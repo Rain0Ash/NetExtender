@@ -1,0 +1,294 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.IO;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
+using NetExtender.Apps.Data;
+using NetExtender.Apps.Data.Common;
+using NetExtender.Apps.Data.Interfaces;
+using NetExtender.Apps.Domains.Interfaces;
+using NetExtender.Exceptions;
+using NetExtender.GUI;
+using NetExtender.Utils.IO;
+using WPFApp = System.Windows.Application;
+
+namespace NetExtender.Apps.Domains
+{
+    public static partial class Domain
+    {
+        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
+        private static class CurrentDomain
+        {
+            private static IDomain current;
+            public static IDomain Current
+            {
+                get
+                {
+                    return current ?? throw new NotInitializedException();
+                }
+                set
+                {
+                    if (Initialized)
+                    {
+                        throw new AlreadyInitializedException();
+                    }
+
+                    current = value ?? throw new ArgumentNullException(nameof(value));
+                }
+            }
+
+            public static Boolean Initialized
+            {
+                get
+                {
+                    return current is not null;
+                }
+            }
+        }
+
+        public static Boolean IsInitialized
+        {
+            get
+            {
+                return CurrentDomain.Initialized;
+            }
+        }
+
+        public static IDomain Current
+        {
+            get
+            {
+                return CurrentDomain.Current;
+            }
+        }
+
+        public static IDomain Create(String name)
+        {
+            return Create(new IPCAppData(name, AppVersion.Default));
+        }
+
+        public static IDomain Create(IIPCAppData data)
+        {
+            CurrentDomain.Current = new InternalDomain(data);
+            return Current;
+        }
+
+        public static IDomain Create<TApp>(String name, GUIType type) where TApp : Application, new()
+        {
+            return Create<TApp>(new IPCAppData(name, AppVersion.Default), type);
+        }
+
+        public static IDomain Create<TApp>(IIPCAppData data, GUIType type) where TApp : Application, new()
+        {
+            return Create(new TApp(), data, type);
+        }
+
+        public static IDomain Create<TApp>(String name, TApp app, GUIType type) where TApp : Application, new()
+        {
+            return Create(app, new IPCAppData(name, AppVersion.Default), type);
+        }
+
+        public static IDomain Create<TApp>(TApp app, IIPCAppData data, GUIType type) where TApp : Application, new()
+        {
+            IDomain domain = Create(data);
+            domain.Initialize(app, type);
+            return domain;
+        }
+
+        private static String path;
+
+        public static String Path
+        {
+            get
+            {
+                if (path is not null)
+                {
+                    return path;
+                }
+
+                String name = Process.GetCurrentProcess().MainModule?.FileName;
+
+                String dir = Directory;
+
+                if (dir is null)
+                {
+                    return null;
+                }
+
+                String file = System.IO.Path.Combine(dir, PathUtils.GetFileNameWithoutExtension(AppDomain.CurrentDomain.FriendlyName) + ".exe");
+
+                return path ??= PathUtils.IsExistAsFile(file) ? file : name;
+            }
+        }
+
+        private static String directory;
+
+        public static String Directory
+        {
+            get
+            {
+                if (directory is not null)
+                {
+                    return directory;
+                }
+
+                String loc = Assembly.GetEntryAssembly()?.Location;
+                if (String.IsNullOrWhiteSpace(loc))
+                {
+                    return null;
+                }
+
+                String dir = PathUtils.GetDirectoryName(loc);
+
+                if (String.IsNullOrEmpty(dir) || !PathUtils.IsExistAsFolder(dir))
+                {
+                    return null;
+                }
+
+                return directory ??= dir;
+            }
+        }
+
+        public static DateTime BuildDateTime
+        {
+            get
+            {
+                return File.GetLastWriteTime(Path);
+            }
+        }
+
+        public static DateTime StartedAt
+        {
+            get
+            {
+                return Current.StartedAt;
+            }
+        }
+
+        public static ShutdownMode ShutdownMode
+        {
+            get
+            {
+                return Current.ShutdownMode;
+            }
+            set
+            {
+                Current.ShutdownMode = value;
+            }
+        }
+
+        public static Guid Guid
+        {
+            get
+            {
+                return Current.Guid;
+            }
+        }
+
+        public static String AppName
+        {
+            get
+            {
+                return Current.AppName;
+            }
+        }
+
+        public static String CurrentAppNameOrPath
+        {
+            get
+            {
+                return IsInitialized && !String.IsNullOrEmpty(AppName) ? AppName : Path;
+            }
+        }
+
+        public static CultureInfo CurrectCulture
+        {
+            get
+            {
+                return Current.Culture;
+            }
+            set
+            {
+                Current.Culture = value;
+            }
+        }
+
+        public static void Run()
+        {
+            Current.Run();
+        }
+
+        public static void Shutdown(Int32 code = 0)
+        {
+            Current.Shutdown(code);
+        }
+
+        public static void Shutdown(Boolean force)
+        {
+            Current.Shutdown(force);
+        }
+
+        public static void Shutdown(Int32 code, Boolean force)
+        {
+            Current.Shutdown(code, force);
+        }
+
+        public static Task<Boolean> ShutdownAsync(Int32 code, Int32 milli)
+        {
+            return Current.ShutdownAsync(code, milli);
+        }
+
+        public static Task<Boolean> ShutdownAsync(Int32 code, Int32 milli, CancellationToken token)
+        {
+            return Current.ShutdownAsync(code, milli, token);
+        }
+
+        public static Task<Boolean> ShutdownAsync(Int32 code, Int32 milli, Boolean force)
+        {
+            return Current.ShutdownAsync(code, milli, force);
+        }
+
+        public static Task<Boolean> ShutdownAsync(Int32 code, Int32 milli, Boolean force, CancellationToken token)
+        {
+            return Current.ShutdownAsync(code, milli, force, token);
+        }
+
+        public static void Restart()
+        {
+            Current.Restart();
+        }
+
+        public static void Restart(Int32 milli)
+        {
+            Current.Restart(milli);
+        }
+
+        public static void Restart(CancellationToken token)
+        {
+            Current.Restart(token);
+        }
+
+        public static void Restart(Int32 milli, CancellationToken token)
+        {
+            Current.Restart(milli, token);
+        }
+
+        public static Task SendMessageAsync(Byte[] message)
+        {
+            return Current.SendMessageAsync(message);
+        }
+
+        public static Task SendMessageAsync(IEnumerable<Byte[]> message)
+        {
+            return Current.SendMessageAsync(message);
+        }
+    }
+}

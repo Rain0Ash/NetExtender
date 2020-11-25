@@ -1,0 +1,932 @@
+<#@ template language="C#v3.5" #>
+<#@ output extension=".cs" encoding="utf-8"#>
+<#@ assembly name="System.Core"#>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
+using System;
+using System.Numerics;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Runtime.CompilerServices;
+
+namespace NetExtender.Utils.Numerics
+{   <#
+    List<String> types = new List<String>
+    {
+        nameof(Char),
+        nameof(SByte),
+        nameof(Byte),
+        nameof(Int16),
+        nameof(UInt16),
+        nameof(Int32),
+        nameof(UInt32),
+        nameof(Int64),
+        nameof(UInt64),
+        nameof(Single),
+        nameof(Double),
+        nameof(Decimal)
+    };
+
+    Dictionary<String, String> operands = new Dictionary<String, String>
+    {
+        {"+", "Add"},
+        {"-", "Substract"},
+        {"*", "Multiply"},
+        {"/", "Divide"},
+        {"%", "Modulo"},
+        {"&", "And"},
+        {"|", "Or"},
+        {"^", "Xor"},
+        {"~", "Invert"},
+        {"| |", "Abs"},
+        {"-| |", "Negative"},
+        {"==", "Equal"},
+        {"!=", "NotEqual"},
+        {">", "Greater"},
+        {">=", "GreaterEqual"},
+        {"<", "Less"},
+        {"<=", "LessEqual"}
+    };
+
+    const String biginteger = "BigInteger";
+
+    static Boolean NotChar(String type)
+    {
+        return type != nameof(Char);
+    }
+    
+    static Boolean IsSmallType(String type)
+    {
+        return type == nameof(Char) || type == nameof(Byte) || type == nameof(SByte) || type == nameof(Int16) || type == nameof(UInt16);
+    }
+
+    static Boolean IsUnsignedType(String type)
+    {
+        return type == nameof(Char) || type == nameof(Byte) || type == nameof(UInt16) || type == nameof(UInt32) || type == nameof(UInt64);
+    }
+    
+    Boolean IsIntType(String type)
+    {
+        return type == nameof(Char) || type == nameof(SByte) || type == nameof(Byte) || type == nameof(Int16) || type == nameof(UInt16) || type == nameof(Int32) || type == nameof(UInt32) || type == nameof(Int64) || type == nameof(UInt64) || type == biginteger;
+    }
+
+    void ForEach(IEnumerable<String> avtypes, Action<String> action)
+    {
+        String[] type = avtypes.ToArray();
+
+        for (Int32 i = 0; i < type.Length; i++)
+        {
+            action(type[i]);
+
+            if (i <= type.Length - 2)
+            {
+                WriteLine(String.Empty);
+            }
+        }
+    }
+
+    void Functions(String @operator)
+    {
+        Boolean comparison = @operator == "==" || @operator == "!=" ||
+                             @operator == ">" || @operator == ">=" ||
+                             @operator == "<" || @operator == "<=";
+
+        Boolean unary = @operator == "~" || @operator == "| |" || @operator == "-| |";
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+
+        WriteLine($"\t\tpublic static {(comparison ? nameof(Boolean) : "T")} {operands[@operator]}<T>({(unary ? "T value" : "T left, T right")}) where T : unmanaged, IConvertible");
+
+        WriteLine("\t\t{");
+
+        foreach (
+            String type in
+                types.Where(type => type != nameof(Single) && type != nameof(Double) && type != nameof(Decimal) || @operator != "&" && @operator != "|" && @operator != "^"))
+        {
+            Boolean unsigned = IsUnsignedType(type);
+            Boolean small = IsSmallType(type);
+
+            if (unsigned && (@operator == "| |" || @operator == "-| |") || @operator == "~" && (type == nameof(Single) || type == nameof(Double) || type == nameof(Decimal)))
+            {
+                continue;
+            }
+
+            WriteLine($"\t\t\tif (typeof(T) == typeof({type}))");
+            WriteLine("\t\t\t{");
+
+            String expression = $"Unsafe.As<T, {type}>(ref left) {@operator} Unsafe.As<T, {type}>(ref right)";
+
+            if (!comparison && small)
+            {
+                expression = $"({type})({expression})";
+            }
+
+
+            if (comparison)
+            {
+                if ((type == nameof(Single) || type == nameof(Double)) && (@operator == "==" || @operator == "!="))
+                {
+                    expression = $"Math.Abs(Unsafe.As<T, {type}>(ref left) - Unsafe.As<T, {type}>(ref right)) {{0}} {type}.Epsilon";
+
+                    expression = @operator switch
+                    {
+                        "==" => String.Format(expression, "<"),
+                        "!=" => String.Format(expression, ">"),
+                        _ => throw new NotSupportedException()
+                        };
+                }
+                WriteLine($"\t\t\t\treturn {expression};");
+            }
+            else if (unary)
+            {
+                switch (@operator)
+                {
+                    case "~":
+                        WriteLine($"\t\t\t\t{(small ? nameof(Int32) : $"{type}")} {(small ? "i" : "val")} = ~Unsafe.As<T, {type}>(ref value);");
+                        if (small)
+                        {
+                            WriteLine($"\t\t\t\t{type} val = Unsafe.As<{nameof(Int32)}, {type}>(ref i);");
+                        }
+
+                        WriteLine($"\t\t\t\treturn Unsafe.As<{type}, T>(ref val);");
+                        break;
+                    case "| |":
+                        WriteLine($"\t\t\t\t{type} val = Math.Abs(Unsafe.As<T, {type}>(ref value));");
+                        WriteLine($"\t\t\t\treturn Unsafe.As<{type}, T>(ref val);");
+                        break;
+                    case "-| |":
+                        WriteLine($"\t\t\t\t{(small ? nameof(Int32) : $"{type}")} {(small ? "i" : "val")} = -Math.Abs(Unsafe.As<T, {type}>(ref value));");
+                        if (small)
+                        {
+                            WriteLine($"\t\t\t\t{type} val = Unsafe.As<{nameof(Int32)}, {type}>(ref i);");
+                        }
+                        WriteLine($"\t\t\t\treturn Unsafe.As<{type}, T>(ref val);");
+                        break;
+                    default:
+                        throw new NotSupportedException();
+                }
+            }
+            else
+            {
+                WriteLine($"\t\t\t\t{type} value = {expression};");
+                WriteLine($"\t\t\t\treturn Unsafe.As<{type}, T>(ref value);");
+            }
+            
+            WriteLine("\t\t\t}");
+            WriteLine(String.Empty);
+        }
+
+        WriteLine($"\t\t\tthrow new NotSupportedException($\"Operator {@operator} is not supported for {{typeof(T)}} type\");");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+    }
+
+    void FactorialFunc(String type)
+    {
+        WriteLine($"\t\tpublic static {biginteger} Factorial(this {type} value)");
+        WriteLine("\t\t{");
+
+        if (!IsUnsignedType(type))
+        {
+            WriteLine("\t\t\tif (value < 0)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\tthrow new ArgumentOutOfRangeException();");
+            WriteLine("\t\t\t}");
+
+            WriteLine(String.Empty);
+        }
+
+        if (!IsSmallType(type) && type != nameof(Int32) && type != nameof(UInt32))
+        {
+            WriteLine("\t\t\tif (value > UInt32.MaxValue)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\tthrow new ArgumentOutOfRangeException();");
+            WriteLine("\t\t\t}");
+
+            WriteLine(String.Empty);
+        }
+        
+        WriteLine($"\t\t\treturn Factorial((UInt32)value);");
+        
+        WriteLine("\t\t}");
+    }
+
+    void Factorial()
+    {
+        ForEach(types.Where(NotChar).Where(IsIntType).Where(type => type != nameof(UInt32)).Append(biginteger), FactorialFunc);
+    }
+
+    void RangeFunc(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(Range)}({type} stop)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Range)}({(IsSmallType(type) ? $"({type})" : String.Empty)}0, stop);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+        
+        WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(Range)}({type} start, {type} stop, {type} step = 1)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tif ({(type == nameof(Single) || type == nameof(Double) ? $"Math.Abs(step) < {type}.Epsilon" : "step == 0")})");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tthrow new ArgumentException(\"Step cannot be equals zero.\");");
+        WriteLine("\t\t\t}");
+        
+        WriteLine(String.Empty);
+
+        if (IsUnsignedType(type))
+        {
+            WriteLine($"\t\t\tfor ({type} i = start; i < stop; i += step)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\tyield return i;");
+            WriteLine("\t\t\t}");
+        }
+        else
+        {
+            WriteLine("\t\t\tif (start < stop && step > 0)");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\tfor ({type} i = start; i < stop; i += step)");
+            WriteLine("\t\t\t\t{");
+            WriteLine("\t\t\t\t\tyield return i;");
+            WriteLine("\t\t\t\t}");
+            WriteLine("\t\t\t}");
+            WriteLine("\t\t\telse if (start > stop && step < 0)");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\tfor ({type} i = start; i > stop; i += step)");
+            WriteLine("\t\t\t\t{");
+            WriteLine("\t\t\t\t\tyield return i;");
+            WriteLine("\t\t\t\t}");
+            WriteLine("\t\t\t}");
+        }
+
+        WriteLine("\t\t}");
+    }
+    
+    void Range()
+    {
+        ForEach(types.Where(NotChar), RangeFunc);
+    }
+
+    void ToRangeFunc(String type)
+    {
+        const Boolean defaultLooped = false;
+        String looped = defaultLooped.ToString().ToLower();
+
+        String func =
+            $"public static {{0}} {nameof(ToRange)}({{1}}{type} value, {type} minimum = {(type == "Char" ? $"{type}.MinValue" : "0")}, {type} maximum = {type}.MaxValue, Boolean looped = {looped})";
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\t{String.Format(func, "void", "ref ")}");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\t value = {nameof(ToRange)}(value, minimum, maximum, looped);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\t{String.Format(func, type, "this ")}");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tif (value > maximum)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn looped ? minimum : maximum;");
+        WriteLine("\t\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t\tif (value < minimum)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn looped ? maximum : minimum;");
+        WriteLine("\t\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t\treturn value;");
+        WriteLine("\t\t}");
+    }
+
+    void ToRange()
+    {
+        ForEach(types, ToRangeFunc);
+    }
+
+    void InRangeFunc(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, MathPositionType comparison = MathPositionType.Both)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(InRange)}(value, default, {type}.MaxValue, comparison);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, {type} maximum, MathPositionType comparison = MathPositionType.Both)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(InRange)}(value, default, maximum, comparison);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine(
+            $"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, {type} minimum, {type} maximum, MathPositionType comparison = MathPositionType.Both)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn comparison switch");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tMathPositionType.None => value > minimum && value < maximum,");
+        WriteLine("\t\t\t\tMathPositionType.Left => value >= minimum && value < maximum,");
+        WriteLine("\t\t\t\tMathPositionType.Right => value > minimum && value <= maximum,");
+        WriteLine("\t\t\t\tMathPositionType.Both => value >= minimum && value <= maximum,");
+        WriteLine("\t\t\t\t_ => throw new NotSupportedException(comparison.ToString())");
+        WriteLine("\t\t\t};");
+        WriteLine("\t\t}");
+    }
+
+    void InRange()
+    {
+        ForEach(types, InRangeFunc);
+    }
+
+    void IsPositiveFunc(String type)
+    {
+        if (IsUnsignedType(type))
+        {
+            WriteLine("\t\t[SuppressMessage(\"ReSharper\", \"UnusedParameter.Global\")]");
+        }
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(IsPositive)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine(IsUnsignedType(type) ? "\t\t\treturn true;" : "\t\t\treturn value >= 0;");
+        WriteLine("\t\t}");
+    }
+    
+    void IsPositive()
+    {
+        ForEach(types.Append(biginteger), IsPositiveFunc);
+    }
+    
+    void IsNegativeFunc(String type)
+    {
+        if (IsUnsignedType(type))
+        {
+            WriteLine("\t\t[SuppressMessage(\"ReSharper\", \"UnusedParameter.Global\")]");
+        }
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(IsNegative)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine(IsUnsignedType(type) ? "\t\t\treturn false;" : "\t\t\treturn value < 0;");
+        WriteLine("\t\t}");
+    }
+    
+    void IsNegative()
+    {
+        ForEach(types.Append(biginteger), IsNegativeFunc);
+    }
+    
+    void ToSignFunc(String type)
+    {
+        if (IsUnsignedType(type))
+        {
+            WriteLine("\t\t[SuppressMessage(\"ReSharper\", \"UnusedParameter.Global\")]");
+        }
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Char)} {nameof(ToSign)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine(IsUnsignedType(type) ? "\t\t\treturn '+';" : "\t\t\treturn value >= 0 ? '+' : '-';");
+        WriteLine("\t\t}");
+    }
+    
+    void ToSign()
+    {
+        ForEach(types.Append(biginteger), ToSignFunc);
+    }
+
+    void RoundToMultiplierFunc(String type)
+    {
+        Boolean integer = IsIntType(type) || type == nameof(Decimal);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tprivate static {type} RoundUpToMultiplierOriginal({type} value, {type} multiplier)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn RoundUpToMultiplierOriginal(value, multiplier, value % multiplier);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tprivate static {type} RoundUpToMultiplierOriginal({type} value, {type} multiplier, {(IsSmallType(type) ? nameof(Int32) : type)} remainder)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {(integer ? "remainder == 0" : "IsEpsilon(remainder)")} ? value : {(IsSmallType(type) ? $"({type})(multiplier - remainder + value)" : "multiplier - remainder + value")};");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine($"\t\tpublic static {type} RoundUpToMultiplier({type} value, {type} multiplier = 10)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tif ({(integer ? "multiplier == 0" : "IsEpsilon(multiplier)")})");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tthrow new ArgumentException(nameof(multiplier));");
+        WriteLine("\t\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine($"\t\t\tif ({(integer ? "value == 0" : "IsEpsilon(value)")} || {(integer ? $"value == multiplier || multiplier == 1{(!IsUnsignedType(type) ? " || multiplier == -1" : String.Empty)}" : "IsEpsilon(value - multiplier)")})");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn value;");
+        WriteLine("\t\t\t}");
+        
+        WriteLine(String.Empty);
+
+        if (!IsUnsignedType(type))
+        {
+            WriteLine("\t\t\tif (value < 0 ^ multiplier < 0)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\treturn RoundDownToMultiplierOriginal(value, multiplier.Abs());");
+            WriteLine("\t\t\t}");
+            
+            WriteLine(String.Empty);
+        }
+
+        WriteLine($"\t\t\t{(IsSmallType(type) ? nameof(Int32) : type)} remainder = value % multiplier;");
+        WriteLine($"\t\t\treturn {(integer ? "remainder == 0" : "IsEpsilon(remainder)")} ? value : RoundUpToMultiplierOriginal(value, multiplier, remainder);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tprivate static {type} RoundDownToMultiplierOriginal({type} value, {type} multiplier)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\t{(IsSmallType(type) ? $"{nameof(Int32)}" : $"{type}")} remainder = value % multiplier;");
+        WriteLine($"\t\t\treturn {(integer ? "remainder == 0" : "IsEpsilon(remainder)")} ? value : {(IsSmallType(type) ? $"({type})(value - remainder)" : "value - remainder")};");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+
+        WriteLine($"\t\tpublic static {type} RoundDownToMultiplier({type} value, {type} multiplier = 10)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tif ({(integer ? "multiplier == 0" : "IsEpsilon(multiplier)")})");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tthrow new ArgumentException(nameof(multiplier));");
+        WriteLine("\t\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine($"\t\t\tif ({(integer ? "value == 0" : "IsEpsilon(value)")} || {(integer ? $"value == multiplier || multiplier == 1{(!IsUnsignedType(type) ? " || multiplier == -1" : String.Empty)}" : "IsEpsilon(value - multiplier)")})");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn value;");
+        WriteLine("\t\t\t}");
+        
+        WriteLine(String.Empty);
+
+        if (!IsUnsignedType(type))
+        {
+            WriteLine("\t\t\tif (value < 0 && multiplier < 0)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\tif (value > multiplier)");
+            WriteLine("\t\t\t\t{");
+            WriteLine("\t\t\t\t\treturn 0;");
+            WriteLine("\t\t\t\t}");
+            
+            WriteLine(String.Empty);
+            
+            WriteLine($"\t\t\t\tmultiplier = {(IsSmallType(type) ? $"({type})(-multiplier)" : "-multiplier")};");
+            WriteLine("\t\t\t}");
+            
+            WriteLine(String.Empty);
+            
+            WriteLine("\t\t\tif (value < 0 || multiplier < 0)");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\treturn {(IsSmallType(type) ? $"({type})(-RoundUpToMultiplierOriginal(-value, multiplier))" : "-RoundUpToMultiplierOriginal(-value, multiplier)")};");
+            WriteLine("\t\t\t}");
+            
+            WriteLine(String.Empty);
+        }
+        
+        WriteLine("\t\t\treturn RoundDownToMultiplierOriginal(value, multiplier);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine($"\t\tpublic static {type} RoundBankingToMultiplier({type} value, {type} multiplier = 10)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tif ({(integer ? "multiplier == 0" : "IsEpsilon(multiplier)")})");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tthrow new ArgumentException(nameof(multiplier));");
+        WriteLine("\t\t\t}");
+        
+        
+        WriteLine(String.Empty);
+        
+        WriteLine($"\t\t\tif ({(integer ? "value == 0" : "IsEpsilon(value)")} || {(integer ? $"value == multiplier || multiplier == 1{(!IsUnsignedType(type) ? " || multiplier == -1" : String.Empty)}" : "IsEpsilon(value - multiplier)")})");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn value;");
+        WriteLine("\t\t\t}");
+        
+        WriteLine(String.Empty);
+
+        if (IsUnsignedType(type))
+        {
+            WriteLine("\t\t\treturn value % multiplier >= multiplier / 2d ? RoundUpToMultiplierOriginal(value, multiplier) : RoundDownToMultiplierOriginal(value, multiplier);");
+        }
+        else
+        {
+            WriteLine($"\t\t\t{(IsSmallType(type) ? nameof(Int32) : type)} remainder = value % multiplier;");
+            WriteLine($"\t\t\t{(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} average = multiplier / 2{(type == nameof(Decimal) ? "m" : "d")};");
+        
+            WriteLine(String.Empty);
+            
+            WriteLine("\t\t\tif (value > 0)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\tif (multiplier > 0)");
+            WriteLine("\t\t\t\t{");
+            WriteLine("\t\t\t\t\treturn remainder >= average ? RoundUpToMultiplierOriginal(value, multiplier) : RoundDownToMultiplierOriginal(value, multiplier);");
+            WriteLine("\t\t\t\t}");
+
+            WriteLine(String.Empty);
+        
+            WriteLine("\t\t\t\treturn remainder <= -average ? RoundUpToMultiplier(value, multiplier) : RoundDownToMultiplier(value, multiplier);");
+            WriteLine("\t\t\t}");
+        
+            WriteLine(String.Empty);
+        
+            WriteLine("\t\t\tif (multiplier > 0)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\treturn remainder >= -average ? RoundUpToMultiplier(value, multiplier) : RoundDownToMultiplier(value, multiplier);");
+            WriteLine("\t\t\t}");
+        
+            WriteLine(String.Empty);
+        
+            WriteLine("\t\t\treturn remainder <= average ? RoundUpToMultiplierOriginal(value, multiplier) : RoundDownToMultiplierOriginal(value, multiplier);");
+        }
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} RoundAwayFromZeroToMultiplier({type} value, {type} multiplier)");
+        WriteLine("\t\t{");
+
+        if (IsUnsignedType(type))
+        {
+            WriteLine("\t\t\treturn RoundUpToMultiplier(value, multiplier);");
+        }
+        else
+        {
+            WriteLine("\t\t\tif (value > 0)");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\treturn multiplier > 0 ? RoundUpToMultiplier(value, multiplier) : RoundUpToMultiplier(value, {(IsSmallType(type) ? $"({type})(-multiplier)" : "-multiplier")});");
+            WriteLine("\t\t\t}");
+            
+            WriteLine(String.Empty);
+            
+            WriteLine($"\t\t\treturn multiplier > 0 ? RoundUpToMultiplier(value, {(IsSmallType(type) ? $"({type})(-multiplier)" : "-multiplier")}) : RoundUpToMultiplier(value, multiplier);");
+        }
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine($"\t\tpublic static {type} {nameof(RoundToMultiplier)}(this {type} value, {type} multiplier, RoundType round = RoundType.Banking)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn round switch");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tRoundType.Banking => RoundBankingToMultiplier(value, multiplier),");
+        WriteLine("\t\t\t\tRoundType.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),");
+        WriteLine("\t\t\t\tRoundType.Ceil => RoundUpToMultiplier(value, multiplier),");
+        WriteLine("\t\t\t\tRoundType.Floor => RoundDownToMultiplier(value, multiplier),");
+        WriteLine($"\t\t\t\t_ => throw new {nameof(NotSupportedException)}()");
+        WriteLine("\t\t\t};");
+        WriteLine("\t\t}");
+    }
+    
+    void RoundToMultiplier()
+    {
+        ForEach(types.Where(NotChar), RoundToMultiplierFunc);
+    }
+
+    void AbsFunc(String type)
+    {
+        if (!IsUnsignedType(type))
+        {
+            WriteLine($"\t\t/// <inheritdoc cref=\"Math.Abs({type})\"/>");
+        }
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static void Abs(ref {type} value)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tvalue = Abs(value);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+        
+        if (!IsUnsignedType(type))
+        {
+            WriteLine($"\t\t/// <inheritdoc cref=\"Math.Abs({type})\"/>");
+        }
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} Abs(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine(!IsUnsignedType(type) ? "\t\t\treturn Math.Abs(value);" : "\t\t\treturn value;");
+        WriteLine("\t\t}");
+    }
+
+    void Abs()
+    {
+        ForEach(types, AbsFunc);
+    }
+
+    void PowFunc(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Pow)}(this {type} value, {nameof(Byte)} pow)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\t{type} ret = 1;");
+        WriteLine("\t\t\twhile (pow != 0)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tif ((pow & 1) == 1)");
+        WriteLine("\t\t\t\t{");
+        WriteLine("\t\t\t\t\tret *= value;");
+        WriteLine("\t\t\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t\t\tvalue *= value;");
+        WriteLine("\t\t\t\tpow >>= 1;");
+        WriteLine("\t\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t\treturn ret;");
+        WriteLine("\t\t}");
+    }
+
+    void Pow()
+    {
+        ForEach(types.Where(type => IsIntType(type) && !IsSmallType(type)).Append(biginteger), PowFunc);
+    }
+
+    void SqrtFunc(String type)
+    {
+        WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Double)} {nameof(Sqrt)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn Math.Sqrt(value);");
+        WriteLine("\t\t}");
+    }
+    
+    void Sqrt()
+    {
+        ForEach(types.Where(type => type != nameof(Decimal) && type != nameof(Char)), SqrtFunc);
+    }
+    
+    void ToRadiansFunc(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Double)} {nameof(ToRadians)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn ToRadians(({nameof(Double)}) value);");
+        WriteLine("\t\t}");
+    }
+    
+    void ToRadians()
+    {
+        ForEach(types.Where(type => IsIntType(type) && type != nameof(Char)), ToRadiansFunc);
+    }
+
+    void ZeroCheckFunc(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} ZeroCheck(this {type} value, {type} alternate = 1)");
+        WriteLine("\t\t{");
+        if (IsIntType(type) || type == nameof(Decimal))
+        {
+            WriteLine("\t\t\treturn value == 0 ? alternate : value;");
+        }
+        else
+        {
+            WriteLine("\t\t\treturn IsEpsilon(value) ? alternate : value;");
+        }
+        
+        WriteLine("\t\t}");
+    }
+    
+    void ZeroCheck()
+    {
+        ForEach(types.Where(NotChar), ZeroCheckFunc);
+    }
+
+    void MeanFunc(String type)
+    {
+        WriteLine("\t\t/// <summary>");
+        WriteLine("\t\t/// Calculates the mean value of the provided values.");
+        WriteLine("\t\t/// </summary>");
+        WriteLine("\t\t/// <param name=\"values\">The values.</param>");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Mean)}(this IEnumerable<{type}> values)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tUInt32 count = 0;");
+        WriteLine($"\t\t\t{(IsIntType(type) ? type == biginteger ? biginteger : IsUnsignedType(type) ? nameof(UInt64) : nameof(Int64) : type == nameof(Single) ? nameof(Double) : type)} sum = 0;");
+        WriteLine($"\t\t\tforeach ({type} value in values)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tsum += value;");
+        WriteLine("\t\t\t\t++count;");
+        WriteLine("\t\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t\tif (count == 0 || count > sum)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn 0;");
+        WriteLine("\t\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        Boolean remove = type == nameof(Int64) || type == nameof(UInt64) || type == nameof(Double) || type == nameof(Decimal) || type == biginteger;
+        WriteLine($"\t\t\treturn {(remove ? "sum / count" : $"({type})(sum / count)")};");
+        WriteLine("\t\t}");
+    }
+    
+    void Mean()
+    {
+        ForEach(types.Where(NotChar).Append(biginteger), MeanFunc);
+    }
+
+    void ToBaseFunc(String type)
+    {
+        WriteLine($"\t\tpublic static {nameof(String)} {nameof(ToBase)}(this {type} value, {nameof(Byte)} @base)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tif (!@base.InRange(MinBase, MaxBase))");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tthrow new ArgumentOutOfRangeException(nameof(@base), @\"Base out of range\");");
+        WriteLine("\t\t\t}");
+        
+        WriteLine(String.Empty);
+
+        if (IsUnsignedType(type))
+        {
+            WriteLine("\t\t\tif (value <= 0)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\treturn \"0\";");
+            WriteLine("\t\t\t}");
+        }
+        else
+        {
+            WriteLine("\t\t\tif (value == 0)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\treturn \"0\";");
+            WriteLine("\t\t\t}");
+            
+            WriteLine(String.Empty);
+            
+            WriteLine($"\t\t\t{nameof(Boolean)} negative = value < 0;");
+            WriteLine("\t\t\tif (negative)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\tAbs(ref value);");
+            WriteLine("\t\t\t}");
+        }
+        
+        WriteLine(String.Empty);
+
+        if (type != biginteger)
+        {
+            WriteLine($"\t\t\t// 64 is the worst cast buffer size for base 2 and {type}.MaxValue");
+        }
+
+        WriteLine($"\t\t\t{(type == biginteger ? "Int32 max = (Int32) RoundCeil(Log(value, 2))" : $"const Int32 max = 8 * sizeof({type})")};");
+        WriteLine($"\t\t\t{nameof(Int32)} i = max;");
+        WriteLine($"\t\t\tSpan<{nameof(Char)}> buffer = stackalloc {nameof(Char)}[max];");
+
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t\tdo");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\t{(IsSmallType(type) ? $"{nameof(Int32)}" : $"{type}")} number = value % @base;");
+        WriteLine($"\t\t\t\tbuffer[--i] = ({nameof(Char)})(number < 10 ? ZeroChar + number : AlphabetStart + number);");
+        WriteLine(String.Empty);
+        WriteLine($"\t\t\t\tvalue /= {(type == nameof(SByte) ? $"({nameof(SByte)})" : String.Empty)}@base;");
+        WriteLine("\t\t\t} while (value > 0);");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine($"\t\t\treturn {(IsUnsignedType(type) ? String.Empty : "$\"{(negative ? \"-\" : String.Empty)}\" + ")}new {nameof(String)}(buffer.Slice(i, max - i));");
+        
+        WriteLine("\t\t}");
+    }
+
+    void ToBase()
+    {
+        WriteLine("\t\tprivate const Byte MinBase = 2;");
+        WriteLine("\t\tprivate const Byte MaxBase = 36;");
+        WriteLine("\t\tprivate const Int32 ZeroChar = '0';");
+        WriteLine("\t\tprivate const Int32 AlphabetStart = '9' - MinBase;");
+        
+        WriteLine(String.Empty);
+
+        ForEach(types.Where(type => NotChar(type) && IsIntType(type)).Append(biginteger), ToBaseFunc);
+    }
+
+    void SumFunc(String type)
+    {
+        if (IsSmallType(type) || IsUnsignedType(type) || type == biginteger)
+        {
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this IEnumerable<{type}> source)");
+            WriteLine("\t\t{");
+            String func =
+                $"return source.Aggregate{(type != nameof(Int32) ? $"<{type}, {type}>" : String.Empty)}(0, (current, value) => {(IsSmallType(type) ? $"({type}) (current + value)" : "current + value")});";
+            
+            if (type != biginteger)
+            {
+                WriteLine("\t\t\tchecked");
+                WriteLine("\t\t\t{");
+                WriteLine($"\t\t\t\t{func}");
+                WriteLine("\t\t\t}");
+            }
+            else
+            {
+                WriteLine($"\t\t\t{func}");
+            }
+            
+            WriteLine("\t\t}");
+        
+            WriteLine(String.Empty);
+        }
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this IEnumerable<{type}> source, {type} overflow)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\ttry");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn source.Sum();");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t\tcatch (OverflowException)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn overflow;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+    }
+    
+    void Sum()
+    {
+        ForEach(types.Where(NotChar).Append(biginteger), SumFunc);
+    }
+#>
+
+    public static partial class MathUtils
+    {
+<#
+    Factorial();
+    WriteLine(String.Empty);
+    Range();
+    WriteLine(String.Empty);
+    ToRange();
+    WriteLine(String.Empty);
+    InRange();
+    WriteLine(String.Empty);
+    IsPositive();
+    WriteLine(String.Empty);
+    IsNegative();
+    WriteLine(String.Empty);
+    ToSign();
+    WriteLine(String.Empty);
+    RoundToMultiplier();
+    WriteLine(String.Empty);
+    Abs();
+    WriteLine(String.Empty);
+    Pow();
+    WriteLine(String.Empty);
+    Sqrt();
+    WriteLine(String.Empty);
+    ToRadians();
+    WriteLine(String.Empty);
+    ZeroCheck();
+    WriteLine(String.Empty);
+    Mean();
+    WriteLine(String.Empty);
+    ToBase();
+    WriteLine(String.Empty);
+    Sum();
+#>
+    }
+
+    [SuppressMessage("ReSharper", "InvertIf")]
+    public static class MathUnsafe
+    {
+<#
+    foreach (String @operator in operands.Keys)
+    {
+        Functions(@operator);
+    }
+#>
+    }
+}

@@ -1,0 +1,175 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <UseWindowsForms>true</UseWindowsForms>
+        <UseWPF>true</UseWPF>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <DefineConstants></DefineConstants>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Hooks\Keyboard" />
+      <Folder Include="Hooks\Mouse" />
+      <Folder Include="Numerics" />
+      <Folder Include="Resources" />
+      <Folder Include="Types\Dynamic" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="AngleSharp" Version="1.0.0-alpha-844" />
+      <PackageReference Include="BouncyCastle.NetCore" Version="1.8.8" />
+      <PackageReference Include="DynamicData" Version="6.17.14" />
+      <PackageReference Include="Fody" Version="6.3.0">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="Microsoft-WindowsAPICodePack-Core" Version="1.1.4" />
+      <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
+      <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.0" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.0" />
+      <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.22" />
+      <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+      <PackageReference Include="Polly" Version="7.2.1" />
+      <PackageReference Include="protobuf-net" Version="3.0.62" />
+      <PackageReference Include="ReactiveUI" Version="12.1.5" />
+      <PackageReference Include="ReactiveUI.Fody" Version="12.1.5" />
+      <PackageReference Include="ReactiveUI.WinForms" Version="12.1.5" />
+      <PackageReference Include="ReactiveUI.WPF" Version="12.1.5" />
+      <PackageReference Include="Selenium.WebDriver" Version="4.0.0-alpha07" />
+      <PackageReference Include="System.Management" Version="5.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="Config\Property.cs">
+            <DependentUpon>Config.cs</DependentUpon>
+        </Compile>
+        <Compile Remove="NetExtender.Tests\**" />
+        <Compile Update="Types\Network\FixedWebClient.cs" />
+        <Compile Update="Cryptography\Hash.cs">
+            <DependentUpon>Cryptography.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Cryptography\Base.cs">
+            <DependentUpon>Cryptography.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Cryptography\AES.cs">
+            <DependentUpon>Cryptography.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utils\Network\UserAgents.cs">
+            <DependentUpon>WebUtils.cs</DependentUpon>
+        </Compile>
+        <Compile Update="ApplicationData\Updater\FS.cs">
+            <DependentUpon>Updater.cs</DependentUpon>
+        </Compile>
+        <Compile Update="ApplicationData\Updater\Network.cs">
+            <DependentUpon>Updater.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Apps\Applications\ConsoleApplication.cs">
+            <DependentUpon>Application.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Apps\Applications\ConsoleGUIApplication.cs">
+            <DependentUpon>Application.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Apps\Applications\WinFormsApplication.cs">
+            <DependentUpon>Application.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Apps\Applications\WPFApplication.cs">
+            <DependentUpon>Application.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Apps\Applications\Static.cs">
+            <DependentUpon>Application.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Apps\Domain\Static.cs">
+            <DependentUpon>Domain.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Apps\Domain\Applications\WPFApplication.cs">
+            <DependentUpon>Application.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Apps\Domain\Applications\ConsoleApplication.cs">
+            <DependentUpon>Application.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Apps\Domain\Applications\ConsoleGUIApplication.cs">
+            <DependentUpon>Application.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Apps\Domain\Applications\WinFormsApplication.cs">
+            <DependentUpon>Application.cs</DependentUpon>
+        </Compile>
+        <Compile Remove="Localizations\DefaultCultureStrings.cs" />
+        <Compile Remove="Localizations\DefaultLocalization.cs" />
+        <Compile Update="Utils\Math\GenericMathUtils.cs">
+            <DependentUpon>GenericMathUtils.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Other\Point.cs">
+            <DependentUpon>Point.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Math\Point.cs">
+            <DependentUpon>Point.tt</DependentUpon>
+        </Compile>
+        <Compile Remove="Web\WebClient.cs" />
+        <Compile Remove="Web\RequestOptions.cs" />
+        <Compile Remove="Web\Responces\**" />
+        <Compile Update="Utils\IO\ConsoleAsyncInput.cs">
+            <DependentUpon>ConsoleUtils.cs</DependentUpon>
+        </Compile>
+        <Compile Remove="Utils\IO\ConsoleListener.cs" />
+        <Compile Update="Utils\IO\ConsoleExitHandler.cs">
+            <DependentUpon>ConsoleUtils.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Apps\Domains\Static.cs">
+            <DependentUpon>Domain.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utils\IO\Alt.cs">
+            <DependentUpon>KeyboardUtils.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utils\IO\Win.cs">
+            <DependentUpon>KeyboardUtils.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utils\IO\Ctrl.cs">
+            <DependentUpon>KeyboardUtils.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utils\IO\Shift.cs">
+            <DependentUpon>KeyboardUtils.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utils\Numerics\GenericMathUtils.cs">
+            <DependentUpon>GenericMathUtils.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Utils\Numerics\MathEnumerableUtils.cs">
+            <DependentUpon>MathUtils.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utils\Numerics\GenericRandomUtils.cs">
+            <AutoGen>True</AutoGen>
+            <DesignTime>True</DesignTime>
+            <DependentUpon>GenericRandomUtils.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Utils\Numerics\Primes.cs">
+            <DependentUpon>PrimeUtils.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Numerics\Point.cs">
+            <DependentUpon>Point.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Cryptography\RSA.cs">
+            <DependentUpon>Cryptography.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Cryptography\Compression.cs">
+            <DependentUpon>Cryptography.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utils\Numerics\TrileanLogicUtils.cs">
+            <DependentUpon>LogicUtils.cs</DependentUpon>
+        </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Utils\Numerics\GenericMathUtils.tt">
+        <Generator>TextTemplatingFileGenerator</Generator>
+        <LastGenOutput>GenericMathUtils.cs</LastGenOutput>
+      </None>
+    </ItemGroup>
+
+</Project>
