@@ -15,6 +15,8 @@ using NetExtender.Utils.Types;
 using DynamicData.Annotations;
 using NetExtender.Watchers;
 
+using NotNullAttribute = DynamicData.Annotations.NotNullAttribute;
+
 namespace NetExtender.Utils.IO
 {
     public static class DirectoryUtils
@@ -202,7 +204,7 @@ namespace NetExtender.Utils.IO
         }
 
 
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Local")]
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
@@ -239,55 +241,54 @@ namespace NetExtender.Utils.IO
 
         public const String AnySearchPattern = ".*";
 
-        public static IEnumerable<String> GetDirectories([DynamicData.Annotations.NotNull] String path, Boolean recursive = false)
+        public static IEnumerable<String> GetDirectories([NotNull] String path, Boolean recursive = false)
         {
             return GetEntries(path, recursive, PathType.Folder);
         }
 
-        public static IEnumerable<String> GetDirectories([DynamicData.Annotations.NotNull] String path, [DynamicData.Annotations.NotNull] [RegexPattern]
-            String searchPattern, Boolean recursive = false)
+        public static IEnumerable<String> GetDirectories([NotNull] String path, [NotNull] [RegexPattern] String pattern, Boolean recursive = false)
         {
-            return GetEntries(path, searchPattern, recursive, PathType.Folder);
+            return GetEntries(path, pattern, recursive, PathType.Folder);
         }
 
-        public static IEnumerable<String> GetDirectories([DynamicData.Annotations.NotNull] String path, Regex regex, Boolean recursive = false)
+        public static IEnumerable<String> GetDirectories([NotNull] String path, Regex regex, Boolean recursive = false)
         {
             return GetEntries(path, regex, recursive, PathType.Folder);
         }
 
-        public static IEnumerable<String> GetFiles([DynamicData.Annotations.NotNull] String path, Boolean recursive = false)
+        public static IEnumerable<String> GetFiles([NotNull] String path, Boolean recursive = false)
         {
             return GetEntries(path, recursive, PathType.File);
         }
 
-        public static IEnumerable<String> GetFiles([DynamicData.Annotations.NotNull] String path, [DynamicData.Annotations.NotNull] [RegexPattern]
-            String searchPattern, Boolean recursive = false)
+        public static IEnumerable<String> GetFiles([NotNull] String path, [NotNull] [RegexPattern] String pattern, Boolean recursive = false)
         {
-            return GetEntries(path, searchPattern, recursive, PathType.File);
+            return GetEntries(path, pattern, recursive, PathType.File);
         }
 
-        public static IEnumerable<String> GetFiles([DynamicData.Annotations.NotNull] String path, Regex regex, Boolean recursive = false)
+        public static IEnumerable<String> GetFiles([NotNull] String path, Regex regex, Boolean recursive = false)
         {
             return GetEntries(path, regex, recursive, PathType.File);
         }
 
-        public static IEnumerable<String> GetEntries([DynamicData.Annotations.NotNull] String path, [DynamicData.Annotations.NotNull] [RegexPattern]
-            String searchPattern, Boolean recursive = false, PathType type = PathType.All)
+        public static IEnumerable<String> GetEntries([NotNull] String path, [NotNull] [RegexPattern] String pattern, Boolean recursive = false, PathType type = PathType.All)
         {
-            return GetEntries(path, new Regex(String.IsNullOrEmpty(searchPattern) ? AnySearchPattern : searchPattern), recursive, type);
+            return GetEntries(path, new Regex(String.IsNullOrEmpty(pattern) ? AnySearchPattern : pattern), recursive, type);
         }
 
-        public static IEnumerable<String> GetEntries([DynamicData.Annotations.NotNull] String path, Boolean recursive = false, PathType type = PathType.All)
+        public static IEnumerable<String> GetEntries([NotNull] String path, Boolean recursive = false, PathType type = PathType.All)
         {
+            if (String.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException(@"Value cannot be null or empty.", nameof(path));
+            }
+
             if (type == PathType.None)
             {
                 yield break;
             }
 
-            if (path.Last() != '\\')
-            {
-                path += "\\";
-            }
+            path = PathUtils.ConvertToFolder(path);
 
             if (!PathUtils.IsValidPath(path, PathType.Folder, PathStatus.Exist))
             {
@@ -296,13 +297,13 @@ namespace NetExtender.Utils.IO
 
             IntPtr handle = FindFirstFileW(path + "*", out WIN32_FIND_DATA data);
 
+            if (handle.IsNullOrInvalid())
+            {
+                yield break;
+            }
+            
             try
             {
-                if ((Environment.Is64BitProcess ? handle.ToInt64() : handle.ToInt32()) == -1)
-                {
-                    yield break;
-                }
-
                 do
                 {
                     if (data.cFileName == "." || data.cFileName == "..")
@@ -342,7 +343,7 @@ namespace NetExtender.Utils.IO
             }
         }
 
-        public static IEnumerable<String> GetEntries([DynamicData.Annotations.NotNull] String path, Regex regex, Boolean recursive = false, PathType type = PathType.All)
+        public static IEnumerable<String> GetEntries([NotNull] String path, Regex regex, Boolean recursive = false, PathType type = PathType.All)
         {
             return GetEntries(path, recursive, type).Where(file => regex.IsMatch(file));
         }
