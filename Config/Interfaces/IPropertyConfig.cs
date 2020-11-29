@@ -12,9 +12,9 @@ namespace NetExtender.Config.Interfaces
 {
     public interface IPropertyConfig : IConfig, IReadOnlyPropertyConfig
     {
-        public void SetValue<T>(IReadOnlyConfigProperty<T> property, T value)
+        public Boolean SetValue<T>(IReadOnlyConfigProperty<T> property, T value)
         {
-            SetValue(property.Key, value, property.CryptKey, property.Sections);
+            return SetValue(property.Key, value, property.CryptKey, property.Sections);
         }
         
         public T GetOrSetValue<T>(IReadOnlyConfigProperty<T> property)
@@ -27,9 +27,9 @@ namespace NetExtender.Config.Interfaces
             return GetOrSetValue(property.Key, value, property.CryptKey, property.Converter, property.Sections);
         }
         
-        public void RemoveValue(IConfigPropertyBase property)
+        public Boolean RemoveValue(IReadOnlyConfigPropertyBase property)
         {
-            RemoveValue(property.Key, property.Sections);
+            return RemoveValue(property.Key, property.Sections);
         }
         
         public new IConfigProperty<T> GetProperty<T>(String key, params String[] sections)

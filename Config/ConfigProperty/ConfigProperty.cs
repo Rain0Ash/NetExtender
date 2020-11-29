@@ -37,6 +37,7 @@ namespace NetExtender.Config
         [Reactive]
         public T DefaultValue { get; private set; }
 
+        private Boolean _initialized;
         private T _value;
 
         [Reactive]
@@ -44,6 +45,7 @@ namespace NetExtender.Config
         {
             get
             {
+                Initialize();
                 return IsValid && !AlwaysDefault ? _value : DefaultValue;
             }
             private set
@@ -84,8 +86,17 @@ namespace NetExtender.Config
             DefaultValue = defaultValue;
             Validate = validate;
             Converter = converter ?? ConvertUtils.TryConvert;
-            
+        }
+
+        private void Initialize()
+        {
+            if (_initialized)
+            {
+                return;
+            }
+
             Read();
+            _initialized = true;
         }
 
         public void SetValue(T value)

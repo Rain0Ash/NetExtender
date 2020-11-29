@@ -7,7 +7,7 @@ using ReactiveUI;
 
 namespace NetExtender.Config
 {
-    public interface IReadOnlyConfigProperty<T> : IReadOnlyConfigPropertyBase, IReactiveObject
+    public interface IReadOnlyConfigProperty<T> : IReadOnlyConfigPropertyBase
     {
         public Boolean ThrowOnInvalid { get; }
         public T DefaultValue { get; }

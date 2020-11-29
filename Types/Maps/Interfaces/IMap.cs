@@ -9,6 +9,7 @@ namespace NetExtender.Types.Maps
     // ReSharper disable once PossibleInterfaceMemberAmbiguity
     public interface IMap<TKey, TValue> : IDictionary<TKey, TValue>
     {
+        public Boolean ContainsValue(TValue key);
         public Boolean ContainsByValue(TValue key, TKey value);
         public Boolean ContainsByValue(KeyValuePair<TValue, TKey> item);
         public Boolean TryGetKey(TValue key, out TKey value);

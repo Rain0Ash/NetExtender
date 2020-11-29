@@ -6,28 +6,28 @@ using NetExtender.Config.Common;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Types.Trees;
 
-namespace NetExtender.Config.RAM
+namespace NetExtender.Config.Ram
 {
-    public class RAMConfig : Config
+    public class RamConfig : Config
     {
         protected DictionaryTree<String, String> Config;
 
-        public RAMConfig(String path = null, ConfigOptions options = ConfigOptions.None)
+        public RamConfig(String path = null, ConfigOptions options = ConfigOptions.None)
             : this(path, null, options)
         {
         }
         
-        public RAMConfig(String path, ICryptKey crypt, ConfigOptions options = ConfigOptions.None)
+        public RamConfig(String path, ICryptKey crypt, ConfigOptions options = ConfigOptions.None)
             : this(new DictionaryTree<String, String>(), path, crypt, options)
         {
         }
 
-        public RAMConfig(DictionaryTree<String, String> config, String path = null, ConfigOptions options = ConfigOptions.None)
+        public RamConfig(DictionaryTree<String, String> config, String path = null, ConfigOptions options = ConfigOptions.None)
             : this(config, path, null, options)
         {
         }
         
-        public RAMConfig(DictionaryTree<String, String> config, String path, ICryptKey crypt, ConfigOptions options = ConfigOptions.None)
+        public RamConfig(DictionaryTree<String, String> config, String path, ICryptKey crypt, ConfigOptions options = ConfigOptions.None)
             : base(path ?? "RAM", crypt, options)
         {
             Config = config;

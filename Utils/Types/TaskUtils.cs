@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using DynamicData.Annotations;
@@ -12,21 +13,86 @@ namespace NetExtender.Utils.Types
 {
     public static class TaskUtils
     {
-	    /// <summary>
-	    /// Cached true task
-	    /// </summary>
-        public static Task<Boolean> True { get; } = Task.FromResult(true);
+	    /// <inheritdoc cref="BooleanUtils.True"/>
+	    public static Task<Boolean> True
+	    {
+		    get
+		    {
+			    return BooleanUtils.True;
+		    }
+	    }
 	    
-	    /// <summary>
-	    /// Cached false task
-	    /// </summary>
-        public static Task<Boolean> False { get; } = Task.FromResult(false);
+	    /// <inheritdoc cref="BooleanUtils.False"/>
+	    public static Task<Boolean> False
+	    {
+		    get
+		    {
+			    return BooleanUtils.False;
+		    }
+	    }
 
-        /// <summary>
-        /// Cached empty string task
-        /// </summary>
-        public static Task<String> Empty { get; } = Task.FromResult(String.Empty);
+	    private static class TaskCache<T>
+        {
+	        public static Task<T> Default { get; }
+
+	        static TaskCache()
+	        {
+		        Default = Task.FromResult(default(T));
+	        }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<T> DefaultTask<T>()
+        {
+	        return TaskCache<T>.Default;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<Boolean> ToTask(this Boolean value)
+        {
+	        return value ? True : False;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<T> ToTask<T>(this T value)
+        {
+	        return Task.FromResult(value);
+        }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task ToCanceledTask(this CancellationToken token)
+        {
+	        return Task.FromCanceled(token);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<T> ToCanceledTask<T>(this CancellationToken token)
+        {
+	        return Task.FromCanceled<T>(token);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task ToExceptionTask(this Exception exception)
+        {
+	        if (exception is null)
+	        {
+		        throw new ArgumentNullException(nameof(exception));
+	        }
+
+	        return Task.FromException(exception);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<T> ToExceptionTask<T>(this Exception exception)
+        {
+	        if (exception is null)
+	        {
+		        throw new ArgumentNullException(nameof(exception));
+	        }
+
+	        return Task.FromException<T>(exception);
+        }
+
         public static Task WaitAsync(CancellationToken token)
         {
             return WaitAsync(null, token);

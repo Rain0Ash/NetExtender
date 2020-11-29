@@ -9,9 +9,9 @@ using NetExtender.Config.Common;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Utils.Types;
 
-namespace NetExtender.Config.INI
+namespace NetExtender.Config.Ini
 {
-    public class INIConfig : Config
+    public class IniConfig : Config
     {
         public const String DefaultJoiner = ".";
         public const String DefaultSection = "Main";
@@ -21,32 +21,32 @@ namespace NetExtender.Config.INI
         
         protected StringBuilder Buffer { get; } = new StringBuilder(255);
 
-        public INIConfig(String path = null, ConfigOptions options = ConfigOptions.None)
+        public IniConfig(String path = null, ConfigOptions options = ConfigOptions.None)
             : this(path, DefaultSection, options)
         {
         }
         
-        public INIConfig(String path, String section, ConfigOptions options = ConfigOptions.None)
+        public IniConfig(String path, String section, ConfigOptions options = ConfigOptions.None)
             : this(path, section, DefaultJoiner, options)
         {
         }
         
-        public INIConfig(String path, String section, String joiner = DefaultJoiner, ConfigOptions options = ConfigOptions.None)
+        public IniConfig(String path, String section, String joiner = DefaultJoiner, ConfigOptions options = ConfigOptions.None)
             : this(path, section, joiner, null, options)
         {
         }
         
-        public INIConfig(String path, ICryptKey crypt, ConfigOptions options = ConfigOptions.None)
+        public IniConfig(String path, ICryptKey crypt, ConfigOptions options = ConfigOptions.None)
             : this(path, DefaultSection, crypt, options)
         {
         }
 
-        public INIConfig(String path, String section, ICryptKey crypt, ConfigOptions options = ConfigOptions.None)
+        public IniConfig(String path, String section, ICryptKey crypt, ConfigOptions options = ConfigOptions.None)
             : this(path, section, DefaultJoiner, crypt, options)
         {
         }
         
-        public INIConfig(String path, String section, String joiner, ICryptKey crypt, ConfigOptions options = ConfigOptions.None)
+        public IniConfig(String path, String section, String joiner, ICryptKey crypt, ConfigOptions options = ConfigOptions.None)
             : base(ValidatePathOrGetDefault(path, "ini"), crypt, options)
         {
             MainSection = section ?? DefaultSection;

@@ -15,11 +15,7 @@ namespace NetExtender.Config
         public new Boolean IsReadOnly { get; set; }
         public new Boolean AlwaysDefault { get; set; }
         public new ConfigPropertyOptions Options { get; set; }
-
         public void Save();
-
         public void Reset();
-
-        public void Dispose(Boolean disposing);
     }
 }

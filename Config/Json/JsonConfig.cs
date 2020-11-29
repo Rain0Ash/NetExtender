@@ -8,9 +8,9 @@ using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Types.Trees;
 using Newtonsoft.Json;
 
-namespace NetExtender.Config.JSON
+namespace NetExtender.Config.Json
 {
-    public class JSONConfig : FileConfig
+    public class JsonConfig : FileConfig
     {
         private static readonly JsonSerializerSettings Settings = new JsonSerializerSettings
         {
@@ -18,12 +18,12 @@ namespace NetExtender.Config.JSON
             NullValueHandling = NullValueHandling.Ignore
         };
         
-        public JSONConfig(String path = null, ConfigOptions options = ConfigOptions.None)
+        public JsonConfig(String path = null, ConfigOptions options = ConfigOptions.None)
             : this(path, null, options)
         {
         }
         
-        public JSONConfig(String path, ICryptKey crypt, ConfigOptions options = ConfigOptions.None)
+        public JsonConfig(String path, ICryptKey crypt, ConfigOptions options = ConfigOptions.None)
             : base(ValidatePathOrGetDefault(path, "json"), crypt, options)
         {
         }

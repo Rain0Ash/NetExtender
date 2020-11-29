@@ -6,16 +6,16 @@ using NetExtender.Config.Common;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.DataBase;
 
-namespace NetExtender.Config.SQL
+namespace NetExtender.Config.Sql
 {
-    public class SQLConfig : Config
+    public class SqlConfig : Config
     {
-        public SQLConfig(String path, DatabaseConnection databaseConnection, ConfigOptions options)
+        public SqlConfig(String path, DatabaseConnection databaseConnection, ConfigOptions options)
             : base(path, options)
         {
         }
 
-        public SQLConfig(String path, DatabaseConnection databaseConnection, ICryptKey crypt, ConfigOptions options)
+        public SqlConfig(String path, DatabaseConnection databaseConnection, ICryptKey crypt, ConfigOptions options)
             : base(path, crypt, options)
         {
         }

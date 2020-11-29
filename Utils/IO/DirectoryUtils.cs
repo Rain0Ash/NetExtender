@@ -203,7 +203,6 @@ namespace NetExtender.Utils.IO
             }
         }
 
-
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Local")]
@@ -228,6 +227,15 @@ namespace NetExtender.Utils.IO
             public UInt32 dwFileType;
             public UInt32 dwCreatorType;
             public UInt16 wFinderFlags;
+
+            public readonly Boolean IsDirectory
+            {
+                get
+                {
+                    const UInt32 directory = (UInt32) FileAttributes.Directory;
+                    return (dwFileAttributes & directory) == directory;
+                }
+            }
         }
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
@@ -273,7 +281,12 @@ namespace NetExtender.Utils.IO
 
         public static IEnumerable<String> GetEntries([NotNull] String path, [NotNull] [RegexPattern] String pattern, Boolean recursive = false, PathType type = PathType.All)
         {
-            return GetEntries(path, new Regex(String.IsNullOrEmpty(pattern) ? AnySearchPattern : pattern), recursive, type);
+            if (String.IsNullOrEmpty(pattern) || pattern == AnySearchPattern)
+            {
+                return GetEntries(path, recursive, type);
+            }
+
+            return GetEntries(path, new Regex(pattern), recursive, type);
         }
 
         public static IEnumerable<String> GetEntries([NotNull] String path, Boolean recursive = false, PathType type = PathType.All)
@@ -301,6 +314,9 @@ namespace NetExtender.Utils.IO
             {
                 yield break;
             }
+
+            Boolean folder = type.HasFlag(PathType.Folder);
+            Boolean file = type.HasFlag(PathType.File);
             
             try
             {
@@ -313,7 +329,7 @@ namespace NetExtender.Utils.IO
 
                     String entryname = path + data.cFileName;
 
-                    if ((data.dwFileAttributes & (UInt32) FileAttributes.Directory) == (UInt32) FileAttributes.Directory)
+                    if (data.IsDirectory)
                     {
                         if (recursive)
                         {
@@ -323,14 +339,14 @@ namespace NetExtender.Utils.IO
                             }
                         }
 
-                        if (type.HasFlag(PathType.Folder))
+                        if (folder)
                         {
                             yield return entryname;
                         }
                     }
                     else
                     {
-                        if (type.HasFlag(PathType.File))
+                        if (file)
                         {
                             yield return entryname;
                         }

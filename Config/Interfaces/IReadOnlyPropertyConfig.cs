@@ -18,7 +18,7 @@ namespace NetExtender.Config.Interfaces
             return GetValue(property.Key, property.DefaultValue, property.CryptKey, property.Converter, property.Sections);
         }
         
-        public Boolean KeyExist(IConfigPropertyBase property)
+        public Boolean KeyExist(IReadOnlyConfigPropertyBase property)
         {
             return KeyExist(property.Key, property.Sections);
         }
@@ -110,6 +110,6 @@ namespace NetExtender.Config.Interfaces
             return GetProperty(key, value, validate, crypt?.Invoke(key, sections), options, converter, sections);
         }
 
-        public IEnumerable<IConfigPropertyBase> GetProperties();
+        public IEnumerable<IReadOnlyConfigPropertyBase> GetProperties();
     }
 }

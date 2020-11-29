@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DynamicData.Annotations;
 using NetExtender.Utils.Types;
 using NetExtender.Config.Interfaces;
 using NetExtender.Converters;
@@ -11,39 +12,63 @@ using NetExtender.Crypto;
 using NetExtender.Crypto.CryptKey;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Types.Dictionaries;
+using NetExtender.Types.Dictionaries.Interfaces;
+using NetExtender.Types.Maps;
 
 namespace NetExtender.Config
 {
     public partial class Config
     {
-        public void SetValue<T>(IReadOnlyConfigProperty<T> property, T value)
+        private static readonly IIndexDictionary<IConfig, IIndexMap<String, IReadOnlyConfigPropertyBase>> Properties =
+            new IndexDictionary<IConfig, IIndexMap<String, IReadOnlyConfigPropertyBase>>();
+
+        private static Boolean IsLinked(IReadOnlyConfigPropertyBase property)
         {
-            SetValue(property.Key, value, property.CryptKey, property.Sections);
+            return Properties.TryGetValue(property.Config, out IIndexMap<String, IReadOnlyConfigPropertyBase> map) && map.ContainsValue(property);
+        }
+
+        private static void ThrowIfPropertyNotLinked(IReadOnlyConfigPropertyBase property)
+        {
+            if (!IsLinked(property))
+            {
+                throw new ArgumentException("Property not linked to config");
+            }
+        }
+        
+        public Boolean SetValue<T>(IReadOnlyConfigProperty<T> property, T value)
+        {
+            ThrowIfPropertyNotLinked(property);
+            return SetValue(property.Key, value, property.CryptKey, property.Sections);
         }
 
         public T GetValue<T>(IReadOnlyConfigProperty<T> property)
         {
+            ThrowIfPropertyNotLinked(property);
             return GetValue(property.Key, property.DefaultValue, property.CryptKey, property.Converter, property.Sections);
         }
 
         public T GetOrSetValue<T>(IReadOnlyConfigProperty<T> property)
         {
+            ThrowIfPropertyNotLinked(property);
             return GetOrSetValue(property, property.DefaultValue);
         }
 
         public T GetOrSetValue<T>(IReadOnlyConfigProperty<T> property, T value)
         {
+            ThrowIfPropertyNotLinked(property);
             return GetOrSetValue(property.Key, value, property.CryptKey, property.Converter, property.Sections);
         }
 
-        public Boolean KeyExist(IConfigPropertyBase property)
+        public Boolean KeyExist(IReadOnlyConfigPropertyBase property)
         {
+            ThrowIfPropertyNotLinked(property);
             return KeyExist(property.Key, property.Sections);
         }
 
-        public void RemoveValue(IConfigPropertyBase property)
+        public Boolean RemoveValue(IReadOnlyConfigPropertyBase property)
         {
-            RemoveValue(property.Key, property.Sections);
+            ThrowIfPropertyNotLinked(property);
+            return RemoveValue(property.Key, property.Sections);
         }
         
         public IConfigProperty<T> GetProperty<T>(String key, params String[] sections)
@@ -93,7 +118,7 @@ namespace NetExtender.Config
         
         public IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, ICryptKey crypt, ConfigPropertyOptions options, params String[] sections)
         {
-            return GetProperty(key, value, validate, crypt, options, Utils.Types.ConvertUtils.TryConvert, sections);
+            return GetProperty(key, value, validate, crypt, options, ConvertUtils.TryConvert, sections);
         }
         
         public IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, Func<ICryptKey> crypt, ConfigPropertyOptions options, params String[] sections)
@@ -141,9 +166,14 @@ namespace NetExtender.Config
             return GetProperty(key, value, validate, crypt?.Invoke(key, sections), options, converter, sections);
         }
 
-        private static IConfigPropertyBase GetOrAddProperty(IConfigPropertyBase property)
+        private static IIndexMap<String, IReadOnlyConfigPropertyBase> NewPropertyMap()
         {
-            return Properties.GetOrAdd(property.Config, new IndexDictionary<String, IConfigPropertyBase>())
+            return new IndexMap<String, IReadOnlyConfigPropertyBase>();
+        }
+
+        private static IReadOnlyConfigPropertyBase GetOrAddProperty(IReadOnlyConfigPropertyBase property)
+        {
+            return Properties.GetOrAdd(property.Config, NewPropertyMap)
                 .GetOrAdd(property.Path, property);
         }
 
@@ -157,39 +187,35 @@ namespace NetExtender.Config
             throw new ArgumentException(@$"Config already contains another property with same path '{property.Path}' and different generic type.", nameof(property));
         }
 
-        public IEnumerable<IConfigPropertyBase> GetProperties()
+        [CanBeNull]
+        public IEnumerable<IReadOnlyConfigPropertyBase> GetProperties()
         {
-            return Properties.TryGetValue(this, out IndexDictionary<String, IConfigPropertyBase> dictionary) ? dictionary.Values : null;
+            return Properties.TryGetValue(this, out IIndexMap<String, IReadOnlyConfigPropertyBase> dictionary) ? dictionary.Values : null;
         }
         
-        private static void ReadProperty(IConfigPropertyBase property)
+        private static void ReadProperty(IReadOnlyConfigPropertyBase property)
         {
             property.Read();
         }
 
-        private static void SaveProperty(IConfigPropertyBase property)
+        private static void SaveProperty(IReadOnlyConfigPropertyBase property)
         {
-            property.Save();
+            (property as IConfigPropertyBase)?.Save();
         }
 
-        private static void ResetProperty(IConfigPropertyBase property)
+        private static void ResetProperty(IReadOnlyConfigPropertyBase property)
         {
-            property.Reset();
+            (property as IConfigPropertyBase)?.Reset();
         }
 
-        private static IConfigPropertyBase CopyProperty(IConfigPropertyBase property)
+        private static void ClearProperty(IReadOnlyConfigPropertyBase property)
         {
-            return property.DeepCopy();
+            (property as IConfigPropertyBase)?.Dispose();
         }
         
-        private static void ClearProperty(IConfigPropertyBase property)
+        public static void RemoveProperty(IReadOnlyConfigPropertyBase property)
         {
-            property.Dispose(true);
-        }
-        
-        public static void RemoveProperty(IConfigPropertyBase property)
-        {
-            if (!Properties.TryGetValue(property.Config, out IndexDictionary<String, IConfigPropertyBase> dictionary))
+            if (!Properties.TryGetValue(property.Config, out IIndexMap<String, IReadOnlyConfigPropertyBase> dictionary))
             {
                 return;
             }
@@ -198,9 +224,9 @@ namespace NetExtender.Config
             ClearProperty(property);
         }
         
-        private void ForEachProperty(Action<IConfigPropertyBase> action)
+        private void ForEachProperty(Action<IReadOnlyConfigPropertyBase> action)
         {
-            if (Properties.TryGetValue(this, out IndexDictionary<String, IConfigPropertyBase> dictionary))
+            if (Properties.TryGetValue(this, out IIndexMap<String, IReadOnlyConfigPropertyBase> dictionary))
             {
                 dictionary.Values.ToList().ForEach(action);
             }

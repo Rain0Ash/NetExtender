@@ -5,21 +5,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NetExtender.Config.Common;
-using NetExtender.Config.JSON;
+using NetExtender.Config.Json;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Types.Trees;
 using NetExtender.Utils.Formats;
 
-namespace NetExtender.Config.XML
+namespace NetExtender.Config.Xml
 {
-    public class XMLConfig : JSONConfig
+    public class XmlConfig : JsonConfig
     {
-        public XMLConfig(String path = null, ConfigOptions options = ConfigOptions.None)
+        public XmlConfig(String path = null, ConfigOptions options = ConfigOptions.None)
             : this(path, null, options)
         {
         }
         
-        public XMLConfig(String path, ICryptKey crypt, ConfigOptions options = ConfigOptions.None)
+        public XmlConfig(String path, ICryptKey crypt, ConfigOptions options = ConfigOptions.None)
             : base(ValidatePathOrGetDefault(path, "xml"), crypt, options)
         {
         }

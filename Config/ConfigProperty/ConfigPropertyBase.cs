@@ -142,22 +142,22 @@ namespace NetExtender.Config
 
         public void Dispose()
         {
-            if (!_disposed)
+            if (_disposed)
             {
-                Dispose(true);
+                return;
             }
+
+            Dispose(true);
+            GC.SuppressFinalize(this);
+            _disposed = true;
         }
 
-        public void Dispose(Boolean disposing)
+        protected void Dispose(Boolean disposing)
         {
             if (disposing)
             {
                 Config.RemoveProperty(this);
-                return;
             }
-
-            _disposed = true;
-            Dispose();
         }
     }
 }

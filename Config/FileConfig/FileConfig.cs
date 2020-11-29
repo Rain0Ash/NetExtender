@@ -3,13 +3,13 @@
 
 using System;
 using NetExtender.Config.Common;
-using NetExtender.Config.RAM;
+using NetExtender.Config.Ram;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Types.Trees;
 
 namespace NetExtender.Config.File
 {
-    public abstract class FileConfig : RAMConfig
+    public abstract class FileConfig : RamConfig
     {
         protected FileConfig(String path, ConfigOptions options)
             : this(path, null, options)

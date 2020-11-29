@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace NetExtender.Utils.Types
 {
@@ -36,6 +37,16 @@ namespace NetExtender.Utils.Types
 
     public static class StringUtils
     {
+        /// <summary>
+        /// Cached null string task
+        /// </summary>
+        public static Task<String> Null { get; } = Task.FromResult<String>(null);
+        
+        /// <summary>
+        /// Cached empty string task
+        /// </summary>
+        public static Task<String> Empty { get; } = Task.FromResult(String.Empty);
+        
         public const String DefaultSeparator = " ";
         
         public const String FormatVariableRegexPattern = @"\{([^\{\}]+)\}";
@@ -279,10 +290,10 @@ namespace NetExtender.Utils.Types
 
         public static String[] SplitByUpperCase(String str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            return SplitByUpperCaseEnumerable(str, options).ToArray();
+            return SplitByUpperCaseInternal(str, options).ToArray();
         }
 
-        private static IEnumerable<String> SplitByUpperCaseEnumerable(String str, StringSplitOptions options)
+        private static IEnumerable<String> SplitByUpperCaseInternal(String str, StringSplitOptions options)
         {
             if (String.IsNullOrEmpty(str))
             {
