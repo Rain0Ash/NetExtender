@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DynamicData.Annotations;
+using NetExtender.Types.Streams;
 
 namespace NetExtender.Utils.Types
 {
@@ -133,6 +134,46 @@ namespace NetExtender.Utils.Types
         public static Task StartCopyToAsync(this Stream input, Stream output, Int32 bufferSize, CancellationToken token)
         {
             return CopyToAsync(input, output, bufferSize, 0, token);
+        }
+        
+        public static BandwidthStream Bandwidth(this Stream stream, Int32 speed, InformationSize size)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            return new BandwidthStream(stream, speed, size);
+        }
+        
+        public static BandwidthStream<T> Bandwidth<T>(this T stream, Int32 speed, InformationSize size) where T : Stream
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            return new BandwidthStream<T>(stream, speed, size);
+        }
+        
+        public static BandwidthStream Bandwidth(this Stream stream, UInt64 speed = UInt64.MaxValue, InformationSize size = InformationSize.Byte)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+            
+            return new BandwidthStream(stream, speed, size);
+        }
+        
+        public static BandwidthStream<T> Bandwidth<T>(this T stream, UInt64 speed = UInt64.MaxValue, InformationSize size = InformationSize.Byte) where T : Stream
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+            
+            return new BandwidthStream<T>(stream, speed, size);
         }
 
         public static MemoryStream ToStream(this String str)

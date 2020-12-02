@@ -199,7 +199,7 @@ namespace NetExtender.Utils.IO
             {
                 if (!PathUtils.IsExistAsFile(file))
                 {
-                    return String.Empty;
+                    return null;
                 }
 
                 Boolean opened = false;
@@ -220,7 +220,6 @@ namespace NetExtender.Utils.IO
             }
             finally
             {
-                reader?.Close();
                 reader?.Dispose();
             }
         }
@@ -255,11 +254,11 @@ namespace NetExtender.Utils.IO
 
             if (!PathUtils.IsValidFilePath(path))
             {
-                throw new ArgumentException(nameof(path));
+                throw new ArgumentException(null, nameof(path));
             }
 
-            Boolean create = !PathUtils.IsExistAsFile(path);
-            if (!overwrite && !create)
+            Boolean exist = PathUtils.IsExistAsFile(path);
+            if (!overwrite && exist)
             {
                 throw new IOException($"File {path} already exist");
             }
@@ -289,7 +288,7 @@ namespace NetExtender.Utils.IO
                     // ignored
                 }
 
-                if (!create)
+                if (exist)
                 {
                     return null;
                 }
@@ -310,18 +309,18 @@ namespace NetExtender.Utils.IO
             return new FileInfo(path);
         }
 
-        public static Boolean CreateShortcut(String file, String dir)
+        public static Boolean CreateShortcut(String path, String directory)
         {
-            if (!PathUtils.IsExistAsFile(file))
+            if (!PathUtils.IsExistAsFile(path))
             {
                 return false;
             }
 
-            Shortcut shortcut = new Shortcut(Path.GetFileNameWithoutExtension(file) + ".lnk")
+            Shortcut shortcut = new Shortcut(Path.GetFileNameWithoutExtension(path) + ".lnk")
             {
-                TargetPath = file,
-                WorkingDirectory = Path.GetDirectoryName(file),
-                SaveDirectory = dir
+                TargetPath = path,
+                WorkingDirectory = Path.GetDirectoryName(path),
+                SaveDirectory = directory
             };
 
             try

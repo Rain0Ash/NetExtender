@@ -176,262 +176,467 @@ namespace NetExtender.Utils.Numerics
 			return (UInt64) (MathUtils.RoundBanking(value * max - value * min) + min);
 		}
 
-		public static IEnumerable<SByte> Range(SByte max, Int32 count = Int32.MaxValue)
+		public static SByte NextNonZeroSByte(SByte max = SByte.MaxValue)
 		{
-			return Range(SByte.MinValue, max, count);
+			return NextNonZeroSByte(SByte.MinValue, max);
 		}
 
-		public static IEnumerable<SByte> Range(SByte min, SByte max, Int32 count = Int32.MaxValue)
+		public static SByte NextNonZeroSByte(SByte min, SByte max)
 		{
-			if (count < 0)
-			{
-				throw new ArgumentException("Count can't be less than -1");
-			}
+			SByte value;
 
-			if (count == 0)
+			do
 			{
-				yield break;
-			}
+				value = NextSByte(min, max);
 
-			for (Int32 i = 0; i < count; i++)
-			{
-				yield return NextSByte(min, max);
-			}
+			} while (value == 0);
+
+			return value;
 		}
 
-		public static IEnumerable<Byte> Range(Byte max, Int32 count = Int32.MaxValue)
+		public static Byte NextNonZeroByte(Byte max = Byte.MaxValue)
 		{
-			return Range(Byte.MinValue, max, count);
+			return NextNonZeroByte(Byte.MinValue, max);
 		}
 
-		public static IEnumerable<Byte> Range(Byte min, Byte max, Int32 count = Int32.MaxValue)
+		public static Byte NextNonZeroByte(Byte min, Byte max)
 		{
-			if (count < 0)
-			{
-				throw new ArgumentException("Count can't be less than -1");
-			}
+			Byte value;
 
-			if (count == 0)
+			do
 			{
-				yield break;
-			}
+				value = NextByte(min, max);
 
-			for (Int32 i = 0; i < count; i++)
-			{
-				yield return NextByte(min, max);
-			}
+			} while (value == 0);
+
+			return value;
 		}
 
-		public static IEnumerable<Int16> Range(Int16 max, Int32 count = Int32.MaxValue)
+		public static Int16 NextNonZeroInt16(Int16 max = Int16.MaxValue)
 		{
-			return Range(Int16.MinValue, max, count);
+			return NextNonZeroInt16(Int16.MinValue, max);
 		}
 
-		public static IEnumerable<Int16> Range(Int16 min, Int16 max, Int32 count = Int32.MaxValue)
+		public static Int16 NextNonZeroInt16(Int16 min, Int16 max)
 		{
-			if (count < 0)
-			{
-				throw new ArgumentException("Count can't be less than -1");
-			}
+			Int16 value;
 
-			if (count == 0)
+			do
 			{
-				yield break;
-			}
+				value = NextInt16(min, max);
 
-			for (Int32 i = 0; i < count; i++)
-			{
-				yield return NextInt16(min, max);
-			}
+			} while (value == 0);
+
+			return value;
 		}
 
-		public static IEnumerable<UInt16> Range(UInt16 max, Int32 count = Int32.MaxValue)
+		public static UInt16 NextNonZeroUInt16(UInt16 max = UInt16.MaxValue)
 		{
-			return Range(UInt16.MinValue, max, count);
+			return NextNonZeroUInt16(UInt16.MinValue, max);
 		}
 
-		public static IEnumerable<UInt16> Range(UInt16 min, UInt16 max, Int32 count = Int32.MaxValue)
+		public static UInt16 NextNonZeroUInt16(UInt16 min, UInt16 max)
 		{
-			if (count < 0)
-			{
-				throw new ArgumentException("Count can't be less than -1");
-			}
+			UInt16 value;
 
-			if (count == 0)
+			do
 			{
-				yield break;
-			}
+				value = NextUInt16(min, max);
 
-			for (Int32 i = 0; i < count; i++)
-			{
-				yield return NextUInt16(min, max);
-			}
+			} while (value == 0);
+
+			return value;
 		}
 
-		public static IEnumerable<Int32> Range(Int32 count = Int32.MaxValue)
+		public static Int32 NextNonZeroInt32(Int32 max = Int32.MaxValue)
 		{
-			return Range(Int32.MinValue, Int32.MaxValue, count);
+			return NextNonZeroInt32(Int32.MinValue, max);
 		}
 
-		public static IEnumerable<Int32> Range(Int32 max, Int32 count)
+		public static Int32 NextNonZeroInt32(Int32 min, Int32 max)
 		{
-			return Range(Int32.MinValue, max, count);
+			Int32 value;
+
+			do
+			{
+				value = NextInt32(min, max);
+
+			} while (value == 0);
+
+			return value;
 		}
 
-		public static IEnumerable<Int32> Range(Int32 min, Int32 max, Int32 count)
+		public static UInt32 NextNonZeroUInt32(UInt32 max = UInt32.MaxValue)
 		{
-			if (count < 0)
-			{
-				throw new ArgumentException("Count can't be less than -1");
-			}
-
-			if (count == 0)
-			{
-				yield break;
-			}
-
-			for (Int32 i = 0; i < count; i++)
-			{
-				yield return NextInt32(min, max);
-			}
+			return NextNonZeroUInt32(UInt32.MinValue, max);
 		}
 
-		public static IEnumerable<UInt32> Range(UInt32 max, Int32 count = Int32.MaxValue)
+		public static UInt32 NextNonZeroUInt32(UInt32 min, UInt32 max)
 		{
-			return Range(UInt32.MinValue, max, count);
+			UInt32 value;
+
+			do
+			{
+				value = NextUInt32(min, max);
+
+			} while (value == 0);
+
+			return value;
 		}
 
-		public static IEnumerable<UInt32> Range(UInt32 min, UInt32 max, Int32 count = Int32.MaxValue)
+		public static Int64 NextNonZeroInt64(Int64 max = Int64.MaxValue)
 		{
-			if (count < 0)
-			{
-				throw new ArgumentException("Count can't be less than -1");
-			}
-
-			if (count == 0)
-			{
-				yield break;
-			}
-
-			for (Int32 i = 0; i < count; i++)
-			{
-				yield return NextUInt32(min, max);
-			}
+			return NextNonZeroInt64(Int64.MinValue, max);
 		}
 
-		public static IEnumerable<Int64> Range(Int64 max, Int32 count = Int32.MaxValue)
+		public static Int64 NextNonZeroInt64(Int64 min, Int64 max)
 		{
-			return Range(Int64.MinValue, max, count);
+			Int64 value;
+
+			do
+			{
+				value = NextInt64(min, max);
+
+			} while (value == 0);
+
+			return value;
 		}
 
-		public static IEnumerable<Int64> Range(Int64 min, Int64 max, Int32 count = Int32.MaxValue)
+		public static UInt64 NextNonZeroUInt64(UInt64 max = UInt64.MaxValue)
 		{
-			if (count < 0)
-			{
-				throw new ArgumentException("Count can't be less than -1");
-			}
-
-			if (count == 0)
-			{
-				yield break;
-			}
-
-			for (Int32 i = 0; i < count; i++)
-			{
-				yield return NextInt64(min, max);
-			}
+			return NextNonZeroUInt64(UInt64.MinValue, max);
 		}
 
-		public static IEnumerable<UInt64> Range(UInt64 max, Int32 count = Int32.MaxValue)
+		public static UInt64 NextNonZeroUInt64(UInt64 min, UInt64 max)
 		{
-			return Range(UInt64.MinValue, max, count);
+			UInt64 value;
+
+			do
+			{
+				value = NextUInt64(min, max);
+
+			} while (value == 0);
+
+			return value;
 		}
 
-		public static IEnumerable<UInt64> Range(UInt64 min, UInt64 max, Int32 count = Int32.MaxValue)
+		public static Single NextNonZeroSingle(Single max = Single.MaxValue)
 		{
-			if (count < 0)
-			{
-				throw new ArgumentException("Count can't be less than -1");
-			}
-
-			if (count == 0)
-			{
-				yield break;
-			}
-
-			for (Int32 i = 0; i < count; i++)
-			{
-				yield return NextUInt64(min, max);
-			}
+			return NextNonZeroSingle(Single.MinValue, max);
 		}
 
-		public static IEnumerable<Single> Range(Single max, Int32 count = Int32.MaxValue)
+		public static Single NextNonZeroSingle(Single min, Single max)
 		{
-			return Range(Single.MinValue, max, count);
+			Single value;
+
+			do
+			{
+				value = NextSingle(min, max);
+
+			} while (value == 0);
+
+			return value;
 		}
 
-		public static IEnumerable<Single> Range(Single min, Single max, Int32 count = Int32.MaxValue)
+		public static Double NextNonZeroDouble(Double max = Double.MaxValue)
 		{
-			if (count < 0)
-			{
-				throw new ArgumentException("Count can't be less than -1");
-			}
-
-			if (count == 0)
-			{
-				yield break;
-			}
-
-			for (Int32 i = 0; i < count; i++)
-			{
-				yield return NextSingle(min, max);
-			}
+			return NextNonZeroDouble(Double.MinValue, max);
 		}
 
-		public static IEnumerable<Double> Range(Double max, Int32 count = Int32.MaxValue)
+		public static Double NextNonZeroDouble(Double min, Double max)
 		{
-			return Range(Double.MinValue, max, count);
+			Double value;
+
+			do
+			{
+				value = NextDouble(min, max);
+
+			} while (value == 0);
+
+			return value;
 		}
 
-		public static IEnumerable<Double> Range(Double min, Double max, Int32 count = Int32.MaxValue)
+		public static Decimal NextNonZeroDecimal(Decimal max = Decimal.MaxValue)
 		{
-			if (count < 0)
-			{
-				throw new ArgumentException("Count can't be less than -1");
-			}
-
-			if (count == 0)
-			{
-				yield break;
-			}
-
-			for (Int32 i = 0; i < count; i++)
-			{
-				yield return NextDouble(min, max);
-			}
+			return NextNonZeroDecimal(Decimal.MinValue, max);
 		}
 
-		public static IEnumerable<Decimal> Range(Decimal max, Int32 count = Int32.MaxValue)
+		public static Decimal NextNonZeroDecimal(Decimal min, Decimal max)
 		{
-			return Range(Decimal.MinValue, max, count);
+			Decimal value;
+
+			do
+			{
+				value = NextDecimal(min, max);
+
+			} while (value == 0);
+
+			return value;
 		}
 
-		public static IEnumerable<Decimal> Range(Decimal min, Decimal max, Int32 count = Int32.MaxValue)
+		public static SByte NextSignSByte(Double chance = 0.5)
 		{
-			if (count < 0)
-			{
-				throw new ArgumentException("Count can't be less than -1");
-			}
+			return NextBoolean(chance) ? 1 : -1;
+		}
 
-			if (count == 0)
-			{
-				yield break;
-			}
+		public static Int16 NextSignInt16(Double chance = 0.5)
+		{
+			return NextBoolean(chance) ? 1 : -1;
+		}
 
-			for (Int32 i = 0; i < count; i++)
-			{
-				yield return NextDecimal(min, max);
-			}
+		public static Int32 NextSignInt32(Double chance = 0.5)
+		{
+			return NextBoolean(chance) ? 1 : -1;
+		}
+
+		public static Int64 NextSignInt64(Double chance = 0.5)
+		{
+			return NextBoolean(chance) ? 1 : -1;
+		}
+
+		public static Single NextSignSingle(Double chance = 0.5)
+		{
+			return NextBoolean(chance) ? 1 : -1;
+		}
+
+		public static Double NextSignDouble(Double chance = 0.5)
+		{
+			return NextBoolean(chance) ? 1 : -1;
+		}
+
+		public static Decimal NextSignDecimal(Double chance = 0.5)
+		{
+			return NextBoolean(chance) ? 1 : -1;
+		}
+
+		public static IEnumerable<SByte> SByteRange(SByte max, Int32 count = Int32.MaxValue)
+		{
+			return SByteRange(SByte.MinValue, max, count);
+		}
+
+		public static IEnumerable<SByte> SByteRange(SByte min, SByte max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextSByte);
+		}
+
+		public static IEnumerable<Byte> ByteRange(Byte max, Int32 count = Int32.MaxValue)
+		{
+			return ByteRange(Byte.MinValue, max, count);
+		}
+
+		public static IEnumerable<Byte> ByteRange(Byte min, Byte max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextByte);
+		}
+
+		public static IEnumerable<Int16> Int16Range(Int16 max, Int32 count = Int32.MaxValue)
+		{
+			return Int16Range(Int16.MinValue, max, count);
+		}
+
+		public static IEnumerable<Int16> Int16Range(Int16 min, Int16 max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextInt16);
+		}
+
+		public static IEnumerable<UInt16> UInt16Range(UInt16 max, Int32 count = Int32.MaxValue)
+		{
+			return UInt16Range(UInt16.MinValue, max, count);
+		}
+
+		public static IEnumerable<UInt16> UInt16Range(UInt16 min, UInt16 max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextUInt16);
+		}
+
+		public static IEnumerable<Int32> Int32Range(Int32 count = Int32.MaxValue)
+		{
+			return Int32Range(Int32.MinValue, Int32.MaxValue, count);
+		}
+
+		public static IEnumerable<Int32> Int32Range(Int32 max, Int32 count)
+		{
+			return Int32Range(Int32.MinValue, max, count);
+		}
+
+		public static IEnumerable<Int32> Int32Range(Int32 min, Int32 max, Int32 count)
+		{
+			return Range(min, max, count, NextInt32);
+		}
+
+		public static IEnumerable<UInt32> UInt32Range(UInt32 max, Int32 count = Int32.MaxValue)
+		{
+			return UInt32Range(UInt32.MinValue, max, count);
+		}
+
+		public static IEnumerable<UInt32> UInt32Range(UInt32 min, UInt32 max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextUInt32);
+		}
+
+		public static IEnumerable<Int64> Int64Range(Int64 max, Int32 count = Int32.MaxValue)
+		{
+			return Int64Range(Int64.MinValue, max, count);
+		}
+
+		public static IEnumerable<Int64> Int64Range(Int64 min, Int64 max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextInt64);
+		}
+
+		public static IEnumerable<UInt64> UInt64Range(UInt64 max, Int32 count = Int32.MaxValue)
+		{
+			return UInt64Range(UInt64.MinValue, max, count);
+		}
+
+		public static IEnumerable<UInt64> UInt64Range(UInt64 min, UInt64 max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextUInt64);
+		}
+
+		public static IEnumerable<Single> SingleRange(Single max, Int32 count = Int32.MaxValue)
+		{
+			return SingleRange(Single.MinValue, max, count);
+		}
+
+		public static IEnumerable<Single> SingleRange(Single min, Single max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextSingle);
+		}
+
+		public static IEnumerable<Double> DoubleRange(Double max, Int32 count = Int32.MaxValue)
+		{
+			return DoubleRange(Double.MinValue, max, count);
+		}
+
+		public static IEnumerable<Double> DoubleRange(Double min, Double max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextDouble);
+		}
+
+		public static IEnumerable<Decimal> DecimalRange(Decimal max, Int32 count = Int32.MaxValue)
+		{
+			return DecimalRange(Decimal.MinValue, max, count);
+		}
+
+		public static IEnumerable<Decimal> DecimalRange(Decimal min, Decimal max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextDecimal);
+		}
+
+		public static IEnumerable<SByte> SByteNonZeroRange(SByte max, Int32 count = Int32.MaxValue)
+		{
+			return SByteNonZeroRange(SByte.MinValue, max, count);
+		}
+
+		public static IEnumerable<SByte> SByteNonZeroRange(SByte min, SByte max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextNonZeroSByte);
+		}
+
+		public static IEnumerable<Byte> ByteNonZeroRange(Byte max, Int32 count = Int32.MaxValue)
+		{
+			return ByteNonZeroRange(Byte.MinValue, max, count);
+		}
+
+		public static IEnumerable<Byte> ByteNonZeroRange(Byte min, Byte max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextNonZeroByte);
+		}
+
+		public static IEnumerable<Int16> Int16NonZeroRange(Int16 max, Int32 count = Int32.MaxValue)
+		{
+			return Int16NonZeroRange(Int16.MinValue, max, count);
+		}
+
+		public static IEnumerable<Int16> Int16NonZeroRange(Int16 min, Int16 max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextNonZeroInt16);
+		}
+
+		public static IEnumerable<UInt16> UInt16NonZeroRange(UInt16 max, Int32 count = Int32.MaxValue)
+		{
+			return UInt16NonZeroRange(UInt16.MinValue, max, count);
+		}
+
+		public static IEnumerable<UInt16> UInt16NonZeroRange(UInt16 min, UInt16 max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextNonZeroUInt16);
+		}
+
+		public static IEnumerable<Int32> Int32NonZeroRange(Int32 count = Int32.MaxValue)
+		{
+			return Int32NonZeroRange(Int32.MinValue, Int32.MaxValue, count);
+		}
+
+		public static IEnumerable<Int32> Int32NonZeroRange(Int32 max, Int32 count)
+		{
+			return Int32NonZeroRange(Int32.MinValue, max, count);
+		}
+
+		public static IEnumerable<Int32> Int32NonZeroRange(Int32 min, Int32 max, Int32 count)
+		{
+			return Range(min, max, count, NextNonZeroInt32);
+		}
+
+		public static IEnumerable<UInt32> UInt32NonZeroRange(UInt32 max, Int32 count = Int32.MaxValue)
+		{
+			return UInt32NonZeroRange(UInt32.MinValue, max, count);
+		}
+
+		public static IEnumerable<UInt32> UInt32NonZeroRange(UInt32 min, UInt32 max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextNonZeroUInt32);
+		}
+
+		public static IEnumerable<Int64> Int64NonZeroRange(Int64 max, Int32 count = Int32.MaxValue)
+		{
+			return Int64NonZeroRange(Int64.MinValue, max, count);
+		}
+
+		public static IEnumerable<Int64> Int64NonZeroRange(Int64 min, Int64 max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextNonZeroInt64);
+		}
+
+		public static IEnumerable<UInt64> UInt64NonZeroRange(UInt64 max, Int32 count = Int32.MaxValue)
+		{
+			return UInt64NonZeroRange(UInt64.MinValue, max, count);
+		}
+
+		public static IEnumerable<UInt64> UInt64NonZeroRange(UInt64 min, UInt64 max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextNonZeroUInt64);
+		}
+
+		public static IEnumerable<Single> SingleNonZeroRange(Single max, Int32 count = Int32.MaxValue)
+		{
+			return SingleNonZeroRange(Single.MinValue, max, count);
+		}
+
+		public static IEnumerable<Single> SingleNonZeroRange(Single min, Single max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextNonZeroSingle);
+		}
+
+		public static IEnumerable<Double> DoubleNonZeroRange(Double max, Int32 count = Int32.MaxValue)
+		{
+			return DoubleNonZeroRange(Double.MinValue, max, count);
+		}
+
+		public static IEnumerable<Double> DoubleNonZeroRange(Double min, Double max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextNonZeroDouble);
+		}
+
+		public static IEnumerable<Decimal> DecimalNonZeroRange(Decimal max, Int32 count = Int32.MaxValue)
+		{
+			return DecimalNonZeroRange(Decimal.MinValue, max, count);
+		}
+
+		public static IEnumerable<Decimal> DecimalNonZeroRange(Decimal min, Decimal max, Int32 count = Int32.MaxValue)
+		{
+			return Range(min, max, count, NextNonZeroDecimal);
 		}
     }  
 }

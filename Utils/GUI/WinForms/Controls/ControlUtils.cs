@@ -19,31 +19,43 @@ namespace NetExtender.Utils.GUI.WinForms.Controls
     public static class ControlUtils
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetPosition(this Control control, Int32 x, Int32 y)
+        {
+            SetPosition(control, new Point(x, y));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetPosition(this Control control, Point point)
         {
             control.Location = point;
         }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetPosition(this Control control, Form relative, Int32 distance = GUIUtils.Distance)
+        public static void SetPosition(this Control control, Control x, Control y)
         {
-            SetPosition(control, relative, distance, distance);
+            SetPosition(control, new Point(x.Location.X, y.Location.Y));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetPosition(this Control control, Form relative, Int32 distanceX, Int32 distanceY)
+        public static void SetPositionInner(this Control control, Control relative, Int32 distance = GUIUtils.Distance)
         {
-            SetPosition(control, relative, PointOffset.UpLeft, distanceX, distanceY);
+            SetPositionInner(control, relative, distance, distance);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetPosition(this Control control, Form relative, PointOffset offset, Int32 distance = GUIUtils.Distance)
+        public static void SetPositionInner(this Control control, Control relative, Int32 distanceX, Int32 distanceY)
         {
-            SetPosition(control, relative, offset, distance, distance);
+            SetPositionInner(control, relative, PointOffset.UpLeft, distanceX, distanceY);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetPosition(this Control control, Form relative, PointOffset offset, Int32 distanceX, Int32 distanceY)
+        public static void SetPositionInner(this Control control, Control relative, PointOffset offset, Int32 distance = GUIUtils.Distance)
+        {
+            SetPositionInner(control, relative, offset, distance, distance);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetPositionInner(this Control control, Control relative, PointOffset offset, Int32 distanceX, Int32 distanceY)
         {
             control.Location = offset switch
             {
@@ -61,26 +73,20 @@ namespace NetExtender.Utils.GUI.WinForms.Controls
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetPosition(this Control control, Control relative, Int32 distance = GUIUtils.Distance)
+        public static void SetPositionOuter(this Control control, Control relative, Int32 distance = GUIUtils.Distance)
         {
-            SetPosition(control, relative, PointOffset.Right, distance);
+            SetPositionOuter(control, relative, PointOffset.Right, distance);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetPosition(this Control control, Control relative, HorizontalAlignment alignment, Int32 distance = GUIUtils.Distance)
+        public static void SetPositionOuter(this Control control, Control relative, HorizontalAlignment alignment, Int32 distance = GUIUtils.Distance)
         {
-            SetPosition(control, relative, PointOffset.Right, alignment, distance);
+            SetPositionOuter(control, relative, PointOffset.Right, alignment, distance);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetPosition(this Control control, Control relative, PointOffset offset, Int32 distance = GUIUtils.Distance)
+        public static void SetPositionOuter(this Control control, Control relative, PointOffset offset, Int32 distance = GUIUtils.Distance)
         {
-            if (relative is Form form)
-            {
-                SetPosition(control, form, offset, distance);
-                return;
-            }
-            
             control.Location = offset switch
             {
                 PointOffset.None => control.Location,
@@ -96,14 +102,8 @@ namespace NetExtender.Utils.GUI.WinForms.Controls
             };
         }
 
-        public static void SetPosition(this Control control, Control relative, PointOffset offset, HorizontalAlignment alignment, Int32 distance = GUIUtils.Distance)
+        public static void SetPositionOuter(this Control control, Control relative, PointOffset offset, HorizontalAlignment alignment, Int32 distance = GUIUtils.Distance)
         {
-            if (relative is Form form)
-            {
-                SetPosition(control, form, offset, distance);
-                return;
-            }
-            
             control.Location = offset switch
             {
                 PointOffset.None => control.Location,
@@ -142,11 +142,65 @@ namespace NetExtender.Utils.GUI.WinForms.Controls
                 _ => throw new NotSupportedException()
             };
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetPosition(this Control control, Control relative, Int32 distance = GUIUtils.Distance)
+        {
+            SetPosition(control, relative, PointOffset.Right, distance);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetPosition(this Control control, Control relative, HorizontalAlignment alignment, Int32 distance = GUIUtils.Distance)
+        {
+            SetPosition(control, relative, PointOffset.Right, alignment, distance);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetPosition(this Control control, Control x, Control y)
+        public static void SetPosition(this Control control, Control relative, PointOffset offset, Int32 distance = GUIUtils.Distance)
         {
-            control.Location = new Point(x.Location.X, y.Location.Y);
+            if (relative is Form form)
+            {
+                SetPositionInner(control, form, offset, distance);
+                return;
+            }
+            
+            SetPositionOuter(control, relative, offset, distance);
+        }
+
+        public static void SetPosition(this Control control, Control relative, PointOffset offset, HorizontalAlignment alignment, Int32 distance = GUIUtils.Distance)
+        {
+            if (relative is Form form)
+            {
+                SetPositionInner(control, form, offset, distance);
+                return;
+            }
+            
+            SetPositionOuter(control, relative, offset, alignment, distance);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetSize(this Control control, Int32 size, ControlSizeType type)
+        {
+            switch (type)
+            {
+                case ControlSizeType.Both:
+                    SetSize(control, size, size);
+                    break;
+                case ControlSizeType.Width:
+                    SetSize(control, size, control.Size.Height);
+                    break;
+                case ControlSizeType.Height:
+                    SetSize(control, control.Size.Width, size);
+                    break;
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetSize(this Control control, Int32 width, Int32 height)
+        {
+            SetSize(control, new Size(width, height));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -154,54 +208,61 @@ namespace NetExtender.Utils.GUI.WinForms.Controls
         {
             control.Size = size;
         }
-
-        //TODO: от текущей позиции до конца формы согласно Size Type + distance от конца формы, оставшуюся координату можно задать. Если координата не задана - использовать квадрат.
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetSize(this Control control, Form relative)
-        {
-            
-        }
-        
-        //TODO: сделать возможность постоянной привязки позиции, на подобии CancellationRegistrationToken
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetSize(this Control control, Control relative)
-        {
-            if (relative is Form form)
-            {
-                SetSize(control, form);
-                return;
-            }
-            
-            SetSize(control, relative.Size);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetSize(this Control control, Control relative, ControlSizeType type)
-        {
-            if (relative is Form form)
-            {
-                return;
-            }
-            
-            switch (type)
-            {
-                case ControlSizeType.Both:
-                    SetSize(control, relative);
-                    break;
-                case ControlSizeType.Width:
-                    control.Size = new Size(relative.Size.Width, control.Size.Height);
-                    break;
-                case ControlSizeType.Height:
-                    control.Size = new Size(control.Size.Width, relative.Size.Height);
-                    break;
-                default:
-                    throw new NotSupportedException();
-            }
-        }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetSize(this Control control, Control width, Control height)
+        {
+            SetSizeOuter(control, width, height);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetSize(this Control control, Control relative, ControlSizeType type = ControlSizeType.Both)
+        {
+            if (relative is Form form)
+            {
+                SetSizeInner(control, form, type);
+                return;
+            }
+            
+            SetSizeOuter(control, relative, type);
+        }
+
+        //TODO: от текущей позиции до конца формы согласно Size Type + distance от конца формы, оставшуюся координату можно задать. Если координата не задана - использовать квадрат.
+
+        //TODO: сделать возможность постоянной привязки позиции, на подобии CancellationRegistrationToken
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetSizeInner(this Control control, Control relative, ControlSizeType type = ControlSizeType.Both)
+        {
+            control.Size = type switch
+            {
+                ControlSizeType.Both => relative.ClientSize,
+                ControlSizeType.Width => new Size(relative.ClientSize.Width, control.ClientSize.Height),
+                ControlSizeType.Height => new Size(control.ClientSize.Width, relative.ClientSize.Height),
+                _ => throw new NotSupportedException()
+            };
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetSizeInner(this Control control, Control width, Control height)
+        {
+            control.Size = new Size(width.ClientSize.Width, height.ClientSize.Height);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetSizeOuter(this Control control, Control relative, ControlSizeType type = ControlSizeType.Both)
+        {
+            control.Size = type switch
+            {
+                ControlSizeType.Both => relative.Size,
+                ControlSizeType.Width => new Size(relative.Size.Width, control.Size.Height),
+                ControlSizeType.Height => new Size(control.Size.Width, relative.Size.Height),
+                _ => throw new NotSupportedException()
+            };
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetSizeOuter(this Control control, Control width, Control height)
         {
             control.Size = new Size(width.Size.Width, height.Size.Height);
         }

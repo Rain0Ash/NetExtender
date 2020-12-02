@@ -170,6 +170,10 @@
         <Generator>TextTemplatingFileGenerator</Generator>
         <LastGenOutput>GenericMathUtils.cs</LastGenOutput>
       </None>
+      <None Update="Utils\Numerics\GenericRandomUtils.tt">
+        <Generator>TextTemplatingFileGenerator</Generator>
+        <LastGenOutput>GenericRandomUtils.cs</LastGenOutput>
+      </None>
     </ItemGroup>
 
 </Project>

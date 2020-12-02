@@ -28,6 +28,35 @@ namespace NetExtender.Utils.GUI
             return new MessageForm(str.GetString(), title?.GetString(), icon, messageIcon, buttons).ShowDialog();
         }
 
+        public static Boolean ToBoolean(this MessageBoxResult value)
+        {
+            return value switch
+            {
+                MessageBoxResult.None => false,
+                MessageBoxResult.OK => true,
+                MessageBoxResult.Cancel => false,
+                MessageBoxResult.Yes => true,
+                MessageBoxResult.No => false,
+                _ => throw new NotSupportedException()
+            };
+        }
+        
+        public static Boolean ToBoolean(this DialogResult value)
+        {
+            return value switch
+            {
+                DialogResult.None => false,
+                DialogResult.OK => true,
+                DialogResult.Cancel => false,
+                DialogResult.Abort => false,
+                DialogResult.Retry => true,
+                DialogResult.Ignore => false,
+                DialogResult.Yes => true,
+                DialogResult.No => false,
+                _ => throw new NotSupportedException()
+            };
+        }
+
         [DllImport("user32.dll", SetLastError = true)]
         private static extern UInt32 GetWindowThreadProcessId(IntPtr hWnd, out UInt32 lpdwProcessId);
 

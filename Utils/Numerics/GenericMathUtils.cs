@@ -2765,67 +2765,67 @@ namespace NetExtender.Utils.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static SByte ZeroCheck(this SByte value, SByte alternate = 1)
+		public static SByte ToNonZero(this SByte value, SByte alternate = 1)
 		{
 			return value == 0 ? alternate : value;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Byte ZeroCheck(this Byte value, Byte alternate = 1)
+		public static Byte ToNonZero(this Byte value, Byte alternate = 1)
 		{
 			return value == 0 ? alternate : value;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Int16 ZeroCheck(this Int16 value, Int16 alternate = 1)
+		public static Int16 ToNonZero(this Int16 value, Int16 alternate = 1)
 		{
 			return value == 0 ? alternate : value;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static UInt16 ZeroCheck(this UInt16 value, UInt16 alternate = 1)
+		public static UInt16 ToNonZero(this UInt16 value, UInt16 alternate = 1)
 		{
 			return value == 0 ? alternate : value;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Int32 ZeroCheck(this Int32 value, Int32 alternate = 1)
+		public static Int32 ToNonZero(this Int32 value, Int32 alternate = 1)
 		{
 			return value == 0 ? alternate : value;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static UInt32 ZeroCheck(this UInt32 value, UInt32 alternate = 1)
+		public static UInt32 ToNonZero(this UInt32 value, UInt32 alternate = 1)
 		{
 			return value == 0 ? alternate : value;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Int64 ZeroCheck(this Int64 value, Int64 alternate = 1)
+		public static Int64 ToNonZero(this Int64 value, Int64 alternate = 1)
 		{
 			return value == 0 ? alternate : value;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static UInt64 ZeroCheck(this UInt64 value, UInt64 alternate = 1)
+		public static UInt64 ToNonZero(this UInt64 value, UInt64 alternate = 1)
 		{
 			return value == 0 ? alternate : value;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Single ZeroCheck(this Single value, Single alternate = 1)
+		public static Single ToNonZero(this Single value, Single alternate = 1)
 		{
 			return IsEpsilon(value) ? alternate : value;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Double ZeroCheck(this Double value, Double alternate = 1)
+		public static Double ToNonZero(this Double value, Double alternate = 1)
 		{
 			return IsEpsilon(value) ? alternate : value;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Decimal ZeroCheck(this Decimal value, Decimal alternate = 1)
+		public static Decimal ToNonZero(this Decimal value, Decimal alternate = 1)
 		{
 			return value == 0 ? alternate : value;
 		}

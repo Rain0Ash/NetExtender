@@ -167,7 +167,7 @@ namespace NetExtender.GUI.WinForms.Labels
 
         private String EvaluateAndFill(Int32 multiply)
         {
-            Decimal value = (CurrentValue / MaximumValue.ZeroCheck() * multiply).Round(PercentFractionalCount, Round);
+            Decimal value = (CurrentValue / MaximumValue.ToNonZero() * multiply).Round(PercentFractionalCount, Round);
             
             Int32 digits = value.GetDigitsCountAfterPoint();
 

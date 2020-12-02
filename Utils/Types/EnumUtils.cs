@@ -117,6 +117,26 @@ namespace NetExtender.Utils.Types
         {
             return CacheValues<T>.Values;
         }
+        
+        /// <summary>
+        ///     Retrieves an array of the values of the constants in a specified enumeration.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        public static IReadOnlyList<T> GetValues<T>(Boolean @default) where T : unmanaged, Enum
+        {
+            return @default ? GetValues<T>() : GetValuesWithoutDefault<T>();
+        }
+
+        /// <summary>
+        ///     Retrieves an array of the values (exclude default values) of the constants in a specified enumeration.
+        /// </summary>
+        /// <typeparam name="T">Enum type</typeparam>
+        /// <returns></returns>
+        public static IReadOnlyList<T> GetValuesWithoutDefault<T>() where T : unmanaged, Enum
+        {
+            return CacheValuesWithoutDefault<T>.Values;
+        }
 
         /// <summary>
         ///     Retrieves an array of the names of the constants in a specified enumeration.
@@ -744,6 +764,18 @@ namespace NetExtender.Utils.Types
                 T[] values = Enum.GetValues(type) as T[] ?? throw new ArgumentException(nameof(T));
                 Values = values.ToReadOnlyArray();
                 IsEmpty = values.Length == 0;
+            }
+        }
+        
+        private static class CacheValuesWithoutDefault<T> where T : unmanaged, Enum
+        {
+            public static readonly ReadOnlyArray<T> Values;
+            public static readonly Boolean IsEmpty;
+
+            static CacheValuesWithoutDefault()
+            {
+                Values = CacheValues<T>.Values.Where(GenericUtils.IsNotDefault).ToReadOnlyArray();
+                IsEmpty = Values.Count <= 0;
             }
         }
 

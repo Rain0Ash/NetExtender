@@ -55,6 +55,28 @@ namespace NetExtender.Utils.Types
                 }
             }
         }
+
+        public static IEnumerable<(Int32 counter, T item)> Enumerate<T>(this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            Int32 counter = 0;
+            return source.Select(item => (counter++, item));
+        }
+        
+        public static IEnumerable<(Int64 counter, T item)> LongEnumerate<T>(this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            Int64 counter = 0;
+            return source.Select(item => (counter++, item));
+        }
         
         public static IEnumerable<T> Append<T>(this IEnumerable<T> source, IEnumerable<T> additional)
         {

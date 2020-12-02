@@ -11,8 +11,13 @@ namespace NetExtender.Types.Arrays
     /// Provides the readonly array.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public sealed class ReadOnlyArray<T> : IReadOnlyList<T>
+    public sealed class ReadOnlyArray<T> : ReadOnlyArray, IReadOnlyList<T>
     {
+        public static implicit operator ReadOnlySpan<T>(ReadOnlyArray<T> array)
+        {
+            return array._source;
+        }
+
         private readonly T[] _source;
 
         /// <summary>
@@ -165,6 +170,19 @@ namespace NetExtender.Types.Arrays
             public void Dispose()
             {
             }
+        }
+    }
+
+    public abstract class ReadOnlyArray
+    {
+        private static class EmptyArray<T>
+        {
+            public static readonly ReadOnlyArray<T> Value = new ReadOnlyArray<T>(Array.Empty<T>());
+        }
+
+        public static ReadOnlyArray<T> Empty<T>()
+        {
+            return EmptyArray<T>.Value;
         }
     }
 }

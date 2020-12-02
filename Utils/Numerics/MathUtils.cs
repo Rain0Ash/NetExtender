@@ -1548,15 +1548,15 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static BigInteger ZeroCheck(this BigInteger value)
+        public static BigInteger ToNonZero(this BigInteger value)
         {
-            return ZeroCheck(value, BigInteger.One);
+            return ToNonZero(value, BigInteger.One);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static BigInteger ZeroCheck(this BigInteger value, BigInteger alternate)
+        public static BigInteger ToNonZero(this BigInteger value, BigInteger alternate)
         {
-            return value == 0 ? alternate : value;
+            return value == BigInteger.Zero ? alternate : value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

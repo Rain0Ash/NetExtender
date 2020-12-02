@@ -703,10 +703,10 @@ namespace NetExtender.Utils.Numerics
         ForEach(types.Where(type => IsIntType(type) && type != nameof(Char)), ToRadiansFunc);
     }
 
-    void ZeroCheckFunc(String type)
+    void ToNonZeroFunc(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-        WriteLine($"\t\tpublic static {type} ZeroCheck(this {type} value, {type} alternate = 1)");
+        WriteLine($"\t\tpublic static {type} ToNonZero(this {type} value, {type} alternate = 1)");
         WriteLine("\t\t{");
         if (IsIntType(type) || type == nameof(Decimal))
         {
@@ -720,9 +720,9 @@ namespace NetExtender.Utils.Numerics
         WriteLine("\t\t}");
     }
     
-    void ZeroCheck()
+    void ToNonZero()
     {
-        ForEach(types.Where(NotChar), ZeroCheckFunc);
+        ForEach(types.Where(NotChar), ToNonZeroFunc);
     }
 
     void MeanFunc(String type)
@@ -909,7 +909,7 @@ namespace NetExtender.Utils.Numerics
     WriteLine(String.Empty);
     ToRadians();
     WriteLine(String.Empty);
-    ZeroCheck();
+    ToNonZero();
     WriteLine(String.Empty);
     Mean();
     WriteLine(String.Empty);

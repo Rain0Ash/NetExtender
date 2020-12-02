@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using NetExtender.Random;
 
 namespace NetExtender.Utils.Numerics
@@ -88,6 +89,27 @@ namespace NetExtender.Utils.Numerics
             }
             
             return NextDouble() <= chance;
+        }
+        
+        private static IEnumerable<T> Range<T>(T min, T max, Int32 count, Func<T, T, T> generator)
+        {
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
+            switch (count)
+            {
+                case < 0:
+                    throw new ArgumentException("Count can't be less than -1");
+                case 0:
+                    yield break;
+            }
+
+            for (Int32 i = 0; i < count; i++)
+            {
+                yield return generator(min, max);
+            }
         }
     }
 }
