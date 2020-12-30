@@ -7,12 +7,6 @@ namespace NetExtender.Utils.OS
 {
     public static class CompabilityUtils
     {
-        public static Boolean IsRunningOnMono
-        {
-            get
-            {
-                return Type.GetType("Mono.Runtime") is not null;
-            }
-        }
+        public static Boolean IsRunningOnMono { get; } = Type.GetType("Mono.Runtime") is not null;
     }
 }

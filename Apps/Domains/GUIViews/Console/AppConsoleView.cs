@@ -14,7 +14,7 @@ namespace NetExtender.Apps.Domains.GUIViews.Console
         {
             Domain.ShutdownMode = ShutdownMode.OnExplicitShutdown;
             ConsoleUtils.CancelKeyPress += ExitHandle;
-            ConsoleUtils.IsVTCodeEnabled = true;
+            ConsoleUtils.VTCode = true;
         }
 
         protected virtual void ExitHandle(Object sender, ConsoleCancelEventArgs e)

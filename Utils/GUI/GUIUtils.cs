@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Forms;
+using NetExtender.GUI;
 using NetExtender.Utils.Types;
 using NetExtender.Utils.WPF;
 using NetExtender.GUI.Common.Interfaces;
@@ -80,6 +81,16 @@ namespace NetExtender.Utils.GUI
 
         [DllImport("user32.dll")]
         private static extern Boolean ShowWindow(IntPtr hWnd, UInt32 nCmdShow);
+
+        public static Boolean ShowWindow(IntPtr handle, WindowStateType state)
+        {
+            return ShowWindow(handle, (UInt32) state);
+        }
+        
+        public static Boolean ShowWindow(this IWindow window, WindowStateType state)
+        {
+            return ShowWindow(window.Handle, state);
+        }
 
         private static Boolean Bring(IntPtr hWnd)
         {

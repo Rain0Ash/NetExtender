@@ -2,7 +2,9 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -251,6 +253,27 @@ namespace NetExtender.Utils.Types
             return reader.ReadToEndAsync();
         }
 
+        public static T SetPosition<T>(this T stream) where T : Stream
+        {
+            return ResetPosition(stream);
+        }
+        
+        public static T ResetPosition<T>(this T stream) where T : Stream
+        {
+            return SetPosition(stream, 0);
+        }
+        
+        public static T SetPosition<T>(this T stream, Int64 position) where T : Stream
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            stream.Position = position;
+            return stream;
+        }
+
         public static Boolean TrySetPosition(this Stream stream, Int64 position)
         {
             if (stream is null)
@@ -272,6 +295,17 @@ namespace NetExtender.Utils.Types
             {
                 return false;
             }
+        }
+        
+        public static T SeekPosition<T>(this T stream, Int64 offset, SeekOrigin origin = SeekOrigin.Begin) where T : Stream
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            stream.Seek(offset, origin);
+            return stream;
         }
         
         public static Boolean TrySeek(this Stream stream, Int64 offset, SeekOrigin origin = SeekOrigin.Begin)
@@ -298,7 +332,7 @@ namespace NetExtender.Utils.Types
         }
 
         private const Int32 DefaultBufferSize = 1024;
-
+        
         /// <summary>
         /// Wraps <paramref name="stream" /> with <see cref="StreamReader" />.
         /// </summary>
@@ -306,7 +340,7 @@ namespace NetExtender.Utils.Types
         /// <param name="encoding">The character encoding to use.</param>
         /// <param name="leaveOpen">true to leave the stream open after the <see cref="StreamReader" /> object is disposed; otherwise, false.</param>
         [NotNull]
-        public static StreamReader ToStreamReader([NotNull] this Stream stream, [CanBeNull] Encoding encoding = null, Boolean leaveOpen = false)
+        public static StreamReader ToStreamReader([NotNull] this Stream stream, Encoding encoding, Boolean leaveOpen = false)
         {
             return new StreamReader(stream, encoding ?? Encoding.UTF8, true, DefaultBufferSize, leaveOpen);
         }
@@ -355,9 +389,36 @@ namespace NetExtender.Utils.Types
         [NotNull]
         public static String ReadAsString([NotNull] this Stream stream, [CanBeNull] Encoding encoding = null)
         {
-            // DO NOT dispose the reader
             using StreamReader reader = stream.ToStreamReader(encoding, true);
             return reader.ReadToEnd();
+        }
+
+        /// <summary>
+        /// Returns content of the stream as a byte array.
+        /// </summary>
+        /// <param name="stream">The stream to read.</param>
+        /// <param name="encoding">The character encoding to use.</param>
+        [NotNull]
+        public static String[] ReadAsLines([NotNull] this Stream stream, [CanBeNull] Encoding encoding = null)
+        {
+            return ReadAsSequential(stream, encoding).ToArray();
+        }
+        
+        /// <summary>
+        /// Returns content of the stream as a byte array.
+        /// </summary>
+        /// <param name="stream">The stream to read.</param>
+        /// <param name="encoding">The character encoding to use.</param>
+        [NotNull]
+        public static IEnumerable<String> ReadAsSequential([NotNull] this Stream stream, [CanBeNull] Encoding encoding = null)
+        {
+            using StreamReader reader = stream.ToStreamReader(encoding, true);
+
+            String line;
+            while((line = reader.ReadLine()) is not null)
+            {
+                yield return line;
+            }
         }
 
         /// <summary>
@@ -368,12 +429,8 @@ namespace NetExtender.Utils.Types
         [NotNull]
         public static async Task<String> ReadAsStringAsync([NotNull] this Stream stream, [CanBeNull] Encoding encoding = null)
         {
-            // DO NOT dispose the reader
-            // ReSharper disable once ConvertToUsingDeclaration
-            using (StreamReader reader = stream.ToStreamReader(encoding, true))
-            {
-                return await reader.ReadToEndAsync().ConfigureAwait(false);
-            }
+            using StreamReader reader = stream.ToStreamReader(encoding, true);
+            return await reader.ReadToEndAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -383,10 +440,11 @@ namespace NetExtender.Utils.Types
         [NotNull]
         public static Byte[] ReadAsByteArray([NotNull] this Stream stream)
         {
-            // DO NOT dispose the reader
             using BinaryReader reader = stream.ToBinaryReader(null, true);
-            Int32 readCount = checked((Int32) (stream.Length - stream.Position));
-            return reader.ReadBytes(readCount);
+            
+            Int32 count = checked((Int32) (stream.Length - stream.Position));
+            
+            return reader.ReadBytes(count);
         }
     }
 }

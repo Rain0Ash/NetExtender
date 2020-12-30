@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.AccessControl;
@@ -142,7 +143,7 @@ namespace NetExtender.Utils.IO
 
         public static Byte[] ReadFileBytes(String path)
         {
-            return PathUtils.IsExistAsFile(path) ? File.ReadAllBytes(path) : null;
+            return File.ReadAllBytes(path);
         }
 
         public static Byte[] TryReadFileBytes(String path)
@@ -156,10 +157,29 @@ namespace NetExtender.Utils.IO
                 return null;
             }
         }
+        
+        public static Boolean TryReadFileBytes(String path, out Byte[] result)
+        {
+            try
+            {
+                result = ReadFileBytes(path);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
 
         public static String ReadFileText(String path)
         {
-            return PathUtils.IsExistAsFile(path) ? File.ReadAllText(path) : null;
+            return File.ReadAllText(path);
+        }
+        
+        public static String ReadFileText(String path, Encoding encoding)
+        {
+            return encoding is null ? ReadFileText(path) : File.ReadAllText(path, encoding);
         }
 
         public static String TryReadFileText(String path)
@@ -173,10 +193,55 @@ namespace NetExtender.Utils.IO
                 return null;
             }
         }
+        
+        public static String TryReadFileText(String path, Encoding encoding)
+        {
+            try
+            {
+                return ReadFileText(path, encoding);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        
+        public static Boolean TryReadFileText(String path, out String result)
+        {
+            try
+            {
+                result = ReadFileText(path);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        public static Boolean TryReadFileText(String path, Encoding encoding, out String result)
+        {
+            try
+            {
+                result = ReadFileText(path, encoding);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
 
         public static String[] ReadFileLines(String path)
         {
-            return PathUtils.IsExistAsFile(path) ? File.ReadAllLines(path) : null;
+            return File.ReadAllLines(path);
+        }
+        
+        public static String[] ReadFileLines(String path, Encoding encoding)
+        {
+            return encoding is null ? ReadFileLines(path) : File.ReadAllLines(path, encoding);
         }
         
         public static String[] TryReadFileLines(String path)
@@ -190,7 +255,127 @@ namespace NetExtender.Utils.IO
                 return null;
             }
         }
+        
+        public static String[] TryReadFileLines(String path, Encoding encoding)
+        {
+            try
+            {
+                return ReadFileLines(path, encoding);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        
+        public static Boolean TryReadFileLines(String path, out String[] result)
+        {
+            try
+            {
+                result = ReadFileLines(path);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        public static Boolean TryReadFileLines(String path, Encoding encoding, out String[] result)
+        {
+            try
+            {
+                result = ReadFileLines(path, encoding);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
 
+        private static StreamReader GetFileReader(String path, Encoding encoding = null)
+        {
+            return encoding is null ? new StreamReader(path) : new StreamReader(path, encoding);
+        }
+        
+        public static IEnumerable<String> ReadFileSequential(String path)
+        {
+            StreamReader file = GetFileReader(path);
+
+            String line;
+            while((line = file.ReadLine()) is not null)
+            {
+                yield return line;
+            }
+        }
+        
+        public static IEnumerable<String> ReadFileSequential(String path, Encoding encoding)
+        {
+            using StreamReader file = GetFileReader(path, encoding);
+
+            String line;
+            while((line = file.ReadLine()) is not null)
+            {
+                yield return line;
+            }
+        }
+        
+        public static IEnumerable<String> TryReadFileSequential(String path)
+        {
+            try
+            {
+                return ReadFileSequential(path);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        
+        public static IEnumerable<String> TryReadFileSequential(String path, Encoding encoding)
+        {
+            try
+            {
+                return ReadFileSequential(path, encoding);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        
+        public static Boolean TryReadFileSequential(String path, out IEnumerable<String> result)
+        {
+            try
+            {
+                result = ReadFileSequential(path);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        public static Boolean TryReadFileSequential(String path, Encoding encoding, out IEnumerable<String> result)
+        {
+            try
+            {
+                result = ReadFileSequential(path, encoding);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+
+        //TODO: To async
         public static String GetFileContents(String file, Int32 timeout = 5000)
         {
             StreamReader reader = null;
@@ -269,7 +454,7 @@ namespace NetExtender.Utils.IO
 
             await using FileStream original = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None, 4096, options);
 
-            await using FileStream part = new FileStream(partname, FileMode.Create, FileAccess.Write, FileShare.None, buffer, options);
+            await using FileStream part = new FileStream(partname, FileMode.Create, FileAccess.Write, FileShare.None, buffer, options | FileOptions.DeleteOnClose);
 
             await stream.CopyToAsync(part, buffer, token).ConfigureAwait(false);
             await part.FlushAsync(token).ConfigureAwait(false);

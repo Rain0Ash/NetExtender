@@ -3,13 +3,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Runtime.CompilerServices;
+using NetExtender.Random.Interfaces;
 
-namespace NetExtender.Random
+ namespace NetExtender.Random
 {
     /// <summary>
     /// Generates pseudo-random numbers using the Mersenne Twister algorithm.
     /// </summary>
-    public class MersenneTwister : System.Random
+    public sealed class MersenneTwister : System.Random, IRandomInclude
     {
         /// <summary>
         /// Creates a new pseudo-random number generator with a default seed.
@@ -29,35 +32,35 @@ namespace NetExtender.Random
         /// <param name="seed">A value to use as a seed.</param>
         public MersenneTwister(Int32 seed)
         {
-            Init((UInt32) seed);
+            unchecked
+            {
+                Init((UInt32) seed);
+            }
+        }
+        
+        /// <summary>
+        /// Creates a new pseudo-random number generator with a given seed.
+        /// </summary>
+        /// <param name="seed">A value to use as a seed.</param>
+        public MersenneTwister(UInt32 seed)
+        {
+            Init(seed);
         }
 
         /// <summary>
         /// Creates a pseudo-random number generator initialized with the given array.
         /// </summary>
-        /// <param name="initKey">The array for initializing keys.</param>
-        public MersenneTwister(Int32[] initKey)
+        /// <param name="key">The array for initializing keys.</param>
+        public MersenneTwister(IEnumerable<UInt32> key)
         {
-            if (initKey is null)
-            {
-                throw new ArgumentNullException(nameof(initKey));
-            }
-
-            UInt32[] initArray = new UInt32[initKey.Length];
-
-            for (Int32 i = 0; i < initKey.Length; ++i)
-            {
-                initArray[i] = (UInt32) initKey[i];
-            }
-
-            Init(initArray);
+            Init(key?.ToArray() ?? throw new ArgumentNullException(nameof(key)));
         }
 
         /// <summary>
         /// Returns the next pseudo-random <see cref="UInt32"/>.
         /// </summary>
         /// <returns>A pseudo-random <see cref="UInt32"/> value.</returns>
-        public virtual UInt32 NextUInt32()
+        public UInt32 NextUInt32()
         {
             return GenerateUInt32();
         }
@@ -72,7 +75,7 @@ namespace NetExtender.Random
         /// <returns>
         /// A pseudo-random <see cref="UInt32"/> value which is at most <paramref name="max"/>.
         /// </returns>
-        public virtual UInt32 NextUInt32(UInt32 max)
+        public UInt32 NextUInt32(UInt32 max)
         {
             return (UInt32) (GenerateUInt32() / ((Double) UInt32.MaxValue / max));
         }
@@ -90,11 +93,11 @@ namespace NetExtender.Random
         /// <exception cref="ArgumentOutOfRangeException">
         /// If <c><paramref name="min"/> &gt;= <paramref name="max"/></c>.
         /// </exception>
-        public virtual UInt32 NextUInt32(UInt32 min, UInt32 max) /* throws ArgumentOutOfRangeException */
+        public UInt32 NextUInt32(UInt32 min, UInt32 max) /* throws ArgumentOutOfRangeException */
         {
             if (min > max)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(min));
             }
 
             return (UInt32) (GenerateUInt32() / ((Double) UInt32.MaxValue / (max - min)) + min);
@@ -121,17 +124,12 @@ namespace NetExtender.Random
         /// </exception>
         public override Int32 Next(Int32 max)
         {
-            if (max >= 1)
+            return max switch
             {
-                return (Int32) (NextDouble() * max);
-            }
-
-            if (max < 0)
-            {
-                throw new ArgumentOutOfRangeException();
-            }
-
-            return 0;
+                >= 1 => (Int32) (NextDouble() * max),
+                < 0 => throw new ArgumentOutOfRangeException(nameof(max)),
+                _ => 0
+            };
         }
 
         /// <summary>
@@ -150,7 +148,7 @@ namespace NetExtender.Random
         {
             if (max < min)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(min));
             }
 
             if (max == min)
@@ -174,7 +172,7 @@ namespace NetExtender.Random
             // [codekaizen: corrected this to check null before checking length.]
             if (buffer is null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(buffer));
             }
 
             for (Int32 idx = 0; idx < buffer.Length; ++idx)
@@ -211,9 +209,10 @@ namespace NetExtender.Random
         /// </code>
         /// </para>
         /// </remarks>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public override Double NextDouble()
         {
-            return Compute53BitRandom(0, InverseOnePlus53BitsOf1S);
+            return NextDoubleWithoutOne();
         }
 
         /// <summary>
@@ -221,27 +220,35 @@ namespace NetExtender.Random
         /// either strictly less than one, or less than or equal to one, 
         /// depending on the value of the given parameter.
         /// </summary>
-        /// <param name="includeOne">
+        /// <param name="include">
         /// If <see langword="true"/>, the pseudo-random number returned will be 
         /// less than or equal to one; otherwise, the pseudo-random number returned will
         /// be strictly less than one.
         /// </param>
         /// <returns>
-        /// If <paramref name="includeOne"/> is <see langword="true"/>, 
+        /// If <paramref name="include"/> is <see langword="true"/>, 
         /// this method returns a double-precision pseudo-random number greater than 
         /// or equal to zero, and less than or equal to one. 
-        /// If <paramref name="includeOne"/> is <see langword="false"/>, this method
+        /// If <paramref name="include"/> is <see langword="false"/>, this method
         /// returns a double-precision pseudo-random number greater than or equal to zero and
         /// strictly less than one.
         /// </returns>
-        public Double NextDouble(Boolean includeOne)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Double NextDouble(Boolean include)
         {
-            return includeOne ? NextDoubleWithOne() : NextDouble();
+            return include ? NextDoubleWithOne() : NextDoubleWithoutOne();
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Double NextDoubleWithOne()
         {
             return Compute53BitRandom(0, Inverse53BitsOf1S);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Double NextDoubleWithoutOne()
+        {
+            return Compute53BitRandom(0, InverseOnePlus53BitsOf1S);
         }
 
         /// <summary>
@@ -254,58 +261,10 @@ namespace NetExtender.Random
         }
 
         /// <summary>
-        /// Returns a pseudo-random number between 0.0 and 1.0.
-        /// </summary>
-        /// <returns>
-        /// A single-precision floating point number greater than or equal to 0.0, 
-        /// and less than 1.0.
-        /// </returns>
-        public Single NextSingle()
-        {
-            return (Single) NextDouble();
-        }
-
-        /// <summary>
-        /// Returns a pseudo-random number greater than or equal to zero, and either strictly
-        /// less than one, or less than or equal to one, depending on the value of the
-        /// given boolean parameter.
-        /// </summary>
-        /// <param name="includeOne">
-        /// If <see langword="true"/>, the pseudo-random number returned will be 
-        /// less than or equal to one; otherwise, the pseudo-random number returned will
-        /// be strictly less than one.
-        /// </param>
-        /// <returns>
-        /// If <paramref name="includeOne"/> is <see langword="true"/>, this method returns a
-        /// single-precision pseudo-random number greater than or equal to zero, and less
-        /// than or equal to one. If <paramref name="includeOne"/> is <see langword="false"/>, 
-        /// this method returns a single-precision pseudo-random number greater than or equal to zero and
-        /// strictly less than one.
-        /// </returns>
-        public Single NextSingle(Boolean includeOne)
-        {
-            return (Single) NextDouble(includeOne);
-        }
-        
-        public Single NextSingleWithOne()
-        {
-            return (Single) NextDoubleWithOne();
-        }
-        
-        /// <summary>
-        /// Returns a pseudo-random number greater than 0.0 and less than 1.0.
-        /// </summary>
-        /// <returns>A pseudo-random number greater than 0.0 and less than 1.0.</returns>
-        public Single NextSinglePositive()
-        {
-            return (Single) NextDoublePositive();
-        }
-
-        /// <summary>
         /// Generates a new pseudo-random <see cref="UInt32"/>.
         /// </summary>
         /// <returns>A pseudo-random <see cref="UInt32"/>.</returns>
-        protected UInt32 GenerateUInt32()
+        private UInt32 GenerateUInt32()
         {
             UInt32 y;
 
@@ -406,8 +365,7 @@ namespace NetExtender.Random
 
                 for (; k > 0; k--)
                 {
-                    _mt[i] = (UInt32) ((_mt[i] ^ ((_mt[i - 1] ^ (_mt[i - 1] >> 30)) * 1664525U)) + key[j] +
-                                       j); /* non linear */
+                    _mt[i] = (UInt32) ((_mt[i] ^ ((_mt[i - 1] ^ (_mt[i - 1] >> 30)) * 1664525U)) + key[j] + j); /* non linear */
                     _mt[i] &= 0xffffffffU; // for WORDSIZE > 32 machines
                     i++;
                     j++;

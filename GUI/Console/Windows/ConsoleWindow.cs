@@ -5,6 +5,5 @@ namespace NetExtender.GUI.Console.Windows
 {
     public class ConsoleWindow
     {
-        
     }
 }

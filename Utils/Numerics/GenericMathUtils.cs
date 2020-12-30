@@ -9,7 +9,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utils.Numerics
-{   
+{
+    [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
     public static partial class MathUtils
     {
 		public static BigInteger Factorial(this SByte value)
@@ -3592,7 +3593,10 @@ namespace NetExtender.Utils.Numerics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static BigInteger Sum(this IEnumerable<BigInteger> source)
 		{
-			return source.Aggregate<BigInteger, BigInteger>(0, (current, value) => current + value);
+			checked
+			{
+				return source.Aggregate<BigInteger, BigInteger>(0, (current, value) => current + value);
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3601,6 +3605,556 @@ namespace NetExtender.Utils.Numerics
 			try
 			{
 				return source.Sum();
+			}
+			catch (OverflowException)
+			{
+				return overflow;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte Multiply(this IEnumerable<SByte> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			checked
+			{
+				using IEnumerator<SByte> enumerator = source.GetEnumerator();
+
+				if (!enumerator.MoveNext() || enumerator.Current == 0)
+				{
+					return 0;
+				}
+
+				SByte result = enumerator.Current;
+
+				while (enumerator.MoveNext())
+				{
+					switch (enumerator.Current)
+					{
+						case 0:
+							return 0;
+						case 1:
+							continue;
+						default:
+							result *= enumerator.Current;
+							break;
+					}
+				}
+
+				return result;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte Multiply(this IEnumerable<SByte> source, SByte overflow)
+		{
+			try
+			{
+				return source.Multiply();
+			}
+			catch (OverflowException)
+			{
+				return overflow;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte Multiply(this IEnumerable<Byte> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			checked
+			{
+				using IEnumerator<Byte> enumerator = source.GetEnumerator();
+
+				if (!enumerator.MoveNext() || enumerator.Current == 0)
+				{
+					return 0;
+				}
+
+				Byte result = enumerator.Current;
+
+				while (enumerator.MoveNext())
+				{
+					switch (enumerator.Current)
+					{
+						case 0:
+							return 0;
+						case 1:
+							continue;
+						default:
+							result *= enumerator.Current;
+							break;
+					}
+				}
+
+				return result;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte Multiply(this IEnumerable<Byte> source, Byte overflow)
+		{
+			try
+			{
+				return source.Multiply();
+			}
+			catch (OverflowException)
+			{
+				return overflow;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 Multiply(this IEnumerable<Int16> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			checked
+			{
+				using IEnumerator<Int16> enumerator = source.GetEnumerator();
+
+				if (!enumerator.MoveNext() || enumerator.Current == 0)
+				{
+					return 0;
+				}
+
+				Int16 result = enumerator.Current;
+
+				while (enumerator.MoveNext())
+				{
+					switch (enumerator.Current)
+					{
+						case 0:
+							return 0;
+						case 1:
+							continue;
+						default:
+							result *= enumerator.Current;
+							break;
+					}
+				}
+
+				return result;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 Multiply(this IEnumerable<Int16> source, Int16 overflow)
+		{
+			try
+			{
+				return source.Multiply();
+			}
+			catch (OverflowException)
+			{
+				return overflow;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 Multiply(this IEnumerable<UInt16> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			checked
+			{
+				using IEnumerator<UInt16> enumerator = source.GetEnumerator();
+
+				if (!enumerator.MoveNext() || enumerator.Current == 0)
+				{
+					return 0;
+				}
+
+				UInt16 result = enumerator.Current;
+
+				while (enumerator.MoveNext())
+				{
+					switch (enumerator.Current)
+					{
+						case 0:
+							return 0;
+						case 1:
+							continue;
+						default:
+							result *= enumerator.Current;
+							break;
+					}
+				}
+
+				return result;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 Multiply(this IEnumerable<UInt16> source, UInt16 overflow)
+		{
+			try
+			{
+				return source.Multiply();
+			}
+			catch (OverflowException)
+			{
+				return overflow;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 Multiply(this IEnumerable<Int32> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			checked
+			{
+				using IEnumerator<Int32> enumerator = source.GetEnumerator();
+
+				if (!enumerator.MoveNext() || enumerator.Current == 0)
+				{
+					return 0;
+				}
+
+				Int32 result = enumerator.Current;
+
+				while (enumerator.MoveNext())
+				{
+					switch (enumerator.Current)
+					{
+						case 0:
+							return 0;
+						case 1:
+							continue;
+						default:
+							result *= enumerator.Current;
+							break;
+					}
+				}
+
+				return result;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 Multiply(this IEnumerable<Int32> source, Int32 overflow)
+		{
+			try
+			{
+				return source.Multiply();
+			}
+			catch (OverflowException)
+			{
+				return overflow;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 Multiply(this IEnumerable<UInt32> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			checked
+			{
+				using IEnumerator<UInt32> enumerator = source.GetEnumerator();
+
+				if (!enumerator.MoveNext() || enumerator.Current == 0)
+				{
+					return 0;
+				}
+
+				UInt32 result = enumerator.Current;
+
+				while (enumerator.MoveNext())
+				{
+					switch (enumerator.Current)
+					{
+						case 0:
+							return 0;
+						case 1:
+							continue;
+						default:
+							result *= enumerator.Current;
+							break;
+					}
+				}
+
+				return result;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 Multiply(this IEnumerable<UInt32> source, UInt32 overflow)
+		{
+			try
+			{
+				return source.Multiply();
+			}
+			catch (OverflowException)
+			{
+				return overflow;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 Multiply(this IEnumerable<Int64> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			checked
+			{
+				using IEnumerator<Int64> enumerator = source.GetEnumerator();
+
+				if (!enumerator.MoveNext() || enumerator.Current == 0)
+				{
+					return 0;
+				}
+
+				Int64 result = enumerator.Current;
+
+				while (enumerator.MoveNext())
+				{
+					switch (enumerator.Current)
+					{
+						case 0:
+							return 0;
+						case 1:
+							continue;
+						default:
+							result *= enumerator.Current;
+							break;
+					}
+				}
+
+				return result;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 Multiply(this IEnumerable<Int64> source, Int64 overflow)
+		{
+			try
+			{
+				return source.Multiply();
+			}
+			catch (OverflowException)
+			{
+				return overflow;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 Multiply(this IEnumerable<UInt64> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			checked
+			{
+				using IEnumerator<UInt64> enumerator = source.GetEnumerator();
+
+				if (!enumerator.MoveNext() || enumerator.Current == 0)
+				{
+					return 0;
+				}
+
+				UInt64 result = enumerator.Current;
+
+				while (enumerator.MoveNext())
+				{
+					switch (enumerator.Current)
+					{
+						case 0:
+							return 0;
+						case 1:
+							continue;
+						default:
+							result *= enumerator.Current;
+							break;
+					}
+				}
+
+				return result;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 Multiply(this IEnumerable<UInt64> source, UInt64 overflow)
+		{
+			try
+			{
+				return source.Multiply();
+			}
+			catch (OverflowException)
+			{
+				return overflow;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single Multiply(this IEnumerable<Single> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			checked
+			{
+				using IEnumerator<Single> enumerator = source.GetEnumerator();
+
+				if (!enumerator.MoveNext() || enumerator.Current == 0)
+				{
+					return 0;
+				}
+
+				Single result = enumerator.Current;
+
+				while (enumerator.MoveNext())
+				{
+					switch (enumerator.Current)
+					{
+						case 0:
+							return 0;
+						case 1:
+							continue;
+						default:
+							result *= enumerator.Current;
+							break;
+					}
+				}
+
+				return result;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single Multiply(this IEnumerable<Single> source, Single overflow)
+		{
+			try
+			{
+				return source.Multiply();
+			}
+			catch (OverflowException)
+			{
+				return overflow;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Multiply(this IEnumerable<Double> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			checked
+			{
+				using IEnumerator<Double> enumerator = source.GetEnumerator();
+
+				if (!enumerator.MoveNext() || enumerator.Current == 0)
+				{
+					return 0;
+				}
+
+				Double result = enumerator.Current;
+
+				while (enumerator.MoveNext())
+				{
+					switch (enumerator.Current)
+					{
+						case 0:
+							return 0;
+						case 1:
+							continue;
+						default:
+							result *= enumerator.Current;
+							break;
+					}
+				}
+
+				return result;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Multiply(this IEnumerable<Double> source, Double overflow)
+		{
+			try
+			{
+				return source.Multiply();
+			}
+			catch (OverflowException)
+			{
+				return overflow;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal Multiply(this IEnumerable<Decimal> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			checked
+			{
+				using IEnumerator<Decimal> enumerator = source.GetEnumerator();
+
+				if (!enumerator.MoveNext() || enumerator.Current == 0)
+				{
+					return 0;
+				}
+
+				Decimal result = enumerator.Current;
+
+				while (enumerator.MoveNext())
+				{
+					switch (enumerator.Current)
+					{
+						case 0:
+							return 0;
+						case 1:
+							continue;
+						default:
+							result *= enumerator.Current;
+							break;
+					}
+				}
+
+				return result;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal Multiply(this IEnumerable<Decimal> source, Decimal overflow)
+		{
+			try
+			{
+				return source.Multiply();
 			}
 			catch (OverflowException)
 			{

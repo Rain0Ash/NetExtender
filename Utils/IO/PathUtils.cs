@@ -240,16 +240,16 @@ namespace NetExtender.Utils.IO
                 PathType.LocalPath => IsValidPath(path, false),
                 PathType.NetworkFolder => IsValidNetworkFolderPath(path),
                 PathType.Folder => IsValidFolderPath(path),
-                PathType.LocalFile | PathType.NetworkFolder => (IsValidFilePath(path, false) || IsValidNetworkFolderPath(path)),
-                PathType.Folder | PathType.LocalFile => (IsValidPath(path, false) || IsValidNetworkFolderPath(path)),
+                PathType.LocalFile | PathType.NetworkFolder => IsValidFilePath(path, false) || IsValidNetworkFolderPath(path),
+                PathType.Folder | PathType.LocalFile => IsValidPath(path, false) || IsValidNetworkFolderPath(path),
                 PathType.NetworkFile => IsValidNetworkFilePath(path),
-                PathType.LocalFolder | PathType.NetworkFile => (IsValidFolderPath(path, false) || IsValidNetworkFilePath(path)),
+                PathType.LocalFolder | PathType.NetworkFile => IsValidFolderPath(path, false) || IsValidNetworkFilePath(path),
                 PathType.File => IsValidFilePath(path),
-                PathType.LocalFolder | PathType.LocalFile | PathType.NetworkFile => (IsValidPath(path, false) ||
-                                                                                     IsValidNetworkFilePath(path)),
+                PathType.LocalFolder | PathType.LocalFile | PathType.NetworkFile => IsValidPath(path, false) ||
+                                                                                    IsValidNetworkFilePath(path),
                 PathType.NetworkPath => IsValidNetworkPath(path),
-                PathType.Folder | PathType.NetworkFile => (IsValidFolderPath(path) || IsValidNetworkPath(path)),
-                PathType.File | PathType.NetworkFolder => (IsValidFilePath(path) || IsValidNetworkPath(path)),
+                PathType.Folder | PathType.NetworkFile => IsValidFolderPath(path) || IsValidNetworkPath(path),
+                PathType.File | PathType.NetworkFolder => IsValidFilePath(path) || IsValidNetworkPath(path),
                 PathType.All => IsValidPath(path),
                 _ => IsValidPath(path)
             };
@@ -369,8 +369,8 @@ namespace NetExtender.Utils.IO
 
         public static Boolean IsValidWebPath(String path)
         {
-            return Uri.TryCreate(path, UriKind.Absolute, out Uri uriResult)
-                   && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+            return Uri.TryCreate(path, UriKind.Absolute, out Uri result)
+                   && (result.Scheme == Uri.UriSchemeHttp || result.Scheme == Uri.UriSchemeHttps);
         }
 
         public static String TrimPath(String path)

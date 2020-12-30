@@ -431,6 +431,18 @@ namespace NetExtender.Utils.Types
         {
             return count <= 1 ? value : new StringBuilder(value.Length * count).Insert(0, value, count).ToString();
         }
+        
+        private static Regex AnsiRegex { get; } = new Regex(@"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])", RegexOptions.Compiled);
+
+        public static Int32 CountAnsi(this String value)
+        {
+            return AnsiRegex.Matches(value).Count;
+        }
+        
+        public static String RemoveAnsi(this String value)
+        {
+            return AnsiRegex.Replace(value, String.Empty);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Comment(this String value)

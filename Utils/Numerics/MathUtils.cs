@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -80,6 +81,10 @@ namespace NetExtender.Utils.Numerics
         public const Double DoubleE = Math.E;
         public const Double DoubleRad = DoublePI / 180;
 
+        public const Decimal DecimalZero = Decimal.Zero;
+        public const Decimal DecimalMaxPlaces = 1.000000000000000000000000000000000M;
+        public const Decimal DecimalMinusOne = Decimal.MinusOne;
+        
         /// <summary>
         /// Represents PI
         /// </summary>
@@ -481,30 +486,30 @@ namespace NetExtender.Utils.Numerics
         /// <summary>
         /// Analogy of Math.Log
         /// </summary>
-        /// <param name="x"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public static Decimal Log(this Decimal x)
+        public static Decimal Log(this Decimal value)
         {
-            if (x <= Decimal.Zero)
+            if (value <= Decimal.Zero)
             {
                 throw new ArgumentException("x must be greater than zero");
             }
 
             Int32 count = 0;
-            while (x >= Decimal.One)
+            while (value >= Decimal.One)
             {
-                x *= DecimalInvertedE;
+                value *= DecimalInvertedE;
                 count++;
             }
 
-            while (x <= DecimalInvertedE)
+            while (value <= DecimalInvertedE)
             {
-                x *= DecimalE;
+                value *= DecimalE;
                 count--;
             }
 
-            x--;
-            if (x == Decimal.Zero)
+            value--;
+            if (value == Decimal.Zero)
             {
                 return count;
             }
@@ -518,7 +523,7 @@ namespace NetExtender.Utils.Numerics
             {
                 iteration++;
                 cache = result;
-                y *= -x;
+                y *= -value;
                 result += y / iteration;
             }
 
@@ -535,27 +540,39 @@ namespace NetExtender.Utils.Numerics
         /// <summary>
         /// Analogy of Math.Log10
         /// </summary>
-        /// <param name="x"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public static Decimal Log10(this Decimal x)
+        public static Decimal Log10(this Decimal value)
         {
-            return Log(x) * DecimalInvertedLog10;
+            return Log(value) * DecimalInvertedLog10;
         }
 
         /// <summary>
         /// Analogy of Math.Sqrt
         /// </summary>
-        /// <param name="x"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        [SuppressMessage("ReSharper", "IntroduceOptionalParameters.Global")]
+        public static Decimal Sqrt(this Decimal value)
+        {
+            return Sqrt(value, Decimal.Zero);
+        }
+
+        /// <summary>
+        /// Analogy of Math.Sqrt
+        /// </summary>
+        /// <param name="value"></param>
         /// <param name="epsilon">lasts iteration while error less than this epsilon</param>
         /// <returns></returns>
-        public static Decimal Sqrt(this Decimal x, Decimal epsilon = Decimal.Zero)
+        public static Decimal Sqrt(this Decimal value, Decimal epsilon)
         {
-            if (x < Decimal.Zero)
+            if (value < Decimal.Zero)
             {
                 throw new OverflowException("Cannot calculate square root from a negative number");
             }
 
-            Decimal current = (Decimal) Math.Sqrt((Double) x), previous;
+            Decimal previous;
+            Decimal current = (Decimal) Math.Sqrt((Double) value);
             do
             {
                 previous = current;
@@ -564,7 +581,8 @@ namespace NetExtender.Utils.Numerics
                     return Decimal.Zero;
                 }
 
-                current = (previous + x / previous) * DecimalHalf;
+                current = (previous + value / previous) * DecimalHalf;
+                
             } while (Abs(previous - current) > epsilon);
 
             return current;
@@ -1447,15 +1465,13 @@ namespace NetExtender.Utils.Numerics
 
         public static Boolean IsPowerOf(UInt64 value, UInt64 pow)
         {
-            if (value == 0)
+            switch (value)
             {
-                return false;
-            }
-
-            // The only power of 1 is 1 itself 
-            if (value == 1)
-            {
-                return pow == 1;
+                case 0:
+                    return false;
+                // The only power of 1 is 1 itself 
+                case 1:
+                    return pow == 1;
             }
 
             if (pow == 2)
@@ -1494,17 +1510,17 @@ namespace NetExtender.Utils.Numerics
                 return 1;
             }
 
-            if (d1 < 0 && d2 > 0 || d1 > 0 && d2 < 0)
+            switch (d1)
             {
-                throw new ArgumentException($"Both values must either be positive or negative. Given values were '{d1}' and '{d2}'.");
+                case < 0 when d2 > 0:
+                case > 0 when d2 < 0:
+                    throw new ArgumentException($"Both values must either be positive or negative. Given values were '{d1}' and '{d2}'.");
+                case > 0 when d1 < d2:
+                case < 0 when d1 > d2:
+                    return 1 - d1 / d2;
+                default:
+                    return 1 - d2 / d1;
             }
-
-            if (d1 > 0 && d1 < d2 || d1 < 0 && d1 > d2)
-            {
-                return 1 - d1 / d2;
-            }
-
-            return 1 - d2 / d1;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1579,6 +1595,52 @@ namespace NetExtender.Utils.Numerics
             }
 
             return (Int32) Math.Floor(Math.Log10(Math.Abs(value)));
+        }
+        
+        public static Decimal Normalize(this Decimal value)
+        {
+            return value/DecimalMaxPlaces;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
+        public static BigInteger Multiply(this IEnumerable<BigInteger> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            checked
+            {
+                using IEnumerator<BigInteger> enumerator = source.GetEnumerator();
+
+                if (!enumerator.MoveNext())
+                {
+                    return 0;
+                }
+
+                BigInteger result = 1;
+
+                while (enumerator.MoveNext())
+                {
+                    BigInteger current = enumerator.Current;
+                    
+                    if (current == BigInteger.Zero)
+                    {
+                        return 0;
+                    }
+                    
+                    if (current == BigInteger.One)
+                    {
+                        continue;
+                    }
+                    
+                    result *= enumerator.Current;
+                }
+
+                return result;
+            }
         }
 
         public static void Range(ref IConvertible value, Decimal minimum = Decimal.Zero, Decimal maximum = Decimal.MaxValue,
@@ -1703,6 +1765,18 @@ namespace NetExtender.Utils.Numerics
         {
             Decimal power = (Decimal) Math.Pow(10, digits);
             return Math.Floor(number * power) / power;
+        }
+        
+        public static Decimal Truncate(this Decimal value, Byte digits)
+        {
+            Decimal round = Math.Round(value, digits);
+
+            return value switch
+            {
+                > 0 when round > value => round - new Decimal(1, 0, 0, false, digits),
+                < 0 when round < value => round + new Decimal(1, 0, 0, false, digits),
+                _ => round
+            };
         }
 
         private const RoundType DefaultRoundType = RoundType.Banking;

@@ -22,15 +22,44 @@ namespace NetExtender.Utils.Types
             return Enumerable.Empty<T>().GetEnumerator();
         }
 
-        public static IEnumerable<T> GetEnumerableFrom<T>(T first)
+        public static IEnumerable<T> GetEnumerableFrom<T>(T value)
         {
-            yield return first;
+            yield return value;
         }
         
+        public static IEnumerable<T> GetEnumerableFrom<T>(T value, params T[] other)
+        {
+            yield return value;
+
+            // ReSharper disable once InvertIf
+            if (other?.Length > 0)
+            {
+                foreach (T item in other)
+                {
+                    yield return item;
+                }
+            }
+        }
+
         public static IEnumerable<T> GetEnumerableFrom<T>(T first, T second)
         {
             yield return first;
             yield return second;
+        }
+        
+        public static IEnumerable<T> GetEnumerableFrom<T>(T first, T second, params T[] other)
+        {
+            yield return first;
+            yield return second;
+
+            // ReSharper disable once InvertIf
+            if (other?.Length > 0)
+            {
+                foreach (T item in other)
+                {
+                    yield return item;
+                }
+            }
         }
         
         public static IEnumerable<T> GetEnumerableFrom<T>(T first, T second, T third)
@@ -77,7 +106,7 @@ namespace NetExtender.Utils.Types
             Int64 counter = 0;
             return source.Select(item => (counter++, item));
         }
-        
+
         public static IEnumerable<T> Append<T>(this IEnumerable<T> source, IEnumerable<T> additional)
         {
             return source.Concat(additional);
@@ -395,6 +424,67 @@ namespace NetExtender.Utils.Types
             }
 
             return source.Select(item => where(item) ? predicate(item) : item);
+        }
+        
+        public static IEnumerable<TTo> SelectAs<TFrom, TTo>(this IEnumerable<TFrom> source) where TTo : class
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            foreach (TFrom item in source)
+            {
+                yield return item as TTo;
+            }
+        }
+        
+        public static IEnumerable<T> WhereIs<T, TCheck>(this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            foreach (T item in source)
+            {
+                if (item is TCheck)
+                {
+                    yield return item;
+                }
+            }
+        }
+        
+        public static IEnumerable<TTo> SelectWhereIs<TFrom, TTo>(this IEnumerable<TFrom> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            foreach (TFrom item in source)
+            {
+                if (item is TTo convert)
+                {
+                    yield return convert;
+                }
+            }
+        }
+
+        public static IEnumerable<T> SelectWhereNotNull<T>(this IEnumerable<T?> source) where T : struct
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            foreach (T? item in source)
+            {
+                if (item.HasValue)
+                {
+                    yield return item.Value;
+                }
+            }
         }
 
         public static IEnumerable<T> Sort<T>(this IEnumerable<T> source, IComparer<T> comparer = null)

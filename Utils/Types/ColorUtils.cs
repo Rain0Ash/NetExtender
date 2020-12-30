@@ -153,13 +153,14 @@ namespace NetExtender.Utils.Types
                 h = TwoThirds + deltaG - deltaR;
             }
 
-            if (h < 0)
+            switch (h)
             {
-                h += 1;
-            }
-            else if (h > 1)
-            {
-                h -= 1;
+                case < 0:
+                    h += 1;
+                    break;
+                case > 1:
+                    h -= 1;
+                    break;
             }
         }
 

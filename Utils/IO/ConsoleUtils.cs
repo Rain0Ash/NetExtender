@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.Runtime.CompilerServices;
@@ -10,7 +11,9 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Events.Args;
+using NetExtender.GUI;
 using NetExtender.Types.Maps;
+using NetExtender.Utils.GUI;
 using NetExtender.Utils.Types;
 
 namespace NetExtender.Utils.IO
@@ -37,11 +40,11 @@ namespace NetExtender.Utils.IO
     public static partial class ConsoleUtils
     {
         [DllImport("user32.dll")]
-        public static extern Int32 DeleteMenu(IntPtr hMenu, Int32 nPosition, Int32 wFlags);
+        private static extern Int32 DeleteMenu(IntPtr hMenu, Int32 nPosition, Int32 wFlags);
 
         [DllImport("user32.dll")]
         private static extern IntPtr GetSystemMenu(IntPtr hWnd, Boolean bRevert);
-        
+
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern IntPtr GetStdHandle(Int32 nStdHandle);
 
@@ -51,8 +54,20 @@ namespace NetExtender.Utils.IO
         [DllImport("kernel32.dll")]
         private static extern IntPtr GetConsoleWindow();
 
+        [StructLayout(LayoutKind.Sequential)]
+        private readonly struct WindowPlacement
+        {
+            public readonly Int32 length;
+            public readonly UInt32 flags;
+            public readonly UInt32 showCmd;
+            public readonly Point ptMinPosition;
+            public readonly Point ptMaxPosition;
+            public readonly Rectangle rcNormalPosition;
+        }
+
         [DllImport("user32.dll")]
-        private static extern Boolean ShowWindow(IntPtr hWnd, Int32 nCmdShow);
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern Boolean GetWindowPlacement(IntPtr hWnd, ref WindowPlacement lpwndpl);
 
         [DllImport("kernel32.dll")]
         private static extern Boolean GetConsoleMode(IntPtr hConsoleHandle, out UInt32 lpMode);
@@ -60,8 +75,51 @@ namespace NetExtender.Utils.IO
         [DllImport("kernel32.dll")]
         private static extern Boolean SetConsoleMode(IntPtr hConsoleHandle, UInt32 dwMode);
 
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
         private static extern Boolean SetConsoleTitle(String lpConsoleTitle);
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public readonly struct ConsoleFont
+        {
+            public readonly UInt32 Index;
+            public readonly Int16 SizeX;
+            public readonly Int16 SizeY;
+        }
+
+        [DllImport("kernel32.dll")]
+        private static extern Boolean SetConsoleIcon(IntPtr hIcon);
+        
+        [DllImport("kernel32")]
+        private static extern Boolean SetConsoleFont(IntPtr hOutput, UInt32 index);
+
+        [DllImport("kernel32.dll")]
+        private static extern UInt32 GetNumberOfConsoleFonts();
+
+        [DllImport("kernel32")]
+        private static extern Boolean GetConsoleFontInfo(IntPtr hOutput, [MarshalAs(UnmanagedType.Bool)] Boolean bMaximize, UInt32 count,
+            [MarshalAs(UnmanagedType.LPArray), Out] ConsoleFont[] fonts);
+        
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        public struct FontInfo
+        {
+            public Int32 cbSize { get; init; }
+            public Int32 FontIndex { get; init; }
+            public Int16 FontWidth { get; init; }
+            public Int16 Size { get; init; }
+            public Int32 FontFamily { get; init; }
+            public Int32 FontWeight { get; init; }
+
+            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+            public String FontName;
+        }
+        
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern Boolean SetCurrentConsoleFontEx(IntPtr hConsoleOutput, Boolean MaximumWindow, ref FontInfo ConsoleCurrentFontEx);
+
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern Boolean GetCurrentConsoleFontEx(IntPtr hConsoleOutput, Boolean MaximumWindow, ref FontInfo ConsoleCurrentFontEx);
 
         [DllImport("kernel32.dll")]
         private static extern UInt32 GetLastError();
@@ -143,7 +201,49 @@ namespace NetExtender.Utils.IO
             }
         }
 
-        public static Boolean IsConsoleVisible
+        private static Icon icon;
+
+        public static Icon ConsoleIcon
+        {
+            get
+            {
+                return icon;
+            }
+            set
+            {
+                if (ConsoleWindow == IntPtr.Zero)
+                {
+                    return;
+                }
+                
+                if (SetConsoleIcon(value?.Handle ?? IntPtr.Zero))
+                {
+                    icon = value;
+                }
+            }
+        }
+        
+        public static ConsoleFont[] ConsoleFonts
+        {
+            get
+            {
+                if (ConsoleWindow == IntPtr.Zero)
+                {
+                    return null;
+                }
+                
+                ConsoleFont[] fonts = new ConsoleFont[GetNumberOfConsoleFonts()];
+                
+                if (fonts.Length <= 0)
+                {
+                    return null;
+                }
+
+                return GetConsoleFontInfo(ConsoleOutputHandle, false, (UInt32) fonts.Length, fonts) ? fonts : null;
+            }
+        }
+
+        public static UInt32 ConsoleFontIndex
         {
             set
             {
@@ -151,20 +251,269 @@ namespace NetExtender.Utils.IO
                 {
                     return;
                 }
-
-                if (value)
+                
+                ConsoleFont[] fonts = ConsoleFonts;
+                
+                if (fonts is null)
                 {
-                    ShowWindow(ConsoleWindow, 5);
                     return;
                 }
 
-                ShowWindow(ConsoleWindow, 0);
+                if (value >= fonts.Length)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(value));
+                }
+
+                SetConsoleFont(ConsoleOutputHandle, value);
+            }
+        }
+
+        public static FontInfo Font
+        {
+            get
+            {
+                FontInfo font = new FontInfo
+                {
+                    cbSize = Marshal.SizeOf<FontInfo>()
+                };
+
+                if (!GetCurrentConsoleFontEx(ConsoleOutputHandle, false, ref font))
+                {
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                }
+
+                return font;
+            }
+            set
+            {
+                if (!SetCurrentConsoleFontEx(ConsoleOutputHandle, false, ref value))
+                {
+                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                }
+            }
+        }
+        
+        public static Int16 FontSize
+        {
+            get
+            {
+                return Font.Size;
+            }
+            set
+            {
+                SetCurrentFont(value);
+            }
+        }
+
+        public static void SetCurrentFont(Int16 size = 0)
+        {
+            SetCurrentFont(null, size);
+        }
+
+        public static void SetCurrentFont(String font, Int16 size = 0)
+        {
+            Font = new FontInfo
+            {
+                cbSize = Marshal.SizeOf<FontInfo>(),
+                FontIndex = 0,
+                FontFamily = 54,
+                FontName = font ?? Font.FontName,
+                FontWeight = 400,
+                Size = size > 0 ? size : Font.Size
+            };
+        }
+
+        public static Point Cursor
+        {
+            get
+            {
+                (Int32 x, Int32 y) = GetCursorPosition();
+
+                return new Point(x, y);
+            }
+            set
+            {
+                SetCursorPosition(value.X, value.Y);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (Int32 x, Int32 y) GetCursorPosition()
+        {
+            return Console.GetCursorPosition();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetCursorPosition()
+        {
+            ResetCursorPosition();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ResetCursorPosition()
+        {
+            SetCursorPosition(0, 0);
+        }
+
+        /// <inheritdoc cref="Console.SetCursorPosition"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetCursorPosition(Int32 x, Int32 y)
+        {
+            Console.SetCursorPosition(x, y);
+        }
+
+        /// <inheritdoc cref="Console.SetBufferSize"/>
+        public static Size Buffer
+        {
+            get
+            {
+                return new Size(Console.BufferWidth, Console.BufferHeight);
+            }
+            set
+            {
+                SetBufferSize(value.Width, value.Height);
+            }
+        }
+
+        /// <inheritdoc cref="Console.SetBufferSize"/>
+        public static void SetBufferSize(Int32 width, Int32 height)
+        {
+            Console.SetBufferSize(width, height);
+        }
+
+        /// <inheritdoc cref="Console.SetWindowSize"/>
+        public static Size Size
+        {
+            get
+            {
+                return new Size(Console.WindowWidth, Console.WindowHeight);
+            }
+            set
+            {
+                SetWindowSize(Math.Min(value.Width, Console.LargestWindowWidth), Math.Min(value.Height, Console.LargestWindowHeight));
+            }
+        }
+        
+        /// <inheritdoc cref="Console.SetWindowSize"/>
+        public static void SetWindowSize(Int32 width, Int32 height)
+        {
+            Console.SetWindowSize(width, height);
+        }
+        
+        /// <inheritdoc cref="Console.SetWindowPosition"/>
+        public static Point Position
+        {
+            get
+            {
+                return new Point(Console.WindowLeft, Console.WindowTop);
+            }
+            set
+            {
+                SetWindowPosition(value.X, value.Y);
+            }
+        }
+        
+        /// <inheritdoc cref="Console.SetWindowPosition"/>
+        public static void SetWindowPosition(Int32 x, Int32 y)
+        {
+            Console.SetWindowPosition(x, y);
+        }
+
+        public static void CenterToScreen()
+        {
+            throw new NotImplementedException();
+        }
+        
+        public static Boolean? IsConsoleVisible
+        {
+            get
+            {
+                if (ConsoleWindow == IntPtr.Zero)
+                {
+                    return null;
+                }
+
+                WindowPlacement placement = new WindowPlacement();
+
+                if (!GetWindowPlacement(ConsoleWindow, ref placement))
+                {
+                    return null;
+                }
+
+                return (WindowStateType) placement.showCmd switch
+                {
+                    WindowStateType.Hide => false,
+                    WindowStateType.Normal => true,
+                    WindowStateType.Maximize => true,
+                    WindowStateType.Minimize => true,
+                    WindowStateType.Restore => true,
+                    WindowStateType.Show => true,
+                    WindowStateType.ShowMinimized => true,
+                    WindowStateType.ShowNoActivate => true,
+                    WindowStateType.ShowMininimizedNoActive => true,
+                    WindowStateType.ShowNormalNoActivate => true,
+                    _ => throw new NotSupportedException()
+                };
+            }
+            set
+            {
+                if (value is null)
+                {
+                    return;
+                }
+
+                if (ConsoleWindow == IntPtr.Zero)
+                {
+                    return;
+                }
+
+                if (value.Value)
+                {
+                    GUIUtils.ShowWindow(ConsoleWindow, WindowStateType.Show);
+                    return;
+                }
+
+                GUIUtils.ShowWindow(ConsoleWindow, WindowStateType.Hide);
+            }
+        }
+
+        public static WindowStateType? ConsoleWindowState
+        {
+            get
+            {
+                if (ConsoleWindow == IntPtr.Zero)
+                {
+                    return null;
+                }
+
+                WindowPlacement placement = new WindowPlacement();
+
+                if (!GetWindowPlacement(ConsoleWindow, ref placement))
+                {
+                    return null;
+                }
+
+                return (WindowStateType) placement.showCmd;
+            }
+            set
+            {
+                if (value is null)
+                {
+                    return;
+                }
+
+                if (ConsoleWindow == IntPtr.Zero)
+                {
+                    return;
+                }
+
+                GUIUtils.ShowWindow(ConsoleWindow, value.Value);
             }
         }
 
         private const UInt32 VTProcessing = 0x0004;
 
-        public static Boolean? IsVTCodeEnabled
+        public static Boolean? VTCode
         {
             get
             {
@@ -253,7 +602,7 @@ namespace NetExtender.Utils.IO
                 ChangeMode(ConsoleInputHandle, value, MouseInputMode);
             }
         }
-        
+
         private const Int32 MfBycommand = 0x00000000;
         public const Int32 ScClose = 0xF060;
 
@@ -262,10 +611,10 @@ namespace NetExtender.Utils.IO
             set
             {
                 throw new NotImplementedException();
-                
+
                 if (!value)
                 {
-                    DeleteMenu(GetSystemMenu(ConsoleWindow, false),ScClose, MfBycommand);
+                    DeleteMenu(GetSystemMenu(ConsoleWindow, false), ScClose, MfBycommand);
                 }
             }
         }
@@ -482,13 +831,13 @@ namespace NetExtender.Utils.IO
         {
             return InputAsync(Console.ReadLine, milli, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T CastAs<T>()
         {
             return CastAs<T>(CultureInfo.InvariantCulture);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T CastAs<T>(CultureInfo info)
         {
@@ -534,13 +883,13 @@ namespace NetExtender.Utils.IO
             String read = await ReadLineAsync(milli, token).ConfigureAwait(false);
             return read is null ? default : read.CastConvert<T>(info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ReadAs<T>()
         {
             return ReadAs<T>(CultureInfo.InvariantCulture);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ReadAs<T>(CultureInfo info)
         {
@@ -586,25 +935,25 @@ namespace NetExtender.Utils.IO
             String read = await ReadLineAsync(milli, token).ConfigureAwait(false);
             return read is null ? default : read.Convert<T>(info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> CastReadAsEnumerable<T>()
         {
             return CastReadAsEnumerable<T>(CultureInfo.InvariantCulture);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> CastReadAsEnumerable<T>(CultureInfo info)
         {
             return CastReadAsEnumerable<T>(StringUtils.DefaultSeparator, info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> CastReadAsEnumerable<T>(String separator, CultureInfo info)
         {
             return Console.ReadLine()?.CastConvert<T>(separator, info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> CastReadAsEnumerable<T>(String[] separators, CultureInfo info)
         {
@@ -616,13 +965,13 @@ namespace NetExtender.Utils.IO
         {
             return CastAsEnumerableAsync<T>(CultureInfo.InvariantCulture, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>> CastAsEnumerableAsync<T>(String separator, CancellationToken token)
         {
             return CastAsEnumerableAsync<T>(separator, CultureInfo.InvariantCulture, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>> CastAsEnumerableAsync<T>(String[] separators, CancellationToken token)
         {
@@ -634,13 +983,13 @@ namespace NetExtender.Utils.IO
         {
             return CastAsEnumerableAsync<T>(StringUtils.DefaultSeparator, info, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IEnumerable<T>> CastAsEnumerableAsync<T>(String separator, CultureInfo info, CancellationToken token)
         {
             return (await ReadLineAsync(token).ConfigureAwait(false))?.CastConvert<T>(separator, info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IEnumerable<T>> CastAsEnumerableAsync<T>(String[] separators, CultureInfo info, CancellationToken token)
         {
@@ -652,13 +1001,13 @@ namespace NetExtender.Utils.IO
         {
             return CastAsEnumerableAsync<T>(StringUtils.DefaultSeparator, milli);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>> CastAsEnumerableAsync<T>(String separator, Int32 milli)
         {
             return CastAsEnumerableAsync<T>(separator, CultureInfo.InvariantCulture, milli);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>> CastAsEnumerableAsync<T>(String[] separators, Int32 milli)
         {
@@ -670,13 +1019,13 @@ namespace NetExtender.Utils.IO
         {
             return CastAsEnumerableAsync<T>(StringUtils.DefaultSeparator, info, milli);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IEnumerable<T>> CastAsEnumerableAsync<T>(String separator, CultureInfo info, Int32 milli)
         {
             return (await ReadLineAsync(milli).ConfigureAwait(false))?.CastConvert<T>(separator, info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IEnumerable<T>> CastAsEnumerableAsync<T>(String[] separators, CultureInfo info, Int32 milli)
         {
@@ -688,13 +1037,13 @@ namespace NetExtender.Utils.IO
         {
             return CastAsEnumerableAsync<T>(StringUtils.DefaultSeparator, milli, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>> CastAsEnumerableAsync<T>(String separator, Int32 milli, CancellationToken token)
         {
             return CastAsEnumerableAsync<T>(separator, CultureInfo.InvariantCulture, milli, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>> CastAsEnumerableAsync<T>(String[] separators, Int32 milli, CancellationToken token)
         {
@@ -706,13 +1055,13 @@ namespace NetExtender.Utils.IO
         {
             return CastAsEnumerableAsync<T>(StringUtils.DefaultSeparator, info, milli, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IEnumerable<T>> CastAsEnumerableAsync<T>(String separator, CultureInfo info, Int32 milli, CancellationToken token)
         {
             return (await ReadLineAsync(milli, token).ConfigureAwait(false))?.CastConvert<T>(separator, info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IEnumerable<T>> CastAsEnumerableAsync<T>(String[] separators, CultureInfo info, Int32 milli, CancellationToken token)
         {
@@ -724,19 +1073,19 @@ namespace NetExtender.Utils.IO
         {
             return ReadAsEnumerable<T>(CultureInfo.InvariantCulture);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> ReadAsEnumerable<T>(CultureInfo info)
         {
             return ReadAsEnumerable<T>(StringUtils.DefaultSeparator, info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> ReadAsEnumerable<T>(String separator, CultureInfo info)
         {
             return Console.ReadLine()?.Convert<T>(separator, info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> ReadAsEnumerable<T>(String[] separators, CultureInfo info)
         {
@@ -748,13 +1097,13 @@ namespace NetExtender.Utils.IO
         {
             return ReadAsEnumerableAsync<T>(CultureInfo.InvariantCulture, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>> ReadAsEnumerableAsync<T>(String separator, CancellationToken token)
         {
             return ReadAsEnumerableAsync<T>(separator, CultureInfo.InvariantCulture, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>> ReadAsEnumerableAsync<T>(String[] separators, CancellationToken token)
         {
@@ -766,13 +1115,13 @@ namespace NetExtender.Utils.IO
         {
             return ReadAsEnumerableAsync<T>(StringUtils.DefaultSeparator, info, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IEnumerable<T>> ReadAsEnumerableAsync<T>(String separator, CultureInfo info, CancellationToken token)
         {
             return (await ReadLineAsync(token).ConfigureAwait(false))?.Convert<T>(separator, info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IEnumerable<T>> ReadAsEnumerableAsync<T>(String[] separators, CultureInfo info, CancellationToken token)
         {
@@ -784,13 +1133,13 @@ namespace NetExtender.Utils.IO
         {
             return ReadAsEnumerableAsync<T>(StringUtils.DefaultSeparator, milli);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>> ReadAsEnumerableAsync<T>(String separator, Int32 milli)
         {
             return ReadAsEnumerableAsync<T>(separator, CultureInfo.InvariantCulture, milli);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>> ReadAsEnumerableAsync<T>(String[] separators, Int32 milli)
         {
@@ -802,13 +1151,13 @@ namespace NetExtender.Utils.IO
         {
             return ReadAsEnumerableAsync<T>(StringUtils.DefaultSeparator, info, milli);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IEnumerable<T>> ReadAsEnumerableAsync<T>(String separator, CultureInfo info, Int32 milli)
         {
             return (await ReadLineAsync(milli).ConfigureAwait(false))?.Convert<T>(separator, info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IEnumerable<T>> ReadAsEnumerableAsync<T>(String[] separators, CultureInfo info, Int32 milli)
         {
@@ -820,13 +1169,13 @@ namespace NetExtender.Utils.IO
         {
             return ReadAsEnumerableAsync<T>(StringUtils.DefaultSeparator, milli, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>> ReadAsEnumerableAsync<T>(String separator, Int32 milli, CancellationToken token)
         {
             return ReadAsEnumerableAsync<T>(separator, CultureInfo.InvariantCulture, milli, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>> ReadAsEnumerableAsync<T>(String[] separators, Int32 milli, CancellationToken token)
         {
@@ -838,37 +1187,37 @@ namespace NetExtender.Utils.IO
         {
             return ReadAsEnumerableAsync<T>(StringUtils.DefaultSeparator, info, milli, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IEnumerable<T>> ReadAsEnumerableAsync<T>(String separator, CultureInfo info, Int32 milli, CancellationToken token)
         {
             return (await ReadLineAsync(milli, token).ConfigureAwait(false))?.Convert<T>(separator, info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IEnumerable<T>> ReadAsEnumerableAsync<T>(String[] separators, CultureInfo info, Int32 milli, CancellationToken token)
         {
             return (await ReadLineAsync(milli, token).ConfigureAwait(false))?.Convert<T>(separators, info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> TryReadAsEnumerable<T>()
         {
             return TryReadAsEnumerable<T>(CultureInfo.InvariantCulture);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> TryReadAsEnumerable<T>(CultureInfo info)
         {
             return TryReadAsEnumerable<T>(StringUtils.DefaultSeparator, info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> TryReadAsEnumerable<T>(String separator, CultureInfo info)
         {
             return Console.ReadLine()?.TryConvert<T>(separator, info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> TryReadAsEnumerable<T>(String[] separators, CultureInfo info)
         {
@@ -880,13 +1229,13 @@ namespace NetExtender.Utils.IO
         {
             return TryReadAsEnumerableAsync<T>(CultureInfo.InvariantCulture, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>> TryReadAsEnumerableAsync<T>(String separator, CancellationToken token)
         {
             return TryReadAsEnumerableAsync<T>(separator, CultureInfo.InvariantCulture, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>> TryReadAsEnumerableAsync<T>(String[] separators, CancellationToken token)
         {
@@ -898,13 +1247,13 @@ namespace NetExtender.Utils.IO
         {
             return TryReadAsEnumerableAsync<T>(StringUtils.DefaultSeparator, info, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IEnumerable<T>> TryReadAsEnumerableAsync<T>(String separator, CultureInfo info, CancellationToken token)
         {
             return (await ReadLineAsync(token).ConfigureAwait(false))?.TryConvert<T>(separator, info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IEnumerable<T>> TryReadAsEnumerableAsync<T>(String[] separators, CultureInfo info, CancellationToken token)
         {
@@ -916,13 +1265,13 @@ namespace NetExtender.Utils.IO
         {
             return TryReadAsEnumerableAsync<T>(StringUtils.DefaultSeparator, milli);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>> TryReadAsEnumerableAsync<T>(String separator, Int32 milli)
         {
             return TryReadAsEnumerableAsync<T>(separator, CultureInfo.InvariantCulture, milli);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>> TryReadAsEnumerableAsync<T>(String[] separators, Int32 milli)
         {
@@ -934,13 +1283,13 @@ namespace NetExtender.Utils.IO
         {
             return TryReadAsEnumerableAsync<T>(StringUtils.DefaultSeparator, info, milli);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IEnumerable<T>> TryReadAsEnumerableAsync<T>(String separator, CultureInfo info, Int32 milli)
         {
             return (await ReadLineAsync(milli).ConfigureAwait(false))?.TryConvert<T>(separator, info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IEnumerable<T>> TryReadAsEnumerableAsync<T>(String[] separators, CultureInfo info, Int32 milli)
         {
@@ -952,13 +1301,13 @@ namespace NetExtender.Utils.IO
         {
             return TryReadAsEnumerableAsync<T>(StringUtils.DefaultSeparator, milli, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>> TryReadAsEnumerableAsync<T>(String separator, Int32 milli, CancellationToken token)
         {
             return TryReadAsEnumerableAsync<T>(separator, CultureInfo.InvariantCulture, milli, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>> TryReadAsEnumerableAsync<T>(String[] separators, Int32 milli, CancellationToken token)
         {
@@ -970,13 +1319,13 @@ namespace NetExtender.Utils.IO
         {
             return TryReadAsEnumerableAsync<T>(StringUtils.DefaultSeparator, info, milli, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IEnumerable<T>> TryReadAsEnumerableAsync<T>(String separator, CultureInfo info, Int32 milli, CancellationToken token)
         {
             return (await ReadLineAsync(milli, token).ConfigureAwait(false))?.TryConvert<T>(separator, info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IEnumerable<T>> TryReadAsEnumerableAsync<T>(String[] separators, CultureInfo info, Int32 milli, CancellationToken token)
         {
@@ -1083,7 +1432,7 @@ namespace NetExtender.Utils.IO
         }
 
         private static readonly Object ConsoleLock = new Object();
-        
+
         public static void ToConsole<T>(this T value, Boolean newLine = true, IFormatProvider info = null)
         {
             String str = value.GetString(info ?? CultureInfo.InvariantCulture) ?? "null";
@@ -1097,7 +1446,7 @@ namespace NetExtender.Utils.IO
                 Console.Write(str);
             }
         }
-        
+
         public static void ToConsole<T>(this T value, ConsoleColor foreground, Boolean newLine = true, IFormatProvider info = null)
         {
             lock (ConsoleLock)

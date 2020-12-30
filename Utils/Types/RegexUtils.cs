@@ -208,6 +208,11 @@ namespace NetExtender.Utils.Types
                 // ReSharper disable once PossibleMultipleEnumeration
                 foreach (String groupName in groupNames)
                 {
+                    if (groupName is null)
+                    {
+                        continue;
+                    }
+                    
                     if (nogroup && Int32.TryParse(groupName, out _) || groups[groupName].Captures.Count <= 0)
                     {
                         continue;
@@ -224,8 +229,6 @@ namespace NetExtender.Utils.Types
 
             return captures.ToImmutableDictionary();
         }
-        
-        
         
         private static Task<T> ExecuteAsync<T>(Func<T> handler, CancellationToken token)
         {

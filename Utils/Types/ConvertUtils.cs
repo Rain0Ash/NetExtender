@@ -303,156 +303,187 @@ namespace NetExtender.Utils.Types
             };
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Boolean value)
         {
             return value.ToString();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Boolean value, IFormatProvider provider)
         {
             return value.ToString();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Char value)
         {
             return Char.ToString(value);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Char value, IFormatProvider provider)
         {
             return Char.ToString(value);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this SByte value)
         {
-            return value.ToString(CultureInfo.InvariantCulture);
+            return value.GetString(CultureInfo.InvariantCulture);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this SByte value, IFormatProvider provider)
         {
             return value.ToString(provider);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Byte value)
         {
-            return value.ToString(CultureInfo.InvariantCulture);
+            return value.GetString(CultureInfo.InvariantCulture);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Byte value, IFormatProvider provider)
         {
             return value.ToString(provider);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Int16 value)
         {
-            return value.ToString(CultureInfo.InvariantCulture);
+            return value.GetString(CultureInfo.InvariantCulture);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Int16 value, IFormatProvider provider)
         {
             return value.ToString(provider);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this UInt16 value)
         {
-            return value.ToString(CultureInfo.InvariantCulture);
+            return value.GetString(CultureInfo.InvariantCulture);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this UInt16 value, IFormatProvider provider)
         {
             return value.ToString(provider);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Int32 value)
         {
-            return value.ToString(CultureInfo.InvariantCulture);
+            return value.GetString(CultureInfo.InvariantCulture);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Int32 value, IFormatProvider provider)
         {
             return value.ToString(provider);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this UInt32 value)
         {
-            return value.ToString(CultureInfo.InvariantCulture);
+            return value.GetString(CultureInfo.InvariantCulture);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this UInt32 value, IFormatProvider provider)
         {
             return value.ToString(provider);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Int64 value)
         {
-            return value.ToString(CultureInfo.InvariantCulture);
+            return value.GetString(CultureInfo.InvariantCulture);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Int64 value, IFormatProvider provider)
         {
             return value.ToString(provider);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this UInt64 value)
         {
-            return value.ToString(CultureInfo.InvariantCulture);
+            return value.GetString(CultureInfo.InvariantCulture);
         }
 
-        public static String GetString(UInt64 value, IFormatProvider provider)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this UInt64 value, IFormatProvider provider)
         {
             return value.ToString(provider);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Single value)
         {
-            return value.ToString(CultureInfo.InvariantCulture);
+            return value.GetString(CultureInfo.InvariantCulture);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Single value, IFormatProvider provider)
         {
             return value.ToString(provider);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Double value)
         {
-            return value.ToString(CultureInfo.InvariantCulture);
+            return value.GetString(CultureInfo.InvariantCulture);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Double value, IFormatProvider provider)
         {
             return value.ToString(provider);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Decimal value)
         {
-            return value.ToString(CultureInfo.InvariantCulture);
+            return value.GetString(CultureInfo.InvariantCulture);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Decimal value, IFormatProvider provider)
         {
-            return value.ToString(provider);
+            return value.Normalize().ToString(provider);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this DateTime value)
         {
-            return value.ToString(CultureInfo.InvariantCulture);
+            return value.GetString(CultureInfo.InvariantCulture);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this DateTime value, IFormatProvider provider)
         {
             return value.ToString(provider);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this String value)
         {
             return value;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this String value, IFormatProvider provider)
         {
             return value.ToString(provider);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this IEnumerable<T> source)
         {
             return GetString(source, CultureInfo.InvariantCulture);

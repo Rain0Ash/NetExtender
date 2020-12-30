@@ -3,7 +3,6 @@
 
 using System;
 using NetExtender.Converters;
-using ReactiveUI;
 
 namespace NetExtender.Config
 {

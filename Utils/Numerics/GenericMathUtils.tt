@@ -14,7 +14,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utils.Numerics
-{   <#
+{
+<#
     List<String> types = new List<String>
     {
         nameof(Char),
@@ -842,20 +843,11 @@ namespace NetExtender.Utils.Numerics
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
             WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this IEnumerable<{type}> source)");
             WriteLine("\t\t{");
-            String func =
-                $"return source.Aggregate{(type != nameof(Int32) ? $"<{type}, {type}>" : String.Empty)}(0, (current, value) => {(IsSmallType(type) ? $"({type}) (current + value)" : "current + value")});";
-            
-            if (type != biginteger)
-            {
-                WriteLine("\t\t\tchecked");
-                WriteLine("\t\t\t{");
-                WriteLine($"\t\t\t\t{func}");
-                WriteLine("\t\t\t}");
-            }
-            else
-            {
-                WriteLine($"\t\t\t{func}");
-            }
+
+            WriteLine("\t\t\tchecked");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\treturn source.Aggregate{(type != nameof(Int32) ? $"<{type}, {type}>" : String.Empty)}(0, (current, value) => {(IsSmallType(type) ? $"({type}) (current + value)" : "current + value")});");
+            WriteLine("\t\t\t}");
             
             WriteLine("\t\t}");
         
@@ -867,7 +859,7 @@ namespace NetExtender.Utils.Numerics
         WriteLine("\t\t{");
         WriteLine("\t\t\ttry");
         WriteLine("\t\t\t{");
-        WriteLine("\t\t\t\treturn source.Sum();");
+        WriteLine($"\t\t\t\treturn source.{nameof(Sum)}();");
         WriteLine("\t\t\t}");
         WriteLine("\t\t\tcatch (OverflowException)");
         WriteLine("\t\t\t{");
@@ -880,8 +872,69 @@ namespace NetExtender.Utils.Numerics
     {
         ForEach(types.Where(NotChar).Append(biginteger), SumFunc);
     }
-#>
 
+    void MultiplyFunc(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this IEnumerable<{type}> source)");
+        WriteLine("\t\t{");
+
+        WriteLine("\t\t\tif (source is null)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tthrow new ArgumentNullException(nameof(source));");
+        WriteLine("\t\t\t}");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\tchecked");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\tusing IEnumerator<{type}> enumerator = source.GetEnumerator();");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\t\tif (!enumerator.MoveNext() || enumerator.Current == 0)");
+        WriteLine("\t\t\t\t{");
+        WriteLine("\t\t\t\t\treturn 0;");
+        WriteLine("\t\t\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\t\t\t{type} result = enumerator.Current;");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\t\twhile (enumerator.MoveNext())");
+        WriteLine("\t\t\t\t{");
+        WriteLine("\t\t\t\t\tswitch (enumerator.Current)");
+        WriteLine("\t\t\t\t\t{");
+        WriteLine($"\t\t\t\t\t\tcase {(type == biginteger ? "BigInteger.Zero" : "0")}:");
+        WriteLine("\t\t\t\t\t\t\treturn 0;");
+        WriteLine($"\t\t\t\t\t\tcase {(type == biginteger ? "BigInteger.One" : "1")}:");
+        WriteLine("\t\t\t\t\t\t\tcontinue;");
+        WriteLine("\t\t\t\t\t\tdefault:");
+        WriteLine("\t\t\t\t\t\t\tresult *= enumerator.Current;");
+        WriteLine("\t\t\t\t\t\t\tbreak;");
+        WriteLine("\t\t\t\t\t}");
+        WriteLine("\t\t\t\t}");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\t\treturn result;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this IEnumerable<{type}> source, {type} overflow)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\ttry");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\treturn source.{nameof(Multiply)}();");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t\tcatch (OverflowException)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn overflow;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+    }
+
+    void Multiply()
+    {
+        ForEach(types.Where(NotChar), MultiplyFunc);
+    }
+#>
+    [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
     public static partial class MathUtils
     {
 <#
@@ -916,6 +969,8 @@ namespace NetExtender.Utils.Numerics
     ToBase();
     WriteLine(String.Empty);
     Sum();
+    WriteLine(String.Empty);
+    Multiply();
 #>
     }
 

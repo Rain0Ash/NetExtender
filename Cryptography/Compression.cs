@@ -46,6 +46,13 @@ namespace NetExtender.Crypto
             return stream.ToArray();
         }
         
+        public static Byte[] Decompress(this Byte[] data, CompressionType type = Compression.DefaultCompressionType)
+        {
+            using MemoryStream stream = new MemoryStream();
+            Decompress(data.ToStream(), stream, type);
+            return stream.ToArray();
+        }
+        
         public static Task<Byte[]> CompressAsync(this Byte[] data, CompressionType type)
         {
             return CompressAsync(data, Compression.DefaultCompressionLevel, type);
@@ -57,14 +64,6 @@ namespace NetExtender.Crypto
             await CompressAsync(data.ToStream(), stream, level, type).ConfigureAwait(false);
             return stream.ToArray();
         }
-        
-        public static Byte[] Decompress(this Byte[] data, CompressionType type = Compression.DefaultCompressionType)
-        {
-            using MemoryStream stream = new MemoryStream();
-            Decompress(data.ToStream(), stream, type);
-            return stream.ToArray();
-        }
-
         public static async Task<Byte[]> DecompressAsync(this Byte[] data, CompressionType type = Compression.DefaultCompressionType)
         {
             await using MemoryStream stream = new MemoryStream();
@@ -72,62 +71,74 @@ namespace NetExtender.Crypto
             return stream.ToArray();
         }
         
-        public static Stream Compress(this Stream stream, CompressionType type = Compression.DefaultCompressionType)
+        public static MemoryStream Compress(this Stream stream, CompressionType type = Compression.DefaultCompressionType)
         {
             return Compress(stream, Compression.DefaultCompressionLevel, type);
         }
         
-        public static Stream Compress(this Stream stream, CompressionLevel level = Compression.DefaultCompressionLevel, CompressionType type = Compression.DefaultCompressionType)
+        public static MemoryStream Compress(this Stream stream, CompressionLevel level = Compression.DefaultCompressionLevel, CompressionType type = Compression.DefaultCompressionType)
         {
-            return Compress(stream, null, level, type);
+            return Compress<MemoryStream>(stream, null, level, type).ResetPosition();
         }
 
-        public static Stream Compress(this Stream stream, Stream destination, CompressionLevel level = Compression.DefaultCompressionLevel, CompressionType type = Compression.DefaultCompressionType)
+        public static T Compress<T>(this Stream stream, T destination, CompressionLevel level = Compression.DefaultCompressionLevel, CompressionType type = Compression.DefaultCompressionType) where T : Stream
         {
-            using CompressionStream compress = new CompressionStream(destination ??= new MemoryStream(), type, level);
+            Boolean empty = destination is null;
+            
+            using CompressionStream compress = new CompressionStream(destination ??= (T)(Object) new MemoryStream(), type, level, true);
             stream.CopyTo(compress);
-            return destination;
+            
+            return empty ? destination.ResetPosition() : destination;
         }
         
-        public static Task<Stream> CompressAsync(this Stream stream, CompressionType type = Compression.DefaultCompressionType)
+        public static MemoryStream Decompress(this Stream stream, CompressionType type = Compression.DefaultCompressionType)
+        {
+            return Decompress<MemoryStream>(stream, null, type).ResetPosition();
+        }
+
+        public static T Decompress<T>(this Stream stream, T destination, CompressionType type = Compression.DefaultCompressionType) where T : Stream
+        {
+            Boolean empty = destination is null;
+            
+            using CompressionStream compress = new CompressionStream(stream, type, CompressionMode.Decompress);
+            compress.CopyTo(destination ??= (T)(Object) new MemoryStream());
+            
+            return empty ? destination.ResetPosition() : destination;
+        }
+        
+        public static Task<MemoryStream> CompressAsync(this Stream stream, CompressionType type = Compression.DefaultCompressionType)
         {
             return CompressAsync(stream, Compression.DefaultCompressionLevel, type);
         }
         
-        public static Task<Stream> CompressAsync(this Stream stream, CompressionLevel level = Compression.DefaultCompressionLevel, CompressionType type = Compression.DefaultCompressionType)
+        public static async Task<MemoryStream> CompressAsync(this Stream stream, CompressionLevel level = Compression.DefaultCompressionLevel, CompressionType type = Compression.DefaultCompressionType)
         {
-            return CompressAsync(stream, null, level, type);
+            return (await CompressAsync<MemoryStream>(stream, null, level, type)).ResetPosition();
         }
 
-        public static async Task<Stream> CompressAsync(this Stream stream, Stream destination, CompressionLevel level = Compression.DefaultCompressionLevel, CompressionType type = Compression.DefaultCompressionType)
+        public static async Task<T> CompressAsync<T>(this Stream stream, T destination, CompressionLevel level = Compression.DefaultCompressionLevel, CompressionType type = Compression.DefaultCompressionType) where T : Stream
         {
-            await using CompressionStream compress = new CompressionStream(destination ??= new MemoryStream(), type, level);
+            Boolean empty = destination is null;
+            
+            await using CompressionStream compress = new CompressionStream(destination ??= (T)(Object) new MemoryStream(), type, level, true);
             await stream.CopyToAsync(compress).ConfigureAwait(false);
-            return destination;
-        }
-        
-        public static Stream Decompress(this Stream stream, CompressionType type = Compression.DefaultCompressionType)
-        {
-            return Decompress(stream, null, type);
+
+            return empty ? destination.ResetPosition() : destination;
         }
 
-        public static Stream Decompress(this Stream stream, Stream destination, CompressionType type = Compression.DefaultCompressionType)
+        public static async Task<MemoryStream> DecompressAsync(this Stream stream, CompressionType type = Compression.DefaultCompressionType)
         {
-            using CompressionStream compress = new CompressionStream(stream, type, CompressionMode.Decompress);
-            compress.CopyTo(destination ??= new MemoryStream());
-            return destination;
-        }
-        
-        public static Task<Stream> DecompressAsync(this Stream stream, CompressionType type = Compression.DefaultCompressionType)
-        {
-            return DecompressAsync(stream, null, type);
+            return (await DecompressAsync<MemoryStream>(stream, null, type)).ResetPosition();
         }
 
-        public static async Task<Stream> DecompressAsync(this Stream stream, Stream destination, CompressionType type = Compression.DefaultCompressionType)
+        public static async Task<T> DecompressAsync<T>(this Stream stream, T destination, CompressionType type = Compression.DefaultCompressionType) where T : Stream
         {
-            await using CompressionStream compress = new CompressionStream(stream, type, CompressionMode.Decompress);
-            await compress.CopyToAsync(destination ??= new MemoryStream()).ConfigureAwait(false);
-            return destination;
+            Boolean empty = destination is null;
+            
+            await using CompressionStream compress = new CompressionStream(stream, type, CompressionMode.Decompress, true);
+            await compress.CopyToAsync(destination ??= (T)(Object) new MemoryStream()).ConfigureAwait(false);
+            
+            return empty ? destination.ResetPosition() : destination;
         }
         
         public static class Compression

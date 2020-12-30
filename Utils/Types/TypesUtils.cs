@@ -5,8 +5,5 @@ namespace NetExtender.Utils.Types
 {
     public static class TypesUtils
     {
-        
-        
-        
     }
 }

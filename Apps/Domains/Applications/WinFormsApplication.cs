@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 
+using System;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
@@ -44,11 +45,13 @@ namespace NetExtender.Apps.Domains.Applications
         {
         }
         
+        [STAThread]
         public override void Run()
         {
             System.Windows.Forms.Application.Run();
         }
 
+        [STAThread]
         public void Run(Form form)
         {
             if (form is not null)
