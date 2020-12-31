@@ -41,7 +41,7 @@ namespace NetExtender.Utils.Types
 	        }
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<T> DefaultTask<T>()
         {
 	        return TaskCache<T>.Default;
@@ -91,6 +91,45 @@ namespace NetExtender.Utils.Types
 	        }
 
 	        return Task.FromException<T>(exception);
+        }
+        
+        public static Task Delay(CancellationToken token)
+        {
+	        return Delay(-1, token);
+        }
+
+        public static Task Delay(TimeSpan delay)
+        {
+	        return Delay(delay, CancellationToken.None);
+        }
+
+        public static async Task Delay(TimeSpan delay, CancellationToken token)
+        {
+	        try
+	        {
+				await Task.Delay(delay, token);
+	        }
+	        catch (TaskCanceledException)
+	        {
+		        //ignored
+	        }
+        }
+        
+        public static Task Delay(Int32 milli)
+        {
+	        return Delay(milli, CancellationToken.None);
+        }
+        
+        public static async Task Delay(Int32 milli, CancellationToken token)
+        {
+	        try
+	        {
+		        await Task.Delay(milli, token);
+	        }
+	        catch (TaskCanceledException)
+	        {
+		        //ignored
+	        }
         }
 
         public static Task WaitAsync(CancellationToken token)

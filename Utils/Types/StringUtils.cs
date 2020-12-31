@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -430,6 +431,41 @@ namespace NetExtender.Utils.Types
         public static String Repeat(this String value, Int32 count)
         {
             return count <= 1 ? value : new StringBuilder(value.Length * count).Insert(0, value, count).ToString();
+        }
+
+        public static Boolean IsMatrix(this ICollection<String> value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (value.Count <= 0)
+            {
+                throw new ArgumentException(@"Value cannot be an empty collection.", nameof(value));
+            }
+
+            return value.AllSame(row => row.Length);
+        }
+
+        public static Size GetMatrixSize(this ICollection<String> value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (value.Count <= 0)
+            {
+                throw new ArgumentException(@"Value cannot be an empty collection.", nameof(value));
+            }
+            
+            if (!IsMatrix(value))
+            {
+                throw new ArgumentException(@"Different strings length", nameof(value));
+            }
+
+            return new Size(value.First().Length, value.Count);
         }
         
         private static Regex AnsiRegex { get; } = new Regex(@"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])", RegexOptions.Compiled);

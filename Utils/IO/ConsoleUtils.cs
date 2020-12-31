@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using NetExtender.Events.Args;
 using NetExtender.GUI;
 using NetExtender.Types.Maps;
@@ -53,16 +54,50 @@ namespace NetExtender.Utils.IO
 
         [DllImport("kernel32.dll")]
         private static extern IntPtr GetConsoleWindow();
+        
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern Boolean SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, Int32 x, Int32 y, Int32 cx, Int32 cy, Int32 flags);
+        
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern Boolean GetWindowRect(IntPtr hWnd, out Rect lpRect);
+
+        private static Boolean GetWindowRect(IntPtr hWnd, out Rectangle lpRect)
+        {
+            if (GetWindowRect(hWnd, out Rect rectangle))
+            {
+                lpRect = rectangle;
+                return true;
+            }
+
+            lpRect = default;
+            return false;
+        }
+        
+        [StructLayout(LayoutKind.Sequential)]
+        private readonly struct Rect
+        {
+            public static implicit operator Rectangle(Rect rect)
+            {
+                return new Rectangle(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
+            }
+
+            private Int32 Left { get; init; }
+            private Int32 Top { get; init; }
+            private Int32 Right { get; init; }
+            private Int32 Bottom { get; init; }
+        }
 
         [StructLayout(LayoutKind.Sequential)]
         private readonly struct WindowPlacement
         {
-            public readonly Int32 length;
-            public readonly UInt32 flags;
-            public readonly UInt32 showCmd;
-            public readonly Point ptMinPosition;
-            public readonly Point ptMaxPosition;
-            public readonly Rectangle rcNormalPosition;
+            public Int32 Length { get; init; }
+            public UInt32 Flags { get; init; }
+            public UInt32 ShowCmd { get; init; }
+            public Point MinPosition { get; init; }
+            public Point MaxPosition { get; init; }
+            public Rectangle NormalPosition { get; init; }
         }
 
         [DllImport("user32.dll")]
@@ -414,14 +449,45 @@ namespace NetExtender.Utils.IO
         }
         
         /// <inheritdoc cref="Console.SetWindowPosition"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetWindowPosition(Int32 x, Int32 y)
         {
-            Console.SetWindowPosition(x, y);
+            if (!GetWindowRect(ConsoleWindow, out Rectangle rectangle))
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
+            
+            SetWindowPosition(x, y, rectangle);
+        }
+        
+        /// <inheritdoc cref="Console.SetWindowPosition"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetWindowPosition(Int32 x, Int32 y, Rectangle rectangle)
+        {
+            SetWindowPosition(x, y, rectangle.Size);
+        }
+        
+        /// <inheritdoc cref="Console.SetWindowPosition"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetWindowPosition(Int32 x, Int32 y, Size size)
+        {
+            if (!SetWindowPos(ConsoleWindow, IntPtr.Zero, x, y, size.Width, size.Height, 0x4 | 0x10))
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
         }
 
         public static void CenterToScreen()
         {
-            throw new NotImplementedException();
+            if (!GetWindowRect(ConsoleWindow, out Rectangle rectangle))
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
+
+            Screen screen = Screen.FromHandle(ConsoleWindow);
+            
+            Size size = rectangle.Size;
+            SetWindowPosition(screen.WorkingArea.Width / 2 - rectangle.Width / 2, screen.WorkingArea.Height / 2 - rectangle.Height / 2, size);
         }
         
         public static Boolean? IsConsoleVisible
@@ -440,7 +506,7 @@ namespace NetExtender.Utils.IO
                     return null;
                 }
 
-                return (WindowStateType) placement.showCmd switch
+                return (WindowStateType) placement.ShowCmd switch
                 {
                     WindowStateType.Hide => false,
                     WindowStateType.Normal => true,
@@ -493,7 +559,7 @@ namespace NetExtender.Utils.IO
                     return null;
                 }
 
-                return (WindowStateType) placement.showCmd;
+                return (WindowStateType) placement.ShowCmd;
             }
             set
             {
