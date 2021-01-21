@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using NetExtender.Utils.Types;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 
 namespace NetExtender.Types.Dictionaries

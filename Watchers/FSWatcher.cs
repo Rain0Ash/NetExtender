@@ -7,7 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 using NetExtender.Exceptions;
 using NetExtender.IO.NTFS.DataStreams;
 using NetExtender.Utils.IO;

@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 using NetExtender.Crypto;
 
 namespace NetExtender.Utils.Types

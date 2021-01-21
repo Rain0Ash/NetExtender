@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using NetExtender.Utils.Numerics;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 using NetExtender.Utils.IO;
 
 namespace NetExtender.Utils.OS

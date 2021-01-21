@@ -3,7 +3,7 @@
 
 using System;
 using System.Runtime.Serialization;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 
 namespace NetExtender.Exceptions
 {

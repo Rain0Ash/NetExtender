@@ -45,11 +45,43 @@ namespace NetExtender.Workstation
         }
 
         [DllImport("kernel32.dll")]
-        public static extern void GetSystemInfo([MarshalAs(UnmanagedType.Struct)] ref SYSTEM_INFO lpSystemInfo);
+        private static extern void GetSystemInfo([MarshalAs(UnmanagedType.Struct)] ref SYSTEM_INFO lpSystemInfo);
 
         [DllImport("kernel32.dll")]
         private static extern void GetNativeSystemInfo([MarshalAs(UnmanagedType.Struct)] ref SYSTEM_INFO lpSystemInfo);
 
+        private static String GetWmiPropertyValueAsString(String queryString, String propertyName)
+        {
+            SelectQuery query = new SelectQuery(queryString);
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
+            foreach (ManagementBaseObject obj in searcher.Get())
+            {
+                if (obj is ManagementObject management)
+                {
+                    return management.Properties[propertyName].Value.ToString();
+                }
+            }
+
+            return null;
+        }
+        
+        public static DateTime GetWmiPropertyValueAsDateTime(String queryString, String propertyName)
+        {
+            String value = GetWmiPropertyValueAsString(queryString, propertyName);
+
+            if (String.IsNullOrEmpty(value))
+            {
+                throw new ManagementException();
+            }
+            
+            return ManagementDateTimeConverter.ToDateTime(value);
+        } 
+        
+        public static DateTime GetBootDateTime()
+        {
+            return GetWmiPropertyValueAsDateTime("SELECT * FROM Win32_OperatingSystem WHERE Primary='true'", "LastBootUpTime");
+        }
+        
         public static ProcessorArchitecture GetProcessorBits()
         {
             ProcessorArchitecture pbits = ProcessorArchitecture.Unknown;

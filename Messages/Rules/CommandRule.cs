@@ -11,8 +11,8 @@ namespace NetExtender.Messages.Rules
     public class CommandRule<T> : ConsoleRule<T>, ICommandRule<T>
     {
         public T Id { get; }
-        public LocaleStrings Name { get; set; }
-        public LocaleStrings Annotation { get; set; }
+        public LocaleMultiString Name { get; set; }
+        public LocaleMultiString Annotation { get; set; }
 
         public CommandRule(T id, ReaderHandler<T> handler = null)
             : base(handler)

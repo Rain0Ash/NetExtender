@@ -76,7 +76,7 @@ namespace NetExtender.Network.Networking.WebSocket
             // Multicast data to all WebSocket sessions
             foreach (TcpNetworkSession session in Sessions.Values)
             {
-                if (!(session is WebSocketNetworkSession wsSession))
+                if (session is not WebSocketNetworkSession wsSession)
                 {
                     continue;
                 }

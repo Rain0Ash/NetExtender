@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 using NetExtender.Types.Sets.Interfaces;
 
 namespace NetExtender.Types.Sets

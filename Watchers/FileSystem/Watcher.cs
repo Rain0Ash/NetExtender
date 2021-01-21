@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using NetExtender.Times;
 using NetExtender.Watchers.FileSystem.Interfaces;
 
 namespace NetExtender.Watchers.FileSystem
@@ -91,7 +92,7 @@ namespace NetExtender.Watchers.FileSystem
     {
         public static IWatcher Create(WatcherType type, String path, String filter = "")
         {
-            return Create(type, path, TimeSpan.FromMinutes(1), filter);
+            return Create(type, path, Time.Minute.One, filter);
         }
         
         public static IWatcher Create(WatcherType type, String path, TimeSpan polling, String filter = "")

@@ -14,28 +14,25 @@ namespace NetExtender.Types.Trees
 {
     [Serializable]
     [JsonObject(MemberSerialization.OptIn, MissingMemberHandling = MissingMemberHandling.Ignore, ItemNullValueHandling = NullValueHandling.Ignore)]
-    public class DictionaryTreeNode<TKey, TValue> : IDictionaryTree<TKey, TValue>, IReadOnlyDictionaryTree<TKey, TValue>
+    public class DictionaryTreeNode<TKey, TValue> : IDictionaryTreeNode<TKey, TValue>, IReadOnlyDictionaryTreeNode<TKey, TValue>
     {
-        public static explicit operator DictionaryTree<TKey, TValue>(DictionaryTreeNode<TKey, TValue> node)
-        {
-            return node.Tree;
-        }
-        
         [JsonProperty(Order = 0)]
         public TValue Value { get; set; }
 
         [JsonProperty(PropertyName = nameof(Tree), Order = 1)]
-        private DictionaryTree<TKey, TValue> _tree;
+        private IDictionaryTree<TKey, TValue> _tree;
         
         [JsonIgnore]
-        public DictionaryTree<TKey, TValue> Tree
+        public IDictionaryTree<TKey, TValue> Tree
         {
             get
             {
-                return _tree ??= new DictionaryTree<TKey, TValue>();
+                return _tree ??= CreateTree();
             }
         }
 
+        public IEqualityComparer<TKey> Comparer { get; }
+        
         [JsonIgnore]
         public Boolean IsReadOnly
         {
@@ -50,26 +47,16 @@ namespace NetExtender.Types.Trees
         {
             get
             {
-                if (HasTree)
-                {
-                    return Tree.Keys;
-                }
-
-                return ImmutableList<TKey>.Empty;
+                return HasTree ? Tree.Keys : ImmutableList<TKey>.Empty;
             }
         }
 
         [JsonIgnore]
-        public ICollection<DictionaryTreeNode<TKey, TValue>> Values
+        public ICollection<IDictionaryTreeNode<TKey, TValue>> Values
         {
             get
             {
-                if (HasTree)
-                {
-                    return Tree.Values;
-                }
-
-                return ImmutableList<DictionaryTreeNode<TKey, TValue>>.Empty;
+                return HasTree ? Tree.Values : ImmutableList<IDictionaryTreeNode<TKey, TValue>>.Empty;
             }
         }
 
@@ -144,28 +131,44 @@ namespace NetExtender.Types.Trees
         {
         }
         
-        public DictionaryTreeNode(DictionaryTree<TKey, TValue> tree)
-            : this(default, tree)
+        public DictionaryTreeNode(IEqualityComparer<TKey> comparer = default)
+            : this(default, comparer)
         {
         }
         
-        public DictionaryTreeNode(TValue value = default, DictionaryTree<TKey, TValue> tree = default)
+        public DictionaryTreeNode(IDictionaryTree<TKey, TValue> tree, IEqualityComparer<TKey> comparer = default)
+            : this(default, tree, comparer)
+        {
+        }
+        
+        public DictionaryTreeNode(TValue value = default, IDictionaryTree<TKey, TValue> tree = default, IEqualityComparer<TKey> comparer = default)
         {
             Value = value;
             _tree = tree;
+            Comparer = comparer ?? _tree?.Comparer;
+        }
+
+        public virtual IDictionaryTree<TKey, TValue> CreateTree()
+        {
+            return new DictionaryTree<TKey, TValue>(Comparer);
         }
         
-        public void Add(KeyValuePair<TKey, DictionaryTreeNode<TKey, TValue>> item)
+        protected virtual IDictionaryTreeNode<TKey, TValue> CreateNode()
+        {
+            return new DictionaryTreeNode<TKey, TValue>(Comparer);
+        }
+        
+        public void Add(KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>> item)
         {
             Tree.Add(item);
         }
 
-        public void Add(TKey key, DictionaryTreeNode<TKey, TValue> value)
+        public void Add(TKey key, IDictionaryTreeNode<TKey, TValue> value)
         {
             Tree.Add(key, value);
         }
 
-        public Boolean Contains(KeyValuePair<TKey, DictionaryTreeNode<TKey, TValue>> item)
+        public Boolean Contains(KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>> item)
         {
             return HasTree && Enumerable.Contains(Tree, item);
         }
@@ -180,37 +183,37 @@ namespace NetExtender.Types.Trees
             return GetChild(key, sections) is not null;
         }
         
-        public DictionaryTreeNode<TKey, TValue> GetChild(TKey key)
+        public IDictionaryTreeNode<TKey, TValue> GetChild(TKey key)
         {
-            TryGetValue(key, out DictionaryTreeNode<TKey, TValue> value);
+            TryGetValue(key, out IDictionaryTreeNode<TKey, TValue> value);
             return value;
         }
 
-        public DictionaryTreeNode<TKey, TValue> GetChild(TKey key, params TKey[] sections)
+        public IDictionaryTreeNode<TKey, TValue> GetChild(TKey key, params TKey[] sections)
         {
-            DictionaryTreeNode<TKey, TValue> node = GetChildSection(sections);
+            IDictionaryTreeNode<TKey, TValue> node = GetChildSection(sections);
 
             if (node is null)
             {
                 return null;
             }
 
-            node.TryGetValue(key, out DictionaryTreeNode<TKey, TValue> value);
+            node.TryGetValue(key, out IDictionaryTreeNode<TKey, TValue> value);
             return value;
         }
 
-        public DictionaryTreeNode<TKey, TValue> GetChildSection(IEnumerable<TKey> sections)
+        public IDictionaryTreeNode<TKey, TValue> GetChildSection(IEnumerable<TKey> sections)
         {
-            DictionaryTreeNode<TKey, TValue> node = this;
+            IDictionaryTreeNode<TKey, TValue> node = this;
             return sections.Any(section => !node.TryGetValue(section, out node)) ? null : node;
         }
 
-        public DictionaryTreeNode<TKey, TValue> GetChildSection(params TKey[] sections)
+        public IDictionaryTreeNode<TKey, TValue> GetChildSection(params TKey[] sections)
         {
             return GetChildSection(sections.AsEnumerable());
         }
 
-        public Boolean TryGetValue(TKey key, out DictionaryTreeNode<TKey, TValue> value)
+        public Boolean TryGetValue(TKey key, out IDictionaryTreeNode<TKey, TValue> value)
         {
             if (HasTree)
             {
@@ -226,7 +229,7 @@ namespace NetExtender.Types.Trees
             return HasTree && Tree.Remove(key);
         }
         
-        public Boolean Remove(KeyValuePair<TKey, DictionaryTreeNode<TKey, TValue>> item)
+        public Boolean Remove(KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>> item)
         {
             return HasTree && Tree.Remove(item);
         }
@@ -236,9 +239,9 @@ namespace NetExtender.Types.Trees
             return Remove(key, sections, out _);
         }
 
-        public Boolean Remove(TKey key, IEnumerable<TKey> sections, out DictionaryTreeNode<TKey, TValue> value)
+        public Boolean Remove(TKey key, IEnumerable<TKey> sections, out IDictionaryTreeNode<TKey, TValue> value)
         {
-            DictionaryTreeNode<TKey, TValue> child = GetChildSection(sections);
+            IDictionaryTreeNode<TKey, TValue> child = GetChildSection(sections);
 
             if (child is not null)
             {
@@ -249,7 +252,7 @@ namespace NetExtender.Types.Trees
             return false;
         }
 
-        public Boolean Remove(TKey key, out DictionaryTreeNode<TKey, TValue> value, params TKey[] sections)
+        public Boolean Remove(TKey key, out IDictionaryTreeNode<TKey, TValue> value, params TKey[] sections)
         {
             return Remove(key, sections, out value);
         }
@@ -262,7 +265,7 @@ namespace NetExtender.Types.Trees
             }
         }
         
-        public void CopyTo(KeyValuePair<TKey, DictionaryTreeNode<TKey, TValue>>[] array, Int32 index)
+        public void CopyTo(KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>>[] array, Int32 index)
         {
             if (!HasTree)
             {
@@ -279,7 +282,7 @@ namespace NetExtender.Types.Trees
                 return;
             }
 
-            foreach ((TKey key, DictionaryTreeNode<TKey, TValue> value) in Tree)
+            foreach ((TKey key, IDictionaryTreeNode<TKey, TValue> value) in Tree)
             {
                 if (value.IsEmpty)
                 {
@@ -292,9 +295,14 @@ namespace NetExtender.Types.Trees
             }
         }
 
+        public void RemoveEmpty(TKey key)
+        {
+            RemoveEmpty(key, Array.Empty<TKey>());
+        }
+
         public void RemoveEmpty(TKey key, params TKey[] sections)
         {
-            DictionaryTreeNode<TKey, TValue> node = GetChildSection(sections);
+            IDictionaryTreeNode<TKey, TValue> node = GetChildSection(sections);
             
             if (node is null || node.Count <= 0)
             {
@@ -304,13 +312,13 @@ namespace NetExtender.Types.Trees
             node.RemoveEmpty(key);
         }
 
-        public DictionaryTreeNode<TKey, TValue> this[TKey key]
+        public IDictionaryTreeNode<TKey, TValue> this[TKey key]
         {
             get
             {
                 if (!ContainsKey(key))
                 {
-                    Tree[key] = new DictionaryTreeNode<TKey, TValue>();
+                    Tree[key] = CreateNode();
                 }
 
                 return Tree[key];
@@ -321,11 +329,11 @@ namespace NetExtender.Types.Trees
             }
         }
 
-        public DictionaryTreeNode<TKey, TValue> this[TKey key, params TKey[] sections]
+        public IDictionaryTreeNode<TKey, TValue> this[TKey key, params TKey[] sections]
         {
             get
             {
-                DictionaryTreeNode<TKey, TValue> node = this;
+                IDictionaryTreeNode<TKey, TValue> node = this;
 
                 if (sections.Length <= 0)
                 {
@@ -338,7 +346,7 @@ namespace NetExtender.Types.Trees
             }
             set
             {
-                DictionaryTreeNode<TKey, TValue> node = this;
+                IDictionaryTreeNode<TKey, TValue> node = this;
 
                 if (sections.Length <= 0)
                 {
@@ -351,9 +359,9 @@ namespace NetExtender.Types.Trees
             }
         }
         
-        public IEnumerator<KeyValuePair<TKey, DictionaryTreeNode<TKey, TValue>>> GetEnumerator()
+        public IEnumerator<KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>>> GetEnumerator()
         {
-            return HasTree ? Tree.GetEnumerator() : EnumerableUtils.GetEmptyEnumerator<KeyValuePair<TKey, DictionaryTreeNode<TKey, TValue>>>();
+            return HasTree ? Tree.GetEnumerator() : EnumerableUtils.GetEmptyEnumerator<KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>>>();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

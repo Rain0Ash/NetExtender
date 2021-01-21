@@ -212,13 +212,7 @@ namespace NetExtender.Apps.Data
 
         public override Int32 GetHashCode()
         {
-            unchecked
-            {
-                Int32 hash = Version.GetHashCode();
-                hash = (hash * 397) ^ (Int32) Status;
-                hash = (hash * 397) ^ (Int32) Branch;
-                return hash;
-            }
+            return HashCode.Combine(Version, Status, Branch);
         }
 
         public virtual void Dispose()

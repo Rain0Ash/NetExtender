@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 using NetExtender.Loggers.Messages;
 using NetExtender.Types.Lists;
 

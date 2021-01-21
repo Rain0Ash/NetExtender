@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 using NetExtender.Types.Streams;
 
 namespace NetExtender.Utils.Types
@@ -79,17 +79,22 @@ namespace NetExtender.Utils.Types
 
             Int32 read;
             Int64 already = 0;
-            while ((read = await input.ReadAsync(buffer, 0, buffer.Length, token).ConfigureAwait(false)) > 0)
+            while ((read = await input.ReadAsync(buffer.AsMemory(0, buffer.Length), token).ConfigureAwait(false)) > 0)
             {
-                await output.WriteAsync(buffer, 0, read, token).ConfigureAwait(false);
+                await output.WriteAsync(buffer.AsMemory(0, read), token).ConfigureAwait(false);
 
                 already += read;
                 progress?.Report(already);
             }
         }
 
-        public static void CopyTo(this Stream input, Stream output, Int32 bufferSize = BufferUtils.DefaultBuffer, Int32 position = 0)
+        public static void CopyTo([NotNull] this Stream input, Stream output, Int32 bufferSize = BufferUtils.DefaultBuffer, Int32 position = 0)
         {
+            if (input is null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+
             if (input.CanSeek)
             {
                 input.Position = position;
@@ -98,18 +103,23 @@ namespace NetExtender.Utils.Types
             input.CopyTo(output, bufferSize);
         }
 
-        public static void StartCopyTo(this Stream input, Stream output, Int32 bufferSize = BufferUtils.DefaultBuffer)
+        public static void StartCopyTo([NotNull] this Stream input, Stream output, Int32 bufferSize = BufferUtils.DefaultBuffer)
         {
             CopyTo(input, output, bufferSize);
         }
 
-        public static Task CopyToAsync(this Stream input, Stream output, Int32 bufferSize, Int32 position)
+        public static Task CopyToAsync([NotNull] this Stream input, Stream output, Int32 bufferSize, Int32 position)
         {
             return CopyToAsync(input, output, bufferSize, position, CancellationToken.None);
         }
 
-        public static Task CopyToAsync(this Stream input, Stream output, Int32 bufferSize, Int32 position, CancellationToken token)
+        public static Task CopyToAsync([NotNull] this Stream input, Stream output, Int32 bufferSize, Int32 position, CancellationToken token)
         {
+            if (input is null)
+            {
+                throw new ArgumentNullException(nameof(input));
+            }
+
             if (input.CanSeek)
             {
                 input.Position = position;
@@ -118,27 +128,27 @@ namespace NetExtender.Utils.Types
             return input.CopyToAsync(output, bufferSize, token);
         }
 
-        public static Task StartCopyToAsync(this Stream input, Stream output)
+        public static Task StartCopyToAsync([NotNull] this Stream input, Stream output)
         {
             return StartCopyToAsync(input, output, CancellationToken.None);
         }
 
-        public static Task StartCopyToAsync(this Stream input, Stream output, CancellationToken token)
+        public static Task StartCopyToAsync([NotNull] this Stream input, Stream output, CancellationToken token)
         {
             return StartCopyToAsync(input, output, BufferUtils.DefaultBuffer, token);
         }
 
-        public static Task StartCopyToAsync(this Stream input, Stream output, Int32 bufferSize)
+        public static Task StartCopyToAsync([NotNull] this Stream input, Stream output, Int32 bufferSize)
         {
             return StartCopyToAsync(input, output, bufferSize, CancellationToken.None);
         }
 
-        public static Task StartCopyToAsync(this Stream input, Stream output, Int32 bufferSize, CancellationToken token)
+        public static Task StartCopyToAsync([NotNull] this Stream input, Stream output, Int32 bufferSize, CancellationToken token)
         {
             return CopyToAsync(input, output, bufferSize, 0, token);
         }
         
-        public static BandwidthStream Bandwidth(this Stream stream, Int32 speed, InformationSize size)
+        public static BandwidthStream Bandwidth([NotNull] this Stream stream, Int32 speed, InformationSize size)
         {
             if (stream is null)
             {
@@ -148,7 +158,7 @@ namespace NetExtender.Utils.Types
             return new BandwidthStream(stream, speed, size);
         }
         
-        public static BandwidthStream<T> Bandwidth<T>(this T stream, Int32 speed, InformationSize size) where T : Stream
+        public static BandwidthStream<T> Bandwidth<T>([NotNull] this T stream, Int32 speed, InformationSize size) where T : Stream
         {
             if (stream is null)
             {
@@ -158,7 +168,7 @@ namespace NetExtender.Utils.Types
             return new BandwidthStream<T>(stream, speed, size);
         }
         
-        public static BandwidthStream Bandwidth(this Stream stream, UInt64 speed = UInt64.MaxValue, InformationSize size = InformationSize.Byte)
+        public static BandwidthStream Bandwidth([NotNull] this Stream stream, UInt64 speed = UInt64.MaxValue, InformationSize size = InformationSize.Byte)
         {
             if (stream is null)
             {
@@ -168,7 +178,7 @@ namespace NetExtender.Utils.Types
             return new BandwidthStream(stream, speed, size);
         }
         
-        public static BandwidthStream<T> Bandwidth<T>(this T stream, UInt64 speed = UInt64.MaxValue, InformationSize size = InformationSize.Byte) where T : Stream
+        public static BandwidthStream<T> Bandwidth<T>([NotNull] this T stream, UInt64 speed = UInt64.MaxValue, InformationSize size = InformationSize.Byte) where T : Stream
         {
             if (stream is null)
             {
@@ -178,33 +188,53 @@ namespace NetExtender.Utils.Types
             return new BandwidthStream<T>(stream, speed, size);
         }
 
-        public static MemoryStream ToStream(this String str)
+        public static MemoryStream ToStream([NotNull] this String str)
         {
             return ToStream(str, Encoding.UTF8);
         }
 
-        public static MemoryStream ToStream(this String str, Encoding encoding)
+        public static MemoryStream ToStream([NotNull] this String str, Encoding encoding)
         {
-            return ToStream(encoding.GetBytes(str));
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
+            return ToStream((encoding ?? Encoding.UTF8).GetBytes(str));
         }
 
-        public static Stream ToStream(this String str, Stream output)
+        public static Stream ToStream([NotNull] this String str, Stream output)
         {
             return ToStream(str, output, Encoding.UTF8);
         }
 
-        public static Stream ToStream(this String str, Stream output, Encoding encoding)
+        public static Stream ToStream([NotNull] this String str, Stream output, Encoding encoding)
         {
-            return ToStream(encoding.GetBytes(str), output);
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
+            return ToStream((encoding ?? Encoding.UTF8).GetBytes(str), output);
         }
 
-        public static MemoryStream ToStream(this Byte[] bytes)
+        public static MemoryStream ToStream([NotNull] this Byte[] bytes)
         {
+            if (bytes is null)
+            {
+                throw new ArgumentNullException(nameof(bytes));
+            }
+
             return new MemoryStream(bytes);
         }
 
-        public static Stream ToStream(this Byte[] bytes, Stream output)
+        public static Stream ToStream([NotNull] this Byte[] bytes, Stream output)
         {
+            if (bytes is null)
+            {
+                throw new ArgumentNullException(nameof(bytes));
+            }
+
             using MemoryStream input = new MemoryStream(bytes);
             output ??= new MemoryStream();
 
@@ -212,13 +242,18 @@ namespace NetExtender.Utils.Types
             return output;
         }
 
-        public static Task<Stream> ToStreamAsync(this Byte[] bytes, Stream output = null)
+        public static Task<Stream> ToStreamAsync([NotNull] this Byte[] bytes, Stream output = null)
         {
             return ToStreamAsync(bytes, output, CancellationToken.None);
         }
 
-        public static async Task<Stream> ToStreamAsync(this Byte[] bytes, Stream output, CancellationToken token)
+        public static async Task<Stream> ToStreamAsync([NotNull] this Byte[] bytes, Stream output, CancellationToken token)
         {
+            if (bytes is null)
+            {
+                throw new ArgumentNullException(nameof(bytes));
+            }
+
             await using MemoryStream input = new MemoryStream(bytes);
             output ??= new MemoryStream();
 
@@ -226,29 +261,49 @@ namespace NetExtender.Utils.Types
             return output;
         }
 
-        public static Task<Int32> ReadAsync(this Stream stream, Byte[] buffer, CancellationToken token)
+        public static Task<Int32> ReadAsync([NotNull] this Stream stream, Byte[] buffer, CancellationToken token)
         {
             return ReadAsync(stream, buffer, 0, token);
         }
 
-        public static Task<Int32> ReadAsync(this Stream stream, Byte[] buffer, Int32 offset = 0)
+        public static Task<Int32> ReadAsync([NotNull] this Stream stream, Byte[] buffer, Int32 offset = 0)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             return stream.ReadAsync(buffer, offset, buffer.Length);
         }
 
-        public static Task<Int32> ReadAsync(this Stream stream, Byte[] buffer, Int32 offset, CancellationToken token)
+        public static Task<Int32> ReadAsync([NotNull] this Stream stream, Byte[] buffer, Int32 offset, CancellationToken token)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             return stream.ReadAsync(buffer, offset, buffer.Length, token);
         }
 
-        public static String ConvertToString(this Stream stream, Encoding encoding = null)
+        public static String ConvertToString([NotNull] this Stream stream, Encoding encoding = null)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             StreamReader reader = new StreamReader(stream, encoding ?? Encoding.UTF8);
             return reader.ReadToEnd();
         }
         
-        public static Task<String> ConvertToStringAsync(this Stream stream, Encoding encoding = null)
+        public static Task<String> ConvertToStringAsync([NotNull] this Stream stream, Encoding encoding = null)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             StreamReader reader = new StreamReader(stream, encoding ?? Encoding.UTF8);
             return reader.ReadToEndAsync();
         }
@@ -263,7 +318,7 @@ namespace NetExtender.Utils.Types
             return SetPosition(stream, 0);
         }
         
-        public static T SetPosition<T>(this T stream, Int64 position) where T : Stream
+        public static T SetPosition<T>([NotNull] this T stream, Int64 position) where T : Stream
         {
             if (stream is null)
             {
@@ -274,7 +329,7 @@ namespace NetExtender.Utils.Types
             return stream;
         }
 
-        public static Boolean TrySetPosition(this Stream stream, Int64 position)
+        public static Boolean TrySetPosition([NotNull] this Stream stream, Int64 position)
         {
             if (stream is null)
             {
@@ -297,7 +352,7 @@ namespace NetExtender.Utils.Types
             }
         }
         
-        public static T SeekPosition<T>(this T stream, Int64 offset, SeekOrigin origin = SeekOrigin.Begin) where T : Stream
+        public static T SeekPosition<T>([NotNull] this T stream, Int64 offset, SeekOrigin origin = SeekOrigin.Begin) where T : Stream
         {
             if (stream is null)
             {
@@ -308,7 +363,7 @@ namespace NetExtender.Utils.Types
             return stream;
         }
         
-        public static Boolean TrySeek(this Stream stream, Int64 offset, SeekOrigin origin = SeekOrigin.Begin)
+        public static Boolean TrySeek([NotNull] this Stream stream, Int64 offset, SeekOrigin origin = SeekOrigin.Begin)
         {
             if (stream is null)
             {
@@ -342,6 +397,11 @@ namespace NetExtender.Utils.Types
         [NotNull]
         public static StreamReader ToStreamReader([NotNull] this Stream stream, Encoding encoding, Boolean leaveOpen = false)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             return new StreamReader(stream, encoding ?? Encoding.UTF8, true, DefaultBufferSize, leaveOpen);
         }
 
@@ -354,6 +414,11 @@ namespace NetExtender.Utils.Types
         [NotNull]
         public static BinaryReader ToBinaryReader([NotNull] this Stream stream, [CanBeNull] Encoding encoding = null, Boolean leaveOpen = false)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             return new BinaryReader(stream, encoding ?? Encoding.UTF8, leaveOpen);
         }
 
@@ -366,6 +431,11 @@ namespace NetExtender.Utils.Types
         [NotNull]
         public static StreamWriter ToStreamWriter([NotNull] this Stream stream, [CanBeNull] Encoding encoding = null, Boolean leaveOpen = false)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             return new StreamWriter(stream, encoding ?? Encoding.UTF8, DefaultBufferSize, leaveOpen);
         }
 
@@ -378,6 +448,11 @@ namespace NetExtender.Utils.Types
         [NotNull]
         public static BinaryWriter ToBinaryWriter([NotNull] this Stream stream, [CanBeNull] Encoding encoding = null, Boolean leaveOpen = false)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             return new BinaryWriter(stream, encoding ?? Encoding.UTF8, leaveOpen);
         }
 
@@ -389,6 +464,11 @@ namespace NetExtender.Utils.Types
         [NotNull]
         public static String ReadAsString([NotNull] this Stream stream, [CanBeNull] Encoding encoding = null)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             using StreamReader reader = stream.ToStreamReader(encoding, true);
             return reader.ReadToEnd();
         }
@@ -412,6 +492,11 @@ namespace NetExtender.Utils.Types
         [NotNull]
         public static IEnumerable<String> ReadAsSequential([NotNull] this Stream stream, [CanBeNull] Encoding encoding = null)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             using StreamReader reader = stream.ToStreamReader(encoding, true);
 
             String line;
@@ -429,6 +514,11 @@ namespace NetExtender.Utils.Types
         [NotNull]
         public static async Task<String> ReadAsStringAsync([NotNull] this Stream stream, [CanBeNull] Encoding encoding = null)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             using StreamReader reader = stream.ToStreamReader(encoding, true);
             return await reader.ReadToEndAsync().ConfigureAwait(false);
         }
@@ -440,6 +530,11 @@ namespace NetExtender.Utils.Types
         [NotNull]
         public static Byte[] ReadAsByteArray([NotNull] this Stream stream)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             using BinaryReader reader = stream.ToBinaryReader(null, true);
             
             Int32 count = checked((Int32) (stream.Length - stream.Position));

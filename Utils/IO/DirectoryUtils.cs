@@ -12,10 +12,10 @@ using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Text.RegularExpressions;
 using NetExtender.Utils.Types;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 using NetExtender.Watchers;
 
-using NotNullAttribute = DynamicData.Annotations.NotNullAttribute;
+using NotNullAttribute = JetBrains.Annotations.NotNullAttribute;
 
 namespace NetExtender.Utils.IO
 {
@@ -376,16 +376,14 @@ namespace NetExtender.Utils.IO
                 throw new ArgumentNullException(nameof(directory));
             }
 
-            if (suffix is null)
+            switch (suffix)
             {
-                throw new ArgumentNullException(nameof(suffix));
+                case null:
+                    throw new ArgumentNullException(nameof(suffix));
+                case "":
+                    return;
             }
 
-            if (suffix == String.Empty)
-            {
-                return;
-            }
-            
             String name = directory.Name + suffix;
 
             String dir = Path.GetDirectoryName(directory.FullName);
@@ -796,16 +794,14 @@ namespace NetExtender.Utils.IO
                 throw new ArgumentNullException(nameof(directory));
             }
 
-            if (suffix is null)
+            switch (suffix)
             {
-                throw new ArgumentNullException(nameof(suffix));
+                case null:
+                    throw new ArgumentNullException(nameof(suffix));
+                case "":
+                    return;
             }
 
-            if (suffix == String.Empty)
-            {
-                return;
-            }
-            
             if (!directory.Name.EndsWith(suffix))
             {
                 return;

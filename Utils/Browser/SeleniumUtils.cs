@@ -2,7 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
+using NetExtender.Times;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 
@@ -22,12 +23,12 @@ namespace NetExtender.Utils.Browser
 
         public static T WaitUntil<T>(this IWebDriver driver, [NotNull] Func<IWebDriver, T> condition)
         {
-            return WaitUntil(driver, condition, TimeSpan.FromSeconds(3));
+            return WaitUntil(driver, condition, Time.Second.Three);
         }
         
         public static T WaitUntil<T>(this IWebDriver driver, [NotNull] Func<IWebDriver, T> condition, TimeSpan timeout)
         {
-            return WaitUntil(driver, condition, timeout, TimeSpan.FromMilliseconds(50));
+            return WaitUntil(driver, condition, timeout, Time.Milli.Fifty);
         }
         
         public static T WaitUntil<T>(this IWebDriver driver, [NotNull] Func<IWebDriver, T> condition, TimeSpan timeout, TimeSpan polling)

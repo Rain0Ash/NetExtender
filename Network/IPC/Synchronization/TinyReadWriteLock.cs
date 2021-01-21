@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using NetExtender.Times;
 
 namespace NetExtender.Network.IPC.Synchronization
 {
@@ -28,7 +29,7 @@ namespace NetExtender.Network.IPC.Synchronization
 		public Boolean IsWriterLockHeld { get; private set; }
 
 		public const Int32 DefaultMaxReaderCount = 6;
-		public static readonly TimeSpan DefaultWaitTimeout = TimeSpan.FromSeconds(5);
+		public static readonly TimeSpan DefaultWaitTimeout = Time.Second.Five;
 
 		/// <summary>
 		/// Initializes a new instance of the TinyReadWriteLock class.

@@ -10,7 +10,6 @@ using NetExtender.Random.Interfaces;
 
 namespace NetExtender.Utils.Numerics
 {
-    [SuppressMessage("ReSharper", "IntroduceOptionalParameters.Global")]
     public static partial class RandomUtils
     {
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

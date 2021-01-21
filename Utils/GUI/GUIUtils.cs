@@ -2,16 +2,20 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Forms;
+using JetBrains.Annotations;
 using NetExtender.GUI;
 using NetExtender.Utils.Types;
 using NetExtender.Utils.WPF;
 using NetExtender.GUI.Common.Interfaces;
 using NetExtender.GUI.WinForms.Forms;
+using NetExtender.Types.Native.Windows;
+using NetExtender.Utils.OS;
 
 namespace NetExtender.Utils.GUI
 {
@@ -74,21 +78,60 @@ namespace NetExtender.Utils.GUI
         private static extern Boolean AttachThreadInput(UInt32 idAttach, UInt32 idAttachTo, Boolean fAttach); 
 
         [DllImport("user32.dll", SetLastError = true)] 
-        private static extern Boolean BringWindowToTop(IntPtr hWnd); 
-
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern Boolean BringWindowToTop(HandleRef hWnd); 
+        private static extern Boolean BringWindowToTop(IntPtr hWnd);
 
         [DllImport("user32.dll")]
         private static extern Boolean ShowWindow(IntPtr hWnd, UInt32 nCmdShow);
+        
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern Boolean GetWindowRect(IntPtr hWnd, out WinRectangle lpRect);
 
+        public static Rectangle GetWindowRectangle(IntPtr handle)
+        {
+            if (!GetWindowRect(handle, out WinRectangle rectangle))
+            {
+                InteropUtils.ThrowLastWin32Exception();
+            }
+
+            return rectangle;
+        }
+
+        public static Rectangle GetWindowRectangle([NotNull] this IWindow window)
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            return GetWindowRectangle(window.Handle);
+        }
+
+        //TODO: добавить установку, проверку и удаление пунктов меню
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern IntPtr GetSystemMenu(IntPtr hWnd, Boolean bRevert);
+	
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern Boolean AppendMenu(IntPtr hMenu, Int32 uFlags, Int32 uIDNewItem, String lpNewItem);
+	
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern Boolean InsertMenu(IntPtr hMenu, Int32 uPosition, Int32 uFlags, Int32 uIDNewItem, String lpNewItem);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern Int32 DeleteMenu(IntPtr hMenu, Int32 nPosition, Int32 wFlags);
+        
         public static Boolean ShowWindow(IntPtr handle, WindowStateType state)
         {
             return ShowWindow(handle, (UInt32) state);
         }
         
-        public static Boolean ShowWindow(this IWindow window, WindowStateType state)
+        public static Boolean ShowWindow([NotNull] this IWindow window, WindowStateType state)
         {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
             return ShowWindow(window.Handle, state);
         }
 
@@ -116,20 +159,35 @@ namespace NetExtender.Utils.GUI
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean BringToForeground(this Form form)
+        public static Boolean BringToForeground([NotNull] this Form form)
         {
+            if (form is null)
+            {
+                throw new ArgumentNullException(nameof(form));
+            }
+
             return BringToForegroundWindow(form.Handle);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean BringToForeground(this Window window)
+        public static Boolean BringToForeground([NotNull] this Window window)
         {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
             return BringToForegroundWindow(window.GetHandle());
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean BringToForeground(IGUIHandle window)
+        public static Boolean BringToForeground([NotNull] IGUIHandle window)
         {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
             return BringToForegroundWindow(window.Handle);
         }
     }

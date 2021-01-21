@@ -640,7 +640,7 @@ namespace NetExtender.GUI.WinForms.ListViews
 
         protected virtual void OnMenuActionClicked(Object sender, ToolStripItemClickedEventArgs e)
         {
-            if (!(e.ClickedItem is FixedToolStripMenuItem item))
+            if (e.ClickedItem is not FixedToolStripMenuItem item)
             {
                 return;
             }

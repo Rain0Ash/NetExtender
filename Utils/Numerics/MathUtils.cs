@@ -552,7 +552,6 @@ namespace NetExtender.Utils.Numerics
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        [SuppressMessage("ReSharper", "IntroduceOptionalParameters.Global")]
         public static Decimal Sqrt(this Decimal value)
         {
             return Sqrt(value, Decimal.Zero);

@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Events.Args;
 using NetExtender.Network.IPC.IO;
+using NetExtender.Times;
 using ProtoBuf;
 
 namespace NetExtender.Network.IPC.Messaging
@@ -56,7 +57,7 @@ namespace NetExtender.Network.IPC.Messaging
 			}
 		}
 
-		public static readonly TimeSpan DefaultMinMessageAge = TimeSpan.FromMilliseconds(500);
+		public static readonly TimeSpan DefaultMinMessageAge = Time.Second.Half;
 
 		static TinyMessageBus()
 		{

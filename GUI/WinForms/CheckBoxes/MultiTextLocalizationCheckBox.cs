@@ -9,9 +9,9 @@ namespace NetExtender.GUI.WinForms.CheckBoxes
 {
     public class MultiTextLocalizationCheckBox : LocalizationCheckBox
     {
-        public LocaleStrings CheckedText { get; set; }
-        public LocaleStrings IndeterminateText { get; set; }
-        public LocaleStrings UncheckedText { get; set; }
+        public LocaleMultiString CheckedText { get; set; }
+        public LocaleMultiString IndeterminateText { get; set; }
+        public LocaleMultiString UncheckedText { get; set; }
 
         protected override void OnCheckedChanged(EventArgs e)
         {

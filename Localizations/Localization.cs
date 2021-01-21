@@ -11,9 +11,11 @@ using System.Runtime.InteropServices;
 using NetExtender.Utils.Types;
 using NetExtender.Cultures;
 using NetExtender.Cultures.Comparers;
+using NetExtender.Types.Culture;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Dictionaries.Interfaces;
 using NetExtender.Types.Maps;
+using NetExtender.Types.Strings;
 using ReactiveUI;
 
 namespace NetExtender.Localizations
@@ -128,16 +130,16 @@ namespace NetExtender.Localizations
         public static IEnumerable<Int32> AvailableLocalization { get; private set; }
         public static IReadOnlyList<Culture> Cultures { get; private set; }
 
-        protected Localization(LocaleStrings strings)
-            : this(0, strings)
+        protected Localization(LocaleMultiString multiString)
+            : this(0, multiString)
         {
         }
 
-        protected Localization(Int32 lcid, LocaleStrings strings = null)
+        protected Localization(Int32 lcid, LocaleMultiString multiString = null)
         {
-            strings ??= new LocaleStrings();
-            AvailableLocalization = strings.AvailableLocalization;
-            Cultures = strings.Cultures;
+            multiString ??= new LocaleMultiString();
+            AvailableLocalization = multiString.AvailableLocalization;
+            Cultures = multiString.Cultures;
             InitializeLanguage();
             StringsNotify();
             UpdateLocalization(lcid);
@@ -152,7 +154,7 @@ namespace NetExtender.Localizations
         {
             foreach (PropertyInfo info in GetType().GetProperties())
             {
-                if (info.PropertyType == typeof(Strings) || info.PropertyType.IsSubclassOf(typeof(Strings)))
+                if (info.PropertyType == typeof(MultiString) || info.PropertyType.IsSubclassOf(typeof(MultiString)))
                 {
                     LanguageChanged += () => this.RaisePropertyChanged(info.Name);
                 }

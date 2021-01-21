@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 using NetExtender.Types.Arrays;
 
 namespace NetExtender.Utils.Types
@@ -58,7 +58,7 @@ namespace NetExtender.Utils.Types
 
             return array;
         }
-        
+
         /// <summary>
         /// Performs the specified action for each element in the array. Supports multiple dimensions, the second parameter of the action are current indices for the dimensions.
         /// <para>
@@ -133,7 +133,7 @@ namespace NetExtender.Utils.Types
             source[index1, y1] = source[x2, y2];
             source[x2, y2] = temp;
         }
-        
+
         /// <summary>Sets all elements in an <see cref="Array" /> to the default value of each element type.</summary>
         /// <param name="array">The <see cref="Array" /> whose elements need to be cleared.</param>
         /// <exception cref="ArgumentNullException">
@@ -143,7 +143,7 @@ namespace NetExtender.Utils.Types
         {
             Array.Clear(array, 0, array.Length);
         }
-        
+
         /// <summary>Sets a range of elements in the <see cref="Array" /> to zero, to false, or to null, depending on the element type.</summary>
         /// <param name="array">The <see cref="Array" /> whose elements need to be cleared.</param>
         /// <param name="index">The starting index of the range of elements to clear.</param>
@@ -171,12 +171,12 @@ namespace NetExtender.Utils.Types
         {
             Array.Clear(array, index, length);
         }
-        
+
         public static Span<T> Slice<T>(this T[] array, Int32 start)
         {
             return array.AsSpan().Slice(start);
         }
-        
+
         public static Span<T> Slice<T>(this T[] array, Int32 start, Int32 length)
         {
             return array.AsSpan().Slice(start, length);
@@ -186,12 +186,12 @@ namespace NetExtender.Utils.Types
         {
             array.AsSpan().Fill(value);
         }
-        
+
         public static void Fill<T>(this T[] array, T value, Int32 start)
         {
             array.AsSpan().Slice(start).Fill(value);
         }
-        
+
         public static void Fill<T>(this T[] array, T value, Int32 start, Int32 length)
         {
             array.AsSpan().Slice(start, length).Fill(value);
@@ -213,14 +213,14 @@ namespace NetExtender.Utils.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(length));
             }
-            
+
             length = (array.Length - index) % (length + 1);
 
             if (length == 0)
             {
                 return Array.Empty<T>();
             }
-            
+
             T[] result = new T[length];
             Array.Copy(array, index, result, 0, length);
             return result;
@@ -235,6 +235,11 @@ namespace NetExtender.Utils.Types
         /// <returns>Array of items</returns>
         public static T[] ParamsAppend<T>(this T item, params T[] items)
         {
+            if (items is null || items.Length <= 0)
+            {
+                return new[] { item };
+            }
+
             return items.Prepend(item).ToArray();
         }
 
@@ -930,7 +935,7 @@ namespace NetExtender.Utils.Types
         {
             return Array.TrueForAll(array, match);
         }
-        
+
         /// <summary>
         /// Converts to <see cref="ReadOnlyArray{T}"/>.
         /// </summary>
@@ -946,7 +951,7 @@ namespace NetExtender.Utils.Types
 
             return source is T[] array ? ToReadOnlyArray(array) : new ReadOnlyArray<T>(source.ToArray());
         }
-        
+
         /// <summary>
         /// Converts to <see cref="ReadOnlyArray{T}"/>.
         /// </summary>
@@ -961,596 +966,596 @@ namespace NetExtender.Utils.Types
         #region EqualsTo
 
         private const Int32 BoundLength = 5;
-        
+
         /// <summary>
         /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-		/// </summary>
-		/// <param name="first">The first array to compare.</param>
-		/// <param name="second">The second array to compare.</param>
-		/// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-		[Pure]
-		public static unsafe Boolean EqualsTo([CanBeNull] this Char[] first, [CanBeNull] Char[] second)
-		{
-			if (first == second)
+        /// </summary>
+        /// <param name="first">The first array to compare.</param>
+        /// <param name="second">The second array to compare.</param>
+        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
+        [Pure]
+        public static unsafe Boolean EqualsTo([CanBeNull] this Char[] first, [CanBeNull] Char[] second)
+        {
+            if (first == second)
             {
-				return true;
+                return true;
             }
 
-			if (first is null || second is null)
+            if (first is null || second is null)
             {
-				return false;
+                return false;
             }
 
-			if (first.Length != second.Length)
+            if (first.Length != second.Length)
             {
-				return false;
+                return false;
             }
-			
-			if (first.Length == 0)
-			{
-				return true;
-			}
 
-			if (first.Length < BoundLength)
-			{
-                return !first.Where((value, i) => value != second[i]).Any(); 
-			}
-
-			fixed (void* pa = &first[0], pb = &second[0])
+            if (first.Length == 0)
             {
-				return MemoryUtils.Compare((Byte*)pa, (Byte*)pb, first.Length * sizeof(Char));
+                return true;
             }
-		}
 
-		/// <summary>
+            if (first.Length < BoundLength)
+            {
+                return !first.Where((value, i) => value != second[i]).Any();
+            }
+
+            fixed (void* pa = &first[0], pb = &second[0])
+            {
+                return MemoryUtils.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(Char));
+            }
+        }
+
+        /// <summary>
         /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-		/// </summary>
-		/// <param name="first">The first array to compare.</param>
-		/// <param name="second">The second array to compare.</param>
-		/// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-		[Pure]
-		public static unsafe Boolean EqualsTo([CanBeNull] this SByte[] first, [CanBeNull] SByte[] second)
-		{
-			if (first == second)
+        /// </summary>
+        /// <param name="first">The first array to compare.</param>
+        /// <param name="second">The second array to compare.</param>
+        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
+        [Pure]
+        public static unsafe Boolean EqualsTo([CanBeNull] this SByte[] first, [CanBeNull] SByte[] second)
+        {
+            if (first == second)
             {
-				return true;
+                return true;
             }
 
-			if (first is null || second is null)
+            if (first is null || second is null)
             {
-				return false;
+                return false;
             }
 
-			if (first.Length != second.Length)
+            if (first.Length != second.Length)
             {
-				return false;
+                return false;
             }
 
-			if (first.Length == 0)
-			{
-				return true;
-			}
-			
-			if (first.Length < BoundLength)
-			{
-                return !first.Where((value, i) => value != second[i]).Any(); 
-			}
-
-			fixed (void* pa = &first[0], pb = &second[0])
+            if (first.Length == 0)
             {
-				return MemoryUtils.Compare((Byte*)pa, (Byte*)pb, first.Length * sizeof(SByte));
+                return true;
             }
-		}
 
-		/// <summary>
+            if (first.Length < BoundLength)
+            {
+                return !first.Where((value, i) => value != second[i]).Any();
+            }
+
+            fixed (void* pa = &first[0], pb = &second[0])
+            {
+                return MemoryUtils.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(SByte));
+            }
+        }
+
+        /// <summary>
         /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-		/// </summary>
-		/// <param name="first">The first array to compare.</param>
-		/// <param name="second">The second array to compare.</param>
-		/// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-		[Pure]
-		public static unsafe Boolean EqualsTo([CanBeNull] this Byte[] first, [CanBeNull] Byte[] second)
-		{
-			if (first == second)
+        /// </summary>
+        /// <param name="first">The first array to compare.</param>
+        /// <param name="second">The second array to compare.</param>
+        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
+        [Pure]
+        public static unsafe Boolean EqualsTo([CanBeNull] this Byte[] first, [CanBeNull] Byte[] second)
+        {
+            if (first == second)
             {
-				return true;
+                return true;
             }
 
-			if (first is null || second is null)
+            if (first is null || second is null)
             {
-				return false;
+                return false;
             }
 
-			if (first.Length != second.Length)
+            if (first.Length != second.Length)
             {
-				return false;
+                return false;
             }
-			
-			if (first.Length == 0)
-			{
-				return true;
-			}
 
-			if (first.Length < BoundLength)
-			{
-                return !first.Where((value, i) => value != second[i]).Any(); 
-			}
-
-			fixed (void* pa = &first[0], pb = &second[0])
+            if (first.Length == 0)
             {
-				return MemoryUtils.Compare((Byte*)pa, (Byte*)pb, first.Length * sizeof(Byte));
+                return true;
             }
-		}
 
-		/// <summary>
+            if (first.Length < BoundLength)
+            {
+                return !first.Where((value, i) => value != second[i]).Any();
+            }
+
+            fixed (void* pa = &first[0], pb = &second[0])
+            {
+                return MemoryUtils.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(Byte));
+            }
+        }
+
+        /// <summary>
         /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-		/// </summary>
-		/// <param name="first">The first array to compare.</param>
-		/// <param name="second">The second array to compare.</param>
-		/// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-		[Pure]
-		public static unsafe Boolean EqualsTo([CanBeNull] this Int16[] first, [CanBeNull] Int16[] second)
-		{
-			if (first == second)
+        /// </summary>
+        /// <param name="first">The first array to compare.</param>
+        /// <param name="second">The second array to compare.</param>
+        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
+        [Pure]
+        public static unsafe Boolean EqualsTo([CanBeNull] this Int16[] first, [CanBeNull] Int16[] second)
+        {
+            if (first == second)
             {
-				return true;
+                return true;
             }
 
-			if (first is null || second is null)
+            if (first is null || second is null)
             {
-				return false;
+                return false;
             }
 
-			if (first.Length != second.Length)
+            if (first.Length != second.Length)
             {
-				return false;
+                return false;
             }
-			
-			if (first.Length == 0)
-			{
-				return true;
-			}
 
-			if (first.Length < BoundLength)
-			{
-                return !first.Where((value, i) => value != second[i]).Any(); 
-			}
-
-			fixed (void* pa = &first[0], pb = &second[0])
+            if (first.Length == 0)
             {
-				return MemoryUtils.Compare((Byte*)pa, (Byte*)pb, first.Length * sizeof(Int16));
+                return true;
             }
-		}
 
-		/// <summary>
+            if (first.Length < BoundLength)
+            {
+                return !first.Where((value, i) => value != second[i]).Any();
+            }
+
+            fixed (void* pa = &first[0], pb = &second[0])
+            {
+                return MemoryUtils.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(Int16));
+            }
+        }
+
+        /// <summary>
         /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-		/// </summary>
-		/// <param name="first">The first array to compare.</param>
-		/// <param name="second">The second array to compare.</param>
-		/// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-		[Pure]
-		public static unsafe Boolean EqualsTo([CanBeNull] this UInt16[] first, [CanBeNull] UInt16[] second)
-		{
-			if (first == second)
+        /// </summary>
+        /// <param name="first">The first array to compare.</param>
+        /// <param name="second">The second array to compare.</param>
+        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
+        [Pure]
+        public static unsafe Boolean EqualsTo([CanBeNull] this UInt16[] first, [CanBeNull] UInt16[] second)
+        {
+            if (first == second)
             {
-				return true;
+                return true;
             }
 
-			if (first is null || second is null)
+            if (first is null || second is null)
             {
-				return false;
+                return false;
             }
 
-			if (first.Length != second.Length)
+            if (first.Length != second.Length)
             {
-				return false;
+                return false;
             }
-			
-			if (first.Length == 0)
-			{
-				return true;
-			}
 
-			if (first.Length < BoundLength)
-			{
-                return !first.Where((value, i) => value != second[i]).Any(); 
-			}
-
-			fixed (void* pa = &first[0], pb = &second[0])
+            if (first.Length == 0)
             {
-				return MemoryUtils.Compare((Byte*)pa, (Byte*)pb, first.Length * sizeof(UInt16));
+                return true;
             }
-		}
 
-		/// <summary>
+            if (first.Length < BoundLength)
+            {
+                return !first.Where((value, i) => value != second[i]).Any();
+            }
+
+            fixed (void* pa = &first[0], pb = &second[0])
+            {
+                return MemoryUtils.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(UInt16));
+            }
+        }
+
+        /// <summary>
         /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-		/// </summary>
-		/// <param name="first">The first array to compare.</param>
-		/// <param name="second">The second array to compare.</param>
-		/// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-		[Pure]
-		public static unsafe Boolean EqualsTo([CanBeNull] this Int32[] first, [CanBeNull] Int32[] second)
-		{
-			if (first == second)
+        /// </summary>
+        /// <param name="first">The first array to compare.</param>
+        /// <param name="second">The second array to compare.</param>
+        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
+        [Pure]
+        public static unsafe Boolean EqualsTo([CanBeNull] this Int32[] first, [CanBeNull] Int32[] second)
+        {
+            if (first == second)
             {
-				return true;
+                return true;
             }
 
-			if (first is null || second is null)
+            if (first is null || second is null)
             {
-				return false;
+                return false;
             }
 
-			if (first.Length != second.Length)
+            if (first.Length != second.Length)
             {
-				return false;
+                return false;
             }
-			
-			if (first.Length == 0)
-			{
-				return true;
-			}
 
-			if (first.Length < BoundLength)
-			{
-                return !first.Where((value, i) => value != second[i]).Any(); 
-			}
-
-			fixed (void* pa = &first[0], pb = &second[0])
+            if (first.Length == 0)
             {
-				return MemoryUtils.Compare((Byte*)pa, (Byte*)pb, first.Length * sizeof(Int32));
+                return true;
             }
-		}
 
-		/// <summary>
+            if (first.Length < BoundLength)
+            {
+                return !first.Where((value, i) => value != second[i]).Any();
+            }
+
+            fixed (void* pa = &first[0], pb = &second[0])
+            {
+                return MemoryUtils.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(Int32));
+            }
+        }
+
+        /// <summary>
         /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-		/// </summary>
-		/// <param name="first">The first array to compare.</param>
-		/// <param name="second">The second array to compare.</param>
-		/// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-		[Pure]
-		public static unsafe Boolean EqualsTo([CanBeNull] this UInt32[] first, [CanBeNull] UInt32[] second)
-		{
-			if (first == second)
+        /// </summary>
+        /// <param name="first">The first array to compare.</param>
+        /// <param name="second">The second array to compare.</param>
+        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
+        [Pure]
+        public static unsafe Boolean EqualsTo([CanBeNull] this UInt32[] first, [CanBeNull] UInt32[] second)
+        {
+            if (first == second)
             {
-				return true;
+                return true;
             }
 
-			if (first is null || second is null)
+            if (first is null || second is null)
             {
-				return false;
+                return false;
             }
 
-			if (first.Length != second.Length)
+            if (first.Length != second.Length)
             {
-				return false;
+                return false;
             }
-			
-			if (first.Length == 0)
-			{
-				return true;
-			}
 
-			if (first.Length < BoundLength)
-			{
-                return !first.Where((value, i) => value != second[i]).Any(); 
-			}
-
-			fixed (void* pa = &first[0], pb = &second[0])
+            if (first.Length == 0)
             {
-				return MemoryUtils.Compare((Byte*)pa, (Byte*)pb, first.Length * sizeof(UInt32));
+                return true;
             }
-		}
 
-		/// <summary>
+            if (first.Length < BoundLength)
+            {
+                return !first.Where((value, i) => value != second[i]).Any();
+            }
+
+            fixed (void* pa = &first[0], pb = &second[0])
+            {
+                return MemoryUtils.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(UInt32));
+            }
+        }
+
+        /// <summary>
         /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-		/// </summary>
-		/// <param name="first">The first array to compare.</param>
-		/// <param name="second">The second array to compare.</param>
-		/// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-		[Pure]
-		public static unsafe Boolean EqualsTo([CanBeNull] this Int64[] first, [CanBeNull] Int64[] second)
-		{
-			if (first == second)
+        /// </summary>
+        /// <param name="first">The first array to compare.</param>
+        /// <param name="second">The second array to compare.</param>
+        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
+        [Pure]
+        public static unsafe Boolean EqualsTo([CanBeNull] this Int64[] first, [CanBeNull] Int64[] second)
+        {
+            if (first == second)
             {
-				return true;
+                return true;
             }
 
-			if (first is null || second is null)
+            if (first is null || second is null)
             {
-				return false;
+                return false;
             }
 
-			if (first.Length != second.Length)
+            if (first.Length != second.Length)
             {
-				return false;
+                return false;
             }
-			
-			if (first.Length == 0)
-			{
-				return true;
-			}
 
-			if (first.Length < BoundLength)
-			{
-                return !first.Where((value, i) => value != second[i]).Any(); 
-			}
-
-			fixed (void* pa = &first[0], pb = &second[0])
+            if (first.Length == 0)
             {
-				return MemoryUtils.Compare((Byte*)pa, (Byte*)pb, first.Length * sizeof(Int64));
+                return true;
             }
-		}
 
-		/// <summary>
+            if (first.Length < BoundLength)
+            {
+                return !first.Where((value, i) => value != second[i]).Any();
+            }
+
+            fixed (void* pa = &first[0], pb = &second[0])
+            {
+                return MemoryUtils.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(Int64));
+            }
+        }
+
+        /// <summary>
         /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-		/// </summary>
-		/// <param name="first">The first array to compare.</param>
-		/// <param name="second">The second array to compare.</param>
-		/// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-		[Pure]
-		public static unsafe Boolean EqualsTo([CanBeNull] this UInt64[] first, [CanBeNull] UInt64[] second)
-		{
-			if (first == second)
+        /// </summary>
+        /// <param name="first">The first array to compare.</param>
+        /// <param name="second">The second array to compare.</param>
+        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
+        [Pure]
+        public static unsafe Boolean EqualsTo([CanBeNull] this UInt64[] first, [CanBeNull] UInt64[] second)
+        {
+            if (first == second)
             {
-				return true;
+                return true;
             }
 
-			if (first is null || second is null)
+            if (first is null || second is null)
             {
-				return false;
+                return false;
             }
 
-			if (first.Length != second.Length)
+            if (first.Length != second.Length)
             {
-				return false;
+                return false;
             }
-			
-			if (first.Length == 0)
-			{
-				return true;
-			}
 
-			if (first.Length < BoundLength)
-			{
-                return !first.Where((value, i) => value != second[i]).Any(); 
-			}
-
-			fixed (void* pa = &first[0], pb = &second[0])
+            if (first.Length == 0)
             {
-				return MemoryUtils.Compare((Byte*)pa, (Byte*)pb, first.Length * sizeof(UInt64));
+                return true;
             }
-		}
 
-		/// <summary>
+            if (first.Length < BoundLength)
+            {
+                return !first.Where((value, i) => value != second[i]).Any();
+            }
+
+            fixed (void* pa = &first[0], pb = &second[0])
+            {
+                return MemoryUtils.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(UInt64));
+            }
+        }
+
+        /// <summary>
         /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-		/// </summary>
-		/// <param name="first">The first array to compare.</param>
-		/// <param name="second">The second array to compare.</param>
-		/// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-		[Pure]
-		public static unsafe Boolean EqualsTo([CanBeNull] this Single[] first, [CanBeNull] Single[] second)
-		{
-			if (first == second)
+        /// </summary>
+        /// <param name="first">The first array to compare.</param>
+        /// <param name="second">The second array to compare.</param>
+        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
+        [Pure]
+        public static unsafe Boolean EqualsTo([CanBeNull] this Single[] first, [CanBeNull] Single[] second)
+        {
+            if (first == second)
             {
-				return true;
+                return true;
             }
 
-			if (first is null || second is null)
+            if (first is null || second is null)
             {
-				return false;
+                return false;
             }
 
-			if (first.Length != second.Length)
+            if (first.Length != second.Length)
             {
-				return false;
+                return false;
             }
-			
-			if (first.Length == 0)
-			{
-				return true;
-			}
 
-			if (first.Length < BoundLength)
-			{
-                 return !first.Where((value, i) => Math.Abs(value - second[i]) >= Single.Epsilon).Any();
-			}
-
-			fixed (void* pa = &first[0], pb = &second[0])
+            if (first.Length == 0)
             {
-				return MemoryUtils.Compare((Byte*)pa, (Byte*)pb, first.Length * sizeof(Single));
+                return true;
             }
-		}
 
-		/// <summary>
+            if (first.Length < BoundLength)
+            {
+                return !first.Where((value, i) => Math.Abs(value - second[i]) >= Single.Epsilon).Any();
+            }
+
+            fixed (void* pa = &first[0], pb = &second[0])
+            {
+                return MemoryUtils.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(Single));
+            }
+        }
+
+        /// <summary>
         /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-		/// </summary>
-		/// <param name="first">The first array to compare.</param>
-		/// <param name="second">The second array to compare.</param>
-		/// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-		[Pure]
-		public static unsafe Boolean EqualsTo([CanBeNull] this Double[] first, [CanBeNull] Double[] second)
-		{
-			if (first == second)
+        /// </summary>
+        /// <param name="first">The first array to compare.</param>
+        /// <param name="second">The second array to compare.</param>
+        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
+        [Pure]
+        public static unsafe Boolean EqualsTo([CanBeNull] this Double[] first, [CanBeNull] Double[] second)
+        {
+            if (first == second)
             {
-				return true;
+                return true;
             }
 
-			if (first is null || second is null)
+            if (first is null || second is null)
             {
-				return false;
+                return false;
             }
 
-			if (first.Length != second.Length)
+            if (first.Length != second.Length)
             {
-				return false;
+                return false;
             }
-			
-			if (first.Length == 0)
-			{
-				return true;
-			}
 
-			if (first.Length < BoundLength)
-			{
-                 return !first.Where((value, i) => Math.Abs(value - second[i]) >= Double.Epsilon).Any();
-			}
-
-			fixed (void* pa = &first[0], pb = &second[0])
+            if (first.Length == 0)
             {
-				return MemoryUtils.Compare((Byte*)pa, (Byte*)pb, first.Length * sizeof(Double));
+                return true;
             }
-		}
 
-		/// <summary>
+            if (first.Length < BoundLength)
+            {
+                return !first.Where((value, i) => Math.Abs(value - second[i]) >= Double.Epsilon).Any();
+            }
+
+            fixed (void* pa = &first[0], pb = &second[0])
+            {
+                return MemoryUtils.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(Double));
+            }
+        }
+
+        /// <summary>
         /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-		/// </summary>
-		/// <param name="first">The first array to compare.</param>
-		/// <param name="second">The second array to compare.</param>
-		/// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-		[Pure]
-		public static unsafe Boolean EqualsTo([CanBeNull] this Decimal[] first, [CanBeNull] Decimal[] second)
-		{
-			if (first == second)
+        /// </summary>
+        /// <param name="first">The first array to compare.</param>
+        /// <param name="second">The second array to compare.</param>
+        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
+        [Pure]
+        public static unsafe Boolean EqualsTo([CanBeNull] this Decimal[] first, [CanBeNull] Decimal[] second)
+        {
+            if (first == second)
             {
-				return true;
+                return true;
             }
 
-			if (first is null || second is null)
+            if (first is null || second is null)
             {
-				return false;
+                return false;
             }
 
-			if (first.Length != second.Length)
+            if (first.Length != second.Length)
             {
-				return false;
+                return false;
             }
-			
-			if (first.Length == 0)
-			{
-				return true;
-			}
 
-			if (first.Length < BoundLength)
-			{
-                return !first.Where((value, i) => value != second[i]).Any(); 
-			}
-
-			fixed (void* pa = &first[0], pb = &second[0])
+            if (first.Length == 0)
             {
-				return MemoryUtils.Compare((Byte*)pa, (Byte*)pb, first.Length * sizeof(Decimal));
+                return true;
             }
-		}
 
-		/// <summary>
+            if (first.Length < BoundLength)
+            {
+                return !first.Where((value, i) => value != second[i]).Any();
+            }
+
+            fixed (void* pa = &first[0], pb = &second[0])
+            {
+                return MemoryUtils.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(Decimal));
+            }
+        }
+
+        /// <summary>
         /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-		/// </summary>
-		/// <param name="first">The first array to compare.</param>
-		/// <param name="second">The second array to compare.</param>
-		/// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-		[Pure]
-		public static unsafe Boolean EqualsTo([CanBeNull] this TimeSpan[] first, [CanBeNull] TimeSpan[] second)
-		{
-			if (first == second)
+        /// </summary>
+        /// <param name="first">The first array to compare.</param>
+        /// <param name="second">The second array to compare.</param>
+        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
+        [Pure]
+        public static unsafe Boolean EqualsTo([CanBeNull] this TimeSpan[] first, [CanBeNull] TimeSpan[] second)
+        {
+            if (first == second)
             {
-				return true;
+                return true;
             }
 
-			if (first is null || second is null)
+            if (first is null || second is null)
             {
-				return false;
+                return false;
             }
 
-			if (first.Length != second.Length)
+            if (first.Length != second.Length)
             {
-				return false;
+                return false;
             }
-			
-			if (first.Length == 0)
-			{
-				return true;
-			}
 
-			if (first.Length < BoundLength)
-			{
-                return !first.Where((value, i) => value != second[i]).Any(); 
-			}
-
-			fixed (void* pa = &first[0], pb = &second[0])
+            if (first.Length == 0)
             {
-				return MemoryUtils.Compare((Byte*)pa, (Byte*)pb, first.Length * sizeof(TimeSpan));
+                return true;
             }
-		}
 
-		/// <summary>
+            if (first.Length < BoundLength)
+            {
+                return !first.Where((value, i) => value != second[i]).Any();
+            }
+
+            fixed (void* pa = &first[0], pb = &second[0])
+            {
+                return MemoryUtils.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(TimeSpan));
+            }
+        }
+
+        /// <summary>
         /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-		/// </summary>
-		/// <param name="first">The first array to compare.</param>
-		/// <param name="second">The second array to compare.</param>
-		/// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-		[Pure]
-		public static unsafe Boolean EqualsTo([CanBeNull] this Guid[] first, [CanBeNull] Guid[] second)
-		{
-			if (first == second)
+        /// </summary>
+        /// <param name="first">The first array to compare.</param>
+        /// <param name="second">The second array to compare.</param>
+        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
+        [Pure]
+        public static unsafe Boolean EqualsTo([CanBeNull] this Guid[] first, [CanBeNull] Guid[] second)
+        {
+            if (first == second)
             {
-				return true;
+                return true;
             }
 
-			if (first is null || second is null)
+            if (first is null || second is null)
             {
-				return false;
+                return false;
             }
 
-			if (first.Length != second.Length)
+            if (first.Length != second.Length)
             {
-				return false;
+                return false;
             }
 
-			if (first.Length == 0)
+            if (first.Length == 0)
             {
-				return true;
+                return true;
             }
 
-			fixed (void* pa = &first[0], pb = &second[0])
+            fixed (void* pa = &first[0], pb = &second[0])
             {
-				return MemoryUtils.Compare((Byte*)pa, (Byte*)pb, first.Length * sizeof(Guid));
+                return MemoryUtils.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(Guid));
             }
-		}
-		
-		/// <summary>
-		/// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-		/// </summary>
-		/// <param name="first">The first array to compare.</param>
-		/// <param name="second">The second array to compare.</param>
-		/// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-		[Pure]
-		public static unsafe Boolean EqualsTo<T>([CanBeNull] this T[] first, [CanBeNull] T[] second) where T : unmanaged
-		{
-			if (first == second)
-			{
-				return true;
-			}
+        }
 
-			if (first is null || second is null)
-			{
-				return false;
-			}
+        /// <summary>
+        /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
+        /// </summary>
+        /// <param name="first">The first array to compare.</param>
+        /// <param name="second">The second array to compare.</param>
+        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
+        [Pure]
+        public static unsafe Boolean EqualsTo<T>([CanBeNull] this T[] first, [CanBeNull] T[] second) where T : unmanaged
+        {
+            if (first == second)
+            {
+                return true;
+            }
 
-			if (first.Length != second.Length)
-			{
-				return false;
-			}
+            if (first is null || second is null)
+            {
+                return false;
+            }
 
-			if (first.Length == 0)
-			{
-				return true;
-			}
+            if (first.Length != second.Length)
+            {
+                return false;
+            }
 
-			fixed (void* pa = &first[0], pb = &second[0])
-			{
-				return MemoryUtils.Compare((Byte*)pa, (Byte*)pb, first.Length * sizeof(T));
-			}
-		}
+            if (first.Length == 0)
+            {
+                return true;
+            }
+
+            fixed (void* pa = &first[0], pb = &second[0])
+            {
+                return MemoryUtils.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(T));
+            }
+        }
 
         #endregion
     }

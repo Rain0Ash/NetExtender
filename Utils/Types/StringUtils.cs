@@ -14,6 +14,7 @@ using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace NetExtender.Utils.Types
 {
@@ -42,15 +43,45 @@ namespace NetExtender.Utils.Types
         /// Cached null string task
         /// </summary>
         public static Task<String> Null { get; } = Task.FromResult<String>(null);
-        
+
         /// <summary>
         /// Cached empty string task
         /// </summary>
         public static Task<String> Empty { get; } = Task.FromResult(String.Empty);
-        
+
         public const String DefaultSeparator = " ";
-        
+
         public const String FormatVariableRegexPattern = @"\{([^\{\}]+)\}";
+
+        public static Int32 CharLength([NotNull] this String[] values)
+        {
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.Length switch
+            {
+                0 => 0,
+                1 => values[0]?.Length ?? 0,
+                _ => values.WhereNotNull().Sum(str => str.Length)
+            };
+        }
+
+        public static Int64 CharLongLength([NotNull] this String[] values)
+        {
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.Length switch
+            {
+                0 => 0,
+                1 => values[0]?.Length ?? 0,
+                _ => values.WhereNotNull().Aggregate<String, Int64>(0, (current, str) => current + str.Length)
+            };
+        }
 
         public static IEnumerable<Int32> AllIndexesOf(this String str, String pattern, StringComparison comparison = StringComparison.Ordinal)
         {
@@ -158,7 +189,7 @@ namespace NetExtender.Utils.Types
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
-        public static String BeforeFormatVariables(String str)
+        public static String TrimAfterFormatVariables(String str)
         {
             Match match = Regex.Match(str, FormatVariableRegexPattern, RegexOptions.Compiled);
             return match.Success ? str.Substring(0, match.Index) : null;
@@ -168,21 +199,21 @@ namespace NetExtender.Utils.Types
         {
             if (source is null)
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(source));
             }
 
-            Int32 argsExpected = FormatArgsExpected(source);
+            Int32 expected = FormatArgsExpected(source);
 
-            if (argsExpected <= 0)
+            if (expected <= 0)
             {
                 return source;
             }
 
             const String nullArgs = @"null";
 
-            args = args.Length < argsExpected
-                ? args.Concat(Enumerable.Repeat(nullArgs, argsExpected - args.Length)).ToArray()
-                : args.Take(argsExpected).ToArray();
+            args = args.Length < expected
+                ? args.Concat(Enumerable.Repeat(nullArgs, expected - args.Length)).ToArray()
+                : args.Take(expected).ToArray();
 
             return String.Format(source, args);
         }
@@ -201,20 +232,35 @@ namespace NetExtender.Utils.Types
         {
             return str is null;
         }
+        
+        public static Boolean IsNotNull(this String str)
+        {
+            return str is not null;
+        }
 
         public static Boolean IsEmpty(this String str)
         {
             return str == String.Empty;
         }
+        
+        public static Boolean IsNotEmpty(this String str)
+        {
+            return str != String.Empty;
+        }
 
         public static Boolean IsWhiteSpace(this String str)
         {
-            return str.Length > 0 && IsEmptyOrWhiteSpace(str);
+            return str is not null && str.Length > 0 && str.All(Char.IsWhiteSpace);
+        }
+
+        public static Boolean IsNotWhiteSpace(this String str)
+        {
+            return !IsWhiteSpace(str);
         }
 
         public static Boolean IsEmptyOrWhiteSpace(this String str)
         {
-            return str.All(Char.IsWhiteSpace);
+            return str is not null && (str.Length <= 0 || str.All(Char.IsWhiteSpace));
         }
 
         public static Boolean IsNullOrEmpty(this String str)
@@ -225,16 +271,6 @@ namespace NetExtender.Utils.Types
         public static Boolean IsNullOrWhiteSpace(this String str)
         {
             return String.IsNullOrWhiteSpace(str);
-        }
-
-        public static Boolean IsNotNull(this String str)
-        {
-            return str is not null;
-        }
-
-        public static Boolean IsNotEmpty(this String str)
-        {
-            return str != String.Empty;
         }
 
         public static Boolean IsNotNullOrEmpty(this String str)
@@ -262,28 +298,29 @@ namespace NetExtender.Utils.Types
         {
             return SplitByNewLine(str, Int32.MaxValue, options);
         }
-        
+
         public static String[] SplitByNewLine(String str, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
             return str.Split('\n', count, options);
         }
-        
+
         public static String[] SplitBySpace(String str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
             return SplitBySpace(str, Int32.MaxValue, options);
         }
-        
+
         public static String[] SplitBySpace(String str, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
             return str.Split(' ', count, options);
         }
-        
+
         private static readonly Char[] NewLineAndSpaceChars = {'\n', ' '};
+
         public static String[] SplitByNewLineAndSpace(String str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
             return SplitByNewLineAndSpace(str, Int32.MaxValue, options);
         }
-        
+
         public static String[] SplitByNewLineAndSpace(String str, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
             return str.Split(NewLineAndSpaceChars, count, options);
@@ -302,7 +339,7 @@ namespace NetExtender.Utils.Types
             }
 
             Boolean allentries = options == StringSplitOptions.None;
-            
+
             Int32 index = 0;
             UnicodeCategory ctype = str.GetUnicodeCategory(index);
             String value;
@@ -310,7 +347,7 @@ namespace NetExtender.Utils.Types
             {
                 Char current = str[pos];
                 UnicodeCategory type = current.GetUnicodeCategory();
-                
+
                 if (ctype == type)
                 {
                     continue;
@@ -326,7 +363,7 @@ namespace NetExtender.Utils.Types
                         {
                             yield return value;
                         }
-                        
+
                         index = token;
                     }
                 }
@@ -337,7 +374,7 @@ namespace NetExtender.Utils.Types
                     {
                         yield return value;
                     }
-                    
+
                     index = pos;
                 }
 
@@ -418,6 +455,26 @@ namespace NetExtender.Utils.Types
             return values.Length > 0 ? String.Join(separator, values.Where(predicate)) : String.Empty;
         }
 
+        public static IEnumerable<String> WhereNotNullOrEmpty([NotNull] this IEnumerable<String> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.WhereNot(String.IsNullOrEmpty);
+        }
+
+        public static IEnumerable<String> WhereNotNullOrWhiteSpace([NotNull] this IEnumerable<String> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.WhereNot(String.IsNullOrWhiteSpace);
+        }
+
         public static String CapitalizeFirstChar(this String value)
         {
             if (String.IsNullOrEmpty(value))
@@ -433,7 +490,7 @@ namespace NetExtender.Utils.Types
             return count <= 1 ? value : new StringBuilder(value.Length * count).Insert(0, value, count).ToString();
         }
 
-        public static Boolean IsMatrix(this ICollection<String> value)
+        public static Boolean IsMatrix(this IReadOnlyCollection<String> value)
         {
             if (value is null)
             {
@@ -445,10 +502,10 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentException(@"Value cannot be an empty collection.", nameof(value));
             }
 
-            return value.AllSame(row => row.Length);
+            return value.AllSame(row => row.RemoveAnsi().Length);
         }
 
-        public static Size GetMatrixSize(this ICollection<String> value)
+        public static Size GetMatrixSize(this IReadOnlyCollection<String> value)
         {
             if (value is null)
             {
@@ -459,22 +516,22 @@ namespace NetExtender.Utils.Types
             {
                 throw new ArgumentException(@"Value cannot be an empty collection.", nameof(value));
             }
-            
+
             if (!IsMatrix(value))
             {
                 throw new ArgumentException(@"Different strings length", nameof(value));
             }
 
-            return new Size(value.First().Length, value.Count);
+            return new Size(value.First().RemoveAnsi().Length, value.Count);
         }
-        
+
         private static Regex AnsiRegex { get; } = new Regex(@"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])", RegexOptions.Compiled);
 
         public static Int32 CountAnsi(this String value)
         {
             return AnsiRegex.Matches(value).Count;
         }
-        
+
         public static String RemoveAnsi(this String value)
         {
             return AnsiRegex.Replace(value, String.Empty);
@@ -490,19 +547,19 @@ namespace NetExtender.Utils.Types
 
             return $"\"{value}\"";
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String CommentSingle(String value)
         {
             return $"\'{value}\'";
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Comment(this String value, Boolean single)
         {
             return single ? CommentSingle(value) : Comment(value);
         }
-        
+
         public static String AddPrefix(this String value, String prefix)
         {
             if (value is null)
@@ -539,11 +596,16 @@ namespace NetExtender.Utils.Types
             {
                 return value;
             }
-            
+
             return str + value + str;
         }
-        
+
         public static String RemovePrefix(this String value, String prefix)
+        {
+            return RemovePrefix(value, prefix, StringComparison.Ordinal);
+        }
+
+        public static String RemovePrefix(this String value, String prefix, StringComparison comparison)
         {
             if (value is null)
             {
@@ -555,10 +617,20 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(prefix));
             }
 
-            return value.StartsWith(prefix, StringComparison.CurrentCulture) ? value.Substring(prefix.Length) : value;
+            if (prefix.Length > value.Length || !value.StartsWith(prefix, comparison))
+            {
+                return value;
+            }
+
+            return value.Substring(prefix.Length);
         }
 
         public static String RemoveSuffix(this String value, String suffix)
+        {
+            return RemoveSuffix(value, suffix, StringComparison.Ordinal);
+        }
+
+        public static String RemoveSuffix(this String value, String suffix, StringComparison comparison)
         {
             if (value is null)
             {
@@ -570,19 +642,40 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(suffix));
             }
 
-            if (suffix.Length <= value.Length && value.EndsWith(suffix, StringComparison.CurrentCulture))
+            if (value.Length < suffix.Length || !value.EndsWith(suffix, comparison))
             {
-                return value.Substring(0, value.Length - suffix.Length);
+                return value;
             }
 
-            return value;
-        }
-
-        public static String RemovePrefixAndSuffix(this String value, String trim)
-        {
-            return value.RemovePrefix(trim).RemoveSuffix(trim);
+            return value.Substring(0, value.Length - suffix.Length);
         }
         
+        public static String RemovePrefixAndSuffix(this String value, String trim)
+        {
+            return RemovePrefixAndSuffix(value, trim, StringComparison.Ordinal);
+        }
+
+        public static String RemovePrefixAndSuffix([NotNull] this String value, String trim, StringComparison comparison)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (value.Length < trim.Length)
+            {
+                return value;
+            }
+
+            return value.StartsWith(trim, comparison) switch
+            {
+                true when value.EndsWith(trim, comparison) => value.Length > 2 * trim.Length ? value.Substring(trim.Length, value.Length - 2 * trim.Length) : String.Empty,
+                true => value.Substring(trim.Length),
+                false when value.EndsWith(trim, comparison) => value.Substring(0, value.Length - trim.Length),
+                _ => value
+            };
+        }
+
         /// <summary>
         /// Returns the beginning portion of s up to, but not including,
         /// the first occurrence of the character c. If c is not present in
@@ -592,7 +685,7 @@ namespace NetExtender.Utils.Types
         {
             return value.TakeWhile(ch => ch != character).Join();
         }
-        
+
         /// <summary>
         /// Returns the first string parameter that is not null, has a length greater
         /// than zero, and does not consist only of whitespace.
@@ -632,7 +725,6 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(value));
             }
 
-            // ReSharper disable once InvertIf
             if (!caseSensitive)
             {
                 character = Char.ToLowerInvariant(character);
@@ -715,7 +807,7 @@ namespace NetExtender.Utils.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(length), @"The maximum length must not be less than 4.");
             }
-            
+
             if (value.Length <= length - 3)
             {
                 return value;
@@ -724,38 +816,16 @@ namespace NetExtender.Utils.Types
             return value.Substring(0, length - 3) + "...";
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String Pop(this StringBuilder builder)
-        {
-            String str = builder.ToString();
-            builder.Clear();
-            return str;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String Pop(this StringBuilder builder, Int32 startIndex)
-        {
-            return Pop(builder, startIndex, builder.Length - startIndex);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String Pop(this StringBuilder builder, Int32 startIndex, Int32 length)
-        {
-            String str = builder.ToString(startIndex, length);
-            builder.Remove(startIndex, length);
-            return str;
-        }
-
         /// <summary>
         /// Converts the specified string to a stream by using UTF-8 encoding that can be read from.
         /// <para>Don't forget to dispose the stream.</para>
         /// </summary>
         /// <param name="value">A string value that the stream will read from.</param>
-        public static MemoryStream ToStream(String value)
+        public static MemoryStream ToStream(this String value)
         {
             return ToStream(value, Encoding.UTF8);
         }
-        
+
         /// <summary>
         /// Convert value to a MemoryStream, using the given encoding.
         /// </summary>
@@ -771,7 +841,7 @@ namespace NetExtender.Utils.Types
             writer.Write(value);
             writer.Flush();
             stream.Position = 0;
-            
+
             return stream;
         }
 
@@ -780,8 +850,13 @@ namespace NetExtender.Utils.Types
         /// </summary>
         /// <param name="source">The characters to convert.</param>
         [SecurityCritical]
-        public static SecureString ToSecureString(this IEnumerable<Char> source)
+        public static SecureString ToSecureString([NotNull] this IEnumerable<Char> source)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
             SecureString secure = new SecureString();
 
             foreach (Char chr in source)
@@ -799,8 +874,13 @@ namespace NetExtender.Utils.Types
         /// </summary>
         /// <param name="value">The secure string to convert.</param>
         [SecurityCritical]
-        public static String ToInsecureString(this SecureString value)
+        public static String ToInsecureString([NotNull] this SecureString value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             IntPtr ptr = Marshal.SecureStringToBSTR(value);
 
             try

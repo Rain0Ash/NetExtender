@@ -317,17 +317,17 @@ namespace NetExtender.Apps.Domains
                 }
             }
 
-            public void Initialize(GUIType type)
+            public IDomain Initialize(GUIType type)
             {
-                Initialize<WPFApp>(type);
+                return Initialize<WPFApp>(type);
             }
 
-            public void Initialize<TApp>(GUIType type) where TApp : WPFApp, new()
+            public IDomain Initialize<TApp>(GUIType type) where TApp : WPFApp, new()
             {
-                Initialize(new TApp(), type);
+                return Initialize(new TApp(), type);
             }
 
-            public void Initialize<TApp>(TApp app, GUIType type) where TApp : WPFApp, new()
+            public IDomain Initialize<TApp>(TApp app, GUIType type) where TApp : WPFApp, new()
             {
                 Application = type switch
                 {
@@ -338,6 +338,8 @@ namespace NetExtender.Apps.Domains
                     GUIType.None => throw new NotSupportedException(),
                     _ => throw new NotSupportedException()
                 };
+
+                return this;
             }
 
             public void Run()

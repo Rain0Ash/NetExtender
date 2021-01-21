@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.ConstrainedExecution;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 
 namespace NetExtender.Utils.Types
 {

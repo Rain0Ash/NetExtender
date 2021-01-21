@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utils.Types
@@ -33,9 +34,9 @@ namespace NetExtender.Utils.Types
             return (IntPtr) value;
         }
         
+        [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
         public static IntPtr ToIntPtr(this Int64 value)
         {
-            // ReSharper disable once RedundantOverflowCheckingContext
             checked
             {
                 return (IntPtr) value;

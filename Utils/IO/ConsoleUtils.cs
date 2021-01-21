@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.Runtime.CompilerServices;
@@ -15,6 +16,8 @@ using NetExtender.Events.Args;
 using NetExtender.GUI;
 using NetExtender.Types.Maps;
 using NetExtender.Utils.GUI;
+using NetExtender.Utils.OS;
+using NetExtender.Utils.OS.Devices;
 using NetExtender.Utils.Types;
 
 namespace NetExtender.Utils.IO
@@ -40,12 +43,6 @@ namespace NetExtender.Utils.IO
 
     public static partial class ConsoleUtils
     {
-        [DllImport("user32.dll")]
-        private static extern Int32 DeleteMenu(IntPtr hMenu, Int32 nPosition, Int32 wFlags);
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetSystemMenu(IntPtr hWnd, Boolean bRevert);
-
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern IntPtr GetStdHandle(Int32 nStdHandle);
 
@@ -58,36 +55,6 @@ namespace NetExtender.Utils.IO
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern Boolean SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, Int32 x, Int32 y, Int32 cx, Int32 cy, Int32 flags);
-        
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern Boolean GetWindowRect(IntPtr hWnd, out Rect lpRect);
-
-        private static Boolean GetWindowRect(IntPtr hWnd, out Rectangle lpRect)
-        {
-            if (GetWindowRect(hWnd, out Rect rectangle))
-            {
-                lpRect = rectangle;
-                return true;
-            }
-
-            lpRect = default;
-            return false;
-        }
-        
-        [StructLayout(LayoutKind.Sequential)]
-        private readonly struct Rect
-        {
-            public static implicit operator Rectangle(Rect rect)
-            {
-                return new Rectangle(rect.Left, rect.Top, rect.Right - rect.Left, rect.Bottom - rect.Top);
-            }
-
-            private Int32 Left { get; init; }
-            private Int32 Top { get; init; }
-            private Int32 Right { get; init; }
-            private Int32 Bottom { get; init; }
-        }
 
         [StructLayout(LayoutKind.Sequential)]
         private readonly struct WindowPlacement
@@ -314,7 +281,7 @@ namespace NetExtender.Utils.IO
 
                 if (!GetCurrentConsoleFontEx(ConsoleOutputHandle, false, ref font))
                 {
-                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                    InteropUtils.ThrowLastWin32Exception();
                 }
 
                 return font;
@@ -323,7 +290,7 @@ namespace NetExtender.Utils.IO
             {
                 if (!SetCurrentConsoleFontEx(ConsoleOutputHandle, false, ref value))
                 {
-                    throw new Win32Exception(Marshal.GetLastWin32Error());
+                    InteropUtils.ThrowLastWin32Exception();
                 }
             }
         }
@@ -428,6 +395,14 @@ namespace NetExtender.Utils.IO
                 SetWindowSize(Math.Min(value.Width, Console.LargestWindowWidth), Math.Min(value.Height, Console.LargestWindowHeight));
             }
         }
+
+        public static Rectangle Rectangle
+        {
+            get
+            {
+                return GUIUtils.GetWindowRectangle(ConsoleWindow);
+            }
+        }
         
         /// <inheritdoc cref="Console.SetWindowSize"/>
         public static void SetWindowSize(Int32 width, Int32 height)
@@ -447,17 +422,12 @@ namespace NetExtender.Utils.IO
                 SetWindowPosition(value.X, value.Y);
             }
         }
-        
+
         /// <inheritdoc cref="Console.SetWindowPosition"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetWindowPosition(Int32 x, Int32 y)
         {
-            if (!GetWindowRect(ConsoleWindow, out Rectangle rectangle))
-            {
-                throw new Win32Exception(Marshal.GetLastWin32Error());
-            }
-            
-            SetWindowPosition(x, y, rectangle);
+            SetWindowPosition(x, y, Rectangle);
         }
         
         /// <inheritdoc cref="Console.SetWindowPosition"/>
@@ -473,21 +443,33 @@ namespace NetExtender.Utils.IO
         {
             if (!SetWindowPos(ConsoleWindow, IntPtr.Zero, x, y, size.Width, size.Height, 0x4 | 0x10))
             {
-                throw new Win32Exception(Marshal.GetLastWin32Error());
+                InteropUtils.ThrowLastWin32Exception();
             }
         }
-
-        public static void CenterToScreen()
+        
+        [Obsolete]
+        public static void CenterToScreenByScreen()
         {
-            if (!GetWindowRect(ConsoleWindow, out Rectangle rectangle))
-            {
-                throw new Win32Exception(Marshal.GetLastWin32Error());
-            }
-
+            Rectangle rectangle = Rectangle;
             Screen screen = Screen.FromHandle(ConsoleWindow);
             
             Size size = rectangle.Size;
             SetWindowPosition(screen.WorkingArea.Width / 2 - rectangle.Width / 2, screen.WorkingArea.Height / 2 - rectangle.Height / 2, size);
+        }
+
+        public static void CenterToScreen()
+        {
+            CenterToScreen(DefaultMonitorType.Primary);
+        }
+        
+        public static void CenterToScreen(DefaultMonitorType type)
+        {
+            MonitorInfo screen = DeviceUtils.GetMonitorInfoFromWindow(ConsoleWindow, type);
+            
+            Rectangle rectangle = Rectangle;
+            Rectangle area = screen.WorkingArea;
+            
+            SetWindowPosition(area.Width / 2 - rectangle.Width / 2, area.Height / 2 - rectangle.Height / 2, rectangle.Size);
         }
         
         public static Boolean? IsConsoleVisible
@@ -669,19 +651,27 @@ namespace NetExtender.Utils.IO
             }
         }
 
-        private const Int32 MfBycommand = 0x00000000;
-        public const Int32 ScClose = 0xF060;
-
         public static Boolean ConsoleExitButtonEnabled
         {
             set
             {
                 throw new NotImplementedException();
-
-                if (!value)
-                {
-                    DeleteMenu(GetSystemMenu(ConsoleWindow, false), ScClose, MfBycommand);
-                }
+            }
+        }
+        
+        public static Boolean ConsoleMaximizeButtonEnabled
+        {
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
+        
+        public static Boolean ConsoleMinimizeButtonEnabled
+        {
+            set
+            {
+                throw new NotImplementedException();
             }
         }
 
@@ -696,26 +686,6 @@ namespace NetExtender.Utils.IO
                 Console.CancelKeyPress -= value;
             }
         }
-
-        /*
-        public static Boolean ConsoleListenerEnabled
-        {
-            get
-            {
-                return ConsoleListener.Running;
-            }
-            set
-            {
-                if (value)
-                {
-                    ConsoleListener.Start();
-                    return;
-                }
-                
-                ConsoleListener.Stop();
-            }
-        }
-        */
 
         public static Boolean HandleExit
         {

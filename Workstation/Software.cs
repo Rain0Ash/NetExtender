@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using NetExtender.Utils.Types;
-using NetExtender.Config.Registry;
+using NetExtender.Configuration.Registry;
 using NetExtender.Registry;
 
 namespace NetExtender.Workstation
@@ -126,7 +126,7 @@ namespace NetExtender.Workstation
             return bit;
         }
 
-        private static readonly Config.Config Config = new RegistryConfig(RegistryKeys.LocalMachine, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion");
+        private static readonly Configuration.Config Config = new Configuration.Config(new RegistryConfigBehavior(RegistryKeys.LocalMachine, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion"));
 
         private static Boolean IsWindows10()
         {

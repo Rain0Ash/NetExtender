@@ -10,11 +10,12 @@ using System.Linq;
 using NetExtender.Utils.Types;
 using NetExtender.Localizations;
 using NetExtender.Loggers.Common;
+using NetExtender.Types.Strings;
 using NetExtender.Utils.IO;
 
 namespace NetExtender.Loggers.Messages
 {
-    public readonly struct LogMessage : IConsoleMsg
+    public readonly struct LogMessage : IConsoleMessage
     {
         public static LogMessage NullError(String param)
         {
@@ -46,7 +47,7 @@ namespace NetExtender.Loggers.Messages
             [MessageType.UnknownError] = ConsoleColor.Gray
         }.ToImmutableDictionary();
 
-        public Strings Message { get; }
+        public MultiString Message { get; }
         private String[] Format { get; }
         public MessageType Type { get; }
         public ConsoleColor MessageColor { get; }
@@ -63,11 +64,11 @@ namespace NetExtender.Loggers.Messages
         public LogMessage(String message, MessageType type = MessageType.Default, IEnumerable<String> format = null,
             ConsoleColor? color = null, Int32 priority = 0,
             MessageAdditions additions = MessageAdditions.CurrentTime, Boolean newLine = true)
-            : this(new LocaleStrings(message), type, format, color, priority, additions, newLine)
+            : this(new LocaleMultiString(message), type, format, color, priority, additions, newLine)
         {
         }
 
-        public LogMessage(Strings message, MessageType type = MessageType.Default, IEnumerable<String> format = null,
+        public LogMessage(MultiString message, MessageType type = MessageType.Default, IEnumerable<String> format = null,
             ConsoleColor? color = null, Int32 priority = 0,
             MessageAdditions additions = MessageAdditions.CurrentTime, Boolean newLine = true)
         {

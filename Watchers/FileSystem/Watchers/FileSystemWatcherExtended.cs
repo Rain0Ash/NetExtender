@@ -3,7 +3,7 @@
 
 using System;
 using System.IO;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 using NetExtender.Watchers.FileSystem.Interfaces;
 
 namespace NetExtender.Watchers.FileSystem

@@ -534,7 +534,6 @@ namespace NetExtender.Utils.Numerics
         ForEach(types, NonZeroRangeFunc, false);
     }
 #>
-    [SuppressMessage("ReSharper", "IntroduceOptionalParameters.Global")]
     public static partial class RandomUtils
     {
 <#

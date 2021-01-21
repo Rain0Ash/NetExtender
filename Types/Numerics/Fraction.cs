@@ -440,7 +440,7 @@ namespace NetExtender.Types.Numerics
         /// <returns>True if they are, false otherwise</returns>
         public override Boolean Equals(Object obj)
         {
-            if (!(obj is Fraction other))
+            if (obj is not Fraction other)
             {
                 return false;
             }

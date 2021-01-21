@@ -148,7 +148,7 @@ namespace NetExtender.Utils.Types
             return DrawingUtils.GetAspectRatio(image.Width, image.Height);
         }
 
-        public static Icon IconFromImage(Image img)
+        public static Icon IconFromImage(Image image)
         {
             MemoryStream ms = new MemoryStream();
             BinaryWriter bw = new BinaryWriter(ms);
@@ -157,14 +157,14 @@ namespace NetExtender.Utils.Types
             bw.Write((Int16) 1); // 2 : 1=ico, 2=cur
             bw.Write((Int16) 1); // 4 : number of images
             // Image directory
-            Int32 w = img.Width;
+            Int32 w = image.Width;
             if (w >= 256)
             {
                 w = 0;
             }
 
             bw.Write((Byte) w); // 0 : width of image
-            Int32 h = img.Height;
+            Int32 h = image.Height;
             if (h > 255)
             {
                 h = 0;
@@ -180,7 +180,7 @@ namespace NetExtender.Utils.Types
             Int32 start = (Int32) ms.Position + 4;
             bw.Write(start); // 12: offset of image data
             // Image data
-            img.Save(ms, ImageFormat.Png);
+            image.Save(ms, ImageFormat.Png);
             Int32 imageSize = (Int32) ms.Position - start;
             ms.Seek(sizeHere, SeekOrigin.Begin);
             bw.Write(imageSize);
@@ -190,32 +190,32 @@ namespace NetExtender.Utils.Types
             return new Icon(ms);
         }
 
-        public static Byte[] ToBytes(this Image img)
+        public static Byte[] ToBytes(this Image image)
         {
-            return ToBytes(img, img.RawFormat);
+            return ToBytes(image, image.RawFormat);
         }
         
-        public static Byte[] ToBytes(this Image img, ImageFormat format)
+        public static Byte[] ToBytes(this Image image, ImageFormat format)
         {
             using MemoryStream stream = new MemoryStream();
-            img.Save(stream, format);
+            image.Save(stream, format);
             return stream.ToArray();
         }
         
-        public static Image FromBytes(Byte[] img)
+        public static Image FromBytes(Byte[] image)
         {
-            using MemoryStream stream = new MemoryStream(img);
+            using MemoryStream stream = new MemoryStream(image);
             return Image.FromStream(stream);
         }
 
-        public static Byte[] GetHash(this Image img)
+        public static Byte[] GetHash(this Image image)
         {
-            return img.ToBytes().GetHash();
+            return image.ToBytes().GetHash();
         }
 
-        public static Byte[] GetHash(this Image img, HashType type)
+        public static Byte[] GetHash(this Image image, HashType type)
         {
-            return img.ToBytes().Hashing(type);
+            return image.ToBytes().Hashing(type);
         }
 
         /// <summary>

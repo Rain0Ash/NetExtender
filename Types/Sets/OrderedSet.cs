@@ -4,7 +4,7 @@
  using System;
  using System.Collections;
  using System.Collections.Generic;
- using DynamicData.Annotations;
+ using JetBrains.Annotations;
  using NetExtender.Types.Sets.Interfaces;
 
  namespace NetExtender.Types.Sets
@@ -67,6 +67,18 @@
             _dict = new Dictionary<T, LinkedListNode<T>>(comparer ?? EqualityComparer<T>.Default);
             _linked = new LinkedList<T>();
         }
+        
+        public Boolean Add(T item)
+        {
+            if (_dict.ContainsKey(item))
+            {
+                return false;
+            }
+
+            LinkedListNode<T> node = _linked.AddLast(item);
+            _dict.Add(item, node);
+            return true;
+        }
 
         void ICollection<T>.Add(T item)
         {
@@ -79,8 +91,13 @@
             _dict.Clear();
         }
 
-        public Boolean Remove([NotNull] T item)
+        public Boolean Remove(T item)
         {
+            if (item is null)
+            {
+                return false;
+            }
+            
             Boolean found = _dict.TryGetValue(item ?? throw new ArgumentNullException(nameof(item)), out LinkedListNode<T> node);
             if (!found)
             {
@@ -114,24 +131,12 @@
         
         void ICollection.CopyTo(Array array, Int32 index)
         {
-            if (!(array is T[] typed))
+            if (array is not T[] typed)
             {
                 throw new ArgumentException(@"Invalid type", nameof(array));
             }
             
             CopyTo(typed, index);
-        }
-
-        public Boolean Add(T item)
-        {
-            if (_dict.ContainsKey(item))
-            {
-                return false;
-            }
-
-            LinkedListNode<T> node = _linked.AddLast(item);
-            _dict.Add(item, node);
-            return true;
         }
     }
 }

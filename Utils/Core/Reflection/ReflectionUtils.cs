@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
@@ -57,6 +58,45 @@ namespace NetExtender.Utils.Core
         public static IEnumerable<Type> GetTypesInNamespace(Assembly assembly, String @namespace)
         {
             return assembly.GetTypes().Where(type => String.Equals(type.Namespace, @namespace, StringComparison.Ordinal)).ToArray();
+        }
+        
+        public static Boolean IsJITOptimized(this Assembly assembly)
+        {
+            foreach (Object attribute in assembly.GetCustomAttributes(typeof(DebuggableAttribute), false))
+            {
+                if (attribute is DebuggableAttribute attr)
+                {
+                    return !attr.IsJITOptimizerDisabled;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Get a String containing stack information from zero or more levels up the call stack.
+        /// </summary>
+        /// <param name="levels">
+        /// A <see cref="System.Int32"/> which indicates how many levels up the stack 
+        /// the information should be retrieved from.  This value must be zero or greater.
+        /// </param>
+        /// <returns>
+        /// A String in this format:
+        /// <para>
+        /// file name::namespace.[one or more type names].method name
+        /// </para>
+        /// </returns>
+        public static String GetStackInfo(Int32 levels = 2)
+        {
+            if (levels < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(levels));
+            }
+
+            StackFrame frame = new StackFrame(levels, true);
+            MethodBase method = frame.GetMethod() ?? throw new InvalidOperationException();
+
+            return $"{Path.GetFileName(frame.GetFileName())}::{method.DeclaringType?.FullName ?? String.Empty}.{method.Name} - Line {frame.GetFileLineNumber()}";
         }
 
         /// <summary>
@@ -253,27 +293,12 @@ namespace NetExtender.Utils.Core
             return property;
         }
 
-        public static Delegate GetDelegate(this MethodInfo info)
+        public static Boolean TryCreateDelegate(this MethodInfo info, out Delegate result)
         {
-            return GetDelegate<Delegate>(info);
+            return TryCreateDelegate<Delegate>(info, out result);
         }
 
-        public static T GetDelegate<T>(this MethodInfo info) where T : Delegate
-        {
-            if (info is null)
-            {
-                throw new ArgumentNullException(nameof(info));
-            }
-
-            return (T) Delegate.CreateDelegate(typeof(T), info);
-        }
-
-        public static Boolean TryGetDelegate(this MethodInfo info, out Delegate result)
-        {
-            return TryGetDelegate<Delegate>(info, out result);
-        }
-
-        public static Boolean TryGetDelegate<T>(this MethodInfo info, out T result) where T : Delegate
+        public static Boolean TryCreateDelegate<T>(this MethodInfo info, out T result) where T : Delegate
         {
             if (info is null)
             {
@@ -283,7 +308,7 @@ namespace NetExtender.Utils.Core
             
             try
             {
-                result = GetDelegate<T>(info);
+                result = info.CreateDelegate<T>();
                 return true;
             }
             catch (Exception)

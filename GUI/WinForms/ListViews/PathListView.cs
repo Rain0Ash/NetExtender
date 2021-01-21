@@ -107,7 +107,7 @@ namespace NetExtender.GUI.WinForms.ListViews
         
         public override Boolean TryInsert(Int32 index, GenericListViewItem<T> lvitem)
         {
-            if (!(lvitem.Item is FSWatcher))
+            if (lvitem.Item is not FSWatcher watcher)
             {
                 lvitem.Item = (T) new FSWatcher(lvitem.Text, PathType, PathStatus);
             }
@@ -162,7 +162,7 @@ namespace NetExtender.GUI.WinForms.ListViews
 
         protected override void OnMenuActionClicked(Object sender, ToolStripItemClickedEventArgs e)
         {
-            if (!(e.ClickedItem is FixedToolStripMenuItem item))
+            if (e.ClickedItem is not FixedToolStripMenuItem item)
             {
                 return;
             }

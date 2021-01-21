@@ -24,7 +24,7 @@ namespace NetExtender.Cultures.Comparers
         }
 
         public CultureComparer(IEnumerable<String> order = null)
-            : base((order ?? LocaleStrings.DefaultLocalization).Select(code => code.ToLower()))
+            : base((order ?? LocaleMultiString.DefaultLocalization).Select(code => code.ToLower()))
         {
         }
 

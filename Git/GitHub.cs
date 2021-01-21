@@ -9,7 +9,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using NetExtender.Utils.Network;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 using NetExtender.Apps.Data.Common;
 using NetExtender.Apps.Domains;
 using NetExtender.Utils.Formats;

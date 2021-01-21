@@ -15,7 +15,7 @@ namespace NetExtender.Utils.IO
         {
             private delegate Boolean EventHandler(ConsoleCtrlType type);
 
-            [DllImport("Kernel32")]
+            [DllImport("kernel32.dll")]
             private static extern Boolean SetConsoleCtrlHandler(EventHandler handler, Boolean add);
 
             private static EventHandler handler;

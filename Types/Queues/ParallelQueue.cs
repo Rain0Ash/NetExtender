@@ -5,7 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 
 namespace NetExtender.Types.Queues
 {

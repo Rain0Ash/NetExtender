@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 
 namespace NetExtender.Utils.Types
 {

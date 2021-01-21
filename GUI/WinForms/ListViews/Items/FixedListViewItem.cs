@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Runtime.Serialization;
 using System.Windows.Forms;
 using NetExtender.Utils.GUI.Winforms.ListView;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 using NetExtender.Interfaces;
 
 namespace NetExtender.GUI.WinForms.ListViews.Items

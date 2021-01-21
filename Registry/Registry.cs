@@ -44,6 +44,7 @@ namespace NetExtender.Registry
             }
             catch (Exception)
             {
+                reg.Dispose();
                 return null;
             }
         }

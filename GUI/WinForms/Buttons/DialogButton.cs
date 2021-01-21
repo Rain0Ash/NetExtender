@@ -100,7 +100,7 @@ namespace NetExtender.GUI.WinForms.Buttons
                 return fullPath;
             }
 
-            fullPath = StringUtils.BeforeFormatVariables(fullPath);
+            fullPath = StringUtils.TrimAfterFormatVariables(fullPath);
             if (!String.IsNullOrEmpty(fullPath) && Directory.Exists(fullPath))
             {
                 return fullPath;

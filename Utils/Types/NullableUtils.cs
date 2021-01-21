@@ -1,7 +1,8 @@
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-using DynamicData.Annotations;
+using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 
 namespace NetExtender.Utils.Types
 {
@@ -11,12 +12,25 @@ namespace NetExtender.Utils.Types
         /// Returns nullable of specified value.
         /// </summary>
         /// <typeparam name="T">Type of value</typeparam>
-        /// <param name="value">THe value</param>
+        /// <param name="value">The value</param>
         /// <returns><paramref name="value"/> wrapped in nullable.</returns>
         [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? AsNullable<T>(this T value) where T : struct
         {
             return value;
+        }
+        
+        /// <summary>
+        /// Return value or default
+        /// </summary>
+        /// <typeparam name="T">Type of value</typeparam>
+        /// <param name="value">The value</param>
+        [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToValue<T>(this T? value) where T : struct
+        {
+            return value ?? default;
         }
     }
 }

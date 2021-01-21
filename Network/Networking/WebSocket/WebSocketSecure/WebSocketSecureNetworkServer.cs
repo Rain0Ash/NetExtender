@@ -74,7 +74,7 @@ namespace NetExtender.Network.Networking.WebSocket.Secure
             // Multicast data to all WebSocket sessions
             foreach (SslNetworkSession session in Sessions.Values)
             {
-                if (!(session is WebSocketSecureNetworkSession wssSession))
+                if (session is not WebSocketSecureNetworkSession wssSession)
                 {
                     continue;
                 }

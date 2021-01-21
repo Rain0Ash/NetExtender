@@ -1,49 +1,186 @@
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-using System.Linq;
-using NetExtender.Cultures;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using JetBrains.Annotations;
+using NetExtender.Configuration;
+using NetExtender.Configuration.Common;
+using NetExtender.Cultures.Comparers;
+using NetExtender.Exceptions;
 using NetExtender.Localizations.Interfaces;
+using NetExtender.Utils.Types;
 
 namespace NetExtender.Localizations
 {
-    public delegate void LanguageChangedHandler(Culture culture);
+    public delegate void LanguageChangedHandler(CultureInfo info);
     
-    internal class InternalLocalization : ILocalization
+    public static partial class InternalLocalization
     {
-        private event LanguageChangedHandler Changed;
-        
-        public event EmptyHandler LanguageChanged;
-        public event LanguageChangedHandler LanguageCultureChanged
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
+        private static class CurrentLocalization
         {
-            add
+            private static ILocalization current;
+            public static ILocalization Current
             {
-                if (Changed?.GetInvocationList().Contains(value) == true)
+                get
                 {
-                    return;
+                    return current ?? throw new NotInitializedException();
                 }
-
-                Changed += value;
+                set
+                {
+                    ThrowIfAlreadyInitialized();
+                    current = value ?? throw new ArgumentNullException(nameof(value));
+                }
             }
-            remove
+
+            public static Boolean Initialized
             {
-                Changed -= value;
+                get
+                {
+                    return current is not null;
+                }
+            }
+            
+            public static void ThrowIfAlreadyInitialized()
+            {
+                if (Initialized)
+                {
+                    throw new AlreadyInitializedException();
+                }
+            }
+        }
+        
+        public static Boolean IsInitialized
+        {
+            get
+            {
+                return CurrentLocalization.Initialized;
             }
         }
 
-        public InternalLocalization()
+        public static ILocalization Current
         {
-            LanguageCultureChanged += OnLanguageCultureChanged;
+            get
+            {
+                return CurrentLocalization.Current;
+            }
+        }
+        
+        public static CultureComparer Comparer
+        {
+            get
+            {
+                return Current.Comparer;
+            }
+        }
+        
+        public static Boolean ChangeUIThreadLanguage
+        {
+            get
+            {
+                return Current.ChangeUIThreadLanguage;
+            }
+            set
+            {
+                Current.ChangeUIThreadLanguage = value;
+            }
         }
 
-        private void OnLanguageCultureChanged(Culture _)
+        public static Boolean UseSystemCulture
         {
-            LanguageChanged?.Invoke();
+            get
+            {
+                return Current.UseSystemCulture;
+            }
+            set
+            {
+                Current.UseSystemCulture = value;
+            }
         }
 
-        public void Dispose()
+        public static CultureInfo Culture
         {
-            Changed = null;
+            get
+            {
+                return Current.Culture;
+            }
+        }
+        
+        public static CultureInfo System
+        {
+            get
+            {
+                return CultureUtils.System;
+            }
+        }
+
+        public static CultureInfo Default
+        {
+            get
+            {
+                return CultureUtils.English;
+            }
+        }
+        
+        public static IReadOnlySet<CultureInfo> Supported
+        {
+            get
+            {
+                return Current.Languages;
+            }
+        }
+
+        public const ConfigType DefaultConfigType = ConfigType.JSON;
+        
+        public static ILocalization Create([NotNull] IConfigBehavior behavior)
+        {
+            CurrentLocalization.ThrowIfAlreadyInitialized();
+            CurrentLocalization.Current = new InternalLocalization2(behavior);
+            return Current;
+        }
+        
+        public static ILocalization Create()
+        {
+            return Create(DefaultConfigType, Config.DefaultConfigOptions);
+        }
+        
+        public static ILocalization Create(ConfigType type)
+        {
+            return Create(type, Config.DefaultConfigOptions);
+        }
+        
+        public static ILocalization Create(ConfigOptions options)
+        {
+            return Create(DefaultConfigType, options);
+        }
+        
+        public static ILocalization Create(ConfigType type, ConfigOptions options)
+        {
+            return Create(null, type, options);
+        }
+        
+        public static ILocalization Create(String path)
+        {
+            return Create(path, DefaultConfigType);
+        }
+        
+        public static ILocalization Create(String path, ConfigType type)
+        {
+            return Create(path, type, Config.DefaultConfigOptions);
+        }
+        
+        public static ILocalization Create(String path, ConfigOptions options)
+        {
+            return Create(path, DefaultConfigType, options);
+        }
+        
+        public static ILocalization Create(String path, ConfigType type, ConfigOptions options)
+        {
+            CurrentLocalization.ThrowIfAlreadyInitialized();
+            CurrentLocalization.Current = new InternalLocalization2(path, type, options);
+            return Current;
         }
     }
 }

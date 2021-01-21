@@ -16,7 +16,7 @@ namespace NetExtender.DataBase
         Utf8
     }
 
-    public class DatabaseConnection
+    public record DatabaseConnection
     {
         public static implicit operator String(DatabaseConnection connection)
         {
@@ -31,24 +31,23 @@ namespace NetExtender.DataBase
             }
         }
         
-        //TODO: init
-        public String Host { get; set; }
-        public UInt16 Port { get; set; }
-        public String User { get; set; }
-        public String Password { get; set; }
-        public String Database { get; set; }
-        public Boolean TrustedConnection { get; set; } = true;
-        public UInt16 Timeout { get; set; } = 60;
-        public UInt16 CommandTimeout { get; set; } = 180;
-        public UInt16 Lifetime { get; set; } = 600;
-        public CharSet CharSet { get; set; } = CharSet.Utf8;
-        public Boolean Pooling { get; set; } = false;
-        public Int32 MinPoolSize { get; set; } = 0;
-        public Int32 MaxPoolSize { get; set; } = 10;
-        public Boolean AllowZeroDatetime { get; set; } = true;
-        public Boolean ConvertZeroDatetime { get; set; } = true;
-        public SSLMode SSLMode { get; set; } = SSLMode.None;
-        public DataBaseType Type { get; set; } = DataBase.DefaultType;
+        public String Host { get; init; }
+        public UInt16 Port { get; init; }
+        public String User { get; init; }
+        public String Password { get; init; }
+        public String Database { get; init; }
+        public Boolean TrustedConnection { get; init; } = true;
+        public UInt16 Timeout { get; init; } = 60;
+        public UInt16 CommandTimeout { get; init; } = 180;
+        public UInt16 Lifetime { get; init; } = 600;
+        public CharSet CharSet { get; init; } = CharSet.Utf8;
+        public Boolean Pooling { get; init; } = false;
+        public Int32 MinPoolSize { get; init; } = 0;
+        public Int32 MaxPoolSize { get; init; } = 10;
+        public Boolean AllowZeroDatetime { get; init; } = true;
+        public Boolean ConvertZeroDatetime { get; init; } = true;
+        public SSLMode SSLMode { get; init; } = SSLMode.None;
+        public DataBaseType Type { get; init; } = DataBase.DefaultType;
 
         public DatabaseConnection(String host, UInt16 port, String user, String password, String database)
         {

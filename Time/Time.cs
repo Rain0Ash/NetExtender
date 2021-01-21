@@ -125,6 +125,29 @@ namespace NetExtender.Times
             
             public static TimeSpan Get(Double count)
             {
+                return TimeSpan.FromSeconds(count);
+            }
+        }
+        
+        public static class Milli
+        {
+            public static readonly TimeSpan OneSecond = TimeSpan.FromMilliseconds(1000);
+            public static readonly TimeSpan ThreeQuarterSecond = TimeSpan.FromMilliseconds(750);
+            public static readonly TimeSpan HalfSecond = TimeSpan.FromMilliseconds(500);
+            public static readonly TimeSpan QuarterSecond = TimeSpan.FromMilliseconds(250);
+            public static readonly TimeSpan Hundred = TimeSpan.FromMilliseconds(100);
+            public static readonly TimeSpan Fifty = TimeSpan.FromMilliseconds(50);
+            public static readonly TimeSpan Thirty = TimeSpan.FromMilliseconds(30);
+            public static readonly TimeSpan TwentyFive = TimeSpan.FromMilliseconds(25);
+            public static readonly TimeSpan Twenty = TimeSpan.FromMilliseconds(20);
+            public static readonly TimeSpan Ten = TimeSpan.FromMilliseconds(10);
+            public static readonly TimeSpan Five = TimeSpan.FromMilliseconds(5);
+            public static readonly TimeSpan Three = TimeSpan.FromMilliseconds(3);
+            public static readonly TimeSpan Two = TimeSpan.FromMilliseconds(2);
+            public static readonly TimeSpan One = TimeSpan.FromMilliseconds(1);
+            
+            public static TimeSpan Get(Double count)
+            {
                 return TimeSpan.FromMilliseconds(count);
             }
         }

@@ -80,7 +80,7 @@ namespace NetExtender.Attributes
             }
         }
 
-        public static String Format(Object obj, String str, String enumerableSeparator = "_")
+        public static String Format(Object obj, String str, String separator = "_")
         {
             if (obj is null || String.IsNullOrEmpty(str))
             {
@@ -89,7 +89,7 @@ namespace NetExtender.Attributes
 
             try
             {
-                Dictionary<String, Object> replaceDictionary = new Dictionary<String, Object>();
+                Dictionary<String, Object> replacing = new Dictionary<String, Object>();
                 foreach (PropertyInfo field in obj.GetType()
                     .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
                 {
@@ -97,11 +97,11 @@ namespace NetExtender.Attributes
 
                     foreach (FormattedFieldAttribute attribute in attributes)
                     {
-                        foreach (String linkedName in attribute.LinkedNames)
+                        foreach (String name in attribute.LinkedNames)
                         {
                             Object temp = field.GetValue(obj);
                             String value = temp is IEnumerable<Object> enumerable
-                                ? String.Join(enumerableSeparator, enumerable)
+                                ? String.Join(separator, enumerable)
                                 : temp?.ToString();
 
                             if (String.IsNullOrEmpty(value))
@@ -109,12 +109,12 @@ namespace NetExtender.Attributes
                                 continue;
                             }
 
-                            replaceDictionary[linkedName] = value;
+                            replacing[name] = value;
                         }
                     }
                 }
 
-                return str.FormatFromDictionary(replaceDictionary);
+                return str.FormatFromDictionary(replacing);
             }
             catch (Exception)
             {

@@ -29,16 +29,16 @@ namespace NetExtender.Utils.IO
 
                     inputType = value;
 
-                    StartAsyncInput(inputType);
+                    StartAsyncInput(inputType).Start();
                 }
             }
 
-            private static async void StartAsyncInput(ConsoleInputType type)
+            private static async Task StartAsyncInput(ConsoleInputType type)
             {
-                StopAsyncInput();
+                await StopAsyncInput();
                 cancellation = new CancellationTokenSource();
 
-                Action input = type switch
+                Func<Task> input = type switch
                 {
                     ConsoleInputType.None => StopAsyncInput,
                     ConsoleInputType.Line => LineInputHandler,
@@ -54,19 +54,20 @@ namespace NetExtender.Utils.IO
                 }
                 catch (OperationCanceledException)
                 {
-                    StopAsyncInput();
+                    await StopAsyncInput();
                 }
             }
             
-            private static void StopAsyncInput()
+            private static Task StopAsyncInput()
             {
                 StopRead();
                 cancellation?.Cancel();
                 cancellation?.Dispose();
                 cancellation = null;
+                return Task.CompletedTask;
             }
 
-            private static async Task InputHandlerAsync<T>(Func<CancellationToken, Task<T>> handler, Action<T> @event)
+            private static async Task InputHandlerAsync<T>(Func<CancellationToken, Task<T>> handler, Action<T> action)
             {
                 while (cancellation?.Token.IsCancellationRequested == false)
                 {
@@ -77,31 +78,27 @@ namespace NetExtender.Utils.IO
                         continue;
                     }
 
-                    @event.Invoke(value);
+                    action.Invoke(value);
                 }
             }
             
-            private static async void LineInputHandler()
+            private static async Task LineInputHandler()
             {
-                // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
                 await InputHandlerAsync(ReadLineAsync, OnConsoleLineInput).ConfigureAwait(false);
             }
 
-            private static async void KeyInfoInputHandler()
+            private static async Task KeyInfoInputHandler()
             {
-                // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
                 await InputHandlerAsync(ReadKeyAsync, OnConsoleKeyInfoInput).ConfigureAwait(false);
             }
 
-            private static async void KeyInfoInterceptInputHandler()
+            private static async Task KeyInfoInterceptInputHandler()
             {
-                // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
                 await InputHandlerAsync(ReadKeyInterceptAsync, OnConsoleKeyInfoInput).ConfigureAwait(false);
             }
 
-            private static async void KeyCodeInputHandler()
+            private static async Task KeyCodeInputHandler()
             {
-                // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting
                 await InputHandlerAsync(ReadAsync, OnConsoleKeyCodeInput).ConfigureAwait(false);
             }
         }

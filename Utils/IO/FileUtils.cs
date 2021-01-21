@@ -5,11 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using NetExtender.IO.Shortcut;
 using NetExtender.Utils.Types;
 
@@ -437,6 +439,11 @@ namespace NetExtender.Utils.IO
                 throw new ArgumentNullException(nameof(stream));
             }
 
+            if (!stream.CanRead)
+            {
+                throw new NotSupportedException();
+            }
+
             if (!PathUtils.IsValidFilePath(path))
             {
                 throw new ArgumentException(null, nameof(path));
@@ -454,7 +461,7 @@ namespace NetExtender.Utils.IO
 
             await using FileStream original = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None, 4096, options);
 
-            await using FileStream part = new FileStream(partname, FileMode.Create, FileAccess.Write, FileShare.None, buffer, options | FileOptions.DeleteOnClose);
+            await using FileStream part = new FileStream(partname, FileMode.Create, FileAccess.Write, FileShare.None, buffer, options);
 
             await stream.CopyToAsync(part, buffer, token).ConfigureAwait(false);
             await part.FlushAsync(token).ConfigureAwait(false);
@@ -532,16 +539,14 @@ namespace NetExtender.Utils.IO
                 throw new ArgumentNullException(nameof(file));
             }
 
-            if (suffix is null)
+            switch (suffix)
             {
-                throw new ArgumentNullException(nameof(suffix));
+                case null:
+                    throw new ArgumentNullException(nameof(suffix));
+                case "":
+                    return;
             }
 
-            if (suffix == String.Empty)
-            {
-                return;
-            }
-            
             String name = file.Name + suffix;
 
             String dir = Path.GetDirectoryName(file.FullName);
@@ -567,16 +572,14 @@ namespace NetExtender.Utils.IO
                 throw new ArgumentNullException(nameof(file));
             }
 
-            if (suffix is null)
+            switch (suffix)
             {
-                throw new ArgumentNullException(nameof(suffix));
+                case null:
+                    throw new ArgumentNullException(nameof(suffix));
+                case "":
+                    return;
             }
 
-            if (suffix == String.Empty)
-            {
-                return;
-            }
-            
             if (!file.Name.EndsWith(suffix))
             {
                 return;
@@ -593,6 +596,73 @@ namespace NetExtender.Utils.IO
                 
             String path = Path.Combine(dir, name);
             file.MoveTo(path);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FileStream ToReadStream([NotNull] this FileInfo info)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            return info.OpenRead();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FileStream ToWriteStream([NotNull] this FileInfo info)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            return info.OpenWrite();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FileStream ToStream([NotNull] this FileInfo info)
+        {
+            return ToStream(info, FileShare.None);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FileStream ToStream([NotNull] this FileInfo info, FileShare share)
+        {
+            return ToStream(info, FileMode.OpenOrCreate, FileAccess.ReadWrite, share);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FileStream ToStream([NotNull] this FileInfo info, FileMode mode)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            return info.Open(mode);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FileStream ToStream([NotNull] this FileInfo info, FileMode mode, FileAccess access)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            return info.Open(mode, access);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FileStream ToStream([NotNull] this FileInfo info, FileMode mode, FileAccess access, FileShare share)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            return info.Open(mode, access, share);
         }
     }
 }

@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 
 namespace NetExtender.Utils.Types
 {

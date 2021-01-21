@@ -7,6 +7,16 @@ namespace NetExtender.Events.Args
 {
     public class TypeCancellationEventArgs<T> : CancellationEventArgs
     {
+        public static implicit operator TypeCancellationEventArgs<T>(TypeCancelEventArgs<T> args)
+        {
+            return new TypeCancellationEventArgs<T>(args.Value, args.Cancel);
+        }
+        
+        public static implicit operator TypeCancellationEventArgs<T>(TypeHandledEventArgs<T> args)
+        {
+            return new TypeCancellationEventArgs<T>(args.Value, args.Handled);
+        }
+        
         public T Value { get; }
         
         public TypeCancellationEventArgs(T value)

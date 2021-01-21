@@ -8,7 +8,7 @@ namespace NetExtender.Messages.Rules.Interfaces
     public interface ICommandRule<T> : IConsoleRule<T>
     {
         public T Id { get; }
-        public LocaleStrings Name { get; set; }
-        public LocaleStrings Annotation { get; set; }
+        public LocaleMultiString Name { get; set; }
+        public LocaleMultiString Annotation { get; set; }
     }
 }

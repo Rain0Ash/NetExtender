@@ -34,7 +34,7 @@ namespace NetExtender.Messages.Rules
             {
                 foreach (ICommandRule<T> rule in Rules.Values)
                 {
-                    if (!(rule is INestedCommandRule<T> nested))
+                    if (rule is not INestedCommandRule<T> nested)
                     {
                         continue;
                     }

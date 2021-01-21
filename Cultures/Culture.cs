@@ -5,7 +5,7 @@ using System;
 using System.Drawing;
 using System.Globalization;
 using NetExtender.Utils.Types;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 using NetExtender.Images.Flags;
 
 namespace NetExtender.Cultures
@@ -19,7 +19,7 @@ namespace NetExtender.Cultures
             {
                 return _customName ??= this.GetNativeLanguageName();
             }
-            protected internal set //TODO: Init
+            init
             {
                 _customName = value;
             }
@@ -49,7 +49,7 @@ namespace NetExtender.Cultures
                     return _image ??= Images.Images.Basic.Null;
                 }
             }
-            private set //TODO: Init
+            init
             {
                 _image = value;
             }

@@ -4,7 +4,7 @@
 using System;
 using System.Linq;
 using System.Linq.Expressions;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 
 namespace NetExtender.Utils.Types.Queryable
 {

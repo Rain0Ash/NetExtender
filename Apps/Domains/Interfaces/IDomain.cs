@@ -52,9 +52,9 @@ namespace NetExtender.Apps.Domains.Interfaces
 
         public String ProtocolName { get; }
 
-        public void Initialize(GUIType type);
-        public void Initialize<TApp>(GUIType type) where TApp : WPFApp, new();
-        public void Initialize<TApp>(TApp app, GUIType type) where TApp : WPFApp, new();
+        public IDomain Initialize(GUIType type);
+        public IDomain Initialize<TApp>(GUIType type) where TApp : WPFApp, new();
+        public IDomain Initialize<TApp>(TApp app, GUIType type) where TApp : WPFApp, new();
 
         public Task SendMessageAsync(Byte[] message);
 

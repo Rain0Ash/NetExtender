@@ -10,9 +10,9 @@ namespace NetExtender.GUI.WinForms.CheckBoxes
 {
     public class LocalizationCheckBox : CheckBox, ILocalizable
     {
-        private LocaleStrings _localizationText;
+        private LocaleMultiString _localizationText;
 
-        public LocaleStrings LocalizationText
+        public LocaleMultiString LocalizationText
         {
             get
             {

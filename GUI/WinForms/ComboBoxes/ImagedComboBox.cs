@@ -37,16 +37,16 @@ using NetExtender.Localizations;
 
     public sealed class DropDownItem
     {
-        public LocaleStrings Value { get; }
+        public LocaleMultiString Value { get; }
 
         public Image Image { get; set; }
 
         public DropDownItem(String text, Image image = null)
-            : this(new LocaleStrings(text), image)
+            : this(new LocaleMultiString(text), image)
         {
         }
 
-        public DropDownItem(LocaleStrings text, Image image = null)
+        public DropDownItem(LocaleMultiString text, Image image = null)
         {
             Value = text;
             Image = image ?? new Bitmap(16, 16);

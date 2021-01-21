@@ -5,11 +5,11 @@ using System.Drawing;
 
 namespace NetExtender.Types.Drawing
 {
-    public class DrawingData
+    public readonly struct DrawingData
     {
-        public Color BackgroundColor { get; set; }
-        public Color ForegroundColor { get; set; }
-        public Font Font { get; set; }
+        public Color BackgroundColor { get; }
+        public Color ForegroundColor { get; }
+        public Font Font { get; }
 
         public DrawingData(Color background, Color foreground, Font font = null)
         {

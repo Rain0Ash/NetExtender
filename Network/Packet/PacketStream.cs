@@ -814,7 +814,7 @@
 
         public Int32 CompareTo(Object? obj)
         {
-            if (!(obj is PacketStream stream))
+            if (obj is not PacketStream stream)
             {
                 throw new ArgumentException("Object is not an PacketStream instance");
             }

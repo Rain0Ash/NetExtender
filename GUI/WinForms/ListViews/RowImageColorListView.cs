@@ -96,7 +96,7 @@ namespace NetExtender.GUI.WinForms.ListViews
                 return;
             }
 
-            if (!(e.Item is GenericListViewItem<T> lvitem))
+            if (e.Item is not GenericListViewItem<T> lvitem)
             {
                 throw new CollectionSyncException();
             }

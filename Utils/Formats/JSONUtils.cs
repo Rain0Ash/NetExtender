@@ -3,8 +3,11 @@
 
 using System;
 using System.Xml;
+using JetBrains.Annotations;
+using NetExtender.NewtonSoft;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace NetExtender.Utils.Formats
 {
@@ -68,6 +71,60 @@ namespace NetExtender.Utils.Formats
         public static String ToJSON(this XmlDocument document)
         {
             return JsonConvert.SerializeXmlNode(document, Newtonsoft.Json.Formatting.Indented, true);
+        }
+        
+        private static PropertyContractResolver InitResolver([NotNull] JsonSerializerSettings settings)
+        {
+            if (settings is null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
+            switch (settings.ContractResolver)
+            {
+                case null:
+                {
+                    PropertyContractResolver resolver = new PropertyContractResolver();
+                    settings.ContractResolver = resolver;
+                    return resolver;
+                }
+                case PropertyContractResolver resolver:
+                {
+                    return resolver;
+                }
+                case DefaultContractResolver other:
+                {
+                    PropertyContractResolver resolver = new PropertyContractResolver(other);
+                    settings.ContractResolver = resolver;
+                    return resolver;
+                }
+                default:
+                    throw new NotSupportedException($"Invalid {nameof(settings.ContractResolver)}. Expected {nameof(DefaultContractResolver)}, received {settings.ContractResolver.GetType().FullName}.");
+            }
+        }
+        
+        public static JsonSerializerSettings RenameProperty([NotNull] this JsonSerializerSettings settings, [NotNull] Type type, [NotNull] String property, [NotNull] String name)
+        {
+            InitResolver(settings).RenameProperty(type, property, name);
+            return settings;
+        }
+
+        public static JsonSerializerSettings IgnoreProperty([NotNull] this JsonSerializerSettings settings, [NotNull] Type type, [NotNull] String property)
+        {
+            InitResolver(settings).IgnoreProperty(type, property);
+            return settings;
+        }
+
+        public static JsonSerializerSettings IgnoreProperty([NotNull] this JsonSerializerSettings settings, [NotNull] Type type, [NotNull] params String[] properties)
+        {
+            InitResolver(settings).IgnoreProperty(type, properties);
+            return settings;
+        }
+
+        public static JsonSerializerSettings OrderProperty([NotNull] this JsonSerializerSettings settings, [NotNull] Type type, [NotNull] String property, Int32 order)
+        {
+            InitResolver(settings).OrderProperty(type, property, order);
+            return settings;
         }
     }
 }

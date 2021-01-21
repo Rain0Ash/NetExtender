@@ -17,7 +17,6 @@ namespace NetExtender.Utils.Numerics
     }
     
     /// <inheritdoc cref="System.Random"/>
-    [SuppressMessage("ReSharper", "IntroduceOptionalParameters.Global")]
     public static partial class RandomUtils
     {
         public static IRandom Create(this RandomType type)

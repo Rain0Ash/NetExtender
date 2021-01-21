@@ -10,7 +10,7 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using NetExtender.Utils.Types;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 using NetExtender.Utils.IO;
 using Newtonsoft.Json;
 

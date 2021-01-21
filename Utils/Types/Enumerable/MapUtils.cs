@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using DynamicData.Annotations;
+using JetBrains.Annotations;
 using NetExtender.Types.Maps;
 
 namespace NetExtender.Utils.Types
@@ -90,7 +90,6 @@ namespace NetExtender.Utils.Types
         }
         
         [Pure]
-        [SuppressMessage("ReSharper", "IntroduceOptionalParameters.Global")]
         public static TKey TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key)
         {
             return TryGetKey(source, key, default(TKey));

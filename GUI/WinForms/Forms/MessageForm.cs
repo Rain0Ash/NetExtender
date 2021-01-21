@@ -22,10 +22,10 @@ namespace NetExtender.GUI.WinForms.Forms
         private static readonly Size IconSize = new Size(64, 64);
 
         // ReSharper disable once FieldCanBeMadeReadOnly.Global
-        public static LocaleStrings ThisLinkIsInvalidMessage = new LocaleStrings(@"This link is invalid");
+        public static LocaleMultiString ThisLinkIsInvalidMessage = new LocaleMultiString(@"This link is invalid");
 
         // ReSharper disable once FieldCanBeMadeReadOnly.Global
-        public static LocaleStrings InvalidLinkMessage = new LocaleStrings(@"Invalid link");
+        public static LocaleMultiString InvalidLinkMessage = new LocaleMultiString(@"Invalid link");
 
         public static DialogResult GetDialogResultOnException(Exception exception, String additionalText = null, String title = null,
             MessageBoxButtons messageBoxButtons = MessageBoxButtons.RetryCancel, IEnumerable<Object> buttonsName = null)
@@ -35,7 +35,7 @@ namespace NetExtender.GUI.WinForms.Forms
             List<Exception> exceptions = new List<Exception>();
             do
             {
-                if (!(exception is TargetInvocationException))
+                if (exception is not TargetInvocationException)
                 {
                     exceptions.Add(exception);
                 }

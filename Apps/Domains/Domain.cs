@@ -4,13 +4,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using JetBrains.Annotations;
 using NetExtender.Apps.Data;
 using NetExtender.Apps.Data.Common;
 using NetExtender.Apps.Data.Interfaces;
@@ -24,7 +24,7 @@ namespace NetExtender.Apps.Domains
 {
     public static partial class Domain
     {
-        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         private static class CurrentDomain
         {
             private static IDomain current;
@@ -36,11 +36,7 @@ namespace NetExtender.Apps.Domains
                 }
                 set
                 {
-                    if (Initialized)
-                    {
-                        throw new AlreadyInitializedException();
-                    }
-
+                    ThrowIfAlreadyInitialized();
                     current = value ?? throw new ArgumentNullException(nameof(value));
                 }
             }
@@ -50,6 +46,14 @@ namespace NetExtender.Apps.Domains
                 get
                 {
                     return current is not null;
+                }
+            }
+
+            public static void ThrowIfAlreadyInitialized()
+            {
+                if (Initialized)
+                {
+                    throw new AlreadyInitializedException();
                 }
             }
         }
@@ -70,6 +74,18 @@ namespace NetExtender.Apps.Domains
             }
         }
 
+        public static IDomain Create([NotNull] IDomain domain)
+        {
+            if (domain is null)
+            {
+                throw new ArgumentNullException(nameof(domain));
+            }
+            
+            CurrentDomain.ThrowIfAlreadyInitialized();
+            CurrentDomain.Current = domain;
+            return Current;
+        }
+        
         public static IDomain Create(String name)
         {
             return Create(new IPCAppData(name, AppVersion.Default));
@@ -77,8 +93,8 @@ namespace NetExtender.Apps.Domains
 
         public static IDomain Create(IIPCAppData data)
         {
-            CurrentDomain.Current = new InternalDomain(data);
-            return Current;
+            CurrentDomain.ThrowIfAlreadyInitialized();
+            return Create(new InternalDomain(data));
         }
 
         public static IDomain Create<TApp>(String name, GUIType type) where TApp : Application, new()
@@ -98,9 +114,8 @@ namespace NetExtender.Apps.Domains
 
         public static IDomain Create<TApp>(TApp app, IIPCAppData data, GUIType type) where TApp : Application, new()
         {
-            IDomain domain = Create(data);
-            domain.Initialize(app, type);
-            return domain;
+            CurrentDomain.ThrowIfAlreadyInitialized();
+            return Create(data).Initialize(app, type);
         }
 
         private static String path;
