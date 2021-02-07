@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using NetExtender.Configuration.Common;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Types.Trees;
@@ -33,12 +34,12 @@ namespace NetExtender.Configuration.Ram
             Config = config;
         }
 
-        public override String Get(String key, params String[] sections)
+        public override String Get(String key, IEnumerable<String> sections)
         {
             return Config[key, sections].Value;
         }
 
-        public override Boolean Set(String key, String value, params String[] sections)
+        public override Boolean Set(String key, String value, IEnumerable<String> sections)
         {
             if (value is null)
             {

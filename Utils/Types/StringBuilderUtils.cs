@@ -24,7 +24,28 @@ namespace NetExtender.Utils.Types
         {
             return new StringBuilder(value, capacity);
         }
-        
+
+        public static StringBuilder ToStringBuilder([NotNull] this IEnumerable<Char> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (source is String str)
+            {
+                return new StringBuilder(str);
+            }
+
+            StringBuilder builder = new StringBuilder();
+            foreach (Char chr in source)
+            {
+                builder.Append(chr);
+            }
+            
+            return builder;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNull(this StringBuilder builder)
         {
@@ -90,6 +111,21 @@ namespace NetExtender.Utils.Types
         {
             return !IsNullOrWhiteSpace(builder);
         }
+
+        public static StringBuilder Append([NotNull] this StringBuilder builder, [NotNull] IEnumerable<Char> source)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return builder.Append(source.ToStringBuilder());
+        }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder Prepend([NotNull] this StringBuilder builder, Char value)
@@ -107,6 +143,21 @@ namespace NetExtender.Utils.Types
         public static StringBuilder Prepend([NotNull] this StringBuilder builder, StringBuilder value)
         {
             return AddPrefix(builder, value);
+        }
+        
+        public static StringBuilder Prepend([NotNull] this StringBuilder builder, [NotNull] IEnumerable<Char> source)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return builder.Prepend(source.ToStringBuilder());
         }
         
         public static StringBuilder AddSuffix([NotNull] this StringBuilder builder, String value)
@@ -575,6 +626,575 @@ namespace NetExtender.Utils.Types
             result = builder.ToString(start, length);
             return builder.Remove(start, length);
         }
+        
+        public static StringBuilder ToUpper([NotNull] this StringBuilder builder)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            String result = builder.ToString().ToUpper();
+            return builder.Clear().Append(result);
+        }
+
+        public static StringBuilder ToUpper(this StringBuilder builder, CultureInfo info)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            String result = builder.ToString().ToUpper(info);
+            return builder.Clear().Append(result);
+        }
+
+        public static StringBuilder ToUpperInvariant(this StringBuilder builder)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            String result = builder.ToString().ToUpperInvariant();
+            return builder.Clear().Append(result);
+        }
+
+        public static StringBuilder ToLower(this StringBuilder builder)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            String result = builder.ToString().ToLower();
+            return builder.Clear().Append(result);
+        }
+
+        public static StringBuilder ToLower(this StringBuilder builder, CultureInfo info)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            String result = builder.ToString().ToLower(info);
+            return builder.Clear().Append(result);
+        }
+
+        public static StringBuilder ToLowerInvariant(this StringBuilder builder)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            String result = builder.ToString().ToLowerInvariant();
+            return builder.Clear().Append(result);
+        }
+
+        public static StringBuilder Normalize(this StringBuilder builder)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            String result = builder.ToString().Normalize();
+            return builder.Clear().Append(result);
+        }
+
+        public static StringBuilder Normalize(this StringBuilder builder, NormalizationForm normalization)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            String result = builder.ToString().Normalize(normalization);
+            return builder.Clear().Append(result);
+        }
+        
+        public static Boolean IsNormalized([NotNull] this StringBuilder builder)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().IsNormalized();
+        }
+
+        public static Boolean IsNormalized([NotNull] this StringBuilder builder, NormalizationForm normalization)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().IsNormalized(normalization);
+        }
+
+        public static Boolean Contains([NotNull] this StringBuilder builder, String value)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().Contains(value);
+        }
+
+        public static Boolean Contains([NotNull] this StringBuilder builder, String value, StringComparison comparison)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().Contains(value, comparison);
+        }
+
+        public static Boolean Contains([NotNull] this StringBuilder builder, Char value)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().Contains(value);
+        }
+
+        public static Boolean Contains([NotNull] this StringBuilder builder, Char value, StringComparison comparison)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().Contains(value, comparison);
+        }
+
+        public static Int32 IndexOf([NotNull] this StringBuilder builder, Char value)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().IndexOf(value);
+        }
+
+        public static Int32 IndexOf([NotNull] this StringBuilder builder, Char value, Int32 start)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().IndexOf(value, start);
+        }
+
+        public static Int32 IndexOf([NotNull] this StringBuilder builder, Char value, StringComparison comparison)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().IndexOf(value, comparison);
+        }
+
+        public static Int32 IndexOf([NotNull] this StringBuilder builder, Char value, Int32 start, Int32 count)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().IndexOf(value, start, count);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringIndexOfIsCultureSpecific.1")]
+        public static Int32 IndexOf([NotNull] this StringBuilder builder, String value)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().IndexOf(value);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringIndexOfIsCultureSpecific.2")]
+        public static Int32 IndexOf([NotNull] this StringBuilder builder, String value, Int32 start)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().IndexOf(value, start);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringIndexOfIsCultureSpecific.3")]
+        public static Int32 IndexOf([NotNull] this StringBuilder builder, String value, Int32 start, Int32 count)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().IndexOf(value, start, count);
+        }
+
+        public static Int32 IndexOf([NotNull] this StringBuilder builder, String value, StringComparison comparison)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().IndexOf(value, comparison);
+        }
+
+        public static Int32 IndexOf([NotNull] this StringBuilder builder, String value, Int32 start, StringComparison comparison)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().IndexOf(value, start, comparison);
+        }
+
+        public static Int32 IndexOf([NotNull] this StringBuilder builder, String value, Int32 start, Int32 count, StringComparison comparison)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().IndexOf(value, start, count, comparison);
+        }
+
+        public static Int32 LastIndexOf([NotNull] this StringBuilder builder, Char value)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().LastIndexOf(value);
+        }
+
+        public static Int32 LastIndexOf([NotNull] this StringBuilder builder, Char value, Int32 start)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().LastIndexOf(value, start);
+        }
+
+        public static Int32 LastIndexOf([NotNull] this StringBuilder builder, Char value, Int32 start, Int32 count)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().LastIndexOf(value, start, count);
+        }
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringLastIndexOfIsCultureSpecific.1")]
+        public static Int32 LastIndexOf(this StringBuilder builder, String value)
+        {
+            return builder.ToString().LastIndexOf(value);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringLastIndexOfIsCultureSpecific.2")]
+        public static Int32 LastIndexOf(this StringBuilder builder, String value, Int32 start)
+        {
+            return builder.ToString().LastIndexOf(value, start);
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringLastIndexOfIsCultureSpecific.3")]
+        public static Int32 LastIndexOf(this StringBuilder builder, String value, Int32 start, Int32 count)
+        {
+            return builder.ToString().LastIndexOf(value, start, count);
+        }
+
+        public static Int32 LastIndexOf(this StringBuilder builder, String value, StringComparison comparison)
+        {
+            return builder.ToString().LastIndexOf(value, comparison);
+        }
+
+        public static Int32 LastIndexOf(this StringBuilder builder, String value, Int32 start, StringComparison comparison)
+        {
+            return builder.ToString().LastIndexOf(value, start, comparison);
+        }
+
+        public static Int32 LastIndexOf(this StringBuilder builder, String value, Int32 start, Int32 count, StringComparison comparison)
+        {
+            return builder.ToString().LastIndexOf(value, start, count, comparison);
+        }
+
+        public static Int32 IndexOfAny(this StringBuilder builder, Char[] values)
+        {
+            return builder.ToString().IndexOfAny(values);
+        }
+
+        public static Int32 IndexOfAny(this StringBuilder builder, Char[] values, Int32 start)
+        {
+            return builder.ToString().IndexOfAny(values, start);
+        }
+
+        public static Int32 IndexOfAny(this StringBuilder builder, Char[] values, Int32 start, Int32 count)
+        {
+            return builder.ToString().IndexOfAny(values, start, count);
+        }
+        
+        public static Int32 LastIndexOfAny(this StringBuilder builder, Char[] values)
+        {
+            return builder.ToString().LastIndexOfAny(values);
+        }
+
+        public static Int32 LastIndexOfAny(this StringBuilder builder, Char[] values, Int32 start)
+        {
+            return builder.ToString().LastIndexOfAny(values, start);
+        }
+
+        public static Int32 LastIndexOfAny(this StringBuilder builder, Char[] values, Int32 start, Int32 count)
+        {
+            return builder.ToString().LastIndexOfAny(values, start, count);
+        }
+
+        public static String[] Split(this StringBuilder builder, Char separator, StringSplitOptions options = StringSplitOptions.None)
+        {
+            return builder.ToString().Split(separator, options);
+        }
+
+        public static String[] Split(this StringBuilder builder, Char separator, Int32 count, StringSplitOptions options = StringSplitOptions.None)
+        {
+            return builder.ToString().Split(separator, count, options);
+        }
+
+        public static String[] Split(this StringBuilder builder, params Char[]? separator)
+        {
+            return builder.ToString().Split(separator);
+        }
+
+        public static String[] Split(this StringBuilder builder, Char[]? separator, Int32 count)
+        {
+            return builder.ToString().Split(separator, count);
+        }
+
+        public static String[] Split(this StringBuilder builder, Char[]? separator, StringSplitOptions options)
+        {
+            return builder.ToString().Split(separator, options);
+        }
+
+        public static String[] Split(this StringBuilder builder, Char[]? separator, Int32 count, StringSplitOptions options)
+        {
+            return builder.ToString().Split(separator, count, options);
+        }
+
+        public static String[] Split(this StringBuilder builder, String? separator, StringSplitOptions options = StringSplitOptions.None)
+        {
+            return builder.ToString().Split(separator, options);
+        }
+
+        public static String[] Split(this StringBuilder builder, String? separator, Int32 count, StringSplitOptions options = StringSplitOptions.None)
+        {
+            return builder.ToString().Split(separator, count, options);
+        }
+
+        public static String[] Split(this StringBuilder builder, String[]? separator, StringSplitOptions options)
+        {
+            return builder.ToString().Split(separator, options);
+        }
+
+        public static String[] Split(this StringBuilder builder, String[]? separator, Int32 count, StringSplitOptions options)
+        {
+            return builder.ToString().Split(separator, count, options);
+        }
+
+        public static StringBuilder Insert(Int32 start, String value)
+        {
+            return builder.ToString().Insert(start, value);
+        }
+
+        public static StringBuilder Remove(Int32 start)
+        {
+            return ToString().Remove(start);
+        }
+
+        public static StringBuilder Remove(Int32 start, Int32 count)
+        {
+            return ToString().Remove(start, count);
+        }
+
+        public static StringBuilder Replace(Char before, Char after)
+        {
+            return ToString().Replace(before, after);
+        }
+
+        public static StringBuilder Replace(String before, String? after)
+        {
+            return ToString().Replace(before, after);
+        }
+
+        public static StringBuilder Replace(String before, String? after, Boolean ignoreCase, CultureInfo? culture)
+        {
+            return ToString().Replace(before, after, ignoreCase, culture);
+        }
+
+        public static StringBuilder Replace(String before, String? after, StringComparison comparison)
+        {
+            return ToString().Replace(before, after, comparison);
+        }
+
+        public static StringBuilder Substring(Int32 start)
+        {
+            return ToString().Substring(start);
+        }
+
+        public static StringBuilder Substring(Int32 start, Int32 length)
+        {
+            return ToString().Substring(start, length);
+        }
+
+        public static StringBuilder Trim()
+        {
+            return ToString().Trim();
+        }
+
+        public static StringBuilder Trim(Char trim)
+        {
+            return ToString().Trim(trim);
+        }
+
+        public static StringBuilder Trim(params Char[]? trim)
+        {
+            return ToString().Trim(trim);
+        }
+
+        public static StringBuilder TrimStart()
+        {
+            return ToString().Trim();
+        }
+
+        public static StringBuilder TrimStart(Char trim)
+        {
+            return ToString().Trim(trim);
+        }
+
+        public static StringBuilder TrimStart(params Char[]? trim)
+        {
+            return ToString().Trim(trim);
+        }
+
+        public static StringBuilder TrimEnd()
+        {
+            return ToString().Trim();
+        }
+
+        public static StringBuilder TrimEnd(Char trim)
+        {
+            return ToString().Trim(trim);
+        }
+
+        public static StringBuilder TrimEnd(params Char[]? trim)
+        {
+            return ToString().Trim(trim);
+        }
+        
+        public static Boolean StartsWith(String value)
+        {
+            return ToString().StartsWith(value);
+        }
+
+        public static Boolean StartsWith(String value, StringComparison comparison)
+        {
+            return ToString().StartsWith(value, comparison);
+        }
+
+        public static Boolean StartsWith(String value, Boolean ignoreCase, CultureInfo? culture)
+        {
+            return ToString().StartsWith(value, ignoreCase, culture);
+        }
+
+        public static Boolean StartsWith(Char value)
+        {
+            return ToString().StartsWith(value);
+        }
+        
+        public static Boolean EndsWith(String value)
+        {
+            return ToString().EndsWith(value);
+        }
+
+        public static Boolean EndsWith(String value, StringComparison comparison)
+        {
+            return ToString().EndsWith(value, comparison);
+        }
+
+        public static Boolean EndsWith(String value, Boolean ignoreCase, CultureInfo? culture)
+        {
+            return ToString().EndsWith(value, ignoreCase, culture);
+        }
+
+        public static Boolean EndsWith(Char value)
+        {
+            return ToString().EndsWith(value);
+        }
+
+        public static StringBuilder PadLeft(Int32 width)
+        {
+            return ToString().PadLeft(width);
+        }
+
+        public static StringBuilder PadLeft(Int32 width, Char padding)
+        {
+            return ToString().PadLeft(width, padding);
+        }
+
+        public static StringBuilder PadRight(Int32 width)
+        {
+            return ToString().PadRight(width);
+        }
+
+        public static StringBuilder PadRight(Int32 width, Char padding)
+        {
+            return ToString().PadRight(width, padding);
+        }
+        
+        public static StringRuneEnumerator EnumerateRunes(this StringBuilder builder)
+        {
+            return builder.ToString().EnumerateRunes();
+        }
+
+        public static Char[] ToCharArray([NotNull] this StringBuilder builder)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().ToCharArray();
+        }
+
+        public static Char[] ToCharArray([NotNull] this StringBuilder builder, Int32 start, Int32 length)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.ToString().ToCharArray(start, length);
+        }
 
         public static IEnumerable<Char> AsEnumerable([NotNull] this StringBuilder builder)
         {
@@ -583,10 +1203,21 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
+            // ReSharper disable once ForCanBeConvertedToForeach
             for (Int32 i = 0; i < builder.Length; i++)
             {
                 yield return builder[i];
             }
+        }
+
+        public static IEnumerator<Char> GetEnumerator([NotNull] this StringBuilder builder)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return AsEnumerable(builder).GetEnumerator();
         }
     }
 }

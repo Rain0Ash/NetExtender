@@ -11,6 +11,7 @@ using JetBrains.Annotations;
 
 namespace NetExtender.Utils.Types
 {
+	[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "AsyncConverter.AsyncMethodNamingHighlighting")]
     public static class TaskUtils
     {
 	    /// <inheritdoc cref="BooleanUtils.True"/>
@@ -107,7 +108,7 @@ namespace NetExtender.Utils.Types
         {
 	        try
 	        {
-				await Task.Delay(delay, token);
+				await Task.Delay(delay, token).ConfigureAwait(false);
 	        }
 	        catch (TaskCanceledException)
 	        {
@@ -124,7 +125,7 @@ namespace NetExtender.Utils.Types
         {
 	        try
 	        {
-		        await Task.Delay(milli, token);
+		        await Task.Delay(milli, token).ConfigureAwait(false);
 	        }
 	        catch (TaskCanceledException)
 	        {
@@ -195,7 +196,7 @@ namespace NetExtender.Utils.Types
                 Task time = Task.Delay(timeout, token);
                 Task<Boolean> wait = TryWaitAsync(condition, delay, token);
 
-                return await Task.WhenAny(wait, time).ConfigureAwait(false) == wait && await wait;
+                return await Task.WhenAny(wait, time).ConfigureAwait(false) == wait && await wait.ConfigureAwait(false);
             }
             catch (TaskCanceledException)
             {
@@ -268,6 +269,7 @@ namespace NetExtender.Utils.Types
         }
         
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, CancellationToken, TaskContinuationOptions, TaskScheduler)"/>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "CA1068")]
         public static Task ContinueWith(this Task source, Action action, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
         {
 	        return source.ContinueWith(_ => action(), token, options, scheduler);
@@ -295,6 +297,7 @@ namespace NetExtender.Utils.Types
 	        return source.ContinueWith(_ => function(), token);
         }
         
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "CA1068")]
         public static Task<T> ContinueWith<T>(this Task source, Func<T> function, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
         {
 	        return source.ContinueWith(_ => function(), token, options, scheduler);

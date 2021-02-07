@@ -16,12 +16,12 @@ namespace NetExtender.Messages.Rules
         
         public ReaderHandler<T> Handler { get; }
 
-        public ConsoleRule()
+        protected ConsoleRule()
             : this(null)
         {
         }
 
-        public ConsoleRule(ReaderHandler<T> handler)
+        protected ConsoleRule(ReaderHandler<T> handler)
         {
             Handler = handler ?? RunAsync;
         }

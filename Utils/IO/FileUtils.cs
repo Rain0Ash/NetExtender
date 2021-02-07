@@ -411,6 +411,27 @@ namespace NetExtender.Utils.IO
             }
         }
 
+        public static FileStream Reserve([NotNull] this FileStream stream, Int32 count, InformationSize type)
+        {
+            return Reserve(stream, (Int32) type.ConvertToBytes(count));
+        }
+
+        public static FileStream Reserve([NotNull] this FileStream stream, Int64 bytes)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            if (bytes <= stream.Length)
+            {
+                return stream;
+            }
+            
+            stream.SetLength(bytes);
+            return stream;
+        }
+
         public static Task<FileInfo> SafeCreateFileAsync(String path, Byte[] data, Boolean overwrite = false, Int32 buffer = BufferUtils.DefaultBuffer)
         {
             return SafeCreateFileAsync(path, data, overwrite, buffer, CancellationToken.None);
@@ -512,7 +533,8 @@ namespace NetExtender.Utils.IO
             {
                 TargetPath = path,
                 WorkingDirectory = Path.GetDirectoryName(path),
-                SaveDirectory = directory
+                SaveDirectory = directory,
+                IconLocation = path
             };
 
             try
@@ -663,6 +685,18 @@ namespace NetExtender.Utils.IO
             }
 
             return info.Open(mode, access, share);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsReadOnly(this FileAccess access)
+        {
+            return !access.HasFlag(FileAccess.Write);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static FileAccess GetFileAccess(Boolean value)
+        {
+            return value ? FileAccess.ReadWrite : FileAccess.Read;
         }
     }
 }

@@ -45,5 +45,6 @@ namespace NetExtender.Types.Trees.Interfaces
         public new IDictionaryTreeNode<TKey, TValue> this[TKey key] { get; set; }
         
         public IDictionaryTreeNode<TKey, TValue> this[TKey key, params TKey[] sections] { get; set; }
+        public IDictionaryTreeNode<TKey, TValue> this[TKey key, IEnumerable<TKey> sections] { get; set; }
     }
 }

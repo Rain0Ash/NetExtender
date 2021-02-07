@@ -64,7 +64,7 @@ namespace NetExtender.Network.Networking.Common
         ///     Initialize network server with a given IP endpoint
         /// </summary>
         /// <param name="endpoint">IP endpoint</param>
-        public NetworkConnectionServer(IPEndPoint endpoint)
+        protected NetworkConnectionServer(IPEndPoint endpoint)
             : base(endpoint)
         {
         }

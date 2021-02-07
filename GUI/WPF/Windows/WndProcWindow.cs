@@ -11,8 +11,8 @@ namespace NetExtender.GUI.WPF.Windows
     public abstract class WndProcWindow : StartedWindow
     {
         private HwndSource _hwnd;
-        
-        public WndProcWindow()
+
+        protected WndProcWindow()
         {
             Started += InitizalizeWndProc;
             Closed += DisposeWndProc;

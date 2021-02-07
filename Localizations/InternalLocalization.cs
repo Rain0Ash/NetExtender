@@ -4,183 +4,348 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using JetBrains.Annotations;
 using NetExtender.Configuration;
 using NetExtender.Configuration.Common;
 using NetExtender.Cultures.Comparers;
-using NetExtender.Exceptions;
 using NetExtender.Localizations.Interfaces;
+using NetExtender.Localizations.Sub.Interfaces;
+using NetExtender.Types.Strings.Interfaces;
 using NetExtender.Utils.Types;
+using ReactiveUI.Fody.Helpers;
 
 namespace NetExtender.Localizations
 {
-    public delegate void LanguageChangedHandler(CultureInfo info);
-    
-    public static partial class InternalLocalization
+    public static partial class Localization
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-        private static class CurrentLocalization
+        private class InternalLocalization : Config, ILocalization
         {
-            private static ILocalization current;
-            public static ILocalization Current
+            private event LanguageChangedHandler LanguageChanged;
+
+            public event LanguageChangedHandler LanguageCultureChanged
+            {
+                add
+                {
+                    if (LanguageChanged.Contains(value))
+                    {
+                        return;
+                    }
+
+                    LanguageChanged += value;
+                }
+                remove
+                {
+                    LanguageChanged -= value;
+                }
+            }
+
+            public CultureComparer Comparer { get; }
+
+            [Reactive]
+            public Boolean ChangeUIThreadLanguage { get; set; } = true;
+
+            [Reactive]
+            public Boolean UseSystemCulture { get; set; } = true;
+
+            [Reactive]
+            public CultureInfo Culture { get; private set; }
+
+            public CultureInfo Standart
             {
                 get
                 {
-                    return current ?? throw new NotInitializedException();
-                }
-                set
-                {
-                    ThrowIfAlreadyInitialized();
-                    current = value ?? throw new ArgumentNullException(nameof(value));
+                    return UseSystemCulture && Supported.ContainsKey(CultureUtils.System) ? CultureUtils.System : CultureUtils.English;
                 }
             }
 
-            public static Boolean Initialized
+            protected Dictionary<CultureInfo, ISubLocalization> Supported { get; }
+
+            public IOrderedEnumerable<CultureInfo> Languages
             {
                 get
                 {
-                    return current is not null;
+                    return Supported.Keys.Sort(Comparer);
                 }
             }
-            
-            public static void ThrowIfAlreadyInitialized()
+
+            private static (CultureComparer, Dictionary<CultureInfo, ISubLocalization>) Convert(ILocalizationBehaviour behaviour)
             {
-                if (Initialized)
+                CultureComparer comparer = behaviour?.Comparer ?? new CultureComparer {Default};
+
+                Dictionary<CultureInfo, ISubLocalization> supported;
+
+                if (behaviour?.Supported is not null)
                 {
-                    throw new AlreadyInitializedException();
+                    supported = new Dictionary<CultureInfo, ISubLocalization>(behaviour.Supported);
+
+                    if (!supported.ContainsKey(Default))
+                    {
+                        supported.Add(Default, null);
+                    }
                 }
-            }
-        }
-        
-        public static Boolean IsInitialized
-        {
-            get
-            {
-                return CurrentLocalization.Initialized;
-            }
-        }
+                else
+                {
+                    supported = new Dictionary<CultureInfo, ISubLocalization>()
+                    {
+                        {Default, null}
+                    };
+                }
 
-        public static ILocalization Current
-        {
-            get
-            {
-                return CurrentLocalization.Current;
+                return (comparer, supported);
             }
-        }
-        
-        public static CultureComparer Comparer
-        {
-            get
-            {
-                return Current.Comparer;
-            }
-        }
-        
-        public static Boolean ChangeUIThreadLanguage
-        {
-            get
-            {
-                return Current.ChangeUIThreadLanguage;
-            }
-            set
-            {
-                Current.ChangeUIThreadLanguage = value;
-            }
-        }
 
-        public static Boolean UseSystemCulture
-        {
-            get
+            public InternalLocalization([NotNull] IConfigBehavior config, ILocalizationBehaviour behaviour = null)
+                : base(config)
             {
-                return Current.UseSystemCulture;
+                (Comparer, Supported) = Convert(behaviour);
             }
-            set
-            {
-                Current.UseSystemCulture = value;
-            }
-        }
 
-        public static CultureInfo Culture
-        {
-            get
+            public InternalLocalization(ConfigType type, ConfigOptions options, ILocalizationBehaviour behaviour = null)
+                : base(type, options)
             {
-                return Current.Culture;
+                (Comparer, Supported) = Convert(behaviour);
             }
-        }
-        
-        public static CultureInfo System
-        {
-            get
-            {
-                return CultureUtils.System;
-            }
-        }
 
-        public static CultureInfo Default
-        {
-            get
+            public InternalLocalization(String path, ConfigType type, ConfigOptions options, ILocalizationBehaviour behaviour = null)
+                : base(path, type, options)
             {
-                return CultureUtils.English;
+                (Comparer, Supported) = Convert(behaviour);
             }
-        }
-        
-        public static IReadOnlySet<CultureInfo> Supported
-        {
-            get
-            {
-                return Current.Languages;
-            }
-        }
 
-        public const ConfigType DefaultConfigType = ConfigType.JSON;
-        
-        public static ILocalization Create([NotNull] IConfigBehavior behavior)
-        {
-            CurrentLocalization.ThrowIfAlreadyInitialized();
-            CurrentLocalization.Current = new InternalLocalization2(behavior);
-            return Current;
-        }
-        
-        public static ILocalization Create()
-        {
-            return Create(DefaultConfigType, Config.DefaultConfigOptions);
-        }
-        
-        public static ILocalization Create(ConfigType type)
-        {
-            return Create(type, Config.DefaultConfigOptions);
-        }
-        
-        public static ILocalization Create(ConfigOptions options)
-        {
-            return Create(DefaultConfigType, options);
-        }
-        
-        public static ILocalization Create(ConfigType type, ConfigOptions options)
-        {
-            return Create(null, type, options);
-        }
-        
-        public static ILocalization Create(String path)
-        {
-            return Create(path, DefaultConfigType);
-        }
-        
-        public static ILocalization Create(String path, ConfigType type)
-        {
-            return Create(path, type, Config.DefaultConfigOptions);
-        }
-        
-        public static ILocalization Create(String path, ConfigOptions options)
-        {
-            return Create(path, DefaultConfigType, options);
-        }
-        
-        public static ILocalization Create(String path, ConfigType type, ConfigOptions options)
-        {
-            CurrentLocalization.ThrowIfAlreadyInitialized();
-            CurrentLocalization.Current = new InternalLocalization2(path, type, options);
-            return Current;
+            public Boolean AddSupportedCulture([NotNull] CultureInfo info)
+            {
+                return AddSupportedCulture(info, null);
+            }
+
+            public Boolean AddSupportedCulture([NotNull] CultureInfo info, [CanBeNull] ISubLocalization config)
+            {
+                if (info is null)
+                {
+                    throw new ArgumentNullException(nameof(info));
+                }
+
+                return Supported.TryAdd(info, config);
+            }
+
+            public Boolean RemoveSupportedCulture([NotNull] CultureInfo info)
+            {
+                if (info is null)
+                {
+                    throw new ArgumentNullException(nameof(info));
+                }
+
+                if (info.LCID == CultureUtils.Default || info.LCID == CultureUtils.English.LCID)
+                {
+                    return false;
+                }
+
+                return Supported.Remove(info);
+            }
+
+            public void UpdateLocalization(CultureInfo info)
+            {
+                if (info is null)
+                {
+                    return;
+                }
+
+                if (Equals(Culture, info))
+                {
+                    return;
+                }
+
+                if (!Supported.ContainsKey(info))
+                {
+                    throw new InvalidOperationException();
+                }
+
+                Culture = info;
+
+                if (ChangeUIThreadLanguage)
+                {
+                    SetUILanguage();
+                }
+
+                LanguageChanged?.Invoke(Culture);
+            }
+
+            public Boolean TryUpdateLocalization(CultureInfo info)
+            {
+                if (info is null)
+                {
+                    return false;
+                }
+
+                if (Equals(Culture, info))
+                {
+                    return true;
+                }
+
+                if (!Supported.ContainsKey(info))
+                {
+                    return false;
+                }
+
+                Culture = info;
+
+                if (ChangeUIThreadLanguage)
+                {
+                    SetUILanguage();
+                }
+
+                LanguageChanged?.Invoke(Culture);
+                return true;
+            }
+
+            public Boolean SetUILanguage()
+            {
+                UInt16 lcid;
+                try
+                {
+                    lcid = Culture.Equals(CultureInfo.InvariantCulture) ? CultureUtils.English.LCID16() : Culture.LCID16();
+                }
+                catch (Exception)
+                {
+                    lcid = CultureUtils.English.LCID16();
+                }
+
+                if (CultureUtils.SetUILanguage(lcid))
+                {
+                    return true;
+                }
+
+                CultureUtils.English.SetUILanguage();
+                return false;
+            }
+
+            public Int32 GetLanguageOrderID()
+            {
+                return GetLanguageOrderID(Culture);
+            }
+
+            public Int32 GetLanguageOrderID(CultureInfo info)
+            {
+                return Comparer.GetOrder(info);
+            }
+
+            public ILocalizationProperty GetProperty(String key, IString value, params String[] sections)
+            {
+                return new LocalizationProperty(this, Supported, key, value, sections);
+            }
+
+            private static IConfigProperty<T> GetOrAddProperty<T>(IConfigPropertyBase property)
+            {
+                if (ConfigPropertyObserver.GetOrAddProperty(property) is IConfigProperty<T> result)
+                {
+                    return result;
+                }
+
+                throw new ArgumentException(@$"Config already contains another property with same path '{property.Path}' and different generic type.", nameof(property));
+            }
+
+            [CanBeNull]
+            public IEnumerable<IReadOnlyConfigPropertyBase> GetProperties()
+            {
+                return ConfigPropertyObserver.GetProperties(this);
+            }
+
+            private static void ReadProperty(IReadOnlyConfigPropertyBase property)
+            {
+                property?.Read();
+            }
+
+            private static void SaveProperty(IReadOnlyConfigPropertyBase property)
+            {
+                (property as IConfigPropertyBase)?.Save();
+            }
+
+            private static void ResetProperty(IReadOnlyConfigPropertyBase property)
+            {
+                (property as IConfigPropertyBase)?.Reset();
+            }
+
+            private static void ClearProperty(IReadOnlyConfigPropertyBase property)
+            {
+                (property as IConfigPropertyBase)?.Dispose();
+            }
+
+            public void RemoveProperty(IReadOnlyConfigPropertyBase property)
+            {
+                ConfigPropertyObserver.ThrowIfPropertyNotLinkedTo(this, property);
+                ConfigPropertyObserver.RemoveProperty(property);
+                ClearProperty(property);
+            }
+
+            private void ForEachProperty(Action<IReadOnlyConfigPropertyBase> action)
+            {
+                ConfigPropertyObserver.ForEachProperty(this, action);
+            }
+
+            public void ReadProperties()
+            {
+                ForEachProperty(ReadProperty);
+            }
+
+            public void SaveProperties()
+            {
+                ForEachProperty(SaveProperty);
+            }
+
+            public void ResetProperties()
+            {
+                ForEachProperty(ResetProperty);
+            }
+
+            public void ClearProperties()
+            {
+                ForEachProperty(ClearProperty);
+                ConfigPropertyObserver.ClearProperties(this);
+            }
+
+            public Boolean SetValue<T>(IReadOnlyConfigProperty<T> property, T value)
+            {
+                ConfigPropertyObserver.ThrowIfPropertyNotLinked(property);
+                return SetValue(property.Key, value, property.CryptKey, property.Sections);
+            }
+
+            public T GetValue<T>(IReadOnlyConfigProperty<T> property)
+            {
+                ConfigPropertyObserver.ThrowIfPropertyNotLinked(property);
+                return GetValue(property.Key, property.DefaultValue, property.CryptKey, property.Converter, property.Sections);
+            }
+
+            public T GetOrSetValue<T>(IReadOnlyConfigProperty<T> property)
+            {
+                ConfigPropertyObserver.ThrowIfPropertyNotLinked(property);
+                return GetOrSetValue(property, property.DefaultValue);
+            }
+
+            public T GetOrSetValue<T>(IReadOnlyConfigProperty<T> property, T value)
+            {
+                ConfigPropertyObserver.ThrowIfPropertyNotLinked(property);
+                return GetOrSetValue(property.Key, value, property.CryptKey, property.Converter, property.Sections);
+            }
+
+            public Boolean KeyExist(IReadOnlyConfigPropertyBase property)
+            {
+                ConfigPropertyObserver.ThrowIfPropertyNotLinked(property);
+                return KeyExist(property.Key, property.Sections);
+            }
+
+            public Boolean RemoveValue(IReadOnlyConfigPropertyBase property)
+            {
+                ConfigPropertyObserver.ThrowIfPropertyNotLinked(property);
+                return RemoveValue(property.Key, property.Sections);
+            }
+
+            protected override void DisposeInternal(Boolean disposing)
+            {
+                base.DisposeInternal(disposing);
+                LanguageChanged = null;
+                ClearProperties();
+            }
         }
     }
 }

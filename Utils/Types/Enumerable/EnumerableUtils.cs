@@ -107,6 +107,29 @@ namespace NetExtender.Utils.Types
             Int64 counter = 0;
             return source.Select(item => (counter++, item));
         }
+        
+        public static Int32 FindIndex<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            foreach ((Int32 counter, T item) in source.Enumerate())
+            {
+                if (predicate(item))
+                {
+                    return counter;
+                }
+            }
+
+            return -1;
+        }
 
         public static IEnumerable<T> Append<T>([CanBeNull] this IEnumerable<T> source, [CanBeNull] IEnumerable<T> additional)
         {
@@ -547,7 +570,69 @@ namespace NetExtender.Utils.Types
             return source.Prepend(prepend(source.Aggregate(aggregate)));
         }
 
-        public static IEnumerable<TOut> TrySelect<T, TOut>([NotNull] this IEnumerable<T> source, Func<T, TOut> predicate)
+        public static IEnumerable<TResult> SelectManyWhere<T, TResult>(this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, Func<T, IEnumerable<TResult>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            foreach (T item in source)
+            {
+                if (!where(item))
+                {
+                    continue;
+                }
+                
+                foreach (TResult result in selector(item))
+                {
+                    yield return result;
+                }
+            }
+        }
+        
+        public static IEnumerable<TResult> SelectManyWhereNot<T, TResult>(this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, Func<T, IEnumerable<TResult>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            foreach (T item in source)
+            {
+                if (where(item))
+                {
+                    continue;
+                }
+                
+                foreach (TResult result in selector(item))
+                {
+                    yield return result;
+                }
+            }
+        }
+
+        public static IEnumerable<TResult> TrySelect<T, TResult>([NotNull] this IEnumerable<T> source, Func<T, TResult> predicate)
         {
             if (source is null)
             {
@@ -561,7 +646,7 @@ namespace NetExtender.Utils.Types
 
             foreach (T item in source)
             {
-                TOut value;
+                TResult value;
                 Boolean successful;
 
                 try
@@ -583,7 +668,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TOut> TrySelectWhere<T, TOut>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] Func<T, TOut> predicate)
+        public static IEnumerable<TResult> TrySelectWhere<T, TResult>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] Func<T, TResult> predicate)
         {
             if (source is null)
             {
@@ -604,7 +689,7 @@ namespace NetExtender.Utils.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TOut> TrySelectWhereNot<T, TOut>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] Func<T, TOut> predicate)
+        public static IEnumerable<TResult> TrySelectWhereNot<T, TResult>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] Func<T, TResult> predicate)
         {
             if (source is null)
             {
@@ -625,7 +710,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TOut> TrySelectWhere<T, TOut>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] TryParseHandler<T, TOut> predicate)
+        public static IEnumerable<TResult> TrySelectWhere<T, TResult>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] TryParseHandler<T, TResult> predicate)
         {
             if (source is null)
             {
@@ -646,7 +731,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TOut> TrySelectWhereNot<T, TOut>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] TryParseHandler<T, TOut> predicate)
+        public static IEnumerable<TResult> TrySelectWhereNot<T, TResult>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] TryParseHandler<T, TResult> predicate)
         {
             if (source is null)
             {
@@ -667,7 +752,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TOut> TryParse<T, TOut>([NotNull] this IEnumerable<T> source, TryParseHandler<T, TOut> predicate)
+        public static IEnumerable<TResult> TryParse<T, TResult>([NotNull] this IEnumerable<T> source, TryParseHandler<T, TResult> predicate)
         {
             if (source is null)
             {
@@ -678,7 +763,7 @@ namespace NetExtender.Utils.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TOut> TryParseWhere<T, TOut>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] TryParseHandler<T, TOut> predicate)
+        public static IEnumerable<TResult> TryParseWhere<T, TResult>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] TryParseHandler<T, TResult> predicate)
         {
             if (source is null)
             {
@@ -965,7 +1050,37 @@ namespace NetExtender.Utils.Types
             }
         }
 
-        public static IEnumerable<T> SelectWhereNotNull<T>(this IEnumerable<T?> source) where T : struct
+        public static IEnumerable<TResult> SelectWhereNotNull<T, TResult>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, TResult> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.WhereNotNull().Select(selector);
+        }
+        
+        public static IEnumerable<TResult> SelectManyWhereNotNull<T, TResult>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, IEnumerable<TResult>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.SelectManyWhere(item => item is not null, selector);
+        }
+
+        public static IEnumerable<T> SelectWhereNotNull<T>([NotNull] this IEnumerable<T?> source) where T : struct
         {
             if (source is null)
             {
@@ -981,7 +1096,7 @@ namespace NetExtender.Utils.Types
             }
         }
 
-        public static IEnumerable<T> Sort<T>([NotNull] this IEnumerable<T> source, IComparer<T> comparer = null)
+        public static IOrderedEnumerable<T> OrderBy<T>([NotNull] this IEnumerable<T> source, IComparer<T> comparer)
         {
             if (source is null)
             {
@@ -990,8 +1105,43 @@ namespace NetExtender.Utils.Types
 
             return source.OrderBy(item => item, comparer);
         }
+        
+        public static IOrderedEnumerable<T> OrderByDescending<T>([NotNull] this IEnumerable<T> source, IComparer<T> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
 
-        public static IEnumerable<T> Sort<T, TKey>([NotNull] this IEnumerable<T> source, Func<T, TKey> selector, IComparer<TKey> comparer = null)
+            return source.OrderByDescending(item => item, comparer);
+        }
+
+        public static IOrderedEnumerable<T> Sort<T>([NotNull] this IEnumerable<T> source, IComparer<T> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return OrderBy(source, comparer);
+        }
+
+        public static IOrderedEnumerable<T> Sort<T, TKey>([NotNull] this IEnumerable<T> source, Func<T, TKey> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.OrderBy(selector);
+        }
+
+        public static IOrderedEnumerable<T> Sort<T, TKey>([NotNull] this IEnumerable<T> source, Func<T, TKey> selector, IComparer<TKey> comparer)
         {
             if (source is null)
             {
@@ -1004,6 +1154,46 @@ namespace NetExtender.Utils.Types
             }
 
             return source.OrderBy(selector, comparer);
+        }
+        
+        public static IOrderedEnumerable<T> SortDescending<T>([NotNull] this IEnumerable<T> source, IComparer<T> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return OrderByDescending(source, comparer);
+        }
+
+        public static IOrderedEnumerable<T> SortDescending<T, TKey>([NotNull] this IEnumerable<T> source, Func<T, TKey> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.OrderByDescending(selector);
+        }
+
+        public static IOrderedEnumerable<T> SortDescending<T, TKey>([NotNull] this IEnumerable<T> source, Func<T, TKey> selector, IComparer<TKey> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.OrderByDescending(selector, comparer);
         }
 
         public static IEnumerable<T> ForEach<T>([NotNull] this IEnumerable<T> source, Action<T> action)
@@ -2503,13 +2693,24 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(comparer));
             }
 
-            if (!source.Any())
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
             {
                 return true;
             }
 
-            T first = source.First();
-            return source.Skip(1).All(e => comparer.Equals(first, e));
+            T first = enumerator.Current;
+
+            while (enumerator.MoveNext())
+            {
+                if (!comparer.Equals(first, enumerator.Current))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -2520,11 +2721,16 @@ namespace NetExtender.Utils.Types
         /// <typeparam name="TValue">The type of the values to compare.</typeparam>
         /// <param name="source">The collection.</param>
         /// <param name="selector">A transform function to apply to each element to select the value on which to compare elements.</param>
-        public static Boolean AllSame<T, TValue>([NotNull] this IEnumerable<T> source, Func<T, TValue> selector)
+        public static Boolean AllSame<T, TValue>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, TValue> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
             }
 
             return AllSame(source, selector, EqualityComparer<TValue>.Default);
@@ -2539,7 +2745,7 @@ namespace NetExtender.Utils.Types
         /// <param name="source">The collection.</param>
         /// <param name="selector">A transform function to apply to each element to select the value on which to compare elements.</param>
         /// <param name="comparer">The comparer</param>
-        public static Boolean AllSame<T, TValue>(this IEnumerable<T> source, Func<T, TValue> selector, IEqualityComparer<TValue> comparer)
+        public static Boolean AllSame<T, TValue>(this IEnumerable<T> source, Func<T, TValue> selector, [NotNull] IEqualityComparer<TValue> comparer)
         {
             if (source is null)
             {
@@ -2551,13 +2757,12 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            if (!source.Any())
+            if (comparer is null)
             {
-                return true;
+                throw new ArgumentNullException(nameof(comparer));
             }
 
-            TValue sample = selector(source.First());
-            return source.Skip(1).All(e => comparer.Equals(sample, selector(e)));
+            return source.Select(selector).AllSame(comparer);
         }
 
         /// <summary>
@@ -2628,8 +2833,8 @@ namespace NetExtender.Utils.Types
             {
                 null when nullToEmpty => Enumerable.Empty<T>(),
                 null => throw new ArgumentNullException(nameof(source)),
-                IReadOnlyCollection<T> _ => source,
-                ICollection<T> _ => source,
+                IReadOnlyCollection<T> => source,
+                ICollection<T> => source,
                 _ => source.ToArray()
             };
         }

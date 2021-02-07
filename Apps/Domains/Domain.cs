@@ -18,6 +18,7 @@ using NetExtender.Apps.Domains.Interfaces;
 using NetExtender.Exceptions;
 using NetExtender.GUI;
 using NetExtender.Utils.IO;
+using NetExtender.Utils.Types;
 using WPFApp = System.Windows.Application;
 
 namespace NetExtender.Apps.Domains
@@ -118,8 +119,9 @@ namespace NetExtender.Apps.Domains
             return Create(data).Initialize(app, type);
         }
 
-        private static String path;
+        public static String FriendlyName { get; } = PathUtils.GetFileNameWithoutExtension(AppDomain.CurrentDomain.FriendlyName);
 
+        private static String path;
         public static String Path
         {
             get
@@ -138,14 +140,13 @@ namespace NetExtender.Apps.Domains
                     return null;
                 }
 
-                String file = System.IO.Path.Combine(dir, PathUtils.GetFileNameWithoutExtension(AppDomain.CurrentDomain.FriendlyName) + ".exe");
+                String file = System.IO.Path.Combine(dir, FriendlyName + ".exe");
 
                 return path ??= PathUtils.IsExistAsFile(file) ? file : name;
             }
         }
 
         private static String directory;
-
         public static String Directory
         {
             get
@@ -216,23 +217,39 @@ namespace NetExtender.Apps.Domains
             }
         }
 
-        public static String CurrentAppNameOrPath
+        public static String AppNameOrPath
         {
             get
             {
-                return IsInitialized && !String.IsNullOrEmpty(AppName) ? AppName : Path;
+                return IsInitialized ? AppName : Path;
             }
         }
 
-        public static CultureInfo CurrectCulture
+        public static String AppNameOrFriendlyName
         {
             get
             {
-                return Current.Culture;
+                return IsInitialized ? AppName : FriendlyName;
+            }
+        }
+
+        public static CultureInfo Culture
+        {
+            get
+            {
+                return IsInitialized ? Current.Culture : CultureUtils.System;
             }
             set
             {
                 Current.Culture = value;
+            }
+        }
+
+        public static AppInformation Information
+        {
+            get
+            {
+                return Current.Information;
             }
         }
 

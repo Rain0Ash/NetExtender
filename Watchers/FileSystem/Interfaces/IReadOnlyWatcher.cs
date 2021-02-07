@@ -13,7 +13,7 @@ namespace NetExtender.Watchers.FileSystem.Interfaces
         public event FileSystemEventHandler Deleted;
         public event RenamedEventHandler Renamed;
         public event ErrorEventHandler Error;
-
+        
         public String Path { get; }
 
         public String Filter { get; }

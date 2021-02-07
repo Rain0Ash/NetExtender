@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using NetExtender.Configuration.Common;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.DataBase;
@@ -24,12 +25,12 @@ namespace NetExtender.Configuration.Sql
             _connection = connection;
         }
 
-        public override String Get(String key, params String[] sections)
+        public override String Get(String key, IEnumerable<String> sections)
         {
             throw new NotImplementedException();
         }
 
-        public override Boolean Set(String key, String value, params String[] sections)
+        public override Boolean Set(String key, String value, IEnumerable<String> sections)
         {
             throw new NotImplementedException();
         }

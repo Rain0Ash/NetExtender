@@ -4,12 +4,13 @@
 using System.Collections.Generic;
 using System.Globalization;
 using NetExtender.Cultures.Comparers;
+using NetExtender.Localizations.Sub.Interfaces;
 
 namespace NetExtender.Localizations.Interfaces
 {
     public interface ILocalizationBehaviour
     {
         public CultureComparer Comparer { get; init; }
-        public IEnumerable<CultureInfo> Supported { get; init; }
+        public IDictionary<CultureInfo, ISubLocalization> Supported { get; init; }
     }
 }

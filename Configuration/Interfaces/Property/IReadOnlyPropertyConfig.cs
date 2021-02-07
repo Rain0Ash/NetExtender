@@ -3,26 +3,17 @@
 
 using System;
 using System.Collections.Generic;
+using NetExtender.Configuration.Interfaces.Property.Common;
 using NetExtender.Converters;
 using NetExtender.Crypto;
 using NetExtender.Crypto.CryptKey;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Utils.Types;
 
-namespace NetExtender.Configuration.Interfaces
+namespace NetExtender.Configuration.Interfaces.Property
 {
-    public interface IReadOnlyPropertyConfig : IReadOnlyConfig
+    public interface IReadOnlyPropertyConfig : IReadOnlyConfig, IReadOnlyPropertyConfigBase
     {
-        public T GetValue<T>(IReadOnlyConfigProperty<T> property)
-        {
-            return GetValue(property.Key, property.DefaultValue, property.CryptKey, property.Converter, property.Sections);
-        }
-        
-        public Boolean KeyExist(IReadOnlyConfigPropertyBase property)
-        {
-            return KeyExist(property.Key, property.Sections);
-        }
-        
         public IReadOnlyConfigProperty<T> GetProperty<T>(String key, params String[] sections)
         {
             return GetProperty(key, default(T), sections);

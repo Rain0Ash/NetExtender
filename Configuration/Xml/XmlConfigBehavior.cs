@@ -29,17 +29,17 @@ namespace NetExtender.Configuration.Xml
             return key.Replace(' ', '_');
         }
         
-        private static String[] Convert(IEnumerable<String> sections)
+        private static IEnumerable<String> Convert(IEnumerable<String> sections)
         {
-            return sections.Select(Convert).ToArray();
+            return sections.Select(Convert);
         }
 
-        public override String Get(String key, params String[] sections)
+        public override String Get(String key, IEnumerable<String> sections)
         {
             return base.Get(Convert(key), Convert(sections));
         }
 
-        public override Boolean Set(String key, String value, params String[] sections)
+        public override Boolean Set(String key, String value, IEnumerable<String> sections)
         {
             return base.Set(Convert(key), value, Convert(sections));
         }

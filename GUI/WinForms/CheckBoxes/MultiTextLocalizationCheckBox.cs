@@ -3,15 +3,15 @@
 
 using System;
 using System.Windows.Forms;
-using NetExtender.Localizations;
+using NetExtender.Types.Strings.Interfaces;
 
 namespace NetExtender.GUI.WinForms.CheckBoxes
 {
     public class MultiTextLocalizationCheckBox : LocalizationCheckBox
     {
-        public LocaleMultiString CheckedText { get; set; }
-        public LocaleMultiString IndeterminateText { get; set; }
-        public LocaleMultiString UncheckedText { get; set; }
+        public IString CheckedText { get; set; }
+        public IString IndeterminateText { get; set; }
+        public IString UncheckedText { get; set; }
 
         protected override void OnCheckedChanged(EventArgs e)
         {

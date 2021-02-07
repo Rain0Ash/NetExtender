@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using NetExtender.Exceptions;
 using NetExtender.Exceptions.Enum;
@@ -95,6 +96,88 @@ namespace NetExtender.Utils.Types
             fixed (T* ps = &second)
             {
                 return HasFlags(pf, ps);
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        private static unsafe T SetFlags<T>(T* first, T* second) where T : unmanaged, Enum
+        {
+            Byte* pf = (Byte*) first;
+            Byte* ps = (Byte*) second;
+
+            Span<Byte> value = stackalloc Byte[sizeof(T)];
+            
+            for (Int32 i = 0; i < value.Length; i++)
+            {
+                value[i] = (Byte) (pf[i] | ps[i]);
+            }
+
+            return MemoryMarshal.Read<T>(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe T SetFlags<T>(this T first, T second) where T : unmanaged, Enum
+        {
+            return SetFlags(&first, &second);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void SetFlags<T>(ref T first, T second) where T : unmanaged, Enum
+        {
+            fixed (T* pf = &first)
+            {
+                first = SetFlags(pf, &second);
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void SetFlags<T>(ref T first, in T second) where T : unmanaged, Enum
+        {
+            fixed (T* pf = &first)
+            fixed (T* ps = &second)
+            {
+                first = SetFlags(pf, ps);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        private static unsafe T RemoveFlags<T>(T* first, T* second) where T : unmanaged, Enum
+        {
+            Byte* pf = (Byte*) first;
+            Byte* ps = (Byte*) second;
+
+            Span<Byte> value = stackalloc Byte[sizeof(T)];
+            
+            for (Int32 i = 0; i < value.Length; i++)
+            {
+                value[i] = (Byte) (pf[i] & ~ps[i]);
+            }
+
+            return MemoryMarshal.Read<T>(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe T RemoveFlags<T>(this T first, T second) where T : unmanaged, Enum
+        {
+            return RemoveFlags(&first, &second);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void RemoveFlags<T>(ref T first, T second) where T : unmanaged, Enum
+        {
+            fixed (T* pf = &first)
+            {
+                first = RemoveFlags(pf, &second);
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void RemoveFlags<T>(ref T first, in T second) where T : unmanaged, Enum
+        {
+            fixed (T* pf = &first)
+            fixed (T* ps = &second)
+            {
+                first = RemoveFlags(pf, ps);
             }
         }
 

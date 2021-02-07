@@ -170,6 +170,9 @@
         <Compile Update="Configuration\Property.cs">
           <DependentUpon>Config.cs</DependentUpon>
         </Compile>
+        <Compile Update="Localizations\InternalLocalization.cs">
+          <DependentUpon>Localization.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>

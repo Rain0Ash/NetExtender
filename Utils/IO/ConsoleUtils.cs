@@ -3,8 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.Runtime.CompilerServices;
@@ -1471,7 +1469,7 @@ namespace NetExtender.Utils.IO
 
         public static void ToConsole<T>(this T value, Boolean newLine = true, IFormatProvider info = null)
         {
-            String str = value.GetString(info ?? CultureInfo.InvariantCulture) ?? "null";
+            String str = value.GetString(info ?? CultureInfo.InvariantCulture) ?? StringUtils.NullString;
 
             if (newLine)
             {

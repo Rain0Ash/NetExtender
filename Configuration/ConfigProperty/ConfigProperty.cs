@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using NetExtender.Configuration.Interfaces.Property;
 using NetExtender.Converters;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Interfaces;
@@ -20,7 +21,7 @@ namespace NetExtender.Configuration
         DisableSave = 8,
     }
     
-    public sealed class ConfigProperty<T> : ConfigPropertyBase, IConfigProperty<T>, IReadOnlyValidable<T>, IFormattable
+    public class ConfigProperty<T> : ConfigPropertyBase, IConfigProperty<T>, IReadOnlyValidable<T>, IFormattable
     {
         public static implicit operator T(ConfigProperty<T> property)
         {
@@ -32,6 +33,8 @@ namespace NetExtender.Configuration
             return property.ToString();
         }
 
+        private new IPropertyConfig Config { get; }
+        
         public Boolean ThrowOnInvalid { get; set; }
 
         [Reactive]
@@ -48,7 +51,7 @@ namespace NetExtender.Configuration
                 Initialize();
                 return IsValid && !AlwaysDefault ? _value : DefaultValue;
             }
-            private set
+            protected set
             {
                 if (IsReadOnly)
                 {
@@ -80,9 +83,10 @@ namespace NetExtender.Configuration
         
         public TryConverter<String, T> Converter { get; set; }
 
-        internal ConfigProperty(Config config, String key, T defaultValue, Func<T, Boolean> validate, ICryptKey crypt, ConfigPropertyOptions options, TryConverter<String, T> converter, params String[] sections)
+        protected internal ConfigProperty(IPropertyConfig config, String key, T defaultValue, Func<T, Boolean> validate, ICryptKey crypt, ConfigPropertyOptions options, TryConverter<String, T> converter, params String[] sections)
             : base(config, key, crypt, options, sections)
         {
+            Config = config;
             DefaultValue = defaultValue;
             Validate = validate;
             Converter = converter ?? ConvertUtils.TryConvert;
@@ -179,6 +183,11 @@ namespace NetExtender.Configuration
         public override void Read()
         {
             Value = Config.GetValue(this);
+        }
+
+        public override Boolean KeyExist()
+        {
+            return Config.KeyExist(Key, Sections);
         }
 
         public override void Reset()

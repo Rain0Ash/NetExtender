@@ -1,16 +1,9 @@
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-using System;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
-using NetExtender.Utils.Types;
-using NetExtender.Cultures;
-using NetExtender.Utils.Numerics;
-
 namespace NetExtender.GUI.WPF.ComboBoxes
 {
+#if WPF
     public class LocalizationComboBox : LocalizableComboBox
     {
         public LocalizationComboBox()
@@ -20,11 +13,11 @@ namespace NetExtender.GUI.WPF.ComboBoxes
 
         private void OnStarted(Object sender, EventArgs e)
         {
-            Localizations.Localization.LanguageChanged += SetLanguage;
+            Localization.LanguageChanged += SetLanguage;
             IsVisibleChanged += OnVisibleChanged;
             SelectionChanged += OnSelectedIndexChanged;
 
-            ItemsSource = Localizations.Localization.Cultures;
+            ItemsSource = Localization.Supported;
             DisplayMemberPath = "CustomName";
             SelectedValuePath = "LCID";
 
@@ -33,28 +26,28 @@ namespace NetExtender.GUI.WPF.ComboBoxes
 
         public void SetLanguage()
         {
-            SetLanguage(Localizations.Localization.CurrentCulture.LCID);
+            SetLanguage(Localization.Culture.LCID);
         }
 
         public void SetLanguage(Int32 lcid)
         {
             while (true)
             {
-                Int32 selectedIndex = Localizations.Localization.GetLanguageOrderID(lcid);
+                Int32 selectedIndex = Localization.GetLanguageOrderID(lcid);
                 if (selectedIndex.InRange(0, Items.Count, MathPositionType.Left))
                 {
                     SelectedIndex = selectedIndex;
                     return;
                 }
 
-                if (Localizations.Localization.DefaultCulture.LCID == lcid)
+                if (Localization.Default.LCID == lcid)
                 {
-                    throw new IndexOutOfRangeException($"Culture {Localizations.Localization.CultureByLCID.TryGetValue(lcid)?.CustomName ?? "Not exist"} out of range");
+                    throw new IndexOutOfRangeException($"Culture {Localization.CultureByLCID.TryGetValue(lcid)?.CustomName ?? "Not exist"} out of range");
                 }
                 
-                if (Localizations.Localization.BasicCulture.LCID == lcid)
+                if (Localization.Basic.LCID == lcid)
                 {
-                    lcid = Localizations.Localization.DefaultCulture.LCID;
+                    lcid = Localization.DefaultCulture.LCID;
                 }
             }
         }
@@ -69,14 +62,15 @@ namespace NetExtender.GUI.WPF.ComboBoxes
 
         public Int32 GetLanguageLCID()
         {
-            return Localizations.Localization.CultureByLCID.FirstOr(
+            return Localization.CultureByLCID.FirstOr(
                 x => String.Equals(x.Value.CustomName, SelectedValue.ToString(), StringComparison.CurrentCultureIgnoreCase),
-                new KeyValuePair<Int32, Culture>(Localizations.Localization.DefaultCulture.LCID, Localizations.Localization.DefaultCulture)).Key;
+                new KeyValuePair<Int32, Culture>(Localization.DefaultCulture.LCID, Localization.DefaultCulture)).Key;
         }
 
         protected void OnSelectedIndexChanged(Object sender, SelectionChangedEventArgs e)
         {
-            Localizations.Localization.UpdateLocalization(GetLanguageLCID());
+            Localization.UpdateLocalization(GetLanguageLCID());
         }
     }
+#endif
 }

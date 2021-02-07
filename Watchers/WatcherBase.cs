@@ -49,7 +49,7 @@ namespace NetExtender.Watchers
             }
         }
 
-        public WatcherBase()
+        protected WatcherBase()
         {
             PathChanged += OnPathChanged;
         }

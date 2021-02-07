@@ -75,7 +75,7 @@ namespace NetExtender.GUI.WinForms.ListViews
             OwnerDraw = true;
             GridLines = true;
             FullRowSelect = true;
-            Images.Images.Add("null", NetExtender.Images.Images.Basic.Null);
+            Images.Images.Add(StringUtils.NullString, NetExtender.Images.Images.Basic.Null);
             SmallImageList = Images;
             DrawColumnHeader += OnDrawColumnHeader;
             DrawItem += OnDrawItem;
@@ -112,7 +112,7 @@ namespace NetExtender.GUI.WinForms.ListViews
 
         protected virtual String GetItemImageKey(GenericListViewItem<T> lvitem)
         {
-            return ImageDictionary.TryGetValue(lvitem.Item, "null");
+            return ImageDictionary.TryGetValue(lvitem.Item, StringUtils.NullString);
         }
         
         protected virtual Color GetItemBackColor(GenericListViewItem<T> lvitem, DrawingData data)
@@ -181,7 +181,7 @@ namespace NetExtender.GUI.WinForms.ListViews
 
             ImageDictionary.Remove(item);
             
-            if (hash is not null && !hash.Equals("null", StringComparison.OrdinalIgnoreCase)
+            if (hash is not null && !hash.Equals(StringUtils.NullString, StringComparison.OrdinalIgnoreCase)
                              && !ImageDictionary.Any(pair => pair.Value.Equals(hash, StringComparison.OrdinalIgnoreCase)))
             {
                 Images.Images.RemoveByKey(hash);

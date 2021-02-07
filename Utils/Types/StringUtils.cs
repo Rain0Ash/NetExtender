@@ -15,6 +15,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using NetExtender.Types.Strings;
+using NetExtender.Types.Strings.Interfaces;
 
 namespace NetExtender.Utils.Types
 {
@@ -43,11 +45,12 @@ namespace NetExtender.Utils.Types
         /// Cached null string task
         /// </summary>
         public static Task<String> Null { get; } = Task.FromResult<String>(null);
-
         /// <summary>
         /// Cached empty string task
         /// </summary>
         public static Task<String> Empty { get; } = Task.FromResult(String.Empty);
+
+        public const String NullString = "null";
 
         public const String DefaultSeparator = " ";
 
@@ -68,6 +71,41 @@ namespace NetExtender.Utils.Types
             };
         }
 
+        public static Int32 CharLength([NotNull] this IEnumerable<String> values)
+        {
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.WhereNotNull().Sum(str => str.Length);
+        }
+        
+        public static Int32 CharLength([NotNull] this IString[] values)
+        {
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.Length switch
+            {
+                0 => 0,
+                1 => values[0]?.Length ?? 0,
+                _ => values.WhereNotNull().Sum(str => str.Length)
+            };
+        }
+
+        public static Int32 CharLength([NotNull] this IEnumerable<IString> values)
+        {
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.WhereNotNull().Sum(str => str.Length);
+        }
+
         public static Int64 CharLongLength([NotNull] this String[] values)
         {
             if (values is null)
@@ -81,6 +119,41 @@ namespace NetExtender.Utils.Types
                 1 => values[0]?.Length ?? 0,
                 _ => values.WhereNotNull().Aggregate<String, Int64>(0, (current, str) => current + str.Length)
             };
+        }
+        
+        public static Int64 CharLongLength([NotNull] this IEnumerable<String> values)
+        {
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.WhereNotNull().Aggregate<String, Int64>(0, (current, str) => current + str.Length);
+        }
+        
+        public static Int64 CharLongLength([NotNull] this IString[] values)
+        {
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.Length switch
+            {
+                0 => 0,
+                1 => values[0]?.Length ?? 0,
+                _ => values.WhereNotNull().Aggregate<IString, Int64>(0, (current, str) => current + str.Length)
+            };
+        }
+        
+        public static Int64 CharLongLength([NotNull] this IEnumerable<IString> values)
+        {
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.WhereNotNull().Aggregate<IString, Int64>(0, (current, str) => current + str.Length);
         }
 
         public static IEnumerable<Int32> AllIndexesOf(this String str, String pattern, StringComparison comparison = StringComparison.Ordinal)
@@ -108,32 +181,41 @@ namespace NetExtender.Utils.Types
             {'<', '>'}
         }.ToImmutableDictionary();
 
-        public static Boolean IsBracketsWellFormed(String str)
+        public static Boolean IsBracketsWellFormed([NotNull] String value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (value.IsEmpty())
+            {
+                return true;
+            }
+
             Stack<Char> brackets = new Stack<Char>();
 
             try
             {
-                foreach (Char c in str)
+                foreach (Char chr in value)
                 {
-                    if (BracketPairs.Keys.Contains(c))
+                    if (BracketPairs.Keys.Contains(chr))
                     {
-                        brackets.Push(c);
+                        brackets.Push(chr);
+                        continue;
                     }
-                    else
+
+                    if (!BracketPairs.Values.Contains(chr))
                     {
-                        if (!BracketPairs.Values.Contains(c))
-                        {
-                            continue;
-                        }
-
-                        if (c != BracketPairs[brackets.First()])
-                        {
-                            return false;
-                        }
-
-                        brackets.Pop();
+                        continue;
                     }
+
+                    if (chr != BracketPairs[brackets.Peek()])
+                    {
+                        return false;
+                    }
+
+                    brackets.Pop();
                 }
             }
             catch (Exception)
@@ -171,14 +253,19 @@ namespace NetExtender.Utils.Types
             return String.Format(newFormatString.ToString(), valueDict.OrderBy(x => keyToInt[x.Key]).Select(x => x.Value).ToArray());
         }
 
-        public static Int32 FormatArgsExpected(this String str)
+        public static Int32 FormatArgsExpected([NotNull] this String str)
         {
-            const String pattern = @"(?<!\{)(?>\{\{)*\{\d(.*?)";
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
 
-            if (String.IsNullOrWhiteSpace(str))
+            if (str.Length <= 0)
             {
                 return 0;
             }
+
+            const String pattern = @"(?<!\{)(?>\{\{)*\{\d(.*?)";
 
             MatchCollection matches = Regex.Matches(str, pattern, RegexOptions.Compiled);
             return matches.Select(m => m.Value).Distinct().Count();
@@ -195,11 +282,16 @@ namespace NetExtender.Utils.Types
             return match.Success ? str.Substring(0, match.Index) : null;
         }
 
-        public static String Format(this String source, params Object[] args)
+        public static String Format([NotNull] this String source, [CanBeNull] params Object[] args)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
+            }
+
+            if (args is null)
+            {
+                return source;
             }
 
             Int32 expected = FormatArgsExpected(source);
@@ -209,129 +301,362 @@ namespace NetExtender.Utils.Types
                 return source;
             }
 
-            const String nullArgs = @"null";
-
             args = args.Length < expected
-                ? args.Concat(Enumerable.Repeat(nullArgs, expected - args.Length)).ToArray()
+                ? args.Concat(Enumerable.Repeat(NullString, expected - args.Length)).ToArray()
                 : args.Take(expected).ToArray();
 
             return String.Format(source, args);
         }
 
-        public static Boolean EndsWith(this String str, IEnumerable<Char> chars)
+        public static String Format([NotNull] this IString source, [NotNull] params Object[] args)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Format(source.ToString(), args);
+        }
+
+        public static Boolean EndsWith([NotNull] this String str, [NotNull] IEnumerable<Char> chars)
+        {
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
+            if (chars is null)
+            {
+                throw new ArgumentNullException(nameof(chars));
+            }
+
             return chars.Any(str.EndsWith);
         }
 
-        public static Boolean EndsWith(this String str, IEnumerable<String> substrings)
+        public static Boolean EndsWith([NotNull] this IString str, [NotNull] IEnumerable<Char> chars)
         {
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
+            return EndsWith(str.ToString(), chars);
+        }
+
+        public static Boolean EndsWith([NotNull] this String str, [NotNull] IEnumerable<String> substrings)
+        {
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
+            if (substrings is null)
+            {
+                throw new ArgumentNullException(nameof(substrings));
+            }
+
             return substrings.Any(str.EndsWith);
         }
 
-        public static Boolean IsNull(this String str)
+        public static Boolean EndsWith([NotNull] this IString str, [NotNull] IEnumerable<String> substrings)
+        {
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
+            return EndsWith(str.ToString(), substrings);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNull([CanBeNull] this String str)
         {
             return str is null;
         }
         
-        public static Boolean IsNotNull(this String str)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNull([CanBeNull] this IString str)
+        {
+            return str?.ToString() is null;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotNull([CanBeNull] this String str)
         {
             return str is not null;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotNull([CanBeNull] this IString str)
+        {
+            return str?.ToString() is not null;
+        }
 
-        public static Boolean IsEmpty(this String str)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsEmpty([CanBeNull] this String str)
         {
             return str == String.Empty;
         }
         
-        public static Boolean IsNotEmpty(this String str)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsEmpty([CanBeNull] this IString str)
         {
-            return str != String.Empty;
+            return str is not null && str.Length <= 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotEmpty([CanBeNull] this String str)
+        {
+            return !IsEmpty(str);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotEmpty([CanBeNull] this IString str)
+        {
+            return !IsEmpty(str);
         }
 
-        public static Boolean IsWhiteSpace(this String str)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsWhiteSpace([CanBeNull] this String str)
         {
             return str is not null && str.Length > 0 && str.All(Char.IsWhiteSpace);
         }
 
-        public static Boolean IsNotWhiteSpace(this String str)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsWhiteSpace([CanBeNull] this IString str)
+        {
+            return str is not null && str.Length > 0 && str.All(Char.IsWhiteSpace);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotWhiteSpace([CanBeNull] this String str)
         {
             return !IsWhiteSpace(str);
         }
 
-        public static Boolean IsEmptyOrWhiteSpace(this String str)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotWhiteSpace([CanBeNull] this IString str)
+        {
+            return !IsWhiteSpace(str);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsEmptyOrWhiteSpace([CanBeNull] this String str)
         {
             return str is not null && (str.Length <= 0 || str.All(Char.IsWhiteSpace));
         }
 
-        public static Boolean IsNullOrEmpty(this String str)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsEmptyOrWhiteSpace([CanBeNull] this IString str)
+        {
+            return str is not null && (str.Length <= 0 || str.All(Char.IsWhiteSpace));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNullOrEmpty([CanBeNull] this String str)
         {
             return String.IsNullOrEmpty(str);
         }
 
-        public static Boolean IsNullOrWhiteSpace(this String str)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNullOrEmpty([CanBeNull] this IString str)
+        {
+            return str is null || str.Length <= 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNullOrWhiteSpace([CanBeNull] this String str)
         {
             return String.IsNullOrWhiteSpace(str);
         }
 
-        public static Boolean IsNotNullOrEmpty(this String str)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNullOrWhiteSpace([CanBeNull] this IString str)
         {
-            return !String.IsNullOrEmpty(str);
+            return str is null || str.Length <= 0 || str.All(Char.IsWhiteSpace);
         }
 
-        public static Boolean IsNotNullOrWhiteSpace(this String str)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotNullOrEmpty([CanBeNull] this String str)
         {
-            return !String.IsNullOrWhiteSpace(str);
+            return !IsNullOrEmpty(str);
         }
 
-        /// <inheritdoc cref="char.GetUnicodeCategory(String,Int32)"/>
-        public static UnicodeCategory GetUnicodeCategory(this String str, Int32 index)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotNullOrEmpty([CanBeNull] this IString str)
         {
+            return !IsNullOrEmpty(str);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotNullOrWhiteSpace([CanBeNull] this String str)
+        {
+            return !IsNullOrWhiteSpace(str);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotNullOrWhiteSpace([CanBeNull] this IString str)
+        {
+            return !IsNullOrWhiteSpace(str);
+        }
+
+        /// <inheritdoc cref="Char.GetUnicodeCategory(String,Int32)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UnicodeCategory GetUnicodeCategory([NotNull] this String str, Int32 index)
+        {
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
             return Char.GetUnicodeCategory(str, index);
         }
-
-        public static String[] SplitByChars(String str)
+        
+        /// <inheritdoc cref="Char.GetUnicodeCategory(String,Int32)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UnicodeCategory GetUnicodeCategory([NotNull] this IString str, Int32 index)
         {
+            return GetUnicodeCategory(str.ToString(), index);
+        }
+        
+        public static String[] SplitByChars([NotNull] String str)
+        {
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
             return str.Split();
         }
 
-        public static String[] SplitByNewLine(String str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByChars([NotNull] IString str)
+        {
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
+            return SplitByChars(str.ToString());
+        }
+
+        public static String[] SplitByNewLine([NotNull] String str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
             return SplitByNewLine(str, Int32.MaxValue, options);
         }
 
-        public static String[] SplitByNewLine(String str, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLine([NotNull] String str, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
             return str.Split('\n', count, options);
         }
+        
+        public static String[] SplitByNewLine([NotNull] IString str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        {
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
 
-        public static String[] SplitBySpace(String str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+            return SplitByNewLine(str.ToString(), options);
+        }
+
+        public static String[] SplitByNewLine([NotNull] IString str, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        {
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
+            return SplitByNewLine(str.ToString(), count, options);
+        }
+
+        public static String[] SplitBySpace([NotNull] String str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
             return SplitBySpace(str, Int32.MaxValue, options);
         }
 
-        public static String[] SplitBySpace(String str, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitBySpace([NotNull] String str, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
             return str.Split(' ', count, options);
+        }
+        
+        public static String[] SplitBySpace([NotNull] IString str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        {
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
+            return SplitBySpace(str.ToString(), options);
+        }
+
+        public static String[] SplitBySpace([NotNull] IString str, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        {
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
+            return SplitBySpace(str.ToString(), count, options);
         }
 
         private static readonly Char[] NewLineAndSpaceChars = {'\n', ' '};
 
-        public static String[] SplitByNewLineAndSpace(String str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLineAndSpace([NotNull] String str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
             return SplitByNewLineAndSpace(str, Int32.MaxValue, options);
         }
 
-        public static String[] SplitByNewLineAndSpace(String str, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLineAndSpace([NotNull] String str, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
             return str.Split(NewLineAndSpaceChars, count, options);
         }
+        
+        public static String[] SplitByNewLineAndSpace([NotNull] IString str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        {
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
 
-        public static String[] SplitByUpperCase(String str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+            return SplitByNewLineAndSpace(str.ToString(), options);
+        }
+
+        public static String[] SplitByNewLineAndSpace([NotNull] IString str, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        {
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
+            return SplitByNewLineAndSpace(str.ToString(), count, options);
+        }
+
+        public static String[] SplitByUpperCase([NotNull] String str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
             return SplitByUpperCaseInternal(str, options).ToArray();
         }
+        
+        public static String[] SplitByUpperCase([NotNull] IString str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        {
+            return SplitByUpperCase(str.ToString(), options);
+        }
 
-        private static IEnumerable<String> SplitByUpperCaseInternal(String str, StringSplitOptions options)
+        private static IEnumerable<String> SplitByUpperCaseInternal([CanBeNull] String str, StringSplitOptions options)
         {
             if (String.IsNullOrEmpty(str))
             {
@@ -388,13 +713,23 @@ namespace NetExtender.Utils.Types
             }
         }
 
-        private static String[] SplitByUpperCase(IEnumerable<String> split, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        private static String[] SplitByUpperCase([NotNull] IEnumerable<String> split, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            return split.SelectMany(str => SplitByUpperCase(str, options)).ToArray();
+            if (split is null)
+            {
+                throw new ArgumentNullException(nameof(split));
+            }
+
+            return split.SelectManyWhereNotNull(str => SplitByUpperCase(str, options)).ToArray();
         }
 
-        public static String[] SplitBy(this String str, SplitType split = SplitType.NewLine, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitBy([NotNull] this String str, SplitType split = SplitType.NewLine, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
             return split switch
             {
                 SplitType.Chars => SplitByChars(str),
@@ -409,21 +744,51 @@ namespace NetExtender.Utils.Types
             };
         }
 
-        public static String Join<T>(this String separator, IEnumerable<T> values)
+        public static String[] SplitBy([NotNull] this IString str, SplitType split = SplitType.NewLine, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            return String.Join(separator, values);
+            if (str is null)
+            {
+                throw new ArgumentNullException(nameof(str));
+            }
+
+            return SplitBy(str.ToString(), split, options);
         }
 
-        public static String Join(this String separator, IEnumerable<String> values)
+        public static String Concat([NotNull] this IEnumerable<Char> source)
         {
-            return String.Join(separator, values);
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (source is String str)
+            {
+                return str;
+            }
+
+            return source.ToStringBuilder().ToString();
         }
 
-        public static String Join(this String separator, IEnumerable<String> values, JoinType type)
+        public static String Join<T>(this String separator, [CanBeNull] IEnumerable<T> values)
         {
+            return values is not null ? String.Join(separator, values) : String.Empty;
+        }
+
+        public static String Join(this String separator, [CanBeNull] IEnumerable<String> values)
+        {
+            return values is not null ? String.Join(separator, values) : String.Empty;
+        }
+
+        public static String Join(this String separator, [CanBeNull] IEnumerable<String> values, JoinType type)
+        {
+            if (values is null)
+            {
+                return String.Empty;
+            }
+            
             return type switch
             {
-                JoinType.Default => String.Join(separator, values),
+                JoinType.Default => Join(separator, values),
                 JoinType.NotEmpty => Join(separator, IsNotNullOrEmpty, values),
                 JoinType.NotWhiteSpace => Join(separator, IsNotNullOrWhiteSpace, values),
                 _ => throw new NotSupportedException()
@@ -432,12 +797,12 @@ namespace NetExtender.Utils.Types
 
         public static String Join<T>(this String separator, params T[] values)
         {
-            return String.Join(separator, values);
+            return values is not null ? String.Join(separator, values) : String.Empty;
         }
 
         public static String Join(this String separator, params String[] values)
         {
-            return String.Join(separator, values);
+            return values is not null ? String.Join(separator, values) : String.Empty;
         }
 
         public static String Join(this String separator, JoinType type, params String[] values)
@@ -445,13 +810,33 @@ namespace NetExtender.Utils.Types
             return Join(separator, values, type);
         }
 
-        public static String Join(this String separator, Func<String, Boolean> predicate, IEnumerable<String> values)
+        public static String Join(this String separator, [NotNull] Func<String, Boolean> predicate, [CanBeNull] IEnumerable<String> values)
         {
+            if (values is null)
+            {
+                return String.Empty;
+            }
+            
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
             return String.Join(separator, values.Where(predicate));
         }
 
-        public static String Join(this String separator, Func<String, Boolean> predicate, params String[] values)
+        public static String Join(this String separator, [NotNull] Func<String, Boolean> predicate, [CanBeNull] params String[] values)
         {
+            if (values is null)
+            {
+                return String.Empty;
+            }
+            
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
             return values.Length > 0 ? String.Join(separator, values.Where(predicate)) : String.Empty;
         }
 
@@ -464,6 +849,16 @@ namespace NetExtender.Utils.Types
 
             return source.WhereNot(String.IsNullOrEmpty);
         }
+        
+        public static IEnumerable<IString> WhereNotNullOrEmpty([NotNull] this IEnumerable<IString> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.WhereNot(IsNullOrEmpty);
+        }
 
         public static IEnumerable<String> WhereNotNullOrWhiteSpace([NotNull] this IEnumerable<String> source)
         {
@@ -473,6 +868,16 @@ namespace NetExtender.Utils.Types
             }
 
             return source.WhereNot(String.IsNullOrWhiteSpace);
+        }
+        
+        public static IEnumerable<IString> WhereNotNullOrWhiteSpace([NotNull] this IEnumerable<IString> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.WhereNot(IsNullOrWhiteSpace);
         }
 
         public static String CapitalizeFirstChar(this String value)
@@ -485,55 +890,90 @@ namespace NetExtender.Utils.Types
             return value[0].ToString().ToUpper() + value.Substring(1);
         }
 
-        public static String Repeat(this String value, Int32 count)
+        public static String Repeat([NotNull] this String value, Int32 count)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             return count <= 1 ? value : new StringBuilder(value.Length * count).Insert(0, value, count).ToString();
         }
 
-        public static Boolean IsMatrix(this IReadOnlyCollection<String> value)
+        public static Boolean IsMatrix([NotNull] this IEnumerable<String> value)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
 
-            if (value.Count <= 0)
+            using IEnumerator<String> enumerator = value.GetEnumerator();
+
+            if (!enumerator.MoveNext())
             {
-                throw new ArgumentException(@"Value cannot be an empty collection.", nameof(value));
+                return false;
             }
 
-            return value.AllSame(row => row.RemoveAnsi().Length);
+            Int32? first = enumerator.Current?.RemoveAnsi().Length;
+
+            while (enumerator.MoveNext())
+            {
+                if (!EqualityComparer<Int32?>.Default.Equals(first, enumerator.Current?.RemoveAnsi().Length))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
-        public static Size GetMatrixSize(this IReadOnlyCollection<String> value)
+        public static Size GetMatrixSize([NotNull] this IEnumerable<String> value)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
+            
+            using IEnumerator<String> enumerator = value.GetEnumerator();
 
-            if (value.Count <= 0)
+            if (!enumerator.MoveNext())
             {
-                throw new ArgumentException(@"Value cannot be an empty collection.", nameof(value));
+                throw new ArgumentException(@"Value cannot be empty.", nameof(value));
             }
 
-            if (!IsMatrix(value))
+            Int32 first = enumerator.Current?.RemoveAnsi().Length ?? 0;
+
+            Int32 counter;
+            for (counter = 1; enumerator.MoveNext(); counter++)
             {
-                throw new ArgumentException(@"Different strings length", nameof(value));
+                if (!EqualityComparer<Int32>.Default.Equals(first, enumerator.Current?.RemoveAnsi().Length ?? 0))
+                {
+                    throw new InvalidOperationException(@"Different values length.");
+                }
             }
 
-            return new Size(value.First().RemoveAnsi().Length, value.Count);
+            return new Size(first, counter);
         }
-
+        
         private static Regex AnsiRegex { get; } = new Regex(@"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])", RegexOptions.Compiled);
 
-        public static Int32 CountAnsi(this String value)
+        public static Int32 CountAnsi([NotNull] this String value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             return AnsiRegex.Matches(value).Count;
         }
 
-        public static String RemoveAnsi(this String value)
+        public static String RemoveAnsi([NotNull] this String value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             return AnsiRegex.Replace(value, String.Empty);
         }
 
@@ -676,14 +1116,189 @@ namespace NetExtender.Utils.Types
             };
         }
 
+        private static String ToOppositeCaseInternal([NotNull] this String value, [NotNull] Func<Char, Char> upper, [NotNull] Func<Char, Char> lower)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (upper is null)
+            {
+                throw new ArgumentNullException(nameof(upper));
+            }
+
+            if (lower is null)
+            {
+                throw new ArgumentNullException(nameof(lower));
+            }
+            
+            StringBuilder builder = new StringBuilder();
+
+            foreach (Char chr in value)
+            {
+                if (!Char.IsLetter(chr))
+                {
+                    builder.Append(chr);
+                    continue;
+                }
+
+                if (Char.IsUpper(chr))
+                {
+                    builder.Append(lower(chr));
+                    continue;
+                }
+
+                builder.Append(upper(chr));
+            }
+
+            return builder.ToString();
+        }
+
+        public static String ToOppositeCase([NotNull] this String value)
+        {
+            return ToOppositeCase(value, null);
+        }
+        
+        public static String ToOppositeCase([NotNull] this String value, CultureInfo info)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (value.IsEmpty())
+            {
+                return value;
+            }
+
+            Func<Char, Char> upper;
+            Func<Char, Char> lower;
+            
+            if (info is null)
+            {
+                upper = Char.ToUpper;
+                lower = Char.ToLower;
+            }
+            else
+            {
+                upper = chr => Char.ToUpper(chr, info);
+                lower = chr => Char.ToLower(chr, info);
+            }
+
+            return ToOppositeCaseInternal(value, upper, lower);
+        }
+        
+        public static String ToOppositeCaseInvariant([NotNull] this String value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return value.IsEmpty() ? value : ToOppositeCaseInternal(value, Char.ToUpperInvariant, Char.ToLowerInvariant);
+        }
+
+        public static String UpperTo([NotNull] this String value, Int32 index)
+        {
+            return UpperTo(value, index, null);
+        }
+
+        public static String UpperTo([NotNull] this String value, Int32 index, [CanBeNull] CultureInfo? info)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return index switch
+            {
+                -1 => value.ToUpperInvariant(),
+                0 => value,
+                _ => value.Substring(0, index).ToUpper(info)
+            };
+        }
+        
+        public static String UpperToInvariant([NotNull] this String value, Int32 index)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return index switch
+            {
+                -1 => value.ToUpperInvariant(),
+                0 => value,
+                _ => value.Substring(0, index).ToUpperInvariant() + value.Substring(index + 1, value.Length - index - 1)
+            };
+        }
+
+        public static String UpperTo([NotNull] this String value, Char character)
+        {
+            return UpperTo(value, character, null);
+        }
+        
+        public static String UpperTo([NotNull] this String value, Char character, [CanBeNull] CultureInfo? info)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return UpperTo(value, value.IndexOf(character), info);
+        }
+        
+        public static String UpperToInvariant([NotNull] this String value, Char character)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return UpperToInvariant(value, value.IndexOf(character));
+        }
+        
+        public static String UpperToInclude([NotNull] this String value, Char character)
+        {
+            return UpperToInclude(value, character, null);
+        }
+        
+        public static String UpperToInclude([NotNull] this String value, Char character, [CanBeNull] IFormatProvider? provider)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            
+        }
+        
+        public static String UpperToIncludeInvariant([NotNull] this String value, Char character)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            
+        }
+
         /// <summary>
         /// Returns the beginning portion of s up to, but not including,
         /// the first occurrence of the character c. If c is not present in
         /// s, then s is returned.
         /// </summary>
-        public static String UpTo(this String value, Char character)
+        public static String UpTo([NotNull] this String value, Char character)
         {
-            return value.TakeWhile(ch => ch != character).Join();
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            Int32 index = value.IndexOf(character);
+
+            return index <= -1 ? value : value.Substring(0, index);
         }
 
         /// <summary>
@@ -816,6 +1431,29 @@ namespace NetExtender.Utils.Types
             return value.Substring(0, length - 3) + "...";
         }
 
+        public static String RemoveDiacritics([NotNull] this String value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (value.IsEmpty())
+            {
+                return value;
+            }
+
+            String normalized = value.Normalize(NormalizationForm.FormD);
+            StringBuilder builder = new StringBuilder();
+            
+            foreach (Char chr in normalized.Where(chr => CharUnicodeInfo.GetUnicodeCategory(chr) != UnicodeCategory.NonSpacingMark))
+            {
+                builder.Append(chr);
+            }
+            
+            return builder.ToString().Normalize(NormalizationForm.FormC);
+        }
+        
         /// <summary>
         /// Converts the specified string to a stream by using UTF-8 encoding that can be read from.
         /// <para>Don't forget to dispose the stream.</para>
@@ -891,6 +1529,19 @@ namespace NetExtender.Utils.Types
             {
                 Marshal.ZeroFreeBSTR(ptr);
             }
+        }
+
+        public static IString IStringNull { get; } = new StringAdapter(null);
+        public static IString IStringEmpty { get; } = new StringAdapter(String.Empty);
+
+        public static IString ToIString([CanBeNull] this String value)
+        {
+            if (value is null)
+            {
+                return IStringNull;
+            }
+
+            return value.Length > 0 ? new StringAdapter(value) : IStringEmpty;
         }
     }
 }

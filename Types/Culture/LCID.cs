@@ -7,7 +7,7 @@ using NetExtender.Utils.Types;
 
 namespace NetExtender.Types.Culture
 {
-    public readonly struct LCID : IEquatable<LCID>, IEquatable<Int32>, IEquatable<UInt16>, IEquatable<CultureData>
+    public readonly struct LCID : IEquatable<LCID>, IEquatable<Int32>, IEquatable<UInt16>, IEquatable<CultureLCID>
     {
         public static LCID En { get; } = new LCID(0x409);
         public static LCID Ru { get; } = new LCID(0x419);
@@ -39,12 +39,12 @@ namespace NetExtender.Types.Culture
             return second.Equals(first);
         }
         
-        public static Boolean operator ==(LCID first, CultureData second)
+        public static Boolean operator ==(LCID first, CultureLCID second)
         {
             return first.Equals(second);
         }
         
-        public static Boolean operator ==(CultureData first, LCID second)
+        public static Boolean operator ==(CultureLCID first, LCID second)
         {
             return second.Equals(first);
         }
@@ -74,22 +74,22 @@ namespace NetExtender.Types.Culture
             return !second.Equals(first);
         }
         
-        public static Boolean operator !=(LCID first, CultureData second)
+        public static Boolean operator !=(LCID first, CultureLCID second)
         {
             return !first.Equals(second);
         }
         
-        public static Boolean operator !=(CultureData first, LCID second)
+        public static Boolean operator !=(CultureLCID first, LCID second)
         {
             return !second.Equals(first);
         }
 
-        public static implicit operator CultureData(LCID lcid)
+        public static implicit operator CultureLCID(LCID lcid)
         {
-            return (CultureData) lcid.Code16;
+            return (CultureLCID) lcid.Code16;
         }
 
-        public static implicit operator LCID(CultureData culture)
+        public static implicit operator LCID(CultureLCID culture)
         {
             return new LCID(culture);
         }
@@ -134,7 +134,7 @@ namespace NetExtender.Types.Culture
             }
         }
 
-        public LCID(CultureData culture)
+        public LCID(CultureLCID culture)
             : this((Int32) culture)
         {
         }
@@ -164,7 +164,7 @@ namespace NetExtender.Types.Culture
             return Code == other;
         }
 
-        public Boolean Equals(CultureData other)
+        public Boolean Equals(CultureLCID other)
         {
             return Code == (Int32) other;
         }
@@ -177,7 +177,7 @@ namespace NetExtender.Types.Culture
                 LCID lcid => Equals(lcid),
                 Int32 lcid => Equals(lcid),
                 UInt16 lcid => Equals(lcid),
-                CultureData lcid => Equals(lcid),
+                CultureLCID lcid => Equals(lcid),
                 _ => false
             };
         }

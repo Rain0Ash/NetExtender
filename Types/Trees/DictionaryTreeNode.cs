@@ -328,14 +328,26 @@ namespace NetExtender.Types.Trees
                 Tree[key] = value;
             }
         }
-
+        
         public IDictionaryTreeNode<TKey, TValue> this[TKey key, params TKey[] sections]
+        {
+            get
+            {
+                return this[key, (IEnumerable<TKey>) sections];
+            }
+            set
+            {
+                this[key, (IEnumerable<TKey>) sections] = value;
+            }
+        }
+
+        public IDictionaryTreeNode<TKey, TValue> this[TKey key, IEnumerable<TKey> sections]
         {
             get
             {
                 IDictionaryTreeNode<TKey, TValue> node = this;
 
-                if (sections.Length <= 0)
+                if (sections is null)
                 {
                     return node[key];
                 }
@@ -348,9 +360,10 @@ namespace NetExtender.Types.Trees
             {
                 IDictionaryTreeNode<TKey, TValue> node = this;
 
-                if (sections.Length <= 0)
+                if (sections is null)
                 {
                     node[key] = value;
+                    return;
                 }
 
                 node = sections.Aggregate(node, (current, section) => current[section]);

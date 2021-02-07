@@ -12,18 +12,18 @@ namespace NetExtender.Utils.Types
     {
         Bit = 1,
         Byte = ByteUtils.BitInBytes,
-        Kb = Bit * ByteUtils.ByteMultiplier,
-        KB = ByteUtils.BitInBytes * Kb,
-        Mb = Kb * Kb,
-        MB = ByteUtils.BitInBytes * Mb,
-        Gb = Mb * Kb,
-        GB = ByteUtils.BitInBytes * Gb,
-        Tb = Mb * Mb,
-        TB = ByteUtils.BitInBytes * Tb,
-        Pb = Gb * Kb,
-        PB = ByteUtils.BitInBytes * Pb,
-        Zb = Gb * Mb,
-        ZB = ByteUtils.BitInBytes * Zb
+        KiloBit = Bit * ByteUtils.ByteMultiplier,
+        KiloByte = ByteUtils.BitInBytes * KiloBit,
+        MegaBit = KiloBit * KiloBit,
+        MegaByte = ByteUtils.BitInBytes * MegaBit,
+        GigaBit = MegaBit * KiloBit,
+        GigaByte = ByteUtils.BitInBytes * GigaBit,
+        TeraBit = MegaBit * MegaBit,
+        TeraByte = ByteUtils.BitInBytes * TeraBit,
+        PetaBit = GigaBit * MegaBit,
+        PetaByte = ByteUtils.BitInBytes * PetaBit,
+        ZettaBit = GigaBit * GigaBit,
+        ZettaByte = ByteUtils.BitInBytes * ZettaBit
     }
 
     public static class ByteUtils
@@ -34,12 +34,12 @@ namespace NetExtender.Utils.Types
         [DllImport("msvcrt.dll")]
         private static extern Int32 memcmp(Byte[] first, Byte[] second, Int64 count);
 
-        public static Boolean ByteArrayCompare(Byte[] first, Byte[] second)
+        public static Boolean ByteArrayCompare(this Byte[] first, Byte[] second)
         {
             return first.Length == second.Length && memcmp(first, second, first.Length) == 0;
         }
 
-        public static Boolean ByteArrayCompare(ReadOnlySpan<Byte> first, ReadOnlySpan<Byte> second)
+        public static Boolean ByteArrayCompare(this ReadOnlySpan<Byte> first, ReadOnlySpan<Byte> second)
         {
             return first.SequenceEqual(second);
         }
@@ -67,7 +67,7 @@ namespace NetExtender.Utils.Types
                 return String.Empty;
             }
 
-            Boolean hasSeparator = separator.IsNotNullOrEmpty();
+            Boolean hasSeparator = !String.IsNullOrEmpty(separator);
             Int32 length = data.Length * 2;
             if (hasSeparator)
             {
@@ -112,6 +112,21 @@ namespace NetExtender.Utils.Types
 
             return value * ((Double)from / (Double)to);
         }
+
+        public static UInt64 ConvertInformation(this InformationSize from, Int64 value, InformationSize to = InformationSize.Byte)
+        {
+            return value > 0 ? ConvertInformation(from, (UInt64) value, to) : 0;
+        }
+
+        public static UInt64 ConvertInformation(this InformationSize from, UInt64 value, InformationSize to = InformationSize.Byte)
+        {
+            if (from == to)
+            {
+                return value;
+            }
+
+            return value * ((UInt64) from / (UInt64) to);
+        }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ConvertToBit(this InformationSize from, UInt64 value)
@@ -122,7 +137,7 @@ namespace NetExtender.Utils.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ConvertToBytes(this InformationSize from, Int32 value)
         {
-            return ConvertToBytes(from, (UInt64) value);
+            return value > 0 ? ConvertToBytes(from, (UInt64) value) : 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

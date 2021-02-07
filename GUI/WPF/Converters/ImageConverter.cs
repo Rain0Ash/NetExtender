@@ -22,7 +22,7 @@ namespace NetExtender.GUI.WPF.Converters
     {
         private static ImageConverter converter;
         public Object Convert(Object value, Type targetType,
-            Object parameter, CultureInfo culture)
+            Object parameter, CultureInfo info)
         {
             // empty images are empty...
             if (value is null) { return null; }
@@ -50,7 +50,7 @@ namespace NetExtender.GUI.WPF.Converters
         }
 
         public Object ConvertBack(Object value, Type targetType,
-            Object parameter, CultureInfo culture)
+            Object parameter, CultureInfo info)
         {
             return null;
         }

@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using NetExtender.Utils.Core;
 
 namespace NetExtender.Utils.Types
 {
@@ -85,6 +87,88 @@ namespace NetExtender.Utils.Types
             {
                 return default;
             }
+        }
+        
+        private static Object DeepCopyInternal(Object original, IDictionary<Object, Object> visited)
+        {
+            if (original is null)
+            {
+                return null;
+            }
+
+            Type type = original.GetType();
+
+            if (type.IsPrimitive())
+            {
+                return original;
+            }
+
+            if (visited.ContainsKey(original))
+            {
+                return visited[original];
+            }
+
+            if (typeof(Delegate).IsAssignableFrom(type))
+            {
+                return null;
+            }
+
+            Object clone = MemberwiseCloneMethod.Invoke(original, null);
+
+            if (type.IsArray)
+            {
+                Type array = type.GetElementType();
+                if (!array.IsPrimitive())
+                {
+                    Array cloned = (Array) clone;
+
+                    cloned.ForEach((arr, indices) => arr.SetValue(DeepCopyInternal(cloned?.GetValue(indices), visited), indices));
+                }
+            }
+
+            visited.Add(original, clone);
+
+            DeepCopyFields(original, visited, clone, type);
+
+            RecursiveDeepCopyBaseTypePrivateFields(original, visited, clone, type);
+
+            return clone;
+        }
+
+        private static void DeepCopyFields(Object original, IDictionary<Object, Object> visited, Object clone, IReflect type,
+            BindingFlags binding = BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.FlattenHierarchy,
+            Func<FieldInfo, Boolean> filter = null)
+        {
+            IEnumerable<FieldInfo> fields = type.GetFields(binding);
+
+            if (filter is not null)
+            {
+                fields = fields.WhereNot(filter);
+            }
+            
+            foreach (FieldInfo field in fields)
+            {
+                if (field.FieldType.IsPrimitive())
+                {
+                    continue;
+                }
+
+                Object origfield = field.GetValue(original);
+                Object clonedfield = DeepCopyInternal(origfield, visited);
+
+                field.SetValue(clone, clonedfield);
+            }
+        }
+
+        private static void RecursiveDeepCopyBaseTypePrivateFields(Object original, IDictionary<Object, Object> visited, Object clone, Type type)
+        {
+            if (type.BaseType is null)
+            {
+                return;
+            }
+
+            RecursiveDeepCopyBaseTypePrivateFields(original, visited, clone, type.BaseType);
+            DeepCopyFields(original, visited, clone, type.BaseType, BindingFlags.Instance | BindingFlags.NonPublic, fieldInfo => fieldInfo.IsPrivate);
         }
     }
 }

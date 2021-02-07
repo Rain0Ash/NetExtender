@@ -13,6 +13,7 @@ using System.Text;
 using NetExtender.Utils.Numerics;
 using NetExtender.Exceptions;
 using NetExtender.Types.Sets.Interfaces;
+using NetExtender.Types.Strings.Interfaces;
 
 namespace NetExtender.Utils.Types
 {
@@ -296,6 +297,7 @@ namespace NetExtender.Utils.Types
                 null => null,
                 Char chr => escape ? $"\'{chr.GetString(provider)}\'" : chr.GetString(provider),
                 String str => escape ? $"\"{str.GetString(provider)}\"" : str.GetString(provider),
+                IString str => escape ? $"\"{str.ToString(provider)}\"" : str.ToString(provider),
                 IEnumerable enumerable => enumerable.GetString(provider),
                 IFormattable formattable => formattable.ToString(null, provider),
                 IConvertible convertible => convertible.ToString(provider),

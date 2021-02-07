@@ -43,7 +43,8 @@ namespace NetExtender.Types.Drawing
             Art = art.ToImmutableArray();
         }
         
-        public ASCIIArt([NotNull] IReadOnlyCollection<String> art)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        public ASCIIArt([NotNull] IEnumerable<String> art)
         {
             if (art is null)
             {

@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -19,12 +20,13 @@ using ReactiveUI.Fody.Helpers;
 
 namespace NetExtender.Configuration
 {
-    public partial class Config : ReactiveObject, IPropertyConfig
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+    public class Config : ReactiveObject, IConfig
     {
         public const ConfigType DefaultConfigType = ConfigType.Registry;
         public const ConfigOptions DefaultConfigOptions = ConfigOptions.None;
         
-        public static IPropertyConfig Create([NotNull] IConfigBehavior behavior)
+        public static IConfig Create([NotNull] IConfigBehavior behavior)
         {
             if (behavior is null)
             {
@@ -34,22 +36,22 @@ namespace NetExtender.Configuration
             return new Config(behavior);
         }
         
-        public static IPropertyConfig Create(String path)
+        public static IConfig Create(String path)
         {
             return new Config(ConfigBehavior.Create(path));
         }
         
-        public static IPropertyConfig Create(String path, ConfigType type)
+        public static IConfig Create(String path, ConfigType type)
         {
             return new Config(ConfigBehavior.Create(path, type));
         }
         
-        public static IPropertyConfig Create(String path, ConfigOptions options)
+        public static IConfig Create(String path, ConfigOptions options)
         {
             return new Config(ConfigBehavior.Create(path, options));
         }
 
-        public static IPropertyConfig Create(String path, ConfigType type, ConfigOptions options)
+        public static IConfig Create(String path, ConfigType type, ConfigOptions options)
         {
             return new Config(ConfigBehavior.Create(path, type, options));
         }
@@ -172,36 +174,36 @@ namespace NetExtender.Configuration
             return ConvertToValue(value);
         }
 
-        public Boolean SetValue<T>(String key, T value, params String[] sections)
+        public Boolean SetValue<T>(String key, T value, IEnumerable<String> sections)
         {
             return SetInternal(key, ConvertToValue(value), sections);
         }
         
-        public Boolean SetValue<T>(String key, T value, ICryptKey crypt, params String[] sections)
+        public Boolean SetValue<T>(String key, T value, ICryptKey crypt, IEnumerable<String> sections)
         {
             String result = SetValueInternalCrypt(value, crypt);
             return SetValue(key, result, sections);
         }
         
-        public Task<Boolean> SetValueAsync<T>(String key, T value, params String[] sections)
+        public Task<Boolean> SetValueAsync<T>(String key, T value, IEnumerable<String> sections)
         {
-            return SetValueAsync(key, value, CancellationToken.None, sections);
+            return SetValueAsync(key, value, sections, CancellationToken.None);
         }
         
-        public Task<Boolean> SetValueAsync<T>(String key, T value, CancellationToken token, params String[] sections)
+        public Task<Boolean> SetValueAsync<T>(String key, T value, IEnumerable<String> sections, CancellationToken token)
         {
-            return SetInternalAsync(key, ConvertToValue(value), token, sections);
+            return SetInternalAsync(key, ConvertToValue(value), sections, token);
         }
 
-        public Task<Boolean> SetValueAsync<T>(String key, T value, ICryptKey crypt, params String[] sections)
+        public Task<Boolean> SetValueAsync<T>(String key, T value, ICryptKey crypt, IEnumerable<String> sections)
         {
-            return SetValueAsync(key, value, crypt, CancellationToken.None, sections);
+            return SetValueAsync(key, value, crypt, sections, CancellationToken.None);
         }
         
-        public Task<Boolean> SetValueAsync<T>(String key, T value, ICryptKey crypt, CancellationToken token, params String[] sections)
+        public Task<Boolean> SetValueAsync<T>(String key, T value, ICryptKey crypt, IEnumerable<String> sections, CancellationToken token)
         {
             String result = SetValueInternalCrypt(value, crypt);
-            return SetValueAsync(key, result, token, sections);
+            return SetValueAsync(key, result, sections, token);
         }
 
         protected T ConvertFromValue<T>(String value)
@@ -221,65 +223,65 @@ namespace NetExtender.Configuration
             return crypt.Decrypt(value) ?? value;
         }
 
-        public String GetValue(String key, params String[] sections)
+        public String GetValue(String key, IEnumerable<String> sections)
         {
             return GetInternal(key, sections);
         }
         
-        public Task<String> GetValueAsync(String key, params String[] sections)
+        public Task<String> GetValueAsync(String key, IEnumerable<String> sections)
         {
-            return GetValueAsync(key, CancellationToken.None, sections);
+            return GetValueAsync(key, sections, CancellationToken.None);
         }
         
-        public Task<String> GetValueAsync(String key, CancellationToken token, params String[] sections)
+        public Task<String> GetValueAsync(String key, IEnumerable<String> sections, CancellationToken token)
         {
-            return GetInternalAsync(key, token, sections);
+            return GetInternalAsync(key, sections, token);
         }
 
-        public String GetValue(String key, String defaultValue, params String[] sections)
+        public String GetValue(String key, String defaultValue, IEnumerable<String> sections)
         {
             return GetValue(key, sections) ?? defaultValue;
         }
         
-        public Task<String> GetValueAsync(String key, String defaultValue, params String[] sections)
+        public Task<String> GetValueAsync(String key, String defaultValue, IEnumerable<String> sections)
         {
-            return GetValueAsync(key, defaultValue, CancellationToken.None, sections);
+            return GetValueAsync(key, defaultValue, sections, CancellationToken.None);
         }
         
-        public async Task<String> GetValueAsync(String key, String defaultValue, CancellationToken token, params String[] sections)
+        public async Task<String> GetValueAsync(String key, String defaultValue, IEnumerable<String> sections, CancellationToken token)
         {
-            return await GetValueAsync(key, token, sections) ?? defaultValue;
+            return await GetValueAsync(key, sections, token).ConfigureAwait(false) ?? defaultValue;
         }
 
-        public String GetValue(String key, String defaultValue, Boolean decrypt, params String[] sections)
+        public String GetValue(String key, String defaultValue, Boolean decrypt, IEnumerable<String> sections)
         {
             return GetValue(key, defaultValue, decrypt, null, sections);
         }
 
-        public String GetValue(String key, String defaultValue, Boolean decrypt, ICryptKey crypt, params String[] sections)
+        public String GetValue(String key, String defaultValue, Boolean decrypt, ICryptKey crypt, IEnumerable<String> sections)
         {
             String value = GetValue(key, defaultValue, sections);
             return GetValueInternalCrypt(value, decrypt, crypt);
         }
         
-        public Task<String> GetValueAsync(String key, String defaultValue, Boolean decrypt, params String[] sections)
+        public Task<String> GetValueAsync(String key, String defaultValue, Boolean decrypt, IEnumerable<String> sections)
         {
-            return GetValueAsync(key, defaultValue, decrypt, CancellationToken.None, sections);
+            return GetValueAsync(key, defaultValue, decrypt, sections, CancellationToken.None);
         }
         
-        public Task<String> GetValueAsync(String key, String defaultValue, Boolean decrypt, CancellationToken token, params String[] sections)
+        public Task<String> GetValueAsync(String key, String defaultValue, Boolean decrypt, IEnumerable<String> sections, CancellationToken token)
         {
-            return GetValueAsync(key, defaultValue, decrypt, null, token, sections);
+            return GetValueAsync(key, defaultValue, decrypt, null, sections, token);
         }
 
-        public Task<String> GetValueAsync(String key, String defaultValue, Boolean decrypt, ICryptKey crypt, params String[] sections)
+        public Task<String> GetValueAsync(String key, String defaultValue, Boolean decrypt, ICryptKey crypt, IEnumerable<String> sections)
         {
-            return GetValueAsync(key, defaultValue, decrypt, crypt, CancellationToken.None, sections);
+            return GetValueAsync(key, defaultValue, decrypt, crypt, sections, CancellationToken.None);
         }
 
-        public async Task<String> GetValueAsync(String key, String defaultValue, Boolean decrypt, ICryptKey crypt, CancellationToken token, params String[] sections)
+        public async Task<String> GetValueAsync(String key, String defaultValue, Boolean decrypt, ICryptKey crypt, IEnumerable<String> sections, CancellationToken token)
         {
-            String value = await GetValueAsync(key, defaultValue, token, sections);
+            String value = await GetValueAsync(key, defaultValue, sections, token).ConfigureAwait(false);
             return GetValueInternalCrypt(value, decrypt, crypt);
         }
         
@@ -297,80 +299,80 @@ namespace NetExtender.Configuration
             return converter(crypt.Decrypt(value) ?? value, out cval) ? cval : defaultValue;
         }
 
-        public T GetValue<T>(String key, params String[] sections)
+        public T GetValue<T>(String key, IEnumerable<String> sections)
         {
             return ConvertFromValue<T>(GetValue(key, sections));
         }
         
-        public Task<T> GetValueAsync<T>(String key, params String[] sections)
+        public Task<T> GetValueAsync<T>(String key, IEnumerable<String> sections)
         {
-            return GetValueAsync<T>(key, CancellationToken.None, sections);
+            return GetValueAsync<T>(key, sections, CancellationToken.None);
         }
         
-        public async Task<T> GetValueAsync<T>(String key, CancellationToken token, params String[] sections)
+        public async Task<T> GetValueAsync<T>(String key, IEnumerable<String> sections, CancellationToken token)
         {
-            return ConvertFromValue<T>(await GetValueAsync(key, token, sections));
+            return ConvertFromValue<T>(await GetValueAsync(key, sections, token).ConfigureAwait(false));
         }
 
-        public T GetValue<T>(String key, T defaultValue, params String[] sections)
+        public T GetValue<T>(String key, T defaultValue, IEnumerable<String> sections)
         {
             return GetValue(key, defaultValue, (ICryptKey) null, sections);
         }
 
-        public T GetValue<T>(String key, T defaultValue, ICryptKey crypt, params String[] sections)
+        public T GetValue<T>(String key, T defaultValue, ICryptKey crypt, IEnumerable<String> sections)
         {
             return GetValue(key, defaultValue, crypt, ConvertUtils.TryConvert, sections);
         }
 
-        public T GetValue<T>(String key, T defaultValue, TryConverter<String, T> converter, params String[] sections)
+        public T GetValue<T>(String key, T defaultValue, TryConverter<String, T> converter, IEnumerable<String> sections)
         {
             return GetValue(key, defaultValue, null, converter, sections);
         }
 
-        public T GetValue<T>(String key, T defaultValue, ICryptKey crypt, TryConverter<String, T> converter, params String[] sections)
+        public T GetValue<T>(String key, T defaultValue, ICryptKey crypt, TryConverter<String, T> converter, IEnumerable<String> sections)
         {
             String value = GetValue(key, defaultValue.GetString(CultureInfo.InvariantCulture), sections);
             return GetValueInternalCrypt(value, defaultValue, crypt, converter);
         }
         
-        public Task<T> GetValueAsync<T>(String key, T defaultValue, params String[] sections)
+        public Task<T> GetValueAsync<T>(String key, T defaultValue, IEnumerable<String> sections)
         {
-            return GetValueAsync(key, defaultValue, CancellationToken.None, sections);
+            return GetValueAsync(key, defaultValue, sections, CancellationToken.None);
         }
         
-        public Task<T> GetValueAsync<T>(String key, T defaultValue, CancellationToken token, params String[] sections)
+        public Task<T> GetValueAsync<T>(String key, T defaultValue, IEnumerable<String> sections, CancellationToken token)
         {
-            return GetValueAsync(key, defaultValue, (ICryptKey) null, token, sections);
+            return GetValueAsync(key, defaultValue, (ICryptKey) null, sections, token);
         }
         
-        public Task<T> GetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, params String[] sections)
+        public Task<T> GetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, IEnumerable<String> sections)
         {
-            return GetValueAsync(key, defaultValue, crypt, CancellationToken.None, sections);
+            return GetValueAsync(key, defaultValue, crypt, sections, CancellationToken.None);
         }
         
-        public Task<T> GetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, CancellationToken token, params String[] sections)
+        public Task<T> GetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, IEnumerable<String> sections, CancellationToken token)
         {
-            return GetValueAsync(key, defaultValue, crypt, ConvertUtils.TryConvert, token, sections);
+            return GetValueAsync(key, defaultValue, crypt, ConvertUtils.TryConvert, sections, token);
         }
         
-        public Task<T> GetValueAsync<T>(String key, T defaultValue, TryConverter<String, T> converter, params String[] sections)
+        public Task<T> GetValueAsync<T>(String key, T defaultValue, TryConverter<String, T> converter, IEnumerable<String> sections)
         {
-            return GetValueAsync(key, defaultValue, converter, CancellationToken.None, sections);
+            return GetValueAsync(key, defaultValue, converter, sections, CancellationToken.None);
         }
         
-        public Task<T> GetValueAsync<T>(String key, T defaultValue, TryConverter<String, T> converter, CancellationToken token, params String[] sections)
+        public Task<T> GetValueAsync<T>(String key, T defaultValue, TryConverter<String, T> converter, IEnumerable<String> sections, CancellationToken token)
         {
-            return GetValueAsync(key, defaultValue, null, converter, CancellationToken.None, sections);
+            return GetValueAsync(key, defaultValue, null, converter, sections, CancellationToken.None);
         }
 
-        public Task<T> GetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, TryConverter<String, T> converter, params String[] sections)
+        public Task<T> GetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, TryConverter<String, T> converter, IEnumerable<String> sections)
         {
-            return GetValueAsync(key, defaultValue, crypt, converter, CancellationToken.None, sections);
+            return GetValueAsync(key, defaultValue, crypt, converter, sections, CancellationToken.None);
         }
         
-        public async Task<T> GetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, TryConverter<String, T> converter, CancellationToken token, params String[] sections)
+        public async Task<T> GetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, TryConverter<String, T> converter, IEnumerable<String> sections, CancellationToken token)
         {
-            String value = await GetValueAsync(key, defaultValue.GetString(CultureInfo.InvariantCulture), token, sections);
+            String value = await GetValueAsync(key, defaultValue.GetString(CultureInfo.InvariantCulture), sections, token).ConfigureAwait(false);
             return GetValueInternalCrypt(value, defaultValue, crypt, converter);
         }
 
@@ -388,17 +390,17 @@ namespace NetExtender.Configuration
             return true;
         }
 
-        public String GetOrSetValue(String key, String defaultValue, params String[] sections)
+        public String GetOrSetValue(String key, String defaultValue, IEnumerable<String> sections)
         {
             return GetOrSetValue(key, defaultValue, CryptAction.Decrypt, sections);
         }
 
-        public String GetOrSetValue(String key, String defaultValue, CryptAction crypt, params String[] sections)
+        public String GetOrSetValue(String key, String defaultValue, CryptAction crypt, IEnumerable<String> sections)
         {
             return GetOrSetValue(key, defaultValue, crypt, null, sections);
         }
 
-        public String GetOrSetValue(String key, String defaultValue, CryptAction crypt, ICryptKey cryptKey, params String[] sections)
+        public String GetOrSetValue(String key, String defaultValue, CryptAction crypt, ICryptKey cryptKey, IEnumerable<String> sections)
         {
             String value = GetValue(key, sections);
 
@@ -411,41 +413,41 @@ namespace NetExtender.Configuration
             return defaultValue;
         }
         
-        public Task<String> GetOrSetValueAsync(String key, String defaultValue, params String[] sections)
+        public Task<String> GetOrSetValueAsync(String key, String defaultValue, IEnumerable<String> sections)
         {
-            return GetOrSetValueAsync(key, defaultValue, CancellationToken.None, sections);
+            return GetOrSetValueAsync(key, defaultValue, sections, CancellationToken.None);
         }
         
-        public Task<String> GetOrSetValueAsync(String key, String defaultValue, CancellationToken token, params String[] sections)
+        public Task<String> GetOrSetValueAsync(String key, String defaultValue, IEnumerable<String> sections, CancellationToken token)
         {
-            return GetOrSetValueAsync(key, defaultValue, CryptAction.Decrypt, token, sections);
+            return GetOrSetValueAsync(key, defaultValue, CryptAction.Decrypt, sections, token);
         }
         
-        public Task<String> GetOrSetValueAsync(String key, String defaultValue, CryptAction crypt, params String[] sections)
+        public Task<String> GetOrSetValueAsync(String key, String defaultValue, CryptAction crypt, IEnumerable<String> sections)
         {
-            return GetOrSetValueAsync(key, defaultValue, crypt, CancellationToken.None, sections);
+            return GetOrSetValueAsync(key, defaultValue, crypt, sections, CancellationToken.None);
         }
         
-        public Task<String> GetOrSetValueAsync(String key, String defaultValue, CryptAction crypt, CancellationToken token, params String[] sections)
+        public Task<String> GetOrSetValueAsync(String key, String defaultValue, CryptAction crypt, IEnumerable<String> sections, CancellationToken token)
         {
-            return GetOrSetValueAsync(key, defaultValue, crypt, null, token, sections);
+            return GetOrSetValueAsync(key, defaultValue, crypt, null, sections, token);
         }
 
-        public Task<String> GetOrSetValueAsync(String key, String defaultValue, CryptAction crypt, ICryptKey cryptKey, params String[] sections)
+        public Task<String> GetOrSetValueAsync(String key, String defaultValue, CryptAction crypt, ICryptKey cryptKey, IEnumerable<String> sections)
         {
-            return GetOrSetValueAsync(key, defaultValue, crypt, cryptKey, CancellationToken.None, sections);
+            return GetOrSetValueAsync(key, defaultValue, crypt, cryptKey, sections, CancellationToken.None);
         }
         
-        public async Task<String> GetOrSetValueAsync(String key, String defaultValue, CryptAction crypt, ICryptKey cryptKey, CancellationToken token, params String[] sections)
+        public async Task<String> GetOrSetValueAsync(String key, String defaultValue, CryptAction crypt, ICryptKey cryptKey, IEnumerable<String> sections, CancellationToken token)
         {
-            String value = await GetValueAsync(key, token, sections);
+            String value = await GetValueAsync(key, sections, token).ConfigureAwait(false);
 
             if (GetOrSetValueInternalCrypt(value, crypt, cryptKey, out String result))
             {
                 return result;
             }
 
-            await SetValueAsync(key, defaultValue, cryptKey, token, sections);
+            await SetValueAsync(key, defaultValue, cryptKey, sections, token).ConfigureAwait(false);
             return defaultValue;
         }
         
@@ -469,22 +471,22 @@ namespace NetExtender.Configuration
             return true;
         }
 
-        public T GetOrSetValue<T>(String key, T defaultValue, params String[] sections)
+        public T GetOrSetValue<T>(String key, T defaultValue, IEnumerable<String> sections)
         {
             return GetOrSetValue(key, defaultValue, (ICryptKey) null, sections);
         }
         
-        public T GetOrSetValue<T>(String key, T defaultValue, ICryptKey crypt, params String[] sections)
+        public T GetOrSetValue<T>(String key, T defaultValue, ICryptKey crypt, IEnumerable<String> sections)
         {
             return GetOrSetValue(key, defaultValue, crypt, ConvertUtils.TryConvert, sections);
         }
 
-        public T GetOrSetValue<T>(String key, T defaultValue, TryConverter<String, T> converter, params String[] sections)
+        public T GetOrSetValue<T>(String key, T defaultValue, TryConverter<String, T> converter, IEnumerable<String> sections)
         {
             return GetOrSetValue(key, defaultValue, null, converter, sections);
         }
 
-        public T GetOrSetValue<T>(String key, T defaultValue, ICryptKey crypt, TryConverter<String, T> converter, params String[] sections)
+        public T GetOrSetValue<T>(String key, T defaultValue, ICryptKey crypt, TryConverter<String, T> converter, IEnumerable<String> sections)
         {
             String value = GetValue(key, sections);
 
@@ -501,44 +503,44 @@ namespace NetExtender.Configuration
             return defaultValue;
         }
         
-        public Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, params String[] sections)
+        public Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, IEnumerable<String> sections)
         {
-            return GetOrSetValueAsync(key, defaultValue, CancellationToken.None, sections);
+            return GetOrSetValueAsync(key, defaultValue, sections, CancellationToken.None);
         }
         
-        public Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, CancellationToken token, params String[] sections)
+        public Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, IEnumerable<String> sections, CancellationToken token)
         {
-            return GetOrSetValueAsync(key, defaultValue, (ICryptKey) null, token, sections);
+            return GetOrSetValueAsync(key, defaultValue, (ICryptKey) null, sections, token);
         }
         
-        public Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, params String[] sections)
+        public Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, IEnumerable<String> sections)
         {
-            return GetOrSetValueAsync(key, defaultValue, crypt, CancellationToken.None, sections);
+            return GetOrSetValueAsync(key, defaultValue, crypt, sections, CancellationToken.None);
         }
         
-        public Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, CancellationToken token, params String[] sections)
+        public Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, IEnumerable<String> sections, CancellationToken token)
         {
-            return GetOrSetValueAsync(key, defaultValue, crypt, ConvertUtils.TryConvert, token, sections);
+            return GetOrSetValueAsync(key, defaultValue, crypt, ConvertUtils.TryConvert, sections, token);
         }
         
-        public Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, TryConverter<String, T> converter, params String[] sections)
+        public Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, TryConverter<String, T> converter, IEnumerable<String> sections)
         {
-            return GetOrSetValueAsync(key, defaultValue, converter, CancellationToken.None, sections);
+            return GetOrSetValueAsync(key, defaultValue, converter, sections, CancellationToken.None);
         }
         
-        public Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, TryConverter<String, T> converter, CancellationToken token, params String[] sections)
+        public Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, TryConverter<String, T> converter, IEnumerable<String> sections, CancellationToken token)
         {
-            return GetOrSetValueAsync(key, defaultValue, null, converter, token, sections);
+            return GetOrSetValueAsync(key, defaultValue, null, converter, sections, token);
         }
 
-        public Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, TryConverter<String, T> converter, params String[] sections)
+        public Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, TryConverter<String, T> converter, IEnumerable<String> sections)
         {
-            return GetOrSetValueAsync(key, defaultValue, crypt, converter, CancellationToken.None, sections);
+            return GetOrSetValueAsync(key, defaultValue, crypt, converter, sections, CancellationToken.None);
         }
 
-        public async Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, TryConverter<String, T> converter, CancellationToken token, params String[] sections)
+        public async Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, TryConverter<String, T> converter, IEnumerable<String> sections, CancellationToken token)
         {
-            String value = await GetValueAsync(key, token, sections);
+            String value = await GetValueAsync(key, sections, token).ConfigureAwait(false);
 
             if (GetOrSetValueInternalCrypt(value, defaultValue, crypt, converter, out T result))
             {
@@ -547,65 +549,65 @@ namespace NetExtender.Configuration
 
             if (!IsReadOnly)
             {
-                await SetValueAsync(key, defaultValue, crypt, token, sections);
+                await SetValueAsync(key, defaultValue, crypt, sections, token).ConfigureAwait(false);
             }
             
             return defaultValue;
         }
 
-        public Boolean KeyExist(String key, params String[] sections)
+        public Boolean KeyExist(String key, IEnumerable<String> sections)
         {
             return GetValue(key, sections) is not null;
         }
         
-        public Task<Boolean> KeyExistAsync(String key, params String[] sections)
+        public Task<Boolean> KeyExistAsync(String key, IEnumerable<String> sections)
         {
-            return KeyExistAsync(key, CancellationToken.None, sections);
+            return KeyExistAsync(key, sections, CancellationToken.None);
         }
         
-        public async Task<Boolean> KeyExistAsync(String key, CancellationToken token, params String[] sections)
+        public async Task<Boolean> KeyExistAsync(String key, IEnumerable<String> sections, CancellationToken token)
         {
-            return await GetValueAsync(key, token, sections) is not null;
+            return await GetValueAsync(key, sections, token).ConfigureAwait(false) is not null;
         }
 
-        public Boolean RemoveValue(String key, params String[] sections)
+        public Boolean RemoveValue(String key, IEnumerable<String> sections)
         {
             return SetValue<String>(key, null, sections);
         }
         
-        public Task<Boolean> RemoveValueAsync(String key, params String[] sections)
+        public Task<Boolean> RemoveValueAsync(String key, IEnumerable<String> sections)
         {
-            return RemoveValueAsync(key, CancellationToken.None, sections);
+            return RemoveValueAsync(key, sections, CancellationToken.None);
         }
         
-        public Task<Boolean> RemoveValueAsync(String key, CancellationToken token, params String[] sections)
+        public Task<Boolean> RemoveValueAsync(String key, IEnumerable<String> sections, CancellationToken token)
         {
-            return SetValueAsync<String>(key, null, token, sections);
+            return SetValueAsync<String>(key, null, sections, token);
         }
 
-        protected String Get(String key, params String[] sections)
+        protected String Get(String key, IEnumerable<String> sections)
         {
             return Behavior.Get(key, sections);
         }
 
         // ReSharper disable once UnusedParameter.Global
-        protected Task<String> GetAsync(String key, CancellationToken token, params String[] sections)
+        protected Task<String> GetAsync(String key, IEnumerable<String> sections, CancellationToken token)
         {
-            return Behavior.GetAsync(key, token, sections);
+            return Behavior.GetAsync(key, sections, token);
         }
 
-        protected Boolean Set(String key, String value, params String[] sections)
+        protected Boolean Set(String key, String value, IEnumerable<String> sections)
         {
             return Behavior.Set(key, value, sections);
         }
 
         // ReSharper disable once UnusedParameter.Global
-        protected Task<Boolean> SetAsync(String key, String value, CancellationToken token, params String[] sections)
+        protected Task<Boolean> SetAsync(String key, String value, IEnumerable<String> sections, CancellationToken token)
         {
-            return Behavior.SetAsync(key, value, token, sections);
+            return Behavior.SetAsync(key, value, sections, token);
         }
 
-        private Boolean GetInternalCrypt(ref String key, ref String[] sections)
+        private Boolean GetInternalCrypt(ref String key, ref IEnumerable<String> sections)
         {
             if (!IsCryptData)
             {
@@ -617,7 +619,7 @@ namespace NetExtender.Configuration
             return true;
         }
 
-        private String GetInternal(String key, params String[] sections)
+        private String GetInternal(String key, IEnumerable<String> sections)
         {
             // ReSharper disable once ConvertIfStatementToReturnStatement
             if (GetInternalCrypt(ref key, ref sections))
@@ -628,18 +630,18 @@ namespace NetExtender.Configuration
             return null;
         }
         
-        private Task<String> GetInternalAsync(String key, CancellationToken token, params String[] sections)
+        private Task<String> GetInternalAsync(String key, IEnumerable<String> sections, CancellationToken token)
         {
             // ReSharper disable once ConvertIfStatementToReturnStatement
             if (GetInternalCrypt(ref key, ref sections))
             {
-                return GetAsync(key, token, sections);
+                return GetAsync(key, sections, token);
             }
 
             return StringUtils.Null;
         }
 
-        private Boolean SetInternalCrypt(ref String key, ref String value, ref String[] sections)
+        private Boolean SetInternalCrypt(ref String key, ref String value, ref IEnumerable<String> sections)
         {
             if (CheckReadOnly())
             {
@@ -657,7 +659,7 @@ namespace NetExtender.Configuration
             return true;
         }
         
-        private Boolean SetInternal(String key, String value, params String[] sections)
+        private Boolean SetInternal(String key, String value, IEnumerable<String> sections)
         {
             // ReSharper disable once ConvertIfStatementToReturnStatement
             if (SetInternalCrypt(ref key, ref value, ref sections))
@@ -668,12 +670,12 @@ namespace NetExtender.Configuration
             return false;
         }
         
-        private Task<Boolean> SetInternalAsync(String key, String value, CancellationToken token, params String[] sections)
+        private Task<Boolean> SetInternalAsync(String key, String value, IEnumerable<String> sections, CancellationToken token)
         {
             // ReSharper disable once ConvertIfStatementToReturnStatement
             if (SetInternalCrypt(ref key, ref value, ref sections))
             {
-                return SetAsync(key, value, token, sections);
+                return SetAsync(key, value, sections, token);
             }
 
             return TaskUtils.False;
@@ -710,7 +712,6 @@ namespace NetExtender.Configuration
 
             if (disposing)
             {
-                ClearProperties();
                 Behavior.Dispose();
             }
             

@@ -207,8 +207,8 @@ namespace NetExtender.Watchers
         public FSWatcher(FileSystemInfo info, PathStatus status = Utils.IO.PathStatus.All, WatcherType watcher = WatcherType.None)
             : this(info.FullName, info switch
             {
-                FileInfo _ => PathType.File,
-                DirectoryInfo _ => PathType.Folder,
+                FileInfo => PathType.File,
+                DirectoryInfo => PathType.Folder,
                 _ => PathType.All
             }, status, watcher)
         {

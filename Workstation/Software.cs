@@ -4,6 +4,7 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using NetExtender.Configuration.Interfaces;
 using NetExtender.Utils.Types;
 using NetExtender.Configuration.Registry;
 using NetExtender.Registry;
@@ -55,7 +56,6 @@ namespace NetExtender.Workstation
     {
         public OSType OSType { get; }
         public OSVersion OSVersion { get; }
-            
         public SoftwareArchitecture Architecture { get; }
 
         public OSData(OSType type, OSVersion version, SoftwareArchitecture architecture)
@@ -78,28 +78,28 @@ namespace NetExtender.Workstation
             };
         }
 
-        [DllImport("kernel32", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
-        private static extern IntPtr LoadLibrary(String libraryName);
+        [DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
+        private static extern IntPtr LoadLibrary(String name);
 
-        [DllImport("kernel32", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
-        private static extern IntPtr GetProcAddress(IntPtr hwnd, String procedureName);
+        [DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
+        private static extern IntPtr GetProcAddress(IntPtr hwnd, String procedure);
 
         private delegate Boolean IsWow64ProcessDelegate([In] IntPtr handle, [Out] out Boolean isWow64Process);
 
         private static IsWow64ProcessDelegate GetIsWow64ProcessDelegate()
         {
-            IntPtr handle = LoadLibrary("kernel32");
+            IntPtr handle = LoadLibrary("kernel32.dll");
 
             if (handle == IntPtr.Zero)
             {
                 return null;
             }
 
-            IntPtr fnPtr = GetProcAddress(handle, "IsWow64Process");
+            IntPtr proc = GetProcAddress(handle, "IsWow64Process");
 
-            if (fnPtr != IntPtr.Zero)
+            if (proc != IntPtr.Zero)
             {
-                return (IsWow64ProcessDelegate) Marshal.GetDelegateForFunctionPointer(fnPtr, typeof(IsWow64ProcessDelegate));
+                return (IsWow64ProcessDelegate) Marshal.GetDelegateForFunctionPointer(proc, typeof(IsWow64ProcessDelegate));
             }
 
             return null;
@@ -107,11 +107,7 @@ namespace NetExtender.Workstation
 
         private static Boolean Is32BitProcessOn64BitProcessor()
         {
-            IsWow64ProcessDelegate fnDelegate = GetIsWow64ProcessDelegate();
-
-            Boolean retVal = fnDelegate.Invoke(Process.GetCurrentProcess().Handle, out Boolean isWow64);
-
-            return retVal && isWow64;
+            return GetIsWow64ProcessDelegate().Invoke(Process.GetCurrentProcess().Handle, out Boolean isWow64) && isWow64;
         }
 
         public static SoftwareArchitecture GetOSArchitecture()
@@ -126,13 +122,12 @@ namespace NetExtender.Workstation
             return bit;
         }
 
-        private static readonly Configuration.Config Config = new Configuration.Config(new RegistryConfigBehavior(RegistryKeys.LocalMachine, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion"));
+        private static readonly IReadOnlyConfig Config = new Configuration.Config(new RegistryConfigBehavior(RegistryKeys.LocalMachine, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion"));
 
         private static Boolean IsWindows10()
         {
-            String productName = Config.GetValue("ProductName");
-
-            return productName.StartsWith("Windows 10", StringComparison.OrdinalIgnoreCase);
+            String product = Config.GetValue("ProductName");
+            return product.StartsWith("Windows 10", StringComparison.OrdinalIgnoreCase);
         }
 
         private static Int32 MajorVersion
@@ -144,16 +139,16 @@ namespace NetExtender.Workstation
                     return 10;
                 }
 
-                String exactVersion = OSVersionRegistry;
+                String exact = OSVersionRegistry;
 
-                if (String.IsNullOrEmpty(exactVersion))
+                if (String.IsNullOrEmpty(exact))
                 {
                     return Environment.OSVersion.Version.Major;
                 }
 
-                String splitVersion = exactVersion.Split('.').TryGetValue(1, "0");
-                Int32.TryParse(splitVersion, out Int32 value);
-                return value;
+                String split = exact.Split('.').TryGetValue(1, "0");
+                
+                return Int32.TryParse(split, out Int32 value) ? value : 0;
             }
         }
 
@@ -166,16 +161,16 @@ namespace NetExtender.Workstation
                     return 0;
                 }
 
-                String exactVersion = OSVersionRegistry;
+                String exact = OSVersionRegistry;
 
-                if (String.IsNullOrEmpty(exactVersion))
+                if (String.IsNullOrEmpty(exact))
                 {
                     return Environment.OSVersion.Version.Minor;
                 }
 
-                String splitVersion = exactVersion.Split('.').TryGetValue(1, "0");
-                Int32.TryParse(splitVersion, out Int32 value);
-                return value;
+                String split = exact.Split('.').TryGetValue(1, "0");
+                
+                return Int32.TryParse(split, out Int32 value) ? value : 0;
             }
         }
 
@@ -215,9 +210,9 @@ namespace NetExtender.Workstation
         {
             get
             {
-                OSVERSIONINFOEX osVersionInfo = new OSVERSIONINFOEX {dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSVERSIONINFOEX))};
+                OSVERSIONINFOEX info = new OSVERSIONINFOEX {dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSVERSIONINFOEX))};
 
-                return GetVersionEx(ref osVersionInfo) ? osVersionInfo.szCSDVersion : String.Empty;
+                return GetVersionEx(ref info) ? info.szCSDVersion : String.Empty;
             }
         }
 
@@ -276,8 +271,7 @@ namespace NetExtender.Workstation
                             }
 
                             break;
-                        case 10
-                            : //this will only show up if the application has a manifest file allowing W10, otherwise a 6.2 version will be used
+                        case 10: //this will only show up if the application has a manifest file allowing W10, otherwise a 6.2 version will be used
                             return new OSData(OSType.Windows, OSVersion.Win10, architecture);
                     }
 

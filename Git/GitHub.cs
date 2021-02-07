@@ -26,13 +26,13 @@ namespace NetExtender.Git
         [ItemCanBeNull]
         public static Task<GitHubRelease> GetLatestReleaseAsync(HttpClient client, Boolean stable = true)
         {
-            return GetLatestReleaseAsync(client, Domain.Current.Information, stable);
+            return GetLatestReleaseAsync(client, Domain.Information, stable);
         }
         
         [ItemCanBeNull]
         public static Task<GitHubRelease> GetLatestReleaseAsync(WebClient client, Boolean stable = true)
         {
-            return GetLatestReleaseAsync(client, Domain.Current.Information, stable);
+            return GetLatestReleaseAsync(client, Domain.Information, stable);
         }
         
         public static async Task<GitHubRelease> GetLatestReleaseAsync(HttpClient client, AppInformation information, Boolean stable = true)

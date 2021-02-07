@@ -9,7 +9,7 @@ namespace NetExtender.GUI.WPF.Windows
 {
     public abstract class LocalizableWindow : FlashWindow, ILocalizable
     {
-        public LocalizableWindow()
+        protected LocalizableWindow()
         {
             Loaded += AddLocalization;
             Unloaded += RemoveLocalization;

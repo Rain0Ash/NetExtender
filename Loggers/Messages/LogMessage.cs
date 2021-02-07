@@ -3,19 +3,20 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Drawing;
 using System.Globalization;
-using System.Linq;
+using JetBrains.Annotations;
 using NetExtender.Utils.Types;
 using NetExtender.Localizations;
 using NetExtender.Loggers.Common;
+using NetExtender.Loggers.Messages.Interfaces;
 using NetExtender.Types.Strings;
+using NetExtender.Types.Strings.Interfaces;
 using NetExtender.Utils.IO;
 
 namespace NetExtender.Loggers.Messages
 {
-    public readonly struct LogMessage : IConsoleMessage
+    public class LogMessage : StringBase, ILogMessage
     {
         public static LogMessage NullError(String param)
         {
@@ -31,6 +32,8 @@ namespace NetExtender.Loggers.Messages
         {
             return new LogMessage(msg, type);
         }
+
+        public const ConsoleColor DefaultColor = ConsoleColor.White;
         
         public static IDictionary<MessageType, ConsoleColor> MessageColors { get; } = new Dictionary<MessageType, ConsoleColor>
         {
@@ -45,41 +48,121 @@ namespace NetExtender.Loggers.Messages
             [MessageType.CriticalError] = ConsoleColor.Magenta,
             [MessageType.FatalError] = ConsoleColor.DarkMagenta,
             [MessageType.UnknownError] = ConsoleColor.Gray
-        }.ToImmutableDictionary();
+        };
 
-        public MultiString Message { get; }
-        private String[] Format { get; }
-        public MessageType Type { get; }
-        public ConsoleColor MessageColor { get; }
-        public Int32 Priority { get; }
-        public MessageAdditions Additions { get; }
-        public Boolean NewLine { get; }
+        public override Boolean Immutable
+        {
+            get
+            {
+                return Message.Immutable;
+            }
+        }
+
+        public override Boolean Constant
+        {
+            get
+            {
+                return Message.Constant && Format.Length <= 0;
+            }
+        }
+
+        public override Int32 Length
+        {
+            get
+            {
+                return Message.Length;
+            }
+        }
+
+        public override String Text
+        {
+            get
+            {
+                return Message.ToString();
+            }
+            protected set
+            {
+                Message = new StringAdapter(value);
+            }
+        }
+
+        private IString _message;
+        [NotNull]
+        public IString Message
+        {
+            get
+            {
+                return _message;
+            }
+            protected set
+            {
+                _message = value ?? throw new ArgumentNullException(nameof(value));
+            }
+        }
+
+        public Object[] Format { protected get; init; }
+
+        private readonly MessageType _type;
+        public MessageType Type
+        {
+            get
+            {
+                return _type;
+            }
+            init
+            {
+                _type = value;
+
+                if (_color is null)
+                {
+                    Color = MessageColors.TryGetValue(Type, out ConsoleColor color) ? color : DefaultColor;
+                }
+            }
+        }
+
+        private readonly ConsoleColor? _color;
+        public ConsoleColor Color
+        {
+            get
+            {
+                return _color ?? ConsoleColor.White;
+            }
+            init
+            {
+                _color = value;
+            }
+        }
+
+        public Int32 Priority { get; init; }
+        public MessageAdditions Additions { get; init; } = MessageAdditions.CurrentTime;
+        public Boolean NewLine { get; init; }
         public DateTime DateTime { get; }
 
         public static implicit operator String(LogMessage obj)
         {
             return obj.ToString();
         }
-
-        public LogMessage(String message, MessageType type = MessageType.Default, IEnumerable<String> format = null,
-            ConsoleColor? color = null, Int32 priority = 0,
-            MessageAdditions additions = MessageAdditions.CurrentTime, Boolean newLine = true)
-            : this(new LocaleMultiString(message), type, format, color, priority, additions, newLine)
+        
+        public LogMessage(String message)
+            : this(message.ToIString())
         {
         }
 
-        public LogMessage(MultiString message, MessageType type = MessageType.Default, IEnumerable<String> format = null,
-            ConsoleColor? color = null, Int32 priority = 0,
-            MessageAdditions additions = MessageAdditions.CurrentTime, Boolean newLine = true)
+        public LogMessage(String message, MessageType type)
+            : this(message.ToIString(), type)
         {
-            Message = message;
-            Format = format?.ToArray();
-            Type = type;
-            MessageColor = color ?? MessageColors[Type];
-            Priority = priority;
-            Additions = additions;
-            NewLine = newLine;
+        }
 
+        public LogMessage([NotNull] IString message)
+        {
+            Message = message ?? throw new ArgumentNullException(nameof(message));
+            DateTime = DateTime.Now;
+        }
+
+        public LogMessage([NotNull] IString message, MessageType type)
+        {
+            Message = message ?? throw new ArgumentNullException(nameof(message));
+            Type = type;
             DateTime = DateTime.Now;
         }
 
@@ -90,7 +173,7 @@ namespace NetExtender.Loggers.Messages
 
         public void ToConsole(Boolean newLine)
         {
-            ToConsole(newLine, MessageColor);
+            ToConsole(newLine, Color);
         }
 
         public void ToConsole(Boolean newLine, ConsoleColor color)
@@ -100,12 +183,12 @@ namespace NetExtender.Loggers.Messages
 
         public Color GetColor()
         {
-            return ConsoleUtils.GetColor(MessageColor);
+            return ConsoleUtils.GetColor(Color);
         }
 
         public override String ToString()
         {
-            CultureInfo info = Localization.CurrentCulture;
+            CultureInfo info = Localization.Culture;
 
             String dateTime = Additions switch
             {
@@ -115,7 +198,7 @@ namespace NetExtender.Loggers.Messages
                 _ => String.Empty
             };
 
-            return $"{dateTime}{(dateTime.Length > 0 ? " " : String.Empty)}{(Format.IsNotEmpty() ? String.Format(Message, Format) : Message)}";
+            return $"{dateTime}{(dateTime.Length > 0 ? " " : String.Empty)}{(Message.Format(Format))}";
         }
     }
 }

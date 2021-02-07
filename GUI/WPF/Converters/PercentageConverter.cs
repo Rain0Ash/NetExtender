@@ -12,7 +12,7 @@ namespace NetExtender.GUI.WPF.Converters
         public Object Convert(Object value, 
             Type targetType, 
             Object parameter, 
-            CultureInfo culture)
+            CultureInfo info)
         {
             return System.Convert.ToDouble(value, CultureInfo.InvariantCulture) * 
                    System.Convert.ToDouble(parameter, CultureInfo.InvariantCulture);
@@ -21,7 +21,7 @@ namespace NetExtender.GUI.WPF.Converters
         public Object ConvertBack(Object value, 
             Type targetType, 
             Object parameter, 
-            CultureInfo culture)
+            CultureInfo info)
         {
             throw new NotSupportedException();
         }

@@ -11,6 +11,7 @@
  using System.Threading;
  using System.Threading.Tasks;
  using NetExtender.Utils.IO;
+ using NetExtender.Utils.Types;
  using NetExtender.Watchers.FileSystem.Interfaces;
 
  namespace NetExtender.Watchers.FileSystem
@@ -263,7 +264,7 @@
             {
                 _filter = value;
 
-                _regexFilter = value == String.Empty ? new Regex(".*") : new Regex(Regex.Escape(value).Replace("\\?", ".").Replace("\\*", ".*"));
+                _regexFilter = value.IsEmpty() ? new Regex(".*") : new Regex(Regex.Escape(value).Replace("\\?", ".").Replace("\\*", ".*"));
             }
         }
 

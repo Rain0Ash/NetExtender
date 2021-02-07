@@ -89,7 +89,7 @@ namespace NetExtender.Network.Networking.Common
         // Send buffer
         protected Boolean sending;
 
-        public NetworkClient(IPEndPoint endpoint)
+        protected NetworkClient(IPEndPoint endpoint)
         {
             Id = Guid.NewGuid();
             Endpoint = endpoint;

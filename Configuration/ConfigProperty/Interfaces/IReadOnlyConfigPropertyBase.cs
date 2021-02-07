@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using NetExtender.Configuration.Interfaces;
+using NetExtender.Configuration.Interfaces.Property.Common;
 using NetExtender.Crypto;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using ReactiveUI;
@@ -12,7 +12,7 @@ namespace NetExtender.Configuration
     public interface IReadOnlyConfigPropertyBase : IReactiveObject
     {
         public String Path { get; }
-        public IPropertyConfig Config { get; }
+        public IPropertyConfigBase Config { get; }
         public String Key { get; }
         public String[] Sections { get; }
         public CryptAction Crypt { get; }
@@ -20,6 +20,7 @@ namespace NetExtender.Configuration
         public Boolean Caching { get; }
         public Boolean IsReadOnly { get; }
         public Boolean AlwaysDefault { get; }
+        public Boolean DisableSave { get; }
         public ConfigPropertyOptions Options { get; }
 
         public void Read();

@@ -2,8 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.ComponentModel;
-using System.Linq;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using NetExtender.Configuration.Common;
@@ -55,14 +54,11 @@ namespace NetExtender.Configuration.Ini
             Joiner = joiner ?? DefaultJoiner;
         }
 
-        protected String ToSection(params String[] sections)
+        protected String ToSection(IEnumerable<String> sections)
         {
-            return sections.Length switch
-            {
-                0 => MainSection,
-                1 => sections[0],
-                _ => String.Join(Joiner, sections.Where(StringUtils.IsNotNullOrEmpty))
-            };
+            String join = Joiner.Join(sections);
+
+            return String.IsNullOrEmpty(join) ? MainSection : join;
         }
 
         protected virtual String Get(String key, String section)
@@ -76,7 +72,7 @@ namespace NetExtender.Configuration.Ini
             return String.IsNullOrEmpty(result) ? null : result;
         }
 
-        public override String Get(String key, params String[] sections)
+        public override String Get(String key, IEnumerable<String> sections)
         {
             return Get(key, ToSection(sections));
         }
@@ -91,7 +87,7 @@ namespace NetExtender.Configuration.Ini
             return true;
         }
 
-        public override Boolean Set(String key, String value, params String[] sections)
+        public override Boolean Set(String key, String value, IEnumerable<String> sections)
         {
             return Set(key, value, ToSection(sections));
         }

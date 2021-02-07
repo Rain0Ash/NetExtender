@@ -23,7 +23,7 @@ namespace NetExtender.Utils.Types
 
     public static class CultureUtils
     {
-        public const Int32 Default = (Int32) CultureData.Invariant;
+        public const Int32 Default = (Int32) CultureLCID.Invariant;
 
         public static CultureInfo Invariant
         {
@@ -49,7 +49,7 @@ namespace NetExtender.Utils.Types
             }
         }
 
-        public static CultureInfo English { get; } = GetCultureInfo(CultureData.En);
+        public static CultureInfo English { get; } = GetCultureInfo(CultureLCID.En);
 
         public static Int32 GetLCIDByCode(String code)
         {
@@ -71,25 +71,25 @@ namespace NetExtender.Utils.Types
             return (UInt16) GetLCIDByCode(code);
         }
 
-        public static String GetNativeLanguageName([NotNull] this CultureInfo culture)
+        public static String GetNativeLanguageName([NotNull] this CultureInfo info)
         {
-            if (culture is null)
+            if (info is null)
             {
-                throw new ArgumentNullException(nameof(culture));
+                throw new ArgumentNullException(nameof(info));
             }
 
-            String native = culture.IsNeutralCulture ? culture.NativeName : culture.Parent.NativeName;
-            return culture.TextInfo.ToTitleCase(native);
+            String native = info.IsNeutralCulture ? info.NativeName : info.Parent.NativeName;
+            return info.TextInfo.ToTitleCase(native);
         }
 
         private static IDictionary<CultureInfo, Image> ImagesCache { get; } = new Dictionary<CultureInfo, Image>();
 
-        private static Image ReadImage(CultureInfo culture)
+        private static Image ReadImage(CultureInfo info)
         {
             try
             {
-                return FlagsImages.ResourceManager.GetObject(culture.TwoLetterISOLanguageName) as Image ??
-                       FlagsImages.ResourceManager.GetObject($"_{culture.TwoLetterISOLanguageName}") as Image ?? Images.Images.Basic.Null;
+                return FlagsImages.ResourceManager.GetObject(info.TwoLetterISOLanguageName) as Image ??
+                       FlagsImages.ResourceManager.GetObject($"_{info.TwoLetterISOLanguageName}") as Image ?? Images.Images.Basic.Null;
             }
             catch (Exception)
             {
@@ -97,69 +97,69 @@ namespace NetExtender.Utils.Types
             }
         }
 
-        public static Image GetImage([NotNull] this CultureInfo culture)
+        public static Image GetImage([NotNull] this CultureInfo info)
         {
-            if (culture is null)
+            if (info is null)
             {
-                throw new ArgumentNullException(nameof(culture));
+                throw new ArgumentNullException(nameof(info));
             }
 
             lock (ImagesCache)
             {
-                if (ImagesCache.TryGetValue(culture, out Image image) && image is not null)
+                if (ImagesCache.TryGetValue(info, out Image image) && image is not null)
                 {
                     return image;
                 }
 
-                image = ReadImage(culture);
+                image = ReadImage(info);
                 if (image is null)
                 {
                     return Images.Images.Basic.Null;
                 }
 
-                ImagesCache.Add(culture, image);
+                ImagesCache.Add(info, image);
                 return image;
             }
         }
 
-        public static void SetImage([NotNull] this CultureInfo culture, Image image)
+        public static void SetImage([NotNull] this CultureInfo info, Image image)
         {
-            if (culture is null)
+            if (info is null)
             {
-                throw new ArgumentNullException(nameof(culture));
+                throw new ArgumentNullException(nameof(info));
             }
 
             lock (ImagesCache)
             {
                 if (image is null)
                 {
-                    ImagesCache.Remove(culture);
+                    ImagesCache.Remove(info);
                     return;
                 }
 
-                ImagesCache[culture] = image;
+                ImagesCache[info] = image;
             }
         }
 
-        public static LCID LCID(this CultureInfo culture)
+        public static LCID LCID(this CultureInfo info)
         {
-            if (culture is null)
+            if (info is null)
             {
                 return Default;
             }
 
-            return new LCID(culture.LCID);
+            return new LCID(info.LCID);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UInt16 LCID16(this CultureInfo culture)
+        public static UInt16 LCID16(this CultureInfo info)
         {
-            if (culture is null)
+            if (info is null)
             {
                 return Default;
             }
 
-            return (UInt16) culture.LCID;
+            return (UInt16) info.LCID;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -189,7 +189,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean TryGetCultureInfo(this CultureData culture, out CultureInfo info)
+        public static Boolean TryGetCultureInfo(this CultureLCID culture, out CultureInfo info)
         {
             return TryGetCultureInfo((Int32) culture, out info);
         }
@@ -260,15 +260,27 @@ namespace NetExtender.Utils.Types
         {
             return GetCultureInfo(lcid.Code, type);
         }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static CultureInfo GetCultureInfo(this CultureData lcid)
+        public static CultureInfo ToCultureInfo(this CultureLCID lcid)
         {
-            return GetCultureInfo(lcid, CultureType.Invariant);
+            return GetCultureInfo(lcid);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static CultureInfo GetCultureInfo(this CultureData lcid, CultureType type)
+        public static CultureInfo GetCultureInfo(this CultureLCID lcid)
+        {
+            return GetCultureInfo(lcid, CultureType.Invariant);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static CultureInfo ToCultureInfo(this CultureLCID lcid, CultureType type)
+        {
+            return GetCultureInfo(lcid, type);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static CultureInfo GetCultureInfo(this CultureLCID lcid, CultureType type)
         {
             return GetCultureInfo((Int32) lcid, type);
         }
@@ -313,19 +325,19 @@ namespace NetExtender.Utils.Types
             return SetUILanguage(lcid.Code);
         }
 
-        public static Boolean SetUILanguage(this CultureData lcid)
+        public static Boolean SetUILanguage(this CultureLCID lcid)
         {
             return SetUILanguage((UInt16) lcid);
         }
 
-        public static Boolean SetUILanguage([NotNull] this CultureInfo culture)
+        public static Boolean SetUILanguage([NotNull] this CultureInfo info)
         {
-            if (culture is null)
+            if (info is null)
             {
-                throw new ArgumentNullException(nameof(culture));
+                throw new ArgumentNullException(nameof(info));
             }
 
-            return SetUILanguage(culture.LCID);
+            return SetUILanguage(info.LCID);
         }
     }
 }

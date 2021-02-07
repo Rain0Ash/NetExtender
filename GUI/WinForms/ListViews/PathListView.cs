@@ -88,8 +88,7 @@ namespace NetExtender.GUI.WinForms.ListViews
             ValidateItem = IsValidItem;
             RecursiveText = "Recursive";
             ActionType |= Common.ActionType.ChangeStatus;
-            ItemForm = new PathTextBoxForm();
-            ItemForm.TextBox.Validate = IsValidItemText;
+            ItemForm = new PathTextBoxForm {TextBox = {Validate = IsValidItemText}};
 
             Action += OnAction;
         }

@@ -2,7 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -15,22 +14,139 @@ using NetExtender.Utils.WPF;
 using NetExtender.GUI.Common.Interfaces;
 using NetExtender.GUI.WinForms.Forms;
 using NetExtender.Types.Native.Windows;
+using NetExtender.Types.Strings.Interfaces;
 using NetExtender.Utils.OS;
 
 namespace NetExtender.Utils.GUI
 {
+    public class GUIMessage
+    {
+        public IString Text { get; }
+        public IString Title { get; }
+        public MessageBoxButtons Buttons { get; set; }
+        public MessageBoxIcon Icon { get; set; }
+        public MessageBoxDefaultButton DefaultButton { get; set; }
+        public System.Windows.Forms.MessageBoxOptions Options { get; set; }
+        public Boolean ShowHelpButton { get; set; }
+
+        public GUIMessage(String text)
+            : this(text, text)
+        {
+        }
+        
+        public GUIMessage(String text, String title)
+            : this(text.ToIString(), title.ToIString())
+        {
+        }
+        
+        public GUIMessage(IString text)
+            : this(text, text)
+        {
+        }
+        
+        public GUIMessage(IString text, IString title)
+        {
+            Text = text;
+            Title = title;
+        }
+
+        public DialogResult ToMessageBox()
+        {
+            return System.Windows.Forms.MessageBox.Show(Text.ToString(), Title.ToString(), Buttons, Icon, DefaultButton, Options, ShowHelpButton);
+        }
+    }
+    
     public static class GUIUtils
     {
         public const Int32 Distance = 5;
         
-        public static DialogResult ToMessageBox(this Object str, Object caption = null, MessageBoxButtons buttons = MessageBoxButtons.OK, MessageBoxIcon icon = MessageBoxIcon.Warning)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DialogResult ToMessageBox(this String text)
         {
-            return System.Windows.Forms.MessageBox.Show(str.GetString(), caption?.GetString(), buttons, icon);
+            return ToMessageBox(text, null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DialogResult ToMessageBox(this String text, String title)
+        {
+            return ToMessageBox(text, title, MessageBoxButtons.OK);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DialogResult ToMessageBox(this String text, MessageBoxIcon icon)
+        {
+            return ToMessageBox(text, null, icon);
         }
 
-        public static DialogResult ToMessageForm(this Object str, Object title = null, Image icon = null, Image messageIcon = null, MessageBoxButtons buttons = MessageBoxButtons.OK)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DialogResult ToMessageBox(this String text, String title, MessageBoxIcon icon)
         {
-            return new MessageForm(str.GetString(), title?.GetString(), icon, messageIcon, buttons).ShowDialog();
+            return ToMessageBox(text, title, MessageBoxButtons.OK, icon);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DialogResult ToMessageBox(this String text, MessageBoxButtons buttons)
+        {
+            return ToMessageBox(text, null, buttons);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DialogResult ToMessageBox(this String text, String title, MessageBoxButtons buttons)
+        {
+            return ToMessageBox(text, title, buttons, MessageBoxIcon.Warning);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DialogResult ToMessageBox(this String text, MessageBoxIcon icon, MessageBoxButtons buttons)
+        {
+            return ToMessageBox(text, buttons, icon);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DialogResult ToMessageBox(this String text, String title, MessageBoxIcon icon, MessageBoxButtons buttons)
+        {
+            return ToMessageBox(text, title, buttons, icon);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DialogResult ToMessageBox(this String text, MessageBoxButtons buttons, MessageBoxIcon icon)
+        {
+            return System.Windows.Forms.MessageBox.Show(text, null, buttons, icon);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DialogResult ToMessageBox(this String text, String title, MessageBoxButtons buttons, MessageBoxIcon icon)
+        {
+            return System.Windows.Forms.MessageBox.Show(text, title, buttons, icon);
+        }
+
+        public static DialogResult ToDialogResult(this MessageBoxResult result)
+        {
+            return result switch
+            {
+                MessageBoxResult.None => DialogResult.None,
+                MessageBoxResult.OK => DialogResult.OK,
+                MessageBoxResult.Cancel => DialogResult.Cancel,
+                MessageBoxResult.Yes => DialogResult.Yes,
+                MessageBoxResult.No => DialogResult.No,
+                _ => throw new NotSupportedException()
+            };
+        }
+        
+        public static MessageBoxResult ToMessageBoxResult(this DialogResult result)
+        {
+            return result switch
+            {
+                DialogResult.None => MessageBoxResult.None,
+                DialogResult.OK => MessageBoxResult.OK,
+                DialogResult.Cancel => MessageBoxResult.Cancel,
+                DialogResult.Abort => MessageBoxResult.Cancel,
+                DialogResult.Retry => MessageBoxResult.Cancel,
+                DialogResult.Ignore => MessageBoxResult.Cancel,
+                DialogResult.Yes => MessageBoxResult.Yes,
+                DialogResult.No => MessageBoxResult.No,
+                _ => throw new NotSupportedException()
+            };
         }
 
         public static Boolean ToBoolean(this MessageBoxResult value)

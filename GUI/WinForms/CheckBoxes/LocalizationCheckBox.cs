@@ -5,22 +5,22 @@ using System;
 using System.Windows.Forms;
 using NetExtender.Interfaces;
 using NetExtender.Localizations;
+using NetExtender.Types.Strings.Interfaces;
 
 namespace NetExtender.GUI.WinForms.CheckBoxes
 {
     public class LocalizationCheckBox : CheckBox, ILocalizable
     {
-        private LocaleMultiString _localizationText;
-
-        public LocaleMultiString LocalizationText
+        private IString _text;
+        public IString LocalizationText
         {
             get
             {
-                return _localizationText;
+                return _text;
             }
             set
             {
-                _localizationText = value;
+                _text = value;
 
                 OnUpdateText();
             }
@@ -45,7 +45,7 @@ namespace NetExtender.GUI.WinForms.CheckBoxes
         {
             if (LocalizationText is not null)
             {
-                Text = LocalizationText;
+                Text = LocalizationText.ToString();
             }
         }
 

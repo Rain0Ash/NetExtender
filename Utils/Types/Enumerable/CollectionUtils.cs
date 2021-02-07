@@ -4,19 +4,30 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using NetExtender.Combinatorics;
 
 namespace NetExtender.Utils.Types
 {
     public static class CollectionUtils
     {
-        public static IList<IList<T>> GetCombinations<T>(this ICollection<T> collection, Int32 min = 1)
+        public static IList<IList<T>> GetCombinations<T>([NotNull] this ICollection<T> collection, Int32 min = 1)
         {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
             return GetCombinations(collection, min, collection.Count);
         }
 
-        public static IList<IList<T>> GetCombinations<T>(this ICollection<T> collection, Int32 min, Int32 max)
+        public static IList<IList<T>> GetCombinations<T>([NotNull] this ICollection<T> collection, Int32 min, Int32 max)
         {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
             if (min < 1 || min > collection.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(min));
@@ -37,8 +48,18 @@ namespace NetExtender.Utils.Types
             return combo.ToList();
         }
 
-        public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> items)
+        public static void AddRange<T>([NotNull] this ICollection<T> collection, [NotNull] IEnumerable<T> items)
         {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (items is null)
+            {
+                throw new ArgumentNullException(nameof(items));
+            }
+
             foreach (T item in items)
             {
                 collection.Add(item);

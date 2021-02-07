@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Apps.Domains;
@@ -136,18 +136,18 @@ namespace NetExtender.Configuration.Common
             return value.Convert<T>();
         }
         
-        public abstract String Get(String key, params String[] sections);
-        public abstract Boolean Set(String key, String value, params String[] sections);
+        public abstract String Get(String key, IEnumerable<String> sections);
+        public abstract Boolean Set(String key, String value, IEnumerable<String> sections);
         
         // ReSharper disable once UnusedParameter.Global
-        public virtual Task<String> GetAsync(String key, CancellationToken token, params String[] sections)
+        public virtual Task<String> GetAsync(String key, IEnumerable<String> sections, CancellationToken token)
         {
             String result = Get(key, sections);
             return Task.FromResult(result);
         }
         
         // ReSharper disable once UnusedParameter.Global
-        public virtual Task<Boolean> SetAsync(String key, String value, CancellationToken token, params String[] sections)
+        public virtual Task<Boolean> SetAsync(String key, String value, IEnumerable<String> sections, CancellationToken token)
         {
             Boolean result = Set(key, value, sections);
             return result.ToTask();

@@ -88,7 +88,7 @@ namespace NetExtender.Times.Timers.Wrappers
         public void Dispose()
         {
             _timer.Elapsed -= OnTick;
-            _timer?.Dispose();
+            _timer.Dispose();
         }
 
         public ValueTask DisposeAsync()

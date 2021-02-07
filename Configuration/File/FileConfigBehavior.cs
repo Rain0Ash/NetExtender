@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Ram;
 using NetExtender.Crypto.CryptKey.Interfaces;
@@ -81,7 +82,7 @@ namespace NetExtender.Configuration.File
             WriteConfigText(config);
         }
 
-        public override Boolean Set(String key, String value, params String[] sections)
+        public override Boolean Set(String key, String value, IEnumerable<String> sections)
         {
             if (!base.Set(key, value, sections))
             {

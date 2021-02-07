@@ -3,7 +3,7 @@
 
 using System;
 using System.Linq;
-using NetExtender.Configuration.Interfaces;
+using NetExtender.Configuration.Interfaces.Property.Common;
 using NetExtender.Crypto;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using ReactiveUI;
@@ -21,7 +21,7 @@ namespace NetExtender.Configuration
             }
         }
 
-        public IPropertyConfig Config { get; }
+        public IPropertyConfigBase Config { get; }
         public String Key { get; }
         public String[] Sections { get; }
 
@@ -121,7 +121,7 @@ namespace NetExtender.Configuration
 
         private Boolean _disposed;
 
-        protected ConfigPropertyBase(Config config, String key, ICryptKey cryptKey, ConfigPropertyOptions options, params String[] sections)
+        protected ConfigPropertyBase(IPropertyConfigBase config, String key, ICryptKey cryptKey, ConfigPropertyOptions options, params String[] sections)
         {
             Config = config;
             Key = key;
@@ -136,10 +136,7 @@ namespace NetExtender.Configuration
 
         public abstract void Reset();
 
-        public Boolean KeyExist()
-        {
-            return Config.KeyExist(Key, Sections);
-        }
+        public abstract Boolean KeyExist();
 
         public void Dispose()
         {
@@ -157,7 +154,7 @@ namespace NetExtender.Configuration
         {
             if (disposing)
             {
-                NetExtender.Configuration.Config.RemoveProperty(this);
+                ConfigPropertyObserver.RemoveProperty(this);
             }
         }
     }

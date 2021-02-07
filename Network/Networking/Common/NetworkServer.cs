@@ -120,8 +120,8 @@ namespace NetExtender.Network.Networking.Common
         internal Int64 bytesPending;
         internal Int64 bytesReceived;
         internal Int64 bytesSent;
-        
-        public NetworkServer(IPEndPoint endpoint)
+
+        protected NetworkServer(IPEndPoint endpoint)
         {
             Id = Guid.NewGuid();
             Endpoint = endpoint;

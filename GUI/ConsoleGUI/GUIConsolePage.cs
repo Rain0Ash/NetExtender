@@ -67,7 +67,7 @@ namespace NetExtender.GUI.ConsoleGUI
             Int32 i = 0;
             foreach (ICommandRule<ConsoleKeyInfo> rule in Rules.Values)
             {
-                String text = rule.Name;
+                String text = rule.Name.ToString();
 
                 if (_selected == i++)
                 {

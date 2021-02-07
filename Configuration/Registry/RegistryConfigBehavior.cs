@@ -2,50 +2,47 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using NetExtender.Apps.Domains;
 using NetExtender.Configuration.Common;
 using NetExtender.Registry;
+using NetExtender.Registry.Interfaces;
+using NetExtender.Utils.OS;
 
 namespace NetExtender.Configuration.Registry
 {
     public sealed class RegistryConfigBehavior : ConfigBehavior
     {
-        private readonly NetExtender.Registry.Registry _registry;
+        private IRegistry Registry { get; }
 
         public RegistryKeys RegistryKey
         {
             get
             {
-                return _registry.RegistryKey;
+                return Registry.RegistryKey;
             }
         }
 
         public RegistryConfigBehavior(String path = null, ConfigOptions options = ConfigOptions.None)
-            : base(String.IsNullOrEmpty(path) ? $"Software\\{Domain.Current.AppName}" : path, options)
+            : base(String.IsNullOrEmpty(path) ? $"Software\\{Domain.AppNameOrFriendlyName}" : path, options)
         {
-            _registry = new NetExtender.Registry.Registry(Path)
-            {
-                IsReadOnly = IsReadOnly
-            };
+            Registry = RegistryUtils.Create(Path, IsReadOnly);
         }
 
         public RegistryConfigBehavior(RegistryKeys key, String path, ConfigOptions options = ConfigOptions.None)
             : base(path, options)
         {
-            _registry = new NetExtender.Registry.Registry(Path, key)
-            {
-                IsReadOnly = IsReadOnly
-            };
+            Registry = key.Create(Path, IsReadOnly);
         }
 
-        public override String Get(String key, params String[] sections)
+        public override String Get(String key, IEnumerable<String> sections)
         {
-            return _registry.GetValue(key, sections);
+            return Registry.GetValue(key, sections);
         }
 
-        public override Boolean Set(String key, String value, params String[] sections)
+        public override Boolean Set(String key, String value, IEnumerable<String> sections)
         {
-            _registry.SetValue(key, value, sections);
+            Registry.SetValue(key, value, sections);
             return true;
         }
     }

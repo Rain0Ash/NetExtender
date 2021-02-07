@@ -3,16 +3,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using NetExtender.Utils.Types;
 using Microsoft.Win32;
-using NetExtender.Apps.Domains;
+using NetExtender.Registry.Interfaces;
+using NetExtender.Utils.IO;
 
 namespace NetExtender.Registry
 {
-    public sealed class Registry
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+    public sealed class Registry : IRegistry
     {
-        private static readonly IReadOnlyDictionary<RegistryKeys, RegistryKey> Keys = new Dictionary<RegistryKeys, RegistryKey>
+        private static IDictionary<RegistryKeys, RegistryKey> Keys { get; } = new Dictionary<RegistryKeys, RegistryKey>
         {
             {RegistryKeys.CurrentUser, Microsoft.Win32.Registry.CurrentUser},
             {RegistryKeys.CurrentConfig, Microsoft.Win32.Registry.CurrentConfig},
@@ -20,27 +24,30 @@ namespace NetExtender.Registry
             {RegistryKeys.Users, Microsoft.Win32.Registry.Users},
             {RegistryKeys.ClassesRoot, Microsoft.Win32.Registry.ClassesRoot},
             {RegistryKeys.PerformanceData, Microsoft.Win32.Registry.PerformanceData}
-        };
+        }.ToImmutableDictionary();
 
-        public Boolean IsReadOnly { get; set; } = true;
+        public const String Separator = "\\";
+
+        public Boolean IsReadOnly { get; }
 
         public String Path { get; }
         public RegistryKeys RegistryKey { get; }
 
-        public Registry(String path = null, RegistryKeys key = RegistryKeys.CurrentUser)
+        public Registry(String path, RegistryKeys key, FileAccess access)
         {
-            Path = path ?? $"Software\\{Domain.Current.AppName}";
+            Path = path ?? throw new ArgumentNullException(nameof(path));
             RegistryKey = key;
+            IsReadOnly = access.IsReadOnly();
         }
 
-        private RegistryKey GetRegistryKey(Boolean write, params String[] sections)
+        private RegistryKey GetRegistryKey(FileAccess access, IEnumerable<String> sections)
         {
             RegistryKey reg = Keys[RegistryKey];
             String path = $"{Path}\\{sections.Join("\\")}";
 
             try
             {
-                return write ? reg.CreateSubKey(path) : reg.OpenSubKey(path);
+                return access.HasFlag(FileAccess.Write) ? reg.CreateSubKey(path) : reg.OpenSubKey(path);
             }
             catch (Exception)
             {
@@ -49,21 +56,45 @@ namespace NetExtender.Registry
             }
         }
 
-        private RegistryKey GetReadRegistryKey(params String[] sections)
+        private RegistryKey GetReadRegistryKey(IEnumerable<String> sections)
         {
-            return GetRegistryKey(false, sections);
+            return GetRegistryKey(FileAccess.Read, sections);
         }
 
-        private RegistryKey GetWriteRegistryKey(params String[] sections)
+        private RegistryKey GetWriteRegistryKey(IEnumerable<String> sections)
         {
-            return GetRegistryKey(true, sections);
+            return GetRegistryKey(FileAccess.ReadWrite, sections);
+        }
+        
+        public String GetValue(String key, params String[] sections)
+        {
+            return GetValue(key, (IEnumerable<String>) sections);
+        }
+
+        public String GetValue(String key, IEnumerable<String> sections)
+        {
+            try
+            {
+                using RegistryKey reg = GetReadRegistryKey(sections);
+
+                return reg?.GetValue(key)?.ToString();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public Boolean SetValue(String key, String value, params String[] sections)
         {
+            return SetValue(key, value, (IEnumerable<String>) sections);
+        }
+        
+        public Boolean SetValue(String key, String value, IEnumerable<String> sections)
+        {
             try
             {
-                if (GetValue(key) == value)
+                if (GetValue(key, sections) == value)
                 {
                     return true;
                 }
@@ -93,22 +124,13 @@ namespace NetExtender.Registry
                 return false;
             }
         }
-
-        public String GetValue(String key, params String[] sections)
+        
+        public String[] GetValueNames(params String[] sections)
         {
-            try
-            {
-                using RegistryKey reg = GetReadRegistryKey(sections);
-
-                return reg?.GetValue(key)?.ToString();
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return GetValueNames((IEnumerable<String>) sections);
         }
 
-        public String[] GetValueNames(String[] sections)
+        public String[] GetValueNames(IEnumerable<String> sections)
         {
             try
             {
@@ -122,7 +144,12 @@ namespace NetExtender.Registry
             }
         }
 
-        public String[] GetSubKeyNames(String[] sections)
+        public String[] GetSubKeyNames(params String[] sections)
+        {
+            return GetSubKeyNames((IEnumerable<String>) sections);
+        }
+        
+        public String[] GetSubKeyNames(IEnumerable<String> sections)
         {
             try
             {
@@ -136,7 +163,7 @@ namespace NetExtender.Registry
             }
         }
 
-        private IEnumerable<RegistryKey> GetSubRegistryKeys(Boolean recursive, params String[] sections)
+        private IEnumerable<RegistryKey> GetSubRegistryKeys(Boolean recursive, IEnumerable<String> sections)
         {
             using RegistryKey key = GetReadRegistryKey(sections);
 
@@ -147,7 +174,7 @@ namespace NetExtender.Registry
             
             foreach (String subkey in key.GetSubKeyNames())
             {
-                using RegistryKey iterkey = GetReadRegistryKey(sections.Append(subkey).ToArray());
+                using RegistryKey iterkey = GetReadRegistryKey(sections.Append(subkey));
                 
                 if (iterkey is not null)
                 {
@@ -159,7 +186,7 @@ namespace NetExtender.Registry
                     continue;
                 }
 
-                foreach (RegistryKey subiterkey in GetSubRegistryKeys(true, sections.Append(subkey).ToArray()))
+                foreach (RegistryKey subiterkey in GetSubRegistryKeys(true, sections.Append(subkey)))
                 {
                     if (subiterkey is not null)
                     {
@@ -171,14 +198,24 @@ namespace NetExtender.Registry
 
         public Boolean KeyExist(String key, params String[] sections)
         {
+            return KeyExist(key, (IEnumerable<String>) sections);
+        }
+        
+        public Boolean KeyExist(String key, IEnumerable<String> sections)
+        {
             return GetValue(key, sections) is not null;
         }
 
         public Boolean RemoveKey(String key, params String[] sections)
         {
+            return RemoveKey(key, (IEnumerable<String>) sections);
+        }
+        
+        public Boolean RemoveKey(String key, IEnumerable<String> sections)
+        {
             try
             {
-                using RegistryKey reg = GetRegistryKey(false, sections);
+                using RegistryKey reg = GetReadRegistryKey(sections);
 
                 if (reg?.GetValue(key) is null)
                 {

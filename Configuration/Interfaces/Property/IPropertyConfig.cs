@@ -2,36 +2,17 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using NetExtender.Configuration.Interfaces.Property.Common;
 using NetExtender.Converters;
 using NetExtender.Crypto;
 using NetExtender.Crypto.CryptKey;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Utils.Types;
 
-namespace NetExtender.Configuration.Interfaces
+namespace NetExtender.Configuration.Interfaces.Property
 {
-    public interface IPropertyConfig : IConfig, IReadOnlyPropertyConfig
+    public interface IPropertyConfig : IConfig, IReadOnlyPropertyConfig, IPropertyConfigBase
     {
-        public Boolean SetValue<T>(IReadOnlyConfigProperty<T> property, T value)
-        {
-            return SetValue(property.Key, value, property.CryptKey, property.Sections);
-        }
-        
-        public T GetOrSetValue<T>(IReadOnlyConfigProperty<T> property)
-        {
-            return GetOrSetValue(property, property.DefaultValue);
-        }
-
-        public T GetOrSetValue<T>(IReadOnlyConfigProperty<T> property, T value)
-        {
-            return GetOrSetValue(property.Key, value, property.CryptKey, property.Converter, property.Sections);
-        }
-        
-        public Boolean RemoveValue(IReadOnlyConfigPropertyBase property)
-        {
-            return RemoveValue(property.Key, property.Sections);
-        }
-        
         public new IConfigProperty<T> GetProperty<T>(String key, params String[] sections)
         {
             return GetProperty(key, default(T), sections);

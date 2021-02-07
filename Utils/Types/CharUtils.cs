@@ -9,63 +9,63 @@ namespace NetExtender.Utils.Types
 {
     public static class CharUtils
     {
-        public static Boolean IsControl(Char chr)
+        public static Boolean IsControl(Char character)
         {
-            return chr != '	' && Char.IsControl(chr);
+            return character != '	' && Char.IsControl(character);
         }
 
-        public static String Repeat(this Char chr, Int32 count)
+        public static String Repeat(this Char character, Int32 count)
         {
-            return count < 1 ? String.Empty : new String(chr, count);
+            return count < 1 ? String.Empty : new String(character, count);
         }
         
         /// <inheritdoc cref="Char.ToLower(Char)"/>
         [Pure]
-        public static Char ToLower(this Char chr)
+        public static Char ToLower(this Char character)
         {
-            return Char.ToLower(chr);
+            return Char.ToLower(character);
         }
 
         /// <inheritdoc cref="Char.ToLower(Char,CultureInfo)"/>
         [Pure]
-        public static Char ToLower(this Char chr, [NotNull] CultureInfo culture)
+        public static Char ToLower(this Char character, [CanBeNull] CultureInfo info)
         {
-            return Char.ToLower(chr, culture);
+            return info is null ? ToLower(character) : Char.ToLower(character, info);
         }
 
         /// <inheritdoc cref="Char.ToLowerInvariant"/>
         [Pure]
-        public static Char ToLowerInvariant(this Char chr)
+        public static Char ToLowerInvariant(this Char character)
         {
-            return Char.ToLowerInvariant(chr);
+            return Char.ToLowerInvariant(character);
         }
 
         /// <inheritdoc cref="Char.ToUpper(Char)"/>
         [Pure]
-        public static Char ToUpper(this Char chr)
+        public static Char ToUpper(this Char character)
         {
-            return Char.ToUpper(chr);
+            return Char.ToUpper(character);
         }
 
         /// <inheritdoc cref="Char.ToUpper(Char,CultureInfo)"/>
         [Pure]
-        public static Char ToUpper(this Char chr, [NotNull] CultureInfo culture)
+        public static Char ToUpper(this Char character, [CanBeNull] CultureInfo info)
         {
-            return Char.ToUpper(chr, culture);
+            return info is null ? ToUpper(character) : Char.ToUpper(character, info);
         }
 
         /// <inheritdoc cref="Char.ToUpperInvariant"/>
         [Pure]
-        public static Char ToUpperInvariant(this Char chr)
+        public static Char ToUpperInvariant(this Char character)
         {
-            return Char.ToUpperInvariant(chr);
+            return Char.ToUpperInvariant(character);
         }
         
         /// <inheritdoc cref="Char.GetUnicodeCategory(Char)"/>
         [Pure]
-        public static UnicodeCategory GetUnicodeCategory(this Char chr)
+        public static UnicodeCategory GetUnicodeCategory(this Char character)
         {
-            return Char.GetUnicodeCategory(chr);
+            return Char.GetUnicodeCategory(character);
         }
 
         [Pure]

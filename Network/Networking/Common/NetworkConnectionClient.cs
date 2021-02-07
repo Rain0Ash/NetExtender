@@ -44,7 +44,7 @@ namespace NetExtender.Network.Networking.Common
         ///     Initialize client with a given IP endpoint
         /// </summary>
         /// <param name="endpoint">IP endpoint</param>
-        public NetworkConnectionClient(IPEndPoint endpoint)
+        protected NetworkConnectionClient(IPEndPoint endpoint)
             : base(endpoint)
         {
         }

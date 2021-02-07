@@ -1,224 +1,274 @@
-﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
-using NetExtender.Utils.Types;
-using NetExtender.Cultures;
+using JetBrains.Annotations;
+using NetExtender.Comparers.Interfaces;
+using NetExtender.Configuration;
+using NetExtender.Configuration.Common;
 using NetExtender.Cultures.Comparers;
-using NetExtender.Types.Culture;
-using NetExtender.Types.Dictionaries;
-using NetExtender.Types.Dictionaries.Interfaces;
-using NetExtender.Types.Maps;
-using NetExtender.Types.Strings;
-using ReactiveUI;
+using NetExtender.Exceptions;
+using NetExtender.Localizations.Interfaces;
+using NetExtender.Localizations.Sub.Interfaces;
+using NetExtender.Utils.Types;
 
 namespace NetExtender.Localizations
 {
-    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    public abstract class Localization : ReactiveObject
-    {
-        private static event EmptyHandler LChanged;
+    public delegate void LanguageChangedHandler(CultureInfo info);
 
-        public static event EmptyHandler LanguageChanged
+    public static partial class Localization
+    {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
+        private static class CurrentLocalization
+        {
+            private static ILocalization current;
+
+            public static ILocalization Current
+            {
+                get
+                {
+                    return current ?? throw new NotInitializedException();
+                }
+                set
+                {
+                    ThrowIfAlreadyInitialized();
+                    current = value ?? throw new ArgumentNullException(nameof(value));
+                    current.LanguageCultureChanged += OnLanguageChanged;
+                }
+            }
+
+            public static Boolean Initialized
+            {
+                get
+                {
+                    return current is not null;
+                }
+            }
+
+            public static void ThrowIfAlreadyInitialized()
+            {
+                if (Initialized)
+                {
+                    throw new AlreadyInitializedException();
+                }
+            }
+        }
+
+        public static Boolean IsInitialized
+        {
+            get
+            {
+                return CurrentLocalization.Initialized;
+            }
+        }
+
+        public static ILocalization Current
+        {
+            get
+            {
+                return CurrentLocalization.Current;
+            }
+        }
+
+        public static event LanguageChangedHandler Changed
         {
             add
             {
-                if (LChanged?.GetInvocationList().Contains(value) == true)
-                {
-                    return;
-                }
-
-                LChanged += value;
+                Current.LanguageCultureChanged += value;
             }
             remove
             {
-                LChanged -= value;
+                Current.LanguageCultureChanged -= value;
             }
         }
 
-        public static String NewLine
+        private static void OnLanguageChanged(CultureInfo info)
+        {
+            LanguageChanged?.Invoke();
+        }
+
+        public static event EmptyHandler LanguageChanged;
+
+        public static IReadOnlyOrderedComparer<CultureInfo> Comparer
         {
             get
             {
-                return Environment.NewLine;
+                return IsInitialized ? Current.Comparer : CultureComparer.Default;
             }
         }
 
-        static Localization()
-        {
-            DefaultCulture = new Culture(LCID.En) {CustomName = "English"};
-
-            List<Culture> array = new List<Culture>
-            {
-                DefaultCulture,
-                new Culture(LCID.Ru) {CustomName = "Русский"},
-                new Culture(LCID.De) {CustomName = "Deutsch"},
-                new Culture(LCID.Fr) {CustomName = "Française"}
-            };
-
-            CultureLCIDDictionary =
-                new IndexDictionary<Int32, Culture>(array.Select(culture =>
-                    new KeyValuePair<Int32, Culture>(culture.LCID, culture)));
-
-            CodeByLCIDMap = new Map<Int32, String>(CultureLCIDDictionary.ToDictionary(pair => pair.Value.LCID, pair => pair.Value.Code.ToLower()));
-
-            DefaultComparer = new CultureComparer(CultureLCIDDictionary.Select(pair => pair.Value));
-
-            SystemCulture = CultureLCIDDictionary.TryGetValue(CultureInfo.CurrentUICulture.LCID, DefaultCulture);
-
-            CurrentCulture = SystemCulture;
-        }
-
-        public static CultureComparer DefaultComparer { get; }
-
-        private static readonly IndexDictionary<Int32, Culture> CultureLCIDDictionary;
-
-        private static readonly Map<Int32, String> CodeByLCIDMap;
-
-        public static IReadOnlyMap<Int32, String> CodeByLCID
+        public static Boolean ChangeUIThreadLanguage
         {
             get
             {
-                return CodeByLCIDMap;
+                return Current.ChangeUIThreadLanguage;
+            }
+            set
+            {
+                Current.ChangeUIThreadLanguage = value;
             }
         }
 
-        public static IReadOnlyIndexDictionary<Int32, Culture> CultureByLCID
+        public static Boolean UseSystemCulture
         {
             get
             {
-                return CultureLCIDDictionary;
+                return Current.UseSystemCulture;
+            }
+            set
+            {
+                Current.UseSystemCulture = value;
             }
         }
 
-        public static void AddLanguage(Int32 lcid, Culture culture)
-        {
-            CultureLCIDDictionary.Add(lcid, culture);
-            CodeByLCIDMap.Add(lcid, culture.Code);
-        }
-
-        public static void RemoveLanguage(Int32 lcid)
-        {
-            CultureLCIDDictionary.Remove(lcid);
-            CodeByLCIDMap.Remove(lcid);
-        }
-
-        public static Culture DefaultCulture { get; }
-
-        public static Culture SystemCulture { get; }
-
-        public static Culture BasicCulture
+        public static CultureInfo Culture
         {
             get
             {
-                return UseSystemCulture && CultureByLCID.ContainsKey(SystemCulture.LCID) ? SystemCulture : DefaultCulture;
+                return IsInitialized ? Current.Culture : System;
             }
         }
 
-        public static Culture CurrentCulture { get; protected set; }
-
-        public static Boolean ChangeUIThreadLanguage { get; set; } = true;
-
-        public static Boolean UseSystemCulture { get; set; } = true;
-
-        public static IEnumerable<Int32> AvailableLocalization { get; private set; }
-        public static IReadOnlyList<Culture> Cultures { get; private set; }
-
-        protected Localization(LocaleMultiString multiString)
-            : this(0, multiString)
+        public static CultureInfo Basic
         {
-        }
-
-        protected Localization(Int32 lcid, LocaleMultiString multiString = null)
-        {
-            multiString ??= new LocaleMultiString();
-            AvailableLocalization = multiString.AvailableLocalization;
-            Cultures = multiString.Cultures;
-            InitializeLanguage();
-            StringsNotify();
-            UpdateLocalization(lcid);
-        }
-
-        protected virtual void InitializeLanguage()
-        {
-            //Override by language strings;
-        }
-
-        private void StringsNotify()
-        {
-            foreach (PropertyInfo info in GetType().GetProperties())
+            get
             {
-                if (info.PropertyType == typeof(MultiString) || info.PropertyType.IsSubclassOf(typeof(MultiString)))
-                {
-                    LanguageChanged += () => this.RaisePropertyChanged(info.Name);
-                }
+                return IsInitialized ? Current.Standart : Culture;
             }
         }
 
-        public static void UpdateLocalization(Int32 lcid)
+        public static CultureInfo System
         {
-            if (!CultureByLCID.ContainsKey(lcid) || !AvailableLocalization.Contains(lcid))
+            get
             {
-                lcid = BasicCulture.LCID;
+                return CultureUtils.System;
             }
+        }
 
-            if (CurrentCulture.LCID == lcid)
+        public static CultureInfo Default
+        {
+            get
             {
-                return;
+                return CultureUtils.English;
             }
+        }
 
-            CurrentCulture = CultureByLCID[lcid];
-
-            if (ChangeUIThreadLanguage)
+        public static IOrderedEnumerable<CultureInfo> Supported
+        {
+            get
             {
-                SetUILanguage();
+                return IsInitialized ? Current.Languages : EnumerableUtils.GetEnumerableFrom(Default).OrderBy(Comparer);
             }
-
-            LChanged?.Invoke();
         }
 
-        [DllImport("Kernel32.dll", CharSet = CharSet.Auto)]
-        private static extern UInt16 SetThreadUILanguage(UInt16 langId);
+        public const ConfigType DefaultConfigType = ConfigType.JSON;
 
-        public static void SetUILanguage()
+        public static ILocalization Create([NotNull] ILocalization localization)
         {
-            UInt16 lcid;
-            try
+            if (localization is null)
             {
-                lcid = CurrentCulture.LCID16;
+                throw new ArgumentNullException(nameof(localization));
             }
-            catch (Exception)
+            
+            CurrentLocalization.ThrowIfAlreadyInitialized();
+            CurrentLocalization.Current = localization;
+            return Current;
+        }
+        
+        public static ILocalization Create([NotNull] IConfigBehavior behavior)
+        {
+            if (behavior is null)
             {
-                lcid = DefaultCulture.LCID16;
+                throw new ArgumentNullException(nameof(behavior));
             }
 
-            SetUILanguage(lcid);
+            CurrentLocalization.ThrowIfAlreadyInitialized();
+            CurrentLocalization.Current = new InternalLocalization(behavior);
+            return Current;
         }
 
-        public static void SetUILanguage(UInt16 lcid)
+        public static ILocalization Create()
         {
-            SetThreadUILanguage(lcid);
+            return Create(DefaultConfigType, Config.DefaultConfigOptions);
         }
 
-        public static Int32 GetLanguageOrderID(Int32 lcid)
+        public static ILocalization Create(ConfigType type)
         {
-            return DefaultComparer.GetLanguageOrderID(lcid);
+            return Create(type, Config.DefaultConfigOptions);
         }
 
-        public static String GetCultureCode()
+        public static ILocalization Create(ConfigOptions options)
         {
-            return CurrentCulture.Code;
+            return Create(DefaultConfigType, options);
         }
 
-        public static String GetCultureCode(Int32 lcid)
+        public static ILocalization Create(ConfigType type, ConfigOptions options)
         {
-            return CodeByLCID.TryGetValue(lcid, out String code) ? code : DefaultCulture.Code;
+            return Create(null, type, options);
+        }
+
+        public static ILocalization Create(String path)
+        {
+            return Create(path, DefaultConfigType);
+        }
+
+        public static ILocalization Create(String path, ConfigType type)
+        {
+            return Create(path, type, Config.DefaultConfigOptions);
+        }
+
+        public static ILocalization Create(String path, ConfigOptions options)
+        {
+            return Create(path, DefaultConfigType, options);
+        }
+
+        public static ILocalization Create(String path, ConfigType type, ConfigOptions options)
+        {
+            CurrentLocalization.ThrowIfAlreadyInitialized();
+            CurrentLocalization.Current = new InternalLocalization(path, type, options);
+            return Current;
+        }
+
+        public static Int32 GetLanguageOrderID()
+        {
+            return IsInitialized ? Current.GetLanguageOrderID() : 0;
+        }
+
+        public static Int32 GetLanguageOrderID([NotNull] CultureInfo info)
+        {
+            return Current.GetLanguageOrderID(info);
+        }
+
+        public static Boolean AddSupportedCulture([NotNull] CultureInfo info)
+        {
+            return Current.AddSupportedCulture(info);
+        }
+
+        public static Boolean AddSupportedCulture([NotNull] CultureInfo info, [CanBeNull] ISubLocalization localization)
+        {
+            return Current.AddSupportedCulture(info, localization);
+        }
+
+        public static Boolean RemoveSupportedCulture([NotNull] CultureInfo info)
+        {
+            return Current.RemoveSupportedCulture(info);
+        }
+
+        public static void UpdateLocalization([CanBeNull] CultureInfo info)
+        {
+            Current.UpdateLocalization(info);
+        }
+        
+        public static Boolean TryUpdateLocalization([CanBeNull] CultureInfo info)
+        {
+            return Current.TryUpdateLocalization(info);
+        }
+
+        public static Boolean SetUILanguage()
+        {
+            return Current.SetUILanguage();
         }
     }
 }

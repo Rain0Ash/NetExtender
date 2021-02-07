@@ -3,8 +3,9 @@
 
 using System;
 using JetBrains.Annotations;
+using NetExtender.Configuration;
 using NetExtender.Configuration.Common;
-using NetExtender.Configuration.Interfaces;
+using NetExtender.Configuration.Interfaces.Property;
 
 namespace NetExtender.Utils.Config
 {
@@ -17,7 +18,7 @@ namespace NetExtender.Utils.Config
                 throw new ArgumentNullException(nameof(behavior));
             }
 
-            return NetExtender.Configuration.Config.Create(behavior);
+            return PropertyConfig.Create(behavior);
         }
         
         public static IPropertyConfig Create(this ConfigType type)
@@ -27,12 +28,12 @@ namespace NetExtender.Utils.Config
         
         public static IPropertyConfig Create(this ConfigType type, ConfigOptions options)
         {
-            return NetExtender.Configuration.Config.Create(null, type, options);
+            return PropertyConfig.Create(null, type, options);
         }
 
         public static IPropertyConfig Create(this ConfigType type, String path)
         {
-            return NetExtender.Configuration.Config.Create(path, type);
+            return PropertyConfig.Create(path, type);
         }
         
         public static IPropertyConfig Create(this ConfigType type, String path, ConfigOptions options)
@@ -42,7 +43,7 @@ namespace NetExtender.Utils.Config
 
         public static IPropertyConfig Create(this ConfigType type, ConfigOptions options, String path)
         {
-            return NetExtender.Configuration.Config.Create(path, type, options);
+            return PropertyConfig.Create(path, type, options);
         }
     }
 }

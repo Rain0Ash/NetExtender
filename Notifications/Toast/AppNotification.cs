@@ -92,7 +92,7 @@ namespace NetExtender.Notifications.Toasts
         {
             if (String.IsNullOrEmpty(aumid))
             {
-                aumid = Domain.CurrentAppNameOrPath;
+                aumid = Domain.AppNameOrPath;
             }
             
             GuidAttribute attribute = typeof(T).GetCustomAttribute<GuidAttribute>();

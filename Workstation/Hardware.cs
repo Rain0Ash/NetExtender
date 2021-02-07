@@ -8,6 +8,7 @@ using System.Management;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using NetExtender.Utils.Types;
 
 namespace NetExtender.Workstation
 {
@@ -134,23 +135,22 @@ namespace NetExtender.Workstation
         {
             ManagementClass mc = new ManagementClass("Win32_NetworkAdapterConfiguration");
             ManagementObjectCollection moc = mc.GetInstances();
-            String macAddress = String.Empty;
+            String mac = String.Empty;
             foreach (ManagementBaseObject o in moc)
             {
                 ManagementObject mo = (ManagementObject) o;
-                if (macAddress == String.Empty)
+                if (mac.IsEmpty())
                 {
                     if ((Boolean) mo["IPEnabled"])
                     {
-                        macAddress = mo["MacAddress"].ToString();
+                        mac = mo["MacAddress"].ToString();
                     }
                 }
 
                 mo.Dispose();
             }
 
-            macAddress = macAddress.Replace(":", String.Empty);
-            return macAddress;
+            return mac;
         }
 
         /// <summary>
@@ -372,7 +372,7 @@ namespace NetExtender.Workstation
         /// <returns>CPU Manufacturer</returns>
         public static String GetCPUManufacturer()
         {
-            String cpuMan = String.Empty;
+            String cpu = String.Empty;
             //create an instance of the Managemnet class with the
             //Win32_Processor class
             ManagementClass mgmt = new ManagementClass("Win32_Processor");
@@ -381,14 +381,14 @@ namespace NetExtender.Workstation
             //start our loop for all processors found
             foreach (ManagementBaseObject obj in objCol)
             {
-                if (cpuMan == String.Empty)
+                if (cpu.IsEmpty())
                 {
                     // only return manufacturer from first CPU
-                    cpuMan = obj.Properties["Manufacturer"].Value.ToString();
+                    cpu = obj.Properties["Manufacturer"].Value.ToString();
                 }
             }
 
-            return cpuMan;
+            return cpu;
         }
 
         /// <summary>
@@ -435,7 +435,7 @@ namespace NetExtender.Workstation
             //loop through all the objects we find
             foreach (ManagementBaseObject obj in objCol)
             {
-                if (gateway == String.Empty) // only return MAC Address from first card
+                if (gateway.IsEmpty()) // only return MAC Address from first card
                 {
                     //grab the value from the first network adapter we find
                     //you can change the string to an array and get all

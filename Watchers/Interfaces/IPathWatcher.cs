@@ -13,11 +13,9 @@ namespace NetExtender.Watchers.Interfaces
     {
         public String Path { get; set; }
         public PathStatus PathStatus { get; set; }
-        
         public Image Icon { get; }
-
-        public Boolean IsValid();
         
+        public Boolean IsValid();
         public Boolean IsExist();
     }
 }
