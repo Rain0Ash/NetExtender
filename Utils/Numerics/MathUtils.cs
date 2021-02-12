@@ -1778,8 +1778,31 @@ namespace NetExtender.Utils.Numerics
             };
         }
 
-        private const RoundType DefaultRoundType = RoundType.Banking;
+        public const RoundType DefaultRoundType = RoundType.Banking;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(ref Single number, RoundType type)
+        {
+            number = Round(number, type);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(ref Single number, Byte digits = DefaultRoundDigits, RoundType type = DefaultRoundType)
+        {
+            number = Round(number, digits, type);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Round(this Single number, RoundType type)
+        {
+            return Round(number, DefaultRoundDigits, type);
+        }
+
+        public static Single Round(this Single number, Byte digits = DefaultRoundDigits, RoundType type = DefaultRoundType)
+        {
+            return (Single) Round((Double) number, digits, type);
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Round(ref Double number, RoundType type)
         {
@@ -1800,7 +1823,7 @@ namespace NetExtender.Utils.Numerics
 
         public static Double Round(this Double number, Byte digits = DefaultRoundDigits, RoundType type = DefaultRoundType)
         {
-            digits = ToRange(digits, Byte.MinValue, (Byte) 15);
+            ToRange(ref digits, Byte.MinValue, 15);
 
             return type switch
             {
@@ -1832,7 +1855,7 @@ namespace NetExtender.Utils.Numerics
 
         public static Decimal Round(this Decimal number, Byte digits = DefaultRoundDigits, RoundType type = DefaultRoundType)
         {
-            digits = ToRange(digits, Byte.MinValue, (Byte) 15);
+            ToRange(ref digits, Byte.MinValue, 15);
 
             return type switch
             {

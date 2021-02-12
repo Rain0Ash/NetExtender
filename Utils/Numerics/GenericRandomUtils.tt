@@ -10,7 +10,6 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NetExtender.Random.Interfaces;
 
@@ -108,10 +107,7 @@ namespace NetExtender.Utils.Numerics
             WriteLine($"\t\t\treturn count <= 0 ? {nameof(Enumerable)}.Empty<T>() : Range({(item.HasValue ? item.Value.Item2 + ", " : String.Empty)}min, max, generator).Take(count);");
             WriteLine("\t\t}");
 
-            if (item != random.Last())
-            {
-                WriteLine(String.Empty);
-            }
+            WriteLine(String.Empty);
         }
     }
 
@@ -171,14 +167,11 @@ namespace NetExtender.Utils.Numerics
             WriteLine("\t\t\t\t(min, max) = (max, min);");
             WriteLine("\t\t\t}");
             WriteLine(String.Empty);
-            WriteLine($"\t\t\tDouble value = {nameof(Next)}Double({item.Value.Item2});");
+            WriteLine($"\t\t\t{nameof(Double)} value = {nameof(Next)}{nameof(Double)}({item.Value.Item2});");
             WriteLine($"\t\t\treturn ({type}) (MathUtils.RoundBanking(value * max - value * min) + min);");
             WriteLine("\t\t}");
 
-            if (item != random.Last())
-            {
-                WriteLine(String.Empty);
-            }
+            WriteLine(String.Empty);
         }
     }
 
@@ -236,16 +229,121 @@ namespace NetExtender.Utils.Numerics
             WriteLine("\t\t\t}");
             WriteLine("\t\t}");
 
-            if (item != random.Last())
-            {
-                WriteLine(String.Empty);
-            }
+            WriteLine(String.Empty);
         }
     }
 
     void NextBytes()
     {
         ForEach(types, NextBytesFunc, false);
+    }
+    
+    void NextNonNegativeFunc(String type)
+    {
+        foreach ((String, String)? item in random)
+        {
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {type} {nameof(NextNonNegative)}{type}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 : String.Empty)})");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\treturn {nameof(NextNonNegative)}{type}({(item.HasValue ? item.Value.Item2 + $", {type}.MaxValue" : Generator)});");
+            WriteLine("\t\t}");
+
+            WriteLine(String.Empty);
+        }
+
+        foreach ((String, String)? item in random)
+        {
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {type} {nameof(NextNonNegative)}{type}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} max)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\treturn {nameof(NextNonNegative)}{type}({(item.HasValue ? item.Value.Item2 + ", default" : Generator)}, max);");
+            WriteLine("\t\t}");
+
+            WriteLine(String.Empty);
+        }
+
+        foreach ((String, String)? item in random)
+        {
+            if (item is null)
+            {
+                WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+                WriteLine($"\t\tpublic static {type} {nameof(NextNonNegative)}{type}({type} min, {type} max)");
+                WriteLine("\t\t{");
+                WriteLine($"\t\t\treturn {nameof(Next)}{type}({Generator}, min, max);");
+                WriteLine("\t\t}");
+
+                WriteLine(String.Empty);
+
+                continue;
+            }
+
+            WriteLine($"\t\tpublic static {type} {nameof(NextNonNegative)}{type}({"this " + item.Value.Item1 + " " + item.Value.Item2 + ", "}{type} min, {type} max)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\treturn {nameof(Next)}{type}({item.Value.Item2}, min, max);");
+            WriteLine("\t\t}");
+
+            WriteLine(String.Empty);
+        }
+    }
+
+    void NextNonNegative()
+    {
+        ForEach(types, NextNonNegativeFunc, false);
+    }
+
+    void NextNonNegativeBytesFunc(String type)
+    {
+        foreach ((String, String)? item in random)
+        {
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static void {nameof(NextNonNegative)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}Span<{type}> span)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\t{nameof(NextNonNegative)}({(item.HasValue ? item.Value.Item2 : Generator)}, span{(item.HasValue ? $", {type}.MaxValue" : String.Empty)});");
+            WriteLine("\t\t}");
+
+            WriteLine(String.Empty);
+        }
+
+        foreach ((String, String)? item in random)
+        {
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine(
+                $"\t\tpublic static void {nameof(NextNonNegative)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}Span<{type}> span, {type} max)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\t{nameof(NextNonNegative)}({(item.HasValue ? item.Value.Item2 : Generator)}, span{(item.HasValue ? ", default" : String.Empty)}, max);");
+            WriteLine("\t\t}");
+
+            WriteLine(String.Empty);
+        }
+
+        foreach ((String, String)? item in random)
+        {
+            if (item is null)
+            {
+                WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+                WriteLine($"\t\tpublic static void {nameof(NextNonNegative)}(Span<{type}> span, {type} min, {type} max)");
+                WriteLine("\t\t{");
+                WriteLine($"\t\t\t{nameof(Next)}({Generator}, span, min, max);");
+                WriteLine("\t\t}");
+
+                WriteLine(String.Empty);
+
+                continue;
+            }
+
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static void {nameof(NextNonNegative)}({"this " + item.Value.Item1 + " " + item.Value.Item2}, Span<{type}> span, {type} min, {type} max)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\t{nameof(Next)}({item.Value.Item2}, span, min, max);");
+            WriteLine("\t\t}");
+
+            WriteLine(String.Empty);
+        }
+    }
+
+    void NextNonNegativeBytes()
+    {
+        ForEach(types, NextNonNegativeBytesFunc, false);
     }
 
     void NextNonZeroFunc(String type)
@@ -301,10 +399,7 @@ namespace NetExtender.Utils.Numerics
             WriteLine("\t\t\treturn value;");
             WriteLine("\t\t}");
 
-            if (item != random.Last())
-            {
-                WriteLine(String.Empty);
-            }
+            WriteLine(String.Empty);
         }
     }
 
@@ -362,10 +457,7 @@ namespace NetExtender.Utils.Numerics
             WriteLine("\t\t\t}");
             WriteLine("\t\t}");
 
-            if (item != random.Last())
-            {
-                WriteLine(String.Empty);
-            }
+            WriteLine(String.Empty);
         }
     }
 
@@ -389,10 +481,7 @@ namespace NetExtender.Utils.Numerics
 
             WriteLine("\t\t}");
 
-            if (item != random.Last())
-            {
-                WriteLine(String.Empty);
-            }
+            WriteLine(String.Empty);
         }
     }
 
@@ -461,16 +550,82 @@ namespace NetExtender.Utils.Numerics
             WriteLine($"\t\t\treturn {nameof(Range)}({(item.HasValue ? item.Value.Item2 + ", " : String.Empty)}min, max, count, {nameof(Next)}{type});");
             WriteLine("\t\t}");
 
-            if (item != random.Last())
-            {
-                WriteLine(String.Empty);
-            }
+            WriteLine(String.Empty);
         }
     }
 
     void Range()
     {
         ForEach(types.Append(nameof(TimeSpan)).Append(nameof(DateTime)), RangeFunc, false);
+    }
+    
+    void NonNegativeRangeFunc(String type)
+    {
+        if (type == nameof(Int32))
+        {
+            foreach ((String, String)? item in random)
+            {
+                WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+                WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(NonNegativeRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 : String.Empty)})");
+                WriteLine("\t\t{");
+                WriteLine($"\t\t\treturn {type}{nameof(NonNegativeRange)}({(item.HasValue ? item.Value.Item2 + $", default, {type}.MaxValue" : Generator)});");
+                WriteLine("\t\t}");
+
+                WriteLine(String.Empty);
+            }
+        }
+
+        foreach ((String, String)? item in random)
+        {
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(NonNegativeRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} max)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\treturn {type}{nameof(NonNegativeRange)}({(item.HasValue ? item.Value.Item2 : Generator)}{(item.HasValue ? ", default" : String.Empty)}, max);");
+            WriteLine("\t\t}");
+
+            WriteLine(String.Empty);
+        }
+
+        if (type != nameof(Int32))
+        {
+            foreach ((String, String)? item in random)
+            {
+                WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+                WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(NonNegativeRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} max, Int32 count)");
+                WriteLine("\t\t{");
+                WriteLine($"\t\t\treturn {type}{nameof(NonNegativeRange)}({(item.HasValue ? item.Value.Item2 : Generator)}{(item.HasValue ? ", default" : String.Empty)}, max, count);");
+                WriteLine("\t\t}");
+
+                WriteLine(String.Empty);
+            }
+        }
+
+        foreach ((String, String)? item in random)
+        {
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(NonNegativeRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} min, {type} max)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\treturn {nameof(Range)}({(item.HasValue ? item.Value.Item2 + ", " : String.Empty)}min, max, {nameof(NextNonNegative)}{type});");
+            WriteLine("\t\t}");
+
+            WriteLine(String.Empty);
+        }
+
+        foreach ((String, String)? item in random)
+        {
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(NonNegativeRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} min, {type} max, Int32 count)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\treturn {nameof(Range)}({(item.HasValue ? item.Value.Item2 + ", " : String.Empty)}min, max, count, {nameof(NextNonNegative)}{type});");
+            WriteLine("\t\t}");
+
+            WriteLine(String.Empty);
+        }
+    }
+
+    void NonNegativeRange()
+    {
+        ForEach(types, NonNegativeRangeFunc, false);
     }
 
     void NonZeroRangeFunc(String type)
@@ -522,10 +677,7 @@ namespace NetExtender.Utils.Numerics
             WriteLine($"\t\t\treturn {nameof(Range)}({(item.HasValue ? item.Value.Item2 + ", " : String.Empty)}min, max, count, {nameof(NextNonZero)}{type});");
             WriteLine("\t\t}");
             
-            if (item != random.Last())
-            {
-                WriteLine(String.Empty);
-            }
+            WriteLine(String.Empty);
         }
     }
 
@@ -538,19 +690,15 @@ namespace NetExtender.Utils.Numerics
     {
 <#
     Next();
-    WriteLine(String.Empty);
+    NextNonNegative();
     NextNonZero();
-    WriteLine(String.Empty);
     NextBytes();
-    WriteLine(String.Empty);
+    NextNonNegativeBytes();
     NextNonZeroBytes();
-    WriteLine(String.Empty);
     NextSign();
-    WriteLine(String.Empty);
     RangeInternal();
-    WriteLine(String.Empty);
     Range();
-    WriteLine(String.Empty);
+    NonNegativeRange();
     NonZeroRange();
 #>
     }

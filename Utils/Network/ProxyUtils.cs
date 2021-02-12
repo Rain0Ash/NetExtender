@@ -4,53 +4,36 @@
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace NetExtender.Utils.Network
 {
     public static class ProxyUtils
     {
-        public static WebProxy CreateProxy(String address, Int32 port, String login = null, String password = null)
+        public static async Task<HttpStatusCode> CheckProxyAsync([NotNull] this WebProxy proxy)
         {
-            if (!NetworkUtils.ValidateIPv4(address))
+            if (proxy?.Address is null)
             {
-                throw new ArgumentException("Address is not valid");
+                throw new ArgumentNullException(nameof(proxy));
             }
 
-            if (!NetworkUtils.ValidatePort(port))
-            {
-                throw new ArgumentException("Port is not valid");
-            }
-
-            login ??= String.Empty;
-            password ??= String.Empty;
-
-            return new WebProxy(address, port)
-            {
-                Credentials = new NetworkCredential(login, password)
-            };
-        }
-
-        public static async Task<HttpStatusCode> CheckProxyAsync(WebProxy proxy)
-        {
             Boolean ping = await NetworkUtils.CheckPingAsync(proxy.Address.Host).ConfigureAwait(false);
             if (!ping)
             {
                 return HttpStatusCode.ServiceUnavailable;
             }
 
-            const String checkAddress = "http://google.com";
-            const String userAgent =
-                "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36";
+            const String address = "http://google.com";
 
-            HttpWebRequest request = (HttpWebRequest) WebRequest.Create(checkAddress);
+            HttpWebRequest request = (HttpWebRequest) WebRequest.Create(address);
             request.Proxy = proxy;
-            request.UserAgent = userAgent;
-            request.Timeout = 2000;
+            request.UserAgent = WebUtils.CurrentSessionUserAgent;
+            request.Timeout = 1000;
 
             try
             {
-                await request.GetResponseAsync().ConfigureAwait(false);
-                return request.GetResponse() is HttpWebResponse response ? response.StatusCode : HttpStatusCode.OK;
+                WebResponse response = await request.GetResponseAsync().ConfigureAwait(false);
+                return response is HttpWebResponse http ? http.StatusCode : HttpStatusCode.OK;
             }
             catch (WebException e)
             {

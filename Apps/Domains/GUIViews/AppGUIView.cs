@@ -9,7 +9,7 @@ namespace NetExtender.Apps.Domains.GUIViews.Common
 {
     public abstract class AppGUIView : IGUIView
     {
-        public static IGUIView CurrentView { get; private set; }
+        public static IGUIView Current { get; private set; }
         protected static Object SyncObject { get; } = new Object();
         
         protected Boolean Started { get; private set; }
@@ -20,12 +20,12 @@ namespace NetExtender.Apps.Domains.GUIViews.Common
             {
                 if (Started)
                 {
-                    if (CurrentView == this)
+                    if (Current == this)
                     {
                         return;
                     }
                 
-                    throw new AlreadyInitializedException();
+                    throw new AlreadyInitializedException("View already initialized", nameof(Current));
                 }
 
                 args ??= Array.Empty<String>();
@@ -33,7 +33,7 @@ namespace NetExtender.Apps.Domains.GUIViews.Common
                 try
                 {
                     StartInitialize();
-                    CurrentView = this;
+                    Current = this;
                     Started = true;
                     HandleArgs(args);
                     Run();

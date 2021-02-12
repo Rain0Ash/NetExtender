@@ -31,7 +31,16 @@ namespace NetExtender.Comparers
             }
         }
 
+        public Boolean IsReadOnly
+        {
+            get
+            {
+                return Order.IsReadOnly;
+            }
+        }
+
         private readonly IComparer<T> _comparer = Inner;
+
         public IComparer<T> Comparer
         {
             get
@@ -40,12 +49,7 @@ namespace NetExtender.Comparers
             }
             init
             {
-                if (value is null)
-                {
-                    return;
-                }
-                
-                _comparer = value;
+                _comparer = value ?? Inner;
             }
         }
 
@@ -104,7 +108,7 @@ namespace NetExtender.Comparers
         {
             return Order.Contains(item);
         }
-        
+
         public Int32 GetOrder(T item)
         {
             return Order.IndexOf(item);
@@ -118,6 +122,16 @@ namespace NetExtender.Comparers
         public Boolean Remove(T item)
         {
             return Order.Remove(item);
+        }
+        
+        public void Clear()
+        {
+            Order.Clear();
+        }
+        
+        public void CopyTo(T[] array, Int32 index)
+        {
+            Order.CopyTo(array, index);
         }
 
         protected Int32 Compare(Int32 first, Int32 second)

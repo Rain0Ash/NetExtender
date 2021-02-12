@@ -1198,92 +1198,7 @@ namespace NetExtender.Utils.Types
 
             return value.IsEmpty() ? value : ToOppositeCaseInternal(value, Char.ToUpperInvariant, Char.ToLowerInvariant);
         }
-
-        public static String UpperTo([NotNull] this String value, Int32 index)
-        {
-            return UpperTo(value, index, null);
-        }
-
-        public static String UpperTo([NotNull] this String value, Int32 index, [CanBeNull] CultureInfo? info)
-        {
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-            
-            return index switch
-            {
-                -1 => value.ToUpperInvariant(),
-                0 => value,
-                _ => value.Substring(0, index).ToUpper(info)
-            };
-        }
         
-        public static String UpperToInvariant([NotNull] this String value, Int32 index)
-        {
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            return index switch
-            {
-                -1 => value.ToUpperInvariant(),
-                0 => value,
-                _ => value.Substring(0, index).ToUpperInvariant() + value.Substring(index + 1, value.Length - index - 1)
-            };
-        }
-
-        public static String UpperTo([NotNull] this String value, Char character)
-        {
-            return UpperTo(value, character, null);
-        }
-        
-        public static String UpperTo([NotNull] this String value, Char character, [CanBeNull] CultureInfo? info)
-        {
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            return UpperTo(value, value.IndexOf(character), info);
-        }
-        
-        public static String UpperToInvariant([NotNull] this String value, Char character)
-        {
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            return UpperToInvariant(value, value.IndexOf(character));
-        }
-        
-        public static String UpperToInclude([NotNull] this String value, Char character)
-        {
-            return UpperToInclude(value, character, null);
-        }
-        
-        public static String UpperToInclude([NotNull] this String value, Char character, [CanBeNull] IFormatProvider? provider)
-        {
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            
-        }
-        
-        public static String UpperToIncludeInvariant([NotNull] this String value, Char character)
-        {
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-
-            
-        }
-
         /// <summary>
         /// Returns the beginning portion of s up to, but not including,
         /// the first occurrence of the character c. If c is not present in
@@ -1452,6 +1367,78 @@ namespace NetExtender.Utils.Types
             }
             
             return builder.ToString().Normalize(NormalizationForm.FormC);
+        }
+
+        [CanBeNull]
+        public static CultureInfo? ToCultureInfo(this StringComparison comparison)
+        {
+            switch (comparison)
+            {
+                case StringComparison.CurrentCulture:
+                case StringComparison.CurrentCultureIgnoreCase:
+                    return CultureInfo.CurrentCulture;
+                case StringComparison.InvariantCulture:
+                case StringComparison.InvariantCultureIgnoreCase:
+                    return CultureInfo.InvariantCulture;
+                case StringComparison.Ordinal:
+                case StringComparison.OrdinalIgnoreCase:
+                    return null;
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+        
+        public static Boolean IsIgnoreCase(this StringComparison comparison)
+        {
+            switch (comparison)
+            {
+                case StringComparison.CurrentCulture:
+                case StringComparison.InvariantCulture:
+                case StringComparison.Ordinal:
+                    return false;
+                case StringComparison.CurrentCultureIgnoreCase:
+                case StringComparison.InvariantCultureIgnoreCase:
+                case StringComparison.OrdinalIgnoreCase:
+                    return true;
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+        
+        public static StringComparison ToIgnoreCase(this StringComparison comparison)
+        {
+            switch (comparison)
+            {
+                case StringComparison.CurrentCulture:
+                case StringComparison.CurrentCultureIgnoreCase:
+                    return StringComparison.CurrentCultureIgnoreCase;
+                case StringComparison.InvariantCulture:
+                case StringComparison.InvariantCultureIgnoreCase:
+                    return StringComparison.InvariantCultureIgnoreCase;
+                case StringComparison.Ordinal:
+                case StringComparison.OrdinalIgnoreCase:
+                    return StringComparison.OrdinalIgnoreCase;
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+        
+        public static StringComparison ToCaseSensitive(this StringComparison comparison)
+        {
+            switch (comparison)
+            {
+                case StringComparison.CurrentCulture:
+                case StringComparison.CurrentCultureIgnoreCase:
+                    return StringComparison.CurrentCulture;
+                case StringComparison.InvariantCulture:
+                case StringComparison.InvariantCultureIgnoreCase:
+                    return StringComparison.InvariantCulture;
+                case StringComparison.Ordinal:
+                case StringComparison.OrdinalIgnoreCase:
+                    return StringComparison.Ordinal;
+                default:
+                    throw new NotSupportedException();
+            }
         }
         
         /// <summary>

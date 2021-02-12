@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using NetExtender.Times;
 using NetExtender.Utils.IO;
 using NetExtender.Utils.Types;
@@ -15,17 +16,88 @@ namespace NetExtender.Utils.Network
 {
     public static class HttpClientUtils
     {
-        public static HttpClient Create(HttpMessageHandler handler = null, String agent = null, Boolean disposeHandler = true)
+        private static HttpClient DisposeAndThrowOnInvalidAddUserAgent([NotNull] HttpClient client, String agent)
         {
-            handler ??= new HttpClientHandler();
-            HttpClient client = new HttpClient(handler, disposeHandler);
-
-            if (agent != String.Empty)
+            if (client is null)
             {
-                client.DefaultRequestHeaders.UserAgent.TryParseAdd(agent ?? WebUtils.RandomUserAgent);
+                throw new ArgumentNullException(nameof(client));
             }
 
-            return client;
+            if (agent == String.Empty)
+            {
+                return client;
+            }
+            
+            if (client.AddUserAgentHeader(agent ?? WebUtils.CurrentSessionUserAgent))
+            {
+                return client;
+            }
+
+            client.Dispose();
+            throw new ArgumentException(@"Invalid user agent", nameof(agent));
+        }
+        
+        public static HttpClient Create()
+        {
+            return Create(WebUtils.CurrentSessionUserAgent);
+        }
+
+        public static HttpClient Create(String agent)
+        {
+            HttpClient client = new HttpClient();
+            return DisposeAndThrowOnInvalidAddUserAgent(client, agent);
+        }
+        
+        public static HttpClient Create([NotNull] this HttpMessageHandler handler)
+        {
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            return Create(handler, WebUtils.CurrentSessionUserAgent);
+        }
+        
+        public static HttpClient Create([NotNull] this HttpMessageHandler handler, String agent)
+        {
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+            
+            HttpClient client = new HttpClient(handler);
+            return DisposeAndThrowOnInvalidAddUserAgent(client, agent);
+        }
+
+        public static HttpClient Create([NotNull] this HttpMessageHandler handler, Boolean dispose)
+        {
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            return Create(handler, WebUtils.CurrentSessionUserAgent, dispose);
+        }
+
+        public static HttpClient Create([NotNull] this HttpMessageHandler handler, String agent, Boolean dispose)
+        {
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            HttpClient client = new HttpClient(handler, dispose);
+            return DisposeAndThrowOnInvalidAddUserAgent(client, agent);
+        }
+
+        public static Boolean AddUserAgentHeader([NotNull] this HttpClient client, String agent)
+        {
+            if (client is null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
+            return WebUtils.ValidateUserAgent(agent) && client.DefaultRequestHeaders.UserAgent.TryParseAdd(agent);
         }
         
         private static Task<HttpResponseMessage> DownloadTaskAsync(this HttpClient client, String address, CancellationToken token)
@@ -60,7 +132,7 @@ namespace NetExtender.Utils.Network
         public static async Task<String> GetHeadAsync(this HttpClient client, String address, CancellationToken token)
         {
             using HttpResponseMessage message = await client.SendAsync(new HttpRequestMessage(HttpMethod.Head, address), token).ConfigureAwait(false);
-            return await message.Content.ReadAsStringAsync().ConfigureAwait(false);
+            return await message.Content.ReadAsStringAsync(token).ConfigureAwait(false);
         }
 
         public static Task<String> GetHeadAsync(this HttpClient client, String address, Byte tries, TimeSpan timeout, Action<Byte> callback, CancellationToken token)
@@ -92,7 +164,7 @@ namespace NetExtender.Utils.Network
         {
             using HttpResponseMessage message = await DownloadTaskAsync(client, address, token).ConfigureAwait(false);
             using HttpContent content = message.Content;
-            await using Stream stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
+            await using Stream stream = await content.ReadAsStreamAsync(token).ConfigureAwait(false);
             using StreamReader reader = new StreamReader(stream, encoding);
             return await reader.ReadToEndAsync().ConfigureAwait(false);
         }
@@ -174,14 +246,14 @@ namespace NetExtender.Utils.Network
         }
 
         private const Boolean DefaultOverwrite = false;
-        public static Task<FileInfo> DownloadFileTaskAsync(this HttpClient client, String address, String path, Int32 bufferSize = BufferUtils.DefaultBuffer)
+        public static Task<FileInfo> DownloadFileTaskAsync(this HttpClient client, String address, String path, Int32 buffer = BufferUtils.DefaultBuffer)
         {
-            return DownloadFileTaskAsync(client, address, path, DefaultOverwrite, bufferSize, CancellationToken.None);
+            return DownloadFileTaskAsync(client, address, path, DefaultOverwrite, buffer, CancellationToken.None);
         }
         
-        public static Task<FileInfo> DownloadFileTaskAsync(this HttpClient client, String address, String path, Boolean overwrite = DefaultOverwrite, Int32 bufferSize = BufferUtils.DefaultBuffer)
+        public static Task<FileInfo> DownloadFileTaskAsync(this HttpClient client, String address, String path, Boolean overwrite = DefaultOverwrite, Int32 buffer = BufferUtils.DefaultBuffer)
         {
-            return DownloadFileTaskAsync(client, address, path, overwrite, bufferSize, CancellationToken.None);
+            return DownloadFileTaskAsync(client, address, path, overwrite, buffer, CancellationToken.None);
         }
 
         public static Task<FileInfo> DownloadFileTaskAsync(this HttpClient client, String address, String path, CancellationToken token)
@@ -194,20 +266,20 @@ namespace NetExtender.Utils.Network
             return DownloadFileTaskAsync(client, address, path, overwrite, BufferUtils.DefaultBuffer, token);
         }
         
-        public static Task<FileInfo> DownloadFileTaskAsync(this HttpClient client, String address, String path, Int32 bufferSize, CancellationToken token)
+        public static Task<FileInfo> DownloadFileTaskAsync(this HttpClient client, String address, String path, Int32 buffer, CancellationToken token)
         {
-            return DownloadFileTaskAsync(client, address, path, DefaultOverwrite, bufferSize, token);
+            return DownloadFileTaskAsync(client, address, path, DefaultOverwrite, buffer, token);
         }
 
-        public static async Task<FileInfo> DownloadFileTaskAsync(this HttpClient client, String address, String path, Boolean overwrite, Int32 bufferSize, CancellationToken token)
+        public static async Task<FileInfo> DownloadFileTaskAsync(this HttpClient client, String address, String path, Boolean overwrite, Int32 buffer, CancellationToken token)
         {
             using HttpResponseMessage message = await DownloadTaskAsync(client, address, HttpCompletionOption.ResponseHeadersRead, token).ConfigureAwait(false);
             using HttpContent content = message.Content;
-            await using Stream stream = await content.ReadAsStreamAsync().ConfigureAwait(false);
+            await using Stream stream = await content.ReadAsStreamAsync(token).ConfigureAwait(false);
             
             try
             {
-                return await FileUtils.SafeCreateFileAsync(path, stream, overwrite, bufferSize, token).ConfigureAwait(false);
+                return await FileUtils.SafeCreateFileAsync(path, stream, overwrite, buffer, token).ConfigureAwait(false);
             }
             catch (Exception)
             {

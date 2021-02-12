@@ -51,7 +51,7 @@ namespace NetExtender.Network.Networking.SSL
         {
             if (IsConnected)
             {
-                throw new AlreadyInitializedException();
+                throw new AlreadyInitializedException("Already connected");
             }
             
             Socket = socket;

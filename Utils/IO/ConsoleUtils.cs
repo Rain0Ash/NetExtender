@@ -49,7 +49,7 @@ namespace NetExtender.Utils.IO
 
         [DllImport("kernel32.dll")]
         private static extern IntPtr GetConsoleWindow();
-        
+
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern Boolean SetWindowPos(IntPtr hWnd, IntPtr hWndInsertAfter, Int32 x, Int32 y, Int32 cx, Int32 cy, Int32 flags);
@@ -88,7 +88,7 @@ namespace NetExtender.Utils.IO
 
         [DllImport("kernel32.dll")]
         private static extern Boolean SetConsoleIcon(IntPtr hIcon);
-        
+
         [DllImport("kernel32")]
         private static extern Boolean SetConsoleFont(IntPtr hOutput, UInt32 index);
 
@@ -97,8 +97,9 @@ namespace NetExtender.Utils.IO
 
         [DllImport("kernel32")]
         private static extern Boolean GetConsoleFontInfo(IntPtr hOutput, [MarshalAs(UnmanagedType.Bool)] Boolean bMaximize, UInt32 count,
-            [MarshalAs(UnmanagedType.LPArray), Out] ConsoleFont[] fonts);
-        
+            [MarshalAs(UnmanagedType.LPArray), Out]
+            ConsoleFont[] fonts);
+
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct FontInfo
         {
@@ -112,7 +113,7 @@ namespace NetExtender.Utils.IO
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
             public String FontName;
         }
-        
+
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern Boolean SetCurrentConsoleFontEx(IntPtr hConsoleOutput, Boolean MaximumWindow, ref FontInfo ConsoleCurrentFontEx);
@@ -215,14 +216,14 @@ namespace NetExtender.Utils.IO
                 {
                     return;
                 }
-                
+
                 if (SetConsoleIcon(value?.Handle ?? IntPtr.Zero))
                 {
                     icon = value;
                 }
             }
         }
-        
+
         public static ConsoleFont[] ConsoleFonts
         {
             get
@@ -231,9 +232,9 @@ namespace NetExtender.Utils.IO
                 {
                     return null;
                 }
-                
+
                 ConsoleFont[] fonts = new ConsoleFont[GetNumberOfConsoleFonts()];
-                
+
                 if (fonts.Length <= 0)
                 {
                     return null;
@@ -251,9 +252,9 @@ namespace NetExtender.Utils.IO
                 {
                     return;
                 }
-                
+
                 ConsoleFont[] fonts = ConsoleFonts;
-                
+
                 if (fonts is null)
                 {
                     return;
@@ -292,7 +293,7 @@ namespace NetExtender.Utils.IO
                 }
             }
         }
-        
+
         public static Int16 FontSize
         {
             get
@@ -342,13 +343,13 @@ namespace NetExtender.Utils.IO
         {
             return Console.GetCursorPosition();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetCursorPosition()
         {
             ResetCursorPosition();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ResetCursorPosition()
         {
@@ -401,13 +402,13 @@ namespace NetExtender.Utils.IO
                 return GUIUtils.GetWindowRectangle(ConsoleWindow);
             }
         }
-        
+
         /// <inheritdoc cref="Console.SetWindowSize"/>
         public static void SetWindowSize(Int32 width, Int32 height)
         {
             Console.SetWindowSize(width, height);
         }
-        
+
         /// <inheritdoc cref="Console.SetWindowPosition"/>
         public static Point Position
         {
@@ -427,14 +428,14 @@ namespace NetExtender.Utils.IO
         {
             SetWindowPosition(x, y, Rectangle);
         }
-        
+
         /// <inheritdoc cref="Console.SetWindowPosition"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetWindowPosition(Int32 x, Int32 y, Rectangle rectangle)
         {
             SetWindowPosition(x, y, rectangle.Size);
         }
-        
+
         /// <inheritdoc cref="Console.SetWindowPosition"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetWindowPosition(Int32 x, Int32 y, Size size)
@@ -444,13 +445,13 @@ namespace NetExtender.Utils.IO
                 InteropUtils.ThrowLastWin32Exception();
             }
         }
-        
+
         [Obsolete]
         public static void CenterToScreenByScreen()
         {
             Rectangle rectangle = Rectangle;
             Screen screen = Screen.FromHandle(ConsoleWindow);
-            
+
             Size size = rectangle.Size;
             SetWindowPosition(screen.WorkingArea.Width / 2 - rectangle.Width / 2, screen.WorkingArea.Height / 2 - rectangle.Height / 2, size);
         }
@@ -459,17 +460,17 @@ namespace NetExtender.Utils.IO
         {
             CenterToScreen(DefaultMonitorType.Primary);
         }
-        
+
         public static void CenterToScreen(DefaultMonitorType type)
         {
             MonitorInfo screen = DeviceUtils.GetMonitorInfoFromWindow(ConsoleWindow, type);
-            
+
             Rectangle rectangle = Rectangle;
             Rectangle area = screen.WorkingArea;
-            
+
             SetWindowPosition(area.Width / 2 - rectangle.Width / 2, area.Height / 2 - rectangle.Height / 2, rectangle.Size);
         }
-        
+
         public static Boolean? IsConsoleVisible
         {
             get
@@ -656,7 +657,7 @@ namespace NetExtender.Utils.IO
                 throw new NotImplementedException();
             }
         }
-        
+
         public static Boolean ConsoleMaximizeButtonEnabled
         {
             set
@@ -664,7 +665,7 @@ namespace NetExtender.Utils.IO
                 throw new NotImplementedException();
             }
         }
-        
+
         public static Boolean ConsoleMinimizeButtonEnabled
         {
             set
@@ -1406,33 +1407,93 @@ namespace NetExtender.Utils.IO
         };
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ConsoleColor GetColor(Color color)
+        public static ConsoleColor ToConsoleColor(this Color color)
         {
-            return ColorMap.TryGetValue(color, ConsoleColor.White);
+            return ToConsoleColor(color, out ConsoleColor result) ? result : ConsoleColor.White;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color GetColor(ConsoleColor consoleColor)
+        public static Boolean ToConsoleColor(this Color color, out ConsoleColor result)
         {
-            return ColorMap.TryGetKey(consoleColor, Color.White);
+            return ColorMap.TryGetValue(color, out result);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Write<T>(T value, IFormatProvider info = null)
+        public static Color ToColor(this ConsoleColor color)
         {
-            ToConsole(value, false, info);
+            return ColorMap.TryGetKey(color, Color.White);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Write<T>(T value, ConsoleColor color, IFormatProvider info = null)
+        public static void Write<T>(T value)
         {
-            ToConsole(value, color, false, info);
+            Write(value, null);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Write<T>(T value, ConsoleColor color, ConsoleColor bColor, IFormatProvider info = null)
+        public static void Write<T>(T value, IFormatProvider provider)
         {
-            ToConsole(value, color, bColor, false, info);
+            Write(value, ConvertUtils.DefaultEscapeType, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Write<T>(T value, EscapeType escape)
+        {
+            Write(value, escape, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Write<T>(T value, EscapeType escape, IFormatProvider provider)
+        {
+            ToConsole(value, escape, false, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Write<T>(T value, ConsoleColor foreground)
+        {
+            Write(value, foreground, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Write<T>(T value, ConsoleColor foreground, IFormatProvider provider)
+        {
+            Write(value, foreground, ConvertUtils.DefaultEscapeType, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Write<T>(T value, ConsoleColor foreground, EscapeType escape)
+        {
+            Write(value, foreground, escape, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Write<T>(T value, ConsoleColor foreground, EscapeType escape, IFormatProvider provider)
+        {
+            ToConsole(value, foreground, escape, false, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Write<T>(T value, ConsoleColor foreground, ConsoleColor background)
+        {
+            Write(value, foreground, background, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Write<T>(T value, ConsoleColor foreground, ConsoleColor background, IFormatProvider provider)
+        {
+            Write(value, foreground, background, ConvertUtils.DefaultEscapeType, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Write<T>(T value, ConsoleColor foreground, ConsoleColor background, EscapeType escape)
+        {
+            Write(value, foreground, background, escape, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Write<T>(T value, ConsoleColor foreground, ConsoleColor background, EscapeType escape, IFormatProvider provider)
+        {
+            ToConsole(value, foreground, background, escape, false, provider);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1442,34 +1503,136 @@ namespace NetExtender.Utils.IO
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void WriteLine<T>(T value, IFormatProvider info = null)
+        public static void WriteLine<T>(T value)
         {
-            ToConsole(value, info);
+            WriteLine(value, null);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void WriteLine<T>(T value, ConsoleColor color, IFormatProvider info = null)
+        public static void WriteLine<T>(T value, IFormatProvider provider)
         {
-            ToConsole(value, color, true, info);
+            WriteLine(value, ConvertUtils.DefaultEscapeType, provider);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void WriteLine<T>(T value, ConsoleColor color, ConsoleColor bColor, IFormatProvider info = null)
+        public static void WriteLine<T>(T value, EscapeType escape)
         {
-            ToConsole(value, color, bColor, true, info);
+            WriteLine(value, escape, null);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ToConsole<T>(this T value, IFormatProvider info)
+        public static void WriteLine<T>(T value, EscapeType escape, IFormatProvider provider)
         {
-            ToConsole(value, true, info);
+            ToConsole(value, escape, true, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WriteLine<T>(T value, ConsoleColor foreground)
+        {
+            WriteLine(value, foreground, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WriteLine<T>(T value, ConsoleColor foreground, IFormatProvider provider)
+        {
+            WriteLine(value, foreground, ConvertUtils.DefaultEscapeType, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WriteLine<T>(T value, ConsoleColor foreground, EscapeType escape)
+        {
+            WriteLine(value, foreground, escape, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WriteLine<T>(T value, ConsoleColor foreground, EscapeType escape, IFormatProvider provider)
+        {
+            ToConsole(value, foreground, escape, true, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WriteLine<T>(T value, ConsoleColor foreground, ConsoleColor background)
+        {
+            WriteLine(value, foreground, background, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WriteLine<T>(T value, ConsoleColor foreground, ConsoleColor background, IFormatProvider provider)
+        {
+            WriteLine(value, foreground, background, ConvertUtils.DefaultEscapeType, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WriteLine<T>(T value, ConsoleColor foreground, ConsoleColor background, EscapeType escape)
+        {
+            WriteLine(value, foreground, background, escape, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void WriteLine<T>(T value, ConsoleColor foreground, ConsoleColor background, EscapeType escape, IFormatProvider provider)
+        {
+            ToConsole(value, foreground, background, escape, true, provider);
         }
 
         private static readonly Object ConsoleLock = new Object();
 
-        public static void ToConsole<T>(this T value, Boolean newLine = true, IFormatProvider info = null)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value)
         {
-            String str = value.GetString(info ?? CultureInfo.InvariantCulture) ?? StringUtils.NullString;
+            ToConsole(value, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, EscapeType escape)
+        {
+            ToConsole(value, escape, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, IFormatProvider provider)
+        {
+            ToConsole(value, true, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, EscapeType escape, IFormatProvider provider)
+        {
+            ToConsole(value, true, escape, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, Boolean newLine)
+        {
+            ToConsole(value, newLine, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, EscapeType escape, Boolean newLine)
+        {
+            ToConsole(value, newLine, escape);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, Boolean newLine, EscapeType escape)
+        {
+            ToConsole(value, newLine, escape, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, Boolean newLine, IFormatProvider provider)
+        {
+            ToConsole(value, newLine, ConvertUtils.DefaultEscapeType, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, EscapeType escape, Boolean newLine, IFormatProvider provider)
+        {
+            ToConsole(value, newLine, escape, provider);
+        }
+
+        public static void ToConsole<T>(this T value, Boolean newLine, EscapeType escape, IFormatProvider provider)
+        {
+            String str = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtils.NullString;
 
             if (newLine)
             {
@@ -1481,28 +1644,135 @@ namespace NetExtender.Utils.IO
             }
         }
 
-        public static void ToConsole<T>(this T value, ConsoleColor foreground, Boolean newLine = true, IFormatProvider info = null)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, ConsoleColor foreground)
+        {
+            ToConsole(value, foreground, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, EscapeType escape)
+        {
+            ToConsole(value, foreground, escape, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, IFormatProvider provider)
+        {
+            ToConsole(value, foreground, true, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, EscapeType escape, IFormatProvider provider)
+        {
+            ToConsole(value, foreground, true, escape, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, Boolean newLine)
+        {
+            ToConsole(value, foreground, newLine, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, EscapeType escape, Boolean newLine)
+        {
+            ToConsole(value, foreground, newLine, escape);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, Boolean newLine, EscapeType escape)
+        {
+            ToConsole(value, foreground, newLine, escape, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, Boolean newLine, IFormatProvider provider)
+        {
+            ToConsole(value, foreground, newLine, ConvertUtils.DefaultEscapeType, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, EscapeType escape, Boolean newLine, IFormatProvider provider)
+        {
+            ToConsole(value, foreground, newLine, escape, provider);
+        }
+
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, Boolean newLine, EscapeType escape, IFormatProvider provider)
         {
             lock (ConsoleLock)
             {
                 ConsoleColor color = Console.ForegroundColor;
                 Console.ForegroundColor = foreground;
 
-                ToConsole(value, newLine, info);
+                ToConsole(value, newLine, escape, provider);
 
                 Console.ForegroundColor = color;
             }
         }
 
-        public static void ToConsole<T>(this T value, ConsoleColor foreground, ConsoleColor background, Boolean newLine = true,
-            IFormatProvider info = null)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, ConsoleColor background)
+        {
+            ToConsole(value, foreground, background, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, ConsoleColor background, EscapeType escape)
+        {
+            ToConsole(value, foreground, background, escape, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, ConsoleColor background, IFormatProvider provider)
+        {
+            ToConsole(value, foreground, background, true, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, ConsoleColor background, EscapeType escape, IFormatProvider provider)
+        {
+            ToConsole(value, foreground, background, true, escape, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, ConsoleColor background, Boolean newLine)
+        {
+            ToConsole(value, foreground, background, newLine, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, ConsoleColor background, EscapeType escape, Boolean newLine)
+        {
+            ToConsole(value, foreground, background, newLine, escape);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, ConsoleColor background, Boolean newLine, EscapeType escape)
+        {
+            ToConsole(value, foreground, background, newLine, escape, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, ConsoleColor background, Boolean newLine, IFormatProvider provider)
+        {
+            ToConsole(value, foreground, background, newLine, ConvertUtils.DefaultEscapeType, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, ConsoleColor background, EscapeType escape, Boolean newLine, IFormatProvider provider)
+        {
+            ToConsole(value, foreground, background, newLine, escape, provider);
+        }
+
+        public static void ToConsole<T>(this T value, ConsoleColor foreground, ConsoleColor background, Boolean newLine, EscapeType escape, IFormatProvider provider)
         {
             lock (ConsoleLock)
             {
                 ConsoleColor color = Console.BackgroundColor;
                 Console.BackgroundColor = background;
 
-                ToConsole(value, foreground, newLine, info);
+                ToConsole(value, foreground, newLine, escape, provider);
 
                 Console.BackgroundColor = color;
             }

@@ -1,8 +1,10 @@
-﻿﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
+using NetExtender.Random.Interfaces;
 
 namespace NetExtender.Random
 {
@@ -51,8 +53,7 @@ namespace NetExtender.Random
                 cdl[i] = sum;
             }
 
-            cdl[length - 1] =
-                1f; //last item of CDA is always 1, I do this because numerical inaccurarcies add up and last item probably wont be 1
+            cdl[length - 1] = 1f; //last item of CDA is always 1, I do this because numerical inaccurarcies add up and last item probably wont be 1
         }
 
         /// <summary>
@@ -86,8 +87,7 @@ namespace NetExtender.Random
                 cda[i] = sum;
             }
 
-            cda[length - 1] =
-                1f; //last item of CDA is always 1, I do this because numerical inaccurarcies add up and last item probably wont be 1
+            cda[length - 1] = 1f; //last item of CDA is always 1, I do this because numerical inaccurarcies add up and last item probably wont be 1
         }
 
 
@@ -95,14 +95,14 @@ namespace NetExtender.Random
         /// Linear search, good/faster for small arrays
         /// </summary>
         /// <param name="cda">Cummulative Distribution Array</param>
-        /// <param name="randomValue">Uniform random value</param>
+        /// <param name="value">Uniform random value</param>
         /// <returns>Returns index of an value inside CDA</returns>
-        public static Int32 SelectIndexLinearSearch(this Double[] cda, Double randomValue)
+        public static Int32 SelectIndexLinearSearch(this Double[] cda, Double value)
         {
             Int32 i = 0;
 
             // last element, CDA[CDA.Length-1] should always be 1
-            while (cda[i] < randomValue)
+            while (cda[i] < value)
             {
                 i++;
             }
@@ -116,9 +116,9 @@ namespace NetExtender.Random
         /// Code taken out of C# array.cs Binary Search & modified
         /// </summary>
         /// <param name="cda">Cummulative Distribution Array</param>
-        /// <param name="randomValue">Uniform random value</param>
+        /// <param name="value">Uniform random value</param>
         /// <returns>Returns index of an value inside CDA</returns>
-        public static Int32 SelectIndexBinarySearch(this Double[] cda, Double randomValue)
+        public static Int32 SelectIndexBinarySearch(this Double[] cda, Double value)
         {
             Int32 lo = 0;
             Int32 hi = cda.Length - 1;
@@ -129,12 +129,12 @@ namespace NetExtender.Random
                 // calculate median
                 index = lo + ((hi - lo) >> 1);
 
-                if (Math.Abs(cda[index] - randomValue) < Double.Epsilon)
+                if (Math.Abs(cda[index] - value) < Double.Epsilon)
                 {
                     return index;
                 }
 
-                if (cda[index] < randomValue)
+                if (cda[index] < value)
                 {
                     // shrink left
                     lo = index + 1;
@@ -155,14 +155,14 @@ namespace NetExtender.Random
         /// Linear search, good/faster for small lists
         /// </summary>
         /// <param name="cdl">Cummulative Distribution List</param>
-        /// <param name="randomValue">Uniform random value</param>
+        /// <param name="value">Uniform random value</param>
         /// <returns>Returns index of an value inside CDA</returns>
-        public static Int32 SelectIndexLinearSearch(this List<Double> cdl, Double randomValue)
+        public static Int32 SelectIndexLinearSearch(this List<Double> cdl, Double value)
         {
             Int32 i = 0;
 
             // last element, CDL[CDL.Length-1] should always be 1
-            while (cdl[i] < randomValue)
+            while (cdl[i] < value)
             {
                 i++;
             }
@@ -175,9 +175,9 @@ namespace NetExtender.Random
         /// Code taken out of C# array.cs Binary Search & modified
         /// </summary>
         /// <param name="cdl">Cummulative Distribution List</param>
-        /// <param name="randomValue">Uniform random value</param>
+        /// <param name="value">Uniform random value</param>
         /// <returns>Returns index of an value inside CDL</returns>
-        public static Int32 SelectIndexBinarySearch(this List<Double> cdl, Double randomValue)
+        public static Int32 SelectIndexBinarySearch(this List<Double> cdl, Double value)
         {
             Int32 lo = 0;
             Int32 hi = cdl.Count - 1;
@@ -188,12 +188,12 @@ namespace NetExtender.Random
                 // calculate median
                 index = lo + ((hi - lo) >> 1);
 
-                if (Math.Abs(cdl[index] - randomValue) < Double.Epsilon)
+                if (Math.Abs(cdl[index] - value) < Double.Epsilon)
                 {
                     return index;
                 }
 
-                if (cdl[index] < randomValue)
+                if (cdl[index] < value)
                 {
                     // shrink left
                     lo = index + 1;
@@ -231,12 +231,12 @@ namespace NetExtender.Random
         /// Gemerates uniform random values for all indexes in array.
         /// </summary>
         /// <param name="array">The array where all values will be randomized.</param>
-        /// <param name="r">Random generator</param>
-        public static void RandomWeightsArray(ref Double[] array, System.Random r)
+        /// <param name="random">Random generator</param>
+        public static void RandomWeightsArray(ref Double[] array, IRandom random)
         {
             for (Int32 i = 0; i < array.Length; i++)
             {
-                array[i] = r.NextDouble();
+                array[i] = random.NextDouble();
 
                 if (Math.Abs(array[i]) < Double.Epsilon)
                 {
@@ -248,16 +248,21 @@ namespace NetExtender.Random
         /// <summary>
         /// Creates new array with uniform random variables. 
         /// </summary>
-        /// <param name="r">Random generator</param>
+        /// <param name="random">Random generator</param>
         /// <param name="length">Length of new array</param>
         /// <returns>Array with random uniform random variables</returns>
-        public static Double[] RandomWeightsArray(System.Random r, Int32 length)
+        public static Double[] RandomWeightsArray([NotNull] IRandom random, Int32 length)
         {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
             Double[] array = new Double[length];
 
             for (Int32 i = 0; i < length; i++)
             {
-                array[i] = r.NextDouble();
+                array[i] = random.NextDouble();
 
                 if (Math.Abs(array[i]) < Double.Epsilon)
                 {
@@ -267,7 +272,6 @@ namespace NetExtender.Random
 
             return array;
         }
-
 
         /// <summary>
         /// Returns identity, list[i] = i
@@ -290,12 +294,22 @@ namespace NetExtender.Random
         /// Gemerates uniform random values for all indexes in list.
         /// </summary>
         /// <param name="list">The list where all values will be randomized.</param>
-        /// <param name="r">Random generator</param>
-        public static void RandomWeightsList(ref List<Double> list, System.Random r)
+        /// <param name="random">Random generator</param>
+        public static void RandomWeightsList([NotNull] ref List<Double> list, [NotNull] IRandom random)
         {
+            if (list is null)
+            {
+                throw new ArgumentNullException(nameof(list));
+            }
+
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
             for (Int32 i = 0; i < list.Count; i++)
             {
-                list[i] = r.NextDouble();
+                list[i] = random.NextDouble();
 
                 if (Math.Abs(list[i]) < Double.Epsilon)
                 {

@@ -54,13 +54,13 @@ namespace NetExtender.Apps.Domains
             {
                 get
                 {
-                    return _application ?? throw new NotInitializedException();
+                    return _application ?? throw new NotInitializedException("Application is not initialized", nameof(Application));
                 }
                 private set
                 {
                     if (_application is not null)
                     {
-                        throw new AlreadyInitializedException();
+                        throw new AlreadyInitializedException("Application already initialized", nameof(Application));
                     }
 
                     _application = value;
@@ -96,6 +96,11 @@ namespace NetExtender.Apps.Domains
                     if (value is null)
                     {
                         throw new ArgumentNullException(nameof(value));
+                    }
+
+                    if (_data == value)
+                    {
+                        return;
                     }
 
                     if (_data is not null)

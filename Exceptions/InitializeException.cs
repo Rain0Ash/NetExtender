@@ -24,6 +24,16 @@ namespace NetExtender.Exceptions
         {
         }
 
+        public AlreadyInitializedException([CanBeNull] String? message, [CanBeNull] String? paramName)
+            : base(message, paramName)
+        {
+        }
+
+        public AlreadyInitializedException([CanBeNull] String? message, [CanBeNull] String? paramName, [CanBeNull] Exception? innerException)
+            : base(message, paramName, innerException)
+        {
+        }
+
         protected AlreadyInitializedException([NotNull] SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -47,6 +57,16 @@ namespace NetExtender.Exceptions
         {
         }
 
+        public NotInitializedException([CanBeNull] String? message, [CanBeNull] String? paramName)
+            : base(message, paramName)
+        {
+        }
+
+        public NotInitializedException([CanBeNull] String? message, [CanBeNull] String? paramName, [CanBeNull] Exception? innerException)
+            : base(message, paramName, innerException)
+        {
+        }
+
         protected NotInitializedException([NotNull] SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
@@ -54,7 +74,7 @@ namespace NetExtender.Exceptions
     }
     
     [Serializable]
-    public class InitializeException : Exception
+    public class InitializeException : ArgumentException
     {
         public InitializeException()
         {
@@ -67,6 +87,16 @@ namespace NetExtender.Exceptions
 
         public InitializeException([CanBeNull] String? message, [CanBeNull] Exception? innerException)
             : base(message, innerException)
+        {
+        }
+
+        public InitializeException([CanBeNull] String? message, [CanBeNull] String? paramName)
+            : base(message, paramName)
+        {
+        }
+
+        public InitializeException([CanBeNull] String? message, [CanBeNull] String? paramName, [CanBeNull] Exception? innerException)
+            : base(message, paramName, innerException)
         {
         }
         

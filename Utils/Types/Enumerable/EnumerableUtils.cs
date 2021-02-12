@@ -5,9 +5,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using NetExtender.Random;
+using NetExtender.Random.Interfaces;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Utils.Numerics;
 
@@ -86,6 +88,19 @@ namespace NetExtender.Utils.Types
             }
         }
 
+        public static IEnumerable<T> GetEnumerableFrom<T>([NotNull] Func<T> generator)
+        {
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
+            while (true)
+            {
+                yield return generator();
+            }
+        }
+
         public static IEnumerable<(Int32 counter, T item)> Enumerate<T>(this IEnumerable<T> source)
         {
             if (source is null)
@@ -108,6 +123,88 @@ namespace NetExtender.Utils.Types
             return source.Select(item => (counter++, item));
         }
         
+        public static Int32 CountWhile<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            Int32 count = 0;
+            foreach (T item in source)
+            {
+                if (!predicate(item))
+                {
+                    return count;
+                }
+
+                count++;
+            }
+
+            return count;
+        }
+        
+        public static Int64 LongCountWhile<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            Int64 count = 0;
+            foreach (T item in source)
+            {
+                if (!predicate(item))
+                {
+                    return count;
+                }
+
+                count++;
+            }
+
+            return count;
+        }
+
+        public static Int32 ReverseCountWhile<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.Reverse().CountWhile(predicate);
+        }
+
+        public static Int64 ReverseLongCountWhile<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+            
+            return source.Reverse().LongCountWhile(predicate);
+        }
+
         public static Int32 FindIndex<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> predicate)
         {
             if (source is null)
@@ -121,6 +218,29 @@ namespace NetExtender.Utils.Types
             }
 
             foreach ((Int32 counter, T item) in source.Enumerate())
+            {
+                if (predicate(item))
+                {
+                    return counter;
+                }
+            }
+
+            return -1;
+        }
+        
+        public static Int64 LongFindIndex<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            foreach ((Int64 counter, T item) in source.LongEnumerate())
             {
                 if (predicate(item))
                 {
@@ -351,11 +471,11 @@ namespace NetExtender.Utils.Types
 
             return source switch
             {
-                IList<T> list => list.Count <= 0 ? default : list[RandomUtils.Next(list.Count - 1)],
-                IReadOnlyList<T> list => list.Count <= 0 ? default : list[RandomUtils.Next(list.Count - 1)],
-                ICollection<T> collection => collection.Count <= 0 ? default : collection.ElementAtOrDefault(RandomUtils.Next(collection.Count - 1)),
-                IReadOnlyCollection<T> collection => collection.Count <= 0 ? default : collection.ElementAtOrDefault(RandomUtils.Next(collection.Count - 1)),
-                _ => source.ElementAtOrDefault(RandomUtils.Next(source.Count() - 1))
+                IList<T> list => list.Count <= 0 ? default : list[RandomUtils.NextNonNegative(list.Count - 1)],
+                IReadOnlyList<T> list => list.Count <= 0 ? default : list[RandomUtils.NextNonNegative(list.Count - 1)],
+                ICollection<T> collection => collection.Count <= 0 ? default : collection.ElementAtOrDefault(RandomUtils.NextNonNegative(collection.Count - 1)),
+                IReadOnlyCollection<T> collection => collection.Count <= 0 ? default : collection.ElementAtOrDefault(RandomUtils.NextNonNegative(collection.Count - 1)),
+                _ => source.ElementAtOrDefault(RandomUtils.NextNonNegative(source.Count() - 1))
             };
         }
 
@@ -1096,6 +1216,16 @@ namespace NetExtender.Utils.Types
             }
         }
 
+        public static IOrderedEnumerable<T> OrderBy<T>([NotNull] this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return OrderBy(source, Comparer<T>.Default);
+        }
+
         public static IOrderedEnumerable<T> OrderBy<T>([NotNull] this IEnumerable<T> source, IComparer<T> comparer)
         {
             if (source is null)
@@ -1105,7 +1235,17 @@ namespace NetExtender.Utils.Types
 
             return source.OrderBy(item => item, comparer);
         }
-        
+
+        public static IOrderedEnumerable<T> OrderByDescending<T>([NotNull] this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return OrderByDescending(source, Comparer<T>.Default);
+        }
+
         public static IOrderedEnumerable<T> OrderByDescending<T>([NotNull] this IEnumerable<T> source, IComparer<T> comparer)
         {
             if (source is null)
@@ -1114,6 +1254,16 @@ namespace NetExtender.Utils.Types
             }
 
             return source.OrderByDescending(item => item, comparer);
+        }
+
+        public static IOrderedEnumerable<T> Sort<T>([NotNull] this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Sort(source, Comparer<T>.Default);
         }
 
         public static IOrderedEnumerable<T> Sort<T>([NotNull] this IEnumerable<T> source, IComparer<T> comparer)
@@ -1155,7 +1305,17 @@ namespace NetExtender.Utils.Types
 
             return source.OrderBy(selector, comparer);
         }
-        
+
+        public static IOrderedEnumerable<T> SortDescending<T>([NotNull] this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return SortDescending(source, Comparer<T>.Default);
+        }
+
         public static IOrderedEnumerable<T> SortDescending<T>([NotNull] this IEnumerable<T> source, IComparer<T> comparer)
         {
             if (source is null)
@@ -1894,21 +2054,49 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return Shuffle(source, new MersenneTwister());
+            return Shuffle(source, (IRandom) new MersenneTwister());
         }
 
-        public static IEnumerable<T> Shuffle<T>([NotNull] this IEnumerable<T> source, System.Random generator)
+        public static IEnumerable<T> Shuffle<T>([NotNull] this IEnumerable<T> source, [NotNull] System.Random random)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
             T[] buffer = source.ToArray();
 
             for (Int32 i = 0; i < buffer.Length; i++)
             {
-                Int32 j = generator.Next(i, buffer.Length);
+                Int32 j = random.Next(i, buffer.Length);
+                yield return buffer[j];
+
+                buffer[j] = buffer[i];
+            }
+        }
+        
+        public static IEnumerable<T> Shuffle<T>([NotNull] this IEnumerable<T> source, [NotNull] IRandom random)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            T[] buffer = source.ToArray();
+
+            for (Int32 i = 0; i < buffer.Length; i++)
+            {
+                Int32 j = random.Next(i, buffer.Length);
                 yield return buffer[j];
 
                 buffer[j] = buffer[i];

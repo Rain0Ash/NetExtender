@@ -101,7 +101,7 @@ namespace NetExtender.Utils.Application
         public static async void Restart(Int32 milli, Dispatcher dispatcher, Action<Int32> shutdown, CancellationToken token)
         {
             const Int32 close = 1000;
-            milli = milli.ToRange(close);
+            MathUtils.ToRange(ref milli, close);
             
             Process restart = ProcessUtils.StartProcess(Domain.Path, milli, token);
 
@@ -110,7 +110,7 @@ namespace NetExtender.Utils.Application
                 Int32 wait = milli - close;
                 if (wait > 0)
                 {
-                    await Task.Delay(milli - close, token).ConfigureAwait(false);
+                    await Task.Delay(wait, token).ConfigureAwait(false);
                 }
 
                 Shutdown(dispatcher, shutdown);

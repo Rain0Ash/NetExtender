@@ -3,6 +3,9 @@
 
 using System.Collections.Generic;
 using System;
+using JetBrains.Annotations;
+using NetExtender.Random.Interfaces;
+using NetExtender.Utils.Numerics;
 using NetExtender.Utils.Types;
 
  namespace NetExtender.Random
@@ -13,17 +16,17 @@ using NetExtender.Utils.Types;
     /// <typeparam name="T"></typeparam>
     public class RandomSelectorBuilder<T> : IRandomSelectorBuilder<T>
     {
-        private readonly System.Random _random;
-        private readonly List<T> _itemBuffer;
-        private readonly List<Double> _weightBuffer;
+        private readonly IRandom _random;
+        private readonly List<T> _items;
+        private readonly List<Double> _weights;
 
         public RandomSelectorBuilder(IDictionary<T, Double> items = null)
         {
-            _random = new System.Random();
-            _itemBuffer = new List<T>();
-            _weightBuffer = new List<Double>();
+            _random = RandomUtils.Create();
+            _items = new List<T>();
+            _weights = new List<Double>();
 
-            if (items.IsNotEmpty())
+            if (items is not null)
             {
                 Add(items);
             }
@@ -43,12 +46,17 @@ using NetExtender.Utils.Types;
                 return;
             }
 
-            _itemBuffer.Add(item);
-            _weightBuffer.Add(weight);
+            _items.Add(item);
+            _weights.Add(weight);
         }
 
-        public void Add(IDictionary<T, Double> items)
+        public void Add([NotNull] IDictionary<T, Double> items)
         {
+            if (items is null)
+            {
+                throw new ArgumentNullException(nameof(items));
+            }
+
             foreach ((T item, Double weight) in items)
             {
                 Add(item, weight);
@@ -62,11 +70,11 @@ using NetExtender.Utils.Types;
         /// <returns>Returns IRandomSelector, underlying objects are either StaticRandomSelectorLinear or StaticRandomSelectorBinary. Both are non-mutable.</returns>
         public IRandomSelector<T> Build(Int32 seed = -1)
         {
-            T[] items = _itemBuffer.ToArray();
-            Double[] cda = _weightBuffer.ToArray();
+            T[] items = _items.ToArray();
+            Double[] cda = _weights.ToArray();
 
-            _itemBuffer.Clear();
-            _weightBuffer.Clear();
+            _items.Clear();
+            _weights.Clear();
 
             RandomMath.BuildCumulativeDistribution(cda);
 
@@ -91,36 +99,35 @@ using NetExtender.Utils.Types;
         /// non-instance based, Double threaded only. For ease of use. 
         /// Build from array of items/weights.
         /// </summary>
-        /// <param name="itemsArray">Array of items</param>
-        /// <param name="weightsArray">Array of non-zero non-normalized weights. Have to be same length as itemsArray.</param>
+        /// <param name="items">Array of items</param>
+        /// <param name="weights">Array of non-zero non-normalized weights. Have to be same length as itemsArray.</param>
         /// <returns></returns>
-        public static IRandomSelector<T> Build(T[] itemsArray, Double[] weightsArray)
+        public static IRandomSelector<T> Build(T[] items, Double[] weights)
         {
             StaticBuilder.Clear();
 
-            for (Int32 i = 0; i < itemsArray.Length; i++)
+            for (Int32 i = 0; i < items.Length; i++)
             {
-                StaticBuilder.Add(itemsArray[i], weightsArray[i]);
+                StaticBuilder.Add(items[i], weights[i]);
             }
 
             return StaticBuilder.Build();
         }
 
-
         /// <summary>
         /// non-instance based, Double threaded only. For ease of use. 
         /// Build from array of items/weights.
         /// </summary>
-        /// <param name="itemsList">List of weights</param>
-        /// <param name="weightsList">List of non-zero non-normalized weights. Have to be same length as itemsList.</param>
+        /// <param name="items">List of weights</param>
+        /// <param name="weights">List of non-zero non-normalized weights. Have to be same length as itemsList.</param>
         /// <returns></returns>
-        public static IRandomSelector<T> Build(List<T> itemsList, List<Double> weightsList)
+        public static IRandomSelector<T> Build(List<T> items, List<Double> weights)
         {
             StaticBuilder.Clear();
 
-            for (Int32 i = 0; i < itemsList.Count; i++)
+            for (Int32 i = 0; i < items.Count; i++)
             {
-                StaticBuilder.Add(itemsList[i], weightsList[i]);
+                StaticBuilder.Add(items[i], weights[i]);
             }
 
             return StaticBuilder.Build();
@@ -128,8 +135,8 @@ using NetExtender.Utils.Types;
 
         private void Clear()
         {
-            _itemBuffer.Clear();
-            _weightBuffer.Clear();
+            _items.Clear();
+            _weights.Clear();
         }
     }
 }

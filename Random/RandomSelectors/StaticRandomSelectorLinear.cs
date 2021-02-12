@@ -2,8 +2,10 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using NetExtender.Random.Interfaces;
+using NetExtender.Utils.Numerics;
 
-namespace NetExtender.Random
+ namespace NetExtender.Random
 {
     /// <summary>
     /// Uses Linear Search for picking random items
@@ -12,7 +14,7 @@ namespace NetExtender.Random
     /// <typeparam name="T">Type of items you wish this selector returns</typeparam>
     public class StaticRandomSelectorLinear<T> : IRandomSelector<T>
     {
-        private readonly System.Random _random;
+        private readonly IRandom _random;
 
         // internal buffers
         private readonly T[] _items;
@@ -29,7 +31,7 @@ namespace NetExtender.Random
         {
             _items = items;
             _cda = cda;
-            _random = new System.Random(seed);
+            _random = RandomUtils.Create(seed);
         }
 
         /// <summary>
@@ -37,9 +39,9 @@ namespace NetExtender.Random
         /// Uses linear search for random selection.
         /// </summary>
         /// <returns>Returns item</returns>
-        public T SelectRandomItem(Double randomValue)
+        public T SelectRandomItem(Double value)
         {
-            return _items[_cda.SelectIndexBinarySearch(randomValue)];
+            return _items[_cda.SelectIndexBinarySearch(value)];
         }
 
         /// <summary>
@@ -49,9 +51,7 @@ namespace NetExtender.Random
         /// <returns>Returns item</returns>
         public T SelectRandomItem()
         {
-            Double randomValue = _random.NextDouble();
-
-            return _items[_cda.SelectIndexBinarySearch(randomValue)];
+            return _items[_cda.SelectIndexBinarySearch(_random.NextDouble())];
         }
     }
 }

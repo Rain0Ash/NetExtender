@@ -5,6 +5,8 @@ using System.Security.Cryptography;
 using System.Text;
 using NetExtender.Network.Networking.Http;
 using NetExtender.Network.Networking.WebSocket.Interfaces;
+using NetExtender.Random.Interfaces;
+using NetExtender.Utils.Numerics;
 
 namespace NetExtender.Network.Networking.WebSocket
 {
@@ -187,8 +189,8 @@ namespace NetExtender.Network.Networking.WebSocket
 
             // WebSocket successfully handshaked!
             WsHandshaked = true;
-            System.Random rnd = new System.Random();
-            rnd.NextBytes(WsSendMask);
+            IRandom random = RandomUtils.Create();
+            random.NextBytes(WsSendMask);
             _wsHandler.OnWsConnected(response);
 
             return true;

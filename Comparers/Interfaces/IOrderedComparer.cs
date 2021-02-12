@@ -7,13 +7,11 @@ using JetBrains.Annotations;
 
 namespace NetExtender.Comparers.Interfaces
 {
-    public interface IOrderedComparer<T> : IReadOnlyOrderedComparer<T>
+    // ReSharper disable once PossibleInterfaceMemberAmbiguity
+    public interface IOrderedComparer<T> : IReadOnlyOrderedComparer<T>, ICollection<T>
     {
-        public new IComparer<T> Comparer { get; init; }
-        public void Add(T item);
         public void AddRange([NotNull] IEnumerable<T> items);
         public void Insert(Int32 index, T item);
         public void InsertRange(Int32 index, [NotNull] IEnumerable<T> items);
-        public Boolean Remove(T item);
     }
 }

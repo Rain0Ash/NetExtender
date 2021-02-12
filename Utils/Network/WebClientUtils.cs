@@ -8,6 +8,7 @@ using System.IO;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using NetExtender.Times;
 using NetExtender.Utils.IO;
 using NetExtender.Utils.Types;
@@ -17,8 +18,23 @@ namespace NetExtender.Utils.Network
 {
     public static class WebClientUtils
     {
-        private static async Task<T> DownloadTaskAsync<T>(WebClient client, Func<WebClient, String, Task<T>> handler, String address, CancellationToken token)
+        private static async Task<T> DownloadTaskAsync<T>([NotNull] WebClient client, [NotNull] Func<WebClient, String, Task<T>> handler, [NotNull] String address, CancellationToken token)
         {
+            if (client is null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            if (address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
             token.ThrowIfCancellationRequested();
 
             await using (token.Register(client.CancelAsync))
@@ -27,9 +43,24 @@ namespace NetExtender.Utils.Network
             }
         }
 
-        private static Task<T> DownloadTaskAsync<T>(WebClient client, Func<WebClient, String, Task<T>> handler, String address,
+        private static Task<T> DownloadTaskAsync<T>([NotNull] WebClient client, [NotNull] Func<WebClient, String, Task<T>> handler, [NotNull] String address,
             Byte tries, TimeSpan timeout, Action<Byte> callback, CancellationToken token)
         {
+            if (client is null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            if (address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
             Task<T> DownloadTask(CancellationToken cancel)
             {
                 return DownloadTaskAsync(client, handler, address, cancel);
@@ -38,8 +69,13 @@ namespace NetExtender.Utils.Network
             return TaskUtils.TimeoutRetryTaskAsync(DownloadTask, tries, timeout, callback, token);
         }
 
-        private static Task<String> DownloadStringHandlerAsync(WebClient client, String address)
+        private static Task<String> DownloadStringHandlerAsync([NotNull] WebClient client, String address)
         {
+            if (client is null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
             return client.DownloadStringTaskAsync(address);
         }
 
@@ -123,11 +159,26 @@ namespace NetExtender.Utils.Network
             return DownloadTaskAsync(client, DownloadDataHandlerAsync, address, tries, timeout, callback, token);
         }
 
-        private static async Task<FileInfo> DownloadFileHandlerAsync(this WebClient client, String address, String path, Boolean overwrite)
+        private static async Task<FileInfo> DownloadFileHandlerAsync([NotNull] this WebClient client, [NotNull] String address, [NotNull] String path, Boolean overwrite)
         {
+            if (client is null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
+            if (address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
             if (!PathUtils.IsValidFilePath(path))
             {
-                throw new ArgumentException(nameof(path));
+                throw new ArgumentException(@"Is not valid file path", nameof(path));
             }
 
             if (!overwrite && PathUtils.IsExistAsFile(path))
@@ -156,8 +207,23 @@ namespace NetExtender.Utils.Network
             return DownloadFileTaskAsync(client, address, path, false, token);
         }
 
-        public static Task<FileInfo> DownloadFileTaskAsync(this WebClient client, String address, String path, Boolean overwrite, CancellationToken token)
+        public static Task<FileInfo> DownloadFileTaskAsync([NotNull] this WebClient client, [NotNull] String address, [NotNull] String path, Boolean overwrite, CancellationToken token)
         {
+            if (client is null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
+            if (address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
             Task<FileInfo> DownloadWebFileTaskAsync(WebClient web, String url)
             {
                 return DownloadFileHandlerAsync(web, url, path, overwrite);
@@ -217,8 +283,23 @@ namespace NetExtender.Utils.Network
             return DownloadFileTaskAsync(client, address, path, false, tries, timeout, callback, token);
         }
 
-        public static Task<FileInfo> DownloadFileTaskAsync(this WebClient client, String address, String path, Boolean overwrite, Byte tries, TimeSpan timeout, Action<Byte> callback, CancellationToken token)
+        public static Task<FileInfo> DownloadFileTaskAsync([NotNull] this WebClient client, [NotNull] String address, [NotNull] String path, Boolean overwrite, Byte tries, TimeSpan timeout, Action<Byte> callback, CancellationToken token)
         {
+            if (client is null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
+            if (address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
             Task<FileInfo> DownloadWebFileTaskAsync(WebClient web, String url)
             {
                 return DownloadFileHandlerAsync(web, url, path, overwrite);
@@ -232,27 +313,27 @@ namespace NetExtender.Utils.Network
             return ReadAsync(client, address, handler, CancellationToken.None);
         }
 
-        public static Task<Boolean> ReadAsync(this WebClient client, String address, Func<IList<Byte>, CancellationToken, Task<Boolean>> handler)
+        public static Task<Boolean> ReadAsync(this WebClient client, String address, Func<Byte[], CancellationToken, Task<Boolean>> handler)
         {
             return ReadAsync(client, address, handler, CancellationToken.None);
         }
 
-        public static Task<Boolean> ReadAsync(this WebClient client, String address, Func<IList<Byte>, CancellationToken, Task<Boolean>> handler, CancellationToken token)
+        public static Task<Boolean> ReadAsync(this WebClient client, String address, Func<Byte[], CancellationToken, Task<Boolean>> handler, CancellationToken token)
         {
             return ReadAsync(client, address, handler, new Byte[BufferUtils.DefaultBuffer], token);
         }
 
-        public static Task<Boolean> ReadAsync(this WebClient client, String address, Func<IList<Byte>, CancellationToken, Task<Boolean>> handler, Int32 bufferSize)
+        public static Task<Boolean> ReadAsync(this WebClient client, String address, Func<Byte[], CancellationToken, Task<Boolean>> handler, Int32 bufferSize)
         {
             return ReadAsync(client, address, handler, bufferSize, CancellationToken.None);
         }
 
-        public static Task<Boolean> ReadAsync(this WebClient client, String address, Func<IList<Byte>, CancellationToken, Task<Boolean>> handler, Byte[] buffer)
+        public static Task<Boolean> ReadAsync(this WebClient client, String address, Func<Byte[], CancellationToken, Task<Boolean>> handler, Byte[] buffer)
         {
             return ReadAsync(client, address, handler, buffer, CancellationToken.None);
         }
 
-        public static Task<Boolean> ReadAsync(this WebClient client, String address, Func<IList<Byte>, CancellationToken, Task<Boolean>> handler, Int32 bufferSize, CancellationToken token)
+        public static Task<Boolean> ReadAsync(this WebClient client, String address, Func<Byte[], CancellationToken, Task<Boolean>> handler, Int32 bufferSize, CancellationToken token)
         {
             return ReadAsync(client, address, handler, new Byte[bufferSize], token);
         }
@@ -262,8 +343,18 @@ namespace NetExtender.Utils.Network
             return client.OpenReadTaskAsync(address);
         }
 
-        public static async Task<Boolean> ReadAsync(this WebClient client, String address, Func<Stream, CancellationToken, Task> handler, CancellationToken token)
+        public static async Task<Boolean> ReadAsync([NotNull] this WebClient client, [NotNull] String address, [NotNull] Func<Stream, CancellationToken, Task> handler, CancellationToken token)
         {
+            if (client is null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
+            if (address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
             if (handler is null)
             {
                 throw new ArgumentNullException(nameof(handler));
@@ -281,14 +372,24 @@ namespace NetExtender.Utils.Network
             }
         }
 
-        public static Task<Boolean> ReadAsync(this WebClient client, String address, Func<IList<Byte>, CancellationToken, Task<Boolean>> handler, Byte[] buffer, CancellationToken token)
+        public static Task<Boolean> ReadAsync(this WebClient client, String address, Func<Byte[], CancellationToken, Task<Boolean>> handler, Byte[] buffer, CancellationToken token)
         {
             return ReadAsync(client, address, handler, buffer, null, token);
         }
 
-        public static async Task<Boolean> ReadAsync(this WebClient client, String address, Func<IList<Byte>, CancellationToken, Task<Boolean>> handler, Byte[] buffer,
+        public static async Task<Boolean> ReadAsync([NotNull] this WebClient client, [NotNull] String address, Func<Byte[], CancellationToken, Task<Boolean>> handler, Byte[] buffer,
             IProgress<WebDownloadProgress> progress, CancellationToken token)
         {
+            if (client is null)
+            {
+                throw new ArgumentNullException(nameof(client));
+            }
+
+            if (address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
             if (handler is null)
             {
                 throw new ArgumentNullException(nameof(handler));
@@ -297,17 +398,19 @@ namespace NetExtender.Utils.Network
             try
             {
                 await using Stream stream = await GetStreamAsync(client, address).ConfigureAwait(false);
-                Int32 read;
-                Int32 bytes = Int32.Parse(client.ResponseHeaders[HttpResponseHeader.ContentLength]);
-                Int32 received = 0;
 
-                while ((read = await stream.ReadAsync(buffer, 0, buffer.Length, token).ConfigureAwait(false)) > 0)
+                if (!Int32.TryParse(client.ResponseHeaders?[HttpResponseHeader.ContentLength], out Int32 bytes))
                 {
-                    IList<Byte> array = (read == buffer.Length ? buffer : buffer.SubArray(0)).ToImmutableArray();
+                    return false;
+                }
+                
+                Int32 received = 0;
+                Int32 read;
+                while ((read = await stream.ReadAsync(buffer.AsMemory(0, buffer.Length), token).ConfigureAwait(false)) > 0)
+                {
+                    Boolean successfull = await handler(buffer.SubArray(read), token).ConfigureAwait(false);
 
-                    Boolean successfull = await handler(array, token).ConfigureAwait(false);
-
-                    if (!successfull)
+                    if (!successfull || token.IsCancellationRequested)
                     {
                         return false;
                     }

@@ -2,10 +2,13 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace NetExtender.Utils.Types
 {
@@ -94,6 +97,41 @@ namespace NetExtender.Utils.Types
         public static CancellationTokenSource CreateLinkedSource(this CancellationToken first, TimeSpan? timeout, params CancellationToken[] tokens)
         {
             return timeout.HasValue ? CreateLinkedSource(first, timeout.Value, tokens) : CreateLinkedSource(first, tokens);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static CancellationTokenSource CreateLinkedSource([NotNull] this IEnumerable<CancellationToken> tokens)
+        {
+            if (tokens is null)
+            {
+                throw new ArgumentNullException(nameof(tokens));
+            }
+
+            return CancellationTokenSource.CreateLinkedTokenSource(tokens.ToArray());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static CancellationTokenSource CreateLinkedSource([NotNull] this IEnumerable<CancellationToken> tokens, TimeSpan timeout)
+        {
+            if (tokens is null)
+            {
+                throw new ArgumentNullException(nameof(tokens));
+            }
+
+            CancellationTokenSource source = CreateLinkedSource(tokens);
+            source.CancelAfter(timeout);
+            return source;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static CancellationTokenSource CreateLinkedSource([NotNull] this IEnumerable<CancellationToken> tokens, TimeSpan? timeout)
+        {
+            if (tokens is null)
+            {
+                throw new ArgumentNullException(nameof(tokens));
+            }
+
+            return timeout.HasValue ? CreateLinkedSource(tokens, timeout.Value) : CreateLinkedSource(tokens);
         }
         
         /// <summary>

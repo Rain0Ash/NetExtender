@@ -318,8 +318,7 @@ namespace NetExtender.Types.Bits
 
             Length = length;
         }
-
-
+        
         /// <summary>
         /// Clear out the BitString so it is empty
         /// </summary>
@@ -334,7 +333,10 @@ namespace NetExtender.Types.Bits
         {
             for (Int32 i = 0; i < _buffer.Length; i++)
             {
-                _buffer[i] = (UInt32) RandomUtils.Next();
+                unchecked
+                {
+                    _buffer[i] = (UInt32) RandomUtils.Next();
+                }
             }
         }
 

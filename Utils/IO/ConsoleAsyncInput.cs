@@ -29,22 +29,22 @@ namespace NetExtender.Utils.IO
 
                     inputType = value;
 
-                    StartAsyncInput(inputType).Start();
+                    StartAsyncInputAsync(inputType).Start();
                 }
             }
 
-            private static async Task StartAsyncInput(ConsoleInputType type)
+            private static async Task StartAsyncInputAsync(ConsoleInputType type)
             {
-                await StopAsyncInput();
+                await StopAsyncInputAsync().ConfigureAwait(false);
                 cancellation = new CancellationTokenSource();
 
                 Func<Task> input = type switch
                 {
-                    ConsoleInputType.None => StopAsyncInput,
-                    ConsoleInputType.Line => LineInputHandler,
-                    ConsoleInputType.KeyInfo => KeyInfoInputHandler,
-                    ConsoleInputType.KeyInfoIntercept => KeyInfoInterceptInputHandler,
-                    ConsoleInputType.KeyCode => KeyCodeInputHandler,
+                    ConsoleInputType.None => StopAsyncInputAsync,
+                    ConsoleInputType.Line => LineInputHandlerAsync,
+                    ConsoleInputType.KeyInfo => KeyInfoInputHandlerAsync,
+                    ConsoleInputType.KeyInfoIntercept => KeyInfoInterceptInputHandlerAsync,
+                    ConsoleInputType.KeyCode => KeyCodeInputHandlerAsync,
                     _ => throw new NotSupportedException()
                 };
 
@@ -54,11 +54,11 @@ namespace NetExtender.Utils.IO
                 }
                 catch (OperationCanceledException)
                 {
-                    await StopAsyncInput();
+                    await StopAsyncInputAsync().ConfigureAwait(false);
                 }
             }
             
-            private static Task StopAsyncInput()
+            private static Task StopAsyncInputAsync()
             {
                 StopRead();
                 cancellation?.Cancel();
@@ -82,24 +82,24 @@ namespace NetExtender.Utils.IO
                 }
             }
             
-            private static async Task LineInputHandler()
+            private static Task LineInputHandlerAsync()
             {
-                await InputHandlerAsync(ReadLineAsync, OnConsoleLineInput).ConfigureAwait(false);
+                return InputHandlerAsync(ReadLineAsync, OnConsoleLineInput);
             }
 
-            private static async Task KeyInfoInputHandler()
+            private static Task KeyInfoInputHandlerAsync()
             {
-                await InputHandlerAsync(ReadKeyAsync, OnConsoleKeyInfoInput).ConfigureAwait(false);
+                return InputHandlerAsync(ReadKeyAsync, OnConsoleKeyInfoInput);
             }
 
-            private static async Task KeyInfoInterceptInputHandler()
+            private static Task KeyInfoInterceptInputHandlerAsync()
             {
-                await InputHandlerAsync(ReadKeyInterceptAsync, OnConsoleKeyInfoInput).ConfigureAwait(false);
+                return InputHandlerAsync(ReadKeyInterceptAsync, OnConsoleKeyInfoInput);
             }
 
-            private static async Task KeyCodeInputHandler()
+            private static Task KeyCodeInputHandlerAsync()
             {
-                await InputHandlerAsync(ReadAsync, OnConsoleKeyCodeInput).ConfigureAwait(false);
+                return InputHandlerAsync(ReadAsync, OnConsoleKeyCodeInput);
             }
         }
     }

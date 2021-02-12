@@ -3,17 +3,20 @@
 
 using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 
 namespace NetExtender.Utils.Types
 {
     public static class CharUtils
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsControl(Char character)
         {
             return character != '	' && Char.IsControl(character);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Repeat(this Char character, Int32 count)
         {
             return count < 1 ? String.Empty : new String(character, count);
@@ -21,6 +24,7 @@ namespace NetExtender.Utils.Types
         
         /// <inheritdoc cref="Char.ToLower(Char)"/>
         [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Char ToLower(this Char character)
         {
             return Char.ToLower(character);
@@ -28,6 +32,7 @@ namespace NetExtender.Utils.Types
 
         /// <inheritdoc cref="Char.ToLower(Char,CultureInfo)"/>
         [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Char ToLower(this Char character, [CanBeNull] CultureInfo info)
         {
             return info is null ? ToLower(character) : Char.ToLower(character, info);
@@ -35,6 +40,7 @@ namespace NetExtender.Utils.Types
 
         /// <inheritdoc cref="Char.ToLowerInvariant"/>
         [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Char ToLowerInvariant(this Char character)
         {
             return Char.ToLowerInvariant(character);
@@ -42,6 +48,7 @@ namespace NetExtender.Utils.Types
 
         /// <inheritdoc cref="Char.ToUpper(Char)"/>
         [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Char ToUpper(this Char character)
         {
             return Char.ToUpper(character);
@@ -49,6 +56,7 @@ namespace NetExtender.Utils.Types
 
         /// <inheritdoc cref="Char.ToUpper(Char,CultureInfo)"/>
         [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Char ToUpper(this Char character, [CanBeNull] CultureInfo info)
         {
             return info is null ? ToUpper(character) : Char.ToUpper(character, info);
@@ -56,6 +64,7 @@ namespace NetExtender.Utils.Types
 
         /// <inheritdoc cref="Char.ToUpperInvariant"/>
         [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Char ToUpperInvariant(this Char character)
         {
             return Char.ToUpperInvariant(character);
@@ -63,12 +72,14 @@ namespace NetExtender.Utils.Types
         
         /// <inheritdoc cref="Char.GetUnicodeCategory(Char)"/>
         [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UnicodeCategory GetUnicodeCategory(this Char character)
         {
             return Char.GetUnicodeCategory(character);
         }
 
         [Pure]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Char ToChar(this Boolean value)
         {
             return value ? '1' : '0';

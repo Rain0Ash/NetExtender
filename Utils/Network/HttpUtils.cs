@@ -8,9 +8,9 @@ namespace NetExtender.Utils.Network
 {
     public static class HttpUtils
     {
-        public static Boolean IsClientErrorCode(this HttpStatusCode statusCode)
+        public static Boolean IsClientErrorCode(this HttpStatusCode code)
         {
-            return statusCode >= HttpStatusCode.BadRequest && statusCode < HttpStatusCode.InternalServerError;
+            return code >= HttpStatusCode.BadRequest && code < HttpStatusCode.InternalServerError;
         }
     }
 }

@@ -84,6 +84,7 @@ namespace NetExtender.Utils.Numerics
 			Double value = NextDouble(random);
 			return (SByte) (MathUtils.RoundBanking(value * max - value * min) + min);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Byte NextByte()
 		{
@@ -157,6 +158,7 @@ namespace NetExtender.Utils.Numerics
 			Double value = NextDouble(random);
 			return (Byte) (MathUtils.RoundBanking(value * max - value * min) + min);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int16 NextInt16()
 		{
@@ -230,6 +232,7 @@ namespace NetExtender.Utils.Numerics
 			Double value = NextDouble(random);
 			return (Int16) (MathUtils.RoundBanking(value * max - value * min) + min);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static UInt16 NextUInt16()
 		{
@@ -303,6 +306,7 @@ namespace NetExtender.Utils.Numerics
 			Double value = NextDouble(random);
 			return (UInt16) (MathUtils.RoundBanking(value * max - value * min) + min);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int32 NextInt32()
 		{
@@ -376,6 +380,7 @@ namespace NetExtender.Utils.Numerics
 			Double value = NextDouble(random);
 			return (Int32) (MathUtils.RoundBanking(value * max - value * min) + min);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static UInt32 NextUInt32()
 		{
@@ -449,6 +454,7 @@ namespace NetExtender.Utils.Numerics
 			Double value = NextDouble(random);
 			return (UInt32) (MathUtils.RoundBanking(value * max - value * min) + min);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int64 NextInt64()
 		{
@@ -522,6 +528,7 @@ namespace NetExtender.Utils.Numerics
 			Double value = NextDouble(random);
 			return (Int64) (MathUtils.RoundBanking(value * max - value * min) + min);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static UInt64 NextUInt64()
 		{
@@ -597,6 +604,578 @@ namespace NetExtender.Utils.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte NextNonNegativeSByte()
+		{
+			return NextNonNegativeSByte(Generator);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte NextNonNegativeSByte(this System.Random random)
+		{
+			return NextNonNegativeSByte(random, SByte.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte NextNonNegativeSByte(this IRandom random)
+		{
+			return NextNonNegativeSByte(random, SByte.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte NextNonNegativeSByte(SByte max)
+		{
+			return NextNonNegativeSByte(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte NextNonNegativeSByte(this System.Random random, SByte max)
+		{
+			return NextNonNegativeSByte(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte NextNonNegativeSByte(this IRandom random, SByte max)
+		{
+			return NextNonNegativeSByte(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte NextNonNegativeSByte(SByte min, SByte max)
+		{
+			return NextSByte(Generator, min, max);
+		}
+
+		public static SByte NextNonNegativeSByte(this System.Random random, SByte min, SByte max)
+		{
+			return NextSByte(random, min, max);
+		}
+
+		public static SByte NextNonNegativeSByte(this IRandom random, SByte min, SByte max)
+		{
+			return NextSByte(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte NextNonNegativeByte()
+		{
+			return NextNonNegativeByte(Generator);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte NextNonNegativeByte(this System.Random random)
+		{
+			return NextNonNegativeByte(random, Byte.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte NextNonNegativeByte(this IRandom random)
+		{
+			return NextNonNegativeByte(random, Byte.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte NextNonNegativeByte(Byte max)
+		{
+			return NextNonNegativeByte(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte NextNonNegativeByte(this System.Random random, Byte max)
+		{
+			return NextNonNegativeByte(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte NextNonNegativeByte(this IRandom random, Byte max)
+		{
+			return NextNonNegativeByte(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte NextNonNegativeByte(Byte min, Byte max)
+		{
+			return NextByte(Generator, min, max);
+		}
+
+		public static Byte NextNonNegativeByte(this System.Random random, Byte min, Byte max)
+		{
+			return NextByte(random, min, max);
+		}
+
+		public static Byte NextNonNegativeByte(this IRandom random, Byte min, Byte max)
+		{
+			return NextByte(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 NextNonNegativeInt16()
+		{
+			return NextNonNegativeInt16(Generator);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 NextNonNegativeInt16(this System.Random random)
+		{
+			return NextNonNegativeInt16(random, Int16.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 NextNonNegativeInt16(this IRandom random)
+		{
+			return NextNonNegativeInt16(random, Int16.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 NextNonNegativeInt16(Int16 max)
+		{
+			return NextNonNegativeInt16(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 NextNonNegativeInt16(this System.Random random, Int16 max)
+		{
+			return NextNonNegativeInt16(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 NextNonNegativeInt16(this IRandom random, Int16 max)
+		{
+			return NextNonNegativeInt16(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 NextNonNegativeInt16(Int16 min, Int16 max)
+		{
+			return NextInt16(Generator, min, max);
+		}
+
+		public static Int16 NextNonNegativeInt16(this System.Random random, Int16 min, Int16 max)
+		{
+			return NextInt16(random, min, max);
+		}
+
+		public static Int16 NextNonNegativeInt16(this IRandom random, Int16 min, Int16 max)
+		{
+			return NextInt16(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 NextNonNegativeUInt16()
+		{
+			return NextNonNegativeUInt16(Generator);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 NextNonNegativeUInt16(this System.Random random)
+		{
+			return NextNonNegativeUInt16(random, UInt16.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 NextNonNegativeUInt16(this IRandom random)
+		{
+			return NextNonNegativeUInt16(random, UInt16.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 NextNonNegativeUInt16(UInt16 max)
+		{
+			return NextNonNegativeUInt16(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 NextNonNegativeUInt16(this System.Random random, UInt16 max)
+		{
+			return NextNonNegativeUInt16(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 NextNonNegativeUInt16(this IRandom random, UInt16 max)
+		{
+			return NextNonNegativeUInt16(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 NextNonNegativeUInt16(UInt16 min, UInt16 max)
+		{
+			return NextUInt16(Generator, min, max);
+		}
+
+		public static UInt16 NextNonNegativeUInt16(this System.Random random, UInt16 min, UInt16 max)
+		{
+			return NextUInt16(random, min, max);
+		}
+
+		public static UInt16 NextNonNegativeUInt16(this IRandom random, UInt16 min, UInt16 max)
+		{
+			return NextUInt16(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 NextNonNegativeInt32()
+		{
+			return NextNonNegativeInt32(Generator);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 NextNonNegativeInt32(this System.Random random)
+		{
+			return NextNonNegativeInt32(random, Int32.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 NextNonNegativeInt32(this IRandom random)
+		{
+			return NextNonNegativeInt32(random, Int32.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 NextNonNegativeInt32(Int32 max)
+		{
+			return NextNonNegativeInt32(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 NextNonNegativeInt32(this System.Random random, Int32 max)
+		{
+			return NextNonNegativeInt32(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 NextNonNegativeInt32(this IRandom random, Int32 max)
+		{
+			return NextNonNegativeInt32(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 NextNonNegativeInt32(Int32 min, Int32 max)
+		{
+			return NextInt32(Generator, min, max);
+		}
+
+		public static Int32 NextNonNegativeInt32(this System.Random random, Int32 min, Int32 max)
+		{
+			return NextInt32(random, min, max);
+		}
+
+		public static Int32 NextNonNegativeInt32(this IRandom random, Int32 min, Int32 max)
+		{
+			return NextInt32(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 NextNonNegativeUInt32()
+		{
+			return NextNonNegativeUInt32(Generator);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 NextNonNegativeUInt32(this System.Random random)
+		{
+			return NextNonNegativeUInt32(random, UInt32.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 NextNonNegativeUInt32(this IRandom random)
+		{
+			return NextNonNegativeUInt32(random, UInt32.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 NextNonNegativeUInt32(UInt32 max)
+		{
+			return NextNonNegativeUInt32(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 NextNonNegativeUInt32(this System.Random random, UInt32 max)
+		{
+			return NextNonNegativeUInt32(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 NextNonNegativeUInt32(this IRandom random, UInt32 max)
+		{
+			return NextNonNegativeUInt32(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 NextNonNegativeUInt32(UInt32 min, UInt32 max)
+		{
+			return NextUInt32(Generator, min, max);
+		}
+
+		public static UInt32 NextNonNegativeUInt32(this System.Random random, UInt32 min, UInt32 max)
+		{
+			return NextUInt32(random, min, max);
+		}
+
+		public static UInt32 NextNonNegativeUInt32(this IRandom random, UInt32 min, UInt32 max)
+		{
+			return NextUInt32(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 NextNonNegativeInt64()
+		{
+			return NextNonNegativeInt64(Generator);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 NextNonNegativeInt64(this System.Random random)
+		{
+			return NextNonNegativeInt64(random, Int64.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 NextNonNegativeInt64(this IRandom random)
+		{
+			return NextNonNegativeInt64(random, Int64.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 NextNonNegativeInt64(Int64 max)
+		{
+			return NextNonNegativeInt64(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 NextNonNegativeInt64(this System.Random random, Int64 max)
+		{
+			return NextNonNegativeInt64(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 NextNonNegativeInt64(this IRandom random, Int64 max)
+		{
+			return NextNonNegativeInt64(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 NextNonNegativeInt64(Int64 min, Int64 max)
+		{
+			return NextInt64(Generator, min, max);
+		}
+
+		public static Int64 NextNonNegativeInt64(this System.Random random, Int64 min, Int64 max)
+		{
+			return NextInt64(random, min, max);
+		}
+
+		public static Int64 NextNonNegativeInt64(this IRandom random, Int64 min, Int64 max)
+		{
+			return NextInt64(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 NextNonNegativeUInt64()
+		{
+			return NextNonNegativeUInt64(Generator);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 NextNonNegativeUInt64(this System.Random random)
+		{
+			return NextNonNegativeUInt64(random, UInt64.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 NextNonNegativeUInt64(this IRandom random)
+		{
+			return NextNonNegativeUInt64(random, UInt64.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 NextNonNegativeUInt64(UInt64 max)
+		{
+			return NextNonNegativeUInt64(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 NextNonNegativeUInt64(this System.Random random, UInt64 max)
+		{
+			return NextNonNegativeUInt64(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 NextNonNegativeUInt64(this IRandom random, UInt64 max)
+		{
+			return NextNonNegativeUInt64(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 NextNonNegativeUInt64(UInt64 min, UInt64 max)
+		{
+			return NextUInt64(Generator, min, max);
+		}
+
+		public static UInt64 NextNonNegativeUInt64(this System.Random random, UInt64 min, UInt64 max)
+		{
+			return NextUInt64(random, min, max);
+		}
+
+		public static UInt64 NextNonNegativeUInt64(this IRandom random, UInt64 min, UInt64 max)
+		{
+			return NextUInt64(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single NextNonNegativeSingle()
+		{
+			return NextNonNegativeSingle(Generator);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single NextNonNegativeSingle(this System.Random random)
+		{
+			return NextNonNegativeSingle(random, Single.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single NextNonNegativeSingle(this IRandom random)
+		{
+			return NextNonNegativeSingle(random, Single.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single NextNonNegativeSingle(Single max)
+		{
+			return NextNonNegativeSingle(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single NextNonNegativeSingle(this System.Random random, Single max)
+		{
+			return NextNonNegativeSingle(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single NextNonNegativeSingle(this IRandom random, Single max)
+		{
+			return NextNonNegativeSingle(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single NextNonNegativeSingle(Single min, Single max)
+		{
+			return NextSingle(Generator, min, max);
+		}
+
+		public static Single NextNonNegativeSingle(this System.Random random, Single min, Single max)
+		{
+			return NextSingle(random, min, max);
+		}
+
+		public static Single NextNonNegativeSingle(this IRandom random, Single min, Single max)
+		{
+			return NextSingle(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double NextNonNegativeDouble()
+		{
+			return NextNonNegativeDouble(Generator);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double NextNonNegativeDouble(this System.Random random)
+		{
+			return NextNonNegativeDouble(random, Double.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double NextNonNegativeDouble(this IRandom random)
+		{
+			return NextNonNegativeDouble(random, Double.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double NextNonNegativeDouble(Double max)
+		{
+			return NextNonNegativeDouble(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double NextNonNegativeDouble(this System.Random random, Double max)
+		{
+			return NextNonNegativeDouble(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double NextNonNegativeDouble(this IRandom random, Double max)
+		{
+			return NextNonNegativeDouble(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double NextNonNegativeDouble(Double min, Double max)
+		{
+			return NextDouble(Generator, min, max);
+		}
+
+		public static Double NextNonNegativeDouble(this System.Random random, Double min, Double max)
+		{
+			return NextDouble(random, min, max);
+		}
+
+		public static Double NextNonNegativeDouble(this IRandom random, Double min, Double max)
+		{
+			return NextDouble(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal NextNonNegativeDecimal()
+		{
+			return NextNonNegativeDecimal(Generator);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal NextNonNegativeDecimal(this System.Random random)
+		{
+			return NextNonNegativeDecimal(random, Decimal.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal NextNonNegativeDecimal(this IRandom random)
+		{
+			return NextNonNegativeDecimal(random, Decimal.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal NextNonNegativeDecimal(Decimal max)
+		{
+			return NextNonNegativeDecimal(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal NextNonNegativeDecimal(this System.Random random, Decimal max)
+		{
+			return NextNonNegativeDecimal(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal NextNonNegativeDecimal(this IRandom random, Decimal max)
+		{
+			return NextNonNegativeDecimal(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal NextNonNegativeDecimal(Decimal min, Decimal max)
+		{
+			return NextDecimal(Generator, min, max);
+		}
+
+		public static Decimal NextNonNegativeDecimal(this System.Random random, Decimal min, Decimal max)
+		{
+			return NextDecimal(random, min, max);
+		}
+
+		public static Decimal NextNonNegativeDecimal(this IRandom random, Decimal min, Decimal max)
+		{
+			return NextDecimal(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static SByte NextNonZeroSByte()
 		{
 			return NextNonZeroSByte(Generator);
@@ -665,6 +1244,7 @@ namespace NetExtender.Utils.Numerics
 
 			return value;
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Byte NextNonZeroByte()
 		{
@@ -734,6 +1314,7 @@ namespace NetExtender.Utils.Numerics
 
 			return value;
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int16 NextNonZeroInt16()
 		{
@@ -803,6 +1384,7 @@ namespace NetExtender.Utils.Numerics
 
 			return value;
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static UInt16 NextNonZeroUInt16()
 		{
@@ -872,6 +1454,7 @@ namespace NetExtender.Utils.Numerics
 
 			return value;
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int32 NextNonZeroInt32()
 		{
@@ -941,6 +1524,7 @@ namespace NetExtender.Utils.Numerics
 
 			return value;
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static UInt32 NextNonZeroUInt32()
 		{
@@ -1010,6 +1594,7 @@ namespace NetExtender.Utils.Numerics
 
 			return value;
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int64 NextNonZeroInt64()
 		{
@@ -1079,6 +1664,7 @@ namespace NetExtender.Utils.Numerics
 
 			return value;
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static UInt64 NextNonZeroUInt64()
 		{
@@ -1148,6 +1734,7 @@ namespace NetExtender.Utils.Numerics
 
 			return value;
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Single NextNonZeroSingle()
 		{
@@ -1217,6 +1804,7 @@ namespace NetExtender.Utils.Numerics
 
 			return value;
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double NextNonZeroDouble()
 		{
@@ -1286,6 +1874,7 @@ namespace NetExtender.Utils.Numerics
 
 			return value;
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Decimal NextNonZeroDecimal()
 		{
@@ -1415,6 +2004,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextSByte(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void Next(Span<Byte> span)
 		{
@@ -1474,6 +2064,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextByte(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void Next(Span<Int16> span)
 		{
@@ -1533,6 +2124,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextInt16(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void Next(Span<UInt16> span)
 		{
@@ -1592,6 +2184,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextUInt16(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void Next(Span<Int32> span)
 		{
@@ -1651,6 +2244,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextInt32(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void Next(Span<UInt32> span)
 		{
@@ -1710,6 +2304,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextUInt32(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void Next(Span<Int64> span)
 		{
@@ -1769,6 +2364,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextInt64(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void Next(Span<UInt64> span)
 		{
@@ -1828,6 +2424,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextUInt64(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void Next(Span<Single> span)
 		{
@@ -1887,6 +2484,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextSingle(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void Next(Span<Double> span)
 		{
@@ -1946,6 +2544,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextDouble(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void Next(Span<Decimal> span)
 		{
@@ -2007,6 +2606,600 @@ namespace NetExtender.Utils.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<SByte> span)
+		{
+			NextNonNegative(Generator, span);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<SByte> span)
+		{
+			NextNonNegative(random, span, SByte.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<SByte> span)
+		{
+			NextNonNegative(random, span, SByte.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<SByte> span, SByte max)
+		{
+			NextNonNegative(Generator, span, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<SByte> span, SByte max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<SByte> span, SByte max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<SByte> span, SByte min, SByte max)
+		{
+			Next(Generator, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<SByte> span, SByte min, SByte max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<SByte> span, SByte min, SByte max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Byte> span)
+		{
+			NextNonNegative(Generator, span);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Byte> span)
+		{
+			NextNonNegative(random, span, Byte.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Byte> span)
+		{
+			NextNonNegative(random, span, Byte.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Byte> span, Byte max)
+		{
+			NextNonNegative(Generator, span, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Byte> span, Byte max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Byte> span, Byte max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Byte> span, Byte min, Byte max)
+		{
+			Next(Generator, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Byte> span, Byte min, Byte max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Byte> span, Byte min, Byte max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Int16> span)
+		{
+			NextNonNegative(Generator, span);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Int16> span)
+		{
+			NextNonNegative(random, span, Int16.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Int16> span)
+		{
+			NextNonNegative(random, span, Int16.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Int16> span, Int16 max)
+		{
+			NextNonNegative(Generator, span, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Int16> span, Int16 max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Int16> span, Int16 max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Int16> span, Int16 min, Int16 max)
+		{
+			Next(Generator, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Int16> span, Int16 min, Int16 max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Int16> span, Int16 min, Int16 max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<UInt16> span)
+		{
+			NextNonNegative(Generator, span);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<UInt16> span)
+		{
+			NextNonNegative(random, span, UInt16.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<UInt16> span)
+		{
+			NextNonNegative(random, span, UInt16.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<UInt16> span, UInt16 max)
+		{
+			NextNonNegative(Generator, span, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<UInt16> span, UInt16 max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<UInt16> span, UInt16 max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<UInt16> span, UInt16 min, UInt16 max)
+		{
+			Next(Generator, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<UInt16> span, UInt16 min, UInt16 max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<UInt16> span, UInt16 min, UInt16 max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Int32> span)
+		{
+			NextNonNegative(Generator, span);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Int32> span)
+		{
+			NextNonNegative(random, span, Int32.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Int32> span)
+		{
+			NextNonNegative(random, span, Int32.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Int32> span, Int32 max)
+		{
+			NextNonNegative(Generator, span, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Int32> span, Int32 max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Int32> span, Int32 max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Int32> span, Int32 min, Int32 max)
+		{
+			Next(Generator, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Int32> span, Int32 min, Int32 max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Int32> span, Int32 min, Int32 max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<UInt32> span)
+		{
+			NextNonNegative(Generator, span);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<UInt32> span)
+		{
+			NextNonNegative(random, span, UInt32.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<UInt32> span)
+		{
+			NextNonNegative(random, span, UInt32.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<UInt32> span, UInt32 max)
+		{
+			NextNonNegative(Generator, span, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<UInt32> span, UInt32 max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<UInt32> span, UInt32 max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<UInt32> span, UInt32 min, UInt32 max)
+		{
+			Next(Generator, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<UInt32> span, UInt32 min, UInt32 max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<UInt32> span, UInt32 min, UInt32 max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Int64> span)
+		{
+			NextNonNegative(Generator, span);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Int64> span)
+		{
+			NextNonNegative(random, span, Int64.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Int64> span)
+		{
+			NextNonNegative(random, span, Int64.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Int64> span, Int64 max)
+		{
+			NextNonNegative(Generator, span, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Int64> span, Int64 max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Int64> span, Int64 max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Int64> span, Int64 min, Int64 max)
+		{
+			Next(Generator, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Int64> span, Int64 min, Int64 max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Int64> span, Int64 min, Int64 max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<UInt64> span)
+		{
+			NextNonNegative(Generator, span);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<UInt64> span)
+		{
+			NextNonNegative(random, span, UInt64.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<UInt64> span)
+		{
+			NextNonNegative(random, span, UInt64.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<UInt64> span, UInt64 max)
+		{
+			NextNonNegative(Generator, span, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<UInt64> span, UInt64 max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<UInt64> span, UInt64 max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<UInt64> span, UInt64 min, UInt64 max)
+		{
+			Next(Generator, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<UInt64> span, UInt64 min, UInt64 max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<UInt64> span, UInt64 min, UInt64 max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Single> span)
+		{
+			NextNonNegative(Generator, span);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Single> span)
+		{
+			NextNonNegative(random, span, Single.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Single> span)
+		{
+			NextNonNegative(random, span, Single.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Single> span, Single max)
+		{
+			NextNonNegative(Generator, span, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Single> span, Single max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Single> span, Single max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Single> span, Single min, Single max)
+		{
+			Next(Generator, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Single> span, Single min, Single max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Single> span, Single min, Single max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Double> span)
+		{
+			NextNonNegative(Generator, span);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Double> span)
+		{
+			NextNonNegative(random, span, Double.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Double> span)
+		{
+			NextNonNegative(random, span, Double.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Double> span, Double max)
+		{
+			NextNonNegative(Generator, span, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Double> span, Double max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Double> span, Double max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Double> span, Double min, Double max)
+		{
+			Next(Generator, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Double> span, Double min, Double max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Double> span, Double min, Double max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Decimal> span)
+		{
+			NextNonNegative(Generator, span);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Decimal> span)
+		{
+			NextNonNegative(random, span, Decimal.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Decimal> span)
+		{
+			NextNonNegative(random, span, Decimal.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Decimal> span, Decimal max)
+		{
+			NextNonNegative(Generator, span, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Decimal> span, Decimal max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Decimal> span, Decimal max)
+		{
+			NextNonNegative(random, span, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(Span<Decimal> span, Decimal min, Decimal max)
+		{
+			Next(Generator, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this System.Random random, Span<Decimal> span, Decimal min, Decimal max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void NextNonNegative(this IRandom random, Span<Decimal> span, Decimal min, Decimal max)
+		{
+			Next(random, span, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void NextNonZero(Span<SByte> span)
 		{
 			NextNonZero(Generator, span);
@@ -2065,6 +3258,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextNonZeroSByte(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void NextNonZero(Span<Byte> span)
 		{
@@ -2124,6 +3318,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextNonZeroByte(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void NextNonZero(Span<Int16> span)
 		{
@@ -2183,6 +3378,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextNonZeroInt16(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void NextNonZero(Span<UInt16> span)
 		{
@@ -2242,6 +3438,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextNonZeroUInt16(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void NextNonZero(Span<Int32> span)
 		{
@@ -2301,6 +3498,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextNonZeroInt32(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void NextNonZero(Span<UInt32> span)
 		{
@@ -2360,6 +3558,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextNonZeroUInt32(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void NextNonZero(Span<Int64> span)
 		{
@@ -2419,6 +3618,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextNonZeroInt64(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void NextNonZero(Span<UInt64> span)
 		{
@@ -2478,6 +3678,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextNonZeroUInt64(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void NextNonZero(Span<Single> span)
 		{
@@ -2537,6 +3738,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextNonZeroSingle(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void NextNonZero(Span<Double> span)
 		{
@@ -2596,6 +3798,7 @@ namespace NetExtender.Utils.Numerics
 				span[i] = NextNonZeroDouble(random, min, max);
 			}
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static void NextNonZero(Span<Decimal> span)
 		{
@@ -2673,6 +3876,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return NextBoolean(random, chance) ? 1 : -1;
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int16 NextSignInt16(Double chance = 0.5)
 		{
@@ -2690,6 +3894,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return NextBoolean(random, chance) ? 1 : -1;
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int32 NextSignInt32(Double chance = 0.5)
 		{
@@ -2707,6 +3912,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return NextBoolean(random, chance) ? 1 : -1;
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int64 NextSignInt64(Double chance = 0.5)
 		{
@@ -2724,6 +3930,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return NextBoolean(random, chance) ? 1 : -1;
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Single NextSignSingle(Double chance = 0.5)
 		{
@@ -2741,6 +3948,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return NextBoolean(random, chance) ? 1 : -1;
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double NextSignDouble(Double chance = 0.5)
 		{
@@ -2758,6 +3966,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return NextBoolean(random, chance) ? 1 : -1;
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Decimal NextSignDecimal(Double chance = 0.5)
 		{
@@ -2922,6 +4131,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextSByte);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Byte> ByteRange(Byte max)
 		{
@@ -2993,6 +4203,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextByte);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Int16> Int16Range(Int16 max)
 		{
@@ -3064,6 +4275,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextInt16);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<UInt16> UInt16Range(UInt16 max)
 		{
@@ -3135,6 +4347,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextUInt16);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Int32> Int32Range()
 		{
@@ -3206,6 +4419,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextInt32);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<UInt32> UInt32Range(UInt32 max)
 		{
@@ -3277,6 +4491,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextUInt32);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Int64> Int64Range(Int64 max)
 		{
@@ -3348,6 +4563,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextInt64);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<UInt64> UInt64Range(UInt64 max)
 		{
@@ -3419,6 +4635,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextUInt64);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Single> SingleRange(Single max)
 		{
@@ -3490,6 +4707,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextSingle);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Double> DoubleRange(Double max)
 		{
@@ -3561,6 +4779,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextDouble);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Decimal> DecimalRange(Decimal max)
 		{
@@ -3632,6 +4851,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextDecimal);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<TimeSpan> TimeSpanRange(TimeSpan max)
 		{
@@ -3703,6 +4923,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextTimeSpan);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<DateTime> DateTimeRange(DateTime max)
 		{
@@ -3776,6 +4997,798 @@ namespace NetExtender.Utils.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<SByte> SByteNonNegativeRange(SByte max)
+		{
+			return SByteNonNegativeRange(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<SByte> SByteNonNegativeRange(this System.Random random, SByte max)
+		{
+			return SByteNonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<SByte> SByteNonNegativeRange(this IRandom random, SByte max)
+		{
+			return SByteNonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<SByte> SByteNonNegativeRange(SByte max, Int32 count)
+		{
+			return SByteNonNegativeRange(Generator, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<SByte> SByteNonNegativeRange(this System.Random random, SByte max, Int32 count)
+		{
+			return SByteNonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<SByte> SByteNonNegativeRange(this IRandom random, SByte max, Int32 count)
+		{
+			return SByteNonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<SByte> SByteNonNegativeRange(SByte min, SByte max)
+		{
+			return Range(min, max, NextNonNegativeSByte);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<SByte> SByteNonNegativeRange(this System.Random random, SByte min, SByte max)
+		{
+			return Range(random, min, max, NextNonNegativeSByte);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<SByte> SByteNonNegativeRange(this IRandom random, SByte min, SByte max)
+		{
+			return Range(random, min, max, NextNonNegativeSByte);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<SByte> SByteNonNegativeRange(SByte min, SByte max, Int32 count)
+		{
+			return Range(min, max, count, NextNonNegativeSByte);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<SByte> SByteNonNegativeRange(this System.Random random, SByte min, SByte max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeSByte);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<SByte> SByteNonNegativeRange(this IRandom random, SByte min, SByte max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeSByte);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Byte> ByteNonNegativeRange(Byte max)
+		{
+			return ByteNonNegativeRange(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Byte> ByteNonNegativeRange(this System.Random random, Byte max)
+		{
+			return ByteNonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Byte> ByteNonNegativeRange(this IRandom random, Byte max)
+		{
+			return ByteNonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Byte> ByteNonNegativeRange(Byte max, Int32 count)
+		{
+			return ByteNonNegativeRange(Generator, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Byte> ByteNonNegativeRange(this System.Random random, Byte max, Int32 count)
+		{
+			return ByteNonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Byte> ByteNonNegativeRange(this IRandom random, Byte max, Int32 count)
+		{
+			return ByteNonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Byte> ByteNonNegativeRange(Byte min, Byte max)
+		{
+			return Range(min, max, NextNonNegativeByte);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Byte> ByteNonNegativeRange(this System.Random random, Byte min, Byte max)
+		{
+			return Range(random, min, max, NextNonNegativeByte);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Byte> ByteNonNegativeRange(this IRandom random, Byte min, Byte max)
+		{
+			return Range(random, min, max, NextNonNegativeByte);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Byte> ByteNonNegativeRange(Byte min, Byte max, Int32 count)
+		{
+			return Range(min, max, count, NextNonNegativeByte);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Byte> ByteNonNegativeRange(this System.Random random, Byte min, Byte max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeByte);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Byte> ByteNonNegativeRange(this IRandom random, Byte min, Byte max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeByte);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int16> Int16NonNegativeRange(Int16 max)
+		{
+			return Int16NonNegativeRange(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int16> Int16NonNegativeRange(this System.Random random, Int16 max)
+		{
+			return Int16NonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int16> Int16NonNegativeRange(this IRandom random, Int16 max)
+		{
+			return Int16NonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int16> Int16NonNegativeRange(Int16 max, Int32 count)
+		{
+			return Int16NonNegativeRange(Generator, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int16> Int16NonNegativeRange(this System.Random random, Int16 max, Int32 count)
+		{
+			return Int16NonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int16> Int16NonNegativeRange(this IRandom random, Int16 max, Int32 count)
+		{
+			return Int16NonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int16> Int16NonNegativeRange(Int16 min, Int16 max)
+		{
+			return Range(min, max, NextNonNegativeInt16);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int16> Int16NonNegativeRange(this System.Random random, Int16 min, Int16 max)
+		{
+			return Range(random, min, max, NextNonNegativeInt16);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int16> Int16NonNegativeRange(this IRandom random, Int16 min, Int16 max)
+		{
+			return Range(random, min, max, NextNonNegativeInt16);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int16> Int16NonNegativeRange(Int16 min, Int16 max, Int32 count)
+		{
+			return Range(min, max, count, NextNonNegativeInt16);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int16> Int16NonNegativeRange(this System.Random random, Int16 min, Int16 max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeInt16);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int16> Int16NonNegativeRange(this IRandom random, Int16 min, Int16 max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeInt16);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt16> UInt16NonNegativeRange(UInt16 max)
+		{
+			return UInt16NonNegativeRange(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt16> UInt16NonNegativeRange(this System.Random random, UInt16 max)
+		{
+			return UInt16NonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt16> UInt16NonNegativeRange(this IRandom random, UInt16 max)
+		{
+			return UInt16NonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt16> UInt16NonNegativeRange(UInt16 max, Int32 count)
+		{
+			return UInt16NonNegativeRange(Generator, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt16> UInt16NonNegativeRange(this System.Random random, UInt16 max, Int32 count)
+		{
+			return UInt16NonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt16> UInt16NonNegativeRange(this IRandom random, UInt16 max, Int32 count)
+		{
+			return UInt16NonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt16> UInt16NonNegativeRange(UInt16 min, UInt16 max)
+		{
+			return Range(min, max, NextNonNegativeUInt16);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt16> UInt16NonNegativeRange(this System.Random random, UInt16 min, UInt16 max)
+		{
+			return Range(random, min, max, NextNonNegativeUInt16);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt16> UInt16NonNegativeRange(this IRandom random, UInt16 min, UInt16 max)
+		{
+			return Range(random, min, max, NextNonNegativeUInt16);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt16> UInt16NonNegativeRange(UInt16 min, UInt16 max, Int32 count)
+		{
+			return Range(min, max, count, NextNonNegativeUInt16);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt16> UInt16NonNegativeRange(this System.Random random, UInt16 min, UInt16 max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeUInt16);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt16> UInt16NonNegativeRange(this IRandom random, UInt16 min, UInt16 max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeUInt16);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int32> Int32NonNegativeRange()
+		{
+			return Int32NonNegativeRange(Generator);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int32> Int32NonNegativeRange(this System.Random random)
+		{
+			return Int32NonNegativeRange(random, default, Int32.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int32> Int32NonNegativeRange(this IRandom random)
+		{
+			return Int32NonNegativeRange(random, default, Int32.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int32> Int32NonNegativeRange(Int32 max)
+		{
+			return Int32NonNegativeRange(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int32> Int32NonNegativeRange(this System.Random random, Int32 max)
+		{
+			return Int32NonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int32> Int32NonNegativeRange(this IRandom random, Int32 max)
+		{
+			return Int32NonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int32> Int32NonNegativeRange(Int32 min, Int32 max)
+		{
+			return Range(min, max, NextNonNegativeInt32);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int32> Int32NonNegativeRange(this System.Random random, Int32 min, Int32 max)
+		{
+			return Range(random, min, max, NextNonNegativeInt32);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int32> Int32NonNegativeRange(this IRandom random, Int32 min, Int32 max)
+		{
+			return Range(random, min, max, NextNonNegativeInt32);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int32> Int32NonNegativeRange(Int32 min, Int32 max, Int32 count)
+		{
+			return Range(min, max, count, NextNonNegativeInt32);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int32> Int32NonNegativeRange(this System.Random random, Int32 min, Int32 max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeInt32);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int32> Int32NonNegativeRange(this IRandom random, Int32 min, Int32 max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeInt32);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt32> UInt32NonNegativeRange(UInt32 max)
+		{
+			return UInt32NonNegativeRange(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt32> UInt32NonNegativeRange(this System.Random random, UInt32 max)
+		{
+			return UInt32NonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt32> UInt32NonNegativeRange(this IRandom random, UInt32 max)
+		{
+			return UInt32NonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt32> UInt32NonNegativeRange(UInt32 max, Int32 count)
+		{
+			return UInt32NonNegativeRange(Generator, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt32> UInt32NonNegativeRange(this System.Random random, UInt32 max, Int32 count)
+		{
+			return UInt32NonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt32> UInt32NonNegativeRange(this IRandom random, UInt32 max, Int32 count)
+		{
+			return UInt32NonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt32> UInt32NonNegativeRange(UInt32 min, UInt32 max)
+		{
+			return Range(min, max, NextNonNegativeUInt32);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt32> UInt32NonNegativeRange(this System.Random random, UInt32 min, UInt32 max)
+		{
+			return Range(random, min, max, NextNonNegativeUInt32);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt32> UInt32NonNegativeRange(this IRandom random, UInt32 min, UInt32 max)
+		{
+			return Range(random, min, max, NextNonNegativeUInt32);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt32> UInt32NonNegativeRange(UInt32 min, UInt32 max, Int32 count)
+		{
+			return Range(min, max, count, NextNonNegativeUInt32);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt32> UInt32NonNegativeRange(this System.Random random, UInt32 min, UInt32 max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeUInt32);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt32> UInt32NonNegativeRange(this IRandom random, UInt32 min, UInt32 max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeUInt32);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int64> Int64NonNegativeRange(Int64 max)
+		{
+			return Int64NonNegativeRange(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int64> Int64NonNegativeRange(this System.Random random, Int64 max)
+		{
+			return Int64NonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int64> Int64NonNegativeRange(this IRandom random, Int64 max)
+		{
+			return Int64NonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int64> Int64NonNegativeRange(Int64 max, Int32 count)
+		{
+			return Int64NonNegativeRange(Generator, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int64> Int64NonNegativeRange(this System.Random random, Int64 max, Int32 count)
+		{
+			return Int64NonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int64> Int64NonNegativeRange(this IRandom random, Int64 max, Int32 count)
+		{
+			return Int64NonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int64> Int64NonNegativeRange(Int64 min, Int64 max)
+		{
+			return Range(min, max, NextNonNegativeInt64);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int64> Int64NonNegativeRange(this System.Random random, Int64 min, Int64 max)
+		{
+			return Range(random, min, max, NextNonNegativeInt64);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int64> Int64NonNegativeRange(this IRandom random, Int64 min, Int64 max)
+		{
+			return Range(random, min, max, NextNonNegativeInt64);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int64> Int64NonNegativeRange(Int64 min, Int64 max, Int32 count)
+		{
+			return Range(min, max, count, NextNonNegativeInt64);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int64> Int64NonNegativeRange(this System.Random random, Int64 min, Int64 max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeInt64);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int64> Int64NonNegativeRange(this IRandom random, Int64 min, Int64 max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeInt64);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt64> UInt64NonNegativeRange(UInt64 max)
+		{
+			return UInt64NonNegativeRange(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt64> UInt64NonNegativeRange(this System.Random random, UInt64 max)
+		{
+			return UInt64NonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt64> UInt64NonNegativeRange(this IRandom random, UInt64 max)
+		{
+			return UInt64NonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt64> UInt64NonNegativeRange(UInt64 max, Int32 count)
+		{
+			return UInt64NonNegativeRange(Generator, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt64> UInt64NonNegativeRange(this System.Random random, UInt64 max, Int32 count)
+		{
+			return UInt64NonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt64> UInt64NonNegativeRange(this IRandom random, UInt64 max, Int32 count)
+		{
+			return UInt64NonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt64> UInt64NonNegativeRange(UInt64 min, UInt64 max)
+		{
+			return Range(min, max, NextNonNegativeUInt64);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt64> UInt64NonNegativeRange(this System.Random random, UInt64 min, UInt64 max)
+		{
+			return Range(random, min, max, NextNonNegativeUInt64);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt64> UInt64NonNegativeRange(this IRandom random, UInt64 min, UInt64 max)
+		{
+			return Range(random, min, max, NextNonNegativeUInt64);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt64> UInt64NonNegativeRange(UInt64 min, UInt64 max, Int32 count)
+		{
+			return Range(min, max, count, NextNonNegativeUInt64);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt64> UInt64NonNegativeRange(this System.Random random, UInt64 min, UInt64 max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeUInt64);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt64> UInt64NonNegativeRange(this IRandom random, UInt64 min, UInt64 max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeUInt64);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> SingleNonNegativeRange(Single max)
+		{
+			return SingleNonNegativeRange(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> SingleNonNegativeRange(this System.Random random, Single max)
+		{
+			return SingleNonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> SingleNonNegativeRange(this IRandom random, Single max)
+		{
+			return SingleNonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> SingleNonNegativeRange(Single max, Int32 count)
+		{
+			return SingleNonNegativeRange(Generator, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> SingleNonNegativeRange(this System.Random random, Single max, Int32 count)
+		{
+			return SingleNonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> SingleNonNegativeRange(this IRandom random, Single max, Int32 count)
+		{
+			return SingleNonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> SingleNonNegativeRange(Single min, Single max)
+		{
+			return Range(min, max, NextNonNegativeSingle);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> SingleNonNegativeRange(this System.Random random, Single min, Single max)
+		{
+			return Range(random, min, max, NextNonNegativeSingle);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> SingleNonNegativeRange(this IRandom random, Single min, Single max)
+		{
+			return Range(random, min, max, NextNonNegativeSingle);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> SingleNonNegativeRange(Single min, Single max, Int32 count)
+		{
+			return Range(min, max, count, NextNonNegativeSingle);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> SingleNonNegativeRange(this System.Random random, Single min, Single max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeSingle);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> SingleNonNegativeRange(this IRandom random, Single min, Single max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeSingle);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> DoubleNonNegativeRange(Double max)
+		{
+			return DoubleNonNegativeRange(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> DoubleNonNegativeRange(this System.Random random, Double max)
+		{
+			return DoubleNonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> DoubleNonNegativeRange(this IRandom random, Double max)
+		{
+			return DoubleNonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> DoubleNonNegativeRange(Double max, Int32 count)
+		{
+			return DoubleNonNegativeRange(Generator, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> DoubleNonNegativeRange(this System.Random random, Double max, Int32 count)
+		{
+			return DoubleNonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> DoubleNonNegativeRange(this IRandom random, Double max, Int32 count)
+		{
+			return DoubleNonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> DoubleNonNegativeRange(Double min, Double max)
+		{
+			return Range(min, max, NextNonNegativeDouble);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> DoubleNonNegativeRange(this System.Random random, Double min, Double max)
+		{
+			return Range(random, min, max, NextNonNegativeDouble);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> DoubleNonNegativeRange(this IRandom random, Double min, Double max)
+		{
+			return Range(random, min, max, NextNonNegativeDouble);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> DoubleNonNegativeRange(Double min, Double max, Int32 count)
+		{
+			return Range(min, max, count, NextNonNegativeDouble);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> DoubleNonNegativeRange(this System.Random random, Double min, Double max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeDouble);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> DoubleNonNegativeRange(this IRandom random, Double min, Double max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeDouble);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> DecimalNonNegativeRange(Decimal max)
+		{
+			return DecimalNonNegativeRange(Generator, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> DecimalNonNegativeRange(this System.Random random, Decimal max)
+		{
+			return DecimalNonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> DecimalNonNegativeRange(this IRandom random, Decimal max)
+		{
+			return DecimalNonNegativeRange(random, default, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> DecimalNonNegativeRange(Decimal max, Int32 count)
+		{
+			return DecimalNonNegativeRange(Generator, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> DecimalNonNegativeRange(this System.Random random, Decimal max, Int32 count)
+		{
+			return DecimalNonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> DecimalNonNegativeRange(this IRandom random, Decimal max, Int32 count)
+		{
+			return DecimalNonNegativeRange(random, default, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> DecimalNonNegativeRange(Decimal min, Decimal max)
+		{
+			return Range(min, max, NextNonNegativeDecimal);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> DecimalNonNegativeRange(this System.Random random, Decimal min, Decimal max)
+		{
+			return Range(random, min, max, NextNonNegativeDecimal);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> DecimalNonNegativeRange(this IRandom random, Decimal min, Decimal max)
+		{
+			return Range(random, min, max, NextNonNegativeDecimal);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> DecimalNonNegativeRange(Decimal min, Decimal max, Int32 count)
+		{
+			return Range(min, max, count, NextNonNegativeDecimal);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> DecimalNonNegativeRange(this System.Random random, Decimal min, Decimal max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeDecimal);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> DecimalNonNegativeRange(this IRandom random, Decimal min, Decimal max, Int32 count)
+		{
+			return Range(random, min, max, count, NextNonNegativeDecimal);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<SByte> SByteNonZeroRange(SByte max)
 		{
 			return SByteNonZeroRange(SByte.MinValue, max);
@@ -3828,6 +5841,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextNonZeroSByte);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Byte> ByteNonZeroRange(Byte max)
 		{
@@ -3881,6 +5895,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextNonZeroByte);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Int16> Int16NonZeroRange(Int16 max)
 		{
@@ -3934,6 +5949,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextNonZeroInt16);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<UInt16> UInt16NonZeroRange(UInt16 max)
 		{
@@ -3987,6 +6003,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextNonZeroUInt16);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Int32> Int32NonZeroRange()
 		{
@@ -4058,6 +6075,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextNonZeroInt32);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<UInt32> UInt32NonZeroRange(UInt32 max)
 		{
@@ -4111,6 +6129,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextNonZeroUInt32);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Int64> Int64NonZeroRange(Int64 max)
 		{
@@ -4164,6 +6183,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextNonZeroInt64);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<UInt64> UInt64NonZeroRange(UInt64 max)
 		{
@@ -4217,6 +6237,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextNonZeroUInt64);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Single> SingleNonZeroRange(Single max)
 		{
@@ -4270,6 +6291,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextNonZeroSingle);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Double> DoubleNonZeroRange(Double max)
 		{
@@ -4323,6 +6345,7 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextNonZeroDouble);
 		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Decimal> DecimalNonZeroRange(Decimal max)
 		{
@@ -4376,5 +6399,6 @@ namespace NetExtender.Utils.Numerics
 		{
 			return Range(random, min, max, count, NextNonZeroDecimal);
 		}
+
     }
 }

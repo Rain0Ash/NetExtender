@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using NetExtender.Exceptions;
 using NetExtender.Utils.Types;
 using NetExtender.Random;
 using NetExtender.Web.Common;
@@ -17,7 +18,7 @@ namespace NetExtender.Utils.Network
         private static IDictionary<BrowserType, IList<String>> UserAgents { get; } = new Dictionary<BrowserType, IList<String>>
         {
             [BrowserType.Chrome] = BrowserUserAgent.Chrome,
-            [BrowserType.IE] = BrowserUserAgent.IE,
+            [BrowserType.IE] = BrowserUserAgent.InternetExplorer,
             [BrowserType.Edge] = BrowserUserAgent.Chrome,
             [BrowserType.Opera] = BrowserUserAgent.Opera,
             [BrowserType.Firefox] = BrowserUserAgent.Firefox,
@@ -31,6 +32,70 @@ namespace NetExtender.Utils.Network
             {
                 return CreateUserAgent(Selector.SelectRandomItem());
             }
+        }
+
+        private static String sessionua;
+        public static String SessionUserAgent
+        {
+            get
+            {
+                return sessionua ??= RandomUserAgent;
+            }
+            private set
+            {
+                ThrowIfSessionUserAgentAlreadyInitialized();
+                if (!ValidateUserAgent(value))
+                {
+                    throw new ArgumentException(@"Is not valid user agent", nameof(value));
+                }
+                
+                currentua = value;
+            }
+        }
+
+        private static String currentua;
+        public static String CurrentSessionUserAgent
+        {
+            get
+            {
+                return currentua ??= SessionUserAgent;
+            }
+            set
+            {
+                if (!ValidateUserAgent(value))
+                {
+                    throw new ArgumentException(@"Is not valid user agent", nameof(value));
+                }
+                
+                currentua = value;
+            }
+        }
+        
+        private static void ThrowIfSessionUserAgentAlreadyInitialized()
+        {
+            if (sessionua is not null)
+            {
+                throw new AlreadyInitializedException("User agent already initialized", nameof(SessionUserAgent));
+            }
+        }
+
+        public static String InitializeSessionUserAgent()
+        {
+            ThrowIfSessionUserAgentAlreadyInitialized();
+            return InitializeSessionUserAgent(RandomUserAgent);
+        }
+        
+        public static String InitializeSessionUserAgent(BrowserType type)
+        {
+            ThrowIfSessionUserAgentAlreadyInitialized();
+            return InitializeSessionUserAgent(CreateUserAgent(type));
+        }
+        
+        public static String InitializeSessionUserAgent(String agent)
+        {
+            ThrowIfSessionUserAgentAlreadyInitialized();
+            SessionUserAgent = agent;
+            return SessionUserAgent;
         }
         
         public static String CreateUserAgent(BrowserType type)

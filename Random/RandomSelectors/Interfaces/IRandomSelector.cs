@@ -12,6 +12,6 @@ namespace NetExtender.Random
     public interface IRandomSelector<out T>
     {
         T SelectRandomItem();
-        T SelectRandomItem(Double randomValue);
+        T SelectRandomItem(Double value);
     }
 }

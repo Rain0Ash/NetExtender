@@ -183,7 +183,7 @@ namespace NetExtender.Loggers.Messages
 
         public Color GetColor()
         {
-            return ConsoleUtils.GetColor(Color);
+            return ConsoleUtils.ToColor(Color);
         }
 
         public override String ToString()

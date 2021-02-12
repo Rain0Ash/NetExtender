@@ -266,7 +266,7 @@ namespace NetExtender.Watchers
         {
             if (_watcher is null)
             {
-                throw new NotInitializedException("Watcher is not initialized");
+                throw new NotInitializedException("Watcher is not initialized", nameof(Watcher));
             }
         }
         

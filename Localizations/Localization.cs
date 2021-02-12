@@ -29,7 +29,7 @@ namespace NetExtender.Localizations
             {
                 get
                 {
-                    return current ?? throw new NotInitializedException();
+                    return current ?? throw new NotInitializedException("Localization is not initialized", nameof(Current));
                 }
                 set
                 {
@@ -51,7 +51,7 @@ namespace NetExtender.Localizations
             {
                 if (Initialized)
                 {
-                    throw new AlreadyInitializedException();
+                    throw new AlreadyInitializedException("Localization already initialized", nameof(Current));
                 }
             }
         }

@@ -2,10 +2,14 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 using NetExtender.Random;
 using NetExtender.Random.Interfaces;
+using NetExtender.Utils.Types;
 
 namespace NetExtender.Utils.Numerics
 {
@@ -18,6 +22,16 @@ namespace NetExtender.Utils.Numerics
     /// <inheritdoc cref="System.Random"/>
     public static partial class RandomUtils
     {
+        public static IRandom Create()
+        {
+            return Create(RandomType.Default);
+        }
+
+        public static IRandom Create(Int32 seed)
+        {
+            return Create(RandomType.Default, seed);
+        }
+
         public static IRandom Create(this RandomType type)
         {
             return type switch
@@ -92,6 +106,114 @@ namespace NetExtender.Utils.Numerics
         public static Int32 Next(this IRandom random, Int32 min, Int32 max)
         {
             return NextInt32(random, min, max);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 NextNonNegative()
+        {
+            return NextNonNegativeInt32();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 NextNonNegative(this System.Random random)
+        {
+            return NextNonNegativeInt32(random);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 NextNonNegative(this IRandom random)
+        {
+            return NextNonNegativeInt32(random);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 NextNonNegative(Int32 max)
+        {
+            return NextNonNegativeInt32(max);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 NextNonNegative(this System.Random random, Int32 max)
+        {
+            return NextNonNegativeInt32(random, max);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 NextNonNegative(this IRandom random, Int32 max)
+        {
+            return NextNonNegativeInt32(random, max);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 NextNonNegative(Int32 min, Int32 max)
+        {
+            return NextNonNegativeInt32(min, max);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 NextNonNegative(this System.Random random, Int32 min, Int32 max)
+        {
+            return NextNonNegativeInt32(random, min, max);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 NextNonNegative(this IRandom random, Int32 min, Int32 max)
+        {
+            return NextNonNegativeInt32(random, min, max);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 NextNonZero()
+        {
+            return NextNonZeroInt32();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 NextNonZero(this System.Random random)
+        {
+            return NextNonZeroInt32(random);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 NextNonZero(this IRandom random)
+        {
+            return NextNonZeroInt32(random);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 NextNonZero(Int32 max)
+        {
+            return NextNonZeroInt32(max);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 NextNonZero(this System.Random random, Int32 max)
+        {
+            return NextNonZeroInt32(random, max);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 NextNonZero(this IRandom random, Int32 max)
+        {
+            return NextNonZeroInt32(random, max);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 NextNonZero(Int32 min, Int32 max)
+        {
+            return NextNonZeroInt32(min, max);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 NextNonZero(this System.Random random, Int32 min, Int32 max)
+        {
+            return NextNonZeroInt32(random, min, max);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 NextNonZero(this IRandom random, Int32 min, Int32 max)
+        {
+            return NextNonZeroInt32(random, min, max);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

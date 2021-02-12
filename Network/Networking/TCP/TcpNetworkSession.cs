@@ -44,7 +44,7 @@ namespace NetExtender.Network.Networking.TCP
         {
             if (IsConnected)
             {
-                throw new AlreadyInitializedException();
+                throw new AlreadyInitializedException("Already connected");
             }
             
             Socket = socket;

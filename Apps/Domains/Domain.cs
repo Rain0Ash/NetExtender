@@ -33,7 +33,7 @@ namespace NetExtender.Apps.Domains
             {
                 get
                 {
-                    return current ?? throw new NotInitializedException();
+                    return current ?? throw new NotInitializedException("Domain is already initialized", nameof(Current));
                 }
                 set
                 {
@@ -54,7 +54,7 @@ namespace NetExtender.Apps.Domains
             {
                 if (Initialized)
                 {
-                    throw new AlreadyInitializedException();
+                    throw new AlreadyInitializedException("Domain already initialized", nameof(Current));
                 }
             }
         }

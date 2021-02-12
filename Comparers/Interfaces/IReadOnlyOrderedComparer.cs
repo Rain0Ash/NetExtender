@@ -6,9 +6,8 @@ using System.Collections.Generic;
 
 namespace NetExtender.Comparers.Interfaces
 {
-    public interface IReadOnlyOrderedComparer<T> : IComparer<T>, IEnumerable<T>
+    public interface IReadOnlyOrderedComparer<T> : IComparer<T>, IReadOnlyCollection<T>
     {
-        public Int32 Count { get; }
         public IComparer<T> Comparer { get; }
         public Boolean Contains(T item);
         public Int32 GetOrder(T item);
