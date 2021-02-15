@@ -4,15 +4,171 @@
 using System;
 using System.Numerics;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 
 namespace NetExtender.Utils.Numerics
 {
-    [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
     public static partial class MathUtils
     {
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Char Min(this Char value, Char compare)
+		{
+			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte Min(this SByte value, SByte compare)
+		{
+			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte Min(this Byte value, Byte compare)
+		{
+			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 Min(this Int16 value, Int16 compare)
+		{
+			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 Min(this UInt16 value, UInt16 compare)
+		{
+			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 Min(this Int32 value, Int32 compare)
+		{
+			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 Min(this UInt32 value, UInt32 compare)
+		{
+			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 Min(this Int64 value, Int64 compare)
+		{
+			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 Min(this UInt64 value, UInt64 compare)
+		{
+			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single Min(this Single value, Single compare)
+		{
+			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Min(this Double value, Double compare)
+		{
+			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal Min(this Decimal value, Decimal compare)
+		{
+			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static BigInteger Min(this BigInteger value, BigInteger compare)
+		{
+			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Char Max(this Char value, Char compare)
+		{
+			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte Max(this SByte value, SByte compare)
+		{
+			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte Max(this Byte value, Byte compare)
+		{
+			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 Max(this Int16 value, Int16 compare)
+		{
+			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 Max(this UInt16 value, UInt16 compare)
+		{
+			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 Max(this Int32 value, Int32 compare)
+		{
+			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 Max(this UInt32 value, UInt32 compare)
+		{
+			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 Max(this Int64 value, Int64 compare)
+		{
+			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 Max(this UInt64 value, UInt64 compare)
+		{
+			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single Max(this Single value, Single compare)
+		{
+			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Max(this Double value, Double compare)
+		{
+			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal Max(this Decimal value, Decimal compare)
+		{
+			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static BigInteger Max(this BigInteger value, BigInteger compare)
+		{
+			return value >= compare ? value : compare;
+		}
+
 		public static BigInteger Factorial(this SByte value)
 		{
 			if (value < 0)
@@ -936,7 +1092,7 @@ namespace NetExtender.Utils.Numerics
 				MathPositionType.Left => value >= minimum && value < maximum,
 				MathPositionType.Right => value > minimum && value <= maximum,
 				MathPositionType.Both => value >= minimum && value <= maximum,
-				_ => throw new NotSupportedException(comparison.ToString())
+				_ => throw new NotSupportedException()
 			};
 		}
 
@@ -961,7 +1117,7 @@ namespace NetExtender.Utils.Numerics
 				MathPositionType.Left => value >= minimum && value < maximum,
 				MathPositionType.Right => value > minimum && value <= maximum,
 				MathPositionType.Both => value >= minimum && value <= maximum,
-				_ => throw new NotSupportedException(comparison.ToString())
+				_ => throw new NotSupportedException()
 			};
 		}
 
@@ -986,7 +1142,7 @@ namespace NetExtender.Utils.Numerics
 				MathPositionType.Left => value >= minimum && value < maximum,
 				MathPositionType.Right => value > minimum && value <= maximum,
 				MathPositionType.Both => value >= minimum && value <= maximum,
-				_ => throw new NotSupportedException(comparison.ToString())
+				_ => throw new NotSupportedException()
 			};
 		}
 
@@ -1011,7 +1167,7 @@ namespace NetExtender.Utils.Numerics
 				MathPositionType.Left => value >= minimum && value < maximum,
 				MathPositionType.Right => value > minimum && value <= maximum,
 				MathPositionType.Both => value >= minimum && value <= maximum,
-				_ => throw new NotSupportedException(comparison.ToString())
+				_ => throw new NotSupportedException()
 			};
 		}
 
@@ -1036,7 +1192,7 @@ namespace NetExtender.Utils.Numerics
 				MathPositionType.Left => value >= minimum && value < maximum,
 				MathPositionType.Right => value > minimum && value <= maximum,
 				MathPositionType.Both => value >= minimum && value <= maximum,
-				_ => throw new NotSupportedException(comparison.ToString())
+				_ => throw new NotSupportedException()
 			};
 		}
 
@@ -1061,7 +1217,7 @@ namespace NetExtender.Utils.Numerics
 				MathPositionType.Left => value >= minimum && value < maximum,
 				MathPositionType.Right => value > minimum && value <= maximum,
 				MathPositionType.Both => value >= minimum && value <= maximum,
-				_ => throw new NotSupportedException(comparison.ToString())
+				_ => throw new NotSupportedException()
 			};
 		}
 
@@ -1086,7 +1242,7 @@ namespace NetExtender.Utils.Numerics
 				MathPositionType.Left => value >= minimum && value < maximum,
 				MathPositionType.Right => value > minimum && value <= maximum,
 				MathPositionType.Both => value >= minimum && value <= maximum,
-				_ => throw new NotSupportedException(comparison.ToString())
+				_ => throw new NotSupportedException()
 			};
 		}
 
@@ -1111,7 +1267,7 @@ namespace NetExtender.Utils.Numerics
 				MathPositionType.Left => value >= minimum && value < maximum,
 				MathPositionType.Right => value > minimum && value <= maximum,
 				MathPositionType.Both => value >= minimum && value <= maximum,
-				_ => throw new NotSupportedException(comparison.ToString())
+				_ => throw new NotSupportedException()
 			};
 		}
 
@@ -1136,7 +1292,7 @@ namespace NetExtender.Utils.Numerics
 				MathPositionType.Left => value >= minimum && value < maximum,
 				MathPositionType.Right => value > minimum && value <= maximum,
 				MathPositionType.Both => value >= minimum && value <= maximum,
-				_ => throw new NotSupportedException(comparison.ToString())
+				_ => throw new NotSupportedException()
 			};
 		}
 
@@ -1161,7 +1317,7 @@ namespace NetExtender.Utils.Numerics
 				MathPositionType.Left => value >= minimum && value < maximum,
 				MathPositionType.Right => value > minimum && value <= maximum,
 				MathPositionType.Both => value >= minimum && value <= maximum,
-				_ => throw new NotSupportedException(comparison.ToString())
+				_ => throw new NotSupportedException()
 			};
 		}
 
@@ -1186,7 +1342,7 @@ namespace NetExtender.Utils.Numerics
 				MathPositionType.Left => value >= minimum && value < maximum,
 				MathPositionType.Right => value > minimum && value <= maximum,
 				MathPositionType.Both => value >= minimum && value <= maximum,
-				_ => throw new NotSupportedException(comparison.ToString())
+				_ => throw new NotSupportedException()
 			};
 		}
 
@@ -1211,11 +1367,11 @@ namespace NetExtender.Utils.Numerics
 				MathPositionType.Left => value >= minimum && value < maximum,
 				MathPositionType.Right => value > minimum && value <= maximum,
 				MathPositionType.Both => value >= minimum && value <= maximum,
-				_ => throw new NotSupportedException(comparison.ToString())
+				_ => throw new NotSupportedException()
 			};
 		}
 
-		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsPositive(this Char value)
 		{
@@ -1228,7 +1384,7 @@ namespace NetExtender.Utils.Numerics
 			return value >= 0;
 		}
 
-		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsPositive(this Byte value)
 		{
@@ -1241,7 +1397,7 @@ namespace NetExtender.Utils.Numerics
 			return value >= 0;
 		}
 
-		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsPositive(this UInt16 value)
 		{
@@ -1254,7 +1410,7 @@ namespace NetExtender.Utils.Numerics
 			return value >= 0;
 		}
 
-		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsPositive(this UInt32 value)
 		{
@@ -1267,7 +1423,7 @@ namespace NetExtender.Utils.Numerics
 			return value >= 0;
 		}
 
-		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsPositive(this UInt64 value)
 		{
@@ -1298,7 +1454,7 @@ namespace NetExtender.Utils.Numerics
 			return value >= 0;
 		}
 
-		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsNegative(this Char value)
 		{
@@ -1311,7 +1467,7 @@ namespace NetExtender.Utils.Numerics
 			return value < 0;
 		}
 
-		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsNegative(this Byte value)
 		{
@@ -1324,7 +1480,7 @@ namespace NetExtender.Utils.Numerics
 			return value < 0;
 		}
 
-		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsNegative(this UInt16 value)
 		{
@@ -1337,7 +1493,7 @@ namespace NetExtender.Utils.Numerics
 			return value < 0;
 		}
 
-		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsNegative(this UInt32 value)
 		{
@@ -1350,7 +1506,7 @@ namespace NetExtender.Utils.Numerics
 			return value < 0;
 		}
 
-		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsNegative(this UInt64 value)
 		{
@@ -1381,7 +1537,7 @@ namespace NetExtender.Utils.Numerics
 			return value < 0;
 		}
 
-		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Char ToSign(this Char value)
 		{
@@ -1394,7 +1550,7 @@ namespace NetExtender.Utils.Numerics
 			return value >= 0 ? '+' : '-';
 		}
 
-		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Char ToSign(this Byte value)
 		{
@@ -1407,7 +1563,7 @@ namespace NetExtender.Utils.Numerics
 			return value >= 0 ? '+' : '-';
 		}
 
-		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Char ToSign(this UInt16 value)
 		{
@@ -1420,7 +1576,7 @@ namespace NetExtender.Utils.Numerics
 			return value >= 0 ? '+' : '-';
 		}
 
-		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Char ToSign(this UInt32 value)
 		{
@@ -1433,7 +1589,7 @@ namespace NetExtender.Utils.Numerics
 			return value >= 0 ? '+' : '-';
 		}
 
-		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Char ToSign(this UInt64 value)
 		{
@@ -1568,6 +1724,17 @@ namespace NetExtender.Utils.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte RoundToZeroMultiplier(SByte value, SByte multiplier)
+		{
+			if (value > 0)
+			{
+				return multiplier > 0 ? RoundDownToMultiplier(value, multiplier) : RoundDownToMultiplier(value, (SByte)(-multiplier));
+			}
+
+			return multiplier > 0 ? RoundDownToMultiplier(value, (SByte)(-multiplier)) : RoundDownToMultiplier(value, multiplier);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static SByte RoundAwayFromZeroToMultiplier(SByte value, SByte multiplier)
 		{
 			if (value > 0)
@@ -1578,14 +1745,15 @@ namespace NetExtender.Utils.Numerics
 			return multiplier > 0 ? RoundUpToMultiplier(value, (SByte)(-multiplier)) : RoundUpToMultiplier(value, multiplier);
 		}
 
-		public static SByte RoundToMultiplier(this SByte value, SByte multiplier, RoundType round = RoundType.Banking)
+		public static SByte RoundToMultiplier(this SByte value, SByte multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
 		{
-			return round switch
+			return rounding switch
 			{
-				RoundType.Banking => RoundBankingToMultiplier(value, multiplier),
-				RoundType.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
-				RoundType.Ceil => RoundUpToMultiplier(value, multiplier),
-				RoundType.Floor => RoundDownToMultiplier(value, multiplier),
+				MidpointRounding.ToEven => RoundBankingToMultiplier(value, multiplier),
+				MidpointRounding.ToZero => RoundToZeroMultiplier(value, multiplier),
+				MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
+				MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
+				MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
 				_ => throw new NotSupportedException()
 			};
 		}
@@ -1656,19 +1824,26 @@ namespace NetExtender.Utils.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte RoundToZeroMultiplier(Byte value, Byte multiplier)
+		{
+			return RoundDownToMultiplier(value, multiplier);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Byte RoundAwayFromZeroToMultiplier(Byte value, Byte multiplier)
 		{
 			return RoundUpToMultiplier(value, multiplier);
 		}
 
-		public static Byte RoundToMultiplier(this Byte value, Byte multiplier, RoundType round = RoundType.Banking)
+		public static Byte RoundToMultiplier(this Byte value, Byte multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
 		{
-			return round switch
+			return rounding switch
 			{
-				RoundType.Banking => RoundBankingToMultiplier(value, multiplier),
-				RoundType.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
-				RoundType.Ceil => RoundUpToMultiplier(value, multiplier),
-				RoundType.Floor => RoundDownToMultiplier(value, multiplier),
+				MidpointRounding.ToEven => RoundBankingToMultiplier(value, multiplier),
+				MidpointRounding.ToZero => RoundToZeroMultiplier(value, multiplier),
+				MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
+				MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
+				MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
 				_ => throw new NotSupportedException()
 			};
 		}
@@ -1777,6 +1952,17 @@ namespace NetExtender.Utils.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 RoundToZeroMultiplier(Int16 value, Int16 multiplier)
+		{
+			if (value > 0)
+			{
+				return multiplier > 0 ? RoundDownToMultiplier(value, multiplier) : RoundDownToMultiplier(value, (Int16)(-multiplier));
+			}
+
+			return multiplier > 0 ? RoundDownToMultiplier(value, (Int16)(-multiplier)) : RoundDownToMultiplier(value, multiplier);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int16 RoundAwayFromZeroToMultiplier(Int16 value, Int16 multiplier)
 		{
 			if (value > 0)
@@ -1787,14 +1973,15 @@ namespace NetExtender.Utils.Numerics
 			return multiplier > 0 ? RoundUpToMultiplier(value, (Int16)(-multiplier)) : RoundUpToMultiplier(value, multiplier);
 		}
 
-		public static Int16 RoundToMultiplier(this Int16 value, Int16 multiplier, RoundType round = RoundType.Banking)
+		public static Int16 RoundToMultiplier(this Int16 value, Int16 multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
 		{
-			return round switch
+			return rounding switch
 			{
-				RoundType.Banking => RoundBankingToMultiplier(value, multiplier),
-				RoundType.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
-				RoundType.Ceil => RoundUpToMultiplier(value, multiplier),
-				RoundType.Floor => RoundDownToMultiplier(value, multiplier),
+				MidpointRounding.ToEven => RoundBankingToMultiplier(value, multiplier),
+				MidpointRounding.ToZero => RoundToZeroMultiplier(value, multiplier),
+				MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
+				MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
+				MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
 				_ => throw new NotSupportedException()
 			};
 		}
@@ -1865,19 +2052,26 @@ namespace NetExtender.Utils.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 RoundToZeroMultiplier(UInt16 value, UInt16 multiplier)
+		{
+			return RoundDownToMultiplier(value, multiplier);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static UInt16 RoundAwayFromZeroToMultiplier(UInt16 value, UInt16 multiplier)
 		{
 			return RoundUpToMultiplier(value, multiplier);
 		}
 
-		public static UInt16 RoundToMultiplier(this UInt16 value, UInt16 multiplier, RoundType round = RoundType.Banking)
+		public static UInt16 RoundToMultiplier(this UInt16 value, UInt16 multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
 		{
-			return round switch
+			return rounding switch
 			{
-				RoundType.Banking => RoundBankingToMultiplier(value, multiplier),
-				RoundType.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
-				RoundType.Ceil => RoundUpToMultiplier(value, multiplier),
-				RoundType.Floor => RoundDownToMultiplier(value, multiplier),
+				MidpointRounding.ToEven => RoundBankingToMultiplier(value, multiplier),
+				MidpointRounding.ToZero => RoundToZeroMultiplier(value, multiplier),
+				MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
+				MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
+				MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
 				_ => throw new NotSupportedException()
 			};
 		}
@@ -1986,6 +2180,17 @@ namespace NetExtender.Utils.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 RoundToZeroMultiplier(Int32 value, Int32 multiplier)
+		{
+			if (value > 0)
+			{
+				return multiplier > 0 ? RoundDownToMultiplier(value, multiplier) : RoundDownToMultiplier(value, -multiplier);
+			}
+
+			return multiplier > 0 ? RoundDownToMultiplier(value, -multiplier) : RoundDownToMultiplier(value, multiplier);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int32 RoundAwayFromZeroToMultiplier(Int32 value, Int32 multiplier)
 		{
 			if (value > 0)
@@ -1996,14 +2201,15 @@ namespace NetExtender.Utils.Numerics
 			return multiplier > 0 ? RoundUpToMultiplier(value, -multiplier) : RoundUpToMultiplier(value, multiplier);
 		}
 
-		public static Int32 RoundToMultiplier(this Int32 value, Int32 multiplier, RoundType round = RoundType.Banking)
+		public static Int32 RoundToMultiplier(this Int32 value, Int32 multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
 		{
-			return round switch
+			return rounding switch
 			{
-				RoundType.Banking => RoundBankingToMultiplier(value, multiplier),
-				RoundType.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
-				RoundType.Ceil => RoundUpToMultiplier(value, multiplier),
-				RoundType.Floor => RoundDownToMultiplier(value, multiplier),
+				MidpointRounding.ToEven => RoundBankingToMultiplier(value, multiplier),
+				MidpointRounding.ToZero => RoundToZeroMultiplier(value, multiplier),
+				MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
+				MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
+				MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
 				_ => throw new NotSupportedException()
 			};
 		}
@@ -2074,19 +2280,26 @@ namespace NetExtender.Utils.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 RoundToZeroMultiplier(UInt32 value, UInt32 multiplier)
+		{
+			return RoundDownToMultiplier(value, multiplier);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static UInt32 RoundAwayFromZeroToMultiplier(UInt32 value, UInt32 multiplier)
 		{
 			return RoundUpToMultiplier(value, multiplier);
 		}
 
-		public static UInt32 RoundToMultiplier(this UInt32 value, UInt32 multiplier, RoundType round = RoundType.Banking)
+		public static UInt32 RoundToMultiplier(this UInt32 value, UInt32 multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
 		{
-			return round switch
+			return rounding switch
 			{
-				RoundType.Banking => RoundBankingToMultiplier(value, multiplier),
-				RoundType.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
-				RoundType.Ceil => RoundUpToMultiplier(value, multiplier),
-				RoundType.Floor => RoundDownToMultiplier(value, multiplier),
+				MidpointRounding.ToEven => RoundBankingToMultiplier(value, multiplier),
+				MidpointRounding.ToZero => RoundToZeroMultiplier(value, multiplier),
+				MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
+				MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
+				MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
 				_ => throw new NotSupportedException()
 			};
 		}
@@ -2195,6 +2408,17 @@ namespace NetExtender.Utils.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 RoundToZeroMultiplier(Int64 value, Int64 multiplier)
+		{
+			if (value > 0)
+			{
+				return multiplier > 0 ? RoundDownToMultiplier(value, multiplier) : RoundDownToMultiplier(value, -multiplier);
+			}
+
+			return multiplier > 0 ? RoundDownToMultiplier(value, -multiplier) : RoundDownToMultiplier(value, multiplier);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int64 RoundAwayFromZeroToMultiplier(Int64 value, Int64 multiplier)
 		{
 			if (value > 0)
@@ -2205,14 +2429,15 @@ namespace NetExtender.Utils.Numerics
 			return multiplier > 0 ? RoundUpToMultiplier(value, -multiplier) : RoundUpToMultiplier(value, multiplier);
 		}
 
-		public static Int64 RoundToMultiplier(this Int64 value, Int64 multiplier, RoundType round = RoundType.Banking)
+		public static Int64 RoundToMultiplier(this Int64 value, Int64 multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
 		{
-			return round switch
+			return rounding switch
 			{
-				RoundType.Banking => RoundBankingToMultiplier(value, multiplier),
-				RoundType.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
-				RoundType.Ceil => RoundUpToMultiplier(value, multiplier),
-				RoundType.Floor => RoundDownToMultiplier(value, multiplier),
+				MidpointRounding.ToEven => RoundBankingToMultiplier(value, multiplier),
+				MidpointRounding.ToZero => RoundToZeroMultiplier(value, multiplier),
+				MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
+				MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
+				MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
 				_ => throw new NotSupportedException()
 			};
 		}
@@ -2283,19 +2508,26 @@ namespace NetExtender.Utils.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 RoundToZeroMultiplier(UInt64 value, UInt64 multiplier)
+		{
+			return RoundDownToMultiplier(value, multiplier);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static UInt64 RoundAwayFromZeroToMultiplier(UInt64 value, UInt64 multiplier)
 		{
 			return RoundUpToMultiplier(value, multiplier);
 		}
 
-		public static UInt64 RoundToMultiplier(this UInt64 value, UInt64 multiplier, RoundType round = RoundType.Banking)
+		public static UInt64 RoundToMultiplier(this UInt64 value, UInt64 multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
 		{
-			return round switch
+			return rounding switch
 			{
-				RoundType.Banking => RoundBankingToMultiplier(value, multiplier),
-				RoundType.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
-				RoundType.Ceil => RoundUpToMultiplier(value, multiplier),
-				RoundType.Floor => RoundDownToMultiplier(value, multiplier),
+				MidpointRounding.ToEven => RoundBankingToMultiplier(value, multiplier),
+				MidpointRounding.ToZero => RoundToZeroMultiplier(value, multiplier),
+				MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
+				MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
+				MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
 				_ => throw new NotSupportedException()
 			};
 		}
@@ -2404,6 +2636,17 @@ namespace NetExtender.Utils.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single RoundToZeroMultiplier(Single value, Single multiplier)
+		{
+			if (value > 0)
+			{
+				return multiplier > 0 ? RoundDownToMultiplier(value, multiplier) : RoundDownToMultiplier(value, -multiplier);
+			}
+
+			return multiplier > 0 ? RoundDownToMultiplier(value, -multiplier) : RoundDownToMultiplier(value, multiplier);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Single RoundAwayFromZeroToMultiplier(Single value, Single multiplier)
 		{
 			if (value > 0)
@@ -2414,14 +2657,15 @@ namespace NetExtender.Utils.Numerics
 			return multiplier > 0 ? RoundUpToMultiplier(value, -multiplier) : RoundUpToMultiplier(value, multiplier);
 		}
 
-		public static Single RoundToMultiplier(this Single value, Single multiplier, RoundType round = RoundType.Banking)
+		public static Single RoundToMultiplier(this Single value, Single multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
 		{
-			return round switch
+			return rounding switch
 			{
-				RoundType.Banking => RoundBankingToMultiplier(value, multiplier),
-				RoundType.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
-				RoundType.Ceil => RoundUpToMultiplier(value, multiplier),
-				RoundType.Floor => RoundDownToMultiplier(value, multiplier),
+				MidpointRounding.ToEven => RoundBankingToMultiplier(value, multiplier),
+				MidpointRounding.ToZero => RoundToZeroMultiplier(value, multiplier),
+				MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
+				MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
+				MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
 				_ => throw new NotSupportedException()
 			};
 		}
@@ -2530,6 +2774,17 @@ namespace NetExtender.Utils.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double RoundToZeroMultiplier(Double value, Double multiplier)
+		{
+			if (value > 0)
+			{
+				return multiplier > 0 ? RoundDownToMultiplier(value, multiplier) : RoundDownToMultiplier(value, -multiplier);
+			}
+
+			return multiplier > 0 ? RoundDownToMultiplier(value, -multiplier) : RoundDownToMultiplier(value, multiplier);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double RoundAwayFromZeroToMultiplier(Double value, Double multiplier)
 		{
 			if (value > 0)
@@ -2540,14 +2795,15 @@ namespace NetExtender.Utils.Numerics
 			return multiplier > 0 ? RoundUpToMultiplier(value, -multiplier) : RoundUpToMultiplier(value, multiplier);
 		}
 
-		public static Double RoundToMultiplier(this Double value, Double multiplier, RoundType round = RoundType.Banking)
+		public static Double RoundToMultiplier(this Double value, Double multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
 		{
-			return round switch
+			return rounding switch
 			{
-				RoundType.Banking => RoundBankingToMultiplier(value, multiplier),
-				RoundType.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
-				RoundType.Ceil => RoundUpToMultiplier(value, multiplier),
-				RoundType.Floor => RoundDownToMultiplier(value, multiplier),
+				MidpointRounding.ToEven => RoundBankingToMultiplier(value, multiplier),
+				MidpointRounding.ToZero => RoundToZeroMultiplier(value, multiplier),
+				MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
+				MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
+				MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
 				_ => throw new NotSupportedException()
 			};
 		}
@@ -2656,6 +2912,17 @@ namespace NetExtender.Utils.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal RoundToZeroMultiplier(Decimal value, Decimal multiplier)
+		{
+			if (value > 0)
+			{
+				return multiplier > 0 ? RoundDownToMultiplier(value, multiplier) : RoundDownToMultiplier(value, -multiplier);
+			}
+
+			return multiplier > 0 ? RoundDownToMultiplier(value, -multiplier) : RoundDownToMultiplier(value, multiplier);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Decimal RoundAwayFromZeroToMultiplier(Decimal value, Decimal multiplier)
 		{
 			if (value > 0)
@@ -2666,14 +2933,15 @@ namespace NetExtender.Utils.Numerics
 			return multiplier > 0 ? RoundUpToMultiplier(value, -multiplier) : RoundUpToMultiplier(value, multiplier);
 		}
 
-		public static Decimal RoundToMultiplier(this Decimal value, Decimal multiplier, RoundType round = RoundType.Banking)
+		public static Decimal RoundToMultiplier(this Decimal value, Decimal multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
 		{
-			return round switch
+			return rounding switch
 			{
-				RoundType.Banking => RoundBankingToMultiplier(value, multiplier),
-				RoundType.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
-				RoundType.Ceil => RoundUpToMultiplier(value, multiplier),
-				RoundType.Floor => RoundDownToMultiplier(value, multiplier),
+				MidpointRounding.ToEven => RoundBankingToMultiplier(value, multiplier),
+				MidpointRounding.ToZero => RoundToZeroMultiplier(value, multiplier),
+				MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
+				MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
+				MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
 				_ => throw new NotSupportedException()
 			};
 		}
@@ -2994,6 +3262,267 @@ namespace NetExtender.Utils.Numerics
 		public static Double Sqrt(this Double value)
 		{
 			return Math.Sqrt(value);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Char Difference(this Char value, Char between)
+		{
+			return value <= between ? (Char) (between - value) : (Char) (value - between);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte Difference(this SByte value, SByte between)
+		{
+			unchecked
+			{
+				return (Byte) (value >= between ? (Byte) value - (Byte) between : (Byte) between - (Byte) value);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte Difference(this Byte value, Byte between)
+		{
+			return value <= between ? (Byte) (between - value) : (Byte) (value - between);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 Difference(this Int16 value, Int16 between)
+		{
+			unchecked
+			{
+				return (UInt16) (value >= between ? (UInt16) value - (UInt16) between : (UInt16) between - (UInt16) value);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 Difference(this UInt16 value, UInt16 between)
+		{
+			return value <= between ? (UInt16) (between - value) : (UInt16) (value - between);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 Difference(this Int32 value, Int32 between)
+		{
+			unchecked
+			{
+				return value >= between ? (UInt32) value - (UInt32) between : (UInt32) between - (UInt32) value;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 Difference(this UInt32 value, UInt32 between)
+		{
+			return value <= between ? between - value : value - between;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 Difference(this Int64 value, Int64 between)
+		{
+			unchecked
+			{
+				return value >= between ? (UInt64) value - (UInt64) between : (UInt64) between - (UInt64) value;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 Difference(this UInt64 value, UInt64 between)
+		{
+			return value <= between ? between - value : value - between;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single Difference(this Single value, Single between)
+		{
+			return value <= between ? Abs(between - value) : Abs(value - between);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Difference(this Double value, Double between)
+		{
+			return value <= between ? Abs(between - value) : Abs(value - between);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal Difference(this Decimal value, Decimal between)
+		{
+			return value <= between ? Abs(between - value) : Abs(value - between);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static BigInteger Difference(this BigInteger value, BigInteger between)
+		{
+			return value <= between ? Abs(between - value) : Abs(value - between);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Char DiscreteDifference(this Char value, Char between)
+		{
+			return Difference(value, between);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte DiscreteDifference(this SByte value, SByte between)
+		{
+			return Difference(value, between);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte DiscreteDifference(this Byte value, Byte between)
+		{
+			return Difference(value, between);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 DiscreteDifference(this Int16 value, Int16 between)
+		{
+			return Difference(value, between);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 DiscreteDifference(this UInt16 value, UInt16 between)
+		{
+			return Difference(value, between);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 DiscreteDifference(this Int32 value, Int32 between)
+		{
+			return Difference(value, between);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 DiscreteDifference(this UInt32 value, UInt32 between)
+		{
+			return Difference(value, between);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 DiscreteDifference(this Int64 value, Int64 between)
+		{
+			return Difference(value, between);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 DiscreteDifference(this UInt64 value, UInt64 between)
+		{
+			return Difference(value, between);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Char DiscreteIncludeDifference(this Char value, Char between)
+		{
+			return DiscreteIncludeDifference(value, between, Char.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Char DiscreteIncludeDifference(this Char value, Char between, Char overflow)
+		{
+			Char difference = DiscreteDifference(value, between);
+			return difference < Char.MaxValue ? (Char) (difference + 1) : overflow;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte DiscreteIncludeDifference(this SByte value, SByte between)
+		{
+			return DiscreteIncludeDifference(value, between, Byte.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte DiscreteIncludeDifference(this SByte value, SByte between, Byte overflow)
+		{
+			Byte difference = DiscreteDifference(value, between);
+			return difference < Byte.MaxValue ? (Byte) (difference + 1) : overflow;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte DiscreteIncludeDifference(this Byte value, Byte between)
+		{
+			return DiscreteIncludeDifference(value, between, Byte.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte DiscreteIncludeDifference(this Byte value, Byte between, Byte overflow)
+		{
+			Byte difference = DiscreteDifference(value, between);
+			return difference < Byte.MaxValue ? (Byte) (difference + 1) : overflow;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 DiscreteIncludeDifference(this Int16 value, Int16 between)
+		{
+			return DiscreteIncludeDifference(value, between, UInt16.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 DiscreteIncludeDifference(this Int16 value, Int16 between, UInt16 overflow)
+		{
+			UInt16 difference = DiscreteDifference(value, between);
+			return difference < UInt16.MaxValue ? (UInt16) (difference + 1) : overflow;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 DiscreteIncludeDifference(this UInt16 value, UInt16 between)
+		{
+			return DiscreteIncludeDifference(value, between, UInt16.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 DiscreteIncludeDifference(this UInt16 value, UInt16 between, UInt16 overflow)
+		{
+			UInt16 difference = DiscreteDifference(value, between);
+			return difference < UInt16.MaxValue ? (UInt16) (difference + 1) : overflow;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 DiscreteIncludeDifference(this Int32 value, Int32 between)
+		{
+			return DiscreteIncludeDifference(value, between, UInt32.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 DiscreteIncludeDifference(this Int32 value, Int32 between, UInt32 overflow)
+		{
+			UInt32 difference = DiscreteDifference(value, between);
+			return difference < UInt32.MaxValue ? difference + 1 : overflow;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 DiscreteIncludeDifference(this UInt32 value, UInt32 between)
+		{
+			return DiscreteIncludeDifference(value, between, UInt32.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 DiscreteIncludeDifference(this UInt32 value, UInt32 between, UInt32 overflow)
+		{
+			UInt32 difference = DiscreteDifference(value, between);
+			return difference < UInt32.MaxValue ? difference + 1 : overflow;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 DiscreteIncludeDifference(this Int64 value, Int64 between)
+		{
+			return DiscreteIncludeDifference(value, between, UInt64.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 DiscreteIncludeDifference(this Int64 value, Int64 between, UInt64 overflow)
+		{
+			UInt64 difference = DiscreteDifference(value, between);
+			return difference < UInt64.MaxValue ? difference + 1 : overflow;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 DiscreteIncludeDifference(this UInt64 value, UInt64 between)
+		{
+			return DiscreteIncludeDifference(value, between, UInt64.MaxValue);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 DiscreteIncludeDifference(this UInt64 value, UInt64 between, UInt64 overflow)
+		{
+			UInt64 difference = DiscreteDifference(value, between);
+			return difference < UInt64.MaxValue ? difference + 1 : overflow;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3657,7 +4186,7 @@ namespace NetExtender.Utils.Numerics
 				Abs(ref value);
 			}
 
-			Int32 max = (Int32) RoundCeil(Log(value, 2));
+			Int32 max = (Int32) Round(Log(value, 2), MidpointRounding.ToPositiveInfinity);
 			Int32 i = max;
 			Span<Char> buffer = stackalloc Char[max];
 
@@ -4440,9 +4969,384 @@ namespace NetExtender.Utils.Numerics
 				return overflow;
 			}
 		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		public static Double Average([NotNull] this IEnumerable<SByte> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			return source.Cast<Double>().Average();
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		public static Double Average([NotNull] this IEnumerable<Byte> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			return source.Cast<Double>().Average();
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		public static Double Average([NotNull] this IEnumerable<Int16> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			return source.Cast<Double>().Average();
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		public static Double Average([NotNull] this IEnumerable<UInt16> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			return source.Cast<Double>().Average();
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		public static Double Average([NotNull] this IEnumerable<UInt32> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			return source.Cast<Double>().Average();
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		public static Double Average([NotNull] this IEnumerable<UInt64> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			return source.Cast<Double>().Average();
+		}
+
+		public static Double Variance([NotNull] this IEnumerable<SByte> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			ICollection<SByte> values = source as ICollection<SByte> ?? source.ToList();
+
+			if (values.Count <= 0)
+			{
+				return 0;
+			}
+
+			Double mean = values.Average();
+			Double sum = values.Sum(x => (x - mean).Pow(2));
+			return sum / values.Count;
+		}
+
+		public static Double Variance([NotNull] this IEnumerable<Byte> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			ICollection<Byte> values = source as ICollection<Byte> ?? source.ToList();
+
+			if (values.Count <= 0)
+			{
+				return 0;
+			}
+
+			Double mean = values.Average();
+			Double sum = values.Sum(x => (x - mean).Pow(2));
+			return sum / values.Count;
+		}
+
+		public static Double Variance([NotNull] this IEnumerable<Int16> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			ICollection<Int16> values = source as ICollection<Int16> ?? source.ToList();
+
+			if (values.Count <= 0)
+			{
+				return 0;
+			}
+
+			Double mean = values.Average();
+			Double sum = values.Sum(x => (x - mean).Pow(2));
+			return sum / values.Count;
+		}
+
+		public static Double Variance([NotNull] this IEnumerable<UInt16> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			ICollection<UInt16> values = source as ICollection<UInt16> ?? source.ToList();
+
+			if (values.Count <= 0)
+			{
+				return 0;
+			}
+
+			Double mean = values.Average();
+			Double sum = values.Sum(x => (x - mean).Pow(2));
+			return sum / values.Count;
+		}
+
+		public static Double Variance([NotNull] this IEnumerable<Int32> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			ICollection<Int32> values = source as ICollection<Int32> ?? source.ToList();
+
+			if (values.Count <= 0)
+			{
+				return 0;
+			}
+
+			Double mean = values.Average();
+			Double sum = values.Sum(x => (x - mean).Pow(2));
+			return sum / values.Count;
+		}
+
+		public static Double Variance([NotNull] this IEnumerable<UInt32> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			ICollection<UInt32> values = source as ICollection<UInt32> ?? source.ToList();
+
+			if (values.Count <= 0)
+			{
+				return 0;
+			}
+
+			Double mean = values.Average();
+			Double sum = values.Sum(x => (x - mean).Pow(2));
+			return sum / values.Count;
+		}
+
+		public static Double Variance([NotNull] this IEnumerable<Int64> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			ICollection<Int64> values = source as ICollection<Int64> ?? source.ToList();
+
+			if (values.Count <= 0)
+			{
+				return 0;
+			}
+
+			Double mean = values.Average();
+			Double sum = values.Sum(x => (x - mean).Pow(2));
+			return sum / values.Count;
+		}
+
+		public static Double Variance([NotNull] this IEnumerable<UInt64> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			ICollection<UInt64> values = source as ICollection<UInt64> ?? source.ToList();
+
+			if (values.Count <= 0)
+			{
+				return 0;
+			}
+
+			Double mean = values.Average();
+			Double sum = values.Sum(x => (x - mean).Pow(2));
+			return sum / values.Count;
+		}
+
+		public static Double Variance([NotNull] this IEnumerable<Single> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			ICollection<Single> values = source as ICollection<Single> ?? source.ToList();
+
+			if (values.Count <= 0)
+			{
+				return 0;
+			}
+
+			Double mean = values.Average();
+			Double sum = values.Sum(x => (x - mean).Pow(2));
+			return sum / values.Count;
+		}
+
+		public static Double Variance([NotNull] this IEnumerable<Double> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			ICollection<Double> values = source as ICollection<Double> ?? source.ToList();
+
+			if (values.Count <= 0)
+			{
+				return 0;
+			}
+
+			Double mean = values.Average();
+			Double sum = values.Sum(x => (x - mean).Pow(2));
+			return sum / values.Count;
+		}
+
+		public static Decimal Variance([NotNull] this IEnumerable<Decimal> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			ICollection<Decimal> values = source as ICollection<Decimal> ?? source.ToList();
+
+			if (values.Count <= 0)
+			{
+				return 0;
+			}
+
+			Decimal mean = values.Average();
+			Decimal sum = values.Sum(x => (x - mean).Pow(2));
+			return sum / values.Count;
+		}
+
+		public static Double StandardDeviation([NotNull] this IEnumerable<SByte> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			return source.Variance().Sqrt();
+		}
+		public static Double StandardDeviation([NotNull] this IEnumerable<Byte> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			return source.Variance().Sqrt();
+		}
+		public static Double StandardDeviation([NotNull] this IEnumerable<Int16> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			return source.Variance().Sqrt();
+		}
+		public static Double StandardDeviation([NotNull] this IEnumerable<UInt16> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			return source.Variance().Sqrt();
+		}
+		public static Double StandardDeviation([NotNull] this IEnumerable<Int32> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			return source.Variance().Sqrt();
+		}
+		public static Double StandardDeviation([NotNull] this IEnumerable<UInt32> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			return source.Variance().Sqrt();
+		}
+		public static Double StandardDeviation([NotNull] this IEnumerable<Int64> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			return source.Variance().Sqrt();
+		}
+		public static Double StandardDeviation([NotNull] this IEnumerable<UInt64> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			return source.Variance().Sqrt();
+		}
+		public static Double StandardDeviation([NotNull] this IEnumerable<Single> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			return source.Variance().Sqrt();
+		}
+		public static Double StandardDeviation([NotNull] this IEnumerable<Double> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			return source.Variance().Sqrt();
+		}
+		public static Decimal StandardDeviation([NotNull] this IEnumerable<Decimal> source)
+		{
+			if (source is null)
+			{
+				throw new ArgumentNullException(nameof(source));
+			}
+
+			return source.Variance().Sqrt();
+		}
     }
 
-    [SuppressMessage("ReSharper", "InvertIf")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "InvertIf")]
     public static class MathUnsafe
     {
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

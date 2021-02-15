@@ -1,9 +1,9 @@
 <#@ template language="C#v3.5" #>
 <#@ output extension=".cs" encoding="utf-8"#>
 <#@ assembly name="System.Core"#>
+<#@ import namespace="System.Collections" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Collections" #>
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
@@ -11,7 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Linq;
+using JetBrains.Annotations;
 using NetExtender.Random.Interfaces;
+using NetExtender.Utils.Types;
 
 namespace NetExtender.Utils.Numerics
 {
@@ -45,6 +47,35 @@ namespace NetExtender.Utils.Numerics
     {
         return type == nameof(Char) || type == nameof(SByte) || type == nameof(Byte) || type == nameof(Int16) || type == nameof(UInt16) || type == nameof(Int32) ||
                type == nameof(UInt32) || type == nameof(Int64) || type == nameof(UInt64);
+    }
+
+    static Boolean IsFloatType(String type)
+    {
+        return type == nameof(Single) || type == nameof(Double);
+    }
+    
+    static String ToSignedType(String type)
+    {
+        return type switch
+        {
+            nameof(Byte) => nameof(SByte),
+            nameof(UInt16) => nameof(Int16),
+            nameof(UInt32) => nameof(Int32),
+            nameof(UInt64) => nameof(Int64),
+            _ => type
+        };
+    }
+
+    static String ToUnsignedType(String type)
+    {
+        return type switch
+        {
+            nameof(SByte) => nameof(Byte),
+            nameof(Int16) => nameof(UInt16),
+            nameof(Int32) => nameof(UInt32),
+            nameof(Int64) => nameof(UInt64),
+            _ => type
+        };
     }
 
     void ForEach(IEnumerable<String> types, Action<String> action, Boolean line = true)
@@ -168,7 +199,7 @@ namespace NetExtender.Utils.Numerics
             WriteLine("\t\t\t}");
             WriteLine(String.Empty);
             WriteLine($"\t\t\t{nameof(Double)} value = {nameof(Next)}{nameof(Double)}({item.Value.Item2});");
-            WriteLine($"\t\t\treturn ({type}) (MathUtils.RoundBanking(value * max - value * min) + min);");
+            WriteLine($"\t\t\treturn ({type}) ((value * max - value * min).Round() + min);");
             WriteLine("\t\t}");
 
             WriteLine(String.Empty);
@@ -497,9 +528,9 @@ namespace NetExtender.Utils.Numerics
             foreach ((String, String)? item in random)
             {
                 WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-                WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(Range)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 : String.Empty)})");
+                WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {nameof(Range)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 : String.Empty)})");
                 WriteLine("\t\t{");
-                WriteLine($"\t\t\treturn {type}{nameof(Range)}({(item.HasValue ? item.Value.Item2 + $", {type}.MinValue, {type}.MaxValue" : Generator)});");
+                WriteLine($"\t\t\treturn {nameof(Range)}({(item.HasValue ? item.Value.Item2 + $", {type}.MinValue, {type}.MaxValue" : Generator)});");
                 WriteLine("\t\t}");
 
                 WriteLine(String.Empty);
@@ -509,9 +540,9 @@ namespace NetExtender.Utils.Numerics
         foreach ((String, String)? item in random)
         {
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-            WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(Range)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} max)");
+            WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {nameof(Range)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} max)");
             WriteLine("\t\t{");
-            WriteLine($"\t\t\treturn {type}{nameof(Range)}({(item.HasValue ? item.Value.Item2 : Generator)}{(item.HasValue ? $", {type}.MinValue" : String.Empty)}, max);");
+            WriteLine($"\t\t\treturn {nameof(Range)}({(item.HasValue ? item.Value.Item2 : Generator)}{(item.HasValue ? $", {type}.MinValue" : String.Empty)}, max);");
             WriteLine("\t\t}");
 
             WriteLine(String.Empty);
@@ -522,9 +553,9 @@ namespace NetExtender.Utils.Numerics
             foreach ((String, String)? item in random)
             {
                 WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-                WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(Range)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} max, Int32 count)");
+                WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {nameof(Range)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} max, Int32 count)");
                 WriteLine("\t\t{");
-                WriteLine($"\t\t\treturn {type}{nameof(Range)}({(item.HasValue ? item.Value.Item2 : Generator)}{(item.HasValue ? $", {type}.MinValue" : String.Empty)}, max, count);");
+                WriteLine($"\t\t\treturn {nameof(Range)}({(item.HasValue ? item.Value.Item2 : Generator)}{(item.HasValue ? $", {type}.MinValue" : String.Empty)}, max, count);");
                 WriteLine("\t\t}");
 
                 WriteLine(String.Empty);
@@ -534,7 +565,7 @@ namespace NetExtender.Utils.Numerics
         foreach ((String, String)? item in random)
         {
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-            WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(Range)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} min, {type} max)");
+            WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {nameof(Range)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} min, {type} max)");
             WriteLine("\t\t{");
             WriteLine($"\t\t\treturn {nameof(Range)}({(item.HasValue ? item.Value.Item2 + ", " : String.Empty)}min, max, {nameof(Next)}{type});");
             WriteLine("\t\t}");
@@ -545,7 +576,7 @@ namespace NetExtender.Utils.Numerics
         foreach ((String, String)? item in random)
         {
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-            WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(Range)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} min, {type} max, Int32 count)");
+            WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {nameof(Range)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} min, {type} max, Int32 count)");
             WriteLine("\t\t{");
             WriteLine($"\t\t\treturn {nameof(Range)}({(item.HasValue ? item.Value.Item2 + ", " : String.Empty)}min, max, count, {nameof(Next)}{type});");
             WriteLine("\t\t}");
@@ -566,9 +597,9 @@ namespace NetExtender.Utils.Numerics
             foreach ((String, String)? item in random)
             {
                 WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-                WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(NonNegativeRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 : String.Empty)})");
+                WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {nameof(NonNegativeRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 : String.Empty)})");
                 WriteLine("\t\t{");
-                WriteLine($"\t\t\treturn {type}{nameof(NonNegativeRange)}({(item.HasValue ? item.Value.Item2 + $", default, {type}.MaxValue" : Generator)});");
+                WriteLine($"\t\t\treturn {nameof(NonNegativeRange)}({(item.HasValue ? item.Value.Item2 + $", {type}.MaxValue" : Generator)});");
                 WriteLine("\t\t}");
 
                 WriteLine(String.Empty);
@@ -578,9 +609,9 @@ namespace NetExtender.Utils.Numerics
         foreach ((String, String)? item in random)
         {
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-            WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(NonNegativeRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} max)");
+            WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {nameof(NonNegativeRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} max)");
             WriteLine("\t\t{");
-            WriteLine($"\t\t\treturn {type}{nameof(NonNegativeRange)}({(item.HasValue ? item.Value.Item2 : Generator)}{(item.HasValue ? ", default" : String.Empty)}, max);");
+            WriteLine($"\t\t\treturn {nameof(NonNegativeRange)}({(item.HasValue ? item.Value.Item2 : Generator)}{(item.HasValue ? $", default{(IsSmallType(type) || type == nameof(Int32) ? $"({type})" : String.Empty)}" : String.Empty)}, max);");
             WriteLine("\t\t}");
 
             WriteLine(String.Empty);
@@ -591,9 +622,9 @@ namespace NetExtender.Utils.Numerics
             foreach ((String, String)? item in random)
             {
                 WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-                WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(NonNegativeRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} max, Int32 count)");
+                WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {nameof(NonNegativeRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} max, Int32 count)");
                 WriteLine("\t\t{");
-                WriteLine($"\t\t\treturn {type}{nameof(NonNegativeRange)}({(item.HasValue ? item.Value.Item2 : Generator)}{(item.HasValue ? ", default" : String.Empty)}, max, count);");
+                WriteLine($"\t\t\treturn {nameof(NonNegativeRange)}({(item.HasValue ? item.Value.Item2 : Generator)}{(item.HasValue ? $", default{(IsSmallType(type) || type == nameof(Int32) ? $"({type})" : String.Empty)}" : String.Empty)}, max, count);");
                 WriteLine("\t\t}");
 
                 WriteLine(String.Empty);
@@ -603,7 +634,7 @@ namespace NetExtender.Utils.Numerics
         foreach ((String, String)? item in random)
         {
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-            WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(NonNegativeRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} min, {type} max)");
+            WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {nameof(NonNegativeRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} min, {type} max)");
             WriteLine("\t\t{");
             WriteLine($"\t\t\treturn {nameof(Range)}({(item.HasValue ? item.Value.Item2 + ", " : String.Empty)}min, max, {nameof(NextNonNegative)}{type});");
             WriteLine("\t\t}");
@@ -614,7 +645,7 @@ namespace NetExtender.Utils.Numerics
         foreach ((String, String)? item in random)
         {
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-            WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(NonNegativeRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} min, {type} max, Int32 count)");
+            WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {nameof(NonNegativeRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} min, {type} max, Int32 count)");
             WriteLine("\t\t{");
             WriteLine($"\t\t\treturn {nameof(Range)}({(item.HasValue ? item.Value.Item2 + ", " : String.Empty)}min, max, count, {nameof(NextNonNegative)}{type});");
             WriteLine("\t\t}");
@@ -635,9 +666,9 @@ namespace NetExtender.Utils.Numerics
             foreach ((String, String)? item in random)
             {
                 WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-                WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(NonZeroRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 : String.Empty)})");
+                WriteLine($"\t\tpublic static {nameof(IEnumerable)}<{type}> {nameof(NonZeroRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 : String.Empty)})");
                 WriteLine("\t\t{");
-                WriteLine($"\t\t\treturn {type}{nameof(NonZeroRange)}({(item.HasValue ? item.Value.Item2 + ", " : String.Empty)}{type}.MinValue, {type}.MaxValue);");
+                WriteLine($"\t\t\treturn {nameof(NonZeroRange)}({(item.HasValue ? item.Value.Item2 + ", " : String.Empty)}{type}.MinValue, {type}.MaxValue);");
                 WriteLine("\t\t}");
                 
                 WriteLine(String.Empty);
@@ -648,9 +679,9 @@ namespace NetExtender.Utils.Numerics
         {
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
             WriteLine(
-                $"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(NonZeroRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} max)");
+                $"\t\tpublic static {nameof(IEnumerable)}<{type}> {nameof(NonZeroRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} max)");
             WriteLine("\t\t{");
-            WriteLine($"\t\t\treturn {type}{nameof(NonZeroRange)}({(item.HasValue ? item.Value.Item2 + ", " : String.Empty)}{type}.MinValue, max);");
+            WriteLine($"\t\t\treturn {nameof(NonZeroRange)}({(item.HasValue ? item.Value.Item2 + ", " : String.Empty)}{type}.MinValue, max);");
             WriteLine("\t\t}");
 
             WriteLine(String.Empty);
@@ -660,7 +691,7 @@ namespace NetExtender.Utils.Numerics
         {
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
             WriteLine(
-                $"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(NonZeroRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} min, {type} max)");
+                $"\t\tpublic static {nameof(IEnumerable)}<{type}> {nameof(NonZeroRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} min, {type} max)");
             WriteLine("\t\t{");
             WriteLine($"\t\t\treturn {nameof(Range)}({(item.HasValue ? item.Value.Item2 + ", " : String.Empty)}min, max, {nameof(NextNonZero)}{type});");
             WriteLine("\t\t}");
@@ -672,7 +703,7 @@ namespace NetExtender.Utils.Numerics
         {
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
             WriteLine(
-                $"\t\tpublic static {nameof(IEnumerable)}<{type}> {type}{nameof(NonZeroRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} min, {type} max, Int32 count)");
+                $"\t\tpublic static {nameof(IEnumerable)}<{type}> {nameof(NonZeroRange)}({(item.HasValue ? "this " + item.Value.Item1 + " " + item.Value.Item2 + ", " : String.Empty)}{type} min, {type} max, Int32 count)");
             WriteLine("\t\t{");
             WriteLine($"\t\t\treturn {nameof(Range)}({(item.HasValue ? item.Value.Item2 + ", " : String.Empty)}min, max, count, {nameof(NextNonZero)}{type});");
             WriteLine("\t\t}");
@@ -684,6 +715,279 @@ namespace NetExtender.Utils.Numerics
     void NonZeroRange()
     {
         ForEach(types, NonZeroRangeFunc, false);
+    }
+
+    void UniqueRangeFunc(String type)
+    {
+        foreach ((String, String) item in random.Where(item => item.HasValue).Select(item => item.Value))
+        {
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tprivate static IEnumerable<{type}> UniqueSetRange([NotNull] {item.Item1} {item.Item2}, {type} min, {type} max{(IsIntType(type) ? String.Empty : $", {nameof(Byte)} digits, {nameof(MidpointRounding)} rounding")})");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\t{nameof(Int32)} difference = {(IsSmallType(type) ? String.Empty : $"({nameof(Int32)}) ")}Math.Min(max.DiscreteIncludeDifference(min{(IsIntType(type) ? String.Empty : ", digits")}, {(IsIntType(type) ? ToUnsignedType(type) : nameof(Decimal))}.MaxValue), {nameof(Int32)}.MaxValue);");
+            WriteLine($"\t\t\tHashSet<{type}> set = new HashSet<{type}>(Math.Min(difference, {nameof(Byte)}.MaxValue));");
+            WriteLine(String.Empty);
+            WriteLine("\t\t\twhile (set.Count < difference)");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\t{type} item = {nameof(Next)}{type}(random, min, max){(IsIntType(type) ? String.Empty : ".Round(digits, rounding)")};");
+            WriteLine("\t\t\t\tif (set.Add(item))");
+            WriteLine("\t\t\t\t{");
+            WriteLine("\t\t\t\t\tyield return item;");
+            WriteLine("\t\t\t\t}");
+            WriteLine("\t\t\t}");
+            WriteLine("\t\t}");
+            
+            WriteLine(String.Empty);
+        }
+        
+        foreach ((String, String) item in random.Where(item => item.HasValue).Select(item => item.Value))
+        {
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tprivate static IEnumerable<{type}> UniqueSetRange([NotNull] {item.Item1} {item.Item2}, {type} min, {type} max{(IsIntType(type) ? String.Empty : $", {nameof(Byte)} digits, {nameof(MidpointRounding)} rounding")}, {nameof(Int32)} count)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\tHashSet<{type}> set = new HashSet<{type}>(count);");
+            WriteLine(String.Empty);
+            WriteLine("\t\t\twhile (set.Count < count)");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\t{type} item = {nameof(Next)}{type}(random, min, max){(IsIntType(type) ? String.Empty : ".Round(digits, rounding)")};");
+            WriteLine("\t\t\t\tif (set.Add(item))");
+            WriteLine("\t\t\t\t{");
+            WriteLine("\t\t\t\t\tyield return item;");
+            WriteLine("\t\t\t\t}");
+            WriteLine("\t\t\t}");
+            WriteLine("\t\t}");
+                
+            WriteLine(String.Empty);
+        }
+
+        if (IsIntType(type))
+        {
+            foreach ((String, String) item in random.Where(item => item.HasValue).Select(item => item.Value))
+            {
+                WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+                WriteLine($"\t\tprivate static IEnumerable<{type}> UniqueShuffleRange([NotNull] {item.Item1} {item.Item2}, {type} min, {type} max)");
+                WriteLine("\t\t{");
+                WriteLine("\t\t\treturn MathUtils.RangeInclude(min, max).Shuffle(random);");
+                WriteLine("\t\t}");
+
+                WriteLine(String.Empty);
+            }
+
+            foreach ((String, String) item in random.Where(item => item.HasValue).Select(item => item.Value))
+            {
+                WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+                WriteLine($"\t\tprivate static IEnumerable<{type}> UniqueShuffleRange([NotNull] {item.Item1} {item.Item2}, {type} min, {type} max, {nameof(Int32)} count)");
+                WriteLine("\t\t{");
+                WriteLine("\t\t\treturn UniqueShuffleRange(random, min, max).Take(count);");
+                WriteLine("\t\t}");
+
+                WriteLine(String.Empty);
+            }
+        }
+
+        foreach ((String, String)? item in random)
+        {
+            if (item is null)
+            {
+                if (!IsIntType(type))
+                {
+                    WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+                    WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}({type} min, {type} max)");
+                    WriteLine("\t\t{");
+                    WriteLine($"\t\t\treturn {nameof(UniqueRange)}(min, max, 0);");
+                    WriteLine("\t\t}");
+                    
+                    WriteLine(String.Empty);
+                    
+                    WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+                    WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}({type} min, {type} max{(IsIntType(type) ? String.Empty : $", {nameof(Byte)} digits")})");
+                    WriteLine("\t\t{");
+                    WriteLine($"\t\t\treturn {nameof(UniqueRange)}(min, max, digits, MathUtils.DefaultRoundType);");
+                    WriteLine("\t\t}");
+                    
+                    WriteLine(String.Empty);
+                }
+                
+                WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+                WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}({type} min, {type} max{(IsIntType(type) ? String.Empty : $", {nameof(Byte)} digits, {nameof(MidpointRounding)} rounding")})");
+                WriteLine("\t\t{");
+                WriteLine($"\t\t\treturn {nameof(UniqueRange)}({Generator}, min, max{(IsIntType(type) ? String.Empty : ", digits, rounding")});");
+                WriteLine("\t\t}");
+                
+                WriteLine(String.Empty);
+                continue;
+            }
+
+            if (!IsIntType(type))
+            {
+                WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+                WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}([NotNull] this {item.Value.Item1} {item.Value.Item2}, {type} min, {type} max)");
+                WriteLine("\t\t{");
+                WriteLine($"\t\t\treturn {nameof(UniqueRange)}({item.Value.Item2}, min, max, 0);");
+                WriteLine("\t\t}");
+                    
+                WriteLine(String.Empty);
+                    
+                WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+                WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}([NotNull] this {item.Value.Item1} {item.Value.Item2}, {type} min, {type} max{(IsIntType(type) ? String.Empty : $", {nameof(Byte)} digits")})");
+                WriteLine("\t\t{");
+                WriteLine($"\t\t\treturn {nameof(UniqueRange)}({item.Value.Item2}, min, max, digits, MathUtils.DefaultRoundType);");
+                WriteLine("\t\t}");
+                    
+                WriteLine(String.Empty);
+            }
+            
+            WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}([NotNull] this {item.Value.Item1} {item.Value.Item2}, {type} min, {type} max{(IsIntType(type) ? String.Empty : $", {nameof(Byte)} digits, {nameof(MidpointRounding)} rounding")})");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\tif ({item.Value.Item2} is null)");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\tthrow new ArgumentNullException(nameof({item.Value.Item2}));");
+            WriteLine("\t\t\t}");
+            
+            WriteLine(String.Empty);
+            
+            WriteLine($"\t\t\tif ({(IsFloatType(type) ? $"Math.Abs(max - min) < {type}.Epsilon" : "max == min")})");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\treturn EnumerableUtils.GetEnumerableFrom(min);");
+            WriteLine("\t\t\t}");
+            
+            WriteLine(String.Empty);
+            
+            WriteLine("\t\t\tif (max < min)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\t(min, max) = (max, min);");
+            WriteLine("\t\t\t}");
+            
+            WriteLine(String.Empty);
+
+            if (IsIntType(type))
+            {
+                WriteLine($"\t\t\t{ToUnsignedType(type)} difference = max.DiscreteIncludeDifference(min, {ToUnsignedType(type)}.MaxValue);");
+                WriteLine($"\t\t\treturn difference <= ({nameof(Byte)}.MaxValue + 1) * 4 ?");
+                WriteLine($"\t\t\t\tUniqueShuffleRange({item.Value.Item2}, min, max, {(!IsSmallType(type) ? $"({nameof(Int32)}) " : String.Empty)}difference) :");
+                WriteLine($"\t\t\t\tUniqueSetRange({item.Value.Item2}, min, max);");
+            }
+            else
+            {
+                WriteLine("\t\t\tMathUtils.ToRange(ref digits, 0, 15);");
+                WriteLine(String.Empty);
+                WriteLine($"\t\t\t{nameof(Decimal)} difference = max.DiscreteIncludeDifference(min, digits, {nameof(Decimal)}.MaxValue);");
+                WriteLine("\t\t\treturn difference <= (Byte.MaxValue + 1) * 4 ? UniqueSetRange(random, min, max, digits, rounding, (Int32) difference) : UniqueSetRange(random, min, max, digits, rounding);");
+            }
+
+            WriteLine("\t\t}");
+            
+            WriteLine(String.Empty);
+        }
+        
+        foreach ((String, String)? item in random)
+        {
+            if (item is null)
+            {
+                if (!IsIntType(type))
+                {
+                    WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+                    WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}({type} min, {type} max, {nameof(Int32)} count)");
+                    WriteLine("\t\t{");
+                    WriteLine($"\t\t\treturn {nameof(UniqueRange)}(min, max, 0, count);");
+                    WriteLine("\t\t}");
+                    
+                    WriteLine(String.Empty);
+                    
+                    WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+                    WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}({type} min, {type} max{(IsIntType(type) ? String.Empty : $", {nameof(Byte)} digits")}, {nameof(Int32)} count)");
+                    WriteLine("\t\t{");
+                    WriteLine($"\t\t\treturn {nameof(UniqueRange)}(min, max, digits, MathUtils.DefaultRoundType, count);");
+                    WriteLine("\t\t}");
+                    
+                    WriteLine(String.Empty);
+                }
+                
+                WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+                WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}({type} min, {type} max{(IsIntType(type) ? String.Empty : $", {nameof(Byte)} digits, {nameof(MidpointRounding)} rounding")}, {nameof(Int32)} count)");
+                WriteLine("\t\t{");
+                WriteLine($"\t\t\treturn {nameof(UniqueRange)}({Generator}, min, max{(IsIntType(type) ? String.Empty : ", digits, rounding")}, count);");
+                WriteLine("\t\t}");
+                WriteLine(String.Empty);
+                continue;
+            }
+            
+            if (!IsIntType(type))
+            {
+                WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+                WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}([NotNull] this {item.Value.Item1} {item.Value.Item2}, {type} min, {type} max, {nameof(Int32)} count)");
+                WriteLine("\t\t{");
+                WriteLine($"\t\t\treturn {nameof(UniqueRange)}({item.Value.Item2}, min, max, 0, count);");
+                WriteLine("\t\t}");
+                    
+                WriteLine(String.Empty);
+                    
+                WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+                WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}([NotNull] this {item.Value.Item1} {item.Value.Item2}, {type} min, {type} max{(IsIntType(type) ? String.Empty : $", {nameof(Byte)} digits")}, {nameof(Int32)} count)");
+                WriteLine("\t\t{");
+                WriteLine($"\t\t\treturn {nameof(UniqueRange)}({item.Value.Item2}, min, max, digits, MathUtils.DefaultRoundType, count);");
+                WriteLine("\t\t}");
+                    
+                WriteLine(String.Empty);
+            }
+            
+            WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}([NotNull] this {item.Value.Item1} {item.Value.Item2}, {type} min, {type} max{(IsIntType(type) ? String.Empty : $", {nameof(Byte)} digits, {nameof(MidpointRounding)} rounding")}, {nameof(Int32)} count)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\tif ({item.Value.Item2} is null)");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\tthrow new ArgumentNullException(nameof({item.Value.Item2}));");
+            WriteLine("\t\t\t}");
+            
+            WriteLine(String.Empty);
+            
+            WriteLine("\t\t\tswitch (count)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\tcase <= 0:");
+            WriteLine($"\t\t\t\t\treturn Enumerable.Empty<{type}>();");
+            WriteLine("\t\t\t\tcase 1:");
+            WriteLine($"\t\t\t\t\treturn EnumerableUtils.GetEnumerableFrom({nameof(Next)}{type}(random, min, max));");
+            WriteLine("\t\t\t}");
+            
+            WriteLine(String.Empty);
+            
+            WriteLine($"\t\t\tif ({(IsFloatType(type) ? $"Math.Abs(max - min) < {type}.Epsilon" : "max == min")})");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\treturn EnumerableUtils.GetEnumerableFrom(min);");
+            WriteLine("\t\t\t}");
+            
+            WriteLine(String.Empty);
+            
+            WriteLine("\t\t\tif (max < min)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\t(min, max) = (max, min);");
+            WriteLine("\t\t\t}");
+            
+            WriteLine(String.Empty);
+
+            if (IsIntType(type))
+            {
+                WriteLine($"\t\t\t{ToUnsignedType(type)} difference = max.DiscreteIncludeDifference(min, {ToUnsignedType(type)}.MaxValue);");
+                WriteLine($"\t\t\tcount = ({nameof(Int32)}) Math.Min(({nameof(UInt32)}) count, difference);");
+                WriteLine($"\t\t\treturn count <= {nameof(SByte)}.MaxValue + 1 || count / ({nameof(Double)}) difference >= 0.8 ?");
+                WriteLine($"\t\t\t\tUniqueShuffleRange({item.Value.Item2}, min, max, count) :");
+                WriteLine($"\t\t\t\tUniqueSetRange({item.Value.Item2}, min, max, count);");
+            }
+            else
+            {
+                WriteLine("\t\t\tMathUtils.ToRange(ref digits, 0, 15);");
+                WriteLine(String.Empty);
+                WriteLine($"\t\t\treturn UniqueSetRange(random, min, max, digits, rounding, (Int32) Math.Min(count, max.DiscreteIncludeDifference(min, digits, {nameof(Decimal)}.MaxValue)));");
+            }
+
+            WriteLine("\t\t}");
+            
+            WriteLine(String.Empty);
+        }
+    }
+    
+    void UniqueRange()
+    {
+        ForEach(types, UniqueRangeFunc, false);
     }
 #>
     public static partial class RandomUtils
@@ -700,6 +1004,7 @@ namespace NetExtender.Utils.Numerics
     Range();
     NonNegativeRange();
     NonZeroRange();
+    UniqueRange();
 #>
     }
 }

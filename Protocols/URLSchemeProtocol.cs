@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using JetBrains.Annotations;
 using Microsoft.Win32;
 using NetExtender.Apps.Data.Interfaces;
 using NetExtender.Apps.Domains;
@@ -17,10 +18,20 @@ namespace NetExtender.Protocols
 
     internal class URLSchemeProtocol
     {
-        private readonly IAppDataEx _data;
+        private readonly IAppData _data;
 
-        public URLSchemeProtocol(IAppDataEx data)
+        public URLSchemeProtocol()
+            : this(Domain.Current.Data)
         {
+        }
+        
+        public URLSchemeProtocol([NotNull] IAppData data)
+        {
+            if (data is null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
             if (String.IsNullOrWhiteSpace(data.AppName) || String.IsNullOrWhiteSpace(data.AppShortName))
             {
                 throw new ArgumentException("Not null or whitespace app name");

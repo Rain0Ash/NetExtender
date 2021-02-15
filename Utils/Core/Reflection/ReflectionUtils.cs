@@ -2,12 +2,15 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Reflection;
+using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utils.Core
@@ -526,6 +529,101 @@ namespace NetExtender.Utils.Core
             }
 
             return type.IsValueType && type.IsPrimitive;
+        }
+
+        private static class SizeCache<T> where T : struct
+        {
+            // ReSharper disable once StaticMemberInGenericType
+            public static Int32 Size { get; }
+
+            static SizeCache()
+            {
+                Size = GetTypeSize(typeof(T));
+            }
+        }
+
+        private static class SizeCache
+        {
+            private static ConcurrentDictionary<Type, Int32> Cache { get; } = new ConcurrentDictionary<Type, Int32>();
+            
+            public static Int32 GetSize(Type type)
+            {
+                if (Cache.TryGetValue(type, out Int32 size))
+                {
+                    return size;
+                }
+
+                if (!type.IsValueType)
+                {
+                    throw new ArgumentException(@"Is not value type", nameof(type));
+                }
+
+                DynamicMethod method = new DynamicMethod("SizeOfType", typeof(Int32), Array.Empty<Type>());
+                ILGenerator il = method.GetILGenerator();
+                il.Emit(OpCodes.Sizeof, type);
+                il.Emit(OpCodes.Ret);
+                
+                // ReSharper disable once PossibleNullReferenceException
+                size = (Int32) method.Invoke(null, null);
+                Cache.TryAdd(type, size);
+                return size;
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 GetSize<T>(this T _) where T : struct
+        {
+            return GetSize<T>();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 GetSize<T>(this T[] array) where T : struct
+        {
+            return SizeCache<T>.Size * array.Length;
+        }
+        
+        public static Boolean GetSize<T>(this T[] array, out Int64 size) where T : struct
+        {
+            try
+            {
+                size = SizeCache<T>.Size * array.LongLength;
+                return true;
+            }
+            catch (OverflowException)
+            {
+                size = default;
+                return false;
+            }
+        }
+        
+        public static Boolean GetSize<T>(this T[] array, out BigInteger size) where T : struct
+        {
+            try
+            {
+                size = SizeCache<T>.Size * (BigInteger) array.LongLength;
+                return true;
+            }
+            catch (OverflowException)
+            {
+                size = default;
+                return false;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 GetSize<T>() where T : struct
+        {
+            return SizeCache<T>.Size;
+        }
+
+        private static Int32 GetTypeSize(Type type)
+        {
+            if (type.IsValueType)
+            {
+                throw new ArgumentException(@"Is not value type", nameof(type));
+            }
+
+            return SizeCache.GetSize(type);
         }
 
         /// <summary>

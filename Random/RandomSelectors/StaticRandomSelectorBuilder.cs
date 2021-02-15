@@ -6,7 +6,6 @@ using System;
 using JetBrains.Annotations;
 using NetExtender.Random.Interfaces;
 using NetExtender.Utils.Numerics;
-using NetExtender.Utils.Types;
 
  namespace NetExtender.Random
 {

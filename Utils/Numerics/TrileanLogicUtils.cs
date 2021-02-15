@@ -14,8 +14,8 @@ namespace NetExtender.Utils.Numerics
         /// <summary>
         /// Return EQ (==)
         /// </summary>
-        /// <param name="first">First boolean</param>
-        /// <param name="second">Second boolean</param>
+        /// <param name="first">First trilean</param>
+        /// <param name="second">Second trilean</param>
         /// <returns><see cref="first"/> == <see cref="second"/></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Eq(Trilean first, Trilean second)
@@ -26,20 +26,20 @@ namespace NetExtender.Utils.Numerics
         /// <summary>
         /// Return EQ (==)
         /// </summary>
-        /// <param name="first">First boolean</param>
-        /// <param name="second">Second boolean</param>
-        /// <param name="third">Third boolean</param>
+        /// <param name="first">First trilean</param>
+        /// <param name="second">Second trilean</param>
+        /// <param name="third">Third trilean</param>
         /// <returns><see cref="first"/> == <see cref="second"/> == <see cref="third"/></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Eq(Trilean first, Trilean second, Trilean third)
         {
-            return first == second == third;
+            return first == second && second == third;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Eq(Trilean first, Trilean second, Trilean third, params Trilean[] values)
         {
-            return values.Prepend(second, third).All(boolean => boolean == first);
+            return values.Prepend(second, third).All(trilean => trilean == first);
         }
 
         public static Trilean Eq(ReadOnlySpan<Trilean> values)
@@ -57,8 +57,8 @@ namespace NetExtender.Utils.Numerics
         /// <summary>
         /// Return AND (&&)
         /// </summary>
-        /// <param name="first">First boolean</param>
-        /// <param name="second">Second boolean</param>
+        /// <param name="first">First trilean</param>
+        /// <param name="second">Second trilean</param>
         /// <returns><see cref="first"/> && <see cref="second"/></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean And(Trilean first, Trilean second)
@@ -69,9 +69,9 @@ namespace NetExtender.Utils.Numerics
         /// <summary>
         /// Return AND (&&)
         /// </summary>
-        /// <param name="first">First boolean</param>
-        /// <param name="second">Second boolean</param>
-        /// <param name="third">Third boolean</param>
+        /// <param name="first">First trilean</param>
+        /// <param name="second">Second trilean</param>
+        /// <param name="third">Third trilean</param>
         /// <returns><see cref="first"/> && <see cref="second"/> && <see cref="third"/></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean And(Trilean first, Trilean second, Trilean third)
@@ -82,7 +82,7 @@ namespace NetExtender.Utils.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean And(Trilean first, Trilean second, Trilean third, params Trilean[] values)
         {
-            return values.Prepend(first, second, third).All(boolean => boolean);
+            return values.Prepend(first, second, third).All(trilean => trilean);
         }
         
         public static Trilean And(ReadOnlySpan<Trilean> values)
@@ -93,15 +93,15 @@ namespace NetExtender.Utils.Numerics
                 1 => values[0],
                 2 => And(values[0], values[1]),
                 3 => And(values[0], values[1], values[2]),
-                _ => values.All(boolean => boolean)
+                _ => values.All(trilean => trilean)
             };
         }
 
         /// <summary>
         /// Return OR (||)
         /// </summary>
-        /// <param name="first">First boolean</param>
-        /// <param name="second">Second boolean</param>
+        /// <param name="first">First trilean</param>
+        /// <param name="second">Second trilean</param>
         /// <returns><see cref="first"/> || <see cref="second"/></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Or(Trilean first, Trilean second)
@@ -112,9 +112,9 @@ namespace NetExtender.Utils.Numerics
         /// <summary>
         /// Return OR (||)
         /// </summary>
-        /// <param name="first">First boolean</param>
-        /// <param name="second">Second boolean</param>
-        /// <param name="third">Third boolean</param>
+        /// <param name="first">First trilean</param>
+        /// <param name="second">Second trilean</param>
+        /// <param name="third">Third trilean</param>
         /// <returns><see cref="first"/> || <see cref="second"/> || <see cref="third"/></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Or(Trilean first, Trilean second, Trilean third)
@@ -125,7 +125,7 @@ namespace NetExtender.Utils.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Or(Trilean first, Trilean second, Trilean third, params Trilean[] values)
         {
-            return values.Prepend(first, second, third).Any(boolean => boolean);
+            return values.Prepend(first, second, third).Any(trilean => trilean);
         }
         
         public static Trilean Or(ReadOnlySpan<Trilean> values)
@@ -136,15 +136,15 @@ namespace NetExtender.Utils.Numerics
                 1 => values[0],
                 2 => Or(values[0], values[1]),
                 3 => Or(values[0], values[1], values[2]),
-                _ => values.Any(boolean => boolean)
+                _ => values.Any(trilean => trilean)
             };
         }
 
         /// <summary>
         /// Return XOR (^)
         /// </summary>
-        /// <param name="first">First boolean</param>
-        /// <param name="second">Second boolean</param>
+        /// <param name="first">First trilean</param>
+        /// <param name="second">Second trilean</param>
         /// <returns><see cref="first"/> ^ <see cref="second"/></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Xor(Trilean first, Trilean second)
@@ -155,9 +155,9 @@ namespace NetExtender.Utils.Numerics
         /// <summary>
         /// Return XOR (^)
         /// </summary>
-        /// <param name="first">First boolean</param>
-        /// <param name="second">Second boolean</param>
-        /// <param name="third">Third boolean</param>
+        /// <param name="first">First trilean</param>
+        /// <param name="second">Second trilean</param>
+        /// <param name="third">Third trilean</param>
         /// <returns><see cref="first"/> ^ <see cref="second"/> ^ <see cref="third"/></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Xor(Trilean first, Trilean second, Trilean third)
@@ -171,7 +171,7 @@ namespace NetExtender.Utils.Numerics
             return values.Prepend(first, second, third).Aggregate((current, value) => current ^ value);
         }
         
-        public static Trilean Xor(ReadOnlySpan<Trilean>  values)
+        public static Trilean Xor(ReadOnlySpan<Trilean> values)
         {
             return values.Length switch
             {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using JetBrains.Annotations;
 
-namespace NetExtender.Utils.Types.Queryable
+namespace NetExtender.Utils.Types
 {
     public static class QueryableUtils
     {

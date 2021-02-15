@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Linq;
+using JetBrains.Annotations;
 using NetExtender.Random.Interfaces;
+using NetExtender.Utils.Types;
 
 namespace NetExtender.Utils.Numerics
 {
@@ -66,7 +68,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Double value = NextDouble(random);
-			return (SByte) (MathUtils.RoundBanking(value * max - value * min) + min);
+			return (SByte) ((value * max - value * min).Round() + min);
 		}
 
 		public static SByte NextSByte(this IRandom random, SByte min, SByte max)
@@ -82,7 +84,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Double value = NextDouble(random);
-			return (SByte) (MathUtils.RoundBanking(value * max - value * min) + min);
+			return (SByte) ((value * max - value * min).Round() + min);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -140,7 +142,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Double value = NextDouble(random);
-			return (Byte) (MathUtils.RoundBanking(value * max - value * min) + min);
+			return (Byte) ((value * max - value * min).Round() + min);
 		}
 
 		public static Byte NextByte(this IRandom random, Byte min, Byte max)
@@ -156,7 +158,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Double value = NextDouble(random);
-			return (Byte) (MathUtils.RoundBanking(value * max - value * min) + min);
+			return (Byte) ((value * max - value * min).Round() + min);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -214,7 +216,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Double value = NextDouble(random);
-			return (Int16) (MathUtils.RoundBanking(value * max - value * min) + min);
+			return (Int16) ((value * max - value * min).Round() + min);
 		}
 
 		public static Int16 NextInt16(this IRandom random, Int16 min, Int16 max)
@@ -230,7 +232,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Double value = NextDouble(random);
-			return (Int16) (MathUtils.RoundBanking(value * max - value * min) + min);
+			return (Int16) ((value * max - value * min).Round() + min);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -288,7 +290,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Double value = NextDouble(random);
-			return (UInt16) (MathUtils.RoundBanking(value * max - value * min) + min);
+			return (UInt16) ((value * max - value * min).Round() + min);
 		}
 
 		public static UInt16 NextUInt16(this IRandom random, UInt16 min, UInt16 max)
@@ -304,7 +306,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Double value = NextDouble(random);
-			return (UInt16) (MathUtils.RoundBanking(value * max - value * min) + min);
+			return (UInt16) ((value * max - value * min).Round() + min);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -362,7 +364,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Double value = NextDouble(random);
-			return (Int32) (MathUtils.RoundBanking(value * max - value * min) + min);
+			return (Int32) ((value * max - value * min).Round() + min);
 		}
 
 		public static Int32 NextInt32(this IRandom random, Int32 min, Int32 max)
@@ -378,7 +380,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Double value = NextDouble(random);
-			return (Int32) (MathUtils.RoundBanking(value * max - value * min) + min);
+			return (Int32) ((value * max - value * min).Round() + min);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -436,7 +438,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Double value = NextDouble(random);
-			return (UInt32) (MathUtils.RoundBanking(value * max - value * min) + min);
+			return (UInt32) ((value * max - value * min).Round() + min);
 		}
 
 		public static UInt32 NextUInt32(this IRandom random, UInt32 min, UInt32 max)
@@ -452,7 +454,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Double value = NextDouble(random);
-			return (UInt32) (MathUtils.RoundBanking(value * max - value * min) + min);
+			return (UInt32) ((value * max - value * min).Round() + min);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -510,7 +512,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Double value = NextDouble(random);
-			return (Int64) (MathUtils.RoundBanking(value * max - value * min) + min);
+			return (Int64) ((value * max - value * min).Round() + min);
 		}
 
 		public static Int64 NextInt64(this IRandom random, Int64 min, Int64 max)
@@ -526,7 +528,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Double value = NextDouble(random);
-			return (Int64) (MathUtils.RoundBanking(value * max - value * min) + min);
+			return (Int64) ((value * max - value * min).Round() + min);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -584,7 +586,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Double value = NextDouble(random);
-			return (UInt64) (MathUtils.RoundBanking(value * max - value * min) + min);
+			return (UInt64) ((value * max - value * min).Round() + min);
 		}
 
 		public static UInt64 NextUInt64(this IRandom random, UInt64 min, UInt64 max)
@@ -600,7 +602,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Double value = NextDouble(random);
-			return (UInt64) (MathUtils.RoundBanking(value * max - value * min) + min);
+			return (UInt64) ((value * max - value * min).Round() + min);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -4061,2343 +4063,4763 @@ namespace NetExtender.Utils.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteRange(SByte max)
+		public static IEnumerable<SByte> Range(SByte max)
 		{
-			return SByteRange(Generator, max);
+			return Range(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteRange(this System.Random random, SByte max)
+		public static IEnumerable<SByte> Range(this System.Random random, SByte max)
 		{
-			return SByteRange(random, SByte.MinValue, max);
+			return Range(random, SByte.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteRange(this IRandom random, SByte max)
+		public static IEnumerable<SByte> Range(this IRandom random, SByte max)
 		{
-			return SByteRange(random, SByte.MinValue, max);
+			return Range(random, SByte.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteRange(SByte max, Int32 count)
+		public static IEnumerable<SByte> Range(SByte max, Int32 count)
 		{
-			return SByteRange(Generator, max, count);
+			return Range(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteRange(this System.Random random, SByte max, Int32 count)
+		public static IEnumerable<SByte> Range(this System.Random random, SByte max, Int32 count)
 		{
-			return SByteRange(random, SByte.MinValue, max, count);
+			return Range(random, SByte.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteRange(this IRandom random, SByte max, Int32 count)
+		public static IEnumerable<SByte> Range(this IRandom random, SByte max, Int32 count)
 		{
-			return SByteRange(random, SByte.MinValue, max, count);
+			return Range(random, SByte.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteRange(SByte min, SByte max)
+		public static IEnumerable<SByte> Range(SByte min, SByte max)
 		{
 			return Range(min, max, NextSByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteRange(this System.Random random, SByte min, SByte max)
+		public static IEnumerable<SByte> Range(this System.Random random, SByte min, SByte max)
 		{
 			return Range(random, min, max, NextSByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteRange(this IRandom random, SByte min, SByte max)
+		public static IEnumerable<SByte> Range(this IRandom random, SByte min, SByte max)
 		{
 			return Range(random, min, max, NextSByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteRange(SByte min, SByte max, Int32 count)
+		public static IEnumerable<SByte> Range(SByte min, SByte max, Int32 count)
 		{
 			return Range(min, max, count, NextSByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteRange(this System.Random random, SByte min, SByte max, Int32 count)
+		public static IEnumerable<SByte> Range(this System.Random random, SByte min, SByte max, Int32 count)
 		{
 			return Range(random, min, max, count, NextSByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteRange(this IRandom random, SByte min, SByte max, Int32 count)
+		public static IEnumerable<SByte> Range(this IRandom random, SByte min, SByte max, Int32 count)
 		{
 			return Range(random, min, max, count, NextSByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteRange(Byte max)
+		public static IEnumerable<Byte> Range(Byte max)
 		{
-			return ByteRange(Generator, max);
+			return Range(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteRange(this System.Random random, Byte max)
+		public static IEnumerable<Byte> Range(this System.Random random, Byte max)
 		{
-			return ByteRange(random, Byte.MinValue, max);
+			return Range(random, Byte.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteRange(this IRandom random, Byte max)
+		public static IEnumerable<Byte> Range(this IRandom random, Byte max)
 		{
-			return ByteRange(random, Byte.MinValue, max);
+			return Range(random, Byte.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteRange(Byte max, Int32 count)
+		public static IEnumerable<Byte> Range(Byte max, Int32 count)
 		{
-			return ByteRange(Generator, max, count);
+			return Range(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteRange(this System.Random random, Byte max, Int32 count)
+		public static IEnumerable<Byte> Range(this System.Random random, Byte max, Int32 count)
 		{
-			return ByteRange(random, Byte.MinValue, max, count);
+			return Range(random, Byte.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteRange(this IRandom random, Byte max, Int32 count)
+		public static IEnumerable<Byte> Range(this IRandom random, Byte max, Int32 count)
 		{
-			return ByteRange(random, Byte.MinValue, max, count);
+			return Range(random, Byte.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteRange(Byte min, Byte max)
+		public static IEnumerable<Byte> Range(Byte min, Byte max)
 		{
 			return Range(min, max, NextByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteRange(this System.Random random, Byte min, Byte max)
+		public static IEnumerable<Byte> Range(this System.Random random, Byte min, Byte max)
 		{
 			return Range(random, min, max, NextByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteRange(this IRandom random, Byte min, Byte max)
+		public static IEnumerable<Byte> Range(this IRandom random, Byte min, Byte max)
 		{
 			return Range(random, min, max, NextByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteRange(Byte min, Byte max, Int32 count)
+		public static IEnumerable<Byte> Range(Byte min, Byte max, Int32 count)
 		{
 			return Range(min, max, count, NextByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteRange(this System.Random random, Byte min, Byte max, Int32 count)
+		public static IEnumerable<Byte> Range(this System.Random random, Byte min, Byte max, Int32 count)
 		{
 			return Range(random, min, max, count, NextByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteRange(this IRandom random, Byte min, Byte max, Int32 count)
+		public static IEnumerable<Byte> Range(this IRandom random, Byte min, Byte max, Int32 count)
 		{
 			return Range(random, min, max, count, NextByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16Range(Int16 max)
+		public static IEnumerable<Int16> Range(Int16 max)
 		{
-			return Int16Range(Generator, max);
+			return Range(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16Range(this System.Random random, Int16 max)
+		public static IEnumerable<Int16> Range(this System.Random random, Int16 max)
 		{
-			return Int16Range(random, Int16.MinValue, max);
+			return Range(random, Int16.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16Range(this IRandom random, Int16 max)
+		public static IEnumerable<Int16> Range(this IRandom random, Int16 max)
 		{
-			return Int16Range(random, Int16.MinValue, max);
+			return Range(random, Int16.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16Range(Int16 max, Int32 count)
+		public static IEnumerable<Int16> Range(Int16 max, Int32 count)
 		{
-			return Int16Range(Generator, max, count);
+			return Range(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16Range(this System.Random random, Int16 max, Int32 count)
+		public static IEnumerable<Int16> Range(this System.Random random, Int16 max, Int32 count)
 		{
-			return Int16Range(random, Int16.MinValue, max, count);
+			return Range(random, Int16.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16Range(this IRandom random, Int16 max, Int32 count)
+		public static IEnumerable<Int16> Range(this IRandom random, Int16 max, Int32 count)
 		{
-			return Int16Range(random, Int16.MinValue, max, count);
+			return Range(random, Int16.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16Range(Int16 min, Int16 max)
+		public static IEnumerable<Int16> Range(Int16 min, Int16 max)
 		{
 			return Range(min, max, NextInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16Range(this System.Random random, Int16 min, Int16 max)
+		public static IEnumerable<Int16> Range(this System.Random random, Int16 min, Int16 max)
 		{
 			return Range(random, min, max, NextInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16Range(this IRandom random, Int16 min, Int16 max)
+		public static IEnumerable<Int16> Range(this IRandom random, Int16 min, Int16 max)
 		{
 			return Range(random, min, max, NextInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16Range(Int16 min, Int16 max, Int32 count)
+		public static IEnumerable<Int16> Range(Int16 min, Int16 max, Int32 count)
 		{
 			return Range(min, max, count, NextInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16Range(this System.Random random, Int16 min, Int16 max, Int32 count)
+		public static IEnumerable<Int16> Range(this System.Random random, Int16 min, Int16 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16Range(this IRandom random, Int16 min, Int16 max, Int32 count)
+		public static IEnumerable<Int16> Range(this IRandom random, Int16 min, Int16 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16Range(UInt16 max)
+		public static IEnumerable<UInt16> Range(UInt16 max)
 		{
-			return UInt16Range(Generator, max);
+			return Range(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16Range(this System.Random random, UInt16 max)
+		public static IEnumerable<UInt16> Range(this System.Random random, UInt16 max)
 		{
-			return UInt16Range(random, UInt16.MinValue, max);
+			return Range(random, UInt16.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16Range(this IRandom random, UInt16 max)
+		public static IEnumerable<UInt16> Range(this IRandom random, UInt16 max)
 		{
-			return UInt16Range(random, UInt16.MinValue, max);
+			return Range(random, UInt16.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16Range(UInt16 max, Int32 count)
+		public static IEnumerable<UInt16> Range(UInt16 max, Int32 count)
 		{
-			return UInt16Range(Generator, max, count);
+			return Range(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16Range(this System.Random random, UInt16 max, Int32 count)
+		public static IEnumerable<UInt16> Range(this System.Random random, UInt16 max, Int32 count)
 		{
-			return UInt16Range(random, UInt16.MinValue, max, count);
+			return Range(random, UInt16.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16Range(this IRandom random, UInt16 max, Int32 count)
+		public static IEnumerable<UInt16> Range(this IRandom random, UInt16 max, Int32 count)
 		{
-			return UInt16Range(random, UInt16.MinValue, max, count);
+			return Range(random, UInt16.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16Range(UInt16 min, UInt16 max)
+		public static IEnumerable<UInt16> Range(UInt16 min, UInt16 max)
 		{
 			return Range(min, max, NextUInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16Range(this System.Random random, UInt16 min, UInt16 max)
+		public static IEnumerable<UInt16> Range(this System.Random random, UInt16 min, UInt16 max)
 		{
 			return Range(random, min, max, NextUInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16Range(this IRandom random, UInt16 min, UInt16 max)
+		public static IEnumerable<UInt16> Range(this IRandom random, UInt16 min, UInt16 max)
 		{
 			return Range(random, min, max, NextUInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16Range(UInt16 min, UInt16 max, Int32 count)
+		public static IEnumerable<UInt16> Range(UInt16 min, UInt16 max, Int32 count)
 		{
 			return Range(min, max, count, NextUInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16Range(this System.Random random, UInt16 min, UInt16 max, Int32 count)
+		public static IEnumerable<UInt16> Range(this System.Random random, UInt16 min, UInt16 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextUInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16Range(this IRandom random, UInt16 min, UInt16 max, Int32 count)
+		public static IEnumerable<UInt16> Range(this IRandom random, UInt16 min, UInt16 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextUInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32Range()
+		public static IEnumerable<Int32> Range()
 		{
-			return Int32Range(Generator);
+			return Range(Generator);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32Range(this System.Random random)
+		public static IEnumerable<Int32> Range(this System.Random random)
 		{
-			return Int32Range(random, Int32.MinValue, Int32.MaxValue);
+			return Range(random, Int32.MinValue, Int32.MaxValue);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32Range(this IRandom random)
+		public static IEnumerable<Int32> Range(this IRandom random)
 		{
-			return Int32Range(random, Int32.MinValue, Int32.MaxValue);
+			return Range(random, Int32.MinValue, Int32.MaxValue);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32Range(Int32 max)
+		public static IEnumerable<Int32> Range(Int32 max)
 		{
-			return Int32Range(Generator, max);
+			return Range(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32Range(this System.Random random, Int32 max)
+		public static IEnumerable<Int32> Range(this System.Random random, Int32 max)
 		{
-			return Int32Range(random, Int32.MinValue, max);
+			return Range(random, Int32.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32Range(this IRandom random, Int32 max)
+		public static IEnumerable<Int32> Range(this IRandom random, Int32 max)
 		{
-			return Int32Range(random, Int32.MinValue, max);
+			return Range(random, Int32.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32Range(Int32 min, Int32 max)
+		public static IEnumerable<Int32> Range(Int32 min, Int32 max)
 		{
 			return Range(min, max, NextInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32Range(this System.Random random, Int32 min, Int32 max)
+		public static IEnumerable<Int32> Range(this System.Random random, Int32 min, Int32 max)
 		{
 			return Range(random, min, max, NextInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32Range(this IRandom random, Int32 min, Int32 max)
+		public static IEnumerable<Int32> Range(this IRandom random, Int32 min, Int32 max)
 		{
 			return Range(random, min, max, NextInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32Range(Int32 min, Int32 max, Int32 count)
+		public static IEnumerable<Int32> Range(Int32 min, Int32 max, Int32 count)
 		{
 			return Range(min, max, count, NextInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32Range(this System.Random random, Int32 min, Int32 max, Int32 count)
+		public static IEnumerable<Int32> Range(this System.Random random, Int32 min, Int32 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32Range(this IRandom random, Int32 min, Int32 max, Int32 count)
+		public static IEnumerable<Int32> Range(this IRandom random, Int32 min, Int32 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32Range(UInt32 max)
+		public static IEnumerable<UInt32> Range(UInt32 max)
 		{
-			return UInt32Range(Generator, max);
+			return Range(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32Range(this System.Random random, UInt32 max)
+		public static IEnumerable<UInt32> Range(this System.Random random, UInt32 max)
 		{
-			return UInt32Range(random, UInt32.MinValue, max);
+			return Range(random, UInt32.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32Range(this IRandom random, UInt32 max)
+		public static IEnumerable<UInt32> Range(this IRandom random, UInt32 max)
 		{
-			return UInt32Range(random, UInt32.MinValue, max);
+			return Range(random, UInt32.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32Range(UInt32 max, Int32 count)
+		public static IEnumerable<UInt32> Range(UInt32 max, Int32 count)
 		{
-			return UInt32Range(Generator, max, count);
+			return Range(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32Range(this System.Random random, UInt32 max, Int32 count)
+		public static IEnumerable<UInt32> Range(this System.Random random, UInt32 max, Int32 count)
 		{
-			return UInt32Range(random, UInt32.MinValue, max, count);
+			return Range(random, UInt32.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32Range(this IRandom random, UInt32 max, Int32 count)
+		public static IEnumerable<UInt32> Range(this IRandom random, UInt32 max, Int32 count)
 		{
-			return UInt32Range(random, UInt32.MinValue, max, count);
+			return Range(random, UInt32.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32Range(UInt32 min, UInt32 max)
+		public static IEnumerable<UInt32> Range(UInt32 min, UInt32 max)
 		{
 			return Range(min, max, NextUInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32Range(this System.Random random, UInt32 min, UInt32 max)
+		public static IEnumerable<UInt32> Range(this System.Random random, UInt32 min, UInt32 max)
 		{
 			return Range(random, min, max, NextUInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32Range(this IRandom random, UInt32 min, UInt32 max)
+		public static IEnumerable<UInt32> Range(this IRandom random, UInt32 min, UInt32 max)
 		{
 			return Range(random, min, max, NextUInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32Range(UInt32 min, UInt32 max, Int32 count)
+		public static IEnumerable<UInt32> Range(UInt32 min, UInt32 max, Int32 count)
 		{
 			return Range(min, max, count, NextUInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32Range(this System.Random random, UInt32 min, UInt32 max, Int32 count)
+		public static IEnumerable<UInt32> Range(this System.Random random, UInt32 min, UInt32 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextUInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32Range(this IRandom random, UInt32 min, UInt32 max, Int32 count)
+		public static IEnumerable<UInt32> Range(this IRandom random, UInt32 min, UInt32 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextUInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64Range(Int64 max)
+		public static IEnumerable<Int64> Range(Int64 max)
 		{
-			return Int64Range(Generator, max);
+			return Range(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64Range(this System.Random random, Int64 max)
+		public static IEnumerable<Int64> Range(this System.Random random, Int64 max)
 		{
-			return Int64Range(random, Int64.MinValue, max);
+			return Range(random, Int64.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64Range(this IRandom random, Int64 max)
+		public static IEnumerable<Int64> Range(this IRandom random, Int64 max)
 		{
-			return Int64Range(random, Int64.MinValue, max);
+			return Range(random, Int64.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64Range(Int64 max, Int32 count)
+		public static IEnumerable<Int64> Range(Int64 max, Int32 count)
 		{
-			return Int64Range(Generator, max, count);
+			return Range(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64Range(this System.Random random, Int64 max, Int32 count)
+		public static IEnumerable<Int64> Range(this System.Random random, Int64 max, Int32 count)
 		{
-			return Int64Range(random, Int64.MinValue, max, count);
+			return Range(random, Int64.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64Range(this IRandom random, Int64 max, Int32 count)
+		public static IEnumerable<Int64> Range(this IRandom random, Int64 max, Int32 count)
 		{
-			return Int64Range(random, Int64.MinValue, max, count);
+			return Range(random, Int64.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64Range(Int64 min, Int64 max)
+		public static IEnumerable<Int64> Range(Int64 min, Int64 max)
 		{
 			return Range(min, max, NextInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64Range(this System.Random random, Int64 min, Int64 max)
+		public static IEnumerable<Int64> Range(this System.Random random, Int64 min, Int64 max)
 		{
 			return Range(random, min, max, NextInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64Range(this IRandom random, Int64 min, Int64 max)
+		public static IEnumerable<Int64> Range(this IRandom random, Int64 min, Int64 max)
 		{
 			return Range(random, min, max, NextInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64Range(Int64 min, Int64 max, Int32 count)
+		public static IEnumerable<Int64> Range(Int64 min, Int64 max, Int32 count)
 		{
 			return Range(min, max, count, NextInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64Range(this System.Random random, Int64 min, Int64 max, Int32 count)
+		public static IEnumerable<Int64> Range(this System.Random random, Int64 min, Int64 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64Range(this IRandom random, Int64 min, Int64 max, Int32 count)
+		public static IEnumerable<Int64> Range(this IRandom random, Int64 min, Int64 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64Range(UInt64 max)
+		public static IEnumerable<UInt64> Range(UInt64 max)
 		{
-			return UInt64Range(Generator, max);
+			return Range(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64Range(this System.Random random, UInt64 max)
+		public static IEnumerable<UInt64> Range(this System.Random random, UInt64 max)
 		{
-			return UInt64Range(random, UInt64.MinValue, max);
+			return Range(random, UInt64.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64Range(this IRandom random, UInt64 max)
+		public static IEnumerable<UInt64> Range(this IRandom random, UInt64 max)
 		{
-			return UInt64Range(random, UInt64.MinValue, max);
+			return Range(random, UInt64.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64Range(UInt64 max, Int32 count)
+		public static IEnumerable<UInt64> Range(UInt64 max, Int32 count)
 		{
-			return UInt64Range(Generator, max, count);
+			return Range(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64Range(this System.Random random, UInt64 max, Int32 count)
+		public static IEnumerable<UInt64> Range(this System.Random random, UInt64 max, Int32 count)
 		{
-			return UInt64Range(random, UInt64.MinValue, max, count);
+			return Range(random, UInt64.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64Range(this IRandom random, UInt64 max, Int32 count)
+		public static IEnumerable<UInt64> Range(this IRandom random, UInt64 max, Int32 count)
 		{
-			return UInt64Range(random, UInt64.MinValue, max, count);
+			return Range(random, UInt64.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64Range(UInt64 min, UInt64 max)
+		public static IEnumerable<UInt64> Range(UInt64 min, UInt64 max)
 		{
 			return Range(min, max, NextUInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64Range(this System.Random random, UInt64 min, UInt64 max)
+		public static IEnumerable<UInt64> Range(this System.Random random, UInt64 min, UInt64 max)
 		{
 			return Range(random, min, max, NextUInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64Range(this IRandom random, UInt64 min, UInt64 max)
+		public static IEnumerable<UInt64> Range(this IRandom random, UInt64 min, UInt64 max)
 		{
 			return Range(random, min, max, NextUInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64Range(UInt64 min, UInt64 max, Int32 count)
+		public static IEnumerable<UInt64> Range(UInt64 min, UInt64 max, Int32 count)
 		{
 			return Range(min, max, count, NextUInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64Range(this System.Random random, UInt64 min, UInt64 max, Int32 count)
+		public static IEnumerable<UInt64> Range(this System.Random random, UInt64 min, UInt64 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextUInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64Range(this IRandom random, UInt64 min, UInt64 max, Int32 count)
+		public static IEnumerable<UInt64> Range(this IRandom random, UInt64 min, UInt64 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextUInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleRange(Single max)
+		public static IEnumerable<Single> Range(Single max)
 		{
-			return SingleRange(Generator, max);
+			return Range(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleRange(this System.Random random, Single max)
+		public static IEnumerable<Single> Range(this System.Random random, Single max)
 		{
-			return SingleRange(random, Single.MinValue, max);
+			return Range(random, Single.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleRange(this IRandom random, Single max)
+		public static IEnumerable<Single> Range(this IRandom random, Single max)
 		{
-			return SingleRange(random, Single.MinValue, max);
+			return Range(random, Single.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleRange(Single max, Int32 count)
+		public static IEnumerable<Single> Range(Single max, Int32 count)
 		{
-			return SingleRange(Generator, max, count);
+			return Range(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleRange(this System.Random random, Single max, Int32 count)
+		public static IEnumerable<Single> Range(this System.Random random, Single max, Int32 count)
 		{
-			return SingleRange(random, Single.MinValue, max, count);
+			return Range(random, Single.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleRange(this IRandom random, Single max, Int32 count)
+		public static IEnumerable<Single> Range(this IRandom random, Single max, Int32 count)
 		{
-			return SingleRange(random, Single.MinValue, max, count);
+			return Range(random, Single.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleRange(Single min, Single max)
+		public static IEnumerable<Single> Range(Single min, Single max)
 		{
 			return Range(min, max, NextSingle);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleRange(this System.Random random, Single min, Single max)
+		public static IEnumerable<Single> Range(this System.Random random, Single min, Single max)
 		{
 			return Range(random, min, max, NextSingle);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleRange(this IRandom random, Single min, Single max)
+		public static IEnumerable<Single> Range(this IRandom random, Single min, Single max)
 		{
 			return Range(random, min, max, NextSingle);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleRange(Single min, Single max, Int32 count)
+		public static IEnumerable<Single> Range(Single min, Single max, Int32 count)
 		{
 			return Range(min, max, count, NextSingle);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleRange(this System.Random random, Single min, Single max, Int32 count)
+		public static IEnumerable<Single> Range(this System.Random random, Single min, Single max, Int32 count)
 		{
 			return Range(random, min, max, count, NextSingle);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleRange(this IRandom random, Single min, Single max, Int32 count)
+		public static IEnumerable<Single> Range(this IRandom random, Single min, Single max, Int32 count)
 		{
 			return Range(random, min, max, count, NextSingle);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleRange(Double max)
+		public static IEnumerable<Double> Range(Double max)
 		{
-			return DoubleRange(Generator, max);
+			return Range(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleRange(this System.Random random, Double max)
+		public static IEnumerable<Double> Range(this System.Random random, Double max)
 		{
-			return DoubleRange(random, Double.MinValue, max);
+			return Range(random, Double.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleRange(this IRandom random, Double max)
+		public static IEnumerable<Double> Range(this IRandom random, Double max)
 		{
-			return DoubleRange(random, Double.MinValue, max);
+			return Range(random, Double.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleRange(Double max, Int32 count)
+		public static IEnumerable<Double> Range(Double max, Int32 count)
 		{
-			return DoubleRange(Generator, max, count);
+			return Range(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleRange(this System.Random random, Double max, Int32 count)
+		public static IEnumerable<Double> Range(this System.Random random, Double max, Int32 count)
 		{
-			return DoubleRange(random, Double.MinValue, max, count);
+			return Range(random, Double.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleRange(this IRandom random, Double max, Int32 count)
+		public static IEnumerable<Double> Range(this IRandom random, Double max, Int32 count)
 		{
-			return DoubleRange(random, Double.MinValue, max, count);
+			return Range(random, Double.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleRange(Double min, Double max)
+		public static IEnumerable<Double> Range(Double min, Double max)
 		{
 			return Range(min, max, NextDouble);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleRange(this System.Random random, Double min, Double max)
+		public static IEnumerable<Double> Range(this System.Random random, Double min, Double max)
 		{
 			return Range(random, min, max, NextDouble);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleRange(this IRandom random, Double min, Double max)
+		public static IEnumerable<Double> Range(this IRandom random, Double min, Double max)
 		{
 			return Range(random, min, max, NextDouble);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleRange(Double min, Double max, Int32 count)
+		public static IEnumerable<Double> Range(Double min, Double max, Int32 count)
 		{
 			return Range(min, max, count, NextDouble);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleRange(this System.Random random, Double min, Double max, Int32 count)
+		public static IEnumerable<Double> Range(this System.Random random, Double min, Double max, Int32 count)
 		{
 			return Range(random, min, max, count, NextDouble);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleRange(this IRandom random, Double min, Double max, Int32 count)
+		public static IEnumerable<Double> Range(this IRandom random, Double min, Double max, Int32 count)
 		{
 			return Range(random, min, max, count, NextDouble);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalRange(Decimal max)
+		public static IEnumerable<Decimal> Range(Decimal max)
 		{
-			return DecimalRange(Generator, max);
+			return Range(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalRange(this System.Random random, Decimal max)
+		public static IEnumerable<Decimal> Range(this System.Random random, Decimal max)
 		{
-			return DecimalRange(random, Decimal.MinValue, max);
+			return Range(random, Decimal.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalRange(this IRandom random, Decimal max)
+		public static IEnumerable<Decimal> Range(this IRandom random, Decimal max)
 		{
-			return DecimalRange(random, Decimal.MinValue, max);
+			return Range(random, Decimal.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalRange(Decimal max, Int32 count)
+		public static IEnumerable<Decimal> Range(Decimal max, Int32 count)
 		{
-			return DecimalRange(Generator, max, count);
+			return Range(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalRange(this System.Random random, Decimal max, Int32 count)
+		public static IEnumerable<Decimal> Range(this System.Random random, Decimal max, Int32 count)
 		{
-			return DecimalRange(random, Decimal.MinValue, max, count);
+			return Range(random, Decimal.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalRange(this IRandom random, Decimal max, Int32 count)
+		public static IEnumerable<Decimal> Range(this IRandom random, Decimal max, Int32 count)
 		{
-			return DecimalRange(random, Decimal.MinValue, max, count);
+			return Range(random, Decimal.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalRange(Decimal min, Decimal max)
+		public static IEnumerable<Decimal> Range(Decimal min, Decimal max)
 		{
 			return Range(min, max, NextDecimal);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalRange(this System.Random random, Decimal min, Decimal max)
+		public static IEnumerable<Decimal> Range(this System.Random random, Decimal min, Decimal max)
 		{
 			return Range(random, min, max, NextDecimal);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalRange(this IRandom random, Decimal min, Decimal max)
+		public static IEnumerable<Decimal> Range(this IRandom random, Decimal min, Decimal max)
 		{
 			return Range(random, min, max, NextDecimal);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalRange(Decimal min, Decimal max, Int32 count)
+		public static IEnumerable<Decimal> Range(Decimal min, Decimal max, Int32 count)
 		{
 			return Range(min, max, count, NextDecimal);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalRange(this System.Random random, Decimal min, Decimal max, Int32 count)
+		public static IEnumerable<Decimal> Range(this System.Random random, Decimal min, Decimal max, Int32 count)
 		{
 			return Range(random, min, max, count, NextDecimal);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalRange(this IRandom random, Decimal min, Decimal max, Int32 count)
+		public static IEnumerable<Decimal> Range(this IRandom random, Decimal min, Decimal max, Int32 count)
 		{
 			return Range(random, min, max, count, NextDecimal);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<TimeSpan> TimeSpanRange(TimeSpan max)
+		public static IEnumerable<TimeSpan> Range(TimeSpan max)
 		{
-			return TimeSpanRange(Generator, max);
+			return Range(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<TimeSpan> TimeSpanRange(this System.Random random, TimeSpan max)
+		public static IEnumerable<TimeSpan> Range(this System.Random random, TimeSpan max)
 		{
-			return TimeSpanRange(random, TimeSpan.MinValue, max);
+			return Range(random, TimeSpan.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<TimeSpan> TimeSpanRange(this IRandom random, TimeSpan max)
+		public static IEnumerable<TimeSpan> Range(this IRandom random, TimeSpan max)
 		{
-			return TimeSpanRange(random, TimeSpan.MinValue, max);
+			return Range(random, TimeSpan.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<TimeSpan> TimeSpanRange(TimeSpan max, Int32 count)
+		public static IEnumerable<TimeSpan> Range(TimeSpan max, Int32 count)
 		{
-			return TimeSpanRange(Generator, max, count);
+			return Range(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<TimeSpan> TimeSpanRange(this System.Random random, TimeSpan max, Int32 count)
+		public static IEnumerable<TimeSpan> Range(this System.Random random, TimeSpan max, Int32 count)
 		{
-			return TimeSpanRange(random, TimeSpan.MinValue, max, count);
+			return Range(random, TimeSpan.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<TimeSpan> TimeSpanRange(this IRandom random, TimeSpan max, Int32 count)
+		public static IEnumerable<TimeSpan> Range(this IRandom random, TimeSpan max, Int32 count)
 		{
-			return TimeSpanRange(random, TimeSpan.MinValue, max, count);
+			return Range(random, TimeSpan.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<TimeSpan> TimeSpanRange(TimeSpan min, TimeSpan max)
+		public static IEnumerable<TimeSpan> Range(TimeSpan min, TimeSpan max)
 		{
 			return Range(min, max, NextTimeSpan);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<TimeSpan> TimeSpanRange(this System.Random random, TimeSpan min, TimeSpan max)
+		public static IEnumerable<TimeSpan> Range(this System.Random random, TimeSpan min, TimeSpan max)
 		{
 			return Range(random, min, max, NextTimeSpan);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<TimeSpan> TimeSpanRange(this IRandom random, TimeSpan min, TimeSpan max)
+		public static IEnumerable<TimeSpan> Range(this IRandom random, TimeSpan min, TimeSpan max)
 		{
 			return Range(random, min, max, NextTimeSpan);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<TimeSpan> TimeSpanRange(TimeSpan min, TimeSpan max, Int32 count)
+		public static IEnumerable<TimeSpan> Range(TimeSpan min, TimeSpan max, Int32 count)
 		{
 			return Range(min, max, count, NextTimeSpan);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<TimeSpan> TimeSpanRange(this System.Random random, TimeSpan min, TimeSpan max, Int32 count)
+		public static IEnumerable<TimeSpan> Range(this System.Random random, TimeSpan min, TimeSpan max, Int32 count)
 		{
 			return Range(random, min, max, count, NextTimeSpan);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<TimeSpan> TimeSpanRange(this IRandom random, TimeSpan min, TimeSpan max, Int32 count)
+		public static IEnumerable<TimeSpan> Range(this IRandom random, TimeSpan min, TimeSpan max, Int32 count)
 		{
 			return Range(random, min, max, count, NextTimeSpan);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<DateTime> DateTimeRange(DateTime max)
+		public static IEnumerable<DateTime> Range(DateTime max)
 		{
-			return DateTimeRange(Generator, max);
+			return Range(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<DateTime> DateTimeRange(this System.Random random, DateTime max)
+		public static IEnumerable<DateTime> Range(this System.Random random, DateTime max)
 		{
-			return DateTimeRange(random, DateTime.MinValue, max);
+			return Range(random, DateTime.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<DateTime> DateTimeRange(this IRandom random, DateTime max)
+		public static IEnumerable<DateTime> Range(this IRandom random, DateTime max)
 		{
-			return DateTimeRange(random, DateTime.MinValue, max);
+			return Range(random, DateTime.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<DateTime> DateTimeRange(DateTime max, Int32 count)
+		public static IEnumerable<DateTime> Range(DateTime max, Int32 count)
 		{
-			return DateTimeRange(Generator, max, count);
+			return Range(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<DateTime> DateTimeRange(this System.Random random, DateTime max, Int32 count)
+		public static IEnumerable<DateTime> Range(this System.Random random, DateTime max, Int32 count)
 		{
-			return DateTimeRange(random, DateTime.MinValue, max, count);
+			return Range(random, DateTime.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<DateTime> DateTimeRange(this IRandom random, DateTime max, Int32 count)
+		public static IEnumerable<DateTime> Range(this IRandom random, DateTime max, Int32 count)
 		{
-			return DateTimeRange(random, DateTime.MinValue, max, count);
+			return Range(random, DateTime.MinValue, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<DateTime> DateTimeRange(DateTime min, DateTime max)
+		public static IEnumerable<DateTime> Range(DateTime min, DateTime max)
 		{
 			return Range(min, max, NextDateTime);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<DateTime> DateTimeRange(this System.Random random, DateTime min, DateTime max)
+		public static IEnumerable<DateTime> Range(this System.Random random, DateTime min, DateTime max)
 		{
 			return Range(random, min, max, NextDateTime);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<DateTime> DateTimeRange(this IRandom random, DateTime min, DateTime max)
+		public static IEnumerable<DateTime> Range(this IRandom random, DateTime min, DateTime max)
 		{
 			return Range(random, min, max, NextDateTime);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<DateTime> DateTimeRange(DateTime min, DateTime max, Int32 count)
+		public static IEnumerable<DateTime> Range(DateTime min, DateTime max, Int32 count)
 		{
 			return Range(min, max, count, NextDateTime);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<DateTime> DateTimeRange(this System.Random random, DateTime min, DateTime max, Int32 count)
+		public static IEnumerable<DateTime> Range(this System.Random random, DateTime min, DateTime max, Int32 count)
 		{
 			return Range(random, min, max, count, NextDateTime);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<DateTime> DateTimeRange(this IRandom random, DateTime min, DateTime max, Int32 count)
+		public static IEnumerable<DateTime> Range(this IRandom random, DateTime min, DateTime max, Int32 count)
 		{
 			return Range(random, min, max, count, NextDateTime);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonNegativeRange(SByte max)
+		public static IEnumerable<SByte> NonNegativeRange(SByte max)
 		{
-			return SByteNonNegativeRange(Generator, max);
+			return NonNegativeRange(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonNegativeRange(this System.Random random, SByte max)
+		public static IEnumerable<SByte> NonNegativeRange(this System.Random random, SByte max)
 		{
-			return SByteNonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default(SByte), max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonNegativeRange(this IRandom random, SByte max)
+		public static IEnumerable<SByte> NonNegativeRange(this IRandom random, SByte max)
 		{
-			return SByteNonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default(SByte), max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonNegativeRange(SByte max, Int32 count)
+		public static IEnumerable<SByte> NonNegativeRange(SByte max, Int32 count)
 		{
-			return SByteNonNegativeRange(Generator, max, count);
+			return NonNegativeRange(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonNegativeRange(this System.Random random, SByte max, Int32 count)
+		public static IEnumerable<SByte> NonNegativeRange(this System.Random random, SByte max, Int32 count)
 		{
-			return SByteNonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default(SByte), max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonNegativeRange(this IRandom random, SByte max, Int32 count)
+		public static IEnumerable<SByte> NonNegativeRange(this IRandom random, SByte max, Int32 count)
 		{
-			return SByteNonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default(SByte), max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonNegativeRange(SByte min, SByte max)
+		public static IEnumerable<SByte> NonNegativeRange(SByte min, SByte max)
 		{
 			return Range(min, max, NextNonNegativeSByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonNegativeRange(this System.Random random, SByte min, SByte max)
+		public static IEnumerable<SByte> NonNegativeRange(this System.Random random, SByte min, SByte max)
 		{
 			return Range(random, min, max, NextNonNegativeSByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonNegativeRange(this IRandom random, SByte min, SByte max)
+		public static IEnumerable<SByte> NonNegativeRange(this IRandom random, SByte min, SByte max)
 		{
 			return Range(random, min, max, NextNonNegativeSByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonNegativeRange(SByte min, SByte max, Int32 count)
+		public static IEnumerable<SByte> NonNegativeRange(SByte min, SByte max, Int32 count)
 		{
 			return Range(min, max, count, NextNonNegativeSByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonNegativeRange(this System.Random random, SByte min, SByte max, Int32 count)
+		public static IEnumerable<SByte> NonNegativeRange(this System.Random random, SByte min, SByte max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeSByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonNegativeRange(this IRandom random, SByte min, SByte max, Int32 count)
+		public static IEnumerable<SByte> NonNegativeRange(this IRandom random, SByte min, SByte max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeSByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonNegativeRange(Byte max)
+		public static IEnumerable<Byte> NonNegativeRange(Byte max)
 		{
-			return ByteNonNegativeRange(Generator, max);
+			return NonNegativeRange(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonNegativeRange(this System.Random random, Byte max)
+		public static IEnumerable<Byte> NonNegativeRange(this System.Random random, Byte max)
 		{
-			return ByteNonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default(Byte), max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonNegativeRange(this IRandom random, Byte max)
+		public static IEnumerable<Byte> NonNegativeRange(this IRandom random, Byte max)
 		{
-			return ByteNonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default(Byte), max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonNegativeRange(Byte max, Int32 count)
+		public static IEnumerable<Byte> NonNegativeRange(Byte max, Int32 count)
 		{
-			return ByteNonNegativeRange(Generator, max, count);
+			return NonNegativeRange(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonNegativeRange(this System.Random random, Byte max, Int32 count)
+		public static IEnumerable<Byte> NonNegativeRange(this System.Random random, Byte max, Int32 count)
 		{
-			return ByteNonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default(Byte), max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonNegativeRange(this IRandom random, Byte max, Int32 count)
+		public static IEnumerable<Byte> NonNegativeRange(this IRandom random, Byte max, Int32 count)
 		{
-			return ByteNonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default(Byte), max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonNegativeRange(Byte min, Byte max)
+		public static IEnumerable<Byte> NonNegativeRange(Byte min, Byte max)
 		{
 			return Range(min, max, NextNonNegativeByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonNegativeRange(this System.Random random, Byte min, Byte max)
+		public static IEnumerable<Byte> NonNegativeRange(this System.Random random, Byte min, Byte max)
 		{
 			return Range(random, min, max, NextNonNegativeByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonNegativeRange(this IRandom random, Byte min, Byte max)
+		public static IEnumerable<Byte> NonNegativeRange(this IRandom random, Byte min, Byte max)
 		{
 			return Range(random, min, max, NextNonNegativeByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonNegativeRange(Byte min, Byte max, Int32 count)
+		public static IEnumerable<Byte> NonNegativeRange(Byte min, Byte max, Int32 count)
 		{
 			return Range(min, max, count, NextNonNegativeByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonNegativeRange(this System.Random random, Byte min, Byte max, Int32 count)
+		public static IEnumerable<Byte> NonNegativeRange(this System.Random random, Byte min, Byte max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonNegativeRange(this IRandom random, Byte min, Byte max, Int32 count)
+		public static IEnumerable<Byte> NonNegativeRange(this IRandom random, Byte min, Byte max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonNegativeRange(Int16 max)
+		public static IEnumerable<Int16> NonNegativeRange(Int16 max)
 		{
-			return Int16NonNegativeRange(Generator, max);
+			return NonNegativeRange(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonNegativeRange(this System.Random random, Int16 max)
+		public static IEnumerable<Int16> NonNegativeRange(this System.Random random, Int16 max)
 		{
-			return Int16NonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default(Int16), max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonNegativeRange(this IRandom random, Int16 max)
+		public static IEnumerable<Int16> NonNegativeRange(this IRandom random, Int16 max)
 		{
-			return Int16NonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default(Int16), max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonNegativeRange(Int16 max, Int32 count)
+		public static IEnumerable<Int16> NonNegativeRange(Int16 max, Int32 count)
 		{
-			return Int16NonNegativeRange(Generator, max, count);
+			return NonNegativeRange(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonNegativeRange(this System.Random random, Int16 max, Int32 count)
+		public static IEnumerable<Int16> NonNegativeRange(this System.Random random, Int16 max, Int32 count)
 		{
-			return Int16NonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default(Int16), max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonNegativeRange(this IRandom random, Int16 max, Int32 count)
+		public static IEnumerable<Int16> NonNegativeRange(this IRandom random, Int16 max, Int32 count)
 		{
-			return Int16NonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default(Int16), max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonNegativeRange(Int16 min, Int16 max)
+		public static IEnumerable<Int16> NonNegativeRange(Int16 min, Int16 max)
 		{
 			return Range(min, max, NextNonNegativeInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonNegativeRange(this System.Random random, Int16 min, Int16 max)
+		public static IEnumerable<Int16> NonNegativeRange(this System.Random random, Int16 min, Int16 max)
 		{
 			return Range(random, min, max, NextNonNegativeInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonNegativeRange(this IRandom random, Int16 min, Int16 max)
+		public static IEnumerable<Int16> NonNegativeRange(this IRandom random, Int16 min, Int16 max)
 		{
 			return Range(random, min, max, NextNonNegativeInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonNegativeRange(Int16 min, Int16 max, Int32 count)
+		public static IEnumerable<Int16> NonNegativeRange(Int16 min, Int16 max, Int32 count)
 		{
 			return Range(min, max, count, NextNonNegativeInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonNegativeRange(this System.Random random, Int16 min, Int16 max, Int32 count)
+		public static IEnumerable<Int16> NonNegativeRange(this System.Random random, Int16 min, Int16 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonNegativeRange(this IRandom random, Int16 min, Int16 max, Int32 count)
+		public static IEnumerable<Int16> NonNegativeRange(this IRandom random, Int16 min, Int16 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonNegativeRange(UInt16 max)
+		public static IEnumerable<UInt16> NonNegativeRange(UInt16 max)
 		{
-			return UInt16NonNegativeRange(Generator, max);
+			return NonNegativeRange(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonNegativeRange(this System.Random random, UInt16 max)
+		public static IEnumerable<UInt16> NonNegativeRange(this System.Random random, UInt16 max)
 		{
-			return UInt16NonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default(UInt16), max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonNegativeRange(this IRandom random, UInt16 max)
+		public static IEnumerable<UInt16> NonNegativeRange(this IRandom random, UInt16 max)
 		{
-			return UInt16NonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default(UInt16), max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonNegativeRange(UInt16 max, Int32 count)
+		public static IEnumerable<UInt16> NonNegativeRange(UInt16 max, Int32 count)
 		{
-			return UInt16NonNegativeRange(Generator, max, count);
+			return NonNegativeRange(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonNegativeRange(this System.Random random, UInt16 max, Int32 count)
+		public static IEnumerable<UInt16> NonNegativeRange(this System.Random random, UInt16 max, Int32 count)
 		{
-			return UInt16NonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default(UInt16), max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonNegativeRange(this IRandom random, UInt16 max, Int32 count)
+		public static IEnumerable<UInt16> NonNegativeRange(this IRandom random, UInt16 max, Int32 count)
 		{
-			return UInt16NonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default(UInt16), max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonNegativeRange(UInt16 min, UInt16 max)
+		public static IEnumerable<UInt16> NonNegativeRange(UInt16 min, UInt16 max)
 		{
 			return Range(min, max, NextNonNegativeUInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonNegativeRange(this System.Random random, UInt16 min, UInt16 max)
+		public static IEnumerable<UInt16> NonNegativeRange(this System.Random random, UInt16 min, UInt16 max)
 		{
 			return Range(random, min, max, NextNonNegativeUInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonNegativeRange(this IRandom random, UInt16 min, UInt16 max)
+		public static IEnumerable<UInt16> NonNegativeRange(this IRandom random, UInt16 min, UInt16 max)
 		{
 			return Range(random, min, max, NextNonNegativeUInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonNegativeRange(UInt16 min, UInt16 max, Int32 count)
+		public static IEnumerable<UInt16> NonNegativeRange(UInt16 min, UInt16 max, Int32 count)
 		{
 			return Range(min, max, count, NextNonNegativeUInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonNegativeRange(this System.Random random, UInt16 min, UInt16 max, Int32 count)
+		public static IEnumerable<UInt16> NonNegativeRange(this System.Random random, UInt16 min, UInt16 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeUInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonNegativeRange(this IRandom random, UInt16 min, UInt16 max, Int32 count)
+		public static IEnumerable<UInt16> NonNegativeRange(this IRandom random, UInt16 min, UInt16 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeUInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonNegativeRange()
+		public static IEnumerable<Int32> NonNegativeRange()
 		{
-			return Int32NonNegativeRange(Generator);
+			return NonNegativeRange(Generator);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonNegativeRange(this System.Random random)
+		public static IEnumerable<Int32> NonNegativeRange(this System.Random random)
 		{
-			return Int32NonNegativeRange(random, default, Int32.MaxValue);
+			return NonNegativeRange(random, Int32.MaxValue);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonNegativeRange(this IRandom random)
+		public static IEnumerable<Int32> NonNegativeRange(this IRandom random)
 		{
-			return Int32NonNegativeRange(random, default, Int32.MaxValue);
+			return NonNegativeRange(random, Int32.MaxValue);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonNegativeRange(Int32 max)
+		public static IEnumerable<Int32> NonNegativeRange(Int32 max)
 		{
-			return Int32NonNegativeRange(Generator, max);
+			return NonNegativeRange(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonNegativeRange(this System.Random random, Int32 max)
+		public static IEnumerable<Int32> NonNegativeRange(this System.Random random, Int32 max)
 		{
-			return Int32NonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default(Int32), max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonNegativeRange(this IRandom random, Int32 max)
+		public static IEnumerable<Int32> NonNegativeRange(this IRandom random, Int32 max)
 		{
-			return Int32NonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default(Int32), max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonNegativeRange(Int32 min, Int32 max)
+		public static IEnumerable<Int32> NonNegativeRange(Int32 min, Int32 max)
 		{
 			return Range(min, max, NextNonNegativeInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonNegativeRange(this System.Random random, Int32 min, Int32 max)
+		public static IEnumerable<Int32> NonNegativeRange(this System.Random random, Int32 min, Int32 max)
 		{
 			return Range(random, min, max, NextNonNegativeInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonNegativeRange(this IRandom random, Int32 min, Int32 max)
+		public static IEnumerable<Int32> NonNegativeRange(this IRandom random, Int32 min, Int32 max)
 		{
 			return Range(random, min, max, NextNonNegativeInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonNegativeRange(Int32 min, Int32 max, Int32 count)
+		public static IEnumerable<Int32> NonNegativeRange(Int32 min, Int32 max, Int32 count)
 		{
 			return Range(min, max, count, NextNonNegativeInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonNegativeRange(this System.Random random, Int32 min, Int32 max, Int32 count)
+		public static IEnumerable<Int32> NonNegativeRange(this System.Random random, Int32 min, Int32 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonNegativeRange(this IRandom random, Int32 min, Int32 max, Int32 count)
+		public static IEnumerable<Int32> NonNegativeRange(this IRandom random, Int32 min, Int32 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonNegativeRange(UInt32 max)
+		public static IEnumerable<UInt32> NonNegativeRange(UInt32 max)
 		{
-			return UInt32NonNegativeRange(Generator, max);
+			return NonNegativeRange(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonNegativeRange(this System.Random random, UInt32 max)
+		public static IEnumerable<UInt32> NonNegativeRange(this System.Random random, UInt32 max)
 		{
-			return UInt32NonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonNegativeRange(this IRandom random, UInt32 max)
+		public static IEnumerable<UInt32> NonNegativeRange(this IRandom random, UInt32 max)
 		{
-			return UInt32NonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonNegativeRange(UInt32 max, Int32 count)
+		public static IEnumerable<UInt32> NonNegativeRange(UInt32 max, Int32 count)
 		{
-			return UInt32NonNegativeRange(Generator, max, count);
+			return NonNegativeRange(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonNegativeRange(this System.Random random, UInt32 max, Int32 count)
+		public static IEnumerable<UInt32> NonNegativeRange(this System.Random random, UInt32 max, Int32 count)
 		{
-			return UInt32NonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonNegativeRange(this IRandom random, UInt32 max, Int32 count)
+		public static IEnumerable<UInt32> NonNegativeRange(this IRandom random, UInt32 max, Int32 count)
 		{
-			return UInt32NonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonNegativeRange(UInt32 min, UInt32 max)
+		public static IEnumerable<UInt32> NonNegativeRange(UInt32 min, UInt32 max)
 		{
 			return Range(min, max, NextNonNegativeUInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonNegativeRange(this System.Random random, UInt32 min, UInt32 max)
+		public static IEnumerable<UInt32> NonNegativeRange(this System.Random random, UInt32 min, UInt32 max)
 		{
 			return Range(random, min, max, NextNonNegativeUInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonNegativeRange(this IRandom random, UInt32 min, UInt32 max)
+		public static IEnumerable<UInt32> NonNegativeRange(this IRandom random, UInt32 min, UInt32 max)
 		{
 			return Range(random, min, max, NextNonNegativeUInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonNegativeRange(UInt32 min, UInt32 max, Int32 count)
+		public static IEnumerable<UInt32> NonNegativeRange(UInt32 min, UInt32 max, Int32 count)
 		{
 			return Range(min, max, count, NextNonNegativeUInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonNegativeRange(this System.Random random, UInt32 min, UInt32 max, Int32 count)
+		public static IEnumerable<UInt32> NonNegativeRange(this System.Random random, UInt32 min, UInt32 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeUInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonNegativeRange(this IRandom random, UInt32 min, UInt32 max, Int32 count)
+		public static IEnumerable<UInt32> NonNegativeRange(this IRandom random, UInt32 min, UInt32 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeUInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonNegativeRange(Int64 max)
+		public static IEnumerable<Int64> NonNegativeRange(Int64 max)
 		{
-			return Int64NonNegativeRange(Generator, max);
+			return NonNegativeRange(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonNegativeRange(this System.Random random, Int64 max)
+		public static IEnumerable<Int64> NonNegativeRange(this System.Random random, Int64 max)
 		{
-			return Int64NonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonNegativeRange(this IRandom random, Int64 max)
+		public static IEnumerable<Int64> NonNegativeRange(this IRandom random, Int64 max)
 		{
-			return Int64NonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonNegativeRange(Int64 max, Int32 count)
+		public static IEnumerable<Int64> NonNegativeRange(Int64 max, Int32 count)
 		{
-			return Int64NonNegativeRange(Generator, max, count);
+			return NonNegativeRange(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonNegativeRange(this System.Random random, Int64 max, Int32 count)
+		public static IEnumerable<Int64> NonNegativeRange(this System.Random random, Int64 max, Int32 count)
 		{
-			return Int64NonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonNegativeRange(this IRandom random, Int64 max, Int32 count)
+		public static IEnumerable<Int64> NonNegativeRange(this IRandom random, Int64 max, Int32 count)
 		{
-			return Int64NonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonNegativeRange(Int64 min, Int64 max)
+		public static IEnumerable<Int64> NonNegativeRange(Int64 min, Int64 max)
 		{
 			return Range(min, max, NextNonNegativeInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonNegativeRange(this System.Random random, Int64 min, Int64 max)
+		public static IEnumerable<Int64> NonNegativeRange(this System.Random random, Int64 min, Int64 max)
 		{
 			return Range(random, min, max, NextNonNegativeInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonNegativeRange(this IRandom random, Int64 min, Int64 max)
+		public static IEnumerable<Int64> NonNegativeRange(this IRandom random, Int64 min, Int64 max)
 		{
 			return Range(random, min, max, NextNonNegativeInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonNegativeRange(Int64 min, Int64 max, Int32 count)
+		public static IEnumerable<Int64> NonNegativeRange(Int64 min, Int64 max, Int32 count)
 		{
 			return Range(min, max, count, NextNonNegativeInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonNegativeRange(this System.Random random, Int64 min, Int64 max, Int32 count)
+		public static IEnumerable<Int64> NonNegativeRange(this System.Random random, Int64 min, Int64 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonNegativeRange(this IRandom random, Int64 min, Int64 max, Int32 count)
+		public static IEnumerable<Int64> NonNegativeRange(this IRandom random, Int64 min, Int64 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonNegativeRange(UInt64 max)
+		public static IEnumerable<UInt64> NonNegativeRange(UInt64 max)
 		{
-			return UInt64NonNegativeRange(Generator, max);
+			return NonNegativeRange(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonNegativeRange(this System.Random random, UInt64 max)
+		public static IEnumerable<UInt64> NonNegativeRange(this System.Random random, UInt64 max)
 		{
-			return UInt64NonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonNegativeRange(this IRandom random, UInt64 max)
+		public static IEnumerable<UInt64> NonNegativeRange(this IRandom random, UInt64 max)
 		{
-			return UInt64NonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonNegativeRange(UInt64 max, Int32 count)
+		public static IEnumerable<UInt64> NonNegativeRange(UInt64 max, Int32 count)
 		{
-			return UInt64NonNegativeRange(Generator, max, count);
+			return NonNegativeRange(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonNegativeRange(this System.Random random, UInt64 max, Int32 count)
+		public static IEnumerable<UInt64> NonNegativeRange(this System.Random random, UInt64 max, Int32 count)
 		{
-			return UInt64NonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonNegativeRange(this IRandom random, UInt64 max, Int32 count)
+		public static IEnumerable<UInt64> NonNegativeRange(this IRandom random, UInt64 max, Int32 count)
 		{
-			return UInt64NonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonNegativeRange(UInt64 min, UInt64 max)
+		public static IEnumerable<UInt64> NonNegativeRange(UInt64 min, UInt64 max)
 		{
 			return Range(min, max, NextNonNegativeUInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonNegativeRange(this System.Random random, UInt64 min, UInt64 max)
+		public static IEnumerable<UInt64> NonNegativeRange(this System.Random random, UInt64 min, UInt64 max)
 		{
 			return Range(random, min, max, NextNonNegativeUInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonNegativeRange(this IRandom random, UInt64 min, UInt64 max)
+		public static IEnumerable<UInt64> NonNegativeRange(this IRandom random, UInt64 min, UInt64 max)
 		{
 			return Range(random, min, max, NextNonNegativeUInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonNegativeRange(UInt64 min, UInt64 max, Int32 count)
+		public static IEnumerable<UInt64> NonNegativeRange(UInt64 min, UInt64 max, Int32 count)
 		{
 			return Range(min, max, count, NextNonNegativeUInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonNegativeRange(this System.Random random, UInt64 min, UInt64 max, Int32 count)
+		public static IEnumerable<UInt64> NonNegativeRange(this System.Random random, UInt64 min, UInt64 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeUInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonNegativeRange(this IRandom random, UInt64 min, UInt64 max, Int32 count)
+		public static IEnumerable<UInt64> NonNegativeRange(this IRandom random, UInt64 min, UInt64 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeUInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonNegativeRange(Single max)
+		public static IEnumerable<Single> NonNegativeRange(Single max)
 		{
-			return SingleNonNegativeRange(Generator, max);
+			return NonNegativeRange(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonNegativeRange(this System.Random random, Single max)
+		public static IEnumerable<Single> NonNegativeRange(this System.Random random, Single max)
 		{
-			return SingleNonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonNegativeRange(this IRandom random, Single max)
+		public static IEnumerable<Single> NonNegativeRange(this IRandom random, Single max)
 		{
-			return SingleNonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonNegativeRange(Single max, Int32 count)
+		public static IEnumerable<Single> NonNegativeRange(Single max, Int32 count)
 		{
-			return SingleNonNegativeRange(Generator, max, count);
+			return NonNegativeRange(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonNegativeRange(this System.Random random, Single max, Int32 count)
+		public static IEnumerable<Single> NonNegativeRange(this System.Random random, Single max, Int32 count)
 		{
-			return SingleNonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonNegativeRange(this IRandom random, Single max, Int32 count)
+		public static IEnumerable<Single> NonNegativeRange(this IRandom random, Single max, Int32 count)
 		{
-			return SingleNonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonNegativeRange(Single min, Single max)
+		public static IEnumerable<Single> NonNegativeRange(Single min, Single max)
 		{
 			return Range(min, max, NextNonNegativeSingle);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonNegativeRange(this System.Random random, Single min, Single max)
+		public static IEnumerable<Single> NonNegativeRange(this System.Random random, Single min, Single max)
 		{
 			return Range(random, min, max, NextNonNegativeSingle);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonNegativeRange(this IRandom random, Single min, Single max)
+		public static IEnumerable<Single> NonNegativeRange(this IRandom random, Single min, Single max)
 		{
 			return Range(random, min, max, NextNonNegativeSingle);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonNegativeRange(Single min, Single max, Int32 count)
+		public static IEnumerable<Single> NonNegativeRange(Single min, Single max, Int32 count)
 		{
 			return Range(min, max, count, NextNonNegativeSingle);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonNegativeRange(this System.Random random, Single min, Single max, Int32 count)
+		public static IEnumerable<Single> NonNegativeRange(this System.Random random, Single min, Single max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeSingle);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonNegativeRange(this IRandom random, Single min, Single max, Int32 count)
+		public static IEnumerable<Single> NonNegativeRange(this IRandom random, Single min, Single max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeSingle);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonNegativeRange(Double max)
+		public static IEnumerable<Double> NonNegativeRange(Double max)
 		{
-			return DoubleNonNegativeRange(Generator, max);
+			return NonNegativeRange(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonNegativeRange(this System.Random random, Double max)
+		public static IEnumerable<Double> NonNegativeRange(this System.Random random, Double max)
 		{
-			return DoubleNonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonNegativeRange(this IRandom random, Double max)
+		public static IEnumerable<Double> NonNegativeRange(this IRandom random, Double max)
 		{
-			return DoubleNonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonNegativeRange(Double max, Int32 count)
+		public static IEnumerable<Double> NonNegativeRange(Double max, Int32 count)
 		{
-			return DoubleNonNegativeRange(Generator, max, count);
+			return NonNegativeRange(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonNegativeRange(this System.Random random, Double max, Int32 count)
+		public static IEnumerable<Double> NonNegativeRange(this System.Random random, Double max, Int32 count)
 		{
-			return DoubleNonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonNegativeRange(this IRandom random, Double max, Int32 count)
+		public static IEnumerable<Double> NonNegativeRange(this IRandom random, Double max, Int32 count)
 		{
-			return DoubleNonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonNegativeRange(Double min, Double max)
+		public static IEnumerable<Double> NonNegativeRange(Double min, Double max)
 		{
 			return Range(min, max, NextNonNegativeDouble);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonNegativeRange(this System.Random random, Double min, Double max)
+		public static IEnumerable<Double> NonNegativeRange(this System.Random random, Double min, Double max)
 		{
 			return Range(random, min, max, NextNonNegativeDouble);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonNegativeRange(this IRandom random, Double min, Double max)
+		public static IEnumerable<Double> NonNegativeRange(this IRandom random, Double min, Double max)
 		{
 			return Range(random, min, max, NextNonNegativeDouble);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonNegativeRange(Double min, Double max, Int32 count)
+		public static IEnumerable<Double> NonNegativeRange(Double min, Double max, Int32 count)
 		{
 			return Range(min, max, count, NextNonNegativeDouble);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonNegativeRange(this System.Random random, Double min, Double max, Int32 count)
+		public static IEnumerable<Double> NonNegativeRange(this System.Random random, Double min, Double max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeDouble);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonNegativeRange(this IRandom random, Double min, Double max, Int32 count)
+		public static IEnumerable<Double> NonNegativeRange(this IRandom random, Double min, Double max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeDouble);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonNegativeRange(Decimal max)
+		public static IEnumerable<Decimal> NonNegativeRange(Decimal max)
 		{
-			return DecimalNonNegativeRange(Generator, max);
+			return NonNegativeRange(Generator, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonNegativeRange(this System.Random random, Decimal max)
+		public static IEnumerable<Decimal> NonNegativeRange(this System.Random random, Decimal max)
 		{
-			return DecimalNonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonNegativeRange(this IRandom random, Decimal max)
+		public static IEnumerable<Decimal> NonNegativeRange(this IRandom random, Decimal max)
 		{
-			return DecimalNonNegativeRange(random, default, max);
+			return NonNegativeRange(random, default, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonNegativeRange(Decimal max, Int32 count)
+		public static IEnumerable<Decimal> NonNegativeRange(Decimal max, Int32 count)
 		{
-			return DecimalNonNegativeRange(Generator, max, count);
+			return NonNegativeRange(Generator, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonNegativeRange(this System.Random random, Decimal max, Int32 count)
+		public static IEnumerable<Decimal> NonNegativeRange(this System.Random random, Decimal max, Int32 count)
 		{
-			return DecimalNonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonNegativeRange(this IRandom random, Decimal max, Int32 count)
+		public static IEnumerable<Decimal> NonNegativeRange(this IRandom random, Decimal max, Int32 count)
 		{
-			return DecimalNonNegativeRange(random, default, max, count);
+			return NonNegativeRange(random, default, max, count);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonNegativeRange(Decimal min, Decimal max)
+		public static IEnumerable<Decimal> NonNegativeRange(Decimal min, Decimal max)
 		{
 			return Range(min, max, NextNonNegativeDecimal);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonNegativeRange(this System.Random random, Decimal min, Decimal max)
+		public static IEnumerable<Decimal> NonNegativeRange(this System.Random random, Decimal min, Decimal max)
 		{
 			return Range(random, min, max, NextNonNegativeDecimal);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonNegativeRange(this IRandom random, Decimal min, Decimal max)
+		public static IEnumerable<Decimal> NonNegativeRange(this IRandom random, Decimal min, Decimal max)
 		{
 			return Range(random, min, max, NextNonNegativeDecimal);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonNegativeRange(Decimal min, Decimal max, Int32 count)
+		public static IEnumerable<Decimal> NonNegativeRange(Decimal min, Decimal max, Int32 count)
 		{
 			return Range(min, max, count, NextNonNegativeDecimal);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonNegativeRange(this System.Random random, Decimal min, Decimal max, Int32 count)
+		public static IEnumerable<Decimal> NonNegativeRange(this System.Random random, Decimal min, Decimal max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeDecimal);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonNegativeRange(this IRandom random, Decimal min, Decimal max, Int32 count)
+		public static IEnumerable<Decimal> NonNegativeRange(this IRandom random, Decimal min, Decimal max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonNegativeDecimal);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonZeroRange(SByte max)
+		public static IEnumerable<SByte> NonZeroRange(SByte max)
 		{
-			return SByteNonZeroRange(SByte.MinValue, max);
+			return NonZeroRange(SByte.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonZeroRange(this System.Random random, SByte max)
+		public static IEnumerable<SByte> NonZeroRange(this System.Random random, SByte max)
 		{
-			return SByteNonZeroRange(random, SByte.MinValue, max);
+			return NonZeroRange(random, SByte.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonZeroRange(this IRandom random, SByte max)
+		public static IEnumerable<SByte> NonZeroRange(this IRandom random, SByte max)
 		{
-			return SByteNonZeroRange(random, SByte.MinValue, max);
+			return NonZeroRange(random, SByte.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonZeroRange(SByte min, SByte max)
+		public static IEnumerable<SByte> NonZeroRange(SByte min, SByte max)
 		{
 			return Range(min, max, NextNonZeroSByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonZeroRange(this System.Random random, SByte min, SByte max)
+		public static IEnumerable<SByte> NonZeroRange(this System.Random random, SByte min, SByte max)
 		{
 			return Range(random, min, max, NextNonZeroSByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonZeroRange(this IRandom random, SByte min, SByte max)
+		public static IEnumerable<SByte> NonZeroRange(this IRandom random, SByte min, SByte max)
 		{
 			return Range(random, min, max, NextNonZeroSByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonZeroRange(SByte min, SByte max, Int32 count)
+		public static IEnumerable<SByte> NonZeroRange(SByte min, SByte max, Int32 count)
 		{
 			return Range(min, max, count, NextNonZeroSByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonZeroRange(this System.Random random, SByte min, SByte max, Int32 count)
+		public static IEnumerable<SByte> NonZeroRange(this System.Random random, SByte min, SByte max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroSByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<SByte> SByteNonZeroRange(this IRandom random, SByte min, SByte max, Int32 count)
+		public static IEnumerable<SByte> NonZeroRange(this IRandom random, SByte min, SByte max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroSByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonZeroRange(Byte max)
+		public static IEnumerable<Byte> NonZeroRange(Byte max)
 		{
-			return ByteNonZeroRange(Byte.MinValue, max);
+			return NonZeroRange(Byte.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonZeroRange(this System.Random random, Byte max)
+		public static IEnumerable<Byte> NonZeroRange(this System.Random random, Byte max)
 		{
-			return ByteNonZeroRange(random, Byte.MinValue, max);
+			return NonZeroRange(random, Byte.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonZeroRange(this IRandom random, Byte max)
+		public static IEnumerable<Byte> NonZeroRange(this IRandom random, Byte max)
 		{
-			return ByteNonZeroRange(random, Byte.MinValue, max);
+			return NonZeroRange(random, Byte.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonZeroRange(Byte min, Byte max)
+		public static IEnumerable<Byte> NonZeroRange(Byte min, Byte max)
 		{
 			return Range(min, max, NextNonZeroByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonZeroRange(this System.Random random, Byte min, Byte max)
+		public static IEnumerable<Byte> NonZeroRange(this System.Random random, Byte min, Byte max)
 		{
 			return Range(random, min, max, NextNonZeroByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonZeroRange(this IRandom random, Byte min, Byte max)
+		public static IEnumerable<Byte> NonZeroRange(this IRandom random, Byte min, Byte max)
 		{
 			return Range(random, min, max, NextNonZeroByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonZeroRange(Byte min, Byte max, Int32 count)
+		public static IEnumerable<Byte> NonZeroRange(Byte min, Byte max, Int32 count)
 		{
 			return Range(min, max, count, NextNonZeroByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonZeroRange(this System.Random random, Byte min, Byte max, Int32 count)
+		public static IEnumerable<Byte> NonZeroRange(this System.Random random, Byte min, Byte max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Byte> ByteNonZeroRange(this IRandom random, Byte min, Byte max, Int32 count)
+		public static IEnumerable<Byte> NonZeroRange(this IRandom random, Byte min, Byte max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroByte);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonZeroRange(Int16 max)
+		public static IEnumerable<Int16> NonZeroRange(Int16 max)
 		{
-			return Int16NonZeroRange(Int16.MinValue, max);
+			return NonZeroRange(Int16.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonZeroRange(this System.Random random, Int16 max)
+		public static IEnumerable<Int16> NonZeroRange(this System.Random random, Int16 max)
 		{
-			return Int16NonZeroRange(random, Int16.MinValue, max);
+			return NonZeroRange(random, Int16.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonZeroRange(this IRandom random, Int16 max)
+		public static IEnumerable<Int16> NonZeroRange(this IRandom random, Int16 max)
 		{
-			return Int16NonZeroRange(random, Int16.MinValue, max);
+			return NonZeroRange(random, Int16.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonZeroRange(Int16 min, Int16 max)
+		public static IEnumerable<Int16> NonZeroRange(Int16 min, Int16 max)
 		{
 			return Range(min, max, NextNonZeroInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonZeroRange(this System.Random random, Int16 min, Int16 max)
+		public static IEnumerable<Int16> NonZeroRange(this System.Random random, Int16 min, Int16 max)
 		{
 			return Range(random, min, max, NextNonZeroInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonZeroRange(this IRandom random, Int16 min, Int16 max)
+		public static IEnumerable<Int16> NonZeroRange(this IRandom random, Int16 min, Int16 max)
 		{
 			return Range(random, min, max, NextNonZeroInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonZeroRange(Int16 min, Int16 max, Int32 count)
+		public static IEnumerable<Int16> NonZeroRange(Int16 min, Int16 max, Int32 count)
 		{
 			return Range(min, max, count, NextNonZeroInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonZeroRange(this System.Random random, Int16 min, Int16 max, Int32 count)
+		public static IEnumerable<Int16> NonZeroRange(this System.Random random, Int16 min, Int16 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int16> Int16NonZeroRange(this IRandom random, Int16 min, Int16 max, Int32 count)
+		public static IEnumerable<Int16> NonZeroRange(this IRandom random, Int16 min, Int16 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonZeroRange(UInt16 max)
+		public static IEnumerable<UInt16> NonZeroRange(UInt16 max)
 		{
-			return UInt16NonZeroRange(UInt16.MinValue, max);
+			return NonZeroRange(UInt16.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonZeroRange(this System.Random random, UInt16 max)
+		public static IEnumerable<UInt16> NonZeroRange(this System.Random random, UInt16 max)
 		{
-			return UInt16NonZeroRange(random, UInt16.MinValue, max);
+			return NonZeroRange(random, UInt16.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonZeroRange(this IRandom random, UInt16 max)
+		public static IEnumerable<UInt16> NonZeroRange(this IRandom random, UInt16 max)
 		{
-			return UInt16NonZeroRange(random, UInt16.MinValue, max);
+			return NonZeroRange(random, UInt16.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonZeroRange(UInt16 min, UInt16 max)
+		public static IEnumerable<UInt16> NonZeroRange(UInt16 min, UInt16 max)
 		{
 			return Range(min, max, NextNonZeroUInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonZeroRange(this System.Random random, UInt16 min, UInt16 max)
+		public static IEnumerable<UInt16> NonZeroRange(this System.Random random, UInt16 min, UInt16 max)
 		{
 			return Range(random, min, max, NextNonZeroUInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonZeroRange(this IRandom random, UInt16 min, UInt16 max)
+		public static IEnumerable<UInt16> NonZeroRange(this IRandom random, UInt16 min, UInt16 max)
 		{
 			return Range(random, min, max, NextNonZeroUInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonZeroRange(UInt16 min, UInt16 max, Int32 count)
+		public static IEnumerable<UInt16> NonZeroRange(UInt16 min, UInt16 max, Int32 count)
 		{
 			return Range(min, max, count, NextNonZeroUInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonZeroRange(this System.Random random, UInt16 min, UInt16 max, Int32 count)
+		public static IEnumerable<UInt16> NonZeroRange(this System.Random random, UInt16 min, UInt16 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroUInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt16> UInt16NonZeroRange(this IRandom random, UInt16 min, UInt16 max, Int32 count)
+		public static IEnumerable<UInt16> NonZeroRange(this IRandom random, UInt16 min, UInt16 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroUInt16);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonZeroRange()
+		public static IEnumerable<Int32> NonZeroRange()
 		{
-			return Int32NonZeroRange(Int32.MinValue, Int32.MaxValue);
+			return NonZeroRange(Int32.MinValue, Int32.MaxValue);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonZeroRange(this System.Random random)
+		public static IEnumerable<Int32> NonZeroRange(this System.Random random)
 		{
-			return Int32NonZeroRange(random, Int32.MinValue, Int32.MaxValue);
+			return NonZeroRange(random, Int32.MinValue, Int32.MaxValue);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonZeroRange(this IRandom random)
+		public static IEnumerable<Int32> NonZeroRange(this IRandom random)
 		{
-			return Int32NonZeroRange(random, Int32.MinValue, Int32.MaxValue);
+			return NonZeroRange(random, Int32.MinValue, Int32.MaxValue);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonZeroRange(Int32 max)
+		public static IEnumerable<Int32> NonZeroRange(Int32 max)
 		{
-			return Int32NonZeroRange(Int32.MinValue, max);
+			return NonZeroRange(Int32.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonZeroRange(this System.Random random, Int32 max)
+		public static IEnumerable<Int32> NonZeroRange(this System.Random random, Int32 max)
 		{
-			return Int32NonZeroRange(random, Int32.MinValue, max);
+			return NonZeroRange(random, Int32.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonZeroRange(this IRandom random, Int32 max)
+		public static IEnumerable<Int32> NonZeroRange(this IRandom random, Int32 max)
 		{
-			return Int32NonZeroRange(random, Int32.MinValue, max);
+			return NonZeroRange(random, Int32.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonZeroRange(Int32 min, Int32 max)
+		public static IEnumerable<Int32> NonZeroRange(Int32 min, Int32 max)
 		{
 			return Range(min, max, NextNonZeroInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonZeroRange(this System.Random random, Int32 min, Int32 max)
+		public static IEnumerable<Int32> NonZeroRange(this System.Random random, Int32 min, Int32 max)
 		{
 			return Range(random, min, max, NextNonZeroInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonZeroRange(this IRandom random, Int32 min, Int32 max)
+		public static IEnumerable<Int32> NonZeroRange(this IRandom random, Int32 min, Int32 max)
 		{
 			return Range(random, min, max, NextNonZeroInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonZeroRange(Int32 min, Int32 max, Int32 count)
+		public static IEnumerable<Int32> NonZeroRange(Int32 min, Int32 max, Int32 count)
 		{
 			return Range(min, max, count, NextNonZeroInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonZeroRange(this System.Random random, Int32 min, Int32 max, Int32 count)
+		public static IEnumerable<Int32> NonZeroRange(this System.Random random, Int32 min, Int32 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int32> Int32NonZeroRange(this IRandom random, Int32 min, Int32 max, Int32 count)
+		public static IEnumerable<Int32> NonZeroRange(this IRandom random, Int32 min, Int32 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonZeroRange(UInt32 max)
+		public static IEnumerable<UInt32> NonZeroRange(UInt32 max)
 		{
-			return UInt32NonZeroRange(UInt32.MinValue, max);
+			return NonZeroRange(UInt32.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonZeroRange(this System.Random random, UInt32 max)
+		public static IEnumerable<UInt32> NonZeroRange(this System.Random random, UInt32 max)
 		{
-			return UInt32NonZeroRange(random, UInt32.MinValue, max);
+			return NonZeroRange(random, UInt32.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonZeroRange(this IRandom random, UInt32 max)
+		public static IEnumerable<UInt32> NonZeroRange(this IRandom random, UInt32 max)
 		{
-			return UInt32NonZeroRange(random, UInt32.MinValue, max);
+			return NonZeroRange(random, UInt32.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonZeroRange(UInt32 min, UInt32 max)
+		public static IEnumerable<UInt32> NonZeroRange(UInt32 min, UInt32 max)
 		{
 			return Range(min, max, NextNonZeroUInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonZeroRange(this System.Random random, UInt32 min, UInt32 max)
+		public static IEnumerable<UInt32> NonZeroRange(this System.Random random, UInt32 min, UInt32 max)
 		{
 			return Range(random, min, max, NextNonZeroUInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonZeroRange(this IRandom random, UInt32 min, UInt32 max)
+		public static IEnumerable<UInt32> NonZeroRange(this IRandom random, UInt32 min, UInt32 max)
 		{
 			return Range(random, min, max, NextNonZeroUInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonZeroRange(UInt32 min, UInt32 max, Int32 count)
+		public static IEnumerable<UInt32> NonZeroRange(UInt32 min, UInt32 max, Int32 count)
 		{
 			return Range(min, max, count, NextNonZeroUInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonZeroRange(this System.Random random, UInt32 min, UInt32 max, Int32 count)
+		public static IEnumerable<UInt32> NonZeroRange(this System.Random random, UInt32 min, UInt32 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroUInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt32> UInt32NonZeroRange(this IRandom random, UInt32 min, UInt32 max, Int32 count)
+		public static IEnumerable<UInt32> NonZeroRange(this IRandom random, UInt32 min, UInt32 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroUInt32);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonZeroRange(Int64 max)
+		public static IEnumerable<Int64> NonZeroRange(Int64 max)
 		{
-			return Int64NonZeroRange(Int64.MinValue, max);
+			return NonZeroRange(Int64.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonZeroRange(this System.Random random, Int64 max)
+		public static IEnumerable<Int64> NonZeroRange(this System.Random random, Int64 max)
 		{
-			return Int64NonZeroRange(random, Int64.MinValue, max);
+			return NonZeroRange(random, Int64.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonZeroRange(this IRandom random, Int64 max)
+		public static IEnumerable<Int64> NonZeroRange(this IRandom random, Int64 max)
 		{
-			return Int64NonZeroRange(random, Int64.MinValue, max);
+			return NonZeroRange(random, Int64.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonZeroRange(Int64 min, Int64 max)
+		public static IEnumerable<Int64> NonZeroRange(Int64 min, Int64 max)
 		{
 			return Range(min, max, NextNonZeroInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonZeroRange(this System.Random random, Int64 min, Int64 max)
+		public static IEnumerable<Int64> NonZeroRange(this System.Random random, Int64 min, Int64 max)
 		{
 			return Range(random, min, max, NextNonZeroInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonZeroRange(this IRandom random, Int64 min, Int64 max)
+		public static IEnumerable<Int64> NonZeroRange(this IRandom random, Int64 min, Int64 max)
 		{
 			return Range(random, min, max, NextNonZeroInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonZeroRange(Int64 min, Int64 max, Int32 count)
+		public static IEnumerable<Int64> NonZeroRange(Int64 min, Int64 max, Int32 count)
 		{
 			return Range(min, max, count, NextNonZeroInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonZeroRange(this System.Random random, Int64 min, Int64 max, Int32 count)
+		public static IEnumerable<Int64> NonZeroRange(this System.Random random, Int64 min, Int64 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Int64> Int64NonZeroRange(this IRandom random, Int64 min, Int64 max, Int32 count)
+		public static IEnumerable<Int64> NonZeroRange(this IRandom random, Int64 min, Int64 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonZeroRange(UInt64 max)
+		public static IEnumerable<UInt64> NonZeroRange(UInt64 max)
 		{
-			return UInt64NonZeroRange(UInt64.MinValue, max);
+			return NonZeroRange(UInt64.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonZeroRange(this System.Random random, UInt64 max)
+		public static IEnumerable<UInt64> NonZeroRange(this System.Random random, UInt64 max)
 		{
-			return UInt64NonZeroRange(random, UInt64.MinValue, max);
+			return NonZeroRange(random, UInt64.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonZeroRange(this IRandom random, UInt64 max)
+		public static IEnumerable<UInt64> NonZeroRange(this IRandom random, UInt64 max)
 		{
-			return UInt64NonZeroRange(random, UInt64.MinValue, max);
+			return NonZeroRange(random, UInt64.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonZeroRange(UInt64 min, UInt64 max)
+		public static IEnumerable<UInt64> NonZeroRange(UInt64 min, UInt64 max)
 		{
 			return Range(min, max, NextNonZeroUInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonZeroRange(this System.Random random, UInt64 min, UInt64 max)
+		public static IEnumerable<UInt64> NonZeroRange(this System.Random random, UInt64 min, UInt64 max)
 		{
 			return Range(random, min, max, NextNonZeroUInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonZeroRange(this IRandom random, UInt64 min, UInt64 max)
+		public static IEnumerable<UInt64> NonZeroRange(this IRandom random, UInt64 min, UInt64 max)
 		{
 			return Range(random, min, max, NextNonZeroUInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonZeroRange(UInt64 min, UInt64 max, Int32 count)
+		public static IEnumerable<UInt64> NonZeroRange(UInt64 min, UInt64 max, Int32 count)
 		{
 			return Range(min, max, count, NextNonZeroUInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonZeroRange(this System.Random random, UInt64 min, UInt64 max, Int32 count)
+		public static IEnumerable<UInt64> NonZeroRange(this System.Random random, UInt64 min, UInt64 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroUInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<UInt64> UInt64NonZeroRange(this IRandom random, UInt64 min, UInt64 max, Int32 count)
+		public static IEnumerable<UInt64> NonZeroRange(this IRandom random, UInt64 min, UInt64 max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroUInt64);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonZeroRange(Single max)
+		public static IEnumerable<Single> NonZeroRange(Single max)
 		{
-			return SingleNonZeroRange(Single.MinValue, max);
+			return NonZeroRange(Single.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonZeroRange(this System.Random random, Single max)
+		public static IEnumerable<Single> NonZeroRange(this System.Random random, Single max)
 		{
-			return SingleNonZeroRange(random, Single.MinValue, max);
+			return NonZeroRange(random, Single.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonZeroRange(this IRandom random, Single max)
+		public static IEnumerable<Single> NonZeroRange(this IRandom random, Single max)
 		{
-			return SingleNonZeroRange(random, Single.MinValue, max);
+			return NonZeroRange(random, Single.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonZeroRange(Single min, Single max)
+		public static IEnumerable<Single> NonZeroRange(Single min, Single max)
 		{
 			return Range(min, max, NextNonZeroSingle);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonZeroRange(this System.Random random, Single min, Single max)
+		public static IEnumerable<Single> NonZeroRange(this System.Random random, Single min, Single max)
 		{
 			return Range(random, min, max, NextNonZeroSingle);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonZeroRange(this IRandom random, Single min, Single max)
+		public static IEnumerable<Single> NonZeroRange(this IRandom random, Single min, Single max)
 		{
 			return Range(random, min, max, NextNonZeroSingle);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonZeroRange(Single min, Single max, Int32 count)
+		public static IEnumerable<Single> NonZeroRange(Single min, Single max, Int32 count)
 		{
 			return Range(min, max, count, NextNonZeroSingle);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonZeroRange(this System.Random random, Single min, Single max, Int32 count)
+		public static IEnumerable<Single> NonZeroRange(this System.Random random, Single min, Single max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroSingle);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> SingleNonZeroRange(this IRandom random, Single min, Single max, Int32 count)
+		public static IEnumerable<Single> NonZeroRange(this IRandom random, Single min, Single max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroSingle);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonZeroRange(Double max)
+		public static IEnumerable<Double> NonZeroRange(Double max)
 		{
-			return DoubleNonZeroRange(Double.MinValue, max);
+			return NonZeroRange(Double.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonZeroRange(this System.Random random, Double max)
+		public static IEnumerable<Double> NonZeroRange(this System.Random random, Double max)
 		{
-			return DoubleNonZeroRange(random, Double.MinValue, max);
+			return NonZeroRange(random, Double.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonZeroRange(this IRandom random, Double max)
+		public static IEnumerable<Double> NonZeroRange(this IRandom random, Double max)
 		{
-			return DoubleNonZeroRange(random, Double.MinValue, max);
+			return NonZeroRange(random, Double.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonZeroRange(Double min, Double max)
+		public static IEnumerable<Double> NonZeroRange(Double min, Double max)
 		{
 			return Range(min, max, NextNonZeroDouble);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonZeroRange(this System.Random random, Double min, Double max)
+		public static IEnumerable<Double> NonZeroRange(this System.Random random, Double min, Double max)
 		{
 			return Range(random, min, max, NextNonZeroDouble);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonZeroRange(this IRandom random, Double min, Double max)
+		public static IEnumerable<Double> NonZeroRange(this IRandom random, Double min, Double max)
 		{
 			return Range(random, min, max, NextNonZeroDouble);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonZeroRange(Double min, Double max, Int32 count)
+		public static IEnumerable<Double> NonZeroRange(Double min, Double max, Int32 count)
 		{
 			return Range(min, max, count, NextNonZeroDouble);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonZeroRange(this System.Random random, Double min, Double max, Int32 count)
+		public static IEnumerable<Double> NonZeroRange(this System.Random random, Double min, Double max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroDouble);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> DoubleNonZeroRange(this IRandom random, Double min, Double max, Int32 count)
+		public static IEnumerable<Double> NonZeroRange(this IRandom random, Double min, Double max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroDouble);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonZeroRange(Decimal max)
+		public static IEnumerable<Decimal> NonZeroRange(Decimal max)
 		{
-			return DecimalNonZeroRange(Decimal.MinValue, max);
+			return NonZeroRange(Decimal.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonZeroRange(this System.Random random, Decimal max)
+		public static IEnumerable<Decimal> NonZeroRange(this System.Random random, Decimal max)
 		{
-			return DecimalNonZeroRange(random, Decimal.MinValue, max);
+			return NonZeroRange(random, Decimal.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonZeroRange(this IRandom random, Decimal max)
+		public static IEnumerable<Decimal> NonZeroRange(this IRandom random, Decimal max)
 		{
-			return DecimalNonZeroRange(random, Decimal.MinValue, max);
+			return NonZeroRange(random, Decimal.MinValue, max);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonZeroRange(Decimal min, Decimal max)
+		public static IEnumerable<Decimal> NonZeroRange(Decimal min, Decimal max)
 		{
 			return Range(min, max, NextNonZeroDecimal);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonZeroRange(this System.Random random, Decimal min, Decimal max)
+		public static IEnumerable<Decimal> NonZeroRange(this System.Random random, Decimal min, Decimal max)
 		{
 			return Range(random, min, max, NextNonZeroDecimal);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonZeroRange(this IRandom random, Decimal min, Decimal max)
+		public static IEnumerable<Decimal> NonZeroRange(this IRandom random, Decimal min, Decimal max)
 		{
 			return Range(random, min, max, NextNonZeroDecimal);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonZeroRange(Decimal min, Decimal max, Int32 count)
+		public static IEnumerable<Decimal> NonZeroRange(Decimal min, Decimal max, Int32 count)
 		{
 			return Range(min, max, count, NextNonZeroDecimal);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonZeroRange(this System.Random random, Decimal min, Decimal max, Int32 count)
+		public static IEnumerable<Decimal> NonZeroRange(this System.Random random, Decimal min, Decimal max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroDecimal);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> DecimalNonZeroRange(this IRandom random, Decimal min, Decimal max, Int32 count)
+		public static IEnumerable<Decimal> NonZeroRange(this IRandom random, Decimal min, Decimal max, Int32 count)
 		{
 			return Range(random, min, max, count, NextNonZeroDecimal);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<SByte> UniqueSetRange([NotNull] System.Random random, SByte min, SByte max)
+		{
+			Int32 difference = Math.Min(max.DiscreteIncludeDifference(min, Byte.MaxValue), Int32.MaxValue);
+			HashSet<SByte> set = new HashSet<SByte>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				SByte item = NextSByte(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<SByte> UniqueSetRange([NotNull] IRandom random, SByte min, SByte max)
+		{
+			Int32 difference = Math.Min(max.DiscreteIncludeDifference(min, Byte.MaxValue), Int32.MaxValue);
+			HashSet<SByte> set = new HashSet<SByte>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				SByte item = NextSByte(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<SByte> UniqueSetRange([NotNull] System.Random random, SByte min, SByte max, Int32 count)
+		{
+			HashSet<SByte> set = new HashSet<SByte>(count);
+
+			while (set.Count < count)
+			{
+				SByte item = NextSByte(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<SByte> UniqueSetRange([NotNull] IRandom random, SByte min, SByte max, Int32 count)
+		{
+			HashSet<SByte> set = new HashSet<SByte>(count);
+
+			while (set.Count < count)
+			{
+				SByte item = NextSByte(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<SByte> UniqueShuffleRange([NotNull] System.Random random, SByte min, SByte max)
+		{
+			return MathUtils.RangeInclude(min, max).Shuffle(random);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<SByte> UniqueShuffleRange([NotNull] IRandom random, SByte min, SByte max)
+		{
+			return MathUtils.RangeInclude(min, max).Shuffle(random);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<SByte> UniqueShuffleRange([NotNull] System.Random random, SByte min, SByte max, Int32 count)
+		{
+			return UniqueShuffleRange(random, min, max).Take(count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<SByte> UniqueShuffleRange([NotNull] IRandom random, SByte min, SByte max, Int32 count)
+		{
+			return UniqueShuffleRange(random, min, max).Take(count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<SByte> UniqueRange(SByte min, SByte max)
+		{
+			return UniqueRange(Generator, min, max);
+		}
+
+		public static IEnumerable<SByte> UniqueRange([NotNull] this System.Random random, SByte min, SByte max)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			Byte difference = max.DiscreteIncludeDifference(min, Byte.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ?
+				UniqueShuffleRange(random, min, max, difference) :
+				UniqueSetRange(random, min, max);
+		}
+
+		public static IEnumerable<SByte> UniqueRange([NotNull] this IRandom random, SByte min, SByte max)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			Byte difference = max.DiscreteIncludeDifference(min, Byte.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ?
+				UniqueShuffleRange(random, min, max, difference) :
+				UniqueSetRange(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<SByte> UniqueRange(SByte min, SByte max, Int32 count)
+		{
+			return UniqueRange(Generator, min, max, count);
+		}
+
+		public static IEnumerable<SByte> UniqueRange([NotNull] this System.Random random, SByte min, SByte max, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<SByte>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextSByte(random, min, max));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			Byte difference = max.DiscreteIncludeDifference(min, Byte.MaxValue);
+			count = (Int32) Math.Min((UInt32) count, difference);
+			return count <= SByte.MaxValue + 1 || count / (Double) difference >= 0.8 ?
+				UniqueShuffleRange(random, min, max, count) :
+				UniqueSetRange(random, min, max, count);
+		}
+
+		public static IEnumerable<SByte> UniqueRange([NotNull] this IRandom random, SByte min, SByte max, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<SByte>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextSByte(random, min, max));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			Byte difference = max.DiscreteIncludeDifference(min, Byte.MaxValue);
+			count = (Int32) Math.Min((UInt32) count, difference);
+			return count <= SByte.MaxValue + 1 || count / (Double) difference >= 0.8 ?
+				UniqueShuffleRange(random, min, max, count) :
+				UniqueSetRange(random, min, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Byte> UniqueSetRange([NotNull] System.Random random, Byte min, Byte max)
+		{
+			Int32 difference = Math.Min(max.DiscreteIncludeDifference(min, Byte.MaxValue), Int32.MaxValue);
+			HashSet<Byte> set = new HashSet<Byte>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				Byte item = NextByte(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Byte> UniqueSetRange([NotNull] IRandom random, Byte min, Byte max)
+		{
+			Int32 difference = Math.Min(max.DiscreteIncludeDifference(min, Byte.MaxValue), Int32.MaxValue);
+			HashSet<Byte> set = new HashSet<Byte>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				Byte item = NextByte(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Byte> UniqueSetRange([NotNull] System.Random random, Byte min, Byte max, Int32 count)
+		{
+			HashSet<Byte> set = new HashSet<Byte>(count);
+
+			while (set.Count < count)
+			{
+				Byte item = NextByte(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Byte> UniqueSetRange([NotNull] IRandom random, Byte min, Byte max, Int32 count)
+		{
+			HashSet<Byte> set = new HashSet<Byte>(count);
+
+			while (set.Count < count)
+			{
+				Byte item = NextByte(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Byte> UniqueShuffleRange([NotNull] System.Random random, Byte min, Byte max)
+		{
+			return MathUtils.RangeInclude(min, max).Shuffle(random);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Byte> UniqueShuffleRange([NotNull] IRandom random, Byte min, Byte max)
+		{
+			return MathUtils.RangeInclude(min, max).Shuffle(random);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Byte> UniqueShuffleRange([NotNull] System.Random random, Byte min, Byte max, Int32 count)
+		{
+			return UniqueShuffleRange(random, min, max).Take(count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Byte> UniqueShuffleRange([NotNull] IRandom random, Byte min, Byte max, Int32 count)
+		{
+			return UniqueShuffleRange(random, min, max).Take(count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Byte> UniqueRange(Byte min, Byte max)
+		{
+			return UniqueRange(Generator, min, max);
+		}
+
+		public static IEnumerable<Byte> UniqueRange([NotNull] this System.Random random, Byte min, Byte max)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			Byte difference = max.DiscreteIncludeDifference(min, Byte.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ?
+				UniqueShuffleRange(random, min, max, difference) :
+				UniqueSetRange(random, min, max);
+		}
+
+		public static IEnumerable<Byte> UniqueRange([NotNull] this IRandom random, Byte min, Byte max)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			Byte difference = max.DiscreteIncludeDifference(min, Byte.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ?
+				UniqueShuffleRange(random, min, max, difference) :
+				UniqueSetRange(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Byte> UniqueRange(Byte min, Byte max, Int32 count)
+		{
+			return UniqueRange(Generator, min, max, count);
+		}
+
+		public static IEnumerable<Byte> UniqueRange([NotNull] this System.Random random, Byte min, Byte max, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<Byte>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextByte(random, min, max));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			Byte difference = max.DiscreteIncludeDifference(min, Byte.MaxValue);
+			count = (Int32) Math.Min((UInt32) count, difference);
+			return count <= SByte.MaxValue + 1 || count / (Double) difference >= 0.8 ?
+				UniqueShuffleRange(random, min, max, count) :
+				UniqueSetRange(random, min, max, count);
+		}
+
+		public static IEnumerable<Byte> UniqueRange([NotNull] this IRandom random, Byte min, Byte max, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<Byte>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextByte(random, min, max));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			Byte difference = max.DiscreteIncludeDifference(min, Byte.MaxValue);
+			count = (Int32) Math.Min((UInt32) count, difference);
+			return count <= SByte.MaxValue + 1 || count / (Double) difference >= 0.8 ?
+				UniqueShuffleRange(random, min, max, count) :
+				UniqueSetRange(random, min, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int16> UniqueSetRange([NotNull] System.Random random, Int16 min, Int16 max)
+		{
+			Int32 difference = Math.Min(max.DiscreteIncludeDifference(min, UInt16.MaxValue), Int32.MaxValue);
+			HashSet<Int16> set = new HashSet<Int16>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				Int16 item = NextInt16(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int16> UniqueSetRange([NotNull] IRandom random, Int16 min, Int16 max)
+		{
+			Int32 difference = Math.Min(max.DiscreteIncludeDifference(min, UInt16.MaxValue), Int32.MaxValue);
+			HashSet<Int16> set = new HashSet<Int16>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				Int16 item = NextInt16(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int16> UniqueSetRange([NotNull] System.Random random, Int16 min, Int16 max, Int32 count)
+		{
+			HashSet<Int16> set = new HashSet<Int16>(count);
+
+			while (set.Count < count)
+			{
+				Int16 item = NextInt16(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int16> UniqueSetRange([NotNull] IRandom random, Int16 min, Int16 max, Int32 count)
+		{
+			HashSet<Int16> set = new HashSet<Int16>(count);
+
+			while (set.Count < count)
+			{
+				Int16 item = NextInt16(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int16> UniqueShuffleRange([NotNull] System.Random random, Int16 min, Int16 max)
+		{
+			return MathUtils.RangeInclude(min, max).Shuffle(random);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int16> UniqueShuffleRange([NotNull] IRandom random, Int16 min, Int16 max)
+		{
+			return MathUtils.RangeInclude(min, max).Shuffle(random);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int16> UniqueShuffleRange([NotNull] System.Random random, Int16 min, Int16 max, Int32 count)
+		{
+			return UniqueShuffleRange(random, min, max).Take(count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int16> UniqueShuffleRange([NotNull] IRandom random, Int16 min, Int16 max, Int32 count)
+		{
+			return UniqueShuffleRange(random, min, max).Take(count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int16> UniqueRange(Int16 min, Int16 max)
+		{
+			return UniqueRange(Generator, min, max);
+		}
+
+		public static IEnumerable<Int16> UniqueRange([NotNull] this System.Random random, Int16 min, Int16 max)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt16 difference = max.DiscreteIncludeDifference(min, UInt16.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ?
+				UniqueShuffleRange(random, min, max, difference) :
+				UniqueSetRange(random, min, max);
+		}
+
+		public static IEnumerable<Int16> UniqueRange([NotNull] this IRandom random, Int16 min, Int16 max)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt16 difference = max.DiscreteIncludeDifference(min, UInt16.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ?
+				UniqueShuffleRange(random, min, max, difference) :
+				UniqueSetRange(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int16> UniqueRange(Int16 min, Int16 max, Int32 count)
+		{
+			return UniqueRange(Generator, min, max, count);
+		}
+
+		public static IEnumerable<Int16> UniqueRange([NotNull] this System.Random random, Int16 min, Int16 max, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<Int16>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextInt16(random, min, max));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt16 difference = max.DiscreteIncludeDifference(min, UInt16.MaxValue);
+			count = (Int32) Math.Min((UInt32) count, difference);
+			return count <= SByte.MaxValue + 1 || count / (Double) difference >= 0.8 ?
+				UniqueShuffleRange(random, min, max, count) :
+				UniqueSetRange(random, min, max, count);
+		}
+
+		public static IEnumerable<Int16> UniqueRange([NotNull] this IRandom random, Int16 min, Int16 max, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<Int16>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextInt16(random, min, max));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt16 difference = max.DiscreteIncludeDifference(min, UInt16.MaxValue);
+			count = (Int32) Math.Min((UInt32) count, difference);
+			return count <= SByte.MaxValue + 1 || count / (Double) difference >= 0.8 ?
+				UniqueShuffleRange(random, min, max, count) :
+				UniqueSetRange(random, min, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt16> UniqueSetRange([NotNull] System.Random random, UInt16 min, UInt16 max)
+		{
+			Int32 difference = Math.Min(max.DiscreteIncludeDifference(min, UInt16.MaxValue), Int32.MaxValue);
+			HashSet<UInt16> set = new HashSet<UInt16>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				UInt16 item = NextUInt16(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt16> UniqueSetRange([NotNull] IRandom random, UInt16 min, UInt16 max)
+		{
+			Int32 difference = Math.Min(max.DiscreteIncludeDifference(min, UInt16.MaxValue), Int32.MaxValue);
+			HashSet<UInt16> set = new HashSet<UInt16>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				UInt16 item = NextUInt16(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt16> UniqueSetRange([NotNull] System.Random random, UInt16 min, UInt16 max, Int32 count)
+		{
+			HashSet<UInt16> set = new HashSet<UInt16>(count);
+
+			while (set.Count < count)
+			{
+				UInt16 item = NextUInt16(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt16> UniqueSetRange([NotNull] IRandom random, UInt16 min, UInt16 max, Int32 count)
+		{
+			HashSet<UInt16> set = new HashSet<UInt16>(count);
+
+			while (set.Count < count)
+			{
+				UInt16 item = NextUInt16(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt16> UniqueShuffleRange([NotNull] System.Random random, UInt16 min, UInt16 max)
+		{
+			return MathUtils.RangeInclude(min, max).Shuffle(random);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt16> UniqueShuffleRange([NotNull] IRandom random, UInt16 min, UInt16 max)
+		{
+			return MathUtils.RangeInclude(min, max).Shuffle(random);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt16> UniqueShuffleRange([NotNull] System.Random random, UInt16 min, UInt16 max, Int32 count)
+		{
+			return UniqueShuffleRange(random, min, max).Take(count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt16> UniqueShuffleRange([NotNull] IRandom random, UInt16 min, UInt16 max, Int32 count)
+		{
+			return UniqueShuffleRange(random, min, max).Take(count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt16> UniqueRange(UInt16 min, UInt16 max)
+		{
+			return UniqueRange(Generator, min, max);
+		}
+
+		public static IEnumerable<UInt16> UniqueRange([NotNull] this System.Random random, UInt16 min, UInt16 max)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt16 difference = max.DiscreteIncludeDifference(min, UInt16.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ?
+				UniqueShuffleRange(random, min, max, difference) :
+				UniqueSetRange(random, min, max);
+		}
+
+		public static IEnumerable<UInt16> UniqueRange([NotNull] this IRandom random, UInt16 min, UInt16 max)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt16 difference = max.DiscreteIncludeDifference(min, UInt16.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ?
+				UniqueShuffleRange(random, min, max, difference) :
+				UniqueSetRange(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt16> UniqueRange(UInt16 min, UInt16 max, Int32 count)
+		{
+			return UniqueRange(Generator, min, max, count);
+		}
+
+		public static IEnumerable<UInt16> UniqueRange([NotNull] this System.Random random, UInt16 min, UInt16 max, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<UInt16>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextUInt16(random, min, max));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt16 difference = max.DiscreteIncludeDifference(min, UInt16.MaxValue);
+			count = (Int32) Math.Min((UInt32) count, difference);
+			return count <= SByte.MaxValue + 1 || count / (Double) difference >= 0.8 ?
+				UniqueShuffleRange(random, min, max, count) :
+				UniqueSetRange(random, min, max, count);
+		}
+
+		public static IEnumerable<UInt16> UniqueRange([NotNull] this IRandom random, UInt16 min, UInt16 max, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<UInt16>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextUInt16(random, min, max));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt16 difference = max.DiscreteIncludeDifference(min, UInt16.MaxValue);
+			count = (Int32) Math.Min((UInt32) count, difference);
+			return count <= SByte.MaxValue + 1 || count / (Double) difference >= 0.8 ?
+				UniqueShuffleRange(random, min, max, count) :
+				UniqueSetRange(random, min, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int32> UniqueSetRange([NotNull] System.Random random, Int32 min, Int32 max)
+		{
+			Int32 difference = (Int32) Math.Min(max.DiscreteIncludeDifference(min, UInt32.MaxValue), Int32.MaxValue);
+			HashSet<Int32> set = new HashSet<Int32>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				Int32 item = NextInt32(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int32> UniqueSetRange([NotNull] IRandom random, Int32 min, Int32 max)
+		{
+			Int32 difference = (Int32) Math.Min(max.DiscreteIncludeDifference(min, UInt32.MaxValue), Int32.MaxValue);
+			HashSet<Int32> set = new HashSet<Int32>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				Int32 item = NextInt32(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int32> UniqueSetRange([NotNull] System.Random random, Int32 min, Int32 max, Int32 count)
+		{
+			HashSet<Int32> set = new HashSet<Int32>(count);
+
+			while (set.Count < count)
+			{
+				Int32 item = NextInt32(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int32> UniqueSetRange([NotNull] IRandom random, Int32 min, Int32 max, Int32 count)
+		{
+			HashSet<Int32> set = new HashSet<Int32>(count);
+
+			while (set.Count < count)
+			{
+				Int32 item = NextInt32(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int32> UniqueShuffleRange([NotNull] System.Random random, Int32 min, Int32 max)
+		{
+			return MathUtils.RangeInclude(min, max).Shuffle(random);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int32> UniqueShuffleRange([NotNull] IRandom random, Int32 min, Int32 max)
+		{
+			return MathUtils.RangeInclude(min, max).Shuffle(random);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int32> UniqueShuffleRange([NotNull] System.Random random, Int32 min, Int32 max, Int32 count)
+		{
+			return UniqueShuffleRange(random, min, max).Take(count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int32> UniqueShuffleRange([NotNull] IRandom random, Int32 min, Int32 max, Int32 count)
+		{
+			return UniqueShuffleRange(random, min, max).Take(count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int32> UniqueRange(Int32 min, Int32 max)
+		{
+			return UniqueRange(Generator, min, max);
+		}
+
+		public static IEnumerable<Int32> UniqueRange([NotNull] this System.Random random, Int32 min, Int32 max)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt32 difference = max.DiscreteIncludeDifference(min, UInt32.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ?
+				UniqueShuffleRange(random, min, max, (Int32) difference) :
+				UniqueSetRange(random, min, max);
+		}
+
+		public static IEnumerable<Int32> UniqueRange([NotNull] this IRandom random, Int32 min, Int32 max)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt32 difference = max.DiscreteIncludeDifference(min, UInt32.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ?
+				UniqueShuffleRange(random, min, max, (Int32) difference) :
+				UniqueSetRange(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int32> UniqueRange(Int32 min, Int32 max, Int32 count)
+		{
+			return UniqueRange(Generator, min, max, count);
+		}
+
+		public static IEnumerable<Int32> UniqueRange([NotNull] this System.Random random, Int32 min, Int32 max, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<Int32>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextInt32(random, min, max));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt32 difference = max.DiscreteIncludeDifference(min, UInt32.MaxValue);
+			count = (Int32) Math.Min((UInt32) count, difference);
+			return count <= SByte.MaxValue + 1 || count / (Double) difference >= 0.8 ?
+				UniqueShuffleRange(random, min, max, count) :
+				UniqueSetRange(random, min, max, count);
+		}
+
+		public static IEnumerable<Int32> UniqueRange([NotNull] this IRandom random, Int32 min, Int32 max, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<Int32>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextInt32(random, min, max));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt32 difference = max.DiscreteIncludeDifference(min, UInt32.MaxValue);
+			count = (Int32) Math.Min((UInt32) count, difference);
+			return count <= SByte.MaxValue + 1 || count / (Double) difference >= 0.8 ?
+				UniqueShuffleRange(random, min, max, count) :
+				UniqueSetRange(random, min, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt32> UniqueSetRange([NotNull] System.Random random, UInt32 min, UInt32 max)
+		{
+			Int32 difference = (Int32) Math.Min(max.DiscreteIncludeDifference(min, UInt32.MaxValue), Int32.MaxValue);
+			HashSet<UInt32> set = new HashSet<UInt32>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				UInt32 item = NextUInt32(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt32> UniqueSetRange([NotNull] IRandom random, UInt32 min, UInt32 max)
+		{
+			Int32 difference = (Int32) Math.Min(max.DiscreteIncludeDifference(min, UInt32.MaxValue), Int32.MaxValue);
+			HashSet<UInt32> set = new HashSet<UInt32>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				UInt32 item = NextUInt32(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt32> UniqueSetRange([NotNull] System.Random random, UInt32 min, UInt32 max, Int32 count)
+		{
+			HashSet<UInt32> set = new HashSet<UInt32>(count);
+
+			while (set.Count < count)
+			{
+				UInt32 item = NextUInt32(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt32> UniqueSetRange([NotNull] IRandom random, UInt32 min, UInt32 max, Int32 count)
+		{
+			HashSet<UInt32> set = new HashSet<UInt32>(count);
+
+			while (set.Count < count)
+			{
+				UInt32 item = NextUInt32(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt32> UniqueShuffleRange([NotNull] System.Random random, UInt32 min, UInt32 max)
+		{
+			return MathUtils.RangeInclude(min, max).Shuffle(random);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt32> UniqueShuffleRange([NotNull] IRandom random, UInt32 min, UInt32 max)
+		{
+			return MathUtils.RangeInclude(min, max).Shuffle(random);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt32> UniqueShuffleRange([NotNull] System.Random random, UInt32 min, UInt32 max, Int32 count)
+		{
+			return UniqueShuffleRange(random, min, max).Take(count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt32> UniqueShuffleRange([NotNull] IRandom random, UInt32 min, UInt32 max, Int32 count)
+		{
+			return UniqueShuffleRange(random, min, max).Take(count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt32> UniqueRange(UInt32 min, UInt32 max)
+		{
+			return UniqueRange(Generator, min, max);
+		}
+
+		public static IEnumerable<UInt32> UniqueRange([NotNull] this System.Random random, UInt32 min, UInt32 max)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt32 difference = max.DiscreteIncludeDifference(min, UInt32.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ?
+				UniqueShuffleRange(random, min, max, (Int32) difference) :
+				UniqueSetRange(random, min, max);
+		}
+
+		public static IEnumerable<UInt32> UniqueRange([NotNull] this IRandom random, UInt32 min, UInt32 max)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt32 difference = max.DiscreteIncludeDifference(min, UInt32.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ?
+				UniqueShuffleRange(random, min, max, (Int32) difference) :
+				UniqueSetRange(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt32> UniqueRange(UInt32 min, UInt32 max, Int32 count)
+		{
+			return UniqueRange(Generator, min, max, count);
+		}
+
+		public static IEnumerable<UInt32> UniqueRange([NotNull] this System.Random random, UInt32 min, UInt32 max, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<UInt32>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextUInt32(random, min, max));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt32 difference = max.DiscreteIncludeDifference(min, UInt32.MaxValue);
+			count = (Int32) Math.Min((UInt32) count, difference);
+			return count <= SByte.MaxValue + 1 || count / (Double) difference >= 0.8 ?
+				UniqueShuffleRange(random, min, max, count) :
+				UniqueSetRange(random, min, max, count);
+		}
+
+		public static IEnumerable<UInt32> UniqueRange([NotNull] this IRandom random, UInt32 min, UInt32 max, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<UInt32>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextUInt32(random, min, max));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt32 difference = max.DiscreteIncludeDifference(min, UInt32.MaxValue);
+			count = (Int32) Math.Min((UInt32) count, difference);
+			return count <= SByte.MaxValue + 1 || count / (Double) difference >= 0.8 ?
+				UniqueShuffleRange(random, min, max, count) :
+				UniqueSetRange(random, min, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int64> UniqueSetRange([NotNull] System.Random random, Int64 min, Int64 max)
+		{
+			Int32 difference = (Int32) Math.Min(max.DiscreteIncludeDifference(min, UInt64.MaxValue), Int32.MaxValue);
+			HashSet<Int64> set = new HashSet<Int64>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				Int64 item = NextInt64(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int64> UniqueSetRange([NotNull] IRandom random, Int64 min, Int64 max)
+		{
+			Int32 difference = (Int32) Math.Min(max.DiscreteIncludeDifference(min, UInt64.MaxValue), Int32.MaxValue);
+			HashSet<Int64> set = new HashSet<Int64>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				Int64 item = NextInt64(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int64> UniqueSetRange([NotNull] System.Random random, Int64 min, Int64 max, Int32 count)
+		{
+			HashSet<Int64> set = new HashSet<Int64>(count);
+
+			while (set.Count < count)
+			{
+				Int64 item = NextInt64(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int64> UniqueSetRange([NotNull] IRandom random, Int64 min, Int64 max, Int32 count)
+		{
+			HashSet<Int64> set = new HashSet<Int64>(count);
+
+			while (set.Count < count)
+			{
+				Int64 item = NextInt64(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int64> UniqueShuffleRange([NotNull] System.Random random, Int64 min, Int64 max)
+		{
+			return MathUtils.RangeInclude(min, max).Shuffle(random);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int64> UniqueShuffleRange([NotNull] IRandom random, Int64 min, Int64 max)
+		{
+			return MathUtils.RangeInclude(min, max).Shuffle(random);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int64> UniqueShuffleRange([NotNull] System.Random random, Int64 min, Int64 max, Int32 count)
+		{
+			return UniqueShuffleRange(random, min, max).Take(count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Int64> UniqueShuffleRange([NotNull] IRandom random, Int64 min, Int64 max, Int32 count)
+		{
+			return UniqueShuffleRange(random, min, max).Take(count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int64> UniqueRange(Int64 min, Int64 max)
+		{
+			return UniqueRange(Generator, min, max);
+		}
+
+		public static IEnumerable<Int64> UniqueRange([NotNull] this System.Random random, Int64 min, Int64 max)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt64 difference = max.DiscreteIncludeDifference(min, UInt64.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ?
+				UniqueShuffleRange(random, min, max, (Int32) difference) :
+				UniqueSetRange(random, min, max);
+		}
+
+		public static IEnumerable<Int64> UniqueRange([NotNull] this IRandom random, Int64 min, Int64 max)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt64 difference = max.DiscreteIncludeDifference(min, UInt64.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ?
+				UniqueShuffleRange(random, min, max, (Int32) difference) :
+				UniqueSetRange(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int64> UniqueRange(Int64 min, Int64 max, Int32 count)
+		{
+			return UniqueRange(Generator, min, max, count);
+		}
+
+		public static IEnumerable<Int64> UniqueRange([NotNull] this System.Random random, Int64 min, Int64 max, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<Int64>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextInt64(random, min, max));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt64 difference = max.DiscreteIncludeDifference(min, UInt64.MaxValue);
+			count = (Int32) Math.Min((UInt32) count, difference);
+			return count <= SByte.MaxValue + 1 || count / (Double) difference >= 0.8 ?
+				UniqueShuffleRange(random, min, max, count) :
+				UniqueSetRange(random, min, max, count);
+		}
+
+		public static IEnumerable<Int64> UniqueRange([NotNull] this IRandom random, Int64 min, Int64 max, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<Int64>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextInt64(random, min, max));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt64 difference = max.DiscreteIncludeDifference(min, UInt64.MaxValue);
+			count = (Int32) Math.Min((UInt32) count, difference);
+			return count <= SByte.MaxValue + 1 || count / (Double) difference >= 0.8 ?
+				UniqueShuffleRange(random, min, max, count) :
+				UniqueSetRange(random, min, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt64> UniqueSetRange([NotNull] System.Random random, UInt64 min, UInt64 max)
+		{
+			Int32 difference = (Int32) Math.Min(max.DiscreteIncludeDifference(min, UInt64.MaxValue), Int32.MaxValue);
+			HashSet<UInt64> set = new HashSet<UInt64>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				UInt64 item = NextUInt64(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt64> UniqueSetRange([NotNull] IRandom random, UInt64 min, UInt64 max)
+		{
+			Int32 difference = (Int32) Math.Min(max.DiscreteIncludeDifference(min, UInt64.MaxValue), Int32.MaxValue);
+			HashSet<UInt64> set = new HashSet<UInt64>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				UInt64 item = NextUInt64(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt64> UniqueSetRange([NotNull] System.Random random, UInt64 min, UInt64 max, Int32 count)
+		{
+			HashSet<UInt64> set = new HashSet<UInt64>(count);
+
+			while (set.Count < count)
+			{
+				UInt64 item = NextUInt64(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt64> UniqueSetRange([NotNull] IRandom random, UInt64 min, UInt64 max, Int32 count)
+		{
+			HashSet<UInt64> set = new HashSet<UInt64>(count);
+
+			while (set.Count < count)
+			{
+				UInt64 item = NextUInt64(random, min, max);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt64> UniqueShuffleRange([NotNull] System.Random random, UInt64 min, UInt64 max)
+		{
+			return MathUtils.RangeInclude(min, max).Shuffle(random);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt64> UniqueShuffleRange([NotNull] IRandom random, UInt64 min, UInt64 max)
+		{
+			return MathUtils.RangeInclude(min, max).Shuffle(random);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt64> UniqueShuffleRange([NotNull] System.Random random, UInt64 min, UInt64 max, Int32 count)
+		{
+			return UniqueShuffleRange(random, min, max).Take(count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<UInt64> UniqueShuffleRange([NotNull] IRandom random, UInt64 min, UInt64 max, Int32 count)
+		{
+			return UniqueShuffleRange(random, min, max).Take(count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt64> UniqueRange(UInt64 min, UInt64 max)
+		{
+			return UniqueRange(Generator, min, max);
+		}
+
+		public static IEnumerable<UInt64> UniqueRange([NotNull] this System.Random random, UInt64 min, UInt64 max)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt64 difference = max.DiscreteIncludeDifference(min, UInt64.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ?
+				UniqueShuffleRange(random, min, max, (Int32) difference) :
+				UniqueSetRange(random, min, max);
+		}
+
+		public static IEnumerable<UInt64> UniqueRange([NotNull] this IRandom random, UInt64 min, UInt64 max)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt64 difference = max.DiscreteIncludeDifference(min, UInt64.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ?
+				UniqueShuffleRange(random, min, max, (Int32) difference) :
+				UniqueSetRange(random, min, max);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt64> UniqueRange(UInt64 min, UInt64 max, Int32 count)
+		{
+			return UniqueRange(Generator, min, max, count);
+		}
+
+		public static IEnumerable<UInt64> UniqueRange([NotNull] this System.Random random, UInt64 min, UInt64 max, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<UInt64>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextUInt64(random, min, max));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt64 difference = max.DiscreteIncludeDifference(min, UInt64.MaxValue);
+			count = (Int32) Math.Min((UInt32) count, difference);
+			return count <= SByte.MaxValue + 1 || count / (Double) difference >= 0.8 ?
+				UniqueShuffleRange(random, min, max, count) :
+				UniqueSetRange(random, min, max, count);
+		}
+
+		public static IEnumerable<UInt64> UniqueRange([NotNull] this IRandom random, UInt64 min, UInt64 max, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<UInt64>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextUInt64(random, min, max));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			UInt64 difference = max.DiscreteIncludeDifference(min, UInt64.MaxValue);
+			count = (Int32) Math.Min((UInt32) count, difference);
+			return count <= SByte.MaxValue + 1 || count / (Double) difference >= 0.8 ?
+				UniqueShuffleRange(random, min, max, count) :
+				UniqueSetRange(random, min, max, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Single> UniqueSetRange([NotNull] System.Random random, Single min, Single max, Byte digits, MidpointRounding rounding)
+		{
+			Int32 difference = (Int32) Math.Min(max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue), Int32.MaxValue);
+			HashSet<Single> set = new HashSet<Single>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				Single item = NextSingle(random, min, max).Round(digits, rounding);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Single> UniqueSetRange([NotNull] IRandom random, Single min, Single max, Byte digits, MidpointRounding rounding)
+		{
+			Int32 difference = (Int32) Math.Min(max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue), Int32.MaxValue);
+			HashSet<Single> set = new HashSet<Single>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				Single item = NextSingle(random, min, max).Round(digits, rounding);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Single> UniqueSetRange([NotNull] System.Random random, Single min, Single max, Byte digits, MidpointRounding rounding, Int32 count)
+		{
+			HashSet<Single> set = new HashSet<Single>(count);
+
+			while (set.Count < count)
+			{
+				Single item = NextSingle(random, min, max).Round(digits, rounding);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Single> UniqueSetRange([NotNull] IRandom random, Single min, Single max, Byte digits, MidpointRounding rounding, Int32 count)
+		{
+			HashSet<Single> set = new HashSet<Single>(count);
+
+			while (set.Count < count)
+			{
+				Single item = NextSingle(random, min, max).Round(digits, rounding);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> UniqueRange(Single min, Single max)
+		{
+			return UniqueRange(min, max, 0);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> UniqueRange(Single min, Single max, Byte digits)
+		{
+			return UniqueRange(min, max, digits, MathUtils.DefaultRoundType);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> UniqueRange(Single min, Single max, Byte digits, MidpointRounding rounding)
+		{
+			return UniqueRange(Generator, min, max, digits, rounding);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> UniqueRange([NotNull] this System.Random random, Single min, Single max)
+		{
+			return UniqueRange(random, min, max, 0);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> UniqueRange([NotNull] this System.Random random, Single min, Single max, Byte digits)
+		{
+			return UniqueRange(random, min, max, digits, MathUtils.DefaultRoundType);
+		}
+
+		public static IEnumerable<Single> UniqueRange([NotNull] this System.Random random, Single min, Single max, Byte digits, MidpointRounding rounding)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (Math.Abs(max - min) < Single.Epsilon)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			MathUtils.ToRange(ref digits, 0, 15);
+
+			Decimal difference = max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ? UniqueSetRange(random, min, max, digits, rounding, (Int32) difference) : UniqueSetRange(random, min, max, digits, rounding);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> UniqueRange([NotNull] this IRandom random, Single min, Single max)
+		{
+			return UniqueRange(random, min, max, 0);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> UniqueRange([NotNull] this IRandom random, Single min, Single max, Byte digits)
+		{
+			return UniqueRange(random, min, max, digits, MathUtils.DefaultRoundType);
+		}
+
+		public static IEnumerable<Single> UniqueRange([NotNull] this IRandom random, Single min, Single max, Byte digits, MidpointRounding rounding)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (Math.Abs(max - min) < Single.Epsilon)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			MathUtils.ToRange(ref digits, 0, 15);
+
+			Decimal difference = max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ? UniqueSetRange(random, min, max, digits, rounding, (Int32) difference) : UniqueSetRange(random, min, max, digits, rounding);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> UniqueRange(Single min, Single max, Int32 count)
+		{
+			return UniqueRange(min, max, 0, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> UniqueRange(Single min, Single max, Byte digits, Int32 count)
+		{
+			return UniqueRange(min, max, digits, MathUtils.DefaultRoundType, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> UniqueRange(Single min, Single max, Byte digits, MidpointRounding rounding, Int32 count)
+		{
+			return UniqueRange(Generator, min, max, digits, rounding, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> UniqueRange([NotNull] this System.Random random, Single min, Single max, Int32 count)
+		{
+			return UniqueRange(random, min, max, 0, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> UniqueRange([NotNull] this System.Random random, Single min, Single max, Byte digits, Int32 count)
+		{
+			return UniqueRange(random, min, max, digits, MathUtils.DefaultRoundType, count);
+		}
+
+		public static IEnumerable<Single> UniqueRange([NotNull] this System.Random random, Single min, Single max, Byte digits, MidpointRounding rounding, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<Single>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextSingle(random, min, max));
+			}
+
+			if (Math.Abs(max - min) < Single.Epsilon)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			MathUtils.ToRange(ref digits, 0, 15);
+
+			return UniqueSetRange(random, min, max, digits, rounding, (Int32) Math.Min(count, max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue)));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> UniqueRange([NotNull] this IRandom random, Single min, Single max, Int32 count)
+		{
+			return UniqueRange(random, min, max, 0, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Single> UniqueRange([NotNull] this IRandom random, Single min, Single max, Byte digits, Int32 count)
+		{
+			return UniqueRange(random, min, max, digits, MathUtils.DefaultRoundType, count);
+		}
+
+		public static IEnumerable<Single> UniqueRange([NotNull] this IRandom random, Single min, Single max, Byte digits, MidpointRounding rounding, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<Single>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextSingle(random, min, max));
+			}
+
+			if (Math.Abs(max - min) < Single.Epsilon)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			MathUtils.ToRange(ref digits, 0, 15);
+
+			return UniqueSetRange(random, min, max, digits, rounding, (Int32) Math.Min(count, max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue)));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Double> UniqueSetRange([NotNull] System.Random random, Double min, Double max, Byte digits, MidpointRounding rounding)
+		{
+			Int32 difference = (Int32) Math.Min(max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue), Int32.MaxValue);
+			HashSet<Double> set = new HashSet<Double>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				Double item = NextDouble(random, min, max).Round(digits, rounding);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Double> UniqueSetRange([NotNull] IRandom random, Double min, Double max, Byte digits, MidpointRounding rounding)
+		{
+			Int32 difference = (Int32) Math.Min(max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue), Int32.MaxValue);
+			HashSet<Double> set = new HashSet<Double>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				Double item = NextDouble(random, min, max).Round(digits, rounding);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Double> UniqueSetRange([NotNull] System.Random random, Double min, Double max, Byte digits, MidpointRounding rounding, Int32 count)
+		{
+			HashSet<Double> set = new HashSet<Double>(count);
+
+			while (set.Count < count)
+			{
+				Double item = NextDouble(random, min, max).Round(digits, rounding);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Double> UniqueSetRange([NotNull] IRandom random, Double min, Double max, Byte digits, MidpointRounding rounding, Int32 count)
+		{
+			HashSet<Double> set = new HashSet<Double>(count);
+
+			while (set.Count < count)
+			{
+				Double item = NextDouble(random, min, max).Round(digits, rounding);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> UniqueRange(Double min, Double max)
+		{
+			return UniqueRange(min, max, 0);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> UniqueRange(Double min, Double max, Byte digits)
+		{
+			return UniqueRange(min, max, digits, MathUtils.DefaultRoundType);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> UniqueRange(Double min, Double max, Byte digits, MidpointRounding rounding)
+		{
+			return UniqueRange(Generator, min, max, digits, rounding);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> UniqueRange([NotNull] this System.Random random, Double min, Double max)
+		{
+			return UniqueRange(random, min, max, 0);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> UniqueRange([NotNull] this System.Random random, Double min, Double max, Byte digits)
+		{
+			return UniqueRange(random, min, max, digits, MathUtils.DefaultRoundType);
+		}
+
+		public static IEnumerable<Double> UniqueRange([NotNull] this System.Random random, Double min, Double max, Byte digits, MidpointRounding rounding)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (Math.Abs(max - min) < Double.Epsilon)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			MathUtils.ToRange(ref digits, 0, 15);
+
+			Decimal difference = max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ? UniqueSetRange(random, min, max, digits, rounding, (Int32) difference) : UniqueSetRange(random, min, max, digits, rounding);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> UniqueRange([NotNull] this IRandom random, Double min, Double max)
+		{
+			return UniqueRange(random, min, max, 0);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> UniqueRange([NotNull] this IRandom random, Double min, Double max, Byte digits)
+		{
+			return UniqueRange(random, min, max, digits, MathUtils.DefaultRoundType);
+		}
+
+		public static IEnumerable<Double> UniqueRange([NotNull] this IRandom random, Double min, Double max, Byte digits, MidpointRounding rounding)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (Math.Abs(max - min) < Double.Epsilon)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			MathUtils.ToRange(ref digits, 0, 15);
+
+			Decimal difference = max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ? UniqueSetRange(random, min, max, digits, rounding, (Int32) difference) : UniqueSetRange(random, min, max, digits, rounding);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> UniqueRange(Double min, Double max, Int32 count)
+		{
+			return UniqueRange(min, max, 0, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> UniqueRange(Double min, Double max, Byte digits, Int32 count)
+		{
+			return UniqueRange(min, max, digits, MathUtils.DefaultRoundType, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> UniqueRange(Double min, Double max, Byte digits, MidpointRounding rounding, Int32 count)
+		{
+			return UniqueRange(Generator, min, max, digits, rounding, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> UniqueRange([NotNull] this System.Random random, Double min, Double max, Int32 count)
+		{
+			return UniqueRange(random, min, max, 0, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> UniqueRange([NotNull] this System.Random random, Double min, Double max, Byte digits, Int32 count)
+		{
+			return UniqueRange(random, min, max, digits, MathUtils.DefaultRoundType, count);
+		}
+
+		public static IEnumerable<Double> UniqueRange([NotNull] this System.Random random, Double min, Double max, Byte digits, MidpointRounding rounding, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<Double>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextDouble(random, min, max));
+			}
+
+			if (Math.Abs(max - min) < Double.Epsilon)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			MathUtils.ToRange(ref digits, 0, 15);
+
+			return UniqueSetRange(random, min, max, digits, rounding, (Int32) Math.Min(count, max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue)));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> UniqueRange([NotNull] this IRandom random, Double min, Double max, Int32 count)
+		{
+			return UniqueRange(random, min, max, 0, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Double> UniqueRange([NotNull] this IRandom random, Double min, Double max, Byte digits, Int32 count)
+		{
+			return UniqueRange(random, min, max, digits, MathUtils.DefaultRoundType, count);
+		}
+
+		public static IEnumerable<Double> UniqueRange([NotNull] this IRandom random, Double min, Double max, Byte digits, MidpointRounding rounding, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<Double>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextDouble(random, min, max));
+			}
+
+			if (Math.Abs(max - min) < Double.Epsilon)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			MathUtils.ToRange(ref digits, 0, 15);
+
+			return UniqueSetRange(random, min, max, digits, rounding, (Int32) Math.Min(count, max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue)));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Decimal> UniqueSetRange([NotNull] System.Random random, Decimal min, Decimal max, Byte digits, MidpointRounding rounding)
+		{
+			Int32 difference = (Int32) Math.Min(max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue), Int32.MaxValue);
+			HashSet<Decimal> set = new HashSet<Decimal>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				Decimal item = NextDecimal(random, min, max).Round(digits, rounding);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Decimal> UniqueSetRange([NotNull] IRandom random, Decimal min, Decimal max, Byte digits, MidpointRounding rounding)
+		{
+			Int32 difference = (Int32) Math.Min(max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue), Int32.MaxValue);
+			HashSet<Decimal> set = new HashSet<Decimal>(Math.Min(difference, Byte.MaxValue));
+
+			while (set.Count < difference)
+			{
+				Decimal item = NextDecimal(random, min, max).Round(digits, rounding);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Decimal> UniqueSetRange([NotNull] System.Random random, Decimal min, Decimal max, Byte digits, MidpointRounding rounding, Int32 count)
+		{
+			HashSet<Decimal> set = new HashSet<Decimal>(count);
+
+			while (set.Count < count)
+			{
+				Decimal item = NextDecimal(random, min, max).Round(digits, rounding);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		private static IEnumerable<Decimal> UniqueSetRange([NotNull] IRandom random, Decimal min, Decimal max, Byte digits, MidpointRounding rounding, Int32 count)
+		{
+			HashSet<Decimal> set = new HashSet<Decimal>(count);
+
+			while (set.Count < count)
+			{
+				Decimal item = NextDecimal(random, min, max).Round(digits, rounding);
+				if (set.Add(item))
+				{
+					yield return item;
+				}
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> UniqueRange(Decimal min, Decimal max)
+		{
+			return UniqueRange(min, max, 0);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> UniqueRange(Decimal min, Decimal max, Byte digits)
+		{
+			return UniqueRange(min, max, digits, MathUtils.DefaultRoundType);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> UniqueRange(Decimal min, Decimal max, Byte digits, MidpointRounding rounding)
+		{
+			return UniqueRange(Generator, min, max, digits, rounding);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> UniqueRange([NotNull] this System.Random random, Decimal min, Decimal max)
+		{
+			return UniqueRange(random, min, max, 0);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> UniqueRange([NotNull] this System.Random random, Decimal min, Decimal max, Byte digits)
+		{
+			return UniqueRange(random, min, max, digits, MathUtils.DefaultRoundType);
+		}
+
+		public static IEnumerable<Decimal> UniqueRange([NotNull] this System.Random random, Decimal min, Decimal max, Byte digits, MidpointRounding rounding)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			MathUtils.ToRange(ref digits, 0, 15);
+
+			Decimal difference = max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ? UniqueSetRange(random, min, max, digits, rounding, (Int32) difference) : UniqueSetRange(random, min, max, digits, rounding);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> UniqueRange([NotNull] this IRandom random, Decimal min, Decimal max)
+		{
+			return UniqueRange(random, min, max, 0);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> UniqueRange([NotNull] this IRandom random, Decimal min, Decimal max, Byte digits)
+		{
+			return UniqueRange(random, min, max, digits, MathUtils.DefaultRoundType);
+		}
+
+		public static IEnumerable<Decimal> UniqueRange([NotNull] this IRandom random, Decimal min, Decimal max, Byte digits, MidpointRounding rounding)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			MathUtils.ToRange(ref digits, 0, 15);
+
+			Decimal difference = max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue);
+			return difference <= (Byte.MaxValue + 1) * 4 ? UniqueSetRange(random, min, max, digits, rounding, (Int32) difference) : UniqueSetRange(random, min, max, digits, rounding);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> UniqueRange(Decimal min, Decimal max, Int32 count)
+		{
+			return UniqueRange(min, max, 0, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> UniqueRange(Decimal min, Decimal max, Byte digits, Int32 count)
+		{
+			return UniqueRange(min, max, digits, MathUtils.DefaultRoundType, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> UniqueRange(Decimal min, Decimal max, Byte digits, MidpointRounding rounding, Int32 count)
+		{
+			return UniqueRange(Generator, min, max, digits, rounding, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> UniqueRange([NotNull] this System.Random random, Decimal min, Decimal max, Int32 count)
+		{
+			return UniqueRange(random, min, max, 0, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> UniqueRange([NotNull] this System.Random random, Decimal min, Decimal max, Byte digits, Int32 count)
+		{
+			return UniqueRange(random, min, max, digits, MathUtils.DefaultRoundType, count);
+		}
+
+		public static IEnumerable<Decimal> UniqueRange([NotNull] this System.Random random, Decimal min, Decimal max, Byte digits, MidpointRounding rounding, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<Decimal>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextDecimal(random, min, max));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			MathUtils.ToRange(ref digits, 0, 15);
+
+			return UniqueSetRange(random, min, max, digits, rounding, (Int32) Math.Min(count, max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue)));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> UniqueRange([NotNull] this IRandom random, Decimal min, Decimal max, Int32 count)
+		{
+			return UniqueRange(random, min, max, 0, count);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Decimal> UniqueRange([NotNull] this IRandom random, Decimal min, Decimal max, Byte digits, Int32 count)
+		{
+			return UniqueRange(random, min, max, digits, MathUtils.DefaultRoundType, count);
+		}
+
+		public static IEnumerable<Decimal> UniqueRange([NotNull] this IRandom random, Decimal min, Decimal max, Byte digits, MidpointRounding rounding, Int32 count)
+		{
+			if (random is null)
+			{
+				throw new ArgumentNullException(nameof(random));
+			}
+
+			switch (count)
+			{
+				case <= 0:
+					return Enumerable.Empty<Decimal>();
+				case 1:
+					return EnumerableUtils.GetEnumerableFrom(NextDecimal(random, min, max));
+			}
+
+			if (max == min)
+			{
+				return EnumerableUtils.GetEnumerableFrom(min);
+			}
+
+			if (max < min)
+			{
+				(min, max) = (max, min);
+			}
+
+			MathUtils.ToRange(ref digits, 0, 15);
+
+			return UniqueSetRange(random, min, max, digits, rounding, (Int32) Math.Min(count, max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue)));
 		}
 
     }

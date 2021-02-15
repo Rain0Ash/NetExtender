@@ -12,7 +12,6 @@ using NetExtender.GUI;
 using NetExtender.Utils.Types;
 using NetExtender.Utils.WPF;
 using NetExtender.GUI.Common.Interfaces;
-using NetExtender.GUI.WinForms.Forms;
 using NetExtender.Types.Native.Windows;
 using NetExtender.Types.Strings.Interfaces;
 using NetExtender.Utils.OS;

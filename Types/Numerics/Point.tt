@@ -1,7 +1,7 @@
 <#@ template language="C#" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#
-    List<String> unmanagedTypes = new List<String>
+    List<String> types = new List<String>
     {
         nameof(Char),
         nameof(SByte),
@@ -21,7 +21,7 @@
 
     void Point()
     {
-        foreach (String type in unmanagedTypes)
+        foreach (String type in types)
         {
             Boolean small = type == nameof(Char) || type == nameof(Byte) || type == nameof(SByte) || type == nameof(Int16) || type == nameof(UInt16);
             Boolean unsigned = type == nameof(Char) || type == nameof(Byte) || type == nameof(UInt16) || type == nameof(UInt32) || type == nameof(UInt64);
@@ -69,11 +69,12 @@
                 {
                     WriteLine($"\t\t\treturn new {name}(first.X {@operator} second.X, first.Y {@operator} second.Y);");
                 }
+                
                 WriteLine("\t\t}");
+                
+                WriteLine(String.Empty);
             }
 
-            WriteLine(String.Empty);
-            
             WriteLine($"\t\tpublic {type} X {{ get; }}");
             WriteLine($"\t\tpublic {type} Y {{ get; }}");
             
@@ -176,7 +177,7 @@
 
             WriteLine("\t}");
 
-            if (type != unmanagedTypes[unmanagedTypes.Count - 1])
+            if (type != types[types.Count - 1])
             {
                 WriteLine(String.Empty);
             }

@@ -266,38 +266,41 @@ using NetExtender.Random.Interfaces;
         /// <returns>A pseudo-random <see cref="UInt32"/>.</returns>
         private UInt32 GenerateUInt32()
         {
-            UInt32 y;
-
-            /* _mag01[x] = x * MatrixA  for x=0,1 */
-            if (_mti >= N) /* generate N words at one time */
+            unchecked
             {
-                Int16 kk = 0;
+                UInt32 y;
 
-                for (; kk < N - M; ++kk)
+                /* _mag01[x] = x * MatrixA  for x=0,1 */
+                if (_mti >= N) /* generate N words at one time */
                 {
-                    y = (_mt[kk] & UpperMask) | (_mt[kk + 1] & LowerMask);
-                    _mt[kk] = _mt[kk + M] ^ (y >> 1) ^ Mag01[y & 0x1];
+                    Int16 kk = 0;
+
+                    for (; kk < N - M; ++kk)
+                    {
+                        y = (_mt[kk] & UpperMask) | (_mt[kk + 1] & LowerMask);
+                        _mt[kk] = _mt[kk + M] ^ (y >> 1) ^ Mag01[y & 0x1];
+                    }
+
+                    for (; kk < N - 1; ++kk)
+                    {
+                        y = (_mt[kk] & UpperMask) | (_mt[kk + 1] & LowerMask);
+                        _mt[kk] = _mt[kk + (M - N)] ^ (y >> 1) ^ Mag01[y & 0x1];
+                    }
+
+                    y = (_mt[N - 1] & UpperMask) | (_mt[0] & LowerMask);
+                    _mt[N - 1] = _mt[M - 1] ^ (y >> 1) ^ Mag01[y & 0x1];
+
+                    _mti = 0;
                 }
 
-                for (; kk < N - 1; ++kk)
-                {
-                    y = (_mt[kk] & UpperMask) | (_mt[kk + 1] & LowerMask);
-                    _mt[kk] = _mt[kk + (M - N)] ^ (y >> 1) ^ Mag01[y & 0x1];
-                }
+                y = _mt[_mti++];
+                y ^= TemperingShiftU(y);
+                y ^= TemperingShiftS(y) & TemperingMaskB;
+                y ^= TemperingShiftT(y) & TemperingMaskC;
+                y ^= TemperingShiftL(y);
 
-                y = (_mt[N - 1] & UpperMask) | (_mt[0] & LowerMask);
-                _mt[N - 1] = _mt[M - 1] ^ (y >> 1) ^ Mag01[y & 0x1];
-
-                _mti = 0;
+                return y;
             }
-
-            y = _mt[_mti++];
-            y ^= TemperingShiftU(y);
-            y ^= TemperingShiftS(y) & TemperingMaskB;
-            y ^= TemperingShiftT(y) & TemperingMaskC;
-            y ^= TemperingShiftL(y);
-
-            return y;
         }
 
         /* Period parameters */
@@ -358,10 +361,10 @@ using NetExtender.Random.Interfaces;
             {
                 Init(19650218U);
 
-                Int32 keyLength = key.Count;
+                Int32 length = key.Count;
                 Int32 i = 1;
                 Int32 j = 0;
-                Int32 k = N > keyLength ? N : keyLength;
+                Int32 k = N > length ? N : length;
 
                 for (; k > 0; k--)
                 {
@@ -375,7 +378,7 @@ using NetExtender.Random.Interfaces;
                         i = 1;
                     }
 
-                    if (j >= keyLength)
+                    if (j >= length)
                     {
                         j = 0;
                     }

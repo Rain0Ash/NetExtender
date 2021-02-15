@@ -11,17 +11,6 @@ using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utils.Numerics
 {
-    public enum RoundType
-    {
-        /// <inheritdoc cref="MidpointRounding.ToEven"/>
-        Banking,
-
-        /// <inheritdoc cref="MidpointRounding.ToZero"/>
-        AwayFromZero,
-        Floor,
-        Ceil
-    }
-
     public enum DisplayType
     {
         Value,
@@ -370,6 +359,12 @@ namespace NetExtender.Utils.Numerics
             return Abs(value - longValue) <= DecimalEpsilon;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Pow(this Double value, Double pow)
+        {
+            return Math.Pow(value, pow);
+        }
+
         /// <summary>
         /// Analogy of Math.Pow method
         /// </summary>
@@ -546,7 +541,7 @@ namespace NetExtender.Utils.Numerics
         {
             return Log(value) * DecimalInvertedLog10;
         }
-
+        
         /// <summary>
         /// Analogy of Math.Sqrt
         /// </summary>
@@ -1562,6 +1557,144 @@ namespace NetExtender.Utils.Numerics
             return BitConverter.GetBytes(Decimal.GetBits(value)[3])[2];
         }
 
+        public static Decimal DiscreteDifference(this Single value, Single between, Byte digits)
+        {
+            Single abs = Abs(value - between);
+
+            if (abs < Single.Epsilon)
+            {
+                return 1;
+            }
+            
+            return (Decimal) abs * Pow(10M, digits);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal DiscreteDifference(this Single value, Single between, Byte digits, Decimal overflow)
+        {
+            try
+            {
+                return DiscreteDifference(value, between, digits);
+            }
+            catch (OverflowException)
+            {
+                return overflow;
+            }
+        }
+
+        public static Decimal DiscreteDifference(this Double value, Double between, Byte digits)
+        {
+            Double abs = Abs(value - between);
+
+            if (abs < Double.Epsilon)
+            {
+                return 1;
+            }
+            
+            return (Decimal) abs * Pow(10M, digits);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal DiscreteDifference(this Double value, Double between, Byte digits, Decimal overflow)
+        {
+            try
+            {
+                return DiscreteDifference(value, between, digits);
+            }
+            catch (OverflowException)
+            {
+                return overflow;
+            }
+        }
+
+        public static Decimal DiscreteDifference(this Decimal value, Decimal between, Byte digits)
+        {
+            Decimal abs = Abs(value - between);
+
+            if (abs < DecimalEpsilon)
+            {
+                return 1;
+            }
+            
+            return abs * Pow(10M, digits);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal DiscreteDifference(this Decimal value, Decimal between, Byte digits, Decimal overflow)
+        {
+            try
+            {
+                return DiscreteDifference(value, between, digits);
+            }
+            catch (OverflowException)
+            {
+                return overflow;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal DiscreteIncludeDifference(this Single value, Single between, Byte digits)
+        {
+            return DiscreteDifference(value, between, digits) + 1;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal DiscreteIncludeDifference(this Single value, Single between, Byte digits, Decimal overflow)
+        {
+            try
+            {
+                return DiscreteIncludeDifference(value, between, digits);
+            }
+            catch (OverflowException)
+            {
+                return overflow;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal DiscreteIncludeDifference(this Double value, Double between, Byte digits)
+        {
+            return DiscreteDifference(value, between, digits) + 1;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal DiscreteIncludeDifference(this Double value, Double between, Byte digits, Decimal overflow)
+        {
+            try
+            {
+                return DiscreteIncludeDifference(value, between, digits);
+            }
+            catch (OverflowException)
+            {
+                return overflow;
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal DiscreteIncludeDifference(this Decimal value, Decimal between, Byte digits)
+        {
+            return DiscreteDifference(value, between, digits) + 1;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal DiscreteIncludeDifference(this Decimal value, Decimal between, Byte digits, Decimal overflow)
+        {
+            try
+            {
+                return DiscreteIncludeDifference(value, between, digits);
+            }
+            catch (OverflowException)
+            {
+                return overflow;
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger DiscreteDifference(this BigInteger value, BigInteger between)
+        {
+            return Difference(value, between) + BigInteger.One;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BigInteger ToNonZero(this BigInteger value)
         {
@@ -1642,130 +1775,30 @@ namespace NetExtender.Utils.Numerics
             }
         }
 
-        public static void Range(ref IConvertible value, Decimal minimum = Decimal.Zero, Decimal maximum = Decimal.MaxValue,
+        public static void ToRange(ref IConvertible value, Decimal minimum = Decimal.Zero, Decimal maximum = Decimal.MaxValue,
             Boolean looped = false)
         {
-            value = Range(value, minimum, maximum, looped);
+            value = ToRange(value, minimum, maximum, looped);
         }
 
-        public static Decimal Range(IConvertible value, Decimal minimum = Decimal.Zero, Decimal maximum = Decimal.MaxValue,
+        public static Decimal ToRange(this IConvertible value, Decimal minimum = Decimal.Zero, Decimal maximum = Decimal.MaxValue,
             Boolean looped = false)
         {
-            Decimal @decimal = Convert.ToDecimal(value);
+            Decimal convert = Convert.ToDecimal(value);
 
-            if (@decimal > maximum)
+            if (convert > maximum)
             {
                 return looped ? minimum : maximum;
             }
 
-            if (@decimal < minimum)
+            if (convert < minimum)
             {
                 return looped ? maximum : minimum;
             }
 
-            return @decimal;
+            return convert;
         }
 
-        private const Byte DefaultRoundDigits = 0;
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void RoundBanking(ref Double number, Byte digits = DefaultRoundDigits)
-        {
-            number = RoundBanking(number, digits);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double RoundBanking(Double number, Byte digits = DefaultRoundDigits)
-        {
-            return Math.Round(number, digits, MidpointRounding.ToEven);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void RoundBanking(ref Decimal number, Byte digits = DefaultRoundDigits)
-        {
-            number = RoundBanking(number, digits);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal RoundBanking(Decimal number, Byte digits = DefaultRoundDigits)
-        {
-            return Math.Round(number, digits, MidpointRounding.ToEven);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void RoundAwayFromZero(ref Double number, Byte digits = DefaultRoundDigits)
-        {
-            number = RoundAwayFromZero(number, digits);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double RoundAwayFromZero(Double number, Byte digits = DefaultRoundDigits)
-        {
-            return Math.Round(number, digits, MidpointRounding.AwayFromZero);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void RoundAwayFromZero(ref Decimal number, Byte digits = DefaultRoundDigits)
-        {
-            number = RoundAwayFromZero(number, digits);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal RoundAwayFromZero(Decimal number, Byte digits = DefaultRoundDigits)
-        {
-            return Math.Round(number, digits, MidpointRounding.AwayFromZero);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void RoundCeil(ref Double number, Byte digits = DefaultRoundDigits)
-        {
-            number = RoundCeil(number, digits);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double RoundCeil(Double number, Byte digits = DefaultRoundDigits)
-        {
-            return Math.Ceiling(number * Math.Pow(10, digits)) / Math.Pow(10, digits);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void RoundCeil(ref Decimal number, Byte digits = DefaultRoundDigits)
-        {
-            number = RoundCeil(number, digits);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal RoundCeil(Decimal number, Byte digits = DefaultRoundDigits)
-        {
-            return Math.Ceiling(number * (Decimal) Math.Pow(10, digits)) / (Decimal) Math.Pow(10, digits);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void RoundFloor(ref Double number, Byte digits = DefaultRoundDigits)
-        {
-            number = RoundFloor(number, digits);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double RoundFloor(Double number, Byte digits = DefaultRoundDigits)
-        {
-            Double power = Math.Pow(10, digits);
-            return Math.Floor(number * power) / power;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void RoundFloor(ref Decimal number, Byte digits = DefaultRoundDigits)
-        {
-            number = RoundFloor(number, digits);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal RoundFloor(Decimal number, Byte digits = DefaultRoundDigits)
-        {
-            Decimal power = (Decimal) Math.Pow(10, digits);
-            return Math.Floor(number * power) / power;
-        }
-        
         public static Decimal Truncate(this Decimal value, Byte digits)
         {
             Decimal round = Math.Round(value, digits);
@@ -1778,93 +1811,150 @@ namespace NetExtender.Utils.Numerics
             };
         }
 
-        public const RoundType DefaultRoundType = RoundType.Banking;
+        public const MidpointRounding DefaultRoundType = MidpointRounding.ToEven;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Round(ref Single number, RoundType type)
+        public static void Round(ref Single value)
         {
-            number = Round(number, type);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Round(ref Single number, Byte digits = DefaultRoundDigits, RoundType type = DefaultRoundType)
-        {
-            number = Round(number, digits, type);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Round(this Single number, RoundType type)
-        {
-            return Round(number, DefaultRoundDigits, type);
-        }
-
-        public static Single Round(this Single number, Byte digits = DefaultRoundDigits, RoundType type = DefaultRoundType)
-        {
-            return (Single) Round((Double) number, digits, type);
+            value = Round(value);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Round(ref Double number, RoundType type)
+        public static void Round(ref Single value, MidpointRounding rounding)
         {
-            number = Round(number, type);
+            value = Round(value, rounding);
         }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Round(ref Double number, Byte digits = DefaultRoundDigits, RoundType type = DefaultRoundType)
+        public static void Round(ref Single value, Byte digits)
         {
-            number = Round(number, digits, type);
+            value = Round(value, digits);
         }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Round(this Double number, RoundType type)
+        public static void Round(ref Single value, Byte digits, MidpointRounding rounding)
         {
-            return Round(number, DefaultRoundDigits, type);
+            value = Round(value, digits, rounding);
         }
-
-        public static Double Round(this Double number, Byte digits = DefaultRoundDigits, RoundType type = DefaultRoundType)
-        {
-            ToRange(ref digits, Byte.MinValue, 15);
-
-            return type switch
-            {
-                RoundType.Banking => RoundBanking(number, digits),
-                RoundType.AwayFromZero => RoundAwayFromZero(number, digits),
-                RoundType.Ceil => RoundCeil(number, digits),
-                RoundType.Floor => RoundFloor(number, digits),
-                _ => throw new NotSupportedException()
-            };
-        }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Round(ref Decimal number, RoundType type)
+        public static Single Round(this Single value)
         {
-            number = Round(number, type);
+            return (Single) Round((Double) value);
         }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Round(ref Decimal number, Byte digits = DefaultRoundDigits, RoundType type = DefaultRoundType)
+        public static Single Round(this Single value, MidpointRounding rounding)
         {
-            number = Round(number, digits, type);
+            return (Single) Round((Double) value, rounding);
         }
-
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal Round(this Decimal number, RoundType type)
+        public static Single Round(this Single value, Byte digits)
         {
-            return Round(number, DefaultRoundDigits, type);
+            return (Single) Round((Double) value, digits);
         }
-
-        public static Decimal Round(this Decimal number, Byte digits = DefaultRoundDigits, RoundType type = DefaultRoundType)
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Round(this Single value, Byte digits, MidpointRounding rounding)
         {
-            ToRange(ref digits, Byte.MinValue, 15);
-
-            return type switch
-            {
-                RoundType.Banking => RoundBanking(number, digits),
-                RoundType.AwayFromZero => RoundAwayFromZero(number, digits),
-                RoundType.Ceil => RoundCeil(number, digits),
-                RoundType.Floor => RoundFloor(number, digits),
-                _ => throw new NotSupportedException()
-            };
+            return (Single) Round((Double) value, digits, rounding);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(ref Double value)
+        {
+            value = Round(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(ref Double value, MidpointRounding rounding)
+        {
+            value = Round(value, rounding);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(ref Double value, Byte digits)
+        {
+            value = Round(value, digits);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(ref Double value, Byte digits, MidpointRounding rounding)
+        {
+            value = Round(value, digits, rounding);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Round(this Double value)
+        {
+            return Math.Round(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Round(this Double value, MidpointRounding rounding)
+        {
+            return Math.Round(value, rounding);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Round(this Double value, Byte digits)
+        {
+            return Math.Round(value, digits);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Round(this Double value, Byte digits, MidpointRounding rounding)
+        {
+            return Math.Round(value, digits, rounding);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(ref Decimal value)
+        {
+            value = Round(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(ref Decimal value, MidpointRounding rounding)
+        {
+            value = Round(value, rounding);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(ref Decimal value, Byte digits)
+        {
+            value = Round(value, digits);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(ref Decimal value, Byte digits, MidpointRounding rounding)
+        {
+            value = Round(value, digits, rounding);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal Round(this Decimal value)
+        {
+            return Math.Round(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal Round(this Decimal value, MidpointRounding rounding)
+        {
+            return Math.Round(value, rounding);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal Round(this Decimal value, Byte digits)
+        {
+            return Math.Round(value, digits);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal Round(this Decimal value, Byte digits, MidpointRounding rounding)
+        {
+            return Math.Round(value, digits, rounding);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1964,6 +2054,53 @@ namespace NetExtender.Utils.Numerics
                 MathPositionType.Both => value >= minimum && value <= maximum,
                 _ => throw new NotSupportedException(comparison.ToString())
             };
+        }
+        
+        public static IEnumerable<Decimal> ToDecimal([NotNull] this IEnumerable<IConvertible> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Select(Convert.ToDecimal);
+        }
+
+        /// <summary>
+        /// Gets the median from the list
+        /// </summary>
+        /// <typeparam name="T">The data type of the list</typeparam>
+        /// <param name="values">The list of values</param>
+        /// <param name="average">
+        /// Function used to find the average of two values if the number of values is even.
+        /// </param>
+        /// <param name="order">Function used to order the values</param>
+        /// <returns>The median value</returns>
+        public static T Median<T>([NotNull] this IList<T> values, Func<T, T, T> average = null, Func<T, T> order = null)
+        {
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            if (values.Count <= 0)
+            {
+                return default;
+            }
+
+            average ??= (x, _) => x;
+            order ??= x => x;
+            values = values.OrderBy(order).ToList();
+
+            if (values.Count % 2 != 0)
+            {
+                return values[values.Count / 2];
+            }
+
+            T first = values[values.Count / 2];
+            T second = values[values.Count / 2 - 1];
+
+            return average(first, second);
         }
 
         public static String ToBase(this Single value, Byte @base, UInt16 precise = 16 * sizeof(Single))
@@ -2242,7 +2379,7 @@ namespace NetExtender.Utils.Numerics
         {
             return ConvertBase(value.ToString(CultureInfo.InvariantCulture), from, to);
         }
-
+        
         /// <summary>
         /// Returns the quartile values of an ordered set of doubles. The provided list must be already ordered. If it is not, please use method <see cref="FindQuartiles(IEnumerable{double})"/>.
         /// <para>

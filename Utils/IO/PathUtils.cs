@@ -1141,7 +1141,7 @@ namespace NetExtender.Utils.IO
             return result;
         }
 
-        private static IList<Win32StreamInfo> GetDataStreams(String path)
+        private static IEnumerable<Win32StreamInfo> GetDataStreams(String path)
         {
             if (String.IsNullOrEmpty(path))
             {
@@ -1153,15 +1153,13 @@ namespace NetExtender.Utils.IO
                 throw new ArgumentException(@"The specified stream name contains invalid characters.", nameof(path));
             }
 
-            List<Win32StreamInfo> result = new List<Win32StreamInfo>();
-
             using SafeFileHandle hFile = Safe.CreateFile(path, NativeFileAccess.GenericRead, FileShare.Read, IntPtr.Zero, FileMode.Open, NativeFileFlags.BackupSemantics,
                 IntPtr.Zero);
             using StreamName hName = new StreamName();
 
             if (hFile.IsInvalid)
             {
-                return result;
+                yield break;
             }
 
             Win32StreamId streamId = new Win32StreamId();
@@ -1177,51 +1175,50 @@ namespace NetExtender.Utils.IO
                     // Read the next stream header:
                     if (!BackupRead(hFile, ref streamId, dwStreamHeaderSize, out bytesRead, false, false, ref context))
                     {
-                        finished = true;
+                        break;
                     }
-                    else if (dwStreamHeaderSize != bytesRead)
+
+                    if (dwStreamHeaderSize != bytesRead)
                     {
-                        finished = true;
+                        break;
+                    }
+
+                    // Read the stream name:
+                    String name;
+                    if (streamId.StreamNameSize <= 0)
+                    {
+                        name = null;
                     }
                     else
                     {
-                        // Read the stream name:
-                        String name;
-                        if (streamId.StreamNameSize <= 0)
+                        hName.EnsureCapacity(streamId.StreamNameSize);
+                        if (!BackupRead(hFile, hName.MemoryBlock, streamId.StreamNameSize, out bytesRead, false, false, ref context))
                         {
                             name = null;
+                            finished = true;
                         }
                         else
                         {
-                            hName.EnsureCapacity(streamId.StreamNameSize);
-                            if (!BackupRead(hFile, hName.MemoryBlock, streamId.StreamNameSize, out bytesRead, false, false, ref context))
-                            {
-                                name = null;
-                                finished = true;
-                            }
-                            else
-                            {
-                                // Unicode chars are 2 bytes:
-                                name = hName.ReadStreamName(bytesRead >> 1);
-                            }
+                            // Unicode chars are 2 bytes:
+                            name = hName.ReadStreamName(bytesRead >> 1);
                         }
+                    }
 
-                        // Add the stream info to the result:
-                        if (!String.IsNullOrEmpty(name))
-                        {
-                            result.Add(new Win32StreamInfo((FileStreamType) streamId.StreamId, (FileStreamAttributes) streamId.StreamAttributes, streamId.Size.ToInt64(), name));
-                        }
+                    // Add the stream info to the result:
+                    if (!String.IsNullOrEmpty(name))
+                    {
+                        yield return new Win32StreamInfo((FileStreamType) streamId.StreamId, (FileStreamAttributes) streamId.StreamAttributes, streamId.Size.ToInt64(), name);
+                    }
 
-                        // Skip the contents of the stream:
-                        if (streamId.Size.Low == 0 && streamId.Size.High == 0)
-                        {
-                            continue;
-                        }
+                    // Skip the contents of the stream:
+                    if (streamId.Size.Low == 0 && streamId.Size.High == 0)
+                    {
+                        continue;
+                    }
 
-                        if (!finished && !BackupSeek(hFile, streamId.Size.Low, streamId.Size.High, out _, out _, ref context))
-                        {
-                            finished = true;
-                        }
+                    if (!finished && !BackupSeek(hFile, streamId.Size.Low, streamId.Size.High, out _, out _, ref context))
+                    {
+                        finished = true;
                     }
                 }
             }
@@ -1230,8 +1227,6 @@ namespace NetExtender.Utils.IO
                 // Abort the backup:
                 BackupRead(hFile, hName.MemoryBlock, 0, out bytesRead, true, false, ref context);
             }
-
-            return result;
         }
     }
 }

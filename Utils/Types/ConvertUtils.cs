@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using NetExtender.Utils.Numerics;
@@ -328,6 +329,21 @@ namespace NetExtender.Utils.Types
                 null => escape.HasFlag(EscapeType.Null) ? StringUtils.NullString : null,
                 Char chr => escape.HasFlag(EscapeType.Full) ? $"\'{chr.GetString(provider)}\'" : chr.GetString(provider),
                 String str => escape.HasFlag(EscapeType.Full) ? $"\"{str.GetString(provider)}\"" : str.GetString(provider),
+                Boolean number => number.GetString(provider),
+                SByte number => number.GetString(provider),
+                Byte number => number.GetString(provider),
+                Int16 number => number.GetString(provider),
+                UInt16 number => number.GetString(provider),
+                Int32 number => number.GetString(provider),
+                UInt32 number => number.GetString(provider),
+                Int64 number => number.GetString(provider),
+                UInt64 number => number.GetString(provider),
+                Single number => number.GetString(provider),
+                Double number => number.GetString(provider),
+                Decimal number => number.GetString(provider),
+                BigInteger number => number.GetString(provider),
+                DateTime number => number.GetString(provider),
+                TimeSpan number => number.GetString(provider),
                 IString str => escape.HasFlag(EscapeType.Full) ? $"\"{str.ToString(provider)}\"" : str.ToString(provider),
                 IEnumerable enumerable => enumerable.GetString(escape, provider),
                 IFormattable formattable => formattable.ToString(null, provider),
@@ -491,6 +507,18 @@ namespace NetExtender.Utils.Types
         {
             return value.Normalize().ToString(provider);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this BigInteger value)
+        {
+            return value.GetString(CultureInfo.InvariantCulture);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this BigInteger value, IFormatProvider provider)
+        {
+            return value.ToString(provider);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this DateTime value)
@@ -502,6 +530,18 @@ namespace NetExtender.Utils.Types
         public static String GetString(this DateTime value, IFormatProvider provider)
         {
             return value.ToString(provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this TimeSpan value)
+        {
+            return value.GetString(CultureInfo.InvariantCulture);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this TimeSpan value, IFormatProvider provider)
+        {
+            return value.ToString();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

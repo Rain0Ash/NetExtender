@@ -141,9 +141,6 @@
         <Compile Update="Utils\Numerics\GenericMathUtils.cs">
             <DependentUpon>GenericMathUtils.tt</DependentUpon>
         </Compile>
-        <Compile Update="Utils\Numerics\MathEnumerableUtils.cs">
-            <DependentUpon>MathUtils.cs</DependentUpon>
-        </Compile>
         <Compile Update="Utils\Numerics\GenericRandomUtils.cs">
             <AutoGen>True</AutoGen>
             <DesignTime>True</DesignTime>
@@ -183,6 +180,10 @@
       <None Update="Utils\Numerics\GenericRandomUtils.tt">
         <Generator>TextTemplatingFileGenerator</Generator>
         <LastGenOutput>GenericRandomUtils.cs</LastGenOutput>
+      </None>
+      <None Update="Types\Numerics\Point.tt">
+        <Generator>TextTemplatingFileGenerator</Generator>
+        <LastGenOutput>Point.cs</LastGenOutput>
       </None>
     </ItemGroup>
 

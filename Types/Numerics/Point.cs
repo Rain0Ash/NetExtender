@@ -14,24 +14,28 @@ namespace NetExtender.Types.Numerics
 			Int32 y = first.Y + second.Y;
 			return new CharPoint(Unsafe.As<Int32, Char>(ref x), Unsafe.As<Int32, Char>(ref y));
 		}
+
 		public static CharPoint operator -(CharPoint first, CharPoint second)
 		{
 			Int32 x = first.X - second.X;
 			Int32 y = first.Y - second.Y;
 			return new CharPoint(Unsafe.As<Int32, Char>(ref x), Unsafe.As<Int32, Char>(ref y));
 		}
+
 		public static CharPoint operator *(CharPoint first, CharPoint second)
 		{
 			Int32 x = first.X * second.X;
 			Int32 y = first.Y * second.Y;
 			return new CharPoint(Unsafe.As<Int32, Char>(ref x), Unsafe.As<Int32, Char>(ref y));
 		}
+
 		public static CharPoint operator /(CharPoint first, CharPoint second)
 		{
 			Int32 x = first.X / second.X;
 			Int32 y = first.Y / second.Y;
 			return new CharPoint(Unsafe.As<Int32, Char>(ref x), Unsafe.As<Int32, Char>(ref y));
 		}
+
 		public static CharPoint operator %(CharPoint first, CharPoint second)
 		{
 			Int32 x = first.X % second.X;
@@ -125,24 +129,28 @@ namespace NetExtender.Types.Numerics
 			Int32 y = first.Y + second.Y;
 			return new SBytePoint(Unsafe.As<Int32, SByte>(ref x), Unsafe.As<Int32, SByte>(ref y));
 		}
+
 		public static SBytePoint operator -(SBytePoint first, SBytePoint second)
 		{
 			Int32 x = first.X - second.X;
 			Int32 y = first.Y - second.Y;
 			return new SBytePoint(Unsafe.As<Int32, SByte>(ref x), Unsafe.As<Int32, SByte>(ref y));
 		}
+
 		public static SBytePoint operator *(SBytePoint first, SBytePoint second)
 		{
 			Int32 x = first.X * second.X;
 			Int32 y = first.Y * second.Y;
 			return new SBytePoint(Unsafe.As<Int32, SByte>(ref x), Unsafe.As<Int32, SByte>(ref y));
 		}
+
 		public static SBytePoint operator /(SBytePoint first, SBytePoint second)
 		{
 			Int32 x = first.X / second.X;
 			Int32 y = first.Y / second.Y;
 			return new SBytePoint(Unsafe.As<Int32, SByte>(ref x), Unsafe.As<Int32, SByte>(ref y));
 		}
+
 		public static SBytePoint operator %(SBytePoint first, SBytePoint second)
 		{
 			Int32 x = first.X % second.X;
@@ -236,24 +244,28 @@ namespace NetExtender.Types.Numerics
 			Int32 y = first.Y + second.Y;
 			return new BytePoint(Unsafe.As<Int32, Byte>(ref x), Unsafe.As<Int32, Byte>(ref y));
 		}
+
 		public static BytePoint operator -(BytePoint first, BytePoint second)
 		{
 			Int32 x = first.X - second.X;
 			Int32 y = first.Y - second.Y;
 			return new BytePoint(Unsafe.As<Int32, Byte>(ref x), Unsafe.As<Int32, Byte>(ref y));
 		}
+
 		public static BytePoint operator *(BytePoint first, BytePoint second)
 		{
 			Int32 x = first.X * second.X;
 			Int32 y = first.Y * second.Y;
 			return new BytePoint(Unsafe.As<Int32, Byte>(ref x), Unsafe.As<Int32, Byte>(ref y));
 		}
+
 		public static BytePoint operator /(BytePoint first, BytePoint second)
 		{
 			Int32 x = first.X / second.X;
 			Int32 y = first.Y / second.Y;
 			return new BytePoint(Unsafe.As<Int32, Byte>(ref x), Unsafe.As<Int32, Byte>(ref y));
 		}
+
 		public static BytePoint operator %(BytePoint first, BytePoint second)
 		{
 			Int32 x = first.X % second.X;
@@ -347,24 +359,28 @@ namespace NetExtender.Types.Numerics
 			Int32 y = first.Y + second.Y;
 			return new Int16Point(Unsafe.As<Int32, Int16>(ref x), Unsafe.As<Int32, Int16>(ref y));
 		}
+
 		public static Int16Point operator -(Int16Point first, Int16Point second)
 		{
 			Int32 x = first.X - second.X;
 			Int32 y = first.Y - second.Y;
 			return new Int16Point(Unsafe.As<Int32, Int16>(ref x), Unsafe.As<Int32, Int16>(ref y));
 		}
+
 		public static Int16Point operator *(Int16Point first, Int16Point second)
 		{
 			Int32 x = first.X * second.X;
 			Int32 y = first.Y * second.Y;
 			return new Int16Point(Unsafe.As<Int32, Int16>(ref x), Unsafe.As<Int32, Int16>(ref y));
 		}
+
 		public static Int16Point operator /(Int16Point first, Int16Point second)
 		{
 			Int32 x = first.X / second.X;
 			Int32 y = first.Y / second.Y;
 			return new Int16Point(Unsafe.As<Int32, Int16>(ref x), Unsafe.As<Int32, Int16>(ref y));
 		}
+
 		public static Int16Point operator %(Int16Point first, Int16Point second)
 		{
 			Int32 x = first.X % second.X;
@@ -458,24 +474,28 @@ namespace NetExtender.Types.Numerics
 			Int32 y = first.Y + second.Y;
 			return new UInt16Point(Unsafe.As<Int32, UInt16>(ref x), Unsafe.As<Int32, UInt16>(ref y));
 		}
+
 		public static UInt16Point operator -(UInt16Point first, UInt16Point second)
 		{
 			Int32 x = first.X - second.X;
 			Int32 y = first.Y - second.Y;
 			return new UInt16Point(Unsafe.As<Int32, UInt16>(ref x), Unsafe.As<Int32, UInt16>(ref y));
 		}
+
 		public static UInt16Point operator *(UInt16Point first, UInt16Point second)
 		{
 			Int32 x = first.X * second.X;
 			Int32 y = first.Y * second.Y;
 			return new UInt16Point(Unsafe.As<Int32, UInt16>(ref x), Unsafe.As<Int32, UInt16>(ref y));
 		}
+
 		public static UInt16Point operator /(UInt16Point first, UInt16Point second)
 		{
 			Int32 x = first.X / second.X;
 			Int32 y = first.Y / second.Y;
 			return new UInt16Point(Unsafe.As<Int32, UInt16>(ref x), Unsafe.As<Int32, UInt16>(ref y));
 		}
+
 		public static UInt16Point operator %(UInt16Point first, UInt16Point second)
 		{
 			Int32 x = first.X % second.X;
@@ -577,18 +597,22 @@ namespace NetExtender.Types.Numerics
 		{
 			return new Int32Point(first.X + second.X, first.Y + second.Y);
 		}
+
 		public static Int32Point operator -(Int32Point first, Int32Point second)
 		{
 			return new Int32Point(first.X - second.X, first.Y - second.Y);
 		}
+
 		public static Int32Point operator *(Int32Point first, Int32Point second)
 		{
 			return new Int32Point(first.X * second.X, first.Y * second.Y);
 		}
+
 		public static Int32Point operator /(Int32Point first, Int32Point second)
 		{
 			return new Int32Point(first.X / second.X, first.Y / second.Y);
 		}
+
 		public static Int32Point operator %(Int32Point first, Int32Point second)
 		{
 			return new Int32Point(first.X % second.X, first.Y % second.Y);
@@ -678,18 +702,22 @@ namespace NetExtender.Types.Numerics
 		{
 			return new UInt32Point(first.X + second.X, first.Y + second.Y);
 		}
+
 		public static UInt32Point operator -(UInt32Point first, UInt32Point second)
 		{
 			return new UInt32Point(first.X - second.X, first.Y - second.Y);
 		}
+
 		public static UInt32Point operator *(UInt32Point first, UInt32Point second)
 		{
 			return new UInt32Point(first.X * second.X, first.Y * second.Y);
 		}
+
 		public static UInt32Point operator /(UInt32Point first, UInt32Point second)
 		{
 			return new UInt32Point(first.X / second.X, first.Y / second.Y);
 		}
+
 		public static UInt32Point operator %(UInt32Point first, UInt32Point second)
 		{
 			return new UInt32Point(first.X % second.X, first.Y % second.Y);
@@ -779,18 +807,22 @@ namespace NetExtender.Types.Numerics
 		{
 			return new Int64Point(first.X + second.X, first.Y + second.Y);
 		}
+
 		public static Int64Point operator -(Int64Point first, Int64Point second)
 		{
 			return new Int64Point(first.X - second.X, first.Y - second.Y);
 		}
+
 		public static Int64Point operator *(Int64Point first, Int64Point second)
 		{
 			return new Int64Point(first.X * second.X, first.Y * second.Y);
 		}
+
 		public static Int64Point operator /(Int64Point first, Int64Point second)
 		{
 			return new Int64Point(first.X / second.X, first.Y / second.Y);
 		}
+
 		public static Int64Point operator %(Int64Point first, Int64Point second)
 		{
 			return new Int64Point(first.X % second.X, first.Y % second.Y);
@@ -880,18 +912,22 @@ namespace NetExtender.Types.Numerics
 		{
 			return new UInt64Point(first.X + second.X, first.Y + second.Y);
 		}
+
 		public static UInt64Point operator -(UInt64Point first, UInt64Point second)
 		{
 			return new UInt64Point(first.X - second.X, first.Y - second.Y);
 		}
+
 		public static UInt64Point operator *(UInt64Point first, UInt64Point second)
 		{
 			return new UInt64Point(first.X * second.X, first.Y * second.Y);
 		}
+
 		public static UInt64Point operator /(UInt64Point first, UInt64Point second)
 		{
 			return new UInt64Point(first.X / second.X, first.Y / second.Y);
 		}
+
 		public static UInt64Point operator %(UInt64Point first, UInt64Point second)
 		{
 			return new UInt64Point(first.X % second.X, first.Y % second.Y);
@@ -991,18 +1027,22 @@ namespace NetExtender.Types.Numerics
 		{
 			return new SinglePoint(first.X + second.X, first.Y + second.Y);
 		}
+
 		public static SinglePoint operator -(SinglePoint first, SinglePoint second)
 		{
 			return new SinglePoint(first.X - second.X, first.Y - second.Y);
 		}
+
 		public static SinglePoint operator *(SinglePoint first, SinglePoint second)
 		{
 			return new SinglePoint(first.X * second.X, first.Y * second.Y);
 		}
+
 		public static SinglePoint operator /(SinglePoint first, SinglePoint second)
 		{
 			return new SinglePoint(first.X / second.X, first.Y / second.Y);
 		}
+
 		public static SinglePoint operator %(SinglePoint first, SinglePoint second)
 		{
 			return new SinglePoint(first.X % second.X, first.Y % second.Y);
@@ -1102,18 +1142,22 @@ namespace NetExtender.Types.Numerics
 		{
 			return new DoublePoint(first.X + second.X, first.Y + second.Y);
 		}
+
 		public static DoublePoint operator -(DoublePoint first, DoublePoint second)
 		{
 			return new DoublePoint(first.X - second.X, first.Y - second.Y);
 		}
+
 		public static DoublePoint operator *(DoublePoint first, DoublePoint second)
 		{
 			return new DoublePoint(first.X * second.X, first.Y * second.Y);
 		}
+
 		public static DoublePoint operator /(DoublePoint first, DoublePoint second)
 		{
 			return new DoublePoint(first.X / second.X, first.Y / second.Y);
 		}
+
 		public static DoublePoint operator %(DoublePoint first, DoublePoint second)
 		{
 			return new DoublePoint(first.X % second.X, first.Y % second.Y);
@@ -1203,18 +1247,22 @@ namespace NetExtender.Types.Numerics
 		{
 			return new DecimalPoint(first.X + second.X, first.Y + second.Y);
 		}
+
 		public static DecimalPoint operator -(DecimalPoint first, DecimalPoint second)
 		{
 			return new DecimalPoint(first.X - second.X, first.Y - second.Y);
 		}
+
 		public static DecimalPoint operator *(DecimalPoint first, DecimalPoint second)
 		{
 			return new DecimalPoint(first.X * second.X, first.Y * second.Y);
 		}
+
 		public static DecimalPoint operator /(DecimalPoint first, DecimalPoint second)
 		{
 			return new DecimalPoint(first.X / second.X, first.Y / second.Y);
 		}
+
 		public static DecimalPoint operator %(DecimalPoint first, DecimalPoint second)
 		{
 			return new DecimalPoint(first.X % second.X, first.Y % second.Y);

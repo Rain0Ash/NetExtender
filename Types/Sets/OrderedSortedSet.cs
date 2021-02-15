@@ -262,17 +262,17 @@ namespace NetExtender.Types.Sets
             Set.Clear();
             Inner.Clear();
         }
-        
+
         /// <inheritdoc cref="SortedSet{T}.GetEnumerator"/>
         public IEnumerator<T> GetEnumerator()
         {
-            return Set.GetEnumerator();
+            return Set.OrderBy(Inner).GetEnumerator();
         }
 
         /// <inheritdoc cref="SortedSet{T}.GetEnumerator"/>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable) Set).GetEnumerator();
+            return GetEnumerator();
         }
 
         /// <inheritdoc cref="SortedSet{T}.CopyTo(T[],Int32)"/>

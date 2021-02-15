@@ -111,21 +111,21 @@ namespace NetExtender.GUI.WinForms.Labels
             }
         }
 
-        private RoundType _round = RoundType.Banking;
-        public RoundType Round
+        private MidpointRounding _rounding = MidpointRounding.ToEven;
+        public MidpointRounding Rounding
         {
             get
             {
-                return _round;
+                return _rounding;
             }
             set
             {
-                if (_round == value)
+                if (_rounding == value)
                 {
                     return;
                 }
 
-                _round = value;
+                _rounding = value;
                 ValueChanged?.Invoke();
             }
         }
@@ -167,7 +167,7 @@ namespace NetExtender.GUI.WinForms.Labels
 
         private String EvaluateAndFill(Int32 multiply)
         {
-            Decimal value = (CurrentValue / MaximumValue.ToNonZero() * multiply).Round(PercentFractionalCount, Round);
+            Decimal value = (CurrentValue / MaximumValue.ToNonZero() * multiply).Round(PercentFractionalCount, Rounding);
             
             Int32 digits = value.GetDigitsCountAfterPoint();
 

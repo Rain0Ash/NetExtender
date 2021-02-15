@@ -251,6 +251,71 @@ namespace NetExtender.Types.Numerics
         {
             return second | first;
         }
+        
+        public static Trilean operator ^(Trilean first, Trilean second)
+        {
+            return first._trilean switch
+            {
+                VTrue => second._trilean switch
+                {
+                    VTrue => False,
+                    VTrit => Trit,
+                    VFalse => True,
+                    _ => throw new ArgumentOutOfRangeException(nameof(second))
+                },
+                VTrit => Trit,
+                VFalse => second._trilean switch
+                {
+                    VTrue => True,
+                    VTrit => Trit,
+                    VFalse => False,
+                    _ => throw new ArgumentOutOfRangeException(nameof(second))
+                },
+                _ => throw new ArgumentOutOfRangeException(nameof(first))
+            };
+        }
+        
+        public static Trilean operator ^(Trilean first, Boolean second)
+        {
+            return first._trilean switch
+            {
+                VTrue => second ? False : True,
+                VTrit => Trit,
+                VFalse => second ? True : False,
+                _ => throw new ArgumentOutOfRangeException(nameof(first))
+            };
+        }
+        
+        public static Trilean operator ^(Trilean first, Boolean? second)
+        {
+            return first._trilean switch
+            {
+                VTrue => second switch
+                {
+                    true => False,
+                    false => True,
+                    null => Trit
+                },
+                VTrit => Trit,
+                VFalse => second switch
+                {
+                    true => True,
+                    false => False,
+                    null => Trit
+                },
+                _ => throw new ArgumentOutOfRangeException(nameof(first))
+            };
+        }
+
+        public static Trilean operator ^(Boolean first, Trilean second)
+        {
+            return second ^ first;
+        }
+        
+        public static Trilean operator ^(Boolean? first, Trilean second)
+        {
+            return second ^ first;
+        }
 
         private readonly Byte _trilean;
 
