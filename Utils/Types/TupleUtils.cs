@@ -2,11 +2,10 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace NetExtender.Utils.Types
 {
-    [SuppressMessage("ReSharper", "UseDeconstructionOnParameter")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UseDeconstructionOnParameter")]
     public static class TupleUtils
     {
         public static IEnumerable<T> AsEnumerable<T>(this (T, T) value)

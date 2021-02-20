@@ -3,8 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading;
 using NetExtender.Utils.Numerics;
 
@@ -48,10 +46,16 @@ namespace NetExtender.Utils.Types
 	    /// </summary>
 	    /// <param name="source">List of TimeSpans</param>
 	    /// <returns>The average value</returns>
-	    [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-	    public static TimeSpan Average(this IEnumerable<TimeSpan> source)
+	    public static TimeSpan Average([JetBrains.Annotations.NotNull] this IEnumerable<TimeSpan> source)
 	    {
-		    return source?.Any() != true ? TimeSpan.Zero : new TimeSpan((Int64) source.Average(x => x.Ticks));
+		    if (source is null)
+		    {
+			    throw new ArgumentNullException(nameof(source));
+		    }
+
+		    Double? average = source.AverageOrDefault(x => x.Ticks);
+		    
+		    return average is not null ? new TimeSpan((Int64) average) : TimeSpan.Zero;
 	    }
 
 	    /// <summary>

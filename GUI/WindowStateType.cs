@@ -2,11 +2,10 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace NetExtender.GUI
 {
-    [SuppressMessage("ReSharper", "CA1069")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "CA1069")]
     public enum WindowStateType : UInt32
     {
         Hide = 0,

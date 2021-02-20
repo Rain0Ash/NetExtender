@@ -50,6 +50,8 @@ namespace NetExtender.Types.Drawing
             {
                 throw new ArgumentNullException(nameof(art));
             }
+
+            art = art.Materialize();
             
             Size = art.GetMatrixSize();
             Art = art.ToImmutableArray();

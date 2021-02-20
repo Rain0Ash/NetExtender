@@ -8,7 +8,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Interfaces;
 using NetExtender.Converters;
@@ -20,13 +19,12 @@ using ReactiveUI.Fody.Helpers;
 
 namespace NetExtender.Configuration
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
     public class Config : ReactiveObject, IConfig
     {
         public const ConfigType DefaultConfigType = ConfigType.Registry;
         public const ConfigOptions DefaultConfigOptions = ConfigOptions.None;
         
-        public static IConfig Create([NotNull] IConfigBehavior behavior)
+        public static IConfig Create([JetBrains.Annotations.NotNull] IConfigBehavior behavior)
         {
             if (behavior is null)
             {
@@ -141,7 +139,7 @@ namespace NetExtender.Configuration
         [Reactive]
         public ConfigPropertyOptions DefaultOptions { get; set; } = ConfigPropertyOptions.Caching;
 
-        public Config([NotNull] IConfigBehavior behavior)
+        public Config([JetBrains.Annotations.NotNull] IConfigBehavior behavior)
         {
             Behavior = behavior ?? throw new ArgumentNullException(nameof(behavior));
         }
@@ -400,8 +398,10 @@ namespace NetExtender.Configuration
             return GetOrSetValue(key, defaultValue, crypt, null, sections);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public String GetOrSetValue(String key, String defaultValue, CryptAction crypt, ICryptKey cryptKey, IEnumerable<String> sections)
         {
+            sections = sections.Materialize();
             String value = GetValue(key, sections);
 
             if (GetOrSetValueInternalCrypt(value, crypt, cryptKey, out String result))
@@ -438,8 +438,10 @@ namespace NetExtender.Configuration
             return GetOrSetValueAsync(key, defaultValue, crypt, cryptKey, sections, CancellationToken.None);
         }
         
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public async Task<String> GetOrSetValueAsync(String key, String defaultValue, CryptAction crypt, ICryptKey cryptKey, IEnumerable<String> sections, CancellationToken token)
         {
+            sections = sections.Materialize();
             String value = await GetValueAsync(key, sections, token).ConfigureAwait(false);
 
             if (GetOrSetValueInternalCrypt(value, crypt, cryptKey, out String result))
@@ -486,8 +488,10 @@ namespace NetExtender.Configuration
             return GetOrSetValue(key, defaultValue, null, converter, sections);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public T GetOrSetValue<T>(String key, T defaultValue, ICryptKey crypt, TryConverter<String, T> converter, IEnumerable<String> sections)
         {
+            sections = sections.Materialize();
             String value = GetValue(key, sections);
 
             if (GetOrSetValueInternalCrypt(value, defaultValue, crypt, converter, out T result))
@@ -538,8 +542,10 @@ namespace NetExtender.Configuration
             return GetOrSetValueAsync(key, defaultValue, crypt, converter, sections, CancellationToken.None);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public async Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, TryConverter<String, T> converter, IEnumerable<String> sections, CancellationToken token)
         {
+            sections = sections.Materialize();
             String value = await GetValueAsync(key, sections, token).ConfigureAwait(false);
 
             if (GetOrSetValueInternalCrypt(value, defaultValue, crypt, converter, out T result))

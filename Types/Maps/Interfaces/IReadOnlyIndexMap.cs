@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using NetExtender.Types.Dictionaries.Interfaces;
 
-namespace NetExtender.Types.Maps
+namespace NetExtender.Types.Maps.Interfaces
 {
     public interface IReadOnlyIndexMap<TKey, TValue> : IReadOnlyMap<TKey, TValue>, IReadOnlyIndexDictionary<TKey, TValue>
     {

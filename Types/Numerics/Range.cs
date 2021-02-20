@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using NetExtender.Utils.Types;
 
@@ -17,7 +16,7 @@ namespace NetExtender.Types.Numerics
             return (value.Min, value.Max);
         }
         
-        [SuppressMessage("ReSharper", "UseDeconstructionOnParameter")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UseDeconstructionOnParameter")]
         public static implicit operator Range<T>((T Min, T Max) value)
         {
             return new Range<T>(value.Min, value.Max);

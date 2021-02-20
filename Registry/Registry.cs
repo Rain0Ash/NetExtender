@@ -13,7 +13,6 @@ using NetExtender.Utils.IO;
 
 namespace NetExtender.Registry
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
     public sealed class Registry : IRegistry
     {
         private static IDictionary<RegistryKeys, RegistryKey> Keys { get; } = new Dictionary<RegistryKeys, RegistryKey>
@@ -90,8 +89,11 @@ namespace NetExtender.Registry
             return SetValue(key, value, (IEnumerable<String>) sections);
         }
         
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public Boolean SetValue(String key, String value, IEnumerable<String> sections)
         {
+            sections = sections.Materialize();
+            
             try
             {
                 if (GetValue(key, sections) == value)
@@ -163,8 +165,11 @@ namespace NetExtender.Registry
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         private IEnumerable<RegistryKey> GetSubRegistryKeys(Boolean recursive, IEnumerable<String> sections)
         {
+            sections = sections.Materialize();
+            
             using RegistryKey key = GetReadRegistryKey(sections);
 
             if (key is null)

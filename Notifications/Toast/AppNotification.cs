@@ -57,7 +57,7 @@ namespace NetExtender.Notifications.Toasts
     }
 
 #if TOAST_OLD
-    [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StaticMemberInGenericType")]
     public static class AppNotification<T> where T : NotificationActivator, new()
     {
         private static Lazy<ToastNotifier> LazyNotifier { get; set; }

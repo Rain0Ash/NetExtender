@@ -538,7 +538,7 @@ namespace NetExtender.Utils.Core
 
             static SizeCache()
             {
-                Size = GetTypeSize(typeof(T));
+                Size = GetSize(typeof(T));
             }
         }
 
@@ -546,7 +546,7 @@ namespace NetExtender.Utils.Core
         {
             private static ConcurrentDictionary<Type, Int32> Cache { get; } = new ConcurrentDictionary<Type, Int32>();
             
-            public static Int32 GetSize(Type type)
+            public static Int32 GetTypeSize(Type type)
             {
                 if (Cache.TryGetValue(type, out Int32 size))
                 {
@@ -616,14 +616,14 @@ namespace NetExtender.Utils.Core
             return SizeCache<T>.Size;
         }
 
-        private static Int32 GetTypeSize(Type type)
+        public static Int32 GetSize(this Type type)
         {
-            if (type.IsValueType)
+            if (!type.IsValueType)
             {
                 throw new ArgumentException(@"Is not value type", nameof(type));
             }
 
-            return SizeCache.GetSize(type);
+            return SizeCache.GetTypeSize(type);
         }
 
         /// <summary>
@@ -637,8 +637,8 @@ namespace NetExtender.Utils.Core
                 return null;
             }
 
-            Func<Object> f = GetDefaultGeneric<Object>;
-            return f.Method.GetGenericMethodDefinition().MakeGenericMethod(type).Invoke(null, null);
+            Func<Object> func = GetDefaultGeneric<Object>;
+            return func.Method.GetGenericMethodDefinition().MakeGenericMethod(type).Invoke(null, null);
         }
 
         /// <summary>

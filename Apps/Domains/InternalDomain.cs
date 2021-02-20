@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,7 +39,7 @@ namespace NetExtender.Apps.Domains
             }
         }
         
-        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         private class InternalDomain : IDomain
         {
             public event TypeHandler<TypeHandledEventArgs<AppDataMessage>> AnotherDomainStarted;

@@ -10,7 +10,8 @@ using NetExtender.Utils.Types;
 
 namespace NetExtender.Types.Sets
 {
-    public class RangeSet<T> : SortedSet<Range<T>> where T : IComparable<T>
+    [Serializable]
+    public class RangeSet<T> : FixedSortedSet<Range<T>> where T : IComparable<T>
     {
         public RangeSet()
         {

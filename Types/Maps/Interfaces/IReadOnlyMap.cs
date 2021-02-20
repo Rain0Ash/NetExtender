@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NetExtender.Types.Maps
+namespace NetExtender.Types.Maps.Interfaces
 {
     public interface IReadOnlyMap<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
     {

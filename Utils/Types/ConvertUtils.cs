@@ -5,7 +5,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -27,7 +26,7 @@ namespace NetExtender.Utils.Types
         FullWithNull = Null | Full
     }
     
-    [SuppressMessage("ReSharper", "UnusedParameter.Global")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
     public static class ConvertUtils
     {
         public const EscapeType DefaultEscapeType = EscapeType.Null;
@@ -119,7 +118,6 @@ namespace NetExtender.Utils.Types
             return String.IsNullOrEmpty(input) ? Enumerable.Empty<T>() : TryConvert<T>(input.Split(separators, StringSplitOptions.RemoveEmptyEntries), info);
         }
 
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public static IEnumerable<T> Convert<T>(this IEnumerable source)
         {
             return source switch
@@ -610,7 +608,6 @@ namespace NetExtender.Utils.Types
             return GetString(source, EscapeType.FullWithNull, provider);
         }
 
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public static String GetString(this IEnumerable source, EscapeType escape, IFormatProvider provider)
         {
             return source switch

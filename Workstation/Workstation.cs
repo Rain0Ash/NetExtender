@@ -201,8 +201,8 @@ namespace NetExtender.Workstation
 
             return succesfull;
         }
-        
-        [DllImport("user32")]
+
+        [DllImport("user32.dll")]
         private static extern Boolean ExitWindowsEx(UInt32 uFlags, UInt32 dwReason);
 
         public static Boolean Logoff()

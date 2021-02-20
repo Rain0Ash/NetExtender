@@ -12,6 +12,8 @@ namespace NetExtender
     {
         public static IAppData Data { get; } = new AppData(AppVersion.Default, AppStatus.OpenBeta);
 
+        public delegate String SystemResourceDelegate();
+        
         [STAThread]
         public static async Task Main()
         {

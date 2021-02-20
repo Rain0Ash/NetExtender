@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using NetExtender.Events.Args;
 using NetExtender.GUI;
 using NetExtender.Types.Maps;
+using NetExtender.Types.Maps.Interfaces;
 using NetExtender.Utils.GUI;
 using NetExtender.Utils.OS;
 using NetExtender.Utils.OS.Devices;
@@ -1386,6 +1387,7 @@ namespace NetExtender.Utils.IO
             Console.Clear();
         }
 
+        //TODO: IImmutableMap
         private static readonly IMap<Color, ConsoleColor> ColorMap = new Map<Color, ConsoleColor>
         {
             [Color.Black] = ConsoleColor.Black,

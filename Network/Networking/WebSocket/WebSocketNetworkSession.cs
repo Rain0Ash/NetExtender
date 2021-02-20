@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Net.Sockets;
 using System.Text;
 using NetExtender.Network.Networking.Common;
@@ -12,7 +11,7 @@ namespace NetExtender.Network.Networking.WebSocket
     ///     WebSocket session
     /// </summary>
     /// <remarks> WebSocket session is used to read and write data from the connected WebSocket client. Thread-safe.</remarks>
-    [SuppressMessage("ReSharper", "InconsistentlySynchronizedField")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "InconsistentlySynchronizedField")]
     public class WebSocketNetworkSession : HttpNetworkSession, IWebSocketNetwork
     {
         internal readonly WebSocketNetwork webSocketNetwork;

@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -160,7 +159,6 @@ namespace NetExtender.Utils.IO
             return GetFiles(included, excluded, new Regex(pattern));
         }
 
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public static IEnumerable<String> GetFiles(IEnumerable<FSWatcher> included, IEnumerable<FSWatcher> excluded, Regex regex)
         {
             if (included.IsNullOrEmpty())
@@ -204,9 +202,9 @@ namespace NetExtender.Utils.IO
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Local")]
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "InconsistentNaming")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Local")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
         private struct WIN32_FIND_DATA
         {
             public UInt32 dwFileAttributes;
@@ -415,9 +413,11 @@ namespace NetExtender.Utils.IO
         /// <param name="suffix">The suffix to add to all directories and files.</param>
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
         /// <param name="ignored">A collection of directory names to ignore when adding suffix.</param>
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public static void AddSuffixToAll(DirectoryInfo directory, String suffix, SearchOption option, IEnumerable<String> ignored)
         {
+            ignored = ignored.Materialize();
+            
             AddSuffixToAllFiles(directory, suffix, SearchOption.TopDirectoryOnly);
             AddSuffixToAllDirectories(directory, suffix, SearchOption.TopDirectoryOnly, ignored);
 
@@ -451,9 +451,11 @@ namespace NetExtender.Utils.IO
         /// <param name="suffix">The suffix to add to all directories.</param>
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
         /// <param name="ignored">A collection of directory names to ignore when adding suffix.</param>
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public static void AddSuffixToAllDirectories(DirectoryInfo directory, String suffix, SearchOption option, IEnumerable<String> ignored)
         {
+            ignored = ignored.Materialize();
+            
             DirectoryInfo[] directories = directory.GetDirectories("*", SearchOption.TopDirectoryOnly);
 
             foreach (DirectoryInfo subdirectory in directories)
@@ -636,9 +638,11 @@ namespace NetExtender.Utils.IO
         /// <param name="suffix">The suffix that directories must not contain in order to be deleted.</param>
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
         /// <param name="ignored">A collection of directory names to ignore.</param>
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public static void DeleteAllDirectoriesWithoutSuffix(DirectoryInfo directory, String suffix, SearchOption option, IEnumerable<String> ignored)
         {
+            ignored = ignored.Materialize();
+            
             DirectoryInfo[] subdirectories = directory.GetDirectories("*", SearchOption.TopDirectoryOnly);
             for (Int32 i = subdirectories.Length - 1; i >= 0; --i)
             {
@@ -739,9 +743,11 @@ namespace NetExtender.Utils.IO
         /// <param name="suffix">The suffix that files and directories must not contain in order to be deleted.</param>
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
         /// <param name="ignored">A collection of directory names to ignore.</param>
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public static void DeleteAllWithoutSuffix(DirectoryInfo directory, String suffix, SearchOption option, IEnumerable<String> ignored)
         {
+            ignored = ignored.Materialize();
+            
             DeleteAllFilesWithoutSuffix(directory, suffix, SearchOption.TopDirectoryOnly);
             DeleteAllDirectoriesWithoutSuffix(directory, suffix, SearchOption.TopDirectoryOnly, ignored);
 

@@ -9,12 +9,12 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using NetExtender.Random;
 using NetExtender.Random.Interfaces;
+using NetExtender.Types.Collections;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Utils.Numerics;
 
 namespace NetExtender.Utils.Types
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "IteratorNeverReturns")]
     public static class EnumerableUtils
     {
@@ -28,7 +28,7 @@ namespace NetExtender.Utils.Types
         {
             yield return value;
         }
-        
+
         public static IEnumerable<T> GetEnumerableFrom<T>(T value, params T[] other)
         {
             yield return value;
@@ -48,7 +48,7 @@ namespace NetExtender.Utils.Types
             yield return first;
             yield return second;
         }
-        
+
         public static IEnumerable<T> GetEnumerableFrom<T>(T first, T second, params T[] other)
         {
             yield return first;
@@ -63,14 +63,14 @@ namespace NetExtender.Utils.Types
                 }
             }
         }
-        
+
         public static IEnumerable<T> GetEnumerableFrom<T>(T first, T second, T third)
         {
             yield return first;
             yield return second;
             yield return third;
         }
-        
+
         public static IEnumerable<T> GetEnumerableFrom<T>(T first, T second, T third, params T[] other)
         {
             yield return first;
@@ -110,7 +110,7 @@ namespace NetExtender.Utils.Types
             Int32 counter = 0;
             return source.Select(item => (counter++, item));
         }
-        
+
         public static IEnumerable<(Int64 counter, T item)> LongEnumerate<T>(this IEnumerable<T> source)
         {
             if (source is null)
@@ -121,7 +121,7 @@ namespace NetExtender.Utils.Types
             Int64 counter = 0;
             return source.Select(item => (counter++, item));
         }
-        
+
         public static Int32 CountWhile<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> predicate)
         {
             if (source is null)
@@ -147,7 +147,7 @@ namespace NetExtender.Utils.Types
 
             return count;
         }
-        
+
         public static Int64 LongCountWhile<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> predicate)
         {
             if (source is null)
@@ -200,7 +200,7 @@ namespace NetExtender.Utils.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             return source.Reverse().LongCountWhile(predicate);
         }
 
@@ -226,7 +226,7 @@ namespace NetExtender.Utils.Types
 
             return -1;
         }
-        
+
         public static Int64 LongFindIndex<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> predicate)
         {
             if (source is null)
@@ -254,7 +254,7 @@ namespace NetExtender.Utils.Types
         {
             return source.Concat(additional);
         }
-        
+
         public static IEnumerable<T> Append<T>([CanBeNull] this IEnumerable<T> source, [CanBeNull] params IEnumerable<T>[] additionals)
         {
             return source.Concat(additionals);
@@ -269,7 +269,7 @@ namespace NetExtender.Utils.Types
                     yield return item;
                 }
             }
-            
+
             yield return value;
 
             if (values is null)
@@ -282,12 +282,12 @@ namespace NetExtender.Utils.Types
                 yield return item;
             }
         }
-        
+
         public static IEnumerable<T> Prepend<T>([CanBeNull] this IEnumerable<T> source, [CanBeNull] IEnumerable<T> additional)
         {
             return source.Preconcat(additional);
         }
-        
+
         public static IEnumerable<T> Prepend<T>([CanBeNull] this IEnumerable<T> source, [CanBeNull] params IEnumerable<T>[] additionals)
         {
             return source.Preconcat(additionals);
@@ -315,7 +315,7 @@ namespace NetExtender.Utils.Types
                 yield return item;
             }
         }
-        
+
         public static IEnumerable<T> Concat<T>([CanBeNull] this IEnumerable<T> source, [CanBeNull] IEnumerable<T> additional)
         {
             if (source is not null)
@@ -358,14 +358,14 @@ namespace NetExtender.Utils.Types
                 {
                     continue;
                 }
-                
+
                 foreach (T item in next)
                 {
                     yield return item;
                 }
             }
         }
-        
+
         public static IEnumerable<T> Preconcat<T>([CanBeNull] this IEnumerable<T> source, [CanBeNull] IEnumerable<T> additional)
         {
             if (additional is not null)
@@ -397,7 +397,7 @@ namespace NetExtender.Utils.Types
                     {
                         continue;
                     }
-                    
+
                     foreach (T item in next)
                     {
                         yield return item;
@@ -445,6 +445,41 @@ namespace NetExtender.Utils.Types
 
             return alternate;
         }
+        
+        public static T ElementAtOr<T>([NotNull] this IEnumerable<T> source, Int32 index, [NotNull] Func<T> alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            if (index < 0)
+            {
+                return alternate();
+            }
+
+            if (source is IList<T> list)
+            {
+                return index < list.Count ? list[index] : alternate();
+            }
+
+            using IEnumerator<T> e = source.GetEnumerator();
+
+            while (e.MoveNext())
+            {
+                if (index-- == 0)
+                {
+                    return e.Current;
+                }
+            }
+
+            return alternate();
+        }
 
         public static Boolean InBounds<T>([NotNull] this IEnumerable<T> source, Int32 index)
         {
@@ -457,8 +492,123 @@ namespace NetExtender.Utils.Types
             {
                 ICollection<T> collection => index >= 0 && index < collection.Count,
                 IReadOnlyCollection<T> collection => index >= 0 && index < collection.Count,
+                ICollection collection => index >= 0 && index < collection.Count,
                 _ => index >= 0 && index < source.Count()
             };
+        }
+        
+        public static T TryGetValue<T>([NotNull] this IEnumerable<T> source, Int32 index)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return TryGetValue(source, index, out T value) ? value : default;
+        }
+        
+        public static T TryGetValue<T>([NotNull] this IEnumerable<T> source, Int32 index, T alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return TryGetValue(source, index, out T value) ? value : alternate;
+        }
+        
+        public static T TryGetValue<T>([NotNull] this IEnumerable<T> source, Int32 index, [NotNull] Func<T> alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            TryGetValue(source, index, out T value, alternate);
+            return value;
+        }
+
+        public static Boolean TryGetValue<T>([NotNull] this IEnumerable<T> source, Int32 index, out T value)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return TryGetValue(source, index, out value, default(T));
+        }
+
+        public static Boolean TryGetValue<T>([NotNull] this IEnumerable<T> source, Int32 index, out T value, T alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            Boolean result;
+            (value, result) = source switch
+            {
+                IList<T> collection => index >= 0 && index < collection.Count ? (collection[index], true) : (alternate, false),
+                IReadOnlyList<T> collection => index >= 0 && index < collection.Count ? (collection[index], true) : (alternate, false),
+                ICollection<T> collection => index >= 0 && index < collection.Count ? (collection.ElementAt(index), true) : (alternate, false),
+                IReadOnlyCollection<T> collection => index >= 0 && index < collection.Count ? (collection.ElementAt(index), true) : (alternate, false),
+                _ => TryGetValueInternal(source, index, out value) ? (value, true) : (alternate, false)
+            };
+
+            return result;
+        }
+
+        public static Boolean TryGetValue<T>([NotNull] this IEnumerable<T> source, Int32 index, out T value, [NotNull] Func<T> alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            Boolean result;
+            (value, result) = source switch
+            {
+                IList<T> collection => index >= 0 && index < collection.Count ? (collection[index], true) : (alternate(), false),
+                IReadOnlyList<T> collection => index >= 0 && index < collection.Count ? (collection[index], true) : (alternate(), false),
+                ICollection<T> collection => index >= 0 && index < collection.Count ? (collection.ElementAt(index), true) : (alternate(), false),
+                IReadOnlyCollection<T> collection => index >= 0 && index < collection.Count ? (collection.ElementAt(index), true) : (alternate(), false),
+                _ => TryGetValueInternal(source, index, out value) ? (value, true) : (alternate(), false)
+            };
+
+            return result;
+        }
+        
+        private static Boolean TryGetValueInternal<T>([NotNull] IEnumerable<T> source, Int32 index, out T value)
+        {
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            if (index < 0)
+            {
+                value = default;
+                return false;
+            }
+
+            Int32 i = 0;
+            while (enumerator.MoveNext() && i++ < index) { }
+
+            if (i == index)
+            {
+                value = enumerator.Current;
+                return true;
+            }
+
+            value = default;
+            return false;
         }
 
         public static T GetRandom<T>([NotNull] this IEnumerable<T> source)
@@ -470,11 +620,11 @@ namespace NetExtender.Utils.Types
 
             return source switch
             {
-                IList<T> list => list.Count <= 0 ? default : list[RandomUtils.NextNonNegative(list.Count - 1)],
+                IList<T> list => list.GetRandom(),
                 IReadOnlyList<T> list => list.Count <= 0 ? default : list[RandomUtils.NextNonNegative(list.Count - 1)],
                 ICollection<T> collection => collection.Count <= 0 ? default : collection.ElementAtOrDefault(RandomUtils.NextNonNegative(collection.Count - 1)),
                 IReadOnlyCollection<T> collection => collection.Count <= 0 ? default : collection.ElementAtOrDefault(RandomUtils.NextNonNegative(collection.Count - 1)),
-                _ => source.ElementAtOrDefault(RandomUtils.NextNonNegative(source.Count() - 1))
+                _ => source.ToList().GetRandom()
             };
         }
 
@@ -496,7 +646,7 @@ namespace NetExtender.Utils.Types
                 return false;
             }
         }
-        
+
         public static Boolean TryGetFirst<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> predicate, out T result)
         {
             if (source is null)
@@ -520,7 +670,7 @@ namespace NetExtender.Utils.Types
                 return false;
             }
         }
-        
+
         public static Boolean TryGetLast<T>([NotNull] this IEnumerable<T> source, out T result)
         {
             if (source is null)
@@ -539,7 +689,7 @@ namespace NetExtender.Utils.Types
                 return false;
             }
         }
-        
+
         public static Boolean TryGetLast<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> predicate, out T result)
         {
             if (source is null)
@@ -563,7 +713,7 @@ namespace NetExtender.Utils.Types
                 return false;
             }
         }
-        
+
         public static IEnumerable<T> WhereNot<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> predicate)
         {
             if (source is null)
@@ -578,7 +728,7 @@ namespace NetExtender.Utils.Types
 
             return source.Where(item => !predicate(item));
         }
-        
+
         public static IEnumerable<T> WhereNot<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Int32, Boolean> predicate)
         {
             if (source is null)
@@ -603,7 +753,7 @@ namespace NetExtender.Utils.Types
 
             return source.Where(item => item is not null);
         }
-        
+
         public static IEnumerable<T> WhereNotNull<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where)
         {
             if (source is null)
@@ -618,7 +768,7 @@ namespace NetExtender.Utils.Types
 
             return source.WhereNotNull().Where(where);
         }
-        
+
         public static IEnumerable<T> AppendAggregate<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, T, T> aggregate)
         {
             if (source is null)
@@ -631,30 +781,25 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(aggregate));
             }
 
-            return source.Append(source.Aggregate(aggregate));
-        }
-
-        public static IEnumerable<T> AppendAggregate<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, T, T> aggregate, [NotNull] Func<T, T> append)
-        {
-            if (source is null)
+            using IEnumerator<T> e = source.GetEnumerator();
+            if (!e.MoveNext())
             {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentException("");
             }
 
-            if (aggregate is null)
+            T result = e.Current;
+            yield return result;
+            
+            while (e.MoveNext())
             {
-                throw new ArgumentNullException(nameof(aggregate));
+                result = aggregate(result, e.Current);
+                yield return e.Current;
             }
 
-            if (append is null)
-            {
-                throw new ArgumentNullException(nameof(append));
-            }
-
-            return source.Append(append(source.Aggregate(aggregate)));
+            yield return result;
         }
         
-        public static IEnumerable<T> PrependAggregate<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, T, T> aggregate)
+        public static IEnumerable<T> AppendAggregate<T>([NotNull] this IEnumerable<T> source, T seed, [NotNull] Func<T, T, T> aggregate)
         {
             if (source is null)
             {
@@ -666,27 +811,24 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(aggregate));
             }
 
-            return source.Prepend(source.Aggregate(aggregate));
-        }
-        
-        public static IEnumerable<T> PrependAggregate<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, T, T> aggregate, [NotNull] Func<T, T> prepend)
-        {
-            if (source is null)
+            T result = seed;
+            
+            using IEnumerator<T> e = source.GetEnumerator();
+            if (!e.MoveNext())
             {
-                throw new ArgumentNullException(nameof(source));
+                yield return result;
+                yield break;
+            }
+            
+            yield return e.Current;
+            
+            while (e.MoveNext())
+            {
+                result = aggregate(result, e.Current);
+                yield return e.Current;
             }
 
-            if (aggregate is null)
-            {
-                throw new ArgumentNullException(nameof(aggregate));
-            }
-
-            if (prepend is null)
-            {
-                throw new ArgumentNullException(nameof(prepend));
-            }
-
-            return source.Prepend(prepend(source.Aggregate(aggregate)));
+            yield return result;
         }
 
         public static IEnumerable<TResult> SelectManyWhere<T, TResult>(this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, Func<T, IEnumerable<TResult>> selector)
@@ -712,14 +854,14 @@ namespace NetExtender.Utils.Types
                 {
                     continue;
                 }
-                
+
                 foreach (TResult result in selector(item))
                 {
                     yield return result;
                 }
             }
         }
-        
+
         public static IEnumerable<TResult> SelectManyWhereNot<T, TResult>(this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, Func<T, IEnumerable<TResult>> selector)
         {
             if (source is null)
@@ -743,7 +885,7 @@ namespace NetExtender.Utils.Types
                 {
                     continue;
                 }
-                
+
                 foreach (TResult result in selector(item))
                 {
                     yield return result;
@@ -806,7 +948,7 @@ namespace NetExtender.Utils.Types
 
             return source.Where(where).TrySelect(predicate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TResult> TrySelectWhereNot<T, TResult>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] Func<T, TResult> predicate)
         {
@@ -829,7 +971,8 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> TrySelectWhere<T, TResult>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] TryParseHandler<T, TResult> predicate)
+        public static IEnumerable<TResult> TrySelectWhere<T, TResult>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where,
+            [NotNull] TryParseHandler<T, TResult> predicate)
         {
             if (source is null)
             {
@@ -850,7 +993,8 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> TrySelectWhereNot<T, TResult>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] TryParseHandler<T, TResult> predicate)
+        public static IEnumerable<TResult> TrySelectWhereNot<T, TResult>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where,
+            [NotNull] TryParseHandler<T, TResult> predicate)
         {
             if (source is null)
             {
@@ -880,9 +1024,10 @@ namespace NetExtender.Utils.Types
 
             return SelectWhere(source, predicate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<TResult> TryParseWhere<T, TResult>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] TryParseHandler<T, TResult> predicate)
+        public static IEnumerable<TResult> TryParseWhere<T, TResult>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where,
+            [NotNull] TryParseHandler<T, TResult> predicate)
         {
             if (source is null)
             {
@@ -943,7 +1088,7 @@ namespace NetExtender.Utils.Types
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TOut> SelectWhere<T, TOut>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] TryParseHandler<T, TOut> predicate)
         {
@@ -964,7 +1109,7 @@ namespace NetExtender.Utils.Types
 
             return source.Where(where).SelectWhere(predicate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<TOut> SelectWhereNot<T, TOut>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] TryParseHandler<T, TOut> predicate)
         {
@@ -985,7 +1130,7 @@ namespace NetExtender.Utils.Types
 
             return source.WhereNot(where).SelectWhere(predicate);
         }
-        
+
         public static IEnumerable<TOut> SelectWhere<T, TOut>([NotNull] this IEnumerable<T> source, Func<T, (Boolean, TOut)> predicate)
         {
             if (source is null)
@@ -1136,7 +1281,7 @@ namespace NetExtender.Utils.Types
                 yield return item as TTo;
             }
         }
-        
+
         public static IEnumerable<T> WhereIs<T, TCheck>(this IEnumerable<T> source)
         {
             if (source is null)
@@ -1152,7 +1297,7 @@ namespace NetExtender.Utils.Types
                 }
             }
         }
-        
+
         public static IEnumerable<TTo> SelectWhereIs<TFrom, TTo>(this IEnumerable<TFrom> source)
         {
             if (source is null)
@@ -1183,7 +1328,7 @@ namespace NetExtender.Utils.Types
 
             return source.WhereNotNull().Select(selector);
         }
-        
+
         public static IEnumerable<TResult> SelectManyWhereNotNull<T, TResult>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, IEnumerable<TResult>> selector)
         {
             if (source is null)
@@ -1370,9 +1515,8 @@ namespace NetExtender.Utils.Types
             foreach (T item in source)
             {
                 action(item);
+                yield return item;
             }
-
-            return source;
         }
 
         public static IEnumerable<T> ForEachWhere<T>([NotNull] this IEnumerable<T> source, Func<T, Boolean> where, Action<T> action)
@@ -1398,9 +1542,9 @@ namespace NetExtender.Utils.Types
                 {
                     action(item);
                 }
-            }
 
-            return source;
+                yield return item;
+            }
         }
 
         public static IEnumerable<T> ForEach<T>([NotNull] this IEnumerable<T> source, Action<T, Int32> action)
@@ -1420,9 +1564,8 @@ namespace NetExtender.Utils.Types
             {
                 action(item, index);
                 ++index;
+                yield return item;
             }
-
-            return source;
         }
 
         public static IEnumerable<T> ForEachWhere<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] Action<T, Int32> action)
@@ -1451,9 +1594,8 @@ namespace NetExtender.Utils.Types
                 }
 
                 ++index;
+                yield return item;
             }
-
-            return source;
         }
 
         public static IEnumerable<T> ForEachWhereNot<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] Action<T, Int32> action)
@@ -1510,7 +1652,7 @@ namespace NetExtender.Utils.Types
 
             return alternate;
         }
-        
+
         public static T FirstOr<T>([NotNull] this IEnumerable<T> source, Func<T> alternate)
         {
             if (source is null)
@@ -1580,7 +1722,7 @@ namespace NetExtender.Utils.Types
 
             return FirstOr(source.Reverse(), predicate, alternate);
         }
-        
+
         public static T LastOr<T>([NotNull] this IEnumerable<T> source, Func<T> alternate)
         {
             if (source is null)
@@ -1615,7 +1757,7 @@ namespace NetExtender.Utils.Types
 
             return FirstOr(source.Reverse(), predicate, alternate);
         }
-        
+
         /// <summary>
         /// Return item if source is empty
         /// </summary>
@@ -1636,7 +1778,6 @@ namespace NetExtender.Utils.Types
                 do
                 {
                     yield return enumerator.Current;
-                    
                 } while (enumerator.MoveNext());
             }
             else
@@ -1666,7 +1807,7 @@ namespace NetExtender.Utils.Types
 
             return WhereOr(source.Where(predicate), alternate);
         }
-        
+
         /// <summary>
         /// Return item if predicate else return alternate
         /// </summary>
@@ -1829,7 +1970,7 @@ namespace NetExtender.Utils.Types
                     {
                         yield return new[] {item};
                     }
-                
+
                     yield break;
                 }
             }
@@ -2078,7 +2219,7 @@ namespace NetExtender.Utils.Types
                 buffer[j] = buffer[i];
             }
         }
-        
+
         public static IEnumerable<T> Shuffle<T>([NotNull] this IEnumerable<T> source, [NotNull] IRandom random)
         {
             if (source is null)
@@ -2401,9 +2542,40 @@ namespace NetExtender.Utils.Types
             return alternate?.Length > 0 ? NotEmptyOr(source, (IEnumerable<T>) alternate) : source;
         }
 
-        public static IEnumerable<T> NotEmptyOr<T>([NotNull] this IEnumerable<T> source, IEnumerable<T> alternate)
+        public static IEnumerable<T> NotEmptyOr<T>([CanBeNull] this IEnumerable<T> source, [NotNull] IEnumerable<T> alternate)
         {
-            return source.IsNotEmpty() ? source : alternate;
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            if (source is null)
+            {
+                foreach (T item in alternate)
+                {
+                    yield return item;
+                }
+                
+                yield break;
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                foreach (T item in alternate)
+                {
+                    yield return item;
+                }
+                
+                yield break;
+            }
+
+            do
+            {
+                yield return enumerator.Current;
+                
+            } while (enumerator.MoveNext());
         }
 
         /// <summary>
@@ -2434,7 +2606,7 @@ namespace NetExtender.Utils.Types
             {
                 return false;
             }
-            
+
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
@@ -2457,7 +2629,7 @@ namespace NetExtender.Utils.Types
             {
                 return false;
             }
-            
+
             return !source.Any();
         }
 
@@ -2476,7 +2648,7 @@ namespace NetExtender.Utils.Types
             {
                 return false;
             }
-            
+
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
@@ -2499,7 +2671,7 @@ namespace NetExtender.Utils.Types
             {
                 return true;
             }
-            
+
             return !source.Any();
         }
 
@@ -2518,7 +2690,7 @@ namespace NetExtender.Utils.Types
             {
                 return true;
             }
-            
+
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
@@ -2645,6 +2817,572 @@ namespace NetExtender.Utils.Types
             }
 
             return source.OrderBy(selector, comparer).Take(count);
+        }
+
+        public static Double AverageOr([NotNull] this IEnumerable<Int32> source, Double seed)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            using IEnumerator<Int32> e = source.GetEnumerator();
+            if (!e.MoveNext())
+            {
+                return seed;
+            }
+
+            Int64 sum = e.Current;
+            Int64 count = 1;
+            checked
+            {
+                while (e.MoveNext())
+                {
+                    sum += e.Current;
+                    ++count;
+                }
+            }
+
+            return (Double) sum / count;
+        }
+
+        public static Double? AverageOrDefault([NotNull] this IEnumerable<Int32> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            using IEnumerator<Int32> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return null;
+            }
+
+            Int64 sum = enumerator.Current;
+            Int64 count = 1;
+            checked
+            {
+                while (enumerator.MoveNext())
+                {
+                    sum += enumerator.Current;
+                    ++count;
+                }
+            }
+
+            return (Double) sum / count;
+        }
+
+        public static Double AverageOr([NotNull] this IEnumerable<Int64> source, Double seed)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            using IEnumerator<Int64> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return seed;
+            }
+
+            Int64 sum = enumerator.Current;
+            Int64 count = 1;
+            checked
+            {
+                while (enumerator.MoveNext())
+                {
+                    sum += enumerator.Current;
+                    ++count;
+                }
+            }
+
+            return (Double) sum / count;
+        }
+
+        public static Double AverageOrDefault([NotNull] this IEnumerable<Int64> source, Double seed)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            using IEnumerator<Int64> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return seed;
+            }
+
+            Int64 sum = enumerator.Current;
+            Int64 count = 1;
+            checked
+            {
+                while (enumerator.MoveNext())
+                {
+                    sum += enumerator.Current;
+                    ++count;
+                }
+            }
+
+            return (Double) sum / count;
+        }
+
+        public static Single AverageOr([NotNull] this IEnumerable<Single> source, Single seed)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            using IEnumerator<Single> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return seed;
+            }
+
+            Double sum = enumerator.Current;
+            Int64 count = 1;
+            while (enumerator.MoveNext())
+            {
+                sum += enumerator.Current;
+                ++count;
+            }
+
+            return (Single) (sum / count);
+        }
+
+        public static Single? AverageOrDefault([NotNull] this IEnumerable<Single> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            using IEnumerator<Single> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return null;
+            }
+
+            Double sum = enumerator.Current;
+            Int64 count = 1;
+            while (enumerator.MoveNext())
+            {
+                sum += enumerator.Current;
+                ++count;
+            }
+
+            return (Single) (sum / count);
+        }
+
+        public static Double AverageOr([NotNull] this IEnumerable<Double> source, Double seed)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            using IEnumerator<Double> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return seed;
+            }
+
+            Double sum = enumerator.Current;
+            Int64 count = 1;
+            while (enumerator.MoveNext())
+            {
+                // There is an opportunity to short-circuit here, in that if e.Current is
+                // ever NaN then the result will always be NaN. Assuming that this case is
+                // rare enough that not checking is the better approach generally.
+                sum += enumerator.Current;
+                ++count;
+            }
+
+            return sum / count;
+        }
+
+        public static Double? AverageOrDefault([NotNull] this IEnumerable<Double> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            using IEnumerator<Double> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return null;
+            }
+
+            Double sum = enumerator.Current;
+            Int64 count = 1;
+            while (enumerator.MoveNext())
+            {
+                // There is an opportunity to short-circuit here, in that if e.Current is
+                // ever NaN then the result will always be NaN. Assuming that this case is
+                // rare enough that not checking is the better approach generally.
+                sum += enumerator.Current;
+                ++count;
+            }
+
+            return sum / count;
+        }
+
+        public static Decimal AverageOr([NotNull] this IEnumerable<Decimal> source, Decimal seed)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            using IEnumerator<Decimal> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return seed;
+            }
+
+            Decimal sum = enumerator.Current;
+            Int64 count = 1;
+            while (enumerator.MoveNext())
+            {
+                sum += enumerator.Current;
+                ++count;
+            }
+
+            return sum / count;
+        }
+
+        public static Decimal? AverageOrDefault([NotNull] this IEnumerable<Decimal> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            using IEnumerator<Decimal> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return null;
+            }
+
+            Decimal sum = enumerator.Current;
+            Int64 count = 1;
+            while (enumerator.MoveNext())
+            {
+                sum += enumerator.Current;
+                ++count;
+            }
+
+            return sum / count;
+        }
+
+        public static Double AverageOr<TSource>([NotNull] this IEnumerable<TSource> source, [NotNull] Func<TSource, Int32> selector, Double seed)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            using IEnumerator<TSource> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return seed;
+            }
+
+            Int64 sum = selector(enumerator.Current);
+            Int64 count = 1;
+            checked
+            {
+                while (enumerator.MoveNext())
+                {
+                    sum += selector(enumerator.Current);
+                    ++count;
+                }
+            }
+
+            return (Double) sum / count;
+        }
+
+        public static Double? AverageOrDefault<TSource>([NotNull] this IEnumerable<TSource> source, [NotNull] Func<TSource, Int32> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            using IEnumerator<TSource> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return null;
+            }
+
+            Int64 sum = selector(enumerator.Current);
+            Int64 count = 1;
+            checked
+            {
+                while (enumerator.MoveNext())
+                {
+                    sum += selector(enumerator.Current);
+                    ++count;
+                }
+            }
+
+            return (Double) sum / count;
+        }
+
+        public static Double AverageOr<TSource>([NotNull] this IEnumerable<TSource> source, [NotNull] Func<TSource, Int64> selector, Double seed)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            using IEnumerator<TSource> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return seed;
+            }
+
+            Int64 sum = selector(enumerator.Current);
+            Int64 count = 1;
+            checked
+            {
+                while (enumerator.MoveNext())
+                {
+                    sum += selector(enumerator.Current);
+                    ++count;
+                }
+            }
+
+            return (Double) sum / count;
+        }
+
+        public static Double? AverageOrDefault<TSource>([NotNull] this IEnumerable<TSource> source, [NotNull] Func<TSource, Int64> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            using IEnumerator<TSource> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return null;
+            }
+
+            Int64 sum = selector(enumerator.Current);
+            Int64 count = 1;
+            checked
+            {
+                while (enumerator.MoveNext())
+                {
+                    sum += selector(enumerator.Current);
+                    ++count;
+                }
+            }
+
+            return (Double) sum / count;
+        }
+
+        public static Single AverageOr<TSource>([NotNull] this IEnumerable<TSource> source, [NotNull] Func<TSource, Single> selector, Single seed)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            using IEnumerator<TSource> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return seed;
+            }
+
+            Double sum = selector(enumerator.Current);
+            Int64 count = 1;
+            while (enumerator.MoveNext())
+            {
+                sum += selector(enumerator.Current);
+                ++count;
+            }
+
+            return (Single) (sum / count);
+        }
+
+        public static Single? AverageOrDefault<TSource>([NotNull] this IEnumerable<TSource> source, [NotNull] Func<TSource, Single> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            using IEnumerator<TSource> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return null;
+            }
+
+            Double sum = selector(enumerator.Current);
+            Int64 count = 1;
+            while (enumerator.MoveNext())
+            {
+                sum += selector(enumerator.Current);
+                ++count;
+            }
+
+            return (Single) (sum / count);
+        }
+
+        public static Double AverageOr<TSource>([NotNull] this IEnumerable<TSource> source, [NotNull] Func<TSource, Double> selector, Double seed)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            using IEnumerator<TSource> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return seed;
+            }
+
+            Double sum = selector(enumerator.Current);
+            Int64 count = 1;
+            while (enumerator.MoveNext())
+            {
+                // There is an opportunity to short-circuit here, in that if e.Current is
+                // ever NaN then the result will always be NaN. Assuming that this case is
+                // rare enough that not checking is the better approach generally.
+                sum += selector(enumerator.Current);
+                ++count;
+            }
+
+            return sum / count;
+        }
+
+        public static Double? AverageOrDefault<TSource>([NotNull] this IEnumerable<TSource> source, [NotNull] Func<TSource, Double> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            using IEnumerator<TSource> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return null;
+            }
+
+            Double sum = selector(enumerator.Current);
+            Int64 count = 1;
+            while (enumerator.MoveNext())
+            {
+                // There is an opportunity to short-circuit here, in that if e.Current is
+                // ever NaN then the result will always be NaN. Assuming that this case is
+                // rare enough that not checking is the better approach generally.
+                sum += selector(enumerator.Current);
+                ++count;
+            }
+
+            return sum / count;
+        }
+
+        public static Decimal AverageOr<TSource>([NotNull] this IEnumerable<TSource> source, [NotNull] Func<TSource, Decimal> selector, Decimal seed)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            using IEnumerator<TSource> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return seed;
+            }
+
+            Decimal sum = selector(enumerator.Current);
+            Int64 count = 1;
+            while (enumerator.MoveNext())
+            {
+                sum += selector(enumerator.Current);
+                ++count;
+            }
+
+            return sum / count;
+        }
+
+        public static Decimal? AverageOrDefault<TSource>([NotNull] this IEnumerable<TSource> source, [NotNull] Func<TSource, Decimal> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            using IEnumerator<TSource> enumerator = source.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return null;
+            }
+
+            Decimal sum = selector(enumerator.Current);
+            Int64 count = 1;
+            while (enumerator.MoveNext())
+            {
+                sum += selector(enumerator.Current);
+                ++count;
+            }
+
+            return sum / count;
         }
 
         /// <summary>
@@ -2922,7 +3660,7 @@ namespace NetExtender.Utils.Types
 
             return AllSame(source, selector, EqualityComparer<TValue>.Default);
         }
-        
+
         /// <summary>
         /// Determines whether all elements in this collection produce the same value with the provided value selector. Compares using the <see cref="object.Equals(object)"/> method.
         /// <para>This method returns true if the collection is empty or it contains only one element.</para>
@@ -2990,22 +3728,97 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (Equals(source, Enumerable.Empty<T>()))
-            {
-                return 0;
-            }
-
-            if (source == Array.Empty<T>())
-            {
-                return 0;
-            }
-
             return source switch
             {
-                IReadOnlyCollection<T> collection => collection.Count,
                 ICollection<T> collection => collection.Count,
+                IReadOnlyCollection<T> collection => collection.Count,
+                ICollection collection => collection.Count,
                 _ => null
             };
+        }
+
+        public static Boolean IsMaterialized<T>([NotNull] this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return IsMaterialized(source, out _);
+        }
+
+        public static Boolean IsMaterialized<T>([NotNull] this IEnumerable<T> source, out Int32? count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            count = CountIfMaterialized(source);
+            return count is not null;
+        }
+
+        public static IEnumerable<T> Materialize<T>([CanBeNull] this IEnumerable<T> source)
+        {
+            return source switch
+            {
+                null => Enumerable.Empty<T>(),
+                ICollection<T> => source,
+                IReadOnlyCollection<T> => source,
+                _ => source.ToArray()
+            };
+        }
+
+        public static ICollection<T> AsCollection<T>([NotNull] this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return AsCollection(source, out _);
+        }
+        
+        public static ICollection<T> AsCollection<T>([NotNull] this IEnumerable<T> source, out Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            ICollection<T> collection = source as ICollection<T> ?? source.ToArray();
+            count = collection.Count;
+            
+            return collection;
+        }
+        
+        public static IReadOnlyCollection<T> AsReadOnlyCollection<T>([NotNull] this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return AsReadOnlyCollection(source, out _);
+        }
+        
+        public static IReadOnlyCollection<T> AsReadOnlyCollection<T>([NotNull] this IEnumerable<T> source, out Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            IReadOnlyCollection<T> result = source switch
+            {
+                IReadOnlyCollection<T> collection => collection,
+                ICollection<T> collection => new CollectionWrapper<T>(collection),
+                ICollection collection => new NonGenericCollectionWrapper<T>(collection),
+                _ => source.ToArray()
+            };
+
+            count = result.Count;
+            return result;
         }
 
         /// <summary>
@@ -3014,14 +3827,14 @@ namespace NetExtender.Utils.Types
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
         /// <param name="nullToEmpty"></param>
-        public static IEnumerable<T> Materialize<T>(this IEnumerable<T> source, Boolean nullToEmpty = true)
+        public static IEnumerable<T> Materialize<T>(this IEnumerable<T> source, Boolean nullToEmpty)
         {
             return source switch
             {
                 null when nullToEmpty => Enumerable.Empty<T>(),
                 null => throw new ArgumentNullException(nameof(source)),
-                IReadOnlyCollection<T> => source,
                 ICollection<T> => source,
+                IReadOnlyCollection<T> => source,
                 _ => source.ToArray()
             };
         }
@@ -3051,11 +3864,12 @@ namespace NetExtender.Utils.Types
         /// <param name="keySelector"></param>
         /// <param name="valueSelector"></param>
         /// <returns></returns>
-        public static FrozenDictionary<TKey, TValue> ToFrozenDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TValue> valueSelector)
+        public static FrozenDictionary<TKey, TValue> ToFrozenDictionary<TSource, TKey, TValue>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
+            Func<TSource, TValue> valueSelector)
         {
             return FrozenDictionary<TKey, TValue>.Create(source, keySelector, valueSelector);
         }
-        
+
         /// <summary>
         /// Converts to <see cref="FrozenStringKeyDictionary{TValue}"/>.
         /// </summary>
@@ -3163,7 +3977,7 @@ namespace NetExtender.Utils.Types
         {
             return FrozenInt16KeyDictionary<TValue>.Create(source, keySelector, valueSelector);
         }
-        
+
         /// <summary>
         /// Converts to <see cref="FrozenUInt16KeyDictionary{TValue}"/>.
         /// </summary>
@@ -3212,7 +4026,7 @@ namespace NetExtender.Utils.Types
         /// <param name="keySelector"></param>
         /// <param name="valueSelector"></param>
         /// <returns></returns>
-        public static FrozenInt32KeyDictionary<TValue> ToFrozenInt32KeyDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, Int32> keySelector, 
+        public static FrozenInt32KeyDictionary<TValue> ToFrozenInt32KeyDictionary<TSource, TValue>(this IEnumerable<TSource> source, Func<TSource, Int32> keySelector,
             Func<TSource, TValue> valueSelector)
         {
             return FrozenInt32KeyDictionary<TValue>.Create(source, keySelector, valueSelector);

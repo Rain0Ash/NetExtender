@@ -2,7 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace NetExtender.Workstation
@@ -10,7 +9,7 @@ namespace NetExtender.Workstation
     /// <summary>
     /// Provides detailed information about the host operating system.
     /// </summary>
-    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "InconsistentNaming")]
     public static partial class Software
     {
         private static String s_Edition;

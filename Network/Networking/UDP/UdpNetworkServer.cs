@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -757,7 +756,7 @@ namespace NetExtender.Network.Networking.UDP
         ///     Notification is called when a datagram was sent to the client.
         ///     This handler could be used to send another datagram to the client for instance when the pending size is zero.
         /// </remarks>
-        [SuppressMessage("ReSharper", "UnusedParameter.Global")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
         protected virtual void OnSent(EndPoint endpoint, Int64 sent)
         {
         }

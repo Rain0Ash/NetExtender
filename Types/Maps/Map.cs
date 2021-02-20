@@ -7,11 +7,11 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using NetExtender.Utils.Types;
 using NetExtender.Exceptions;
+using NetExtender.Types.Maps.Interfaces;
 
 namespace NetExtender.Types.Maps
 {
-    [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-    [SuppressMessage("ReSharper", "UseDeconstructionOnParameter")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UseDeconstructionOnParameter")]
     public class Map<TKey, TValue> : IMap<TKey, TValue>, IReadOnlyMap<TKey, TValue> where TKey : notnull where TValue : notnull
     {
         public ICollection<TKey> Keys
@@ -46,8 +46,8 @@ namespace NetExtender.Types.Maps
             }
         }
         
-        protected Dictionary<TKey, TValue> Base { get; }
-        protected Dictionary<TValue, TKey> Reversed { get; }
+        protected IDictionary<TKey, TValue> Base { get; }
+        protected IDictionary<TValue, TKey> Reversed { get; }
 
         public Int32 Count
         {
@@ -73,14 +73,24 @@ namespace NetExtender.Types.Maps
             Reversed = new Dictionary<TValue, TKey>();
         }
 
-        public Map(IDictionary<TKey, TValue> dictionary)
+        public Map([JetBrains.Annotations.NotNull] IDictionary<TKey, TValue> dictionary)
         {
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(nameof(dictionary));
+            }
+
             Base = new Dictionary<TKey, TValue>(dictionary);
             Reversed = new Dictionary<TValue, TKey>(dictionary.Reverse());
         }
 
-        public Map(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
+        public Map([JetBrains.Annotations.NotNull] IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
         {
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(nameof(dictionary));
+            }
+
             Base = new Dictionary<TKey, TValue>(dictionary, keyComparer);
             Reversed = new Dictionary<TValue, TKey>(dictionary.Reverse(), valueComparer);
         }
@@ -90,29 +100,61 @@ namespace NetExtender.Types.Maps
             Base = new Dictionary<TKey, TValue>(keyComparer);
             Reversed = new Dictionary<TValue, TKey>(valueComparer);
         }
-
-        public Map(IEnumerable<KeyValuePair<TKey, TValue>> collection)
+        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        public Map([JetBrains.Annotations.NotNull] IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
-            Base = new Dictionary<TKey, TValue>(collection);
-            Reversed = new Dictionary<TValue, TKey>(collection.ReversePairs());
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            source = source.Materialize();
+            
+            Base = new Dictionary<TKey, TValue>(source);
+            Reversed = new Dictionary<TValue, TKey>(source.ReversePairs());
         }
 
-        public Map(IEnumerable<KeyValuePair<TValue, TKey>> collection)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        public Map([JetBrains.Annotations.NotNull] IEnumerable<KeyValuePair<TValue, TKey>> source)
         {
-            Base = new Dictionary<TKey, TValue>(collection.ReversePairs());
-            Reversed = new Dictionary<TValue, TKey>(collection);
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            source = source.Materialize();
+
+            Base = new Dictionary<TKey, TValue>(source.ReversePairs());
+            Reversed = new Dictionary<TValue, TKey>(source);
         }
 
-        public Map(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        public Map([JetBrains.Annotations.NotNull] IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
         {
-            Base = new Dictionary<TKey, TValue>(collection, keyComparer);
-            Reversed = new Dictionary<TValue, TKey>(collection.ReversePairs(), valueComparer);
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            source = source.Materialize();
+
+            Base = new Dictionary<TKey, TValue>(source, keyComparer);
+            Reversed = new Dictionary<TValue, TKey>(source.ReversePairs(), valueComparer);
         }
 
-        public Map(IEnumerable<KeyValuePair<TValue, TKey>> collection, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        public Map([JetBrains.Annotations.NotNull] IEnumerable<KeyValuePair<TValue, TKey>> source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
         {
-            Base = new Dictionary<TKey, TValue>(collection.ReversePairs(), keyComparer);
-            Reversed = new Dictionary<TValue, TKey>(collection, valueComparer);
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            source = source.Materialize();
+
+            Base = new Dictionary<TKey, TValue>(source.ReversePairs(), keyComparer);
+            Reversed = new Dictionary<TValue, TKey>(source, valueComparer);
         }
 
         public Map(Int32 capacity)

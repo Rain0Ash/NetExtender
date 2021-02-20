@@ -2,7 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -80,7 +79,7 @@ namespace NetExtender.GUI.WinForms.Forms
         [DllImport("user32.dll")]
         private static extern Int32 EnableMenuItem(IntPtr hMenu, Int32 uIDEnableItem, Int32 uEnable);
 
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "InconsistentNaming")]
         protected override void WndProc(ref Message m)
         {
             const Int32 HTCAPTION = 0x00000002;

@@ -4,9 +4,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NetExtender.Utils.Numerics;
+using NetExtender.Utils.Types;
 
 namespace NetExtender.Types.Deques
 {
@@ -128,7 +128,7 @@ namespace NetExtender.Types.Deques
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            IReadOnlyCollection<T> source = DequeHelpers.ReifyCollection(collection);
+            IReadOnlyCollection<T> source = collection.AsReadOnlyCollection();
             Int32 count = source.Count;
             if (count > 0)
             {
@@ -756,7 +756,7 @@ namespace NetExtender.Types.Deques
         public void InsertRange(Int32 index, IEnumerable<T> collection)
         {
             CheckNewIndexArgument(Count, index);
-            IReadOnlyCollection<T> source = DequeHelpers.ReifyCollection(collection);
+            IReadOnlyCollection<T> source = collection.AsReadOnlyCollection();
             Int32 collectionCount = source.Count;
 
             // Overflow-safe check for "Count + collectionCount > Capacity"
@@ -839,78 +839,6 @@ namespace NetExtender.Types.Deques
             T[] result = new T[Count];
             ((ICollection<T>) this).CopyTo(result, 0);
             return result;
-        }
-
-        private static class DequeHelpers
-        {
-            [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-            public static IReadOnlyCollection<T> ReifyCollection(IEnumerable<T> source)
-            {
-                return source switch
-                {
-                    null => throw new ArgumentNullException(nameof(source)),
-                    IReadOnlyCollection<T> result => result,
-                    ICollection<T> collection => new CollectionWrapper(collection),
-                    ICollection nongenericCollection => new NongenericCollectionWrapper(nongenericCollection),
-                    _ => new List<T>(source)
-                };
-            }
-
-            private sealed class NongenericCollectionWrapper : IReadOnlyCollection<T>
-            {
-                private readonly ICollection _collection;
-
-                public NongenericCollectionWrapper(ICollection collection)
-                {
-                    _collection = collection ?? throw new ArgumentNullException(nameof(collection));
-                }
-
-                public Int32 Count
-                {
-                    get
-                    {
-                        return _collection.Count;
-                    }
-                }
-
-                public IEnumerator<T> GetEnumerator()
-                {
-                    return _collection.Cast<T>().GetEnumerator();
-                }
-
-                IEnumerator IEnumerable.GetEnumerator()
-                {
-                    return _collection.GetEnumerator();
-                }
-            }
-
-            private sealed class CollectionWrapper : IReadOnlyCollection<T>
-            {
-                private readonly ICollection<T> _collection;
-
-                public CollectionWrapper(ICollection<T> collection)
-                {
-                    _collection = collection ?? throw new ArgumentNullException(nameof(collection));
-                }
-
-                public Int32 Count
-                {
-                    get
-                    {
-                        return _collection.Count;
-                    }
-                }
-
-                public IEnumerator<T> GetEnumerator()
-                {
-                    return _collection.GetEnumerator();
-                }
-
-                IEnumerator IEnumerable.GetEnumerator()
-                {
-                    return _collection.GetEnumerator();
-                }
-            }
         }
     }
 }

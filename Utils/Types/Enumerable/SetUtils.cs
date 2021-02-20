@@ -39,11 +39,26 @@ namespace NetExtender.Utils.Types
             {
                 Type[] interfaces = typeof(T).GetInterfaces();
 
-                IsGenericSet = interfaces.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISet<>));
+                IsGenericSet = interfaces.Any(IsGenericSetInterface);
                 IsSet = IsGenericSet || interfaces.Any(i => i == typeof(ISet));
+            }
+
+            private static Boolean IsGenericSetInterface(Type type)
+            {
+                return type is not null && type.IsGenericType && CacheSet.Contains(type.GetGenericTypeDefinition());
             }
         }
 
+        private static class CacheSet
+        {
+            public static IImmutableSet<Type> SetTypes { get; } = new SortedSet<Type>{typeof(ISet<>), typeof(IReadOnlySet<>), typeof(IImmutableSet<>)}.ToImmutableHashSet();
+
+            public static Boolean Contains(Type type)
+            {
+                return SetTypes.Contains(type);
+            }
+        }
+        
         public static ISet ToSet<T>([NotNull] ISet<T> set)
         {
             if (set is null)
@@ -61,7 +76,37 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
+            return new FixedHashSet<T>(source);
+        }
+        
+        public static HashSet<T> ToHashSet<T>([NotNull] IEnumerable<T> source, IEqualityComparer<T> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return new FixedHashSet<T>(source, comparer);
+        }
+        
+        public static HashSet<T> AsHashSet<T>([NotNull] IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
             return source as HashSet<T> ?? new FixedHashSet<T>(source);
+        }
+        
+        public static HashSet<T> AsHashSet<T>([NotNull] IEnumerable<T> source, IEqualityComparer<T> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source as HashSet<T> ?? new FixedHashSet<T>(source, comparer);
         }
 
         public static SortedSet<T> ToSortedSet<T>([NotNull] this IEnumerable<T> source)
@@ -71,7 +116,37 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
+            return new FixedSortedSet<T>(source);
+        }
+        
+        public static SortedSet<T> ToSortedSet<T>([NotNull] this IEnumerable<T> source, IComparer<T> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return new FixedSortedSet<T>(source, comparer);
+        }
+        
+        public static SortedSet<T> AsSortedSet<T>([NotNull] this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
             return source as SortedSet<T> ?? new FixedSortedSet<T>(source);
+        }
+        
+        public static SortedSet<T> AsSortedSet<T>([NotNull] this IEnumerable<T> source, IComparer<T> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source as SortedSet<T> ?? new FixedSortedSet<T>(source, comparer);
         }
 
         public static OrderedSet<T> ToOrderedSet<T>([NotNull] this IEnumerable<T> source)
@@ -81,7 +156,37 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
+            return new OrderedSet<T>(source);
+        }
+        
+        public static OrderedSet<T> ToOrderedSet<T>([NotNull] this IEnumerable<T> source, IEqualityComparer<T> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return new OrderedSet<T>(source, comparer);
+        }
+        
+        public static OrderedSet<T> AsOrderedSet<T>([NotNull] this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
             return source as OrderedSet<T> ?? new OrderedSet<T>(source);
+        }
+        
+        public static OrderedSet<T> AsOrderedSet<T>([NotNull] this IEnumerable<T> source, IEqualityComparer<T> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source as OrderedSet<T> ?? new OrderedSet<T>(source, comparer);
         }
 
         public static void ExceptWith<T>(this ISet<T> set, [NotNull] params T[] except)

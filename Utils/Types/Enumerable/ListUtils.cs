@@ -5,69 +5,32 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using NetExtender.Utils.Numerics;
 
 namespace NetExtender.Utils.Types
 {
     public static class ListUtils
     {
-        public static T TryGetValue<T>(this IReadOnlyList<T> collection, Int32 index, T defaultValue = default)
+        public static T GetRandom<T>([NotNull] this IList<T> collection)
         {
-            return TryGetValue(collection, index, out T value) ? value : defaultValue;
-        }
-
-        public static Boolean TryGetValue<T>(this IReadOnlyList<T> collection, Int32 index, out T value, T defaultValue = default)
-        {
-            if (collection.InBounds(index))
+            if (collection is null)
             {
-                value = collection[index];
-                return true;
+                throw new ArgumentNullException(nameof(collection));
             }
 
-            value = defaultValue;
-            return false;
+            return collection.Count <= 0 ? default : collection[RandomUtils.NextNonNegative(collection.Count - 1)];
         }
 
-        public static void Swap([NotNull] IList source, Int32 first, Int32 second)
+        public static void Insert<T>([NotNull] this IList<T> collection, Index index, T item)
         {
-            if (source is null)
+            if (collection is null)
             {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (first < 0 || first >= source.Count)
-            {
-                throw new ArgumentOutOfRangeException(nameof(first));
+                throw new ArgumentNullException(nameof(collection));
             }
             
-            if (second < 0 || second >= source.Count)
-            {
-                throw new ArgumentOutOfRangeException(nameof(second));
-            }
-
-            (source[first], source[second]) = (source[second], source[first]);
+            collection.Insert(index.GetOffset(collection.Count), item);
         }
         
-        public static Boolean TrySwap(IList source, Int32 first, Int32 second)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (first < 0 || first >= source.Count)
-            {
-                return false;
-            }
-            
-            if (second < 0 || second >= source.Count)
-            {
-                return false;
-            }
-
-            (source[first], source[second]) = (source[second], source[first]);
-            return true;
-        }
-
         public static void Swap<T>(this IList<T> source, Int32 first, Int32 second)
         {
             if (source is null)
@@ -109,6 +72,47 @@ namespace NetExtender.Utils.Types
             return true;
         }
         
+        public static void Swap([NotNull] IList source, Int32 first, Int32 second)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (first < 0 || first >= source.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(first));
+            }
+            
+            if (second < 0 || second >= source.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(second));
+            }
+
+            (source[first], source[second]) = (source[second], source[first]);
+        }
+        
+        public static Boolean TrySwap(IList source, Int32 first, Int32 second)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (first < 0 || first >= source.Count)
+            {
+                return false;
+            }
+            
+            if (second < 0 || second >= source.Count)
+            {
+                return false;
+            }
+
+            (source[first], source[second]) = (source[second], source[first]);
+            return true;
+        }
+
         public static Int32 BinarySearch<T>(this IList<T> source, T value, IComparer<T> comparer = null)
         {
             if (source is null)

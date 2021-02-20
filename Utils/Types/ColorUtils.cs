@@ -3,16 +3,31 @@
 
 using System;
 using System.Drawing;
+using NetExtender.Types.Drawing.Colors;
+using NetExtender.Types.Drawing.Colors.Interfaces;
 
 namespace NetExtender.Utils.Types
 {
+    public enum ColorType
+    {
+        Unknown,
+        RGB,
+        ARGB,
+        CMYK,
+        HEX,
+        HSV,
+        HSL,
+        CIELAB,
+        XYZ
+    }
+    
     public static class ColorUtils
     {
         /// <summary>
         /// Returns either black or white, depending on the luminosity of the specified background color.
         /// </summary>
         /// <param name="background">The color of the background.</param>
-        public static Color ToBlackWhite(Color background)
+        public static Color ToBlackWhite(this Color background)
         {
             // The formula given for contrast in the W3C Recommendations is (L1 + 0.05) / (L2 + 0.05), where L1 is the luminance of the lightest color and L2 is the luminance of the darkest on a scale of 0.0-1.0.
             // The luminance of black is 0.0 and white is 1.0, so substituting those values lets you determine the one with the highest contrast.
@@ -35,7 +50,7 @@ namespace NetExtender.Utils.Types
             // Or approximately:
             return l > 0.179 ? Color.Black : Color.White;
         }
-        
+
         public static Double RGBToSrgbItur(Double c)
         {
             c /= 255.0;
@@ -47,6 +62,37 @@ namespace NetExtender.Utils.Types
             return Math.Pow((c + 0.055) / 1.055, 2.4);
         }
 
+        public static void ToCMYK(this Color color, out Byte c, out Byte m, out Byte y, out Byte k)
+        {
+            RGBToCMYK(color.R, color.G, color.B, out c, out m, out y, out k);
+        }
+        
+        public static void RGBToCMYK(Byte r, Byte g, Byte b, out Byte c, out Byte m, out Byte y, out Byte k)
+        {
+            Double kd = 1 - Math.Max(r, Math.Max(g, b)) / 255.0;
+            Double div = (1 - kd) * 100;
+
+            k = (Byte) Math.Round(kd * 100);
+            c = (Byte) Math.Round((1 - r / 255.0 - kd) / div);
+            m = (Byte) Math.Round((1 - g / 255.0 - kd) / div);
+            y = (Byte) Math.Round((1 - b / 255.0 - kd) / div);
+        }
+        
+        public static Color CMYKToRGB(Byte c, Byte m, Byte y, Byte k)
+        {
+            CMYKToRGB(c, m, y, k, out Byte r, out Byte g, out Byte b);
+            return Color.FromArgb(r, g, b);
+        }
+        
+        public static void CMYKToRGB(Byte c, Byte m, Byte y, Byte k, out Byte r, out Byte g, out Byte b)
+        {
+            Double kd = 1 - k * 0.01;
+            
+            r = (Byte) Math.Round(255 * (1 - c * 0.01) * kd);
+            g = (Byte) Math.Round(255 * (1 - m * 0.01) * kd);
+            b = (Byte) Math.Round(255 * (1 - y * 0.01) * kd);
+        }
+
         /// <summary>
         /// Converts from RGB to HSV.
         /// </summary>
@@ -54,9 +100,9 @@ namespace NetExtender.Utils.Types
         /// <param name="h">Hue (from 0 to 1).</param>
         /// <param name="s">Saturation (from 0 to 1).</param>
         /// <param name="v">Value (from 0 to 1).</param>
-        public static void RGBToHSV(Color color, out Double h, out Double s, out Double v)
+        public static void ToHSV(this Color color, out Double h, out Double s, out Double v)
         {
-           RGBToHSV(color.R, color.G, color.B, out h, out s, out v);
+            RGBToHSV(color.R, color.G, color.B, out h, out s, out v);
         }
 
         /// <summary>
@@ -86,7 +132,7 @@ namespace NetExtender.Utils.Types
             Double gd = g / 255d;
             Double bd = b / 255d;
 
-            RGBToHsv(rd, gd, bd, out h, out s, out v);
+            RGBToHSV(rd, gd, bd, out h, out s, out v);
         }
 
         /// <summary>
@@ -116,7 +162,7 @@ namespace NetExtender.Utils.Types
         /// <param name="h">Hue (from 0 to 1).</param>
         /// <param name="s">Saturation (from 0 to 1).</param>
         /// <param name="v">Value (from 0 to 1).</param>
-        public static void RGBToHsv(Double r, Double g, Double b, out Double h, out Double s, out Double v)
+        public static void RGBToHSV(Double r, Double g, Double b, out Double h, out Double s, out Double v)
         {
             Double rgbMin = Math.Min(r, Math.Min(g, b));
             Double rgbMax = Math.Max(r, Math.Max(g, b));
@@ -229,6 +275,100 @@ namespace NetExtender.Utils.Types
             }
         }
 
+        public static void ToHSL(this Color color, out Int32 h, out Byte s, out Byte l)
+        {
+            RGBToHSL(color.R, color.G, color.B, out h, out s, out l);
+        }
+
+        public static void RGBToHSL(Byte r, Byte g, Byte b, out Int32 h, out Byte s, out Byte l)
+        {
+            Double red = r / 255.0;
+            Double green = g / 255.0;
+            Double blue = b / 255.0;
+
+            Double min = Math.Min(red, Math.Min(green, blue));
+            Double max = Math.Max(red, Math.Max(green, blue));
+            
+            Double delta = max - min;
+            Double ld = (min + max) / 2;
+            Double hd = 0;
+            Double sd = 0;
+
+            if (Math.Abs(delta) >= Double.Epsilon)
+            {
+                sd = ld <= 0.5 ? delta / (min + max) : delta / (2 - max - min);
+
+                if (Math.Abs(red - max) < Double.Epsilon)
+                {
+                    hd = (green - blue) / 6 / delta;
+                }
+                else if (Math.Abs(green - max) < Double.Epsilon)
+                {
+                    hd = 1.0 / 3 + (blue - red) / 6 / delta;
+                }
+                else
+                {
+                    hd = 2.0 / 3 + (red - green) / 6 / delta;
+                }
+
+                hd = hd < 0 ? ++hd : hd;
+                hd = hd > 1 ? --hd : hd;
+            }
+
+            h = (Int32) Math.Round(hd * 360);
+            s = (Byte) Math.Round(sd * 100);
+            l = (Byte) Math.Round(ld * 100);
+        }
+        
+        public static void HSLToRGB(Int32 h, Byte s, Byte l, out Byte r, out Byte g, out Byte b)
+        {
+            Double hd = h / 360.0;
+            Double sd = s / 100.0;
+            Double ld = l / 100.0;
+
+            Double rd = 1;
+            Double gd = 1;
+            Double bd = 1;
+
+            Double q = ld < 0.5 ? ld * (1 + sd) : ld + sd - ld * sd;
+            Double p = 2 * ld - q;
+
+            if (Math.Abs(sd) >= Double.Epsilon)
+            {
+                rd = GetHue(p, q, hd + 1.0 / 3);
+                gd = GetHue(p, q, hd);
+                bd = GetHue(p, q, hd - 1.0 / 3);
+            }
+
+            r = (Byte) Math.Round(rd * 255);
+            g = (Byte) Math.Round(gd * 255);
+            b = (Byte) Math.Round(bd * 255);
+        }
+        
+        public static Double GetHue(Double p, Double q, Double t)
+        {
+            t += t switch
+            {
+                < 0 => 1,
+                > 1 => -1,
+                _ => 0
+            };
+
+            return t switch
+            {
+                < 1.0 / 6 => p + (q - p) * 6 * t,
+                < 1.0 / 2 => q,
+                < 2.0 / 3 => p + (q - p) * (2.0 / 3 - t) * 6,
+                _ => p
+            };
+        }
+        
+        public static Color HSLToRGB(Int32 h, Byte s, Byte l)
+        {
+            HSLToRGB(h, s, l, out Byte r, out Byte g, out Byte b);
+            return Color.FromArgb(r, g, b);
+        }
+
         /// <summary>
         /// Converts from RGB to CIE-L*ab.
         /// <para>Uses Noon Daylight (D65) illuminant for reference.</para>
@@ -237,7 +377,7 @@ namespace NetExtender.Utils.Types
         /// <param name="l">Lightness.</param>
         /// <param name="a">Green-red color component.</param>
         /// <param name="b">Blue-yellow color component.</param>
-        public static void RGBToCIELAB(Color color, out Double l, out Double a, out Double b)
+        public static void ToCIELAB(this Color color, out Double l, out Double a, out Double b)
         {
             RGBToCIELAB(color.R, color.G, color.B, out l, out a, out b);
         }
@@ -331,7 +471,7 @@ namespace NetExtender.Utils.Types
         /// <param name="x">X.</param>
         /// <param name="y">Y.</param>
         /// <param name="z">Z.</param>
-        public static void RGBToXYZ(Color color, out Double x, out Double y, out Double z)
+        public static void ToXYZ(this Color color, out Double x, out Double y, out Double z)
         {
             RGBToXYZ(color.R, color.G, color.B, out x, out y, out z);
         }
@@ -504,8 +644,8 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentOutOfRangeException(nameof(offset), $@"Must be [0.0, 1.0]. '{offset}' was given.");
             }
 
-            RGBToHSV(start, out Double startH, out Double startS, out Double startV);
-            RGBToHSV(end, out Double endH, out Double endS, out Double endV);
+            ToHSV(start, out Double startH, out Double startS, out Double startV);
+            ToHSV(end, out Double endH, out Double endS, out Double endV);
             Double invertedOffset = 1 - offset;
             Double a = start.A * invertedOffset + end.A * offset;
             Double h = startH * invertedOffset + endH * offset;
@@ -612,6 +752,83 @@ namespace NetExtender.Utils.Types
             x *= D65X;
             y *= D65Y;
             z *= D65Z;
+        }
+
+        private const Double Gamma = 0.80;
+        private const Double IntensityMax = 255;
+
+        public static Boolean WaveLengthToRGB(Double wavelength, out Byte r, out Byte g, out Byte b)
+        {
+            if (wavelength < 380 || wavelength > 780)
+            {
+                r = g = b = default;
+                return false;
+            }
+            
+            Double red, green, blue;
+
+            (red, green, blue) = wavelength switch
+            {
+                >= 380 and < 440 => (-(wavelength - 440) / (440 - 380), 0d, 1d),
+                >= 440 and < 490 => (0d, (wavelength - 440) / (490 - 440), 1d),
+                >= 490 and < 510 => (0d, 1d, -(wavelength - 510) / (510 - 490)),
+                >= 510 and < 580 => ((wavelength - 510) / (580 - 510), 1d, 0d),
+                >= 580 and < 645 => (1d, -(wavelength - 645) / (645 - 580), 0d),
+                >= 645 and <= 780 => (1d, 0d, 0d),
+                _ => (0d, 0d, 0d)
+            };
+
+            Double factor = wavelength switch
+            {
+                >= 380 and < 420 => 0.3 + 0.7 * (wavelength - 380) / (420 - 380),
+                >= 420 and < 701 => 1d,
+                >= 701 and < 781 => 0.3 + 0.7 * (780 - wavelength) / (780 - 700),
+                _ => 0d
+            };
+
+            r = red < Double.Epsilon ? 0 : (Byte) Math.Round(IntensityMax * Math.Pow(red * factor, Gamma));
+            g = green < Double.Epsilon ? 0 : (Byte) Math.Round(IntensityMax * Math.Pow(green * factor, Gamma));
+            b = blue < Double.Epsilon ? 0 : (Byte) Math.Round(IntensityMax * Math.Pow(blue * factor, Gamma));
+            return true;
+        }
+        
+        public static Color WaveLengthToRGB(Double wavelength)
+        {
+            return WaveLengthToRGB(wavelength, out Byte red, out Byte green, out Byte blue) ? Color.FromArgb(red, green, blue) : Color.Black;
+        }
+
+        public static Boolean WaveLengthToRGB(Double wavelength, out Color color)
+        {
+            if (WaveLengthToRGB(wavelength, out Byte red, out Byte green, out Byte blue))
+            {
+                color = Color.FromArgb(red, green, blue);
+                return true;
+            }
+            
+            color = Color.Black;
+            return false;
+        }
+        
+        public static IColor ConvertToColorType(this Color color, ColorType type)
+        {
+            return ConvertRGBToColorType(color.R, color.G, color.B, type);
+        }
+        
+        public static IColor ConvertRGBToColorType(Byte r, Byte g, Byte b, ColorType type)
+        {
+            return type switch
+            {
+                ColorType.Unknown => throw new NotSupportedException(),
+                ColorType.RGB => new RGBColor(r, g, b),
+                ColorType.ARGB => new ARGBColor(r, g, b),
+                ColorType.CMYK => new CMYKColor(RGBToCMYK(r, g, b)),
+                ColorType.HEX => new HEXColor(r, g, b),
+                ColorType.HSV => new HSVColor(),
+                ColorType.HSL => new HSLColor(),
+                ColorType.CIELAB => new CIELABColor(),
+                ColorType.XYZ => new XYZColor(),
+                _ => throw new NotSupportedException()
+            };
         }
     }
 }

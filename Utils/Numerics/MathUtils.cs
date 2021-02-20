@@ -1735,7 +1735,7 @@ namespace NetExtender.Utils.Numerics
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
         public static BigInteger Multiply(this IEnumerable<BigInteger> source)
         {
             if (source is null)

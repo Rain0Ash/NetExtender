@@ -4,17 +4,21 @@
  using System;
  using System.Collections;
  using System.Collections.Generic;
+ using System.Collections.Immutable;
+ using System.Linq;
+ using JetBrains.Annotations;
  using NetExtender.Types.Sets.Interfaces;
+ using NetExtender.Utils.Types;
 
  namespace NetExtender.Types.Sets
 {
-    public class OrderedSet<T> : ICollection<T>, ISet
+    public class OrderedSet<T> : ISet, ISet<T>
     {
         public Int32 Count
         {
             get
             {
-                return _dict.Count;
+                return NodeDictionary.Count;
             }
         }
 
@@ -38,45 +42,271 @@
         {
             get
             {
-                return _dict.IsReadOnly;
+                return NodeDictionary.IsReadOnly;
             }
         }
         
-        private readonly IDictionary<T, LinkedListNode<T>> _dict;
-        private readonly LinkedList<T> _linked;
+        private IDictionary<T, LinkedListNode<T>> NodeDictionary { get; }
+        private LinkedList<T> LinkedList { get; }
 
         public OrderedSet()
-            : this(EqualityComparer<T>.Default)
+            : this((IEqualityComparer<T>) null)
         {
         }
 
-        public OrderedSet(IEqualityComparer<T> comparer)
+        public OrderedSet([CanBeNull] IEqualityComparer<T>? comparer)
         {
-            _dict = new Dictionary<T, LinkedListNode<T>>(comparer);
-            _linked = new LinkedList<T>();
+            NodeDictionary = new Dictionary<T, LinkedListNode<T>>(comparer);
+            LinkedList = new LinkedList<T>();
+        }
+        
+        public OrderedSet(IEnumerable<T> collection)
+            : this(collection, null)
+        {
         }
 
-        public OrderedSet(IEnumerable<T> collection, IEqualityComparer<T> comparer = null)
+        public OrderedSet([NotNull] IEnumerable<T> collection, [CanBeNull] IEqualityComparer<T>? comparer)
         {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
             foreach (T item in collection)
             {
                 Add(item);
             }
 
-            _dict = new Dictionary<T, LinkedListNode<T>>(comparer ?? EqualityComparer<T>.Default);
-            _linked = new LinkedList<T>();
+            NodeDictionary = new Dictionary<T, LinkedListNode<T>>(comparer);
+            LinkedList = new LinkedList<T>();
         }
         
-        public Boolean Add(T item)
+        public Boolean Add([CanBeNull] T item)
         {
-            if (_dict.ContainsKey(item))
+            if (item is null)
             {
                 return false;
             }
 
-            LinkedListNode<T> node = _linked.AddLast(item);
-            _dict.Add(item, node);
+            if (NodeDictionary.ContainsKey(item))
+            {
+                return false;
+            }
+
+            LinkedListNode<T> node = LinkedList.AddLast(item);
+            NodeDictionary.Add(item, node);
             return true;
+        }
+        
+        public Boolean Insert([CanBeNull] T item)
+        {
+            return Insert(0, item);
+        }
+        
+        public Boolean Insert(Int32 index, [CanBeNull] T item)
+        {
+            if (index < 0 || index >= Count)
+            {
+                throw new ArgumentNullException(nameof(index));
+            }
+            
+            if (item is null)
+            {
+                return false;
+            }
+
+            if (NodeDictionary.ContainsKey(item))
+            {
+                return false;
+            }
+
+            LinkedListNode<T> node = LinkedList.Insert(index, item);
+            NodeDictionary.Add(item, node);
+            return true;
+        }
+
+        /// <inheritdoc cref="SortedSet{T}.ExceptWith"/>
+        public void ExceptWith([NotNull] IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+            
+            if (Count <= 0)
+            {
+                return;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                Clear();
+                return;
+            }
+
+            foreach (T item in other)
+            {
+                Remove(item);
+            }
+        }
+
+        /// <inheritdoc cref="SortedSet{T}.IntersectWith"/>
+        public void IntersectWith([NotNull] IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            if (Count <= 0 || ReferenceEquals(this, other))
+            {
+                return;
+            }
+
+            foreach (T item in other)
+            {
+                if (Contains(item))
+                {
+                    continue;
+                }
+                
+                Remove(item);
+            }
+        }
+        
+        /// <inheritdoc cref="SortedSet{T}.SymmetricExceptWith"/>
+        public void SymmetricExceptWith([NotNull] IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                Clear();
+                return;
+            }
+
+            if (Count <= 0)
+            {
+                UnionWith(other);
+                return;
+            }
+
+            foreach (T item in other.Distinct())
+            {
+                if (Contains(item))
+                {
+                    Remove(item);
+                    continue;
+                }
+
+                Add(item);
+            }
+        }
+
+        /// <inheritdoc cref="SortedSet{T}.UnionWith"/>
+        public void UnionWith([NotNull] IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return;
+            }
+
+            foreach (T item in other)
+            {
+                Add(item);
+            }
+        }
+
+        public Boolean IsProperSubsetOf([NotNull] IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return other switch
+            {
+                ISet<T> set => set.IsProperSupersetOf(this),
+                IImmutableSet<T> set => set.IsProperSupersetOf(this),
+                IReadOnlySet<T> set => set.IsProperSupersetOf(this),
+                _ => other.ToHashSet().IsProperSupersetOf(this)
+            };
+        }
+
+        public Boolean IsProperSupersetOf([NotNull] IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return other switch
+            {
+                ISet<T> set => set.IsProperSubsetOf(this),
+                IImmutableSet<T> set => set.IsProperSubsetOf(this),
+                IReadOnlySet<T> set => set.IsProperSubsetOf(this),
+                _ => other.ToHashSet().IsProperSubsetOf(this)
+            };
+        }
+
+        public Boolean IsSubsetOf([NotNull] IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return other switch
+            {
+                ISet<T> set => set.IsSupersetOf(this),
+                IImmutableSet<T> set => set.IsSupersetOf(this),
+                IReadOnlySet<T> set => set.IsSupersetOf(this),
+                _ => other.ToHashSet().IsSupersetOf(this)
+            };
+        }
+
+        public Boolean IsSupersetOf([NotNull] IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return other switch
+            {
+                ISet<T> set => set.IsSubsetOf(this),
+                IImmutableSet<T> set => set.IsSubsetOf(this),
+                IReadOnlySet<T> set => set.IsSubsetOf(this),
+                _ => other.ToHashSet().IsSubsetOf(this)
+            };
+        }
+
+        public Boolean Overlaps([NotNull] IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return other.Any(Contains);
+        }
+
+        public Boolean SetEquals([NotNull] IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return ReferenceEquals(this, other) || other.All(Contains);
         }
 
         void ICollection<T>.Add(T item)
@@ -86,8 +316,8 @@
 
         public void Clear()
         {
-            _linked.Clear();
-            _dict.Clear();
+            LinkedList.Clear();
+            NodeDictionary.Clear();
         }
 
         public Boolean Remove(T item)
@@ -97,20 +327,20 @@
                 return false;
             }
             
-            Boolean found = _dict.TryGetValue(item ?? throw new ArgumentNullException(nameof(item)), out LinkedListNode<T> node);
+            Boolean found = NodeDictionary.TryGetValue(item ?? throw new ArgumentNullException(nameof(item)), out LinkedListNode<T> node);
             if (!found)
             {
                 return false;
             }
 
-            _dict.Remove(item);
-            _linked.Remove(node);
+            NodeDictionary.Remove(item);
+            LinkedList.Remove(node);
             return true;
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            return _linked.GetEnumerator();
+            return LinkedList.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -120,12 +350,12 @@
 
         public Boolean Contains(T item)
         {
-            return item is not null && _dict.ContainsKey(item);
+            return item is not null && NodeDictionary.ContainsKey(item);
         }
 
         public void CopyTo(T[] array, Int32 arrayIndex)
         {
-            _linked.CopyTo(array, arrayIndex);
+            LinkedList.CopyTo(array, arrayIndex);
         }
         
         void ICollection.CopyTo(Array array, Int32 index)

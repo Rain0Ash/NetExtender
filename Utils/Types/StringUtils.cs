@@ -281,8 +281,188 @@ namespace NetExtender.Utils.Types
             Match match = Regex.Match(str, FormatVariableRegexPattern, RegexOptions.Compiled);
             return match.Success ? str.Substring(0, match.Index) : null;
         }
+        
+        public static String Format([NotNull] this String format, Object? arg0)
+        {
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
 
-        public static String Format([NotNull] this String source, [CanBeNull] params Object[] args)
+            return String.Format(format, arg0);
+        }
+
+        public static String Format([NotNull] this IString format, Object? arg0)
+        {
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            return Format(format.ToString(), arg0);
+        }
+
+        public static String Format([NotNull] this String format, Object? arg0, Object? arg1)
+        {
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            return String.Format(format, arg0, arg1);
+        }
+
+        public static String Format([NotNull] this IString format, Object? arg0, Object? arg1)
+        {
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            return Format(format.ToString(), arg0, arg1);
+        }
+
+        public static String Format([NotNull] this String format, Object? arg0, Object? arg1, Object? arg2)
+        {
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            return String.Format(format, arg0, arg1, arg2);
+        }
+
+        public static String Format([NotNull] this IString format, Object? arg0, Object? arg1, Object? arg2)
+        {
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            return Format(format.ToString(), arg0, arg1, arg2);
+        }
+
+        public static String Format([NotNull] this String format, params Object?[] args)
+        {
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            return String.Format(format, args);
+        }
+
+        public static String Format([NotNull] this IString format, params Object?[] args)
+        {
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            return Format(format.ToString(), args);
+        }
+
+        public static String Format(this String format, IFormatProvider? provider, Object? arg0)
+        {
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            return String.Format(provider, format, arg0);
+        }
+
+        public static String Format(this IString format, IFormatProvider? provider, Object? arg0)
+        {
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            return Format(format.ToString(), provider, arg0);
+        }
+
+        public static String Format(this String format, IFormatProvider? provider, Object? arg0, Object? arg1)
+        {
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            return String.Format(provider, format, arg0, arg1);
+        }
+
+        public static String Format(this IString format, IFormatProvider? provider, Object? arg0, Object? arg1)
+        {
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            return Format(format.ToString(), provider, arg0, arg1);
+        }
+
+        public static String Format(this String format, IFormatProvider? provider, Object? arg0, Object? arg1, Object? arg2)
+        {
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            return String.Format(provider, format, arg0, arg1, arg2);
+        }
+
+        public static String Format(this IString format, IFormatProvider? provider, Object? arg0, Object? arg1, Object? arg2)
+        {
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            return Format(format.ToString(), provider, arg0, arg1, arg2);
+        }
+
+        public static String Format(this String format, IFormatProvider? provider, params Object?[] args)
+        {
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            return String.Format(provider, format, args);
+        }
+
+        public static String Format(this IString format, IFormatProvider? provider, params Object?[] args)
+        {
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            return Format(format.ToString(), provider, args);
+        }
+
+        public static Object[] FormatSafeGetArguments([CanBeNull] Object[] args, Int32 expected)
+        {
+            if (args is null)
+            {
+                return expected > 0 ? Enumerable.Repeat((Object) NullString, expected).ToArray() : Array.Empty<Object>();
+            }
+            
+            return (args.Length - expected) switch
+            {
+                0 => args,
+                < 0 => args.Concat(Enumerable.Repeat(NullString, expected - args.Length)).ToArray(),
+                > 0 => args.Take(expected).ToArray()
+            };
+        }
+
+        public static String FormatSafe([NotNull] this String source, [CanBeNull] params Object[] args)
+        {
+            return FormatSafe(source, null, args);
+        }
+        
+        public static String FormatSafe([NotNull] this String source, [CanBeNull] IFormatProvider? provider, [CanBeNull] params Object[] args)
         {
             if (source is null)
             {
@@ -296,26 +476,22 @@ namespace NetExtender.Utils.Types
 
             Int32 expected = FormatArgsExpected(source);
 
-            if (expected <= 0)
-            {
-                return source;
-            }
-
-            args = args.Length < expected
-                ? args.Concat(Enumerable.Repeat(NullString, expected - args.Length)).ToArray()
-                : args.Take(expected).ToArray();
-
-            return String.Format(source, args);
+            return expected > 0 ? String.Format(provider, source, FormatSafeGetArguments(args, expected)) : source;
         }
 
-        public static String Format([NotNull] this IString source, [NotNull] params Object[] args)
+        public static String FormatSafe([NotNull] this IString source, [CanBeNull] params Object[] args)
+        {
+            return FormatSafe(source, null, args);
+        }
+
+        public static String FormatSafe([NotNull] this IString source, [CanBeNull] IFormatProvider? provider, [CanBeNull] params Object[] args)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return Format(source.ToString(), args);
+            return FormatSafe(source.ToString(), provider, args);
         }
 
         public static Boolean EndsWith([NotNull] this String str, [NotNull] IEnumerable<Char> chars)

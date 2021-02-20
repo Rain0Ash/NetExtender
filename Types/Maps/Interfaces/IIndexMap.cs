@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using NetExtender.Types.Dictionaries.Interfaces;
 
-namespace NetExtender.Types.Maps
+namespace NetExtender.Types.Maps.Interfaces
 {
     public interface IIndexMap<TKey, TValue> : IMap<TKey, TValue>, IIndexDictionary<TKey, TValue>
     {

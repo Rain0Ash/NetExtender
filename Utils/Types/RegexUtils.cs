@@ -198,32 +198,33 @@ namespace NetExtender.Utils.Types
             return MatchNamedCaptures(matches, groupNames, nogroup);
         }
         
-        public static IDictionary<String, IList<String>> MatchNamedCaptures(this MatchCollection matches, IEnumerable<String> groupNames, Boolean nogroup)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        public static IDictionary<String, IList<String>> MatchNamedCaptures(this MatchCollection matches, IEnumerable<String> names, Boolean nogroup)
         {
             IDictionary<String, IList<String>> captures = new Dictionary<String, IList<String>>();
+            names = names.Materialize();
             foreach (Match match in matches)
             {
                 GroupCollection groups = match.Groups;
-
-                // ReSharper disable once PossibleMultipleEnumeration
-                foreach (String groupName in groupNames)
+                
+                foreach (String name in names)
                 {
-                    if (groupName is null)
+                    if (name is null)
                     {
                         continue;
                     }
                     
-                    if (nogroup && Int32.TryParse(groupName, out _) || groups[groupName].Captures.Count <= 0)
+                    if (nogroup && Int32.TryParse(name, out _) || groups[name].Captures.Count <= 0)
                     {
                         continue;
                     }
 
-                    if (!captures.ContainsKey(groupName))
+                    if (!captures.ContainsKey(name))
                     {
-                        captures.Add(groupName, new List<String>());
+                        captures.Add(name, new List<String>());
                     }
 
-                    captures[groupName].Add(groups[groupName].Value);
+                    captures[name].Add(groups[name].Value);
                 }
             }
 

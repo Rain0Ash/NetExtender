@@ -8,6 +8,7 @@ using NetExtender.Configuration.Interfaces.Property.Common;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Dictionaries.Interfaces;
 using NetExtender.Types.Maps;
+using NetExtender.Types.Maps.Interfaces;
 using NetExtender.Utils.Types;
 
 namespace NetExtender.Configuration

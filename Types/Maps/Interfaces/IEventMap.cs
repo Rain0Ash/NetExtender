@@ -1,7 +1,7 @@
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-namespace NetExtender.Types.Maps
+namespace NetExtender.Types.Maps.Interfaces
 {
     public interface IEventMap<TKey, TValue> : IMap<TKey, TValue>
     {

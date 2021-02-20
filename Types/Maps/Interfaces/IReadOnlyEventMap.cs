@@ -3,7 +3,7 @@
 
 using NetExtender.Types.Interfaces;
 
-namespace NetExtender.Types.Maps
+namespace NetExtender.Types.Maps.Interfaces
 {
     public interface IReadOnlyEventMap<TKey, TValue> : IReadOnlyMap<TKey, TValue>, IEventType
     {

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using NetExtender.Types.Maps;
+using NetExtender.Types.Maps.Interfaces;
 
 namespace NetExtender.Utils.Types
 {

@@ -3,14 +3,13 @@
 
 #if !TOAST
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Xml;
 
 #pragma warning disable 67
 
 namespace NetExtender.Notifications.Toasts.Mock
 {
-    [SuppressMessage("ReSharper", "UnusedParameter.Local")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Local")]
     public class ToastNotification
     {
         public event TypedEventHandler<ToastNotification, Object> Activated;

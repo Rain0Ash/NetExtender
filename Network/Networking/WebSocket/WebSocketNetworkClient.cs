@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -13,7 +12,7 @@ namespace NetExtender.Network.Networking.WebSocket
     ///     WebSocket client
     /// </summary>
     /// <remarks>WebSocket client is used to communicate with WebSocket server. Thread-safe.</remarks>
-    [SuppressMessage("ReSharper", "InconsistentlySynchronizedField")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "InconsistentlySynchronizedField")]
     public class WebSocketNetworkClient : HttpNetworkClient, IWebSocketNetwork
     {
         internal readonly WebSocketNetwork webSocketNetwork;

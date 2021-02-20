@@ -15,6 +15,7 @@ using NetExtender.GUI.WinForms.ListViews.Items;
 using NetExtender.GUI.WinForms.ToolStrips;
 using NetExtender.GUI.WinForms.ToolStrips.Items;
 using NetExtender.Types.Maps;
+using NetExtender.Types.Maps.Interfaces;
 using NetExtender.Types.Numerics;
 
 namespace NetExtender.GUI.WinForms.ListViews

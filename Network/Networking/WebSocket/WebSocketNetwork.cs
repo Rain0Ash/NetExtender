@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Security.Cryptography;
 using System.Text;
 using NetExtender.Network.Networking.Http;
@@ -13,7 +12,7 @@ namespace NetExtender.Network.Networking.WebSocket
     /// <summary>
     ///     WebSocket utility class
     /// </summary>
-    [SuppressMessage("ReSharper", "UnusedParameter.Global")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
     public class WebSocketNetwork : IWebSocketNetwork
     {
         /// <summary>
@@ -386,7 +385,7 @@ namespace NetExtender.Network.Networking.WebSocket
         /// <param name="buffer">Buffer to send</param>
         /// <param name="offset">Buffer offset</param>
         /// <param name="size">Buffer size</param>
-        [SuppressMessage("ReSharper", "ShiftExpressionRightOperandNotEqualRealCount")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "ShiftExpressionRightOperandNotEqualRealCount")]
         public void PrepareReceiveFrame(Byte[] buffer, Int64 offset, Int64 size)
         {
             lock (WsReceiveLock)

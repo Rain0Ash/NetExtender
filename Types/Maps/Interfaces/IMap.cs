@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NetExtender.Types.Maps
+namespace NetExtender.Types.Maps.Interfaces
 {
     // ReSharper disable once PossibleInterfaceMemberAmbiguity
     public interface IMap<TKey, TValue> : IDictionary<TKey, TValue>

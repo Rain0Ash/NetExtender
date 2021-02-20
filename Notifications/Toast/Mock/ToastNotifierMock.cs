@@ -4,14 +4,13 @@
 #if !TOAST
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
 
 namespace NetExtender.Notifications.Toasts.Mock
 {
     
-    [SuppressMessage("ReSharper", "CA1822")]
-    [SuppressMessage("ReSharper", "MemberCanBeMadeStatic.Global")]
-    [SuppressMessage("ReSharper", "UnusedParameter.Global")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "CA1822")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "MemberCanBeMadeStatic.Global")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
     public class ToastNotifier
     {
         public NotificationSetting Setting { get; } = new NotificationSetting();

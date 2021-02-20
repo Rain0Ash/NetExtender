@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Net.Sockets;
 using NetExtender.Network.Networking.Http;
 
 namespace NetExtender.Network.Networking.WebSocket.Interfaces
 {
-    [SuppressMessage("ReSharper", "UnusedParameter.Global")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
     public interface IWebSocketNetwork
     {
         /// <summary>

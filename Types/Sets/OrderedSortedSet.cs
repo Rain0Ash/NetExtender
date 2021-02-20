@@ -79,6 +79,8 @@ namespace NetExtender.Types.Sets
                 throw new ArgumentNullException(nameof(source));
             }
 
+            source = source.Materialize();
+
             Inner = new OrderedComparer<T>(source);
             Set = new FixedSortedSet<T>(source, Inner);
         }
@@ -90,6 +92,8 @@ namespace NetExtender.Types.Sets
             {
                 throw new ArgumentNullException(nameof(source));
             }
+            
+            source = source.Materialize();
 
             Inner = new OrderedComparer<T>(source, comparer);
             Set = new FixedSortedSet<T>(source, Inner);
@@ -102,6 +106,8 @@ namespace NetExtender.Types.Sets
             {
                 throw new ArgumentNullException(nameof(source));
             }
+            
+            source = source.Materialize();
 
             Inner = new OrderedComparer<T>(order?.Append(source) ?? source);
             Set = new FixedSortedSet<T>(source, Inner);
@@ -131,6 +137,27 @@ namespace NetExtender.Types.Sets
             return true;
         }
 
+        public Boolean Insert([CanBeNull] T item)
+        {
+            return Insert(0, item);
+        }
+
+        public Boolean Insert(Int32 index, [CanBeNull] T item)
+        {
+            if (index < 0 || index >= Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+            
+            if (!Set.Add(item!))
+            {
+                return false;
+            }
+
+            Inner.Insert(index, item);
+            return true;
+        }
+
         /// <inheritdoc cref="SortedSet{T}.ExceptWith"/>
         public void ExceptWith([NotNull] IEnumerable<T> other)
         {
@@ -139,8 +166,14 @@ namespace NetExtender.Types.Sets
                 throw new ArgumentNullException(nameof(other));
             }
             
-            if (Count <= 0 || ReferenceEquals(this, other))
+            if (Count <= 0)
             {
+                return;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                Clear();
                 return;
             }
 
@@ -182,6 +215,18 @@ namespace NetExtender.Types.Sets
                 throw new ArgumentNullException(nameof(other));
             }
 
+            if (ReferenceEquals(this, other))
+            {
+                Clear();
+                return;
+            }
+
+            if (Count <= 0)
+            {
+                UnionWith(other);
+                return;
+            }
+
             foreach (T item in other.Distinct())
             {
                 if (Contains(item))
@@ -202,6 +247,11 @@ namespace NetExtender.Types.Sets
                 throw new ArgumentNullException(nameof(other));
             }
 
+            if (ReferenceEquals(this, other))
+            {
+                return;
+            }
+
             foreach (T item in other)
             {
                 Add(item);
@@ -209,38 +259,68 @@ namespace NetExtender.Types.Sets
         }
 
         /// <inheritdoc cref="SortedSet{T}.IsProperSubsetOf"/>
-        public Boolean IsProperSubsetOf(IEnumerable<T> other)
+        public Boolean IsProperSubsetOf([NotNull] IEnumerable<T> other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             return Set.IsProperSubsetOf(other);
         }
 
         /// <inheritdoc cref="SortedSet{T}.IsProperSupersetOf"/>
-        public Boolean IsProperSupersetOf(IEnumerable<T> other)
+        public Boolean IsProperSupersetOf([NotNull] IEnumerable<T> other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             return Set.IsProperSupersetOf(other);
         }
 
         /// <inheritdoc cref="SortedSet{T}.IsSubsetOf"/>
-        public Boolean IsSubsetOf(IEnumerable<T> other)
+        public Boolean IsSubsetOf([NotNull] IEnumerable<T> other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             return Set.IsSubsetOf(other);
         }
 
         /// <inheritdoc cref="SortedSet{T}.IsSupersetOf"/>
-        public Boolean IsSupersetOf(IEnumerable<T> other)
+        public Boolean IsSupersetOf([NotNull] IEnumerable<T> other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             return Set.IsSupersetOf(other);
         }
 
         /// <inheritdoc cref="SortedSet{T}.Overlaps"/>
-        public Boolean Overlaps(IEnumerable<T> other)
+        public Boolean Overlaps([NotNull] IEnumerable<T> other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             return Set.Overlaps(other);
         }
 
         /// <inheritdoc cref="SortedSet{T}.SetEquals"/>
-        public Boolean SetEquals(IEnumerable<T> other)
+        public Boolean SetEquals([NotNull] IEnumerable<T> other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             return Set.SetEquals(other);
         }
 

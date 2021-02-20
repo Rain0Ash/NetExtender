@@ -68,6 +68,8 @@ namespace NetExtender.Workstation
     
     public static partial class Software
     {
+        public static OSData OperatingSystem { get; } = GetOSVersion();
+
         public static SoftwareArchitecture GetSoftwareArchitecture()
         {
             return IntPtr.Size switch

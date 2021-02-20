@@ -21,5 +21,7 @@ namespace NetExtender.Utils.Numerics.Physics
         public const Double StefanBoltzmannConstant = PI * PI *
                                                       (BoltzmannConstant * BoltzmannConstant * BoltzmannConstant * BoltzmannConstant) /
                                                       (60 * ReducedPlanckConstant * ReducedPlanckConstant * ReducedPlanckConstant * C * C);
+        
+        
     }
 }
