@@ -3,6 +3,7 @@
 
 using System;
 using System.Drawing;
+using JetBrains.Annotations;
 using NetExtender.Types.Drawing.Colors.Interfaces;
 using NetExtender.Utils.Types;
 
@@ -38,9 +39,9 @@ namespace NetExtender.Types.Drawing.Colors
             }
         }
 
-        public Byte R { get; set; }
-        public Byte G { get; set; }
-        public Byte B { get; set; }
+        public Byte R { get; init; }
+        public Byte G { get; init; }
+        public Byte B { get; init; }
 
         public RGBColor(Byte r, Byte g, Byte b)
         {
@@ -51,33 +52,38 @@ namespace NetExtender.Types.Drawing.Colors
         
         public Color ToColor()
         {
-            throw new NotImplementedException();
+            return Color.FromArgb(R, G, B);
         }
 
         public Boolean ToColor(out Color color)
         {
-            throw new NotImplementedException();
+            color = ToColor();
+            return true;
         }
-
-        public Boolean Equals(RGBColor other)
+        
+        public override Int32 GetHashCode()
         {
-            throw new NotImplementedException();
+            return HashCode.Combine(R, G, B);
         }
 
         public override Boolean Equals(Object obj)
         {
-            RGBColor result = (RGBColor) obj;
+            return obj is RGBColor result && Equals(result);
+        }
 
-            return (
-                    result != null &&
-                    R == result.R &&
-                    G == result.G &&
-                    B == result.B);
+        public Boolean Equals(RGBColor other)
+        {
+            return R == other.R && G == other.G && B == other.B;
+        }
+
+        public Boolean Equals([CanBeNull] IColor? color)
+        {
+            return color is not null && ToColor(out Color first) && color.ToColor(out Color second) && first.Equals(second);
         }
 
         public override String ToString()
         {
-            return $"rgb({R}, {G}, {B})";
+            return $"R:{R} G:{G} B:{B}";
         }
     }
 }

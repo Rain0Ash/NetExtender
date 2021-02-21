@@ -23,6 +23,8 @@ namespace NetExtender.Utils.Types
     
     public static class ColorUtils
     {
+        public const ColorType DefaultColorType = ColorType.RGB;
+        
         /// <summary>
         /// Returns either black or white, depending on the luminosity of the specified background color.
         /// </summary>
@@ -146,7 +148,7 @@ namespace NetExtender.Utils.Types
         /// <param name="b">Blue.</param>
         public static void HSVToRGB(Double h, Double s, Double v, out Byte r, out Byte g, out Byte b)
         {
-            HsvToRGB(h, s, v, out Double rd, out Double gd, out Double bd);
+            HSVToRGB(h, s, v, out Double rd, out Double gd, out Double bd);
 
             r = (Byte) (rd * 255);
             g = (Byte) (gd * 255);
@@ -219,7 +221,7 @@ namespace NetExtender.Utils.Types
         /// <param name="r">Red (from 0 to 1).</param>
         /// <param name="g">Green (from 0 to 1).</param>
         /// <param name="b">Blue (from 0 to 1).</param>
-        public static void HsvToRGB(Double h, Double s, Double v, out Double r, out Double g, out Double b)
+        public static void HSVToRGB(Double h, Double s, Double v, out Double r, out Double g, out Double b)
         {
             if (Math.Abs(s) < Double.Epsilon)
             {
@@ -754,6 +756,52 @@ namespace NetExtender.Utils.Types
             z *= D65Z;
         }
 
+        public static Color HEXToARGB(String hex)
+        {
+            return HEXToARGB(hex, out Color color) ? color : Color.Black;
+        }
+        
+        public static Boolean HEXToARGB(String hex, out Color color)
+        {
+            try
+            {
+                color = ColorTranslator.FromHtml(hex);
+                return true;
+            }
+            catch (Exception)
+            {
+                color = Color.Black;
+                return false;
+            }
+        }
+        
+        public static Boolean HEXToARGB(String hex, out Byte a, out Byte r, out Byte g, out Byte b)
+        {
+            if (HEXToARGB(hex, out Color color))
+            {
+                (a, r, g, b) = (color.A, color.R, color.G, color.B);
+                return true;
+            }
+
+            a = r = g = b = default;
+            return false;
+        }
+
+        public static String ToHEX(this Color color)
+        {
+            return ColorTranslator.ToHtml(color);
+        }
+
+        public static String RGBToHEX(Byte r, Byte g, Byte b)
+        {
+            return ColorTranslator.ToHtml(Color.FromArgb(r, g, b));
+        }
+        
+        public static String RGBToHEX(Byte a, Byte r, Byte g, Byte b)
+        {
+            return ColorTranslator.ToHtml(Color.FromArgb(a, r, g, b));
+        }
+        
         private const Double Gamma = 0.80;
         private const Double IntensityMax = 255;
 
@@ -816,19 +864,44 @@ namespace NetExtender.Utils.Types
         
         public static IColor ConvertRGBToColorType(Byte r, Byte g, Byte b, ColorType type)
         {
-            return type switch
+            switch (type)
             {
-                ColorType.Unknown => throw new NotSupportedException(),
-                ColorType.RGB => new RGBColor(r, g, b),
-                ColorType.ARGB => new ARGBColor(r, g, b),
-                ColorType.CMYK => new CMYKColor(RGBToCMYK(r, g, b)),
-                ColorType.HEX => new HEXColor(r, g, b),
-                ColorType.HSV => new HSVColor(),
-                ColorType.HSL => new HSLColor(),
-                ColorType.CIELAB => new CIELABColor(),
-                ColorType.XYZ => new XYZColor(),
-                _ => throw new NotSupportedException()
-            };
+                case ColorType.Unknown:
+                    throw new NotSupportedException();
+                case ColorType.RGB:
+                    return new RGBColor(r, g, b);
+                case ColorType.ARGB:
+                    return new ARGBColor(r, g, b);
+                case ColorType.CMYK:
+                {
+                    RGBToCMYK(r, g, b, out Byte c, out Byte m, out Byte y, out Byte k);
+                    return new CMYKColor(c, m, y, k);
+                }
+                case ColorType.HEX:
+                    return new HEXColor(r, g, b);
+                case ColorType.HSV:
+                {
+                    RGBToHSV(r, g, b, out Double h, out Double s, out Double v);
+                    return new HSVColor(h, s, v);
+                }
+                case ColorType.HSL:
+                {
+                    RGBToHSL(r, g, b, out Int32 h, out Byte s, out Byte l);
+                    return new HSLColor(h, s, l);
+                }
+                case ColorType.CIELAB:
+                {
+                    RGBToCIELAB(r, g, b, out Double l, out Double a, out Double cb);
+                    return new CIELABColor(l, a, cb);
+                }
+                case ColorType.XYZ:
+                {
+                    RGBToXYZ(r, g, b, out Double x, out Double y, out Double z);
+                    return new XYZColor(x, y, z);
+                }
+                default:
+                    throw new NotSupportedException();
+            }
         }
     }
 }

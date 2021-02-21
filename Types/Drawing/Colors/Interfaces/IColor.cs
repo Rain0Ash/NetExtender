@@ -11,7 +11,7 @@ namespace NetExtender.Types.Drawing.Colors.Interfaces
     {
     }
     
-    public interface IColor
+    public interface IColor : IEquatable<IColor>
     {
         public ColorType Type { get; }
 

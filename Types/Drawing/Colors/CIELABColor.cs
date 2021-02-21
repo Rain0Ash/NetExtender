@@ -9,25 +9,25 @@ using NetExtender.Utils.Types;
 
 namespace NetExtender.Types.Drawing.Colors
 {
-    public readonly struct CMYKColor : IColor<CMYKColor>
+    public readonly struct CIELABColor : IColor<CIELABColor>
     {
-        public static implicit operator Color(CMYKColor color)
+        public static implicit operator Color(CIELABColor color)
         {
             return color.ToColor();
         }
         
-        public static implicit operator CMYKColor(Color color)
+        public static implicit operator CIELABColor(Color color)
         {
-            color.ToCMYK(out Byte c, out Byte m, out Byte y, out Byte k);
-            return new CMYKColor(c, m, y, k);
+            color.ToCIELAB(out Double h, out Double s, out Double v);
+            return new CIELABColor(h, s, v);
         }
         
-        public static Boolean operator ==(CMYKColor left, CMYKColor right)
+        public static Boolean operator ==(CIELABColor left, CIELABColor right)
         {
             return left.Equals(right);
         }
 
-        public static Boolean operator !=(CMYKColor left, CMYKColor right)
+        public static Boolean operator !=(CIELABColor left, CIELABColor right)
         {
             return !(left == right);
         }
@@ -36,26 +36,24 @@ namespace NetExtender.Types.Drawing.Colors
         {
             get
             {
-                return ColorType.CMYK;
+                return ColorType.CIELAB;
             }
         }
-
-        public Byte C { get; init; }
-        public Byte M { get; init; }
-        public Byte Y { get; init; }
-        public Byte K { get; init; }
-
-        public CMYKColor(Byte c, Byte m, Byte y, Byte k)
-        {
-            C = c;
-            M = m;
-            Y = y;
-            K = k;
-        }
         
+        public Double L { get; init; }
+        public Double A { get; init; }
+        public Double B { get; init; }
+
+        public CIELABColor(Double l, Double a, Double b)
+        {
+            L = l;
+            A = a;
+            B = b;
+        }
+
         public Color ToColor()
         {
-            return ColorUtils.CMYKToRGB(C, M, Y, K);
+            return ColorUtils.CIELABToRGB(L, A, B);
         }
 
         public Boolean ToColor(out Color color)
@@ -66,17 +64,17 @@ namespace NetExtender.Types.Drawing.Colors
         
         public override Int32 GetHashCode()
         {
-            return HashCode.Combine(C, M, Y, K);
+            return HashCode.Combine(L, A, B);
         }
 
         public override Boolean Equals(Object obj)
         {
-            return obj is CMYKColor result && Equals(result);
+            return obj is CIELABColor result && Equals(result);
         }
 
-        public Boolean Equals(CMYKColor other)
+        public Boolean Equals(CIELABColor other)
         {
-            return C == other.C && M == other.M && Y == other.Y && K == other.K;
+            return Math.Abs(L - other.L) < Double.Epsilon && Math.Abs(A - other.A) < Double.Epsilon && Math.Abs(B - other.B) < Double.Epsilon;
         }
         
         public Boolean Equals([CanBeNull] IColor? color)
@@ -86,7 +84,7 @@ namespace NetExtender.Types.Drawing.Colors
 
         public override String ToString()
         {
-            return $"C:{C} M:{M} Y:{Y} K:{K}";
+            return $"X:{L} Y:{A} Z:{B}";
         }
     }
 }

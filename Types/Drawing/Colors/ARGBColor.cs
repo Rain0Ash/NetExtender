@@ -9,25 +9,24 @@ using NetExtender.Utils.Types;
 
 namespace NetExtender.Types.Drawing.Colors
 {
-    public readonly struct CMYKColor : IColor<CMYKColor>
+    public readonly struct ARGBColor : IColor<ARGBColor>
     {
-        public static implicit operator Color(CMYKColor color)
+        public static implicit operator Color(ARGBColor color)
         {
             return color.ToColor();
         }
         
-        public static implicit operator CMYKColor(Color color)
+        public static implicit operator ARGBColor(Color color)
         {
-            color.ToCMYK(out Byte c, out Byte m, out Byte y, out Byte k);
-            return new CMYKColor(c, m, y, k);
+            return new ARGBColor(color.A, color.R, color.G, color.B);
         }
         
-        public static Boolean operator ==(CMYKColor left, CMYKColor right)
+        public static Boolean operator ==(ARGBColor left, ARGBColor right)
         {
             return left.Equals(right);
         }
 
-        public static Boolean operator !=(CMYKColor left, CMYKColor right)
+        public static Boolean operator !=(ARGBColor left, ARGBColor right)
         {
             return !(left == right);
         }
@@ -36,26 +35,31 @@ namespace NetExtender.Types.Drawing.Colors
         {
             get
             {
-                return ColorType.CMYK;
+                return ColorType.ARGB;
             }
         }
+        
+        public Byte A { get; init; }
+        public Byte R { get; init; }
+        public Byte G { get; init; }
+        public Byte B { get; init; }
 
-        public Byte C { get; init; }
-        public Byte M { get; init; }
-        public Byte Y { get; init; }
-        public Byte K { get; init; }
-
-        public CMYKColor(Byte c, Byte m, Byte y, Byte k)
+        public ARGBColor(Byte r, Byte g, Byte b)
+            : this(Byte.MaxValue, r, g, b)
         {
-            C = c;
-            M = m;
-            Y = y;
-            K = k;
+        }
+        
+        public ARGBColor(Byte a, Byte r, Byte g, Byte b)
+        {
+            A = a;
+            R = r;
+            G = g;
+            B = b;
         }
         
         public Color ToColor()
         {
-            return ColorUtils.CMYKToRGB(C, M, Y, K);
+            return Color.FromArgb(A, R, G, B);
         }
 
         public Boolean ToColor(out Color color)
@@ -66,17 +70,17 @@ namespace NetExtender.Types.Drawing.Colors
         
         public override Int32 GetHashCode()
         {
-            return HashCode.Combine(C, M, Y, K);
+            return HashCode.Combine(A, R, G, B);
         }
 
         public override Boolean Equals(Object obj)
         {
-            return obj is CMYKColor result && Equals(result);
+            return obj is ARGBColor result && Equals(result);
         }
 
-        public Boolean Equals(CMYKColor other)
+        public Boolean Equals(ARGBColor other)
         {
-            return C == other.C && M == other.M && Y == other.Y && K == other.K;
+            return A == other.A && R == other.R && G == other.G && B == other.B;
         }
         
         public Boolean Equals([CanBeNull] IColor? color)
@@ -86,7 +90,7 @@ namespace NetExtender.Types.Drawing.Colors
 
         public override String ToString()
         {
-            return $"C:{C} M:{M} Y:{Y} K:{K}";
+            return $"A:{A} R:{R} G:{G} B:{B}";
         }
     }
 }

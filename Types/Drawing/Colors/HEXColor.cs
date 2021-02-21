@@ -2,12 +2,47 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Drawing;
+using JetBrains.Annotations;
+using NetExtender.Types.Drawing.Colors.Interfaces;
+using NetExtender.Utils.Types;
 
 namespace NetExtender.Types.Drawing.Colors
 {
-    public class HEXColor : IColor
+    public readonly struct HEXColor : IColor<HEXColor>
     {
-        public Int32 Code { get; }
+        public static implicit operator Color(HEXColor color)
+        {
+            return color.ToColor();
+        }
+        
+        public static implicit operator HEXColor(Color color)
+        {
+            return new HEXColor(color);
+        }
+        
+        public static Boolean operator ==(HEXColor left, HEXColor right)
+        {
+            return left.Equals(right);
+        }
+
+        public static Boolean operator !=(HEXColor left, HEXColor right)
+        {
+            return !(left == right);
+        }
+
+        public ColorType Type
+        {
+            get
+            {
+                return ColorType.HEX;
+            }
+        }
+
+        public Byte A { get; init; }
+        public Byte R { get; init; }
+        public Byte G { get; init; }
+        public Byte B { get; init; }
 
         public String Value
         {
@@ -18,24 +53,62 @@ namespace NetExtender.Types.Drawing.Colors
         }
 
         public HEXColor(Byte r, Byte g, Byte b)
+            : this(Byte.MaxValue, r, g, b)
         {
         }
         
-        public 
+        public HEXColor(Byte a, Byte r, Byte g, Byte b)
+        {
+            A = a;
+            R = r;
+            G = g;
+            B = b;
+        }
+
+        public HEXColor(Color color)
+            : this(color.A, color.R, color.G, color.B)
+        {
+        }
         
         public HEXColor(String value)
+            : this(ColorUtils.HEXToARGB(value))
         {
-            if (value.)
         }
 
-        public override bool Equals(object obj)
+        public Color ToColor()
         {
-            return Value == (obj as HEXColor)?.Value;
+            return ToColor(out Color color) ? color : Color.Black;
         }
 
-        public override string ToString()
+        public Boolean ToColor(out Color color)
         {
-            return Value;
+            color = Color.FromArgb(A, R, G, B);
+            return true;
+        }
+        
+        public override Int32 GetHashCode()
+        {
+            return HashCode.Combine(A, R, G, B);
+        }
+
+        public override Boolean Equals(Object obj)
+        {
+            return obj is HEXColor color && Equals(color);
+        }
+        
+        public Boolean Equals(HEXColor other)
+        {
+            return A == other.A && R == other.R && G == other.G && B == other.B;
+        }
+        
+        public Boolean Equals([CanBeNull] IColor? color)
+        {
+            return color is not null && ToColor(out Color first) && color.ToColor(out Color second) && first.Equals(second);
+        }
+
+        public override String ToString()
+        {
+            return ColorUtils.RGBToHEX(A, R, G, B);
         }
     }
 }

@@ -9,25 +9,25 @@ using NetExtender.Utils.Types;
 
 namespace NetExtender.Types.Drawing.Colors
 {
-    public readonly struct CMYKColor : IColor<CMYKColor>
+    public readonly struct HSLColor : IColor<HSLColor>
     {
-        public static implicit operator Color(CMYKColor color)
+        public static implicit operator Color(HSLColor color)
         {
             return color.ToColor();
         }
         
-        public static implicit operator CMYKColor(Color color)
+        public static implicit operator HSLColor(Color color)
         {
-            color.ToCMYK(out Byte c, out Byte m, out Byte y, out Byte k);
-            return new CMYKColor(c, m, y, k);
+            color.ToHSL(out Int32 h, out Byte s, out Byte l);
+            return new HSLColor(h, s, l);
         }
         
-        public static Boolean operator ==(CMYKColor left, CMYKColor right)
+        public static Boolean operator ==(HSLColor left, HSLColor right)
         {
             return left.Equals(right);
         }
 
-        public static Boolean operator !=(CMYKColor left, CMYKColor right)
+        public static Boolean operator !=(HSLColor left, HSLColor right)
         {
             return !(left == right);
         }
@@ -36,26 +36,24 @@ namespace NetExtender.Types.Drawing.Colors
         {
             get
             {
-                return ColorType.CMYK;
+                return ColorType.HSL;
             }
         }
-
-        public Byte C { get; init; }
-        public Byte M { get; init; }
-        public Byte Y { get; init; }
-        public Byte K { get; init; }
-
-        public CMYKColor(Byte c, Byte m, Byte y, Byte k)
-        {
-            C = c;
-            M = m;
-            Y = y;
-            K = k;
-        }
         
+        public Int32 H { get; init; }
+        public Byte S { get; init; }
+        public Byte L { get; init; }
+
+        public HSLColor(Int32 h, Byte s, Byte l)
+        {
+            H = h;
+            S = s;
+            L = l;
+        }
+
         public Color ToColor()
         {
-            return ColorUtils.CMYKToRGB(C, M, Y, K);
+            return ColorUtils.HSLToRGB(H, S, L);
         }
 
         public Boolean ToColor(out Color color)
@@ -66,17 +64,17 @@ namespace NetExtender.Types.Drawing.Colors
         
         public override Int32 GetHashCode()
         {
-            return HashCode.Combine(C, M, Y, K);
+            return HashCode.Combine(H, S, L);
         }
 
         public override Boolean Equals(Object obj)
         {
-            return obj is CMYKColor result && Equals(result);
+            return obj is HSLColor result && Equals(result);
         }
 
-        public Boolean Equals(CMYKColor other)
+        public Boolean Equals(HSLColor other)
         {
-            return C == other.C && M == other.M && Y == other.Y && K == other.K;
+            return H == other.H && S == other.S && L == other.L;
         }
         
         public Boolean Equals([CanBeNull] IColor? color)
@@ -86,7 +84,7 @@ namespace NetExtender.Types.Drawing.Colors
 
         public override String ToString()
         {
-            return $"C:{C} M:{M} Y:{Y} K:{K}";
+            return $"H:{H}° S:{S} L:{L}";
         }
     }
 }
