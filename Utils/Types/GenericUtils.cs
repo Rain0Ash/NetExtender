@@ -8,7 +8,7 @@ using NetExtender.Utils.Core;
 
 namespace NetExtender.Utils.Types
 {
-    public static partial class GenericUtils
+    public static class GenericUtils
     {
         public static T AsDefault<T>(this T value, T alternate)
         {

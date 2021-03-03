@@ -14,7 +14,7 @@ namespace NetExtender.Apps.Domains.GUIViews.Winforms
     {
         public Form Context { get; private set; }
 
-        public Boolean VisualStyle
+        public virtual Boolean VisualStyle
         {
             get
             {
@@ -67,7 +67,7 @@ namespace NetExtender.Apps.Domains.GUIViews.Winforms
             application.Run(Context);
         }
 
-        protected void EnableVisualStyles()
+        protected static void EnableVisualStyles()
         {
             System.Windows.Forms.Application.EnableVisualStyles();
         }

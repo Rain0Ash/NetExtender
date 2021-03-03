@@ -46,11 +46,6 @@ namespace NetExtender.Configuration.Ram
                 return Config.Remove(key);
             }
 
-            if (Get(key, sections) == value)
-            {
-                return false;
-            }
-
             Config[key, sections].Value = value;
             return true;
         }

@@ -1,4 +1,4 @@
-﻿﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
@@ -14,12 +14,11 @@ using NetExtender.Watchers.FileSystem.Interfaces;
     {
         private IWatcher _internalWatcher;
 
-
-        public virtual event FileSystemEventHandler Changed;
-        public virtual event FileSystemEventHandler Created;
-        public virtual event FileSystemEventHandler Deleted;
-        public virtual event ErrorEventHandler Error;
-        public virtual event RenamedEventHandler Renamed;
+        public event FileSystemEventHandler Changed;
+        public event FileSystemEventHandler Created;
+        public event FileSystemEventHandler Deleted;
+        public event ErrorEventHandler Error;
+        public event RenamedEventHandler Renamed;
 
 
         protected IWatcher InternalWatcher

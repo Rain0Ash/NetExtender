@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Immutable;
 using System.ComponentModel;
 using NetExtender.Configuration;
 using NetExtender.Configuration.Interfaces.Property.Common;
@@ -35,7 +36,7 @@ namespace NetExtender.Localizations.Sub
             }
         }
 
-        public String[] Sections
+        public IImmutableList<String> Sections
         {
             get
             {
@@ -114,6 +115,14 @@ namespace NetExtender.Localizations.Sub
             get
             {
                 return Property.ThrowOnInvalid;
+            }
+        }
+        
+        public Boolean ThrowOnReadOnly
+        {
+            get
+            {
+                return Property.ThrowOnReadOnly;
             }
         }
 

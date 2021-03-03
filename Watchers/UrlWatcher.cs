@@ -66,7 +66,7 @@ namespace NetExtender.Watchers
 
         public async Task<Boolean> IsRespondAsync()
         {
-            return IsExist() && await NetworkUtils.CheckPingAsync(Path);
+            return IsExist() && await NetworkUtils.CheckPingAsync(Path).ConfigureAwait(false);
         }
 
         public override void Dispose()

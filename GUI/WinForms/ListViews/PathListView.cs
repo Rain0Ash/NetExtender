@@ -236,7 +236,7 @@ namespace NetExtender.GUI.WinForms.ListViews
         
         protected override Color GetItemForeColor(GenericListViewItem<T> lvitem, DrawingData data)
         {
-            if (lvitem.Item is FSWatcher watcher && watcher.IsRecursive)
+            if (lvitem.Item is FSWatcher { IsRecursive: true })
             {
                 return Color.Red;
             }

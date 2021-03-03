@@ -4,9 +4,12 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using NetExtender.Comparers;
 using NetExtender.Comparers.Interfaces;
 using NetExtender.Localizations;
+using NetExtender.Types.Culture;
+using NetExtender.Utils.Types;
 
 namespace NetExtender.Cultures.Comparers
 {
@@ -14,6 +17,21 @@ namespace NetExtender.Cultures.Comparers
     {
         public static IReadOnlyOrderedComparer<CultureInfo> Default { get; } = new CultureComparer {Localization.Default};
 
+        public CultureComparer(params CultureLCID[] order)
+            : this((IEnumerable<CultureLCID>) order)
+        {
+        }
+        
+        public CultureComparer(params CultureInfo[] order)
+            : this((IEnumerable<CultureInfo>) order)
+        {
+        }
+        
+        public CultureComparer(IEnumerable<CultureLCID> order)
+            : this(order?.Select(CultureUtils.GetCultureInfo))
+        {
+        }
+        
         public CultureComparer(IEnumerable<CultureInfo> order = null)
             : base(order)
         {

@@ -12,8 +12,6 @@ using NetExtender.Types.Sets;
 using NetExtender.Types.Sets.Interfaces;
 using NetExtender.Utils.Numerics;
 
-// ReSharper disable StaticMemberInGenericType
-
 namespace NetExtender.Utils.Types
 {
     public static class SetUtils
@@ -23,39 +21,35 @@ namespace NetExtender.Utils.Types
         {
             return CacheSet<T>.IsSet;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsSet(Type type)
+        {
+            return EnumerableUtils.TypeCache.IsSet(type);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsGenericSet<T>() where T : IEnumerable
         {
             return CacheSet<T>.IsGenericSet;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsGenericSet(Type type)
+        {
+            return EnumerableUtils.TypeCache.IsSet(type);
+        }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StaticMemberInGenericType")]
         private static class CacheSet<T> where T : IEnumerable
         {
-            public static readonly Boolean IsSet;
-            public static readonly Boolean IsGenericSet;
+            public static Boolean IsSet { get; }
+            public static Boolean IsGenericSet { get; }
 
             static CacheSet()
             {
-                Type[] interfaces = typeof(T).GetInterfaces();
-
-                IsGenericSet = interfaces.Any(IsGenericSetInterface);
-                IsSet = IsGenericSet || interfaces.Any(i => i == typeof(ISet));
-            }
-
-            private static Boolean IsGenericSetInterface(Type type)
-            {
-                return type is not null && type.IsGenericType && CacheSet.Contains(type.GetGenericTypeDefinition());
-            }
-        }
-
-        private static class CacheSet
-        {
-            public static IImmutableSet<Type> SetTypes { get; } = new SortedSet<Type>{typeof(ISet<>), typeof(IReadOnlySet<>), typeof(IImmutableSet<>)}.ToImmutableHashSet();
-
-            public static Boolean Contains(Type type)
-            {
-                return SetTypes.Contains(type);
+                IsSet = EnumerableUtils.TypeCache.IsSet(typeof(T));
+                IsGenericSet = EnumerableUtils.TypeCache.IsGenericSet(typeof(T));
             }
         }
         

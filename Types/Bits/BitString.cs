@@ -436,7 +436,7 @@ namespace NetExtender.Types.Bits
 
             if (Length > 8)
             {
-                throw new BitStringException("Unable to convert BitString with length = " + Length.ToString() + " into a 8-bit unsigned integer");
+                throw new BitStringException("Unable to convert BitString with length = " + Length + " into a 8-bit unsigned integer");
             }
 
             if (Length < 8)
@@ -461,7 +461,7 @@ namespace NetExtender.Types.Bits
 
             if (Length > 16)
             {
-                throw new BitStringException("Unable to convert BitString with length = " + Length.ToString() + " into a 16-bit integer");
+                throw new BitStringException("Unable to convert BitString with length = " + Length + " into a 16-bit integer");
             }
 
             if (Length < 16)
@@ -496,7 +496,7 @@ namespace NetExtender.Types.Bits
 
             if (Length > 16)
             {
-                throw new BitStringException("Unable to convert BitString with length = " + Length.ToString() + " into a 16-bit unsigned integer");
+                throw new BitStringException("Unable to convert BitString with length = " + Length + " into a 16-bit unsigned integer");
             }
 
             if (Length < 16)
@@ -524,7 +524,7 @@ namespace NetExtender.Types.Bits
 
             if (Length > 32)
             {
-                throw new BitStringException("Unable to convert BitString with length = " + Length.ToString() + " into a 32-bit integer");
+                throw new BitStringException("Unable to convert BitString with length = " + Length + " into a 32-bit integer");
             }
 
             if (Length < 32)
@@ -559,7 +559,7 @@ namespace NetExtender.Types.Bits
 
             if (Length > 32)
             {
-                throw new BitStringException("Unable to convert BitString with length = " + Length.ToString() + " into a 32-bit unsigned integer");
+                throw new BitStringException("Unable to convert BitString with length = " + Length + " into a 32-bit unsigned integer");
             }
 
             if (Length < 32)
@@ -587,7 +587,7 @@ namespace NetExtender.Types.Bits
 
             if (Length > 64)
             {
-                throw new BitStringException("Unable to convert BitString with length = " + Length.ToString() + " into a 64-bit integer");
+                throw new BitStringException("Unable to convert BitString with length = " + Length + " into a 64-bit integer");
             }
 
             if (Length < 64)
@@ -627,7 +627,7 @@ namespace NetExtender.Types.Bits
 
             if (Length > 64)
             {
-                throw new BitStringException("Unable to convert BitString with length = " + Length.ToString() + " into a 64-bit unsigned integer");
+                throw new BitStringException("Unable to convert BitString with length = " + Length + " into a 64-bit unsigned integer");
             }
 
             if (Length < 64)
@@ -653,7 +653,7 @@ namespace NetExtender.Types.Bits
         /// <param name="myBits">A uint containing the bits you want to display</param>
         /// <param name="numDisplayBits">The number of bits in myBits to display</param>
         /// <returns>A string displaying the bits of 1's and 0's in a uint</returns>
-        private String DisplayBits(UInt32 myBits, Int32 numDisplayBits)
+        private static String DisplayBits(UInt32 myBits, Int32 numDisplayBits)
         {
             const UInt32 mask = 1U << 31;
             String answer = String.Empty;
@@ -1185,7 +1185,7 @@ namespace NetExtender.Types.Bits
 
             if (temp.Length > 64)
             {
-                throw new BitStringException("Unable to increment BitString with length = " + b1.Length.ToString() + ". The maximum length for this operation is 64-bits");
+                throw new BitStringException("Unable to increment BitString with length = " + b1.Length + ". The maximum length for this operation is 64-bits");
             }
 
             temp.Flip();
@@ -1209,7 +1209,7 @@ namespace NetExtender.Types.Bits
 
             if (temp.Length > 64)
             {
-                throw new BitStringException("Unable to decrement BitString with length = " + b1.Length.ToString() + ". The maximum length for this operation is 64-bits");
+                throw new BitStringException("Unable to decrement BitString with length = " + b1.Length + ". The maximum length for this operation is 64-bits");
             }
 
             if (temp.IsAllZeros())

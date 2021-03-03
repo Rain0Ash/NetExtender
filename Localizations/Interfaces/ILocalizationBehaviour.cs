@@ -11,6 +11,6 @@ namespace NetExtender.Localizations.Interfaces
     public interface ILocalizationBehaviour
     {
         public CultureComparer Comparer { get; init; }
-        public IDictionary<CultureInfo, ISubLocalization> Supported { get; init; }
+        public IEnumerable<KeyValuePair<CultureInfo, ISubLocalization>> Supported { get; init; }
     }
 }

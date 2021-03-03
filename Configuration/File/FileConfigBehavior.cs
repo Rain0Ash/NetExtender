@@ -10,7 +10,7 @@ using NetExtender.Types.Trees;
 
 namespace NetExtender.Configuration.File
 {
-    public abstract class FileConfigBehavior : RamConfigBehavior
+    public abstract class FileConfigBehavior : LazyWriteRamConfigBehavior
     {
         protected FileConfigBehavior(String path, ConfigOptions options)
             : this(path, null, options)

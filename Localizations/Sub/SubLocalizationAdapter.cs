@@ -417,12 +417,12 @@ namespace NetExtender.Localizations.Sub
             return Config.RemoveValue(property);
         }
         
-        public IStringLocalizationProperty GetProperty(String key, params String[] sections)
+        public IStringLocalizationProperty GetProperty(String key, IEnumerable<String> sections)
         {
             return GetProperty(key, default, sections);
         }
 
-        public IStringLocalizationProperty GetProperty(String key, IString value, params String[] sections)
+        public IStringLocalizationProperty GetProperty(String key, IString value, IEnumerable<String> sections)
         {
             return new SubLocalizationPropertyAdapter(Config.GetProperty(key, value?.ToString(), sections));
         }

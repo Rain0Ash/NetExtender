@@ -19,12 +19,7 @@ namespace NetExtender.Utils.Core
 
         public T Build()
         {
-            if (!Builder.TryGetValue(Software.OperatingSystem, out T function))
-            {
-                throw new NotImplementedException();
-            }
-
-            return function;
+            return Builder.TryGetValue(Software.OperatingSystem, out T function) ? function : default;
         }
     }
 

@@ -28,24 +28,25 @@
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" />
-      <PackageReference Include="JetBrains.ExternalAnnotations" Version="10.2.88" />
+      <PackageReference Include="JetBrains.Annotations" Version="2021.1.0-eap01" />
+      <PackageReference Include="JetBrains.ExternalAnnotations" Version="10.2.91" />
       <PackageReference Include="Microsoft-WindowsAPICodePack-Core" Version="1.1.4" />
       <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
-      <PackageReference Include="Microsoft.Data.Sqlite" Version="5.0.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.2" />
+      <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.0-preview.1.21102.2" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0-preview.1.21102.2" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0-preview.1.21102.2" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0-preview.1.21102.2" />
       <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.22" />
-      <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+      <PackageReference Include="NAudio" Version="2.0.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1-beta1" />
       <PackageReference Include="Polly" Version="7.2.1" />
       <PackageReference Include="protobuf-net" Version="3.0.73" />
-      <PackageReference Include="ReactiveUI" Version="13.0.38" />
-      <PackageReference Include="ReactiveUI.Fody" Version="13.0.38" />
-      <PackageReference Include="ReactiveUI.WinForms" Version="13.0.38" />
-      <PackageReference Include="ReactiveUI.WPF" Version="13.0.38" />
-      <PackageReference Include="Selenium.WebDriver" Version="4.0.0-alpha07" />
-      <PackageReference Include="System.Management" Version="5.0.0" />
+      <PackageReference Include="ReactiveUI" Version="13.1.1" />
+      <PackageReference Include="ReactiveUI.Fody" Version="13.1.1" />
+      <PackageReference Include="ReactiveUI.WinForms" Version="13.1.1" />
+      <PackageReference Include="ReactiveUI.WPF" Version="13.1.1" />
+      <PackageReference Include="Selenium.WebDriver" Version="4.0.0-beta1" />
+      <PackageReference Include="System.Management" Version="6.0.0-preview.1.21102.12" />
     </ItemGroup>
 
     <ItemGroup>

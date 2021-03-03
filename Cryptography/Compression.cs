@@ -382,7 +382,7 @@ namespace NetExtender.Crypto
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            return (await CompressAsync<MemoryStream>(stream, null, level, type, token)).ResetPosition();
+            return (await CompressAsync<MemoryStream>(stream, null, level, type, token).ConfigureAwait(false)).ResetPosition();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -480,7 +480,7 @@ namespace NetExtender.Crypto
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            return (await DecompressAsync<MemoryStream>(stream, null, type, token)).ResetPosition();
+            return (await DecompressAsync<MemoryStream>(stream, null, type, token).ConfigureAwait(false)).ResetPosition();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

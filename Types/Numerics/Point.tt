@@ -18,6 +18,11 @@
     };
 
     String[] operators = {"+", "-", "*", "/", "%"};
+    
+    static Boolean IsUnsignedType(String type)
+    {
+        return type == nameof(Char) || type == nameof(Byte) || type == nameof(UInt16) || type == nameof(UInt32) || type == nameof(UInt64);
+    }
 
     void Point()
     {
@@ -163,7 +168,7 @@
             WriteLine(String.Empty);
             
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-            WriteLine($"\t\tpublic {nameof(Boolean)} IsPositive()");
+            WriteLine($"\t\tpublic {(IsUnsignedType(type) ? "static " : String.Empty)}{nameof(Boolean)} IsPositive()");
             WriteLine("\t\t{");
             WriteLine($"\t\t\treturn {(unsigned ? "true" : $"X >= {cast}0 && Y >= {cast}0")};");
             WriteLine("\t\t}");

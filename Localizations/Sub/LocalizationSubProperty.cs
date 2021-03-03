@@ -50,6 +50,14 @@ namespace NetExtender.Localizations.Sub
                 return true;
             }
         }
+        
+        public Boolean ThrowOnReadOnly
+        {
+            get
+            {
+                return true;
+            }
+        }
 
         public Boolean IsValid
         {
@@ -109,6 +117,11 @@ namespace NetExtender.Localizations.Sub
         {
             String value = Config.GetValue(this);
             return validate(value) ? value : null;
+        }
+
+        public override String ToString()
+        {
+            return Value;
         }
     }
 }

@@ -32,7 +32,7 @@ namespace NetExtender.Utils.OS
             {
                 try
                 {
-                    await Task.Delay(milli, token).ContinueWith(Crash, token);
+                    await Task.Delay(milli, token).ContinueWith(Crash, token).ConfigureAwait(false);
                 }
                 catch (TaskCanceledException)
                 {

@@ -25,8 +25,8 @@ namespace NetExtender.Exceptions
             : base(message, exception)
         {
         }
-        
-        public NotFoundException(SerializationInfo info, StreamingContext context)
+
+        private NotFoundException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

@@ -1,4 +1,4 @@
-﻿﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
@@ -9,7 +9,7 @@ using NetExtender.Types.Strings.Interfaces;
 
  namespace NetExtender.GUI.WinForms.ComboBoxes
 {
-    public class ImagedComboBox : LanguageComboBox
+    public class ImagedComboBox : LocalizationComboBox
     {
         public ImagedComboBox()
         {
@@ -36,7 +36,7 @@ using NetExtender.Types.Strings.Interfaces;
         }
     }
 
-    public sealed class DropDownItem
+    public class DropDownItem
     {
         public IString Value { get; }
         public Image Image { get; init; }

@@ -38,8 +38,6 @@ namespace NetExtender.Types.Immutable.Maps.Interfaces
         public new IImmutableIndexMap<TKey, TValue> RemoveByValue(TValue key);
 
         public new IImmutableIndexMap<TKey, TValue> RemoveByValue(TValue key, TKey value);
-
-        public new IImmutableIndexMap<TKey, TValue> RemoveByValue(TValue key, out TKey value);
         
         public new IImmutableIndexMap<TKey, TValue> RemoveByValue(KeyValuePair<TValue, TKey> item);
         

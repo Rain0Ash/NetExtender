@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -10,54 +11,338 @@ namespace NetExtender.Utils.Types
     public static class BitUtils
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Byte RotateLeft(Byte value, Int32 offset)
+        public static SByte RotateLeft(this SByte value, Int32 offset)
         {
-            const Int32 size = sizeof(Byte) * 8;
-
-            offset %= size;
-
+            const Int32 size = sizeof(SByte) * 8;
+            
             unchecked
             {
-                return (Byte) ((value << offset) | (value >> (size - offset)));
+                switch (offset)
+                {
+                    case 0:
+                        return value;
+                    case < 0:
+                        offset = -offset % size;
+                        return (SByte) ((value >> offset) | (value << (size - offset)));
+                    default:
+                        offset %= size;
+                        return (SByte) ((value << offset) | (value >> (size - offset)));
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Byte RotateLeft(this Byte value, Int32 offset)
+        {
+            const Int32 size = sizeof(Byte) * 8;
+            
+            unchecked
+            {
+                switch (offset)
+                {
+                    case 0:
+                        return value;
+                    case < 0:
+                        offset = -offset % size;
+                        return (Byte) ((value >> offset) | (value << (size - offset)));
+                    default:
+                        offset %= size;
+                        return (Byte) ((value << offset) | (value >> (size - offset)));
+                }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UInt16 RotateLeft(UInt16 value, Int32 offset)
+        public static Int16 RotateLeft(this Int16 value, Int32 offset)
+        {
+            const Int32 size = sizeof(Int16) * 8;
+
+            unchecked
+            {
+                switch (offset)
+                {
+                    case 0:
+                        return value;
+                    case < 0:
+                        offset = -offset % size;
+                        return (Int16) ((value >> offset) | (value << (size - offset)));
+                    default:
+                        offset %= size;
+                        return (Int16) ((value << offset) | (value >> (size - offset)));
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt16 RotateLeft(this UInt16 value, Int32 offset)
         {
             const Int32 size = sizeof(UInt16) * 8;
 
-            offset %= size;
-
             unchecked
             {
-                return (UInt16) ((value << offset) | (value >> (size - offset)));
+                switch (offset)
+                {
+                    case 0:
+                        return value;
+                    case < 0:
+                        offset = -offset % size;
+                        return (UInt16) ((value >> offset) | (value << (size - offset)));
+                    default:
+                        offset %= size;
+                        return (UInt16) ((value << offset) | (value >> (size - offset)));
+                }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UInt32 RotateLeft(UInt32 value, Int32 offset)
+        public static Int32 RotateLeft(this Int32 value, Int32 offset)
+        {
+            const Int32 size = sizeof(Int32) * 8;
+
+            unchecked
+            {
+                switch (offset)
+                {
+                    case 0:
+                        return value;
+                    case < 0:
+                        offset = -offset % size;
+                        return (value >> offset) | (value << (size - offset));
+                    default:
+                        offset %= size;
+                        return (value << offset) | (value >> (size - offset));
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt32 RotateLeft(this UInt32 value, Int32 offset)
         {
             const Int32 size = sizeof(UInt32) * 8;
 
-            offset %= size;
-
             unchecked
             {
-                return (value << offset) | (value >> (size - offset));
+                switch (offset)
+                {
+                    case 0:
+                        return value;
+                    case < 0:
+                        offset = -offset % size;
+                        return (value >> offset) | (value << (size - offset));
+                    default:
+                        offset %= size;
+                        return (value << offset) | (value >> (size - offset));
+                }
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UInt64 RotateLeft(UInt64 value, Int32 offset)
+        public static Int64 RotateLeft(this Int64 value, Int32 offset)
         {
             const Int32 size = sizeof(UInt64) * 8;
 
-            offset %= size;
+            unchecked
+            {
+                switch (offset)
+                {
+                    case 0:
+                        return value;
+                    case < 0:
+                        offset = -offset % size;
+                        return (value >> offset) | (value << (size - offset));
+                    default:
+                        offset %= size;
+                        return (value << offset) | (value >> (size - offset));
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 RotateLeft(this UInt64 value, Int32 offset)
+        {
+            const Int32 size = sizeof(UInt64) * 8;
 
             unchecked
             {
-                return (value << offset) | (value >> (size - offset));
+                switch (offset)
+                {
+                    case 0:
+                        return value;
+                    case < 0:
+                        offset = -offset % size;
+                        return (value >> offset) | (value << (size - offset));
+                    default:
+                        offset %= size;
+                        return (value << offset) | (value >> (size - offset));
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SByte RotateRight(this SByte value, Int32 offset)
+        {
+            const Int32 size = sizeof(SByte) * 8;
+            
+            unchecked
+            {
+                switch (offset)
+                {
+                    case 0:
+                        return value;
+                    case < 0:
+                        offset = -offset % size;
+                        return (SByte) ((value << offset) | (value >> (size - offset)));
+                    default:
+                        offset %= size;
+                        return (SByte) ((value >> offset) | (value << (size - offset)));
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Byte RotateRight(this Byte value, Int32 offset)
+        {
+            const Int32 size = sizeof(Byte) * 8;
+            
+            unchecked
+            {
+                switch (offset)
+                {
+                    case 0:
+                        return value;
+                    case < 0:
+                        offset = -offset % size;
+                        return (Byte) ((value << offset) | (value >> (size - offset)));
+                    default:
+                        offset %= size;
+                        return (Byte) ((value >> offset) | (value << (size - offset)));
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int16 RotateRight(this Int16 value, Int32 offset)
+        {
+            const Int32 size = sizeof(Int16) * 8;
+
+            unchecked
+            {
+                switch (offset)
+                {
+                    case 0:
+                        return value;
+                    case < 0:
+                        offset = -offset % size;
+                        return (Int16) ((value << offset) | (value >> (size - offset)));
+                    default:
+                        offset %= size;
+                        return (Int16) ((value >> offset) | (value << (size - offset)));
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt16 RotateRight(this UInt16 value, Int32 offset)
+        {
+            const Int32 size = sizeof(UInt16) * 8;
+
+            unchecked
+            {
+                switch (offset)
+                {
+                    case 0:
+                        return value;
+                    case < 0:
+                        offset = -offset % size;
+                        return (UInt16) ((value << offset) | (value >> (size - offset)));
+                    default:
+                        offset %= size;
+                        return (UInt16) ((value >> offset) | (value << (size - offset)));
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 RotateRight(this Int32 value, Int32 offset)
+        {
+            const Int32 size = sizeof(Int32) * 8;
+
+            unchecked
+            {
+                switch (offset)
+                {
+                    case 0:
+                        return value;
+                    case < 0:
+                        offset = -offset % size;
+                        return (value << offset) | (value >> (size - offset));
+                    default:
+                        offset %= size;
+                        return (value >> offset) | (value << (size - offset));
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt32 RotateRight(this UInt32 value, Int32 offset)
+        {
+            const Int32 size = sizeof(UInt32) * 8;
+
+            unchecked
+            {
+                switch (offset)
+                {
+                    case 0:
+                        return value;
+                    case < 0:
+                        offset = -offset % size;
+                        return (value << offset) | (value >> (size - offset));
+                    default:
+                        offset %= size;
+                        return (value >> offset) | (value << (size - offset));
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int64 RotateRight(this Int64 value, Int32 offset)
+        {
+            const Int32 size = sizeof(Int64) * 8;
+
+            unchecked
+            {
+                switch (offset)
+                {
+                    case 0:
+                        return value;
+                    case < 0:
+                        offset = -offset % size;
+                        return (value << offset) | (value >> (size - offset));
+                    default:
+                        offset %= size;
+                        return (value >> offset) | (value << (size - offset));
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 RotateRight(this UInt64 value, Int32 offset)
+        {
+            const Int32 size = sizeof(UInt64) * 8;
+
+            unchecked
+            {
+                switch (offset)
+                {
+                    case 0:
+                        return value;
+                    case < 0:
+                        offset = -offset % size;
+                        return (value << offset) | (value >> (size - offset));
+                    default:
+                        offset %= size;
+                        return (value >> offset) | (value << (size - offset));
+                }
             }
         }
 
@@ -116,6 +401,36 @@ namespace NetExtender.Utils.Types
         public static UInt64 ToUInt64(UInt32 left, UInt32 right)
         {
             return ((UInt64) left << 32) | right;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 PopCount(this Int32 value)
+        {
+            unchecked
+            {
+                return PopCount((UInt32) value);
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 PopCount(this UInt32 value)
+        {
+            return BitOperations.PopCount(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 PopCount(this Int64 value)
+        {
+            unchecked
+            {
+                return PopCount((UInt64) value);
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 PopCount(this UInt64 value)
+        {
+            return BitOperations.PopCount(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

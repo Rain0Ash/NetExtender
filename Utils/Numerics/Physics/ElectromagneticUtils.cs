@@ -53,7 +53,7 @@ namespace NetExtender.Utils.Numerics.Physics
         {
             return wavelength switch
             {
-                <= 0 => ElectromagneticType.Unknown,
+                < Double.Epsilon => ElectromagneticType.Unknown,
                 < 0.005 => ElectromagneticType.Gamma,
                 < 10 => ElectromagneticType.XRay,
                 < 380 => ElectromagneticType.Ultraviolet,
@@ -73,7 +73,7 @@ namespace NetExtender.Utils.Numerics.Physics
         {
             return wavelength switch
             {
-                <= 0 => ElectromagneticType.Unknown,
+                < Double.Epsilon => ElectromagneticType.Unknown,
                 >= 60000000 => ElectromagneticType.Gamma,
                 >= 30000 => ElectromagneticType.XRay,
                 > 750 => ElectromagneticType.Ultraviolet,
@@ -115,7 +115,7 @@ namespace NetExtender.Utils.Numerics.Physics
         
         public static Double Frequency(Double wavelength)
         {
-            if (wavelength < 0)
+            if (wavelength < Double.Epsilon)
             {
                 throw new ArgumentOutOfRangeException(nameof(wavelength));
             }
@@ -125,12 +125,52 @@ namespace NetExtender.Utils.Numerics.Physics
         
         public static Double Wavelength(Double frequency)
         {
-            if (frequency < 0)
+            if (frequency < Double.Epsilon)
             {
                 throw new ArgumentOutOfRangeException(nameof(frequency));
             }
 
             return PhysicsUtils.C / frequency;
+        }
+
+        public static Double DoplerWavelength(Double wavelength, Double velocity)
+        {
+            return DoplerWavelength(wavelength, velocity, 0);
+        }
+
+        public static Double DoplerWavelength(Double wavelength, Double velocity, Double angle)
+        {
+            if (wavelength < Double.Epsilon)
+            {
+                throw new ArgumentOutOfRangeException(nameof(wavelength));
+            }
+
+            return velocity switch
+            {
+                < Double.Epsilon => wavelength,
+                >= PhysicsUtils.C => throw new ArgumentOutOfRangeException(nameof(velocity)),
+                _ => Wavelength(DoplerFrequency(Frequency(wavelength), velocity, angle))
+            };
+        }
+
+        public static Double DoplerFrequency(Double frequency, Double velocity)
+        {
+            return DoplerFrequency(frequency, velocity, 0);
+        }
+
+        public static Double DoplerFrequency(Double frequency, Double velocity, Double angle)
+        {
+            if (frequency < Double.Epsilon)
+            {
+                throw new ArgumentOutOfRangeException(nameof(frequency));
+            }
+
+            return velocity switch
+            {
+                < Double.Epsilon => frequency,
+                >= PhysicsUtils.C => throw new ArgumentOutOfRangeException(nameof(velocity)),
+                _ => frequency * Math.Sqrt(1 - velocity * velocity / PhysicsUtils.SquareC) / (1 - velocity / PhysicsUtils.C * Math.Cos(angle))
+            };
         }
     }
 }

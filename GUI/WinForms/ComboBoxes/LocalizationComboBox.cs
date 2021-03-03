@@ -2,98 +2,35 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Globalization;
-using System.Linq;
-using System.Windows.Forms;
-using JetBrains.Annotations;
-using NetExtender.Utils.Types;
 using NetExtender.Localizations;
-using NetExtender.Utils.Numerics;
 
 namespace NetExtender.GUI.WinForms.ComboBoxes
 {
-    public sealed class LocalizationComboBox : ImagedComboBox
+    public class LocalizationComboBox : FixedComboBox
     {
-        private class CultureDropDownItem
+        protected override void OnHandleCreated(EventArgs e)
         {
-            public CultureInfo Info { get; }
-            public DropDownItem Item { get; }
-
-            public CultureDropDownItem([NotNull] CultureInfo info)
-            {
-                Info = info ?? throw new ArgumentNullException(nameof(info));
-                Item = new DropDownItem(Info.GetNativeLanguageName(), Info.GetImage());
-            }
-        }
-        
-        private event TypeHandler<CultureInfo> LanguageChanged;
-
-        public LocalizationComboBox()
-        {
-            BindingContext = new BindingContext();
-            DataSource = GetItemsForDataSource();
-            Localization.LanguageChanged += SetLanguage;
-            SelectedIndexChanged += OnSelectedIndexChanged;
-            LanguageChanged += Localization.UpdateLocalization;
-            SetLanguage();
-        }
-        
-        //TODO: autoupdate
-        private static CultureDropDownItem[] GetItemsForDataSource()
-        {
-            return Localization.Supported.Select(culture => new CultureDropDownItem(culture)).ToArray();
+            base.OnHandleCreated(e);
+            Localization.LanguageChanged += OnUpdateText;
+            OnUpdateText();
         }
 
-        public void SetLanguage()
+        private void OnUpdateText()
         {
-            SetLanguage(Localization.Culture);
+            SuspendLayout();
+            UpdateText();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
-        public void SetLanguage([NotNull] CultureInfo info)
+        protected virtual void UpdateText()
         {
-            if (info is null)
-            {
-                throw new ArgumentNullException(nameof(info));
-            }
-
-            while (true)
-            {
-                Int32 order = Localization.Comparer.GetOrder(info);
-                if (order.InRange(0, Items.Count, MathPositionType.Left))
-                {
-                    SelectedIndex = order;
-                    return;
-                }
-
-                if (Equals(Localization.Default, info))
-                {
-                    throw new IndexOutOfRangeException($"Culture {info.GetNativeLanguageName()} out of range");
-                }
-                
-                if (Equals(Localization.Basic, info))
-                {
-                    info = Localization.Default;
-                }
-            }
-        }
-
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            base.OnVisibleChanged(e);
-            if (Visible && !Disposing)
-            {
-                SetLanguage();
-            }
-        }
-
-        private void OnSelectedIndexChanged(Object sender, EventArgs e)
-        {
-            LanguageChanged?.Invoke(Localization.Supported.ElementAt(SelectedIndex));
+            RefreshItems();
         }
 
         protected override void Dispose(Boolean disposing)
         {
-            LanguageChanged = null;
+            Localization.LanguageChanged -= OnUpdateText;
             base.Dispose(disposing);
         }
     }

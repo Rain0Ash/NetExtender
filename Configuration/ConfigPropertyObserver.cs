@@ -85,12 +85,53 @@ namespace NetExtender.Configuration
             return new IndexMap<String, IReadOnlyConfigPropertyBase>();
         }
         
-        public static IReadOnlyConfigPropertyBase GetOrAddProperty(IReadOnlyConfigPropertyBase property)
+        public static IReadOnlyConfigPropertyBase GetOrAddProperty([NotNull] IReadOnlyConfigPropertyBase property)
         {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            IPropertyConfigBase config = property.Config;
+
+            if (config is null)
+            {
+                throw new ArgumentException(@"Cannot add property without config", nameof(property));
+            }
+
+            String path = property.Path;
+
+            if (path is null)
+            {
+                throw new ArgumentException(@"Cannot add property without path", nameof(property));
+            }
+            
             lock (Properties)
             {
-                return Properties.GetOrAdd(property.Config, CreatePropertyMap)
-                    .GetOrAdd(property.Path, property);
+                return Properties.GetOrAdd(config, CreatePropertyMap).GetOrAdd(path, property);
+            }
+        }
+
+        public static IReadOnlyConfigPropertyBase GetOrAddProperty([NotNull] IPropertyConfigBase config, [NotNull] String path, [NotNull] Func<IReadOnlyConfigPropertyBase> factory)
+        {
+            if (config is null)
+            {
+                throw new ArgumentNullException(nameof(config));
+            }
+
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            lock (Properties)
+            {
+                return Properties.GetOrAdd(config, CreatePropertyMap).GetOrAdd(path, factory);
             }
         }
 
@@ -128,6 +169,16 @@ namespace NetExtender.Configuration
         
         public static Boolean RemoveProperty(IReadOnlyConfigPropertyBase property)
         {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            if (property.Config is null)
+            {
+                throw new ArgumentException(@"Cannot remove property without config", nameof(property));
+            }
+            
             lock (Properties)
             {
                 if (!Properties.TryGetValue(property.Config, out IIndexMap<String, IReadOnlyConfigPropertyBase> dictionary))
@@ -155,18 +206,28 @@ namespace NetExtender.Configuration
             return RemoveProperty(property);
         }
 
-        public static void ForEachProperty([NotNull] IPropertyConfigBase config, Action<IReadOnlyConfigPropertyBase> action)
+        public static void ForEachProperty([NotNull] IPropertyConfigBase config, [NotNull] Action<IReadOnlyConfigPropertyBase> action)
         {
             if (config is null)
             {
                 throw new ArgumentNullException(nameof(config));
             }
 
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             lock (Properties)
             {
-                if (Properties.TryGetValue(config, out IIndexMap<String, IReadOnlyConfigPropertyBase> dictionary))
+                if (!Properties.TryGetValue(config, out IIndexMap<String, IReadOnlyConfigPropertyBase> dictionary))
                 {
-                    dictionary.Values.ForEach(action);
+                    return;
+                }
+
+                foreach (IReadOnlyConfigPropertyBase value in dictionary.Values)
+                {
+                    action(value);
                 }
             }
         }

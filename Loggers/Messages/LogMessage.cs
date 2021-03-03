@@ -198,7 +198,7 @@ namespace NetExtender.Loggers.Messages
                 _ => String.Empty
             };
 
-            return $"{dateTime}{(dateTime.Length > 0 ? " " : String.Empty)}{(Message.Format(Format))}";
+            return $"{dateTime}{(dateTime.Length > 0 ? " " : String.Empty)}{Message.Format(Format)}";
         }
     }
 }

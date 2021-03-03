@@ -6,13 +6,13 @@ using System.Drawing;
 
 namespace NetExtender.Workstation
 {
-    public struct Monitor
+    public readonly struct Monitor
     {
-        public readonly Int32 ID;
-        public String Name;
-        public readonly Rectangle Resolution;
-        public readonly Rectangle WorkingArea;
-        public readonly Rectangle Bounds;
+        public Int32 ID { get; }
+        public String Name { get; }
+        public Rectangle Resolution { get; }
+        public Rectangle WorkingArea { get; }
+        public Rectangle Bounds { get; }
 
         public Hardware.DEVMODE DEVMODE { get; }
 
@@ -31,8 +31,7 @@ namespace NetExtender.Workstation
                 return DEVMODE.dmDisplayFrequency;
             }
         }
-
-
+        
         public Monitor(Int32 id, String name, Rectangle resolution, Rectangle workingArea, Rectangle bounds, Hardware.DEVMODE devmode)
         {
             ID = id;

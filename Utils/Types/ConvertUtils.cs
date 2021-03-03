@@ -10,10 +10,12 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
+using JetBrains.Annotations;
 using NetExtender.Utils.Numerics;
 using NetExtender.Exceptions;
-using NetExtender.Types.Sets.Interfaces;
+using NetExtender.Types.Collections;
 using NetExtender.Types.Strings.Interfaces;
+using NetExtender.Utils.Core;
 
 namespace NetExtender.Utils.Types
 {
@@ -342,6 +344,7 @@ namespace NetExtender.Utils.Types
                 BigInteger number => number.GetString(provider),
                 DateTime number => number.GetString(provider),
                 TimeSpan number => number.GetString(provider),
+                Enum number => number.GetString(escape),
                 IString str => escape.HasFlag(EscapeType.Full) ? $"\"{str.ToString(provider)}\"" : str.ToString(provider),
                 IEnumerable enumerable => enumerable.GetString(escape, provider),
                 IFormattable formattable => formattable.ToString(null, provider),
@@ -541,6 +544,30 @@ namespace NetExtender.Utils.Types
         {
             return value.ToString();
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this Enum value)
+        {
+            return GetStringEscape(value?.ToString());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this Enum value, EscapeType escape)
+        {
+            return value is not null ? GetStringEscape(escape.HasFlag(EscapeType.Full) ? $"{value.GetType().Name}.{value.ToString()}" : value.ToString()) : StringUtils.NullString;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this Enum value, IFormatProvider provider)
+        {
+            return GetString(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this Enum value, IFormatProvider provider, EscapeType escape)
+        {
+            return GetString(value, escape);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this String value)
@@ -608,33 +635,83 @@ namespace NetExtender.Utils.Types
             return GetString(source, EscapeType.FullWithNull, provider);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public static String GetString(this IEnumerable source, EscapeType escape, IFormatProvider provider)
         {
-            return source switch
+            if (source is null)
             {
-                null => escape.HasFlag(EscapeType.Null) ? StringUtils.NullString : null,
-                String str => escape.HasFlag(EscapeType.Full) ? $"\"{str.GetString(provider)}\"" : str.GetString(provider),
-                IDictionary dictionary => dictionary.GetString(escape, provider),
-                ISet set => set.GetString(escape, provider),
-                IEnumerable<IEnumerable> jagged => jagged.GetString(escape, provider),
+                return escape.HasFlag(EscapeType.Null) ? StringUtils.NullString : null;
+            }
 
-                _ => $"[{String.Join(", ", source.Cast<Object>().Select(item => item.GetString(escape, provider)))}]"
-            };
+            if (source is String str)
+            {
+                return escape.HasFlag(EscapeType.Full) ? $"\"{str.GetString(provider)}\"" : str.GetString(provider);
+            }
+
+            switch (source.GetCollectionType())
+            {
+                case CollectionType.Set:
+                case CollectionType.GenericSet:
+                    return source.SetGetString(escape, provider);
+                case CollectionType.Dictionary:
+                case CollectionType.GenericDictionary:
+                    return source.DictionaryGetString(escape, provider);
+                default:
+                    if (source is IEnumerable<IEnumerable> jagged)
+                    {
+                        return jagged.JaggedGetString(escape, provider);
+                    }
+                    
+                    return source.EnumerableGetString(escape, provider);
+            }
         }
 
-        private static String GetString(this IDictionary dictionary, EscapeType escape, IFormatProvider provider)
+        private static Type KeyValuePairType { get; } = typeof(KeyValuePair<,>);
+
+        private static IEnumerable<String> PairGetString([NotNull] this IEnumerable dictionary, EscapeType escape, IFormatProvider provider)
         {
-            return $"{{{String.Join(", ", dictionary.Keys.Cast<Object>().Select(key => $"{key.GetString(escape, provider)} : {dictionary[key].GetString(escape, provider)}"))}}}";
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(nameof(dictionary));
+            }
+
+            foreach (Object obj in dictionary)
+            {
+                if (obj.GetType().TryGetGenericTypeDefinition() == KeyValuePairType)
+                {
+                    dynamic item = obj;
+                    yield return $"{{{((Object) item.Key).GetString(escape, provider)} : {((Object) item.Value).GetString(escape, provider)}}}";
+                    continue;
+                }
+
+                if (obj is DictionaryEntry entry)
+                {
+                    yield return $"{{{entry.Key.GetString(escape, provider)} : {entry.Value.GetString(escape, provider)}}}";
+                    continue;
+                }
+
+                yield return obj.GetString();
+            }
         }
 
-        private static String GetString(this ISet set, EscapeType escape, IFormatProvider provider)
+        private static String DictionaryGetString(this IEnumerable dictionary, EscapeType escape, IFormatProvider provider)
+        {
+            return $"{{{String.Join(", ", dictionary.PairGetString(escape, provider))}}}";
+        }
+
+        private static String SetGetString(this IEnumerable set, EscapeType escape, IFormatProvider provider)
         {
             return $"{{{String.Join(", ", set.Cast<Object>().Select(item => item.GetString(escape, provider)))}}}";
         }
 
-        private static String GetString(this IEnumerable<IEnumerable> jagged, EscapeType escape, IFormatProvider provider)
+        private static String JaggedGetString(this IEnumerable<IEnumerable> jagged, EscapeType escape, IFormatProvider provider)
         {
             return $"[{String.Join(", ", jagged.Select(e => e.GetString(escape, provider)))}]";
+        }
+
+        private static String EnumerableGetString(this IEnumerable source, EscapeType escape, IFormatProvider provider)
+        {
+            return $"[{String.Join(", ", source.Cast<Object>().Select(item => item.GetString(escape, provider)))}]";
         }
 
         #endregion

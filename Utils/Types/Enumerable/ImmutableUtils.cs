@@ -1,9 +1,11 @@
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
 
 namespace NetExtender.Utils.Types
 {
@@ -79,6 +81,78 @@ namespace NetExtender.Utils.Types
         public static ImmutableList<T> ImmutableListFrom<T>(T first, T second, T third, params T[] values)
         {
             return EnumerableUtils.GetEnumerableFrom(first, second, third, values).ToImmutableList();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableStack<T> ImmutableStackFrom<T>(T value)
+        {
+            return ImmutableStack.Create(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableStack<T> ImmutableStackFrom<T>(T value, params T[] values)
+        {
+            return ImmutableStack.CreateRange(EnumerableUtils.GetEnumerableFrom(value, values));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableStack<T> ImmutableStackFrom<T>(T first, T second)
+        {
+            return ImmutableStack.Create(first, second);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableStack<T> ImmutableStackFrom<T>(T first, T second, params T[] values)
+        {
+            return ImmutableStack.CreateRange(EnumerableUtils.GetEnumerableFrom(first, second, values));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableStack<T> ImmutableStackFrom<T>(T first, T second, T third)
+        {
+            return ImmutableStack.Create(first, second, third);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableStack<T> ImmutableStackFrom<T>(T first, T second, T third, params T[] values)
+        {
+            return ImmutableStack.CreateRange(EnumerableUtils.GetEnumerableFrom(first, second, third, values));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableQueue<T> ImmutableQueueFrom<T>(T value)
+        {
+            return ImmutableQueue.Create(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableQueue<T> ImmutableQueueFrom<T>(T value, params T[] values)
+        {
+            return ImmutableQueue.CreateRange(EnumerableUtils.GetEnumerableFrom(value, values));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableQueue<T> ImmutableQueueFrom<T>(T first, T second)
+        {
+            return ImmutableQueue.Create(first, second);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableQueue<T> ImmutableQueueFrom<T>(T first, T second, params T[] values)
+        {
+            return ImmutableQueue.CreateRange(EnumerableUtils.GetEnumerableFrom(first, second, values));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableQueue<T> ImmutableQueueFrom<T>(T first, T second, T third)
+        {
+            return ImmutableQueue.Create(first, second, third);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableQueue<T> ImmutableQueueFrom<T>(T first, T second, T third, params T[] values)
+        {
+            return ImmutableQueue.CreateRange(EnumerableUtils.GetEnumerableFrom(first, second, third, values));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -223,6 +297,124 @@ namespace NetExtender.Utils.Types
         public static ImmutableSortedSet<T> ImmutableSortedSetFrom<T>(T first, T second, T third, IComparer<T> comparer, params T[] values)
         {
             return EnumerableUtils.GetEnumerableFrom(first, second, third, values).ToImmutableSortedSet(comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableList<T> AsImmutableIList<T>(this IEnumerable<T> source)
+        {
+            return source is not null ? source as IImmutableList<T> ?? source.ToImmutableList() : ImmutableList<T>.Empty;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> AsImmutableArray<T>(this IEnumerable<T> source)
+        {
+            return source?.ToImmutableArray() ?? ImmutableArray<T>.Empty;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableList<T> AsImmutableList<T>(this IEnumerable<T> source)
+        {
+            return source is not null ? source as ImmutableList<T> ?? source.ToImmutableList() : ImmutableList<T>.Empty;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableStack<T> AsImmutableIStack<T>(this IEnumerable<T> source)
+        {
+            return source is not null ? source as IImmutableStack<T> ?? source.ToImmutableStack() : ImmutableStack<T>.Empty;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableStack<T> ToImmutableStack<T>([NotNull] this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return ImmutableStack.CreateRange(source);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableStack<T> AsImmutableStack<T>(this IEnumerable<T> source)
+        {
+            return source is not null ? source as ImmutableStack<T> ?? source.ToImmutableStack() : ImmutableStack<T>.Empty;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableQueue<T> AsImmutableIQueue<T>(this IEnumerable<T> source)
+        {
+            return source is not null ? source as IImmutableQueue<T> ?? source.ToImmutableQueue() : ImmutableQueue<T>.Empty;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableQueue<T> ToImmutableQueue<T>([NotNull] this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return ImmutableQueue.CreateRange(source);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableQueue<T> AsImmutableQueue<T>(this IEnumerable<T> source)
+        {
+            return source is not null ? source as ImmutableQueue<T> ?? source.ToImmutableQueue() : ImmutableQueue<T>.Empty;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableSet<T> AsImmutableISet<T>(this IEnumerable<T> source)
+        {
+            return source is not null ? source as IImmutableSet<T> ?? source.ToImmutableHashSet() : ImmutableHashSet<T>.Empty;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableSet<T> AsImmutableISet<T>(this IEnumerable<T> source, [CanBeNull] IEqualityComparer<T>? comparer)
+        {
+            return source is not null ? source as IImmutableSet<T> ?? source.ToImmutableHashSet(comparer) : ImmutableHashSet<T>.Empty;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableHashSet<T> AsImmutableHashSet<T>(this IEnumerable<T> source)
+        {
+            return source is not null ? source as ImmutableHashSet<T> ?? source.ToImmutableHashSet() : ImmutableHashSet<T>.Empty;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableHashSet<T> AsImmutableHashSet<T>(this IEnumerable<T> source, [CanBeNull] IEqualityComparer<T>? comparer)
+        {
+            return source is not null ? source as ImmutableHashSet<T> ?? source.ToImmutableHashSet(comparer) : ImmutableHashSet<T>.Empty;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedSet<T> AsImmutableSortedSet<T>(this IEnumerable<T> source)
+        {
+            return source is not null ? source as ImmutableSortedSet<T> ?? source.ToImmutableSortedSet() : ImmutableSortedSet<T>.Empty;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedSet<T> AsImmutableSortedSet<T>(this IEnumerable<T> source, [CanBeNull] IComparer<T>? comparer)
+        {
+            return source is not null ? source as ImmutableSortedSet<T> ?? source.ToImmutableSortedSet(comparer) : ImmutableSortedSet<T>.Empty;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableDictionary<TKey, TValue> AsImmutableIDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            return source is not null ? source as IImmutableDictionary<TKey, TValue> ?? source.ToImmutableDictionary() : ImmutableDictionary<TKey, TValue>.Empty;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableDictionary<TKey, TValue> AsImmutableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            return source is not null ? source as ImmutableDictionary<TKey, TValue> ?? source.ToImmutableDictionary() : ImmutableDictionary<TKey, TValue>.Empty;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedDictionary<TKey, TValue> AsImmutableSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            return source is not null ? source as ImmutableSortedDictionary<TKey, TValue> ?? source.ToImmutableSortedDictionary() : ImmutableSortedDictionary<TKey, TValue>.Empty;
         }
     }
 }

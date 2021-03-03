@@ -1,4 +1,4 @@
-﻿﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
  using System;
@@ -7,6 +7,7 @@
  using System.ComponentModel;
  using System.Diagnostics;
  using System.IO;
+ using System.Linq;
  using System.Text.RegularExpressions;
  using System.Threading;
  using System.Threading.Tasks;
@@ -31,7 +32,6 @@
         Poll
     }
     
-    [DebuggerDisplay("Path = {_path}, Filter = {_filter}, Polling = {_pollingTask is not null}, EnableRaisingEvents = {_enableRaisingEvents}")]
     public class PollerWatcher : IWatcher, IPoller
     {
         public event FileSystemEventHandler Created;
@@ -43,7 +43,7 @@
             // ReSharper disable once ValueParameterNotUsed
             add
             {
-                if (_supressNotSuppotedErrors)
+                if (SupressNotSupportedErrors)
                 {
                     return;
                 }
@@ -61,7 +61,7 @@
             // ReSharper disable once ValueParameterNotUsed
             add
             {
-                if (_supressNotSuppotedErrors)
+                if (SupressNotSupportedErrors)
                 {
                     return;
                 }
@@ -89,11 +89,6 @@
         /// An uppercase version of _path. used for string comparisons (prevents multiple ToUpper calls)
         /// </summary>
         private String _uppercasePath;
-
-        /// <summary>
-        /// Indicates whether the poller should supress it's NotSupported exceptions when subscribing to Changed/Renamed events.
-        /// </summary>
-        private Boolean _supressNotSuppotedErrors;
 
         /// <summary>
         /// Indicates whether the poller should poll subdirectories or not.
@@ -300,17 +295,7 @@
         /// Set this to true when trying to wrap the PollerWatcher. The events will still not invoke but will allow subscription.
         /// </summary>
         [Browsable(false)]
-        public Boolean SupressNotSupportedErrors
-        {
-            get
-            {
-                return _supressNotSuppotedErrors;
-            }
-            set
-            {
-                _supressNotSuppotedErrors = value;
-            }
-        }
+        public Boolean SupressNotSupportedErrors { get; set; }
 
         /// <summary>
         /// Whether any threads are currently waiting in one of the WaitForChanged overloads
@@ -522,12 +507,9 @@
             }
 
             // For each one of the checks above, see if there is a point even running this check (EnableRaisingEvents is true or threads are WaitingForChange-s).
-            foreach (Action itemsCheck in actionsOnItems)
+            foreach (Action itemsCheck in actionsOnItems.Where(_ => ReportsExpected))
             {
-                if (ReportsExpected)
-                {
-                    itemsCheck();
-                }
+                itemsCheck();
             }
 
             // Update "last seen files" and "last seen folders"

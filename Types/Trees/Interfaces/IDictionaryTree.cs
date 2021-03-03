@@ -9,20 +9,30 @@ namespace NetExtender.Types.Trees.Interfaces
     public interface IDictionaryTree<TKey, TValue> : IDictionary<TKey, IDictionaryTreeNode<TKey, TValue>>
     {
         public IEqualityComparer<TKey> Comparer { get; }
-        
+
         public Int64 FullCount { get; }
-        
+
         public Boolean IsEmpty { get; }
 
         public Boolean HasValue { get; }
 
         public Boolean HasTree { get; }
-        
+
         public Boolean TreeIsEmpty { get; }
+
+        public Boolean ContainsKey(TKey key, IEnumerable<TKey> sections);
         
         public Boolean ContainsKey(TKey key, params TKey[] sections);
+        
+        public TValue GetValue(TKey key);
+        
+        public TValue GetValue(TKey key, IEnumerable<TKey> sections);
+        
+        public TValue GetValue(TKey key, params TKey[] sections);
 
         public IDictionaryTreeNode<TKey, TValue> GetChild(TKey key);
+        
+        public IDictionaryTreeNode<TKey, TValue> GetChild(TKey key, IEnumerable<TKey> sections);
 
         public IDictionaryTreeNode<TKey, TValue> GetChild(TKey key, params TKey[] sections);
 
@@ -30,6 +40,20 @@ namespace NetExtender.Types.Trees.Interfaces
 
         public IDictionaryTreeNode<TKey, TValue> GetChildSection(params TKey[] sections);
 
+        public void Add(TKey key, TValue value);
+
+        public void Add(TKey key, IEnumerable<TKey> sections, TValue value);
+
+        public void Add(TKey key, TValue value, params TKey[] sections);
+        
+        public Boolean TryAdd(TKey key, TValue value);
+
+        public Boolean TryAdd(TKey key, IEnumerable<TKey> sections, TValue value);
+
+        public Boolean TryAdd(TKey key, TValue value, params TKey[] sections);
+
+        public Boolean Remove(TKey key, IEnumerable<TKey> sections);
+        
         public Boolean Remove(TKey key, params TKey[] sections);
 
         public Boolean Remove(TKey key, IEnumerable<TKey> sections, out IDictionaryTreeNode<TKey, TValue> value);
@@ -40,11 +64,14 @@ namespace NetExtender.Types.Trees.Interfaces
 
         public void RemoveEmpty(TKey key);
 
-        public void RemoveEmpty(TKey key, params TKey[] sections);
+        public void RemoveEmpty(TKey key, IEnumerable<TKey> sections);
         
+        public void RemoveEmpty(TKey key, params TKey[] sections);
+
         public new IDictionaryTreeNode<TKey, TValue> this[TKey key] { get; set; }
+
+        public IDictionaryTreeNode<TKey, TValue> this[TKey key, IEnumerable<TKey> sections] { get; set; }
         
         public IDictionaryTreeNode<TKey, TValue> this[TKey key, params TKey[] sections] { get; set; }
-        public IDictionaryTreeNode<TKey, TValue> this[TKey key, IEnumerable<TKey> sections] { get; set; }
     }
 }

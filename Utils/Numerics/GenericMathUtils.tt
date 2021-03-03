@@ -17,7 +17,7 @@ using JetBrains.Annotations;
 namespace NetExtender.Utils.Numerics
 {
 <#
-    List<Type> vtypes = new List<Type>()
+    List<Type> vtypes = new List<Type>
     {
         typeof(Char),
         typeof(SByte),

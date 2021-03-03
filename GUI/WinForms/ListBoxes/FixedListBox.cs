@@ -18,8 +18,8 @@ namespace NetExtender.GUI.WinForms.ListBoxes
         {
             return DataSource switch
             {
-                null => (index >= 0 && index < Items.Count),
-                List<Object> source => (index >= 0 && index < source.Count),
+                null => index >= 0 && index < Items.Count,
+                List<Object> source => index >= 0 && index < source.Count,
                 _ => false
             };
         }

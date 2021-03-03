@@ -53,12 +53,12 @@ namespace NetExtender.GUI.WinForms.Labels
             // first figure out the top
             Single top = _textAlign switch
             {
-                ContentAlignment.MiddleLeft => ((Height - size.Height) / 2),
-                ContentAlignment.MiddleCenter => ((Height - size.Height) / 2),
-                ContentAlignment.MiddleRight => ((Height - size.Height) / 2),
-                ContentAlignment.BottomLeft => (Height - size.Height),
-                ContentAlignment.BottomCenter => (Height - size.Height),
-                ContentAlignment.BottomRight => (Height - size.Height),
+                ContentAlignment.MiddleLeft => (Height - size.Height) / 2,
+                ContentAlignment.MiddleCenter => (Height - size.Height) / 2,
+                ContentAlignment.MiddleRight => (Height - size.Height) / 2,
+                ContentAlignment.BottomLeft => Height - size.Height,
+                ContentAlignment.BottomCenter => Height - size.Height,
+                ContentAlignment.BottomRight => Height - size.Height,
                 _ => 0
             };
 

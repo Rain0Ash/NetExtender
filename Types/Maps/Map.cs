@@ -4,7 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 using NetExtender.Utils.Types;
 using NetExtender.Exceptions;
 using NetExtender.Types.Maps.Interfaces;
@@ -53,8 +53,6 @@ namespace NetExtender.Types.Maps
         {
             get
             {
-                CheckSync();
-                
                 return Base.Count;
             }
         }
@@ -73,7 +71,7 @@ namespace NetExtender.Types.Maps
             Reversed = new Dictionary<TValue, TKey>();
         }
 
-        public Map([JetBrains.Annotations.NotNull] IDictionary<TKey, TValue> dictionary)
+        public Map([NotNull] IDictionary<TKey, TValue> dictionary)
         {
             if (dictionary is null)
             {
@@ -84,7 +82,7 @@ namespace NetExtender.Types.Maps
             Reversed = new Dictionary<TValue, TKey>(dictionary.Reverse());
         }
 
-        public Map([JetBrains.Annotations.NotNull] IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
+        public Map([NotNull] IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
         {
             if (dictionary is null)
             {
@@ -102,7 +100,7 @@ namespace NetExtender.Types.Maps
         }
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public Map([JetBrains.Annotations.NotNull] IEnumerable<KeyValuePair<TKey, TValue>> source)
+        public Map([NotNull] IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             if (source is null)
             {
@@ -116,7 +114,7 @@ namespace NetExtender.Types.Maps
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public Map([JetBrains.Annotations.NotNull] IEnumerable<KeyValuePair<TValue, TKey>> source)
+        public Map([NotNull] IEnumerable<KeyValuePair<TValue, TKey>> source)
         {
             if (source is null)
             {
@@ -130,7 +128,7 @@ namespace NetExtender.Types.Maps
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public Map([JetBrains.Annotations.NotNull] IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
+        public Map([NotNull] IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
         {
             if (source is null)
             {
@@ -144,7 +142,7 @@ namespace NetExtender.Types.Maps
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public Map([JetBrains.Annotations.NotNull] IEnumerable<KeyValuePair<TValue, TKey>> source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
+        public Map([NotNull] IEnumerable<KeyValuePair<TValue, TKey>> source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
         {
             if (source is null)
             {
@@ -167,14 +165,6 @@ namespace NetExtender.Types.Maps
         {
             Base = new Dictionary<TKey, TValue>(capacity, keyComparer);
             Reversed = new Dictionary<TValue, TKey>(capacity, valueComparer);
-        }
-
-        protected virtual void CheckSync()
-        {
-            if (Base.Count != Reversed.Count)
-            {
-                throw new CollectionSyncException();
-            }
         }
 
         public Boolean Contains([NotNull] TKey key, [NotNull] TValue value)
@@ -287,12 +277,12 @@ namespace NetExtender.Types.Maps
             
             Boolean added = Base.TryAdd(key, value);
 
-            if (!(added ^ Reversed.TryAdd(value, key)))
+            if (added ^ Reversed.TryAdd(value, key))
             {
-                return added;
+                throw new CollectionSyncException();
             }
 
-            throw new CollectionSyncException();
+            return added;
         }
 
         public Boolean TryAddByValue([NotNull] TValue key, [NotNull] TKey value)
@@ -338,10 +328,10 @@ namespace NetExtender.Types.Maps
 
             if (removed ^ Reversed.Remove(value))
             {
-                return removed;
+                throw new CollectionSyncException();
             }
 
-            throw new CollectionSyncException();
+            return removed;
         }
         
         public Boolean Remove(KeyValuePair<TKey, TValue> item)

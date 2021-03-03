@@ -9,9 +9,7 @@ namespace NetExtender.Types.Strings.Interfaces
     public interface IFormatString : IString
     {
         public Int32 Arguments { get; }
-
-        public String Format();
-        public String Format([CanBeNull] IFormatProvider? provider);
+        
         public String Format(params Object[] format);
         public String Format([CanBeNull] IFormatProvider? provider, params Object[] format);
     }

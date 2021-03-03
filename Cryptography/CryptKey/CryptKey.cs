@@ -38,29 +38,26 @@ namespace NetExtender.Crypto.CryptKey
 
         public static ICryptKey Create(CryptAction crypt, CryptType type = CryptType.AES)
         {
-            switch (type)
+            return type switch
             {
-                case CryptType.AES:
-                    return crypt switch
-                    {
-                        CryptAction.None => AES.KeyNone,
-                        CryptAction.Decrypt => AES.KeyDecrypt,
-                        CryptAction.Encrypt => AES.KeyEncrypt,
-                        CryptAction.Crypt => AES.KeyCrypt,
-                        _ => AES.Default
-                    };
-                case CryptType.RSA:
-                    return crypt switch
-                    {
-                        CryptAction.None => RSA.KeyNone,
-                        CryptAction.Decrypt => RSA.KeyDecrypt,
-                        CryptAction.Encrypt => RSA.KeyEncrypt,
-                        CryptAction.Crypt => RSA.KeyCrypt,
-                        _ => RSA.Default
-                    };
-                default:
-                    throw new NotSupportedException();
-            }
+                CryptType.AES => crypt switch
+                {
+                    CryptAction.None => AES.KeyNone,
+                    CryptAction.Decrypt => AES.KeyDecrypt,
+                    CryptAction.Encrypt => AES.KeyEncrypt,
+                    CryptAction.Crypt => AES.KeyCrypt,
+                    _ => AES.Default
+                },
+                CryptType.RSA => crypt switch
+                {
+                    CryptAction.None => RSA.KeyNone,
+                    CryptAction.Decrypt => RSA.KeyDecrypt,
+                    CryptAction.Encrypt => RSA.KeyEncrypt,
+                    CryptAction.Crypt => RSA.KeyCrypt,
+                    _ => RSA.Default
+                },
+                _ => throw new NotSupportedException()
+            };
         }
         
         public abstract Int32 KeySize { get; }

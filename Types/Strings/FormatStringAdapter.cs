@@ -20,18 +20,11 @@ namespace NetExtender.Types.Strings
         }
         
         public override Int32 Arguments { get; }
-        protected override Object[] FormatArguments { get; }
 
         public FormatStringAdapter([NotNull] String value)
-            : this(value, null)
-        {
-        }
-
-        public FormatStringAdapter([NotNull] String value, params Object[] format)
         {
             Text = value ?? throw new ArgumentNullException(nameof(value));
             Arguments = value.FormatArgsExpected();
-            FormatArguments = format;
         }
     }
 }

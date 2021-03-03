@@ -110,7 +110,7 @@ namespace NetExtender.Types.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Boolean IsPositive()
+		public static Boolean IsPositive()
 		{
 			return true;
 		}
@@ -340,7 +340,7 @@ namespace NetExtender.Types.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Boolean IsPositive()
+		public static Boolean IsPositive()
 		{
 			return true;
 		}
@@ -570,7 +570,7 @@ namespace NetExtender.Types.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Boolean IsPositive()
+		public static Boolean IsPositive()
 		{
 			return true;
 		}
@@ -790,7 +790,7 @@ namespace NetExtender.Types.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Boolean IsPositive()
+		public static Boolean IsPositive()
 		{
 			return true;
 		}
@@ -1000,7 +1000,7 @@ namespace NetExtender.Types.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public Boolean IsPositive()
+		public static Boolean IsPositive()
 		{
 			return true;
 		}

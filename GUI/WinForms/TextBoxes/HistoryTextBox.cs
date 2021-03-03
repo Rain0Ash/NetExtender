@@ -73,7 +73,7 @@ namespace NetExtender.GUI.WinForms.TextBoxes
             }
 
             _ignoreChange = true;
-            Text = _storageRedo[_storageRedo.Count - 1];
+            Text = _storageRedo[^1];
             _storageUndo.Add(Text);
             _storageRedo.RemoveAt(_storageRedo.Count - 1);
             _ignoreChange = false;
@@ -88,7 +88,7 @@ namespace NetExtender.GUI.WinForms.TextBoxes
 
             _ignoreChange = true;
             _storageRedo.Add(Text);
-            Text = _storageUndo[_storageUndo.Count - 1];
+            Text = _storageUndo[^1];
             _storageUndo.RemoveAt(_storageUndo.Count - 1);
             _ignoreChange = false;
         }

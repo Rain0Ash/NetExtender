@@ -2,11 +2,15 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
+using System.Configuration;
+using JetBrains.Annotations;
 using NetExtender.Configuration.Interfaces.Property;
 using NetExtender.Converters;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Interfaces;
 using NetExtender.Utils.Types;
+using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
 namespace NetExtender.Configuration
@@ -36,42 +40,42 @@ namespace NetExtender.Configuration
         private new IPropertyConfig Config { get; }
         
         public Boolean ThrowOnInvalid { get; set; }
+        public Boolean ThrowOnReadOnly { get; set; }
 
+        private Boolean Initialized { get; set; }
+        
         [Reactive]
-        public T DefaultValue { get; private set; }
+        public T DefaultValue { get; set; }
 
-        private Boolean _initialized;
-        private T _value;
+        protected T InternalValue;
 
-        [Reactive]
         public T Value
         {
             get
             {
                 Initialize();
-                return IsValid && !AlwaysDefault ? _value : DefaultValue;
+                return IsValid && !AlwaysDefault ? InternalValue : DefaultValue;
             }
             protected set
             {
                 if (IsReadOnly)
                 {
+                    if (ThrowOnReadOnly)
+                    {
+                        throw new SettingsPropertyIsReadOnlyException();
+                    }
+                    
                     return;
                 }
                 
-                if (_value.IsEquals(value))
-                {
-                    return;
-                }
-                
-                Boolean valid = Validate?.Invoke(_value) != false;
+                Boolean valid = Validate?.Invoke(value) != false;
                 
                 if (!valid && ThrowOnInvalid)
                 {
                     throw new ArgumentException(@"Value is invalid", nameof(Value));
                 }
                 
-                _value = value;
-
+                this.RaiseAndSetIfChanged(ref InternalValue, value, nameof(Value));
                 IsValid = valid;
             }
         }
@@ -83,26 +87,34 @@ namespace NetExtender.Configuration
         
         public TryConverter<String, T> Converter { get; set; }
 
-        protected internal ConfigProperty(IPropertyConfig config, String key, T defaultValue, Func<T, Boolean> validate, ICryptKey crypt, ConfigPropertyOptions options, TryConverter<String, T> converter, params String[] sections)
-            : base(config, key, crypt, options, sections)
+        protected internal ConfigProperty(IPropertyConfig config, [NotNull] String key, T defaultValue, Func<T, Boolean> validate, ICryptKey crypt, ConfigPropertyOptions options, TryConverter<String, T> converter, IEnumerable<String> sections)
+            : base(config, key ?? throw new ArgumentNullException(nameof(key)), crypt, options, sections)
         {
-            Config = config;
+            Config = config ?? throw new ArgumentNullException(nameof(config));
             DefaultValue = defaultValue;
             Validate = validate;
             Converter = converter ?? ConvertUtils.TryConvert;
         }
 
-        private void Initialize()
+        private Boolean Initialize()
         {
-            if (_initialized)
+            if (Initialized)
             {
-                return;
+                return false;
             }
 
             Read();
-            _initialized = true;
+            
+            Initialized = true;
+            return Initialized;
         }
 
+        protected void SetValueInternal(T value)
+        {
+            this.RaiseAndSetIfChanged(ref InternalValue, value, nameof(Value));
+            IsValid = Validate?.Invoke(value) != false;
+        }
+        
         public void SetValue(T value)
         {
             Value = value;
@@ -111,6 +123,11 @@ namespace NetExtender.Configuration
             {
                 Save();
             }
+        }
+        
+        protected T GetValueInternal()
+        {
+            return InternalValue;
         }
 
         public T GetValue()
@@ -130,31 +147,21 @@ namespace NetExtender.Configuration
                 Read();
             }
 
-            return validate?.Invoke(_value) != false ? _value : DefaultValue;
+            return validate?.Invoke(InternalValue) != false ? InternalValue : DefaultValue;
         }
 
         public T GetOrSetValue()
         {
             if (!Caching)
             {
-                Value = Config.GetOrSetValue(this);
+                SetValueInternal(Config.GetOrSetValue(this));
                 return Value;
             }
 
             Read();
             return Value;
         }
-
-        public void ChangeDefaultValue(T value, Boolean changeValue = true)
-        {
-            if (changeValue && Value.IsEquals(DefaultValue))
-            {
-                Value = value;
-            }
-
-            DefaultValue = value;
-        }
-
+        
         public void ResetValue()
         {
             Value = DefaultValue;
@@ -182,7 +189,7 @@ namespace NetExtender.Configuration
 
         public override void Read()
         {
-            Value = Config.GetValue(this);
+            SetValueInternal(Config.GetValue(this));
         }
 
         public override Boolean KeyExist()

@@ -1,4 +1,4 @@
-﻿﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
@@ -90,7 +90,7 @@ namespace NetExtender.Converters.BitEndian
         /// <param name="value">An array of bytes.</param>
         /// <param name="startIndex">The starting position within value.</param>
         /// <returns>true if the byte at startIndex in value is nonzero; otherwise, false.</returns>
-        public Boolean ToBoolean(Byte[] value, Int32 startIndex)
+        public static Boolean ToBoolean(Byte[] value, Int32 startIndex)
         {
             CheckByteArgument(value, startIndex, 1);
             return BitConverter.ToBoolean(value, startIndex);
@@ -367,7 +367,7 @@ namespace NetExtender.Converters.BitEndian
         /// </summary>
         /// <param name="value">A Boolean value.</param>
         /// <returns>An array of bytes with length 1.</returns>
-        public Byte[] GetBytes(Boolean value)
+        public static Byte[] GetBytes(Boolean value)
         {
             return BitConverter.GetBytes(value);
         }

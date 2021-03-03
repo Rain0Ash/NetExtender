@@ -380,7 +380,7 @@ namespace NetExtender.Utils.Types
         /// <param name="date">Date to convert</param>
         /// <param name="epoch">Epoch to use (defaults to unix epoch of 1/1/1970)</param>
         /// <returns>The Unix Date in DateTime format</returns>
-        public static DateTime To(this Int32 date, DateTime epoch = default)
+        public static DateTime ToDateTime(this Int32 date, DateTime epoch = default)
         {
             if (epoch == default)
             {
@@ -396,7 +396,7 @@ namespace NetExtender.Utils.Types
         /// <param name="date">Date to convert</param>
         /// <param name="epoch">Epoch to use (defaults to unix epoch of 1/1/1970)</param>
         /// <returns>The Unix Date in DateTime format</returns>
-        public static DateTime To(this Int64 date, DateTime epoch = default)
+        public static DateTime ToDateTime(this Int64 date, DateTime epoch = default)
         {
             if (epoch == default)
             {

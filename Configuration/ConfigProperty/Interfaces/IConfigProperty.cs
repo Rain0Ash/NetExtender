@@ -8,11 +8,12 @@ namespace NetExtender.Configuration
 {
     public interface IConfigProperty<T> : IReadOnlyConfigProperty<T>, IConfigPropertyBase
     {
+        public new T DefaultValue { get; set; }
         public new Boolean ThrowOnInvalid { get; set; }
+        public new Boolean ThrowOnReadOnly { get; set; }
         public new TryConverter<String, T> Converter {get; set; }
         public void SetValue(T value);
         public T GetOrSetValue();
-        public void ChangeDefaultValue(T newValue, Boolean changeValue = true);
         public void ResetValue();
         public void RemoveValue();
     }

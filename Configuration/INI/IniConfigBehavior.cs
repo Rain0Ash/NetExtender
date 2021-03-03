@@ -65,7 +65,7 @@ namespace NetExtender.Configuration.Ini
         {
             if (GetPrivateProfileString(section, key, String.Empty, Buffer, 255, Path) == 0)
             {
-                InteropUtils.ThrowLastWin32Exception();
+                return null;
             }
 
             String result = Buffer.Pop();

@@ -11,17 +11,6 @@ namespace NetExtender.Types.Strings
     public abstract class FormatStringBase : StringBase, IFormatString
     {
         public abstract Int32 Arguments { get; }
-        protected abstract Object[] FormatArguments { get; }
-
-        public virtual String Format()
-        {
-            return Format((IFormatProvider) null);
-        }
-        
-        public virtual String Format([CanBeNull] IFormatProvider? provider)
-        {
-            return Arguments > 0 ? Format(provider, StringUtils.FormatSafeGetArguments(FormatArguments, Arguments)) : NonFormatToString(provider);
-        }
 
         public virtual String Format(params Object[] format)
         {
@@ -61,12 +50,12 @@ namespace NetExtender.Types.Strings
 
         public override String ToString()
         {
-            return NonFormatToString()?.Format() ?? String.Empty;
+            return NonFormatToString() ?? String.Empty;
         }
         
         public override String ToString([CanBeNull] IFormatProvider? provider)
         {
-            return NonFormatToString(provider)?.Format(provider) ?? String.Empty;
+            return NonFormatToString(provider) ?? String.Empty;
         }
     }
 }

@@ -376,10 +376,7 @@ namespace NetExtender.Combinatorics
             }
             else
             {
-                if (comparer is null)
-                {
-                    comparer = new SelfComparer<T>();
-                }
+                comparer ??= new SelfComparer<T>();
 
                 _values.Sort(comparer);
                 Int32 j = 1;

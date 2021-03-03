@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NetExtender.Utils.Types;
-using NetExtender.Exceptions;
 using NetExtender.Types.Maps.Interfaces;
 
 namespace NetExtender.Types.Maps
@@ -69,15 +68,7 @@ namespace NetExtender.Types.Maps
         {
             _order = new List<TKey>(capacity);
         }
-
-        protected override void CheckSync()
-        {
-            if (Base.Count != Reversed.Count || Base.Count != _order.Count)
-            {
-                throw new CollectionSyncException();
-            }
-        }
-
+        
         public TKey GetKeyByIndex(Int32 index)
         {
             return _order[index];

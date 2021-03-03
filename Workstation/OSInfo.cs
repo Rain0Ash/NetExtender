@@ -231,8 +231,10 @@ namespace NetExtender.Workstation
                 String name = "unknown";
 
                 OperatingSystem osVersion = Environment.OSVersion;
-                OSVERSIONINFOEX osVersionInfo = new OSVERSIONINFOEX();
-                osVersionInfo.dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSVERSIONINFOEX));
+                OSVERSIONINFOEX osVersionInfo = new OSVERSIONINFOEX
+                {
+                    dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSVERSIONINFOEX))
+                };
 
                 if (GetVersionEx(ref osVersionInfo))
                 {
@@ -289,15 +291,7 @@ namespace NetExtender.Workstation
 
                                         break;
                                     case 10:
-                                        if (csdVersion == "A")
-                                        {
-                                            name = "Windows 98 Second Edition";
-                                        }
-                                        else
-                                        {
-                                            name = "Windows 98";
-                                        }
-
+                                        name = csdVersion == "A" ? "Windows 98 Second Edition" : "Windows 98";
                                         break;
                                     case 90:
                                         name = "Windows Me";
@@ -311,75 +305,62 @@ namespace NetExtender.Workstation
                         {
                             Byte productType = osVersionInfo.wProductType;
 
-                            switch (majorVersion)
+                            name = majorVersion switch
                             {
-                                case 3:
-                                    name = "Windows NT 3.51";
-                                    break;
-                                case 4:
-                                    name = productType switch
+                                3 => "Windows NT 3.51",
+                                4 => productType switch
+                                {
+                                    1 => "Windows NT 4.0",
+                                    3 => "Windows NT 4.0 Server",
+                                    _ => name
+                                },
+                                5 => minorVersion switch
+                                {
+                                    0 => "Windows 2000",
+                                    1 => "Windows XP",
+                                    2 => "Windows Server 2003",
+                                    _ => name
+                                },
+                                6 => minorVersion switch
+                                {
+                                    0 => productType switch
                                     {
-                                        1 => "Windows NT 4.0",
-                                        3 => "Windows NT 4.0 Server",
+                                        1 => "Windows Vista",
+                                        3 => "Windows Server 2008",
                                         _ => name
-                                    };
-
-                                    break;
-                                case 5:
-                                    name = minorVersion switch
+                                    },
+                                    1 => productType switch
                                     {
-                                        0 => "Windows 2000",
-                                        1 => "Windows XP",
-                                        2 => "Windows Server 2003",
+                                        1 => "Windows 7",
+                                        3 => "Windows Server 2008 R2",
                                         _ => name
-                                    };
-
-                                    break;
-                                case 6:
-                                    name = minorVersion switch
+                                    },
+                                    2 => productType switch
                                     {
-                                        0 => productType switch
-                                        {
-                                            1 => "Windows Vista",
-                                            3 => "Windows Server 2008",
-                                            _ => name
-                                        },
-                                        1 => productType switch
-                                        {
-                                            1 => "Windows 7",
-                                            3 => "Windows Server 2008 R2",
-                                            _ => name
-                                        },
-                                        2 => productType switch
-                                        {
-                                            1 => "Windows 8",
-                                            3 => "Windows Server 2012",
-                                            _ => name
-                                        },
-                                        3 => productType switch
-                                        {
-                                            1 => "Windows 8.1",
-                                            3 => "Windows Server 2012 R2",
-                                            _ => name
-                                        },
+                                        1 => "Windows 8",
+                                        3 => "Windows Server 2012",
                                         _ => name
-                                    };
-
-                                    break;
-                                case 10:
-                                    name = minorVersion switch
+                                    },
+                                    3 => productType switch
                                     {
-                                        0 => productType switch
-                                        {
-                                            1 => "Windows 10",
-                                            3 => "Windows Server 2016",
-                                            _ => name
-                                        },
+                                        1 => "Windows 8.1",
+                                        3 => "Windows Server 2012 R2",
                                         _ => name
-                                    };
-
-                                    break;
-                            }
+                                    },
+                                    _ => name
+                                },
+                                10 => minorVersion switch
+                                {
+                                    0 => productType switch
+                                    {
+                                        1 => "Windows 10",
+                                        3 => "Windows Server 2016",
+                                        _ => name
+                                    },
+                                    _ => name
+                                },
+                                _ => name
+                            };
 
                             break;
                         }

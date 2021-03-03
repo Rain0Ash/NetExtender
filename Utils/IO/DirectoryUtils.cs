@@ -20,14 +20,14 @@ namespace NetExtender.Utils.IO
 {
     public static class DirectoryUtils
     {
-        public static Boolean TryCreateDirectory(String path, PathAction remove = PathAction.Standart)
+        public static Boolean TryCreateDirectory(String path, PathAction remove = PathAction.Standard)
         {
             return TryCreateDirectory(path, remove, out _);
         }
 
         public static Boolean TryCreateDirectory(String path, out DirectoryInfo directoryInfo)
         {
-            return TryCreateDirectory(path, PathAction.Standart, out directoryInfo);
+            return TryCreateDirectory(path, PathAction.Standard, out directoryInfo);
         }
 
         public static Boolean TryCreateDirectory(String path, PathAction remove, out DirectoryInfo directoryInfo)
@@ -55,7 +55,7 @@ namespace NetExtender.Utils.IO
                 {
                     switch (remove)
                     {
-                        case PathAction.Standart:
+                        case PathAction.Standard:
                             if (GetFiles(path).All(file => file.Equals("desktop.ini", StringComparison.OrdinalIgnoreCase)) &&
                                 !GetDirectories(path).Any())
                             {
@@ -159,11 +159,16 @@ namespace NetExtender.Utils.IO
             return GetFiles(included, excluded, new Regex(pattern));
         }
 
-        public static IEnumerable<String> GetFiles(IEnumerable<FSWatcher> included, IEnumerable<FSWatcher> excluded, Regex regex)
+        public static IEnumerable<String> GetFiles([NotNull] IEnumerable<FSWatcher> included, [CanBeNull] IEnumerable<FSWatcher> excluded, [NotNull] Regex regex)
         {
-            if (included.IsNullOrEmpty())
+            if (included is null)
             {
-                yield break;
+                throw new ArgumentNullException(nameof(included));
+            }
+
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
             }
 
             HashSet<String> includedFolders = new HashSet<String>();

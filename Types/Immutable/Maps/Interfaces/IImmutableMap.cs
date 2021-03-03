@@ -14,6 +14,7 @@ namespace NetExtender.Types.Immutable.Maps.Interfaces
         public Boolean ContainsByValue(TValue key, TKey value);
         public Boolean ContainsByValue(KeyValuePair<TValue, TKey> item);
         public Boolean TryGetKey(TValue key, out TKey value);
+        public Boolean TryGetValue(TValue equalValue, out TValue actualValue);
 
         public IEnumerator<KeyValuePair<TValue, TKey>> GetValuesEnumerator();
         
@@ -21,12 +22,11 @@ namespace NetExtender.Types.Immutable.Maps.Interfaces
         public IImmutableMap<TKey, TValue> AddByValue(KeyValuePair<TValue, TKey> item);
 
         public IImmutableMap<TKey, TValue> Remove(TKey key, TValue value);
+        public IImmutableMap<TKey, TValue> Remove(KeyValuePair<TKey, TValue> item);
         
         public IImmutableMap<TKey, TValue> RemoveByValue(TValue key);
 
         public IImmutableMap<TKey, TValue> RemoveByValue(TValue key, TKey value);
-
-        public IImmutableMap<TKey, TValue> RemoveByValue(TValue key, out TKey value);
         
         public IImmutableMap<TKey, TValue> RemoveByValue(KeyValuePair<TValue, TKey> item);
 

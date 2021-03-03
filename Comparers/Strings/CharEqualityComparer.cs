@@ -50,23 +50,16 @@ namespace NetExtender.Comparers
 
         private static CompareHandler GetComparerInternal(StringComparison comparison)
         {
-            switch (comparison)
+            return comparison switch
             {
-                case StringComparison.CurrentCulture:
-                    return (x, y) => x == y;
-                case StringComparison.CurrentCultureIgnoreCase:
-                    return (x, y) => Char.ToUpper(x, CultureInfo.CurrentCulture) == Char.ToUpper(y, CultureInfo.CurrentCulture);
-                case StringComparison.InvariantCulture:
-                    return (x, y) => x == y;
-                case StringComparison.InvariantCultureIgnoreCase:
-                    return (x, y) => Char.ToUpper(x, CultureInfo.InvariantCulture) == Char.ToUpper(y, CultureInfo.InvariantCulture);
-                case StringComparison.Ordinal:
-                    return (x, y) => x == y;
-                case StringComparison.OrdinalIgnoreCase:
-                    return (x, y) => Char.ToUpperInvariant(x) == Char.ToUpperInvariant(y);
-                default:
-                    throw new NotSupportedException();
-            }
+                StringComparison.CurrentCulture => (x, y) => x == y,
+                StringComparison.CurrentCultureIgnoreCase => (x, y) => Char.ToUpper(x, CultureInfo.CurrentCulture) == Char.ToUpper(y, CultureInfo.CurrentCulture),
+                StringComparison.InvariantCulture => (x, y) => x == y,
+                StringComparison.InvariantCultureIgnoreCase => (x, y) => Char.ToUpper(x, CultureInfo.InvariantCulture) == Char.ToUpper(y, CultureInfo.InvariantCulture),
+                StringComparison.Ordinal => (x, y) => x == y,
+                StringComparison.OrdinalIgnoreCase => (x, y) => Char.ToUpperInvariant(x) == Char.ToUpperInvariant(y),
+                _ => throw new NotSupportedException()
+            };
         }
 
         private static Boolean Equals(Char x, Char y, CompareHandler comparison)

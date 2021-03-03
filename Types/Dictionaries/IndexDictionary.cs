@@ -89,6 +89,7 @@ namespace NetExtender.Types.Dictionaries
 
         public IndexDictionary()
         {
+            _dictionary = new Dictionary<TKey, TValue>();
             _order = new List<TKey>();
         }
 
@@ -114,23 +115,29 @@ namespace NetExtender.Types.Dictionaries
             _order = new List<TKey>(dictionary.Keys);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public IndexDictionary([JetBrains.Annotations.NotNull] IEnumerable<KeyValuePair<TKey, TValue>> collection)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
+            
+            collection = collection.Materialize();
 
             _dictionary = new Dictionary<TKey, TValue>(collection);
             _order = new List<TKey>(collection.Select(pair => pair.Key));
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public IndexDictionary([JetBrains.Annotations.NotNull] IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? comparer)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
+
+            collection = collection.Materialize();
 
             _dictionary = new Dictionary<TKey, TValue>(collection, comparer);
             _order = new List<TKey>(collection.Select(pair => pair.Key));

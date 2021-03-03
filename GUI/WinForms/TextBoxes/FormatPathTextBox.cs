@@ -56,7 +56,7 @@ namespace NetExtender.GUI.WinForms.TextBoxes
                     return;
                 }
 
-                if (value is not null && value.Any() && value.Intersect(AvailableFormatingParts).Count() != value.Count())
+                if (value is not null && value.Any() && value.Intersect(AvailableFormatingParts).Count() != value.Count)
                 {
                     throw new ArgumentException();
                 }

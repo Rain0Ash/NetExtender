@@ -11,11 +11,12 @@ namespace NetExtender.Types.Drawing.Colors.Interfaces
     {
     }
     
-    public interface IColor : IEquatable<IColor>
+    public interface IColor
     {
         public ColorType Type { get; }
 
         public Color ToColor();
         public Boolean ToColor(out Color color);
+        public Boolean Equals(IColor color);
     }
 }

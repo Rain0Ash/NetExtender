@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Immutable;
 using NetExtender.Configuration.Interfaces.Property.Common;
 using NetExtender.Crypto;
 using NetExtender.Crypto.CryptKey.Interfaces;
@@ -14,7 +15,7 @@ namespace NetExtender.Configuration
         public String Path { get; }
         public IPropertyConfigBase Config { get; }
         public String Key { get; }
-        public String[] Sections { get; }
+        public IImmutableList<String> Sections { get; }
         public CryptAction Crypt { get; }
         public ICryptKey CryptKey { get; }
         public Boolean Caching { get; }

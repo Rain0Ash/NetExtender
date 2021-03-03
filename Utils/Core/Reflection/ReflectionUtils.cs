@@ -12,11 +12,38 @@ using System.Numerics;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using JetBrains.Annotations;
+using NetExtender.Utils.Types;
 
 namespace NetExtender.Utils.Core
 {
     public static class ReflectionUtils
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Type TryGetGenericTypeDefinition([NotNull] this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return type.IsGenericType ? type.GetGenericTypeDefinition() : type;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Type[] GetGenericTypeDefinitionInterfaces([NotNull] this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            Type[] interfaces = type.GetInterfaces();
+            interfaces.InnerChange(TryGetGenericTypeDefinition);
+
+            return interfaces;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T GetCustomAttribute<T>(this MemberInfo element) where T : Attribute
         {

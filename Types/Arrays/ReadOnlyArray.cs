@@ -88,7 +88,7 @@ namespace NetExtender.Types.Arrays
             private readonly T[] _source;
             private Int32 _index;
 
-            public T Current
+            public readonly T Current
             {
                 get
                 {
@@ -96,7 +96,7 @@ namespace NetExtender.Types.Arrays
                 }
             }
 
-            Object IEnumerator.Current
+            readonly Object IEnumerator.Current
             {
                 get
                 {

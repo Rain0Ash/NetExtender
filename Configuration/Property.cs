@@ -3,14 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using JetBrains.Annotations;
 using NetExtender.Configuration.Common;
-using NetExtender.Utils.Types;
 using NetExtender.Configuration.Interfaces.Property;
+using NetExtender.Configuration.Interfaces.Property.Common;
 using NetExtender.Converters;
-using NetExtender.Crypto;
-using NetExtender.Crypto.CryptKey;
 using NetExtender.Crypto.CryptKey.Interfaces;
+using NetExtender.Utils.Types;
 
 namespace NetExtender.Configuration
 {
@@ -96,103 +96,19 @@ namespace NetExtender.Configuration
             ConfigPropertyObserver.ThrowIfPropertyNotLinked(property);
             return RemoveValue(property.Key, property.Sections);
         }
-        
-        public IConfigProperty<T> GetProperty<T>(String key, params String[] sections)
-        {
-            return GetProperty(key, default(T), sections);
-        }
 
-        public IConfigProperty<T> GetProperty<T>(String key, T value, params String[] sections)
-        {
-            return GetProperty(key, value, null, sections);
-        }
-        
-        public IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, params String[] sections)
-        {
-            return GetProperty(key, value, validate, CryptAction.Decrypt, sections);
-        }
-
-        public IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, CryptAction crypt, params String[] sections)
-        {
-            return GetProperty(key, value, validate, CryptKey.Create(crypt), sections);
-        }
-
-        public IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, ICryptKey crypt, params String[] sections)
-        {
-            return GetProperty(key, value, validate, crypt, DefaultOptions, sections);
-        }
-        
-        public IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, Func<ICryptKey> crypt, params String[] sections)
-        {
-            return GetProperty(key, value, validate, crypt?.Invoke(), sections);
-        }
-        
-        public IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, Func<String, ICryptKey> crypt, params String[] sections)
-        {
-            return GetProperty(key, value, validate, crypt?.Invoke(key), sections);
-        }
-        
-        public IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, Func<String, String[], ICryptKey> crypt, params String[] sections)
-        {
-            return GetProperty(key, value, validate, crypt?.Invoke(key, sections), sections);
-        }
-        
-        public IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, CryptAction crypt, ConfigPropertyOptions options, params String[] sections)
-        {
-            return GetProperty(key, value, validate, CryptKey.Create(crypt), options, sections);
-        }
-        
-        public IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, ICryptKey crypt, ConfigPropertyOptions options, params String[] sections)
-        {
-            return GetProperty(key, value, validate, crypt, options, ConvertUtils.TryConvert, sections);
-        }
-        
-        public IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, Func<ICryptKey> crypt, ConfigPropertyOptions options, params String[] sections)
-        {
-            return GetProperty(key, value, validate, crypt?.Invoke(), options, sections);
-        }
-        
-        public IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, Func<String, ICryptKey> crypt, ConfigPropertyOptions options, params String[] sections)
-        {
-            return GetProperty(key, value, validate, crypt?.Invoke(key), options, sections);
-        }
-        
-        public IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, Func<String, String[], ICryptKey> crypt, ConfigPropertyOptions options, params String[] sections)
-        {
-            return GetProperty(key, value, validate, crypt?.Invoke(key, sections), options, sections);
-        }
-        
-        public IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, CryptAction crypt, ConfigPropertyOptions options, TryConverter<String, T> converter, params String[] sections)
-        {
-            return GetProperty(key, value, validate, CryptKey.Create(crypt), options, converter, sections);
-        }
-
-        IReadOnlyConfigProperty<T> IReadOnlyPropertyConfig.GetProperty<T>(String key, T value, Func<T, Boolean> validate, ICryptKey crypt, ConfigPropertyOptions options, TryConverter<String, T> converter, params String[] sections)
+        IReadOnlyConfigProperty<T> IReadOnlyPropertyConfig.GetProperty<T>(String key, T value, Func<T, Boolean> validate, ICryptKey crypt, ConfigPropertyOptions options, TryConverter<String, T> converter, IEnumerable<String> sections)
         {
             return GetProperty(key, value, validate, crypt, options, converter, sections);
         }
         
-        public virtual IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, ICryptKey crypt, ConfigPropertyOptions options, TryConverter<String, T> converter, params String[] sections)
+        public virtual IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, ICryptKey crypt, ConfigPropertyOptions options, TryConverter<String, T> converter, IEnumerable<String> sections)
         {
-            return GetOrAddProperty<T>(new ConfigProperty<T>(this, key, value, validate, crypt, options, converter, sections));
-        }
-        
-        public IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, Func<ICryptKey> crypt, ConfigPropertyOptions options, TryConverter<String, T> converter, params String[] sections)
-        {
-            return GetProperty(key, value, validate, crypt?.Invoke(), options, converter, sections);
-        }
-        
-        public IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, Func<String, ICryptKey> crypt, ConfigPropertyOptions options, TryConverter<String, T> converter, params String[] sections)
-        {
-            return GetProperty(key, value, validate, crypt?.Invoke(key), options, converter, sections);
-        }
-        
-        public IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, Func<String, String[], ICryptKey> crypt, ConfigPropertyOptions options, TryConverter<String, T> converter, params String[] sections)
-        {
-            return GetProperty(key, value, validate, crypt?.Invoke(key, sections), options, converter, sections);
+            IImmutableList<String> materialized = sections.AsImmutableIList();
+            return GetOrAddProperty<T>(this, key, materialized, () => new ConfigProperty<T>(this, key, value, validate, crypt, options, converter, materialized));
         }
 
-        private static IConfigProperty<T> GetOrAddProperty<T>(IConfigPropertyBase property)
+        private static IConfigProperty<T> GetOrAddProperty<T>([NotNull] IConfigPropertyBase property)
         {
             if (ConfigPropertyObserver.GetOrAddProperty(property) is IConfigProperty<T> result)
             {
@@ -200,6 +116,38 @@ namespace NetExtender.Configuration
             }
             
             throw new ArgumentException(@$"Config already contains another property with same path '{property.Path}' and different generic type.", nameof(property));
+        }
+        
+        private static IConfigProperty<T> GetOrAddProperty<T>([NotNull] IPropertyConfigBase config, [NotNull] String key, [NotNull] IEnumerable<String> sections, [NotNull] Func<IConfigPropertyBase> factory)
+        {
+            if (config is null)
+            {
+                throw new ArgumentNullException(nameof(config));
+            }
+
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (sections is null)
+            {
+                throw new ArgumentNullException(nameof(sections));
+            }
+
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            String path = ConfigPropertyBase.GetPath(key, sections);
+            
+            if (ConfigPropertyObserver.GetOrAddProperty(config, path, factory) is IConfigProperty<T> result)
+            {
+                return result;
+            }
+            
+            throw new ArgumentException(@$"Config already contains another property with same path '{path}' and different generic type.", nameof(sections));
         }
 
         [CanBeNull]

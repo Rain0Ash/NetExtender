@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Configuration;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -691,7 +691,7 @@ namespace NetExtender.Configuration
         {
             if (IsReadOnly && ThrowOnReadOnly)
             {
-                throw new ReadOnlyException("Readonly mode");
+                throw new SettingsPropertyIsReadOnlyException("Readonly mode");
             }
 
             return IsReadOnly;

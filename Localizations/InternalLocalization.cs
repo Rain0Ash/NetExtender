@@ -11,6 +11,7 @@ using NetExtender.Configuration.Common;
 using NetExtender.Cultures.Comparers;
 using NetExtender.Localizations.Interfaces;
 using NetExtender.Localizations.Sub.Interfaces;
+using NetExtender.Types.Culture;
 using NetExtender.Types.Strings.Interfaces;
 using NetExtender.Utils.Types;
 using ReactiveUI.Fody.Helpers;
@@ -22,6 +23,8 @@ namespace NetExtender.Localizations
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         private class InternalLocalization : Config, ILocalization
         {
+            public event EmptyHandler SupportedLanguagesChanged;
+            
             private event LanguageChangedHandler LanguageChanged;
 
             public event LanguageChangedHandler LanguageCultureChanged
@@ -50,13 +53,13 @@ namespace NetExtender.Localizations
             public Boolean UseSystemCulture { get; set; } = true;
 
             [Reactive]
-            public CultureInfo Culture { get; private set; }
+            public CultureInfo Culture { get; private set; } = Default;
 
-            public CultureInfo Standart
+            public CultureInfo Standard
             {
                 get
                 {
-                    return UseSystemCulture && Supported.ContainsKey(CultureUtils.System) ? CultureUtils.System : CultureUtils.English;
+                    return UseSystemCulture && Supported.ContainsKey(CultureUtils.System) ? CultureUtils.System : Default;
                 }
             }
 
@@ -87,7 +90,7 @@ namespace NetExtender.Localizations
                 }
                 else
                 {
-                    supported = new Dictionary<CultureInfo, ISubLocalization>()
+                    supported = new Dictionary<CultureInfo, ISubLocalization>
                     {
                         {Default, null}
                     };
@@ -126,7 +129,13 @@ namespace NetExtender.Localizations
                     throw new ArgumentNullException(nameof(info));
                 }
 
-                return Supported.TryAdd(info, config);
+                if (!Supported.TryAdd(info, config))
+                {
+                    return false;
+                }
+                
+                SupportedLanguagesChanged?.Invoke();
+                return true;
             }
 
             public Boolean RemoveSupportedCulture([NotNull] CultureInfo info)
@@ -136,51 +145,62 @@ namespace NetExtender.Localizations
                     throw new ArgumentNullException(nameof(info));
                 }
 
-                if (info.LCID == CultureUtils.Default || info.LCID == CultureUtils.English.LCID)
+                if (info.LCID == CultureUtils.Default || info.LCID == Default.LCID)
                 {
                     return false;
                 }
 
-                return Supported.Remove(info);
-            }
-
-            public void UpdateLocalization(CultureInfo info)
-            {
-                if (info is null)
-                {
-                    return;
-                }
-
-                if (Equals(Culture, info))
-                {
-                    return;
-                }
-
-                if (!Supported.ContainsKey(info))
-                {
-                    throw new InvalidOperationException();
-                }
-
-                Culture = info;
-
-                if (ChangeUIThreadLanguage)
-                {
-                    SetUILanguage();
-                }
-
-                LanguageChanged?.Invoke(Culture);
-            }
-
-            public Boolean TryUpdateLocalization(CultureInfo info)
-            {
-                if (info is null)
+                if (!Supported.Remove(info))
                 {
                     return false;
                 }
 
-                if (Equals(Culture, info))
+                SupportedLanguagesChanged?.Invoke();
+                return true;
+            }
+
+            public Boolean IsSupportCulture(CultureInfo info)
+            {
+                if (info is null)
+                {
+                    throw new ArgumentNullException(nameof(info));
+                }
+
+                if (info.LCID == CultureUtils.Default || info.LCID == Default.LCID)
                 {
                     return true;
+                }
+
+                return Supported.ContainsKey(info);
+            }
+
+            public Boolean Update(UInt16 lcid)
+            {
+                return Update(CultureUtils.GetCultureInfo(lcid));
+            }
+
+            public Boolean Update(Int32 lcid)
+            {
+                return Update(CultureUtils.GetCultureInfo(lcid));
+            }
+
+            public Boolean Update(LCID lcid)
+            {
+                return Update(lcid.GetCultureInfo());
+            }
+
+            public Boolean Update(CultureLCID lcid)
+            {
+                return Update(lcid.GetCultureInfo());
+            }
+
+            public Boolean Update(CultureInfo info)
+            {
+                info ??= Default;
+
+                if (info.IsCultureEquals(Culture))
+                {
+                    return false;
                 }
 
                 if (!Supported.ContainsKey(info))
@@ -204,11 +224,11 @@ namespace NetExtender.Localizations
                 UInt16 lcid;
                 try
                 {
-                    lcid = Culture.Equals(CultureInfo.InvariantCulture) ? CultureUtils.English.LCID16() : Culture.LCID16();
+                    lcid = Culture.IsCultureEquals(CultureInfo.InvariantCulture) ? Default.LCID16() : Culture.LCID16();
                 }
                 catch (Exception)
                 {
-                    lcid = CultureUtils.English.LCID16();
+                    lcid = Default.LCID16();
                 }
 
                 if (CultureUtils.SetUILanguage(lcid))
@@ -216,7 +236,7 @@ namespace NetExtender.Localizations
                     return true;
                 }
 
-                CultureUtils.English.SetUILanguage();
+                Default.SetUILanguage();
                 return false;
             }
 
@@ -230,7 +250,7 @@ namespace NetExtender.Localizations
                 return Comparer.GetOrder(info);
             }
 
-            public ILocalizationProperty GetProperty(String key, IString value, params String[] sections)
+            public ILocalizationProperty GetProperty(String key, IString value, IEnumerable<String> sections)
             {
                 return new LocalizationProperty(this, Supported, key, value, sections);
             }

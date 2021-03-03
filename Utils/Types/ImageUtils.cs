@@ -140,7 +140,7 @@ namespace NetExtender.Utils.Types
             using Graphics gfx = Graphics.FromImage(bmp);
             SizeF stringSize = gfx.MeasureString(text, font);
 
-            return new Rectangle {Width = ((Int32) stringSize.Width) + 20, Height = ((Int32) stringSize.Height) + 10};
+            return new Rectangle {Width = (Int32) stringSize.Width + 20, Height = (Int32) stringSize.Height + 10};
         }
 
         public static Double GetAspectRatio(this Image image)

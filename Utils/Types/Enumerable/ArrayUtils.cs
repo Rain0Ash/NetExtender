@@ -9,7 +9,7 @@ using NetExtender.Types.Arrays;
 
 namespace NetExtender.Utils.Types
 {
-    public static partial class ArrayUtils
+    public static class ArrayUtils
     {
         /// <summary>
         /// Adds the provided item to the end of the array.
@@ -57,6 +57,82 @@ namespace NetExtender.Utils.Types
             }
 
             return array;
+        }
+
+        public static void InnerChange<T>([NotNull] this T[] array, [NotNull] Func<T, T> selector)
+        {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            for (Int32 i = 0; i < array.Length; i++)
+            {
+                T item = array[i];
+                
+                array[i] = selector(item);
+            }
+        }
+        
+        public static void InnerChangeWhere<T>([NotNull] this T[] array, [NotNull] Func<T, Boolean> where, [NotNull] Func<T, T> selector)
+        {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            for (Int32 i = 0; i < array.Length; i++)
+            {
+                T item = array[i];
+                
+                if (where(item))
+                {
+                    array[i] = selector(item);
+                }
+            }
+        }
+        
+        public static void InnerChangeWhereNot<T>([NotNull] this T[] array, [NotNull] Func<T, Boolean> where, [NotNull] Func<T, T> selector)
+        {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            for (Int32 i = 0; i < array.Length; i++)
+            {
+                T item = array[i];
+                
+                if (!where(item))
+                {
+                    array[i] = selector(item);
+                }
+            }
         }
 
         /// <summary>

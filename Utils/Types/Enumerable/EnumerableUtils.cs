@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
@@ -11,6 +13,8 @@ using NetExtender.Random;
 using NetExtender.Random.Interfaces;
 using NetExtender.Types.Collections;
 using NetExtender.Types.Dictionaries;
+using NetExtender.Types.Sets.Interfaces;
+using NetExtender.Utils.Core;
 using NetExtender.Utils.Numerics;
 
 namespace NetExtender.Utils.Types
@@ -1068,7 +1072,7 @@ namespace NetExtender.Utils.Types
             return TrySelectWhereNot(source, where, predicate);
         }
 
-        public static IEnumerable<TOut> SelectWhere<T, TOut>([NotNull] this IEnumerable<T> source, TryParseHandler<T, TOut> predicate)
+        public static IEnumerable<TOut> SelectWhere<T, TOut>([NotNull] this IEnumerable<T> source, [NotNull] TryParseHandler<T, TOut> predicate)
         {
             if (source is null)
             {
@@ -3689,22 +3693,78 @@ namespace NetExtender.Utils.Types
 
             return source.Select(selector).AllSame(comparer);
         }
+        
+        public static IEnumerable<T> DistinctThrow<T>(this IEnumerable<T> source)
+        {
+            return DistinctThrow(source, null);
+        }
+        
+        public static IEnumerable<T> DistinctThrow<T>(this IEnumerable<T> source, [CanBeNull] IEqualityComparer<T> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            HashSet<T> already = new HashSet<T>(comparer ?? EqualityComparer<T>.Default);
 
-        /// <summary>
-        /// Returns distinct elements from a sequence using the provided value selector for equality comparison.
-        /// </summary>
-        /// <typeparam name="T">The type of the elements of source.</typeparam>
-        /// <typeparam name="TValue">The type of the value on which to distinct.</typeparam>
-        /// <param name="source">The source collection.</param>
-        /// <param name="selector">A transform function to apply to each element to select the value on which to distinct.</param>
-        public static IEnumerable<T> DistinctBy<T, TValue>([NotNull] this IEnumerable<T> source, Func<T, TValue> selector)
+            foreach (T item in source)
+            {
+                if (!already.Add(item))
+                {
+                    throw new ArgumentException($"Item {item} already in {nameof(source)}");
+                }
+                
+                yield return item;
+            }
+        }
+        
+        public static IEnumerable<T> DistinctByThrow<T, TDistinct>(this IEnumerable<T> source, [NotNull] Func<T, TDistinct> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            HashSet<TValue> already = new HashSet<TValue>();
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            HashSet<TDistinct> already = new HashSet<TDistinct>();
+
+            foreach (T item in source)
+            {
+                TDistinct distinct = selector(item);
+                if (!already.Add(distinct))
+                {
+                    throw new ArgumentException($"Item \"{distinct}\" already in {nameof(source)}");
+                }
+                
+                yield return item;
+            }
+        }
+        
+        /// <summary>
+        /// Returns distinct elements from a sequence using the provided value selector for equality comparison.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of source.</typeparam>
+        /// <typeparam name="TDistinct">The type of the value on which to distinct.</typeparam>
+        /// <param name="source">The source collection.</param>
+        /// <param name="selector">A transform function to apply to each element to select the value on which to distinct.</param>
+        public static IEnumerable<T> DistinctBy<T, TDistinct>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, TDistinct> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            HashSet<TDistinct> already = new HashSet<TDistinct>();
 
             foreach (T item in source)
             {
@@ -3837,6 +3897,431 @@ namespace NetExtender.Utils.Types
                 IReadOnlyCollection<T> => source,
                 _ => source.ToArray()
             };
+        }
+
+        public static Boolean Is<T>(CollectionType type) where T : IEnumerable
+        {
+            return Is(typeof(T), type);
+        }
+        
+        public static Boolean Is<T>(CollectionType type, Boolean strict) where T : IEnumerable
+        {
+            return Is(typeof(T), type, strict);
+        }
+
+        public static Boolean Is(this IEnumerable enumerable, CollectionType type)
+        {
+            return Is(enumerable?.GetType(), type);
+        }
+        
+        public static Boolean Is(this IEnumerable enumerable, CollectionType type, Boolean strict)
+        {
+            return Is(enumerable?.GetType(), type, strict);
+        }
+
+        public static Boolean Is(this Type type, CollectionType ctype)
+        {
+            return type is not null && type.GetCollectionType().HasFlag(ctype);
+        }
+        
+        public static Boolean Is(this Type type, CollectionType ctype, Boolean strict)
+        {
+            if (type is null)
+            {
+                return false;
+            }
+
+            Boolean istype = ctype switch
+            {
+                CollectionType.None => true,
+                CollectionType.Generic => type.IsGenericType,
+                CollectionType.Enumerable => TypeCache.IsEnumerable(type),
+                CollectionType.GenericEnumerable => TypeCache.IsGenericEnumerable(type),
+                CollectionType.Collection => TypeCache.IsCollection(type),
+                CollectionType.GenericCollection => TypeCache.IsGenericCollection(type),
+                CollectionType.Array => TypeCache.IsArray(type),
+                CollectionType.GenericArray => TypeCache.IsGenericArray(type),
+                CollectionType.List => TypeCache.IsList(type),
+                CollectionType.GenericList => TypeCache.IsGenericList(type),
+                CollectionType.Set => TypeCache.IsSet(type),
+                CollectionType.GenericSet => TypeCache.IsGenericSet(type),
+                CollectionType.Dictionary => TypeCache.IsDictionary(type),
+                CollectionType.GenericDictionary => TypeCache.IsGenericDictionary(type),
+                CollectionType.Stack => TypeCache.IsStack(type),
+                CollectionType.GenericStack => TypeCache.IsGenericStack(type),
+                CollectionType.Queue => TypeCache.IsQueue(type),
+                CollectionType.GenericQueue => TypeCache.IsGenericQueue(type),
+                _ => throw new NotSupportedException()
+            };
+            
+            if (strict || istype)
+            {
+                return istype;
+            }
+
+            return Is(type, ctype);
+        }
+
+        public static CollectionType GetCollectionType<T>() where T : IEnumerable
+        {
+            return GetCollectionType(typeof(T));
+        }
+
+        public static CollectionType GetCollectionType(this IEnumerable enumerable)
+        {
+            return GetCollectionType(enumerable?.GetType());
+        }
+
+        public static CollectionType GetCollectionType(this Type type)
+        {
+            if (type is null)
+            {
+                return CollectionType.None;
+            }
+
+            CollectionType collection = CollectionType.None;
+
+            if (TypeCache.IsGenericArray(type))
+            {
+                collection |= CollectionType.GenericArray;
+            }
+            else if (TypeCache.IsArray(type))
+            {
+                collection |= CollectionType.Array;
+            }
+            
+            if (TypeCache.IsGenericList(type))
+            {
+                collection |= CollectionType.GenericList;
+            }
+            else if (TypeCache.IsList(type))
+            {
+                collection |= CollectionType.List;
+            }
+            
+            if (TypeCache.IsGenericSet(type))
+            {
+                collection |= CollectionType.GenericSet;
+            }
+            else if (TypeCache.IsSet(type))
+            {
+                collection |= CollectionType.Set;
+            }
+            
+            if (TypeCache.IsGenericDictionary(type))
+            {
+                collection |= CollectionType.GenericDictionary;
+            }
+            else if (TypeCache.IsDictionary(type))
+            {
+                collection |= CollectionType.Dictionary;
+            }
+            
+            if (TypeCache.IsGenericStack(type))
+            {
+                collection |= CollectionType.GenericStack;
+            }
+            else if (TypeCache.IsStack(type))
+            {
+                collection |= CollectionType.Stack;
+            }
+            
+            if (TypeCache.IsGenericQueue(type))
+            {
+                collection |= CollectionType.GenericQueue;
+            }
+            else if (TypeCache.IsQueue(type))
+            {
+                collection |= CollectionType.Queue;
+            }
+
+            if (collection.HasFlag(CollectionType.Collection))
+            {
+                return collection;
+            }
+
+            if (TypeCache.IsGenericCollection(type))
+            {
+                collection |= CollectionType.GenericCollection;
+            }
+            else if (TypeCache.IsCollection(type))
+            {
+                collection |= CollectionType.Collection;
+            }
+
+            if (collection.HasFlag(CollectionType.Enumerable))
+            {
+                return collection;
+            }
+            
+            if (TypeCache.IsGenericEnumerable(type))
+            {
+                collection |= CollectionType.GenericEnumerable;
+            }
+            else if (TypeCache.IsEnumerable(type))
+            {
+                collection |= CollectionType.Enumerable;
+            }
+
+            return collection;
+        }
+
+        internal static class TypeCache
+        {
+            private readonly struct Status
+            {
+                public Boolean IsType { get; init; }
+                public Boolean IsNonGenericType { get; init; }
+                public Boolean IsGenericType { get; init; }
+
+                public Status(Boolean type, Boolean nongeneric, Boolean generic)
+                {
+                    IsType = type;
+                    IsNonGenericType = nongeneric;
+                    IsGenericType = generic;
+                }
+            }
+            
+            private static ConcurrentDictionary<Type, Status> EnumerableCache { get; } = new ConcurrentDictionary<Type, Status>();
+            private static ConcurrentDictionary<Type, Status> CollectionCache { get; } = new ConcurrentDictionary<Type, Status>();
+            private static ConcurrentDictionary<Type, Status> ListCache { get; } = new ConcurrentDictionary<Type, Status>();
+            private static ConcurrentDictionary<Type, Status> SetCache { get; } = new ConcurrentDictionary<Type, Status>();
+            private static ConcurrentDictionary<Type, Status> DictionaryCache { get; } = new ConcurrentDictionary<Type, Status>();
+            private static ConcurrentDictionary<Type, Status> StackCache { get; } = new ConcurrentDictionary<Type, Status>();
+            private static ConcurrentDictionary<Type, Status> QueueCache { get; } = new ConcurrentDictionary<Type, Status>();
+            
+            public static IImmutableSet<Type> EnumerableTypes { get; } = new HashSet<Type>{typeof(IEnumerable)}.ToImmutableHashSet();
+            public static IImmutableSet<Type> GenericEnumerableTypes { get; } = new HashSet<Type>{typeof(IEnumerable<>)}.ToImmutableHashSet();
+            public static IImmutableSet<Type> CollectionTypes { get; } = new HashSet<Type>{typeof(ICollection)}.ToImmutableHashSet();
+            public static IImmutableSet<Type> GenericCollectionTypes { get; } = new HashSet<Type>{typeof(ICollection<>), typeof(IReadOnlyCollection<>)}.ToImmutableHashSet();
+            public static IImmutableSet<Type> ListTypes { get; } = new HashSet<Type>{typeof(IList)}.ToImmutableHashSet();
+            public static IImmutableSet<Type> GenericListTypes { get; } = new HashSet<Type>{typeof(IList<>), typeof(IReadOnlyList<>), typeof(IImmutableList<>)}.ToImmutableHashSet();
+            public static IImmutableSet<Type> SetTypes { get; } = new HashSet<Type>{typeof(ISet)}.ToImmutableHashSet();
+            public static IImmutableSet<Type> GenericSetTypes { get; } = new HashSet<Type>{typeof(ISet<>), typeof(IReadOnlySet<>), typeof(IImmutableSet<>)}.ToImmutableHashSet();
+            public static IImmutableSet<Type> DictionaryTypes { get; } = new HashSet<Type>{typeof(IDictionary)}.ToImmutableHashSet();
+            public static IImmutableSet<Type> GenericDictionaryTypes { get; } = new HashSet<Type>{typeof(IDictionary<,>), typeof(IReadOnlyDictionary<,>), typeof(IImmutableDictionary<,>)}.ToImmutableHashSet();
+            public static IImmutableSet<Type> StackTypes { get; } = new HashSet<Type>{typeof(Stack)}.ToImmutableHashSet();
+            public static IImmutableSet<Type> GenericStackTypes { get; } = new HashSet<Type>{typeof(Stack<>), typeof(ConcurrentStack<>), typeof(IImmutableStack<>)}.ToImmutableHashSet();
+            public static IImmutableSet<Type> QueueTypes { get; } = new HashSet<Type>{typeof(Queue)}.ToImmutableHashSet();
+            public static IImmutableSet<Type> GenericQueueTypes { get; } = new HashSet<Type>{typeof(Queue<>), typeof(ConcurrentQueue<>), typeof(IImmutableQueue<>)}.ToImmutableHashSet();
+
+            private static Status Create(Type type, IImmutableSet<Type> types, IImmutableSet<Type> generics)
+            {
+                if (type is null)
+                {
+                    throw new ArgumentNullException(nameof(type));
+                }
+
+                type = type.TryGetGenericTypeDefinition();
+
+                Type[] interfaces = type.GetGenericTypeDefinitionInterfaces();
+                Boolean isnongeneric = types.Contains(type) || types.Overlaps(interfaces);
+                Boolean isgeneric = generics.Contains(type) || generics.Overlaps(interfaces);
+
+                Boolean istype = isnongeneric || isgeneric;
+
+                return new Status(istype, isnongeneric, isgeneric);
+            }
+            
+            private static Status CreateEnumerable(Type type)
+            {
+                return Create(type, EnumerableTypes, GenericEnumerableTypes);
+            }
+
+            private static Status CreateCollection(Type type)
+            {
+                return Create(type, CollectionTypes, GenericCollectionTypes);
+            }
+            
+            private static Status CreateList(Type type)
+            {
+                return Create(type, ListTypes, GenericListTypes);
+            }
+            
+            private static Status CreateSet(Type type)
+            {
+                return Create(type, SetTypes, GenericSetTypes);
+            }
+
+            private static Status CreateDictionary(Type type)
+            {
+                return Create(type, DictionaryTypes, GenericDictionaryTypes);
+            }
+            
+            private static Status CreateStack(Type type)
+            {
+                return Create(type, StackTypes, GenericStackTypes);
+            }
+            
+            private static Status CreateQueue(Type type)
+            {
+                return Create(type, QueueTypes, GenericQueueTypes);
+            }
+
+            private static Boolean Is(Type type, ConcurrentDictionary<Type, Status> cache, Func<Type, Status> factory)
+            {
+                if (type is null)
+                {
+                    return false;
+                }
+                
+                if (type.IsAbstract && type.IsSealed)
+                {
+                    return false;
+                }
+
+                return cache.GetOrAdd(type.TryGetGenericTypeDefinition(), factory).IsType;
+            }
+            
+            private static Boolean IsNonGeneric(Type type, ConcurrentDictionary<Type, Status> cache, Func<Type, Status> factory)
+            {
+                if (type is null)
+                {
+                    return false;
+                }
+                
+                if (type.IsGenericType || type.IsAbstract && type.IsSealed)
+                {
+                    return false;
+                }
+
+                return cache.GetOrAdd(type, factory).IsNonGenericType;
+            }
+            
+            private static Boolean IsGeneric(Type type, ConcurrentDictionary<Type, Status> cache, Func<Type, Status> factory)
+            {
+                if (type is null)
+                {
+                    return false;
+                }
+                
+                if (!type.IsGenericType || type.IsAbstract && type.IsSealed)
+                {
+                    return false;
+                }
+
+                return cache.GetOrAdd(type.GetGenericTypeDefinition(), factory).IsGenericType;
+            }
+
+            public static Boolean IsArray(Type type)
+            {
+                return type is not null && type.IsArray;
+            }
+            
+            public static Boolean IsNonGenericArray(Type type)
+            {
+                return type is not null && type.IsArray && !type.IsGenericType;
+            }
+            
+            public static Boolean IsGenericArray(Type type)
+            {
+                return type is not null && type.IsArray && type.IsGenericType;
+            }
+            
+            public static Boolean IsEnumerable(Type type)
+            {
+                return type is not null && Is(type, EnumerableCache, CreateEnumerable);
+            }
+            
+            public static Boolean IsNonGenericEnumerable(Type type)
+            {
+                return type is not null && IsNonGeneric(type, EnumerableCache, CreateEnumerable);
+            }
+            
+            public static Boolean IsGenericEnumerable(Type type)
+            {
+                return type is not null && IsGeneric(type, EnumerableCache, CreateEnumerable);
+            }
+            
+            public static Boolean IsCollection(Type type)
+            {
+                return type is not null && Is(type, CollectionCache, CreateCollection);
+            }
+            
+            public static Boolean IsNonGenericCollection(Type type)
+            {
+                return type is not null && IsNonGeneric(type, CollectionCache, CreateCollection);
+            }
+            
+            public static Boolean IsGenericCollection(Type type)
+            {
+                return type is not null && IsGeneric(type, CollectionCache, CreateCollection);
+            }
+            
+            public static Boolean IsList(Type type)
+            {
+                return type is not null && Is(type, ListCache, CreateList);
+            }
+            
+            public static Boolean IsNonGenericList(Type type)
+            {
+                return type is not null && IsNonGeneric(type, ListCache, CreateList);
+            }
+            
+            public static Boolean IsGenericList(Type type)
+            {
+                return type is not null && IsGeneric(type, ListCache, CreateList);
+            }
+
+            public static Boolean IsSet(Type type)
+            {
+                return type is not null && Is(type, SetCache, CreateSet);
+            }
+            
+            public static Boolean IsNonGenericSet(Type type)
+            {
+                return type is not null && IsNonGeneric(type, SetCache, CreateSet);
+            }
+            
+            public static Boolean IsGenericSet(Type type)
+            {
+                return type is not null && IsGeneric(type, SetCache, CreateSet);
+            }
+            
+            public static Boolean IsDictionary(Type type)
+            {
+                return type is not null && Is(type, DictionaryCache, CreateDictionary);
+            }
+            
+            public static Boolean IsNonGenericDictionary(Type type)
+            {
+                return type is not null && IsNonGeneric(type, DictionaryCache, CreateDictionary);
+            }
+            
+            public static Boolean IsGenericDictionary(Type type)
+            {
+                return type is not null && IsGeneric(type, DictionaryCache, CreateDictionary);
+            }
+            
+            public static Boolean IsStack(Type type)
+            {
+                return type is not null && Is(type, StackCache, CreateStack);
+            }
+            
+            public static Boolean IsNonGenericStack(Type type)
+            {
+                return type is not null && IsNonGeneric(type, StackCache, CreateStack);
+            }
+            
+            public static Boolean IsGenericStack(Type type)
+            {
+                return type is not null && IsGeneric(type, StackCache, CreateStack);
+            }
+            
+            public static Boolean IsQueue(Type type)
+            {
+                return type is not null && Is(type, QueueCache, CreateQueue);
+            }
+            
+            public static Boolean IsNonGenericQueue(Type type)
+            {
+                return type is not null && IsNonGeneric(type, QueueCache, CreateQueue);
+            }
+            
+            public static Boolean IsGenericQueue(Type type)
+            {
+                return type is not null && IsGeneric(type, QueueCache, CreateQueue);
+            }
         }
 
         #region ToFrozenDictionary

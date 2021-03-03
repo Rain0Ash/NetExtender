@@ -2,10 +2,14 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using JetBrains.Annotations;
 using NetExtender.Configuration.Interfaces.Property.Common;
 using NetExtender.Crypto;
 using NetExtender.Crypto.CryptKey.Interfaces;
+using NetExtender.Utils.Types;
 using ReactiveUI;
 using ReactiveUI.Fody.Helpers;
 
@@ -13,17 +17,27 @@ namespace NetExtender.Configuration
 {
     public abstract class ConfigPropertyBase : ReactiveObject, IConfigPropertyBase
     {
+        public static String GetPath([NotNull] String key, [NotNull] IEnumerable<String> sections)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return String.Join("\\", sections.Append(key));
+        }
+        
         public String Path
         {
             get
             {
-                return String.Join("\\", Sections.Append(Key));
+                return GetPath(Key, Sections);
             }
         }
 
         public IPropertyConfigBase Config { get; }
         public String Key { get; }
-        public String[] Sections { get; }
+        public IImmutableList<String> Sections { get; }
 
         public CryptAction Crypt
         {
@@ -121,12 +135,12 @@ namespace NetExtender.Configuration
 
         private Boolean _disposed;
 
-        protected ConfigPropertyBase(IPropertyConfigBase config, String key, ICryptKey cryptKey, ConfigPropertyOptions options, params String[] sections)
+        protected ConfigPropertyBase(IPropertyConfigBase config, [NotNull] String key, ICryptKey cryptKey, ConfigPropertyOptions options, IEnumerable<String> sections)
         {
             Config = config;
-            Key = key;
+            Key = key ?? throw new ArgumentNullException(nameof(key));
             CryptKey = cryptKey;
-            Sections = sections;
+            Sections = sections.AsImmutableIList();
             Options = options;
         }
 

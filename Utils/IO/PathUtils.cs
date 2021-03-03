@@ -47,7 +47,7 @@ namespace NetExtender.Utils.IO
     public enum PathAction : Byte
     {
         None,
-        Standart,
+        Standard,
         Force
     }
 

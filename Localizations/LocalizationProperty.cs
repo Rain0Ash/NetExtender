@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Globalization;
 using JetBrains.Annotations;
 using NetExtender.Configuration;
@@ -34,9 +35,16 @@ namespace NetExtender.Localizations
         }
         
         private IReadOnlyDictionary<CultureInfo, ISubLocalization> Localizations { get; }
-        private Dictionary<CultureInfo, IStringLocalizationProperty> _dictionary { get; }
+        
+        private IDictionary<CultureInfo, IStringLocalizationProperty> Dictionary { get; }
 
-        public String Path { get; }
+        public String Path
+        {
+            get
+            {
+                return String.Join("\\", Sections.Append(Key));
+            }
+        }
 
         public ILocalization Config { get; }
 
@@ -49,7 +57,7 @@ namespace NetExtender.Localizations
         }
         
         public String Key { get; }
-        public String[] Sections { get; }
+        public IImmutableList<String> Sections { get; }
 
         public CryptAction Crypt
         {
@@ -114,6 +122,14 @@ namespace NetExtender.Localizations
                 return false;
             }
         }
+        
+        public Boolean ThrowOnReadOnly
+        {
+            get
+            {
+                return true;
+            }
+        }
 
         public IString DefaultValue { get; }
 
@@ -140,13 +156,14 @@ namespace NetExtender.Localizations
         
         private protected IStringLocalizationProperty Current { get; private set; }
 
-        internal LocalizationProperty(ILocalization config, IReadOnlyDictionary<CultureInfo, ISubLocalization> sublocale, String key, IString value, params String[] sections)
+        internal LocalizationProperty(ILocalization config, IReadOnlyDictionary<CultureInfo, ISubLocalization> sublocale, [NotNull] String key, IString value, IEnumerable<String> sections)
         {
             Config = config;
             Localizations = sublocale;
-            Key = key;
-            DefaultValue = value.IsNotNullOrEmpty() ? value : StringUtils.IStringEmpty;
-            Sections = sections;
+            Key = key ?? throw new ArgumentNullException(nameof(key));
+            Sections = sections.ToImmutableArray();
+            DefaultValue = value.IsNotNullOrEmpty() ? value : Path.ToIString();
+            Dictionary = new Dictionary<CultureInfo, IStringLocalizationProperty>();
             
             Config.LanguageCultureChanged += OnChanged;
         }
@@ -158,7 +175,7 @@ namespace NetExtender.Localizations
                 throw new ArgumentNullException(nameof(info));
             }
 
-            if (_dictionary.TryGetValue(info, out IStringLocalizationProperty property))
+            if (Dictionary.TryGetValue(info, out IStringLocalizationProperty property))
             {
                 Current = property;
                 return;
@@ -166,13 +183,8 @@ namespace NetExtender.Localizations
 
             if (Localizations.TryGetValue(info, out ISubLocalization config))
             {
-                if (config is null)
-                {
-                    Current = null;
-                    return;
-                }
-
-                Current = config.GetProperty(Key, Sections);
+                Current = config?.GetProperty(Key, Sections);
+                Dictionary.Add(info, Current);
                 return;
             }
             
@@ -203,7 +215,12 @@ namespace NetExtender.Localizations
 
         public IString GetValue(Func<IString, Boolean> validate)
         {
-            return Current?.GetValue().ToIString() ?? DefaultValue;
+            return Current?.GetValue()?.ToIString() ?? DefaultValue;
+        }
+
+        public override String ToString()
+        {
+            return Current?.ToString() ?? DefaultValue.ToString();
         }
 
         public void Dispose()

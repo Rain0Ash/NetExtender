@@ -9,6 +9,7 @@ namespace NetExtender.Configuration
     public interface IReadOnlyConfigProperty<T> : IReadOnlyConfigPropertyBase
     {
         public Boolean ThrowOnInvalid { get; }
+        public Boolean ThrowOnReadOnly { get; }
         public T DefaultValue { get; }
         public T Value { get; }
         public Boolean IsValid { get; }

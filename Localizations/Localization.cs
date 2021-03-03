@@ -12,6 +12,7 @@ using NetExtender.Cultures.Comparers;
 using NetExtender.Exceptions;
 using NetExtender.Localizations.Interfaces;
 using NetExtender.Localizations.Sub.Interfaces;
+using NetExtender.Types.Culture;
 using NetExtender.Utils.Types;
 
 namespace NetExtender.Localizations
@@ -72,6 +73,18 @@ namespace NetExtender.Localizations
             }
         }
 
+        public static event EmptyHandler SupportedLanguagesChanged
+        {
+            add
+            {
+                Current.SupportedLanguagesChanged += value;
+            }
+            remove
+            {
+                Current.SupportedLanguagesChanged -= value;
+            }
+        }
+        
         public static event LanguageChangedHandler Changed
         {
             add
@@ -131,11 +144,11 @@ namespace NetExtender.Localizations
             }
         }
 
-        public static CultureInfo Basic
+        public static CultureInfo Standard
         {
             get
             {
-                return IsInitialized ? Current.Standart : Culture;
+                return IsInitialized ? Current.Standard : Culture;
             }
         }
 
@@ -191,43 +204,83 @@ namespace NetExtender.Localizations
 
         public static ILocalization Create()
         {
-            return Create(DefaultConfigType, Config.DefaultConfigOptions);
+            return Create((ILocalizationBehaviour) null);
+        }
+        
+        public static ILocalization Create(ILocalizationBehaviour behaviour)
+        {
+            return Create(DefaultConfigType, Config.DefaultConfigOptions, behaviour);
         }
 
         public static ILocalization Create(ConfigType type)
         {
-            return Create(type, Config.DefaultConfigOptions);
+            return Create(type, null);
+        }
+        
+        public static ILocalization Create(ConfigType type, ILocalizationBehaviour behaviour)
+        {
+            return Create(type, Config.DefaultConfigOptions, behaviour);
         }
 
         public static ILocalization Create(ConfigOptions options)
         {
-            return Create(DefaultConfigType, options);
+            return Create(options, null);
+        }
+        
+        public static ILocalization Create(ConfigOptions options, ILocalizationBehaviour behaviour)
+        {
+            return Create(DefaultConfigType, options, behaviour);
         }
 
         public static ILocalization Create(ConfigType type, ConfigOptions options)
         {
-            return Create(null, type, options);
+            return Create(type, options, null);
+        }
+        
+        public static ILocalization Create(ConfigType type, ConfigOptions options, ILocalizationBehaviour behaviour)
+        {
+            return Create(null, type, options, behaviour);
         }
 
         public static ILocalization Create(String path)
         {
-            return Create(path, DefaultConfigType);
+            return Create(path, null);
+        }
+        
+        public static ILocalization Create(String path, ILocalizationBehaviour behaviour)
+        {
+            return Create(path, DefaultConfigType, behaviour);
         }
 
         public static ILocalization Create(String path, ConfigType type)
         {
-            return Create(path, type, Config.DefaultConfigOptions);
+            return Create(path, type, null);
+        }
+        
+        public static ILocalization Create(String path, ConfigType type, ILocalizationBehaviour behaviour)
+        {
+            return Create(path, type, Config.DefaultConfigOptions, behaviour);
         }
 
         public static ILocalization Create(String path, ConfigOptions options)
         {
-            return Create(path, DefaultConfigType, options);
+            return Create(path, options, null);
+        }
+        
+        public static ILocalization Create(String path, ConfigOptions options, ILocalizationBehaviour behaviour)
+        {
+            return Create(path, DefaultConfigType, options, behaviour);
         }
 
         public static ILocalization Create(String path, ConfigType type, ConfigOptions options)
         {
+            return Create(path, type, options, null);
+        }
+
+        public static ILocalization Create(String path, ConfigType type, ConfigOptions options, ILocalizationBehaviour behaviour)
+        {
             CurrentLocalization.ThrowIfAlreadyInitialized();
-            CurrentLocalization.Current = new InternalLocalization(path, type, options);
+            CurrentLocalization.Current = new InternalLocalization(path, type, options, behaviour);
             return Current;
         }
 
@@ -256,14 +309,34 @@ namespace NetExtender.Localizations
             return Current.RemoveSupportedCulture(info);
         }
 
-        public static void UpdateLocalization([CanBeNull] CultureInfo info)
+        public static Boolean IsSupportCulture([NotNull] CultureInfo info)
         {
-            Current.UpdateLocalization(info);
+            return Current.IsSupportCulture(info);
         }
         
-        public static Boolean TryUpdateLocalization([CanBeNull] CultureInfo info)
+        public static Boolean Update(UInt16 lcid)
         {
-            return Current.TryUpdateLocalization(info);
+            return Current.Update(lcid);
+        }
+        
+        public static Boolean Update(Int32 lcid)
+        {
+            return Current.Update(lcid);
+        }
+        
+        public static Boolean Update(LCID lcid)
+        {
+            return Current.Update(lcid);
+        }
+
+        public static Boolean Update(CultureLCID lcid)
+        {
+            return Current.Update(lcid);
+        }
+
+        public static Boolean Update([CanBeNull] CultureInfo info)
+        {
+            return Current.Update(info);
         }
 
         public static Boolean SetUILanguage()
