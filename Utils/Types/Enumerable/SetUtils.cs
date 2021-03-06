@@ -2,11 +2,9 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using NetExtender.Types.Sets;
 using NetExtender.Types.Sets.Interfaces;
@@ -16,43 +14,6 @@ namespace NetExtender.Utils.Types
 {
     public static class SetUtils
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsSet<T>() where T : IEnumerable
-        {
-            return CacheSet<T>.IsSet;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsSet(Type type)
-        {
-            return EnumerableUtils.TypeCache.IsSet(type);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsGenericSet<T>() where T : IEnumerable
-        {
-            return CacheSet<T>.IsGenericSet;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsGenericSet(Type type)
-        {
-            return EnumerableUtils.TypeCache.IsSet(type);
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-        private static class CacheSet<T> where T : IEnumerable
-        {
-            public static Boolean IsSet { get; }
-            public static Boolean IsGenericSet { get; }
-
-            static CacheSet()
-            {
-                IsSet = EnumerableUtils.TypeCache.IsSet(typeof(T));
-                IsGenericSet = EnumerableUtils.TypeCache.IsGenericSet(typeof(T));
-            }
-        }
-        
         public static ISet ToSet<T>([NotNull] ISet<T> set)
         {
             if (set is null)

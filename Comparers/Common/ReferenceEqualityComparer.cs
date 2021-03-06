@@ -32,7 +32,7 @@ namespace NetExtender.Comparers.Common
     /// Equality comparer that uses the <see cref="object.ReferenceEquals(object, object)"/> to compare values.
     /// </summary>
     /// <typeparam name="T">The type of objects to compare.</typeparam>
-    public class ReferenceEqualityComparer<T> : EqualityComparer<T>
+    public class ReferenceEqualityComparer<T> : EqualityComparer<T> where T : class
     {
         private static Lazy<ReferenceEqualityComparer<T>> Lazy { get; } = new Lazy<ReferenceEqualityComparer<T>>();
 

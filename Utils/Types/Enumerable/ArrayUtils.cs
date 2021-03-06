@@ -768,9 +768,10 @@ namespace NetExtender.Utils.Types
         /// <typeparam name="T">The type of the elements of the array.</typeparam>
         /// <exception cref="ArgumentNullException">
         /// <paramref name="array" /> is null.-or-<paramref name="action" /> is null.</exception>
-        public static void ForEach<T>([NotNull] this T[] array, [NotNull, InstantHandle] Action<T> action)
+        public static T[] ForEach<T>([NotNull] this T[] array, [NotNull, InstantHandle] Action<T> action)
         {
             Array.ForEach(array, action);
+            return array;
         }
 
         /// <summary>Searches for the specified object and returns the index of the first occurrence within the entire <see cref="Array" />.</summary>

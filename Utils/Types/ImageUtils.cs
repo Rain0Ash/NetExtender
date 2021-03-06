@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using JetBrains.Annotations;
 using NetExtender.Crypto;
 using NetExtender.Utils.GUI.Drawing;
 
@@ -194,18 +195,99 @@ namespace NetExtender.Utils.Types
         {
             return ToBytes(image, image.RawFormat);
         }
-        
+
         public static Byte[] ToBytes(this Image image, ImageFormat format)
         {
             using MemoryStream stream = new MemoryStream();
             image.Save(stream, format);
             return stream.ToArray();
         }
-        
+
         public static Image FromBytes(Byte[] image)
         {
             using MemoryStream stream = new MemoryStream(image);
             return Image.FromStream(stream);
+        }
+
+        public static T RotateImage<T>([NotNull] this T image, RotateFlipType rotate) where T : Image
+        {
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            image.RotateFlip(rotate);
+            return image;
+        }
+
+        public static T RotateImageCopy<T>([NotNull] this T image, RotateFlipType rotate) where T : Image
+        {
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            return RotateImage((T) (Object) image.Clone(), rotate);
+        }
+
+        public static T RotateImage<T>([NotNull] this T image, RotateFlipType rotate, Boolean copy) where T : Image
+        {
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            return copy ? RotateImageCopy(image, rotate) : RotateImage(image, rotate);
+        }
+
+        public static Bitmap RotateImage([NotNull] this Image image, Single angle)
+        {
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            Single alpha = angle;
+
+            while (alpha < 0)
+            {
+                alpha += 360;
+            }
+
+            const Single gamma = 90;
+            Single beta = 180 - angle - gamma;
+
+            Single c1 = image.Height;
+            Single a1 = Math.Abs((Single) (c1 * Math.Sin(alpha * Math.PI / 180)));
+            Single b1 = Math.Abs((Single) (c1 * Math.Sin(beta * Math.PI / 180)));
+
+            Single c2 = image.Width;
+            Single a2 = Math.Abs((Single) (c2 * Math.Sin(alpha * Math.PI / 180)));
+            Single b2 = Math.Abs((Single) (c2 * Math.Sin(beta * Math.PI / 180)));
+
+            Int32 width = Convert.ToInt32(b2 + a1);
+            Int32 height = Convert.ToInt32(b1 + a2);
+
+            Bitmap rotated = new Bitmap(width, height);
+
+            using Graphics graphics = Graphics.FromImage(rotated);
+
+            graphics.TranslateTransform(rotated.Width / 2f, rotated.Height / 2f);
+            graphics.RotateTransform(angle);
+            graphics.TranslateTransform(-rotated.Width / 2f, -rotated.Height / 2f);
+            graphics.DrawImage(image, new Point((width - image.Width) / 2, (height - image.Height) / 2));
+
+            return rotated;
+        }
+
+        public static Bitmap Resize([NotNull] this Image image, Size size)
+        {
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            return new Bitmap(image, size);
         }
 
         public static Byte[] GetHash(this Image image)

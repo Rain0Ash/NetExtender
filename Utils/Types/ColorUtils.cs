@@ -3,6 +3,8 @@
 
 using System;
 using System.Drawing;
+using System.Runtime.CompilerServices;
+using System.Windows.Forms;
 using NetExtender.Types.Drawing.Colors;
 using NetExtender.Types.Drawing.Colors.Interfaces;
 
@@ -802,6 +804,78 @@ namespace NetExtender.Utils.Types
             return ColorTranslator.ToHtml(Color.FromArgb(a, r, g, b));
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color Light(this Color color, Single percent)
+        {
+            return ControlPaint.Light(color, percent);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color Light(this Color color, Double percent)
+        {
+            return Light(color, (Single) percent);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color Light(this Color color)
+        {
+            return Light(color, 0.25f);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color Lighter(this Color color)
+        {
+            return Light(color, 0.5f);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color Lightest(this Color color)
+        {
+            return Light(color, 0.75f);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color SuperLight(this Color color)
+        {
+            return Light(color, 1.00f);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color Dark(this Color color, Single percent)
+        {
+            return ControlPaint.Dark(color, percent);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color Dark(this Color color, Double percent)
+        {
+            return Dark(color, (Single) percent);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color Dark(this Color color)
+        {
+            return Dark(color, 0.25f);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color Darker(this Color color)
+        {
+            return Dark(color, 0.5f);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color Darkest(this Color color)
+        {
+            return Dark(color, 0.75f);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color SuperDark(this Color color)
+        {
+            return Dark(color, 1.00f);
+        }
+
         private const Double Gamma = 0.80;
         private const Double IntensityMax = 255;
 

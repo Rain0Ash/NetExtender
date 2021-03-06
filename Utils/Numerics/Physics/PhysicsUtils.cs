@@ -10,7 +10,8 @@ namespace NetExtender.Utils.Numerics.Physics
         public const Double PI = Math.PI;
         public const Double E = Math.E;
         public const Int32 C = 299792458;
-        public const Int64 SquareC = (Int64) C * C;
+        public const Int64 LongC = C;
+        public const Int64 SquareC = LongC * LongC;
         public const Double GravitationalConstant = 6.6740831e-11;
         public const Double UniversalGasConstant = 8.3144598;
         public const Double BoltzmannConstant = 1.3806485279e-23;

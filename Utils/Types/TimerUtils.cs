@@ -12,6 +12,7 @@ using NetExtender.Utils.Numerics;
 namespace NetExtender.Utils.Types
 {
     public delegate void TickHandler(Object sender, TimeEventArgs args);
+    public delegate void ItemTickHandler<in T>(Object sender, TimeEventArgs args, T item);
 
     public enum TimerType
     {

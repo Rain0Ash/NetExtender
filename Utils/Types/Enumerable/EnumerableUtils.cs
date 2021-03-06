@@ -773,6 +773,133 @@ namespace NetExtender.Utils.Types
             return source.WhereNotNull().Where(where);
         }
 
+        public static IEnumerable<T> WhereSame<T>([NotNull] this IEnumerable<T> source)
+        {
+            return WhereSame(source, null);
+        }
+
+        public static IEnumerable<T> WhereSame<T>([NotNull] this IEnumerable<T> source, [CanBeNull] IEqualityComparer<T> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                yield break;
+            }
+            
+            comparer ??= EqualityComparer<T>.Default;
+            T first = enumerator.Current;
+            yield return first;
+
+            while (enumerator.MoveNext())
+            {
+                T item = enumerator.Current;
+                if (comparer.Equals(first, item))
+                {
+                    yield return item;
+                }
+            }
+        }
+        
+        public static IEnumerable<T> WhereSameBy<T, TComparable>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, TComparable> selector)
+        {
+            return WhereSameBy(source, selector, (IEqualityComparer<TComparable>) null);
+        }
+
+        public static IEnumerable<T> WhereSameBy<T, TComparable>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, TComparable> selector, [CanBeNull] IEqualityComparer<TComparable> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                yield break;
+            }
+            
+            comparer ??= EqualityComparer<TComparable>.Default;
+            TComparable comparable = selector(enumerator.Current);
+            yield return enumerator.Current;
+
+            while (enumerator.MoveNext())
+            {
+                T item = enumerator.Current;
+                if (comparer.Equals(comparable, selector(item)))
+                {
+                    yield return item;
+                }
+            }
+        }
+        
+        public static IEnumerable<T> WhereSameBy<T, TComparable>([NotNull] this IEnumerable<T> source, [NotNull] T sample, [NotNull] Func<T, TComparable> selector)
+        {
+            return WhereSameBy(source, sample, selector, null);
+        }
+
+        public static IEnumerable<T> WhereSameBy<T, TComparable>([NotNull] this IEnumerable<T> source, [NotNull] T sample, [NotNull] Func<T, TComparable> selector, [CanBeNull] IEqualityComparer<TComparable> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (sample is null)
+            {
+                throw new ArgumentNullException(nameof(sample));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return WhereSameBy(source, selector(sample), selector, comparer);
+        }
+        
+        public static IEnumerable<T> WhereSameBy<T, TComparable>([NotNull] this IEnumerable<T> source, [CanBeNull] TComparable sample, [NotNull] Func<T, TComparable> selector)
+        {
+            return WhereSameBy(source, sample, selector, null);
+        }
+
+        public static IEnumerable<T> WhereSameBy<T, TComparable>([NotNull] this IEnumerable<T> source, [CanBeNull] TComparable sample, [NotNull] Func<T, TComparable> selector, [CanBeNull] IEqualityComparer<TComparable> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            comparer ??= EqualityComparer<TComparable>.Default;
+            
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            while (enumerator.MoveNext())
+            {
+                T item = enumerator.Current;
+                if (comparer.Equals(sample, selector(item)))
+                {
+                    yield return item;
+                }
+            }
+        }
+
         public static IEnumerable<T> AppendAggregate<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, T, T> aggregate)
         {
             if (source is null)
@@ -2904,7 +3031,7 @@ namespace NetExtender.Utils.Types
             return (Double) sum / count;
         }
 
-        public static Double AverageOrDefault([NotNull] this IEnumerable<Int64> source, Double seed)
+        public static Double? AverageOrDefault([NotNull] this IEnumerable<Int64> source)
         {
             if (source is null)
             {
@@ -2914,7 +3041,7 @@ namespace NetExtender.Utils.Types
             using IEnumerator<Int64> enumerator = source.GetEnumerator();
             if (!enumerator.MoveNext())
             {
-                return seed;
+                return null;
             }
 
             Int64 sum = enumerator.Current;
@@ -3600,7 +3727,19 @@ namespace NetExtender.Utils.Types
         /// <param name="source">The collection.</param>
         public static Boolean AllSame<T>(this IEnumerable<T> source)
         {
-            return AllSame(source, EqualityComparer<T>.Default);
+            return AllSame(source, out _);
+        }
+
+        /// <summary>
+        /// Determines whether all elements in this collection are equal to each other. Compares using the <see cref="object.Equals(object)"/> method.
+        /// <para>This method returns true if the collection is empty or it contains only one element.</para>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements.</typeparam>
+        /// <param name="source">The collection.</param>
+        /// <param name="value">First item</param>
+        public static Boolean AllSame<T>(this IEnumerable<T> source, out T value)
+        {
+            return AllSame(source, EqualityComparer<T>.Default, out value);
         }
 
         /// <summary>
@@ -3611,6 +3750,19 @@ namespace NetExtender.Utils.Types
         /// <param name="source">The collection.</param>
         /// <param name="comparer">The comparer</param>
         public static Boolean AllSame<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer)
+        {
+            return AllSame(source, comparer, out _);
+        }
+
+        /// <summary>
+        /// Determines whether all elements in this collection are equal to each other. Compares using the <see cref="object.Equals(object)"/> method.
+        /// <para>This method returns true if the collection is empty or it contains only one element.</para>
+        /// </summary>
+        /// <typeparam name="T">The type of the elements.</typeparam>
+        /// <param name="source">The collection.</param>
+        /// <param name="comparer">The comparer</param>
+        /// <param name="value">First item</param>
+        public static Boolean AllSame<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer, out T value)
         {
             if (source is null)
             {
@@ -3626,14 +3778,15 @@ namespace NetExtender.Utils.Types
 
             if (!enumerator.MoveNext())
             {
+                value = default;
                 return true;
             }
 
-            T first = enumerator.Current;
+            value = enumerator.Current;
 
             while (enumerator.MoveNext())
             {
-                if (!comparer.Equals(first, enumerator.Current))
+                if (!comparer.Equals(value, enumerator.Current))
                 {
                     return false;
                 }
@@ -3718,8 +3871,13 @@ namespace NetExtender.Utils.Types
                 yield return item;
             }
         }
-        
+
         public static IEnumerable<T> DistinctByThrow<T, TDistinct>(this IEnumerable<T> source, [NotNull] Func<T, TDistinct> selector)
+        {
+            return DistinctByThrow(source, selector, EqualityComparer<TDistinct>.Default);
+        }
+
+        public static IEnumerable<T> DistinctByThrow<T, TDistinct>(this IEnumerable<T> source, [NotNull] Func<T, TDistinct> selector, IEqualityComparer<TDistinct> comparer)
         {
             if (source is null)
             {
@@ -3731,7 +3889,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            HashSet<TDistinct> already = new HashSet<TDistinct>();
+            HashSet<TDistinct> already = new HashSet<TDistinct>(comparer);
 
             foreach (T item in source)
             {
@@ -3744,7 +3902,7 @@ namespace NetExtender.Utils.Types
                 yield return item;
             }
         }
-        
+
         /// <summary>
         /// Returns distinct elements from a sequence using the provided value selector for equality comparison.
         /// </summary>
@@ -3753,6 +3911,19 @@ namespace NetExtender.Utils.Types
         /// <param name="source">The source collection.</param>
         /// <param name="selector">A transform function to apply to each element to select the value on which to distinct.</param>
         public static IEnumerable<T> DistinctBy<T, TDistinct>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, TDistinct> selector)
+        {
+            return DistinctBy(source, selector, EqualityComparer<TDistinct>.Default);
+        }
+
+        /// <summary>
+        /// Returns distinct elements from a sequence using the provided value selector for equality comparison.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of source.</typeparam>
+        /// <typeparam name="TDistinct">The type of the value on which to distinct.</typeparam>
+        /// <param name="source">The source collection.</param>
+        /// <param name="selector">A transform function to apply to each element to select the value on which to distinct.</param>
+        /// <param name="comparer">Comparer</param>
+        public static IEnumerable<T> DistinctBy<T, TDistinct>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, TDistinct> selector, IEqualityComparer<TDistinct> comparer)
         {
             if (source is null)
             {
@@ -3764,7 +3935,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            HashSet<TDistinct> already = new HashSet<TDistinct>();
+            HashSet<TDistinct> already = new HashSet<TDistinct>(comparer);
 
             foreach (T item in source)
             {
@@ -3897,6 +4068,82 @@ namespace NetExtender.Utils.Types
                 IReadOnlyCollection<T> => source,
                 _ => source.ToArray()
             };
+        }
+
+        public static Boolean TryReset([NotNull] this IEnumerator enumerator)
+        {
+            if (enumerator is null)
+            {
+                throw new ArgumentNullException(nameof(enumerator));
+            }
+
+            try
+            {
+                enumerator.Reset();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        
+        public static Boolean TryReset<T>([NotNull] this IEnumerator<T> enumerator)
+        {
+            if (enumerator is null)
+            {
+                throw new ArgumentNullException(nameof(enumerator));
+            }
+
+            try
+            {
+                enumerator.Reset();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static IEnumerator<T> GetThreadSafeEnumerator<T>([NotNull] this IEnumerable<T> enumerable)
+        {
+            if (enumerable is null)
+            {
+                throw new ArgumentNullException(nameof(enumerable));
+            }
+
+            return new ThreadSafeEnumerator<T>(enumerable);
+        }
+        
+        public static IEnumerator<T> GetThreadSafeEnumerator<T>([NotNull] this IEnumerable<T> enumerable, [NotNull] Object sync)
+        {
+            if (enumerable is null)
+            {
+                throw new ArgumentNullException(nameof(enumerable));
+            }
+
+            if (sync is null)
+            {
+                throw new ArgumentNullException(nameof(sync));
+            }
+
+            return new ThreadSafeEnumerator<T>(enumerable, sync);
+        }
+        
+        public static IEnumerator<T> GetThreadSafeEnumerator<T>([NotNull] this IEnumerator<T> enumerator, [NotNull] Object sync)
+        {
+            if (enumerator is null)
+            {
+                throw new ArgumentNullException(nameof(enumerator));
+            }
+
+            if (sync is null)
+            {
+                throw new ArgumentNullException(nameof(sync));
+            }
+
+            return new ThreadSafeEnumerator<T>(enumerator, sync);
         }
 
         public static Boolean Is<T>(CollectionType type) where T : IEnumerable

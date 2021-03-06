@@ -49,6 +49,12 @@ namespace NetExtender.Utils.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotNull(this IntPtr value)
+        {
+            return !IsNull(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsInvalid(this IntPtr value)
         {
             return value.ToInt64() < 0;

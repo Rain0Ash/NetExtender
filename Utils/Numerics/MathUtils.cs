@@ -115,6 +115,11 @@ namespace NetExtender.Utils.Numerics
         private const Decimal DecimalInvertedE = 0.3678794411714423215955237701614608674458111310317678M;
 
         /// <summary>
+        /// log(2,E) factor
+        /// </summary>
+        private const Decimal DecimalInvertedLog2 = 1.442695040888963407359924681001892137426645954152985934135M;
+
+        /// <summary>
         /// log(10,E) factor
         /// </summary>
         private const Decimal DecimalInvertedLog10 = 0.434294481903251827651128918916605082294397005803666566114M;
@@ -463,6 +468,27 @@ namespace NetExtender.Utils.Numerics
                 return prod;
             }
         }
+        
+        /// <inheritdoc cref="Math.Log(Double)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Log(this Single value)
+        {
+            return (Single) Math.Log(value);
+        }
+
+        /// <inheritdoc cref="Math.Log(Double,Double)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Log(this Single value, Single baseValue)
+        {
+            return (Single) Math.Log(value, baseValue);
+        }
+        
+        /// <inheritdoc cref="Math.Log(Double,Double)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Log(this Single value, Double baseValue)
+        {
+            return (Single) Math.Log(value, baseValue);
+        }
 
         /// <inheritdoc cref="Math.Log(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -525,6 +551,48 @@ namespace NetExtender.Utils.Numerics
             return count - result;
         }
 
+        /// <summary>
+        /// Analogy of Math.Log
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="baseValue"></param>
+        /// <returns></returns>
+        public static Decimal Log(this Decimal value, Decimal baseValue)
+        {
+            return Log(value) / Log(baseValue);
+        }
+        
+        /// <inheritdoc cref="Math.Log2"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Log2(this Single value)
+        {
+            return (Single) Math.Log2(value);
+        }
+
+        /// <inheritdoc cref="Math.Log2"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Log2(this Double value)
+        {
+            return Math.Log2(value);
+        }
+        
+        /// <summary>
+        /// Analogy of Math.Log2
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public static Decimal Log2(this Decimal value)
+        {
+            return Log(value) * DecimalInvertedLog2;
+        }
+
+        /// <inheritdoc cref="Math.Log10"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Log10(this Single value)
+        {
+            return (Single) Math.Log10(value);
+        }
+
         /// <inheritdoc cref="Math.Log10"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Log10(this Double value)
@@ -580,6 +648,21 @@ namespace NetExtender.Utils.Numerics
             } while (Abs(previous - current) > epsilon);
 
             return current;
+        }
+        
+        public static Single ToDegrees(this Single radians)
+        {
+            return 180 / SinglePI * radians;
+        }
+        
+        public static Double ToDegrees(this Double radians)
+        {
+            return 180 / DoublePI * radians;
+        }
+        
+        public static Decimal ToDegrees(this Decimal radians)
+        {
+            return 180 / DecimalPI * radians;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

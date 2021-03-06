@@ -7,11 +7,13 @@ using System.Collections.Immutable;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.AccessControl;
 using System.Text;
 using System.Text.RegularExpressions;
+using JetBrains.Annotations;
 using NetExtender.Utils.Types;
 using Microsoft.Win32.SafeHandles;
 using NetExtender.IO.NTFS.DataStreams;
@@ -271,9 +273,43 @@ namespace NetExtender.Utils.IO
             };
         }
 
-        private static Boolean IsPathContainsEndSeparator(String path)
+        public static Boolean IsPathContainsEndSeparator([NotNull] String path)
         {
-            return Separators.Any(chr => path.EndsWith(chr.ToString()));
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            path = path.Trim();
+            return path.Length > 0 && Separators.Any(chr => path.EndsWith(chr.ToString()));
+        }
+        
+        public static Char GetPathSeparator([NotNull] String path)
+        {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            path = path.Trim();
+            return path.Length > 0 && path.Where(Separators.Contains).AllSame(out Char separator) ? separator : Separators[0];
+        }
+
+        public static String AddEndSeparator([NotNull] String path)
+        {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            path = path.TrimEnd();
+
+            if (IsPathContainsEndSeparator(path))
+            {
+                return path;
+            }
+
+            return path + GetPathSeparator(path);
         }
 
         public static Boolean IsValidPath(String path, Boolean network = true)
@@ -431,6 +467,290 @@ namespace NetExtender.Utils.IO
 
             // Assert that atleast 2 apostrophe exist in the message
             return length < 0 ? String.Empty : msg.Substring(startIndex, length);
+        }
+        
+        [DllImport("shell32.dll")]
+        private static extern Int32 SHOpenFolderAndSelectItems(IntPtr pidlFolder, UInt32 cidl, [In, MarshalAs(UnmanagedType.LPArray)] IntPtr[] apidl, UInt32 dwFlags);
+
+        [DllImport("shell32.dll")]
+        private static extern void SHParseDisplayName([MarshalAs(UnmanagedType.LPWStr)] String name, IntPtr bindingContext, [Out] out IntPtr pidl, UInt32 sfgaoIn, [Out] out UInt32 psfgaoOut);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IntPtr SHParseDisplayName(String path)
+        {
+            SHParseDisplayName(path, IntPtr.Zero, out IntPtr ptrfile, 0, out _);
+            return ptrfile;
+        }
+
+        public static Boolean OpenExplorer([NotNull] this DirectoryInfo info)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            return OpenExplorer(info.FullName);
+        }
+        
+        public static Boolean OpenExplorer([NotNull] String path)
+        {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (IsExistAsFile(path))
+            {
+                return OpenExplorerWithSelection(path);
+            }
+
+            path = GetFullPath(path);
+
+            if (!IsExistAsFolder(path))
+            {
+                return false;
+            }
+            
+            IntPtr directory = SHParseDisplayName(path);
+
+            if (directory == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            IntPtr[] array = Array.Empty<IntPtr>();
+            Int32 hresult = SHOpenFolderAndSelectItems(directory, (UInt32) array.Length, array, 0);
+            Marshal.FreeCoTaskMem(directory);
+
+            return hresult == 0;
+        }
+        
+        public static Boolean OpenExplorerWithSelection([NotNull] this FileInfo info)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            if (!info.Exists)
+            {
+                return false;
+            }
+
+            return info.Directory is not null && OpenExplorerWithSelection(info.Directory.FullName, info.Name);
+        }
+        
+        public static Boolean OpenExplorerWithSelection([NotNull] String path)
+        {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            String directory = Path.GetDirectoryName(path);
+            return directory is not null && OpenExplorerWithSelection(directory, Path.GetFileName(path));
+        }
+
+        public static Boolean OpenExplorerWithSelection([NotNull] DirectoryInfo info, [CanBeNull] String filename)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            return info.Exists && OpenExplorerWithSelection(info.FullName, filename);
+        }
+
+        public static Boolean OpenExplorerWithSelection([NotNull] IEnumerable<FileInfo> files)
+        {
+            return OpenExplorerWithSelection(files, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static Boolean OpenExplorerWithSelection([NotNull] IEnumerable<FileInfo> files, StringComparison comparison)
+        {
+            if (files is null)
+            {
+                throw new ArgumentNullException(nameof(files));
+            }
+
+            FileInfo first = null;
+
+            IEnumerable<FileInfo> Filter()
+            {
+                using IEnumerator<FileInfo> enumerator = files.GetEnumerator();
+
+                while (enumerator.MoveNext())
+                {
+                    FileInfo item = enumerator.Current;
+                    if (item?.Directory is null || !item.Exists)
+                    {
+                        continue;
+                    }
+
+                    first = item;
+                    yield return item;
+                    break;
+                }
+
+                if (first is null)
+                {
+                    yield break;
+                }
+                
+                while (enumerator.MoveNext())
+                {
+                    FileInfo item = enumerator.Current;
+                    if (item?.Directory is null || !item.Exists)
+                    {
+                        continue;
+                    }
+
+                    if (String.Equals(item.Directory.FullName, first.Directory!.FullName, comparison))
+                    {
+                        yield return item;
+                    }
+                }
+            }
+
+            FileInfo[] values = Filter().Distinct().ToArray();
+
+            return first is not null && OpenExplorerWithSelection(first.Directory!.FullName, values.Select(item => item.Name), comparison);
+        }
+        
+        public static Boolean OpenExplorerWithSelection([NotNull] params FileInfo[] files)
+        {
+            if (files is null)
+            {
+                throw new ArgumentNullException(nameof(files));
+            }
+
+            return files.Length > 0 && OpenExplorerWithSelection((IEnumerable<FileInfo>) files);
+        }
+
+        public static Boolean OpenExplorerWithSelection([NotNull] String directory, [CanBeNull] String filename)
+        {
+            return OpenExplorerWithSelection(directory, filename, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static Boolean OpenExplorerWithSelection([NotNull] String directory, [CanBeNull] String filename, StringComparison comparison)
+        {
+            return OpenExplorerWithSelection(directory, EnumerableUtils.GetEnumerableFrom(filename), comparison);
+        }
+
+        public static Boolean OpenExplorerWithSelection([NotNull] DirectoryInfo info, IEnumerable<String> files)
+        {
+            return OpenExplorerWithSelection(info, files, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static Boolean OpenExplorerWithSelection([NotNull] DirectoryInfo info, IEnumerable<String> files, StringComparison comparison)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            return info.Exists && OpenExplorerWithSelection(info.FullName, files, comparison);
+        }
+
+        public static Boolean OpenExplorerWithSelection([NotNull] DirectoryInfo info, params String[] files)
+        {
+            return OpenExplorerWithSelection(info, StringComparison.OrdinalIgnoreCase, files);
+        }
+
+        public static Boolean OpenExplorerWithSelection([NotNull] DirectoryInfo info, StringComparison comparison, params String[] files)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            if (!info.Exists)
+            {
+                return false;
+            }
+
+            return files?.Length > 0 ? OpenExplorerWithSelection(info, files, comparison) : OpenExplorer(info);
+        }
+
+        public static Boolean OpenExplorerWithSelection([NotNull] String directory, [CanBeNull] params String[] files)
+        {
+            return OpenExplorerWithSelection(directory, StringComparison.OrdinalIgnoreCase, files);
+        }
+
+        public static Boolean OpenExplorerWithSelection([NotNull] String directory, StringComparison comparison, [CanBeNull] params String[] files)
+        {
+            return OpenExplorerWithSelection(directory, files, comparison);
+        }
+
+        public static Boolean OpenExplorerWithSelection([NotNull] String directory, [CanBeNull] IEnumerable<String> files)
+        {
+            return OpenExplorerWithSelection(directory, files, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static Boolean OpenExplorerWithSelection([NotNull] String directory, [CanBeNull] IEnumerable<String> files, StringComparison comparison)
+        {
+            if (directory is null)
+            {
+                throw new ArgumentNullException(nameof(directory));
+            }
+
+            directory = GetFullPath(directory);
+
+            if (!IsExistAsFolder(directory))
+            {
+                return false;
+            }
+
+            if (files is null)
+            {
+                return OpenExplorer(directory);
+            }
+
+            static IEnumerable<String> Filter(IEnumerable<String> files, String directory, StringComparison comparison)
+            {
+                foreach (String file in files)
+                {
+                    if (String.IsNullOrEmpty(file))
+                    {
+                        continue;
+                    }
+
+                    if (IsFullPath(file))
+                    {
+                        String path = GetFullPath(file); // For checking path equality
+                        if (String.Equals(directory, GetDirectoryName(path), comparison) && IsExistAsFile(path))
+                        {
+                            yield return GetFileName(path);
+                        }
+                        
+                        continue;
+                    }
+
+                    yield return file;
+                }
+            }
+            
+            String[] filename = Filter(files, directory, comparison).Distinct().ToArray();
+            if (filename.Length <= 0)
+            {
+                return OpenExplorer(directory);
+            }
+
+            IntPtr ptrdirectory = SHParseDisplayName(directory);
+
+            if (ptrdirectory == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            IntPtr[] ptrfiles = filename.Select(file => SHParseDisplayName(Path.Combine(directory, file))).Where(IntPtrUtils.IsNotNull).ToArray();
+
+            Int32 hresult = SHOpenFolderAndSelectItems(ptrdirectory, (UInt32) ptrfiles.Length, ptrfiles, 0);
+            
+            Marshal.FreeCoTaskMem(ptrdirectory);
+            ptrfiles.ForEach(Marshal.FreeCoTaskMem);
+            
+            return hresult == 0;
         }
 
         /// <summary>

@@ -2,7 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
@@ -11,43 +10,6 @@ namespace NetExtender.Utils.Types
 {
     public static class DictionaryUtils
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsDictionary<T>() where T : IEnumerable
-        {
-            return CacheDictionary<T>.IsDictionary;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsDictionary(Type type)
-        {
-            return EnumerableUtils.TypeCache.IsDictionary(type);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsGenericDictionary<T>() where T : IEnumerable
-        {
-            return CacheDictionary<T>.IsGenericDictionary;
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsGenericDictionary(Type type)
-        {
-            return EnumerableUtils.TypeCache.IsDictionary(type);
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StaticMemberInGenericType")]
-        private static class CacheDictionary<T> where T : IEnumerable
-        {
-            public static Boolean IsDictionary { get; }
-            public static Boolean IsGenericDictionary { get; }
-
-            static CacheDictionary()
-            {
-                IsDictionary = EnumerableUtils.TypeCache.IsDictionary(typeof(T));
-                IsGenericDictionary = EnumerableUtils.TypeCache.IsGenericDictionary(typeof(T));
-            }
-        }
-        
         [Pure]
         public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {

@@ -44,6 +44,9 @@ namespace NetExtender.Utils.Numerics.Physics
 
     public static class ElectromagneticUtils
     {
+        public const Int32 MaxVisibleWaveLength = 780;
+        public const Int32 MinVisibleWaveLength = 380;
+
         /// <summary>
         /// Return <see cref="ElectromagneticType"/> from it's wavelength
         /// </summary>
@@ -56,8 +59,8 @@ namespace NetExtender.Utils.Numerics.Physics
                 < Double.Epsilon => ElectromagneticType.Unknown,
                 < 0.005 => ElectromagneticType.Gamma,
                 < 10 => ElectromagneticType.XRay,
-                < 380 => ElectromagneticType.Ultraviolet,
-                <= 780 => ElectromagneticType.Visible,
+                < MinVisibleWaveLength => ElectromagneticType.Ultraviolet,
+                <= MaxVisibleWaveLength => ElectromagneticType.Visible,
                 < 1000000 => ElectromagneticType.Infared,
                 < 10000000000 => ElectromagneticType.Microwave,
                 _ => ElectromagneticType.Radiowave

@@ -5,11 +5,53 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using NetExtender.Comparers.Common;
+using NetExtender.Comparers.Interfaces;
 
 namespace NetExtender.Utils.Types
 {
     public static class CompareUtils
     {
+        public static IEqualityComparer<T> ToEqualityComparer<T>([NotNull] this Func<T, T, Boolean> comparison)
+        {
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            return CustomEqualityComparer<T>.Create(comparison);
+        }
+        
+        public static IEqualityComparer<T1, T2> ToEqualityComparer<T1, T2>([NotNull] this Func<T1, T2, Boolean> comparison)
+        {
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            return CustomEqualityComparer<T1, T2>.Create(comparison);
+        }
+        
+        public static IComparer<T> ToComparer<T>([NotNull] this Func<T, T, Int32> comparison)
+        {
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            return CustomComparer<T>.Create(comparison);
+        }
+        
+        public static IComparer<T1, T2> ToComparer<T1, T2>([NotNull] this Func<T1, T2, Int32> comparison)
+        {
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            return CustomComparer<T1, T2>.Create(comparison);
+        }
+        
         public static Boolean TryCompareToNull<T>(T first, T second, out Int32 result) where T : class
         {
             if (first is null)

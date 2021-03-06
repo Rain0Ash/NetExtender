@@ -6,7 +6,7 @@ using System.Timers;
 
 namespace NetExtender.Events.Args
 {
-    public class TimeEventArgs
+    public class TimeEventArgs : EventArgs
     {
         public static implicit operator TimeEventArgs(ElapsedEventArgs args)
         {

@@ -456,6 +456,8 @@ namespace NetExtender.GUI.WinForms.TrackBars
             }
         }
 
+        public Boolean DesaturateColorOnDisabled { get; set; } = false;
+
         private Decimal _smallChange = 1;
 
         /// <summary>
@@ -1155,7 +1157,7 @@ namespace NetExtender.GUI.WinForms.TrackBars
         /// <param name="e">A <see cref="T:System.Windows.Forms.PaintEventArgs"></see> that contains the event data.</param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (!Enabled)
+            if (!Enabled && DesaturateColorOnDisabled)
             {
                 Color[] desaturatedColors = DesaturateColors(_thumbOuterColor, _thumbInnerColor, _thumbPenColor,
                     _barInnerColor,
@@ -1171,7 +1173,7 @@ namespace NetExtender.GUI.WinForms.TrackBars
             }
             else
             {
-                if (_mouseEffects && mouseInRegion)
+                if (Enabled && _mouseEffects && mouseInRegion)
                 {
                     Color[] lightenedColors = LightenColors(_thumbOuterColor, _thumbInnerColor, _thumbPenColor,
                         _barInnerColor,

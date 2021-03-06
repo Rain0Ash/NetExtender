@@ -57,11 +57,6 @@ namespace NetExtender.Utils.Types
             return values.Length < 2 ? values.Length : values.Count(MathUtils.IsPowerOf2);
         }
 
-        public static IReadOnlyList<T> Enumerate<T>() where T : unmanaged, Enum
-        {
-            return CacheValues<T>.Values;
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         private static unsafe Boolean HasFlags<T>(T* first, T* second) where T : unmanaged, Enum
         {

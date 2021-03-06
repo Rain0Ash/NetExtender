@@ -327,11 +327,14 @@ using NetExtender.Watchers.FileSystem.Other;
 
         private void Dispose(Boolean disposing)
         {
-            _poller.Created -= OnCreatedPolled;
-            _poller.Deleted -= OnDeletedPolled;
-            _poller.Error -= OnPollerError;
-            _poller.Dispose();
-
+            if (_poller is not null)
+            {
+                _poller.Created -= OnCreatedPolled;
+                _poller.Deleted -= OnDeletedPolled;
+                _poller.Error -= OnPollerError;
+                _poller.Dispose();
+            }
+            
             if (disposing)
             {
                 base.Dispose();

@@ -72,7 +72,7 @@ namespace NetExtender.Apps.Reader
         protected override Boolean OnResume()
         {
             _server.Start();
-            return base.OnStop();
+            return base.OnStart();
         }
         
         protected override Boolean OnStop()
