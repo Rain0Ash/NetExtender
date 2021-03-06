@@ -10,6 +10,8 @@ using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using JetBrains.Annotations;
 using NetExtender.Crypto;
@@ -77,6 +79,23 @@ namespace NetExtender.Utils.Types
         public static Image FromStream(Stream stream)
         {
             return Image.FromStream(stream, true, true);
+        }
+        
+        public static Task<Image> FromStreamAsync(Stream stream)
+        {
+            return FromStreamAsync(stream, CancellationToken.None);
+        }
+        
+        public static Task<Image> FromStreamAsync(Stream stream, CancellationToken token)
+        {
+            try
+            {
+                return Task.Run(() => FromStream(stream), token);
+            }
+            catch (OperationCanceledException)
+            {
+                return Task.FromCanceled<Image>(token);
+            }
         }
 
         public static Bitmap GetResizedImage(String path, Size bounds)
@@ -280,14 +299,50 @@ namespace NetExtender.Utils.Types
             return rotated;
         }
 
+        /// <summary>
+        /// Resize the image to the specified width and height.
+        /// </summary>
+        /// <param name="image">The image to resize.</param>
+        /// <param name="size">The new size to resize to.</param>
+        /// <returns>The resized image.</returns>
         public static Bitmap Resize([NotNull] this Image image, Size size)
+        {
+            return Resize(image, size.Width, size.Height);
+        }
+
+        /// <summary>
+        /// Resize the image to the specified width and height.
+        /// </summary>
+        /// <param name="image">The image to resize.</param>
+        /// <param name="width">The width to resize to.</param>
+        /// <param name="height">The height to resize to.</param>
+        /// <returns>The resized image.</returns>
+        public static Bitmap Resize([NotNull] this Image image, Int32 width, Int32 height)
         {
             if (image is null)
             {
                 throw new ArgumentNullException(nameof(image));
             }
+            
+            Rectangle destRect = new Rectangle(0, 0, width, height);
+            Bitmap destination = new Bitmap(width, height);
 
-            return new Bitmap(image, size);
+            destination.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+            using Graphics graphics = Graphics.FromImage(destination);
+            
+            graphics.CompositingMode = CompositingMode.SourceCopy;
+            graphics.CompositingQuality = CompositingQuality.HighQuality;
+            graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            graphics.SmoothingMode = SmoothingMode.HighQuality;
+            graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+            using ImageAttributes attributes = new ImageAttributes();
+            
+            attributes.SetWrapMode(WrapMode.TileFlipXY);
+            graphics.DrawImage(image, destRect, 0, 0, image.Width,image.Height, GraphicsUnit.Pixel, attributes);
+
+            return destination;
         }
 
         public static Byte[] GetHash(this Image image)

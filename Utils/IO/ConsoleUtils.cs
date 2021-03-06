@@ -404,6 +404,17 @@ namespace NetExtender.Utils.IO
             }
         }
 
+        /// <summary>
+        /// Return new <see cref="IDisposable"/> <see cref="System.Drawing.Graphics"/> for console window.
+        /// </summary>
+        public static Graphics Graphics
+        {
+            get
+            {
+                return Graphics.FromHwnd(ConsoleWindow);
+            }
+        }
+
         /// <inheritdoc cref="Console.SetWindowSize"/>
         public static void SetWindowSize(Int32 width, Int32 height)
         {
@@ -868,6 +879,8 @@ namespace NetExtender.Utils.IO
             return InputAsync(Console.ReadLine, milli, token);
         }
 
+        //TODO: добавить кастомные конвертеры
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T CastAs<T>()
         {

@@ -3,8 +3,11 @@
 
 using System;
 using System.Drawing;
+using System.Reactive;
+using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using JetBrains.Annotations;
 using NetExtender.Types.Numerics;
 
 namespace NetExtender.Utils.GUI.WinForms.Controls
@@ -210,14 +213,39 @@ namespace NetExtender.Utils.GUI.WinForms.Controls
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetSize(this Control control, Control width, Control height)
+        public static void SetSize([NotNull] this Control control, [NotNull] Control width, [NotNull] Control height)
         {
+            if (control is null)
+            {
+                throw new ArgumentNullException(nameof(control));
+            }
+
+            if (width is null)
+            {
+                throw new ArgumentNullException(nameof(width));
+            }
+
+            if (height is null)
+            {
+                throw new ArgumentNullException(nameof(height));
+            }
+            
             SetSizeOuter(control, width, height);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetSize(this Control control, Control relative, ControlSizeType type = ControlSizeType.Both)
+        public static void SetSize([NotNull] this Control control, [NotNull] Control relative, ControlSizeType type = ControlSizeType.Both)
         {
+            if (control is null)
+            {
+                throw new ArgumentNullException(nameof(control));
+            }
+            
+            if (relative is null)
+            {
+                throw new ArgumentNullException(nameof(relative));
+            }
+
             if (relative is Form form)
             {
                 SetSizeInner(control, form, type);
@@ -232,8 +260,18 @@ namespace NetExtender.Utils.GUI.WinForms.Controls
         //TODO: сделать возможность постоянной привязки позиции, на подобии CancellationRegistrationToken
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetSizeInner(this Control control, Control relative, ControlSizeType type = ControlSizeType.Both)
+        public static void SetSizeInner([NotNull] this Control control, [NotNull] Control relative, ControlSizeType type = ControlSizeType.Both)
         {
+            if (control is null)
+            {
+                throw new ArgumentNullException(nameof(control));
+            }
+            
+            if (relative is null)
+            {
+                throw new ArgumentNullException(nameof(relative));
+            }
+            
             control.Size = type switch
             {
                 ControlSizeType.Both => relative.ClientSize,
@@ -244,14 +282,39 @@ namespace NetExtender.Utils.GUI.WinForms.Controls
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetSizeInner(this Control control, Control width, Control height)
+        public static void SetSizeInner([NotNull] this Control control, [NotNull] Control width, [NotNull] Control height)
         {
+            if (control is null)
+            {
+                throw new ArgumentNullException(nameof(control));
+            }
+
+            if (width is null)
+            {
+                throw new ArgumentNullException(nameof(width));
+            }
+
+            if (height is null)
+            {
+                throw new ArgumentNullException(nameof(height));
+            }
+            
             control.Size = new Size(width.ClientSize.Width, height.ClientSize.Height);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetSizeOuter(this Control control, Control relative, ControlSizeType type = ControlSizeType.Both)
+        public static void SetSizeOuter([NotNull] this Control control, [NotNull] Control relative, ControlSizeType type = ControlSizeType.Both)
         {
+            if (control is null)
+            {
+                throw new ArgumentNullException(nameof(control));
+            }
+            
+            if (relative is null)
+            {
+                throw new ArgumentNullException(nameof(relative));
+            }
+            
             control.Size = type switch
             {
                 ControlSizeType.Both => relative.Size,
@@ -262,9 +325,89 @@ namespace NetExtender.Utils.GUI.WinForms.Controls
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void SetSizeOuter(this Control control, Control width, Control height)
+        public static void SetSizeOuter([NotNull] this Control control, [NotNull] Control width, [NotNull] Control height)
         {
+            if (control is null)
+            {
+                throw new ArgumentNullException(nameof(control));
+            }
+
+            if (width is null)
+            {
+                throw new ArgumentNullException(nameof(width));
+            }
+
+            if (height is null)
+            {
+                throw new ArgumentNullException(nameof(height));
+            }
+            
             control.Size = new Size(width.Size.Width, height.Size.Height);
+        }
+
+        private static IDisposable LinkTo([NotNull] this Control control, [NotNull] Control relative, [NotNull] String name, Action<EventPattern<EventHandler>> action)
+        {
+            if (control is null)
+            {
+                throw new ArgumentNullException(nameof(control));
+            }
+            
+            if (relative is null)
+            {
+                throw new ArgumentNullException(nameof(relative));
+            }
+            
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            return Observable.FromEventPattern<EventHandler>(relative, name).Subscribe(action);
+        }
+        
+        public static IDisposable LinkSizeTo([NotNull] this Control control, [NotNull] Control relative, ControlSizeType type = ControlSizeType.Both)
+        {
+            if (control is null)
+            {
+                throw new ArgumentNullException(nameof(control));
+            }
+            
+            if (relative is null)
+            {
+                throw new ArgumentNullException(nameof(relative));
+            }
+
+            return LinkTo(control, relative, nameof(relative.SizeChanged), next => control.SetSize((Control) next.Sender, type));
+        }
+        
+        public static IDisposable LinkSizeInnerTo([NotNull] this Control control, [NotNull] Control relative, ControlSizeType type = ControlSizeType.Both)
+        {
+            if (control is null)
+            {
+                throw new ArgumentNullException(nameof(control));
+            }
+            
+            if (relative is null)
+            {
+                throw new ArgumentNullException(nameof(relative));
+            }
+
+            return LinkTo(control, relative, nameof(relative.SizeChanged), next => control.SetSizeInner((Control) next.Sender, type));
+        }
+        
+        public static IDisposable LinkSizeOuterTo([NotNull] this Control control, [NotNull] Control relative, ControlSizeType type = ControlSizeType.Both)
+        {
+            if (control is null)
+            {
+                throw new ArgumentNullException(nameof(control));
+            }
+            
+            if (relative is null)
+            {
+                throw new ArgumentNullException(nameof(relative));
+            }
+
+            return LinkTo(control, relative, nameof(relative.SizeChanged), next => control.SetSizeOuter((Control) next.Sender, type));
         }
     }
 }
