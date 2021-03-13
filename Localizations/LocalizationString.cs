@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using JetBrains.Annotations;
+using NetExtender.Types.Culture;
 using NetExtender.Types.Strings;
 using NetExtender.Utils.Types;
 
@@ -61,12 +62,17 @@ namespace NetExtender.Localizations
             Localizations = new Dictionary<CultureInfo, String>(localization);
         }
 
-        protected String GetLocalization()
+        public String GetLocalization()
         {
             return GetLocalization(Localization.Culture);
         }
-        
-        protected String GetLocalization(CultureInfo info)
+
+        public String GetLocalization(CultureLCID lcid)
+        {
+            return GetLocalization(lcid.GetCultureInfo());
+        }
+
+        public String GetLocalization(CultureInfo info)
         {
             return Localizations.TryGetValue(info, Default);
         }

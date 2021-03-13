@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using NetExtender.Types.Immutable.Dictionaries;
+using NetExtender.Types.Immutable.Dictionaries.Interfaces;
 
 namespace NetExtender.Utils.Types
 {
@@ -501,5 +503,15 @@ namespace NetExtender.Utils.Types
 
             source.CopyTo(array, index);
         }
+
+        public static ImmutableMultiDictionary<TKey, TValue> ToImmutableMultiDictionary<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, ImmutableHashSet<TValue>>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            return ImmutableMultiDictionary<TKey, TValue>.Empty.AddRange(source);
+        } 
     }
 }

@@ -85,7 +85,7 @@ namespace NetExtender.GUI.WinForms.TextBoxes
             AvailableFormatingPartsGroupList = type
                 .GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                 .Select(members => members.GetCustomAttributes<FormattedFieldAttribute>())
-                .SelectMany(members => members);
+                .SelectMany();
 
             foreach (FormattedFieldAttribute attr in AvailableFormatingPartsGroupList)
             {

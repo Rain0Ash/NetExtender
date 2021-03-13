@@ -71,6 +71,16 @@ namespace NetExtender.Utils.IO
             return Path.GetPathRoot(windows);
         }
 
+        public static Boolean HasAttribute([NotNull] this FileSystemInfo info, FileAttributes attributes)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            return (info.Attributes & attributes) == attributes;
+        }
+
         public static String GetRelativePath(String path, String reference = null)
         {
             if (String.IsNullOrEmpty(path))

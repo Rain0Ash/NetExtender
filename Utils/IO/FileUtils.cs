@@ -19,13 +19,18 @@ namespace NetExtender.Utils.IO
 {
     public static class FileUtils
     {
-        public static Boolean HasAttribute(String path, FileAttributes attributes)
+        public static Boolean HasAttribute([NotNull] String path, FileAttributes attributes)
         {
             return HasAttribute(path, attributes, out _);
         }
 
-        public static Boolean HasAttribute(String path, FileAttributes attributes, out FileAttributes current)
+        public static Boolean HasAttribute([NotNull] String path, FileAttributes attributes, out FileAttributes current)
         {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
             current = File.GetAttributes(path);
             
             return HasAttribute(current, attributes);

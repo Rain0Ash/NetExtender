@@ -9,7 +9,7 @@ using NetExtender.Types.Sets.Interfaces;
 
 namespace NetExtender.Types.Sets
 {
-    public class SetAdapter<T> : ISet, ISet<T>
+    public class SetAdapter<T> : ISet, ISet<T>, IReadOnlySet<T>
     {
         public static implicit operator SetAdapter<T>(HashSet<T> set)
         {

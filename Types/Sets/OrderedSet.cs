@@ -72,13 +72,13 @@
                 throw new ArgumentNullException(nameof(collection));
             }
 
+            NodeDictionary = new Dictionary<T, LinkedListNode<T>>(comparer);
+            LinkedList = new LinkedList<T>();
+            
             foreach (T item in collection)
             {
                 Add(item);
             }
-
-            NodeDictionary = new Dictionary<T, LinkedListNode<T>>(comparer);
-            LinkedList = new LinkedList<T>();
         }
         
         public Boolean Add([CanBeNull] T item)
@@ -87,7 +87,7 @@
             {
                 return false;
             }
-
+            
             if (NodeDictionary.ContainsKey(item))
             {
                 return false;

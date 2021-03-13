@@ -3,29 +3,50 @@
 
 using System;
 using System.Drawing;
+using JetBrains.Annotations;
 
 namespace NetExtender.Utils.GUI.Drawing
 {
     public static class DrawingUtils
     {
-        public static void DrawCircle(this Graphics g, Pen pen, Single x, Single y, Single d)
+        public static void DrawCircle([NotNull] this Graphics graphics, Pen pen, Single x, Single y, Single d)
         {
-            g.DrawEllipse(pen, x, y, d, d);
+            if (graphics is null)
+            {
+                throw new ArgumentNullException(nameof(graphics));
+            }
+
+            graphics.DrawEllipse(pen, x, y, d, d);
         }
 
-        public static void DrawCircle(this Graphics g, Pen pen, Int32 x, Int32 y, Int32 d)
+        public static void DrawCircle([NotNull] this Graphics graphics, Pen pen, Int32 x, Int32 y, Int32 d)
         {
-            g.DrawEllipse(pen, x, y, d, d);
+            if (graphics is null)
+            {
+                throw new ArgumentNullException(nameof(graphics));
+            }
+
+            graphics.DrawEllipse(pen, x, y, d, d);
         }
 
-        public static void FillCircle(this Graphics g, Brush brush, Single x, Single y, Single d)
+        public static void FillCircle([NotNull] this Graphics graphics, Brush brush, Single x, Single y, Single d)
         {
-            g.FillEllipse(brush, x, y, d, d);
+            if (graphics is null)
+            {
+                throw new ArgumentNullException(nameof(graphics));
+            }
+            
+            graphics.FillEllipse(brush, x, y, d, d);
         }
 
-        public static void FillCircle(this Graphics g, Brush brush, Int32 x, Int32 y, Int32 d)
+        public static void FillCircle([NotNull] this Graphics graphics, Brush brush, Int32 x, Int32 y, Int32 d)
         {
-            g.FillEllipse(brush, x, y, d, d);
+            if (graphics is null)
+            {
+                throw new ArgumentNullException(nameof(graphics));
+            }
+
+            graphics.FillEllipse(brush, x, y, d, d);
         }
         
         public static Double GetAspectRatio(this Size size)
@@ -35,7 +56,7 @@ namespace NetExtender.Utils.GUI.Drawing
         
         public static Double GetAspectRatio(Int32 width, Int32 height)
         {
-            return GetAspectRatio(Convert.ToDouble(width), Convert.ToDouble(height));
+            return GetAspectRatio((Double) width, height);
         }
         
         public static Double GetAspectRatio(Double width, Double height)
@@ -43,13 +64,13 @@ namespace NetExtender.Utils.GUI.Drawing
             return width / height;
         }
         
-        public static Size AspectRatioBoundSize(this Size original, Size bounds)
+        public static Size AspectRatioBoundsSize(this Size original, Size bounds)
         {
             Size result = new Size();
-            Double diff = GetAspectRatio(original);
+            Double difference = GetAspectRatio(original);
 
             result.Width = bounds.Width;
-            result.Height = Convert.ToInt32(GetAspectRatio(Convert.ToDouble(original.Height), diff));
+            result.Height = (Int32) GetAspectRatio(original.Height, difference);
 
             // The aspect ratios of the original and bounding rectangles are on opposite sides of 1.0.
             // That means the result height is too big to fit in the bounding rectangle.
@@ -60,8 +81,8 @@ namespace NetExtender.Utils.GUI.Drawing
                 return result;
             }
 
-            Double hdiff = GetAspectRatio(result.Height, bounds.Height);
-            result.Width = Convert.ToInt32(GetAspectRatio(Convert.ToDouble(bounds.Width), hdiff));
+            Double heightdifference = GetAspectRatio(result.Height, bounds.Height);
+            result.Width = (Int32) GetAspectRatio(bounds.Width, heightdifference);
             result.Height = bounds.Height;
 
             return result;

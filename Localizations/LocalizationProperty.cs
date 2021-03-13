@@ -13,6 +13,7 @@ using NetExtender.Crypto;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Localizations.Interfaces;
 using NetExtender.Localizations.Sub.Interfaces;
+using NetExtender.Types.Culture;
 using NetExtender.Types.Strings.Interfaces;
 using NetExtender.Utils.Types;
 using ReactiveUI;
@@ -175,20 +176,34 @@ namespace NetExtender.Localizations
                 throw new ArgumentNullException(nameof(info));
             }
 
-            if (Dictionary.TryGetValue(info, out IStringLocalizationProperty property))
-            {
-                Current = property;
-                return;
-            }
+            Current = GetProperty(info);
+        }
 
-            if (Localizations.TryGetValue(info, out ISubLocalization config))
+        private IStringLocalizationProperty GetProperty([NotNull] CultureInfo info)
+        {
+            if (info is null)
             {
-                Current = config?.GetProperty(Key, Sections);
-                Dictionary.Add(info, Current);
-                return;
+                throw new ArgumentNullException(nameof(info));
             }
             
-            Current = null;
+            if (Dictionary.TryGetValue(info, out IStringLocalizationProperty property))
+            {
+                return property;
+            }
+
+            if (!Localizations.TryGetValue(info, out ISubLocalization config))
+            {
+                return null;
+            }
+
+            property = config?.GetProperty(Key, Sections);
+
+            if (property is not null)
+            {
+                Dictionary.Add(info, property);
+            }
+            
+            return property;
         }
         
         public void Read()
@@ -217,10 +232,30 @@ namespace NetExtender.Localizations
         {
             return Current?.GetValue()?.ToIString() ?? DefaultValue;
         }
+        
+        public IString GetValue(CultureLCID lcid)
+        {
+            return GetValue(lcid, Validate);
+        }
+
+        public IString GetValue(CultureLCID lcid, Func<IString, Boolean> validate)
+        {
+            return GetValue(lcid.GetCultureInfo(), validate);
+        }
+        
+        public IString GetValue(CultureInfo info)
+        {
+            return GetValue(info, Validate);
+        }
+
+        public IString GetValue(CultureInfo info, Func<IString, Boolean> validate)
+        {
+            return GetProperty(info)?.GetValue()?.ToIString() ?? DefaultValue;
+        }
 
         public override String ToString()
         {
-            return Current?.ToString() ?? DefaultValue.ToString();
+            return Current?.ToString() ?? DefaultValue?.ToString();
         }
 
         public void Dispose()

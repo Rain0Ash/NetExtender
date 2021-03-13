@@ -74,18 +74,18 @@ namespace NetExtender.Times.Timers
 
         public Boolean IsReset { get; init; }
         
-        public EnumeratorTimer(Int32 interval, [NotNull] IEnumerable<T> enumerable)
-            : this(enumerable ?? throw new ArgumentNullException(nameof(enumerable)), new TimerWrapper(interval))
+        public EnumeratorTimer(Int32 interval, [NotNull] IEnumerable<T> source)
+            : this(source ?? throw new ArgumentNullException(nameof(source)), new TimerWrapper(interval))
         {
         }
         
-        public EnumeratorTimer(Double interval, [NotNull] IEnumerable<T> enumerable)
-            : this(enumerable ?? throw new ArgumentNullException(nameof(enumerable)), new TimerWrapper(interval))
+        public EnumeratorTimer(Double interval, [NotNull] IEnumerable<T> source)
+            : this(source ?? throw new ArgumentNullException(nameof(source)), new TimerWrapper(interval))
         {
         }
 
-        public EnumeratorTimer(TimeSpan interval, [NotNull] IEnumerable<T> enumerable)
-            : this(enumerable ?? throw new ArgumentNullException(nameof(enumerable)), new TimerWrapper(interval))
+        public EnumeratorTimer(TimeSpan interval, [NotNull] IEnumerable<T> source)
+            : this(source ?? throw new ArgumentNullException(nameof(source)), new TimerWrapper(interval))
         {
         }
         

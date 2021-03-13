@@ -14,9 +14,9 @@ namespace NetExtender.Utils.Numerics.Physics
         ExtremeUltraviolet,
         NearUltraviolet,
         Visible,
-        NearInfared,
-        MidInfared,
-        FarInfared,
+        NearInfrared,
+        MidInfrared,
+        FarInfrared,
         ExtremelyHighFrequency,
         SuperHighFrequency,
         UltraHighFrequency,
@@ -37,7 +37,7 @@ namespace NetExtender.Utils.Numerics.Physics
         XRay,
         Ultraviolet,
         Visible,
-        Infared,
+        Infrared,
         Microwave,
         Radiowave
     }
@@ -61,7 +61,7 @@ namespace NetExtender.Utils.Numerics.Physics
                 < 10 => ElectromagneticType.XRay,
                 < MinVisibleWaveLength => ElectromagneticType.Ultraviolet,
                 <= MaxVisibleWaveLength => ElectromagneticType.Visible,
-                < 1000000 => ElectromagneticType.Infared,
+                < 1000000 => ElectromagneticType.Infrared,
                 < 10000000000 => ElectromagneticType.Microwave,
                 _ => ElectromagneticType.Radiowave
             };
@@ -81,7 +81,7 @@ namespace NetExtender.Utils.Numerics.Physics
                 >= 30000 => ElectromagneticType.XRay,
                 > 750 => ElectromagneticType.Ultraviolet,
                 >= 429 => ElectromagneticType.Visible,
-                >= 0.3 => ElectromagneticType.Infared,
+                >= 0.3 => ElectromagneticType.Infrared,
                 >= 0.0003 => ElectromagneticType.Microwave,
                 _ => ElectromagneticType.Radiowave
             };
@@ -98,9 +98,9 @@ namespace NetExtender.Utils.Numerics.Physics
                 ElectromagneticRadiation.ExtremeUltraviolet => ElectromagneticType.Ultraviolet,
                 ElectromagneticRadiation.NearUltraviolet => ElectromagneticType.Ultraviolet,
                 ElectromagneticRadiation.Visible => ElectromagneticType.Visible,
-                ElectromagneticRadiation.NearInfared => ElectromagneticType.Infared,
-                ElectromagneticRadiation.MidInfared => ElectromagneticType.Infared,
-                ElectromagneticRadiation.FarInfared => ElectromagneticType.Infared,
+                ElectromagneticRadiation.NearInfrared => ElectromagneticType.Infrared,
+                ElectromagneticRadiation.MidInfrared => ElectromagneticType.Infrared,
+                ElectromagneticRadiation.FarInfrared => ElectromagneticType.Infrared,
                 ElectromagneticRadiation.ExtremelyHighFrequency => ElectromagneticType.Microwave,
                 ElectromagneticRadiation.SuperHighFrequency => ElectromagneticType.Microwave,
                 ElectromagneticRadiation.UltraHighFrequency => ElectromagneticType.Microwave,

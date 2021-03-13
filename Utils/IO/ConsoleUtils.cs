@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using JetBrains.Annotations;
 using NetExtender.Events.Args;
 using NetExtender.GUI;
 using NetExtender.Types.Maps;
@@ -102,17 +103,41 @@ namespace NetExtender.Utils.IO
             ConsoleFont[] fonts);
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        public struct FontInfo
+        public readonly struct FontInfo
         {
-            public Int32 cbSize { get; init; }
-            public Int32 FontIndex { get; init; }
-            public Int16 FontWidth { get; init; }
-            public Int16 Size { get; init; }
-            public Int32 FontFamily { get; init; }
-            public Int32 FontWeight { get; init; }
+            public static FontInfo Create()
+            {
+                return new FontInfo(0);
+            }
+            
+            private const Int32 CBSize = 84;
+            
+            // ReSharper disable once UnusedAutoPropertyAccessor.Local
+            private Int32 cbSize { get; }
+            public Int32 Index { get; init; }
+            public Int16 Width { get; init; }
+            public Int16 Size { get; }
+            public Int32 Family { get; init; }
+            public Int32 Weight { get; init; }
 
             [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-            public String FontName;
+            public readonly String FontName;
+
+            public FontInfo(Int16 size)
+                : this(null, size)
+            {
+            }
+            
+            public FontInfo(String name, Int16 size)
+            {
+                cbSize = CBSize;
+                FontName = name;
+                Index = 0;
+                Width = 0;
+                Size = size;
+                Family = 54;
+                Weight = 400;
+            }
         }
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
@@ -274,10 +299,7 @@ namespace NetExtender.Utils.IO
         {
             get
             {
-                FontInfo font = new FontInfo
-                {
-                    cbSize = Marshal.SizeOf<FontInfo>()
-                };
+                FontInfo font = FontInfo.Create();
 
                 if (!GetCurrentConsoleFontEx(ConsoleOutputHandle, false, ref font))
                 {
@@ -314,15 +336,7 @@ namespace NetExtender.Utils.IO
 
         public static void SetCurrentFont(String font, Int16 size = 0)
         {
-            Font = new FontInfo
-            {
-                cbSize = Marshal.SizeOf<FontInfo>(),
-                FontIndex = 0,
-                FontFamily = 54,
-                FontName = font ?? Font.FontName,
-                FontWeight = 400,
-                Size = size > 0 ? size : Font.Size
-            };
+            Font = new FontInfo(font ?? Font.FontName, size > 0 ? size : Font.Size);
         }
 
         public static Point Cursor
@@ -407,12 +421,9 @@ namespace NetExtender.Utils.IO
         /// <summary>
         /// Return new <see cref="IDisposable"/> <see cref="System.Drawing.Graphics"/> for console window.
         /// </summary>
-        public static Graphics Graphics
+        public static Graphics GetConsoleGraphics()
         {
-            get
-            {
-                return Graphics.FromHwnd(ConsoleWindow);
-            }
+            return Graphics.FromHwnd(ConsoleWindow);
         }
 
         /// <inheritdoc cref="Console.SetWindowSize"/>
@@ -879,8 +890,6 @@ namespace NetExtender.Utils.IO
             return InputAsync(Console.ReadLine, milli, token);
         }
 
-        //TODO: добавить кастомные конвертеры
-        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T CastAs<T>()
         {
@@ -945,6 +954,60 @@ namespace NetExtender.Utils.IO
             String read = Console.ReadLine();
             return read is null ? default : read.Convert<T>(info);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ReadAs<T>([NotNull] ParseHandler<String, T> converter)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            return Console.ReadLine().Convert(converter);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ReadAs<T>([NotNull] TryParseHandler<String, T> converter, T @default)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            return Console.ReadLine().Convert(converter, @default);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ReadAs<T>([NotNull] TryParseHandler<String, T> converter, [NotNull] Func<T> generator)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
+            return Console.ReadLine().Convert(converter, generator);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ReadAs<T>([NotNull] TryParseHandler<String, T> converter, [NotNull] Func<String, T> generator)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
+            return Console.ReadLine().Convert(converter, generator);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<T> ReadAsAsync<T>(CancellationToken token)
@@ -958,6 +1021,64 @@ namespace NetExtender.Utils.IO
             String read = await ReadLineAsync(token).ConfigureAwait(false);
             return read is null ? default : read.Convert<T>(info);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async Task<T> ReadAsAsync<T>([NotNull] ParseHandler<String, T> converter, CancellationToken token)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            String read = await ReadLineAsync(token).ConfigureAwait(false);
+            return read.Convert(converter);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async Task<T> ReadAsAsync<T>([NotNull] TryParseHandler<String, T> converter, T @default, CancellationToken token)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            String read = await ReadLineAsync(token).ConfigureAwait(false);
+            return read.Convert(converter, @default);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async Task<T> ReadAsAsync<T>([NotNull] TryParseHandler<String, T> converter, [NotNull] Func<T> generator, CancellationToken token)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
+            String read = await ReadLineAsync(token).ConfigureAwait(false);
+            return read.Convert(converter, generator);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async Task<T> ReadAsAsync<T>([NotNull] TryParseHandler<String, T> converter, [NotNull] Func<String, T> generator, CancellationToken token)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
+            String read = await ReadLineAsync(token).ConfigureAwait(false);
+            return read.Convert(converter, generator);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<T> ReadAsAsync<T>(Int32 milli)
@@ -966,10 +1087,33 @@ namespace NetExtender.Utils.IO
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<T> ReadAsAsync<T>(CultureInfo info, Int32 milli)
+        public static Task<T> ReadAsAsync<T>(CultureInfo info, Int32 milli)
         {
-            String read = await ReadLineAsync(milli).ConfigureAwait(false);
-            return read is null ? default : read.Convert<T>(info);
+            return ReadAsAsync<T>(info, milli, CancellationToken.None);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<T> ReadAsAsync<T>(Int32 milli, [NotNull] ParseHandler<String, T> converter)
+        {
+            return ReadAsAsync(milli, converter, CancellationToken.None);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<T> ReadAsAsync<T>(Int32 milli, [NotNull] TryParseHandler<String, T> converter, T @default)
+        {
+            return ReadAsAsync(milli, converter, @default, CancellationToken.None);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<T> ReadAsAsync<T>(Int32 milli, [NotNull] TryParseHandler<String, T> converter, [NotNull] Func<T> generator)
+        {
+            return ReadAsAsync(milli, converter, generator, CancellationToken.None);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<T> ReadAsAsync<T>(Int32 milli, [NotNull] TryParseHandler<String, T> converter, [NotNull] Func<String, T> generator)
+        {
+            return ReadAsAsync(milli, converter, generator, CancellationToken.None);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -983,6 +1127,64 @@ namespace NetExtender.Utils.IO
         {
             String read = await ReadLineAsync(milli, token).ConfigureAwait(false);
             return read is null ? default : read.Convert<T>(info);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async Task<T> ReadAsAsync<T>(Int32 milli, [NotNull] ParseHandler<String, T> converter, CancellationToken token)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            String read = await ReadLineAsync(milli, token).ConfigureAwait(false);
+            return read.Convert(converter);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async Task<T> ReadAsAsync<T>(Int32 milli, [NotNull] TryParseHandler<String, T> converter, T @default, CancellationToken token)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            String read = await ReadLineAsync(milli, token).ConfigureAwait(false);
+            return read.Convert(converter, @default);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async Task<T> ReadAsAsync<T>(Int32 milli, [NotNull] TryParseHandler<String, T> converter, [NotNull] Func<T> generator, CancellationToken token)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
+            String read = await ReadLineAsync(milli, token).ConfigureAwait(false);
+            return read.Convert(converter, generator);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async Task<T> ReadAsAsync<T>(Int32 milli, [NotNull] TryParseHandler<String, T> converter, [NotNull] Func<String, T> generator, CancellationToken token)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
+            String read = await ReadLineAsync(milli, token).ConfigureAwait(false);
+            return read.Convert(converter, generator);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

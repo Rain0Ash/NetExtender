@@ -106,7 +106,7 @@ namespace NetExtender.Utils.Types
 
         public static Bitmap GetResizedImage(Bitmap image, Size bounds)
         {
-            Size boundSize = new Size(image.Width, image.Height).AspectRatioBoundSize(bounds);
+            Size boundSize = new Size(image.Width, image.Height).AspectRatioBoundsSize(bounds);
 
             Bitmap thumbnail = new Bitmap(boundSize.Width, boundSize.Height, image.PixelFormat);
             using Graphics gfx = Graphics.FromImage(thumbnail);

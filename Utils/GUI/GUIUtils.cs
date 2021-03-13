@@ -58,65 +58,67 @@ namespace NetExtender.Utils.GUI
     public static class GUIUtils
     {
         public const Int32 Distance = 5;
+        public const MessageBoxButtons DefaultMessageBoxButtons = MessageBoxButtons.OK;
+        public const MessageBoxIcon DefaultMessageBoxIcon = MessageBoxIcon.Warning;
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DialogResult ToMessageBox(this String text)
+        public static DialogResult ToMessageBox<T>(this T text)
         {
-            return ToMessageBox(text, null);
+            return ToMessageBox(text, DefaultMessageBoxButtons);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DialogResult ToMessageBox(this String text, String title)
+        public static DialogResult ToMessageBox<T1, T2>(this T1 text, T2 title)
         {
-            return ToMessageBox(text, title, MessageBoxButtons.OK);
+            return ToMessageBox(text, title, DefaultMessageBoxButtons);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DialogResult ToMessageBox(this String text, MessageBoxIcon icon)
+        public static DialogResult ToMessageBox<T>(this T text, MessageBoxIcon icon)
         {
-            return ToMessageBox(text, null, icon);
+            return ToMessageBox(text, DefaultMessageBoxButtons, icon);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DialogResult ToMessageBox(this String text, String title, MessageBoxIcon icon)
+        public static DialogResult ToMessageBox<T1, T2>(this T1 text, T2 title, MessageBoxIcon icon)
         {
-            return ToMessageBox(text, title, MessageBoxButtons.OK, icon);
+            return ToMessageBox(text, title, DefaultMessageBoxButtons, icon);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DialogResult ToMessageBox(this String text, MessageBoxButtons buttons)
+        public static DialogResult ToMessageBox<T>(this T text, MessageBoxButtons buttons)
         {
-            return ToMessageBox(text, null, buttons);
+            return ToMessageBox(text, buttons, DefaultMessageBoxIcon);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DialogResult ToMessageBox(this String text, String title, MessageBoxButtons buttons)
+        public static DialogResult ToMessageBox<T1, T2>(this T1 text, T2 title, MessageBoxButtons buttons)
         {
-            return ToMessageBox(text, title, buttons, MessageBoxIcon.Warning);
+            return ToMessageBox(text, title, buttons, DefaultMessageBoxIcon);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DialogResult ToMessageBox(this String text, MessageBoxIcon icon, MessageBoxButtons buttons)
+        public static DialogResult ToMessageBox<T>(this T text, MessageBoxIcon icon, MessageBoxButtons buttons)
         {
             return ToMessageBox(text, buttons, icon);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DialogResult ToMessageBox(this String text, String title, MessageBoxIcon icon, MessageBoxButtons buttons)
+        public static DialogResult ToMessageBox<T1, T2>(this T1 text, T2 title, MessageBoxIcon icon, MessageBoxButtons buttons)
         {
             return ToMessageBox(text, title, buttons, icon);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DialogResult ToMessageBox(this String text, MessageBoxButtons buttons, MessageBoxIcon icon)
+        public static DialogResult ToMessageBox<T>(this T text, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
-            return System.Windows.Forms.MessageBox.Show(text, null, buttons, icon);
+            return System.Windows.Forms.MessageBox.Show(text.GetString(), null, buttons, icon);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DialogResult ToMessageBox(this String text, String title, MessageBoxButtons buttons, MessageBoxIcon icon)
+        public static DialogResult ToMessageBox<T1, T2>(this T1 text, T2 title, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
-            return System.Windows.Forms.MessageBox.Show(text, title, buttons, icon);
+            return System.Windows.Forms.MessageBox.Show(text.GetString(), title?.GetString(), buttons, icon);
         }
 
         public static DialogResult ToDialogResult(this MessageBoxResult result)
@@ -296,14 +298,14 @@ namespace NetExtender.Utils.GUI
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean BringToForeground([NotNull] IGUIHandle window)
+        public static Boolean BringToForeground([NotNull] IGUIHandle handle)
         {
-            if (window is null)
+            if (handle is null)
             {
-                throw new ArgumentNullException(nameof(window));
+                throw new ArgumentNullException(nameof(handle));
             }
 
-            return BringToForegroundWindow(window.Handle);
+            return BringToForegroundWindow(handle.Handle);
         }
     }
 }

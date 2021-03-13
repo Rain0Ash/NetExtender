@@ -85,7 +85,7 @@ namespace NetExtender.Localizations
                 throw new ArgumentNullException(nameof(info));
             }
             
-            return Dictionary.TryGetValue(info, out IFormatString str) ? str : Dictionary.TryGetValue(Localization.Default, out str) ? str : null;
+            return Dictionary.TryGetValue(info, out IFormatString str) && str is not null ? str : Dictionary.TryGetValue(Localization.Default, out str) ? str : null;
         }
 
         public override String ToString()

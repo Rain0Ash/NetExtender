@@ -715,6 +715,113 @@ namespace NetExtender.Utils.Types
         }
 
         #endregion
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TOut Convert<T, TOut>([NotNull] this ParseHandler<T, TOut> converter, T input)
+        {
+            return Convert(input, converter);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TOut Convert<T, TOut>(this T input, [NotNull] ParseHandler<T, TOut> converter)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            return converter.Invoke(input);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TOut Convert<T, TOut>([NotNull] this TryParseHandler<T, TOut> converter, T input)
+        {
+            return Convert(input, converter);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TOut Convert<T, TOut>(this T input, [NotNull] TryParseHandler<T, TOut> converter)
+        {
+            return Convert(input, converter, default(TOut));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TOut Convert<T, TOut>([NotNull] this TryParseHandler<T, TOut> converter, T input, TOut @default)
+        {
+            return Convert(input, converter, @default);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TOut Convert<T, TOut>(this T input, [NotNull] TryParseHandler<T, TOut> converter, TOut @default)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            return converter.Invoke(input, out TOut result) ? result : @default;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TOut Convert<T, TOut>([NotNull] this TryParseHandler<T, TOut> converter, T input, Func<TOut> generator)
+        {
+            return Convert(input, converter, generator);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TOut Convert<T, TOut>(this T input, [NotNull] TryParseHandler<T, TOut> converter, [NotNull] Func<TOut> generator)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
+            return converter.Invoke(input, out TOut result) ? result : generator();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TOut Convert<T, TOut>([NotNull] this TryParseHandler<T, TOut> converter, T input, [NotNull] Func<T, TOut> generator)
+        {
+            return Convert(input, converter, generator);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TOut Convert<T, TOut>(this T input, [NotNull] TryParseHandler<T, TOut> converter, [NotNull] Func<T, TOut> generator)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
+            return converter.Invoke(input, out TOut result) ? result : generator(input);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Convert<T, TOut>([NotNull] this TryParseHandler<T, TOut> converter, T input, out TOut result)
+        {
+            return Convert(input, converter, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Convert<T, TOut>(this T input, [NotNull] TryParseHandler<T, TOut> converter, out TOut result)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            return converter.Invoke(input, out result);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryConvert<T>(this String input, CultureInfo info, out T result)
@@ -754,7 +861,7 @@ namespace NetExtender.Utils.Types
                 result = Unsafe.As<Boolean, TOutput>(ref convert);
                 return true;
             }
-            
+
             try
             {
                 TypeConverter converter = TypeDescriptor.GetConverter(typeof(TOutput));

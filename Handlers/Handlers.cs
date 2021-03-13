@@ -19,6 +19,7 @@ namespace NetExtender
 
     public delegate void FuncHandler<out T, in TOut>(Func<T, TOut> function);
 
+    public delegate TOut ParseHandler<in T, out TOut>(T value);
     public delegate Boolean TryParseHandler<in T, TOut>(T value, out TOut result);
 
     public delegate T StructLazyFactoryHandler<TStruct, out T>(in TStruct @struct) where TStruct : struct;

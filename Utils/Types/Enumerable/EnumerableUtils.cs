@@ -962,6 +962,17 @@ namespace NetExtender.Utils.Types
             yield return result;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> SelectMany<T>([NotNull] this IEnumerable<IEnumerable<T>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.SelectMany(item => item);
+        }
+
         public static IEnumerable<TResult> SelectManyWhere<T, TResult>(this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, Func<T, IEnumerable<TResult>> selector)
         {
             if (source is null)
@@ -3946,6 +3957,102 @@ namespace NetExtender.Utils.Types
             }
         }
 
+        public static IImmutableDictionary<T, Int32> CountGroup<T>([NotNull] this IEnumerable<T> source)
+        {
+            return CountGroup(source, null);
+        }
+
+        public static IImmutableDictionary<T, Int32> CountGroup<T>([NotNull] this IEnumerable<T> source, IEqualityComparer<T> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            IDictionary<T, Int32> counter = new Dictionary<T, Int32>(comparer);
+            
+            foreach (T item in source)
+            {
+                if (counter.ContainsKey(item))
+                {
+                    counter[item]++;
+                    continue;
+                }
+
+                counter[item] = 1;
+            }
+
+            return counter.ToImmutableDictionary();
+        }
+        
+        public static IImmutableDictionary<TKey, Int32> CountGroupBy<T, TKey>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, TKey> selector)
+        {
+            return CountGroupBy(source, selector, null);
+        }
+
+        public static IImmutableDictionary<TKey, Int32> CountGroupBy<T, TKey>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, TKey> selector, IEqualityComparer<TKey> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Select(selector).CountGroup(comparer);
+        }
+        
+        public static IImmutableDictionary<T, Int64> LongCountGroup<T>([NotNull] this IEnumerable<T> source)
+        {
+            return LongCountGroup(source, null);
+        }
+
+        public static IImmutableDictionary<T, Int64> LongCountGroup<T>([NotNull] this IEnumerable<T> source, IEqualityComparer<T> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            IDictionary<T, Int64> counter = new Dictionary<T, Int64>(comparer);
+            
+            foreach (T item in source)
+            {
+                if (counter.ContainsKey(item))
+                {
+                    counter[item]++;
+                    continue;
+                }
+
+                counter[item] = 1;
+            }
+
+            return counter.ToImmutableDictionary();
+        }
+        
+        public static IImmutableDictionary<TKey, Int64> LongCountGroupBy<T, TKey>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, TKey> selector)
+        {
+            return LongCountGroupBy(source, selector, null);
+        }
+
+        public static IImmutableDictionary<TKey, Int64> LongCountGroupBy<T, TKey>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, TKey> selector, IEqualityComparer<TKey> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Select(selector).LongCountGroup(comparer);
+        }
+
         /// <summary>
         /// Gets collection count if <see cref="source"/> is materialized, otherwise 0.
         /// </summary>
@@ -4103,6 +4210,32 @@ namespace NetExtender.Utils.Types
             catch (Exception)
             {
                 return false;
+            }
+        }
+
+        public static IEnumerable<Object> AsEnumerable([NotNull] this IEnumerator enumerator)
+        {
+            if (enumerator is null)
+            {
+                throw new ArgumentNullException(nameof(enumerator));
+            }
+
+            while (enumerator.MoveNext())
+            {
+                yield return enumerator.Current;
+            }
+        }
+        
+        public static IEnumerable<T> AsEnumerable<T>([NotNull] this IEnumerator<T> enumerator)
+        {
+            if (enumerator is null)
+            {
+                throw new ArgumentNullException(nameof(enumerator));
+            }
+
+            while (enumerator.MoveNext())
+            {
+                yield return enumerator.Current;
             }
         }
 
