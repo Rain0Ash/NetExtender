@@ -7,38 +7,43 @@ namespace NetExtender.GUI.WinForms.TextBoxes
 {
     public class HidenTextBox : ValidableTextBox
     {
-        private const Char ResetChar = '\0';
-
-        private event EmptyHandler PasswdCharChanged;
-        private Char _passwdChar = '*';
-
-        public Char PasswdChar
+        protected const Char ResetPasswordChar = '\0';
+        protected const Char DefaultPasswordChar = '*';
+        
+        private Char _password = DefaultPasswordChar;
+        
+        public override Char PasswordChar
         {
             get
             {
-                return _passwdChar;
+                return _password;
             }
             set
             {
-                if (_passwdChar == value)
+                if (_password == value)
                 {
                     return;
                 }
 
-                _passwdChar = value;
-                PasswdCharChanged?.Invoke();
+                _password = value;
+                OnPasswordCharChanged(EventArgs.Empty);
             }
         }
 
         public HidenTextBox()
         {
-            PasswordChar = PasswdChar;
-
-            Enter += (sender, args) => PasswordChar = ResetChar;
-
-            Leave += (sender, args) => PasswordChar = PasswdChar;
-
-            PasswdCharChanged += () => PasswordChar = PasswdChar;
+            Enter += OnEnter;
+            Leave += OnLeave;
+        }
+        
+        private void OnEnter(Object? sender, EventArgs e)
+        {
+            base.PasswordChar = ResetPasswordChar;
+        }
+        
+        private void OnLeave(Object? sender, EventArgs e)
+        {
+            base.PasswordChar = PasswordChar;
         }
     }
 }

@@ -864,6 +864,42 @@ namespace NetExtender.Utils.Numerics
         ForEach(types.Where(type => type != nameof(Decimal) && type != nameof(Char)), SqrtFunc);
     }
     
+    void LogFunc(String type)
+    {
+        WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Double)} {nameof(Log)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn Math.Log(value);");
+        WriteLine("\t\t}");
+        
+        WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Double)} {nameof(Log)}(this {type} value, {nameof(Double)} newBase)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn Math.Log(value, newBase);");
+        WriteLine("\t\t}");
+        
+        WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Double)} {nameof(Log)}2(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn Math.Log2(value);");
+        WriteLine("\t\t}");
+        
+        WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Double)} {nameof(Log)}10(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn Math.Log10(value);");
+        WriteLine("\t\t}");
+    }
+    
+    void Log()
+    {
+        ForEach(types.Where(type => IsIntType(type) && type != nameof(Char)), LogFunc);
+    }
+    
     void DifferenceFunc(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -1279,6 +1315,8 @@ namespace NetExtender.Utils.Numerics
     Pow();
     WriteLine(String.Empty);
     Sqrt();
+    WriteLine(String.Empty);
+    Log();
     WriteLine(String.Empty);
     Difference();
     WriteLine(String.Empty);

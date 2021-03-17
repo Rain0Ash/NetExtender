@@ -11,6 +11,16 @@ namespace NetExtender.Utils.Types
 {
     public static class ArrayUtils
     {
+        public static T[] AsArray<T>([NotNull] this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source is T[] array ? array : source.ToArray();
+        }
+        
         /// <summary>
         /// Adds the provided item to the end of the array.
         /// </summary>

@@ -26,9 +26,9 @@ namespace NetExtender.Crypto.Hashes.XXHash
         /// <param name="stream">The stream of data</param>
         /// <param name="bufferSize">The buffer size</param>
         /// <param name="seed">The seed number</param>
-        /// <param name="cancellationToken">The cancelation token</param>
+        /// <param name="token">The cancelation token</param>
         /// <returns>The hash</returns>
-        public static async ValueTask<UInt64> ComputeHashAsync(Stream stream, Int32 bufferSize, UInt64 seed, CancellationToken cancellationToken)
+        public static async ValueTask<UInt64> ComputeHashAsync(Stream stream, Int32 bufferSize, UInt64 seed, CancellationToken token)
         {
             // Optimizing memory allocation
             Byte[] buffer = ArrayPool<Byte>.Shared.Rent(bufferSize + 32);
@@ -46,12 +46,12 @@ namespace NetExtender.Crypto.Hashes.XXHash
             {
                 // Read flow of bytes
                 Int32 readBytes;
-                while ((readBytes = await stream.ReadAsync(buffer, offset, bufferSize, cancellationToken).ConfigureAwait(false)) > 0)
+                while ((readBytes = await stream.ReadAsync(buffer, offset, bufferSize, token).ConfigureAwait(false)) > 0)
                 {   
                     // Exit if the operation is canceled
-                    if (cancellationToken.IsCancellationRequested)
+                    if (token.IsCancellationRequested)
                     {
-                        return await Task.FromCanceled<UInt64>(cancellationToken).ConfigureAwait(false);
+                        return await Task.FromCanceled<UInt64>(token).ConfigureAwait(false);
                     }
                     
                     length += readBytes;

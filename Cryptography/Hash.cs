@@ -30,10 +30,10 @@ namespace NetExtender.Crypto
             {
                 throw new ArgumentNullException(nameof(data));
             }
-                
+
             return Hashing(data.ToBytes(), type);
         }
-            
+
         public static Byte[] Hashing(this Byte[] data, HashType type = HashType.SHA256)
         {
             if (data is null)
@@ -73,27 +73,27 @@ namespace NetExtender.Crypto
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         public static class Hash
         {
             public const HashType DefaultHashType = HashType.MD5;
-            
+
             public static Byte[] Sha1(String data)
             {
                 return Sha1(data.ToBytes());
             }
-            
+
             public static Byte[] Sha1(Byte[] data)
             {
                 using SHA1 sha1 = new SHA1Managed();
                 return sha1.ComputeHash(data);
             }
-            
+
             public static Boolean Sha1(ReadOnlySpan<Byte> data, Span<Byte> destination)
             {
                 return Sha1(data, destination, out _);
             }
-            
+
             public static Boolean Sha1(ReadOnlySpan<Byte> data, Span<Byte> destination, out Int32 written)
             {
                 using SHA1 sha1 = new SHA1Managed();
@@ -104,28 +104,28 @@ namespace NetExtender.Crypto
             {
                 return Sha1(data).GetStringFromBytes();
             }
-            
+
             public static String Sha1String(Byte[] data)
             {
                 return Sha1(data).GetStringFromBytes();
             }
-            
+
             public static Byte[] Sha256(String data)
             {
                 return Sha256(data.ToBytes());
             }
-            
+
             public static Byte[] Sha256(Byte[] data)
             {
                 using SHA256 sha256 = new SHA256Managed();
                 return sha256.ComputeHash(data);
             }
-            
+
             public static Boolean Sha256(ReadOnlySpan<Byte> data, Span<Byte> destination)
             {
                 return Sha256(data, destination, out _);
             }
-            
+
             public static Boolean Sha256(ReadOnlySpan<Byte> data, Span<Byte> destination, out Int32 written)
             {
                 using SHA256 sha256 = new SHA256Managed();
@@ -136,7 +136,7 @@ namespace NetExtender.Crypto
             {
                 return Sha256(data).GetStringFromBytes();
             }
-            
+
             public static String Sha256String(Byte[] data)
             {
                 return Sha256(data).GetStringFromBytes();
@@ -146,18 +146,18 @@ namespace NetExtender.Crypto
             {
                 return Sha384(data.ToBytes());
             }
-            
+
             public static Byte[] Sha384(Byte[] data)
             {
                 using SHA384 sha384 = new SHA384Managed();
                 return sha384.ComputeHash(data);
             }
-            
+
             public static Boolean Sha384(ReadOnlySpan<Byte> data, Span<Byte> destination)
             {
                 return Sha384(data, destination, out _);
             }
-            
+
             public static Boolean Sha384(ReadOnlySpan<Byte> data, Span<Byte> destination, out Int32 written)
             {
                 using SHA384 sha384 = new SHA384Managed();
@@ -168,12 +168,12 @@ namespace NetExtender.Crypto
             {
                 return Sha384(data).GetStringFromBytes();
             }
-            
+
             public static String Sha384String(Byte[] data)
             {
                 return Sha384(data).GetStringFromBytes();
             }
-            
+
             public static Byte[] Sha512(String data)
             {
                 return Sha512(data.ToBytes());
@@ -184,18 +184,18 @@ namespace NetExtender.Crypto
                 using SHA512 sha512 = new SHA512Managed();
                 return sha512.ComputeHash(data);
             }
-            
+
             public static Boolean Sha512(ReadOnlySpan<Byte> data, Span<Byte> destination)
             {
                 return Sha512(data, destination, out _);
             }
-            
+
             public static Boolean Sha512(ReadOnlySpan<Byte> data, Span<Byte> destination, out Int32 written)
             {
                 using SHA512 sha512 = new SHA512Managed();
                 return sha512.TryComputeHash(data, destination, out written);
             }
-            
+
             public static String Sha512String(String data)
             {
                 return Sha512(data).GetStringFromBytes();
@@ -205,7 +205,7 @@ namespace NetExtender.Crypto
             {
                 return Sha512(data).GetStringFromBytes();
             }
-            
+
             public static Byte[] MD5(String data)
             {
                 return MD5(data.ToBytes());
@@ -216,18 +216,18 @@ namespace NetExtender.Crypto
                 using Md5 md5 = Md5.Create();
                 return md5.ComputeHash(data);
             }
-            
+
             public static Boolean MD5(ReadOnlySpan<Byte> data, Span<Byte> destination)
             {
                 return MD5(data, destination, out _);
             }
-            
+
             public static Boolean MD5(ReadOnlySpan<Byte> data, Span<Byte> destination, out Int32 written)
             {
                 using Md5 md5 = Md5.Create();
                 return md5.TryComputeHash(data, destination, out written);
             }
-            
+
             public static String MD5String(String data)
             {
                 return MD5(data).GetStringFromBytes();
@@ -237,7 +237,7 @@ namespace NetExtender.Crypto
             {
                 return MD5(data).GetStringFromBytes();
             }
-            
+
             public static Byte Crc8(String data)
             {
                 return Crc8(data.ToBytes());
@@ -247,12 +247,12 @@ namespace NetExtender.Crypto
             {
                 return Crc8(data, data.Length);
             }
-            
+
             public static Boolean Crc8(ReadOnlySpan<Byte> data, Span<Byte> destination)
             {
                 return Crc8(data, destination, out _);
             }
-            
+
             public static Boolean Crc8(ReadOnlySpan<Byte> data, Span<Byte> destination, out Int32 written)
             {
                 if (destination.Length >= 1)
@@ -271,7 +271,7 @@ namespace NetExtender.Crypto
             {
                 Int32 len = size;
                 UInt32 checksum = 0;
-                
+
                 unchecked
                 {
                     for (Int32 i = 0; i <= len - 1; i++)
@@ -279,7 +279,7 @@ namespace NetExtender.Crypto
                         checksum *= 0x13;
                         checksum += data[i];
                     }
-                    
+
                     return (Byte) checksum;
                 }
             }

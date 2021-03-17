@@ -145,14 +145,14 @@ namespace NetExtender.Crypto.Compression
             return _compression.Read(buffer, offset, count);
         }
         
-        public override ValueTask<Int32> ReadAsync(Memory<Byte> buffer, CancellationToken cancellationToken = new CancellationToken())
+        public override ValueTask<Int32> ReadAsync(Memory<Byte> buffer, CancellationToken token = new CancellationToken())
         {
-            return _compression.ReadAsync(buffer, cancellationToken);
+            return _compression.ReadAsync(buffer, token);
         }
         
-        public override Task<Int32> ReadAsync(Byte[] buffer, Int32 offset, Int32 count, CancellationToken cancellationToken)
+        public override Task<Int32> ReadAsync(Byte[] buffer, Int32 offset, Int32 count, CancellationToken token)
         {
-            return _compression.ReadAsync(buffer, offset, count, cancellationToken);
+            return _compression.ReadAsync(buffer, offset, count, token);
         }
 
         public override IAsyncResult BeginRead(Byte[] buffer, Int32 offset, Int32 count, AsyncCallback callback, Object? state)
@@ -180,14 +180,14 @@ namespace NetExtender.Crypto.Compression
             _compression.Write(buffer, offset, count);
         }
         
-        public override ValueTask WriteAsync(ReadOnlyMemory<Byte> buffer, CancellationToken cancellationToken = new CancellationToken())
+        public override ValueTask WriteAsync(ReadOnlyMemory<Byte> buffer, CancellationToken token = new CancellationToken())
         {
-            return _compression.WriteAsync(buffer, cancellationToken);
+            return _compression.WriteAsync(buffer, token);
         }
 
-        public override Task WriteAsync(Byte[] buffer, Int32 offset, Int32 count, CancellationToken cancellationToken)
+        public override Task WriteAsync(Byte[] buffer, Int32 offset, Int32 count, CancellationToken token)
         {
-            return _compression.WriteAsync(buffer, offset, count, cancellationToken);
+            return _compression.WriteAsync(buffer, offset, count, token);
         }
 
         public override IAsyncResult BeginWrite(Byte[] buffer, Int32 offset, Int32 count, AsyncCallback callback, Object? state)
@@ -205,9 +205,9 @@ namespace NetExtender.Crypto.Compression
             _compression.Flush();
         }
 
-        public override Task FlushAsync(CancellationToken cancellationToken)
+        public override Task FlushAsync(CancellationToken token)
         {
-            return _compression.FlushAsync(cancellationToken);
+            return _compression.FlushAsync(token);
         }
 
         public override void CopyTo(Stream destination, Int32 bufferSize)
@@ -215,9 +215,9 @@ namespace NetExtender.Crypto.Compression
             _compression.CopyTo(destination, bufferSize);
         }
 
-        public override Task CopyToAsync(Stream destination, Int32 bufferSize, CancellationToken cancellationToken)
+        public override Task CopyToAsync(Stream destination, Int32 bufferSize, CancellationToken token)
         {
-            return _compression.CopyToAsync(destination, bufferSize, cancellationToken);
+            return _compression.CopyToAsync(destination, bufferSize, token);
         }
         
         public override void Close()

@@ -11,12 +11,6 @@ namespace NetExtender.Utils.Types
     public static class CharUtils
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsControl(Char character)
-        {
-            return character != '	' && Char.IsControl(character);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Repeat(this Char character, Int32 count)
         {
             return count < 1 ? String.Empty : new String(character, count);

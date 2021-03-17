@@ -4,7 +4,6 @@ using NetExtender.Apps;
 using NetExtender.Apps.Data;
 using NetExtender.Apps.Data.Common;
 using NetExtender.Apps.Data.Interfaces;
-using NetExtender.Types.Dictionaries;
 using NetExtender.Utils.IO;
 
 namespace NetExtender

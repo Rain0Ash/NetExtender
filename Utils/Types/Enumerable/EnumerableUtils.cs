@@ -15,6 +15,7 @@ using NetExtender.Types.Collections;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Sets.Interfaces;
 using NetExtender.Utils.Core;
+using NetExtender.Utils.IO;
 using NetExtender.Utils.Numerics;
 
 namespace NetExtender.Utils.Types
@@ -2125,7 +2126,7 @@ namespace NetExtender.Utils.Types
                 chunk ??= new T[size];
                 chunk[index++] = element;
 
-                if (index != size)
+                if (index < size)
                 {
                     continue;
                 }
@@ -2401,9 +2402,10 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (source is ICollection sc && sc.Count < count)
+            // ReSharper disable once PossibleMultipleEnumeration
+            if (source.CountIfMaterialized() >= count)
             {
-                return false;
+                return true;
             }
 
             if (count <= 0)
@@ -2413,6 +2415,7 @@ namespace NetExtender.Utils.Types
 
             Int32 matches = 0;
 
+            // ReSharper disable once PossibleMultipleEnumeration
             using IEnumerator<T> enumerator = source.GetEnumerator();
 
             while (enumerator.MoveNext())
@@ -4052,9 +4055,189 @@ namespace NetExtender.Utils.Types
 
             return source.Select(selector).LongCountGroup(comparer);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> Progress<T>([NotNull] this IEnumerable<T> source, [NotNull] IProgress<Int32> progress)
+        {
+            if (progress is null)
+            {
+                throw new ArgumentNullException(nameof(progress));
+            }
+
+            return Progress(source, progress.Report);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> Progress<T>([NotNull] this IEnumerable<T> source, [NotNull] IProgress<Int32> progress, Int32 size)
+        {
+            if (progress is null)
+            {
+                throw new ArgumentNullException(nameof(progress));
+            }
+
+            return Progress(source, progress.Report, size);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> Progress<T>([NotNull] this IEnumerable<T> source, [NotNull] Action callback)
+        {
+            if (callback is null)
+            {
+                throw new ArgumentNullException(nameof(callback));
+            }
+
+            return Progress(source, _ => callback.Invoke());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> Progress<T>([NotNull] this IEnumerable<T> source, [NotNull] Action callback, Int32 size)
+        {
+            if (callback is null)
+            {
+                throw new ArgumentNullException(nameof(callback));
+            }
+
+            return Progress(source, _ => callback.Invoke(), size);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> Progress<T>([NotNull] this IEnumerable<T> source, [NotNull] Action<Int32> callback)
+        {
+            return Progress(source, callback, 1);
+        }
+
+        public static IEnumerable<T> Progress<T>([NotNull] this IEnumerable<T> source, [NotNull] Action<Int32> callback, Int32 size)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (callback is null)
+            {
+                throw new ArgumentNullException(nameof(callback));
+            }
+
+            if (size <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(size));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+            
+            Int32 count = 0;
+
+            while (true)
+            {
+                Int32 counter;
+
+                for (counter = 0; counter < size && enumerator.MoveNext(); counter++)
+                {
+                    yield return enumerator.Current;
+                }
+
+                if (counter <= 0)
+                {
+                    yield break;
+                }
+
+                count += counter;
+                callback.Invoke(count);
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> LongProgress<T>([NotNull] this IEnumerable<T> source, [NotNull] IProgress<Int64> progress)
+        {
+            if (progress is null)
+            {
+                throw new ArgumentNullException(nameof(progress));
+            }
+
+            return LongProgress(source, progress.Report);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> LongProgress<T>([NotNull] this IEnumerable<T> source, [NotNull] IProgress<Int64> progress, Int64 size)
+        {
+            if (progress is null)
+            {
+                throw new ArgumentNullException(nameof(progress));
+            }
+
+            return LongProgress(source, progress.Report, size);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> LongProgress<T>([NotNull] this IEnumerable<T> source, [NotNull] Action callback)
+        {
+            if (callback is null)
+            {
+                throw new ArgumentNullException(nameof(callback));
+            }
+
+            return LongProgress(source, _ => callback.Invoke());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> LongProgress<T>([NotNull] this IEnumerable<T> source, [NotNull] Action callback, Int64 size)
+        {
+            if (callback is null)
+            {
+                throw new ArgumentNullException(nameof(callback));
+            }
+
+            return LongProgress(source, _ => callback.Invoke(), size);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> LongProgress<T>([NotNull] this IEnumerable<T> source, [NotNull] Action<Int64> callback)
+        {
+            return LongProgress(source, callback, 1);
+        }
+
+        public static IEnumerable<T> LongProgress<T>([NotNull] this IEnumerable<T> source, [NotNull] Action<Int64> callback, Int64 size)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (callback is null)
+            {
+                throw new ArgumentNullException(nameof(callback));
+            }
+
+            if (size <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(size));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+            
+            Int64 count = 0;
+
+            while (true)
+            {
+                Int64 counter;
+
+                for (counter = 0; counter < size && enumerator.MoveNext(); counter++)
+                {
+                    yield return enumerator.Current;
+                }
+
+                if (counter <= 0)
+                {
+                    yield break;
+                }
+
+                count += counter;
+                callback.Invoke(count);
+            }
+        }
 
         /// <summary>
-        /// Gets collection count if <see cref="source"/> is materialized, otherwise 0.
+        /// Gets collection count if <see cref="source"/> is materialized, otherwise null.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
@@ -4175,6 +4358,17 @@ namespace NetExtender.Utils.Types
                 IReadOnlyCollection<T> => source,
                 _ => source.ToArray()
             };
+        }
+        
+        public static IEnumerable<T> Dematerialize<T>([NotNull] this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+            return enumerator.AsEnumerable();
         }
 
         public static Boolean TryReset([NotNull] this IEnumerator enumerator)

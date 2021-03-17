@@ -347,7 +347,7 @@ namespace NetExtender.Utils.Types
 
         public static Byte[] GetHash(this Image image)
         {
-            return image.ToBytes().GetHash();
+            return image.ToBytes().Hashing();
         }
 
         public static Byte[] GetHash(this Image image, HashType type)

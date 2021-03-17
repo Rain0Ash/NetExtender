@@ -73,7 +73,7 @@ namespace NetExtender.Utils.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task ToExceptionTask(this Exception exception)
+        public static Task ToExceptionTask([NotNull] this Exception exception)
         {
 	        if (exception is null)
 	        {
@@ -84,7 +84,7 @@ namespace NetExtender.Utils.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<T> ToExceptionTask<T>(this Exception exception)
+        public static Task<T> ToExceptionTask<T>([NotNull] this Exception exception)
         {
 	        if (exception is null)
 	        {
@@ -92,6 +92,92 @@ namespace NetExtender.Utils.Types
 	        }
 
 	        return Task.FromException<T>(exception);
+        }
+
+        public static IAsyncEnumerable<Task> ToTasksCompletionQueue([NotNull] params Task[] tasks)
+        {
+	        return ToTasksCompletionQueue(tasks, CancellationToken.None);
+        }
+
+        public static IAsyncEnumerable<Task> ToTasksCompletionQueue(CancellationToken token, [NotNull] params Task[] tasks)
+        {
+	        return ToTasksCompletionQueue(tasks, token);
+        }
+        
+        public static IAsyncEnumerable<Task> ToTasksCompletionQueue(this Task task, CancellationToken token, [NotNull] params Task[] tasks)
+        {
+	        return ToTasksCompletionQueue(tasks.Prepend(task), token);
+        }
+        
+        public static IAsyncEnumerable<Task> ToTasksCompletionQueue([NotNull] this IEnumerable<Task> source)
+        {
+	        return ToTasksCompletionQueue(source, CancellationToken.None);
+        }
+
+        public static async IAsyncEnumerable<Task> ToTasksCompletionQueue([NotNull] this IEnumerable<Task> source, [EnumeratorCancellation] CancellationToken token)
+        {
+	        if (source is null)
+	        {
+		        throw new ArgumentNullException(nameof(source));
+	        }
+
+	        HashSet<Task> set = source.WhereNotNull().ToHashSet();
+
+	        while (set.Count > 0 && !token.IsCancellationRequested)
+	        {
+		        Task task = await Task.WhenAny(set).ConfigureAwait(false);
+		        set.Remove(task);
+
+		        if (token.IsCancellationRequested)
+		        {
+			        yield break;
+		        }
+		        
+		        yield return task;
+	        }
+        }
+        
+        public static IAsyncEnumerable<Task<T>> ToTasksCompletionQueue<T>([NotNull] params Task<T>[] tasks)
+        {
+	        return ToTasksCompletionQueue(tasks, CancellationToken.None);
+        }
+
+        public static IAsyncEnumerable<Task<T>> ToTasksCompletionQueue<T>(CancellationToken token, [NotNull] params Task<T>[] tasks)
+        {
+	        return ToTasksCompletionQueue(tasks, token);
+        }
+        
+        public static IAsyncEnumerable<Task<T>> ToTasksCompletionQueue<T>(this Task<T> task, CancellationToken token, [NotNull] params Task<T>[] tasks)
+        {
+	        return ToTasksCompletionQueue(tasks.Prepend(task), token);
+        }
+        
+        public static IAsyncEnumerable<Task<T>> ToTasksCompletionQueue<T>([NotNull] this IEnumerable<Task<T>> source)
+        {
+	        return ToTasksCompletionQueue(source, CancellationToken.None);
+        }
+
+        public static async IAsyncEnumerable<Task<T>> ToTasksCompletionQueue<T>([NotNull] this IEnumerable<Task<T>> source, [EnumeratorCancellation] CancellationToken token)
+        {
+	        if (source is null)
+	        {
+		        throw new ArgumentNullException(nameof(source));
+	        }
+
+	        HashSet<Task<T>> set = source.WhereNotNull().ToHashSet();
+
+	        while (set.Count > 0 && !token.IsCancellationRequested)
+	        {
+		        Task<T> task = await Task.WhenAny(set).ConfigureAwait(false);
+		        set.Remove(task);
+
+		        if (token.IsCancellationRequested)
+		        {
+			        yield break;
+		        }
+		        
+		        yield return task;
+	        }
         }
         
         public static Task Delay(CancellationToken token)
@@ -321,16 +407,21 @@ namespace NetExtender.Utils.Types
 		/// <param name="timeout">
 		/// The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.
 		/// </param>
-		/// <param name="cancellation">
+		/// <param name="token">
 		/// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
 		/// </param>
 		/// <returns>
 		/// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
 		/// <c>false</c>.
 		/// </returns>
-		public static Boolean WaitAll([NotNull] this IEnumerable<Task> tasks, Int32 timeout, CancellationToken cancellation)
+		public static Boolean WaitAll([NotNull] this IEnumerable<Task> tasks, Int32 timeout, CancellationToken token)
 		{
-			return Task.WaitAll(tasks.ToArray(), timeout, cancellation);
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
+			return Task.WaitAll(tasks.ToArray(), timeout, token);
 		}
 
 		/// <summary>
@@ -341,16 +432,21 @@ namespace NetExtender.Utils.Types
 		/// <param name="timeout">
 		/// A <see cref="TimeSpan"/> to wait, or <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
 		/// </param>
-		/// <param name="cancellation">
+		/// <param name="token">
 		/// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
 		/// </param>
 		/// <returns>
 		/// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
 		/// <c>false</c>.
 		/// </returns>
-		public static Boolean WaitAll([NotNull] this IEnumerable<Task> tasks, TimeSpan timeout, CancellationToken cancellation)
+		public static Boolean WaitAll([NotNull] this IEnumerable<Task> tasks, TimeSpan timeout, CancellationToken token)
 		{
-			return Task.WaitAll(tasks.ToArray(), (Int32) timeout.TotalMilliseconds, cancellation);
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
+			return Task.WaitAll(tasks.ToArray(), (Int32) timeout.TotalMilliseconds, token);
 		}
 
 		/// <summary>
@@ -358,16 +454,21 @@ namespace NetExtender.Utils.Types
 		/// milliseconds or until the wait is cancelled.
 		/// </summary>
 		/// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
-		/// <param name="cancellation">
+		/// <param name="token">
 		/// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
 		/// </param>
 		/// <returns>
 		/// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
 		/// <c>false</c>.
 		/// </returns>
-		public static void WaitAll([NotNull] this IEnumerable<Task> tasks, CancellationToken cancellation)
+		public static void WaitAll([NotNull] this IEnumerable<Task> tasks, CancellationToken token)
 		{
-			Task.WaitAll(tasks.ToArray(), cancellation);
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
+			Task.WaitAll(tasks.ToArray(), token);
 		}
 
 		/// <summary>
@@ -384,6 +485,11 @@ namespace NetExtender.Utils.Types
 		/// </returns>
 		public static Boolean WaitAll([NotNull] this IEnumerable<Task> tasks, Int32 timeout)
 		{
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
 			return Task.WaitAll(tasks.ToArray(), timeout);
 		}
 
@@ -401,6 +507,11 @@ namespace NetExtender.Utils.Types
 		/// </returns>
 		public static Boolean WaitAll([NotNull] this IEnumerable<Task> tasks, TimeSpan timeout)
 		{
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
 			return Task.WaitAll(tasks.ToArray(), timeout);
 		}
 
@@ -414,6 +525,11 @@ namespace NetExtender.Utils.Types
 		/// </returns>
 		public static void WaitAll([NotNull] this IEnumerable<Task> tasks)
 		{
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
 			Task.WaitAll(tasks.ToArray());
 		}
 
@@ -427,6 +543,11 @@ namespace NetExtender.Utils.Types
 		// ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
 		public static Task WhenAll([NotNull, ItemNotNull] this IEnumerable<Task> tasks)
 		{
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
 			return Task.WhenAll(tasks);
 		}
 
@@ -442,6 +563,11 @@ namespace NetExtender.Utils.Types
 		// ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
 		public static Task<T[]> WhenAll<T>([NotNull, ItemNotNull] this IEnumerable<Task<T>> tasks)
 		{
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
 			return Task.WhenAll(tasks);
 		}
 
@@ -459,6 +585,11 @@ namespace NetExtender.Utils.Types
 		// ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
 		public static Task<Task<T>> WhenAny<T>([NotNull, ItemNotNull] this IEnumerable<Task<T>> tasks)
 		{
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
 			return Task.WhenAny(tasks);
 		}
 
@@ -475,6 +606,11 @@ namespace NetExtender.Utils.Types
 		// ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
 		public static Task<Task> WhenAny([NotNull, ItemNotNull] this IEnumerable<Task> tasks)
 		{
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
 			return Task.WhenAny(tasks);
 		}
 		
@@ -486,16 +622,21 @@ namespace NetExtender.Utils.Types
 		/// <param name="timeout">
 		/// The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.
 		/// </param>
-		/// <param name="cancellation">
+		/// <param name="token">
 		/// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
 		/// </param>
 		/// <returns>
 		/// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
 		/// <c>false</c>.
 		/// </returns>
-		public static Boolean WaitAll([NotNull] this Task[] tasks, Int32 timeout, CancellationToken cancellation)
+		public static Boolean WaitAll([NotNull] this Task[] tasks, Int32 timeout, CancellationToken token)
 		{
-			return Task.WaitAll(tasks, timeout, cancellation);
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
+			return Task.WaitAll(tasks, timeout, token);
 		}
 
 		/// <summary>
@@ -506,16 +647,21 @@ namespace NetExtender.Utils.Types
 		/// <param name="timeout">
 		/// A <see cref="TimeSpan"/> to wait, or <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
 		/// </param>
-		/// <param name="cancellation">
+		/// <param name="token">
 		/// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
 		/// </param>
 		/// <returns>
 		/// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
 		/// <c>false</c>.
 		/// </returns>
-		public static Boolean WaitAll([NotNull] this Task[] tasks, TimeSpan timeout, CancellationToken cancellation)
+		public static Boolean WaitAll([NotNull] this Task[] tasks, TimeSpan timeout, CancellationToken token)
 		{
-			return Task.WaitAll(tasks, (Int32) timeout.TotalMilliseconds, cancellation);
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
+			return Task.WaitAll(tasks, (Int32) timeout.TotalMilliseconds, token);
 		}
 
 		/// <summary>
@@ -523,16 +669,21 @@ namespace NetExtender.Utils.Types
 		/// milliseconds or until the wait is cancelled.
 		/// </summary>
 		/// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
-		/// <param name="cancellation">
+		/// <param name="token">
 		/// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
 		/// </param>
 		/// <returns>
 		/// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
 		/// <c>false</c>.
 		/// </returns>
-		public static void WaitAll([NotNull] this Task[] tasks, CancellationToken cancellation)
+		public static void WaitAll([NotNull] this Task[] tasks, CancellationToken token)
 		{
-			Task.WaitAll(tasks, cancellation);
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
+			Task.WaitAll(tasks, token);
 		}
 
 		/// <summary>
@@ -549,6 +700,11 @@ namespace NetExtender.Utils.Types
 		/// </returns>
 		public static Boolean WaitAll([NotNull] this Task[] tasks, Int32 timeout)
 		{
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
 			return Task.WaitAll(tasks, timeout);
 		}
 
@@ -566,6 +722,11 @@ namespace NetExtender.Utils.Types
 		/// </returns>
 		public static Boolean WaitAll([NotNull] this Task[] tasks, TimeSpan timeout)
 		{
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
 			return Task.WaitAll(tasks, timeout);
 		}
 
@@ -579,6 +740,11 @@ namespace NetExtender.Utils.Types
 		/// </returns>
 		public static void WaitAll([NotNull] this Task[] tasks)
 		{
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
 			Task.WaitAll(tasks);
 		}
 
@@ -592,6 +758,11 @@ namespace NetExtender.Utils.Types
 		// ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
 		public static Task WhenAll([NotNull, ItemNotNull] this Task[] tasks)
 		{
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
 			return Task.WhenAll(tasks);
 		}
 
@@ -607,6 +778,11 @@ namespace NetExtender.Utils.Types
 		// ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
 		public static Task<T[]> WhenAll<T>([NotNull, ItemNotNull] this Task<T>[] tasks)
 		{
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
 			return Task.WhenAll(tasks);
 		}
 
@@ -624,6 +800,11 @@ namespace NetExtender.Utils.Types
 		// ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
 		public static Task<Task<T>> WhenAny<T>([NotNull, ItemNotNull] this Task<T>[] tasks)
 		{
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
 			return Task.WhenAny(tasks);
 		}
 
@@ -640,6 +821,11 @@ namespace NetExtender.Utils.Types
 		// ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
 		public static Task<Task> WhenAny([NotNull, ItemNotNull] this Task[] tasks)
 		{
+			if (tasks is null)
+			{
+				throw new ArgumentNullException(nameof(tasks));
+			}
+
 			return Task.WhenAny(tasks);
 		}
 		

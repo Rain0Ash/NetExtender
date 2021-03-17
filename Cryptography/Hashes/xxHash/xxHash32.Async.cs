@@ -28,9 +28,9 @@ using System.Threading.Tasks;
         /// <param name="stream">The stream of data</param>
         /// <param name="bufferSize">The buffer size</param>
         /// <param name="seed">The seed number</param>
-        /// <param name="cancellationToken">The cancellation token</param>
+        /// <param name="token">The cancellation token</param>
         /// <returns>The hash</returns>
-        public static async ValueTask<UInt32> ComputeHashAsync(Stream stream, Int32 bufferSize, UInt32 seed, CancellationToken cancellationToken)
+        public static async ValueTask<UInt32> ComputeHashAsync(Stream stream, Int32 bufferSize, UInt32 seed, CancellationToken token)
         {
             // Optimizing memory allocation
             Byte[] buffer = ArrayPool<Byte>.Shared.Rent(bufferSize + 16);
@@ -48,12 +48,12 @@ using System.Threading.Tasks;
             {
                 // Read flow of bytes
                 Int32 readBytes;
-                while ((readBytes = await stream.ReadAsync(buffer, offset, bufferSize, cancellationToken).ConfigureAwait(false)) > 0)
+                while ((readBytes = await stream.ReadAsync(buffer, offset, bufferSize, token).ConfigureAwait(false)) > 0)
                 {
                     // Exit if the operation is canceled
-                    if (cancellationToken.IsCancellationRequested)
+                    if (token.IsCancellationRequested)
                     {
-                        return await Task.FromCanceled<UInt32>(cancellationToken).ConfigureAwait(false);
+                        return await Task.FromCanceled<UInt32>(token).ConfigureAwait(false);
                     }
                     
                     length += readBytes;

@@ -19,7 +19,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(comparison));
             }
 
-            return CustomEqualityComparer<T>.Create(comparison);
+            return CustomEqualityComparer.Create<T>(comparison);
         }
         
         public static IEqualityComparer<T1, T2> ToEqualityComparer<T1, T2>([NotNull] this Func<T1, T2, Boolean> comparison)
@@ -29,7 +29,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(comparison));
             }
 
-            return CustomEqualityComparer<T1, T2>.Create(comparison);
+            return CustomEqualityComparer.Create(comparison);
         }
         
         public static IComparer<T> ToComparer<T>([NotNull] this Func<T, T, Int32> comparison)
@@ -39,7 +39,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(comparison));
             }
 
-            return CustomComparer<T>.Create(comparison);
+            return CustomComparer.Create<T>(comparison);
         }
         
         public static IComparer<T1, T2> ToComparer<T1, T2>([NotNull] this Func<T1, T2, Int32> comparison)
@@ -49,7 +49,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(comparison));
             }
 
-            return CustomComparer<T1, T2>.Create(comparison);
+            return CustomComparer.Create(comparison);
         }
         
         public static Boolean TryCompareToNull<T>(T first, T second, out Int32 result) where T : class

@@ -5,8 +5,12 @@ using System;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using JetBrains.Annotations;
+using NAudio.SoundFont;
+using NetExtender.Random.Interfaces;
 using NetExtender.Types.Drawing.Colors;
 using NetExtender.Types.Drawing.Colors.Interfaces;
+using NetExtender.Utils.Numerics;
 
 namespace NetExtender.Utils.Types
 {
@@ -976,6 +980,308 @@ namespace NetExtender.Utils.Types
                 default:
                     throw new NotSupportedException();
             }
+        }
+        
+        public static Color GetRandomColor()
+        {
+            return GetRandomColor(RandomUtils.Generator);
+        }
+        
+        public static Color GetRandomColor([NotNull] this System.Random random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            return Color.FromArgb(random.NextByte(), random.NextByte(), random.NextByte());
+        }
+        
+        public static Color GetRandomColor([NotNull] this IRandom random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            return Color.FromArgb(random.NextByte(), random.NextByte(), random.NextByte());
+        }
+        
+        public static Color GetRandomAlphaColor()
+        {
+            return GetRandomAlphaColor(RandomUtils.Generator);
+        }
+        
+        public static Color GetRandomAlphaColor([NotNull] this System.Random random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            return Color.FromArgb(random.NextByte(), random.NextByte(), random.NextByte(), random.NextByte());
+        }
+        
+        public static Color GetRandomAlphaColor([NotNull] this IRandom random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            return Color.FromArgb(random.NextByte(), random.NextByte(), random.NextByte(), random.NextByte());
+        }
+
+        public static IColor GetRandomColor(this ColorType type)
+        {
+            return GetRandomColor(RandomUtils.Generator, type);
+        }
+        
+        public static IColor GetRandomColor(this ColorType type, System.Random random)
+        {
+            return GetRandomColor(random, type);
+        }
+        
+        public static IColor GetRandomColor(this ColorType type, IRandom random)
+        {
+            return GetRandomColor(random, type);
+        }
+        
+        public static IColor GetRandomColor(this System.Random random, ColorType type)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            return ConvertRGBToColorType(random.NextByte(), random.NextByte(), random.NextByte(), type);
+        }
+        
+        public static IColor GetRandomColor(this IRandom random, ColorType type)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            return ConvertRGBToColorType(random.NextByte(), random.NextByte(), random.NextByte(), type);
+        }
+
+        public static Color GetRandomLightColor()
+        {
+            return GetRandomLightColor(RandomUtils.Generator);
+        }
+        
+        public static Color GetRandomLightColor(this System.Random random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            return Color.FromArgb(
+                random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
+                random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
+                random.NextByte(MinimumLightRGBColor, Byte.MaxValue));
+        }
+        
+        public static Color GetRandomLightColor(this IRandom random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            return Color.FromArgb(
+                random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
+                random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
+                random.NextByte(MinimumLightRGBColor, Byte.MaxValue));
+        }
+        
+        public static Color GetRandomLightAlphaColor()
+        {
+            return GetRandomLightAlphaColor(RandomUtils.Generator);
+        }
+        
+        public static Color GetRandomLightAlphaColor(this System.Random random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            return Color.FromArgb(
+                random.NextByte(),
+                random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
+                random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
+                random.NextByte(MinimumLightRGBColor, Byte.MaxValue));
+        }
+        
+        public static Color GetRandomLightAlphaColor(this IRandom random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            return Color.FromArgb(
+                random.NextByte(),
+                random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
+                random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
+                random.NextByte(MinimumLightRGBColor, Byte.MaxValue));
+        }
+
+        public static IColor GetRandomLightColor(this ColorType type)
+        {
+            return GetRandomLightColor(RandomUtils.Generator, type);
+        }
+        
+        public static IColor GetRandomLightColor(this ColorType type, System.Random random)
+        {
+            return GetRandomLightColor(random, type);
+        }
+        
+        public static IColor GetRandomLightColor(this ColorType type, IRandom random)
+        {
+            return GetRandomLightColor(random, type);
+        }
+        
+        public const Byte MinimumLightRGBColor = 170;
+        public const Byte MaximumDarkRGBColor = 80;
+
+        public static IColor GetRandomLightColor(this System.Random random, ColorType type)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            return ConvertRGBToColorType(
+                random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
+                random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
+                random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
+                type);
+        }
+
+        public static IColor GetRandomLightColor(this IRandom random, ColorType type)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            return ConvertRGBToColorType(
+                random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
+                random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
+                random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
+                type);
+        }
+
+        public static Color GetRandomDarkColor()
+        {
+            return GetRandomDarkColor(RandomUtils.Generator);
+        }
+        
+        public static Color GetRandomDarkColor(this System.Random random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            return Color.FromArgb(
+                random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
+                random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
+                random.NextByte(Byte.MinValue, MaximumDarkRGBColor));
+        }
+        
+        public static Color GetRandomDarkColor(this IRandom random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            return Color.FromArgb(
+                random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
+                random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
+                random.NextByte(Byte.MinValue, MaximumDarkRGBColor));
+        }
+        
+        public static Color GetRandomDarkAlphaColor()
+        {
+            return GetRandomDarkAlphaColor(RandomUtils.Generator);
+        }
+        
+        public static Color GetRandomDarkAlphaColor(this System.Random random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            return Color.FromArgb(
+                random.NextByte(),
+                random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
+                random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
+                random.NextByte(Byte.MinValue, MaximumDarkRGBColor));
+        }
+        
+        public static Color GetRandomDarkAlphaColor(this IRandom random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            return Color.FromArgb(
+                random.NextByte(),
+                random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
+                random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
+                random.NextByte(Byte.MinValue, MaximumDarkRGBColor));
+        }
+
+        public static IColor GetRandomDarkColor(this ColorType type)
+        {
+            return GetRandomDarkColor(RandomUtils.Generator, type);
+        }
+        
+        public static IColor GetRandomDarkColor(this ColorType type, System.Random random)
+        {
+            return GetRandomDarkColor(random, type);
+        }
+        
+        public static IColor GetRandomDarkColor(this ColorType type, IRandom random)
+        {
+            return GetRandomDarkColor(random, type);
+        }
+
+        public static IColor GetRandomDarkColor(this System.Random random, ColorType type)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            return ConvertRGBToColorType(
+                random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
+                random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
+                random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
+                type);
+        }
+
+        public static IColor GetRandomDarkColor(this IRandom random, ColorType type)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            return ConvertRGBToColorType(
+                random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
+                random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
+                random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
+                type);
         }
     }
 }

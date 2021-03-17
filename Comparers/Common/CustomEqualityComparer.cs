@@ -8,6 +8,30 @@ using NetExtender.Comparers.Interfaces;
 
 namespace NetExtender.Comparers.Common
 {
+    public static class CustomEqualityComparer
+    {
+        public static IEqualityComparer<T> Create<T>([NotNull] Func<T?, T?, Boolean> comparison)
+        {
+            return new CustomEqualityComparer<T>(comparison);
+        }
+        
+        public static IEqualityComparer<T> Create<T>([NotNull] Func<T?, T?, Boolean> comparison, Func<T?, Int32> hash)
+        {
+            return new CustomEqualityComparer<T>(comparison, hash);
+        }
+        
+        public static IEqualityComparer<T1, T2> Create<T1, T2>([NotNull] Func<T1?, T2?, Boolean> comparison)
+        {
+            return new CustomEqualityComparer<T1, T2>(comparison);
+        }
+        
+        public static IEqualityComparer<T1, T2> Create<T1, T2>([NotNull] Func<T1?, T2?, Boolean> comparison, Func<T1?, Int32> hash1, Func<T2, Int32> hash2)
+        {
+            return new CustomEqualityComparer<T1, T2>(comparison, hash1, hash2);
+        }
+
+    }
+    
     public sealed class CustomEqualityComparer<T> : IEqualityComparer<T>
     {
         public static IEqualityComparer<T> Default
@@ -16,16 +40,6 @@ namespace NetExtender.Comparers.Common
             {
                 return EqualityComparer<T>.Default;
             }
-        }
-
-        public static IEqualityComparer<T> Create([NotNull] Func<T?, T?, Boolean> comparison)
-        {
-            return new CustomEqualityComparer<T>(comparison);
-        }
-        
-        public static IEqualityComparer<T> Create([NotNull] Func<T?, T?, Boolean> comparison, Func<T?, Int32> hash)
-        {
-            return new CustomEqualityComparer<T>(comparison, hash);
         }
         
         private Func<T?, T?, Boolean> Comparison { get; }
@@ -55,16 +69,6 @@ namespace NetExtender.Comparers.Common
     
     public sealed class CustomEqualityComparer<T1, T2> : IEqualityComparer<T1, T2>
     {
-        public static IEqualityComparer<T1, T2> Create([NotNull] Func<T1?, T2?, Boolean> comparison)
-        {
-            return new CustomEqualityComparer<T1, T2>(comparison);
-        }
-        
-        public static IEqualityComparer<T1, T2> Create([NotNull] Func<T1?, T2?, Boolean> comparison, Func<T1?, Int32> hash1, Func<T2, Int32> hash2)
-        {
-            return new CustomEqualityComparer<T1, T2>(comparison, hash1, hash2);
-        }
-        
         private Func<T1?, T2?, Boolean> Comparison { get; }
         private Func<T1?, Int32> Hash1 { get; }
         private Func<T2?, Int32> Hash2 { get; }

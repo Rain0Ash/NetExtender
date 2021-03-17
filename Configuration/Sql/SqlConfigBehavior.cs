@@ -5,24 +5,21 @@ using System;
 using System.Collections.Generic;
 using NetExtender.Configuration.Common;
 using NetExtender.Crypto.CryptKey.Interfaces;
-using NetExtender.DataBase;
 
 namespace NetExtender.Configuration.Sql
 {
     public class SqlConfigBehavior : ConfigBehavior
     {
-        private readonly DatabaseConnection _connection;
-        
-        public SqlConfigBehavior(String path, DatabaseConnection connection, ConfigOptions options)
+        public SqlConfigBehavior(String path, ConfigOptions options)
             : base(path, options)
         {
-            _connection = connection;
+            throw new NotImplementedException();
         }
 
-        public SqlConfigBehavior(String path, DatabaseConnection connection, ICryptKey crypt, ConfigOptions options)
+        public SqlConfigBehavior(String path, ICryptKey crypt, ConfigOptions options)
             : base(path, crypt, options)
         {
-            _connection = connection;
+            throw new NotImplementedException();
         }
 
         public override String Get(String key, IEnumerable<String> sections)

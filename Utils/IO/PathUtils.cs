@@ -1101,6 +1101,29 @@ namespace NetExtender.Utils.IO
         private static readonly Char[] InvalidStreamNameChars = Path.GetInvalidFileNameChars().Where(c => c < 1 || c > 31).ToArray();
 
         [StructLayout(LayoutKind.Sequential)]
+        private readonly struct LargeInteger
+        {
+            public static implicit operator Int64(LargeInteger value)
+            {
+                return value.ToInt64();
+            }
+
+            public Int32 High { get; }
+            public Int32 Low { get; }
+            
+            public LargeInteger(Int32 high, Int32 low)
+            {
+                High = high;
+                Low = low;
+            }
+
+            public Int64 ToInt64()
+            {
+                return High * 0x100000000 + Low;
+            }
+        }
+        
+        [StructLayout(LayoutKind.Sequential)]
         private readonly struct Win32StreamId
         {
             public readonly Int32 StreamId;
@@ -1122,7 +1145,7 @@ namespace NetExtender.Utils.IO
 
         [DllImport("kernel32", CharSet = CharSet.Unicode, SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern Boolean GetFileSizeEx(SafeFileHandle handle, out LargeInteger size);
+        private static extern Boolean GetFileSizeEx(SafeFileHandle handle, out UInt64 size);
 
         [DllImport("kernel32", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -1170,7 +1193,8 @@ namespace NetExtender.Utils.IO
             return 0 != FormatMessage(0x3200, IntPtr.Zero, code, 0, lpBuffer, lpBuffer.Capacity, IntPtr.Zero) ? lpBuffer.ToString() : $"Unknown error: {code}";
         }
 
-        private static void ThrowIOError(Int32 code, String path)
+        [CanBeNull]
+        private static Exception? GetIOException(Int32 code, [CanBeNull] String path)
         {
             switch (code)
             {
@@ -1180,102 +1204,74 @@ namespace NetExtender.Utils.IO
                 }
                 case 2: // File not found
                 {
-                    if (String.IsNullOrEmpty(path))
-                    {
-                        throw new FileNotFoundException();
-                    }
-
-                    throw new FileNotFoundException(null, path);
+                    return String.IsNullOrEmpty(path) ? new FileNotFoundException() : new FileNotFoundException(null, path);
                 }
                 case 3: // Directory not found
                 {
-                    if (String.IsNullOrEmpty(path))
-                    {
-                        throw new DirectoryNotFoundException();
-                    }
-
-                    throw new DirectoryNotFoundException($"Could not find a part of the path '{path}'.");
+                    return String.IsNullOrEmpty(path) ? new DirectoryNotFoundException() : new DirectoryNotFoundException($"Could not find a part of the path '{path}'.");
                 }
                 case 5: // Access denied
                 {
-                    if (String.IsNullOrEmpty(path))
-                    {
-                        throw new UnauthorizedAccessException();
-                    }
-
-                    throw new UnauthorizedAccessException($"Access to the path '{path}' was denied.");
+                    return String.IsNullOrEmpty(path) ? new UnauthorizedAccessException() : new UnauthorizedAccessException($"Access to the path '{path}' was denied.");
                 }
                 case 15: // Drive not found
                 {
-                    if (String.IsNullOrEmpty(path))
-                    {
-                        throw new DriveNotFoundException();
-                    }
-
-                    throw new DriveNotFoundException($"Could not find the drive '{path}'. The drive might not be ready or might not be mapped.");
+                    return String.IsNullOrEmpty(path) ? new DriveNotFoundException() : new DriveNotFoundException($"Could not find the drive '{path}'. The drive might not be ready or might not be mapped.");
                 }
                 case 32: // Sharing violation
                 {
-                    if (String.IsNullOrEmpty(path))
-                    {
-                        throw new IOException(GetErrorMessage(code), MakeHRFromErrorCode(code));
-                    }
-
-                    throw new IOException($"The process cannot access the file '{path}' because it is being used by another process.", MakeHRFromErrorCode(code));
+                    return String.IsNullOrEmpty(path) ? new IOException(GetErrorMessage(code), MakeHRFromErrorCode(code)) : new IOException($"The process cannot access the file '{path}' because it is being used by another process.", MakeHRFromErrorCode(code));
                 }
                 case 80: // File already exists
                 {
                     if (!String.IsNullOrEmpty(path))
                     {
-                        throw new IOException($"The file '{path}' already exists.", MakeHRFromErrorCode(code));
+                        return new IOException($"The file '{path}' already exists.", MakeHRFromErrorCode(code));
                     }
 
                     break;
                 }
                 case 87: // Invalid parameter
                 {
-                    throw new IOException(GetErrorMessage(code), MakeHRFromErrorCode(code));
+                    return new IOException(GetErrorMessage(code), MakeHRFromErrorCode(code));
                 }
                 case 183: // File or directory already exists
                 {
                     if (!String.IsNullOrEmpty(path))
                     {
-                        throw new IOException($"Cannot create '{path}' because a file or directory with the same name already exists.", MakeHRFromErrorCode(code));
+                        return new IOException($"Cannot create '{path}' because a file or directory with the same name already exists.", MakeHRFromErrorCode(code));
                     }
 
                     break;
                 }
                 case 206: // Path too long
                 {
-                    throw new PathTooLongException();
+                    return new PathTooLongException();
                 }
                 case 995: // Operation cancelled
                 {
-                    throw new OperationCanceledException();
+                    return new OperationCanceledException();
                 }
                 default:
                 {
-                    Marshal.ThrowExceptionForHR(MakeHRFromErrorCode(code));
-                    break;
+                    return Marshal.GetExceptionForHR(MakeHRFromErrorCode(code));
                 }
             }
+
+            return null;
         }
 
-        public static void ThrowLastIOError(String path)
+        [CanBeNull]
+        public static Exception? GetLastIOException(String path)
         {
             Int32 code = Marshal.GetLastWin32Error();
             if (code == 0)
             {
-                return;
+                return null;
             }
 
             Int32 hr = Marshal.GetHRForLastWin32Error();
-            if (hr >= 0)
-            {
-                throw new Win32Exception(code);
-            }
-
-            ThrowIOError(code, path);
+            return hr >= 0 ? new Win32Exception(code) : GetIOException(code, path);
         }
 
         public static NativeFileAccess ToNative(this FileAccess access)
@@ -1381,7 +1377,13 @@ namespace NetExtender.Utils.IO
                     }
                     default:
                     {
-                        ThrowLastIOError(name);
+                        Exception? exception = GetLastIOException(name);
+
+                        if (exception is not null)
+                        {
+                            throw exception;
+                        }
+                        
                         break;
                     }
                 }
@@ -1416,7 +1418,13 @@ namespace NetExtender.Utils.IO
                     }
                     default:
                     {
-                        ThrowLastIOError(name);
+                        Exception? exception = GetLastIOException(name);
+                        
+                        if (exception is not null)
+                        {
+                            throw exception;
+                        }
+                        
                         break;
                     }
                 }
@@ -1437,29 +1445,31 @@ namespace NetExtender.Utils.IO
             }
         }
 
-        private static Int64 GetFileSize(String path, SafeFileHandle handle)
+        private static UInt64 GetFileSize(String path, SafeFileHandle handle)
         {
-            Int64 result = 0L;
             if (handle is null || handle.IsInvalid)
             {
-                return result;
+                return 0;
             }
 
-            if (GetFileSizeEx(handle, out LargeInteger value))
+            if (GetFileSizeEx(handle, out UInt64 value))
             {
-                result = value.ToInt64();
-            }
-            else
-            {
-                ThrowLastIOError(path);
+                return value;
             }
 
-            return result;
+            Exception? exception = GetLastIOException(path);
+            
+            if (exception is not null)
+            {
+                throw exception;
+            }
+            
+            return 0;
         }
 
-        public static Int64 GetFileSize(String path)
+        public static UInt64 GetFileSize(String path)
         {
-            Int64 result = 0L;
+            UInt64 result = 0;
             if (String.IsNullOrEmpty(path))
             {
                 return result;

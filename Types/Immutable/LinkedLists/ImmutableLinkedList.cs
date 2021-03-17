@@ -56,13 +56,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
         }
 
         private readonly Node? _head;
-
-        private ImmutableLinkedList(Node? head, Int32 count)
-        {
-            _head = head;
-            Count = count;
-        }
-
+        
         /// <summary>
         /// The length of the list
         /// </summary>
@@ -100,6 +94,12 @@ namespace NetExtender.Types.Immutable.LinkedLists
 
                 return new ImmutableLinkedList<T>(_head!.Next, Count - 1);
             }
+        }
+
+        private ImmutableLinkedList(Node? head, Int32 count)
+        {
+            _head = head;
+            Count = count;
         }
 
         internal static ImmutableLinkedList<T> Create(T value)
@@ -400,9 +400,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
                 thatCurrent = thatCurrent.Next;
             }
         }
-
-        #region ---- Prepend ----
-
+        
         /// <summary>
         /// Returns a new list with <paramref name="value"/> prepended.
         /// 
@@ -476,11 +474,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
             newLast.Next = _head;
             return new ImmutableLinkedList<T>(newHead, Count + list.Count);
         }
-
-        #endregion
-
-        #region ---- Append ----
-
+        
         /// <summary>
         /// Returns a new list with <paramref name="value"/> appended.
         /// 
@@ -517,11 +511,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
         {
             return list.PrependRange(this);
         }
-
-        #endregion
-
-        #region ---- Remove ----
-
+        
         /// <summary>
         /// Returns a new list with the first instance of <paramref name="value"/> removed (if present).
         /// 
@@ -640,11 +630,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
 
             return new ImmutableLinkedList<T>(newHead, withoutPrefix.Count - countRemoved);
         }
-
-        #endregion
-
-        #region ---- Skip ----
-
+        
         /// <summary>
         /// Same as <see cref="Enumerable.Skip{TSource}(IEnumerable{TSource}, int)"/>, except the
         /// return type is <see cref="ImmutableLinkedList{T}"/> and allocations are avoided.
@@ -718,8 +704,6 @@ namespace NetExtender.Types.Immutable.LinkedLists
 
             return new ImmutableLinkedList<T>(newHead, Count - countRemoved);
         }
-
-        #endregion
 
         /// <summary>
         /// Returns an <see cref="ImmutableLinkedList{T}"/> for the index range described

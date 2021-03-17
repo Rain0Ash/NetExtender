@@ -13,6 +13,31 @@ namespace NetExtender.GUI.WinForms.TextBoxes
 {
     public class FixedTextBox : TextBox
     {
+        public event EventHandler PasswordCharChanged;
+
+        public new virtual Char PasswordChar
+        {
+            get
+            {
+                return base.PasswordChar;
+            }
+            set
+            {
+                if (PasswordChar == value)
+                {
+                    return;
+                }
+
+                base.PasswordChar = value;
+                OnPasswordCharChanged(EventArgs.Empty);
+            }
+        }
+
+        protected virtual void OnPasswordCharChanged(EventArgs e)
+        {
+            PasswordCharChanged?.Invoke(this, e);
+        }
+        
         public event EmptyHandler ActionTypeChanged;
 
         private ActionType _actionType = ActionType.All;

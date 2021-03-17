@@ -10,22 +10,7 @@ namespace NetExtender.Utils.Types
     {
         public static Boolean CheckValidEmail(String address)
         {
-            return CheckValidEmail(address, out _);
-        }
-
-        public static Boolean CheckValidEmail(String address, out MailAddress email)
-        {
-            try
-            {
-                email = new MailAddress(address);
-            }
-            catch (FormatException)
-            {
-                email = default;
-                return false;
-            }
-
-            return true;
+            return MailAddress.TryCreate(address, out _);
         }
     }
 }

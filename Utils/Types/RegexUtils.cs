@@ -24,13 +24,12 @@ namespace NetExtender.Utils.Types
             try
             {
                 _ = Regex.Match(String.Empty, pattern);
+                return true;
             }
             catch (ArgumentException)
             {
                 return false;
             }
-
-            return true;
         }
 
         public static String JoinMatches([NotNull] String str, [RegexPattern] [NotNull] String pattern, RegexOptions options = RegexOptions.None)
@@ -43,21 +42,26 @@ namespace NetExtender.Utils.Types
             return JoinMatches(Regex.Matches(str, pattern, options), separator);
         }
 
-        public static String JoinMatches(this Regex regex, [NotNull] String str)
+        public static String JoinMatches([NotNull] this Regex regex, [NotNull] String str)
         {
             return JoinMatches(regex, str, String.Empty);
         }
 
-        public static String JoinMatches(this Regex regex, [NotNull] String str, [NotNull] String separator)
+        public static String JoinMatches([NotNull] this Regex regex, [NotNull] String str, [NotNull] String separator)
         {
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
             return JoinMatches(regex.Matches(str), separator);
         }
-        
+
         public static Task<String> JoinMatchesAsync([NotNull] String str, [RegexPattern] [NotNull] String pattern, RegexOptions options = RegexOptions.None)
         {
             return JoinMatchesAsync(str, pattern, String.Empty, options, CancellationToken.None);
         }
-        
+
         public static Task<String> JoinMatchesAsync([NotNull] String str, [RegexPattern] [NotNull] String pattern, RegexOptions options, CancellationToken token)
         {
             return JoinMatchesAsync(str, pattern, String.Empty, options, token);
@@ -67,39 +71,54 @@ namespace NetExtender.Utils.Types
         {
             return JoinMatchesAsync(str, pattern, separator, options, CancellationToken.None);
         }
-        
+
         public static async Task<String> JoinMatchesAsync(String str, [RegexPattern] [NotNull] String pattern, String separator, RegexOptions options, CancellationToken token)
         {
             return JoinMatches(await MatchesAsync(str, pattern, options, token).ConfigureAwait(false), separator);
         }
 
-        public static Task<String> JoinMatchesAsync(this Regex regex, [NotNull] String str)
+        public static Task<String> JoinMatchesAsync([NotNull] this Regex regex, [NotNull] String str)
         {
             return JoinMatchesAsync(regex, str, CancellationToken.None);
         }
-        
-        public static Task<String> JoinMatchesAsync(this Regex regex, [NotNull] String str, CancellationToken token)
+
+        public static Task<String> JoinMatchesAsync([NotNull] this Regex regex, [NotNull] String str, CancellationToken token)
         {
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
             return JoinMatchesAsync(regex, str, String.Empty, token);
         }
 
-        public static Task<String> JoinMatchesAsync(this Regex regex, [NotNull] String str, [NotNull] String separator)
+        public static Task<String> JoinMatchesAsync([NotNull] this Regex regex, [NotNull] String str, [NotNull] String separator)
         {
             return JoinMatchesAsync(regex, str, separator, CancellationToken.None);
         }
-        
-        public static async Task<String> JoinMatchesAsync(this Regex regex, [NotNull] String str, [NotNull] String separator, CancellationToken token)
+
+        public static async Task<String> JoinMatchesAsync([NotNull] this Regex regex, [NotNull] String str, [NotNull] String separator, CancellationToken token)
         {
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
             return JoinMatches(await MatchesAsync(regex, str, token).ConfigureAwait(false), separator);
         }
 
-        public static String JoinMatches(this MatchCollection matches)
+        public static String JoinMatches([NotNull] this MatchCollection matches)
         {
             return JoinMatches(matches, String.Empty);
         }
 
-        public static String JoinMatches(this MatchCollection matches, String separator)
+        public static String JoinMatches([NotNull] this MatchCollection matches, String separator)
         {
+            if (matches is null)
+            {
+                throw new ArgumentNullException(nameof(matches));
+            }
+
             return String.Join(separator ?? String.Empty, GetCaptures(matches).Skip(1));
         }
 
@@ -108,33 +127,48 @@ namespace NetExtender.Utils.Types
             return GetCaptures(Regex.Matches(str, pattern, options));
         }
 
-        public static IEnumerable<String> GetCaptures(this Regex regex, [NotNull] String str)
+        public static IEnumerable<String> GetCaptures([NotNull] this Regex regex, [NotNull] String str)
         {
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
             return GetCaptures(regex.Matches(str));
         }
-        
+
         public static Task<IEnumerable<String>> GetCapturesAsync([NotNull] String str, [RegexPattern] String pattern, RegexOptions options = RegexOptions.None)
         {
             return GetCapturesAsync(str, pattern, options, CancellationToken.None);
         }
-        
+
         public static async Task<IEnumerable<String>> GetCapturesAsync([NotNull] String str, [RegexPattern] String pattern, RegexOptions options, CancellationToken token)
         {
             return GetCaptures(await MatchesAsync(str, pattern, options, token).ConfigureAwait(false));
         }
 
-        public static Task<IEnumerable<String>> GetCapturesAsync(this Regex regex, [NotNull] String str)
+        public static Task<IEnumerable<String>> GetCapturesAsync([NotNull] this Regex regex, [NotNull] String str)
         {
             return GetCapturesAsync(regex, str, CancellationToken.None);
         }
-        
-        public static async Task<IEnumerable<String>> GetCapturesAsync(this Regex regex, [NotNull] String str, CancellationToken token)
+
+        public static async Task<IEnumerable<String>> GetCapturesAsync([NotNull] this Regex regex, [NotNull] String str, CancellationToken token)
         {
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
             return GetCaptures(await MatchesAsync(regex, str, token).ConfigureAwait(false));
         }
 
-        public static IEnumerable<String> GetCaptures(this MatchCollection matches)
+        public static IEnumerable<String> GetCaptures([NotNull] this MatchCollection matches)
         {
+            if (matches is null)
+            {
+                throw new ArgumentNullException(nameof(matches));
+            }
+
             return matches
                 .SelectMany(match => match.Groups.OfType<Group>())
                 .SelectMany(group => group.Captures)
@@ -146,16 +180,21 @@ namespace NetExtender.Utils.Types
             return IfMatchGetCaptures(Regex.Matches(str, pattern, options), str);
         }
 
-        public static IEnumerable<String> IfMatchGetCaptures(this Regex regex, [NotNull] String str)
+        public static IEnumerable<String> IfMatchGetCaptures([NotNull] this Regex regex, [NotNull] String str)
         {
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
             return IfMatchGetCaptures(regex.Matches(str), str);
         }
-        
+
         public static Task<IEnumerable<String>> IfMatchGetCapturesAsync([NotNull] String str, [RegexPattern] String pattern, RegexOptions options = RegexOptions.None)
         {
             return IfMatchGetCapturesAsync(str, pattern, options, CancellationToken.None);
         }
-        
+
         public static async Task<IEnumerable<String>> IfMatchGetCapturesAsync([NotNull] String str, [RegexPattern] String pattern, RegexOptions options, CancellationToken token)
         {
             return IfMatchGetCaptures(await MatchesAsync(str, pattern, options, token).ConfigureAwait(false), str);
@@ -166,19 +205,34 @@ namespace NetExtender.Utils.Types
             return IfMatchGetCapturesAsync(regex, str, CancellationToken.None);
         }
 
-        public static async Task<IEnumerable<String>> IfMatchGetCapturesAsync(this Regex regex, [NotNull] String str, CancellationToken token)
+        public static async Task<IEnumerable<String>> IfMatchGetCapturesAsync([NotNull] this Regex regex, [NotNull] String str, CancellationToken token)
         {
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
             return IfMatchGetCaptures(await MatchesAsync(regex, str, token).ConfigureAwait(false), str);
         }
-        
-        public static IEnumerable<String> IfMatchGetCaptures(this MatchCollection matches, [NotNull] String str)
+
+        public static IEnumerable<String> IfMatchGetCaptures([NotNull] this MatchCollection matches, [NotNull] String str)
         {
+            if (matches is null)
+            {
+                throw new ArgumentNullException(nameof(matches));
+            }
+
             String[] captures = GetCaptures(matches).ToArray();
             return captures.FirstOrDefault()?.Equals(str) == true ? captures : null;
         }
 
-        public static IDictionary<String, IList<String>> MatchNamedCaptures(this Regex regex, String input, Boolean nogroup = true)
+        public static IDictionary<String, IList<String>> MatchNamedCaptures([NotNull] this Regex regex, String input, Boolean nogroup = true)
         {
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
             MatchCollection matches = regex.Matches(input);
             String[] groupNames = regex.GetGroupNames();
 
@@ -189,391 +243,471 @@ namespace NetExtender.Utils.Types
         {
             return MatchNamedCapturesAsync(regex, input, nogroup, CancellationToken.None);
         }
-        
-        public static async Task<IDictionary<String, IList<String>>> MatchNamedCapturesAsync(this Regex regex, String input, Boolean nogroup, CancellationToken token)
+
+        public static async Task<IDictionary<String, IList<String>>> MatchNamedCapturesAsync([NotNull] this Regex regex, String input, Boolean nogroup, CancellationToken token)
         {
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
             MatchCollection matches = await MatchesAsync(regex, input, token).ConfigureAwait(false);
             String[] groupNames = regex.GetGroupNames();
 
             return MatchNamedCaptures(matches, groupNames, nogroup);
         }
-        
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public static IDictionary<String, IList<String>> MatchNamedCaptures(this MatchCollection matches, IEnumerable<String> names, Boolean nogroup)
+        public static IDictionary<String, IList<String>> MatchNamedCaptures([NotNull] this MatchCollection matches, IEnumerable<String> names, Boolean nogroup)
         {
+            if (matches is null)
+            {
+                throw new ArgumentNullException(nameof(matches));
+            }
+
             IDictionary<String, IList<String>> captures = new Dictionary<String, IList<String>>();
             names = names.Materialize();
             foreach (Match match in matches)
             {
                 GroupCollection groups = match.Groups;
-                
+
                 foreach (String name in names)
                 {
                     if (name is null)
                     {
                         continue;
                     }
-                    
+
                     if (nogroup && Int32.TryParse(name, out _) || groups[name].Captures.Count <= 0)
                     {
                         continue;
                     }
 
-                    if (!captures.ContainsKey(name))
-                    {
-                        captures.Add(name, new List<String>());
-                    }
-
-                    captures[name].Add(groups[name].Value);
+                    captures.GetOrAdd(name, () => new List<String>()).Add(groups[name].Value);
                 }
             }
 
             return captures.ToImmutableDictionary();
         }
-        
-        private static Task<T> ExecuteAsync<T>(Func<T> handler, CancellationToken token)
-        {
-            return Task.Run(handler, token);
-        }
-        
+
         public static Task<Match> MatchAsync(String input, String pattern)
         {
             return MatchAsync(input, pattern, CancellationToken.None);
         }
-        
+
         public static Task<Match> MatchAsync(String input, String pattern, CancellationToken token)
         {
-            return ExecuteAsync(() => Regex.Match(input, pattern), token);
+            return Task.Run(() => Regex.Match(input, pattern), token);
         }
-        
+
         public static Task<Match> MatchAsync(String input, String pattern, RegexOptions options)
         {
             return MatchAsync(input, pattern, options, CancellationToken.None);
         }
-        
+
         public static Task<Match> MatchAsync(String input, String pattern, RegexOptions options, CancellationToken token)
         {
-            return ExecuteAsync(() => Regex.Match(input, pattern, options), token);
+            return Task.Run(() => Regex.Match(input, pattern, options), token);
         }
-        
+
         public static Task<Match> MatchAsync(String input, String pattern, RegexOptions options, TimeSpan matchTimeout)
         {
             return MatchAsync(input, pattern, options, matchTimeout, CancellationToken.None);
         }
-        
+
         public static Task<Match> MatchAsync(String input, String pattern, RegexOptions options, TimeSpan matchTimeout, CancellationToken token)
         {
-            return ExecuteAsync(() => Regex.Match(input, pattern, options, matchTimeout), token);
+            return Task.Run(() => Regex.Match(input, pattern, options, matchTimeout), token);
         }
-        
-        public static Task<Match> MatchAsync(this Regex regex, String input)
+
+        public static Task<Match> MatchAsync([NotNull] this Regex regex, String input)
         {
             return MatchAsync(regex, input, CancellationToken.None);
         }
-        
-        public static Task<Match> MatchAsync(this Regex regex, String input, CancellationToken token)
+
+        public static Task<Match> MatchAsync([NotNull] this Regex regex, String input, CancellationToken token)
         {
-            return ExecuteAsync(() => regex.Match(input), token);
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return Task.Run(() => regex.Match(input), token);
         }
-        
-        public static Task<Match> MatchAsync(this Regex regex, String input, Int32 startat)
+
+        public static Task<Match> MatchAsync([NotNull] this Regex regex, String input, Int32 startat)
         {
             return MatchAsync(regex, input, startat, CancellationToken.None);
         }
-        
-        public static Task<Match> MatchAsync(this Regex regex, String input, Int32 startat, CancellationToken token)
+
+        public static Task<Match> MatchAsync([NotNull] this Regex regex, String input, Int32 startat, CancellationToken token)
         {
-            return ExecuteAsync(() => regex.Match(input, startat), token);
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return Task.Run(() => regex.Match(input, startat), token);
         }
-        
-        public static Task<Match> MatchAsync(this Regex regex, String input, Int32 beginning, Int32 length)
+
+        public static Task<Match> MatchAsync([NotNull] this Regex regex, String input, Int32 beginning, Int32 length)
         {
             return MatchAsync(regex, input, beginning, length, CancellationToken.None);
         }
-        
-        public static Task<Match> MatchAsync(this Regex regex, String input, Int32 beginning, Int32 length, CancellationToken token)
+
+        public static Task<Match> MatchAsync([NotNull] this Regex regex, String input, Int32 beginning, Int32 length, CancellationToken token)
         {
-            return ExecuteAsync(() => regex.Match(input, beginning, length), token);
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return Task.Run(() => regex.Match(input, beginning, length), token);
         }
-        
+
         public static Task<MatchCollection> MatchesAsync(String input, String pattern)
         {
             return MatchesAsync(input, pattern, CancellationToken.None);
         }
-        
+
         public static Task<MatchCollection> MatchesAsync(String input, String pattern, CancellationToken token)
         {
-            return ExecuteAsync(() => Regex.Matches(input, pattern), token);
+            return Task.Run(() => Regex.Matches(input, pattern), token);
         }
-        
+
         public static Task<MatchCollection> MatchesAsync(String input, String pattern, RegexOptions options)
         {
             return MatchesAsync(input, pattern, options, CancellationToken.None);
         }
-        
+
         public static Task<MatchCollection> MatchesAsync(String input, String pattern, RegexOptions options, CancellationToken token)
         {
-            return ExecuteAsync(() => Regex.Matches(input, pattern, options), token);
+            return Task.Run(() => Regex.Matches(input, pattern, options), token);
         }
-        
+
         public static Task<MatchCollection> MatchesAsync(String input, String pattern, RegexOptions options, TimeSpan matchTimeout)
         {
             return MatchesAsync(input, pattern, options, matchTimeout, CancellationToken.None);
         }
-        
+
         public static Task<MatchCollection> MatchesAsync(String input, String pattern, RegexOptions options, TimeSpan matchTimeout, CancellationToken token)
         {
-            return ExecuteAsync(() => Regex.Matches(input, pattern, options, matchTimeout), token);
+            return Task.Run(() => Regex.Matches(input, pattern, options, matchTimeout), token);
         }
-        
-        public static Task<MatchCollection> MatchesAsync(this Regex regex, String input)
+
+        public static Task<MatchCollection> MatchesAsync([NotNull] this Regex regex, String input)
         {
             return MatchesAsync(regex, input, CancellationToken.None);
         }
-        
-        public static Task<MatchCollection> MatchesAsync(this Regex regex, String input, CancellationToken token)
+
+        public static Task<MatchCollection> MatchesAsync([NotNull] this Regex regex, String input, CancellationToken token)
         {
-            return ExecuteAsync(() => regex.Matches(input), token);
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return Task.Run(() => regex.Matches(input), token);
         }
-        
-        public static Task<MatchCollection> MatchesAsync(this Regex regex, String input, Int32 startat)
+
+        public static Task<MatchCollection> MatchesAsync([NotNull] this Regex regex, String input, Int32 startat)
         {
             return MatchesAsync(regex, input, startat, CancellationToken.None);
         }
-        
-        public static Task<MatchCollection> MatchesAsync(this Regex regex, String input, Int32 startat, CancellationToken token)
+
+        public static Task<MatchCollection> MatchesAsync([NotNull] this Regex regex, String input, Int32 startat, CancellationToken token)
         {
-            return ExecuteAsync(() => regex.Matches(input, startat), token);
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return Task.Run(() => regex.Matches(input, startat), token);
         }
 
         public static Task<String> ReplaceAsync(String input, String pattern, MatchEvaluator evaluator)
         {
             return ReplaceAsync(input, pattern, evaluator, CancellationToken.None);
         }
-        
+
         public static Task<String> ReplaceAsync(String input, String pattern, MatchEvaluator evaluator, CancellationToken token)
         {
-            return ExecuteAsync(() => Regex.Replace(input, pattern, evaluator), token);
+            return Task.Run(() => Regex.Replace(input, pattern, evaluator), token);
         }
-        
+
         public static Task<String> ReplaceAsync(String input, String pattern, MatchEvaluator evaluator, RegexOptions options)
         {
             return ReplaceAsync(input, pattern, evaluator, options, CancellationToken.None);
         }
-        
+
         public static Task<String> ReplaceAsync(String input, String pattern, MatchEvaluator evaluator, RegexOptions options, CancellationToken token)
         {
-            return ExecuteAsync(() => Regex.Replace(input, pattern, evaluator, options), token);
+            return Task.Run(() => Regex.Replace(input, pattern, evaluator, options), token);
         }
-        
+
         public static Task<String> ReplaceAsync(String input, String pattern, MatchEvaluator evaluator, RegexOptions options, TimeSpan matchTimeout)
         {
             return ReplaceAsync(input, pattern, evaluator, options, matchTimeout, CancellationToken.None);
         }
-        
+
         public static Task<String> ReplaceAsync(String input, String pattern, MatchEvaluator evaluator, RegexOptions options, TimeSpan matchTimeout, CancellationToken token)
         {
-            return ExecuteAsync(() => Regex.Replace(input, pattern, evaluator, options, matchTimeout), token);
+            return Task.Run(() => Regex.Replace(input, pattern, evaluator, options, matchTimeout), token);
         }
 
         public static Task<String> ReplaceAsync(String input, String pattern, String replacement)
         {
             return ReplaceAsync(input, pattern, replacement, CancellationToken.None);
         }
-        
+
         public static Task<String> ReplaceAsync(String input, String pattern, String replacement, CancellationToken token)
         {
-            return ExecuteAsync(() => Regex.Replace(input, pattern, replacement), token);
+            return Task.Run(() => Regex.Replace(input, pattern, replacement), token);
         }
-        
+
         public static Task<String> ReplaceAsync(String input, String pattern, String replacement, RegexOptions options)
         {
             return ReplaceAsync(input, pattern, replacement, options, CancellationToken.None);
         }
-        
+
         public static Task<String> ReplaceAsync(String input, String pattern, String replacement, RegexOptions options, CancellationToken token)
         {
-            return ExecuteAsync(() => Regex.Replace(input, pattern, replacement, options), token);
+            return Task.Run(() => Regex.Replace(input, pattern, replacement, options), token);
         }
-        
+
         public static Task<String> ReplaceAsync(String input, String pattern, String replacement, RegexOptions options, TimeSpan matchTimeout)
         {
             return ReplaceAsync(input, pattern, replacement, options, matchTimeout, CancellationToken.None);
         }
-        
+
         public static Task<String> ReplaceAsync(String input, String pattern, String replacement, RegexOptions options, TimeSpan matchTimeout, CancellationToken token)
         {
-            return ExecuteAsync(() => Regex.Replace(input, pattern, replacement, options, matchTimeout), token);
+            return Task.Run(() => Regex.Replace(input, pattern, replacement, options, matchTimeout), token);
         }
-        
-        public static Task<String> ReplaceAsync(this Regex regex, String input, MatchEvaluator evaluator)
+
+        public static Task<String> ReplaceAsync([NotNull] this Regex regex, String input, MatchEvaluator evaluator)
         {
             return ReplaceAsync(regex, input, evaluator, CancellationToken.None);
         }
-        
-        public static Task<String> ReplaceAsync(this Regex regex, String input, MatchEvaluator evaluator, CancellationToken token)
+
+        public static Task<String> ReplaceAsync([NotNull] this Regex regex, String input, MatchEvaluator evaluator, CancellationToken token)
         {
-            return ExecuteAsync(() => regex.Replace(input, evaluator), token);
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return Task.Run(() => regex.Replace(input, evaluator), token);
         }
-        
-        public static Task<String> ReplaceAsync(this Regex regex, String input, MatchEvaluator evaluator, Int32 count)
+
+        public static Task<String> ReplaceAsync([NotNull] this Regex regex, String input, MatchEvaluator evaluator, Int32 count)
         {
             return ReplaceAsync(regex, input, evaluator, count, CancellationToken.None);
         }
-        
-        public static Task<String> ReplaceAsync(this Regex regex, String input, MatchEvaluator evaluator, Int32 count, CancellationToken token)
+
+        public static Task<String> ReplaceAsync([NotNull] this Regex regex, String input, MatchEvaluator evaluator, Int32 count, CancellationToken token)
         {
-            return ExecuteAsync(() => regex.Replace(input, evaluator, count), token);
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return Task.Run(() => regex.Replace(input, evaluator, count), token);
         }
-        
-        public static Task<String> ReplaceAsync(this Regex regex, String input, MatchEvaluator evaluator, Int32 count, Int32 startat)
+
+        public static Task<String> ReplaceAsync([NotNull] this Regex regex, String input, MatchEvaluator evaluator, Int32 count, Int32 startat)
         {
             return ReplaceAsync(regex, input, evaluator, count, startat, CancellationToken.None);
         }
-        
-        public static Task<String> ReplaceAsync(this Regex regex, String input, MatchEvaluator evaluator, Int32 count, Int32 startat, CancellationToken token)
+
+        public static Task<String> ReplaceAsync([NotNull] this Regex regex, String input, MatchEvaluator evaluator, Int32 count, Int32 startat, CancellationToken token)
         {
-            return ExecuteAsync(() => regex.Replace(input, evaluator, count, startat), token);
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return Task.Run(() => regex.Replace(input, evaluator, count, startat), token);
         }
 
-        public static Task<String> ReplaceAsync(this Regex regex, String input, String replacement)
+        public static Task<String> ReplaceAsync([NotNull] this Regex regex, String input, String replacement)
         {
             return ReplaceAsync(regex, input, replacement, CancellationToken.None);
         }
-        
-        public static Task<String> ReplaceAsync(this Regex regex, String input, String replacement, CancellationToken token)
+
+        public static Task<String> ReplaceAsync([NotNull] this Regex regex, String input, String replacement, CancellationToken token)
         {
-            return ExecuteAsync(() => regex.Replace(input, replacement), token);
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return Task.Run(() => regex.Replace(input, replacement), token);
         }
-        
-        public static Task<String> ReplaceAsync(this Regex regex, String input, String replacement, Int32 count)
+
+        public static Task<String> ReplaceAsync([NotNull] this Regex regex, String input, String replacement, Int32 count)
         {
             return ReplaceAsync(regex, input, replacement, count, CancellationToken.None);
         }
-        
-        public static Task<String> ReplaceAsync(this Regex regex, String input, String replacement, Int32 count, CancellationToken token)
+
+        public static Task<String> ReplaceAsync([NotNull] this Regex regex, String input, String replacement, Int32 count, CancellationToken token)
         {
-            return ExecuteAsync(() => regex.Replace(input, replacement, count), token);
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return Task.Run(() => regex.Replace(input, replacement, count), token);
         }
-        
-        public static Task<String> ReplaceAsync(this Regex regex, String input, String replacement, Int32 count, Int32 startat)
+
+        public static Task<String> ReplaceAsync([NotNull] this Regex regex, String input, String replacement, Int32 count, Int32 startat)
         {
             return ReplaceAsync(regex, input, replacement, count, startat, CancellationToken.None);
         }
-        
-        public static Task<String> ReplaceAsync(this Regex regex, String input, String replacement, Int32 count, Int32 startat, CancellationToken token)
+
+        public static Task<String> ReplaceAsync([NotNull] this Regex regex, String input, String replacement, Int32 count, Int32 startat, CancellationToken token)
         {
-            return ExecuteAsync(() => regex.Replace(input, replacement, count, startat), token);
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return Task.Run(() => regex.Replace(input, replacement, count, startat), token);
         }
-        
+
         public static Task<String[]> SplitAsync(String input, String pattern)
         {
             return SplitAsync(input, pattern, CancellationToken.None);
         }
-        
+
         public static Task<String[]> SplitAsync(String input, String pattern, CancellationToken token)
         {
-            return ExecuteAsync(() => Regex.Split(input, pattern), token);
+            return Task.Run(() => Regex.Split(input, pattern), token);
         }
-        
+
         public static Task<String[]> SplitAsync(String input, String pattern, RegexOptions options)
         {
             return SplitAsync(input, pattern, options, CancellationToken.None);
         }
-        
+
         public static Task<String[]> SplitAsync(String input, String pattern, RegexOptions options, CancellationToken token)
         {
-            return ExecuteAsync(() => Regex.Split(input, pattern, options), token);
+            return Task.Run(() => Regex.Split(input, pattern, options), token);
         }
-        
+
         public static Task<String[]> SplitAsync(String input, String pattern, RegexOptions options, TimeSpan matchTimeout)
         {
             return SplitAsync(input, pattern, options, matchTimeout, CancellationToken.None);
         }
-        
+
         public static Task<String[]> SplitAsync(String input, String pattern, RegexOptions options, TimeSpan matchTimeout, CancellationToken token)
         {
-            return ExecuteAsync(() => Regex.Split(input, pattern, options, matchTimeout), token);
+            return Task.Run(() => Regex.Split(input, pattern, options, matchTimeout), token);
         }
-        
-        public static Task<String[]> SplitAsync(this Regex regex, String input)
+
+        public static Task<String[]> SplitAsync([NotNull] this Regex regex, String input)
         {
             return SplitAsync(regex, input, CancellationToken.None);
         }
-        
-        public static Task<String[]> SplitAsync(this Regex regex, String input, CancellationToken token)
+
+        public static Task<String[]> SplitAsync([NotNull] this Regex regex, String input, CancellationToken token)
         {
-            return ExecuteAsync(() => regex.Split(input), token);
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return Task.Run(() => regex.Split(input), token);
         }
-        
-        public static Task<String[]> SplitAsync(this Regex regex, String input, Int32 startat)
+
+        public static Task<String[]> SplitAsync([NotNull] this Regex regex, String input, Int32 startat)
         {
             return SplitAsync(regex, input, startat, CancellationToken.None);
         }
-        
-        public static Task<String[]> SplitAsync(this Regex regex, String input, Int32 startat, CancellationToken token)
+
+        public static Task<String[]> SplitAsync([NotNull] this Regex regex, String input, Int32 startat, CancellationToken token)
         {
-            return ExecuteAsync(() => regex.Split(input, startat), token);
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return Task.Run(() => regex.Split(input, startat), token);
         }
-        
-        public static Task<String[]> SplitAsync(this Regex regex, String input, Int32 count, Int32 startat)
+
+        public static Task<String[]> SplitAsync([NotNull] this Regex regex, String input, Int32 count, Int32 startat)
         {
             return SplitAsync(regex, input, count, startat, CancellationToken.None);
         }
-        
-        public static Task<String[]> SplitAsync(this Regex regex, String input, Int32 count, Int32 startat, CancellationToken token)
+
+        public static Task<String[]> SplitAsync([NotNull] this Regex regex, String input, Int32 count, Int32 startat, CancellationToken token)
         {
-            return ExecuteAsync(() => regex.Split(input, count, startat), token);
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return Task.Run(() => regex.Split(input, count, startat), token);
         }
-        
+
         public static Task<Boolean> IsMatchAsync(String input, String pattern)
         {
             return IsMatchAsync(input, pattern, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> IsMatchAsync(String input, String pattern, CancellationToken token)
         {
-            return ExecuteAsync(() => Regex.IsMatch(input, pattern), token);
+            return Task.Run(() => Regex.IsMatch(input, pattern), token);
         }
-        
+
         public static Task<Boolean> IsMatchAsync(String input, String pattern, RegexOptions options)
         {
             return IsMatchAsync(input, pattern, options, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> IsMatchAsync(String input, String pattern, RegexOptions options, CancellationToken token)
         {
-            return ExecuteAsync(() => Regex.IsMatch(input, pattern, options), token);
+            return Task.Run(() => Regex.IsMatch(input, pattern, options), token);
         }
-        
+
         public static Task<Boolean> IsMatchAsync(String input, String pattern, RegexOptions options, TimeSpan matchTimeout)
         {
             return IsMatchAsync(input, pattern, options, matchTimeout, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> IsMatchAsync(String input, String pattern, RegexOptions options, TimeSpan matchTimeout, CancellationToken token)
         {
-            return ExecuteAsync(() => Regex.IsMatch(input, pattern, options, matchTimeout), token);
+            return Task.Run(() => Regex.IsMatch(input, pattern, options, matchTimeout), token);
         }
-        
-        public static Task<Boolean> IsMatchAsync(this Regex regex, String input)
+
+        public static Task<Boolean> IsMatchAsync([NotNull] this Regex regex, String input)
         {
             return IsMatchAsync(regex, input, CancellationToken.None);
         }
-        
-        public static Task<Boolean> IsMatchAsync(this Regex regex, String input, CancellationToken token)
+
+        public static Task<Boolean> IsMatchAsync([NotNull] this Regex regex, String input, CancellationToken token)
         {
-            return ExecuteAsync(() => regex.IsMatch(input), token);
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return Task.Run(() => regex.IsMatch(input), token);
         }
-        
-        public static Task<Boolean> IsMatchAsync(this Regex regex, String input, Int32 startat)
+
+        public static Task<Boolean> IsMatchAsync([NotNull] this Regex regex, String input, Int32 startat)
         {
             return IsMatchAsync(regex, input, startat, CancellationToken.None);
         }
-        
-        public static Task<Boolean> IsMatchAsync(this Regex regex, String input, Int32 startat, CancellationToken token)
+
+        public static Task<Boolean> IsMatchAsync([NotNull] this Regex regex, String input, Int32 startat, CancellationToken token)
         {
-            return ExecuteAsync(() => regex.IsMatch(input, startat), token);
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
+            return Task.Run(() => regex.IsMatch(input, startat), token);
         }
     }
 }

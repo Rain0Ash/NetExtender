@@ -11,13 +11,11 @@ namespace NetExtender.Utils.Types
     [PublicAPI]
     public static class MemoryUtils
     {
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         public static unsafe Boolean Compare<T>(T first, T second) where T : unmanaged
         {
             return Compare(&first, &second);
         }
         
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         public static unsafe Boolean Compare<T>(in T first, in T second) where T : unmanaged
         {
             fixed (T* pf = &first)
@@ -27,14 +25,12 @@ namespace NetExtender.Utils.Types
             }
         }
         
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         public static unsafe Boolean Compare<T>(T* first, T* second) where T : unmanaged
         {
             return Compare((Byte*) first, (Byte*) second, sizeof(T));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         public static unsafe Boolean CompareInline<T>(T* first, T* second) where T : unmanaged
         {
             return CompareInline((Byte*) first, (Byte*) second, sizeof(T));
@@ -49,7 +45,6 @@ namespace NetExtender.Utils.Types
         /// <returns>
         /// true if all count bytes of the <paramref name="first"/> and <paramref name="second"/> are equal; otherwise, false.
         /// </returns>
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         public static unsafe Boolean Compare(Byte* first, Byte* second, Int32 count)
         {
             return CompareInline(first, second, count);
@@ -68,7 +63,6 @@ namespace NetExtender.Utils.Types
         /// true if all count bytes of the <paramref name="first"/> and <paramref name="second"/> are equal; otherwise, false.
         /// </returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
         public static unsafe Boolean CompareInline(Byte* first, Byte* second, Int32 count)
         {
             Byte* bp1 = first;

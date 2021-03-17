@@ -40,10 +40,20 @@ namespace NetExtender.GUI.WinForms.TextBoxes
         public PortTextBox()
         {
             Validate = NetworkUtils.ValidatePort;
-            PasswdChar = '\0';
+            HandleCreated += OnCreate;
+            Leave += OnLeave;
+        }
+
+        private void OnCreate(Object? sender, EventArgs e)
+        {
             MaxLength = 5;
+            PasswordChar = ResetPasswordChar;
             Text = DefaultPort.ToString();
-            Leave += (sender, args) => Text = IsValid ? Text : DefaultPort.ToString();
+        }
+        
+        private void OnLeave(Object? sender, EventArgs e)
+        {
+            Text = IsValid ? Text : DefaultPort.ToString();
         }
 
         protected override void OnKeyPress(KeyPressEventArgs e)
@@ -59,7 +69,7 @@ namespace NetExtender.GUI.WinForms.TextBoxes
 
         protected override Boolean IsAllowedChar(Char c)
         {
-            return CharUtils.IsControl(c) || Char.IsDigit(c);
+            return Char.IsControl(c) || Char.IsDigit(c);
         }
     }
 }

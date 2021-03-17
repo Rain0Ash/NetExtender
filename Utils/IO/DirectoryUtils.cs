@@ -282,6 +282,62 @@ namespace NetExtender.Utils.IO
             return GetEntries(path, regex, recursive, PathType.File);
         }
 
+        public static IEnumerable<KeyValuePair<String, UInt64>> GetFilesWithSize([NotNull] String path, Boolean recursive = false)
+        {
+            if (String.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException(@"Value cannot be null or empty.", nameof(path));
+            }
+
+            path = PathUtils.ConvertToFolder(path);
+
+            if (!PathUtils.IsValidPath(path, PathType.Folder, PathStatus.Exist))
+            {
+                yield break;
+            }
+
+            IntPtr handle = FindFirstFileW(path + "*", out WIN32_FIND_DATA data);
+
+            if (handle.IsNullOrInvalid())
+            {
+                yield break;
+            }
+
+            try
+            {
+                do
+                {
+                    if (data.cFileName == "." || data.cFileName == "..")
+                    {
+                        continue;
+                    }
+
+                    String entryname = path + data.cFileName;
+
+                    if (data.IsDirectory)
+                    {
+                        if (!recursive)
+                        {
+                            continue;
+                        }
+
+                        foreach (KeyValuePair<String, UInt64> entry in GetFilesWithSize(entryname, true))
+                        {
+                            yield return entry;
+                        }
+                    }
+                    else
+                    {
+                        yield return new KeyValuePair<String, UInt64>(entryname, BitUtils.ToUInt64(data.nFileSizeHigh, data.nFileSizeLow));
+                    }
+                } while (FindNextFileW(handle, out data));
+            }
+            finally
+            {
+                FindClose(handle);
+            }
+        }
+
         public static IEnumerable<String> GetEntries([NotNull] String path, [NotNull] [RegexPattern] String pattern, Boolean recursive = false, PathType type = PathType.All)
         {
             if (String.IsNullOrEmpty(pattern) || pattern == AnySearchPattern)
@@ -362,8 +418,13 @@ namespace NetExtender.Utils.IO
             }
         }
 
-        public static IEnumerable<String> GetEntries([NotNull] String path, Regex regex, Boolean recursive = false, PathType type = PathType.All)
+        public static IEnumerable<String> GetEntries([NotNull] String path, [NotNull] Regex regex, Boolean recursive = false, PathType type = PathType.All)
         {
+            if (regex is null)
+            {
+                throw new ArgumentNullException(nameof(regex));
+            }
+
             return GetEntries(path, recursive, type).Where(file => regex.IsMatch(file));
         }
 

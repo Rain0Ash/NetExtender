@@ -180,7 +180,7 @@ namespace NetExtender.IO.NTFS.DataStreams
 
             if (Exists)
             {
-                Size = PathUtils.GetFileSize(FullPath);
+                Size = (Int64) PathUtils.GetFileSize(FullPath);
             }
         }
 
@@ -233,12 +233,19 @@ namespace NetExtender.IO.NTFS.DataStreams
             }
 
             SafeFileHandle handle = PathUtils.Safe.CreateFile(FullPath, access.ToNative(), share, IntPtr.Zero, mode, overlapped ? NativeFileFlags.Overlapped : 0, IntPtr.Zero);
-            if (handle.IsInvalid)
+            if (!handle.IsInvalid)
             {
-                PathUtils.ThrowLastIOError(FullPath);
+                return new FileStream(handle, access, bufferSize, overlapped);
             }
 
-            return new FileStream(handle, access, bufferSize, overlapped);
+            Exception? exception = PathUtils.GetLastIOException(FullPath);
+
+            if (exception is not null)
+            {
+                throw exception;
+            }
+
+            return null;
         }
 
         /// <summary>

@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using NetExtender.Utils.Types;
 using NetExtender.Apps.Data.Common;
 using NetExtender.Apps.Data.Interfaces;
+using NetExtender.Crypto;
 using NetExtender.Events.Args;
 using NetExtender.Network.IPC.Messaging;
 
@@ -89,7 +90,7 @@ namespace NetExtender.Apps.Data
         {
             if (bus is null)
             {
-                bus = new TinyMessageBus(AppName.GetHash().ToString());
+                bus = new TinyMessageBus(AppName.Hashing().ToString());
                 _busCreated = true;
             }
             else

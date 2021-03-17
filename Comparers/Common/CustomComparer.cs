@@ -8,6 +8,19 @@ using NetExtender.Comparers.Interfaces;
 
 namespace NetExtender.Comparers.Common
 {
+    public static class CustomComparer
+    {
+        public static IComparer<T> Create<T>([NotNull] Func<T?, T?, Int32> comparison)
+        {
+            return new CustomComparer<T>(comparison);
+        }
+        
+        public static IComparer<T1, T2> Create<T1, T2>([NotNull] Func<T1?, T2?, Int32> comparison)
+        {
+            return new CustomComparer<T1, T2>(comparison);
+        }
+    }
+    
     public sealed class CustomComparer<T> : IComparer<T>
     {
         public static IComparer<T> Default
@@ -18,11 +31,6 @@ namespace NetExtender.Comparers.Common
             }
         }
 
-        public static IComparer<T> Create([NotNull] Func<T?, T?, Int32> comparison)
-        {
-            return new CustomComparer<T>(comparison);
-        }
-        
         private Func<T?, T?, Int32> Comparison { get; }
 
         public CustomComparer([NotNull] Func<T?, T?, Int32> comparison)
@@ -38,11 +46,6 @@ namespace NetExtender.Comparers.Common
     
     public sealed class CustomComparer<T1, T2> : IComparer<T1, T2>
     {
-        public static IComparer<T1, T2> Create([NotNull] Func<T1?, T2?, Int32> comparison)
-        {
-            return new CustomComparer<T1, T2>(comparison);
-        }
-        
         private Func<T1?, T2?, Int32> Comparison { get; }
 
         public CustomComparer([NotNull] Func<T1?, T2?, Int32> comparison)

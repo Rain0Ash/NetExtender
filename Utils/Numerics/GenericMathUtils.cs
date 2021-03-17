@@ -3264,6 +3264,206 @@ namespace NetExtender.Utils.Numerics
 			return Math.Sqrt(value);
 		}
 
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log(this SByte value)
+		{
+			return Math.Log(value);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log(this SByte value, Double newBase)
+		{
+			return Math.Log(value, newBase);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log2(this SByte value)
+		{
+			return Math.Log2(value);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log10(this SByte value)
+		{
+			return Math.Log10(value);
+		}
+
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log(this Byte value)
+		{
+			return Math.Log(value);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log(this Byte value, Double newBase)
+		{
+			return Math.Log(value, newBase);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log2(this Byte value)
+		{
+			return Math.Log2(value);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log10(this Byte value)
+		{
+			return Math.Log10(value);
+		}
+
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log(this Int16 value)
+		{
+			return Math.Log(value);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log(this Int16 value, Double newBase)
+		{
+			return Math.Log(value, newBase);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log2(this Int16 value)
+		{
+			return Math.Log2(value);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log10(this Int16 value)
+		{
+			return Math.Log10(value);
+		}
+
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log(this UInt16 value)
+		{
+			return Math.Log(value);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log(this UInt16 value, Double newBase)
+		{
+			return Math.Log(value, newBase);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log2(this UInt16 value)
+		{
+			return Math.Log2(value);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log10(this UInt16 value)
+		{
+			return Math.Log10(value);
+		}
+
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log(this Int32 value)
+		{
+			return Math.Log(value);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log(this Int32 value, Double newBase)
+		{
+			return Math.Log(value, newBase);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log2(this Int32 value)
+		{
+			return Math.Log2(value);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log10(this Int32 value)
+		{
+			return Math.Log10(value);
+		}
+
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log(this UInt32 value)
+		{
+			return Math.Log(value);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log(this UInt32 value, Double newBase)
+		{
+			return Math.Log(value, newBase);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log2(this UInt32 value)
+		{
+			return Math.Log2(value);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log10(this UInt32 value)
+		{
+			return Math.Log10(value);
+		}
+
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log(this Int64 value)
+		{
+			return Math.Log(value);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log(this Int64 value, Double newBase)
+		{
+			return Math.Log(value, newBase);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log2(this Int64 value)
+		{
+			return Math.Log2(value);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log10(this Int64 value)
+		{
+			return Math.Log10(value);
+		}
+
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log(this UInt64 value)
+		{
+			return Math.Log(value);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log(this UInt64 value, Double newBase)
+		{
+			return Math.Log(value, newBase);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log2(this UInt64 value)
+		{
+			return Math.Log2(value);
+		}
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Log10(this UInt64 value)
+		{
+			return Math.Log10(value);
+		}
+
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Char Difference(this Char value, Char between)
 		{

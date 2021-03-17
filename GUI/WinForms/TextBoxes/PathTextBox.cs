@@ -88,10 +88,15 @@ namespace NetExtender.GUI.WinForms.TextBoxes
         public PathTextBox()
         {
             Validate = text => IsValidPath() && IsWellFormed;
-            PasswdChar = '\0';
+            HandleCreated += OnCreate;
             WellFormedCheckChanged += ItemValidateColor;
             PathTypeChanged += ItemValidateColor;
             PathStatusChanged += ItemValidateColor;
+        }
+
+        private void OnCreate(Object? sender, EventArgs e)
+        {
+            PasswordChar = ResetPasswordChar;
         }
 
         protected override void ItemValidateColor()

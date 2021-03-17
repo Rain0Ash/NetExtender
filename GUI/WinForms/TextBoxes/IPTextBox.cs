@@ -43,14 +43,24 @@ namespace NetExtender.GUI.WinForms.TextBoxes
         public IPTextBox()
         {
             Validate = NetworkUtils.ValidateIPv4;
+            HandleCreated += OnCreate;
+            Leave += OnLeave;
+        }
+        
+        private void OnCreate(Object? sender, EventArgs e)
+        {
             MaxLength = 15;
-            PasswdChar = '\0';
-            Leave += (sender, args) => Text = IsValid ? Text : DefaultHost;
+            PasswordChar = ResetPasswordChar;
+        }
+        
+        private void OnLeave(Object? sender, EventArgs e)
+        {
+            Text = IsValid ? Text : DefaultHost;
         }
         
         protected override Boolean IsAllowedChar(Char c)
         {
-            if (CharUtils.IsControl(c))
+            if (Char.IsControl(c))
             {
                 return true;
             }
@@ -60,12 +70,7 @@ namespace NetExtender.GUI.WinForms.TextBoxes
                 return true;
             }
 
-            if (c == '.' && Text.Length > 0 && Text[^1] != '.' && Text.Count(chr => chr == '.') < 3)
-            {
-                return true;
-            }
-            
-            return false;
+            return c == '.' && Text.Length > 0 && Text[^1] != '.' && Text.Count(chr => chr == '.') < 3;
         }
 
         protected override void OnKeyPress(KeyPressEventArgs e)

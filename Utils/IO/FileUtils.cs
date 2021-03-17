@@ -699,9 +699,9 @@ namespace NetExtender.Utils.IO
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static FileAccess GetFileAccess(Boolean value)
+        public static FileAccess GetFileAccess(Boolean write)
         {
-            return value ? FileAccess.ReadWrite : FileAccess.Read;
+            return write ? FileAccess.ReadWrite : FileAccess.Read;
         }
     }
 }

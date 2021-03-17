@@ -346,61 +346,157 @@ namespace NetExtender.Utils.Types
             }
         }
 
-        public static Int16 ToInt16(SByte left, SByte right)
+        public static Int16 ToInt16(SByte high, SByte low)
         {
             unchecked
             {
-                return ToInt16(left, (Byte) right);
+                return ToInt16(high, (Byte) low);
             }
         }
 
-        public static Int16 ToInt16(SByte left, Byte right)
+        public static Int16 ToInt16(SByte high, Byte low)
         {
             unchecked
             {
-                return (Int16) (left << 8 | right);
+                return (Int16) (high << (sizeof(SByte) * 8) | low);
             }
         }
 
-        public static UInt16 ToUInt16(Byte left, Byte right)
+        public static UInt16 ToUInt16(Byte high, Byte low)
         {
-            return (UInt16) ((left << 8) | right);
+            return (UInt16) ((high << (sizeof(Byte) * 8)) | low);
         }
 
-        public static Int32 ToInt32(Int16 left, Int16 right)
+        public static Int32 ToInt32(Int16 high, Int16 low)
         {
             unchecked
             {
-                return ToInt32(left, (UInt16) right);
+                return ToInt32(high, (UInt16) low);
             }
         }
 
-        public static Int32 ToInt32(Int16 left, UInt16 right)
+        public static Int32 ToInt32(Int16 high, UInt16 low)
         {
-            return left << 16 | right;
+            return high << (sizeof(Int16) * 8) | low;
         }
 
-        public static UInt32 ToUInt32(UInt16 left, UInt16 right)
+        public static UInt32 ToUInt32(UInt16 high, UInt16 low)
         {
-            return ((UInt32) left << 16) | right;
+            return ((UInt32) high << (sizeof(UInt16) * 8)) | low;
         }
 
-        public static Int64 ToInt64(Int32 left, Int32 right)
+        public static Int64 ToInt64(Int32 high, Int32 low)
         {
             unchecked
             {
-                return ToInt64(left, (UInt32) right);
+                return ToInt64(high, (UInt32) low);
             }
         }
 
-        public static Int64 ToInt64(Int32 left, UInt32 right)
+        public static Int64 ToInt64(Int32 high, UInt32 low)
         {
-            return (Int64) left << 32 | right;
+            return (Int64) high << (sizeof(Int32) * 8) | low;
         }
 
-        public static UInt64 ToUInt64(UInt32 left, UInt32 right)
+        public static UInt64 ToUInt64(UInt32 high, UInt32 low)
         {
-            return ((UInt64) left << 32) | right;
+            return ((UInt64) high << (sizeof(UInt32) * 8)) | low;
+        }
+        
+        public static SByte High(this Int16 value)
+        {
+            unchecked
+            {
+                return (SByte) (value >> sizeof(SByte) * 8);
+            }
+        }
+
+        public static SByte Low(this Int16 value)
+        {
+            unchecked
+            {
+                return (SByte) (value & SByte.MinValue);
+            }
+        }
+        
+        public static Byte High(this UInt16 value)
+        {
+            unchecked
+            {
+                return (Byte) (value >> sizeof(Byte) * 8);
+            }
+        }
+
+        public static Byte Low(this UInt16 value)
+        {
+            unchecked
+            {
+                return (Byte) (value & Byte.MaxValue);
+            }
+        }
+        
+        public static Int16 High(this Int32 value)
+        {
+            unchecked
+            {
+                return (Int16) (value >> sizeof(Int16) * 8);
+            }
+        }
+
+        public static Int16 Low(this Int32 value)
+        {
+            unchecked
+            {
+                return (Int16) (value & Int16.MinValue);
+            }
+        }
+        
+        public static UInt16 High(this UInt32 value)
+        {
+            unchecked
+            {
+                return (UInt16) (value >> sizeof(UInt16) * 8);
+            }
+        }
+
+        public static UInt16 Low(this UInt32 value)
+        {
+            unchecked
+            {
+                return (UInt16) (value & UInt16.MaxValue);
+            }
+        }
+        
+        public static Int32 High(this Int64 value)
+        {
+            unchecked
+            {
+                return (Int32) (value >> sizeof(Int32) * 8);
+            }
+        }
+
+        public static Int32 Low(this Int64 value)
+        {
+            unchecked
+            {
+                return (Int32) (value & Int32.MinValue);
+            }
+        }
+        
+        public static UInt32 High(this UInt64 value)
+        {
+            unchecked
+            {
+                return (UInt32) (value >> sizeof(UInt32) * 8);
+            }
+        }
+
+        public static UInt32 Low(this UInt64 value)
+        {
+            unchecked
+            {
+                return (UInt32) (value & UInt32.MaxValue);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
