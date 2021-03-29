@@ -5544,6 +5544,118 @@ namespace NetExtender.Utils.Numerics
 
 			return source.Variance().Sqrt();
 		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		public static Int32 Reverse(this SByte value)
+		{
+			Int32 reverse = 0;
+
+			while (value != 0)
+			{
+				reverse = reverse * 10 + value % 10;
+				value /= 10;
+			}
+
+			return reverse;
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		public static Int32 Reverse(this Byte value)
+		{
+			Int32 reverse = 0;
+
+			while (value != 0)
+			{
+				reverse = reverse * 10 + value % 10;
+				value /= 10;
+			}
+
+			return reverse;
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		public static Int32 Reverse(this Int16 value)
+		{
+			Int32 reverse = 0;
+
+			while (value != 0)
+			{
+				reverse = reverse * 10 + value % 10;
+				value /= 10;
+			}
+
+			return reverse;
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		public static Int32 Reverse(this UInt16 value)
+		{
+			Int32 reverse = 0;
+
+			while (value != 0)
+			{
+				reverse = reverse * 10 + value % 10;
+				value /= 10;
+			}
+
+			return reverse;
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		public static Int32 Reverse(this Int32 value)
+		{
+			Int32 reverse = 0;
+
+			while (value != 0)
+			{
+				reverse = reverse * 10 + value % 10;
+				value /= 10;
+			}
+
+			return reverse;
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		public static UInt32 Reverse(this UInt32 value)
+		{
+			UInt32 reverse = 0;
+
+			while (value != 0)
+			{
+				reverse = reverse * 10 + value % 10;
+				value /= 10;
+			}
+
+			return reverse;
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		public static Int64 Reverse(this Int64 value)
+		{
+			Int64 reverse = 0;
+
+			while (value != 0)
+			{
+				reverse = reverse * 10 + value % 10;
+				value /= 10;
+			}
+
+			return reverse;
+		}
+
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		public static UInt64 Reverse(this UInt64 value)
+		{
+			UInt64 reverse = 0;
+
+			while (value != 0)
+			{
+				reverse = reverse * 10 + value % 10;
+				value /= 10;
+			}
+
+			return reverse;
+		}
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "InvertIf")]

@@ -5,7 +5,6 @@ using System;
 using System.Windows.Forms;
 using NetExtender.Utils.Numerics;
 using NetExtender.Utils.Network;
-using NetExtender.Utils.Types;
 
 namespace NetExtender.GUI.WinForms.TextBoxes
 {

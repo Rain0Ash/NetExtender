@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Utils.Types;
 using NetExtender.Apps.Data.Common;
 using NetExtender.Apps.Data.Interfaces;
 using NetExtender.Crypto;

@@ -17,6 +17,19 @@ using NetExtender.Utils.Types;
 
 namespace NetExtender.Utils.Core
 {
+    [Flags]
+    public enum PrimitiveType
+    {
+        Default = 0,
+        String = 1,
+        Decimal = 2,
+        Complex = 4,
+        TimeSpan = 8,
+        DateTime = 16,
+        DateTimeOffset = 32,
+        All = String | Decimal | Complex | TimeSpan | DateTime | DateTimeOffset
+    }
+    
     public static class ReflectionUtils
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -82,16 +95,26 @@ namespace NetExtender.Utils.Core
 
         public static IEnumerable<Type> GetTypesInNamespace(String @namespace)
         {
-            return GetTypesInNamespace(Assembly.GetEntryAssembly(), @namespace);
+            return GetTypesInNamespace(Assembly.GetEntryAssembly() ?? throw new InvalidOperationException(), @namespace);
         }
 
-        public static IEnumerable<Type> GetTypesInNamespace(Assembly assembly, String @namespace)
+        public static IEnumerable<Type> GetTypesInNamespace([NotNull] this Assembly assembly, [NotNull] String @namespace)
         {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
             return assembly.GetTypes().Where(type => String.Equals(type.Namespace, @namespace, StringComparison.Ordinal)).ToArray();
         }
         
-        public static Boolean IsJITOptimized(this Assembly assembly)
+        public static Boolean IsJITOptimized([NotNull] this Assembly assembly)
         {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
             foreach (Object attribute in assembly.GetCustomAttributes(typeof(DebuggableAttribute), false))
             {
                 if (attribute is DebuggableAttribute attr)
@@ -133,8 +156,13 @@ namespace NetExtender.Utils.Core
         /// Calls the static constructor of this type.
         /// </summary>
         /// <param name="type">The type of which to call the static constructor.</param>
-        public static void CallStaticConstructor(this Type type)
+        public static void CallStaticConstructor([NotNull] this Type type)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             RuntimeHelpers.RunClassConstructor(type.TypeHandle);
         }
 
@@ -167,8 +195,13 @@ namespace NetExtender.Utils.Core
         /// </summary>
         /// <typeparam name="T">The type of the properties.</typeparam>
         /// <param name="obj">The object.</param>
-        public static IEnumerable<PropertyInfo> GetAllPropertiesOfType<T>(this Object obj)
+        public static IEnumerable<PropertyInfo> GetAllPropertiesOfType<T>([NotNull] this Object obj)
         {
+            if (obj is null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
             return GetAllPropertiesOfType<T>(obj.GetType());
         }
 
@@ -177,8 +210,13 @@ namespace NetExtender.Utils.Core
         /// </summary>
         /// <typeparam name="T">The type of the properties.</typeparam>
         /// <param name="type">The type of which to get the properties.</param>
-        public static IEnumerable<PropertyInfo> GetAllPropertiesOfType<T>(this Type type)
+        public static IEnumerable<PropertyInfo> GetAllPropertiesOfType<T>([NotNull] this Type type)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             return type.GetProperties().Where(pi => pi.PropertyType == typeof(T));
         }
 
@@ -187,19 +225,45 @@ namespace NetExtender.Utils.Core
         /// </summary>
         /// <param name="obj">The object or type that has the property or field.</param>
         /// <param name="name">The name of the property or field.</param>
-        public static Object GetPropertyValue(this Object obj, String name)
+        public static Object GetPropertyValue([NotNull] this Object obj, [NotNull] String name)
         {
             if (obj is null)
             {
                 throw new ArgumentNullException(nameof(obj));
             }
 
-            Type type;
-            if (obj is Type typeObj)
+            if (name is null)
             {
-                type = typeObj;
+                throw new ArgumentNullException(nameof(name));
             }
-            else
+
+            if (GetPropertyValue(obj, name, out Object result))
+            {
+                return result;
+            }
+            
+            throw new Exception($"'{name}' is neither a property or a field of type '{result}'.");
+        }
+
+        /// <summary>
+        /// Gets the value of the property or field with the specified name in this object or type.
+        /// </summary>
+        /// <param name="obj">The object or type that has the property or field.</param>
+        /// <param name="name">The name of the property or field.</param>
+        /// <param name="result">Object if successful else <see cref="obj"/> <see cref="Type"/></param>
+        public static Boolean GetPropertyValue([NotNull] this Object obj, [NotNull] String name, out Object result)
+        {
+            if (obj is null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (obj is not Type type)
             {
                 type = obj.GetType();
             }
@@ -207,16 +271,145 @@ namespace NetExtender.Utils.Core
             PropertyInfo property = type.GetProperty(name);
             if (property is not null)
             {
-                return property.GetValue(obj);
+                result = property.GetValue(obj);
+                return true;
             }
 
             FieldInfo field = type.GetField(name);
             if (field is not null)
             {
-                return field.GetValue(obj);
+                result = field.GetValue(obj);
+                return true;
             }
 
-            throw new Exception($"'{name}' is neither a property or a field of type '{type}'.");
+            result = type;
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the value of the property or field with the specified name in this object or type.
+        /// </summary>
+        /// <param name="obj">The object or type that has the property or field.</param>
+        /// <param name="name">The name of the property or field.</param>
+        public static T GetPropertyValue<T>([NotNull] this Object obj, [NotNull] String name)
+        {
+            if (obj is null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            Object value = GetPropertyValue(obj, name);
+            return value switch
+            {
+                null => default,
+                T result => result,
+                _ => value.TryConvert(out T result) ? result : throw new InvalidCastException()
+            };
+        }
+
+        /// <summary>
+        /// Gets the value of the property or field with the specified name in this object or type.
+        /// </summary>
+        /// <param name="obj">The object or type that has the property or field.</param>
+        /// <param name="name">The name of the property or field.</param>
+        /// <param name="converter">Converter function</param>
+        public static T GetPropertyValue<T>([NotNull] this Object obj, [NotNull] String name, [NotNull] ParseHandler<Object, T> converter)
+        {
+            if (obj is null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            return converter(GetPropertyValue(obj, name));
+        }
+
+        /// <summary>
+        /// Gets the value of the property or field with the specified name in this object or type.
+        /// </summary>
+        /// <param name="obj">The object or type that has the property or field.</param>
+        /// <param name="name">The name of the property or field.</param>
+        /// <param name="result">Result value</param>
+        public static Boolean TryGetPropertyValue<T>([NotNull] this Object obj, [NotNull] String name, out T result)
+        {
+            if (obj is null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (GetPropertyValue(obj, name, out Object value))
+            {
+                if (value is T resval)
+                {
+                    result = resval;
+                    return true;
+                }
+                
+                try
+                {
+                    return value.TryConvert(out result);
+                }
+                catch (Exception)
+                {
+                    result = default;
+                    return false;
+                }
+            }
+
+            result = default;
+            return false;
+        }
+
+        /// <summary>
+        /// Gets the value of the property or field with the specified name in this object or type.
+        /// </summary>
+        /// <param name="obj">The object or type that has the property or field.</param>
+        /// <param name="name">The name of the property or field.</param>
+        /// <param name="converter">Converter function</param>
+        /// <param name="result">Result value</param>
+        public static Boolean TryGetPropertyValue<T>([NotNull] this Object obj, [NotNull] String name, [NotNull] TryParseHandler<Object, T> converter, out T result)
+        {
+            if (obj is null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+            
+            if (GetPropertyValue(obj, name, out Object value) && converter(value, out result))
+            {
+                return true;
+            }
+
+            result = default;
+            return false;
         }
 
         /// <summary>
@@ -231,14 +424,8 @@ namespace NetExtender.Utils.Core
             {
                 throw new ArgumentNullException(nameof(obj));
             }
-
-            Type type;
-            if (obj is Type typeObj)
-            {
-                // setting static properties/fields
-                type = typeObj;
-            }
-            else
+            
+            if (obj is not Type type)
             {
                 type = obj.GetType();
             }
@@ -267,30 +454,40 @@ namespace NetExtender.Utils.Core
         /// </para>
         /// </summary>
         /// <param name="type">The type that has the specified property.</param>
-        /// <param name="propertyName">The name of the property.</param>
-        /// <param name="bindingAttr">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
-        public static Type GetPropertyType(this Type type, String propertyName, BindingFlags? bindingAttr = null)
+        /// <param name="name">The name of the property.</param>
+        /// <param name="binding">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
+        public static Type GetPropertyType([NotNull] this Type type, String name, BindingFlags? binding = null)
         {
-            Type propertyType = GetPropertyTypeReal(type, propertyName, bindingAttr);
-
-            // get the generic type of nullable, not THE nullable
-            if (propertyType.IsGenericType && propertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            if (type is null)
             {
-                propertyType = GetGenericFirst(propertyType);
+                throw new ArgumentNullException(nameof(type));
             }
 
-            return propertyType;
+            Type property = GetPropertyTypeReal(type, name, binding);
+
+            // get the generic type of nullable, not THE nullable
+            if (property.IsGenericType && property.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                property = GetGenericFirst(property);
+            }
+
+            return property;
         }
 
         /// <summary>
         /// Gets the type of the specified property in the type.
         /// </summary>
         /// <param name="type">The type that has the specified property.</param>
-        /// <param name="propertyName">The name of the property.</param>
-        /// <param name="bindingAttr">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
-        public static Type GetPropertyTypeReal(this Type type, String propertyName, BindingFlags? bindingAttr = null)
+        /// <param name="name">The name of the property.</param>
+        /// <param name="binding">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
+        public static Type GetPropertyTypeReal([NotNull] this Type type, String name, BindingFlags? binding = null)
         {
-            PropertyInfo property = GetPropertyInfo(type, propertyName, bindingAttr);
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            PropertyInfo property = GetPropertyInfo(type, name, binding);
             return property.PropertyType;
         }
 
@@ -298,26 +495,36 @@ namespace NetExtender.Utils.Core
         /// Gets the property information by name for the type of the object.
         /// </summary>
         /// <param name="obj">Object with a type that has the specified property.</param>
-        /// <param name="propertyName">The name of the property.</param>
-        /// <param name="bindingAttr">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
-        public static PropertyInfo GetPropertyInfo(this Object obj, String propertyName, BindingFlags? bindingAttr = null)
+        /// <param name="name">The name of the property.</param>
+        /// <param name="binding">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
+        public static PropertyInfo GetPropertyInfo([NotNull] this Object obj, String name, BindingFlags? binding = null)
         {
-            return GetPropertyInfo(obj.GetType(), propertyName, bindingAttr);
+            if (obj is null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
+            return GetPropertyInfo(obj.GetType(), name, binding);
         }
 
         /// <summary>
         /// Gets the property information by name for the type.
         /// </summary>
         /// <param name="type">Type that has the specified property.</param>
-        /// <param name="propertyName">The name of the property.</param>
-        /// <param name="bindingAttr">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
-        public static PropertyInfo GetPropertyInfo(this Type type, String propertyName, BindingFlags? bindingAttr = null)
+        /// <param name="name">The name of the property.</param>
+        /// <param name="binding">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
+        public static PropertyInfo GetPropertyInfo([NotNull] this Type type, String name, BindingFlags? binding = null)
         {
-            PropertyInfo property = bindingAttr is null ? type.GetProperty(propertyName) : type.GetProperty(propertyName, bindingAttr.Value);
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            PropertyInfo property = binding is null ? type.GetProperty(name) : type.GetProperty(name, binding.Value);
 
             if (property is null)
             {
-                throw new Exception($"The provided property name ({propertyName}) does not exist in type '{type}'.");
+                throw new Exception($"The provided property name ({name}) does not exist in type '{type}'.");
             }
 
             return property;
@@ -352,23 +559,33 @@ namespace NetExtender.Utils.Core
         /// Gets the field information by name for the type of the object.
         /// </summary>
         /// <param name="obj">Object with a type that has the specified field.</param>
-        /// <param name="fieldName">The name of the field.</param>
-        public static FieldInfo GetFieldInfo(this Object obj, String fieldName)
+        /// <param name="name">The name of the field.</param>
+        public static FieldInfo GetFieldInfo([NotNull] this Object obj, String name)
         {
-            return GetFieldInfo(obj.GetType(), fieldName);
+            if (obj is null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
+            return GetFieldInfo(obj.GetType(), name);
         }
 
         /// <summary>
         /// Gets the field information by name for the type.
         /// </summary>
         /// <param name="type">Type that has the specified field.</param>
-        /// <param name="fieldName">The name of the field.</param>
-        public static FieldInfo GetFieldInfo(this Type type, String fieldName)
+        /// <param name="name">The name of the field.</param>
+        public static FieldInfo GetFieldInfo([NotNull] this Type type, String name)
         {
-            FieldInfo field = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            FieldInfo field = type.GetField(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (field is null)
             {
-                throw new Exception($"The provided property name ({fieldName}) does not exist in type '{type}'.");
+                throw new Exception($"The provided property name ({name}) does not exist in type '{type}'.");
             }
 
             return field;
@@ -378,8 +595,13 @@ namespace NetExtender.Utils.Core
         /// Returns the first definition of generic type of this generic type.
         /// </summary>
         /// <param name="type">The type from which to get the generic type.</param>
-        public static Type GetGenericFirst(this Type type)
+        public static Type GetGenericFirst([NotNull] this Type type)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             return type.GetGenericArguments()[0];
         }
 
@@ -387,34 +609,43 @@ namespace NetExtender.Utils.Core
         /// Gets the constants defined in this type.
         /// </summary>
         /// <param name="type">The type from which to get the constants.</param>
-        /// <param name="includeInherited">Determines whether or not to include inherited constants.</param>
-        public static IEnumerable<FieldInfo> GetConstants(this Type type, Boolean includeInherited)
+        public static IEnumerable<FieldInfo> GetConstants([NotNull] this Type type)
         {
-            BindingFlags bindingFlags;
-            if (includeInherited)
+            return GetConstants(type, true);
+        }
+
+        /// <summary>
+        /// Gets the constants defined in this type.
+        /// </summary>
+        /// <param name="type">The type from which to get the constants.</param>
+        /// <param name="inherited">Determines whether or not to include inherited constants.</param>
+        public static IEnumerable<FieldInfo> GetConstants([NotNull] this Type type, Boolean inherited)
+        {
+            if (type is null)
             {
-                bindingFlags = BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy;
-            }
-            else
-            {
-                bindingFlags = BindingFlags.Public | BindingFlags.Static | BindingFlags.DeclaredOnly;
+                throw new ArgumentNullException(nameof(type));
             }
 
-            FieldInfo[] fields = type.GetFields(bindingFlags);
+            BindingFlags binding = BindingFlags.Public | BindingFlags.Static | (inherited ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly);
 
-            return fields.Where(fi => fi.IsLiteral && !fi.IsInitOnly);
+            return type.GetFields(binding).Where(fi => fi.IsLiteral && !fi.IsInitOnly);
         }
 
         /// <summary>
         /// Sets the specified property to the provided value in the object.
         /// </summary>
         /// <param name="obj">The object with the property.</param>
-        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="name">The name of the property to set.</param>
         /// <param name="value">The value to set the property to.</param>
-        /// <param name="bindingAttr">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
-        public static void SetProperty(this Object obj, String propertyName, Object value, BindingFlags? bindingAttr = null)
+        /// <param name="binding">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
+        public static void SetProperty([NotNull] this Object obj, String name, Object value, BindingFlags? binding = null)
         {
-            PropertyInfo property = GetPropertyInfo(obj, propertyName, bindingAttr);
+            if (obj is null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
+            PropertyInfo property = GetPropertyInfo(obj, name, binding);
             property.SetValue(obj, value);
         }
 
@@ -422,11 +653,16 @@ namespace NetExtender.Utils.Core
         /// Sets the specified field to the provided value in the object.
         /// </summary>
         /// <param name="obj">The object with the field.</param>
-        /// <param name="fieldName">The name of the field to set.</param>
+        /// <param name="name">The name of the field to set.</param>
         /// <param name="value">The value to set the field to.</param>
-        public static void SetField(this Object obj, String fieldName, Object value)
+        public static void SetField([NotNull] this Object obj, String name, Object value)
         {
-            FieldInfo field = GetFieldInfo(obj, fieldName);
+            if (obj is null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
+            FieldInfo field = GetFieldInfo(obj, name);
             field.SetValue(obj, value);
         }
 
@@ -434,12 +670,17 @@ namespace NetExtender.Utils.Core
         /// Sets the specified property to a value that will be extracted from the provided string value using the <see cref="TypeDescriptor.GetConverter(Type)"/> and <see cref="TypeConverter.ConvertFromString(string)"/>.
         /// </summary>
         /// <param name="obj">The object with the property.</param>
-        /// <param name="propertyName">The name of the property to set.</param>
+        /// <param name="name">The name of the property to set.</param>
         /// <param name="valueAsString">The string representation of the value to set to the property.</param>
-        /// <param name="bindingAttr">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
-        public static void SetPropertyFromString(this Object obj, String propertyName, String valueAsString, BindingFlags? bindingAttr = null)
+        /// <param name="binding">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
+        public static void SetPropertyFromString([NotNull] this Object obj, String name, String valueAsString, BindingFlags? binding = null)
         {
-            PropertyInfo property = GetPropertyInfo(obj, propertyName, bindingAttr);
+            if (obj is null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
+            PropertyInfo property = GetPropertyInfo(obj, name, binding);
             TypeConverter converter = TypeDescriptor.GetConverter(property.PropertyType);
             Object value = converter.ConvertFromString(valueAsString);
             property.SetValue(obj, value);
@@ -452,11 +693,14 @@ namespace NetExtender.Utils.Core
         /// <typeparam name="T">The type of the properties.</typeparam>
         /// <param name="obj">The object.</param>
         /// <param name="value">The value to set the properties to.</param>
-        public static void SetAllPropertiesOfType<T>(this Object obj, T value)
+        public static void SetAllPropertiesOfType<T>([NotNull] this Object obj, T value)
         {
-            Type type = obj.GetType();
+            if (obj is null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
 
-            FieldInfo[] fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo[] fields = obj.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
             foreach (FieldInfo field in fields)
             {
@@ -471,75 +715,113 @@ namespace NetExtender.Utils.Core
         /// Determines whether or not this object has a property with the specified name.
         /// </summary>
         /// <param name="obj">The object.</param>
-        /// <param name="propertyName">The name of the property.</param>
-        /// <param name="includeInherited">Determines whether of not to include inherited properties.</param>
-        public static Boolean HasProperty(this Object obj, String propertyName, Boolean includeInherited)
+        /// <param name="name">The name of the property.</param>
+        public static Boolean HasProperty([NotNull] this Object obj, String name)
         {
+            return HasProperty(obj, name, true);
+        }
+
+        /// <summary>
+        /// Determines whether or not this object has a property with the specified name.
+        /// </summary>
+        /// <param name="obj">The object.</param>
+        /// <param name="name">The name of the property.</param>
+        /// <param name="inherited">Determines whether of not to include inherited properties.</param>
+        public static Boolean HasProperty([NotNull] this Object obj, String name, Boolean inherited)
+        {
+            if (obj is null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
             Type type = obj.GetType();
-            return HasProperty(type, propertyName, includeInherited);
+            return HasProperty(type, name, inherited);
         }
 
         /// <summary>
         /// Determines whether or not this type has a property with the specified name.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <param name="propertyName">The name of the property.</param>
-        /// <param name="includeInherited">Determines whether of not to include inherited properties.</param>
-        public static Boolean HasProperty(this Type type, String propertyName, Boolean includeInherited)
+        /// <param name="name">The name of the property.</param>
+        public static Boolean HasProperty([NotNull] this Type type, [NotNull] String name)
         {
-            BindingFlags bindingAttr;
-            if (includeInherited)
-            {
-                bindingAttr = BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
-            }
-            else
-            {
-                bindingAttr = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
-            }
-
-            PropertyInfo propertyInfo = type.GetProperty(propertyName, bindingAttr);
-            return propertyInfo is not null;
+            return HasProperty(type, name, true);
         }
 
         /// <summary>
-        /// Determines whether this type implements the specified parent type. Returns false if both types are the same.
+        /// Determines whether or not this type has a property with the specified name.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <param name="parentType">The type to check if it is implemented.</param>
-        public static Boolean Implements(this Type type, Type parentType)
+        /// <param name="name">The name of the property.</param>
+        /// <param name="inherited">Determines whether of not to include inherited properties.</param>
+        public static Boolean HasProperty([NotNull] this Type type, [NotNull] String name, Boolean inherited)
         {
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
 
-            if (parentType is null)
+            if (name is null)
             {
-                throw new ArgumentNullException(nameof(parentType));
+                throw new ArgumentNullException(nameof(name));
             }
 
-            return type != parentType && parentType.IsAssignableFrom(type);
+            BindingFlags binding = BindingFlags.Public | BindingFlags.Instance | (inherited ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly);
+
+            PropertyInfo property = type.GetProperty(name, binding);
+            return property is not null;
+        }
+
+        /// <summary>
+        /// Determines whether this type implements the specified parent type. Returns false if both types are the same.
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <param name="parent">The type to check if it is implemented.</param>
+        public static Boolean Implements([NotNull] this Type type, [NotNull] Type parent)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (parent is null)
+            {
+                throw new ArgumentNullException(nameof(parent));
+            }
+
+            return type != parent && parent.IsAssignableFrom(type);
         }
 
         /// <summary>
         /// Determines whether the specified type to check derives from this generic type.
         /// </summary>
         /// <param name="generic">The parent generic type.</param>
-        /// <param name="toCheck">The type to check if it derives from the specified generic type.</param>
-        public static Boolean IsSubclassOfRawGeneric(Type generic, Type toCheck)
+        /// <param name="check">The type to check if it derives from the specified generic type.</param>
+        public static Boolean IsSubclassOfRawGeneric([NotNull] Type generic, Type check)
         {
-            while (toCheck is not null && toCheck != typeof(Object))
+            if (generic is null)
             {
-                Type current = toCheck.IsGenericType ? toCheck.GetGenericTypeDefinition() : toCheck;
+                throw new ArgumentNullException(nameof(generic));
+            }
+
+            while (check is not null && check != typeof(Object))
+            {
+                Type current = check.IsGenericType ? check.GetGenericTypeDefinition() : check;
                 if (generic == current)
                 {
                     return true;
                 }
 
-                toCheck = toCheck.BaseType;
+                check = check.BaseType;
             }
 
             return false;
+        }
+
+        /// <inheritdoc cref="IsPrimitive(System.Type,PrimitiveType)"/>
+        public static Boolean IsPrimitive([NotNull] this Type type)
+        {
+            return IsPrimitive(type, PrimitiveType.All);
         }
 
         /// <summary>
@@ -547,15 +829,21 @@ namespace NetExtender.Utils.Core
         /// <para><see cref="string"/> is considered a primitive.</para>
         /// </summary>
         /// <param name="type">The type.</param>
-        public static Boolean IsPrimitive(this Type type)
+        /// <param name="primitive">What type is primitive</param>
+        public static Boolean IsPrimitive([NotNull] this Type type, PrimitiveType primitive)
         {
-            if (type == typeof(String))
+            if (type is null)
             {
-                // string is considered as a primitive
-                return true;
+                throw new ArgumentNullException(nameof(type));
             }
 
-            return type.IsValueType && type.IsPrimitive;
+            return type.IsPrimitive ||
+                   primitive.HasFlag(PrimitiveType.String) && type == typeof(String) ||
+                   primitive.HasFlag(PrimitiveType.Decimal) && type == typeof(Decimal) ||
+                   primitive.HasFlag(PrimitiveType.Complex) && type == typeof(Complex) ||
+                   primitive.HasFlag(PrimitiveType.TimeSpan) && type == typeof(TimeSpan) ||
+                   primitive.HasFlag(PrimitiveType.DateTime) && type == typeof(DateTime) ||
+                   primitive.HasFlag(PrimitiveType.DateTimeOffset) && type == typeof(DateTimeOffset);
         }
 
         private static class SizeCache<T> where T : struct
@@ -598,19 +886,30 @@ namespace NetExtender.Utils.Core
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        // ReSharper disable once UnusedParameter.Global
         public static Int32 GetSize<T>(this T _) where T : struct
         {
             return GetSize<T>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 GetSize<T>(this T[] array) where T : struct
+        public static Int32 GetSize<T>([NotNull] this T[] array) where T : struct
         {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
             return SizeCache<T>.Size * array.Length;
         }
         
-        public static Boolean GetSize<T>(this T[] array, out Int64 size) where T : struct
+        public static Boolean GetSize<T>([NotNull] this T[] array, out Int64 size) where T : struct
         {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
             try
             {
                 size = SizeCache<T>.Size * array.LongLength;
@@ -623,8 +922,13 @@ namespace NetExtender.Utils.Core
             }
         }
         
-        public static Boolean GetSize<T>(this T[] array, out BigInteger size) where T : struct
+        public static Boolean GetSize<T>([NotNull] this T[] array, out BigInteger size) where T : struct
         {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
             try
             {
                 size = SizeCache<T>.Size * (BigInteger) array.LongLength;
@@ -643,8 +947,13 @@ namespace NetExtender.Utils.Core
             return SizeCache<T>.Size;
         }
 
-        public static Int32 GetSize(this Type type)
+        public static Int32 GetSize([NotNull] this Type type)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             if (!type.IsValueType)
             {
                 throw new ArgumentException(@"Is not value type", nameof(type));
@@ -657,8 +966,13 @@ namespace NetExtender.Utils.Core
         /// Gets the default value of this type.
         /// </summary>
         /// <param name="type">The type for which to get the default value.</param>
-        public static Object GetDefault(this Type type)
+        public static Object GetDefault([NotNull] this Type type)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             if (!type.IsValueType)
             {
                 return null;

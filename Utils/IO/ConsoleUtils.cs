@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using JetBrains.Annotations;
 using NetExtender.Events.Args;
 using NetExtender.GUI;
+using NetExtender.GUI.Common.Interfaces;
 using NetExtender.Types.Maps;
 using NetExtender.Types.Maps.Interfaces;
 using NetExtender.Utils.GUI;
@@ -717,7 +718,7 @@ namespace NetExtender.Utils.IO
             }
         }
 
-        public static IConsoleWindowExitHandler WindowExitHandler
+        public static IWindowExitHandler WindowExitHandler
         {
             get
             {

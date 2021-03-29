@@ -12,6 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using Microsoft.Win32.SafeHandles;
 using NetExtender.IO.Shortcut;
 using NetExtender.Utils.Types;
 
@@ -67,26 +68,6 @@ namespace NetExtender.Utils.IO
             {
                 return false;
             }
-        }
-
-        public static FileStream WaitForFile(String path, FileMode mode, FileAccess access, FileShare share)
-        {
-            for (Int32 tries = 0; tries < 10; tries++)
-            {
-                FileStream stream = null;
-                try
-                {
-                    stream = new FileStream(path, mode, access, share);
-                    return stream;
-                }
-                catch (IOException)
-                {
-                    stream?.Dispose();
-                    Thread.Sleep(250);
-                }
-            }
-
-            return null;
         }
 
         public static Boolean CheckPermissions(String path, FileSystemRights access)
@@ -382,43 +363,354 @@ namespace NetExtender.Utils.IO
             }
         }
 
-        //TODO: To async
-        public static String GetFileContents(String file, Int32 timeout = 5000)
+        public static IAsyncDisposable LockFile([NotNull] String path)
         {
-            StreamReader reader = null;
-            Int64 timestamp = Environment.TickCount64;
+            return new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None, 1);
+        }
+        
+        public static Task LockFileAsync([NotNull] String path, CancellationToken token)
+        {
+            return LockFileAsync(path, Timeout.Infinite, token);
+        }
+        
+        public static Task LockFileAsync([NotNull] String path, TimeSpan timeout)
+        {
+            return LockFileAsync(path, timeout, CancellationToken.None);
+        }
+        
+        public static Task LockFileAsync([NotNull] String path, Int32 timeout)
+        {
+            return LockFileAsync(path, timeout, CancellationToken.None);
+        }
+
+        public static Task LockFileAsync([NotNull] String path, TimeSpan timeout, CancellationToken token)
+        {
+            return LockFileAsync(path, timeout.Milliseconds, token);
+        }
+
+        public static async Task LockFileAsync([NotNull] String path, Int32 timeout, CancellationToken token)
+        {
             try
             {
-                if (!PathUtils.IsExistAsFile(file))
-                {
-                    return null;
-                }
-
-                Boolean opened = false;
-                while (!opened)
-                {
-                    if (Environment.TickCount64 - timestamp >= timeout)
-                    {
-                        throw new TimeoutException("File opening timed out");
-                    }
-
-                    reader = File.OpenText(file);
-                    opened = true;
-                }
-
-                String contents = reader.ReadToEnd();
-                reader.Close();
-                return contents;
+                await using IAsyncDisposable disposable = LockFile(path);
+                await Task.Delay(timeout, token).ConfigureAwait(false);
             }
-            finally
+            catch (TaskCanceledException)
             {
-                reader?.Dispose();
+                //ignored
             }
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode)
+        {
+            return WaitCreateFileStreamAsync(path, mode, CancellationToken.None);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(path, mode, Timeout.Infinite, token);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, TimeSpan timeout)
+        {
+            return WaitCreateFileStreamAsync(path, mode, timeout, CancellationToken.None);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, Int32 timeout)
+        {
+            return WaitCreateFileStreamAsync(path, mode, timeout, CancellationToken.None);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, TimeSpan timeout, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(path, mode, timeout.Milliseconds, token);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, Int32 timeout, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(() => new FileStream(path, mode), timeout, token);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access)
+        {
+            return WaitCreateFileStreamAsync(path, mode, access, CancellationToken.None);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(path, mode, access, Timeout.Infinite, token);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, TimeSpan timeout)
+        {
+            return WaitCreateFileStreamAsync(path, mode, access, timeout, CancellationToken.None);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, Int32 timeout)
+        {
+            return WaitCreateFileStreamAsync(path, mode, access, timeout, CancellationToken.None);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, TimeSpan timeout, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(path, mode, access, timeout.Milliseconds, token);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, Int32 timeout, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(() => new FileStream(path, mode, access), timeout, token);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, FileShare share)
+        {
+            return WaitCreateFileStreamAsync(path, mode, access, share, CancellationToken.None);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, FileShare share, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(path, mode, access, share, Timeout.Infinite, token);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, FileShare share, TimeSpan timeout)
+        {
+            return WaitCreateFileStreamAsync(path, mode, access, share, timeout, CancellationToken.None);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, FileShare share, Int32 timeout)
+        {
+            return WaitCreateFileStreamAsync(path, mode, access, share, timeout, CancellationToken.None);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, FileShare share, TimeSpan timeout, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(path, mode, access, share, timeout.Milliseconds, token);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, FileShare share, Int32 timeout, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(() => new FileStream(path, mode, access, share), timeout, token);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, TimeSpan timeout)
+        {
+            return WaitCreateFileStreamAsync(path, mode, access, share, bufferSize, timeout, CancellationToken.None);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Int32 timeout)
+        {
+            return WaitCreateFileStreamAsync(path, mode, access, share, bufferSize, timeout, CancellationToken.None);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, TimeSpan timeout, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(path, mode, access, share, bufferSize, timeout.Milliseconds, token);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Int32 timeout, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(() => new FileStream(path, mode, access, share, bufferSize), timeout, token);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options)
+        {
+            return WaitCreateFileStreamAsync(path, mode, access, share, bufferSize, options, CancellationToken.None);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(path, mode, access, share, bufferSize, options, Timeout.Infinite, token);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, TimeSpan timeout)
+        {
+            return WaitCreateFileStreamAsync(path, mode, access, share, bufferSize, options, timeout, CancellationToken.None);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, Int32 timeout)
+        {
+            return WaitCreateFileStreamAsync(path, mode, access, share, bufferSize, options, timeout, CancellationToken.None);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, TimeSpan timeout, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(path, mode, access, share, bufferSize, options, timeout.Milliseconds, token);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, Int32 timeout, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(() => new FileStream(path, mode, access, share, bufferSize, options), timeout, token);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] this SafeFileHandle handle, FileAccess access)
+        {
+            return WaitCreateFileStreamAsync(handle, access, CancellationToken.None);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] this SafeFileHandle handle, FileAccess access, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(handle, access, Timeout.Infinite, token);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] this SafeFileHandle handle, FileAccess access, TimeSpan timeout)
+        {
+            return WaitCreateFileStreamAsync(handle, access, timeout, CancellationToken.None);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] this SafeFileHandle handle, FileAccess access, Int32 timeout)
+        {
+            return WaitCreateFileStreamAsync(handle, access, timeout, CancellationToken.None);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] this SafeFileHandle handle, FileAccess access, TimeSpan timeout, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(handle, access, timeout.Milliseconds, token);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] this SafeFileHandle handle, FileAccess access, Int32 timeout, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(() => new FileStream(handle, access), timeout, token);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] this SafeFileHandle handle, FileAccess access, Int32 bufferSize, TimeSpan timeout)
+        {
+            return WaitCreateFileStreamAsync(handle, access, bufferSize, timeout, CancellationToken.None);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] this SafeFileHandle handle, FileAccess access, Int32 bufferSize, Int32 timeout)
+        {
+            return WaitCreateFileStreamAsync(handle, access, bufferSize, timeout, CancellationToken.None);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] this SafeFileHandle handle, FileAccess access, Int32 bufferSize, TimeSpan timeout, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(handle, access, bufferSize, timeout.Milliseconds, token);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] this SafeFileHandle handle, FileAccess access, Int32 bufferSize, Int32 timeout, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(() => new FileStream(handle, access, bufferSize), timeout, token);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] this SafeFileHandle handle, FileAccess access, Int32 bufferSize, Boolean isAsync)
+        {
+            return WaitCreateFileStreamAsync(handle, access, bufferSize, isAsync, CancellationToken.None);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] this SafeFileHandle handle, FileAccess access, Int32 bufferSize, Boolean isAsync, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(handle, access, bufferSize, isAsync, Timeout.Infinite, token);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] this SafeFileHandle handle, FileAccess access, Int32 bufferSize, Boolean isAsync, TimeSpan timeout)
+        {
+            return WaitCreateFileStreamAsync(handle, access, bufferSize, isAsync, timeout, CancellationToken.None);
+        }
+        
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] this SafeFileHandle handle, FileAccess access, Int32 bufferSize, Boolean isAsync, Int32 timeout)
+        {
+            return WaitCreateFileStreamAsync(handle, access, bufferSize, isAsync, timeout, CancellationToken.None);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] this SafeFileHandle handle, FileAccess access, Int32 bufferSize, Boolean isAsync, TimeSpan timeout, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(handle, access, bufferSize, isAsync, timeout.Milliseconds, token);
+        }
+
+        /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
+        public static Task<FileStream> WaitCreateFileStreamAsync([NotNull] this SafeFileHandle handle, FileAccess access, Int32 bufferSize, Boolean isAsync, Int32 timeout, CancellationToken token)
+        {
+            return WaitCreateFileStreamAsync(() => new FileStream(handle, access, bufferSize, isAsync), timeout, token);
+        }
+
+        /// <summary>
+        /// Tries to create filestream with timeout if file is locked (<see cref="IOException"/>)
+        /// </summary>
+        /// <param name="factory">FileStream factory</param>
+        /// <param name="timeout">Timeout</param>
+        /// <param name="token"><see cref="CancellationToken"/></param>
+        /// <returns><see cref="FileStream"/></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        /// <exception cref="TimeoutException"></exception>
+        /// <exception cref="OperationCanceledException"></exception>
+        public static async Task<FileStream> WaitCreateFileStreamAsync([NotNull] Func<FileStream> factory, Int32 timeout, CancellationToken token)
+        {
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            if (timeout != Timeout.Infinite && timeout <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(timeout));
+            }
+
+            Int64 timestamp = Environment.TickCount64;
+
+            do
+            {
+                token.ThrowIfCancellationRequested();
+                
+                try
+                {
+                    return factory();
+                }
+                catch (IOException)
+                {
+                    await Task.Delay(50, token).ConfigureAwait(false);
+                }
+                
+            } while (timeout == -1 || Environment.TickCount64 - timestamp < timeout);
+            
+            throw new TimeoutException("File opening timed out");
         }
 
         public static FileStream Reserve([NotNull] this FileStream stream, Int32 count, InformationSize type)
         {
-            return Reserve(stream, (Int32) type.ConvertToBytes(count));
+            return Reserve(stream, (Int64) type.ConvertToBytes(count));
         }
 
         public static FileStream Reserve([NotNull] this FileStream stream, Int64 bytes)
@@ -437,23 +729,23 @@ namespace NetExtender.Utils.IO
             return stream;
         }
 
-        public static Task<FileInfo> SafeCreateFileAsync(String path, Byte[] data, Boolean overwrite = false, Int32 buffer = BufferUtils.DefaultBuffer)
+        public static Task<FileInfo> SafeCreateFileAsync([NotNull] String path, Byte[] data, Boolean overwrite = false, Int32 buffer = BufferUtils.DefaultBuffer)
         {
             return SafeCreateFileAsync(path, data, overwrite, buffer, CancellationToken.None);
         }
 
-        public static Task<FileInfo> SafeCreateFileAsync(String path, Byte[] data, Boolean overwrite, Int32 buffer, CancellationToken token)
+        public static Task<FileInfo> SafeCreateFileAsync([NotNull] String path, Byte[] data, Boolean overwrite, Int32 buffer, CancellationToken token)
         {
             using Stream stream = data.ToStream();
             return SafeCreateFileAsync(path, stream, overwrite, buffer, token);
         }
 
-        public static Task<FileInfo> SafeCreateFileAsync(String path, Stream stream, Boolean overwrite = false, Int32 buffer = BufferUtils.DefaultBuffer)
+        public static Task<FileInfo> SafeCreateFileAsync([NotNull] String path, Stream stream, Boolean overwrite = false, Int32 buffer = BufferUtils.DefaultBuffer)
         {
             return SafeCreateFileAsync(path, stream, overwrite, buffer, CancellationToken.None);
         }
 
-        public static async Task<FileInfo> SafeCreateFileAsync(String path, Stream stream, Boolean overwrite, Int32 buffer, CancellationToken token)
+        public static async Task<FileInfo> SafeCreateFileAsync([NotNull] String path, Stream stream, Boolean overwrite, Int32 buffer, CancellationToken token)
         {
             if (path is null)
             {
@@ -527,8 +819,18 @@ namespace NetExtender.Utils.IO
             return new FileInfo(path);
         }
 
-        public static Boolean CreateShortcut(String path, String directory)
+        public static Boolean CreateShortcut([NotNull] String path, [NotNull] String directory)
         {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (directory is null)
+            {
+                throw new ArgumentNullException(nameof(directory));
+            }
+
             if (!PathUtils.IsExistAsFile(path))
             {
                 return false;
@@ -557,26 +859,28 @@ namespace NetExtender.Utils.IO
         /// <summary>
         /// Renames the specified file (adds the specified suffix to the end of the name).
         /// </summary>
-        /// <param name="file">The file to add the suffix to.</param>
+        /// <param name="info">The file to add the suffix to.</param>
         /// <param name="suffix">The suffix to add to the file.</param>
-        public static void AddSuffix(FileInfo file, String suffix)
+        public static void AddSuffix([NotNull] FileInfo info, [NotNull] String suffix)
         {
-            if (file is null)
+            if (info is null)
             {
-                throw new ArgumentNullException(nameof(file));
+                throw new ArgumentNullException(nameof(info));
             }
 
-            switch (suffix)
+            if (suffix is null)
             {
-                case null:
-                    throw new ArgumentNullException(nameof(suffix));
-                case "":
-                    return;
+                throw new ArgumentNullException(nameof(suffix));
             }
 
-            String name = file.Name + suffix;
+            if (suffix == String.Empty)
+            {
+                return;
+            }
 
-            String dir = Path.GetDirectoryName(file.FullName);
+            String name = info.Name + suffix;
+
+            String dir = Path.GetDirectoryName(info.FullName);
 
             if (String.IsNullOrEmpty(dir))
             {
@@ -584,37 +888,39 @@ namespace NetExtender.Utils.IO
             }
 
             String path = Path.Combine(dir, name);
-            file.MoveTo(path);
+            info.MoveTo(path);
         }
         
         /// <summary>
         /// Renames the specified file (removes the specified suffix from the end of the name, if present).
         /// </summary>
-        /// <param name="file">The file to remove the suffix from.</param>
+        /// <param name="info">The file to remove the suffix from.</param>
         /// <param name="suffix">The suffix to remove from the file.</param>
-        public static void RemoveSuffix(FileInfo file, String suffix)
+        public static void RemoveSuffix([NotNull] FileInfo info, [NotNull] String suffix)
         {
-            if (file is null)
+            if (info is null)
             {
-                throw new ArgumentNullException(nameof(file));
+                throw new ArgumentNullException(nameof(info));
             }
 
-            switch (suffix)
+            if (suffix is null)
             {
-                case null:
-                    throw new ArgumentNullException(nameof(suffix));
-                case "":
-                    return;
+                throw new ArgumentNullException(nameof(suffix));
             }
 
-            if (!file.Name.EndsWith(suffix))
+            if (suffix == String.Empty)
             {
                 return;
             }
 
-            String name = file.Name.Substring(0, file.Name.Length - suffix.Length);
+            if (!info.Name.EndsWith(suffix))
+            {
+                return;
+            }
 
-            String dir = Path.GetDirectoryName(file.FullName);
+            String name = info.Name.Substring(0, info.Name.Length - suffix.Length);
+
+            String dir = Path.GetDirectoryName(info.FullName);
 
             if (String.IsNullOrEmpty(dir))
             {
@@ -622,7 +928,7 @@ namespace NetExtender.Utils.IO
             }
                 
             String path = Path.Combine(dir, name);
-            file.MoveTo(path);
+            info.MoveTo(path);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -703,5 +1009,14 @@ namespace NetExtender.Utils.IO
         {
             return write ? FileAccess.ReadWrite : FileAccess.Read;
         }
+    }
+    
+    public readonly struct FileData
+    {
+        public FileAttributes Attributes { get; init; }
+        public DateTime CreationTime { get; init; }
+        public DateTime LastAccessTime { get; init; }
+        public DateTime LastWriteTime { get; init; }
+        public UInt64 FileSize { get; init; }
     }
 }

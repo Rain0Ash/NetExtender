@@ -23,7 +23,7 @@ namespace NetExtender.Utils.Types
         PetaBit = GigaBit * MegaBit,
         PetaByte = ByteUtils.BitInBytes * PetaBit,
         ZettaBit = GigaBit * GigaBit,
-        ZettaByte = ByteUtils.BitInBytes * ZettaBit
+        ZettaByte = ByteUtils.BitInBytes * ZettaBit,
     }
 
     public static class ByteUtils
@@ -55,14 +55,9 @@ namespace NetExtender.Utils.Types
         /// <exception cref="ArgumentNullException"><paramref name="data"/> is null.</exception>
         [NotNull]
         [Pure]
-        public static unsafe String ToHexString([NotNull] this Byte[] data, [CanBeNull] String separator)
+        public static unsafe String ToHexString(this ReadOnlySpan<Byte> data, [CanBeNull] String separator)
         {
-            if (data is null)
-            {
-                throw new ArgumentNullException(nameof(data));
-            }
-
-            if (data.Length == 0)
+            if (data.Length <= 0)
             {
                 return String.Empty;
             }
@@ -103,22 +98,78 @@ namespace NetExtender.Utils.Types
             }
         }
 
-        public static Double ConvertInformation(this InformationSize from, Double value, InformationSize to = InformationSize.Byte)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double ConvertInformation(Double value, InformationSize from, InformationSize to)
         {
             if (from == to)
             {
                 return value;
             }
 
-            return value * ((Double)from / (Double)to);
+            return value * ((Double) from / (Double) to);
         }
 
-        public static UInt64 ConvertInformation(this InformationSize from, Int64 value, InformationSize to = InformationSize.Byte)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double ConvertInformation(this InformationSize from, Double value, InformationSize to)
+        {
+            return ConvertInformation(value, from, to);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal ConvertInformation(Decimal value, InformationSize from, InformationSize to)
+        {
+            if (from == to)
+            {
+                return value;
+            }
+
+            return value * ((Decimal) from / (Decimal) to);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal ConvertInformation(this InformationSize from, Decimal value, InformationSize to)
+        {
+            return ConvertInformation(value, from, to);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertInformation(Int32 value, InformationSize from, InformationSize to)
         {
             return value > 0 ? ConvertInformation(from, (UInt64) value, to) : 0;
         }
 
-        public static UInt64 ConvertInformation(this InformationSize from, UInt64 value, InformationSize to = InformationSize.Byte)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertInformation(this InformationSize from, Int32 value, InformationSize to)
+        {
+            return ConvertInformation(value, from, to);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertInformation(UInt32 value, InformationSize from, InformationSize to)
+        {
+            return ConvertInformation((UInt64) value, from, to);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertInformation(this InformationSize from, UInt32 value, InformationSize to)
+        {
+            return ConvertInformation(value, from, to);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertInformation(Int64 value, InformationSize from, InformationSize to)
+        {
+            return value > 0 ? ConvertInformation(from, (UInt64) value, to) : 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertInformation(this InformationSize from, Int64 value, InformationSize to)
+        {
+            return ConvertInformation(value, from, to);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertInformation(UInt64 value, InformationSize from, InformationSize to)
         {
             if (from == to)
             {
@@ -127,21 +178,123 @@ namespace NetExtender.Utils.Types
 
             return value * ((UInt64) from / (UInt64) to);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertInformation(this InformationSize from, UInt64 value, InformationSize to)
+        {
+            return ConvertInformation(value, from, to);
+        }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertToBit(Int32 value, InformationSize from)
+        {
+            return value > 0 ? ConvertToBit((UInt64) value, from) : 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertToBit(this InformationSize from, Int32 value)
+        {
+            return ConvertToBit(value, from);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertToBit(UInt32 value, InformationSize from)
+        {
+            return ConvertToBytes(value, from) * BitInBytes;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertToBit(this InformationSize from, UInt32 value)
+        {
+            return ConvertToBit(value, from);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertToBit(Int64 value, InformationSize from)
+        {
+            return value > 0 ? ConvertToBit((UInt64) value, from) : 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertToBit(this InformationSize from, Int64 value)
+        {
+            return ConvertToBit(value, from);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertToBit(UInt64 value, InformationSize from)
+        {
+            return ConvertToBytes(value, from) * BitInBytes;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ConvertToBit(this InformationSize from, UInt64 value)
         {
-            return ConvertToBytes(from, value) * BitInBytes;
+            return ConvertToBit(value, from);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double ConvertToBit(Double value, InformationSize from)
+        {
+            return ConvertToBytes(value, from) * BitInBytes;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double ConvertToBit(this InformationSize from, Double value)
+        {
+            return ConvertToBit(value, from);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal ConvertToBit(Decimal value, InformationSize from)
+        {
+            return ConvertToBytes(value, from) * BitInBytes;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal ConvertToBit(this InformationSize from, Decimal value)
+        {
+            return ConvertToBit(value, from);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertToBytes(Int32 value, InformationSize from)
+        {
+            return value > 0 ? ConvertToBytes(from, (UInt64) value) : 0;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ConvertToBytes(this InformationSize from, Int32 value)
         {
+            return ConvertToBytes(value, from);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertToBytes(UInt32 value, InformationSize from)
+        {
             return value > 0 ? ConvertToBytes(from, (UInt64) value) : 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertToBytes(this InformationSize from, UInt32 value)
+        {
+            return ConvertToBytes(value, from);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertToBytes(Int64 value, InformationSize from)
+        {
+            return value > 0 ? ConvertToBytes(from, (UInt64) value) : 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertToBytes(this InformationSize from, Int64 value)
+        {
+            return ConvertToBytes(value, from);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UInt64 ConvertToBytes(this InformationSize from, UInt64 value)
+        public static UInt64 ConvertToBytes(UInt64 value, InformationSize from)
         {
             return from switch
             {
@@ -149,6 +302,46 @@ namespace NetExtender.Utils.Types
                 InformationSize.Byte => value,
                 _ => value * ((UInt64) from / BitInBytes)
             };
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UInt64 ConvertToBytes(this InformationSize from, UInt64 value)
+        {
+            return ConvertToBytes(value, from);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double ConvertToBytes(Double value, InformationSize from)
+        {
+            return from switch
+            {
+                InformationSize.Bit => value / BitInBytes,
+                InformationSize.Byte => value,
+                _ => value * ((UInt64) from / (Double) BitInBytes)
+            };
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double ConvertToBytes(this InformationSize from, Double value)
+        {
+            return ConvertToBytes(value, from);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal ConvertToBytes(Decimal value, InformationSize from)
+        {
+            return from switch
+            {
+                InformationSize.Bit => value / BitInBytes,
+                InformationSize.Byte => value,
+                _ => value * ((UInt64) from / (Decimal) BitInBytes)
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal ConvertToBytes(this InformationSize from, Decimal value)
+        {
+            return ConvertToBytes(value, from);
         }
     }
 }

@@ -416,5 +416,177 @@ namespace NetExtender.Utils.Types
         {
             return source is not null ? source as ImmutableSortedDictionary<TKey, TValue> ?? source.ToImmutableSortedDictionary() : ImmutableSortedDictionary<TKey, TValue>.Empty;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> AddRange<T>(this ImmutableArray<T> source, [NotNull] params T[] values)
+        {
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.Length > 0 ? source.AddRange(values) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableList<T> AddRange<T>([NotNull] this ImmutableList<T> source, [NotNull] params T[] values)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.Length > 0 ? source.AddRange(values) : source;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableList<T> AddRange<T>([NotNull] this IImmutableList<T> source, [NotNull] params T[] values)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.Length > 0 ? source.AddRange(values) : source;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> InsertRange<T>(this ImmutableArray<T> source, Int32 index, [NotNull] params T[] values)
+        {
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.Length > 0 ? source.InsertRange(index, values) : source;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableList<T> InsertRange<T>([NotNull] this ImmutableList<T> source, Int32 index, [NotNull] params T[] values)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.Length > 0 ? source.InsertRange(index, values) : source;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableList<T> InsertRange<T>([NotNull] this IImmutableList<T> source, Int32 index, [NotNull] params T[] values)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.Length > 0 ? source.InsertRange(index, values) : source;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> RemoveRange<T>(this ImmutableArray<T> source, [NotNull] params T[] values)
+        {
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.Length > 0 ? source.RemoveRange(values) : source;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableArray<T> RemoveRange<T>(this ImmutableArray<T> source, [CanBeNull] IEqualityComparer<T>? comparer, [NotNull] params T[] values)
+        {
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.Length > 0 ? source.RemoveRange(values, comparer) : source;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableList<T> RemoveRange<T>([NotNull] this ImmutableList<T> source, [NotNull] params T[] values)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.Length > 0 ? source.RemoveRange(values) : source;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableList<T> RemoveRange<T>([NotNull] this ImmutableList<T> source, [CanBeNull] IEqualityComparer<T>? comparer, [NotNull] params T[] values)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.Length > 0 ? source.RemoveRange(values, comparer) : source;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableList<T> RemoveRange<T>([NotNull] this IImmutableList<T> source, [NotNull] params T[] values)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.Length > 0 ? source.RemoveRange((IEnumerable<T>) values) : source;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableList<T> RemoveRange<T>([NotNull] this IImmutableList<T> source, [CanBeNull] IEqualityComparer<T>? comparer, [NotNull] params T[] values)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            return values.Length > 0 ? source.RemoveRange(values, comparer) : source;
+        }
     }
 }

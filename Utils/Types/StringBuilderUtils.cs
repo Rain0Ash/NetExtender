@@ -39,8 +39,10 @@ namespace NetExtender.Utils.Types
             {
                 return new StringBuilder(str);
             }
-
-            StringBuilder builder = new StringBuilder();
+            
+            // ReSharper disable once PossibleMultipleEnumeration
+            StringBuilder builder = new StringBuilder(source.CountIfMaterialized() ?? 16);
+            // ReSharper disable once PossibleMultipleEnumeration
             foreach (Char chr in source)
             {
                 builder.Append(chr);
@@ -115,7 +117,13 @@ namespace NetExtender.Utils.Types
             return !IsNullOrWhiteSpace(builder);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder Append([NotNull] this StringBuilder builder, [NotNull] IEnumerable<Char> source)
+        {
+            return AppendRange(builder, source);
+        }
+        
+        public static StringBuilder AppendRange([NotNull] this StringBuilder builder, [NotNull] IEnumerable<Char> source)
         {
             if (builder is null)
             {
@@ -148,7 +156,13 @@ namespace NetExtender.Utils.Types
             return AddPrefix(builder, value);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder Prepend([NotNull] this StringBuilder builder, [NotNull] IEnumerable<Char> source)
+        {
+            return PrependRange(builder, source);
+        }
+        
+        public static StringBuilder PrependRange([NotNull] this StringBuilder builder, [NotNull] IEnumerable<Char> source)
         {
             if (builder is null)
             {
@@ -885,16 +899,170 @@ namespace NetExtender.Utils.Types
             result = builder.ToString(start, length);
             return builder.Remove(start, length);
         }
-        
-        public static StringBuilder ToUpper([NotNull] this StringBuilder builder)
+
+        public static StringBuilder ReplaceInsert([NotNull] this StringBuilder builder, ReadOnlySpan<Char> replace)
+        {
+            return ReplaceInsert(builder, replace, 0);
+        }
+
+        public static StringBuilder ReplaceInsert([NotNull] this StringBuilder builder, ReadOnlySpan<Char> replace, Int32 index)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+            
+            if (replace.IsEmpty)
+            {
+                return builder;
+            }
+
+            if (builder.Length <= 0)
+            {
+                if (replace.Length > builder.MaxCapacity)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(builder));
+                }
+
+                return builder.Append(replace);
+            }
+
+            if (index > builder.Length)
+            {
+                index = builder.Length;
+            }
+            else if (index + builder.Length < 0)
+            {
+                index = builder.Length - replace.Length;
+            }
+
+            if (index + replace.Length > builder.MaxCapacity)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (index >= 0)
+            {
+                for (Int32 i = 0; i < replace.Length; i++)
+                {
+                    Int32 position = index + i;
+
+                    if (position < builder.Length)
+                    {
+                        builder[position] = replace[i];
+                    }
+                    else
+                    {
+                        builder.Append(replace[i]);
+                    }
+                }
+            }
+            else
+            {
+                for (Int32 i = replace.Length - 1; i >= 0; i--)
+                {
+                    Int32 position = index + i;
+
+                    if (position < 0)
+                    {
+                        builder.Prepend(replace[i]);
+                    }
+                    else
+                    {
+                        builder[position] = replace[i];
+                    }
+                }
+            }
+
+            return builder;
+        }
+
+        public static StringBuilder Repeat([NotNull] this StringBuilder builder, Int32 count)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            String result = builder.ToString().ToUpper();
-            return builder.Clear().Append(result);
+            if (count <= 1)
+            {
+                return builder;
+            }
+
+            if (builder.Length * count > builder.MaxCapacity)
+            {
+                throw new ArgumentOutOfRangeException(nameof(builder));
+            }
+
+            return builder.Insert(0, builder.ToString(), count);
+        }
+        
+        public static StringBuilder Shuffle([NotNull] this StringBuilder builder)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (builder.Length <= 1)
+            {
+                return builder;
+            }
+
+            String str = builder.ToString();
+            return builder.Clear().Append(str.Shuffle());
+        }
+        
+        public static StringBuilder Shuffle([NotNull] this StringBuilder builder, Int32 index)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+            
+            if (index < 0 || index >= builder.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (builder.Length <= 1)
+            {
+                return builder;
+            }
+
+            String str = builder.ToString();
+            return builder.Clear().Append(str.Shuffle(index));
+        }
+        
+        public static StringBuilder Shuffle([NotNull] this StringBuilder builder, Int32 index, Int32 length)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+            
+            if (length < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length));
+            }
+
+            if (index < 0 || index + length >= builder.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (length <= 0 || builder.Length <= 1)
+            {
+                return builder;
+            }
+
+            String str = builder.ToString();
+            return builder.Clear().Append(str.Shuffle(index, length));
+        }
+
+        public static StringBuilder ToUpper([NotNull] this StringBuilder builder)
+        {
+            return ToUpper(builder, null);
         }
 
         public static StringBuilder ToUpper(this StringBuilder builder, CultureInfo info)
@@ -921,13 +1089,7 @@ namespace NetExtender.Utils.Types
 
         public static StringBuilder ToLower(this StringBuilder builder)
         {
-            if (builder is null)
-            {
-                throw new ArgumentNullException(nameof(builder));
-            }
-
-            String result = builder.ToString().ToLower();
-            return builder.Clear().Append(result);
+            return ToLower(builder, null);
         }
 
         public static StringBuilder ToLower(this StringBuilder builder, CultureInfo info)
@@ -949,6 +1111,79 @@ namespace NetExtender.Utils.Types
             }
 
             String result = builder.ToString().ToLowerInvariant();
+            return builder.Clear().Append(result);
+        }
+        
+        public static StringBuilder ToCapitalizeFirstChar([NotNull] this StringBuilder builder)
+        {
+            return ToCapitalizeFirstChar(builder, null);
+        }
+        
+        public static StringBuilder ToCapitalizeFirstChar([NotNull] this StringBuilder builder, CultureInfo info)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (builder.Length <= 0)
+            {
+                return builder;
+            }
+
+            builder[0] = builder[0].ToUpper(info);
+            return builder;
+        }
+        
+        public static StringBuilder ToCapitalizeFirstCharLower([NotNull] this StringBuilder builder)
+        {
+            return ToCapitalizeFirstCharLower(builder, null);
+        }
+        
+        public static StringBuilder ToCapitalizeFirstCharLower([NotNull] this StringBuilder builder, CultureInfo info)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.Length > 0 ? ToCapitalizeFirstChar(builder.ToLower(info), info) : builder;
+        }
+
+        public static StringBuilder ToTitleCase([NotNull] this StringBuilder builder)
+        {
+            return ToTitleCase(builder, null);
+        }
+        
+        public static StringBuilder ToTitleCase([NotNull] this StringBuilder builder, CultureInfo info)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (builder.Length <= 0)
+            {
+                return builder;
+            }
+
+            String result = builder.ToString().ToTitleCase(info);
+            return builder.Clear().Append(result);
+        }
+        
+        public static StringBuilder ToTitleCaseLower([NotNull] this StringBuilder builder)
+        {
+            return ToTitleCaseLower(builder, null);
+        }
+
+        public static StringBuilder ToTitleCaseLower([NotNull] this StringBuilder builder, CultureInfo info)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            String result = builder.ToString().ToTitleCaseLower(info);
             return builder.Clear().Append(result);
         }
 
@@ -1506,104 +1741,104 @@ namespace NetExtender.Utils.Types
             return -1;
         }
 
-        public static StringBuilder[] Split([NotNull] this StringBuilder builder, Char separator, StringSplitOptions options = StringSplitOptions.None)
+        public static IEnumerable<StringBuilder> Split([NotNull] this StringBuilder builder, Char separator, StringSplitOptions options = StringSplitOptions.None)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator, options).Select(str => new StringBuilder(str)).ToArray();
+            return builder.ToString().Split(separator, options).Select(str => new StringBuilder(str));
         }
 
-        public static StringBuilder[] Split([NotNull] this StringBuilder builder, Char separator, Int32 count, StringSplitOptions options = StringSplitOptions.None)
+        public static IEnumerable<StringBuilder> Split([NotNull] this StringBuilder builder, Char separator, Int32 count, StringSplitOptions options = StringSplitOptions.None)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator, count, options).Select(str => new StringBuilder(str)).ToArray();
+            return builder.ToString().Split(separator, count, options).Select(str => new StringBuilder(str));
         }
 
-        public static StringBuilder[] Split([NotNull] this StringBuilder builder, params Char[]? separator)
+        public static IEnumerable<StringBuilder> Split([NotNull] this StringBuilder builder, params Char[]? separator)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator).Select(str => new StringBuilder(str)).ToArray();
+            return builder.ToString().Split(separator).Select(str => new StringBuilder(str));
         }
 
-        public static StringBuilder[] Split([NotNull] this StringBuilder builder, Char[]? separator, Int32 count)
+        public static IEnumerable<StringBuilder> Split([NotNull] this StringBuilder builder, Char[]? separator, Int32 count)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator, count).Select(str => new StringBuilder(str)).ToArray();
+            return builder.ToString().Split(separator, count).Select(str => new StringBuilder(str));
         }
 
-        public static StringBuilder[] Split([NotNull] this StringBuilder builder, Char[]? separator, StringSplitOptions options)
+        public static IEnumerable<StringBuilder> Split([NotNull] this StringBuilder builder, Char[]? separator, StringSplitOptions options)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator, options).Select(str => new StringBuilder(str)).ToArray();
+            return builder.ToString().Split(separator, options).Select(str => new StringBuilder(str));
         }
 
-        public static StringBuilder[] Split([NotNull] this StringBuilder builder, Char[]? separator, Int32 count, StringSplitOptions options)
+        public static IEnumerable<StringBuilder> Split([NotNull] this StringBuilder builder, Char[]? separator, Int32 count, StringSplitOptions options)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator, count, options).Select(str => new StringBuilder(str)).ToArray();
+            return builder.ToString().Split(separator, count, options).Select(str => new StringBuilder(str));
         }
 
-        public static StringBuilder[] Split([NotNull] this StringBuilder builder, String? separator, StringSplitOptions options = StringSplitOptions.None)
+        public static IEnumerable<StringBuilder> Split([NotNull] this StringBuilder builder, String? separator, StringSplitOptions options = StringSplitOptions.None)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator, options).Select(str => new StringBuilder(str)).ToArray();
+            return builder.ToString().Split(separator, options).Select(str => new StringBuilder(str));
         }
 
-        public static StringBuilder[] Split([NotNull] this StringBuilder builder, String? separator, Int32 count, StringSplitOptions options = StringSplitOptions.None)
+        public static IEnumerable<StringBuilder> Split([NotNull] this StringBuilder builder, String? separator, Int32 count, StringSplitOptions options = StringSplitOptions.None)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator, count, options).Select(str => new StringBuilder(str)).ToArray();
+            return builder.ToString().Split(separator, count, options).Select(str => new StringBuilder(str));
         }
 
-        public static StringBuilder[] Split([NotNull] this StringBuilder builder, String[]? separator, StringSplitOptions options)
+        public static IEnumerable<StringBuilder> Split([NotNull] this StringBuilder builder, String[]? separator, StringSplitOptions options)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator, options).Select(str => new StringBuilder(str)).ToArray();
+            return builder.ToString().Split(separator, options).Select(str => new StringBuilder(str));
         }
 
-        public static StringBuilder[] Split([NotNull] this StringBuilder builder, String[]? separator, Int32 count, StringSplitOptions options)
+        public static IEnumerable<StringBuilder> Split([NotNull] this StringBuilder builder, String[]? separator, Int32 count, StringSplitOptions options)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.ToString().Split(separator, count, options).Select(str => new StringBuilder(str)).ToArray();
+            return builder.ToString().Split(separator, count, options).Select(str => new StringBuilder(str));
         }
 
         public static StringBuilder Replace([NotNull] this StringBuilder builder, Char before, Char after)

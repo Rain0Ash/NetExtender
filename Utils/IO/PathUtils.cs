@@ -20,7 +20,6 @@ using NetExtender.IO.NTFS.DataStreams;
 using NetExtender.Native;
 using NetExtender.Native.IO;
 using NetExtender.Types.Network;
-using NetExtender.Types.Numerics;
 
 namespace NetExtender.Utils.IO
 {

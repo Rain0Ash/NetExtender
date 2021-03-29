@@ -2,14 +2,528 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore;
+using NetExtender.Utils.Numerics;
 
 namespace NetExtender.Utils.Types
 {
     public static class QueryableUtils
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> WhereNot<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.Where(predicate.LogicalNot());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> WhereNot<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.Where(predicate.LogicalNot());
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> WhereNotNull<T>([NotNull] this IQueryable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(item => item != null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> WhereNotNull<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.WhereNotNull().Where(predicate);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> WhereNotNull<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.WhereNotNull().Where(predicate);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> SelectWhere<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> where, [NotNull] Expression<Func<T, T>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Where(where).Select(selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> SelectWhereNot<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> where, [NotNull] Expression<Func<T, T>> selector)
+        {
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.WhereNot(where).Select(selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> SelectWhere<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> where, [NotNull] Expression<Func<T, T>> selector)
+        {
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Where(where).Select(selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> SelectWhereNot<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> where, [NotNull] Expression<Func<T, T>> selector)
+        {
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.WhereNot(where).Select(selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> SelectWhere<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> where, [NotNull] Expression<Func<T, Int32, T>> selector)
+        {
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Where(where).Select(selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> SelectWhereNot<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> where, [NotNull] Expression<Func<T, Int32, T>> selector)
+        {
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.WhereNot(where).Select(selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> SelectWhere<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> where, [NotNull] Expression<Func<T, Int32, T>> selector)
+        {
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Where(where).Select(selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> SelectWhereNot<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> where, [NotNull] Expression<Func<T, Int32, T>> selector)
+        {
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.WhereNot(where).Select(selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> SelectMany<T>([NotNull] this IQueryable<IQueryable<T>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.SelectMany(item => item);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IQueryable<T> SelectMany<T>([NotNull] this IQueryable<IEnumerable<T>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.SelectMany(item => item);
+        }
+        
+        public static IQueryable<TResult> SelectManyWhere<T, TResult>(this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> where, Expression<Func<T, IEnumerable<TResult>>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Where(where).SelectMany(selector);
+        }
+
+        public static IQueryable<TResult> SelectManyWhereNot<T, TResult>(this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> where, Expression<Func<T, IEnumerable<TResult>>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.WhereNot(where).SelectMany(selector);
+        }
+        
+        public static IQueryable<T> Change<T>([NotNull] this IQueryable<T> source, Expression<Func<T, T>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Select(selector);
+        }
+        
+        public static IQueryable<T> Change<T>([NotNull] this IQueryable<T> source, Expression<Func<T, Int32, T>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Select(selector);
+        }
+        
+        public static IQueryable<T> ChangeWhere<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> where, [NotNull] Expression<Func<T, T>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            Func<T, Boolean> fwhere = where.Compile();
+            Func<T, T> fselector = selector.Compile();
+            return source.Select(item => fwhere(item) ? fselector(item) : item);
+        }
+
+        public static IQueryable<T> ChangeWhereNot<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> where, [NotNull] Expression<Func<T, T>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return ChangeWhere(source, where.LogicalNot(), selector);
+        }
+        
+        public static IQueryable<T> ChangeWhere<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> where, [NotNull] Expression<Func<T, T>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            Func<T, Int32, Boolean> fwhere = where.Compile();
+            Func<T, T> fselector = selector.Compile();
+            return source.Select((item, index) => !fwhere(item, index) ? fselector(item) : item);
+        }
+
+        public static IQueryable<T> ChangeWhereNot<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> where, [NotNull] Expression<Func<T, T>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return ChangeWhere(source, where.LogicalNot(), selector);
+        }
+        
+        public static IQueryable<T> ChangeWhere<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> where, [NotNull] Expression<Func<T, Int32, T>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            Func<T, Boolean> fwhere = where.Compile();
+            Func<T, Int32, T> fselector = selector.Compile();
+            return source.Select((item, index) => fwhere(item) ? fselector(item, index) : item);
+        }
+
+        public static IQueryable<T> ChangeWhereNot<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> where, [NotNull] Expression<Func<T, Int32, T>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return ChangeWhere(source, where.LogicalNot(), selector);
+        }
+        
+        public static IQueryable<T> ChangeWhere<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> where, [NotNull] Expression<Func<T, Int32, T>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            Func<T, Int32, Boolean> fwhere = where.Compile();
+            Func<T, Int32, T> fselector = selector.Compile();
+            return source.Select((item, index) => fwhere(item, index) ? fselector(item, index) : item);
+        }
+
+        public static IQueryable<T> ChangeWhereNot<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> where, [NotNull] Expression<Func<T, Int32, T>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return ChangeWhere(source, where.LogicalNot(), selector);
+        }
+        
+        public static IQueryable<TResult> SelectWhereNotNull<T, TResult>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, TResult>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.WhereNotNull().Select(selector);
+        }
+
+        public static IQueryable<TResult> SelectManyWhereNotNull<T, TResult>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, IEnumerable<TResult>>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.SelectManyWhere(item => item != null, selector);
+        }
+
+        public static IQueryable<T> SelectWhereNotNull<T>([NotNull] this IQueryable<T?> source) where T : struct
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(item => item.HasValue).Select(item => item.Value);
+        }
+        
         /// <summary>
         /// Sorts the elements of a sequence in ascending order according to a key.
         /// </summary>
@@ -35,8 +549,7 @@ namespace NetExtender.Utils.Types
         /// An <see cref="IOrderedQueryable{TElement}"/> whose elements are sorted according to a key.
         /// </returns>
         [NotNull, Pure]
-        public static IOrderedQueryable<T> OrderByDescending<T>(
-            [NotNull] this IQueryable<T> source, [NotNull] String property)
+        public static IOrderedQueryable<T> OrderByDescending<T>([NotNull] this IQueryable<T> source, [NotNull] String property)
         {
             return ApplyOrder(source, property, nameof(OrderByDescending));
         }
@@ -45,7 +558,7 @@ namespace NetExtender.Utils.Types
         /// Performs a subsequent ordering of the elements in a sequence in ascending order according to a key.
         /// </summary>
         /// <typeparam name="T">Type of elements in source.</typeparam>
-        /// <param name="source">An <see cref="IOrderedEnumerable{TElement}"/> that contains elements to sort.</param>
+        /// <param name="source">An <see cref="IOrderedQueryable{TElement}"/> that contains elements to sort.</param>
         /// <param name="property">The property name.</param>
         /// <returns>
         /// An <see cref="IOrderedQueryable{TElement}"/> whose elements are sorted according to a key.
@@ -60,7 +573,7 @@ namespace NetExtender.Utils.Types
         /// Performs a subsequent ordering of the elements in a sequence in descending order according to a key.
         /// </summary>
         /// <typeparam name="T">Type of elements in source.</typeparam>
-        /// <param name="source">An <see cref="IOrderedEnumerable{TElement}"/> that contains elements to sort.</param>
+        /// <param name="source">An <see cref="IOrderedQueryable{TElement}"/> that contains elements to sort.</param>
         /// <param name="property">The property name.</param>
         /// <returns>
         /// An <see cref="IOrderedQueryable{TElement}"/> whose elements are sorted according to a key.
@@ -72,7 +585,7 @@ namespace NetExtender.Utils.Types
         }
 
         [NotNull, Pure]
-        private static IOrderedQueryable<T> ApplyOrder<T>([NotNull] this IQueryable<T> source, [NotNull] String property, [NotNull] String method)
+        private static IOrderedQueryable<T> ApplyOrder<T>([NotNull] IQueryable<T> source, [NotNull] String property, [NotNull] String method)
         {
             if (source is null)
             {
@@ -93,11 +606,576 @@ namespace NetExtender.Utils.Types
 
             return (IOrderedQueryable<T>) source.Provider.CreateQuery<T>(
                 Expression.Call(
-                    typeof(System.Linq.Queryable),
+                    typeof(Queryable),
                     method,
                     new[] {typeof(T), ((MemberExpression) member).Member.DeclaringType},
                     source.Expression,
                     Expression.Quote(expression)));
+        }
+        
+        public static T MaxBy<T, TKey>([NotNull] this IQueryable<T> source, Expression<Func<T, TKey>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.OrderByDescending(selector).FirstOrDefault();
+        }
+
+        public static T MaxBy<T, TKey>([NotNull] this IQueryable<T> source, Expression<Func<T, TKey>> selector, IComparer<TKey> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.OrderByDescending(selector, comparer).FirstOrDefault();
+        }
+
+        public static IQueryable<T> MaxBy<T, TKey>([NotNull] this IQueryable<T> source, Expression<Func<T, TKey>> selector, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.OrderByDescending(selector).Take(count);
+        }
+
+        public static IQueryable<T> MaxBy<T, TKey>([NotNull] this IQueryable<T> source, Expression<Func<T, TKey>> selector, IComparer<TKey> comparer, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.OrderByDescending(selector, comparer).Take(count);
+        }
+
+        public static T MinBy<T, TKey>([NotNull] this IQueryable<T> source, Expression<Func<T, TKey>> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.OrderBy(selector).FirstOrDefault();
+        }
+
+        public static T MinBy<T, TKey>([NotNull] this IQueryable<T> source, Expression<Func<T, TKey>> selector, IComparer<TKey> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.OrderBy(selector, comparer).FirstOrDefault();
+        }
+
+        public static IQueryable<T> MinBy<T, TKey>([NotNull] this IQueryable<T> source, Expression<Func<T, TKey>> selector, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.OrderBy(selector).Take(count);
+        }
+
+        public static IQueryable<T> MinBy<T, TKey>([NotNull] this IQueryable<T> source, Expression<Func<T, TKey>> selector, IComparer<TKey> comparer, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            return source.OrderBy(selector, comparer).Take(count);
+        }
+
+        public static Boolean HasAtLeast<T>([NotNull] this IQueryable<T> source, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Take(count).Count() >= count;
+        }
+        
+        public static Boolean HasAtLeast<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> predicate, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return HasAtLeast(source.Where(predicate), count);
+        }
+        
+        public static Boolean HasAtLeast<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> predicate, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return HasAtLeast(source.Where(predicate), count);
+        }
+
+        public static Task<Boolean> HasAtLeastAsync<T>([NotNull] this IQueryable<T> source, Int32 count)
+        {
+            return HasAtLeastAsync(source, count, CancellationToken.None);
+        }
+
+        public static async Task<Boolean> HasAtLeastAsync<T>([NotNull] this IQueryable<T> source, Int32 count, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return await source.Take(count).CountAsync(token).ConfigureAwait(false) >= count;
+        }
+
+        public static Task<Boolean> HasAtLeastAsync<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> predicate, Int32 count)
+        {
+            return HasAtLeastAsync(source, predicate, count, CancellationToken.None);
+        }
+
+        public static Task<Boolean> HasAtLeastAsync<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> predicate, Int32 count, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return HasAtLeastAsync(source.Where(predicate), count, token);
+        }
+
+        public static Task<Boolean> HasAtLeastAsync<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> predicate, Int32 count)
+        {
+            return HasAtLeastAsync(source, predicate, count, CancellationToken.None);
+        }
+
+        public static Task<Boolean> HasAtLeastAsync<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> predicate, Int32 count, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return HasAtLeastAsync(source.Where(predicate), count, token);
+        }
+        
+        public static Boolean HasAtMost<T>([NotNull] this IQueryable<T> source, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Take(count).Count() <= count;
+        }
+        
+        public static Boolean HasAtMost<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> predicate, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return HasAtMost(source.Where(predicate), count);
+        }
+        
+        public static Boolean HasAtMost<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> predicate, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return HasAtMost(source.Where(predicate), count);
+        }
+
+        public static Task<Boolean> HasAtMostAsync<T>([NotNull] this IQueryable<T> source, Int32 count)
+        {
+            return HasAtMostAsync(source, count, CancellationToken.None);
+        }
+
+        public static async Task<Boolean> HasAtMostAsync<T>([NotNull] this IQueryable<T> source, Int32 count, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return await source.Take(count).CountAsync(token).ConfigureAwait(false) <= count;
+        }
+
+        public static Task<Boolean> HasAtMostAsync<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> predicate, Int32 count)
+        {
+            return HasAtMostAsync(source, predicate, count, CancellationToken.None);
+        }
+
+        public static Task<Boolean> HasAtMostAsync<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> predicate, Int32 count, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return HasAtMostAsync(source.Where(predicate), count, token);
+        }
+        
+        public static Task<Boolean> HasAtMostAsync<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> predicate, Int32 count)
+        {
+            return HasAtMostAsync(source, predicate, count, CancellationToken.None);
+        }
+        
+        public static Task<Boolean> HasAtMostAsync<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> predicate, Int32 count, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return HasAtMostAsync(source.Where(predicate), count, token);
+        }
+        
+        public static Boolean HasExactly<T>([NotNull] this IQueryable<T> source, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Take(count + 1).Count() == count;
+        }
+        
+        public static Boolean HasExactly<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> predicate, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return HasExactly(source.Where(predicate), count);
+        }
+        
+        public static Boolean HasExactly<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> predicate, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return HasExactly(source.Where(predicate), count);
+        }
+
+        public static Task<Boolean> HasExactlyAsync<T>([NotNull] this IQueryable<T> source, Int32 count)
+        {
+            return HasExactlyAsync(source, count, CancellationToken.None);
+        }
+
+        public static async Task<Boolean> HasExactlyAsync<T>([NotNull] this IQueryable<T> source, Int32 count, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return await source.Take(count + 1).CountAsync(token).ConfigureAwait(false) == count;
+        }
+        
+        public static Task<Boolean> HasExactlyAsync<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> predicate, Int32 count)
+        {
+            return HasExactlyAsync(source, predicate, count, CancellationToken.None);
+        }
+        
+        public static Task<Boolean> HasExactlyAsync<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Boolean>> predicate, Int32 count, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return HasExactlyAsync(source.Where(predicate), count, token);
+        }
+        
+        public static Task<Boolean> HasExactlyAsync<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> predicate, Int32 count)
+        {
+            return HasExactlyAsync(source, predicate, count, CancellationToken.None);
+        }
+        
+        public static Task<Boolean> HasExactlyAsync<T>([NotNull] this IQueryable<T> source, [NotNull] Expression<Func<T, Int32, Boolean>> predicate, Int32 count, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return HasExactlyAsync(source.Where(predicate), count, token);
+        }
+        
+        public static T FirstOr<T>([NotNull] this IQueryable<T> source, T alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            foreach (T item in source.Take(1))
+            {
+                return item;
+            }
+
+            return alternate;
+        }
+
+        public static T FirstOr<T>([NotNull] this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, T alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            foreach (T item in source.Where(predicate).Take(1))
+            {
+                return item;
+            }
+
+            return alternate;
+        }
+
+        public static T FirstOr<T>([NotNull] this IQueryable<T> source, Func<T> alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            foreach (T item in source.Take(1))
+            {
+                return item;
+            }
+
+            return alternate.Invoke();
+        }
+
+        public static T FirstOr<T>([NotNull] this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, Func<T> alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            foreach (T item in source.Where(predicate).Take(1))
+            {
+                return item;
+            }
+
+            return alternate.Invoke();
+        }
+
+        public static T LastOr<T>([NotNull] this IQueryable<T> source, T alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            foreach (T item in source.TakeLast(1))
+            {
+                return item;
+            }
+
+            return alternate;
+        }
+
+        public static T LastOr<T>([NotNull] this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, T alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            foreach (T item in source.Where(predicate).TakeLast(1))
+            {
+                return item;
+            }
+
+            return alternate;
+        }
+
+        public static T LastOr<T>([NotNull] this IQueryable<T> source, Func<T> alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            foreach (T item in source.TakeLast(1))
+            {
+                return item;
+            }
+
+            return alternate.Invoke();
+        }
+
+        public static T LastOr<T>([NotNull] this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, Func<T> alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            foreach (T item in source.Where(predicate).TakeLast(1))
+            {
+                return item;
+            }
+
+            return alternate.Invoke();
         }
 
         /// <summary>
@@ -110,17 +1188,17 @@ namespace NetExtender.Utils.Types
         /// </remarks>
         /// <typeparam name="T">The type of the elements in the source sequence.</typeparam>
         /// <param name="source">The sequence from which to extract elements.</param>
-        /// <param name="startIndex">The zero-based index at which to begin slicing.</param>
+        /// <param name="index">The zero-based index at which to begin slicing.</param>
         /// <param name="count">The number of items to slice out of the index.</param>
         /// <returns>
         /// A new sequence containing any elements sliced out from the source sequence.
         /// </returns>
         [NotNull, Pure, LinqTunnel]
-        public static IQueryable<T> Slice<T>([NotNull] this IQueryable<T> source, Int32 startIndex, Int32 count)
+        public static IQueryable<T> Slice<T>([NotNull] this IQueryable<T> source, Int32 index, Int32 count)
         {
-            if (startIndex > 0)
+            if (index > 0)
             {
-                source = source.Skip(startIndex);
+                source = source.Skip(index);
             }
 
             if (count > 0)
@@ -132,26 +1210,26 @@ namespace NetExtender.Utils.Types
         }
 
         /// <summary>
-        /// Extracts <paramref name="pageSize"/> elements from a sequence at a particular one-based page number.
+        /// Extracts <paramref name="size"/> elements from a sequence at a particular one-based page number.
         /// </summary>
         /// <typeparam name="T">The type of the elements in the source sequence.</typeparam>
         /// <param name="source">The sequence from which to page.</param>
-        /// <param name="pageIndex">The one-based page number.</param>
-        /// <param name="pageSize">The size of the page.</param>
+        /// <param name="index">The one-based page number.</param>
+        /// <param name="size">The size of the page.</param>
         /// <returns>
-        /// A new sequence containing elements are at the specified <paramref name="pageIndex"/> from the source sequence.
+        /// A new sequence containing elements are at the specified <paramref name="index"/> from the source sequence.
         /// </returns>
         [NotNull, Pure, LinqTunnel]
-        public static IQueryable<T> Page<T>([NotNull] this IQueryable<T> source, Int32 pageIndex, Int32 pageSize)
+        public static IQueryable<T> Page<T>([NotNull] this IQueryable<T> source, Int32 index, Int32 size)
         {
-            if (pageIndex > 1 && pageSize > 0)
+            if (index > 1 && size > 0)
             {
-                source = source.Skip((pageIndex - 1) * pageSize);
+                source = source.Skip((index - 1) * size);
             }
 
-            if (pageSize > 0)
+            if (size > 0)
             {
-                source = source.Take(pageSize);
+                source = source.Take(size);
             }
 
             return source;

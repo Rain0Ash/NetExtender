@@ -1283,6 +1283,28 @@ namespace NetExtender.Utils.Numerics
     {
         ForEach(types.Where(NotChar), StandardDeviationFunc, false);
     }
+
+    void ReverseFunc(String type)
+    {
+        WriteLine("\t\t[System.Diagnostics.CodeAnalysis.SuppressMessage(\"ReSharper\", \"SuspiciousTypeConversion.Global\")]");
+        WriteLine($"\t\tpublic static {(IsSmallType(type) ? nameof(Int32) : type)} {nameof(Reverse)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\t{(IsSmallType(type) ? nameof(Int32) : type)} reverse = 0;");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\twhile (value != 0)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treverse = reverse * 10 + value % 10;");
+        WriteLine("\t\t\t\tvalue /= 10;");
+        WriteLine("\t\t\t}");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\treturn reverse;");
+        WriteLine("\t\t}");
+    }
+
+    void Reverse()
+    {
+        ForEach(types.Where(NotChar).Where(IsIntType), ReverseFunc);
+    }
 #>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
     public static partial class MathUtils
@@ -1341,6 +1363,8 @@ namespace NetExtender.Utils.Numerics
     Variance();
     WriteLine(String.Empty);
     StandardDeviation();
+    WriteLine(String.Empty);
+    Reverse();
 #>
     }
 

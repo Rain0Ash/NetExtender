@@ -3,7 +3,6 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using System.Runtime.ConstrainedExecution;
 using JetBrains.Annotations;
 
 namespace NetExtender.Utils.Types

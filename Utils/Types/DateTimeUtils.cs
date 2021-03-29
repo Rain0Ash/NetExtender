@@ -2,7 +2,9 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Data.SqlTypes;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using NetExtender.Utils.Numerics;
 using NetExtender.Times;
 
@@ -110,12 +112,83 @@ namespace NetExtender.Utils.Types
             return new DateTime(year, (Int32) month, day, hour, minute, second, millisecond, calendar, kind);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime ToKind(this DateTime value, DateTimeKind kind)
+        {
+            return kind switch
+            {
+                DateTimeKind.Unspecified => value.ToSpecifyKind(kind),
+                DateTimeKind.Utc => value.ToUtcKind(),
+                DateTimeKind.Local => value.ToLocalKind(),
+                _ => throw new NotSupportedException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime ToUtcKind(this DateTime value)
+        {
+            return value.Kind switch
+            {
+                DateTimeKind.Unspecified => DateTime.SpecifyKind(value, DateTimeKind.Utc),
+                DateTimeKind.Local => value.ToUniversalTime(),
+                _ => value
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime? ToUtcKind(this DateTime? value)
+        {
+            return value is not null ? ToUtcKind(value.Value) : null;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime ToLocalKind(this DateTime value)
+        {
+            return value.Kind switch
+            {
+                DateTimeKind.Unspecified => DateTime.SpecifyKind(value, DateTimeKind.Local),
+                DateTimeKind.Utc => value.ToLocalTime(),
+                _ => value
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime? ToLocalKind(this DateTime? value)
+        {
+            return value is not null ? ToLocalKind(value.Value) : null;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime ToSpecifyKind(this DateTimeKind kind, DateTime value)
+        {
+            return ToSpecifyKind(value, kind);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime ToSpecifyKind(this DateTime value, DateTimeKind kind)
+        {
+            return value.Kind == kind ? value : DateTime.SpecifyKind(value, kind);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime? ToSpecifyKind(this DateTimeKind kind, DateTime? value)
+        {
+            return ToSpecifyKind(value, kind);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime? ToSpecifyKind(this DateTime? value, DateTimeKind kind)
+        {
+            return value?.ToSpecifyKind(kind);
+        }
+
         /// <summary>
         /// Adds the number of weeks to the date
         /// </summary>
         /// <param name="date">Date input</param>
         /// <param name="weeks">Number of weeks to add</param>
         /// <returns>The date after the number of weeks are added</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime AddWeeks(this DateTime date, Int32 weeks)
         {
             return date.AddDays(weeks * 7);
@@ -127,6 +200,7 @@ namespace NetExtender.Utils.Types
         /// <param name="date">Birth date</param>
         /// <param name="second">Date to calculate from</param>
         /// <returns>The total age in years</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 Age(this DateTime date, DateTime second = default)
         {
             if (second == default)
@@ -350,12 +424,13 @@ namespace NetExtender.Utils.Types
         /// Converts a DateTime to a specific time zone
         /// </summary>
         /// <param name="date">DateTime to convert</param>
-        /// <param name="timeZone">Time zone to convert to</param>
+        /// <param name="zone">Time zone to convert to</param>
         /// <returns>The converted DateTime</returns>
-        public static DateTime To(this DateTime date, TimeZoneInfo timeZone)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime To(this DateTime date, TimeZoneInfo zone)
         {
-            timeZone ??= TimeZoneInfo.Utc;
-            return TimeZoneInfo.ConvertTime(date, timeZone);
+            zone ??= TimeZoneInfo.Utc;
+            return TimeZoneInfo.ConvertTime(date, zone);
         }
 
         /// <summary>
@@ -411,6 +486,7 @@ namespace NetExtender.Utils.Types
         /// </summary>
         /// <param name="date">Date to get the offset of</param>
         /// <returns>UTC offset</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double UTCOffset(this DateTime date)
         {
             return (date - date.ToUniversalTime()).TotalHours;
@@ -419,6 +495,7 @@ namespace NetExtender.Utils.Types
         /// <summary>
         /// Returns the end of the current month.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime EndOfMonth()
         {
             return EndOfMonth(DateTime.Today);
@@ -428,6 +505,7 @@ namespace NetExtender.Utils.Types
         /// Returns the end of the month of the specified date.
         /// </summary>
         /// <param name="date">The source date.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime EndOfMonth(this DateTime date)
         {
             return new DateTime(date.Year, date.Month, DateTime.DaysInMonth(date.Year, date.Month));
@@ -436,6 +514,7 @@ namespace NetExtender.Utils.Types
         /// <summary>
         /// Returns the end of the current week (sunday).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime EndOfWeek()
         {
             return EndOfWeek(DateTime.Today);
@@ -463,6 +542,7 @@ namespace NetExtender.Utils.Types
         /// Ignores the year. 2000-01-01 and 2001-01-01 will return true.
         /// </para>
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsCurrentMonth(this DateTime date)
         {
             return DateTime.Today.Month == date.Month;
@@ -472,6 +552,7 @@ namespace NetExtender.Utils.Types
         /// Determines whether the provided text represents a valid <see cref="DateTime"/>.
         /// </summary>
         /// <param name="text">A string, possibly representing a valid date and time.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsDateTime(String text)
         {
             return DateTime.TryParse(text, out _);
@@ -481,6 +562,7 @@ namespace NetExtender.Utils.Types
         /// Determines whether this date is in the future. Ignores time.
         /// </summary>
         /// <param name="date">The source date.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsFutureDate(this DateTime date)
         {
             return date.Date.CompareTo(DateTime.Today) > 0;
@@ -490,6 +572,7 @@ namespace NetExtender.Utils.Types
         /// Determines whether this datetime is in the future.
         /// </summary>
         /// <param name="date">The source date.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsFuture(this DateTime date)
         {
             return date.CompareTo(DateTime.Now) > 0;
@@ -499,6 +582,7 @@ namespace NetExtender.Utils.Types
         /// Returns the next date from today on the specified day of the week. If the specified day of the week is today, it returns the next week.
         /// </summary>
         /// <param name="day">The target day of the week.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime NextOnDay(DayOfWeek day)
         {
             return NextOnDay(DateTime.Today, day);
@@ -509,6 +593,7 @@ namespace NetExtender.Utils.Types
         /// </summary>
         /// <param name="date">The source date.</param>
         /// <param name="day">The target day of the week.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime NextOnDay(this DateTime date, DayOfWeek day)
         {
             return date.AddDays(Time.DaysInWeek - ((Int32) date.DayOfWeek - (Int32) day).Abs());
@@ -517,6 +602,7 @@ namespace NetExtender.Utils.Types
         /// <summary>
         /// Returns the start of the current month.
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime StartOfMonth()
         {
             return StartOfMonth(DateTime.Today);
@@ -526,6 +612,7 @@ namespace NetExtender.Utils.Types
         /// Returns the start of the month of the specified date.
         /// </summary>
         /// <param name="date">The source date.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime StartOfMonth(this DateTime date)
         {
             return new DateTime(date.Year, date.Month, 1);
@@ -534,6 +621,7 @@ namespace NetExtender.Utils.Types
         /// <summary>
         /// Returns the start of the current week (monday).
         /// </summary>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime StartOfWeek()
         {
             return StartOfWeek(DateTime.Today);
@@ -557,17 +645,20 @@ namespace NetExtender.Utils.Types
 
             return date.Date.AddDays(diff);
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 Quarter(this DateTime date)
         {
             return (date.Month + 2) / 3;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime AddQuarters(this DateTime date, Int32 quarters)
         {
             return date.AddMonths(quarters * 3);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
         private static void CheckQuarter(Int32 quarter)
         {
@@ -577,49 +668,57 @@ namespace NetExtender.Utils.Types
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime GetFirstDayOfQuarter(Int32 year, Int32 quarter)
         {
             CheckQuarter(quarter);
             return new DateTime(year, 1, 1).AddQuarters(quarter - 1);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime FirstDayOfQuarter(this DateTime date)
         {
             return new DateTime(date.Year, 1, 1).AddQuarters(date.Quarter() - 1);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime GetLastDayOfQuarter(Int32 year, Int32 quarter)
         {
             CheckQuarter(quarter);
             return new DateTime(year, 1, 1).AddQuarters(quarter).AddDays(-1);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime LastDayOfQuarter(this DateTime date)
         {
             return new DateTime(date.Year, 1, 1).AddQuarters(date.Quarter()).AddDays(-1);
         }
 
-        public static Boolean AreDatesInSameYearAndQuarter(DateTime first, DateTime second)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean AreDatesInSameYearAndQuarter(this DateTime first, DateTime second)
         {
             return FirstDayOfQuarter(first) == FirstDayOfQuarter(second);
         }
 
-        public static Boolean IsDateInYearAndQuarter(DateTime date, Int32 year, Int32 quarter)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsDateInYearAndQuarter(this DateTime date, Int32 year, Int32 quarter)
         {
             CheckQuarter(quarter);
             return date.Year == year && date.Quarter() == quarter;
         }
-        
-        public static DateTime Min(DateTime first, DateTime second)
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime Min(this DateTime first, DateTime second)
         {
             return first < second ? first : second;
         }
 
-        public static DateTime Max(DateTime first, DateTime second)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime Max(this DateTime first, DateTime second)
         {
             return first > second ? first : second;
         }
-        
+
         /// <summary>
         /// Set date of datetime
         /// </summary>
@@ -628,11 +727,12 @@ namespace NetExtender.Utils.Types
         /// <param name="month">Month to set</param>
         /// <param name="day">Day to set</param>
         /// <returns>new date</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime SetDate(this DateTime date, Int32 year, Month month, Int32 day)
         {
             return SetDate(date, year, (Int32) month + 1, day);
         }
-        
+
         /// <summary>
         /// Set date of datetime
         /// </summary>
@@ -641,6 +741,7 @@ namespace NetExtender.Utils.Types
         /// <param name="month">Month to set</param>
         /// <param name="day">Day to set</param>
         /// <returns>new date</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime SetDate(this DateTime date, Int32 year, Int32 month, Int32 day)
         {
             return new DateTime(year, month, day, date.Hour, date.Minute, date.Second, date.Millisecond, date.Kind);
@@ -652,6 +753,7 @@ namespace NetExtender.Utils.Types
         /// <param name="date">Date to set date</param>
         /// <param name="year">Year to set</param>
         /// <returns>new date</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime SetYear(this DateTime date, Int32 year)
         {
             return SetDate(date, year, date.Month, date.Day);
@@ -663,17 +765,19 @@ namespace NetExtender.Utils.Types
         /// <param name="date">Date to set date</param>
         /// <param name="month">Month to set</param>
         /// <returns>new date</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime SetMonth(this DateTime date, Int32 month)
         {
             return SetDate(date, date.Year, month, date.Day);
         }
-        
+
         /// <summary>
         /// Set month of date
         /// </summary>
         /// <param name="date">Date to set date</param>
         /// <param name="month">Month to set</param>
         /// <returns>new date</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime SetMonth(this DateTime date, Month month)
         {
             return SetMonth(date, (Int32) month + 1);
@@ -685,11 +789,12 @@ namespace NetExtender.Utils.Types
         /// <param name="date">Date to set date</param>
         /// <param name="day">Day to set</param>
         /// <returns>new date</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime SetDay(this DateTime date, Int32 day)
         {
             return SetDate(date, date.Year, date.Month, day);
         }
-        
+
         /// <summary>
         /// Set time of date
         /// </summary>
@@ -699,6 +804,7 @@ namespace NetExtender.Utils.Types
         /// <param name="second">Seconds to add</param>
         /// <param name="millisecond">Milliseconds to add</param>
         /// <returns>Date with new time</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime SetTime(this DateTime date, Int32 hour, Int32 minute, Int32 second, Int32 millisecond)
         {
             return new DateTime(date.Year, date.Month, date.Day, hour, minute, second, millisecond, date.Kind);
@@ -712,6 +818,7 @@ namespace NetExtender.Utils.Types
         /// <param name="minute">Minutes to add</param>
         /// <param name="second">Seconds to add</param>
         /// <returns>Date with new time</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime SetTime(this DateTime date, Int32 hour, Int32 minute, Int32 second)
         {
             return SetTime(date, hour, minute, second, date.Millisecond);
@@ -724,6 +831,7 @@ namespace NetExtender.Utils.Types
         /// <param name="hour">Hours to add</param>
         /// <param name="minute">Minutes to add</param>
         /// <returns>Date with new time</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime SetTime(this DateTime date, Int32 hour, Int32 minute)
         {
             return SetTime(date, hour, minute, date.Second, date.Millisecond);
@@ -735,6 +843,7 @@ namespace NetExtender.Utils.Types
         /// <param name="date">Date to set time</param>
         /// <param name="hour">Hours to set</param>
         /// <returns>Date with new time</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime SetHour(this DateTime date, Int32 hour)
         {
             return SetTime(date, hour, date.Minute, date.Second, date.Millisecond);
@@ -746,6 +855,7 @@ namespace NetExtender.Utils.Types
         /// <param name="date">Date to set time</param>
         /// <param name="minute">Minute to set</param>
         /// <returns>Date with new time</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime SetMinute(this DateTime date, Int32 minute)
         {
             return SetTime(date, date.Hour, minute, date.Second, date.Millisecond);
@@ -757,6 +867,7 @@ namespace NetExtender.Utils.Types
         /// <param name="date">Date to set time</param>
         /// <param name="second">Second to set</param>
         /// <returns>Date with new time</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime SetSecond(this DateTime date, Int32 second)
         {
             return SetTime(date, date.Hour, date.Minute, second, date.Millisecond);
@@ -768,20 +879,36 @@ namespace NetExtender.Utils.Types
         /// <param name="date">Date to set time</param>
         /// <param name="millisecond">Millisecond to set</param>
         /// <returns>Date with new time</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime SetMillisecond(this DateTime date, Int32 millisecond)
         {
             return SetTime(date, date.Hour, date.Minute, date.Second, millisecond);
         }
-        
+
         /// <summary>
         /// Sets the time portion of a specific date
         /// </summary>
         /// <param name="date">Date input</param>
         /// <param name="time">Time to set</param>
         /// <returns>Sets the time portion of the specified date</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime SetTime(this DateTime date, TimeSpan time)
         {
             return date.Date.Add(time);
+        }
+        
+        /// <summary>
+        ///     Checks if <paramref name="value" /> is between 1/1/1753 12:00:00 AM and 12/31/9999 11:59:59 PM.
+        /// </summary>
+        /// <remarks>
+        ///     SQL Server defines two different datetime formats:
+        ///     The datetime datatype is capable of storing dates in the range 1753-01-01 to 9999-12-31.
+        ///     The datetime2 datatype was introduced in SQL Server 2008. The range of dates that it is capable of storing is
+        ///     0001-01-01 to 9999-12-31.
+        /// </remarks>
+        private static Boolean IsSqlServerDatetime(this DateTime value)
+        {
+            return value >= SqlDateTime.MinValue.Value && value <= SqlDateTime.MaxValue.Value;
         }
     }
 }

@@ -2,14 +2,11 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Drawing;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using NetExtender.Random;
 using NetExtender.Random.Interfaces;
-using NetExtender.Types.Drawing.Colors.Interfaces;
-using NetExtender.Utils.Types;
 
 namespace NetExtender.Utils.Numerics
 {

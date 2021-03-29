@@ -25,14 +25,14 @@ namespace NetExtender.Utils.IO
             return TryCreateDirectory(path, remove, out _);
         }
 
-        public static Boolean TryCreateDirectory(String path, out DirectoryInfo directoryInfo)
+        public static Boolean TryCreateDirectory(String path, out DirectoryInfo info)
         {
-            return TryCreateDirectory(path, PathAction.Standard, out directoryInfo);
+            return TryCreateDirectory(path, PathAction.Standard, out info);
         }
 
-        public static Boolean TryCreateDirectory(String path, PathAction remove, out DirectoryInfo directoryInfo)
+        public static Boolean TryCreateDirectory(String path, PathAction remove, out DirectoryInfo info)
         {
-            directoryInfo = null;
+            info = null;
 
             try
             {
@@ -41,7 +41,7 @@ namespace NetExtender.Utils.IO
                     return true;
                 }
 
-                directoryInfo = Directory.CreateDirectory(path);
+                info = Directory.CreateDirectory(path);
 
                 return Directory.Exists(path);
             }
@@ -212,6 +212,18 @@ namespace NetExtender.Utils.IO
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
         private struct WIN32_FIND_DATA
         {
+            public static implicit operator FileData(WIN32_FIND_DATA data)
+            {
+                return new FileData
+                {
+                    Attributes = (FileAttributes) data.dwFileAttributes,
+                    CreationTime = new DateTime(BitUtils.ToInt64(data.ftCreationTime.dwHighDateTime, data.ftCreationTime.dwLowDateTime)),
+                    LastAccessTime = new DateTime(BitUtils.ToInt64(data.ftLastAccessTime.dwHighDateTime, data.ftLastAccessTime.dwLowDateTime)),
+                    LastWriteTime = new DateTime(BitUtils.ToInt64(data.ftLastWriteTime.dwHighDateTime, data.ftLastWriteTime.dwLowDateTime)),
+                    FileSize = BitUtils.ToUInt64(data.nFileSizeHigh, data.nFileSizeLow)
+                };
+            }
+            
             public UInt32 dwFileAttributes;
             public FILETIME ftCreationTime;
             public FILETIME ftLastAccessTime;
@@ -282,7 +294,7 @@ namespace NetExtender.Utils.IO
             return GetEntries(path, regex, recursive, PathType.File);
         }
 
-        public static IEnumerable<KeyValuePair<String, UInt64>> GetFilesWithSize([NotNull] String path, Boolean recursive = false)
+        private static IEnumerable<KeyValuePair<String, WIN32_FIND_DATA>> GetFilesWindowsData([NotNull] String path, Boolean recursive = false)
         {
             if (String.IsNullOrEmpty(path))
             {
@@ -302,7 +314,7 @@ namespace NetExtender.Utils.IO
             {
                 yield break;
             }
-
+            
             try
             {
                 do
@@ -321,14 +333,14 @@ namespace NetExtender.Utils.IO
                             continue;
                         }
 
-                        foreach (KeyValuePair<String, UInt64> entry in GetFilesWithSize(entryname, true))
+                        foreach (KeyValuePair<String, WIN32_FIND_DATA> entry in GetFilesWindowsData(entryname, true))
                         {
                             yield return entry;
                         }
                     }
                     else
                     {
-                        yield return new KeyValuePair<String, UInt64>(entryname, BitUtils.ToUInt64(data.nFileSizeHigh, data.nFileSizeLow));
+                        yield return new KeyValuePair<String, WIN32_FIND_DATA>(entryname, data);
                     }
                 } while (FindNextFileW(handle, out data));
             }
@@ -336,6 +348,21 @@ namespace NetExtender.Utils.IO
             {
                 FindClose(handle);
             }
+        }
+
+        public static IEnumerable<KeyValuePair<String, FileData>> GetFilesData([NotNull] String path, Boolean recursive = false)
+        {
+            return GetFilesWindowsData(path, recursive).Select(pair => new KeyValuePair<String, FileData>(pair.Key, pair.Value));
+        }
+        
+        public static IEnumerable<KeyValuePair<String, UInt64>> GetFilesSize([NotNull] String path, Boolean recursive = false)
+        {
+            return GetFilesWindowsData(path, recursive).Select(pair => new KeyValuePair<String, UInt64>(pair.Key, BitUtils.ToUInt64(pair.Value.nFileSizeHigh, pair.Value.nFileSizeLow)));
+        }
+
+        public static IEnumerable<FileInfo> GetFilesInfo([NotNull] String path, Boolean recursive = false)
+        {
+            return GetFiles(path, recursive).TrySelect(entry => new FileInfo(entry));
         }
 
         public static IEnumerable<String> GetEntries([NotNull] String path, [NotNull] [RegexPattern] String pattern, Boolean recursive = false, PathType type = PathType.All)

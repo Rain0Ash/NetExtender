@@ -3,11 +3,10 @@
 
 using System;
 using System.Windows.Forms;
-using NetExtender.Utils.IO;
 
 namespace NetExtender.GUI.Common.Interfaces
 {
-    public interface IWindow : IGUIHandle, IConsoleWindowExitHandler
+    public interface IWindow : IGUIHandle, IWindowExitHandler
     {
         public String Name { get; set; }
 

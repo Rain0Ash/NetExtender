@@ -32,7 +32,7 @@ namespace NetExtender.Utils.Types
     public static class ConvertUtils
     {
         public const EscapeType DefaultEscapeType = EscapeType.Null;
-        
+
         public static T CastConvert<T>(this Object obj)
         {
             if (TryConvert(obj, out T value))
@@ -317,7 +317,7 @@ namespace NetExtender.Utils.Types
             return GetString(value, EscapeType.None, provider);
         }
 
-        public static String GetStringEscape<T>(this T value, IFormatProvider provider)
+        public static String GetStringEscape<T>(T value, IFormatProvider provider)
         {
             return GetString(value, EscapeType.FullWithNull, provider);
         }
@@ -349,8 +349,37 @@ namespace NetExtender.Utils.Types
                 IEnumerable enumerable => enumerable.GetString(escape, provider),
                 IFormattable formattable => formattable.ToString(null, provider),
                 IConvertible convertible => convertible.ToString(provider),
-                _ => value.ToString()
+                _ => ToStringUnknown(value, escape, provider)
             };
+        }
+
+        private static String GetStringUnknown(Object value, EscapeType escape, IFormatProvider provider)
+        {
+            return GetStringUnknownInternal(value, escape, provider, out String result) ? result : value.GetString(escape, provider);
+        }
+        
+        private static String ToStringUnknown(Object value, EscapeType escape, IFormatProvider provider)
+        {
+            return GetStringUnknownInternal(value, escape, provider, out String result) ? result : value.ToString();
+        }
+
+        private static Boolean GetStringUnknownInternal(Object value, EscapeType escape, IFormatProvider provider, out String result)
+        {
+            if (value.GetType().TryGetGenericTypeDefinition() == KeyValuePairType)
+            {
+                dynamic item = value;
+                result = $"{{{((Object) item.Key).GetString(escape, provider)} : {((Object) item.Value).GetString(escape, provider)}}}";
+                return true;
+            }
+
+            if (value is DictionaryEntry entry)
+            {
+                result = $"{{{entry.Key.GetString(escape, provider)} : {entry.Value.GetString(escape, provider)}}}";
+                return true;
+            }
+
+            result = default;
+            return false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -677,20 +706,7 @@ namespace NetExtender.Utils.Types
 
             foreach (Object obj in dictionary)
             {
-                if (obj.GetType().TryGetGenericTypeDefinition() == KeyValuePairType)
-                {
-                    dynamic item = obj;
-                    yield return $"{{{((Object) item.Key).GetString(escape, provider)} : {((Object) item.Value).GetString(escape, provider)}}}";
-                    continue;
-                }
-
-                if (obj is DictionaryEntry entry)
-                {
-                    yield return $"{{{entry.Key.GetString(escape, provider)} : {entry.Value.GetString(escape, provider)}}}";
-                    continue;
-                }
-
-                yield return obj.GetString();
+                yield return GetStringUnknown(obj, escape, provider);
             }
         }
 
@@ -831,6 +847,12 @@ namespace NetExtender.Utils.Types
 
         public static Boolean TryConvert<T>(this String input, CultureInfo info, ITypeDescriptorContext context, out T result)
         {
+            if (typeof(T) == typeof(String))
+            {
+                result = (T) (Object) input;
+                return true;
+            }
+            
             if (typeof(T) == typeof(Boolean))
             {
                 Boolean convert = ToBoolean(input);
@@ -840,11 +862,19 @@ namespace NetExtender.Utils.Types
             
             try
             {
-                TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
+                try
+                {
+                    result = (T) System.Convert.ChangeType(input, typeof(T));
+                    return true;
+                }
+                catch (Exception)
+                {
+                    TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
 
-                result = (T) converter.ConvertFromString(context, info, input);
+                    result = (T) converter.ConvertFromString(context, info, input);
 
-                return true;
+                    return true;
+                }
             }
             catch (Exception)
             {
@@ -855,6 +885,12 @@ namespace NetExtender.Utils.Types
 
         public static Boolean TryConvert<TInput, TOutput>(this TInput input, out TOutput result)
         {
+            if (typeof(TInput) == typeof(TOutput))
+            {
+                result = (TOutput) (Object) input;
+                return true;
+            }
+            
             if (typeof(TOutput) == typeof(Boolean))
             {
                 Boolean convert = ToBoolean(input);
@@ -864,11 +900,19 @@ namespace NetExtender.Utils.Types
 
             try
             {
-                TypeConverter converter = TypeDescriptor.GetConverter(typeof(TOutput));
+                try
+                {
+                    result = (TOutput) System.Convert.ChangeType(input, typeof(TOutput));
+                    return true;
+                }
+                catch (Exception)
+                {
+                    TypeConverter converter = TypeDescriptor.GetConverter(typeof(TOutput));
 
-                result = converter.ConvertFrom(input) is TOutput output ? output : default;
+                    result = converter.ConvertFrom(input) is TOutput output ? output : default;
 
-                return true;
+                    return true;
+                }
             }
             catch (Exception)
             {

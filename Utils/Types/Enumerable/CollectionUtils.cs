@@ -48,6 +48,11 @@ namespace NetExtender.Utils.Types
             return combo.ToList();
         }
 
+        public static void AddRange<T>([NotNull] this ICollection<T> collection, [NotNull] params T[] items)
+        {
+            AddRange(collection, (IEnumerable<T>) items);
+        }
+
         public static void AddRange<T>([NotNull] this ICollection<T> collection, [NotNull] IEnumerable<T> items)
         {
             if (collection is null)

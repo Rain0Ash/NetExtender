@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using NetExtender.GUI.Common.Interfaces;
 using NetExtender.GUI.WinForms.Forms;
 
 namespace NetExtender.Utils.IO
@@ -54,8 +55,8 @@ namespace NetExtender.Utils.IO
                 }
             }
 
-            private static IConsoleWindowExitHandler window;
-            public static IConsoleWindowExitHandler ExitWindow
+            private static IWindowExitHandler window;
+            public static IWindowExitHandler ExitWindow
             {
                 get
                 {

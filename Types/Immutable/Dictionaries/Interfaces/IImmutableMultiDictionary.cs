@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using JetBrains.Annotations;
 using NetExtender.Types.Dictionaries.Interfaces;
 
 namespace NetExtender.Types.Immutable.Dictionaries.Interfaces

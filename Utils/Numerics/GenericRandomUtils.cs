@@ -3870,13 +3870,13 @@ namespace NetExtender.Utils.Numerics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static SByte NextSignSByte(this System.Random random, Double chance = 0.5)
 		{
-			return NextBoolean(random, chance) ? 1 : -1;
+			return (SByte) (NextBoolean(random, chance) ? 1 : -1);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static SByte NextSignSByte(this IRandom random, Double chance = 0.5)
 		{
-			return NextBoolean(random, chance) ? 1 : -1;
+			return (SByte) (NextBoolean(random, chance) ? 1 : -1);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3888,13 +3888,13 @@ namespace NetExtender.Utils.Numerics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int16 NextSignInt16(this System.Random random, Double chance = 0.5)
 		{
-			return NextBoolean(random, chance) ? 1 : -1;
+			return (Int16) (NextBoolean(random, chance) ? 1 : -1);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int16 NextSignInt16(this IRandom random, Double chance = 0.5)
 		{
-			return NextBoolean(random, chance) ? 1 : -1;
+			return (Int16) (NextBoolean(random, chance) ? 1 : -1);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

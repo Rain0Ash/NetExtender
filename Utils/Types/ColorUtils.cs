@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using JetBrains.Annotations;
-using NAudio.SoundFont;
 using NetExtender.Random.Interfaces;
 using NetExtender.Types.Drawing.Colors;
 using NetExtender.Types.Drawing.Colors.Interfaces;
@@ -912,9 +911,9 @@ namespace NetExtender.Utils.Types
                 _ => 0d
             };
 
-            r = red < Double.Epsilon ? 0 : (Byte) Math.Round(IntensityMax * Math.Pow(red * factor, Gamma));
-            g = green < Double.Epsilon ? 0 : (Byte) Math.Round(IntensityMax * Math.Pow(green * factor, Gamma));
-            b = blue < Double.Epsilon ? 0 : (Byte) Math.Round(IntensityMax * Math.Pow(blue * factor, Gamma));
+            r = red < Double.Epsilon ? (Byte) 0 : (Byte) Math.Round(IntensityMax * Math.Pow(red * factor, Gamma));
+            g = green < Double.Epsilon ? (Byte) 0 : (Byte) Math.Round(IntensityMax * Math.Pow(green * factor, Gamma));
+            b = blue < Double.Epsilon ? (Byte) 0 : (Byte) Math.Round(IntensityMax * Math.Pow(blue * factor, Gamma));
             return true;
         }
         

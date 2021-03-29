@@ -11,7 +11,6 @@ using System.Xml.Linq;
 using System.Xml.Serialization;
 using NetExtender.Utils.Types;
 using JetBrains.Annotations;
-using NetExtender.Utils.IO;
 using Newtonsoft.Json;
 
 namespace NetExtender.Utils.Formats
@@ -540,18 +539,8 @@ namespace NetExtender.Utils.Formats
         /// <param name="root"></param>
         public static void XMLToObject<T>(String path, out T result, String root)
         {
-            if (String.IsNullOrEmpty(path))
-            {
-                throw new ArgumentException("File name can not be null/empty");
-            }
-
-            if (!PathUtils.IsExistAsFile(path))
-            {
-                throw new ArgumentException("File does not exist");
-            }
-
-            String content = FileUtils.GetFileContents(path);
-            result = XMLToObject<T>(content, root);
+            using StreamReader reader = File.OpenText(path);
+            result = XMLToObject<T>(reader.ReadToEnd(), root);
         }
 
         /// <summary>
@@ -582,18 +571,8 @@ namespace NetExtender.Utils.Formats
         /// <param name="root"></param>
         public static void XMLToObject(String path, out Object result, Type type, String root)
         {
-            if (String.IsNullOrEmpty(path))
-            {
-                throw new ArgumentException("File name can not be null/empty");
-            }
-
-            if (!PathUtils.IsExistAsFile(path))
-            {
-                throw new ArgumentException("File does not exist");
-            }
-
-            String content = FileUtils.GetFileContents(path);
-            result = XMLToObject(content, type, root);
+            using StreamReader reader = File.OpenText(path);
+            result = XMLToObject(reader.ReadToEnd(), type, root);
         }
 
         /// <summary>

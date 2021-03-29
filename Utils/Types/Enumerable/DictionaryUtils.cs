@@ -7,7 +7,6 @@ using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using NetExtender.Types.Immutable.Dictionaries;
-using NetExtender.Types.Immutable.Dictionaries.Interfaces;
 
 namespace NetExtender.Utils.Types
 {

@@ -9,13 +9,11 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
-using NetExtender.Random;
 using NetExtender.Random.Interfaces;
 using NetExtender.Types.Collections;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Sets.Interfaces;
 using NetExtender.Utils.Core;
-using NetExtender.Utils.IO;
 using NetExtender.Utils.Numerics;
 
 namespace NetExtender.Utils.Types
@@ -640,16 +638,14 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            try
+            foreach (T item in source)
             {
-                result = source.First();
+                result = item;
                 return true;
             }
-            catch (InvalidOperationException)
-            {
-                result = default;
-                return false;
-            }
+            
+            result = default;
+            return false;
         }
 
         public static Boolean TryGetFirst<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> predicate, out T result)
@@ -663,17 +659,20 @@ namespace NetExtender.Utils.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-
-            try
+            
+            foreach (T item in source)
             {
-                result = source.First(predicate);
+                if (!predicate(item))
+                {
+                    continue;
+                }
+                
+                result = item;
                 return true;
             }
-            catch (InvalidOperationException)
-            {
-                result = default;
-                return false;
-            }
+            
+            result = default;
+            return false;
         }
 
         public static Boolean TryGetLast<T>([NotNull] this IEnumerable<T> source, out T result)
@@ -759,19 +758,34 @@ namespace NetExtender.Utils.Types
             return source.Where(item => item is not null);
         }
 
-        public static IEnumerable<T> WhereNotNull<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where)
+        public static IEnumerable<T> WhereNotNull<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> predicate)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (where is null)
+            if (predicate is null)
             {
-                throw new ArgumentNullException(nameof(where));
+                throw new ArgumentNullException(nameof(predicate));
             }
 
-            return source.WhereNotNull().Where(where);
+            return source.WhereNotNull().Where(predicate);
+        }
+        
+        public static IEnumerable<T> WhereNotNull<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Int32, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.WhereNotNull().Where(predicate);
         }
 
         public static IEnumerable<T> WhereSame<T>([NotNull] this IEnumerable<T> source)
@@ -901,6 +915,36 @@ namespace NetExtender.Utils.Types
             }
         }
 
+        /// <inheritdoc cref="Every{T}(System.Collections.Generic.IEnumerable{T},int,bool)"/>>
+        public static IEnumerable<T> Every<T>([NotNull] this IEnumerable<T> source, Int32 every)
+        {
+            return Every(source, every, false);
+        }
+
+        /// <summary>
+        /// Return first item and then every n-th item
+        /// </summary>
+        /// <param name="source">Source</param>
+        /// <param name="every">Every n-th item</param>
+        /// <param name="first">Start from first value</param>
+        /// <typeparam name="T">Type</typeparam>
+        /// <returns></returns>
+        public static IEnumerable<T> Every<T>([NotNull] this IEnumerable<T> source, Int32 every, Boolean first)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (every <= 1)
+            {
+                return source;
+            }
+
+            Int32 counter = first ? 0 : 1;
+            return source.Where(_ => counter++ % every == 0);
+        }
+
         public static IEnumerable<T> AppendAggregate<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, T, T> aggregate)
         {
             if (source is null)
@@ -991,18 +1035,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            foreach (T item in source)
-            {
-                if (!where(item))
-                {
-                    continue;
-                }
-
-                foreach (TResult result in selector(item))
-                {
-                    yield return result;
-                }
-            }
+            return source.Where(where).SelectMany(selector);
         }
 
         public static IEnumerable<TResult> SelectManyWhereNot<T, TResult>(this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, Func<T, IEnumerable<TResult>> selector)
@@ -1022,18 +1055,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            foreach (T item in source)
-            {
-                if (where(item))
-                {
-                    continue;
-                }
-
-                foreach (TResult result in selector(item))
-                {
-                    yield return result;
-                }
-            }
+            return source.WhereNot(where).SelectMany(selector);
         }
 
         public static IEnumerable<TResult> TrySelect<T, TResult>([NotNull] this IEnumerable<T> source, Func<T, TResult> predicate)
@@ -1297,7 +1319,7 @@ namespace NetExtender.Utils.Types
             }
         }
 
-        public static IEnumerable<TOut> SelectWhere<T, TOut>([NotNull] this IEnumerable<T> source, Func<T, Boolean> where, Func<T, TOut> select)
+        public static IEnumerable<TOut> SelectWhere<T, TOut>([NotNull] this IEnumerable<T> source, Func<T, Boolean> where, Func<T, TOut> selector)
         {
             if (source is null)
             {
@@ -1309,15 +1331,15 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(where));
             }
 
-            if (select is null)
+            if (selector is null)
             {
-                throw new ArgumentNullException(nameof(select));
+                throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.Where(where).Select(select);
+            return source.Where(where).Select(selector);
         }
 
-        public static IEnumerable<TOut> SelectWhereNot<T, TOut>([NotNull] this IEnumerable<T> source, Func<T, Boolean> where, Func<T, TOut> select)
+        public static IEnumerable<TOut> SelectWhereNot<T, TOut>([NotNull] this IEnumerable<T> source, Func<T, Boolean> where, Func<T, TOut> selector)
         {
             if (source is null)
             {
@@ -1329,50 +1351,185 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(where));
             }
 
-            if (select is null)
+            if (selector is null)
             {
-                throw new ArgumentNullException(nameof(select));
+                throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.WhereNot(where).Select(select);
+            return source.WhereNot(where).Select(selector);
         }
-
-        public static IEnumerable<T> Change<T>([NotNull] this IEnumerable<T> source, Func<T, T> predicate)
+        
+        public static IEnumerable<TOut> SelectWhere<T, TOut>([NotNull] this IEnumerable<T> source, Func<T, Int32, Boolean> where, Func<T, TOut> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (predicate is null)
+            if (where is null)
             {
-                throw new ArgumentNullException(nameof(predicate));
+                throw new ArgumentNullException(nameof(where));
             }
 
-            return source.Select(predicate);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Where(where).Select(selector);
         }
 
-        public static IEnumerable<T> ChangeWhere<T>([NotNull] this IEnumerable<T> source, Func<T, (Boolean, T)> predicate)
+        public static IEnumerable<TOut> SelectWhereNot<T, TOut>([NotNull] this IEnumerable<T> source, Func<T, Int32, Boolean> where, Func<T, TOut> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (predicate is null)
+            if (where is null)
             {
-                throw new ArgumentNullException(nameof(predicate));
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.WhereNot(where).Select(selector);
+        }
+        
+        public static IEnumerable<TOut> SelectWhere<T, TOut>([NotNull] this IEnumerable<T> source, Func<T, Boolean> where, Func<T, Int32, TOut> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Where(where).Select(selector);
+        }
+
+        public static IEnumerable<TOut> SelectWhereNot<T, TOut>([NotNull] this IEnumerable<T> source, Func<T, Boolean> where, Func<T, Int32, TOut> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.WhereNot(where).Select(selector);
+        }
+        
+        public static IEnumerable<TOut> SelectWhere<T, TOut>([NotNull] this IEnumerable<T> source, Func<T, Int32, Boolean> where, Func<T, Int32, TOut> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Where(where).Select(selector);
+        }
+
+        public static IEnumerable<TOut> SelectWhereNot<T, TOut>([NotNull] this IEnumerable<T> source, Func<T, Int32, Boolean> where, Func<T, Int32, TOut> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.WhereNot(where).Select(selector);
+        }
+
+        public static IEnumerable<T> Change<T>([NotNull] this IEnumerable<T> source, Func<T, T> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Select(selector);
+        }
+        
+        public static IEnumerable<T> Change<T>([NotNull] this IEnumerable<T> source, Func<T, Int32, T> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Select(selector);
+        }
+
+        public static IEnumerable<T> ChangeWhere<T>([NotNull] this IEnumerable<T> source, Func<T, (Boolean, T)> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
             }
 
             foreach (T item in source)
             {
-                (Boolean successful, T output) = predicate(item);
+                (Boolean successful, T output) = selector(item);
 
                 yield return successful ? output : item;
             }
         }
 
-        public static IEnumerable<T> ChangeWhere<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] Func<T, T> predicate)
+        public static IEnumerable<T> ChangeWhere<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] Func<T, T> selector)
         {
             if (source is null)
             {
@@ -1384,15 +1541,15 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(where));
             }
 
-            if (predicate is null)
+            if (selector is null)
             {
-                throw new ArgumentNullException(nameof(predicate));
+                throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.Select(item => where(item) ? predicate(item) : item);
+            return source.Select(item => where(item) ? selector(item) : item);
         }
 
-        public static IEnumerable<T> ChangeWhereNot<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] Func<T, T> predicate)
+        public static IEnumerable<T> ChangeWhereNot<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] Func<T, T> selector)
         {
             if (source is null)
             {
@@ -1404,12 +1561,132 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(where));
             }
 
-            if (predicate is null)
+            if (selector is null)
             {
-                throw new ArgumentNullException(nameof(predicate));
+                throw new ArgumentNullException(nameof(selector));
             }
 
-            return ChangeWhere(source, item => !where(item), predicate);
+            return ChangeWhere(source, item => !where(item), selector);
+        }
+        
+        public static IEnumerable<T> ChangeWhere<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Int32, Boolean> where, [NotNull] Func<T, T> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Select((item, index) => !where(item, index) ? selector(item) : item);
+        }
+
+        public static IEnumerable<T> ChangeWhereNot<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Int32, Boolean> where, [NotNull] Func<T, T> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return ChangeWhere(source, (item, index) => !where(item, index), selector);
+        }
+        
+        public static IEnumerable<T> ChangeWhere<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] Func<T, Int32, T> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Select((item, index) => where(item) ? selector(item, index) : item);
+        }
+
+        public static IEnumerable<T> ChangeWhereNot<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> where, [NotNull] Func<T, Int32, T> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return ChangeWhere(source, item => !where(item), selector);
+        }
+        
+        public static IEnumerable<T> ChangeWhere<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Int32, Boolean> where, [NotNull] Func<T, Int32, T> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Select((item, index) => where(item, index) ? selector(item, index) : item);
+        }
+
+        public static IEnumerable<T> ChangeWhereNot<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Int32, Boolean> where, [NotNull] Func<T, Int32, T> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return ChangeWhere(source, (item, index) => !where(item, index), selector);
         }
 
         public static IEnumerable<TTo> SelectAs<TFrom, TTo>(this IEnumerable<TFrom> source) where TTo : class
@@ -1494,13 +1771,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            foreach (T? item in source)
-            {
-                if (item.HasValue)
-                {
-                    yield return item.Value;
-                }
-            }
+            return source.Where(item => item.HasValue).Select(item => item.Value);
         }
 
         public static IOrderedEnumerable<T> OrderBy<T>([NotNull] this IEnumerable<T> source)
@@ -1759,6 +2030,32 @@ namespace NetExtender.Utils.Types
             }
 
             return ForEachWhere(source, item => !where(item), action);
+        }
+        
+        public static IEnumerable<T> ForEachEvery<T>(this IEnumerable<T> source, Action<T> action, Int32 every)
+        {
+            return ForEachEvery(source, action, every, false);
+        }
+
+        public static IEnumerable<T> ForEachEvery<T>([NotNull] this IEnumerable<T> source, [NotNull] Action<T> action, Int32 every, Boolean first)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (every <= 1)
+            {
+                return ForEach(source, action);
+            }
+            
+            Int32 counter = first ? 0 : 1;
+            return source.ForEachWhere(_ => counter++ % every == 0, action);
         }
 
         public static T FirstOr<T>([NotNull] this IEnumerable<T> source, T alternate)
@@ -2337,7 +2634,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return Shuffle(source, (IRandom) new MersenneTwister());
+            return Shuffle(source, RandomUtils.Generator);
         }
 
         public static IEnumerable<T> Shuffle<T>([NotNull] this IEnumerable<T> source, [NotNull] System.Random random)
@@ -2414,32 +2711,21 @@ namespace NetExtender.Utils.Types
             }
 
             Int32 matches = 0;
-
             // ReSharper disable once PossibleMultipleEnumeration
-            using IEnumerator<T> enumerator = source.GetEnumerator();
-
-            while (enumerator.MoveNext())
-            {
-                if (matches++ >= count)
-                {
-                    return true;
-                }
-            }
-
-            return matches >= count;
+            return source.Any(_ => ++matches >= count);
         }
 
         /// <summary>
-        /// Determines whether the specified sequence contains exactly <paramref name="count"/> or more elements satisfying a condition.
+        /// Determines whether the specified sequence's element count is equal to or greater than <paramref name="count"/>.
         /// </summary>
         /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
         /// <param name="source">The <see cref="IEnumerable{TSource}"/> whose elements to count.</param>
-        /// <param name="count">The minimum number of elements satisfying the specified condition the specified sequence is expected to contain.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="count">The minimum number of elements the specified sequence is expected to contain.</param>
         /// <returns>
-        ///   <c>true</c> if the element count of satisfying elements is equal to or greater than <paramref name="count"/>; otherwise, <c>false</c>.
+        ///   <c>true</c> if the element count of <paramref name="source"/> is equal to or greater than <paramref name="count"/>; otherwise, <c>false</c>.
         /// </returns>
-        public static Boolean HasAtLeast<T>([NotNull] this IEnumerable<T> source, Int32 count, Func<T, Boolean> predicate)
+        public static Boolean HasAtLeast<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Boolean> predicate, Int32 count)
         {
             if (source is null)
             {
@@ -2451,9 +2737,35 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            if (source is ICollection sc && sc.Count < count)
+            if (count <= 0)
             {
-                return false;
+                return true;
+            }
+
+            Int32 matches = 0;
+            return source.Where(predicate).Any(_ => ++matches >= count);
+        }
+        
+        /// <summary>
+        /// Determines whether the specified sequence's element count is equal to or greater than <paramref name="count"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">The <see cref="IEnumerable{TSource}"/> whose elements to count.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="count">The minimum number of elements the specified sequence is expected to contain.</param>
+        /// <returns>
+        ///   <c>true</c> if the element count of <paramref name="source"/> is equal to or greater than <paramref name="count"/>; otherwise, <c>false</c>.
+        /// </returns>
+        public static Boolean HasAtLeast<T>([NotNull] this IEnumerable<T> source, [NotNull] Func<T, Int32, Boolean> predicate, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             if (count <= 0)
@@ -2462,13 +2774,7 @@ namespace NetExtender.Utils.Types
             }
 
             Int32 matches = 0;
-
-            if (source.Where(predicate).Any(_ => ++matches >= count))
-            {
-                return true;
-            }
-
-            return matches >= count;
+            return source.Where(predicate).Any(_ => ++matches >= count);
         }
 
         /// <summary>
@@ -2487,7 +2793,20 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return !HasAtLeast(source, count);
+            // ReSharper disable once PossibleMultipleEnumeration
+            if (source.CountIfMaterialized() <= count)
+            {
+                return true;
+            }
+
+            if (count <= 0)
+            {
+                return false;
+            }
+
+            Int32 matches = 0;
+            // ReSharper disable once PossibleMultipleEnumeration
+            return source.All(_ => ++matches <= count);
         }
 
         /// <summary>
@@ -2495,12 +2814,12 @@ namespace NetExtender.Utils.Types
         /// </summary>
         /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
         /// <param name="source">The <see cref="IEnumerable{TSource}"/> whose elements to count.</param>
-        /// <param name="count">The maximum number of elements satisfying the specified condition the specified sequence is expected to contain.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="count">The maximum number of elements satisfying the specified condition the specified sequence is expected to contain.</param>
         /// <returns>
         ///   <c>true</c> if the element count of satisfying elements is equal to or less than <paramref name="count"/>; otherwise, <c>false</c>.
         /// </returns>
-        public static Boolean HasAtMost<T>([NotNull] this IEnumerable<T> source, Int32 count, Func<T, Boolean> predicate)
+        public static Boolean HasAtMost<T>([NotNull] this IEnumerable<T> source, Func<T, Boolean> predicate, Int32 count)
         {
             if (source is null)
             {
@@ -2512,7 +2831,44 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return !HasAtLeast(source, count, predicate);
+            if (count <= 0)
+            {
+                return false;
+            }
+
+            Int32 matches = 0;
+            return source.Where(predicate).All(_ => ++matches <= count);
+        }
+        
+        /// <summary>
+        /// Determines whether the specified sequence contains at most <paramref name="count"/> elements satisfying a condition.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">The <see cref="IEnumerable{TSource}"/> whose elements to count.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="count">The maximum number of elements satisfying the specified condition the specified sequence is expected to contain.</param>
+        /// <returns>
+        ///   <c>true</c> if the element count of satisfying elements is equal to or less than <paramref name="count"/>; otherwise, <c>false</c>.
+        /// </returns>
+        public static Boolean HasAtMost<T>([NotNull] this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (count <= 0)
+            {
+                return false;
+            }
+
+            Int32 matches = 0;
+            return source.Where(predicate).All(_ => ++matches <= count);
         }
 
         /// <summary>
@@ -2531,21 +2887,18 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (source is ICollection collection)
+            // ReSharper disable once PossibleMultipleEnumeration
+            if (source.CountIfMaterialized() == count)
             {
-                return collection.Count == count;
+                return true;
             }
 
             Int32 matches = 0;
 
-            using IEnumerator<T> enumerator = source.GetEnumerator();
-
-            while (enumerator.MoveNext())
+            // ReSharper disable once PossibleMultipleEnumeration
+            if (source.Any(_ => ++matches > count))
             {
-                if (matches++ > count)
-                {
-                    return false;
-                }
+                return false;
             }
 
             return matches == count;
@@ -2556,12 +2909,12 @@ namespace NetExtender.Utils.Types
         /// </summary>
         /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
         /// <param name="source">The <see cref="IEnumerable{TSource}"/> to count satisfying elements.</param>
-        /// <param name="count">The number of matching elements the specified sequence is expected to contain.</param>
         /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="count">The number of matching elements the specified sequence is expected to contain.</param>
         /// <returns>
         ///   <c>true</c> if <paramref name="source"/> contains exactly <paramref name="count"/> elements satisfying the condition; otherwise, <c>false</c>.
         /// </returns>
-        public static Boolean HasExactly<T>([NotNull] this IEnumerable<T> source, Int32 count, Func<T, Boolean> predicate)
+        public static Boolean HasExactly<T>([NotNull] this IEnumerable<T> source, Func<T, Boolean> predicate, Int32 count)
         {
             if (source is null)
             {
@@ -2573,9 +2926,36 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            if (source is ICollection collection && collection.Count < count)
+            Int32 matches = 0;
+
+            if (source.Where(predicate).Any(_ => ++matches > count))
             {
                 return false;
+            }
+
+            return matches == count;
+        }
+        
+        /// <summary>
+        /// Determines whether the specified sequence contains exactly the specified number of elements satisfying the specified condition.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">The <see cref="IEnumerable{TSource}"/> to count satisfying elements.</param>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <param name="count">The number of matching elements the specified sequence is expected to contain.</param>
+        /// <returns>
+        ///   <c>true</c> if <paramref name="source"/> contains exactly <paramref name="count"/> elements satisfying the condition; otherwise, <c>false</c>.
+        /// </returns>
+        public static Boolean HasExactly<T>([NotNull] this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
             }
 
             Int32 matches = 0;
@@ -4122,10 +4502,10 @@ namespace NetExtender.Utils.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(size));
             }
-
-            using IEnumerator<T> enumerator = source.GetEnumerator();
             
             Int32 count = 0;
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
 
             while (true)
             {
@@ -4212,10 +4592,10 @@ namespace NetExtender.Utils.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(size));
             }
-
-            using IEnumerator<T> enumerator = source.GetEnumerator();
             
             Int64 count = 0;
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
 
             while (true)
             {
@@ -4256,6 +4636,32 @@ namespace NetExtender.Utils.Types
                 ICollection collection => collection.Count,
                 _ => null
             };
+        }
+        
+        public static Int32? CountIfMaterializedByReflection([NotNull] this IEnumerable source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.TryGetPropertyValue("Length", out Int32 length) ? length :
+                source.TryGetPropertyValue("Count", out length) ? length :
+                source.TryGetPropertyValue("LongLength", out length) ? length :
+                source.TryGetPropertyValue("LongCount", out length) ? length : default;
+        }
+        
+        public static Int64? LongCountIfMaterializedByReflection([NotNull] this IEnumerable source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.TryGetPropertyValue("LongLength", out Int64 length) ? length :
+                source.TryGetPropertyValue("LongCount", out length) ? length :
+                source.TryGetPropertyValue("Length", out length) ? length :
+                source.TryGetPropertyValue("Count", out length) ? length : default;
         }
 
         public static Boolean IsMaterialized<T>([NotNull] this IEnumerable<T> source)
