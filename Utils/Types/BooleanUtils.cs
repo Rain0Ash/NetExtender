@@ -12,7 +12,7 @@ namespace NetExtender.Utils.Types
         /// Cached true task
         /// </summary>
         public static Task<Boolean> True { get; } = Task.FromResult(true);
-	    
+        
         /// <summary>
         /// Cached false task
         /// </summary>

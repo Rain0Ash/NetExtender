@@ -11,7 +11,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace NetExtender.Utils.Formats
 {
-    public static class JSONUtils
+    public static class JsonUtils
     {
         public static Boolean IsValidJson(String json)
         {
@@ -63,12 +63,12 @@ namespace NetExtender.Utils.Formats
             }
         }
 
-        public static String ToJSON(String xml)
+        public static String ToJson(String xml)
         {
-            return XMLUtils.Parse(xml).ToJSON();
+            return XmlUtils.Parse(xml).ToJson();
         }
 
-        public static String ToJSON(this XmlDocument document)
+        public static String ToJson(this XmlDocument document)
         {
             return JsonConvert.SerializeXmlNode(document, Newtonsoft.Json.Formatting.Indented, true);
         }

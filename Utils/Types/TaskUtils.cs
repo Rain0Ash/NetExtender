@@ -11,212 +11,212 @@ using JetBrains.Annotations;
 
 namespace NetExtender.Utils.Types
 {
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "AsyncConverter.AsyncMethodNamingHighlighting")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "AsyncConverter.AsyncMethodNamingHighlighting")]
     public static class TaskUtils
     {
-	    /// <inheritdoc cref="BooleanUtils.True"/>
-	    public static Task<Boolean> True
-	    {
-		    get
-		    {
-			    return BooleanUtils.True;
-		    }
-	    }
-	    
-	    /// <inheritdoc cref="BooleanUtils.False"/>
-	    public static Task<Boolean> False
-	    {
-		    get
-		    {
-			    return BooleanUtils.False;
-		    }
-	    }
-
-	    private static class TaskCache<T>
+        /// <inheritdoc cref="BooleanUtils.True"/>
+        public static Task<Boolean> True
         {
-	        public static Task<T> Default { get; }
-
-	        static TaskCache()
-	        {
-		        Default = Task.FromResult(default(T));
-	        }
+            get
+            {
+                return BooleanUtils.True;
+            }
+        }
+        
+        /// <inheritdoc cref="BooleanUtils.False"/>
+        public static Task<Boolean> False
+        {
+            get
+            {
+                return BooleanUtils.False;
+            }
         }
 
-	    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static class TaskCache<T>
+        {
+            public static Task<T> Default { get; }
+
+            static TaskCache()
+            {
+                Default = Task.FromResult(default(T));
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<T> DefaultTask<T>()
         {
-	        return TaskCache<T>.Default;
+            return TaskCache<T>.Default;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> ToTask(this Boolean value)
         {
-	        return value ? True : False;
+            return value ? True : False;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<T> ToTask<T>(this T value)
         {
-	        return Task.FromResult(value);
+            return Task.FromResult(value);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task ToCanceledTask(this CancellationToken token)
         {
-	        return Task.FromCanceled(token);
+            return Task.FromCanceled(token);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<T> ToCanceledTask<T>(this CancellationToken token)
         {
-	        return Task.FromCanceled<T>(token);
+            return Task.FromCanceled<T>(token);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task ToExceptionTask([NotNull] this Exception exception)
         {
-	        if (exception is null)
-	        {
-		        throw new ArgumentNullException(nameof(exception));
-	        }
+            if (exception is null)
+            {
+                throw new ArgumentNullException(nameof(exception));
+            }
 
-	        return Task.FromException(exception);
+            return Task.FromException(exception);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<T> ToExceptionTask<T>([NotNull] this Exception exception)
         {
-	        if (exception is null)
-	        {
-		        throw new ArgumentNullException(nameof(exception));
-	        }
+            if (exception is null)
+            {
+                throw new ArgumentNullException(nameof(exception));
+            }
 
-	        return Task.FromException<T>(exception);
+            return Task.FromException<T>(exception);
         }
 
         public static IAsyncEnumerable<Task> ToTasksCompletionQueue([NotNull] params Task[] tasks)
         {
-	        return ToTasksCompletionQueue(tasks, CancellationToken.None);
+            return ToTasksCompletionQueue(tasks, CancellationToken.None);
         }
 
         public static IAsyncEnumerable<Task> ToTasksCompletionQueue(CancellationToken token, [NotNull] params Task[] tasks)
         {
-	        return ToTasksCompletionQueue(tasks, token);
+            return ToTasksCompletionQueue(tasks, token);
         }
         
         public static IAsyncEnumerable<Task> ToTasksCompletionQueue(this Task task, CancellationToken token, [NotNull] params Task[] tasks)
         {
-	        return ToTasksCompletionQueue(tasks.Prepend(task), token);
+            return ToTasksCompletionQueue(tasks.Prepend(task), token);
         }
         
         public static IAsyncEnumerable<Task> ToTasksCompletionQueue([NotNull] this IEnumerable<Task> source)
         {
-	        return ToTasksCompletionQueue(source, CancellationToken.None);
+            return ToTasksCompletionQueue(source, CancellationToken.None);
         }
 
         public static async IAsyncEnumerable<Task> ToTasksCompletionQueue([NotNull] this IEnumerable<Task> source, [EnumeratorCancellation] CancellationToken token)
         {
-	        if (source is null)
-	        {
-		        throw new ArgumentNullException(nameof(source));
-	        }
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
 
-	        HashSet<Task> set = source.WhereNotNull().ToHashSet();
+            HashSet<Task> set = source.WhereNotNull().ToHashSet();
 
-	        while (set.Count > 0 && !token.IsCancellationRequested)
-	        {
-		        Task task = await Task.WhenAny(set).ConfigureAwait(false);
-		        set.Remove(task);
+            while (set.Count > 0 && !token.IsCancellationRequested)
+            {
+                Task task = await Task.WhenAny(set).ConfigureAwait(false);
+                set.Remove(task);
 
-		        if (token.IsCancellationRequested)
-		        {
-			        yield break;
-		        }
-		        
-		        yield return task;
-	        }
+                if (token.IsCancellationRequested)
+                {
+                    yield break;
+                }
+                
+                yield return task;
+            }
         }
         
         public static IAsyncEnumerable<Task<T>> ToTasksCompletionQueue<T>([NotNull] params Task<T>[] tasks)
         {
-	        return ToTasksCompletionQueue(tasks, CancellationToken.None);
+            return ToTasksCompletionQueue(tasks, CancellationToken.None);
         }
 
         public static IAsyncEnumerable<Task<T>> ToTasksCompletionQueue<T>(CancellationToken token, [NotNull] params Task<T>[] tasks)
         {
-	        return ToTasksCompletionQueue(tasks, token);
+            return ToTasksCompletionQueue(tasks, token);
         }
         
         public static IAsyncEnumerable<Task<T>> ToTasksCompletionQueue<T>(this Task<T> task, CancellationToken token, [NotNull] params Task<T>[] tasks)
         {
-	        return ToTasksCompletionQueue(tasks.Prepend(task), token);
+            return ToTasksCompletionQueue(tasks.Prepend(task), token);
         }
         
         public static IAsyncEnumerable<Task<T>> ToTasksCompletionQueue<T>([NotNull] this IEnumerable<Task<T>> source)
         {
-	        return ToTasksCompletionQueue(source, CancellationToken.None);
+            return ToTasksCompletionQueue(source, CancellationToken.None);
         }
 
         public static async IAsyncEnumerable<Task<T>> ToTasksCompletionQueue<T>([NotNull] this IEnumerable<Task<T>> source, [EnumeratorCancellation] CancellationToken token)
         {
-	        if (source is null)
-	        {
-		        throw new ArgumentNullException(nameof(source));
-	        }
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
 
-	        HashSet<Task<T>> set = source.WhereNotNull().ToHashSet();
+            HashSet<Task<T>> set = source.WhereNotNull().ToHashSet();
 
-	        while (set.Count > 0 && !token.IsCancellationRequested)
-	        {
-		        Task<T> task = await Task.WhenAny(set).ConfigureAwait(false);
-		        set.Remove(task);
+            while (set.Count > 0 && !token.IsCancellationRequested)
+            {
+                Task<T> task = await Task.WhenAny(set).ConfigureAwait(false);
+                set.Remove(task);
 
-		        if (token.IsCancellationRequested)
-		        {
-			        yield break;
-		        }
-		        
-		        yield return task;
-	        }
+                if (token.IsCancellationRequested)
+                {
+                    yield break;
+                }
+                
+                yield return task;
+            }
         }
         
         public static Task Delay(CancellationToken token)
         {
-	        return Delay(-1, token);
+            return Delay(-1, token);
         }
 
         public static Task Delay(TimeSpan delay)
         {
-	        return Delay(delay, CancellationToken.None);
+            return Delay(delay, CancellationToken.None);
         }
 
         public static async Task Delay(TimeSpan delay, CancellationToken token)
         {
-	        try
-	        {
-				await Task.Delay(delay, token).ConfigureAwait(false);
-	        }
-	        catch (TaskCanceledException)
-	        {
-		        //ignored
-	        }
+            try
+            {
+                await Task.Delay(delay, token).ConfigureAwait(false);
+            }
+            catch (TaskCanceledException)
+            {
+                //ignored
+            }
         }
         
         public static Task Delay(Int32 milli)
         {
-	        return Delay(milli, CancellationToken.None);
+            return Delay(milli, CancellationToken.None);
         }
         
         public static async Task Delay(Int32 milli, CancellationToken token)
         {
-	        try
-	        {
-		        await Task.Delay(milli, token).ConfigureAwait(false);
-	        }
-	        catch (TaskCanceledException)
-	        {
-		        //ignored
-	        }
+            try
+            {
+                await Task.Delay(milli, token).ConfigureAwait(false);
+            }
+            catch (TaskCanceledException)
+            {
+                //ignored
+            }
         }
 
         public static Task WaitAsync(CancellationToken token)
@@ -345,520 +345,520 @@ namespace NetExtender.Utils.Types
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task})"/>
         public static Task ContinueWith(this Task source, Action action)
         {
-	        return source.ContinueWith(_ => action());
+            return source.ContinueWith(_ => action());
         }
         
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, CancellationToken)"/>
         public static Task ContinueWith(this Task source, Action action, CancellationToken token)
         {
-	        return source.ContinueWith(_ => action(), token);
+            return source.ContinueWith(_ => action(), token);
         }
         
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, CancellationToken, TaskContinuationOptions, TaskScheduler)"/>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "CA1068")]
         public static Task ContinueWith(this Task source, Action action, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
         {
-	        return source.ContinueWith(_ => action(), token, options, scheduler);
+            return source.ContinueWith(_ => action(), token, options, scheduler);
         }
         
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, TaskContinuationOptions)"/>
         public static Task ContinueWith(this Task source, Action action, TaskContinuationOptions options)
         {
-	        return source.ContinueWith(_ => action(), options);
+            return source.ContinueWith(_ => action(), options);
         }
         
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, TaskScheduler)"/>
         public static Task ContinueWith(this Task source, Action action, TaskScheduler scheduler)
         {
-	        return source.ContinueWith(_ => action(), scheduler);
+            return source.ContinueWith(_ => action(), scheduler);
         }
         
         public static Task<T> ContinueWith<T>(this Task source, Func<T> function)
         {
-	        return source.ContinueWith(_ => function());
+            return source.ContinueWith(_ => function());
         }
         
         public static Task<T> ContinueWith<T>(this Task source, Func<T> function, CancellationToken token)
         {
-	        return source.ContinueWith(_ => function(), token);
+            return source.ContinueWith(_ => function(), token);
         }
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "CA1068")]
         public static Task<T> ContinueWith<T>(this Task source, Func<T> function, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
         {
-	        return source.ContinueWith(_ => function(), token, options, scheduler);
+            return source.ContinueWith(_ => function(), token, options, scheduler);
         }
         
         public static Task<T> ContinueWith<T>(this Task source, Func<T> function, TaskContinuationOptions options)
         {
-	        return source.ContinueWith(_ => function(), options);
+            return source.ContinueWith(_ => function(), options);
         }
         
         public static Task<T> ContinueWith<T>(this Task source, Func<T> function, TaskScheduler scheduler)
         {
-	        return source.ContinueWith(_ => function(), scheduler);
+            return source.ContinueWith(_ => function(), scheduler);
         }
         
-		/// <summary>
-		/// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
-		/// milliseconds or until the wait is cancelled.
-		/// </summary>
-		/// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
-		/// <param name="timeout">
-		/// The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.
-		/// </param>
-		/// <param name="token">
-		/// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
-		/// </param>
-		/// <returns>
-		/// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
-		/// <c>false</c>.
-		/// </returns>
-		public static Boolean WaitAll([NotNull] this IEnumerable<Task> tasks, Int32 timeout, CancellationToken token)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
+        /// milliseconds or until the wait is cancelled.
+        /// </summary>
+        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="timeout">
+        /// The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.
+        /// </param>
+        /// <param name="token">
+        /// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        public static Boolean WaitAll([NotNull] this IEnumerable<Task> tasks, Int32 timeout, CancellationToken token)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			return Task.WaitAll(tasks.ToArray(), timeout, token);
-		}
+            return Task.WaitAll(tasks.ToArray(), timeout, token);
+        }
 
-		/// <summary>
-		/// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified
-		/// <see cref="TimeSpan"/> or until the wait is cancelled.
-		/// </summary>
-		/// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
-		/// <param name="timeout">
-		/// A <see cref="TimeSpan"/> to wait, or <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
-		/// </param>
-		/// <param name="token">
-		/// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
-		/// </param>
-		/// <returns>
-		/// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
-		/// <c>false</c>.
-		/// </returns>
-		public static Boolean WaitAll([NotNull] this IEnumerable<Task> tasks, TimeSpan timeout, CancellationToken token)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified
+        /// <see cref="TimeSpan"/> or until the wait is cancelled.
+        /// </summary>
+        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="timeout">
+        /// A <see cref="TimeSpan"/> to wait, or <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
+        /// </param>
+        /// <param name="token">
+        /// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        public static Boolean WaitAll([NotNull] this IEnumerable<Task> tasks, TimeSpan timeout, CancellationToken token)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			return Task.WaitAll(tasks.ToArray(), (Int32) timeout.TotalMilliseconds, token);
-		}
+            return Task.WaitAll(tasks.ToArray(), (Int32) timeout.TotalMilliseconds, token);
+        }
 
-		/// <summary>
-		/// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
-		/// milliseconds or until the wait is cancelled.
-		/// </summary>
-		/// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
-		/// <param name="token">
-		/// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
-		/// </param>
-		/// <returns>
-		/// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
-		/// <c>false</c>.
-		/// </returns>
-		public static void WaitAll([NotNull] this IEnumerable<Task> tasks, CancellationToken token)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
+        /// milliseconds or until the wait is cancelled.
+        /// </summary>
+        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="token">
+        /// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        public static void WaitAll([NotNull] this IEnumerable<Task> tasks, CancellationToken token)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			Task.WaitAll(tasks.ToArray(), token);
-		}
+            Task.WaitAll(tasks.ToArray(), token);
+        }
 
-		/// <summary>
-		/// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
-		/// milliseconds or until the wait is cancelled.
-		/// </summary>
-		/// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
-		/// <param name="timeout">
-		/// The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.
-		/// </param>
-		/// <returns>
-		/// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
-		/// <c>false</c>.
-		/// </returns>
-		public static Boolean WaitAll([NotNull] this IEnumerable<Task> tasks, Int32 timeout)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
+        /// milliseconds or until the wait is cancelled.
+        /// </summary>
+        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="timeout">
+        /// The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        public static Boolean WaitAll([NotNull] this IEnumerable<Task> tasks, Int32 timeout)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			return Task.WaitAll(tasks.ToArray(), timeout);
-		}
+            return Task.WaitAll(tasks.ToArray(), timeout);
+        }
 
-		/// <summary>
-		/// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified
-		/// <see cref="TimeSpan"/> or until the wait is cancelled.
-		/// </summary>
-		/// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
-		/// <param name="timeout">
-		/// A <see cref="TimeSpan"/> to wait, or <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
-		/// </param>
-		/// <returns>
-		/// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
-		/// <c>false</c>.
-		/// </returns>
-		public static Boolean WaitAll([NotNull] this IEnumerable<Task> tasks, TimeSpan timeout)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified
+        /// <see cref="TimeSpan"/> or until the wait is cancelled.
+        /// </summary>
+        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="timeout">
+        /// A <see cref="TimeSpan"/> to wait, or <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        public static Boolean WaitAll([NotNull] this IEnumerable<Task> tasks, TimeSpan timeout)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			return Task.WaitAll(tasks.ToArray(), timeout);
-		}
+            return Task.WaitAll(tasks.ToArray(), timeout);
+        }
 
-		/// <summary>
-		/// Waits for all of the provided <see cref="Task"/> objects to complete execution.
-		/// </summary>
-		/// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
-		/// <returns>
-		/// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
-		/// <c>false</c>.
-		/// </returns>
-		public static void WaitAll([NotNull] this IEnumerable<Task> tasks)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Waits for all of the provided <see cref="Task"/> objects to complete execution.
+        /// </summary>
+        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <returns>
+        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        public static void WaitAll([NotNull] this IEnumerable<Task> tasks)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			Task.WaitAll(tasks.ToArray());
-		}
+            Task.WaitAll(tasks.ToArray());
+        }
 
-		/// <summary>
-		/// Creates a task that will complete when all of the <see cref="Task"/> objects in an enumerable collection
-		/// have completed.
-		/// </summary>
-		/// <param name="tasks">The tasks to wait on for completion.</param>
-		/// <returns>A task that represents the completion of all of the supplied tasks.</returns>
-		[NotNull]
-		// ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
-		public static Task WhenAll([NotNull, ItemNotNull] this IEnumerable<Task> tasks)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Creates a task that will complete when all of the <see cref="Task"/> objects in an enumerable collection
+        /// have completed.
+        /// </summary>
+        /// <param name="tasks">The tasks to wait on for completion.</param>
+        /// <returns>A task that represents the completion of all of the supplied tasks.</returns>
+        [NotNull]
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
+        public static Task WhenAll([NotNull, ItemNotNull] this IEnumerable<Task> tasks)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			return Task.WhenAll(tasks);
-		}
+            return Task.WhenAll(tasks);
+        }
 
-		/// <summary>
-		/// Creates a task that will complete when all of the <see cref="Task{T}"/> objects in an enumerable collection
-		/// have completed.
-		/// </summary>
-		/// <typeparam name="T">The type of the completed Task.</typeparam>
-		/// <param name="tasks">The tasks to wait on for completion.</param>
-		/// <returns>A task that represents the completion of all of the supplied tasks.</returns>
-		[NotNull]
-		[ItemNotNull]
-		// ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
-		public static Task<T[]> WhenAll<T>([NotNull, ItemNotNull] this IEnumerable<Task<T>> tasks)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Creates a task that will complete when all of the <see cref="Task{T}"/> objects in an enumerable collection
+        /// have completed.
+        /// </summary>
+        /// <typeparam name="T">The type of the completed Task.</typeparam>
+        /// <param name="tasks">The tasks to wait on for completion.</param>
+        /// <returns>A task that represents the completion of all of the supplied tasks.</returns>
+        [NotNull]
+        [ItemNotNull]
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
+        public static Task<T[]> WhenAll<T>([NotNull, ItemNotNull] this IEnumerable<Task<T>> tasks)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			return Task.WhenAll(tasks);
-		}
+            return Task.WhenAll(tasks);
+        }
 
-		/// <summary>
-		/// Creates a task that will complete when any of the supplied tasks have completed.
-		/// </summary>
-		/// <typeparam name="T">The type of the completed Task.</typeparam>
-		/// <param name="tasks">The tasks to wait on for completion.</param>
-		/// <returns>
-		/// A task that represents the completion of one of the supplied tasks. The return task's Result is the task that
-		/// completed.
-		/// </returns>
-		[NotNull]
-		[ItemNotNull]
-		// ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
-		public static Task<Task<T>> WhenAny<T>([NotNull, ItemNotNull] this IEnumerable<Task<T>> tasks)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Creates a task that will complete when any of the supplied tasks have completed.
+        /// </summary>
+        /// <typeparam name="T">The type of the completed Task.</typeparam>
+        /// <param name="tasks">The tasks to wait on for completion.</param>
+        /// <returns>
+        /// A task that represents the completion of one of the supplied tasks. The return task's Result is the task that
+        /// completed.
+        /// </returns>
+        [NotNull]
+        [ItemNotNull]
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
+        public static Task<Task<T>> WhenAny<T>([NotNull, ItemNotNull] this IEnumerable<Task<T>> tasks)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			return Task.WhenAny(tasks);
-		}
+            return Task.WhenAny(tasks);
+        }
 
-		/// <summary>
-		/// Creates a task that will complete when any of the supplied tasks have completed.
-		/// </summary>
-		/// <param name="tasks">The tasks to wait on for completion.</param>
-		/// <returns>
-		/// A task that represents the completion of one of the supplied tasks. The return task's Result is the task that
-		/// completed.
-		/// </returns>
-		[NotNull]
-		[ItemNotNull]
-		// ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
-		public static Task<Task> WhenAny([NotNull, ItemNotNull] this IEnumerable<Task> tasks)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Creates a task that will complete when any of the supplied tasks have completed.
+        /// </summary>
+        /// <param name="tasks">The tasks to wait on for completion.</param>
+        /// <returns>
+        /// A task that represents the completion of one of the supplied tasks. The return task's Result is the task that
+        /// completed.
+        /// </returns>
+        [NotNull]
+        [ItemNotNull]
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
+        public static Task<Task> WhenAny([NotNull, ItemNotNull] this IEnumerable<Task> tasks)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			return Task.WhenAny(tasks);
-		}
-		
-		/// <summary>
-		/// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
-		/// milliseconds or until the wait is cancelled.
-		/// </summary>
-		/// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
-		/// <param name="timeout">
-		/// The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.
-		/// </param>
-		/// <param name="token">
-		/// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
-		/// </param>
-		/// <returns>
-		/// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
-		/// <c>false</c>.
-		/// </returns>
-		public static Boolean WaitAll([NotNull] this Task[] tasks, Int32 timeout, CancellationToken token)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+            return Task.WhenAny(tasks);
+        }
+        
+        /// <summary>
+        /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
+        /// milliseconds or until the wait is cancelled.
+        /// </summary>
+        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="timeout">
+        /// The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.
+        /// </param>
+        /// <param name="token">
+        /// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        public static Boolean WaitAll([NotNull] this Task[] tasks, Int32 timeout, CancellationToken token)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			return Task.WaitAll(tasks, timeout, token);
-		}
+            return Task.WaitAll(tasks, timeout, token);
+        }
 
-		/// <summary>
-		/// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified
-		/// <see cref="TimeSpan"/> or until the wait is cancelled.
-		/// </summary>
-		/// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
-		/// <param name="timeout">
-		/// A <see cref="TimeSpan"/> to wait, or <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
-		/// </param>
-		/// <param name="token">
-		/// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
-		/// </param>
-		/// <returns>
-		/// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
-		/// <c>false</c>.
-		/// </returns>
-		public static Boolean WaitAll([NotNull] this Task[] tasks, TimeSpan timeout, CancellationToken token)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified
+        /// <see cref="TimeSpan"/> or until the wait is cancelled.
+        /// </summary>
+        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="timeout">
+        /// A <see cref="TimeSpan"/> to wait, or <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
+        /// </param>
+        /// <param name="token">
+        /// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        public static Boolean WaitAll([NotNull] this Task[] tasks, TimeSpan timeout, CancellationToken token)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			return Task.WaitAll(tasks, (Int32) timeout.TotalMilliseconds, token);
-		}
+            return Task.WaitAll(tasks, (Int32) timeout.TotalMilliseconds, token);
+        }
 
-		/// <summary>
-		/// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
-		/// milliseconds or until the wait is cancelled.
-		/// </summary>
-		/// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
-		/// <param name="token">
-		/// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
-		/// </param>
-		/// <returns>
-		/// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
-		/// <c>false</c>.
-		/// </returns>
-		public static void WaitAll([NotNull] this Task[] tasks, CancellationToken token)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
+        /// milliseconds or until the wait is cancelled.
+        /// </summary>
+        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="token">
+        /// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        public static void WaitAll([NotNull] this Task[] tasks, CancellationToken token)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			Task.WaitAll(tasks, token);
-		}
+            Task.WaitAll(tasks, token);
+        }
 
-		/// <summary>
-		/// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
-		/// milliseconds or until the wait is cancelled.
-		/// </summary>
-		/// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
-		/// <param name="timeout">
-		/// The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.
-		/// </param>
-		/// <returns>
-		/// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
-		/// <c>false</c>.
-		/// </returns>
-		public static Boolean WaitAll([NotNull] this Task[] tasks, Int32 timeout)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
+        /// milliseconds or until the wait is cancelled.
+        /// </summary>
+        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="timeout">
+        /// The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        public static Boolean WaitAll([NotNull] this Task[] tasks, Int32 timeout)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			return Task.WaitAll(tasks, timeout);
-		}
+            return Task.WaitAll(tasks, timeout);
+        }
 
-		/// <summary>
-		/// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified
-		/// <see cref="TimeSpan"/> or until the wait is cancelled.
-		/// </summary>
-		/// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
-		/// <param name="timeout">
-		/// A <see cref="TimeSpan"/> to wait, or <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
-		/// </param>
-		/// <returns>
-		/// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
-		/// <c>false</c>.
-		/// </returns>
-		public static Boolean WaitAll([NotNull] this Task[] tasks, TimeSpan timeout)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified
+        /// <see cref="TimeSpan"/> or until the wait is cancelled.
+        /// </summary>
+        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="timeout">
+        /// A <see cref="TimeSpan"/> to wait, or <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        public static Boolean WaitAll([NotNull] this Task[] tasks, TimeSpan timeout)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			return Task.WaitAll(tasks, timeout);
-		}
+            return Task.WaitAll(tasks, timeout);
+        }
 
-		/// <summary>
-		/// Waits for all of the provided <see cref="Task"/> objects to complete execution.
-		/// </summary>
-		/// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
-		/// <returns>
-		/// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
-		/// <c>false</c>.
-		/// </returns>
-		public static void WaitAll([NotNull] this Task[] tasks)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Waits for all of the provided <see cref="Task"/> objects to complete execution.
+        /// </summary>
+        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <returns>
+        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        public static void WaitAll([NotNull] this Task[] tasks)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			Task.WaitAll(tasks);
-		}
+            Task.WaitAll(tasks);
+        }
 
-		/// <summary>
-		/// Creates a task that will complete when all of the <see cref="Task"/> objects in an enumerable collection
-		/// have completed.
-		/// </summary>
-		/// <param name="tasks">The tasks to wait on for completion.</param>
-		/// <returns>A task that represents the completion of all of the supplied tasks.</returns>
-		[NotNull]
-		// ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
-		public static Task WhenAll([NotNull, ItemNotNull] this Task[] tasks)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Creates a task that will complete when all of the <see cref="Task"/> objects in an enumerable collection
+        /// have completed.
+        /// </summary>
+        /// <param name="tasks">The tasks to wait on for completion.</param>
+        /// <returns>A task that represents the completion of all of the supplied tasks.</returns>
+        [NotNull]
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
+        public static Task WhenAll([NotNull, ItemNotNull] this Task[] tasks)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			return Task.WhenAll(tasks);
-		}
+            return Task.WhenAll(tasks);
+        }
 
-		/// <summary>
-		/// Creates a task that will complete when all of the <see cref="Task{T}"/> objects in an enumerable collection
-		/// have completed.
-		/// </summary>
-		/// <typeparam name="T">The type of the completed Task.</typeparam>
-		/// <param name="tasks">The tasks to wait on for completion.</param>
-		/// <returns>A task that represents the completion of all of the supplied tasks.</returns>
-		[NotNull]
-		[ItemNotNull]
-		// ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
-		public static Task<T[]> WhenAll<T>([NotNull, ItemNotNull] this Task<T>[] tasks)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Creates a task that will complete when all of the <see cref="Task{T}"/> objects in an enumerable collection
+        /// have completed.
+        /// </summary>
+        /// <typeparam name="T">The type of the completed Task.</typeparam>
+        /// <param name="tasks">The tasks to wait on for completion.</param>
+        /// <returns>A task that represents the completion of all of the supplied tasks.</returns>
+        [NotNull]
+        [ItemNotNull]
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
+        public static Task<T[]> WhenAll<T>([NotNull, ItemNotNull] this Task<T>[] tasks)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			return Task.WhenAll(tasks);
-		}
+            return Task.WhenAll(tasks);
+        }
 
-		/// <summary>
-		/// Creates a task that will complete when any of the supplied tasks have completed.
-		/// </summary>
-		/// <typeparam name="T">The type of the completed Task.</typeparam>
-		/// <param name="tasks">The tasks to wait on for completion.</param>
-		/// <returns>
-		/// A task that represents the completion of one of the supplied tasks. The return task's Result is the task that
-		/// completed.
-		/// </returns>
-		[NotNull]
-		[ItemNotNull]
-		// ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
-		public static Task<Task<T>> WhenAny<T>([NotNull, ItemNotNull] this Task<T>[] tasks)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Creates a task that will complete when any of the supplied tasks have completed.
+        /// </summary>
+        /// <typeparam name="T">The type of the completed Task.</typeparam>
+        /// <param name="tasks">The tasks to wait on for completion.</param>
+        /// <returns>
+        /// A task that represents the completion of one of the supplied tasks. The return task's Result is the task that
+        /// completed.
+        /// </returns>
+        [NotNull]
+        [ItemNotNull]
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
+        public static Task<Task<T>> WhenAny<T>([NotNull, ItemNotNull] this Task<T>[] tasks)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			return Task.WhenAny(tasks);
-		}
+            return Task.WhenAny(tasks);
+        }
 
-		/// <summary>
-		/// Creates a task that will complete when any of the supplied tasks have completed.
-		/// </summary>
-		/// <param name="tasks">The tasks to wait on for completion.</param>
-		/// <returns>
-		/// A task that represents the completion of one of the supplied tasks. The return task's Result is the task that
-		/// completed.
-		/// </returns>
-		[NotNull]
-		[ItemNotNull]
-		// ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
-		public static Task<Task> WhenAny([NotNull, ItemNotNull] this Task[] tasks)
-		{
-			if (tasks is null)
-			{
-				throw new ArgumentNullException(nameof(tasks));
-			}
+        /// <summary>
+        /// Creates a task that will complete when any of the supplied tasks have completed.
+        /// </summary>
+        /// <param name="tasks">The tasks to wait on for completion.</param>
+        /// <returns>
+        /// A task that represents the completion of one of the supplied tasks. The return task's Result is the task that
+        /// completed.
+        /// </returns>
+        [NotNull]
+        [ItemNotNull]
+        // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
+        public static Task<Task> WhenAny([NotNull, ItemNotNull] this Task[] tasks)
+        {
+            if (tasks is null)
+            {
+                throw new ArgumentNullException(nameof(tasks));
+            }
 
-			return Task.WhenAny(tasks);
-		}
-		
-		public static async void ErrorHandle(this Task<Boolean> task, Action<Exception> action = null)
-		{
-			try
-			{
-				if (!await task.ConfigureAwait(false))
-				{
-					action?.Invoke(null);
-				}
-			}
-			catch (Exception e)
-			{
-				action?.Invoke(e);
-			}
-		}
-		
-		public static async void ErrorHandle(this Task task, Action<Exception> action = null)
-		{
-			try
-			{
-				await task.ConfigureAwait(false);
-			}
-			catch (Exception e)
-			{
-				action?.Invoke(e);
-			}
-		}
+            return Task.WhenAny(tasks);
+        }
+        
+        public static async void ErrorHandle(this Task<Boolean> task, Action<Exception> action = null)
+        {
+            try
+            {
+                if (!await task.ConfigureAwait(false))
+                {
+                    action?.Invoke(null);
+                }
+            }
+            catch (Exception e)
+            {
+                action?.Invoke(e);
+            }
+        }
+        
+        public static async void ErrorHandle(this Task task, Action<Exception> action = null)
+        {
+            try
+            {
+                await task.ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                action?.Invoke(e);
+            }
+        }
 
-		public static Task<T>[] InitializeTasks<T>(this IEnumerable<Task<T>> tasks)
-		{
-			return tasks.ToArray();
-		}
+        public static Task<T>[] InitializeTasks<T>(this IEnumerable<Task<T>> tasks)
+        {
+            return tasks.ToArray();
+        }
     }
 }

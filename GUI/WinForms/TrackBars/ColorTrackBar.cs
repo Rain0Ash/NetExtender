@@ -2085,7 +2085,7 @@ namespace NetExtender.GUI.WinForms.TrackBars
         /// <param name="pt">The point to test.</param>
         /// <param name="rect">The base rectangle.</param>
         /// <returns>
-        /// 	<c>true</c> if rectangle contains given point; otherwise, <c>false</c>.
+        ///     <c>true</c> if rectangle contains given point; otherwise, <c>false</c>.
         /// </returns>
         private static Boolean IsPointInRect(Point pt, Rectangle rect)
         {

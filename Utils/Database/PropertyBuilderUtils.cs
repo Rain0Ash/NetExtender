@@ -13,7 +13,7 @@ namespace NetExtender.Utils.Database
         {
             return builder.IsRequired(false);
         }
-	
+    
         public static PropertyBuilder<String> HasMaxLength(this PropertyBuilder<String> builder)
         {
             return builder.HasColumnType("NVARCHAR(MAX)");

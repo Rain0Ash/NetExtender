@@ -67,7 +67,7 @@ namespace NetExtender.Git
             }
 
             String json = await client.DownloadStringAsync(url).ConfigureAwait(false);
-            return JSONUtils.DeserializeObject<GitHubRelease[]>(json);
+            return JsonUtils.DeserializeObject<GitHubRelease[]>(json);
         }
         
         private static async Task<GitHubRelease[]> GetReleasesFromURLAsync(WebClient client, String url)
@@ -78,7 +78,7 @@ namespace NetExtender.Git
             }
 
             String json = await client.DownloadStringTaskAsync(url).ConfigureAwait(false);
-            return JSONUtils.DeserializeObject<GitHubRelease[]>(json);
+            return JsonUtils.DeserializeObject<GitHubRelease[]>(json);
         }
     }
 }

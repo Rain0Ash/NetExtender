@@ -19,20 +19,35 @@ namespace NetExtender.Utils.Formats
     /// Extensions for XLinq.
     /// </summary>
     [PublicAPI]
-    public static class XMLUtils
+    public static class XmlUtils
     {
-        public static String IntendXML(this XmlDocument document)
+        public static String IntendXml([NotNull] this XmlDocument document)
         {
+            if (document is null)
+            {
+                throw new ArgumentNullException(nameof(document));
+            }
+
             return document.ToXDocument().ToString();
         }
         
-        public static XmlDocument FromIntendXML(String xml)
+        public static XmlDocument FromIntendXml([NotNull] String xml)
         {
+            if (xml is null)
+            {
+                throw new ArgumentNullException(nameof(xml));
+            }
+
             return XDocument.Parse(xml).ToXmlDocument();
         }
         
-        public static XmlDocument ToXmlDocument(this XDocument document)
+        public static XmlDocument ToXmlDocument([NotNull] this XDocument document)
         {
+            if (document is null)
+            {
+                throw new ArgumentNullException(nameof(document));
+            }
+
             XmlDocument xml = new XmlDocument();
             
             using XmlReader reader = document.CreateReader();
@@ -41,25 +56,65 @@ namespace NetExtender.Utils.Formats
             return xml;
         }
 
-        public static XDocument ToXDocument(this XmlDocument xml)
+        public static XDocument ToXDocument([NotNull] this XmlDocument document)
         {
-            using XmlNodeReader reader = new XmlNodeReader(xml);
+            if (document is null)
+            {
+                throw new ArgumentNullException(nameof(document));
+            }
+
+            using XmlNodeReader reader = new XmlNodeReader(document);
             
             reader.MoveToContent();
             return XDocument.Load(reader);
         }
 
-        public static XmlDocument Parse(String xml)
+        public static XmlDocument Parse([NotNull] String xml)
         {
+            if (xml is null)
+            {
+                throw new ArgumentNullException(nameof(xml));
+            }
+
             XmlDocument document = new XmlDocument();
             document.LoadXml(xml);
             
             return document;
         }
-
-        public static String ToXML(String json, String root = "Root")
+        
+        public static Boolean TryParse([NotNull] String xml, out XmlDocument document)
         {
-            return JsonConvert.DeserializeXmlNode(json, root)?.IntendXML();
+            if (xml is null)
+            {
+                throw new ArgumentNullException(nameof(xml));
+            }
+
+            document = new XmlDocument();
+
+            try
+            {
+                document.LoadXml(xml);
+                return true;
+            }
+            catch (XmlException)
+            {
+                return false;
+            }
+        }
+
+        public static String ToXml([NotNull] String json)
+        {
+            return ToXml(json, null);
+        }
+
+        public static String ToXml([NotNull] String json, [CanBeNull] String root)
+        {
+            if (json is null)
+            {
+                throw new ArgumentNullException(nameof(json));
+            }
+
+            return JsonConvert.DeserializeXmlNode(json, root ?? "Root")?.IntendXml();
         }
 
         public static void SplitOnce(this String value, String separator, out String first, out String second)
@@ -80,14 +135,19 @@ namespace NetExtender.Utils.Formats
             }
             else
             {
-                first = "";
+                first = String.Empty;
                 second = null;
             }
         }
 
-        public static XmlNode CreateXPath(this XmlDocument doc, String xpath)
+        public static XmlNode CreateXPath([NotNull] this XmlDocument document, String xpath)
         {
-            XmlNode node = doc;
+            if (document is null)
+            {
+                throw new ArgumentNullException(nameof(document));
+            }
+
+            XmlNode node = document;
             foreach (String part in xpath.Substring(1).Split('/'))
             {
                 XmlNodeList nodes = node.SelectNodes(part);
@@ -104,7 +164,7 @@ namespace NetExtender.Utils.Formats
 
                 if (part.StartsWith("@"))
                 {
-                    XmlAttribute anode = doc.CreateAttribute(part.Substring(1));
+                    XmlAttribute anode = document.CreateAttribute(part.Substring(1));
                     node.Attributes.Append(anode);
                     node = anode;
                 }
@@ -126,7 +186,7 @@ namespace NetExtender.Utils.Formats
                         elName = part;
                     }
 
-                    XmlNode next = doc.CreateElement(elName);
+                    XmlNode next = document.CreateElement(elName);
                     node.AppendChild(next);
                     node = next;
 
@@ -147,7 +207,7 @@ namespace NetExtender.Utils.Formats
                     }
 
                     value = value.Substring(0, value.Length - 1);
-                    XmlAttribute anode = doc.CreateAttribute(name);
+                    XmlAttribute anode = document.CreateAttribute(name);
                     anode.Value = value;
                     node.Attributes.Append(anode);
                 }
@@ -156,11 +216,11 @@ namespace NetExtender.Utils.Formats
             return node;
         }
 
-        public static void Set(this XmlDocument doc, String xpath, String value)
+        public static void Set(this XmlDocument document, String xpath, String value)
         {
-            if (doc is null)
+            if (document is null)
             {
-                throw new ArgumentNullException(nameof(doc));
+                throw new ArgumentNullException(nameof(document));
             }
 
             if (String.IsNullOrEmpty(xpath))
@@ -168,19 +228,23 @@ namespace NetExtender.Utils.Formats
                 throw new ArgumentNullException(nameof(xpath));
             }
 
-            XmlNodeList nodes = doc.SelectNodes(xpath);
+            XmlNodeList nodes = document.SelectNodes(xpath);
+
+            if (nodes is null || nodes.Count == 0)
+            {
+                CreateXPath(document, xpath).InnerText = value;
+                return;
+            }
+
             if (nodes.Count > 1)
             {
                 throw new XmlException("Xpath '" + xpath + "' was not found multiple times!");
             }
-
-            if (nodes.Count == 0)
+            
+            XmlNode node = nodes[0];
+            if (node is not null)
             {
-                CreateXPath(doc, xpath).InnerText = value;
-            }
-            else
-            {
-                nodes[0].InnerText = value;
+                node.InnerText = value;
             }
         }
         
@@ -498,26 +562,26 @@ namespace NetExtender.Utils.Formats
         }
         
         /// <summary>
-        /// Converts an object to XML
+        /// Converts an object to Xml
         /// </summary>
         /// <param name="temp">Object to convert</param>
         /// <param name="root"></param>
-        /// <param name="path">File to save the XML to</param>
-        /// <returns>string representation of the object in XML format</returns>
-        public static String ObjectToXML(Object temp, String root, String path)
+        /// <param name="path">File to save the Xml to</param>
+        /// <returns>string representation of the object in Xml format</returns>
+        public static String ObjectToXml(Object temp, String root, String path)
         {
-            String xml = ObjectToXML(temp, root);
+            String xml = ObjectToXml(temp, root);
             File.AppendAllText(path, xml);
             return xml;
         }
 
         /// <summary>
-        /// Converts an object to XML
+        /// Converts an object to Xml
         /// </summary>
         /// <param name="temp">Object to convert</param>
         /// <param name="root"></param>
-        /// <returns>string representation of the object in XML format</returns>
-        public static String ObjectToXML(Object temp, String root)
+        /// <returns>string representation of the object in Xml format</returns>
+        public static String ObjectToXml(Object temp, String root)
         {
             if (temp is null)
             {
@@ -532,29 +596,29 @@ namespace NetExtender.Utils.Formats
         }
 
         /// <summary>
-        /// Takes an XML file and exports the Object it holds
+        /// Takes an Xml file and exports the Object it holds
         /// </summary>
         /// <param name="path">File name to use</param>
         /// <param name="result">Object to export to</param>
         /// <param name="root"></param>
-        public static void XMLToObject<T>(String path, out T result, String root)
+        public static void XmlToObject<T>(String path, out T result, String root)
         {
             using StreamReader reader = File.OpenText(path);
-            result = XMLToObject<T>(reader.ReadToEnd(), root);
+            result = XmlToObject<T>(reader.ReadToEnd(), root);
         }
 
         /// <summary>
-        /// Converts an XML string to an object
+        /// Converts an Xml string to an object
         /// </summary>
         /// <typeparam name="T">Object type</typeparam>
-        /// <param name="xml">XML string</param>
+        /// <param name="xml">Xml string</param>
         /// <param name="root"></param>
         /// <returns>The object of the specified type</returns>
-        public static T XMLToObject<T>(String xml, String root)
+        public static T XmlToObject<T>([NotNull] String xml, String root)
         {
             if (String.IsNullOrEmpty(xml))
             {
-                throw new ArgumentException("XML can not be null/empty");
+                throw new ArgumentException(@"Value cannot be null or empty.", nameof(xml));
             }
 
             using MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(xml));
@@ -563,30 +627,35 @@ namespace NetExtender.Utils.Formats
         }
 
         /// <summary>
-        /// Takes an XML file and exports the Object it holds
+        /// Takes an Xml file and exports the Object it holds
         /// </summary>
         /// <param name="path">File name to use</param>
         /// <param name="result">Object to export to</param>
         /// <param name="type">Object type to export</param>
         /// <param name="root"></param>
-        public static void XMLToObject(String path, out Object result, Type type, String root)
+        public static void XmlToObject([NotNull] String path, Type type, String root, out Object result)
         {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
             using StreamReader reader = File.OpenText(path);
-            result = XMLToObject(reader.ReadToEnd(), type, root);
+            result = XmlToObject(reader.ReadToEnd(), type, root);
         }
 
         /// <summary>
-        /// Converts an XML string to an object
+        /// Converts an Xml string to an object
         /// </summary>
-        /// <param name="xml">XML string</param>
+        /// <param name="xml">Xml string</param>
         /// <param name="type">Object type to export</param>
         /// <param name="root"></param>
         /// <returns>The object of the specified type</returns>
-        public static Object XMLToObject(String xml, Type type, String root)
+        public static Object XmlToObject([NotNull] String xml, Type type, String root)
         {
             if (String.IsNullOrEmpty(xml))
             {
-                throw new ArgumentException("XML can not be null/empty");
+                throw new ArgumentException(@"Value cannot be null or empty.", nameof(xml));
             }
 
             using MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(xml));
@@ -599,7 +668,7 @@ namespace NetExtender.Utils.Formats
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="value"></param>
-        public static String SerializeXML<T>(T value)
+        public static String SerializeXml<T>(T value)
         {
             if (value is null)
             {
@@ -625,7 +694,7 @@ namespace NetExtender.Utils.Formats
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public static Boolean TryDeserializeXML<T>(String obj, out T value)
+        public static Boolean TryDeserializeXml<T>(String obj, out T value)
         {
             if (String.IsNullOrEmpty(obj))
             {

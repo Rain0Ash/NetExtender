@@ -46,7 +46,7 @@ namespace NetExtender.Configuration.Xml
 
         protected override String SerializeConfig()
         {
-            return XMLUtils.ToXML(base.SerializeConfig(), "Config");
+            return XmlUtils.ToXml(base.SerializeConfig(), "Config");
         }
 
         protected override DictionaryTree<String, String> DeserializeConfig(String config)
@@ -58,7 +58,7 @@ namespace NetExtender.Configuration.Xml
             
             try
             {
-                return base.DeserializeConfig(JSONUtils.ToJSON(config));
+                return base.DeserializeConfig(JsonUtils.ToJson(config));
             }
             catch (Exception)
             {
