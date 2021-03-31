@@ -4,7 +4,7 @@
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 
-namespace NetExtender.Utils.Database
+namespace NetExtender.Utils.EntityFramework
 {
     public static class DatabaseSetUtils
     {

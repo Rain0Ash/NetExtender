@@ -5,7 +5,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace NetExtender.Utils.Database
+namespace NetExtender.Utils.EntityFramework
 {
     public static class PropertyBuilderUtils
     {

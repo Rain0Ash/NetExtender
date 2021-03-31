@@ -107,5 +107,11 @@ namespace NetExtender.Utils.Network
         {
             return !String.IsNullOrEmpty(agent);
         }
+        
+        private static Boolean IsInternetExplorer(String agent)
+        {
+            return agent.Contains("MSIE")
+                   || agent.Contains("Trident");
+        }
     }
 }

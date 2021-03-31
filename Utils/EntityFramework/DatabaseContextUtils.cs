@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using NetExtender.Database;
 
-namespace NetExtender.Utils.Database
+namespace NetExtender.Utils.EntityFramework
 {
     public static class DatabaseContextUtils
     {
