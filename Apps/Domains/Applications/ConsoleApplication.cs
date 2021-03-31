@@ -6,7 +6,7 @@ using WPFApp = System.Windows.Application;
 
 namespace NetExtender.Apps.Domains.Applications
 {
-    public class ConsoleApplication<TApp> : WPFApplication<TApp> where TApp : WPFApp, new()
+    public class ConsoleApplication : WPFApplication
     {
         public override GUIType GUIType
         {
@@ -21,7 +21,7 @@ namespace NetExtender.Apps.Domains.Applications
             Application.Run();
         }
 
-        protected internal ConsoleApplication(TApp application)
+        protected internal ConsoleApplication(WPFApp application)
             : base(application)
         {
         }

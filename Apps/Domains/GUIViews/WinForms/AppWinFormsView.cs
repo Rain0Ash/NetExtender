@@ -79,6 +79,11 @@ namespace NetExtender.Apps.Domains.GUIViews.Winforms
 
         protected virtual void OnFormClosed(Object sender, EventArgs e)
         {
+            if (Domain.ShutdownMode != ShutdownMode.OnMainWindowClose)
+            {
+                return;
+            }
+            
             try
             {
                 Domain.Shutdown(true);

@@ -4,6 +4,7 @@
 using System;
 using System.Windows.Forms;
 using NetExtender.GUI.Common.Interfaces;
+using NetExtender.Utils.Numerics;
 
 namespace NetExtender.GUI.WinForms.Forms
 {
@@ -96,6 +97,30 @@ namespace NetExtender.GUI.WinForms.Forms
             set
             {
                 _form.Top = (Int32) value;
+            }
+        }
+
+        public Double Width
+        {
+            get
+            {
+                return _form.Width;
+            }
+            set
+            {
+                _form.Width = (Int32) value.Round();
+            }
+        }
+
+        public Double Height
+        {
+            get
+            {
+                return _form.Height;
+            }
+            set
+            {
+                _form.Height = (Int32) value.Round();
             }
         }
 

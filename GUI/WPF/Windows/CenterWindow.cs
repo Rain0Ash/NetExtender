@@ -10,14 +10,19 @@ namespace NetExtender.GUI.WPF.Windows
     {
         protected CenterWindow()
         {
+            Started += SetSizeTo;
             Started += CenterTo;
         }
         
-        private void CenterTo(Object sender, EventArgs e)
+        protected virtual void SetSizeTo(Object sender, EventArgs e)
+        {
+        }
+        
+        protected void CenterTo(Object sender, EventArgs e)
         {
             CenterTo();
         }
-        
+
         protected virtual void CenterTo()
         {
             CenterToScreen();

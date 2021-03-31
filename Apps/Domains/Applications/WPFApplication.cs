@@ -6,15 +6,14 @@ using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 using NetExtender.GUI;
-using NetExtender.GUI.Common.Interfaces;
 using NetExtender.GUI.WPF.Windows;
 using WPFApp = System.Windows.Application;
 
 namespace NetExtender.Apps.Domains.Applications
 {
-    public class WPFApplication<TApp> : Application where TApp : WPFApp, new()
+    public class WPFApplication : Application
     {
-        public TApp Application { get; }
+        public WPFApp Application { get; }
 
         public override GUIType GUIType
         {
@@ -56,7 +55,7 @@ namespace NetExtender.Apps.Domains.Applications
             }
         }
         
-        protected internal WPFApplication(TApp application)
+        protected internal WPFApplication(WPFApp application)
         {
             Application = application ?? throw new ArgumentNullException();
         }
@@ -78,7 +77,7 @@ namespace NetExtender.Apps.Domains.Applications
             Run();
         }
         
-        public override void Run(IWindow window)
+        public override void Run<T>(T window)
         {
             Run(window as Window ?? window as WindowWrapper);
         }

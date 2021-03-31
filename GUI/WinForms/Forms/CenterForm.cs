@@ -9,10 +9,15 @@ namespace NetExtender.GUI.WinForms.Forms
     {
         protected CenterForm()
         {
-            Load += OnLoad;
+            Load += SetSizeTo;
+            Load += CenterTo;
         }
 
-        protected virtual void OnLoad(Object sender, EventArgs args)
+        protected virtual void SetSizeTo(Object? sender, EventArgs e)
+        {
+        }
+
+        protected virtual void CenterTo(Object sender, EventArgs args)
         {
             CenterTo();
         }
@@ -26,7 +31,7 @@ namespace NetExtender.GUI.WinForms.Forms
         {
             if (disposing)
             {
-                Load -= OnLoad;
+                Load -= CenterTo;
             }
             
             base.Dispose(disposing);

@@ -18,6 +18,7 @@ using NetExtender.Apps.Reader;
 using NetExtender.Events.Args;
 using NetExtender.Exceptions;
 using NetExtender.GUI;
+using NetExtender.GUI.Common.Interfaces;
 using WPFApp = System.Windows.Application;
 
 namespace NetExtender.Apps.Domains
@@ -331,14 +332,14 @@ namespace NetExtender.Apps.Domains
                 return Initialize(new TApp(), type);
             }
 
-            public IDomain Initialize<TApp>(TApp app, GUIType type) where TApp : WPFApp, new()
+            public IDomain Initialize(WPFApp app, GUIType type)
             {
                 Application = type switch
                 {
-                    GUIType.Console => new ConsoleApplication<TApp>(app),
-                    GUIType.ConsoleGUI => new ConsoleApplication<TApp>(app),
+                    GUIType.Console => new ConsoleApplication(app),
+                    GUIType.ConsoleGUI => new ConsoleApplication(app),
                     GUIType.WinForms => new WinFormsApplication(),
-                    GUIType.WPF => new WPFApplication<TApp>(app),
+                    GUIType.WPF => new WPFApplication(app),
                     GUIType.None => throw new NotSupportedException(),
                     _ => throw new NotSupportedException()
                 };
@@ -349,6 +350,11 @@ namespace NetExtender.Apps.Domains
             public void Run()
             {
                 Application.Run();
+            }
+            
+            public void Run<T>(T window) where T : IWindow
+            {
+                Application.Run(window);
             }
 
             public void Shutdown(Int32 code = 0)

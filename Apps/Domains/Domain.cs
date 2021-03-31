@@ -17,6 +17,7 @@ using NetExtender.Apps.Data.Interfaces;
 using NetExtender.Apps.Domains.Interfaces;
 using NetExtender.Exceptions;
 using NetExtender.GUI;
+using NetExtender.GUI.Common.Interfaces;
 using NetExtender.Utils.IO;
 using NetExtender.Utils.Types;
 using WPFApp = System.Windows.Application;
@@ -256,6 +257,11 @@ namespace NetExtender.Apps.Domains
         public static void Run()
         {
             Current.Run();
+        }
+        
+        public static void Run<T>(T window) where T : IWindow
+        {
+            Current.Run(window);
         }
 
         public static void Shutdown(Int32 code = 0)

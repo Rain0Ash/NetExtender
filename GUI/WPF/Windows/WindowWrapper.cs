@@ -107,6 +107,30 @@ namespace NetExtender.GUI.WPF.Windows
             }
         }
 
+        public Double Width
+        {
+            get
+            {
+                return _window.Width;
+            }
+            set
+            {
+                _window.Width = value;
+            }
+        }
+
+        public Double Height
+        {
+            get
+            {
+                return _window.Height;
+            }
+            set
+            {
+                _window.Height = value;
+            }
+        }
+
         private readonly Window _window;
 
         public WindowWrapper(Window window)

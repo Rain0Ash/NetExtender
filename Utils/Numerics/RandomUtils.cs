@@ -64,7 +64,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 Next(this IRandom random)
+        public static Int32 Next<T>(this T random) where T : IRandom
         {
             return NextInt32(random);
         }
@@ -82,7 +82,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 Next(this IRandom random, Int32 max)
+        public static Int32 Next<T>(this T random, Int32 max) where T : IRandom
         {
             return NextInt32(random, max);
         }
@@ -100,7 +100,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 Next(this IRandom random, Int32 min, Int32 max)
+        public static Int32 Next<T>(this T random, Int32 min, Int32 max) where T : IRandom
         {
             return NextInt32(random, min, max);
         }
@@ -118,7 +118,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 NextNonNegative(this IRandom random)
+        public static Int32 NextNonNegative<T>(this T random) where T : IRandom
         {
             return NextNonNegativeInt32(random);
         }
@@ -136,7 +136,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 NextNonNegative(this IRandom random, Int32 max)
+        public static Int32 NextNonNegative<T>(this T random, Int32 max) where T : IRandom
         {
             return NextNonNegativeInt32(random, max);
         }
@@ -154,7 +154,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 NextNonNegative(this IRandom random, Int32 min, Int32 max)
+        public static Int32 NextNonNegative<T>(this T random, Int32 min, Int32 max) where T : IRandom
         {
             return NextNonNegativeInt32(random, min, max);
         }
@@ -172,7 +172,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 NextNonZero(this IRandom random)
+        public static Int32 NextNonZero<T>(this T random) where T : IRandom
         {
             return NextNonZeroInt32(random);
         }
@@ -190,7 +190,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 NextNonZero(this IRandom random, Int32 max)
+        public static Int32 NextNonZero<T>(this T random, Int32 max) where T : IRandom
         {
             return NextNonZeroInt32(random, max);
         }
@@ -208,7 +208,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 NextNonZero(this IRandom random, Int32 min, Int32 max)
+        public static Int32 NextNonZero<T>(this T random, Int32 min, Int32 max) where T : IRandom
         {
             return NextNonZeroInt32(random, min, max);
         }
@@ -226,7 +226,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single NextSingle(this IRandom random)
+        public static Single NextSingle<T>(this T random) where T : IRandom
         {
             return NextSingleWithOne(random);
         }
@@ -244,7 +244,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single NextSingle(this IRandom random, Boolean include)
+        public static Single NextSingle<T>(this T random, Boolean include) where T : IRandom
         {
             return include ? NextSingleWithOne(random) : NextSingleWithoutOne(random);
         }
@@ -262,7 +262,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single NextSingleWithOne(this IRandom random)
+        public static Single NextSingleWithOne<T>(this T random) where T : IRandom
         {
             return (Single) NextDoubleWithOne(random);
         }
@@ -280,7 +280,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single NextSingleWithoutOne(this IRandom random)
+        public static Single NextSingleWithoutOne<T>(this T random) where T : IRandom
         {
             return (Single) NextDoubleWithoutOne(random);
         }
@@ -298,7 +298,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single NextSingle(this IRandom random, Single max)
+        public static Single NextSingle<T>(this T random, Single max) where T : IRandom
         {
             return NextSingle(random) * max;
         }
@@ -325,7 +325,7 @@ namespace NetExtender.Utils.Numerics
             return value * max - value * min + min;
         }
 
-        public static Single NextSingle(this IRandom random, Single min, Single max)
+        public static Single NextSingle<T>(this T random, Single min, Single max) where T : IRandom
         {
             if (Math.Abs(max - min) < Single.Epsilon)
             {
@@ -354,7 +354,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double NextDouble(this IRandom random)
+        public static Double NextDouble<T>(this T random) where T : IRandom
         {
             return NextDoubleWithOne(random);
         }
@@ -372,7 +372,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double NextDouble(this IRandom random, Boolean include)
+        public static Double NextDouble<T>(this T random, Boolean include) where T : IRandom
         {
             return include ? NextDoubleWithOne(random) : NextDoubleWithoutOne(random);
         }
@@ -398,7 +398,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double NextDoubleWithOne(this IRandom random)
+        public static Double NextDoubleWithOne<T>(this T random) where T : IRandom
         {
             lock (random)
             {
@@ -432,7 +432,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double NextDoubleWithoutOne(this IRandom random)
+        public static Double NextDoubleWithoutOne<T>(this T random) where T : IRandom
         {
             lock (random)
             {
@@ -458,7 +458,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double NextDouble(this IRandom random, Double max)
+        public static Double NextDouble<T>(this T random, Double max) where T : IRandom
         {
             return NextDouble(random) * max;
         }
@@ -485,7 +485,7 @@ namespace NetExtender.Utils.Numerics
             return value * max - value * min + min;
         }
 
-        public static Double NextDouble(this IRandom random, Double min, Double max)
+        public static Double NextDouble<T>(this T random, Double min, Double max) where T : IRandom
         {
             if (Math.Abs(max - min) < Double.Epsilon)
             {
@@ -514,7 +514,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal NextDecimal(this IRandom random)
+        public static Decimal NextDecimal<T>(this T random) where T : IRandom
         {
             return NextDecimal(random, Decimal.MaxValue);
         }
@@ -532,7 +532,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal NextDecimal(this IRandom random, Decimal max)
+        public static Decimal NextDecimal<T>(this T random, Decimal max) where T : IRandom
         {
             return new Decimal(NextDouble(random)) * max;
         }
@@ -559,7 +559,7 @@ namespace NetExtender.Utils.Numerics
             return value * max - value * min + min;
         }
 
-        public static Decimal NextDecimal(this IRandom random, Decimal min, Decimal max)
+        public static Decimal NextDecimal<T>(this T random, Decimal min, Decimal max) where T : IRandom
         {
             if (max - min == 0)
             {
@@ -589,21 +589,21 @@ namespace NetExtender.Utils.Numerics
             return NextBoolean(random, 0.5d);
         }
 
-        /// <inheritdoc cref="NextBoolean(IRandom,Double)"/>
+        /// <inheritdoc cref="NextBoolean{T}(T,Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean NextBoolean(this IRandom random)
+        public static Boolean NextBoolean<T>(this T random) where T : IRandom
         {
             return NextBoolean(random, 0.5d);
         }
 
-        /// <inheritdoc cref="NextBoolean(IRandom,Double)"/>
+        /// <inheritdoc cref="NextBoolean{T}(T,Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean NextBoolean(Double chance)
         {
             return NextBoolean(Generator, chance);
         }
 
-        /// <inheritdoc cref="NextBoolean(IRandom,Double)"/>
+        /// <inheritdoc cref="NextBoolean{T}(T,Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean NextBoolean(this System.Random random, Double chance)
         {
@@ -621,7 +621,7 @@ namespace NetExtender.Utils.Numerics
         /// <param name="random">Random implementation</param>
         /// <param name="chance">Abs chance to true. Between [0;1]</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean NextBoolean(this IRandom random, Double chance)
+        public static Boolean NextBoolean<T>(this T random, Double chance) where T : IRandom
         {
             return chance switch
             {
@@ -644,7 +644,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex NextComplex(this IRandom random)
+        public static Complex NextComplex<T>(this T random) where T : IRandom
         {
             return new Complex(NextDouble(random), NextDouble(random));
         }
@@ -662,7 +662,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex NextComplex(this IRandom random, Double max)
+        public static Complex NextComplex<T>(this T random, Double max) where T : IRandom
         {
             return new Complex(NextDouble(random, max), NextDouble(random, max));
         }
@@ -680,7 +680,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex NextComplex(this IRandom random, Double min, Double max)
+        public static Complex NextComplex<T>(this T random, Double min, Double max) where T : IRandom
         {
             return NextComplex(random, min, max, min, max);
         }
@@ -698,7 +698,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex NextComplex(this IRandom random, Double min, Double max, Double imin, Double imax)
+        public static Complex NextComplex<T>(this T random, Double min, Double max, Double imin, Double imax) where T : IRandom
         {
             return new Complex(NextDouble(random, min, max), NextDouble(random, imin, imax));
         }
@@ -716,7 +716,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TimeSpan NextTimeSpan(this IRandom random)
+        public static TimeSpan NextTimeSpan<T>(this T random) where T : IRandom
         {
             return NextTimeSpan(random, TimeSpan.MaxValue);
         }
@@ -730,13 +730,13 @@ namespace NetExtender.Utils.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeSpan NextTimeSpan(this System.Random random, TimeSpan max)
         {
-            return NextTimeSpan(random, TimeSpan.MinValue, max);
+            return NextTimeSpan(random, TimeSpan.Zero, max);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TimeSpan NextTimeSpan(this IRandom random, TimeSpan max)
+        public static TimeSpan NextTimeSpan<T>(this T random, TimeSpan max) where T : IRandom
         {
-            return NextTimeSpan(random, TimeSpan.MinValue, max);
+            return NextTimeSpan(random, TimeSpan.Zero, max);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -760,7 +760,7 @@ namespace NetExtender.Utils.Numerics
             return min.Add(TimeSpan.FromTicks(NextInt64(random, min.Ticks, max.Ticks)));
         }
 
-        public static TimeSpan NextTimeSpan(this IRandom random, TimeSpan min, TimeSpan max)
+        public static TimeSpan NextTimeSpan<T>(this T random, TimeSpan min, TimeSpan max) where T : IRandom
         {
             if (max == min)
             {
@@ -788,7 +788,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime NextDateTime(this IRandom random)
+        public static DateTime NextDateTime<T>(this T random) where T : IRandom
         {
             return NextDateTime(random, DateTime.MaxValue);
         }
@@ -806,7 +806,7 @@ namespace NetExtender.Utils.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime NextDateTime(this IRandom random, DateTime max)
+        public static DateTime NextDateTime<T>(this T random, DateTime max) where T : IRandom
         {
             return NextDateTime(random, DateTime.MinValue, max);
         }
@@ -833,7 +833,7 @@ namespace NetExtender.Utils.Numerics
             return min.Add(span);
         }
 
-        public static DateTime NextDateTime(this IRandom random, DateTime min, DateTime max)
+        public static DateTime NextDateTime<T>(this T random, DateTime min, DateTime max) where T : IRandom
         {
             if (max == min)
             {
@@ -869,9 +869,14 @@ namespace NetExtender.Utils.Numerics
             Generator = type.Create(seed);
         }
 
-        public static void Reset(IRandom random)
+        public static void Reset<T>(T random) where T : IRandom
         {
-            Generator = random ?? throw new ArgumentNullException(nameof(random));
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            Generator = random;
         }
 
         public static void Reset([NotNull] System.Random random)

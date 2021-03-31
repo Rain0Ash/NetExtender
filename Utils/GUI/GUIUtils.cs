@@ -213,8 +213,28 @@ namespace NetExtender.Utils.GUI
 
             return rectangle;
         }
+        
+        public static Rectangle GetWindowRectangle([NotNull] this Form form)
+        {
+            if (form is null)
+            {
+                throw new ArgumentNullException(nameof(form));
+            }
 
-        public static Rectangle GetWindowRectangle([NotNull] this IWindow window)
+            return GetWindowRectangle(form.Handle);
+        }
+        
+        public static Rectangle GetWindowRectangle([NotNull] this Window window)
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            return GetWindowRectangle(window.GetHandle());
+        }
+
+        public static Rectangle GetWindowRectangle<T>([NotNull] this T window) where T : IWindow
         {
             if (window is null)
             {
@@ -242,7 +262,27 @@ namespace NetExtender.Utils.GUI
             return ShowWindow(handle, (UInt32) state);
         }
         
-        public static Boolean ShowWindow([NotNull] this IWindow window, WindowStateType state)
+        public static Boolean ShowWindow([NotNull] this Form form, WindowStateType state)
+        {
+            if (form is null)
+            {
+                throw new ArgumentNullException(nameof(form));
+            }
+
+            return ShowWindow(form.Handle, state);
+        }
+        
+        public static Boolean ShowWindow([NotNull] this Window window, WindowStateType state)
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            return ShowWindow(window.GetHandle(), state);
+        }
+        
+        public static Boolean ShowWindow<T>([NotNull] this T window, WindowStateType state) where T : IWindow
         {
             if (window is null)
             {
@@ -306,6 +346,243 @@ namespace NetExtender.Utils.GUI
             }
 
             return BringToForegroundWindow(handle.Handle);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetPrimaryScreenPercentageSize([NotNull] this Form form)
+        {
+            SetPrimaryScreenPercentageSize(form, 50);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetPrimaryScreenPercentageSize([NotNull] this Form form, Byte percentage)
+        {
+            SetPrimaryScreenPercentageSize(form, percentage, percentage);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetPrimaryScreenPercentageSize([NotNull] this Form form, Byte width, Byte height)
+        {
+            if (form is null)
+            {
+                throw new ArgumentNullException(nameof(form));
+            }
+
+            SetScreenPercentageSize(form, Screen.PrimaryScreen, width, height);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetHandleScreenPercentageSize([NotNull] this Form form)
+        {
+            SetHandleScreenPercentageSize(form, 50);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetHandleScreenPercentageSize([NotNull] this Form form, Byte percentage)
+        {
+            SetHandleScreenPercentageSize(form, percentage, percentage);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetHandleScreenPercentageSize([NotNull] this Form form, Byte width, Byte height)
+        {
+            if (form is null)
+            {
+                throw new ArgumentNullException(nameof(form));
+            }
+
+            SetScreenPercentageSize(form, Screen.FromHandle(form.Handle), width, height);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetScreenPercentageSize([NotNull] this Form form, Screen screen)
+        {
+            SetScreenPercentageSize(form, screen, 50);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetScreenPercentageSize([NotNull] this Form form, Screen screen, Byte percentage)
+        {
+            SetScreenPercentageSize(form, screen, percentage, percentage);
+        }
+        
+        public static void SetScreenPercentageSize([NotNull] this Form form, Screen screen, Byte width, Byte height)
+        {
+            if (form is null)
+            {
+                throw new ArgumentNullException(nameof(form));
+            }
+
+            if (width > 100)
+            {
+                width = 100;
+            }
+
+            if (height > 100)
+            {
+                height = 100;
+            }
+
+            form.Width = (Int32) (width / 100d * screen.WorkingArea.Width);
+            form.Height = (Int32) (height / 100d * screen.WorkingArea.Height);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetPrimaryScreenPercentageSize([NotNull] this Window window)
+        {
+            SetPrimaryScreenPercentageSize(window, 50);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetPrimaryScreenPercentageSize([NotNull] this Window window, Byte percentage)
+        {
+            SetPrimaryScreenPercentageSize(window, percentage, percentage);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetPrimaryScreenPercentageSize([NotNull] this Window window, Byte width, Byte height)
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            SetScreenPercentageSize(window, Screen.PrimaryScreen, width, height);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetHandleScreenPercentageSize([NotNull] this Window window)
+        {
+            SetHandleScreenPercentageSize(window, 50);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetHandleScreenPercentageSize([NotNull] this Window window, Byte percentage)
+        {
+            SetHandleScreenPercentageSize(window, percentage, percentage);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetHandleScreenPercentageSize([NotNull] this Window window, Byte width, Byte height)
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            SetScreenPercentageSize(window, Screen.FromHandle(window.GetHandle()), width, height);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetScreenPercentageSize([NotNull] this Window window, Screen screen)
+        {
+            SetScreenPercentageSize(window, screen, 50);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetScreenPercentageSize([NotNull] this Window window, Screen screen, Byte percentage)
+        {
+            SetScreenPercentageSize(window, screen, percentage, percentage);
+        }
+        
+        public static void SetScreenPercentageSize([NotNull] this Window window, Screen screen, Byte width, Byte height)
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            if (width > 100)
+            {
+                width = 100;
+            }
+
+            if (height > 100)
+            {
+                height = 100;
+            }
+
+            window.Width = width / 100d * screen.WorkingArea.Width;
+            window.Height = height / 100d * screen.WorkingArea.Height;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetPrimaryScreenPercentageSize<T>([NotNull] this T window) where T : IWindow
+        {
+            SetPrimaryScreenPercentageSize(window, 50);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetPrimaryScreenPercentageSize<T>([NotNull] this T window, Byte percentage) where T : IWindow
+        {
+            SetPrimaryScreenPercentageSize(window, percentage, percentage);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetPrimaryScreenPercentageSize<T>([NotNull] this T window, Byte width, Byte height) where T : IWindow
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            SetScreenPercentageSize(window, Screen.PrimaryScreen, width, height);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetHandleScreenPercentageSize<T>([NotNull] this T window) where T : IWindow
+        {
+            SetHandleScreenPercentageSize(window, 50);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetHandleScreenPercentageSize<T>([NotNull] this T window, Byte percentage) where T : IWindow
+        {
+            SetHandleScreenPercentageSize(window, percentage, percentage);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetHandleScreenPercentageSize<T>([NotNull] this T window, Byte width, Byte height) where T : IWindow
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            SetScreenPercentageSize(window, Screen.FromHandle(window.Handle), width, height);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetScreenPercentageSize<T>([NotNull] this T window, Screen screen) where T : IWindow
+        {
+            SetScreenPercentageSize(window, screen, 50);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetScreenPercentageSize<T>([NotNull] this T window, Screen screen, Byte percentage) where T : IWindow
+        {
+            SetScreenPercentageSize(window, screen, percentage, percentage);
+        }
+
+        public static void SetScreenPercentageSize<T>([NotNull] this T window, Screen screen, Byte width, Byte height) where T : IWindow
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            if (width > 100)
+            {
+                width = 100;
+            }
+
+            if (height > 100)
+            {
+                height = 100;
+            }
+
+            window.Width = width / 100d * screen.WorkingArea.Width;
+            window.Height = height / 100d * screen.WorkingArea.Height;
         }
     }
 }

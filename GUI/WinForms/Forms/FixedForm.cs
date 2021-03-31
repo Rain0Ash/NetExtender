@@ -8,6 +8,7 @@ using System.Windows.Input;
 using NetExtender.GUI.Common.Interfaces;
 using NetExtender.Utils.GUI;
 using NetExtender.Utils.IO;
+using NetExtender.Utils.Numerics;
 
 namespace NetExtender.GUI.WinForms.Forms
 {
@@ -36,6 +37,30 @@ namespace NetExtender.GUI.WinForms.Forms
             set
             {
                 base.Top = (Int32) value;
+            }
+        }
+
+        Double IWindow.Width
+        {
+            get
+            {
+                return Width;
+            }
+            set
+            {
+                Width = (Int32) value.Round();
+            }
+        }
+
+        Double IWindow.Height
+        {
+            get
+            {
+                return Height;
+            }
+            set
+            {
+                Height = (Int32) value.Round();
             }
         }
 

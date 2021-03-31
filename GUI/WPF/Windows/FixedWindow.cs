@@ -108,7 +108,7 @@ namespace NetExtender.GUI.WPF.Windows
             Mouse.Capture(this);
             Point click = Mouse.GetPosition(this);
             Mouse.Capture(previous);
-            
+
             const Int32 iconWidth = 32;
             
             if (!(click.X <= iconWidth) || !(click.Y <= 0))

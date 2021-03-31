@@ -20,7 +20,7 @@ namespace NetExtender.Apps.Domains.Applications
         public abstract ShutdownMode ShutdownMode { get; set; }
 
         public abstract void Run();
-        public abstract void Run(IWindow window);
+        public abstract void Run<T>(T window) where T : IWindow;
 
         public virtual void Shutdown(Int32 code = 0)
         {
@@ -64,7 +64,7 @@ namespace NetExtender.Apps.Domains.Applications
             {
                 try
                 {
-                    await Task.Delay(milli, token);
+                    await Task.Delay(milli, token).ConfigureAwait(false);
                 }
                 catch (Exception)
                 {

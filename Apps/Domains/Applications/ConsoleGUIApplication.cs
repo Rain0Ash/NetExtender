@@ -7,7 +7,7 @@ using WPFApp = System.Windows.Application;
 
 namespace NetExtender.Apps.Domains.Applications
 {
-    public class ConsoleGUIApplication<TApp> : ConsoleApplication<TApp> where TApp : WPFApp, new()
+    public class ConsoleGUIApplication : ConsoleApplication
     {
         public override GUIType GUIType
         {
@@ -17,7 +17,7 @@ namespace NetExtender.Apps.Domains.Applications
             }
         }
         
-        protected internal ConsoleGUIApplication(TApp application)
+        protected internal ConsoleGUIApplication(WPFApp application)
             : base(application)
         {
         }

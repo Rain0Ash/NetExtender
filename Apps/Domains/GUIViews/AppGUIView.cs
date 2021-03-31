@@ -4,6 +4,7 @@
 using System;
 using NetExtender.Apps.Domains.GUIViews.Common.Interfaces;
 using NetExtender.Exceptions;
+using NetExtender.GUI.Common.Interfaces;
 
 namespace NetExtender.Apps.Domains.GUIViews.Common
 {
@@ -70,6 +71,11 @@ namespace NetExtender.Apps.Domains.GUIViews.Common
         protected virtual void Run()
         {
             Domain.Run();
+        }
+        
+        protected virtual void Run<T>(T window) where T : IWindow
+        {
+            Domain.Run(window);
         }
 
         public virtual void Dispose()

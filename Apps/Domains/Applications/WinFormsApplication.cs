@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Threading;
 using NetExtender.GUI;
-using NetExtender.GUI.Common.Interfaces;
 using NetExtender.GUI.WinForms.Forms;
 
 namespace NetExtender.Apps.Domains.Applications
@@ -63,7 +62,7 @@ namespace NetExtender.Apps.Domains.Applications
             Run();
         }
         
-        public override void Run(IWindow window)
+        public override void Run<T>(T window)
         {
             Run(window as Form ?? window as FormWrapper);
         }

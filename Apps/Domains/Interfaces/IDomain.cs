@@ -54,7 +54,7 @@ namespace NetExtender.Apps.Domains.Interfaces
 
         public IDomain Initialize(GUIType type);
         public IDomain Initialize<TApp>(GUIType type) where TApp : WPFApp, new();
-        public IDomain Initialize<TApp>(TApp app, GUIType type) where TApp : WPFApp, new();
+        public IDomain Initialize(WPFApp app, GUIType type);
 
         public Task SendMessageAsync(Byte[] message);
 
