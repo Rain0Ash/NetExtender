@@ -8,7 +8,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using NetExtender.Utils.Types;
 using JetBrains.Annotations;
-using NetExtender.Localizations.Resources;
+using NetExtender.Resources;
 using NetExtender.Types.Trees.Interfaces;
 using NetExtender.Types.Trees.Json;
 using Newtonsoft.Json;

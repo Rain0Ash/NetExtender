@@ -5,7 +5,10 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Windows.Input;
+using NetExtender.GUI.Common;
+using NetExtender.GUI.Common.EventArgs;
 using NetExtender.GUI.Common.Interfaces;
+using NetExtender.Native;
 using NetExtender.Utils.GUI;
 using NetExtender.Utils.IO;
 using NetExtender.Utils.Numerics;
@@ -76,11 +79,51 @@ namespace NetExtender.GUI.WinForms.Forms
             }
         }
 
+        public event SizeChangeToggleHandler SizeChangeToggle;
+
         protected FixedForm()
         {
             Load += OnLoad;
             Load += BringToFront;
             FormClosing += OnClosing;
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            switch (m.Msg)
+            {
+                case WM.ENTERSIZEMOVE:
+                {
+                    SizeChangeToggleEventArgs args = new SizeChangeToggleEventArgs {End = false};
+                    OnSizeChangeToggle(args);
+
+                    if (args.Handled)
+                    {
+                        return;
+                    }
+                    
+                    break;
+                }
+                case WM.EXITSIZEMOVE:
+                {
+                    SizeChangeToggleEventArgs args = new SizeChangeToggleEventArgs {End = true};
+                    OnSizeChangeToggle(args);
+
+                    if (args.Handled)
+                    {
+                        return;
+                    }
+                    
+                    break;
+                }
+            }
+
+            base.WndProc(ref m);
+        }
+
+        protected virtual void OnSizeChangeToggle(SizeChangeToggleEventArgs e)
+        {
+            SizeChangeToggle?.Invoke(this, e);
         }
 
         private void OnLoad(Object sender, EventArgs e)
@@ -123,7 +166,7 @@ namespace NetExtender.GUI.WinForms.Forms
 
             base.Dispose(disposing);
         }
-        
+
         public Boolean BringToForeground()
         {
             return GUIUtils.BringToForeground((IGUIHandle) this);

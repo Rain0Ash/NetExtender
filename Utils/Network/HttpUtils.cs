@@ -19,6 +19,11 @@ namespace NetExtender.Utils.Network
             return GetHttpStatusName((Int32) code);
         }
 
+        public static Int32 StatusCode(this HttpStatusCode code)
+        {
+            return (Int32) code;
+        }
+
         public static String GetHttpStatusName(Int32 code)
         {
             return code switch

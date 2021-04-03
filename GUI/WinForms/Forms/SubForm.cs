@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using NetExtender.Native;
 
 namespace NetExtender.GUI.WinForms.Forms
 {
@@ -87,14 +88,12 @@ namespace NetExtender.GUI.WinForms.Forms
             const Int32 MF_GRAYED = 0x00000001;
             const Int32 MF_DISABLED = 0x00000002;
             const Int32 SC_MOVE = 0xF010;
-            const Int32 WM_NCLBUTTONDOWN = 0xA1;
-            const Int32 WM_SYSCOMMAND = 0x112;
-            const Int32 WM_INITMENUPOPUP = 0x117;
+            
             switch (m.Msg)
             {
-                case WM_INITMENUPOPUP:
+                case WM.INITMENUPOPUP:
                 {
-                    if (m.LParam.ToInt32() / 65536 != 0) // 'divide by 65536 to get hiword
+                    if (m.LParam.ToInt32() / (UInt16.MaxValue + 1) != 0) // 'divide by 65536 to get hiword
                     {
                         EnableMenuItem(m.WParam, SC_MOVE, MF_BYCOMMAND | MF_DISABLED | MF_GRAYED);
                     }
@@ -103,10 +102,10 @@ namespace NetExtender.GUI.WinForms.Forms
                 }
 
                 //cancels the drag this is IMP
-                case WM_NCLBUTTONDOWN when m.WParam.ToInt32() == HTCAPTION:
+                case WM.NCLBUTTONDOWN when m.WParam.ToInt32() == HTCAPTION:
 
                 // Cancels any clicks on move menu
-                case WM_SYSCOMMAND when (m.WParam.ToInt32() & 0xFFF0) == SC_MOVE:
+                case WM.SYSCOMMAND when (m.WParam.ToInt32() & 0xFFF0) == SC_MOVE:
                     return;
             }
 

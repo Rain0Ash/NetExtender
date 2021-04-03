@@ -4,6 +4,7 @@
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using NetExtender.Native;
 
 namespace NetExtender.GUI.WinForms.ListViews
 {
@@ -15,15 +16,13 @@ namespace NetExtender.GUI.WinForms.ListViews
     
     public class MoveListView : FixedListView
     {
-        private const Int32 WmPaint = 0xF;
-        
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
 
             switch (m.Msg)
             {
-                case WmPaint:
+                case WM.PAINT:
                     DrawInsertionLine();
                     break;
             }

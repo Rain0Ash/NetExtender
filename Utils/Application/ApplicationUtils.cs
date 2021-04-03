@@ -3,17 +3,126 @@
 
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using NetExtender.Utils.Numerics;
 using NetExtender.Apps.Domains;
+using NetExtender.Utils.IO;
 using NetExtender.Utils.OS;
 
 namespace NetExtender.Utils.Application
 {
     public static class ApplicationUtils
     {
+        public static String? Name { get; }
+        public static String? Path { get; }
+
+        public static String? Directory { get; }
+
+        public static DateTime? BuildDateTime { get; }
+
+        private static String? GetNameInternal()
+        {
+            try
+            {
+                return PathUtils.GetFileNameWithoutExtension(AppDomain.CurrentDomain.FriendlyName);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        private static String? GetDirectoryInternal()
+        {
+            try
+            {
+                String location = Assembly.GetEntryAssembly()?.Location;
+                if (String.IsNullOrWhiteSpace(location))
+                {
+                    return null;
+                }
+
+                String directory = PathUtils.GetDirectoryName(location);
+
+                if (String.IsNullOrEmpty(directory) || !PathUtils.IsExistAsFolder(directory))
+                {
+                    return null;
+                }
+
+                return directory;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        private static DateTime? GetBuildDateTimeInternal()
+        {
+            return GetBuildDateTimeInternal(Path ?? GetPathInternal());
+        }
+
+        private static DateTime? GetBuildDateTimeInternal(String path)
+        {
+            try
+            {
+                return path is not null ? File.GetLastWriteTime(path) : null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        private static String? GetPathInternal()
+        {
+            return GetPathInternal(Name ?? GetNameInternal(), Directory ?? GetDirectoryInternal());
+        }
+
+        private static String? GetPathInternal(String name, String directory)
+        {
+            try
+            {
+                if (name is null)
+                {
+                    return null;
+                }
+                
+                if (directory is null)
+                {
+                    return name;
+                }
+
+                String file = System.IO.Path.Combine(directory, name + ".exe");
+
+                return PathUtils.IsExistAsFile(file) ? file : name;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        static ApplicationUtils()
+        {
+            Name = GetNameInternal();
+            Directory = GetDirectoryInternal();
+            
+            if (Name is not null)
+            {
+                Path = GetPathInternal(Name, Directory);
+            }
+
+            if (Path is not null)
+            {
+                BuildDateTime = GetBuildDateTimeInternal(Path);
+            }
+        }
+        
         public static void Shutdown(Int32 code = 0)
         {
             Environment.Exit(code);

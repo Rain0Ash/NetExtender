@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.Windows.Forms;
 using NetExtender.GUI.WinForms.Controls;
+using NetExtender.Native;
 
 namespace NetExtender.GUI.WinForms.Labels
 {
@@ -38,7 +39,7 @@ namespace NetExtender.GUI.WinForms.Labels
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
-            if (m.Msg == 0x000F)
+            if (m.Msg == WM.PAINT)
             {
                 DrawText();
             }

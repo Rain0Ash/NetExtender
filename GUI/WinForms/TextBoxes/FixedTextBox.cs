@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using NetExtender.Utils.Numerics;
 using NetExtender.GUI.Common;
+using NetExtender.Native;
 
 namespace NetExtender.GUI.WinForms.TextBoxes
 {
@@ -66,7 +67,7 @@ namespace NetExtender.GUI.WinForms.TextBoxes
 
             switch (m.Msg)
             {
-                case 0x300:
+                case WM.CUT:
                     if (!ActionType.HasFlag(ActionType.Cut))
                     {
                         return;
@@ -74,7 +75,7 @@ namespace NetExtender.GUI.WinForms.TextBoxes
 
                     base.WndProc(ref m);
                     break;
-                case 0x301:
+                case WM.COPY:
                     if (!ActionType.HasFlag(ActionType.Copy))
                     {
                         return;
@@ -82,7 +83,7 @@ namespace NetExtender.GUI.WinForms.TextBoxes
 
                     base.WndProc(ref m);
                     break;
-                case 0x302:
+                case WM.PASTE:
                     if (!ActionType.HasFlag(ActionType.Paste) || !Clipboard.ContainsText())
                     {
                         return;

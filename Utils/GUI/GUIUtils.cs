@@ -3,6 +3,7 @@
 
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -583,6 +584,54 @@ namespace NetExtender.Utils.GUI
 
             window.Width = width / 100d * screen.WorkingArea.Width;
             window.Height = height / 100d * screen.WorkingArea.Height;
+        }
+        
+        public static Boolean TakeScreenshot(IntPtr handle, out Bitmap screenshot)
+        {
+            if (handle == IntPtr.Zero)
+            {
+                screenshot = default;
+                return false;
+            }
+
+            Rectangle rectangle = GetWindowRectangle(handle);
+            
+            screenshot = new Bitmap(rectangle.Width, rectangle.Height, PixelFormat.Format32bppArgb);
+            
+            using Graphics graphics = Graphics.FromImage(screenshot);
+            graphics.CopyFromScreen(rectangle.Left, rectangle.Top, 0, 0, new System.Drawing.Size(rectangle.Width, rectangle.Height), CopyPixelOperation.SourceCopy);
+            
+            return true;
+        }
+
+        public static Boolean TakeScreenshot([NotNull] this Form form, out Bitmap screenshot)
+        {
+            if (form is null)
+            {
+                throw new ArgumentNullException(nameof(form));
+            }
+
+            return TakeScreenshot(form.Handle, out screenshot);
+        }
+        
+        public static Boolean TakeScreenshot([NotNull] this Window window, out Bitmap screenshot)
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            return TakeScreenshot(window.GetHandle(), out screenshot);
+        }
+        
+        public static Boolean TakeScreenshot<T>([NotNull] this T window, out Bitmap screenshot) where T : IGUIHandle
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            return TakeScreenshot(window.Handle, out screenshot);
         }
     }
 }

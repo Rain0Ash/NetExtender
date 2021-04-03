@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -12,7 +13,11 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using JetBrains.Annotations;
 using NetExtender.Crypto;
 using NetExtender.Utils.GUI.Drawing;
@@ -98,15 +103,15 @@ namespace NetExtender.Utils.Types
             }
         }
 
-        public static Bitmap GetResizedImage(String path, Size bounds)
+        public static Bitmap GetResizedImage(String path, System.Drawing.Size bounds)
         {
             using Bitmap bitmap = new Bitmap(path);
             return GetResizedImage(bitmap, bounds);
         }
 
-        public static Bitmap GetResizedImage(Bitmap image, Size bounds)
+        public static Bitmap GetResizedImage(Bitmap image, System.Drawing.Size bounds)
         {
-            Size boundSize = new Size(image.Width, image.Height).AspectRatioBoundsSize(bounds);
+            System.Drawing.Size boundSize = new System.Drawing.Size(image.Width, image.Height).AspectRatioBoundsSize(bounds);
 
             Bitmap thumbnail = new Bitmap(boundSize.Width, boundSize.Height, image.PixelFormat);
             using Graphics gfx = Graphics.FromImage(thumbnail);
@@ -121,20 +126,20 @@ namespace NetExtender.Utils.Types
 
         public static Bitmap GetTextImage(String message)
         {
-            return GetTextImage(message, Color.White, Color.Black);
+            return GetTextImage(message, System.Drawing.Color.White, System.Drawing.Color.Black);
         }
 
         public static Bitmap GetTextImage(String message, Font font)
         {
-            return GetTextImage(message, font, Color.White, Color.Black);
+            return GetTextImage(message, font, System.Drawing.Color.White, System.Drawing.Color.Black);
         }
 
-        public static Bitmap GetTextImage(String message, Color background, Color foreground)
+        public static Bitmap GetTextImage(String message, System.Drawing.Color background, System.Drawing.Color foreground)
         {
             return GetTextImage(message, new Font("Arial", 12), background, foreground);
         }
 
-        public static Bitmap GetTextImage(String message, Font font, Color background, Color foreground)
+        public static Bitmap GetTextImage(String message, Font font, System.Drawing.Color background, System.Drawing.Color foreground)
         {
             Rectangle rectangle = GetRectangleForText(message, font);
             Bitmap bmp = new Bitmap(rectangle.Width, rectangle.Height);
@@ -156,7 +161,7 @@ namespace NetExtender.Utils.Types
 
         public static Rectangle GetRectangleForText(String text, Font font)
         {
-            using Bitmap bmp = new Bitmap(1, 1, PixelFormat.Format32bppArgb);
+            using Bitmap bmp = new Bitmap(1, 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
             using Graphics gfx = Graphics.FromImage(bmp);
             SizeF stringSize = gfx.MeasureString(text, font);
 
@@ -294,7 +299,7 @@ namespace NetExtender.Utils.Types
             graphics.TranslateTransform(rotated.Width / 2f, rotated.Height / 2f);
             graphics.RotateTransform(angle);
             graphics.TranslateTransform(-rotated.Width / 2f, -rotated.Height / 2f);
-            graphics.DrawImage(image, new Point((width - image.Width) / 2, (height - image.Height) / 2));
+            graphics.DrawImage(image, new System.Drawing.Point((width - image.Width) / 2, (height - image.Height) / 2));
 
             return rotated;
         }
@@ -305,7 +310,7 @@ namespace NetExtender.Utils.Types
         /// <param name="image">The image to resize.</param>
         /// <param name="size">The new size to resize to.</param>
         /// <returns>The resized image.</returns>
-        public static Bitmap Resize([NotNull] this Image image, Size size)
+        public static Bitmap Resize([NotNull] this Image image, System.Drawing.Size size)
         {
             return Resize(image, size.Width, size.Height);
         }
@@ -367,7 +372,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(screen));
             }
 
-            Bitmap bitmap = new Bitmap(screen.Bounds.Width > 1 ? screen.Bounds.Width : 1, screen.Bounds.Height > 1 ? screen.Bounds.Height : 1, PixelFormat.Format32bppArgb);
+            Bitmap bitmap = new Bitmap(screen.Bounds.Width > 1 ? screen.Bounds.Width : 1, screen.Bounds.Height > 1 ? screen.Bounds.Height : 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             try
             {
@@ -399,7 +404,7 @@ namespace NetExtender.Utils.Types
 
             Rectangle rectangle = screens.Aggregate(Rectangle.Empty, (current, screen) => Rectangle.Union(current, screen.Bounds));
 
-            Bitmap bitmap = new Bitmap(rectangle.Width > 1 ? rectangle.Width : 1, rectangle.Height > 1 ? rectangle.Width : 1, PixelFormat.Format32bppArgb);
+            Bitmap bitmap = new Bitmap(rectangle.Width > 1 ? rectangle.Width : 1, rectangle.Height > 1 ? rectangle.Width : 1, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             try
             {
@@ -452,8 +457,8 @@ namespace NetExtender.Utils.Types
                 return false;
             }
 
-            BitmapData bd1 = first.LockBits(new Rectangle(new Point(0, 0), first.Size), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-            BitmapData bd2 = second.LockBits(new Rectangle(new Point(0, 0), second.Size), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            BitmapData bd1 = first.LockBits(new Rectangle(new System.Drawing.Point(0, 0), first.Size), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+            BitmapData bd2 = second.LockBits(new Rectangle(new System.Drawing.Point(0, 0), second.Size), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
 
             try
             {
@@ -470,6 +475,38 @@ namespace NetExtender.Utils.Types
                 first.UnlockBits(bd1);
                 second.UnlockBits(bd2);
             }
+        }
+        
+        [DllImport("gdi32.dll", SetLastError = true)]
+        private static extern Boolean DeleteObject(IntPtr hObject);
+        
+        public static ImageSource ToImageSource([NotNull] this Icon icon)
+        {
+            if (icon is null)
+            {
+                throw new ArgumentNullException(nameof(icon));
+            }
+
+            return ToImageSource(icon.ToBitmap());
+        }
+        
+        public static ImageSource ToImageSource([NotNull] this Bitmap image)
+        {
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            IntPtr handle = image.GetHbitmap();
+
+            ImageSource source = Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+
+            if (!DeleteObject(handle))
+            {
+                throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
+
+            return source;
         }
     }
 }

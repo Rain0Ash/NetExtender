@@ -11,7 +11,7 @@ using NetExtender.Types.Strings;
 using NetExtender.Types.Strings.Interfaces;
 using NetExtender.Utils.Types;
 
-namespace NetExtender.Localizations.Resources
+namespace NetExtender.Resources
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnassignedGetOnlyAutoProperty")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Local")]

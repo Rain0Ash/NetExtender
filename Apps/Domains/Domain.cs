@@ -3,10 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,7 +15,7 @@ using NetExtender.Apps.Domains.Interfaces;
 using NetExtender.Exceptions;
 using NetExtender.GUI;
 using NetExtender.GUI.Common.Interfaces;
-using NetExtender.Utils.IO;
+using NetExtender.Utils.Application;
 using NetExtender.Utils.Types;
 using WPFApp = System.Windows.Application;
 
@@ -90,6 +87,7 @@ namespace NetExtender.Apps.Domains
         
         public static IDomain Create(String name)
         {
+            CurrentDomain.ThrowIfAlreadyInitialized();
             return Create(new IPCAppData(name, AppVersion.Default));
         }
 
@@ -101,16 +99,19 @@ namespace NetExtender.Apps.Domains
 
         public static IDomain Create<TApp>(String name, GUIType type) where TApp : Application, new()
         {
+            CurrentDomain.ThrowIfAlreadyInitialized();
             return Create<TApp>(new IPCAppData(name, AppVersion.Default), type);
         }
 
         public static IDomain Create<TApp>(IIPCAppData data, GUIType type) where TApp : Application, new()
         {
+            CurrentDomain.ThrowIfAlreadyInitialized();
             return Create(new TApp(), data, type);
         }
 
         public static IDomain Create<TApp>(String name, TApp app, GUIType type) where TApp : Application, new()
         {
+            CurrentDomain.ThrowIfAlreadyInitialized();
             return Create(app, new IPCAppData(name, AppVersion.Default), type);
         }
 
@@ -120,65 +121,35 @@ namespace NetExtender.Apps.Domains
             return Create(data).Initialize(app, type);
         }
 
-        public static String FriendlyName { get; } = PathUtils.GetFileNameWithoutExtension(AppDomain.CurrentDomain.FriendlyName);
-
-        private static String path;
-        public static String Path
+        public static String Name
         {
             get
             {
-                if (path is not null)
-                {
-                    return path;
-                }
-
-                String name = Process.GetCurrentProcess().MainModule?.FileName;
-
-                String dir = Directory;
-
-                if (dir is null)
-                {
-                    return null;
-                }
-
-                String file = System.IO.Path.Combine(dir, FriendlyName + ".exe");
-
-                return path ??= PathUtils.IsExistAsFile(file) ? file : name;
+                return ApplicationUtils.Name;
             }
         }
-
-        private static String directory;
+        
         public static String Directory
         {
             get
             {
-                if (directory is not null)
-                {
-                    return directory;
-                }
-
-                String loc = Assembly.GetEntryAssembly()?.Location;
-                if (String.IsNullOrWhiteSpace(loc))
-                {
-                    return null;
-                }
-
-                String dir = PathUtils.GetDirectoryName(loc);
-
-                if (String.IsNullOrEmpty(dir) || !PathUtils.IsExistAsFolder(dir))
-                {
-                    return null;
-                }
-
-                return directory ??= dir;
+                return ApplicationUtils.Directory;
             }
         }
 
-        public static DateTime BuildDateTime
+        public static String Path
         {
             get
             {
-                return File.GetLastWriteTime(Path);
+                return ApplicationUtils.Path;
+            }
+        }
+
+        public static DateTime? BuildDateTime
+        {
+            get
+            {
+                return ApplicationUtils.BuildDateTime;
             }
         }
 
@@ -230,7 +201,7 @@ namespace NetExtender.Apps.Domains
         {
             get
             {
-                return IsInitialized ? AppName : FriendlyName;
+                return IsInitialized ? AppName : Name;
             }
         }
 

@@ -49,11 +49,26 @@ namespace NetExtender.Utils.GUI.Drawing
             graphics.FillEllipse(brush, x, y, d, d);
         }
         
+        public static Size ToIntSize(this System.Windows.Size size)
+        {
+            return new Size((Int32) size.Width, (Int32) size.Height);
+        }
+        
+        public static System.Windows.Size ToDoubleSize(this Size size)
+        {
+            return new System.Windows.Size(size.Width, size.Height);
+        }
+        
         public static Double GetAspectRatio(this Size size)
         {
             return GetAspectRatio(size.Width, size.Height);
         }
         
+        public static Double GetAspectRatio(this System.Windows.Size size)
+        {
+            return GetAspectRatio(size.Width, size.Height);
+        }
+
         public static Double GetAspectRatio(Int32 width, Int32 height)
         {
             return GetAspectRatio((Double) width, height);

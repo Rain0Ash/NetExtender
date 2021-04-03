@@ -6,8 +6,11 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Input;
+using NetExtender.GUI.Common;
+using NetExtender.GUI.Common.EventArgs;
 using NetExtender.Utils.WPF;
 using NetExtender.GUI.Common.Interfaces;
+using NetExtender.Native;
 using NetExtender.Utils.IO;
 
 namespace NetExtender.GUI.WPF.Windows
@@ -27,6 +30,7 @@ namespace NetExtender.GUI.WPF.Windows
         }
 
         private CloseReason _reason;
+
         public CloseReason CloseReason
         {
             get
@@ -46,27 +50,7 @@ namespace NetExtender.GUI.WPF.Windows
         }
 
         public event FormClosingEventHandler WindowClosing;
-        
-        protected override void WndProc(ref Message m)
-        {
-            switch (m.Msg)
-            {
-                case 0x11:
-                case 0x16:
-                    CloseReason = CloseReason.WindowsShutDown;
-                    break;
-
-                case 0x112:
-                    if (((UInt16) m.WParam & 0xfff0) == 0xf060)
-                    {
-                        CloseReason = CloseReason.UserClosing;
-                    }
-
-                    break;
-            }
-            
-            base.WndProc(ref m);
-        }
+        public event SizeChangeToggleHandler SizeChangeToggle;
 
         protected FixedWindow()
         {
@@ -75,6 +59,56 @@ namespace NetExtender.GUI.WPF.Windows
             Closing += OnClosing;
             WindowClosing += DisableIconClickExit;
         }
+        
+        protected override void WndProc(ref Message m)
+        {
+            switch (m.Msg)
+            {
+                case WM.QUERYENDSESSION:
+                case WM.ENDSESSION:
+                    CloseReason = CloseReason.WindowsShutDown;
+                    break;
+
+                case WM.SYSCOMMAND:
+                    if (((UInt16) m.WParam & 0xfff0) == 0xf060)
+                    {
+                        CloseReason = CloseReason.UserClosing;
+                    }
+
+                    break;
+                case WM.ENTERSIZEMOVE:
+                {
+                    SizeChangeToggleEventArgs args = new SizeChangeToggleEventArgs {End = false};
+                    OnSizeChangeToggle(args);
+
+                    if (args.Handled)
+                    {
+                        return;
+                    }
+                    
+                    break;
+                }
+                case WM.EXITSIZEMOVE:
+                {
+                    SizeChangeToggleEventArgs args = new SizeChangeToggleEventArgs {End = true};
+                    OnSizeChangeToggle(args);
+
+                    if (args.Handled)
+                    {
+                        return;
+                    }
+                    
+                    break;
+                }
+            }
+
+            base.WndProc(ref m);
+        }
+
+        protected virtual void OnSizeChangeToggle(SizeChangeToggleEventArgs e)
+        {
+            SizeChangeToggle?.Invoke(this, e);
+        }
 
         private void OnClosing(Object sender, CancelEventArgs e)
         {
@@ -82,7 +116,7 @@ namespace NetExtender.GUI.WPF.Windows
             {
                 return;
             }
-            
+
             FormClosingEventArgs args = new FormClosingEventArgs(CloseReason, e.Cancel);
             WindowClosing?.Invoke(sender, args);
 
@@ -98,7 +132,7 @@ namespace NetExtender.GUI.WPF.Windows
             {
                 return;
             }
-            
+
             if (KeyboardUtils.Alt.IsAlt && Keyboard.IsKeyDown(Key.F4))
             {
                 return;
@@ -110,7 +144,7 @@ namespace NetExtender.GUI.WPF.Windows
             Mouse.Capture(previous);
 
             const Int32 iconWidth = 32;
-            
+
             if (!(click.X <= iconWidth) || !(click.Y <= 0))
             {
                 return;
@@ -118,7 +152,7 @@ namespace NetExtender.GUI.WPF.Windows
 
             e.Cancel = true;
         }
-        
+
         public new DialogResult ShowDialog()
         {
             return this.ShowResultDialog();

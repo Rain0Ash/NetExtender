@@ -14,6 +14,7 @@ using NetExtender.GUI.WinForms.Forms;
 using NetExtender.GUI.WinForms.ListViews.Items;
 using NetExtender.GUI.WinForms.ToolStrips;
 using NetExtender.GUI.WinForms.ToolStrips.Items;
+using NetExtender.Native;
 using NetExtender.Types.Maps;
 using NetExtender.Types.Maps.Interfaces;
 using NetExtender.Types.Numerics;
@@ -230,25 +231,28 @@ namespace NetExtender.GUI.WinForms.ListViews
             [ActionType.Additional3] = new FixedToolStripMenuItem("Additional3"),
         };
         
-        protected override void WndProc(ref Message msg)
+        protected override void WndProc(ref Message m)
         {
-            if (msg.Msg >= 0x204 && msg.Msg <= 0x206)
+            switch (m.Msg)
             {
-                Point pointMousePos = new Point(msg.LParam.ToInt32() & 0xffff, msg.LParam.ToInt32() >> 16);
-                ListViewHitTestInfo hit = HitTest(pointMousePos);
+                case WM.RBUTTONDOWN:
+                case WM.RBUTTONUP:
+                case WM.RBUTTONDBLCLK:
+                    Point pointMousePos = new Point(m.LParam.ToInt32() & 0xffff, m.LParam.ToInt32() >> 16);
+                    ListViewHitTestInfo hit = HitTest(pointMousePos);
 
-                if (hit.Item is null)
-                {
-                    SelectedIndices.Clear();
-                }
-                else if (SelectedIndices.Count == 0)
-                {
+                    if (hit.Item is null)
+                    {
+                        SelectedIndices.Clear();
+                        break;
+                    }
+                    
                     hit.Item.Selected = true;
                     hit.Item.Focused = true;
-                }
+                    break;
             }
             
-            base.WndProc(ref msg);
+            base.WndProc(ref m);
         }
 
         private TypeHandler<TypeHandledEventArgs<ActionType>> _action;
