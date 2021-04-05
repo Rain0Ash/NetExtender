@@ -88,10 +88,10 @@ namespace NetExtender.Apps.Domains
         public static IDomain Create(String name)
         {
             CurrentDomain.ThrowIfAlreadyInitialized();
-            return Create(new IPCAppData(name, AppVersion.Default));
+            return Create(new AppData(name, AppVersion.Default));
         }
 
-        public static IDomain Create(IIPCAppData data)
+        public static IDomain Create(IAppData data)
         {
             CurrentDomain.ThrowIfAlreadyInitialized();
             return Create(new InternalDomain(data));
@@ -100,10 +100,10 @@ namespace NetExtender.Apps.Domains
         public static IDomain Create<TApp>(String name, GUIType type) where TApp : Application, new()
         {
             CurrentDomain.ThrowIfAlreadyInitialized();
-            return Create<TApp>(new IPCAppData(name, AppVersion.Default), type);
+            return Create<TApp>(new AppData(name, AppVersion.Default), type);
         }
 
-        public static IDomain Create<TApp>(IIPCAppData data, GUIType type) where TApp : Application, new()
+        public static IDomain Create<TApp>(IAppData data, GUIType type) where TApp : Application, new()
         {
             CurrentDomain.ThrowIfAlreadyInitialized();
             return Create(new TApp(), data, type);
@@ -112,20 +112,20 @@ namespace NetExtender.Apps.Domains
         public static IDomain Create<TApp>(String name, TApp app, GUIType type) where TApp : Application, new()
         {
             CurrentDomain.ThrowIfAlreadyInitialized();
-            return Create(app, new IPCAppData(name, AppVersion.Default), type);
+            return Create(app, new AppData(name, AppVersion.Default), type);
         }
 
-        public static IDomain Create<TApp>(TApp app, IIPCAppData data, GUIType type) where TApp : Application, new()
+        public static IDomain Create<TApp>(TApp app, IAppData data, GUIType type) where TApp : Application, new()
         {
             CurrentDomain.ThrowIfAlreadyInitialized();
             return Create(data).Initialize(app, type);
         }
 
-        public static String Name
+        public static String FriendlyName
         {
             get
             {
-                return ApplicationUtils.Name;
+                return ApplicationUtils.FriendlyName;
             }
         }
         
@@ -188,6 +188,14 @@ namespace NetExtender.Apps.Domains
                 return Current.AppName;
             }
         }
+        
+        public static String AppShortName
+        {
+            get
+            {
+                return Current.AppShortName;
+            }
+        }
 
         public static String AppNameOrPath
         {
@@ -201,7 +209,23 @@ namespace NetExtender.Apps.Domains
         {
             get
             {
-                return IsInitialized ? AppName : Name;
+                return IsInitialized ? AppName : FriendlyName;
+            }
+        }
+        
+        public static String AppShortNameOrPath
+        {
+            get
+            {
+                return IsInitialized ? AppShortName : Path;
+            }
+        }
+
+        public static String AppShortNameOrFriendlyName
+        {
+            get
+            {
+                return IsInitialized ? AppShortName : FriendlyName;
             }
         }
 
@@ -222,6 +246,26 @@ namespace NetExtender.Apps.Domains
             get
             {
                 return Current.Information;
+            }
+        }
+        
+        public static String UrlSchemeProtocolName
+        {
+            get
+            {
+                return Current.UrlSchemeProtocolName;
+            }
+        }
+
+        public static Boolean? IsUrlSchemeProtocolRegister
+        {
+            get
+            {
+                return Current.IsUrlSchemeProtocolRegister;
+            }
+            set
+            {
+                Current.IsUrlSchemeProtocolRegister = value;
             }
         }
 

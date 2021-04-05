@@ -54,12 +54,13 @@ namespace NetExtender.Configuration.Common
         
         private static String GetDefaultPath(String extension)
         {
-            if (String.IsNullOrWhiteSpace(extension))
+            String filename = DefaultName;
+            if (!String.IsNullOrEmpty(extension))
             {
-                throw new ArgumentException(@"Value cannot be null or whitespace.", nameof(extension));
+                filename += extension.StartsWith('.') ? extension : '.' + extension;
             }
 
-            return System.IO.Path.Combine(Domain.Directory, $"{DefaultName}.{extension}");
+            return System.IO.Path.Combine(Domain.Directory, filename);
         }
         
         protected static String ValidatePathOrGetDefault(String path, String extension)

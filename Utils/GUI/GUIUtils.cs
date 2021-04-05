@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Text;
 using System.Windows;
 using System.Windows.Forms;
 using JetBrains.Annotations;
@@ -33,17 +34,17 @@ namespace NetExtender.Utils.GUI
             : this(text, text)
         {
         }
-        
+
         public GUIMessage(String text, String title)
             : this(text.ToIString(), title.ToIString())
         {
         }
-        
+
         public GUIMessage(IString text)
             : this(text, text)
         {
         }
-        
+
         public GUIMessage(IString text, IString title)
         {
             Text = text;
@@ -55,25 +56,25 @@ namespace NetExtender.Utils.GUI
             return System.Windows.Forms.MessageBox.Show(Text.ToString(), Title.ToString(), Buttons, Icon, DefaultButton, Options, ShowHelpButton);
         }
     }
-    
+
     public static class GUIUtils
     {
         public const Int32 Distance = 5;
         public const MessageBoxButtons DefaultMessageBoxButtons = MessageBoxButtons.OK;
         public const MessageBoxIcon DefaultMessageBoxIcon = MessageBoxIcon.Warning;
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DialogResult ToMessageBox<T>(this T text)
         {
             return ToMessageBox(text, DefaultMessageBoxButtons);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DialogResult ToMessageBox<T1, T2>(this T1 text, T2 title)
         {
             return ToMessageBox(text, title, DefaultMessageBoxButtons);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DialogResult ToMessageBox<T>(this T text, MessageBoxIcon icon)
         {
@@ -85,7 +86,7 @@ namespace NetExtender.Utils.GUI
         {
             return ToMessageBox(text, title, DefaultMessageBoxButtons, icon);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DialogResult ToMessageBox<T>(this T text, MessageBoxButtons buttons)
         {
@@ -97,25 +98,25 @@ namespace NetExtender.Utils.GUI
         {
             return ToMessageBox(text, title, buttons, DefaultMessageBoxIcon);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DialogResult ToMessageBox<T>(this T text, MessageBoxIcon icon, MessageBoxButtons buttons)
         {
             return ToMessageBox(text, buttons, icon);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DialogResult ToMessageBox<T1, T2>(this T1 text, T2 title, MessageBoxIcon icon, MessageBoxButtons buttons)
         {
             return ToMessageBox(text, title, buttons, icon);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DialogResult ToMessageBox<T>(this T text, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
             return System.Windows.Forms.MessageBox.Show(text.GetString(), null, buttons, icon);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DialogResult ToMessageBox<T1, T2>(this T1 text, T2 title, MessageBoxButtons buttons, MessageBoxIcon icon)
         {
@@ -134,7 +135,7 @@ namespace NetExtender.Utils.GUI
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         public static MessageBoxResult ToMessageBoxResult(this DialogResult result)
         {
             return result switch
@@ -163,7 +164,7 @@ namespace NetExtender.Utils.GUI
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         public static Boolean ToBoolean(this DialogResult value)
         {
             return value switch
@@ -189,18 +190,18 @@ namespace NetExtender.Utils.GUI
         [DllImport("kernel32.dll")]
         private static extern UInt32 GetCurrentThreadId();
 
-        [DllImport("user32.dll")] 
-        private static extern IntPtr GetForegroundWindow(); 
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32.dll")]
-        private static extern Boolean AttachThreadInput(UInt32 idAttach, UInt32 idAttachTo, Boolean fAttach); 
+        private static extern Boolean AttachThreadInput(UInt32 idAttach, UInt32 idAttachTo, Boolean fAttach);
 
-        [DllImport("user32.dll", SetLastError = true)] 
+        [DllImport("user32.dll", SetLastError = true)]
         private static extern Boolean BringWindowToTop(IntPtr hWnd);
 
         [DllImport("user32.dll")]
         private static extern Boolean ShowWindow(IntPtr hWnd, UInt32 nCmdShow);
-        
+
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern Boolean GetWindowRect(IntPtr hWnd, out WinRectangle lpRect);
@@ -214,7 +215,7 @@ namespace NetExtender.Utils.GUI
 
             return rectangle;
         }
-        
+
         public static Rectangle GetWindowRectangle([NotNull] this Form form)
         {
             if (form is null)
@@ -224,7 +225,7 @@ namespace NetExtender.Utils.GUI
 
             return GetWindowRectangle(form.Handle);
         }
-        
+
         public static Rectangle GetWindowRectangle([NotNull] this Window window)
         {
             if (window is null)
@@ -248,21 +249,44 @@ namespace NetExtender.Utils.GUI
         //TODO: добавить установку, проверку и удаление пунктов меню
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern IntPtr GetSystemMenu(IntPtr hWnd, Boolean bRevert);
-    
+
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern Boolean AppendMenu(IntPtr hMenu, Int32 uFlags, Int32 uIDNewItem, String lpNewItem);
-    
+
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern Boolean InsertMenu(IntPtr hMenu, Int32 uPosition, Int32 uFlags, Int32 uIDNewItem, String lpNewItem);
 
         [DllImport("user32.dll", SetLastError = true)]
         private static extern Int32 DeleteMenu(IntPtr hMenu, Int32 nPosition, Int32 wFlags);
         
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        private static extern Int32 GetWindowText(IntPtr hWnd, StringBuilder text, Int32 count);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern Boolean EnumThreadWindows(Int32 threadId, EnumThreadProc pfnEnum, IntPtr lParam);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        private static extern IntPtr FindWindow(String lpClassName, String lpWindowName);
+
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        private static extern IntPtr FindWindowEx(IntPtr parentHandle, IntPtr childAfter, String className, String windowTitle);
+
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        private static extern IntPtr FindWindowEx(IntPtr parentHwnd, IntPtr childAfterHwnd, IntPtr className, String windowText);
+
+        [DllImport("user32.dll")]
+        private static extern Int32 ShowWindow(IntPtr hwnd, Int32 nCmdShow);
+
+        [DllImport("user32.dll")]
+        private static extern UInt32 GetWindowThreadProcessId(IntPtr hwnd, out Int32 lpdwProcessId);
+
+        private delegate Boolean EnumThreadProc(IntPtr hwnd, IntPtr lParam);
+
         public static Boolean ShowWindow(IntPtr handle, WindowStateType state)
         {
             return ShowWindow(handle, (UInt32) state);
         }
-        
+
         public static Boolean ShowWindow([NotNull] this Form form, WindowStateType state)
         {
             if (form is null)
@@ -272,7 +296,7 @@ namespace NetExtender.Utils.GUI
 
             return ShowWindow(form.Handle, state);
         }
-        
+
         public static Boolean ShowWindow([NotNull] this Window window, WindowStateType state)
         {
             if (window is null)
@@ -282,7 +306,7 @@ namespace NetExtender.Utils.GUI
 
             return ShowWindow(window.GetHandle(), state);
         }
-        
+
         public static Boolean ShowWindow<T>([NotNull] this T window, WindowStateType state) where T : IWindow
         {
             if (window is null)
@@ -307,7 +331,7 @@ namespace NetExtender.Utils.GUI
             AttachThreadInput(thread, application, false);
             return true;
         }
-        
+
         private static Boolean BringToForegroundWindow(IntPtr hWnd)
         {
             UInt32 thread = GetWindowThreadProcessId(GetForegroundWindow(), IntPtr.Zero);
@@ -315,7 +339,7 @@ namespace NetExtender.Utils.GUI
 
             return thread == application ? Bring(hWnd) : AttachAndBring(thread, application, hWnd);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean BringToForeground([NotNull] this Form form)
         {
@@ -326,7 +350,7 @@ namespace NetExtender.Utils.GUI
 
             return BringToForegroundWindow(form.Handle);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean BringToForeground([NotNull] this Window window)
         {
@@ -348,7 +372,7 @@ namespace NetExtender.Utils.GUI
 
             return BringToForegroundWindow(handle.Handle);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetPrimaryScreenPercentageSize([NotNull] this Form form)
         {
@@ -360,7 +384,7 @@ namespace NetExtender.Utils.GUI
         {
             SetPrimaryScreenPercentageSize(form, percentage, percentage);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetPrimaryScreenPercentageSize([NotNull] this Form form, Byte width, Byte height)
         {
@@ -371,7 +395,7 @@ namespace NetExtender.Utils.GUI
 
             SetScreenPercentageSize(form, Screen.PrimaryScreen, width, height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetHandleScreenPercentageSize([NotNull] this Form form)
         {
@@ -383,7 +407,7 @@ namespace NetExtender.Utils.GUI
         {
             SetHandleScreenPercentageSize(form, percentage, percentage);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetHandleScreenPercentageSize([NotNull] this Form form, Byte width, Byte height)
         {
@@ -394,7 +418,7 @@ namespace NetExtender.Utils.GUI
 
             SetScreenPercentageSize(form, Screen.FromHandle(form.Handle), width, height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetScreenPercentageSize([NotNull] this Form form, Screen screen)
         {
@@ -406,7 +430,7 @@ namespace NetExtender.Utils.GUI
         {
             SetScreenPercentageSize(form, screen, percentage, percentage);
         }
-        
+
         public static void SetScreenPercentageSize([NotNull] this Form form, Screen screen, Byte width, Byte height)
         {
             if (form is null)
@@ -427,7 +451,7 @@ namespace NetExtender.Utils.GUI
             form.Width = (Int32) (width / 100d * screen.WorkingArea.Width);
             form.Height = (Int32) (height / 100d * screen.WorkingArea.Height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetPrimaryScreenPercentageSize([NotNull] this Window window)
         {
@@ -439,7 +463,7 @@ namespace NetExtender.Utils.GUI
         {
             SetPrimaryScreenPercentageSize(window, percentage, percentage);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetPrimaryScreenPercentageSize([NotNull] this Window window, Byte width, Byte height)
         {
@@ -450,7 +474,7 @@ namespace NetExtender.Utils.GUI
 
             SetScreenPercentageSize(window, Screen.PrimaryScreen, width, height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetHandleScreenPercentageSize([NotNull] this Window window)
         {
@@ -462,7 +486,7 @@ namespace NetExtender.Utils.GUI
         {
             SetHandleScreenPercentageSize(window, percentage, percentage);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetHandleScreenPercentageSize([NotNull] this Window window, Byte width, Byte height)
         {
@@ -473,7 +497,7 @@ namespace NetExtender.Utils.GUI
 
             SetScreenPercentageSize(window, Screen.FromHandle(window.GetHandle()), width, height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetScreenPercentageSize([NotNull] this Window window, Screen screen)
         {
@@ -485,7 +509,7 @@ namespace NetExtender.Utils.GUI
         {
             SetScreenPercentageSize(window, screen, percentage, percentage);
         }
-        
+
         public static void SetScreenPercentageSize([NotNull] this Window window, Screen screen, Byte width, Byte height)
         {
             if (window is null)
@@ -506,7 +530,7 @@ namespace NetExtender.Utils.GUI
             window.Width = width / 100d * screen.WorkingArea.Width;
             window.Height = height / 100d * screen.WorkingArea.Height;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetPrimaryScreenPercentageSize<T>([NotNull] this T window) where T : IWindow
         {
@@ -518,7 +542,7 @@ namespace NetExtender.Utils.GUI
         {
             SetPrimaryScreenPercentageSize(window, percentage, percentage);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetPrimaryScreenPercentageSize<T>([NotNull] this T window, Byte width, Byte height) where T : IWindow
         {
@@ -529,7 +553,7 @@ namespace NetExtender.Utils.GUI
 
             SetScreenPercentageSize(window, Screen.PrimaryScreen, width, height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetHandleScreenPercentageSize<T>([NotNull] this T window) where T : IWindow
         {
@@ -541,7 +565,7 @@ namespace NetExtender.Utils.GUI
         {
             SetHandleScreenPercentageSize(window, percentage, percentage);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetHandleScreenPercentageSize<T>([NotNull] this T window, Byte width, Byte height) where T : IWindow
         {
@@ -552,7 +576,7 @@ namespace NetExtender.Utils.GUI
 
             SetScreenPercentageSize(window, Screen.FromHandle(window.Handle), width, height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetScreenPercentageSize<T>([NotNull] this T window, Screen screen) where T : IWindow
         {
@@ -585,7 +609,7 @@ namespace NetExtender.Utils.GUI
             window.Width = width / 100d * screen.WorkingArea.Width;
             window.Height = height / 100d * screen.WorkingArea.Height;
         }
-        
+
         public static Boolean TakeScreenshot(IntPtr handle, out Bitmap screenshot)
         {
             if (handle == IntPtr.Zero)
@@ -595,12 +619,12 @@ namespace NetExtender.Utils.GUI
             }
 
             Rectangle rectangle = GetWindowRectangle(handle);
-            
+
             screenshot = new Bitmap(rectangle.Width, rectangle.Height, PixelFormat.Format32bppArgb);
-            
+
             using Graphics graphics = Graphics.FromImage(screenshot);
             graphics.CopyFromScreen(rectangle.Left, rectangle.Top, 0, 0, new System.Drawing.Size(rectangle.Width, rectangle.Height), CopyPixelOperation.SourceCopy);
-            
+
             return true;
         }
 
@@ -613,7 +637,7 @@ namespace NetExtender.Utils.GUI
 
             return TakeScreenshot(form.Handle, out screenshot);
         }
-        
+
         public static Boolean TakeScreenshot([NotNull] this Window window, out Bitmap screenshot)
         {
             if (window is null)
@@ -623,7 +647,7 @@ namespace NetExtender.Utils.GUI
 
             return TakeScreenshot(window.GetHandle(), out screenshot);
         }
-        
+
         public static Boolean TakeScreenshot<T>([NotNull] this T window, out Bitmap screenshot) where T : IGUIHandle
         {
             if (window is null)
@@ -632,6 +656,46 @@ namespace NetExtender.Utils.GUI
             }
 
             return TakeScreenshot(window.Handle, out screenshot);
+        }
+
+        /// <summary>
+        /// Show the taskbar.
+        /// </summary>
+        public static void ShowTaskbar()
+        {
+            IsTaskbarVisible = true;
+        }
+
+        /// <summary>
+        /// Hide the taskbar.
+        /// </summary>
+        public static void HideTaskbar()
+        {
+            IsTaskbarVisible = false;
+        }
+
+        /// <summary>
+        /// Sets the visibility of the taskbar.
+        /// </summary>
+        public static Boolean IsTaskbarVisible
+        {
+            set
+            {
+                SetTaskbarVisibility(value);
+            }
+        }
+
+        /// <summary>
+        /// Hide or show the Windows taskbar and startmenu.
+        /// </summary>
+        private static void SetTaskbarVisibility(Boolean visible)
+        {
+            IntPtr taskbar = FindWindow("Shell_TrayWnd", null);
+
+            if (taskbar != IntPtr.Zero)
+            {
+                ShowWindow(taskbar, visible ? WindowStateType.Show : WindowStateType.Hide);
+            }
         }
     }
 }

@@ -2,7 +2,7 @@ using System;
 
 namespace NetExtender.Network.IPC.Synchronization
 {
-    public interface ITinyReadWriteLock
+    public interface IInterprocessReadWriteLock
     {
         /// <summary>
         /// Is true if at least one read lock is being held

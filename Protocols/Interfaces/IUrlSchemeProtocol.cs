@@ -1,0 +1,16 @@
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
+using System;
+
+namespace NetExtender.Protocols.Interfaces
+{
+    public interface IUrlSchemeProtocol : IUrlSchemeProtocolInfo
+    {
+        public new Boolean IsRegister { get; set; }
+
+        public Boolean Register();
+        public Boolean Register(String about);
+        public Boolean Unregister();
+    }
+}

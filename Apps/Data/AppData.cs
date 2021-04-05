@@ -6,11 +6,19 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using NetExtender.Apps.Data.Common;
 using NetExtender.Apps.Data.Interfaces;
+using NetExtender.Events.Args;
+using NetExtender.Exceptions;
+using NetExtender.Network.IPC.Messaging;
+using NetExtender.Protocols;
+using NetExtender.Protocols.Interfaces;
+using NetExtender.Utils.Types;
 
 namespace NetExtender.Apps.Data
 {
+    [Serializable]
     public class AppData : IAppData
     {
         private static readonly IDictionary<AppStatus, String> StatusDictionary = new Dictionary<AppStatus, String>
@@ -115,6 +123,118 @@ namespace NetExtender.Apps.Data
             }
         }
 
+        private IUrlSchemeProtocol _protocol;
+        protected IUrlSchemeProtocol UrlSchemeProtocol
+        {
+            get
+            {
+                return _protocol ??= new UrlSchemeProtocol(AppShortName);
+            }
+            init
+            {
+                if (_protocol is not null)
+                {
+                    throw new AlreadyInitializedException(nameof(UrlSchemeProtocol));
+                }
+                
+                _protocol = value;
+            }
+        }
+
+        public String UrlSchemeProtocolName
+        {
+            get
+            {
+                return UrlSchemeProtocol.Name;
+            }
+        }
+
+        public Boolean? IsUrlSchemeProtocolRegister
+        {
+            get
+            {
+                return UrlSchemeProtocol.RegisterStatus;
+            }
+            set
+            {
+                if (!value.HasValue)
+                {
+                    return;
+                }
+                
+                UrlSchemeProtocol.IsRegister = value.Value;
+            }
+        }
+
+        public Boolean HasAnotherInstance
+        {
+            get
+            {
+                return MutexUtils.CaptureMutex(AppName);
+            }
+        }
+
+        public Boolean? IsExternalMessageBus { get; private set; }
+        
+        private IInterprocessMessageBus _bus;
+        protected IInterprocessMessageBus MessageBus
+        {
+            get
+            {
+                if (_bus is not null)
+                {
+                    return _bus;
+                }
+                
+                _bus = new InterprocessMessageBus(AppShortName);
+                IsExternalMessageBus = false;
+                return _bus;
+            }
+            init
+            {
+                if (_bus is not null)
+                {
+                    throw new AlreadyInitializedException(nameof(MessageBus));
+                }
+                
+                if (value is null)
+                {
+                    return;
+                }
+                
+                _bus = value;
+                IsExternalMessageBus = true;
+            }
+        }
+
+        public event SenderTypeHandler<TypeHandledEventArgs<Byte[]>> MessageReceived
+        {
+            add
+            {
+                MessageBus.MessageReceived += value;
+            }
+            remove
+            {
+                MessageBus.MessageReceived -= value;
+            }
+        }
+
+        public Int64 SendedMessages
+        {
+            get
+            {
+                return IsExternalMessageBus is not null ? MessageBus.SendedMessages : 0;
+            }
+        }
+
+        public Int64 ReceivedMessages
+        {
+            get
+            {
+                return IsExternalMessageBus is not null ? MessageBus.ReceivedMessages : 0;
+            }
+        }
+
         protected static String ToShortName(String name)
         {
             return name?.ToLower().Replace(" ", String.Empty);
@@ -141,31 +261,32 @@ namespace NetExtender.Apps.Data
         {
         }
 
-        public AppData(String name, String sname, AppVersion version, AppStatus status = AppStatus.Release, AppBranch branch = AppBranch.Master)
-            : this(name, sname, version, AppInformation.Default, status, branch)
+        public AppData(String name, String shortname, AppVersion version, AppStatus status = AppStatus.Release, AppBranch branch = AppBranch.Master)
+            : this(name, shortname, version, AppInformation.Default, status, branch)
         {
         }
         
-        public AppData(String name, String sname, AppVersion version, AppInformation information, AppStatus status = AppStatus.Release, AppBranch branch = AppBranch.Master)
+        public AppData(String name, String shortname, AppVersion version, AppInformation information, AppStatus status = AppStatus.Release, AppBranch branch = AppBranch.Master)
         {
-            if (String.IsNullOrWhiteSpace(name) || String.IsNullOrWhiteSpace(sname))
+            if (String.IsNullOrWhiteSpace(name) || String.IsNullOrWhiteSpace(shortname))
             {
                 throw new ArgumentException("Not null or whitespace app name");
             }
 
-            if (!Regex.IsMatch(sname, "^[a-zA-Z0-9]+$", RegexOptions.IgnoreCase))
+            if (!Regex.IsMatch(shortname, "^[\x21-\x7E]+$"))
             {
-                throw new ArgumentException(@"Only english chars or numbers", nameof(sname));
+                throw new ArgumentException(@"Only latin chars and digits", nameof(shortname));
             }
             
             Guid = Guid.NewGuid();
             AppName = name.Trim();
-            AppShortName = sname.Trim();
+            AppShortName = shortname.Trim();
             StartedAt = DateTime.Now;
             Version = version;
             Information = information;
             Status = status;
             Branch = branch;
+            MutexUtils.RegisterMutex(AppName);
         }
 
         public Int32 CompareTo(IAppData other)
@@ -195,6 +316,24 @@ namespace NetExtender.Apps.Data
             return compare;
         }
 
+        public Task SendMessageAsync(Byte[] message)
+        {
+            return MessageBus.SendMessageAsync(message);
+        }
+
+        public Task SendMessageAsync(IEnumerable<Byte[]> messages)
+        {
+            return MessageBus.SendMessageAsync(messages);
+        }
+
+        public void ResetMetrics()
+        {
+            if (IsExternalMessageBus is not null)
+            {
+                MessageBus.ResetMetrics();
+            }
+        }
+        
         public override String ToString()
         {
             return $"{Version}:{StatusData}{BranchData}";
@@ -215,8 +354,42 @@ namespace NetExtender.Apps.Data
             return HashCode.Combine(Version, Status, Branch);
         }
 
-        public virtual void Dispose()
+        private Boolean _disposed;
+        
+        public void Dispose()
         {
+            DisposeInternal(true);
+            GC.SuppressFinalize(this);
+        }
+
+        private void DisposeInternal(Boolean disposing)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            if (disposing)
+            {
+                MutexUtils.UnregisterMutex(AppName);
+                
+                if (IsExternalMessageBus == false)
+                {
+                    MessageBus?.Dispose();
+                }
+            }
+
+            _disposed = true;
+            Dispose(disposing);
+        }
+
+        protected virtual void Dispose(Boolean disposing)
+        {
+        }
+
+        ~AppData()
+        {
+            Dispose(false);
         }
     }
 }

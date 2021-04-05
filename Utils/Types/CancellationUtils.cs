@@ -9,11 +9,48 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
+using NetExtender.Times;
 
 namespace NetExtender.Utils.Types
 {
     public static class CancellationUtils
     {
+        private static CancellationToken GetWeakToken([NotNull] this CancellationTokenSource source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            CancellationToken token = source.Token;
+            token.Register(source.Dispose);
+            return token;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static CancellationToken CreateToken(TimeSpan delay)
+        {
+            if (delay <= Time.Milli.Ten)
+            {
+                return new CancellationToken(true);
+            }
+            
+            CancellationTokenSource source = new CancellationTokenSource(delay);
+            return source.GetWeakToken();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static CancellationToken CreateToken(Int32 milliseconds)
+        {
+            if (milliseconds <= 10)
+            {
+                return new CancellationToken(true);
+            }
+            
+            CancellationTokenSource source = new CancellationTokenSource(milliseconds);
+            return source.GetWeakToken();
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CancellationTokenSource CreateLinkedSource(this CancellationToken token)
         {

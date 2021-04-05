@@ -136,9 +136,9 @@ namespace NetExtender.Apps.Reader
             ReaderMessageOptions options = ReaderMessageOptions.External;
             
             // ReSharper disable once InvertIf
-            if (args.Length == 1 && args[0].StartsWith(Domain.Current.ProtocolName, StringComparison.InvariantCultureIgnoreCase))
+            if (args.Length == 1 && args[0].StartsWith(Domain.UrlSchemeProtocolName, StringComparison.InvariantCultureIgnoreCase))
             {
-                args = Regex.Replace(args[0], $"{Domain.Current.ProtocolName}:(\\/|\\\\)*", String.Empty, RegexOptions.IgnoreCase | RegexOptions.Compiled)
+                args = Regex.Replace(args[0], $"{Domain.UrlSchemeProtocolName}:(\\/|\\\\)*", String.Empty, RegexOptions.IgnoreCase | RegexOptions.Compiled)
                     .Replace('/', ' ')
                     .Replace('\\', ' ')
                     .Split(" ", StringSplitOptions.RemoveEmptyEntries)

@@ -17,14 +17,14 @@ namespace NetExtender.Utils.Application
 {
     public static class ApplicationUtils
     {
-        public static String? Name { get; }
+        public static String? FriendlyName { get; }
         public static String? Path { get; }
 
         public static String? Directory { get; }
 
         public static DateTime? BuildDateTime { get; }
 
-        private static String? GetNameInternal()
+        private static String? GetFriendlyNameInternal()
         {
             try
             {
@@ -80,7 +80,7 @@ namespace NetExtender.Utils.Application
 
         private static String? GetPathInternal()
         {
-            return GetPathInternal(Name ?? GetNameInternal(), Directory ?? GetDirectoryInternal());
+            return GetPathInternal(FriendlyName ?? GetFriendlyNameInternal(), Directory ?? GetDirectoryInternal());
         }
 
         private static String? GetPathInternal(String name, String directory)
@@ -109,12 +109,12 @@ namespace NetExtender.Utils.Application
 
         static ApplicationUtils()
         {
-            Name = GetNameInternal();
+            FriendlyName = GetFriendlyNameInternal();
             Directory = GetDirectoryInternal();
             
-            if (Name is not null)
+            if (FriendlyName is not null)
             {
-                Path = GetPathInternal(Name, Directory);
+                Path = GetPathInternal(FriendlyName, Directory);
             }
 
             if (Path is not null)

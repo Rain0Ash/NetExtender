@@ -45,6 +45,7 @@ namespace NetExtender.Utils.Types
         /// Cached null string task
         /// </summary>
         public static Task<String> Null { get; } = Task.FromResult<String>(null);
+
         /// <summary>
         /// Cached empty string task
         /// </summary>
@@ -80,7 +81,7 @@ namespace NetExtender.Utils.Types
 
             return values.WhereNotNull().Sum(str => str.Length);
         }
-        
+
         public static Int32 CharLength([NotNull] this IString[] values)
         {
             if (values is null)
@@ -120,7 +121,7 @@ namespace NetExtender.Utils.Types
                 _ => values.WhereNotNull().Aggregate<String, Int64>(0, (current, str) => current + str.Length)
             };
         }
-        
+
         public static Int64 CharLongLength([NotNull] this IEnumerable<String> values)
         {
             if (values is null)
@@ -130,7 +131,7 @@ namespace NetExtender.Utils.Types
 
             return values.WhereNotNull().Aggregate<String, Int64>(0, (current, str) => current + str.Length);
         }
-        
+
         public static Int64 CharLongLength([NotNull] this IString[] values)
         {
             if (values is null)
@@ -145,7 +146,7 @@ namespace NetExtender.Utils.Types
                 _ => values.WhereNotNull().Aggregate<IString, Int64>(0, (current, str) => current + str.Length)
             };
         }
-        
+
         public static Int64 CharLongLength([NotNull] this IEnumerable<IString> values)
         {
             if (values is null)
@@ -156,19 +157,19 @@ namespace NetExtender.Utils.Types
             return values.WhereNotNull().Aggregate<IString, Int64>(0, (current, str) => current + str.Length);
         }
 
-        public static IEnumerable<Int32> AllIndexesOf(this String str, String pattern, StringComparison comparison = StringComparison.Ordinal)
+        public static IEnumerable<Int32> AllIndexesOf(this String value, String pattern, StringComparison comparison = StringComparison.Ordinal)
         {
-            Int32 index = str.IndexOf(pattern, comparison);
+            Int32 index = value.IndexOf(pattern, comparison);
             while (index != -1)
             {
                 yield return index;
-                index = str.IndexOf(pattern, index + pattern.Length, comparison);
+                index = value.IndexOf(pattern, index + pattern.Length, comparison);
             }
         }
 
-        public static IEnumerable<String> GetFormatVariables(String str)
+        public static IEnumerable<String> GetFormatVariables(String value)
         {
-            return Regex.Matches(str, FormatVariableRegexPattern, RegexOptions.Compiled)
+            return Regex.Matches(value, FormatVariableRegexPattern, RegexOptions.Compiled)
                 .Select(match => match.Value)
                 .Select(format => Regex.Replace(format.ToLower(), @"\{|\}", String.Empty));
         }
@@ -181,7 +182,7 @@ namespace NetExtender.Utils.Types
             {'<', '>'}
         }.ToImmutableDictionary();
 
-        public static Boolean IsBracketsWellFormed([NotNull] String value)
+        public static Boolean IsBracketsWellFormed([NotNull] this String value)
         {
             if (value is null)
             {
@@ -227,61 +228,159 @@ namespace NetExtender.Utils.Types
             return !brackets.Any();
         }
 
-        public static String ReplaceFromDictionary(this String source, IDictionary<String, Object> replaceDict)
+        public static String ReplaceFromDictionary<T>([NotNull] this String source, [NotNull] IEnumerable<KeyValuePair<String, T>> dictionary)
         {
-            return ReplaceFromDictionary(source, replaceDict.ToDictionary(key => key.Key, value => value.Value?.ToString()));
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(nameof(dictionary));
+            }
+
+            return ReplaceFromDictionary(source, dictionary.Select(pair => new KeyValuePair<String, String>(pair.Key, pair.Value?.ToString())));
         }
 
-        public static String ReplaceFromDictionary(this String source, IDictionary<String, String> replaceDict)
+        public static String ReplaceFromDictionary([NotNull] this String value, [NotNull] IEnumerable<KeyValuePair<String, String>> source)
         {
-            return Regex.Replace(source, $@"\b({String.Join("|", replaceDict.Keys)})\b",
-                m => replaceDict[m.Value]?.ToString() ?? String.Empty);
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (value.Length <= 0)
+            {
+                return String.Empty;
+            }
+
+            return source switch
+            {
+                IDictionary<String, String> dictionary => ReplaceFromDictionary(value, dictionary),
+                IReadOnlyDictionary<String, String> dictionary => ReplaceFromDictionary(value, dictionary),
+                _ => ReplaceFromDictionary(value, (IDictionary<String, String>) new Dictionary<String, String>(source))
+            };
         }
 
-        public static String FormatFromDictionary(this String source, IDictionary<String, Object> valueDict)
+        private static String ReplaceFromDictionary([NotNull] String source, [NotNull] IDictionary<String, String> dictionary)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(nameof(dictionary));
+            }
+
+            if (source.Length <= 0)
+            {
+                return String.Empty;
+            }
+            
+            String keys = dictionary.Keys.Join("|");
+
+            return Regex.Replace(source, $@"\b({keys})\b",
+                match => dictionary.TryGetValue(match.Value, out String value) ? value ?? String.Empty : String.Empty);
+        }
+
+        private static String ReplaceFromDictionary([NotNull] String source, [NotNull] IReadOnlyDictionary<String, String> dictionary)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(nameof(dictionary));
+            }
+
+            if (source.Length <= 0)
+            {
+                return String.Empty;
+            }
+
+            String keys = dictionary.Keys.Join("|");
+            
+            return Regex.Replace(source, $@"\b({keys})\b",
+                match => dictionary.TryGetValue(match.Value, out String value) ? value ?? String.Empty : String.Empty);
+        }
+
+        public static String FormatFromDictionary<T>([NotNull] this String value, [NotNull] IEnumerable<KeyValuePair<String, T>> source)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (value.Length <= 0)
+            {
+                return String.Empty;
+            }
+            
+            StringBuilder builder = new StringBuilder(value);
+            
+            Dictionary<String, Int32> keys = new Dictionary<String, Int32>();
+
             Int32 i = 0;
-            StringBuilder newFormatString = new StringBuilder(source);
-            Dictionary<String, Int32> keyToInt = new Dictionary<String, Int32>();
-            foreach ((String key, Object _) in valueDict)
+            void AddToKeys(String key)
             {
-                newFormatString = newFormatString.Replace("{" + key + "}", "{" + i + "}");
-                keyToInt.Add(key, i);
-                i++;
+                builder = builder.Replace($"{{{key}}}", $"{{{i}}}");
+                keys.Add(key, i++);
             }
-
-            return String.Format(newFormatString.ToString(), valueDict.OrderBy(x => keyToInt[x.Key]).Select(x => x.Value).ToArray());
+            
+            Object[] arguments = source.DistinctByKey().ForEachKey(AddToKeys).OrderBy(pair => keys[pair.Key]).Values().Cast<Object>().ToArray();
+            
+            return String.Format(builder.ToString(), arguments);
         }
 
-        public static Int32 FormatArgsExpected([NotNull] this String str)
+        public static Int32 FormatArgsExpected([NotNull] this String value)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            if (str.Length <= 0)
+            if (value.Length <= 0)
             {
                 return 0;
             }
 
             const String pattern = @"(?<!\{)(?>\{\{)*\{\d(.*?)";
 
-            MatchCollection matches = Regex.Matches(str, pattern, RegexOptions.Compiled);
+            MatchCollection matches = Regex.Matches(value, pattern, RegexOptions.Compiled);
             return matches.Select(m => m.Value).Distinct().Count();
         }
 
         /// <summary>
         /// Trim string after format variables
         /// </summary>
-        /// <param name="str"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public static String TrimAfterFormatVariables(String str)
+        public static String TrimAfterFormatVariables([NotNull] String value)
         {
-            Match match = Regex.Match(str, FormatVariableRegexPattern, RegexOptions.Compiled);
-            return match.Success ? str.Substring(0, match.Index) : null;
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            Match match = Regex.Match(value, FormatVariableRegexPattern, RegexOptions.Compiled);
+            return match.Success ? value.Substring(0, match.Index) : null;
         }
-        
+
         public static String Format([NotNull] this String format, Object? arg0)
         {
             if (format is null)
@@ -448,7 +547,7 @@ namespace NetExtender.Utils.Types
             {
                 return expected > 0 ? Enumerable.Repeat((Object) NullString, expected).ToArray() : Array.Empty<Object>();
             }
-            
+
             return (args.Length - expected) switch
             {
                 0 => args,
@@ -461,7 +560,7 @@ namespace NetExtender.Utils.Types
         {
             return FormatSafe(source, null, args);
         }
-        
+
         public static String FormatSafe([NotNull] this String source, [CanBeNull] IFormatProvider? provider, [CanBeNull] params Object[] args)
         {
             if (source is null)
@@ -549,19 +648,19 @@ namespace NetExtender.Utils.Types
         {
             return str is null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNull([CanBeNull] this IString str)
         {
             return str?.ToString() is null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotNull([CanBeNull] this String str)
         {
             return str is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotNull([CanBeNull] this IString str)
         {
@@ -573,19 +672,19 @@ namespace NetExtender.Utils.Types
         {
             return str == String.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsEmpty([CanBeNull] this IString str)
         {
             return str is not null && str.Length <= 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotEmpty([CanBeNull] this String str)
         {
             return !IsEmpty(str);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotEmpty([CanBeNull] this IString str)
         {
@@ -687,14 +786,135 @@ namespace NetExtender.Utils.Types
 
             return Char.GetUnicodeCategory(str, index);
         }
-        
+
         /// <inheritdoc cref="Char.GetUnicodeCategory(String,Int32)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UnicodeCategory GetUnicodeCategory([NotNull] this IString str, Int32 index)
         {
             return GetUnicodeCategory(str.ToString(), index);
         }
+
+        public static Boolean IsAllCharacterInRange([NotNull] this String value, Int32 min, Int32 max)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (min < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(min));
+            }
+
+            if (max < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(max));
+            }
+
+            if (value.Length <= 0)
+            {
+                return true;
+            }
+
+            if (max < min)
+            {
+                (min, max) = (max, min);
+            }
+
+            // ReSharper disable once ForCanBeConvertedToForeach
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            for (Int32 i = 0; i < value.Length; i++)
+            {
+                Char character = value[i];
+                if (character < min || character > max)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public static Boolean IsAllCharacterInRange([NotNull] this IString value, Int32 min, Int32 max)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return IsAllCharacterInRange(value.ToString(), min, max);
+        }
+
+        public static Boolean IsASCII([NotNull] this String value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (value.Length <= 0)
+            {
+                return true;
+            }
+
+            // ReSharper disable once ForCanBeConvertedToForeach
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            for (Int32 i = 0; i < value.Length; i++)
+            {
+                if (value[i] > Byte.MaxValue)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
         
+        public static Boolean IsASCII([NotNull] this IString value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return IsASCII(value.ToString());
+        }
+        
+        public static Boolean IsASCIICharacters([NotNull] this String value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (value.Length <= 0)
+            {
+                return true;
+            }
+
+            // ReSharper disable once ForCanBeConvertedToForeach
+            // ReSharper disable once LoopCanBeConvertedToQuery
+            for (Int32 i = 0; i < value.Length; i++)
+            {
+                if (value[i] < 0x20 || value[i] > Byte.MaxValue)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+        
+        public static Boolean IsASCIICharacters([NotNull] this IString value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return IsASCIICharacters(value.ToString());
+        }
+
         public static String[] SplitByChars([NotNull] String str)
         {
             if (str is null)
@@ -729,7 +949,7 @@ namespace NetExtender.Utils.Types
 
             return str.Split('\n', count, options);
         }
-        
+
         public static String[] SplitByNewLine([NotNull] IString str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
             if (str is null)
@@ -764,7 +984,7 @@ namespace NetExtender.Utils.Types
 
             return str.Split(' ', count, options);
         }
-        
+
         public static String[] SplitBySpace([NotNull] IString str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
             if (str is null)
@@ -801,7 +1021,7 @@ namespace NetExtender.Utils.Types
 
             return str.Split(NewLineAndSpaceChars, count, options);
         }
-        
+
         public static String[] SplitByNewLineAndSpace([NotNull] IString str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
             if (str is null)
@@ -826,7 +1046,7 @@ namespace NetExtender.Utils.Types
         {
             return SplitByUpperCaseInternal(str, options).ToArray();
         }
-        
+
         public static String[] SplitByUpperCase([NotNull] IString str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
             return SplitByUpperCase(str.ToString(), options);
@@ -961,7 +1181,7 @@ namespace NetExtender.Utils.Types
             {
                 return String.Empty;
             }
-            
+
             return type switch
             {
                 JoinType.Default => Join(separator, values),
@@ -992,7 +1212,7 @@ namespace NetExtender.Utils.Types
             {
                 return String.Empty;
             }
-            
+
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
@@ -1007,7 +1227,7 @@ namespace NetExtender.Utils.Types
             {
                 return String.Empty;
             }
-            
+
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
@@ -1015,7 +1235,7 @@ namespace NetExtender.Utils.Types
 
             return values.Length > 0 ? String.Join(separator, values.Where(predicate)) : String.Empty;
         }
-        
+
         public static String ReplaceInsert([NotNull] this String value, ReadOnlySpan<Char> replace)
         {
             return ReplaceInsert(value, replace, 0);
@@ -1035,7 +1255,7 @@ namespace NetExtender.Utils.Types
 
             return value.Length > 0 ? new StringBuilder(value).ReplaceInsert(replace, index).ToString() : replace.ToString();
         }
-        
+
         public static String ReplaceInsert([NotNull] this String value, String replace)
         {
             return ReplaceInsert(value, replace, 0);
@@ -1052,7 +1272,7 @@ namespace NetExtender.Utils.Types
             {
                 return value;
             }
-            
+
             return value.Length > 0 ? new StringBuilder(value).ReplaceInsert(replace, index).ToString() : replace;
         }
 
@@ -1065,7 +1285,7 @@ namespace NetExtender.Utils.Types
 
             return source.WhereNot(String.IsNullOrEmpty);
         }
-        
+
         public static IEnumerable<IString> WhereNotNullOrEmpty([NotNull] this IEnumerable<IString> source)
         {
             if (source is null)
@@ -1085,7 +1305,7 @@ namespace NetExtender.Utils.Types
 
             return source.WhereNot(String.IsNullOrWhiteSpace);
         }
-        
+
         public static IEnumerable<IString> WhereNotNullOrWhiteSpace([NotNull] this IEnumerable<IString> source)
         {
             if (source is null)
@@ -1100,7 +1320,7 @@ namespace NetExtender.Utils.Types
         {
             return ToCapitalizeFirstChar(value, null);
         }
-        
+
         public static String ToCapitalizeFirstChar([NotNull] this String value, CultureInfo info)
         {
             if (value is null)
@@ -1110,12 +1330,12 @@ namespace NetExtender.Utils.Types
 
             return value.Length > 0 ? value[0].ToString(info).ToUpper(info) + value.Substring(1) : value;
         }
-        
+
         public static String ToCapitalizeFirstCharLower([NotNull] this String value)
         {
             return ToCapitalizeFirstCharLower(value, null);
         }
-        
+
         public static String ToCapitalizeFirstCharLower([NotNull] this String value, CultureInfo info)
         {
             if (value is null)
@@ -1130,7 +1350,7 @@ namespace NetExtender.Utils.Types
         {
             return ToTitleCase(value, null);
         }
-        
+
         public static String ToTitleCase([NotNull] this String value, CultureInfo info)
         {
             if (value is null)
@@ -1146,7 +1366,7 @@ namespace NetExtender.Utils.Types
             info ??= CultureInfo.CurrentCulture;
             return info.TextInfo.ToTitleCase(value);
         }
-        
+
         public static String ToTitleCaseLower([NotNull] this String value)
         {
             return ToTitleCaseLower(value, null);
@@ -1166,12 +1386,12 @@ namespace NetExtender.Utils.Types
         {
             return value.AsSpan();
         }
-        
+
         public static ReadOnlySpan<Char> SubSpan(String value, Int32 start)
         {
             return value.AsSpan(start);
         }
-        
+
         public static ReadOnlySpan<Char> SubSpan(String value, Int32 start, Int32 length)
         {
             return value.AsSpan(start, length);
@@ -1196,7 +1416,7 @@ namespace NetExtender.Utils.Types
 
             return value.Length > 1 ? ((IEnumerable<Char>) value).Shuffle().Join() : value;
         }
-        
+
         public static String Shuffle([NotNull] this String value, Int32 index)
         {
             if (value is null)
@@ -1211,7 +1431,7 @@ namespace NetExtender.Utils.Types
 
             return value.Length > 1 ? value.Substring(0, index) + value.Substring(index).Shuffle() : value;
         }
-        
+
         public static String Shuffle([NotNull] this String value, Int32 index, Int32 length)
         {
             if (value is null)
@@ -1270,7 +1490,7 @@ namespace NetExtender.Utils.Types
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             using IEnumerator<String> enumerator = value.GetEnumerator();
 
             if (!enumerator.MoveNext())
@@ -1291,7 +1511,7 @@ namespace NetExtender.Utils.Types
 
             return new Size(first, counter);
         }
-        
+
         private static Regex AnsiRegex { get; } = new Regex(@"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])", RegexOptions.Compiled);
 
         public static Int32 CountAnsi([NotNull] this String value)
@@ -1426,7 +1646,7 @@ namespace NetExtender.Utils.Types
 
             return value.Substring(0, value.Length - suffix.Length);
         }
-        
+
         public static String RemovePrefixAndSuffix(this String value, String trim)
         {
             return RemovePrefixAndSuffix(value, trim, StringComparison.Ordinal);
@@ -1469,7 +1689,7 @@ namespace NetExtender.Utils.Types
             {
                 throw new ArgumentNullException(nameof(lower));
             }
-            
+
             StringBuilder builder = new StringBuilder();
 
             foreach (Char chr in value)
@@ -1496,7 +1716,7 @@ namespace NetExtender.Utils.Types
         {
             return ToOppositeCase(value, null);
         }
-        
+
         public static String ToOppositeCase([NotNull] this String value, CultureInfo info)
         {
             if (value is null)
@@ -1511,7 +1731,7 @@ namespace NetExtender.Utils.Types
 
             Func<Char, Char> upper;
             Func<Char, Char> lower;
-            
+
             if (info is null)
             {
                 upper = Char.ToUpper;
@@ -1525,7 +1745,7 @@ namespace NetExtender.Utils.Types
 
             return ToOppositeCaseInternal(value, upper, lower);
         }
-        
+
         public static String ToOppositeCaseInvariant([NotNull] this String value)
         {
             if (value is null)
@@ -1535,7 +1755,7 @@ namespace NetExtender.Utils.Types
 
             return value.IsEmpty() ? value : ToOppositeCaseInternal(value, Char.ToUpperInvariant, Char.ToLowerInvariant);
         }
-        
+
         /// <summary>
         /// Returns the beginning portion of s up to, but not including,
         /// the first occurrence of the character c. If c is not present in
@@ -1622,6 +1842,61 @@ namespace NetExtender.Utils.Types
             return index < 0 ? value : value.Remove(index, str.Length);
         }
 
+        public static unsafe String RemoveAllWhiteSpace([NotNull] this String value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (value.Length <= 0)
+            {
+                return String.Empty;
+            }
+
+            fixed (Char* pointer = value)
+            {
+                Char* destination = pointer;
+                for (Char* chr = pointer; *chr != 0; chr++)
+                {
+                    switch (*chr)
+                    {
+                        case '\u0020':
+                        case '\u00A0':
+                        case '\u1680':
+                        case '\u2000':
+                        case '\u2001':
+                        case '\u2002':
+                        case '\u2003':
+                        case '\u2004':
+                        case '\u2005':
+                        case '\u2006':
+                        case '\u2007':
+                        case '\u2008':
+                        case '\u2009':
+                        case '\u200A':
+                        case '\u202F':
+                        case '\u205F':
+                        case '\u3000':
+                        case '\u2028':
+                        case '\u2029':
+                        case '\u0009':
+                        case '\u000A':
+                        case '\u000B':
+                        case '\u000C':
+                        case '\u000D':
+                        case '\u0085':
+                            continue;
+                        default:
+                            *destination++ = *chr;
+                            break;
+                    }
+                }
+
+                return new String(pointer, 0, (Int32) (destination - pointer));
+            }
+        }
+
         /// <summary>
         /// Returns a new string from the provided text with the specified maximum length. If the original text is longer than the specified maximum length, 3 dots (...) are added.
         /// </summary>
@@ -1682,7 +1957,7 @@ namespace NetExtender.Utils.Types
 
             return value.Substring(0, length - 3) + "...";
         }
-        
+
         public static String WhereChar([NotNull] this String value, [NotNull] Func<Char, Boolean> where)
         {
             if (value is null)
@@ -1712,7 +1987,7 @@ namespace NetExtender.Utils.Types
 
             return value.Length > 0 ? String.Join(String.Empty, value.WhereNot(where)) : String.Empty;
         }
-        
+
         public static String RemoveNonDigitChars([NotNull] this String value)
         {
             if (value is null)
@@ -1722,7 +1997,7 @@ namespace NetExtender.Utils.Types
 
             return String.Join(String.Empty, value.Where(Char.IsDigit));
         }
-        
+
         public static String RemoveDiacritics([NotNull] this String value)
         {
             if (value is null)
@@ -1737,12 +2012,12 @@ namespace NetExtender.Utils.Types
 
             String normalized = value.Normalize(NormalizationForm.FormD);
             StringBuilder builder = new StringBuilder(normalized.Length);
-            
+
             foreach (Char chr in normalized.Where(chr => CharUnicodeInfo.GetUnicodeCategory(chr) != UnicodeCategory.NonSpacingMark))
             {
                 builder.Append(chr);
             }
-            
+
             return builder.ToString().Normalize(NormalizationForm.FormC);
         }
 
@@ -1764,7 +2039,7 @@ namespace NetExtender.Utils.Types
                     throw new NotSupportedException();
             }
         }
-        
+
         public static Boolean IsIgnoreCase(this StringComparison comparison)
         {
             switch (comparison)
@@ -1781,7 +2056,7 @@ namespace NetExtender.Utils.Types
                     throw new NotSupportedException();
             }
         }
-        
+
         public static StringComparison ToIgnoreCase(this StringComparison comparison)
         {
             switch (comparison)
@@ -1799,7 +2074,7 @@ namespace NetExtender.Utils.Types
                     throw new NotSupportedException();
             }
         }
-        
+
         public static StringComparison ToCaseSensitive(this StringComparison comparison)
         {
             switch (comparison)
@@ -1817,7 +2092,7 @@ namespace NetExtender.Utils.Types
                     throw new NotSupportedException();
             }
         }
-        
+
         /// <summary>
         /// Converts the specified string to a stream by using UTF-8 encoding that can be read from.
         /// <para>Don't forget to dispose the stream.</para>

@@ -9,11 +9,11 @@ namespace NetExtender.Network.IPC.IO
     /// <summary>
     /// Wraps a MemoryMappedFile with inter process synchronization and signaling
     /// </summary>
-    public class TinyMemoryMappedFile : IDisposable, ITinyMemoryMappedFile
+    public class InterprocessMemoryMappedFile : IDisposable, IInterprocessMemoryMappedFile
     {
         private readonly Task _fileWatcherTask;
         private readonly MemoryMappedFile _memoryMappedFile;
-        private readonly ITinyReadWriteLock _readWriteLock;
+        private readonly IInterprocessReadWriteLock _readWriteLock;
         private readonly Boolean _disposeLock;
         private readonly EventWaitHandle _fileWaitHandle;
 
@@ -27,36 +27,36 @@ namespace NetExtender.Network.IPC.IO
         public const Int32 DefaultMaxFileSize = 1024 * 1024;
 
         /// <summary>
-        /// Initializes a new instance of the TinyMemoryMappedFile class.
+        /// Initializes a new instance of the <see cref="InterprocessMemoryMappedFile"/> class.
         /// </summary>
         /// <param name="name">A system wide unique name, the name will have a prefix appended before use</param>
         /// <param name="maxFileSize">The maximum amount of data that can be written to the file memory mapped file</param>
-        public TinyMemoryMappedFile(String name, Int64 maxFileSize = DefaultMaxFileSize)
-            : this(name, maxFileSize, new TinyReadWriteLock(name), true)
+        public InterprocessMemoryMappedFile(String name, Int64 maxFileSize = DefaultMaxFileSize)
+            : this(name, maxFileSize, new InterprocessReadWriteLock(name), true)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the TinyMemoryMappedFile class.
+        /// Initializes a new instance of the <see cref="InterprocessMemoryMappedFile"/> class.
         /// </summary>
         /// <param name="name">A system wide unique name, the name will have a prefix appended before use</param>
         /// <param name="maxFileSize">The maximum amount of data that can be written to the file memory mapped file</param>
         /// <param name="readWriteLock">A read/write lock that will be used to control access to the memory mapped file</param>
         /// <param name="disposeLock">Set to true if the read/write lock is to be disposed when this instance is disposed</param>
-        public TinyMemoryMappedFile(String name, Int64 maxFileSize, ITinyReadWriteLock readWriteLock, Boolean disposeLock)
+        public InterprocessMemoryMappedFile(String name, Int64 maxFileSize, IInterprocessReadWriteLock readWriteLock, Boolean disposeLock)
             : this(CreateOrOpenMemoryMappedFile(name, maxFileSize), CreateEventWaitHandle(name), maxFileSize, readWriteLock, disposeLock)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the TinyMemoryMappedFile class.
+        /// Initializes a new instance of the <see cref="InterprocessMemoryMappedFile"/> class.
         /// </summary>
         /// <param name="memoryMappedFile">An instance of a memory mapped file</param>
         /// <param name="fileWaitHandle">A manual reset EventWaitHandle that is to be used to signal file changes</param>
         /// <param name="maxFileSize">The maximum amount of data that can be written to the file memory mapped file</param>
         /// <param name="readWriteLock">A read/write lock that will be used to control access to the memory mapped file</param>
         /// <param name="disposeLock">Set to true if the read/write lock is to be disposed when this instance is disposed</param>
-        public TinyMemoryMappedFile(MemoryMappedFile memoryMappedFile, EventWaitHandle fileWaitHandle, Int64 maxFileSize, ITinyReadWriteLock readWriteLock, Boolean disposeLock)
+        public InterprocessMemoryMappedFile(MemoryMappedFile memoryMappedFile, EventWaitHandle fileWaitHandle, Int64 maxFileSize, IInterprocessReadWriteLock readWriteLock, Boolean disposeLock)
         {
             _readWriteLock = readWriteLock ?? throw new ArgumentNullException(nameof(readWriteLock));
             _memoryMappedFile = memoryMappedFile ?? throw new ArgumentNullException(nameof(memoryMappedFile));
@@ -80,7 +80,7 @@ namespace NetExtender.Network.IPC.IO
             _disposed = true;
             _disposeWaitHandle.Set();
             // ReSharper disable once AsyncConverter.AsyncWait
-            _fileWatcherTask.Wait(TinyReadWriteLock.DefaultWaitTimeout);
+            _fileWatcherTask.Wait(InterprocessReadWriteLock.DefaultWaitTimeout);
 
             Dispose(true);
             GC.SuppressFinalize(this);
@@ -95,9 +95,9 @@ namespace NetExtender.Network.IPC.IO
 
             _memoryMappedFile.Dispose();
 
-            if (_disposeLock && _readWriteLock is TinyReadWriteLock tinyReadWriteLock)
+            if (_disposeLock && _readWriteLock is InterprocessReadWriteLock rwlock)
             {
-                tinyReadWriteLock.Dispose();
+                rwlock.Dispose();
             }
 
             _fileWaitHandle.Dispose();
@@ -190,7 +190,7 @@ namespace NetExtender.Network.IPC.IO
 
             while (!_disposed)
             {
-                Int32 result = WaitHandle.WaitAny(waitHandles, TinyReadWriteLock.DefaultWaitTimeout);
+                Int32 result = WaitHandle.WaitAny(waitHandles, InterprocessReadWriteLock.DefaultWaitTimeout);
 
                 // Triggers when disposed
                 if (result == 0 || _disposed)
@@ -228,7 +228,7 @@ namespace NetExtender.Network.IPC.IO
         }
 
         /// <summary>
-        /// Create or open a MemoryMappedFile that can be used to construct a TinyMemoryMappedFile
+        /// Create or open a MemoryMappedFile that can be used to construct a <see cref="InterprocessMemoryMappedFile"/>
         /// </summary>
         /// <param name="name">A system wide unique name, the name will have a prefix appended</param>
         /// <param name="maxFileSize">The maximum amount of data that can be written to the file memory mapped file</param>
@@ -245,11 +245,11 @@ namespace NetExtender.Network.IPC.IO
                 throw new ArgumentException(@"Max file size can not be less than 1 byte", nameof(maxFileSize));
             }
 
-            return MemoryMappedFile.CreateOrOpen("TinyMemoryMappedFile_MemoryMappedFile_" + name, maxFileSize + sizeof(Int32));
+            return MemoryMappedFile.CreateOrOpen($"{nameof(InterprocessMemoryMappedFile)}_MemoryMappedFile_{name}", maxFileSize + sizeof(Int32));
         }
 
         /// <summary>
-        /// Create or open an EventWaitHandle that can be used to construct a TinyMemoryMappedFile
+        /// Create or open an EventWaitHandle that can be used to construct a <see cref="InterprocessMemoryMappedFile"/>
         /// </summary>
         /// <param name="name">A system wide unique name, the name will have a prefix appended</param>
         /// <returns>A system wide EventWaitHandle</returns>
@@ -260,7 +260,7 @@ namespace NetExtender.Network.IPC.IO
                 throw new ArgumentException(@"EventWaitHandle must be named", nameof(name));
             }
 
-            return new EventWaitHandle(false, EventResetMode.ManualReset, "TinyMemoryMappedFile_WaitHandle_" + name);
+            return new EventWaitHandle(false, EventResetMode.ManualReset, $"{nameof(InterprocessMemoryMappedFile)}_WaitHandle_{name}");
         }
     }
 }

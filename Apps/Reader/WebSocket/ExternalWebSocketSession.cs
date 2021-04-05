@@ -32,7 +32,7 @@ namespace NetExtender.Apps.Reader.WebSocket
         {
             String message = Encoding.UTF8.GetString(buffer, (Int32) offset, (Int32) size);
 
-            String[] protocol = { $"{Domain.Current.ProtocolName}:\\{message}" };
+            String[] protocol = { $"{Domain.UrlSchemeProtocolName}:\\{message}" };
             _reader.ProcessExternalInputAsync(Server, protocol);
         }
 

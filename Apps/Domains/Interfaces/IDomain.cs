@@ -32,7 +32,7 @@ namespace NetExtender.Apps.Domains.Interfaces
         
         public DateTime StartedAt { get; }
         
-        public IIPCAppData Data { get; }
+        public IAppData Data { get; }
 
         public AppStatus Status { get; }
 
@@ -43,14 +43,14 @@ namespace NetExtender.Apps.Domains.Interfaces
         public String BranchData { get; }
 
         public String AppName { get; }
+        public String AppShortName { get; }
         
         public CultureInfo Culture { get; set; }
         
         public Boolean AlreadyStarted { get; }
         
-        public Boolean UseProtocol { get; set; }
-
-        public String ProtocolName { get; }
+        public String UrlSchemeProtocolName { get; }
+        public Boolean? IsUrlSchemeProtocolRegister { get; set; }
 
         public IDomain Initialize(GUIType type);
         public IDomain Initialize<TApp>(GUIType type) where TApp : WPFApp, new();

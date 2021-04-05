@@ -49,17 +49,249 @@ namespace NetExtender.Utils.Types
             }
         }
         
-        public static IEnumerable<(TKey key, TValue value)> Tuple<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKey<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Action<TKey> action)
+        {
+            return source.ForEachBy(item => item.Key, action);
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKeyWhere<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Func<TKey, Boolean> where, [NotNull] Action<TKey> action)
+        {
+            return source.ForEachByWhere(item => item.Key, where, action);
+        }
+        
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKeyWhere<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Func<TKey, Int32, Boolean> where, [NotNull] Action<TKey> action)
+        {
+            return source.ForEachByWhere(item => item.Key, where, action);
+        }
+        
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKeyWhereNot<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Func<TKey, Boolean> where, [NotNull] Action<TKey> action)
+        {
+            return source.ForEachByWhereNot(item => item.Key, where, action);
+        }
+        
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKeyWhereNot<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Func<TKey, Int32, Boolean> where, [NotNull] Action<TKey> action)
+        {
+            return source.ForEachByWhereNot(item => item.Key, where, action);
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKey<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Action<TKey, Int32> action)
+        {
+            return source.ForEachBy(item => item.Key, action);
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKeyWhere<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Func<TKey, Boolean> where, [NotNull] Action<TKey, Int32> action)
+        {
+            return source.ForEachByWhere(item => item.Key, where, action);
+        }
+        
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKeyWhere<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Func<TKey, Int32, Boolean> where, [NotNull] Action<TKey, Int32> action)
+        {
+            return source.ForEachByWhere(item => item.Key, where, action);
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKeyWhereNot<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Func<TKey, Boolean> where, [NotNull] Action<TKey, Int32> action)
+        {
+            return source.ForEachByWhereNot(item => item.Key, where, action);
+        }
+        
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachKeyWhereNot<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Func<TKey, Int32, Boolean> where, [NotNull] Action<TKey, Int32> action)
+        {
+            return source.ForEachByWhereNot(item => item.Key, where, action);
+        }
+        
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValue<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Action<TValue> action)
+        {
+            return source.ForEachBy(item => item.Value, action);
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValueWhere<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Func<TValue, Boolean> where, [NotNull] Action<TValue> action)
+        {
+            return source.ForEachByWhere(item => item.Value, where, action);
+        }
+        
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValueWhere<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Func<TValue, Int32, Boolean> where, [NotNull] Action<TValue> action)
+        {
+            return source.ForEachByWhere(item => item.Value, where, action);
+        }
+        
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValueWhereNot<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Func<TValue, Boolean> where, [NotNull] Action<TValue> action)
+        {
+            return source.ForEachByWhereNot(item => item.Value, where, action);
+        }
+        
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValueWhereNot<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Func<TValue, Int32, Boolean> where, [NotNull] Action<TValue> action)
+        {
+            return source.ForEachByWhereNot(item => item.Value, where, action);
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValue<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Action<TValue, Int32> action)
+        {
+            return source.ForEachBy(item => item.Value, action);
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValueWhere<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Func<TValue, Boolean> where, [NotNull] Action<TValue, Int32> action)
+        {
+            return source.ForEachByWhere(item => item.Value, where, action);
+        }
+        
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValueWhere<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Func<TValue, Int32, Boolean> where, [NotNull] Action<TValue, Int32> action)
+        {
+            return source.ForEachByWhere(item => item.Value, where, action);
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValueWhereNot<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Func<TValue, Boolean> where, [NotNull] Action<TValue, Int32> action)
+        {
+            return source.ForEachByWhereNot(item => item.Value, where, action);
+        }
+        
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ForEachValueWhereNot<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [NotNull] Func<TValue, Int32, Boolean> where, [NotNull] Action<TValue, Int32> action)
+        {
+            return source.ForEachByWhereNot(item => item.Value, where, action);
+        }
+
+        public static IOrderedEnumerable<KeyValuePair<TKey, TValue>> OrderByKeys<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            // ReSharper disable once UseDeconstruction
-            foreach (KeyValuePair<TKey, TValue> item in source)
+            return OrderByKeys(source, Comparer<TKey>.Default);
+        }
+
+        public static IOrderedEnumerable<KeyValuePair<TKey, TValue>> OrderByKeys<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TKey> comparer)
+        {
+            if (source is null)
             {
-                yield return (item.Key, item.Value);
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.OrderBy(item => item.Key, comparer);
+        }
+
+        public static IOrderedEnumerable<KeyValuePair<TKey, TValue>> OrderByKeysDescending<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return OrderByKeysDescending(source, Comparer<TKey>.Default);
+        }
+
+        public static IOrderedEnumerable<KeyValuePair<TKey, TValue>> OrderByKeysDescending<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TKey> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.OrderByDescending(item => item.Key, comparer);
+        }
+        
+        public static IOrderedEnumerable<KeyValuePair<TKey, TValue>> OrderByValues<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return OrderByValues(source, Comparer<TValue>.Default);
+        }
+
+        public static IOrderedEnumerable<KeyValuePair<TKey, TValue>> OrderByValues<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TValue> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.OrderBy(item => item.Value, comparer);
+        }
+
+        public static IOrderedEnumerable<KeyValuePair<TKey, TValue>> OrderByValuesDescending<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return OrderByValuesDescending(source, Comparer<TValue>.Default);
+        }
+
+        public static IOrderedEnumerable<KeyValuePair<TKey, TValue>> OrderByValuesDescending<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TValue> comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.OrderByDescending(item => item.Value, comparer);
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> DistinctByKey<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return DistinctByKey(source, EqualityComparer<TKey>.Default);
+        }
+        
+        public static IEnumerable<KeyValuePair<TKey, TValue>> DistinctByKey<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [CanBeNull] IEqualityComparer<TKey>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.DistinctBy(item => item.Key, comparer);
+        }
+        
+        public static IEnumerable<KeyValuePair<TKey, TValue>> DistinctByValue<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return DistinctByValue(source, EqualityComparer<TValue>.Default);
+        }
+        
+        public static IEnumerable<KeyValuePair<TKey, TValue>> DistinctByValue<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [CanBeNull] IEqualityComparer<TValue>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.DistinctBy(item => item.Value, comparer);
+        }
+        
+        public static IEnumerable<(TKey key, TValue value)> ToTuple<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            foreach ((TKey key, TValue value) in source)
+            {
+                yield return (key, value);
+            }
+        }
+
+        public static IEnumerable<KeyValuePair<TKey, TValue>> ToKeyValuePairs<TKey, TValue>([NotNull] this IEnumerable<(TKey, TValue)> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            foreach ((TKey key, TValue value) in source)
+            {
+                yield return new KeyValuePair<TKey, TValue>(key, value);
             }
         }
         

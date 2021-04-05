@@ -24,6 +24,17 @@ namespace NetExtender.Utils.Types
         }
         
         [Pure]
+        public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>([NotNull] this IEnumerable<(TKey, TValue)> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.ToKeyValuePairs().ToDictionary();
+        }
+        
+        [Pure]
         public static Boolean Contains<TKey, TValue>([NotNull] this ICollection<KeyValuePair<TKey, TValue>> source, KeyValuePair<TKey, TValue> pair)
         {
             if (source is null)

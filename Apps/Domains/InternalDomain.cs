@@ -83,9 +83,8 @@ namespace NetExtender.Apps.Domains
                 }
             }
 
-            private IIPCAppData _data;
-
-            public IIPCAppData Data
+            private IAppData _data;
+            public IAppData Data
             {
                 get
                 {
@@ -216,6 +215,14 @@ namespace NetExtender.Apps.Domains
                     return Data.AppName;
                 }
             }
+            
+            public String AppShortName
+            {
+                get
+                {
+                    return Data.AppShortName;
+                }
+            }
 
             public CultureInfo Culture
             {
@@ -233,31 +240,31 @@ namespace NetExtender.Apps.Domains
             {
                 get
                 {
-                    return Data.AlreadyStarted;
+                    return Data.HasAnotherInstance;
                 }
             }
 
-            public Boolean UseProtocol
+            public String UrlSchemeProtocolName
             {
                 get
                 {
-                    return Data.UseProtocol;
+                    return Data.UrlSchemeProtocolName;
+                }
+            }
+
+            public Boolean? IsUrlSchemeProtocolRegister
+            {
+                get
+                {
+                    return Data.IsUrlSchemeProtocolRegister;
                 }
                 set
                 {
-                    Data.UseProtocol = value;
+                    Data.IsUrlSchemeProtocolRegister = value;
                 }
             }
 
-            public String ProtocolName
-            {
-                get
-                {
-                    return Data.ProtocolName;
-                }
-            }
-
-            public InternalDomain(IIPCAppData data)
+            public InternalDomain(IAppData data)
             {
                 Culture = CultureInfo.InvariantCulture;
                 Data = data;
@@ -286,7 +293,7 @@ namespace NetExtender.Apps.Domains
 
                 MessageReceived += HandleReceivedMsg;
 
-                if (!Data.AlreadyStarted)
+                if (!Data.HasAnotherInstance)
                 {
                     return;
                 }

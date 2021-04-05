@@ -5,7 +5,7 @@ using NetExtender.Events.Args;
 
 namespace NetExtender.Network.IPC.Messaging
 {
-    public interface ITinyMessageBus
+    public interface IInterprocessMessageBus : IDisposable
     {
         /// <summary>
         /// Called whenever a new message is received
@@ -15,28 +15,28 @@ namespace NetExtender.Network.IPC.Messaging
         /// <summary>
         /// Number of messages that have been published by this message bus
         /// </summary>
-        public Int64 MessagesPublished { get; }
+        public Int64 SendedMessages { get; }
 
         /// <summary>
         /// Number of messages that have been received by this message bus
         /// </summary>
-        public Int64 MessagesReceived { get; }
-
-        /// <summary>
-        /// Resets MessagesSent and MessagesReceived counters
-        /// </summary>
-        public void ResetMetrics();
+        public Int64 ReceivedMessages { get; }
 
         /// <summary>
         /// Publish a message to the message bus
         /// </summary>
         /// <param name="message"></param>
-        public Task PublishAsync(Byte[] message);
+        public Task SendMessageAsync(Byte[] message);
 
         /// <summary>
         /// Publish a number of messages to the message bus
         /// </summary>
         /// <param name="messages"></param>
-        public Task PublishAsync(IEnumerable<Byte[]> messages);
+        public Task SendMessageAsync(IEnumerable<Byte[]> messages);
+        
+        /// <summary>
+        /// Resets MessagesSent and MessagesReceived counters
+        /// </summary>
+        public void ResetMetrics();
     }
 }

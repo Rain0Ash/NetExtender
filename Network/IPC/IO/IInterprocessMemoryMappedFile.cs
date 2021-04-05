@@ -2,7 +2,7 @@ using System;
 
 namespace NetExtender.Network.IPC.IO
 {
-    public interface ITinyMemoryMappedFile
+    public interface IInterprocessMemoryMappedFile
     {
         /// <summary>
         /// Called whenever the file is written to

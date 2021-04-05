@@ -3,10 +3,12 @@
 
 using System;
 using NetExtender.Apps.Data.Common;
+using NetExtender.Network.IPC.Messaging;
 
 namespace NetExtender.Apps.Data.Interfaces
 {
-    public interface IAppData : IComparable<IAppData>, IEquatable<IAppData>, IDisposable
+    // ReSharper disable once RedundantExtendsListEntry
+    public interface IAppData : IComparable<IAppData>, IEquatable<IAppData>, IInterprocessMessageBus, IDisposable
     {
         public static Boolean operator >(IAppData first, IAppData second)
         {
@@ -48,5 +50,9 @@ namespace NetExtender.Apps.Data.Interfaces
         public String StatusData { get; }
         
         public String BranchData { get; }
+        public String UrlSchemeProtocolName { get; }
+        public Boolean? IsUrlSchemeProtocolRegister { get; set; }
+        public Boolean HasAnotherInstance { get; }
+        public Boolean? IsExternalMessageBus { get; }
     }
 }
