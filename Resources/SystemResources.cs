@@ -72,7 +72,7 @@ namespace NetExtender.Resources
             public SystemResourceString([NotNull] SystemResourceDelegate value)
             {
                 Resource = value ?? throw new ArgumentNullException(nameof(value));
-                Arguments = Text.FormatArgsExpected();
+                Arguments = Text.CountExpectedFormatArgs();
             }
         }
 

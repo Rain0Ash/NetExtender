@@ -228,7 +228,7 @@ namespace NetExtender.Utils.Types
             return !brackets.Any();
         }
 
-        public static String ReplaceFromDictionary<T>([NotNull] this String source, [NotNull] IEnumerable<KeyValuePair<String, T>> dictionary)
+        public static String ReplaceFrom<T>([NotNull] this String source, [NotNull] IEnumerable<KeyValuePair<String, T>> dictionary)
         {
             if (source is null)
             {
@@ -240,10 +240,10 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(dictionary));
             }
 
-            return ReplaceFromDictionary(source, dictionary.Select(pair => new KeyValuePair<String, String>(pair.Key, pair.Value?.ToString())));
+            return ReplaceFrom(source, dictionary.Select(pair => new KeyValuePair<String, String>(pair.Key, pair.Value?.ToString())));
         }
 
-        public static String ReplaceFromDictionary([NotNull] this String value, [NotNull] IEnumerable<KeyValuePair<String, String>> source)
+        public static String ReplaceFrom([NotNull] this String value, [NotNull] IEnumerable<KeyValuePair<String, String>> source)
         {
             if (value is null)
             {
@@ -262,13 +262,13 @@ namespace NetExtender.Utils.Types
 
             return source switch
             {
-                IDictionary<String, String> dictionary => ReplaceFromDictionary(value, dictionary),
-                IReadOnlyDictionary<String, String> dictionary => ReplaceFromDictionary(value, dictionary),
-                _ => ReplaceFromDictionary(value, (IDictionary<String, String>) new Dictionary<String, String>(source))
+                IDictionary<String, String> dictionary => ReplaceFrom(value, dictionary),
+                IReadOnlyDictionary<String, String> dictionary => ReplaceFrom(value, dictionary),
+                _ => ReplaceFrom(value, (IDictionary<String, String>) new Dictionary<String, String>(source))
             };
         }
 
-        private static String ReplaceFromDictionary([NotNull] String source, [NotNull] IDictionary<String, String> dictionary)
+        private static String ReplaceFrom([NotNull] String source, [NotNull] IDictionary<String, String> dictionary)
         {
             if (source is null)
             {
@@ -291,7 +291,7 @@ namespace NetExtender.Utils.Types
                 match => dictionary.TryGetValue(match.Value, out String value) ? value ?? String.Empty : String.Empty);
         }
 
-        private static String ReplaceFromDictionary([NotNull] String source, [NotNull] IReadOnlyDictionary<String, String> dictionary)
+        private static String ReplaceFrom([NotNull] String source, [NotNull] IReadOnlyDictionary<String, String> dictionary)
         {
             if (source is null)
             {
@@ -314,7 +314,7 @@ namespace NetExtender.Utils.Types
                 match => dictionary.TryGetValue(match.Value, out String value) ? value ?? String.Empty : String.Empty);
         }
 
-        public static String FormatFromDictionary<T>([NotNull] this String value, [NotNull] IEnumerable<KeyValuePair<String, T>> source)
+        public static String FormatFrom<T>([NotNull] this String value, [NotNull] IEnumerable<KeyValuePair<String, T>> source)
         {
             if (value is null)
             {
@@ -347,7 +347,7 @@ namespace NetExtender.Utils.Types
             return String.Format(builder.ToString(), arguments);
         }
 
-        public static Int32 FormatArgsExpected([NotNull] this String value)
+        public static Int32 CountExpectedFormatArgs([NotNull] this String value)
         {
             if (value is null)
             {
@@ -573,7 +573,7 @@ namespace NetExtender.Utils.Types
                 return source;
             }
 
-            Int32 expected = FormatArgsExpected(source);
+            Int32 expected = CountExpectedFormatArgs(source);
 
             return expected > 0 ? String.Format(provider, source, FormatSafeGetArguments(args, expected)) : source;
         }
@@ -845,7 +845,7 @@ namespace NetExtender.Utils.Types
             return IsAllCharacterInRange(value.ToString(), min, max);
         }
 
-        public static Boolean IsASCII([NotNull] this String value)
+        public static Boolean IsAscii([NotNull] this String value)
         {
             if (value is null)
             {
@@ -870,17 +870,17 @@ namespace NetExtender.Utils.Types
             return true;
         }
         
-        public static Boolean IsASCII([NotNull] this IString value)
+        public static Boolean IsAscii([NotNull] this IString value)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
 
-            return IsASCII(value.ToString());
+            return IsAscii(value.ToString());
         }
         
-        public static Boolean IsASCIICharacters([NotNull] this String value)
+        public static Boolean IsAsciiCharacters([NotNull] this String value)
         {
             if (value is null)
             {
@@ -905,14 +905,14 @@ namespace NetExtender.Utils.Types
             return true;
         }
         
-        public static Boolean IsASCIICharacters([NotNull] this IString value)
+        public static Boolean IsAsciiCharacters([NotNull] this IString value)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
 
-            return IsASCIICharacters(value.ToString());
+            return IsAsciiCharacters(value.ToString());
         }
 
         public static String[] SplitByChars([NotNull] String str)
@@ -1956,6 +1956,63 @@ namespace NetExtender.Utils.Types
             }
 
             return value.Substring(0, length - 3) + "...";
+        }
+        
+        public static Int32 DamerauLevenshteinDistance(this String first, String second)
+        {
+            return DamerauLevenshteinDistance(first, second, new Int32[first.Length + 1, second.Length + 1]);
+        }
+        
+        public static Int32 DamerauLevenshteinDistance([NotNull] this String first, [NotNull] String second, Int32[,] values)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+
+            Int32 flength = first.Length;
+            Int32 slength = second.Length;
+            
+            for (Int32 i = 0; i <= flength; ++i)
+            {
+                values[i, 0] = i;
+            }
+	
+            for (Int32 j = 1; j <= slength; ++j)
+            {
+                values[0, j] = j;
+            }
+	
+            for (Int32 i = 1; i <= flength; ++i)
+            {
+                for (Int32 j = 1; j <= slength; ++j)
+                {
+                    Char fchar = first[i - 1];
+                    Char schar = second[j - 1];
+                    Int32 cost = fchar == schar ? 0 : 1;
+	
+                    Int32 deletion = values[i - 1, j] + 1;
+                    Int32 insertion = values[i, j - 1] + 1;
+                    Int32 substitution = values[i - 1, j - 1] + cost;
+                    
+                    values[i, j] = Math.Min(Math.Min(deletion, insertion), substitution);
+
+                    if (i <= 1 || j <= 1 || fchar != second[j - 2] || first[i - 2] != schar)
+                    {
+                        continue;
+                    }
+
+                    Int32 transposition = values[i - 2, j - 2] + cost;
+                    values[i, j] = Math.Min(values[i, j], transposition);
+                }
+            }
+	
+            return values[flength, slength];
         }
 
         public static String WhereChar([NotNull] this String value, [NotNull] Func<Char, Boolean> where)

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace NetExtender.Utils.EntityFramework
 {
-    public static class DatabaseModelUtils
+    public static class DbModelUtils
     {
         public static String GetTableName<TEntity>([NotNull] this IModel model)
         {

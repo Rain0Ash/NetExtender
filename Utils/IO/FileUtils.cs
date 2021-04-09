@@ -696,7 +696,7 @@ namespace NetExtender.Utils.IO
                 
                 try
                 {
-                    return factory();
+                    return factory.Invoke();
                 }
                 catch (IOException)
                 {

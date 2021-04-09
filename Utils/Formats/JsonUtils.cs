@@ -16,7 +16,7 @@ namespace NetExtender.Utils.Formats
         public static Boolean IsValidJson(String json)
         {
             json = json.Trim();
-            
+
             if (String.IsNullOrEmpty(json) || (!json.StartsWith("{") || !json.EndsWith("}")) && (!json.StartsWith("[") || !json.EndsWith("]")))
             {
                 return false;
@@ -33,17 +33,62 @@ namespace NetExtender.Utils.Formats
             }
         }
 
-        public static T DeserializeObject<T>(String json, JsonSerializerSettings settings = null)
+        public static String JsonSerializeObject(this Object? value)
+        {
+            return JsonConvert.SerializeObject(value);
+        }
+
+        public static String JsonSerializeObject(this Object? value, Newtonsoft.Json.Formatting formatting)
+        {
+            return JsonConvert.SerializeObject(value, formatting);
+        }
+
+        public static String JsonSerializeObject(this Object? value, params JsonConverter[] converters)
+        {
+            return JsonConvert.SerializeObject(value, converters);
+        }
+
+        public static String JsonSerializeObject(this Object? value, Newtonsoft.Json.Formatting formatting, params JsonConverter[] converters)
+        {
+            return JsonConvert.SerializeObject(value, formatting, converters);
+        }
+
+        public static String JsonSerializeObject(this Object? value, JsonSerializerSettings? settings)
+        {
+            return JsonConvert.SerializeObject(value, settings);
+        }
+
+        public static String JsonSerializeObject(this Object? value, Type? type, JsonSerializerSettings? settings)
+        {
+            return JsonConvert.SerializeObject(value, type, settings);
+        }
+
+        public static String JsonSerializeObject(this Object? value, Newtonsoft.Json.Formatting formatting, JsonSerializerSettings? settings)
+        {
+            return JsonConvert.SerializeObject(value, formatting, settings);
+        }
+
+        public static String JsonSerializeObject(this Object? value, Type? type, Newtonsoft.Json.Formatting formatting, JsonSerializerSettings? settings)
+        {
+            return JsonConvert.SerializeObject(value, type, formatting, settings);
+        }
+
+        public static T JsonDeserializeObject<T>(this String json)
+        {
+            return JsonConvert.DeserializeObject<T>(json);
+        }
+        
+        public static T JsonDeserializeObject<T>(this String json, JsonSerializerSettings settings)
         {
             return JsonConvert.DeserializeObject<T>(json, settings);
         }
 
-        public static Boolean TryDeserializeObject<T>(String json, out T result)
+        public static Boolean TryJsonDeserializeObject<T>(this String json, out T result)
         {
-            return TryDeserializeObject(json, null, out result);
+            return TryJsonDeserializeObject(json, null, out result);
         }
 
-        public static Boolean TryDeserializeObject<T>(String json, JsonSerializerSettings settings, out T result)
+        public static Boolean TryJsonDeserializeObject<T>(this String json, JsonSerializerSettings settings, out T result)
         {
             if (String.IsNullOrWhiteSpace(json))
             {
@@ -72,7 +117,7 @@ namespace NetExtender.Utils.Formats
         {
             return JsonConvert.SerializeXmlNode(document, Newtonsoft.Json.Formatting.Indented, true);
         }
-        
+
         private static PropertyContractResolver InitResolver([NotNull] JsonSerializerSettings settings)
         {
             if (settings is null)
@@ -99,10 +144,11 @@ namespace NetExtender.Utils.Formats
                     return resolver;
                 }
                 default:
-                    throw new NotSupportedException($"Invalid {nameof(settings.ContractResolver)}. Expected {nameof(DefaultContractResolver)}, received {settings.ContractResolver.GetType().FullName}.");
+                    throw new NotSupportedException(
+                        $"Invalid {nameof(settings.ContractResolver)}. Expected {nameof(DefaultContractResolver)}, received {settings.ContractResolver.GetType().FullName}.");
             }
         }
-        
+
         public static JsonSerializerSettings RenameProperty([NotNull] this JsonSerializerSettings settings, [NotNull] Type type, [NotNull] String property, [NotNull] String name)
         {
             InitResolver(settings).RenameProperty(type, property, name);

@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace NetExtender.Utils.EntityFramework
 {
-    public static class DatabaseFacedeUtils
+    public static class DbFacedeUtils
     {
         public static Boolean CreateDatabaseIfNotExists([NotNull] this DatabaseFacade database)
         {

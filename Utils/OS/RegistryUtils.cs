@@ -2,7 +2,10 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
+using Microsoft.Win32;
 using NetExtender.Apps.Domains;
 using NetExtender.Registry;
 using NetExtender.Registry.Interfaces;
@@ -12,51 +15,50 @@ namespace NetExtender.Utils.OS
 {
     public static class RegistryUtils
     {
+        private static IImmutableDictionary<RegistryKeys, String> RegistryKeyName { get; } = new Dictionary<RegistryKeys, String>
+        {
+            [RegistryKeys.CurrentUser] = "HKEY_CURRENT_USER",
+            [RegistryKeys.CurrentConfig] = "HKEY_CURRENT_CONFIG",
+            [RegistryKeys.LocalMachine] = "HKEY_LOCAL_MACHINE",
+            [RegistryKeys.Users] = "HKEY_USERS",
+            [RegistryKeys.ClassesRoot] = "HKEY_CLASSES_ROOT",
+            [RegistryKeys.PerformanceData] = "HKEY_PERFORMANCE_DATA"
+
+        }.ToImmutableDictionary();
+        
         public const RegistryKeys DefaultKey = RegistryKeys.CurrentUser;
-        
-        public static IRegistry Create(Boolean write)
+
+        public static String ToRegistryName(this RegistryKeys key)
         {
-            return Create(DefaultKey, write);
+            return RegistryKeyName.TryGetValue(key, out String value) ? value : throw new NotSupportedException();
         }
         
-        public static IRegistry Create(FileAccess access)
+        public static IRegistry Create(this RegistryKeys key, params String[] sections)
         {
-            return Create(DefaultKey, access);
+            return Create(key, sections, false);
+        }
+
+        public static IRegistry Create(this RegistryKeys key, Boolean write, params String[] sections)
+        {
+            return Create(key, sections, write);
         }
         
-        public static IRegistry Create(String path, Boolean write)
+        public static IRegistry Create(this RegistryKeys key, IEnumerable<String> sections, Boolean write)
         {
-            return Create(DefaultKey, path, write);
+            return Create(key, sections, FileUtils.GetFileAccess(write));
         }
         
-        public static IRegistry Create(String path, FileAccess access)
+        public static IRegistry Create(this RegistryKeys key, FileAccess access, params String[] sections)
         {
-            return Create(DefaultKey, path, access);
+            return Create(key, sections, access);
         }
         
-        public static IRegistry Create(this RegistryKeys key)
+        public static IRegistry Create(this RegistryKeys key, IEnumerable<String> sections, FileAccess access)
         {
-            return Create(key, FileAccess.Read);
-        }
-        
-        public static IRegistry Create(this RegistryKeys key, Boolean write)
-        {
-            return Create(key, FileUtils.GetFileAccess(write));
-        }
-        
-        public static IRegistry Create(this RegistryKeys key, FileAccess access)
-        {
-            return Create(key, $"Software\\{Domain.AppNameOrFriendlyName}", access);
-        }
-        
-        public static IRegistry Create(this RegistryKeys key, String path, Boolean write)
-        {
-            return Create(key, path, FileUtils.GetFileAccess(write));
-        }
-        
-        public static IRegistry Create(this RegistryKeys key, String path, FileAccess access)
-        {
-            return new Registry.Registry(path, key, access);
+            return new Registry.Registry(key, sections)
+            {
+                Permission = access == FileAccess.Read ? RegistryKeyPermissionCheck.ReadSubTree : RegistryKeyPermissionCheck.ReadWriteSubTree
+            };
         }
     }
 }

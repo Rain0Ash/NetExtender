@@ -114,7 +114,7 @@ namespace NetExtender.Attributes
                     }
                 }
 
-                return str.FormatFromDictionary(replacing);
+                return str.FormatFrom(replacing);
             }
             catch (Exception)
             {

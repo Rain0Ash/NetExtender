@@ -18,6 +18,18 @@ namespace NetExtender.Utils.Types
             return new KeyValuePair<TValue, TKey>(pair.Value, pair.Key);
         }
 
+        // ReSharper disable once UseDeconstructionOnParameter
+        public static KeyValuePair<TKey, TKey> FlattenByKey<TKey, TValue>(this KeyValuePair<TKey, KeyValuePair<TKey, TValue>> pair)
+        {
+            return new KeyValuePair<TKey, TKey>(pair.Key, pair.Value.Key);
+        }
+        
+        // ReSharper disable once UseDeconstructionOnParameter
+        public static KeyValuePair<TKey, TValue> FlattenByValue<TKey, TValue>(this KeyValuePair<TKey, KeyValuePair<TKey, TValue>> pair)
+        {
+            return new KeyValuePair<TKey, TValue>(pair.Key, pair.Value.Value);
+        }
+        
         public static IEnumerable<KeyValuePair<TValue, TKey>> ReversePairs<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             return source.Select(pair => pair.Reverse());

@@ -460,19 +460,21 @@ namespace NetExtender.Utils.IO
         /// </summary>
         /// <param name="directory">The directory to add the suffix to.</param>
         /// <param name="suffix">The suffix to add to the directory.</param>
-        public static void AddSuffix(DirectoryInfo directory, String suffix)
+        public static void AddSuffix([NotNull] this DirectoryInfo directory, [NotNull] String suffix)
         {
             if (directory is null)
             {
                 throw new ArgumentNullException(nameof(directory));
             }
 
-            switch (suffix)
+            if (suffix is null)
             {
-                case null:
-                    throw new ArgumentNullException(nameof(suffix));
-                case "":
-                    return;
+                throw new ArgumentNullException(nameof(suffix));
+            }
+
+            if (suffix == String.Empty)
+            {
+                return;
             }
 
             String name = directory.Name + suffix;
@@ -494,7 +496,7 @@ namespace NetExtender.Utils.IO
         /// <param name="directory">The directory in which to add the suffix to all directories and files.</param>
         /// <param name="suffix">The suffix to add to all directories and files.</param>
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
-        public static void AddSuffixToAll(DirectoryInfo directory, String suffix, SearchOption option = SearchOption.AllDirectories)
+        public static void AddSuffixToAll([NotNull] this DirectoryInfo directory, [NotNull] String suffix, SearchOption option = SearchOption.AllDirectories)
         {
             AddSuffixToAll(directory, suffix, option, null);
         }
@@ -507,8 +509,23 @@ namespace NetExtender.Utils.IO
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
         /// <param name="ignored">A collection of directory names to ignore when adding suffix.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public static void AddSuffixToAll(DirectoryInfo directory, String suffix, SearchOption option, IEnumerable<String> ignored)
+        public static void AddSuffixToAll([NotNull] this DirectoryInfo directory, [NotNull] String suffix, SearchOption option, IEnumerable<String> ignored)
         {
+            if (directory is null)
+            {
+                throw new ArgumentNullException(nameof(directory));
+            }
+
+            if (suffix is null)
+            {
+                throw new ArgumentNullException(nameof(suffix));
+            }
+
+            if (suffix == String.Empty)
+            {
+                return;
+            }
+
             ignored = ignored.Materialize();
             
             AddSuffixToAllFiles(directory, suffix, SearchOption.TopDirectoryOnly);
@@ -532,7 +549,7 @@ namespace NetExtender.Utils.IO
         /// <param name="directory">The directory in which to add the suffix to all directories.</param>
         /// <param name="suffix">The suffix to add to all directories.</param>
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
-        public static void AddSuffixToAllDirectories(DirectoryInfo directory, String suffix, SearchOption option = SearchOption.AllDirectories)
+        public static void AddSuffixToAllDirectories([NotNull] this DirectoryInfo directory, [NotNull] String suffix, SearchOption option = SearchOption.AllDirectories)
         {
             AddSuffixToAllDirectories(directory, suffix, option, null);
         }
@@ -545,8 +562,23 @@ namespace NetExtender.Utils.IO
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
         /// <param name="ignored">A collection of directory names to ignore when adding suffix.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public static void AddSuffixToAllDirectories(DirectoryInfo directory, String suffix, SearchOption option, IEnumerable<String> ignored)
+        public static void AddSuffixToAllDirectories([NotNull] this DirectoryInfo directory, [NotNull] String suffix, SearchOption option, IEnumerable<String> ignored)
         {
+            if (directory is null)
+            {
+                throw new ArgumentNullException(nameof(directory));
+            }
+
+            if (suffix is null)
+            {
+                throw new ArgumentNullException(nameof(suffix));
+            }
+
+            if (suffix == String.Empty)
+            {
+                return;
+            }
+            
             ignored = ignored.Materialize();
             
             DirectoryInfo[] directories = directory.GetDirectories("*", SearchOption.TopDirectoryOnly);
@@ -573,8 +605,23 @@ namespace NetExtender.Utils.IO
         /// <param name="directory">The directory in which to add the suffix to all files.</param>
         /// <param name="suffix">The suffix to add to all files.</param>
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
-        public static void AddSuffixToAllFiles(DirectoryInfo directory, String suffix, SearchOption option = SearchOption.AllDirectories)
+        public static void AddSuffixToAllFiles([NotNull] this DirectoryInfo directory, String suffix, SearchOption option = SearchOption.AllDirectories)
         {
+            if (directory is null)
+            {
+                throw new ArgumentNullException(nameof(directory));
+            }
+            
+            if (suffix is null)
+            {
+                throw new ArgumentNullException(nameof(suffix));
+            }
+
+            if (suffix == String.Empty)
+            {
+                return;
+            }
+
             FileInfo[] files = directory.GetFiles("*", option);
             foreach (FileInfo file in files)
             {
@@ -589,8 +636,18 @@ namespace NetExtender.Utils.IO
         /// <param name="destination">The path where to copy.</param>
         /// <param name="recursive">Determines whether to copy subdirectories.</param>
         /// <param name="overwrite">true to allow an existing file to be overwritten; otherwise, false.</param>
-        public static void CopyDirectory(String source, String destination, Boolean recursive = true, Boolean overwrite = true)
+        public static void CopyDirectory([NotNull] String source, [NotNull] String destination, Boolean recursive = true, Boolean overwrite = true)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (destination is null)
+            {
+                throw new ArgumentNullException(nameof(destination));
+            }
+
             DirectoryInfo directory = new DirectoryInfo(source);
             CopyDirectory(directory, destination, recursive, overwrite);
         }
@@ -602,8 +659,18 @@ namespace NetExtender.Utils.IO
         /// <param name="destination">The path where to copy.</param>
         /// <param name="recursive">Determines whether to copy subdirectories.</param>
         /// <param name="overwrite">true to allow an existing file to be overwritten; otherwise, false.</param>
-        public static void CopyDirectory(DirectoryInfo source, String destination, Boolean recursive = true, Boolean overwrite = true)
+        public static void CopyDirectory([NotNull] this DirectoryInfo source, [NotNull] String destination, Boolean recursive = true, Boolean overwrite = true)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (String.IsNullOrEmpty(destination))
+            {
+                throw new ArgumentException(@"Value cannot be null or empty.", nameof(destination));
+            }
+
             if (!source.Exists)
             {
                 throw new DirectoryNotFoundException($"Source directory {source.FullName} does not exist or could not be found.");
@@ -644,7 +711,7 @@ namespace NetExtender.Utils.IO
         /// <param name="destination">The path of the directory where to copy files.</param>
         /// <param name="prefix">The prefix that files must contain in order to be copied.</param>
         /// <param name="overwrite">true to allow an existing file to be overwritten; otherwise, false.</param>
-        public static void CopyAllFilesWithPrefix(String source, String destination, String prefix, Boolean overwrite = true)
+        public static void CopyAllFilesWithPrefix([NotNull] String source, [NotNull] String destination, String prefix, Boolean overwrite = true)
         {
             CopyAllFilesWithPrefix(source, destination, prefix, SearchOption.AllDirectories, overwrite);
         }
@@ -658,8 +725,13 @@ namespace NetExtender.Utils.IO
         /// <param name="prefix">The prefix that files must contain in order to be copied.</param>
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
         /// <param name="overwrite">true to allow an existing file to be overwritten; otherwise, false.</param>
-        public static void CopyAllFilesWithPrefix(String source, String destination, String prefix, SearchOption option, Boolean overwrite = true)
+        public static void CopyAllFilesWithPrefix([NotNull] String source, [NotNull] String destination, String prefix, SearchOption option, Boolean overwrite = true)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
             DirectoryInfo info = new DirectoryInfo(source);
             CopyAllFilesWithPrefix(info, destination, prefix, option, overwrite);
         }
@@ -672,7 +744,7 @@ namespace NetExtender.Utils.IO
         /// <param name="destination">The path of the directory where to copy files.</param>
         /// <param name="prefix">The prefix that files must contain in order to be copied.</param>
         /// <param name="overwrite">true to allow an existing file to be overwritten; otherwise, false.</param>
-        public static void CopyAllFilesWithPrefix(DirectoryInfo source, String destination, String prefix, Boolean overwrite = true)
+        public static void CopyAllFilesWithPrefix([NotNull] this DirectoryInfo source, [NotNull] String destination, String prefix, Boolean overwrite = true)
         {
             CopyAllFilesWithPrefix(source, destination, prefix, SearchOption.AllDirectories, overwrite);
         }
@@ -686,8 +758,18 @@ namespace NetExtender.Utils.IO
         /// <param name="prefix">The prefix that files must contain in order to be copied.</param>
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
         /// <param name="overwrite">true to allow an existing file to be overwritten; otherwise, false.</param>
-        public static void CopyAllFilesWithPrefix(DirectoryInfo source, String destination, String prefix, SearchOption option, Boolean overwrite = true)
+        public static void CopyAllFilesWithPrefix([NotNull] this DirectoryInfo source, [NotNull] String destination, String prefix, SearchOption option, Boolean overwrite = true)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (String.IsNullOrEmpty(destination))
+            {
+                throw new ArgumentException(@"Value cannot be null or empty.", nameof(destination));
+            }
+
             if (!Directory.Exists(destination))
             {
                 _ = Directory.CreateDirectory(destination);
@@ -719,7 +801,7 @@ namespace NetExtender.Utils.IO
         /// <param name="directory">The directory in which to delete all directories.</param>
         /// <param name="suffix">The suffix that directories must not contain in order to be deleted.</param>
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
-        public static void DeleteAllDirectoriesWithoutSuffix(DirectoryInfo directory, String suffix, SearchOption option = SearchOption.AllDirectories)
+        public static void DeleteAllDirectoriesWithoutSuffix([NotNull] this DirectoryInfo directory, [NotNull] String suffix, SearchOption option = SearchOption.AllDirectories)
         {
             DeleteAllDirectoriesWithoutSuffix(directory, suffix, option, null);
         }
@@ -732,8 +814,28 @@ namespace NetExtender.Utils.IO
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
         /// <param name="ignored">A collection of directory names to ignore.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public static void DeleteAllDirectoriesWithoutSuffix(DirectoryInfo directory, String suffix, SearchOption option, IEnumerable<String> ignored)
+        public static void DeleteAllDirectoriesWithoutSuffix([NotNull] this DirectoryInfo directory, [NotNull] String suffix, SearchOption option, IEnumerable<String> ignored)
         {
+            if (directory is null)
+            {
+                throw new ArgumentNullException(nameof(directory));
+            }
+
+            if (suffix is null)
+            {
+                throw new ArgumentNullException(nameof(suffix));
+            }
+
+            if (suffix == String.Empty)
+            {
+                return;
+            }
+            
+            if (!directory.Exists)
+            {
+                throw new DirectoryNotFoundException($"Directory {directory.FullName} does not exist or could not be found.");
+            }
+
             ignored = ignored.Materialize();
             
             DirectoryInfo[] subdirectories = directory.GetDirectories("*", SearchOption.TopDirectoryOnly);
@@ -765,8 +867,28 @@ namespace NetExtender.Utils.IO
         /// <param name="directory">The directory in which to delete all directories.</param>
         /// <param name="suffix">The suffix that directories must contain in order to be deleted.</param>
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
-        public static void DeleteAllDirectoriesWithSuffix(DirectoryInfo directory, String suffix, SearchOption option = SearchOption.AllDirectories)
+        public static void DeleteAllDirectoriesWithSuffix([NotNull] this DirectoryInfo directory, [NotNull] String suffix, SearchOption option = SearchOption.AllDirectories)
         {
+            if (directory is null)
+            {
+                throw new ArgumentNullException(nameof(directory));
+            }
+
+            if (suffix is null)
+            {
+                throw new ArgumentNullException(nameof(suffix));
+            }
+
+            if (suffix == String.Empty)
+            {
+                return;
+            }
+
+            if (!directory.Exists)
+            {
+                throw new DirectoryNotFoundException($"Directory {directory.FullName} does not exist or could not be found.");
+            }
+
             DirectoryInfo[] subdirectories = directory.GetDirectories("*", SearchOption.TopDirectoryOnly);
             for (Int32 i = subdirectories.Length - 1; i >= 0; i--)
             {
@@ -791,8 +913,23 @@ namespace NetExtender.Utils.IO
         /// <param name="directory">The directory in which to delete all files.</param>
         /// <param name="suffix">The suffix that files must not contain in order to be deleted.</param>
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
-        public static void DeleteAllFilesWithoutSuffix(DirectoryInfo directory, String suffix, SearchOption option = SearchOption.AllDirectories)
+        public static void DeleteAllFilesWithoutSuffix([NotNull] this DirectoryInfo directory, [NotNull] String suffix, SearchOption option = SearchOption.AllDirectories)
         {
+            if (directory is null)
+            {
+                throw new ArgumentNullException(nameof(directory));
+            }
+
+            if (suffix is null)
+            {
+                throw new ArgumentNullException(nameof(suffix));
+            }
+
+            if (suffix == String.Empty)
+            {
+                return;
+            }
+
             FileInfo[] files = directory.GetFiles("*", option);
             foreach (FileInfo file in files)
             {
@@ -809,8 +946,23 @@ namespace NetExtender.Utils.IO
         /// <param name="directory">The directory in which to delete all files.</param>
         /// <param name="suffix">The suffix that files must contain in order to be deleted.</param>
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
-        public static void DeleteAllFilesWithSuffix(DirectoryInfo directory, String suffix, SearchOption option = SearchOption.AllDirectories)
+        public static void DeleteAllFilesWithSuffix([NotNull] this DirectoryInfo directory, [NotNull] String suffix, SearchOption option = SearchOption.AllDirectories)
         {
+            if (directory is null)
+            {
+                throw new ArgumentNullException(nameof(directory));
+            }
+            
+            if (suffix is null)
+            {
+                throw new ArgumentNullException(nameof(suffix));
+            }
+
+            if (suffix == String.Empty)
+            {
+                return;
+            }
+
             FileInfo[] files = directory.GetFiles("*" + suffix, option);
             foreach (FileInfo file in files)
             {
@@ -824,7 +976,7 @@ namespace NetExtender.Utils.IO
         /// <param name="directory">The directory in which to delete all files and directories.</param>
         /// <param name="suffix">The suffix that files and directories must not contain in order to be deleted.</param>
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
-        public static void DeleteAllWithoutSuffix(DirectoryInfo directory, String suffix, SearchOption option = SearchOption.AllDirectories)
+        public static void DeleteAllWithoutSuffix([NotNull] this DirectoryInfo directory, [NotNull] String suffix, SearchOption option = SearchOption.AllDirectories)
         {
             DeleteAllWithoutSuffix(directory, suffix, option, null);
         }
@@ -837,8 +989,23 @@ namespace NetExtender.Utils.IO
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
         /// <param name="ignored">A collection of directory names to ignore.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public static void DeleteAllWithoutSuffix(DirectoryInfo directory, String suffix, SearchOption option, IEnumerable<String> ignored)
+        public static void DeleteAllWithoutSuffix([NotNull] this DirectoryInfo directory, [NotNull] String suffix, SearchOption option, IEnumerable<String> ignored)
         {
+            if (directory is null)
+            {
+                throw new ArgumentNullException(nameof(directory));
+            }
+            
+            if (suffix is null)
+            {
+                throw new ArgumentNullException(nameof(suffix));
+            }
+
+            if (suffix == String.Empty)
+            {
+                return;
+            }
+
             ignored = ignored.Materialize();
             
             DeleteAllFilesWithoutSuffix(directory, suffix, SearchOption.TopDirectoryOnly);
@@ -863,8 +1030,23 @@ namespace NetExtender.Utils.IO
         /// <param name="directory">The directory in which to delete all files and directories.</param>
         /// <param name="suffix">The suffix that files and directories must contain in order to be deleted.</param>
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
-        public static void DeleteAllWithSuffix(DirectoryInfo directory, String suffix, SearchOption option = SearchOption.AllDirectories)
+        public static void DeleteAllWithSuffix([NotNull] DirectoryInfo directory, String suffix, SearchOption option = SearchOption.AllDirectories)
         {
+            if (directory is null)
+            {
+                throw new ArgumentNullException(nameof(directory));
+            }
+            
+            if (suffix is null)
+            {
+                throw new ArgumentNullException(nameof(suffix));
+            }
+
+            if (suffix == String.Empty)
+            {
+                return;
+            }
+
             DeleteAllFilesWithSuffix(directory, suffix, SearchOption.TopDirectoryOnly);
             DeleteAllDirectoriesWithSuffix(directory, suffix, SearchOption.TopDirectoryOnly);
 
@@ -886,21 +1068,23 @@ namespace NetExtender.Utils.IO
         /// </summary>
         /// <param name="directory">The directory to remove the suffix from.</param>
         /// <param name="suffix">The suffix to remove from the directory.</param>
-        public static void RemoveSuffix(DirectoryInfo directory, String suffix)
+        public static void RemoveSuffix([NotNull] this DirectoryInfo directory, [NotNull] String suffix)
         {
             if (directory is null)
             {
                 throw new ArgumentNullException(nameof(directory));
             }
 
-            switch (suffix)
+            if (suffix is null)
             {
-                case null:
-                    throw new ArgumentNullException(nameof(suffix));
-                case "":
-                    return;
+                throw new ArgumentNullException(nameof(suffix));
             }
 
+            if (suffix == String.Empty)
+            {
+                return;
+            }
+            
             if (!directory.Name.EndsWith(suffix))
             {
                 return;
@@ -925,8 +1109,13 @@ namespace NetExtender.Utils.IO
         /// <param name="directory">The directory in which to remove the suffix from all directories and files.</param>
         /// <param name="suffix">The suffix to remove from all directories and files.</param>
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
-        public static void RemoveSuffixFromAll(DirectoryInfo directory, String suffix, SearchOption option = SearchOption.AllDirectories)
+        public static void RemoveSuffixFromAll([NotNull] this DirectoryInfo directory, String suffix, SearchOption option = SearchOption.AllDirectories)
         {
+            if (directory is null)
+            {
+                throw new ArgumentNullException(nameof(directory));
+            }
+
             RemoveSuffixFromAllFiles(directory, suffix, SearchOption.TopDirectoryOnly);
             RemoveSuffixFromAllDirectories(directory, suffix, SearchOption.TopDirectoryOnly);
 
@@ -948,8 +1137,13 @@ namespace NetExtender.Utils.IO
         /// <param name="directory">The directory in which to remove the suffix from all directories.</param>
         /// <param name="suffix">The suffix to remove from all directories.</param>
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
-        public static void RemoveSuffixFromAllDirectories(DirectoryInfo directory, String suffix, SearchOption option = SearchOption.AllDirectories)
+        public static void RemoveSuffixFromAllDirectories([NotNull] this DirectoryInfo directory, String suffix, SearchOption option = SearchOption.AllDirectories)
         {
+            if (directory is null)
+            {
+                throw new ArgumentNullException(nameof(directory));
+            }
+
             DirectoryInfo[] directories = directory.GetDirectories("*", SearchOption.TopDirectoryOnly);
 
             foreach (DirectoryInfo subdirectory in directories)
@@ -969,13 +1163,28 @@ namespace NetExtender.Utils.IO
         /// <param name="directory">The directory in which to remove the suffix from all directories.</param>
         /// <param name="suffix">The suffix to remove from all directories.</param>
         /// <param name="option">Specifies whether to include only the current directory or all subdirectories.</param>
-        public static void RemoveSuffixFromAllFiles(DirectoryInfo directory, String suffix, SearchOption option = SearchOption.AllDirectories)
+        public static void RemoveSuffixFromAllFiles([NotNull] this DirectoryInfo directory, String suffix, SearchOption option = SearchOption.AllDirectories)
         {
+            if (directory is null)
+            {
+                throw new ArgumentNullException(nameof(directory));
+            }
+
             FileInfo[] files = directory.GetFiles("*" + suffix, option);
             foreach (FileInfo file in files)
             {
                 FileUtils.RemoveSuffix(file, suffix);
             }
+        }
+
+        public static String GetPath(this Environment.SpecialFolder folder)
+        {
+            return Environment.GetFolderPath(folder);
+        }
+        
+        public static DirectoryInfo ToDirectoryInfo(this Environment.SpecialFolder folder)
+        {
+            return new DirectoryInfo(GetPath(folder));
         }
     }
 }

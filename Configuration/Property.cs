@@ -104,7 +104,7 @@ namespace NetExtender.Configuration
         
         public virtual IConfigProperty<T> GetProperty<T>(String key, T value, Func<T, Boolean> validate, ICryptKey crypt, ConfigPropertyOptions options, TryConverter<String, T> converter, IEnumerable<String> sections)
         {
-            IImmutableList<String> materialized = sections.AsImmutableIList();
+            IImmutableList<String> materialized = sections.AsIImmutableList();
             return GetOrAddProperty<T>(this, key, materialized, () => new ConfigProperty<T>(this, key, value, validate, crypt, options, converter, materialized));
         }
 

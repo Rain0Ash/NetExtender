@@ -136,10 +136,25 @@ namespace NetExtender.Utils.IO
             };
         }
 
-        public static String RemoveIllegalChars(String path)
+        public static String? ChangeExtension([NotNull] String path, [CanBeNull] String? extension)
         {
-            String regexSearch = new String(Path.GetInvalidFileNameChars()) + new String(Path.GetInvalidPathChars());
-            return Regex.Replace(path, $"[{Regex.Escape(regexSearch)}]", String.Empty);
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            return Path.ChangeExtension(path, extension);
+        }
+
+        public static String RemoveIllegalChars([NotNull] String path)
+        {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            String regex = new String(Path.GetInvalidFileNameChars()) + new String(Path.GetInvalidPathChars());
+            return Regex.Replace(path, $"[{Regex.Escape(regex)}]", String.Empty);
         }
 
         public static Boolean IsFullPath(String path)
@@ -560,7 +575,7 @@ namespace NetExtender.Utils.IO
             return directory is not null && OpenExplorerWithSelection(directory, Path.GetFileName(path));
         }
 
-        public static Boolean OpenExplorerWithSelection([NotNull] DirectoryInfo info, [CanBeNull] String filename)
+        public static Boolean OpenExplorerWithSelection([NotNull] this DirectoryInfo info, [CanBeNull] String filename)
         {
             if (info is null)
             {
@@ -570,12 +585,12 @@ namespace NetExtender.Utils.IO
             return info.Exists && OpenExplorerWithSelection(info.FullName, filename);
         }
 
-        public static Boolean OpenExplorerWithSelection([NotNull] IEnumerable<FileInfo> files)
+        public static Boolean OpenExplorerWithSelection([NotNull] this IEnumerable<FileInfo> files)
         {
             return OpenExplorerWithSelection(files, StringComparison.OrdinalIgnoreCase);
         }
 
-        public static Boolean OpenExplorerWithSelection([NotNull] IEnumerable<FileInfo> files, StringComparison comparison)
+        public static Boolean OpenExplorerWithSelection([NotNull] this IEnumerable<FileInfo> files, StringComparison comparison)
         {
             if (files is null)
             {
@@ -646,12 +661,12 @@ namespace NetExtender.Utils.IO
             return OpenExplorerWithSelection(directory, EnumerableUtils.GetEnumerableFrom(filename), comparison);
         }
 
-        public static Boolean OpenExplorerWithSelection([NotNull] DirectoryInfo info, IEnumerable<String> files)
+        public static Boolean OpenExplorerWithSelection([NotNull] this DirectoryInfo info, IEnumerable<String> files)
         {
             return OpenExplorerWithSelection(info, files, StringComparison.OrdinalIgnoreCase);
         }
 
-        public static Boolean OpenExplorerWithSelection([NotNull] DirectoryInfo info, IEnumerable<String> files, StringComparison comparison)
+        public static Boolean OpenExplorerWithSelection([NotNull] this DirectoryInfo info, IEnumerable<String> files, StringComparison comparison)
         {
             if (info is null)
             {
@@ -661,12 +676,12 @@ namespace NetExtender.Utils.IO
             return info.Exists && OpenExplorerWithSelection(info.FullName, files, comparison);
         }
 
-        public static Boolean OpenExplorerWithSelection([NotNull] DirectoryInfo info, params String[] files)
+        public static Boolean OpenExplorerWithSelection([NotNull] this DirectoryInfo info, params String[] files)
         {
             return OpenExplorerWithSelection(info, StringComparison.OrdinalIgnoreCase, files);
         }
 
-        public static Boolean OpenExplorerWithSelection([NotNull] DirectoryInfo info, StringComparison comparison, params String[] files)
+        public static Boolean OpenExplorerWithSelection([NotNull] this DirectoryInfo info, StringComparison comparison, params String[] files)
         {
             if (info is null)
             {

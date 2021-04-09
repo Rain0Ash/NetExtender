@@ -300,7 +300,7 @@ namespace NetExtender.Utils.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IImmutableList<T> AsImmutableIList<T>(this IEnumerable<T> source)
+        public static IImmutableList<T> AsIImmutableList<T>(this IEnumerable<T> source)
         {
             return source is not null ? source as IImmutableList<T> ?? source.ToImmutableList() : ImmutableList<T>.Empty;
         }
@@ -318,7 +318,7 @@ namespace NetExtender.Utils.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IImmutableStack<T> AsImmutableIStack<T>(this IEnumerable<T> source)
+        public static IImmutableStack<T> AsIImmutableStack<T>(this IEnumerable<T> source)
         {
             return source is not null ? source as IImmutableStack<T> ?? source.ToImmutableStack() : ImmutableStack<T>.Empty;
         }
@@ -341,7 +341,7 @@ namespace NetExtender.Utils.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IImmutableQueue<T> AsImmutableIQueue<T>(this IEnumerable<T> source)
+        public static IImmutableQueue<T> AsIImmutableQueue<T>(this IEnumerable<T> source)
         {
             return source is not null ? source as IImmutableQueue<T> ?? source.ToImmutableQueue() : ImmutableQueue<T>.Empty;
         }
@@ -364,13 +364,13 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IImmutableSet<T> AsImmutableISet<T>(this IEnumerable<T> source)
+        public static IImmutableSet<T> AsIImmutableSet<T>(this IEnumerable<T> source)
         {
             return source is not null ? source as IImmutableSet<T> ?? source.ToImmutableHashSet() : ImmutableHashSet<T>.Empty;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IImmutableSet<T> AsImmutableISet<T>(this IEnumerable<T> source, [CanBeNull] IEqualityComparer<T>? comparer)
+        public static IImmutableSet<T> AsIImmutableSet<T>(this IEnumerable<T> source, [CanBeNull] IEqualityComparer<T>? comparer)
         {
             return source is not null ? source as IImmutableSet<T> ?? source.ToImmutableHashSet(comparer) : ImmutableHashSet<T>.Empty;
         }
@@ -400,7 +400,7 @@ namespace NetExtender.Utils.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IImmutableDictionary<TKey, TValue> AsImmutableIDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        public static IImmutableDictionary<TKey, TValue> AsIImmutableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             return source is not null ? source as IImmutableDictionary<TKey, TValue> ?? source.ToImmutableDictionary() : ImmutableDictionary<TKey, TValue>.Empty;
         }

@@ -11,7 +11,7 @@ using NetExtender.Database;
 
 namespace NetExtender.Utils.EntityFramework
 {
-    public static class DatabaseContextUtils
+    public static class DbContextUtils
     {
         public static DbConnectionStringBuilder GetConnectionStringBuilder([NotNull] this DbConnection connection)
         {

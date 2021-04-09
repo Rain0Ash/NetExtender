@@ -3,8 +3,7 @@
 
 namespace NetExtender.Utils.EntityFramework
 {
-    public static class ConnectionStringBuilderUtils
+    public static class DbUtils
     {
-        
     }
 }

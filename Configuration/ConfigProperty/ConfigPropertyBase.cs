@@ -140,7 +140,7 @@ namespace NetExtender.Configuration
             Config = config;
             Key = key ?? throw new ArgumentNullException(nameof(key));
             CryptKey = cryptKey;
-            Sections = sections.AsImmutableIList();
+            Sections = sections.AsIImmutableList();
             Options = options;
         }
 

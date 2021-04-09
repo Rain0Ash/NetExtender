@@ -40,7 +40,7 @@ namespace NetExtender.Configuration.Ram
                 return Config.Remove(key);
             }
 
-            IImmutableList<String> imsections = sections.AsImmutableIList();
+            IImmutableList<String> imsections = sections.AsIImmutableList();
 
             if (Get(key, imsections) == value)
             {

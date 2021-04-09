@@ -246,7 +246,7 @@ namespace NetExtender.Types.Trees
                 throw new ArgumentNullException(nameof(key));
             }
 
-            IImmutableList<TKey> imsections = sections.AsImmutableIList();
+            IImmutableList<TKey> imsections = sections.AsIImmutableList();
 
             if (ContainsKey(key, imsections))
             {

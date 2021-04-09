@@ -7,6 +7,7 @@ using NetExtender.Apps.Domains;
 using NetExtender.Configuration.Common;
 using NetExtender.Registry;
 using NetExtender.Registry.Interfaces;
+using NetExtender.Utils.IO;
 using NetExtender.Utils.OS;
 
 namespace NetExtender.Configuration.Registry
@@ -19,20 +20,20 @@ namespace NetExtender.Configuration.Registry
         {
             get
             {
-                return Registry.RegistryKey;
+                return Registry.Key;
             }
         }
 
         public RegistryConfigBehavior(String path = null, ConfigOptions options = ConfigOptions.None)
             : base(String.IsNullOrEmpty(path) ? $"Software\\{Domain.AppNameOrFriendlyName}" : path, options)
         {
-            Registry = RegistryUtils.Create(Path, IsReadOnly);
+            Registry = RegistryKeys.CurrentUser.Create(Path.Split(PathUtils.Separators), !IsReadOnly);
         }
 
         public RegistryConfigBehavior(RegistryKeys key, String path, ConfigOptions options = ConfigOptions.None)
             : base(path, options)
         {
-            Registry = key.Create(Path, IsReadOnly);
+            Registry = key.Create(Path.Split(PathUtils.Separators), !IsReadOnly);
         }
 
         public override String Get(String key, IEnumerable<String> sections)

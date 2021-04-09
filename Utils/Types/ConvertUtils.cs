@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -593,7 +594,7 @@ namespace NetExtender.Utils.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Enum value, IFormatProvider provider, EscapeType escape)
+        public static String GetString(this Enum value, EscapeType escape, IFormatProvider provider)
         {
             return GetString(value, escape);
         }
@@ -895,6 +896,12 @@ namespace NetExtender.Utils.Types
             {
                 Boolean convert = ToBoolean(input);
                 result = Unsafe.As<Boolean, TOutput>(ref convert);
+                return true;
+            }
+
+            if (input is null)
+            {
+                result = default;
                 return true;
             }
 

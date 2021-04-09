@@ -24,7 +24,7 @@ namespace NetExtender.Types.Strings
         public FormatStringAdapter([NotNull] String value)
         {
             Text = value ?? throw new ArgumentNullException(nameof(value));
-            Arguments = value.FormatArgsExpected();
+            Arguments = value.CountExpectedFormatArgs();
         }
     }
 }

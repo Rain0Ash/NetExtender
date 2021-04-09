@@ -14,6 +14,7 @@ using NetExtender.Types.Collections;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Sets.Interfaces;
 using NetExtender.Utils.Core;
+using NetExtender.Utils.IO;
 using NetExtender.Utils.Numerics;
 
 namespace NetExtender.Utils.Types
@@ -4522,7 +4523,12 @@ namespace NetExtender.Utils.Types
         [NotNull]
         public static IEnumerable<T> CreateSingle<T>([NotNull] Func<T> factory)
         {
-            yield return factory();
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            yield return factory.Invoke();
         }
 
         /// <summary>
@@ -4914,30 +4920,45 @@ namespace NetExtender.Utils.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(size));
             }
-            
-            Int32 count = 0;
 
             using IEnumerator<T> enumerator = source.GetEnumerator();
 
-            while (true)
+            if (!enumerator.MoveNext())
             {
-                Int32 counter;
+                yield break;
+            }
+            
+            Int32 count = 0;
+            Int32 counter = 0;
 
-                for (counter = 0; counter < size && enumerator.MoveNext(); counter++)
+            do
+            {
+                T item = enumerator.Current;
+                
+                if (++counter >= size)
                 {
-                    yield return enumerator.Current;
+                    count += counter;
+                    counter = 0;
+                    callback.Invoke(count);
                 }
 
-                if (counter <= 0)
+                if (!enumerator.MoveNext())
                 {
+                    count += counter;
+                    if (count % size > 0)
+                    {
+                        callback.Invoke(count);
+                    }
+
+                    yield return item;
                     yield break;
                 }
+                
+                yield return item;
 
-                count += counter;
-                callback.Invoke(count);
-            }
+            } while (true);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> LongProgress<T>([NotNull] this IEnumerable<T> source, [NotNull] IProgress<Int64> progress)
         {
@@ -5005,27 +5026,42 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentOutOfRangeException(nameof(size));
             }
             
-            Int64 count = 0;
-
             using IEnumerator<T> enumerator = source.GetEnumerator();
 
-            while (true)
+            if (!enumerator.MoveNext())
             {
-                Int64 counter;
+                yield break;
+            }
+            
+            Int64 count = 0;
+            Int64 counter = 0;
 
-                for (counter = 0; counter < size && enumerator.MoveNext(); counter++)
+            do
+            {
+                T item = enumerator.Current;
+                
+                if (++counter >= size)
                 {
-                    yield return enumerator.Current;
+                    count += counter;
+                    counter = 0;
+                    callback.Invoke(count);
                 }
 
-                if (counter <= 0)
+                if (!enumerator.MoveNext())
                 {
+                    count += counter;
+                    if (count % size > 0)
+                    {
+                        callback.Invoke(count);
+                    }
+
+                    yield return item;
                     yield break;
                 }
+                
+                yield return item;
 
-                count += counter;
-                callback.Invoke(count);
-            }
+            } while (true);
         }
 
         /// <summary>

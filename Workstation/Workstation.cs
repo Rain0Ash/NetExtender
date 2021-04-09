@@ -28,8 +28,7 @@ namespace NetExtender.Workstation
         private static String GetCurrentUserSID()
         {
             using WindowsIdentity user = WindowsIdentity.GetCurrent();
-            SecurityIdentifier sid = user.User;
-            return sid?.Value;
+            return user?.User?.Value;
         }
 
         public static Boolean IsAdministrator

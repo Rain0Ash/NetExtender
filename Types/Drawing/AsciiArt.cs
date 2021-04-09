@@ -12,9 +12,9 @@ using NetExtender.Utils.Types;
 
 namespace NetExtender.Types.Drawing
 {
-    public class ASCIIArt : IConsoleMessage
+    public class AsciiArt : IConsoleMessage
     {
-        public static implicit operator String(ASCIIArt art)
+        public static implicit operator String(AsciiArt art)
         {
             return art.ToString();
         }
@@ -25,7 +25,7 @@ namespace NetExtender.Types.Drawing
 
         private ImmutableArray<String> Art { get; }
 
-        public ASCIIArt([NotNull] Stream stream)
+        public AsciiArt([NotNull] Stream stream)
         {
             if (stream is null)
             {
@@ -44,7 +44,7 @@ namespace NetExtender.Types.Drawing
         }
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public ASCIIArt([NotNull] IEnumerable<String> art)
+        public AsciiArt([NotNull] IEnumerable<String> art)
         {
             if (art is null)
             {
