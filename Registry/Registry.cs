@@ -8,8 +8,6 @@ using System.Linq;
 using System.Security.AccessControl;
 using Microsoft.Win32;
 using NetExtender.Registry.Interfaces;
-using NetExtender.Types.Trees;
-using NetExtender.Types.Trees.Interfaces;
 using NetExtender.Utils.OS;
 using NetExtender.Utils.Types;
 

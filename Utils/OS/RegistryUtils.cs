@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using Microsoft.Win32;
-using NetExtender.Apps.Domains;
 using NetExtender.Registry;
 using NetExtender.Registry.Interfaces;
 using NetExtender.Utils.IO;

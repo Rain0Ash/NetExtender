@@ -14,7 +14,6 @@ using NetExtender.Types.Collections;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Sets.Interfaces;
 using NetExtender.Utils.Core;
-using NetExtender.Utils.IO;
 using NetExtender.Utils.Numerics;
 
 namespace NetExtender.Utils.Types
