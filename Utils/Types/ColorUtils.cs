@@ -9,6 +9,8 @@ using JetBrains.Annotations;
 using NetExtender.Random.Interfaces;
 using NetExtender.Types.Drawing.Colors;
 using NetExtender.Types.Drawing.Colors.Interfaces;
+using NetExtender.Types.Maps;
+using NetExtender.Types.Maps.Interfaces;
 using NetExtender.Utils.Numerics;
 
 namespace NetExtender.Utils.Types
@@ -29,6 +31,45 @@ namespace NetExtender.Utils.Types
     public static class ColorUtils
     {
         public const ColorType DefaultColorType = ColorType.RGB;
+        
+        //TODO: IImmutableMap
+        private static readonly IMap<Color, ConsoleColor> ColorMap = new Map<Color, ConsoleColor>
+        {
+            [Color.Black] = ConsoleColor.Black,
+            [Color.Blue] = ConsoleColor.Blue,
+            [Color.Cyan] = ConsoleColor.Cyan,
+            [Color.Gray] = ConsoleColor.Gray,
+            [Color.Green] = ConsoleColor.Green,
+            [Color.Magenta] = ConsoleColor.Magenta,
+            [Color.Red] = ConsoleColor.Red,
+            [Color.White] = ConsoleColor.White,
+            [Color.Yellow] = ConsoleColor.Yellow,
+            [Color.DarkBlue] = ConsoleColor.DarkBlue,
+            [Color.DarkCyan] = ConsoleColor.DarkCyan,
+            [Color.DarkGray] = ConsoleColor.DarkGray,
+            [Color.DarkGreen] = ConsoleColor.DarkGreen,
+            [Color.DarkMagenta] = ConsoleColor.DarkMagenta,
+            [Color.DarkRed] = ConsoleColor.DarkRed,
+            [Color.Orange] = ConsoleColor.DarkYellow
+        };
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ConsoleColor ToConsoleColor(this Color color)
+        {
+            return ToConsoleColor(color, out ConsoleColor result) ? result : ConsoleColor.White;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean ToConsoleColor(this Color color, out ConsoleColor result)
+        {
+            return ColorMap.TryGetValue(color, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color FromConsoleColor(this ConsoleColor color)
+        {
+            return ColorMap.TryGetKey(color, Color.White);
+        }
         
         /// <summary>
         /// Returns either black or white, depending on the luminosity of the specified background color.
@@ -879,8 +920,7 @@ namespace NetExtender.Utils.Types
             return Dark(color, 1.00f);
         }
 
-        private const Double Gamma = 0.80;
-        private const Double IntensityMax = 255;
+        
 
         public static Boolean WaveLengthToRGB(Double wavelength, out Byte r, out Byte g, out Byte b)
         {
@@ -910,6 +950,9 @@ namespace NetExtender.Utils.Types
                 >= 701 and < 781 => 0.3 + 0.7 * (780 - wavelength) / (780 - 700),
                 _ => 0d
             };
+            
+            const Double Gamma = 0.80;
+            const Double IntensityMax = 255;
 
             r = red < Double.Epsilon ? (Byte) 0 : (Byte) Math.Round(IntensityMax * Math.Pow(red * factor, Gamma));
             g = green < Double.Epsilon ? (Byte) 0 : (Byte) Math.Round(IntensityMax * Math.Pow(green * factor, Gamma));
@@ -917,12 +960,67 @@ namespace NetExtender.Utils.Types
             return true;
         }
         
+        public static Boolean WaveLengthToRGB(Decimal wavelength, out Byte r, out Byte g, out Byte b)
+        {
+            if (wavelength < 380 || wavelength > 780)
+            {
+                r = g = b = default;
+                return false;
+            }
+            
+            Decimal red, green, blue;
+
+            (red, green, blue) = wavelength switch
+            {
+                >= 380 and < 440 => (-(wavelength - 440) / (440 - 380), 0M, 1M),
+                >= 440 and < 490 => (0M, (wavelength - 440) / (490 - 440), 1M),
+                >= 490 and < 510 => (0M, 1M, -(wavelength - 510) / (510 - 490)),
+                >= 510 and < 580 => ((wavelength - 510) / (580 - 510), 1M, 0M),
+                >= 580 and < 645 => (1M, -(wavelength - 645) / (645 - 580), 0M),
+                >= 645 and <= 780 => (1M, 0M, 0M),
+                _ => (0M, 0M, 0M)
+            };
+
+            Decimal factor = wavelength switch
+            {
+                >= 380 and < 420 => 0.3M + 0.7M * (wavelength - 380) / (420 - 380),
+                >= 420 and < 701 => 1M,
+                >= 701 and < 781 => 0.3M + 0.7M * (780 - wavelength) / (780 - 700),
+                _ => 0M
+            };
+            
+            const Decimal Gamma = 0.80M;
+            const Decimal IntensityMax = 255;
+
+            r = red <= 0 ? (Byte) 0 : (Byte) Math.Round(IntensityMax * (red * factor).Pow(Gamma));
+            g = green <= 0 ? (Byte) 0 : (Byte) Math.Round(IntensityMax * (green * factor).Pow(Gamma));
+            b = blue <= 0 ? (Byte) 0 : (Byte) Math.Round(IntensityMax * (blue * factor).Pow(Gamma));
+            return true;
+        }
+        
         public static Color WaveLengthToRGB(Double wavelength)
+        {
+            return WaveLengthToRGB(wavelength, out Byte red, out Byte green, out Byte blue) ? Color.FromArgb(red, green, blue) : Color.Black;
+        }
+        
+        public static Color WaveLengthToRGB(Decimal wavelength)
         {
             return WaveLengthToRGB(wavelength, out Byte red, out Byte green, out Byte blue) ? Color.FromArgb(red, green, blue) : Color.Black;
         }
 
         public static Boolean WaveLengthToRGB(Double wavelength, out Color color)
+        {
+            if (WaveLengthToRGB(wavelength, out Byte red, out Byte green, out Byte blue))
+            {
+                color = Color.FromArgb(red, green, blue);
+                return true;
+            }
+            
+            color = Color.Black;
+            return false;
+        }
+        
+        public static Boolean WaveLengthToRGB(Decimal wavelength, out Color color)
         {
             if (WaveLengthToRGB(wavelength, out Byte red, out Byte green, out Byte blue))
             {

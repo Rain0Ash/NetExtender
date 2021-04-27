@@ -1603,45 +1603,6 @@ namespace NetExtender.Utils.IO
             Console.Clear();
         }
 
-        //TODO: IImmutableMap
-        private static readonly IMap<Color, ConsoleColor> ColorMap = new Map<Color, ConsoleColor>
-        {
-            [Color.Black] = ConsoleColor.Black,
-            [Color.Blue] = ConsoleColor.Blue,
-            [Color.Cyan] = ConsoleColor.Cyan,
-            [Color.Gray] = ConsoleColor.Gray,
-            [Color.Green] = ConsoleColor.Green,
-            [Color.Magenta] = ConsoleColor.Magenta,
-            [Color.Red] = ConsoleColor.Red,
-            [Color.White] = ConsoleColor.White,
-            [Color.Yellow] = ConsoleColor.Yellow,
-            [Color.DarkBlue] = ConsoleColor.DarkBlue,
-            [Color.DarkCyan] = ConsoleColor.DarkCyan,
-            [Color.DarkGray] = ConsoleColor.DarkGray,
-            [Color.DarkGreen] = ConsoleColor.DarkGreen,
-            [Color.DarkMagenta] = ConsoleColor.DarkMagenta,
-            [Color.DarkRed] = ConsoleColor.DarkRed,
-            [Color.Orange] = ConsoleColor.DarkYellow
-        };
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ConsoleColor ToConsoleColor(this Color color)
-        {
-            return ToConsoleColor(color, out ConsoleColor result) ? result : ConsoleColor.White;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean ToConsoleColor(this Color color, out ConsoleColor result)
-        {
-            return ColorMap.TryGetValue(color, out result);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color ToColor(this ConsoleColor color)
-        {
-            return ColorMap.TryGetKey(color, Color.White);
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Write<T>(T value)
         {

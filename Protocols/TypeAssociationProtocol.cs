@@ -322,6 +322,8 @@ namespace NetExtender.Protocols
             return registry.SetValue("ProgId", progid);
         }
 
+        private static String UserExperience { get; set; }
+
         private static String GetUserExperience()
         {
             return GetUserExperienceAsync().GetAwaiter().GetResult();
@@ -329,13 +331,18 @@ namespace NetExtender.Protocols
 
         private static async Task<String> GetUserExperienceAsync()
         {
+            if (!String.IsNullOrEmpty(UserExperience))
+            {
+                return UserExperience;
+            }
+            
             await using FileStream stream = new FileStream(Path.Combine(Environment.SpecialFolder.SystemX86.GetPath(), "shell32.dll"), FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
-            String str = await stream.ReadAsStringAsync(Encoding.Unicode).ConfigureAwait(false);
-            Int32 start = str.IndexOf("User Choice set via Windows User Experience", StringComparison.Ordinal);
-            Int32 end = str.IndexOf("}", start, StringComparison.Ordinal);
-
-            return str.Substring(start, end - start + 1);
+            return UserExperience ??= stream.ReadAsSequential(Encoding.Unicode)
+                .Select(str => (str.IndexOf("User Choice set via Windows User Experience", StringComparison.Ordinal), str))
+                .SelectWhere(item => item.Item1 > -1, item => (item.Item1, item.str.IndexOf("}", item.Item1, StringComparison.Ordinal), item.str))
+                .SelectWhere(item => item.Item2 > -1, item => item.str.Substring(item.Item1, item.Item2 - item.Item1 + 1))
+                .FirstOrDefault();
         }
 
         private static String GetUserSID()

@@ -68,6 +68,26 @@ namespace NetExtender.Utils.Numerics.Physics
         }
         
         /// <summary>
+        /// Return <see cref="ElectromagneticType"/> from it's wavelength
+        /// </summary>
+        /// <param name="wavelength">Wavelength in nm</param>
+        /// <returns><see cref="ElectromagneticType"/></returns>
+        public static ElectromagneticType GetElectromagneticTypeFromWaveLength(Decimal wavelength)
+        {
+            return wavelength switch
+            {
+                <= 0 => ElectromagneticType.Unknown,
+                < 0.005M => ElectromagneticType.Gamma,
+                < 10 => ElectromagneticType.XRay,
+                < MinVisibleWaveLength => ElectromagneticType.Ultraviolet,
+                <= MaxVisibleWaveLength => ElectromagneticType.Visible,
+                < 1000000 => ElectromagneticType.Infrared,
+                < 10000000000 => ElectromagneticType.Microwave,
+                _ => ElectromagneticType.Radiowave
+            };
+        }
+        
+        /// <summary>
         /// Return <see cref="ElectromagneticType"/> from it's frequency
         /// </summary>
         /// <param name="wavelength">Wavelength in thz</param>
@@ -83,6 +103,26 @@ namespace NetExtender.Utils.Numerics.Physics
                 >= 429 => ElectromagneticType.Visible,
                 >= 0.3 => ElectromagneticType.Infrared,
                 >= 0.0003 => ElectromagneticType.Microwave,
+                _ => ElectromagneticType.Radiowave
+            };
+        }
+        
+        /// <summary>
+        /// Return <see cref="ElectromagneticType"/> from it's frequency
+        /// </summary>
+        /// <param name="wavelength">Wavelength in thz</param>
+        /// <returns><see cref="ElectromagneticType"/></returns>
+        public static ElectromagneticType GetElectromagneticTypeFromFrequency(Decimal wavelength)
+        {
+            return wavelength switch
+            {
+                <= 0 => ElectromagneticType.Unknown,
+                >= 60000000 => ElectromagneticType.Gamma,
+                >= 30000 => ElectromagneticType.XRay,
+                > 750 => ElectromagneticType.Ultraviolet,
+                >= 429 => ElectromagneticType.Visible,
+                >= 0.3M => ElectromagneticType.Infrared,
+                >= 0.0003M => ElectromagneticType.Microwave,
                 _ => ElectromagneticType.Radiowave
             };
         }
@@ -126,6 +166,16 @@ namespace NetExtender.Utils.Numerics.Physics
             return PhysicsUtils.C / wavelength;
         }
         
+        public static Decimal Frequency(Decimal wavelength)
+        {
+            if (wavelength <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(wavelength));
+            }
+
+            return PhysicsUtils.C / wavelength;
+        }
+        
         public static Double Wavelength(Double frequency)
         {
             if (frequency < Double.Epsilon)
@@ -135,8 +185,23 @@ namespace NetExtender.Utils.Numerics.Physics
 
             return PhysicsUtils.C / frequency;
         }
+        
+        public static Decimal Wavelength(Decimal frequency)
+        {
+            if (frequency <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(frequency));
+            }
+
+            return PhysicsUtils.C / frequency;
+        }
 
         public static Double DoplerWavelength(Double wavelength, Double velocity)
+        {
+            return DoplerWavelength(wavelength, velocity, 0);
+        }
+        
+        public static Decimal DoplerWavelength(Decimal wavelength, Decimal velocity)
         {
             return DoplerWavelength(wavelength, velocity, 0);
         }
@@ -155,8 +220,28 @@ namespace NetExtender.Utils.Numerics.Physics
                 _ => Wavelength(DoplerFrequency(Frequency(wavelength), velocity, angle))
             };
         }
+        
+        public static Decimal DoplerWavelength(Decimal wavelength, Decimal velocity, Decimal angle)
+        {
+            if (wavelength <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(wavelength));
+            }
+
+            return velocity switch
+            {
+                <= 0 => wavelength,
+                >= PhysicsUtils.C => throw new ArgumentOutOfRangeException(nameof(velocity)),
+                _ => Wavelength(DoplerFrequency(Frequency(wavelength), velocity, angle))
+            };
+        }
 
         public static Double DoplerFrequency(Double frequency, Double velocity)
+        {
+            return DoplerFrequency(frequency, velocity, 0);
+        }
+        
+        public static Decimal DoplerFrequency(Decimal frequency, Decimal velocity)
         {
             return DoplerFrequency(frequency, velocity, 0);
         }
@@ -173,6 +258,21 @@ namespace NetExtender.Utils.Numerics.Physics
                 < Double.Epsilon => frequency,
                 >= PhysicsUtils.C => throw new ArgumentOutOfRangeException(nameof(velocity)),
                 _ => frequency * Math.Sqrt(1 - velocity * velocity / PhysicsUtils.SquareC) / (1 - velocity / PhysicsUtils.C * Math.Cos(angle))
+            };
+        }
+        
+        public static Decimal DoplerFrequency(Decimal frequency, Decimal velocity, Decimal angle)
+        {
+            if (frequency <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(frequency));
+            }
+
+            return velocity switch
+            {
+                <= 0 => frequency,
+                >= PhysicsUtils.C => throw new ArgumentOutOfRangeException(nameof(velocity)),
+                _ => frequency * (1 - velocity * velocity / PhysicsUtils.SquareC).Sqrt() / (1 - velocity / PhysicsUtils.C * MathUtils.Cos(angle))
             };
         }
     }
