@@ -1777,6 +1777,33 @@ namespace NetExtender.Utils.Numerics
         {
             return Difference(value, between) + BigInteger.One;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToNonZero(ref BigInteger value)
+        {
+            if (value == BigInteger.Zero)
+            {
+                value = BigInteger.One;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToNonZero(ref BigInteger value, in BigInteger alternate)
+        {
+            if (value == BigInteger.Zero)
+            {
+                value = alternate;
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToNonZero(ref BigInteger value, BigInteger alternate)
+        {
+            if (value == BigInteger.Zero)
+            {
+                value = alternate;
+            }
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BigInteger ToNonZero(this BigInteger value)
@@ -1788,6 +1815,45 @@ namespace NetExtender.Utils.Numerics
         public static BigInteger ToNonZero(this BigInteger value, BigInteger alternate)
         {
             return value == BigInteger.Zero ? alternate : value;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToNonNegative(ref BigInteger value)
+        {
+            if (value < 0)
+            {
+                value = BigInteger.Zero;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToNonNegative(ref BigInteger value, in BigInteger alternate)
+        {
+            if (value < 0)
+            {
+                value = alternate;
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void ToNonNegative(ref BigInteger value, BigInteger alternate)
+        {
+            if (value < 0)
+            {
+                value = alternate;
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger ToNonNegative(this BigInteger value)
+        {
+            return value < 0 ? 0 : value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger ToNonNegative(this BigInteger value, BigInteger alternate)
+        {
+            return value < 0 ? alternate : value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

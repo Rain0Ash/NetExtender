@@ -981,7 +981,31 @@ namespace NetExtender.Utils.Numerics
     void ToNonZeroFunc(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-        WriteLine($"\t\tpublic static {type} ToNonZero(this {type} value, {type} alternate = 1)");
+        WriteLine($"\t\tpublic static void {nameof(ToNonZero)}(ref {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tvalue = {nameof(ToNonZero)}(value);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static void {nameof(ToNonZero)}(ref {type} value, {type} alternate)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tvalue = {nameof(ToNonZero)}(value, alternate);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(ToNonZero)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(ToNonZero)}(value, {(IsSmallType(type) ? $"({type}) " : String.Empty)}1);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(ToNonZero)}(this {type} value, {type} alternate)");
         WriteLine("\t\t{");
         if (IsIntType(type) || type == nameof(Decimal))
         {
@@ -998,6 +1022,50 @@ namespace NetExtender.Utils.Numerics
     void ToNonZero()
     {
         ForEach(types.Where(NotChar), ToNonZeroFunc);
+    }
+    
+    void ToNonNegativeFunc(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static void {nameof(ToNonNegative)}(ref {type} value)");
+        WriteLine("\t\t{");
+        if (!IsUnsignedType(type))
+        {
+            WriteLine($"\t\t\tvalue = {nameof(ToNonNegative)}(value);");
+        }
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static void {nameof(ToNonNegative)}(ref {type} value, {type} alternate)");
+        WriteLine("\t\t{");
+        if (!IsUnsignedType(type))
+        {
+            WriteLine($"\t\t\tvalue = {nameof(ToNonNegative)}(value, alternate);");
+        }
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(ToNonNegative)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {(IsUnsignedType(type) ? "value" : $"value < 0 ? {(IsSmallType(type) ? $"({type}) " : String.Empty)}0 : value")};");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(ToNonNegative)}(this {type} value, {type} alternate)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {(IsUnsignedType(type) ? "value" : "value < 0 ? alternate : value")};");
+        WriteLine("\t\t}");
+    }
+    
+    void ToNonNegative()
+    {
+        ForEach(types.Where(NotChar), ToNonNegativeFunc);
     }
 
     void MeanFunc(String type)
@@ -1349,6 +1417,8 @@ namespace NetExtender.Utils.Numerics
     ToRadians();
     WriteLine(String.Empty);
     ToNonZero();
+    WriteLine(String.Empty);
+    ToNonNegative();
     WriteLine(String.Empty);
     Mean();
     WriteLine(String.Empty);
