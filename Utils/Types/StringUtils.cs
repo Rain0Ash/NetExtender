@@ -284,7 +284,7 @@ namespace NetExtender.Utils.Types
             {
                 return String.Empty;
             }
-            
+
             String keys = dictionary.Keys.Join("|");
 
             return Regex.Replace(source, $@"\b({keys})\b",
@@ -309,7 +309,7 @@ namespace NetExtender.Utils.Types
             }
 
             String keys = dictionary.Keys.Join("|");
-            
+
             return Regex.Replace(source, $@"\b({keys})\b",
                 match => dictionary.TryGetValue(match.Value, out String value) ? value ?? String.Empty : String.Empty);
         }
@@ -330,20 +330,21 @@ namespace NetExtender.Utils.Types
             {
                 return String.Empty;
             }
-            
+
             StringBuilder builder = new StringBuilder(value);
-            
+
             Dictionary<String, Int32> keys = new Dictionary<String, Int32>();
 
             Int32 i = 0;
+
             void AddToKeys(String key)
             {
                 builder = builder.Replace($"{{{key}}}", $"{{{i}}}");
                 keys.Add(key, i++);
             }
-            
+
             Object[] arguments = source.DistinctByKey().ForEachKey(AddToKeys).OrderBy(pair => keys[pair.Key]).Values().Cast<Object>().ToArray();
-            
+
             return String.Format(builder.ToString(), arguments);
         }
 
@@ -869,7 +870,7 @@ namespace NetExtender.Utils.Types
 
             return true;
         }
-        
+
         public static Boolean IsAscii([NotNull] this IString value)
         {
             if (value is null)
@@ -879,7 +880,7 @@ namespace NetExtender.Utils.Types
 
             return IsAscii(value.ToString());
         }
-        
+
         public static Boolean IsAsciiCharacters([NotNull] this String value)
         {
             if (value is null)
@@ -904,7 +905,7 @@ namespace NetExtender.Utils.Types
 
             return true;
         }
-        
+
         public static Boolean IsAsciiCharacters([NotNull] this IString value)
         {
             if (value is null)
@@ -1957,12 +1958,68 @@ namespace NetExtender.Utils.Types
 
             return value.Substring(0, length - 3) + "...";
         }
+
+        public static Int32 LevenshteinDistance(String first, String second)
+        {
+            if (first == null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second == null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+
+            Int32[,] values = new Int32[first.Length + 1, second.Length + 1];
+
+            for (Int32 i = 0; i <= first.Length; i++)
+            {
+                values[i, 0] = i;
+            }
+
+            for (Int32 j = 0; j <= second.Length; j++)
+            {
+                values[0, j] = j;
+            }
+
+            for (Int32 i = 1; i <= first.Length; i++)
+            {
+                for (Int32 j = 1; j <= second.Length; j++)
+                {
+                    Int32 difference = (first[i - 1] == second[j - 1]) ? 0 : 1;
+
+                    values[i, j] = Math.Min(Math.Min(values[i - 1, j] + 1, values[i, j - 1] + 1), values[i - 1, j - 1] + difference);
+                }
+            }
+
+            return values[first.Length, second.Length];
+        }
         
+        public static Int32 LevenshteinDistance([NotNull] this String first, [NotNull] String second, StringComparison comparison)
+        {
+            return comparison switch
+            {
+                StringComparison.CurrentCulture => LevenshteinDistance(first, second),
+                StringComparison.CurrentCultureIgnoreCase => LevenshteinDistance(first.ToUpper(), second.ToUpper()),
+                StringComparison.InvariantCulture => LevenshteinDistance(first, second),
+                StringComparison.InvariantCultureIgnoreCase => LevenshteinDistance(first.ToUpperInvariant(), second.ToUpperInvariant()),
+                StringComparison.Ordinal => LevenshteinDistance(first, second),
+                StringComparison.OrdinalIgnoreCase => LevenshteinDistance(first.ToUpperInvariant(), second.ToUpperInvariant()),
+                _ => throw new NotSupportedException()
+            };
+        }
+
         public static Int32 DamerauLevenshteinDistance(this String first, String second)
         {
             return DamerauLevenshteinDistance(first, second, new Int32[first.Length + 1, second.Length + 1]);
         }
-        
+
+        public static Int32 DamerauLevenshteinDistance(this String first, String second, StringComparison comparison)
+        {
+            return DamerauLevenshteinDistance(first, second, comparison, new Int32[first.Length + 1, second.Length + 1]);
+        }
+
         public static Int32 DamerauLevenshteinDistance([NotNull] this String first, [NotNull] String second, Int32[,] values)
         {
             if (first is null)
@@ -1977,17 +2034,17 @@ namespace NetExtender.Utils.Types
 
             Int32 flength = first.Length;
             Int32 slength = second.Length;
-            
+
             for (Int32 i = 0; i <= flength; ++i)
             {
                 values[i, 0] = i;
             }
-	
+
             for (Int32 j = 1; j <= slength; ++j)
             {
                 values[0, j] = j;
             }
-	
+
             for (Int32 i = 1; i <= flength; ++i)
             {
                 for (Int32 j = 1; j <= slength; ++j)
@@ -1995,11 +2052,11 @@ namespace NetExtender.Utils.Types
                     Char fchar = first[i - 1];
                     Char schar = second[j - 1];
                     Int32 cost = fchar == schar ? 0 : 1;
-	
+
                     Int32 deletion = values[i - 1, j] + 1;
                     Int32 insertion = values[i, j - 1] + 1;
                     Int32 substitution = values[i - 1, j - 1] + cost;
-                    
+
                     values[i, j] = Math.Min(Math.Min(deletion, insertion), substitution);
 
                     if (i <= 1 || j <= 1 || fchar != second[j - 2] || first[i - 2] != schar)
@@ -2011,8 +2068,22 @@ namespace NetExtender.Utils.Types
                     values[i, j] = Math.Min(values[i, j], transposition);
                 }
             }
-	
+
             return values[flength, slength];
+        }
+
+        public static Int32 DamerauLevenshteinDistance([NotNull] this String first, [NotNull] String second, StringComparison comparison, Int32[,] values)
+        {
+            return comparison switch
+            {
+                StringComparison.CurrentCulture => DamerauLevenshteinDistance(first, second, values),
+                StringComparison.CurrentCultureIgnoreCase => DamerauLevenshteinDistance(first.ToUpper(), second.ToUpper(), values),
+                StringComparison.InvariantCulture => DamerauLevenshteinDistance(first, second, values),
+                StringComparison.InvariantCultureIgnoreCase => DamerauLevenshteinDistance(first.ToUpperInvariant(), second.ToUpperInvariant(), values),
+                StringComparison.Ordinal => DamerauLevenshteinDistance(first, second, values),
+                StringComparison.OrdinalIgnoreCase => DamerauLevenshteinDistance(first.ToUpperInvariant(), second.ToUpperInvariant(), values),
+                _ => throw new NotSupportedException()
+            };
         }
 
         public static String WhereChar([NotNull] this String value, [NotNull] Func<Char, Boolean> where)
