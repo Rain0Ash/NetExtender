@@ -140,7 +140,7 @@ namespace NetExtender.GUI.WinForms.ListViews
             e.DrawDefault = true;
         }
 
-        public void SetColor(T item, Color background, Color foreground, Font font = null)
+        public void SetColor(T item, Color background, Color foreground, Font? font = null)
         {
             ColorDictionary.Set(item, new DrawingData(background, foreground, font));
         }

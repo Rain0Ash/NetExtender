@@ -7,7 +7,7 @@ using NetExtender.Localizations;
 
 namespace NetExtender.GUI.WinForms.Forms
 {
-    public abstract class LocalizationForm : FlashForm, ILocalizable
+    public abstract class LocalizationForm : FixedForm, ILocalizable
     {
         protected override void OnLoad(EventArgs e)
         {

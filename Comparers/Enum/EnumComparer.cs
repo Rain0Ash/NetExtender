@@ -60,14 +60,14 @@ namespace NetExtender.Comparers.Enum
             }
         }
 
-        public Boolean Equals(TEnum firstEnum, TEnum secondEnum)
+        public Boolean Equals(TEnum first, TEnum second)
         {
-            return BoxAvoidance.ToInt(firstEnum).Equals(BoxAvoidance.ToInt(secondEnum));
+            return BoxAvoidance.ToInt(first).Equals(BoxAvoidance.ToInt(second));
         }
 
-        public Int32 GetHashCode(TEnum firstEnum)
+        public Int32 GetHashCode(TEnum value)
         {
-            return BoxAvoidance.ToInt(firstEnum).ToInt32(CultureInfo.InvariantCulture);
+            return BoxAvoidance.ToInt(value).ToInt32(CultureInfo.InvariantCulture);
         }
     }
 }

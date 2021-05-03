@@ -8,6 +8,7 @@
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
         <DefineConstants></DefineConstants>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -33,35 +34,35 @@
       <PackageReference Include="DynamicData.ReactiveUI" Version="6.11.0.2613" />
       <PackageReference Include="EntityFrameworkCore.BootKit" Version="2.6.1" />
       <PackageReference Include="EntityFrameworkCore.CommonTools" Version="2.0.2" />
-      <PackageReference Include="Fody" Version="6.5.0">
+      <PackageReference Include="Fody" Version="6.5.1">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
       <PackageReference Include="ImpromptuInterface" Version="7.0.1" />
-      <PackageReference Include="JetBrains.Annotations" Version="2021.1.0-eap01" />
-      <PackageReference Include="JetBrains.ExternalAnnotations" Version="10.2.91" />
+      <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" />
+      <PackageReference Include="JetBrains.ExternalAnnotations" Version="10.2.93" />
       <PackageReference Include="Microsoft-WindowsAPICodePack-Core" Version="1.1.4" />
       <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
-      <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.0-preview.2.21154.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0-preview.2.21154.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.0-preview.2.21154.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="6.0.0-preview.2.21154.2" />
+      <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.0-preview.3.21201.2" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0-preview.3.21201.2" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.0-preview.3.21201.2" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="6.0.0-preview.3.21201.2" />
       <PackageReference Include="Microsoft.EntityFrameworkCore.DynamicLinq" Version="5.2.9" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0-preview.2.21154.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.0-preview.2.21154.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0-preview.2.21154.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="6.0.0-preview.2.21154.2" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0-preview.2.21154.2" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0-preview.3.21201.2" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.0-preview.3.21201.2" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.0-preview.3.21201.2" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="6.0.0-preview.3.21201.2" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0-preview.3.21201.2" />
       <PackageReference Include="NAudio" Version="2.0.0" />
       <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.0-preview2" />
-      <PackageReference Include="Polly" Version="7.2.1" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.0-preview3" />
+      <PackageReference Include="Polly" Version="7.2.2" />
       <PackageReference Include="protobuf-net" Version="3.0.101" />
-      <PackageReference Include="ReactiveUI" Version="13.2.10" />
-      <PackageReference Include="ReactiveUI.Fody" Version="13.2.10" />
-      <PackageReference Include="ReactiveUI.WinForms" Version="13.2.10" />
-      <PackageReference Include="ReactiveUI.WPF" Version="13.2.10" />
-      <PackageReference Include="System.Management" Version="6.0.0-preview.2.21154.6" />
+      <PackageReference Include="ReactiveUI" Version="13.2.18" />
+      <PackageReference Include="ReactiveUI.Fody" Version="13.2.18" />
+      <PackageReference Include="ReactiveUI.WinForms" Version="13.2.18" />
+      <PackageReference Include="ReactiveUI.WPF" Version="13.2.18" />
+      <PackageReference Include="System.Management" Version="6.0.0-preview.3.21201.4" />
     </ItemGroup>
 
     <ItemGroup>

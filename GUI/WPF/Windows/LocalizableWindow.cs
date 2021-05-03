@@ -7,7 +7,7 @@ using NetExtender.Localizations;
 
 namespace NetExtender.GUI.WPF.Windows
 {
-    public abstract class LocalizableWindow : FlashWindow, ILocalizable
+    public abstract class LocalizableWindow : FixedWindow, ILocalizable
     {
         protected LocalizableWindow()
         {

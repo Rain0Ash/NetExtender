@@ -241,13 +241,18 @@ namespace NetExtender.Utils.Types
             CopyStream(input, output);
             return output;
         }
+        
+        public static async Task<MemoryStream> ToStreamAsync([NotNull] this Byte[] bytes)
+        {
+            return new MemoryStream(bytes);
+        }
 
-        public static Task<Stream> ToStreamAsync([NotNull] this Byte[] bytes, Stream output = null)
+        public static Task<Stream> ToStreamAsync([NotNull] this Byte[] bytes, Stream? output = null)
         {
             return ToStreamAsync(bytes, output, CancellationToken.None);
         }
 
-        public static async Task<Stream> ToStreamAsync([NotNull] this Byte[] bytes, Stream output, CancellationToken token)
+        public static async Task<Stream> ToStreamAsync([NotNull] this Byte[] bytes, Stream? output, CancellationToken token)
         {
             if (bytes is null)
             {
@@ -313,11 +318,6 @@ namespace NetExtender.Utils.Types
             return ResetPosition(stream);
         }
         
-        public static T ResetPosition<T>(this T stream) where T : Stream
-        {
-            return SetPosition(stream, 0);
-        }
-        
         public static T SetPosition<T>([NotNull] this T stream, Int64 position) where T : Stream
         {
             if (stream is null)
@@ -350,6 +350,22 @@ namespace NetExtender.Utils.Types
             {
                 return false;
             }
+        }
+        
+        public static T ResetPosition<T>(this T stream) where T : Stream
+        {
+            return SetPosition(stream, 0);
+        }
+        
+        public static T TryResetPosition<T>(this T stream) where T : Stream
+        {
+            return TryResetPosition(stream, out _);
+        }
+        
+        public static T TryResetPosition<T>(this T stream, out Boolean successful) where T : Stream
+        {
+            successful = TrySetPosition(stream, 0);
+            return stream;
         }
         
         public static T SeekPosition<T>([NotNull] this T stream, Int64 offset, SeekOrigin origin = SeekOrigin.Begin) where T : Stream

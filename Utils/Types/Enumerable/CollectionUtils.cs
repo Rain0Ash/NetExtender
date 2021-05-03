@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Linq;
 using JetBrains.Annotations;
 using NetExtender.Combinatorics;
@@ -69,6 +70,19 @@ namespace NetExtender.Utils.Types
             {
                 collection.Add(item);
             }
+        }
+
+        public static StringCollection ToStringCollection([NotNull] this IEnumerable<String> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            StringCollection collection = new StringCollection();
+            collection.AddRange(source.AsArray());
+
+            return collection;
         }
     }
 }

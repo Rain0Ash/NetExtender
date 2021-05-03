@@ -41,12 +41,12 @@ using NetExtender.Types.Strings.Interfaces;
         public IString Value { get; }
         public Image Image { get; init; }
 
-        public DropDownItem(String text, Image image = null)
+        public DropDownItem(String text, Image? image = null)
             : this(new StringAdapter(text), image)
         {
         }
 
-        public DropDownItem(IString text, Image image = null)
+        public DropDownItem(IString text, Image? image = null)
         {
             Value = text;
             Image = image ?? new Bitmap(16, 16);

@@ -73,7 +73,7 @@ namespace NetExtender.Localizations
                 }
             }
 
-            private static (CultureComparer, Dictionary<CultureInfo, ISubLocalization>) Convert(ILocalizationBehaviour behaviour)
+            private static (CultureComparer, Dictionary<CultureInfo, ISubLocalization>) Convert(ILocalizationBehaviour? behaviour)
             {
                 CultureComparer comparer = behaviour?.Comparer ?? new CultureComparer {Default};
 
@@ -99,19 +99,19 @@ namespace NetExtender.Localizations
                 return (comparer, supported);
             }
 
-            public InternalLocalization([NotNull] IConfigBehavior config, ILocalizationBehaviour behaviour = null)
+            public InternalLocalization([NotNull] IConfigBehavior config, ILocalizationBehaviour? behaviour = null)
                 : base(config)
             {
                 (Comparer, Supported) = Convert(behaviour);
             }
 
-            public InternalLocalization(ConfigType type, ConfigOptions options, ILocalizationBehaviour behaviour = null)
+            public InternalLocalization(ConfigType type, ConfigOptions options, ILocalizationBehaviour? behaviour = null)
                 : base(type, options)
             {
                 (Comparer, Supported) = Convert(behaviour);
             }
 
-            public InternalLocalization(String path, ConfigType type, ConfigOptions options, ILocalizationBehaviour behaviour = null)
+            public InternalLocalization(String path, ConfigType type, ConfigOptions options, ILocalizationBehaviour? behaviour = null)
                 : base(path, type, options)
             {
                 (Comparer, Supported) = Convert(behaviour);

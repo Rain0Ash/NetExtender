@@ -23,7 +23,7 @@ namespace NetExtender.Apps.Data.Common
             
         public String Developer { get; }
         public String Repository { get; }
-        public String URL { get; }
+        public String? URL { get; }
 
         public AppInformation(String url)
         {
@@ -39,7 +39,7 @@ namespace NetExtender.Apps.Data.Common
             URL = url;
         }
 
-        public AppInformation(String developer, String repository, String url = null)
+        public AppInformation(String developer, String repository, String? url = null)
         {
             Developer = developer;
             Repository = repository;

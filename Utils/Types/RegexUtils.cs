@@ -271,7 +271,7 @@ namespace NetExtender.Utils.Types
             {
                 GroupCollection groups = match.Groups;
 
-                foreach (String name in names)
+                foreach (String? name in names)
                 {
                     if (name is null)
                     {

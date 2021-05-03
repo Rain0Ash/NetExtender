@@ -14,8 +14,6 @@ using JetBrains.Annotations;
 using NetExtender.Events.Args;
 using NetExtender.GUI;
 using NetExtender.GUI.Common.Interfaces;
-using NetExtender.Types.Maps;
-using NetExtender.Types.Maps.Interfaces;
 using NetExtender.Utils.GUI;
 using NetExtender.Utils.OS;
 using NetExtender.Utils.OS.Devices;

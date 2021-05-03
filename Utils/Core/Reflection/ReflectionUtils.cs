@@ -878,8 +878,14 @@ namespace NetExtender.Utils.Core
                 il.Emit(OpCodes.Sizeof, type);
                 il.Emit(OpCodes.Ret);
                 
-                // ReSharper disable once PossibleNullReferenceException
-                size = (Int32) method.Invoke(null, null);
+                Object? value = method.Invoke(null, null);
+
+                if (value is null)
+                {
+                    return 0;
+                }
+
+                size = (Int32) value;
                 Cache.TryAdd(type, size);
                 return size;
             }
