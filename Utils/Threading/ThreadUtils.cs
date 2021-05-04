@@ -11,17 +11,64 @@ namespace NetExtender.Utils.Threading
     [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "HeapView.CanAvoidClosure")]
     public static class ThreadUtils
     {
-        public static void Create([NotNull] Action action, ApartmentState state)
+        public static ApartmentState State
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return Thread.CurrentThread.GetApartmentState();
+            }
+        }
+        
+        public static Boolean IsSTA
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return State == ApartmentState.STA;
+            }
+        }
+
+        public static Boolean IsMTA
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return State == ApartmentState.MTA;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Exception? SafeInvoke([NotNull] Action action)
+        {
+            try
+            {
+                action.Invoke();
+                return null;
+            }
+            catch (Exception exception)
+            {
+                return exception;
+            }
+        }
+
+        private static void Create([NotNull] Action action, ApartmentState state)
         {
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
             }
 
-            Thread thread = new Thread(action.Invoke);
+            Exception? exception = null;
+            Thread thread = new Thread(() => exception = SafeInvoke(action));
             thread.SetApartmentState(state);
             thread.Start();
             thread.Join();
+
+            if (exception is not null)
+            {
+                throw exception;
+            }
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -244,19 +291,24 @@ namespace NetExtender.Utils.Threading
             MTA(() => action.Invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9));
         }
         
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? Create<TResult>([NotNull] Func<TResult> function, ApartmentState state)
+        private static TResult? Create<TResult>([NotNull] Func<TResult> function, ApartmentState state)
         {
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
             }
 
+            Exception? exception = null;
             TResult? result = default;
-            Thread thread = new Thread(() => result = function.Invoke());
+            Thread thread = new Thread(() => SafeInvoke(() => result = function.Invoke()));
             thread.SetApartmentState(state);
             thread.Start();
             thread.Join();
+
+            if (exception is not null)
+            {
+                throw exception;
+            }
 
             return result;
         }

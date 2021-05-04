@@ -10,10 +10,12 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
 using JetBrains.Annotations;
+using NetExtender.Utils.Threading;
 using NetExtender.Utils.Types;
 
 namespace NetExtender.Utils.IO
@@ -22,6 +24,7 @@ namespace NetExtender.Utils.IO
     {
         None,
         Text,
+        Raw,
         Image,
         Audio,
         Files
@@ -43,40 +46,55 @@ namespace NetExtender.Utils.IO
                 return !Contains();
             }
         }
-        
+
         public static Boolean ContainsText()
         {
-            return Clipboard.ContainsText();
+            return ThreadUtils.IsSTA ? Clipboard.ContainsText() : ThreadUtils.STA(Clipboard.ContainsText);
         }
         
         public static Boolean ContainsText(TextDataFormat format)
         {
-            return Clipboard.ContainsText(format);
+            return ThreadUtils.IsSTA ? Clipboard.ContainsText(format) : ThreadUtils.STA(Clipboard.ContainsText, format);
+        }
+
+        public static Boolean ContainsRaw()
+        {
+            return ThreadUtils.IsSTA ? ContainsRawInternal() : ThreadUtils.STA(ContainsRawInternal);
+        }
+        
+        private static Boolean ContainsRawInternal()
+        {
+            return Clipboard.GetDataObject() is DataObject data && data.GetDataPresent("rawbinary");
         }
         
         public static Boolean ContainsImage()
         {
-            return Clipboard.ContainsImage();
+            return ThreadUtils.IsSTA ? Clipboard.ContainsImage() : ThreadUtils.STA(Clipboard.ContainsImage);
         }
         
         public static Boolean ContainsAudio()
         {
-            return Clipboard.ContainsAudio();
+            return ThreadUtils.IsSTA ? Clipboard.ContainsAudio() : ThreadUtils.STA(Clipboard.ContainsAudio);
         }
         
         public static Boolean ContainsFiles()
         {
-            return Clipboard.ContainsFileDropList();
+            return ThreadUtils.IsSTA ? Clipboard.ContainsFileDropList() : ThreadUtils.STA(Clipboard.ContainsFileDropList);
         }
         
-        public static Boolean ContainsData(String format)
+        public static Boolean ContainsData([NotNull] String format)
         {
-            return Clipboard.ContainsData(format);
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            return ThreadUtils.IsSTA ? Clipboard.ContainsData(format) : ThreadUtils.STA(Clipboard.ContainsData, format);
         }
 
         public static Boolean Contains()
         {
-            return DataFormats.Any(Clipboard.ContainsData);
+            return ThreadUtils.IsSTA ? DataFormats.Any(Clipboard.ContainsData) : ThreadUtils.STA(() => DataFormats.Any(Clipboard.ContainsData));
         }
 
         public static Boolean Contains(ClipboardType type)
@@ -84,6 +102,7 @@ namespace NetExtender.Utils.IO
             return type switch
             {
                 ClipboardType.None => IsEmpty,
+                ClipboardType.Raw => ContainsRaw(),
                 ClipboardType.Text => ContainsText(),
                 ClipboardType.Image => ContainsImage(),
                 ClipboardType.Audio => ContainsAudio(),
@@ -94,15 +113,20 @@ namespace NetExtender.Utils.IO
 
         public static String GetText()
         {
-            return Clipboard.GetText();
+            return ThreadUtils.IsSTA ? Clipboard.GetText() : ThreadUtils.STA(Clipboard.GetText) ?? String.Empty;
         }
         
         public static String GetText(TextDataFormat format)
         {
-            return Clipboard.GetText(format);
+            return ThreadUtils.IsSTA ? Clipboard.GetText(format) : ThreadUtils.STA(Clipboard.GetText, format) ?? String.Empty;
         }
         
         public static Byte[]? GetRaw()
+        {
+            return ThreadUtils.IsSTA ? GetRawInternal() : ThreadUtils.STA(GetRawInternal);
+        }
+
+        private static Byte[]? GetRawInternal()
         {
             if (Clipboard.GetDataObject() is not DataObject data || !data.GetDataPresent("rawbinary"))
             {
@@ -115,64 +139,86 @@ namespace NetExtender.Utils.IO
         
         public static BitmapSource? GetImage()
         {
-            return Clipboard.GetImage();
+            return ThreadUtils.IsSTA ? Clipboard.GetImage() : ThreadUtils.STA(Clipboard.GetImage);
         }
         
         public static Stream? GetAudio()
         {
-            return Clipboard.GetAudioStream();
+            return ThreadUtils.IsSTA ? Clipboard.GetAudioStream() : ThreadUtils.STA(Clipboard.GetAudioStream);
         }
         
         public static StringCollection GetFiles()
         {
-            return Clipboard.GetFileDropList();
+            return ThreadUtils.IsSTA ? Clipboard.GetFileDropList() : ThreadUtils.STA(Clipboard.GetFileDropList) ?? new StringCollection();
         }
         
         public static IDataObject? GetData()
         {
-            return Clipboard.GetDataObject();
+            return ThreadUtils.IsSTA ? Clipboard.GetDataObject() : ThreadUtils.STA(Clipboard.GetDataObject);
         }
         
-        public static Object GetData(String format)
+        public static Object? GetData([NotNull] String format)
         {
-            return Clipboard.GetData(format);
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            return ThreadUtils.IsSTA ? Clipboard.GetData(format) : ThreadUtils.STA(Clipboard.GetData, format);
         }
         
-        public static Boolean SetText([NotNull] String text)
+        public static Boolean SetText(String? text)
         {
             if (text is null)
             {
-                throw new ArgumentNullException(nameof(text));
+                return Clear();
             }
 
-            Clipboard.SetText(text);
+            if (ThreadUtils.IsSTA)
+            {
+                Clipboard.SetText(text);
+                return true;
+            }
+
+            ThreadUtils.STA(Clipboard.SetText, text);
             return true;
         }
 
-        public static Boolean SetText([NotNull] String text, TextDataFormat format)
+        public static Boolean SetText(String? text, TextDataFormat format)
         {
             if (text is null)
             {
-                throw new ArgumentNullException(nameof(text));
+                return Clear();
             }
 
-            Clipboard.SetText(text, format);
+            if (ThreadUtils.IsSTA)
+            {
+                Clipboard.SetText(text, format);
+                return true;
+            }
+
+            ThreadUtils.STA(Clipboard.SetText, text, format);
             return true;
         }
         
-        public static Boolean SetRaw([NotNull] Byte[] raw)
+        public static Boolean SetRaw(Byte[]? raw)
         {
             if (raw is null)
             {
-                throw new ArgumentNullException(nameof(raw));
+                return Clear();
             }
 
             using MemoryStream stream = raw.ToStream();
             return SetRaw(stream);
         }
 
-        public static Boolean SetRaw([NotNull] Stream stream)
+        public static Boolean SetRaw(Stream? stream)
         {
+            if (stream is null)
+            {
+                return Clear();
+            }
+            
             if (stream is MemoryStream memory)
             {
                 return SetRaw(memory);
@@ -184,18 +230,25 @@ namespace NetExtender.Utils.IO
             return SetRaw(ms);
         }
 
-        public static Boolean SetRaw([NotNull] MemoryStream stream)
+        public static Boolean SetRaw(MemoryStream? stream)
         {
             if (stream is null)
             {
-                throw new ArgumentNullException(nameof(stream));
+                return Clear();
             }
 
             try
             {
                 DataObject data = new DataObject();
                 data.SetData("rawbinary", stream, false);
-                Clipboard.SetDataObject(data, true);
+
+                if (ThreadUtils.IsSTA)
+                {
+                    Clipboard.SetDataObject(data, true);
+                    return true;
+                }
+
+                ThreadUtils.STA(Clipboard.SetDataObject, data, true);
                 return true;
             }
             catch (ExternalException)
@@ -204,19 +257,24 @@ namespace NetExtender.Utils.IO
             }
         }
         
-        public static async Task<Boolean> SetRawAsync([NotNull] Byte[] raw)
+        public static async Task<Boolean> SetRawAsync(Byte[]? raw)
         {
             if (raw is null)
             {
-                throw new ArgumentNullException(nameof(raw));
+                return Clear();
             }
 
             await using MemoryStream stream = await raw.ToStreamAsync();
             return SetRaw(stream);
         }
         
-        public static async Task<Boolean> SetRawAsync([NotNull] Stream stream)
+        public static async Task<Boolean> SetRawAsync(Stream? stream)
         {
+            if (stream is null)
+            {
+                return Clear();
+            }
+            
             if (stream is MemoryStream memory)
             {
                 return SetRaw(memory);
@@ -228,87 +286,123 @@ namespace NetExtender.Utils.IO
             return SetRaw(ms);
         }
         
-        public static Boolean SetImage([NotNull] BitmapSource image)
+        public static Boolean SetImage(BitmapSource? image)
         {
             if (image is null)
             {
-                throw new ArgumentNullException(nameof(image));
+                return Clear();
             }
 
-            Clipboard.SetImage(image);
+            if (ThreadUtils.IsSTA)
+            {
+                Clipboard.SetImage(image);
+                return true;
+            }
+
+            ThreadUtils.STA(Clipboard.SetImage, image);
             return true;
         }
 
-        public static Boolean SetAudio([NotNull] Stream stream)
+        public static Boolean SetAudio(Stream? stream)
         {
             if (stream is null)
             {
-                throw new ArgumentNullException(nameof(stream));
+                return Clear();
             }
 
-            Clipboard.SetAudio(stream);
+            if (ThreadUtils.IsSTA)
+            {
+                Clipboard.SetAudio(stream);
+                return true;
+            }
+
+            ThreadUtils.STA(Clipboard.SetAudio, stream);
             return true;
         }
         
-        public static Boolean SetAudio([NotNull] Byte[] audio)
+        public static Boolean SetAudio(Byte[]? audio)
         {
             if (audio is null)
             {
-                throw new ArgumentNullException(nameof(audio));
+                return Clear();
             }
 
-            Clipboard.SetAudio(audio);
+            if (ThreadUtils.IsSTA)
+            {
+                Clipboard.SetAudio(audio);
+                return true;
+            }
+
+            ThreadUtils.STA(Clipboard.SetAudio, audio);
             return true;
         }
         
-        public static Boolean SetFiles([NotNull] IEnumerable<String> files)
+        public static Boolean SetFiles(IEnumerable<String>? files)
         {
             if (files is null)
             {
-                throw new ArgumentNullException(nameof(files));
+                return Clear();
             }
 
             return SetFiles(files.ToStringCollection());
         }
         
-        public static Boolean SetFiles([NotNull] StringCollection files)
+        public static Boolean SetFiles(StringCollection? files)
         {
             if (files is null)
             {
-                throw new ArgumentNullException(nameof(files));
+                return Clear();
             }
 
-            Clipboard.SetFileDropList(files);
+            if (ThreadUtils.IsSTA)
+            {
+                Clipboard.SetFileDropList(files);
+                return true;
+            }
+
+            ThreadUtils.STA(Clipboard.SetFileDropList, files);
             return true;
         }
         
-        public static Boolean SetData([NotNull] IDataObject data)
+        public static Boolean SetData(IDataObject? data)
         {
             if (data is null)
             {
-                throw new ArgumentNullException(nameof(data));
+                return Clear();
             }
 
-            Clipboard.SetDataObject(data);
+            if (ThreadUtils.IsSTA)
+            {
+                Clipboard.SetDataObject(data);
+                return true;
+            }
+
+            ThreadUtils.STA(Clipboard.SetDataObject, data);
             return true;
         }
         
-        public static Boolean SetData([NotNull] IDataObject data, Boolean copy)
+        public static Boolean SetData(IDataObject? data, Boolean copy)
         {
             if (data is null)
             {
-                throw new ArgumentNullException(nameof(data));
+                return Clear();
             }
 
-            Clipboard.SetDataObject(data, copy);
+            if (ThreadUtils.IsSTA)
+            {
+                Clipboard.SetDataObject(data, copy);
+                return true;
+            }
+
+            ThreadUtils.STA(Clipboard.SetDataObject, data, copy);
             return true;
         }
         
-        public static Boolean SetData([NotNull] Object data, [NotNull] String format)
+        public static Boolean SetData(Object? data, [NotNull] String format)
         {
             if (data is null)
             {
-                throw new ArgumentNullException(nameof(data));
+                return Clear();
             }
 
             if (format is null)
@@ -316,7 +410,13 @@ namespace NetExtender.Utils.IO
                 throw new ArgumentNullException(nameof(format));
             }
 
-            Clipboard.SetData(format, data);
+            if (ThreadUtils.IsSTA)
+            {
+                Clipboard.SetData(format, data);
+                return true;
+            }
+
+            ThreadUtils.STA(Clipboard.SetData, format, data);
             return true;
         }
         
@@ -676,27 +776,62 @@ namespace NetExtender.Utils.IO
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsCurrent([NotNull] IDataObject data)
+        public static Boolean IsCurrent(IDataObject? data)
         {
-            if (data is null)
+            return data is null ? IsEmpty : ThreadUtils.IsSTA ? Clipboard.IsCurrent(data) : ThreadUtils.STA(Clipboard.IsCurrent, data);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Boolean FlushInternal()
+        {
+            try
             {
-                throw new ArgumentNullException(nameof(data));
+                Clipboard.Flush();
+                return true;
             }
-
-            return Clipboard.IsCurrent(data);
+            catch (Exception)
+            {
+                return false;
+            }
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Flush()
         {
-            Clipboard.Flush();
+            if (ThreadUtils.IsSTA)
+            {
+                FlushInternal();
+                return true;
+            }
+
+            ThreadUtils.STA(FlushInternal);
             return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Boolean ClearInternal()
+        {
+            try
+            {
+                Clipboard.Clear();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Clear()
         {
-            Clipboard.Clear();
+            if (ThreadUtils.IsSTA)
+            {
+                ClearInternal();
+                return true;
+            }
+
+            ThreadUtils.STA(ClearInternal);
             return true;
         }
     }
