@@ -38,17 +38,17 @@ namespace NetExtender.Types.Sets
         {
         }
 
-        public FixedHashSet([NotNull] IEnumerable<T> collection, [CanBeNull] IEqualityComparer<T> comparer)
+        public FixedHashSet([NotNull] IEnumerable<T> collection, IEqualityComparer<T>? comparer)
             : base(collection, comparer)
         {
         }
 
-        public FixedHashSet([CanBeNull] IEqualityComparer<T> comparer)
+        public FixedHashSet(IEqualityComparer<T>? comparer)
             : base(comparer)
         {
         }
 
-        public FixedHashSet(Int32 capacity, [CanBeNull] IEqualityComparer<T> comparer)
+        public FixedHashSet(Int32 capacity, IEqualityComparer<T>? comparer)
             : base(capacity, comparer)
         {
         }

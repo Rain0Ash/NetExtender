@@ -95,7 +95,6 @@ namespace NetExtender.Utils.Network
             };
         }
 
-        [CanBeNull]
         public static String? GetContentType(String extension)
         {
             return extension switch

@@ -7,5 +7,5 @@ using NetExtender.GUI.Common.EventArgs;
 
 namespace NetExtender.GUI.Common
 {
-    public delegate void SizeChangeToggleHandler([CanBeNull] Object? sender, SizeChangeToggleEventArgs args);
+    public delegate void SizeChangeToggleHandler(Object? sender, SizeChangeToggleEventArgs args);
 }

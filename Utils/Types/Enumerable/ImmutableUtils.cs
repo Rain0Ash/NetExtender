@@ -515,7 +515,7 @@ namespace NetExtender.Utils.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ImmutableArray<T> RemoveRange<T>(this ImmutableArray<T> source, [CanBeNull] IEqualityComparer<T>? comparer, [NotNull] params T[] values)
+        public static ImmutableArray<T> RemoveRange<T>(this ImmutableArray<T> source, IEqualityComparer<T>? comparer, [NotNull] params T[] values)
         {
             if (values is null)
             {
@@ -574,7 +574,7 @@ namespace NetExtender.Utils.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IImmutableList<T> RemoveRange<T>([NotNull] this IImmutableList<T> source, [CanBeNull] IEqualityComparer<T>? comparer, [NotNull] params T[] values)
+        public static IImmutableList<T> RemoveRange<T>([NotNull] this IImmutableList<T> source, IEqualityComparer<T>? comparer, [NotNull] params T[] values)
         {
             if (source is null)
             {

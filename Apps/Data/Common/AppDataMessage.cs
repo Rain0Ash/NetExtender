@@ -23,11 +23,11 @@ namespace NetExtender.Apps.Data.Common
 
         public AppBranch Branch { get; }
 
-        public AppDataMessage(Guid guid, String appName, String appShortName, DateTime startedAt, AppVersion version, AppInformation information, AppStatus status, AppBranch branch)
+        public AppDataMessage(Guid guid, String name, String shortname, DateTime startedAt, AppVersion version, AppInformation information, AppStatus status, AppBranch branch)
         {
             Guid = guid;
-            AppName = appName;
-            AppShortName = appShortName;
+            AppName = name;
+            AppShortName = shortname;
             StartedAt = startedAt;
             Version = version;
             Information = information;

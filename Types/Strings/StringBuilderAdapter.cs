@@ -548,7 +548,7 @@ namespace NetExtender.Types.Strings
             return ReferenceEquals(this, obj) || obj is StringBuilderAdapter other && Equals(other);
         }
 
-        public Boolean Equals([CanBeNull] StringBuilder? other)
+        public Boolean Equals(StringBuilder? other)
         {
             return Equals(Builder, other);
         }

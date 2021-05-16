@@ -150,8 +150,7 @@ namespace NetExtender.Configuration
             throw new ArgumentException(@$"Config already contains another property with same path '{path}' and different generic type.", nameof(sections));
         }
 
-        [CanBeNull]
-        public IEnumerable<IReadOnlyConfigPropertyBase> GetProperties()
+        public IEnumerable<IReadOnlyConfigPropertyBase>? GetProperties()
         {
             return ConfigPropertyObserver.GetProperties(this);
         }

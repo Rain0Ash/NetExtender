@@ -19,12 +19,12 @@ namespace NetExtender.Exceptions
         {
         }
 
-        public InvalidHashException([CanBeNull] String? message)
+        public InvalidHashException(String? message)
             : base(message)
         {
         }
 
-        public InvalidHashException([CanBeNull] String? message, [CanBeNull] Exception? innerException)
+        public InvalidHashException(String? message, Exception? innerException)
             : base(message, innerException)
         {
         }

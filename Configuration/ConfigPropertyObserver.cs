@@ -153,8 +153,7 @@ namespace NetExtender.Configuration
             }
         }
         
-        [CanBeNull]
-        public static IEnumerable<IReadOnlyConfigPropertyBase> GetProperties([NotNull] IPropertyConfigBase config)
+        public static IEnumerable<IReadOnlyConfigPropertyBase>? GetProperties([NotNull] IPropertyConfigBase config)
         {
             if (config is null)
             {

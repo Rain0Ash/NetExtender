@@ -14,12 +14,12 @@ namespace NetExtender.Exceptions
         {
         }
 
-        public CloneException([CanBeNull] String? message)
+        public CloneException(String? message)
             : base(message)
         {
         }
 
-        public CloneException([CanBeNull] String? message, [CanBeNull] Exception? innerException)
+        public CloneException(String? message, Exception? innerException)
             : base(message, innerException)
         {
         }

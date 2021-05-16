@@ -77,7 +77,7 @@ namespace NetExtender.Types.Drawing.Colors
             return Math.Abs(X - other.X) < Double.Epsilon && Math.Abs(Y - other.Y) < Double.Epsilon && Math.Abs(Z - other.Z) < Double.Epsilon;
         }
         
-        public Boolean Equals([CanBeNull] IColor? color)
+        public Boolean Equals(IColor? color)
         {
             return color is not null && ToColor(out Color first) && color.ToColor(out Color second) && first.Equals(second);
         }

@@ -85,7 +85,7 @@ namespace NetExtender.Types.Trees
         {
         }
 
-        public DictionaryTree([NotNull] IDictionary<TKey, IDictionaryTreeNode<TKey, TValue>> dictionary, [CanBeNull] IEqualityComparer<TKey> comparer)
+        public DictionaryTree([NotNull] IDictionary<TKey, IDictionaryTreeNode<TKey, TValue>> dictionary, IEqualityComparer<TKey>? comparer)
             : base(dictionary, comparer)
         {
         }

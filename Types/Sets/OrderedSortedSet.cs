@@ -65,7 +65,7 @@ namespace NetExtender.Types.Sets
             Set = new FixedSortedSet<T>((IComparer<T>) Inner);
         }
         
-        public OrderedSortedSet([CanBeNull] IComparer<T>? comparer)
+        public OrderedSortedSet(IComparer<T>? comparer)
         {
             Inner = new OrderedComparer<T>(comparer);
             Set = new FixedSortedSet<T>((IComparer<T>) Inner);
@@ -86,7 +86,7 @@ namespace NetExtender.Types.Sets
         }
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public OrderedSortedSet([NotNull] IEnumerable<T> source, [CanBeNull] IComparer<T>? comparer)
+        public OrderedSortedSet([NotNull] IEnumerable<T> source, IComparer<T>? comparer)
         {
             if (source is null)
             {
@@ -137,12 +137,12 @@ namespace NetExtender.Types.Sets
             return true;
         }
 
-        public Boolean Insert([CanBeNull] T item)
+        public Boolean Insert(T? item)
         {
             return Insert(0, item);
         }
 
-        public Boolean Insert(Int32 index, [CanBeNull] T item)
+        public Boolean Insert(Int32 index, T? item)
         {
             if (index < 0 || index >= Count)
             {

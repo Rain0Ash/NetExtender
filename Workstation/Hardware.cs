@@ -29,11 +29,11 @@ namespace NetExtender.Workstation
         /// </summary>
         /// <returns></returns>
         /// 
-        public static String GetProcessorID()
+        public static String? GetProcessorID()
         {
             ManagementClass mc = new ManagementClass("win32_processor");
             ManagementObjectCollection moc = mc.GetInstances();
-            String id = String.Empty;
+            String? id = String.Empty;
             foreach (ManagementBaseObject o in moc)
             {
                 ManagementObject mo = (ManagementObject) o;
@@ -523,7 +523,7 @@ namespace NetExtender.Workstation
             return "BIOS Maker: Unknown";
         }
 
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         private static extern Boolean EnumDisplaySettings(String lpszDeviceName, Int32 iModeNum, ref DEVMODE lpDevMode);
 
         private const Int32 EnumCurrentSettings = -1;

@@ -14,22 +14,22 @@ namespace NetExtender.Exceptions.Enum
         {
         }
 
-        public NotFlagsEnumTypeException([CanBeNull] String? message)
+        public NotFlagsEnumTypeException(String? message)
             : base(message)
         {
         }
 
-        public NotFlagsEnumTypeException([CanBeNull] String? message, [CanBeNull] Exception? innerException)
+        public NotFlagsEnumTypeException(String? message, Exception? innerException)
             : base(message, innerException)
         {
         }
 
-        public NotFlagsEnumTypeException([CanBeNull] String? message, [CanBeNull] String? paramName)
+        public NotFlagsEnumTypeException(String? message, String? paramName)
             : base(message, paramName)
         {
         }
 
-        public NotFlagsEnumTypeException([CanBeNull] String? message, [CanBeNull] String? paramName, [CanBeNull] Exception? innerException)
+        public NotFlagsEnumTypeException(String? message, String? paramName, Exception? innerException)
             : base(message, paramName, innerException)
         {
         }

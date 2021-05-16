@@ -107,7 +107,7 @@ namespace NetExtender.Utils.Formats
             return ToXml(json, null);
         }
 
-        public static String ToXml([NotNull] String json, [CanBeNull] String root)
+        public static String ToXml([NotNull] String json, String? root)
         {
             if (json is null)
             {

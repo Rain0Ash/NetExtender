@@ -89,12 +89,12 @@ namespace NetExtender.Comparers
             Order.AddRange(items);
         }
         
-        public void Insert(Int32 index, T item)
+        public void Insert(Int32 index, T? item)
         {
             Order.Insert(index, item);
         }
 
-        public void InsertRange(Int32 index, [NotNull] IEnumerable<T> items)
+        public void InsertRange(Int32 index, [NotNull] IEnumerable<T?> items)
         {
             if (items is null)
             {

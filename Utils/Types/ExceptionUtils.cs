@@ -38,15 +38,14 @@ namespace NetExtender.Utils.Types
         /// <param name="writer"><see cref="TextWriter"/> instance.</param>
         /// <param name="fromNewLine">If <c>true</c> - do not inject separator line from start.</param>
         /// <returns>Detailed exception text.</returns>
-        public static void ToDiagnosticString([CanBeNull] this Exception exception, [NotNull] TextWriter writer, Boolean fromNewLine = true)
+        public static void ToDiagnosticString(this Exception? exception, [NotNull] TextWriter writer, Boolean fromNewLine = true)
         {
             if (writer is null)
             {
                 throw new ArgumentNullException(nameof(writer));
             }
 
-            // ReSharper disable once PossibleNullReferenceException
-            for (Exception ex = exception; ex is not null; ex = ex.InnerException)
+            for (Exception? ex = exception; ex is not null; ex = ex?.InnerException)
             {
                 String exceptionText = $"Exception: {ex.GetType()}";
 

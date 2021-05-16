@@ -247,13 +247,13 @@ namespace NetExtender.Utils.GUI
         }
 
         //TODO: добавить установку, проверку и удаление пунктов меню
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [DllImport("user32.dll", SetLastError = true)]
         private static extern IntPtr GetSystemMenu(IntPtr hWnd, Boolean bRevert);
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern Boolean AppendMenu(IntPtr hMenu, Int32 uFlags, Int32 uIDNewItem, String lpNewItem);
 
-        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
         private static extern Boolean InsertMenu(IntPtr hMenu, Int32 uPosition, Int32 uFlags, Int32 uIDNewItem, String lpNewItem);
 
         [DllImport("user32.dll", SetLastError = true)]

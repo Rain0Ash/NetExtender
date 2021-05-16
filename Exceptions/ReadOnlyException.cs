@@ -14,12 +14,12 @@ namespace NetExtender.Exceptions
         {
         }
 
-        public ReadOnlyException([CanBeNull] String? message)
+        public ReadOnlyException(String? message)
             : base(message)
         {
         }
 
-        public ReadOnlyException([CanBeNull] String? message, [CanBeNull] Exception? innerException)
+        public ReadOnlyException(String? message, Exception? innerException)
             : base(message, innerException)
         {
         }

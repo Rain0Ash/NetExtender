@@ -16,7 +16,7 @@ namespace NetExtender.Types.Sets
         {
         }
 
-        public FixedSortedSet([CanBeNull] IComparer<T>? comparer)
+        public FixedSortedSet(IComparer<T>? comparer)
             : base(comparer)
         {
         }
@@ -26,7 +26,7 @@ namespace NetExtender.Types.Sets
         {
         }
 
-        public FixedSortedSet([NotNull] IEnumerable<T> collection, [CanBeNull] IComparer<T>? comparer)
+        public FixedSortedSet([NotNull] IEnumerable<T> collection, IComparer<T>? comparer)
             : base(collection, comparer)
         {
         }

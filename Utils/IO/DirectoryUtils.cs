@@ -159,7 +159,7 @@ namespace NetExtender.Utils.IO
             return GetFiles(included, excluded, new Regex(pattern));
         }
 
-        public static IEnumerable<String> GetFiles([NotNull] IEnumerable<FSWatcher> included, [CanBeNull] IEnumerable<FSWatcher> excluded, [NotNull] Regex regex)
+        public static IEnumerable<String> GetFiles([NotNull] IEnumerable<FSWatcher> included, IEnumerable<FSWatcher>? excluded, [NotNull] Regex regex)
         {
             if (included is null)
             {

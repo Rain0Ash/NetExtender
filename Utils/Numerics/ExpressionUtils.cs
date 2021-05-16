@@ -51,8 +51,8 @@ namespace NetExtender.Utils.Numerics
                         throw;
                     }
 
-                    Expression castLhs = typeof(T1) == typeof(TResult) ? lhs : (Expression) Expression.Convert(lhs, typeof(TResult));
-                    Expression castRhs = typeof(T2) == typeof(TResult) ? rhs : (Expression) Expression.Convert(rhs, typeof(TResult));
+                    Expression castLhs = typeof(T1) == typeof(TResult) ? lhs : Expression.Convert(lhs, typeof(TResult));
+                    Expression castRhs = typeof(T2) == typeof(TResult) ? rhs : Expression.Convert(rhs, typeof(TResult));
 
                     return Expression.Lambda<Func<T1, T2, TResult>>(
                         body(castLhs, castRhs), lhs, rhs).Compile();

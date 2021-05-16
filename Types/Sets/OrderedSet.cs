@@ -54,7 +54,7 @@
         {
         }
 
-        public OrderedSet([CanBeNull] IEqualityComparer<T>? comparer)
+        public OrderedSet(IEqualityComparer<T>? comparer)
         {
             NodeDictionary = new Dictionary<T, LinkedListNode<T>>(comparer);
             LinkedList = new LinkedList<T>();
@@ -65,7 +65,7 @@
         {
         }
 
-        public OrderedSet([NotNull] IEnumerable<T> collection, [CanBeNull] IEqualityComparer<T>? comparer)
+        public OrderedSet([NotNull] IEnumerable<T> collection, IEqualityComparer<T>? comparer)
         {
             if (collection is null)
             {
@@ -98,12 +98,12 @@
             return true;
         }
         
-        public Boolean Insert([CanBeNull] T item)
+        public Boolean Insert(T? item)
         {
             return Insert(0, item);
         }
         
-        public Boolean Insert(Int32 index, [CanBeNull] T item)
+        public Boolean Insert(Int32 index, T? item)
         {
             if (index < 0 || index >= Count)
             {

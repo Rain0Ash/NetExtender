@@ -23,7 +23,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Contains([CanBeNull] this Delegate @delegate, Delegate value)
+        public static Boolean Contains(this Delegate? @delegate, Delegate value)
         {
             return @delegate is not null && Has(@delegate, value);
         }

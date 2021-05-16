@@ -9,6 +9,6 @@ namespace NetExtender.Types.Strings.Interfaces
     public interface IContainerFormatString : IFormatString
     {
         public String Format();
-        public String Format([CanBeNull] IFormatProvider? provider);
+        public String Format(IFormatProvider? provider);
     }
 }

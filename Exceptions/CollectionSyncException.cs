@@ -14,12 +14,12 @@ namespace NetExtender.Exceptions
         {
         }
 
-        public CollectionSyncException([CanBeNull] String? message)
+        public CollectionSyncException(String? message)
             : base(message)
         {
         }
 
-        public CollectionSyncException([CanBeNull] String? message, [CanBeNull] Exception? innerException)
+        public CollectionSyncException(String? message, Exception? innerException)
             : base(message, innerException)
         {
         }

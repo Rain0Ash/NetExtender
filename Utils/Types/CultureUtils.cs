@@ -340,12 +340,12 @@ namespace NetExtender.Utils.Types
             return SetUILanguage(info.LCID);
         }
 
-        public static Boolean IsCultureEquals(this CultureLCID lcid, [CanBeNull] CultureInfo info)
+        public static Boolean IsCultureEquals(this CultureLCID lcid, CultureInfo? info)
         {
             return IsCultureEquals(info, lcid);
         }
 
-        public static Boolean IsCultureEquals([CanBeNull] this CultureInfo info, CultureLCID lcid)
+        public static Boolean IsCultureEquals(this CultureInfo? info, CultureLCID lcid)
         {
             if (info is null)
             {
@@ -356,7 +356,7 @@ namespace NetExtender.Utils.Types
             return info.LCID == second.LCID && info.Name == second.Name;
         }
 
-        public static Boolean IsCultureEquals([CanBeNull] this CultureInfo first, [CanBeNull] CultureInfo second)
+        public static Boolean IsCultureEquals(this CultureInfo? first, CultureInfo? second)
         {
             if (first is null)
             {

@@ -55,7 +55,7 @@ namespace NetExtender.Utils.Types
         /// <exception cref="ArgumentNullException"><paramref name="data"/> is null.</exception>
         [NotNull]
         [Pure]
-        public static unsafe String ToHexString(this ReadOnlySpan<Byte> data, [CanBeNull] String separator)
+        public static unsafe String ToHexString(this ReadOnlySpan<Byte> data, String? separator)
         {
             if (data.Length <= 0)
             {

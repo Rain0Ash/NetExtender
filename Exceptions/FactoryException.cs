@@ -14,22 +14,22 @@ namespace NetExtender.Exceptions
         {
         }
 
-        public FactoryException([CanBeNull] String? message)
+        public FactoryException(String? message)
             : base(message)
         {
         }
 
-        public FactoryException([CanBeNull] String? message, [CanBeNull] Exception? innerException)
+        public FactoryException(String? message, Exception? innerException)
             : base(message, innerException)
         {
         }
 
-        public FactoryException([CanBeNull] String? message, [CanBeNull] String? paramName)
+        public FactoryException(String? message, String? paramName)
             : base(message, paramName)
         {
         }
 
-        public FactoryException([CanBeNull] String? message, [CanBeNull] String? paramName, [CanBeNull] Exception? innerException)
+        public FactoryException(String? message, String? paramName, Exception? innerException)
             : base(message, paramName, innerException)
         {
         }

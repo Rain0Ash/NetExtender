@@ -79,7 +79,7 @@ namespace NetExtender.Utils.Threading
                 throw new ArgumentNullException(nameof(action));
             }
 
-            Create(action.Invoke, ApartmentState.STA);
+            Create(action, ApartmentState.STA);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -300,7 +300,7 @@ namespace NetExtender.Utils.Threading
 
             Exception? exception = null;
             TResult? result = default;
-            Thread thread = new Thread(() => SafeInvoke(() => result = function.Invoke()));
+            Thread thread = new Thread(() => exception = SafeInvoke(() => result = function.Invoke()));
             thread.SetApartmentState(state);
             thread.Start();
             thread.Join();
@@ -321,7 +321,7 @@ namespace NetExtender.Utils.Threading
                 throw new ArgumentNullException(nameof(function));
             }
 
-            return Create(function.Invoke, ApartmentState.STA);
+            return Create(function, ApartmentState.STA);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -11,6 +11,6 @@ namespace NetExtender.Types.Strings.Interfaces
         public Int32 Arguments { get; }
         
         public String Format(params Object[] format);
-        public String Format([CanBeNull] IFormatProvider? provider, params Object[] format);
+        public String Format(IFormatProvider? provider, params Object[] format);
     }
 }

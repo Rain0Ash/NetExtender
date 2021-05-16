@@ -218,7 +218,7 @@ namespace NetExtender.Utils.Types
         /// <param name="frame">Time frame to use</param>
         /// <param name="info">Culture to use for calculating (defaults to the current culture)</param>
         /// <returns>The beginning of a specific time frame</returns>
-        public static DateTime BeginningOf(this DateTime date, TimeFrame frame, CultureInfo info = null)
+        public static DateTime BeginningOf(this DateTime date, TimeFrame frame, CultureInfo? info = null)
         {
             info ??= CultureInfo.CurrentCulture;
             return frame switch
@@ -227,7 +227,7 @@ namespace NetExtender.Utils.Types
                 TimeFrame.Week => date.AddDays(info.DateTimeFormat.FirstDayOfWeek - date.DayOfWeek).Date,
                 TimeFrame.Month => new DateTime(date.Year, date.Month, 1),
                 TimeFrame.Quarter => date.BeginningOf(TimeFrame.Quarter, date.BeginningOf(TimeFrame.Year, info), info),
-                _ => new DateTime(date.Year, 1, 1),
+                _ => new DateTime(date.Year, 1, 1)
             };
         }
 
@@ -239,7 +239,7 @@ namespace NetExtender.Utils.Types
         /// <param name="start">Start of the first quarter</param>
         /// <param name="info">Culture to use for calculating (defaults to the current culture)</param>
         /// <returns>The beginning of a specific time frame</returns>
-        public static DateTime BeginningOf(this DateTime date, TimeFrame frame, DateTime start, CultureInfo info = null)
+        public static DateTime BeginningOf(this DateTime date, TimeFrame frame, DateTime start, CultureInfo? info = null)
         {
             if (frame != TimeFrame.Quarter)
             {
@@ -272,7 +272,7 @@ namespace NetExtender.Utils.Types
         /// <param name="frame">Time frame to calculate the number of days from</param>
         /// <param name="info">Culture to use for calculating (defaults to the current culture)</param>
         /// <returns>The number of days in the time frame</returns>
-        public static Int32 DaysIn(this DateTime date, TimeFrame frame, CultureInfo info = null)
+        public static Int32 DaysIn(this DateTime date, TimeFrame frame, CultureInfo? info = null)
         {
             info ??= CultureInfo.CurrentCulture;
             return frame switch
@@ -281,7 +281,7 @@ namespace NetExtender.Utils.Types
                 TimeFrame.Week => 7,
                 TimeFrame.Month => info.Calendar.GetDaysInMonth(date.Year, date.Month),
                 TimeFrame.Quarter => date.EndOf(TimeFrame.Quarter, info).DayOfYear - date.BeginningOf(TimeFrame.Quarter, info).DayOfYear,
-                _ => info.Calendar.GetDaysInYear(date.Year),
+                _ => info.Calendar.GetDaysInYear(date.Year)
             };
         }
 
@@ -293,7 +293,7 @@ namespace NetExtender.Utils.Types
         /// <param name="startOfQuarter1">Start of the first quarter</param>
         /// <param name="info">Culture to use for calculating (defaults to the current culture)</param>
         /// <returns>The number of days in the time frame</returns>
-        public static Int32 DaysIn(this DateTime date, TimeFrame frame, DateTime startOfQuarter1, CultureInfo info = null)
+        public static Int32 DaysIn(this DateTime date, TimeFrame frame, DateTime startOfQuarter1, CultureInfo? info = null)
         {
             if (frame != TimeFrame.Quarter)
             {
@@ -311,7 +311,7 @@ namespace NetExtender.Utils.Types
         /// <param name="frame">Time frame to calculate the number of days left</param>
         /// <param name="info">Culture to use for calculating (defaults to the current culture)</param>
         /// <returns>The number of days left in the time frame</returns>
-        public static Int32 DaysLeftIn(this DateTime date, TimeFrame frame, CultureInfo info = null)
+        public static Int32 DaysLeftIn(this DateTime date, TimeFrame frame, CultureInfo? info = null)
         {
             info ??= CultureInfo.CurrentCulture;
             return frame switch
@@ -320,7 +320,7 @@ namespace NetExtender.Utils.Types
                 TimeFrame.Week => 7 - ((Int32) date.DayOfWeek + 1),
                 TimeFrame.Month => date.DaysIn(TimeFrame.Month, info) - date.Day,
                 TimeFrame.Quarter => date.DaysIn(TimeFrame.Quarter, info) - (date.DayOfYear - date.BeginningOf(TimeFrame.Quarter, info).DayOfYear),
-                _ => date.DaysIn(TimeFrame.Year, info) - date.DayOfYear,
+                _ => date.DaysIn(TimeFrame.Year, info) - date.DayOfYear
             };
         }
 
@@ -332,7 +332,7 @@ namespace NetExtender.Utils.Types
         /// <param name="start">Start of the first quarter</param>
         /// <param name="info">Culture to use for calculating (defaults to the current culture)</param>
         /// <returns>The number of days left in the time frame</returns>
-        public static Int32 DaysLeftIn(this DateTime date, TimeFrame frame, DateTime start, CultureInfo info = null)
+        public static Int32 DaysLeftIn(this DateTime date, TimeFrame frame, DateTime start, CultureInfo? info = null)
         {
             if (frame != TimeFrame.Quarter)
             {
@@ -353,7 +353,7 @@ namespace NetExtender.Utils.Types
         /// The end of a specific time frame (TimeFrame.Day is the only one that sets the time to
         /// 12: 59:59 PM, all else are the beginning of the day)
         /// </returns>
-        public static DateTime EndOf(this DateTime date, TimeFrame frame, CultureInfo info = null)
+        public static DateTime EndOf(this DateTime date, TimeFrame frame, CultureInfo? info = null)
         {
             info ??= CultureInfo.CurrentCulture;
             return frame switch
@@ -362,7 +362,7 @@ namespace NetExtender.Utils.Types
                 TimeFrame.Week => date.BeginningOf(TimeFrame.Week, info).AddDays(6),
                 TimeFrame.Month => date.AddMonths(1).BeginningOf(TimeFrame.Month, info).AddDays(-1).Date,
                 TimeFrame.Quarter => date.EndOf(TimeFrame.Quarter, date.BeginningOf(TimeFrame.Year, info), info),
-                _ => new DateTime(date.Year, 12, 31),
+                _ => new DateTime(date.Year, 12, 31)
             };
         }
 
@@ -377,7 +377,7 @@ namespace NetExtender.Utils.Types
         /// The end of a specific time frame (TimeFrame.Day is the only one that sets the time to
         /// 12: 59:59 PM, all else are the beginning of the day)
         /// </returns>
-        public static DateTime EndOf(this DateTime date, TimeFrame frame, DateTime start, CultureInfo info = null)
+        public static DateTime EndOf(this DateTime date, TimeFrame frame, DateTime start, CultureInfo? info = null)
         {
             if (frame != TimeFrame.Quarter)
             {

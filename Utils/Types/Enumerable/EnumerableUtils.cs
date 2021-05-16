@@ -253,17 +253,17 @@ namespace NetExtender.Utils.Types
             return -1;
         }
 
-        public static IEnumerable<T> Append<T>([CanBeNull] this IEnumerable<T> source, [CanBeNull] IEnumerable<T> additional)
+        public static IEnumerable<T> Append<T>(this IEnumerable<T>? source, IEnumerable<T>? additional)
         {
             return source.Concat(additional);
         }
 
-        public static IEnumerable<T> Append<T>([CanBeNull] this IEnumerable<T> source, [CanBeNull] params IEnumerable<T>[] additionals)
+        public static IEnumerable<T> Append<T>(this IEnumerable<T>? source, params IEnumerable<T>[]? additionals)
         {
             return source.Concat(additionals);
         }
 
-        public static IEnumerable<T> Append<T>([CanBeNull] this IEnumerable<T> source, T value, [CanBeNull] params T[] values)
+        public static IEnumerable<T> Append<T>(this IEnumerable<T>? source, T value, params T[]? values)
         {
             if (source is not null)
             {
@@ -286,17 +286,17 @@ namespace NetExtender.Utils.Types
             }
         }
 
-        public static IEnumerable<T> Prepend<T>([CanBeNull] this IEnumerable<T> source, [CanBeNull] IEnumerable<T> additional)
+        public static IEnumerable<T> Prepend<T>(this IEnumerable<T>? source, IEnumerable<T>? additional)
         {
             return source.Preconcat(additional);
         }
 
-        public static IEnumerable<T> Prepend<T>([CanBeNull] this IEnumerable<T> source, [CanBeNull] params IEnumerable<T>[] additionals)
+        public static IEnumerable<T> Prepend<T>(this IEnumerable<T>? source, params IEnumerable<T>[]? additionals)
         {
             return source.Preconcat(additionals);
         }
 
-        public static IEnumerable<T> Prepend<T>([CanBeNull] this IEnumerable<T> source, T value, [CanBeNull] params T[] values)
+        public static IEnumerable<T> Prepend<T>(this IEnumerable<T>? source, T value, params T[]? values)
         {
             yield return value;
 
@@ -390,11 +390,11 @@ namespace NetExtender.Utils.Types
             }
         }
 
-        public static IEnumerable<T> Preconcat<T>([CanBeNull] this IEnumerable<T> source, [CanBeNull] params IEnumerable<T>[] additionals)
+        public static IEnumerable<T> Preconcat<T>(this IEnumerable<T>? source, params IEnumerable<T>?[]? additionals)
         {
             if (additionals is not null)
             {
-                foreach (IEnumerable<T> next in additionals)
+                foreach (IEnumerable<T>? next in additionals)
                 {
                     if (next is null)
                     {

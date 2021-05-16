@@ -52,67 +52,67 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNull(this StringBuilder builder)
+        public static Boolean IsNull(this StringBuilder? builder)
         {
             return builder is null;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNotNull(this StringBuilder builder)
+        public static Boolean IsNotNull(this StringBuilder? builder)
         {
             return builder is not null;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsEmpty(this StringBuilder builder)
+        public static Boolean IsEmpty(this StringBuilder? builder)
         {
             return builder is not null && builder.Length <= 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNotEmpty(this StringBuilder builder)
+        public static Boolean IsNotEmpty(this StringBuilder? builder)
         {
             return !IsEmpty(builder);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNullOrEmpty(this StringBuilder builder)
+        public static Boolean IsNullOrEmpty(this StringBuilder? builder)
         {
             return builder is null || builder.Length <= 0;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNotNullOrEmpty(this StringBuilder builder)
+        public static Boolean IsNotNullOrEmpty(this StringBuilder? builder)
         {
             return !IsNullOrEmpty(builder);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsWhiteSpace(this StringBuilder builder)
+        public static Boolean IsWhiteSpace(this StringBuilder? builder)
         {
             return builder is not null && builder.Length > 0 && builder.AsEnumerable().All(Char.IsWhiteSpace);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNotWhiteSpace(this StringBuilder builder)
+        public static Boolean IsNotWhiteSpace(this StringBuilder? builder)
         {
             return !IsWhiteSpace(builder);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsEmptyOrWhiteSpace(this StringBuilder builder)
+        public static Boolean IsEmptyOrWhiteSpace(this StringBuilder? builder)
         {
             return builder is not null && (builder.Length <= 0 || builder.AsEnumerable().All(Char.IsWhiteSpace));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNullOrWhiteSpace(this StringBuilder builder)
+        public static Boolean IsNullOrWhiteSpace(this StringBuilder? builder)
         {
             return builder is null || IsEmptyOrWhiteSpace(builder);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNotNullOrWhiteSpace(this StringBuilder builder)
+        public static Boolean IsNotNullOrWhiteSpace(this StringBuilder? builder)
         {
             return !IsNullOrWhiteSpace(builder);
         }
@@ -1140,7 +1140,7 @@ namespace NetExtender.Utils.Types
             return ToCapitalizeFirstCharLower(builder, null);
         }
         
-        public static StringBuilder ToCapitalizeFirstCharLower([NotNull] this StringBuilder builder, CultureInfo info)
+        public static StringBuilder ToCapitalizeFirstCharLower([NotNull] this StringBuilder builder, CultureInfo? info)
         {
             if (builder is null)
             {
@@ -1155,7 +1155,7 @@ namespace NetExtender.Utils.Types
             return ToTitleCase(builder, null);
         }
         
-        public static StringBuilder ToTitleCase([NotNull] this StringBuilder builder, CultureInfo info)
+        public static StringBuilder ToTitleCase([NotNull] this StringBuilder builder, CultureInfo? info)
         {
             if (builder is null)
             {
@@ -1176,7 +1176,7 @@ namespace NetExtender.Utils.Types
             return ToTitleCaseLower(builder, null);
         }
 
-        public static StringBuilder ToTitleCaseLower([NotNull] this StringBuilder builder, CultureInfo info)
+        public static StringBuilder ToTitleCaseLower([NotNull] this StringBuilder builder, CultureInfo? info)
         {
             if (builder is null)
             {

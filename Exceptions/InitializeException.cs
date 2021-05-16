@@ -14,22 +14,22 @@ namespace NetExtender.Exceptions
         {
         }
 
-        public AlreadyInitializedException([CanBeNull] String? message)
+        public AlreadyInitializedException(String? message)
             : base(message)
         {
         }
 
-        public AlreadyInitializedException([CanBeNull] String? message, [CanBeNull] Exception? innerException)
+        public AlreadyInitializedException(String? message, Exception? innerException)
             : base(message, innerException)
         {
         }
 
-        public AlreadyInitializedException([CanBeNull] String? message, [CanBeNull] String? paramName)
+        public AlreadyInitializedException(String? message, String? paramName)
             : base(message, paramName)
         {
         }
 
-        public AlreadyInitializedException([CanBeNull] String? message, [CanBeNull] String? paramName, [CanBeNull] Exception? innerException)
+        public AlreadyInitializedException(String? message, String? paramName, Exception? innerException)
             : base(message, paramName, innerException)
         {
         }
@@ -47,22 +47,22 @@ namespace NetExtender.Exceptions
         {
         }
 
-        public NotInitializedException([CanBeNull] String? message)
+        public NotInitializedException(String? message)
             : base(message)
         {
         }
 
-        public NotInitializedException([CanBeNull] String? message, [CanBeNull] Exception? innerException)
+        public NotInitializedException(String? message, Exception? innerException)
             : base(message, innerException)
         {
         }
 
-        public NotInitializedException([CanBeNull] String? message, [CanBeNull] String? paramName)
+        public NotInitializedException(String? message, String? paramName)
             : base(message, paramName)
         {
         }
 
-        public NotInitializedException([CanBeNull] String? message, [CanBeNull] String? paramName, [CanBeNull] Exception? innerException)
+        public NotInitializedException(String? message, String? paramName, Exception? innerException)
             : base(message, paramName, innerException)
         {
         }
@@ -80,22 +80,22 @@ namespace NetExtender.Exceptions
         {
         }
 
-        public InitializeException([CanBeNull] String? message)
+        public InitializeException(String? message)
             : base(message)
         {
         }
 
-        public InitializeException([CanBeNull] String? message, [CanBeNull] Exception? innerException)
+        public InitializeException(String? message, Exception? innerException)
             : base(message, innerException)
         {
         }
 
-        public InitializeException([CanBeNull] String? message, [CanBeNull] String? paramName)
+        public InitializeException(String? message, String? paramName)
             : base(message, paramName)
         {
         }
 
-        public InitializeException([CanBeNull] String? message, [CanBeNull] String? paramName, [CanBeNull] Exception? innerException)
+        public InitializeException(String? message, String? paramName, Exception? innerException)
             : base(message, paramName, innerException)
         {
         }

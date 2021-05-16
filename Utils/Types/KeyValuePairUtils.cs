@@ -251,7 +251,7 @@ namespace NetExtender.Utils.Types
             return DistinctByKey(source, EqualityComparer<TKey>.Default);
         }
         
-        public static IEnumerable<KeyValuePair<TKey, TValue>> DistinctByKey<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [CanBeNull] IEqualityComparer<TKey>? comparer)
+        public static IEnumerable<KeyValuePair<TKey, TValue>> DistinctByKey<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? comparer)
         {
             if (source is null)
             {
@@ -271,7 +271,7 @@ namespace NetExtender.Utils.Types
             return DistinctByValue(source, EqualityComparer<TValue>.Default);
         }
         
-        public static IEnumerable<KeyValuePair<TKey, TValue>> DistinctByValue<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, [CanBeNull] IEqualityComparer<TValue>? comparer)
+        public static IEnumerable<KeyValuePair<TKey, TValue>> DistinctByValue<TKey, TValue>([NotNull] this IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TValue>? comparer)
         {
             if (source is null)
             {

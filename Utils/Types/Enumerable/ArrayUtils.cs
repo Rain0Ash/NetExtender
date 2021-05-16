@@ -1061,7 +1061,7 @@ namespace NetExtender.Utils.Types
         /// <param name="second">The second array to compare.</param>
         /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
         [Pure]
-        public static unsafe Boolean EqualsTo([CanBeNull] this Char[] first, [CanBeNull] Char[] second)
+        public static unsafe Boolean EqualsTo(this Char[]? first, Char[]? second)
         {
             if (first == second)
             {
@@ -1101,7 +1101,7 @@ namespace NetExtender.Utils.Types
         /// <param name="second">The second array to compare.</param>
         /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
         [Pure]
-        public static unsafe Boolean EqualsTo([CanBeNull] this SByte[] first, [CanBeNull] SByte[] second)
+        public static unsafe Boolean EqualsTo(this SByte[]? first, SByte[]? second)
         {
             if (first == second)
             {
@@ -1221,7 +1221,7 @@ namespace NetExtender.Utils.Types
         /// <param name="second">The second array to compare.</param>
         /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
         [Pure]
-        public static unsafe Boolean EqualsTo([CanBeNull] this UInt16[] first, [CanBeNull] UInt16[] second)
+        public static unsafe Boolean EqualsTo(this UInt16[]? first, UInt16[]? second)
         {
             if (first == second)
             {

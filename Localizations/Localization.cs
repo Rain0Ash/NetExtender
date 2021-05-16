@@ -21,6 +21,8 @@ namespace NetExtender.Localizations
 
     public static partial class Localization
     {
+        //TODO: проверить локализацию через файлы. Добавить авточтение локализаций
+        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         private static class CurrentLocalization
         {
@@ -334,7 +336,7 @@ namespace NetExtender.Localizations
             return Current.Update(lcid);
         }
 
-        public static Boolean Update([CanBeNull] CultureInfo info)
+        public static Boolean Update(CultureInfo? info)
         {
             return Current.Update(info);
         }

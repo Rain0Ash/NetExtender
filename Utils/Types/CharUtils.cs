@@ -27,7 +27,7 @@ namespace NetExtender.Utils.Types
         /// <inheritdoc cref="Char.ToLower(Char,CultureInfo)"/>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Char ToLower(this Char character, [CanBeNull] CultureInfo info)
+        public static Char ToLower(this Char character, CultureInfo? info)
         {
             return info is null ? ToLower(character) : Char.ToLower(character, info);
         }
@@ -51,7 +51,7 @@ namespace NetExtender.Utils.Types
         /// <inheritdoc cref="Char.ToUpper(Char,CultureInfo)"/>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Char ToUpper(this Char character, [CanBeNull] CultureInfo info)
+        public static Char ToUpper(this Char character, CultureInfo? info)
         {
             return info is null ? ToUpper(character) : Char.ToUpper(character, info);
         }

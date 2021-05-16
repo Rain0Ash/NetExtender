@@ -136,7 +136,7 @@ namespace NetExtender.Utils.IO
             };
         }
 
-        public static String? ChangeExtension([NotNull] String path, [CanBeNull] String? extension)
+        public static String? ChangeExtension([NotNull] String path, String? extension)
         {
             if (path is null)
             {
@@ -651,12 +651,12 @@ namespace NetExtender.Utils.IO
             return files.Length > 0 && OpenExplorerWithSelection((IEnumerable<FileInfo>) files);
         }
 
-        public static Boolean OpenExplorerWithSelection([NotNull] String directory, [CanBeNull] String filename)
+        public static Boolean OpenExplorerWithSelection([NotNull] String directory, String? filename)
         {
             return OpenExplorerWithSelection(directory, filename, StringComparison.OrdinalIgnoreCase);
         }
 
-        public static Boolean OpenExplorerWithSelection([NotNull] String directory, [CanBeNull] String filename, StringComparison comparison)
+        public static Boolean OpenExplorerWithSelection([NotNull] String directory, String? filename, StringComparison comparison)
         {
             return OpenExplorerWithSelection(directory, EnumerableUtils.GetEnumerableFrom(filename), comparison);
         }
@@ -701,17 +701,17 @@ namespace NetExtender.Utils.IO
             return OpenExplorerWithSelection(directory, StringComparison.OrdinalIgnoreCase, files);
         }
 
-        public static Boolean OpenExplorerWithSelection([NotNull] String directory, StringComparison comparison, [CanBeNull] params String[] files)
+        public static Boolean OpenExplorerWithSelection([NotNull] String directory, StringComparison comparison, params String[]? files)
         {
             return OpenExplorerWithSelection(directory, files, comparison);
         }
 
-        public static Boolean OpenExplorerWithSelection([NotNull] String directory, [CanBeNull] IEnumerable<String> files)
+        public static Boolean OpenExplorerWithSelection([NotNull] String directory, IEnumerable<String>? files)
         {
             return OpenExplorerWithSelection(directory, files, StringComparison.OrdinalIgnoreCase);
         }
 
-        public static Boolean OpenExplorerWithSelection([NotNull] String directory, [CanBeNull] IEnumerable<String> files, StringComparison comparison)
+        public static Boolean OpenExplorerWithSelection([NotNull] String directory, IEnumerable<String>? files, StringComparison comparison)
         {
             if (directory is null)
             {
@@ -1275,7 +1275,6 @@ namespace NetExtender.Utils.IO
             return null;
         }
 
-        [CanBeNull]
         public static Exception? GetLastIOException(String path)
         {
             Int32 code = Marshal.GetLastWin32Error();

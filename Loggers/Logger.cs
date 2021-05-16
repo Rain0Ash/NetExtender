@@ -13,6 +13,8 @@ namespace NetExtender.Loggers
 {
     public class Logger : ILogger
     {
+        
+        //TODO: добавить систему логгирования при помощи IConfig и ILoggerBehaviour
         public static Logger Default { get; } = new Logger();
         
         public event TypeHandler<LogMessage> Logged;

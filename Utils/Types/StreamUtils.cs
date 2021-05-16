@@ -428,7 +428,7 @@ namespace NetExtender.Utils.Types
         /// <param name="encoding">The character encoding to use.</param>
         /// <param name="leaveOpen">true to leave the stream open after the <see cref="BinaryReader" /> object is disposed; otherwise, false.</param>
         [NotNull]
-        public static BinaryReader ToBinaryReader([NotNull] this Stream stream, [CanBeNull] Encoding encoding = null, Boolean leaveOpen = false)
+        public static BinaryReader ToBinaryReader([NotNull] this Stream stream, Encoding encoding = null, Boolean leaveOpen = false)
         {
             if (stream is null)
             {
@@ -445,7 +445,7 @@ namespace NetExtender.Utils.Types
         /// <param name="encoding">The character encoding to use.</param>
         /// <param name="leaveOpen">true to leave the stream open after the <see cref="StreamWriter" /> object is disposed; otherwise, false.</param>
         [NotNull]
-        public static StreamWriter ToStreamWriter([NotNull] this Stream stream, [CanBeNull] Encoding encoding = null, Boolean leaveOpen = false)
+        public static StreamWriter ToStreamWriter([NotNull] this Stream stream, Encoding? encoding = null, Boolean leaveOpen = false)
         {
             if (stream is null)
             {
@@ -462,7 +462,7 @@ namespace NetExtender.Utils.Types
         /// <param name="encoding">The character encoding to use.</param>
         /// <param name="leaveOpen">true to leave the stream open after the <see cref="BinaryWriter" /> object is disposed; otherwise, false.</param>
         [NotNull]
-        public static BinaryWriter ToBinaryWriter([NotNull] this Stream stream, [CanBeNull] Encoding encoding = null, Boolean leaveOpen = false)
+        public static BinaryWriter ToBinaryWriter([NotNull] this Stream stream, Encoding? encoding = null, Boolean leaveOpen = false)
         {
             if (stream is null)
             {

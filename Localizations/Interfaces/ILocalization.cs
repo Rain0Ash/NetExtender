@@ -28,14 +28,14 @@ namespace NetExtender.Localizations.Interfaces
         public Int32 GetLanguageOrderID();
         public Int32 GetLanguageOrderID([NotNull] CultureInfo info);
         public Boolean AddSupportedCulture([NotNull] CultureInfo info);
-        public Boolean AddSupportedCulture([NotNull] CultureInfo info, [CanBeNull] ISubLocalization localization);
+        public Boolean AddSupportedCulture([NotNull] CultureInfo info, ISubLocalization? localization);
         public Boolean RemoveSupportedCulture([NotNull] CultureInfo info);
         public Boolean IsSupportCulture([NotNull] CultureInfo info);
         public Boolean Update(UInt16 lcid);
         public Boolean Update(Int32 lcid);
         public Boolean Update(LCID lcid);
         public Boolean Update(CultureLCID lcid);
-        public Boolean Update([CanBeNull] CultureInfo info);
+        public Boolean Update(CultureInfo? info);
         public Boolean SetUILanguage();
         
         public ILocalizationProperty GetProperty(String key, IEnumerable<String> sections)

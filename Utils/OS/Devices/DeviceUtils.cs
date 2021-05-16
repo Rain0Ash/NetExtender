@@ -84,7 +84,7 @@ namespace NetExtender.Utils.OS.Devices
             return screen;
         }
 
-        public static DriveInfo GetDriveInfo(String name)
+        public static DriveInfo? GetDriveInfo(String name)
         {
             if (String.IsNullOrEmpty(name))
             {
@@ -95,7 +95,7 @@ namespace NetExtender.Utils.OS.Devices
         }
 
         // Pinvoke for API function
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Auto)]
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern Boolean GetDiskFreeSpaceEx(String lpDirectoryName, out UInt64 lpFreeBytesAvailable, out UInt64 lpTotalNumberOfBytes, out UInt64 lpTotalNumberOfFreeBytes);
 

@@ -542,7 +542,7 @@ namespace NetExtender.Utils.Types
             return Format(format.ToString(), provider, args);
         }
 
-        public static Object[] FormatSafeGetArguments([CanBeNull] Object[] args, Int32 expected)
+        public static Object[] FormatSafeGetArguments(Object[]? args, Int32 expected)
         {
             if (args is null)
             {
@@ -557,12 +557,12 @@ namespace NetExtender.Utils.Types
             };
         }
 
-        public static String FormatSafe([NotNull] this String source, [CanBeNull] params Object[] args)
+        public static String FormatSafe([NotNull] this String source, params Object[]? args)
         {
             return FormatSafe(source, null, args);
         }
 
-        public static String FormatSafe([NotNull] this String source, [CanBeNull] IFormatProvider? provider, [CanBeNull] params Object[] args)
+        public static String FormatSafe([NotNull] this String source, IFormatProvider? provider, params Object[]? args)
         {
             if (source is null)
             {
@@ -579,12 +579,12 @@ namespace NetExtender.Utils.Types
             return expected > 0 ? String.Format(provider, source, FormatSafeGetArguments(args, expected)) : source;
         }
 
-        public static String FormatSafe([NotNull] this IString source, [CanBeNull] params Object[] args)
+        public static String FormatSafe([NotNull] this IString source, params Object[]? args)
         {
             return FormatSafe(source, null, args);
         }
 
-        public static String FormatSafe([NotNull] this IString source, [CanBeNull] IFormatProvider? provider, [CanBeNull] params Object[] args)
+        public static String FormatSafe([NotNull] this IString source, IFormatProvider? provider, params Object[]? args)
         {
             if (source is null)
             {
@@ -669,13 +669,13 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsEmpty([CanBeNull] this String str)
+        public static Boolean IsEmpty(this String? str)
         {
             return str == String.Empty;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsEmpty([CanBeNull] this IString str)
+        public static Boolean IsEmpty(this IString? str)
         {
             return str is not null && str.Length <= 0;
         }
@@ -1352,7 +1352,7 @@ namespace NetExtender.Utils.Types
             return ToTitleCase(value, null);
         }
 
-        public static String ToTitleCase([NotNull] this String value, CultureInfo info)
+        public static String ToTitleCase([NotNull] this String value, CultureInfo? info)
         {
             if (value is null)
             {
@@ -1961,12 +1961,12 @@ namespace NetExtender.Utils.Types
 
         public static Int32 LevenshteinDistance(String first, String second)
         {
-            if (first == null)
+            if (first is null)
             {
                 throw new ArgumentNullException(nameof(first));
             }
 
-            if (second == null)
+            if (second is null)
             {
                 throw new ArgumentNullException(nameof(second));
             }
@@ -1998,6 +1998,16 @@ namespace NetExtender.Utils.Types
         
         public static Int32 LevenshteinDistance([NotNull] this String first, [NotNull] String second, StringComparison comparison)
         {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+
             return comparison switch
             {
                 StringComparison.CurrentCulture => LevenshteinDistance(first, second),

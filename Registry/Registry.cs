@@ -204,17 +204,17 @@ namespace NetExtender.Registry
         {
         }
 
-        private Registry(Registry nested, Boolean inherit, IEnumerable<String> sections = null)
+        private Registry(Registry nested, Boolean inherit, IEnumerable<String>? sections = null)
             : this(nested?.Key ?? throw new ArgumentNullException(nameof(nested)), nested, inherit, sections)
         {
         }
 
-        private Registry(RegistryKeys key, Registry nested, IEnumerable<String> sections = null)
+        private Registry(RegistryKeys key, Registry nested, IEnumerable<String>? sections = null)
             : this(key, nested, false, sections)
         {
         }
 
-        private Registry(RegistryKeys key, Registry nested, Boolean inherit, IEnumerable<String> sections = null)
+        private Registry(RegistryKeys key, Registry nested, Boolean inherit, IEnumerable<String>? sections = null)
         {
             Key = nested?.Key ?? key;
             Sections = nested?.Sections ?? ImmutableList<String>.Empty;
@@ -978,7 +978,7 @@ namespace NetExtender.Registry
         {
             try
             {
-                String[] names = GetValueNames();
+                String[]? names = GetValueNames();
 
                 if (names is null)
                 {

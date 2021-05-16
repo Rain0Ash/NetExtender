@@ -170,7 +170,7 @@ namespace NetExtender.Utils.Network
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsSuccessful([CanBeNull] this PingReply? reply)
+        public static Boolean IsSuccessful(this PingReply? reply)
         {
             return reply?.Status == IPStatus.Success;
         }

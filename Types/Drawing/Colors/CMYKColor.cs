@@ -79,7 +79,7 @@ namespace NetExtender.Types.Drawing.Colors
             return C == other.C && M == other.M && Y == other.Y && K == other.K;
         }
         
-        public Boolean Equals([CanBeNull] IColor? color)
+        public Boolean Equals(IColor? color)
         {
             return color is not null && ToColor(out Color first) && color.ToColor(out Color second) && first.Equals(second);
         }

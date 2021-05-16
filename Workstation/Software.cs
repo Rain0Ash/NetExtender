@@ -80,10 +80,10 @@ namespace NetExtender.Workstation
             };
         }
 
-        [DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
+        [DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Unicode)]
         private static extern IntPtr LoadLibrary(String name);
 
-        [DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi)]
+        [DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Unicode)]
         private static extern IntPtr GetProcAddress(IntPtr hwnd, String procedure);
 
         private delegate Boolean IsWow64ProcessDelegate([In] IntPtr handle, [Out] out Boolean isWow64Process);

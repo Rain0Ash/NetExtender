@@ -40,7 +40,6 @@
       </PackageReference>
       <PackageReference Include="ImpromptuInterface" Version="7.0.1" />
       <PackageReference Include="JetBrains.Annotations" Version="2021.1.0" />
-      <PackageReference Include="JetBrains.ExternalAnnotations" Version="10.2.93" />
       <PackageReference Include="Microsoft-WindowsAPICodePack-Core" Version="1.1.4" />
       <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
       <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.0-preview.3.21201.2" />

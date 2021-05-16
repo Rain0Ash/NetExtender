@@ -53,7 +53,7 @@ namespace NetExtender.Types.Strings
             return NonFormatToString() ?? String.Empty;
         }
         
-        public override String ToString([CanBeNull] IFormatProvider? provider)
+        public override String ToString(IFormatProvider? provider)
         {
             return NonFormatToString(provider) ?? String.Empty;
         }
