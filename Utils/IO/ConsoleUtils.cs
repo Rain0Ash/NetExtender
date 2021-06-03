@@ -333,7 +333,7 @@ namespace NetExtender.Utils.IO
             SetCurrentFont(null, size);
         }
 
-        public static void SetCurrentFont(String font, Int16 size = 0)
+        public static void SetCurrentFont(String? font, Int16 size = 0)
         {
             Font = new FontInfo(font ?? Font.FontName, size > 0 ? size : Font.Size);
         }

@@ -57,6 +57,28 @@ namespace NetExtender.Types.Counters
         {
             Internal = new Dictionary<T, Int64>(capacity, comparer);
         }
+        
+        public LongCounter([NotNull] IEnumerable<T> collection)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            Internal = new Dictionary<T, Int64>();
+            AddRange(collection);
+        }
+        
+        public LongCounter([NotNull] IEnumerable<T> collection, IEqualityComparer<T>? comparer)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            Internal = new Dictionary<T, Int64>(comparer);
+            AddRange(collection);
+        }
 
         public Boolean ContainsKey(T key)
         {

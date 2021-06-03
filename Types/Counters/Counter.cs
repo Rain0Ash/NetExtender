@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using JetBrains.Annotations;
 using NetExtender.Types.Counters.Interfaces;
 using NetExtender.Utils.Types;
 
@@ -55,6 +56,28 @@ namespace NetExtender.Types.Counters
         public Counter(Int32 capacity, IEqualityComparer<T>? comparer)
         {
             Internal = new Dictionary<T, Int32>(capacity, comparer);
+        }
+        
+        public Counter([NotNull] IEnumerable<T> collection)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            Internal = new Dictionary<T, Int32>();
+            AddRange(collection);
+        }
+        
+        public Counter([NotNull] IEnumerable<T> collection, IEqualityComparer<T>? comparer)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            Internal = new Dictionary<T, Int32>(comparer);
+            AddRange(collection);
         }
 
         public Boolean ContainsKey(T key)
