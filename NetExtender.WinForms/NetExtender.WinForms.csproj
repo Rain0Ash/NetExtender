@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWindowsForms>true</UseWindowsForms>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
+      <ProjectReference Include="..\NetExtender.Windows\NetExtender.Windows.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Types" />
+    </ItemGroup>
+
+</Project>

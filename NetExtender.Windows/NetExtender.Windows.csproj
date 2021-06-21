@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <Configurations>Debug;Release;Release | x64</Configurations>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NetExtender.Configuration.Registry\NetExtender.Configuration.Registry.csproj" />
+      <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
+      <ProjectReference Include="..\NetExtender.Registry\NetExtender.Registry.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Win32.SystemEvents" Version="6.0.0-preview.5.21301.5" />
+      <PackageReference Include="System.Drawing.Common" Version="6.0.0-preview.5.21301.5" />
+      <PackageReference Include="System.IO.FileSystem.AccessControl" Version="6.0.0-preview.5.21301.5" />
+      <PackageReference Include="System.Management" Version="6.0.0-preview.5.21301.5" />
+      <PackageReference Include="System.Threading.AccessControl" Version="6.0.0-preview.5.21301.5" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Workstation\OperationSystemInfo.cs">
+        <DependentUpon>Software.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Workstation\InfoWinStruct.cs">
+        <DependentUpon>Hardware.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="FileSystem" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NetExtender.Cryptography\NetExtender.Cryptography.csproj" />
+      <ProjectReference Include="..\NetExtender.Newtonsoft\NetExtender.Newtonsoft.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Configuration\Property.cs">
+        <DependentUpon>Config.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>

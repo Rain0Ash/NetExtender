@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <Configurations>Debug;Release;Release | x64</Configurations>
+        <Platforms>AnyCPU</Platforms>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Compile Update="Cryptography\AES.cs">
+        <DependentUpon>Cryptography.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Cryptography\Base.cs">
+        <DependentUpon>Cryptography.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Cryptography\Compression.cs">
+        <DependentUpon>Cryptography.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Cryptography\Hash.cs">
+        <DependentUpon>Cryptography.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Cryptography\RSA.cs">
+        <DependentUpon>Cryptography.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
+    </ItemGroup>
+
+</Project>

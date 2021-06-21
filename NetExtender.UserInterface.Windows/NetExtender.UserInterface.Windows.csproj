@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NetExtender.UserInterface\NetExtender.UserInterface.csproj" />
+      <ProjectReference Include="..\NetExtender.Windows\NetExtender.Windows.csproj" />
+    </ItemGroup>
+
+</Project>

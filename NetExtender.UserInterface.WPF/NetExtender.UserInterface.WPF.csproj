@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWpf>true</UseWpf>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NetExtender.UserInterface.Windows\NetExtender.UserInterface.Windows.csproj" />
+      <ProjectReference Include="..\NetExtender.Windows\NetExtender.Windows.csproj" />
+      <ProjectReference Include="..\NetExtender.WPF\NetExtender.WPF.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Types" />
+    </ItemGroup>
+
+</Project>

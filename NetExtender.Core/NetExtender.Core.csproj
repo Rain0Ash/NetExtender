@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net5.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Core</RootNamespace>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <Configurations>Debug;Release;Release | x64</Configurations>
+        <Platforms>AnyCPU</Platforms>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="System.Reactive" Version="5.0.0" />
+      <PackageReference Include="System.Reactive.Core" Version="5.0.0" />
+      <PackageReference Include="System.Reactive.Interfaces" Version="5.0.0" />
+      <PackageReference Include="System.Reactive.Linq" Version="5.0.0" />
+      <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Interfaces" />
+      <Folder Include="IO\Shortcut" />
+      <Folder Include="Utils\GUI\Drawing" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Utils\Network\UserAgents.cs">
+        <DependentUpon>UserAgentUtils.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utils\Types\HLSColor.cs">
+        <DependentUpon>ColorUtils.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utils\Numerics\TrileanLogicUtils.cs">
+        <DependentUpon>LogicUtils.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Types\Enums\UnderlyingEnumOperation.cs">
+        <DependentUpon>UnderlyingOperation.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utils\IO\ConsoleAsyncInput.cs">
+        <DependentUpon>ConsoleUtils.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>
