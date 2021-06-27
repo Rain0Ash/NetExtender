@@ -49,8 +49,8 @@ namespace NetExtender.UserInterface.WPF.Windows
             }
         }
 
-        public event InterfaceClosingEventHandler WindowClosing;
-        public event SizeChangeToggleHandler? SizeChangeToggle;
+        public event InterfaceClosingEventHandler WindowClosing = null!;
+        public event SizeChangeToggleHandler SizeChangeToggle = null!;
 
         protected FixedWindow()
         {

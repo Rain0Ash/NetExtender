@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.Serialization;
+using NetExtender.Resources;
 using NetExtender.Utils.Types;
 using NetExtender.Types.Trees.Interfaces;
 using NetExtender.Types.Trees.Json;

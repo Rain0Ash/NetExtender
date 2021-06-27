@@ -4,15 +4,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace NetExtender.Types.Arrays
 {
     public class MultiArray<T> : IEnumerable<T> where T : new()
     {
-        public static implicit operator T[](MultiArray<T> array)
+        [return: NotNullIfNotNull("array")]
+        public static implicit operator T[]?(MultiArray<T>? array)
         {
-            return array.ToArray();
+            return array?.ToArray();
         }
 
         public readonly T[] Matrix;

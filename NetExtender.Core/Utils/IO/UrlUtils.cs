@@ -11,7 +11,7 @@ namespace NetExtender.Utils.IO
     {
         public static Boolean IsValidUrl(String path)
         {
-            return !path.IsNullOrEmpty() && Uri.TryCreate(path, UriKind.Absolute, out Uri uriResult) &&
+            return !String.IsNullOrEmpty(path) && Uri.TryCreate(path, UriKind.Absolute, out Uri uriResult) &&
                    (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
         }
         

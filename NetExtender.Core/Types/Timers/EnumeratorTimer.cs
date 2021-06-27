@@ -11,10 +11,10 @@ using NetExtender.Utils.Types;
 
 namespace NetExtender.Types.Timers
 {
-    public class EnumeratorTimer<T> : IEnumeratorTimer<T?>
+    public class EnumeratorTimer<T> : IEnumeratorTimer<T>
     {
         private ITimer Timer { get; }
-        private IEnumerator<T?> Enumerator { get; }
+        private IEnumerator<T> Enumerator { get; }
         
         public event TickHandler Tick
         {
@@ -28,10 +28,10 @@ namespace NetExtender.Types.Timers
             }
         }
 
-        public event EmptyHandler Finished;
-        public event ItemTickHandler<T?> ItemTick;
+        public event EmptyHandler Finished = null!;
+        public event ItemTickHandler<T> ItemTick = null!;
 
-        public T? Current
+        public T Current
         {
             get
             {
@@ -94,7 +94,7 @@ namespace NetExtender.Types.Timers
             Tick += OnTick;
         }
 
-        protected void OnItemTick(Object? sender, TimeEventArgs args, T? item)
+        protected void OnItemTick(Object? sender, TimeEventArgs args, T item)
         {
             ItemTick?.Invoke(sender, args, item);
         }
@@ -144,16 +144,16 @@ namespace NetExtender.Types.Timers
 
         public void Dispose()
         {
-            Finished = null;
-            ItemTick = null;
+            Finished = null!;
+            ItemTick = null!;
             Timer.Dispose();
             Enumerator.Dispose();
         }
 
         public async ValueTask DisposeAsync()
         {
-            Finished = null;
-            ItemTick = null;
+            Finished = null!;
+            ItemTick = null!;
             await Enumerator.DisposeAsync().ConfigureAwait(false);
             await Timer.DisposeAsync().ConfigureAwait(false);
         }

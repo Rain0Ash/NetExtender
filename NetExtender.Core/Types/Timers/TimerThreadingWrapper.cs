@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Events;
@@ -13,16 +14,17 @@ namespace NetExtender.Types.Timers
 {
     public sealed class TimerThreadingWrapper : ITimer
     {
-        public static explicit operator Timer(TimerThreadingWrapper wrapper)
+        [return: NotNullIfNotNull("wrapper")]
+        public static explicit operator Timer?(TimerThreadingWrapper? wrapper)
         {
-            return wrapper._timer;
+            return wrapper?._timer;
         }
         
         private readonly Timer _timer;
         
         public Boolean IsStarted { get; private set; }
         
-        public event TickHandler? Tick;
+        public event TickHandler Tick = null!;
 
         private TimeSpan _interval = Time.Second.One;
         public TimeSpan Interval

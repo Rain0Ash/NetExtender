@@ -7,6 +7,7 @@ namespace NetExtender.Configuration
 {
     public interface IReadOnlyConfigProperty<T> : IReadOnlyConfigPropertyBase
     {
+        public event EventHandler<T> ValueChanged;  
         public Boolean ThrowOnInvalid { get; }
         public Boolean ThrowOnReadOnly { get; }
         public T DefaultValue { get; }

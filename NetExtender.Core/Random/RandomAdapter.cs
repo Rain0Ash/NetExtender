@@ -2,20 +2,23 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using NetExtender.Random.Interfaces;
 
 namespace NetExtender.Random
 {
     public sealed class RandomAdapter : IRandom
     {
-        public static implicit operator RandomAdapter(System.Random random)
+        [return: NotNullIfNotNull("random")]
+        public static implicit operator RandomAdapter?(System.Random? random)
         {
-            return new RandomAdapter(random);
+            return random is not null ? new RandomAdapter(random) : null;
         }
         
-        public static implicit operator System.Random(RandomAdapter random)
+        [return: NotNullIfNotNull("random")]
+        public static implicit operator System.Random?(RandomAdapter? random)
         {
-            return random._random;
+            return random?._random;
         }
         
         private readonly System.Random _random;

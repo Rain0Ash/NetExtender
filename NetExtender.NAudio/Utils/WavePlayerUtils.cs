@@ -5,6 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using NAudio.Wave;
+using NetExtender.NAudio.Types.Streams;
 
 namespace NetExtender.Utils.NAudio
 {
@@ -22,10 +23,11 @@ namespace NetExtender.Utils.NAudio
                 throw new ArgumentNullException(nameof(player));
             }
             
-            SemaphoreSlim signal = new SemaphoreSlim(0, 1);
+            using SemaphoreSlim signal = new SemaphoreSlim(0, 1);
 
             void Release(Object? sender, StoppedEventArgs args)
             {
+                // ReSharper disable once AccessToDisposedClosure
                 signal.Release();
             }
 
@@ -58,6 +60,22 @@ namespace NetExtender.Utils.NAudio
             
             player.Init(provider);
             player.Play();
+        }
+
+        public static void Repeat(this IWavePlayer player, WaveStream stream)
+        {
+            if (player is null)
+            {
+                throw new ArgumentNullException(nameof(player));
+            }
+
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            stream = stream as RepeatWaveStream ?? new RepeatWaveStream(stream);
+            player.Play(stream);
         }
 
         public static Task PlayAsync(this IWavePlayer player)
@@ -93,8 +111,29 @@ namespace NetExtender.Utils.NAudio
                 throw new ArgumentNullException(nameof(provider));
             }
             
-            player.Play(provider);
+            Play(player, provider);
             await player.WaitAsync(token);
+        }
+        
+        public static Task RepeatAsync(this IWavePlayer player, WaveStream stream)
+        {
+            return RepeatAsync(player, stream, CancellationToken.None);
+        }
+
+        public static Task RepeatAsync(this IWavePlayer player, WaveStream stream, CancellationToken token)
+        {
+            if (player is null)
+            {
+                throw new ArgumentNullException(nameof(player));
+            }
+
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            stream = stream as RepeatWaveStream ?? new RepeatWaveStream(stream);
+            return player.PlayAsync(stream, token);
         }
     }
 }

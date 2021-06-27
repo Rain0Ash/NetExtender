@@ -220,7 +220,7 @@ namespace NetExtender.Utils.Types
             return ToStream(str, Encoding.UTF8);
         }
 
-        public static MemoryStream ToStream(this String str, Encoding encoding)
+        public static MemoryStream ToStream(this String str, Encoding? encoding)
         {
             if (str is null)
             {
@@ -235,7 +235,7 @@ namespace NetExtender.Utils.Types
             return ToStream(str, output, Encoding.UTF8);
         }
 
-        public static Stream ToStream(this String str, Stream output, Encoding encoding)
+        public static Stream ToStream(this String str, Stream output, Encoding? encoding)
         {
             if (str is null)
             {
@@ -255,7 +255,7 @@ namespace NetExtender.Utils.Types
             return new MemoryStream(bytes);
         }
 
-        public static Stream ToStream(this Byte[] bytes, Stream output)
+        public static Stream ToStream(this Byte[] bytes, Stream? output)
         {
             if (bytes is null)
             {
@@ -467,7 +467,7 @@ namespace NetExtender.Utils.Types
         /// <param name="stream">The stream to read.</param>
         /// <param name="encoding">The character encoding to use.</param>
         /// <param name="leaveOpen">true to leave the stream open after the <see cref="StreamReader" /> object is disposed; otherwise, false.</param>
-        public static StreamReader ToStreamReader(this Stream stream, Encoding? encoding, Boolean leaveOpen = false)
+        public static StreamReader ToStreamReader(this Stream stream, Encoding? encoding = null, Boolean leaveOpen = false)
         {
             if (stream is null)
             {

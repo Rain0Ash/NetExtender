@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
 using NetExtender.Utils.IO;
@@ -13,9 +14,10 @@ namespace NetExtender.Types.Drawing
 {
     public class AsciiArt : IConsoleMessage
     {
-        public static implicit operator String(AsciiArt art)
+        [return : NotNullIfNotNull("art")]
+        public static implicit operator String?(AsciiArt? art)
         {
-            return art.ToString();
+            return art?.ToString();
         }
         
         public Size Size { get; }

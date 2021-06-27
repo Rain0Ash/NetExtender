@@ -52,7 +52,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
             }
         }
 
-        private ImmutableMultiDictionary([NotNull] ImmutableDictionary<TKey, ImmutableHashSet<TValue>> dictionary)
+        private ImmutableMultiDictionary(ImmutableDictionary<TKey, ImmutableHashSet<TValue>> dictionary)
         {
             Dictionary = dictionary ?? throw new ArgumentNullException(nameof(dictionary));
         }

@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Timers;
 using NetExtender.Times.Timers.Interfaces;
@@ -11,14 +12,16 @@ namespace NetExtender.Types.Timers
 {
     public sealed class TimerWrapper : ITimer
     {
-        public static implicit operator TimerWrapper(Timer timer)
+        [return: NotNullIfNotNull("timer")]
+        public static implicit operator TimerWrapper?(Timer? timer)
         {
-            return new TimerWrapper(timer);
+            return timer is not null ? new TimerWrapper(timer) : null;
         }
         
-        public static implicit operator Timer(TimerWrapper wrapper)
+        [return: NotNullIfNotNull("timer")]
+        public static implicit operator Timer?(TimerWrapper? wrapper)
         {
-            return wrapper._timer;
+            return wrapper?._timer;
         }
         
         private readonly Timer _timer;
@@ -47,7 +50,7 @@ namespace NetExtender.Types.Timers
             }
         }
 
-        public event TickHandler? Tick;
+        public event TickHandler Tick = null!;
 
         public TimerWrapper(Int32 interval)
             : this((Double) interval)

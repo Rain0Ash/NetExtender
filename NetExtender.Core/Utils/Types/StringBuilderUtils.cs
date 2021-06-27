@@ -299,7 +299,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            if (value.IsNullOrEmpty())
+            if (IsNullOrEmpty(value))
             {
                 return builder;
             }

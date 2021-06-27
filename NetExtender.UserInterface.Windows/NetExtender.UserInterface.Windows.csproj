@@ -10,4 +10,10 @@
       <ProjectReference Include="..\NetExtender.Windows\NetExtender.Windows.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="Utils\IO\ConsoleAsyncInput.cs">
+        <DependentUpon>ConsoleAsyncInputUtils.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

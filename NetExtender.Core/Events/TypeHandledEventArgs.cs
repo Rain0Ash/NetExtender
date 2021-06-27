@@ -3,29 +3,32 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NetExtender.Events
 {
     public class TypeHandledEventArgs<T> : HandledEventArgs
     {
-        public static implicit operator TypeHandledEventArgs<T?>(TypeCancelEventArgs<T?> args)
+        [return: NotNullIfNotNull("args")]
+        public static implicit operator TypeHandledEventArgs<T>?(TypeCancelEventArgs<T>? args)
         {
-            return new TypeHandledEventArgs<T?>(args.Value, args.Cancel);
+            return args is not null ? new TypeHandledEventArgs<T>(args.Value, args.Cancel) : null;
         }
         
-        public static implicit operator TypeHandledEventArgs<T?>(TypeCancellationEventArgs<T?> args)
+        [return: NotNullIfNotNull("args")]
+        public static implicit operator TypeHandledEventArgs<T>?(TypeCancellationEventArgs<T>? args)
         {
-            return new TypeHandledEventArgs<T?>(args.Value, args.IsCancelled);
+            return args is not null ? new TypeHandledEventArgs<T>(args.Value, args.IsCancelled) : null;
         }
         
-        public T? Value { get; }
+        public T Value { get; }
         
-        public TypeHandledEventArgs(T? value)
+        public TypeHandledEventArgs(T value)
         {
             Value = value;
         }
 
-        public TypeHandledEventArgs(T? value, Boolean handled)
+        public TypeHandledEventArgs(T value, Boolean handled)
             : base(handled)
         {
             Value = value;

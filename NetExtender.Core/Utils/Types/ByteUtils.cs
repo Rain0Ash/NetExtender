@@ -30,17 +30,10 @@ namespace NetExtender.Utils.Types
         public const Int32 BitInBytes = 8;
         public const Int32 ByteMultiplier = 1024;
 
-        [DllImport("msvcrt.dll")]
-        private static extern Int32 memcmp(Byte[] first, Byte[] second, Int64 count);
-
-        public static Boolean ByteArrayCompare(this Byte[] first, Byte[] second)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean SequenceEqual(this Byte[]? first, Byte[]? second)
         {
-            return first.Length == second.Length && memcmp(first, second, first.Length) == 0;
-        }
-
-        public static Boolean ByteArrayCompare(this ReadOnlySpan<Byte> first, ReadOnlySpan<Byte> second)
-        {
-            return first.SequenceEqual(second);
+            return first.AsSpan().SequenceEqual(second.AsSpan());
         }
 
         /// <summary>

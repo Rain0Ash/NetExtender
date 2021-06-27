@@ -22,7 +22,7 @@ namespace NetExtender.Types.Dispatchers
 
         private Dispatcher Dispatcher { get; }
 
-        public event EventHandler<DispatcherShutdownState>? Shutdown;
+        public event EventHandler<DispatcherShutdownState> Shutdown = null!;
         
         public DispatcherWrapper(Dispatcher dispatcher)
         {

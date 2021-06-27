@@ -2,15 +2,17 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Timers;
 
 namespace NetExtender.Events
 {
     public class TimeEventArgs : EventArgs
     {
-        public static implicit operator TimeEventArgs(ElapsedEventArgs args)
+        [return: NotNullIfNotNull("args")]
+        public static implicit operator TimeEventArgs?(ElapsedEventArgs? args)
         {
-            return new TimeEventArgs(args.SignalTime);
+            return args is not null ? new TimeEventArgs(args.SignalTime) : null;
         }
         
         public DateTime SignalTime { get; }

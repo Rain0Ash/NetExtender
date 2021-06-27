@@ -4,20 +4,23 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using NetExtender.Types.Sets.Interfaces;
 
 namespace NetExtender.Types.Sets
 {
     public class Set<T> : ISet, ISet<T>
     {
-        public static implicit operator Set<T>(HashSet<T> set)
+        [return: NotNullIfNotNull("set")]
+        public static implicit operator Set<T>?(HashSet<T>? set)
         {
-            return Set.Create(set);
+            return set is not null ? Set.Create(set) : null;
         }
         
-        public static implicit operator Set<T>(SortedSet<T> set)
+        [return: NotNullIfNotNull("set")]
+        public static implicit operator Set<T>?(SortedSet<T>? set)
         {
-            return Set.Create(set);
+            return set is not null ? Set.Create(set) : null;
         }
         
         private readonly ISet<T> _set;

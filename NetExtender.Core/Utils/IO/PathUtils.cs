@@ -334,7 +334,7 @@ namespace NetExtender.Utils.IO
                 throw new ArgumentNullException(nameof(path));
             }
 
-            return !path.IsNullOrEmpty() && !GetFullPath(path).IsNullOrEmpty() && (!IsNetworkPath(path) || network && IsValidNetworkPath(path));
+            return !String.IsNullOrEmpty(path) && !GetFullPath(path).IsNullOrEmpty() && (!IsNetworkPath(path) || network && IsValidNetworkPath(path));
         }
 
         public static Boolean IsValidFolderPath(String path, Boolean network = true)
@@ -381,7 +381,7 @@ namespace NetExtender.Utils.IO
 
             try
             {
-                return !path.IsNullOrEmpty() && IsNetworkPath(path) && new Uri(path).IsUnc &&
+                return !String.IsNullOrEmpty(path) && IsNetworkPath(path) && new Uri(path).IsUnc &&
                        Regex.IsMatch(path, @"^\\{2}[\w-]+(\\{1}(([\w-][\w-\s]*[\w-]+[$$]?)|([\w-][$$]?$)))+");
             }
             catch (Exception)

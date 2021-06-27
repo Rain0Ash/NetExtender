@@ -23,7 +23,7 @@ namespace NetExtender.UserInterface.WPF.Windows
             return wrapper.Window;
         }
 
-        public event InterfaceClosingEventHandler? WindowClosing;
+        public event InterfaceClosingEventHandler WindowClosing = null!;
 
         public IntPtr Handle
         {

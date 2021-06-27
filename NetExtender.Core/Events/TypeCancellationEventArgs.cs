@@ -2,24 +2,27 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NetExtender.Events
 {
     public class TypeCancellationEventArgs<T> : CancellationEventArgs
     {
-        public static implicit operator TypeCancellationEventArgs<T?>(TypeCancelEventArgs<T?> args)
+        [return: NotNullIfNotNull("args")]
+        public static implicit operator TypeCancellationEventArgs<T>?(TypeCancelEventArgs<T>? args)
         {
-            return new TypeCancellationEventArgs<T?>(args.Value, args.Cancel);
+            return args is not null ? new TypeCancellationEventArgs<T>(args.Value, args.Cancel) : null;
         }
         
-        public static implicit operator TypeCancellationEventArgs<T?>(TypeHandledEventArgs<T?> args)
+        [return: NotNullIfNotNull("args")]
+        public static implicit operator TypeCancellationEventArgs<T>?(TypeHandledEventArgs<T>? args)
         {
-            return new TypeCancellationEventArgs<T?>(args.Value, args.Handled);
+            return args is not null ? new TypeCancellationEventArgs<T>(args.Value, args.Handled) : null;
         }
         
-        public T? Value { get; }
+        public T Value { get; }
         
-        public TypeCancellationEventArgs(T? value)
+        public TypeCancellationEventArgs(T value)
         {
             Value = value;
         }
@@ -27,9 +30,10 @@ namespace NetExtender.Events
         public TypeCancellationEventArgs(Boolean cancel)
             : base(cancel)
         {
+            Value = default!;
         }
 
-        public TypeCancellationEventArgs(T? value, Boolean cancel)
+        public TypeCancellationEventArgs(T value, Boolean cancel)
             : base(cancel)
         {
             Value = value;

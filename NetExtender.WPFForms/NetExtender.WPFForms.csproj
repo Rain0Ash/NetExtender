@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWindowsForms>true</UseWindowsForms>
+        <UseWpf>true</UseWpf>
+        <RootNamespace>NetExtender.WinFormsUnionWPF</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NetExtender.WinForms\NetExtender.WinForms.csproj" />
+      <ProjectReference Include="..\NetExtender.WPF\NetExtender.WPF.csproj" />
+    </ItemGroup>
+
+</Project>

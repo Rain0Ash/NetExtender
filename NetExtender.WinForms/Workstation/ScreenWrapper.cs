@@ -4,6 +4,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Core.Workstation.Interfaces;
 using NetExtender.Utils.Types;
@@ -12,6 +13,42 @@ namespace NetExtender.Workstation
 {
     public sealed class ScreenWrapper : IScreen
     {
+        public static IScreen[] AllScreens
+        {
+            get
+            {
+                return Screen.AllScreens.Select(screen => (IScreen) new ScreenWrapper(screen)).ToArray();
+            }
+        }
+        
+        public static IScreen PrimaryScreen
+        {
+            get
+            {
+                return new ScreenWrapper(Screen.PrimaryScreen);
+            }
+        }
+        
+        public static IScreen FromControl(Control control)
+        {
+            return new ScreenWrapper(Screen.FromControl(control));
+        }
+        
+        public static IScreen FromHandle(IntPtr handle)
+        {
+            return new ScreenWrapper(Screen.FromHandle(handle));
+        }
+        
+        public static IScreen FromPoint(Point point)
+        {
+            return new ScreenWrapper(Screen.FromPoint(point));
+        }
+        
+        public static IScreen FromRectangle(Rectangle rectangle)
+        {
+            return new ScreenWrapper(Screen.FromRectangle(rectangle));
+        }
+        
         [return: NotNullIfNotNull("screen")]
         public static implicit operator ScreenWrapper?(Screen? screen)
         {

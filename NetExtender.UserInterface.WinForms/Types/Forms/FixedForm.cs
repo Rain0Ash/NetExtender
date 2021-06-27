@@ -62,9 +62,9 @@ namespace NetExtender.UserInterface.WinForms.Forms
             }
         }
 
-        public event InterfaceClosingEventHandler? WindowClosing;
+        public event InterfaceClosingEventHandler WindowClosing = null!;
 
-        public event SizeChangeToggleHandler? SizeChangeToggle;
+        public event SizeChangeToggleHandler SizeChangeToggle = null!;
 
         protected FixedForm()
         {

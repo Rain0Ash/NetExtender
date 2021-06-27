@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.Serialization;
+using NetExtender.Resources;
 using NetExtender.Types.Dictionaries.Interfaces;
 using NetExtender.Utils.Types;
 
@@ -90,27 +91,27 @@ namespace NetExtender.Types.Dictionaries
         {
         }
 
-        public MultiDictionary([NotNull] IDictionary<TKey, ImmutableHashSet<TValue>> dictionary)
+        public MultiDictionary(IDictionary<TKey, ImmutableHashSet<TValue>> dictionary)
             : base(dictionary)
         {
         }
 
-        public MultiDictionary([NotNull] IDictionary<TKey, ImmutableHashSet<TValue>> dictionary, [CanBeNull] IEqualityComparer<TKey>? comparer)
+        public MultiDictionary(IDictionary<TKey, ImmutableHashSet<TValue>> dictionary, IEqualityComparer<TKey>? comparer)
             : base(dictionary, comparer)
         {
         }
         
-        public MultiDictionary([NotNull] IEnumerable<KeyValuePair<TKey, ImmutableHashSet<TValue>>> collection)
+        public MultiDictionary(IEnumerable<KeyValuePair<TKey, ImmutableHashSet<TValue>>> collection)
             : base(collection)
         {
         }
 
-        public MultiDictionary([NotNull] IEnumerable<KeyValuePair<TKey, ImmutableHashSet<TValue>>> collection, [CanBeNull] IEqualityComparer<TKey>? comparer)
+        public MultiDictionary(IEnumerable<KeyValuePair<TKey, ImmutableHashSet<TValue>>> collection, IEqualityComparer<TKey>? comparer)
             : base(collection, comparer)
         {
         }
 
-        public MultiDictionary([CanBeNull] IEqualityComparer<TKey>? comparer)
+        public MultiDictionary(IEqualityComparer<TKey>? comparer)
             : base(comparer)
         {
         }
@@ -120,27 +121,27 @@ namespace NetExtender.Types.Dictionaries
         {
         }
 
-        public MultiDictionary(Int32 capacity, [CanBeNull] IEqualityComparer<TKey>? comparer)
+        public MultiDictionary(Int32 capacity, IEqualityComparer<TKey>? comparer)
             : base(capacity, comparer)
         {
         }
 
-        protected MultiDictionary([NotNull] SerializationInfo info, StreamingContext context)
+        protected MultiDictionary(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }
 
-        public Boolean Contains([NotNull] TKey key, TValue value)
+        public Boolean Contains(TKey key, TValue value)
         {
             if (key is null)
             {
                 throw new ArgumentNullException(nameof(key));
             }
             
-            return TryGetValue(key, out ImmutableHashSet<TValue> result) && result is not null && result.Contains(value);
+            return TryGetValue(key, out ImmutableHashSet<TValue>? result) && result is not null && result.Contains(value);
         }
 
-        public void Add([NotNull] TKey key, TValue value)
+        public void Add(TKey key, TValue value)
         {
             if (key is null)
             {
@@ -150,7 +151,7 @@ namespace NetExtender.Types.Dictionaries
             TryAdd(key, value);
         }
 
-        public Boolean TryAdd([NotNull] TKey key, TValue value)
+        public Boolean TryAdd(TKey key, TValue value)
         {
             if (key is null)
             {
@@ -172,7 +173,7 @@ namespace NetExtender.Types.Dictionaries
             return true;
         }
 
-        public Boolean TryGetValue([NotNull] TKey key, out TValue value)
+        public Boolean TryGetValue(TKey key, out TValue value)
         {
             if (key is null)
             {
@@ -189,7 +190,7 @@ namespace NetExtender.Types.Dictionaries
             return false;
         }
 
-        public Boolean Remove([NotNull] TKey key, TValue value)
+        public Boolean Remove(TKey key, TValue value)
         {
             if (key is null)
             {
@@ -223,7 +224,7 @@ namespace NetExtender.Types.Dictionaries
             return Remove(item.Key, item.Value);
         }
 
-        public void CopyTo([NotNull] KeyValuePair<TKey, TValue>[] array, Int32 arrayIndex)
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 arrayIndex)
         {
             if (array is null)
             {

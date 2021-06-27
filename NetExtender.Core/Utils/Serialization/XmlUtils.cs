@@ -9,6 +9,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
+using NetExtender.Types.Streams;
 using NetExtender.Utils.Types;
 using Newtonsoft.Json;
 

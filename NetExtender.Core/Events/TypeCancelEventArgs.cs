@@ -3,24 +3,27 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NetExtender.Events
 {
     public class TypeCancelEventArgs<T> : CancelEventArgs
     {
-        public static implicit operator TypeCancelEventArgs<T?>(TypeCancellationEventArgs<T?> args)
+        [return: NotNullIfNotNull("args")]
+        public static implicit operator TypeCancelEventArgs<T>?(TypeCancellationEventArgs<T>? args)
         {
-            return new TypeCancelEventArgs<T?>(args.Value, args.IsCancelled);
+            return args is not null ? new TypeCancelEventArgs<T>(args.Value, args.IsCancelled) : null;
         }
         
-        public static implicit operator TypeCancelEventArgs<T?>(TypeHandledEventArgs<T?> args)
+        [return: NotNullIfNotNull("args")]
+        public static implicit operator TypeCancelEventArgs<T>?(TypeHandledEventArgs<T>? args)
         {
-            return new TypeCancelEventArgs<T?>(args.Value, args.Handled);
+            return args is not null ? new TypeCancelEventArgs<T>(args.Value, args.Handled) : null;
         }
         
-        public T? Value { get; }
+        public T Value { get; }
         
-        public TypeCancelEventArgs(T? value)
+        public TypeCancelEventArgs(T value)
         {
             Value = value;
         }
@@ -28,9 +31,10 @@ namespace NetExtender.Events
         public TypeCancelEventArgs(Boolean cancel)
             : base(cancel)
         {
+            Value = default!;
         }
 
-        public TypeCancelEventArgs(T? value, Boolean cancel)
+        public TypeCancelEventArgs(T value, Boolean cancel)
             : base(cancel)
         {
             Value = value;

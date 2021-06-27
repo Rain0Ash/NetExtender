@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NetExtender.Types.Arrays
 {
@@ -13,9 +14,9 @@ namespace NetExtender.Types.Arrays
     /// <typeparam name="T"></typeparam>
     public sealed class ReadOnlyArray<T> : ReadOnlyArray, IReadOnlyList<T>
     {
-        public static implicit operator ReadOnlySpan<T>(ReadOnlyArray<T> array)
+        public static implicit operator ReadOnlySpan<T>(ReadOnlyArray<T>? array)
         {
-            return array._source;
+            return array?._source;
         }
 
         private readonly T[] _source;

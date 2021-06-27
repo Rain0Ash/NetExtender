@@ -3,29 +3,34 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NetExtender.Events
 {
     public class CancellationEventArgs : EventArgs
     {
-        public static implicit operator CancellationEventArgs(CancelEventArgs args)
+        [return: NotNullIfNotNull("args")]
+        public static implicit operator CancellationEventArgs?(CancelEventArgs? args)
         {
-            return new CancellationEventArgs(args.Cancel);
+            return args is not null ? new CancellationEventArgs(args.Cancel) : null;
         }
         
-        public static implicit operator CancelEventArgs(CancellationEventArgs args)
+        [return: NotNullIfNotNull("args")]
+        public static implicit operator CancelEventArgs?(CancellationEventArgs? args)
         {
-            return new CancelEventArgs(args.IsCancelled);
+            return args is not null ? new CancelEventArgs(args.IsCancelled) : null;
         }
         
-        public static implicit operator CancellationEventArgs(HandledEventArgs args)
+        [return: NotNullIfNotNull("args")]
+        public static implicit operator CancellationEventArgs?(HandledEventArgs? args)
         {
-            return new CancellationEventArgs(args.Handled);
+            return args is not null ? new CancellationEventArgs(args.Handled) : null;
         }
         
-        public static implicit operator HandledEventArgs(CancellationEventArgs args)
+        [return: NotNullIfNotNull("args")]
+        public static implicit operator HandledEventArgs?(CancellationEventArgs? args)
         {
-            return new HandledEventArgs(args.IsCancelled);
+            return args is not null ? new HandledEventArgs(args.IsCancelled) : null;
         }
         
         public Boolean IsCancelled { get; private set; }

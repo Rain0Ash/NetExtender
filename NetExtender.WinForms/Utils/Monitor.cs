@@ -3,16 +3,35 @@
 
 using System;
 using System.Drawing;
+using Core.Workstation.Interfaces;
 
 namespace NetExtender.Utils.Windows
 {
-    public readonly struct Monitor
+    public readonly struct Monitor : IScreen
     {
-        public Int32 ID { get; }
+        public Int32 Id { get; }
         public String Name { get; }
+
+        public Boolean Primary
+        {
+            get
+            {
+                return Devmode.dmPositionX == 0 && Devmode.dmPositionY == 0;
+            }
+        }
+
         public Rectangle Resolution { get; }
         public Rectangle WorkingArea { get; }
+
         public Rectangle Bounds { get; }
+        
+        public Int32 BitsPerPixel
+        {
+            get
+            {
+                return Devmode.dmBitsPerPel;
+            }
+        }
 
         internal MonitorUtils.Devmode Devmode { get; }
 
@@ -34,7 +53,7 @@ namespace NetExtender.Utils.Windows
         
         internal Monitor(Int32 id, String name, Rectangle resolution, Rectangle workingArea, Rectangle bounds, MonitorUtils.Devmode devmode)
         {
-            ID = id;
+            Id = id;
             Name = name;
             Resolution = resolution;
             WorkingArea = workingArea;

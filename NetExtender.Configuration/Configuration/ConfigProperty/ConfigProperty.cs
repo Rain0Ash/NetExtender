@@ -21,6 +21,7 @@ namespace NetExtender.Configuration
         DisableSave = 8,
     }
     
+    //TODO: refactoring
     public class ConfigProperty<T> : ConfigPropertyBase, IConfigProperty<T>, IReadOnlyValidable<T>, IFormattable
     {
         public static implicit operator T(ConfigProperty<T> property)
@@ -33,6 +34,8 @@ namespace NetExtender.Configuration
             return property.ToString();
         }
 
+        public event EventHandler<T> ValueChanged = null!; 
+        
         private new IPropertyConfig Config { get; }
         
         public Boolean ThrowOnInvalid { get; set; }
@@ -69,8 +72,9 @@ namespace NetExtender.Configuration
                 {
                     throw new ArgumentException(@"Value is invalid", nameof(Value));
                 }
-                
-                this.RaiseAndSetIfChanged(ref InternalValue, value, nameof(Value));
+
+                InternalValue = value;
+                ValueChanged?.Invoke(this, value);
                 IsValid = valid;
             }
         }
@@ -105,7 +109,8 @@ namespace NetExtender.Configuration
 
         protected void SetValueInternal(T value)
         {
-            this.RaiseAndSetIfChanged(ref InternalValue, value, nameof(Value));
+            InternalValue = value;
+            ValueChanged?.Invoke(this, value);
             IsValid = Validate?.Invoke(value) != false;
         }
         
