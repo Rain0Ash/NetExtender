@@ -2,15 +2,11 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Utils.Types;
-using NetExtender.Domains.Applications;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.Interfaces;
-using NetExtender.Events;
 using NetExtender.Exceptions;
 using NetExtender.Types.Dispatchers.Interfaces;
 using NetExtender.UserInterface.Interfaces;
@@ -19,21 +15,6 @@ namespace NetExtender.Domains
 {
     public static partial class Domain
     {
-        [Serializable]
-        public readonly struct StartedAppDataMessage
-        {
-            public ApplicationInfoMessage This { get; }
-            public ApplicationInfoMessage Another { get; }
-            public Boolean Handled { get; }
-
-            public StartedAppDataMessage(ApplicationInfoMessage @this, ApplicationInfoMessage another, Boolean handled = false)
-            {
-                This = @this;
-                Another = another;
-                Handled = handled;
-            }
-        }
-        
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         private class InternalDomain : IDomain
         {
@@ -65,7 +46,7 @@ namespace NetExtender.Domains
 
             public IApplicationData Data { get; }
 
-            public IDispatcher Dispatcher
+            public IDispatcher? Dispatcher
             {
                 get
                 {

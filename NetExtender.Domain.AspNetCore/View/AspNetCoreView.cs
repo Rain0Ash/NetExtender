@@ -8,24 +8,25 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NetExtender.Domain.AspNetCore.Common;
+using NetExtender.Domains.AspNetCore.Applications;
 using NetExtender.Domains.View;
+using NetExtender.Exceptions;
 
 namespace NetExtender.Domains.AspNetCore.View
 {
     public class AspNetCoreView : ApplicationView
     {
-        protected IHost Context { get; set; } = null!;
         protected Action<WebHostBuilderContext>? Builder { get; }
         protected Action<IServiceCollection>? Services { get; }
         protected Action<IApplicationBuilder, IWebHostEnvironment> Configuration { get; }
-
+        
         public AspNetCoreView(Action<WebHostBuilderContext>? builder, Action<IServiceCollection>? services, Action<IApplicationBuilder, IWebHostEnvironment> configuration)
         {
             Builder = builder;
             Services = services;
             Configuration = configuration;
         }
-
+        
         protected override void InitializeInternal()
         {
             Domain.ShutdownMode = ApplicationShutdownMode.OnExplicitShutdown;
@@ -50,8 +51,13 @@ namespace NetExtender.Domains.AspNetCore.View
 
         protected override void Run()
         {
-            Context = CreateHostBuilder().Build();
-            Context.Run();
+            Run(CreateHostBuilder().Build());
+        }
+
+        protected virtual void Run(IHost? host)
+        {
+            AspNetCoreApplication application = Domain.Current.Application as AspNetCoreApplication ?? throw new InitializeException("Application is not wpf");
+            application.Run(host);
         }
 
         protected override void Run<T>(T window)
