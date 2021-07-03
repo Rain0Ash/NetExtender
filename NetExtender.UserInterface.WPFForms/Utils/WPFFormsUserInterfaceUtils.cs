@@ -8,7 +8,7 @@ using NetExtender.Utils.UserInterface;
 using NetExtender.Workstation;
 using NetExtender.WPF.Utils;
 
-namespace NetExtender.UserInterface.WinFormsUnionWPF
+namespace NetExtender.Utils.UserInterface
 {
     public static class WPFFormsUserInterfaceUtils
     {

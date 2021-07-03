@@ -6,8 +6,11 @@ namespace NetExtender.Domains
     public enum ApplicationBranch
     {
         Master,
-        Prototype,
+        Stable,
+        Unstable,
         Develop,
+        Prototype,
+        Nightly,
         NewArchitecture
     }
 }

@@ -5,7 +5,7 @@ using System;
 using NetExtender.Domains.View;
 using NetExtender.Utils.IO;
 
-namespace NetExtender.Domains.GUIViews.Console
+namespace NetExtender.Domains.View.Console
 {
     public class ConsoleView : ApplicationView
     {

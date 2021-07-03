@@ -33,8 +33,11 @@ namespace NetExtender.Domains
         private static readonly IDictionary<ApplicationBranch, String> BranchDictionary = new Dictionary<ApplicationBranch, String>
         {
             [ApplicationBranch.Master] = String.Empty,
-            [ApplicationBranch.Prototype] = "P",
+            [ApplicationBranch.Stable] = "ST",
+            [ApplicationBranch.Unstable] = "UNST",
             [ApplicationBranch.Develop] = "DEV",
+            [ApplicationBranch.Prototype] = "P",
+            [ApplicationBranch.Nightly] = "N",
             [ApplicationBranch.NewArchitecture] = "NA"
         }.ToImmutableDictionary();
 
