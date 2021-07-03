@@ -9,47 +9,8 @@ namespace NetExtender.NAudio.Types.Streams
     /// <summary>
     /// Stream for looping playback
     /// </summary>
-    public class RepeatWaveStream : WaveStream
+    public class RepeatWaveStream : InternalWaveStream
     {
-        private WaveStream Stream { get; }
-
-        /// <summary>
-        /// Return source stream's wave format
-        /// </summary>
-        public override WaveFormat WaveFormat
-        {
-            get
-            {
-                return Stream.WaveFormat;
-            }
-        }
-
-        /// <summary>
-        /// LoopStream simply returns
-        /// </summary>
-        public override Int64 Length
-        {
-            get
-            {
-                return Stream.Length;
-            }
-        }
-
-        /// <summary>
-        /// LoopStream simply passes on positioning to source stream
-        /// </summary>
-        public override Int64 Position
-        {
-            get
-            {
-                return Stream.Position;
-            }
-            set
-            {
-                Stream.Position = value;
-            }
-        }
-
         /// <summary>
         /// Use this to enable or disable looping
         /// </summary>
@@ -61,23 +22,8 @@ namespace NetExtender.NAudio.Types.Streams
         /// <param name="stream">The stream to read from.<para>Note: the Read method of this stream should return 0 when it reaches the end
         /// or else we will not loop to the start again.</para></param>
         public RepeatWaveStream(WaveStream stream)
+            : base(stream ?? throw new ArgumentNullException(nameof(stream)))
         {
-            if (stream is null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
-
-            if (!stream.CanRead)
-            {
-                throw new ArgumentException("Stream require read feature", nameof(stream));
-            }
-
-            if (!stream.CanSeek)
-            {
-                throw new ArgumentException("Stream require seek feature", nameof(stream));
-            }
-
-            Stream = stream;
         }
 
         public override Int32 Read(Byte[] buffer, Int32 offset, Int32 count)

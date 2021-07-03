@@ -234,49 +234,6 @@ namespace NetExtender.Utils.Types
             return TryGetCultureInfo(culture, out CultureInfo info) ? info : type.GetCultureInfo();
         }
 
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-        private static extern UInt16 SetThreadUILanguage(UInt16 lcid);
-
-        public static Boolean SetUILanguage(UInt16 lcid)
-        {
-            if (lcid <= 0)
-            {
-                return false;
-            }
-
-            return SetThreadUILanguage(lcid) == lcid;
-        }
-
-        public static Boolean SetUILanguage(Int32 lcid)
-        {
-            if (lcid <= 0 || lcid > UInt16.MaxValue)
-            {
-                return false;
-            }
-
-            return SetUILanguage((UInt16) lcid);
-        }
-
-        public static Boolean SetUILanguage(this LCID lcid)
-        {
-            return SetUILanguage(lcid.Code);
-        }
-
-        public static Boolean SetUILanguage(this CultureLCID lcid)
-        {
-            return SetUILanguage((UInt16) lcid);
-        }
-
-        public static Boolean SetUILanguage(this CultureInfo info)
-        {
-            if (info is null)
-            {
-                throw new ArgumentNullException(nameof(info));
-            }
-
-            return SetUILanguage(info.LCID);
-        }
-
         public static Boolean IsCultureEquals(this CultureLCID lcid, CultureInfo? info)
         {
             return IsCultureEquals(info, lcid);

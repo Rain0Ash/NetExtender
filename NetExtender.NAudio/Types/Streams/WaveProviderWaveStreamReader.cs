@@ -2,22 +2,25 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.IO;
 using NAudio.Wave;
+using NetExtender.Types.Streams;
 
 namespace NetExtender.NAudio.Types.Streams
 {
-    public abstract class InternalWaveStream : WaveStream
+    public class WaveProviderWaveStreamReader : WaveStream
     {
-        protected WaveStream Stream { get; }
-        
+        protected IWaveProvider Provider { get; }
+        protected Stream Stream { get; }
+
         public override WaveFormat WaveFormat
         {
             get
             {
-                return Stream.WaveFormat;
+                return Provider.WaveFormat;
             }
         }
-        
+
         public override Int64 Length
         {
             get
@@ -37,30 +40,11 @@ namespace NetExtender.NAudio.Types.Streams
                 Stream.Position = value;
             }
         }
-        
-        public override TimeSpan TotalTime
-        {
-            get
-            {
-                return Stream.TotalTime;
-            }
-        }
 
-        public override TimeSpan CurrentTime
+        public WaveProviderWaveStreamReader(IWaveProvider provider)
         {
-            get
-            {
-                return Stream.CurrentTime;
-            }
-            set
-            {
-                Stream.CurrentTime = value;
-            }
-        }
-
-        protected InternalWaveStream(WaveStream stream)
-        {
-            Stream = stream ?? throw new ArgumentNullException(nameof(stream));
+            Provider = provider ?? throw new ArgumentNullException(nameof(provider));
+            Stream = provider is WaveStream stream ? stream : new SeekableStream(new WaveProviderStreamReader(provider));
         }
         
         public override Int32 Read(Byte[] buffer, Int32 offset, Int32 count)

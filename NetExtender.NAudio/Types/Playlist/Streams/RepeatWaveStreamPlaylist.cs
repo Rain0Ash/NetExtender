@@ -7,27 +7,28 @@ using System.Linq;
 using NAudio.Wave;
 using NetExtender.NAudio.Types.Playlist.Interfaces;
 using NetExtender.Utils.Numerics;
+using NetExtender.Utils.Types;
 
 namespace NetExtender.NAudio.Types.Playlist
 {
-    public class CyclicWaveStreamPlaylist : CyclicWaveStreamPlaylist<WaveStream>, IReadOnlyWaveStreamPlaylist, IWaveStreamPlaylist
+    public class RepeatWaveStreamPlaylist : RepeatWaveStreamPlaylist<WaveStream>, IReadOnlyWaveStreamPlaylist, IWaveStreamPlaylist
     {
-        public CyclicWaveStreamPlaylist()
+        public RepeatWaveStreamPlaylist()
         {
         }
 
-        public CyclicWaveStreamPlaylist(params WaveStream[] items)
+        public RepeatWaveStreamPlaylist(params WaveStream[] items)
             : base(items)
         {
         }
 
-        public CyclicWaveStreamPlaylist(IEnumerable<WaveStream> items)
+        public RepeatWaveStreamPlaylist(IEnumerable<WaveStream> items)
             : base(items)
         {
         }
     }
     
-    public class CyclicWaveStreamPlaylist<T> : WaveStreamPlaylist<T> where T : WaveStream
+    public class RepeatWaveStreamPlaylist<T> : WaveStreamPlaylist<T> where T : WaveStream
     {
         private Int32 _index;
 
@@ -125,6 +126,67 @@ namespace NetExtender.NAudio.Types.Playlist
             }
         }
         
+        public override TimeSpan TotalTime
+        {
+            get
+            {
+                lock (Queue)
+                {
+                    return Queue.Sum(stream => stream.TotalTime);
+                }
+            }
+        }
+
+        public override TimeSpan CurrentTime
+        {
+            get
+            {
+                lock (Queue)
+                {
+                    return Queue.Take(Index).Sum(stream => stream.TotalTime) + StreamCurrentTime;
+                }
+            }
+            set
+            {
+                lock (Queue)
+                {
+                    for (Int32 i = 0; i < Queue.Count; i++)
+                    {
+                        T stream = Queue[i];
+                        TimeSpan length = stream.TotalTime;
+                        if (value < length)
+                        {
+                            Index = i;
+                            StreamCurrentTime = value;
+                            return;
+                        }
+                        
+                        value -= length;
+                    }
+                }
+            }
+        }
+
+        public virtual TimeSpan StreamTotalTime
+        {
+            get
+            {
+                return base.TotalTime;
+            }
+        }
+
+        public virtual TimeSpan StreamCurrentTime
+        {
+            get
+            {
+                return base.CurrentTime;
+            }
+            set
+            {
+                base.CurrentTime = value;
+            }
+        }
+
         protected override T? Current
         {
             get
@@ -136,41 +198,34 @@ namespace NetExtender.NAudio.Types.Playlist
             }
         }
         
-        public CyclicWaveStreamPlaylist()
+        public RepeatWaveStreamPlaylist()
         {
         }
 
-        public CyclicWaveStreamPlaylist(params T[] items)
+        public RepeatWaveStreamPlaylist(params T[] items)
             : base(items)
         {
         }
 
-        public CyclicWaveStreamPlaylist(IEnumerable<T> items)
+        public RepeatWaveStreamPlaylist(IEnumerable<T> items)
             : base(items)
         {
         }
 
         public override Int32 Read(Byte[] buffer, Int32 offset, Int32 count)
         {
-            Int32 read;
-            do
+            T? current = Current;
+
+            if (current is null)
             {
-                T? current = Current;
+                return 0;
+            }
 
-                if (current is null)
-                {
-                    return 0;
-                }
-
-                read = current.Read(buffer, offset, count);
-                if (read > 0)
-                {
-                    continue;
-                }
-
+            Int32 read = current.Read(buffer, offset, count);
+            if (read <= 0)
+            {
                 Next();
-
-            } while (read <= 0);
+            }
 
             return read;
         }
@@ -193,7 +248,7 @@ namespace NetExtender.NAudio.Types.Playlist
         {
             lock (Queue)
             {
-                Index += skip;
+                Index = (Index + skip).ToRange(0, Queue.Count, true);
             }
         }
     }

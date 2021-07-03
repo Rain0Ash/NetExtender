@@ -1700,6 +1700,27 @@ namespace NetExtender.Utils.Types
                 }
             }
         }
+        
+        public static IEnumerable<T> WhereIs<T>(this IEnumerable<T> source, Type type)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            foreach (T item in source)
+            {
+                if (item is not null && item.GetType() == type)
+                {
+                    yield return item;
+                }
+            }
+        }
 
         public static IEnumerable<TTo> SelectWhereIs<TFrom, TTo>(this IEnumerable<TFrom> source)
         {
@@ -4808,6 +4829,16 @@ namespace NetExtender.Utils.Types
             return source.Select(selector).LongCountGroup(comparer);
         }
         
+        public static IEnumerable<IGrouping<Type, T>> GroupByType<T>(this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.WhereNotNull().GroupBy(item => item!.GetType());
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> Progress<T>(this IEnumerable<T> source, IProgress<Int32> progress)
         {

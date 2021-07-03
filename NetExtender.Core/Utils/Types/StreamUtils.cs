@@ -605,5 +605,15 @@ namespace NetExtender.Utils.Types
             
             return reader.ReadBytes(count);
         }
+
+        public static Stream AsSeekableStream(this Stream stream)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            return stream.CanSeek ? stream : new SeekableStream(stream);
+        }
     }
 }

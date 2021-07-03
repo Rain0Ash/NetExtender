@@ -68,8 +68,8 @@ namespace NetExtender.Utils.NAudio
 
             return new ProgressWaveStream(stream, callback);
         }
-        
-        public static WaveStream ProgressWithLength(this WaveStream stream, IProgress<Int64> progress)
+
+        public static WaveStream Progress(this WaveStream stream, IProgress<(Int64, Int64)> progress)
         {
             if (stream is null)
             {
@@ -81,10 +81,10 @@ namespace NetExtender.Utils.NAudio
                 throw new ArgumentNullException(nameof(progress));
             }
 
-            return Progress(stream, progress.Report);
+            return Progress(stream, (position, length) => progress.Report((position, length)));
         }
-        
-        public static WaveStream ProgressWithLength(this WaveStream stream, Action<Int64> callback)
+
+        public static WaveStream Progress(this WaveStream stream, Action<Int64, Int64> callback)
         {
             if (stream is null)
             {
@@ -99,7 +99,7 @@ namespace NetExtender.Utils.NAudio
             return new ProgressWaveStream(stream, callback);
         }
         
-        public static WaveStream ProgressWithLength(this WaveStream stream, IProgress<(Int64, Int64)> progress)
+        public static WaveStream TimeProgress(this WaveStream stream, IProgress<TimeSpan> progress)
         {
             if (stream is null)
             {
@@ -111,10 +111,10 @@ namespace NetExtender.Utils.NAudio
                 throw new ArgumentNullException(nameof(progress));
             }
 
-            return ProgressWithLength(stream, (position, length) => progress.Report((position, length)));
+            return TimeProgress(stream, progress.Report);
         }
-
-        public static WaveStream ProgressWithLength(this WaveStream stream, Action<Int64, Int64> callback)
+        
+        public static WaveStream TimeProgress(this WaveStream stream, Action<TimeSpan> callback)
         {
             if (stream is null)
             {
@@ -126,7 +126,37 @@ namespace NetExtender.Utils.NAudio
                 throw new ArgumentNullException(nameof(callback));
             }
 
-            return new ProgressWaveStreamWithLength(stream, callback);
+            return new ProgressWaveStream(stream, callback);
+        }
+
+        public static WaveStream TimeProgress(this WaveStream stream, IProgress<(TimeSpan, TimeSpan)> progress)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            if (progress is null)
+            {
+                throw new ArgumentNullException(nameof(progress));
+            }
+
+            return TimeProgress(stream, (current, total) => progress.Report((current, total)));
+        }
+
+        public static WaveStream TimeProgress(this WaveStream stream, Action<TimeSpan, TimeSpan> callback)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            if (callback is null)
+            {
+                throw new ArgumentNullException(nameof(callback));
+            }
+
+            return new ProgressWaveStream(stream, callback);
         }
     }
 }

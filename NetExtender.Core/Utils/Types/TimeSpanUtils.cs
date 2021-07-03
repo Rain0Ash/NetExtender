@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using NetExtender.Utils.Numerics;
 
@@ -21,6 +22,31 @@ namespace NetExtender.Utils.Types
                 TimeType.Days => TimeSpan.FromDays(count),
                 _ => throw new NotSupportedException()
             };
+        }
+
+        public static TimeSpan Sum(this IEnumerable<TimeSpan> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Aggregate(TimeSpan.Zero, (current, next) => current + next);
+        }
+        
+        public static TimeSpan Sum<T>(this IEnumerable<T> source, Func<T, TimeSpan> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Aggregate(TimeSpan.Zero, (current, next) => current + selector(next));
         }
         
         public static IEnumerable<TimeSpan> Range(TimeSpan stop)

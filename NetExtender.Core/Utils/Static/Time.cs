@@ -26,6 +26,8 @@ namespace NetExtender.Utils.Static
         
         public const Int32 YearsInCentury = 100;
         public const Int32 YearsInMillennium = 1000;
+        
+        public static readonly TimeSpan Zero = TimeSpan.Zero;
 
         public static class Year
         {

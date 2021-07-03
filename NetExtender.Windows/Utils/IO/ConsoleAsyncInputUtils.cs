@@ -108,12 +108,6 @@ namespace NetExtender.Utils.IO
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ConsoleKeyInfo ReadKeyIntercept()
-        {
-            return Console.ReadKey(true);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<ConsoleKeyInfo> ReadKeyAsync(CancellationToken token)
         {
             return InputAsync(Console.ReadKey, token);
@@ -122,7 +116,7 @@ namespace NetExtender.Utils.IO
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<ConsoleKeyInfo> ReadKeyInterceptAsync(CancellationToken token)
         {
-            return InputAsync(ReadKeyIntercept, token);
+            return InputAsync(ConsoleUtils.ReadKeyIntercept, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -146,7 +140,7 @@ namespace NetExtender.Utils.IO
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<ConsoleKeyInfo> ReadKeyInterceptAsync(Int32 milli, CancellationToken token)
         {
-            return InputAsync(ReadKeyIntercept, milli, token);
+            return InputAsync(ConsoleUtils.ReadKeyIntercept, milli, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

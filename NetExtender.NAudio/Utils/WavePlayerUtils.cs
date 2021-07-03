@@ -61,6 +61,26 @@ namespace NetExtender.Utils.NAudio
             player.Init(provider);
             player.Play();
         }
+        
+        public static void Repeat(this IWavePlayer player, IWaveProvider provider)
+        {
+            if (player is null)
+            {
+                throw new ArgumentNullException(nameof(player));
+            }
+
+            switch (provider)
+            {
+                case null:
+                    throw new ArgumentNullException(nameof(provider));
+                case WaveStream stream:
+                    Repeat(player, stream);
+                    break;
+                default:
+                    Repeat(player, new WaveProviderWaveStreamLazyReader(provider));
+                    break;
+            }
+        }
 
         public static void Repeat(this IWavePlayer player, WaveStream stream)
         {
@@ -113,6 +133,26 @@ namespace NetExtender.Utils.NAudio
             
             Play(player, provider);
             await player.WaitAsync(token);
+        }
+        
+        public static Task RepeatAsync(this IWavePlayer player, IWaveProvider provider)
+        {
+            return RepeatAsync(player, provider, CancellationToken.None);
+        }
+
+        public static Task RepeatAsync(this IWavePlayer player, IWaveProvider provider, CancellationToken token)
+        {
+            if (player is null)
+            {
+                throw new ArgumentNullException(nameof(player));
+            }
+
+            return provider switch
+            {
+                null => throw new ArgumentNullException(nameof(provider)),
+                WaveStream stream => RepeatAsync(player, stream, token),
+                _ => RepeatAsync(player, new WaveProviderWaveStreamLazyReader(provider), token)
+            };
         }
         
         public static Task RepeatAsync(this IWavePlayer player, WaveStream stream)

@@ -149,132 +149,132 @@ namespace NetExtender.Utils.NAudio
             return new WaveStreamPlaylist<T>(playlist);
         }
         
-        public static IWaveStreamPlaylist CyclicPlaylist(this WaveStream stream)
+        public static IWaveStreamPlaylist RepeatPlaylist(this WaveStream stream)
         {
             if (stream is null)
             {
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            return new CyclicWaveStreamPlaylist(stream);
+            return new RepeatWaveStreamPlaylist(stream);
         }
         
-        public static IWaveStreamPlaylist CyclicPlaylist(this WaveStream stream, params WaveStream[] items)
+        public static IWaveStreamPlaylist RepeatPlaylist(this WaveStream stream, params WaveStream[] items)
         {
             if (stream is null)
             {
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            IWaveStreamPlaylist playlist = new CyclicWaveStreamPlaylist(stream);
+            IWaveStreamPlaylist playlist = new RepeatWaveStreamPlaylist(stream);
             playlist.AddRange(items);
             return playlist;
         }
         
-        public static IWaveStreamPlaylist CyclicPlaylist(this IEnumerable<WaveStream> playlist)
+        public static IWaveStreamPlaylist RepeatPlaylist(this IEnumerable<WaveStream> playlist)
         {
             if (playlist is null)
             {
                 throw new ArgumentNullException(nameof(playlist));
             }
 
-            return new CyclicWaveStreamPlaylist(playlist);
+            return new RepeatWaveStreamPlaylist(playlist);
         }
         
-        public static CyclicWaveStreamPlaylist AsCyclicPlaylistStream(this WaveStream stream)
+        public static RepeatWaveStreamPlaylist AsRepeatPlaylistStream(this WaveStream stream)
         {
             if (stream is null)
             {
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            return new CyclicWaveStreamPlaylist(stream);
+            return new RepeatWaveStreamPlaylist(stream);
         }
         
-        public static CyclicWaveStreamPlaylist AsCyclicPlaylistStream(this WaveStream stream, params WaveStream[] items)
+        public static RepeatWaveStreamPlaylist AsRepeatPlaylistStream(this WaveStream stream, params WaveStream[] items)
         {
             if (stream is null)
             {
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            CyclicWaveStreamPlaylist playlist = new CyclicWaveStreamPlaylist(stream);
+            RepeatWaveStreamPlaylist playlist = new RepeatWaveStreamPlaylist(stream);
             playlist.AddRange(items);
             return playlist;
         }
         
-        public static CyclicWaveStreamPlaylist AsCyclicPlaylistStream(this IEnumerable<WaveStream> playlist)
+        public static RepeatWaveStreamPlaylist AsRepeatPlaylistStream(this IEnumerable<WaveStream> playlist)
         {
             if (playlist is null)
             {
                 throw new ArgumentNullException(nameof(playlist));
             }
 
-            return new CyclicWaveStreamPlaylist(playlist);
+            return new RepeatWaveStreamPlaylist(playlist);
         }
         
-        public static CyclicWaveStreamPlaylist<T> AsCyclicPlaylistStream<T>(this T stream) where T : WaveStream
+        public static RepeatWaveStreamPlaylist<T> AsRepeatPlaylistStream<T>(this T stream) where T : WaveStream
         {
             if (stream is null)
             {
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            return new CyclicWaveStreamPlaylist<T>(stream);
+            return new RepeatWaveStreamPlaylist<T>(stream);
         }
         
-        public static CyclicWaveStreamPlaylist<T> AsCyclicPlaylistStream<T>(this T stream, params T[] items) where T : WaveStream
+        public static RepeatWaveStreamPlaylist<T> AsRepeatPlaylistStream<T>(this T stream, params T[] items) where T : WaveStream
         {
             if (stream is null)
             {
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            CyclicWaveStreamPlaylist<T> playlist = new CyclicWaveStreamPlaylist<T>(stream);
+            RepeatWaveStreamPlaylist<T> playlist = new RepeatWaveStreamPlaylist<T>(stream);
             playlist.AddRange(items);
             return playlist;
         }
         
-        public static CyclicWaveStreamPlaylist<T> AsCyclicPlaylistStream<T>(this IEnumerable<T> playlist) where T : WaveStream
+        public static RepeatWaveStreamPlaylist<T> AsRepeatPlaylistStream<T>(this IEnumerable<T> playlist) where T : WaveStream
         {
             if (playlist is null)
             {
                 throw new ArgumentNullException(nameof(playlist));
             }
 
-            return new CyclicWaveStreamPlaylist<T>(playlist);
+            return new RepeatWaveStreamPlaylist<T>(playlist);
         }
         
-        public static IWaveStreamPlaylist<T> WithCyclicPlaylist<T>(this T stream) where T : WaveStream
+        public static IWaveStreamPlaylist<T> WithRepeatPlaylist<T>(this T stream) where T : WaveStream
         {
             if (stream is null)
             {
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            return new CyclicWaveStreamPlaylist<T>(stream);
+            return new RepeatWaveStreamPlaylist<T>(stream);
         }
         
-        public static IWaveStreamPlaylist<T> WithCyclicPlaylist<T>(this T stream, params T[] items) where T : WaveStream
+        public static IWaveStreamPlaylist<T> WithRepeatPlaylist<T>(this T stream, params T[] items) where T : WaveStream
         {
             if (stream is null)
             {
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            IWaveStreamPlaylist<T> playlist = new CyclicWaveStreamPlaylist<T>(stream);
+            IWaveStreamPlaylist<T> playlist = new RepeatWaveStreamPlaylist<T>(stream);
             playlist.AddRange(items);
             return playlist;
         }
         
-        public static IWaveStreamPlaylist<T> WithCyclicPlaylist<T>(this IEnumerable<T> playlist) where T : WaveStream
+        public static IWaveStreamPlaylist<T> WithRepeatPlaylist<T>(this IEnumerable<T> playlist) where T : WaveStream
         {
             if (playlist is null)
             {
                 throw new ArgumentNullException(nameof(playlist));
             }
 
-            return new CyclicWaveStreamPlaylist<T>(playlist);
+            return new RepeatWaveStreamPlaylist<T>(playlist);
         }
     }
 }

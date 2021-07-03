@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NAudio.Wave;
 using NetExtender.NAudio.Types.Playlist.Interfaces;
+using NetExtender.Utils.NAudio;
 using NetExtender.Utils.Types;
 
 namespace NetExtender.NAudio.Types.Playlist
@@ -63,7 +64,7 @@ namespace NetExtender.NAudio.Types.Playlist
         {
             get
             {
-                return Current?.WaveFormat ?? throw new InvalidOperationException();
+                return Current?.WaveFormat ?? WaveFormatUtils.Empty;
             }
         }
 
@@ -100,6 +101,33 @@ namespace NetExtender.NAudio.Types.Playlist
             }
         }
 
+        public override TimeSpan TotalTime
+        {
+            get
+            {
+                return Current?.TotalTime ?? TimeSpan.Zero;
+            }
+        }
+        
+        public override TimeSpan CurrentTime
+        {
+            get
+            {
+                return Current?.CurrentTime ?? TimeSpan.Zero;
+            }
+            set
+            {
+                lock (Queue)
+                {
+                    T? current = Current;
+                    if (current is not null)
+                    {
+                        current.CurrentTime = value;
+                    }
+                }
+            }
+        }
+
         protected virtual T? Current
         {
             get
@@ -133,23 +161,18 @@ namespace NetExtender.NAudio.Types.Playlist
 
         public override Int32 Read(Byte[] buffer, Int32 offset, Int32 count)
         {
-            Int32 read;
-            do
+            T? current = Current;
+
+            if (current is null)
             {
-                T? current = Current;
+                return 0;
+            }
 
-                if (current is null)
-                {
-                    return 0;
-                }
-
-                read = current.Read(buffer, offset, count);
-                if (read <= 0)
-                {
-                    Remove(current);
-                }
-                
-            } while (read <= 0);
+            Int32 read = current.Read(buffer, offset, count);
+            if (read <= 0)
+            {
+                Remove(current);
+            }
 
             return read;
         }

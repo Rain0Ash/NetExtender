@@ -33,6 +33,12 @@ namespace NetExtender.Utils.IO
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ConsoleKeyInfo ReadKeyIntercept()
+        {
+            return Console.ReadKey(true);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T>? CastReadAsEnumerable<T>()
         {
             return CastReadAsEnumerable<T>(CultureInfo.InvariantCulture);
