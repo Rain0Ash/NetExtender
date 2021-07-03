@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Immutable;
 using NetExtender.Domains.View.Interfaces;
 using NetExtender.Exceptions;
 using NetExtender.UserInterface.Interfaces;
@@ -15,8 +16,10 @@ namespace NetExtender.Domains.View
         protected static Object SyncObject { get; } = new Object();
         
         protected Boolean Started { get; private set; }
+        
+        public ImmutableArray<String> Arguments { get; private set; }
 
-        public void Start(String[] args)
+        public void Start(String[]? args)
         {
             lock (SyncObject)
             {
@@ -30,14 +33,12 @@ namespace NetExtender.Domains.View
                     throw new AlreadyInitializedException("View already initialized", nameof(Current));
                 }
 
-                args ??= Array.Empty<String>();
-
                 try
                 {
                     StartInitialize();
                     Current = this;
                     Started = true;
-                    HandleArgs(args);
+                    HandleArgs(args ?? Array.Empty<String>());
                     Run();
                 }
                 catch(Exception)
@@ -62,6 +63,7 @@ namespace NetExtender.Domains.View
 
         protected void HandleArgs(String[] args)
         {
+            Arguments = args.ToImmutableArray();
             HandleArgs(this, args);
         }
 

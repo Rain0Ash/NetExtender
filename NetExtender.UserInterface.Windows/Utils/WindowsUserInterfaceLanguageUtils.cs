@@ -6,9 +6,9 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using NetExtender.Types.Culture;
 
-namespace NetExtender.UserInterface.Windows
+namespace NetExtender.Utils.UserInterface
 {
-    public static class WindowsCultureUtils
+    public static class WindowsUserInterfaceLanguageUtils
     {
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         private static extern UInt16 SetThreadUILanguage(UInt16 lcid);

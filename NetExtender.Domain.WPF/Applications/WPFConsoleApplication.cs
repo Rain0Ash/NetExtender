@@ -7,14 +7,14 @@ namespace NetExtender.Domains.Applications
 {
     public class WPFConsoleApplication : WPFApplication
     {
+        protected WPFConsoleApplication(WPFApp application)
+            : base(application)
+        {
+        }
+        
         public override void Run()
         {
             Application.Run();
-        }
-
-        protected internal WPFConsoleApplication(WPFApp application)
-            : base(application)
-        {
         }
     }
 }

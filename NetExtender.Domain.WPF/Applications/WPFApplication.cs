@@ -40,7 +40,7 @@ namespace NetExtender.Domains.Applications
             }
         }
         
-        protected internal WPFApplication(WPFApp application)
+        protected WPFApplication(WPFApp application)
         {
             Application = application ?? throw new ArgumentNullException();
         }
