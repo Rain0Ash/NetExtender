@@ -7,6 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\NetExtender.AspNet.Core\NetExtender.AspNet.Core.csproj" />
       <ProjectReference Include="..\NetExtender.Domain\NetExtender.Domain.csproj" />
     </ItemGroup>
 

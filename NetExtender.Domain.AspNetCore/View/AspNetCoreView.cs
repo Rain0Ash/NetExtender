@@ -3,28 +3,27 @@
 
 using System;
 using System.Linq;
+using AspNet.Core.Types.Initializers.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NetExtender.AspNet.Core.Types.Initializers;
 using NetExtender.Domain.AspNetCore.Common;
 using NetExtender.Domains.AspNetCore.Applications;
 using NetExtender.Domains.View;
+using NetExtender.Domains.View.Interfaces;
 using NetExtender.Exceptions;
 
 namespace NetExtender.Domains.AspNetCore.View
 {
     public class AspNetCoreView : ApplicationView
     {
-        protected Action<WebHostBuilderContext>? Builder { get; }
-        protected Action<IServiceCollection>? Services { get; }
-        protected Action<IApplicationBuilder, IWebHostEnvironment> Configuration { get; }
+        protected Action<IAspNetCoreInitializer> Initializer { get; }
         
-        public AspNetCoreView(Action<WebHostBuilderContext>? builder, Action<IServiceCollection>? services, Action<IApplicationBuilder, IWebHostEnvironment> configuration)
+        public AspNetCoreView(Action<IAspNetCoreInitializer> initializer)
         {
-            Builder = builder;
-            Services = services;
-            Configuration = configuration;
+            Initializer = initializer ?? throw new ArgumentNullException(nameof(initializer));
         }
         
         protected override void InitializeInternal()
@@ -41,28 +40,25 @@ namespace NetExtender.Domains.AspNetCore.View
         {
             return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(builder =>
             {
-                builder.UseStartup(context =>
-                {
-                    Builder?.Invoke(context);
-                    return new StartupInvoker(context, Services, Configuration);
-                });
+                builder.UseStartup(AspNetCoreInitializerBuilder.Create);
             });
         }
 
-        protected override void Run()
+        protected override IApplicationView Run()
         {
-            Run(CreateHostBuilder().Build());
+            return Run(CreateHostBuilder().Build());
         }
 
-        protected virtual void Run(IHost? host)
+        protected virtual IApplicationView Run(IHost? host)
         {
             AspNetCoreApplication application = Domain.Current.Application as AspNetCoreApplication ?? throw new InitializeException("Application is not wpf");
             application.Run(host);
+            return this;
         }
 
-        protected override void Run<T>(T window)
+        protected override IApplicationView Run<T>(T window)
         {
-            Run();
+            return Run();
         }
     }
 }

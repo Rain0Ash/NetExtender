@@ -8,17 +8,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace NetExtender.Domain.AspNetCore.Common
 {
-    public class StartupInvoker
+    internal class StartupInvoker
     {
-        public WebHostBuilderContext? Context { get; }
-        public Action<IServiceCollection>? Services { get; }
-        public Action<IApplicationBuilder, IWebHostEnvironment> Configuration { get; }
+        private WebHostBuilderContext? Context { get; }
+        private Action<IServiceCollection>? Services { get; }
+        private Action<IApplicationBuilder, IWebHostEnvironment>? Configuration { get; }
 
-        public StartupInvoker(WebHostBuilderContext? context, Action<IServiceCollection>? services, Action<IApplicationBuilder, IWebHostEnvironment> configuration)
+        public StartupInvoker(WebHostBuilderContext context, Action<IServiceCollection> services, Action<IApplicationBuilder, IWebHostEnvironment>? configuration)
         {
             Context = context;
             Services = services;
-            Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+            Configuration = configuration;
         }
             
         public void ConfigureServices(IServiceCollection services)
@@ -28,7 +28,7 @@ namespace NetExtender.Domain.AspNetCore.Common
 
         public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)
         {
-            Configuration.Invoke(application, environment);
+            Configuration?.Invoke(application, environment);
         }
     }
 }
