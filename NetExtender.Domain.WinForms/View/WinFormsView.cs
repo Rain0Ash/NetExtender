@@ -4,6 +4,7 @@
 using System;
 using System.Windows.Forms;
 using NetExtender.Domains.Applications;
+using NetExtender.Domains.View.Interfaces;
 using NetExtender.Exceptions;
 
 namespace NetExtender.Domains.View
@@ -29,28 +30,32 @@ namespace NetExtender.Domains.View
             Context = context;
         }
         
+        protected static void EnableVisualStyles()
+        {
+            System.Windows.Forms.Application.EnableVisualStyles();
+        }
+        
         protected override void InitializeInternal()
         {
             Domain.ShutdownMode = ApplicationShutdownMode.OnExplicitShutdown;
         }
 
-        protected override void Run()
+        protected override IApplicationView Run()
         {
             if (Context is null)
             {
                 System.Windows.Forms.Application.Run();
-                return;
+                return this;
             }
             
-            Run(Context);
+            return Run(Context);
         }
 
-        protected virtual void Run(Form? form)
+        protected virtual IApplicationView Run(Form? form)
         {
             if (form is null)
             {
-                Run();
-                return;
+                return Run();
             }
 
             Context ??= form;
@@ -63,16 +68,12 @@ namespace NetExtender.Domains.View
             
             WinFormsApplication application = Domain.Current.Application as WinFormsApplication ?? throw new InitializeException("Application is not winforms");
             application.Run(Context);
+            return this;
         }
 
-        protected static void EnableVisualStyles()
+        protected IApplicationView Run<T>() where T : Form, new()
         {
-            System.Windows.Forms.Application.EnableVisualStyles();
-        }
-        
-        protected void Run<T>() where T : Form, new()
-        {
-            Run(new T());
+            return Run(new T());
         }
 
         protected virtual void OnFormClosed(Object? sender, EventArgs args)

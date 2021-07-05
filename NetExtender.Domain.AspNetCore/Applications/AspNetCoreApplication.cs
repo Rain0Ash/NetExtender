@@ -2,11 +2,9 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NetExtender.Domains.Applications;
+using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Types.Dispatchers.Interfaces;
 
 namespace NetExtender.Domains.AspNetCore.Applications
@@ -34,25 +32,26 @@ namespace NetExtender.Domains.AspNetCore.Applications
         
         protected IHost? Context { get; set; }
 
-        public override void Run()
+        public override IApplication Run()
         {
-            Run(null);
+            return Run(null);
         }
 
-        public virtual void Run(IHost? host)
+        public virtual IApplication Run(IHost? host)
         {
             if (host is null)
             {
-                return;
+                return this;
             }
 
             Context = host;
             Context.Run();
+            return this;
         }
 
-        public override void Run<T>(T window)
+        public override IApplication Run<T>(T window)
         {
-            Run();
+            return Run();
         }
 
         public override void Shutdown(Int32 code = 0)

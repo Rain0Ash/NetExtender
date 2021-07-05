@@ -7,6 +7,7 @@ namespace NetExtender.Domains.View.Interfaces
 {
     public interface IApplicationView : IDisposable
     {
-        public void Start(String[] args);
+        public IApplicationView Start();
+        public IApplicationView Start(String[]? args);
     }
 }

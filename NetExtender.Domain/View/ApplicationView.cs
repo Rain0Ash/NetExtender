@@ -6,6 +6,7 @@ using System.Collections.Immutable;
 using NetExtender.Domains.View.Interfaces;
 using NetExtender.Exceptions;
 using NetExtender.UserInterface.Interfaces;
+using NetExtender.Utils.Types;
 
 namespace NetExtender.Domains.View
 {
@@ -14,12 +15,17 @@ namespace NetExtender.Domains.View
         public static IApplicationView? Current { get; private set; }
 
         protected static Object SyncObject { get; } = new Object();
-        
+
         protected Boolean Started { get; private set; }
-        
+
         public ImmutableArray<String> Arguments { get; private set; }
 
-        public void Start(String[]? args)
+        public IApplicationView Start()
+        {
+            return Start(null);
+        }
+
+        public IApplicationView Start(String[]? args)
         {
             lock (SyncObject)
             {
@@ -27,9 +33,9 @@ namespace NetExtender.Domains.View
                 {
                     if (Current == this)
                     {
-                        return;
+                        return this;
                     }
-                
+
                     throw new AlreadyInitializedException("View already initialized", nameof(Current));
                 }
 
@@ -39,11 +45,11 @@ namespace NetExtender.Domains.View
                     Current = this;
                     Started = true;
                     HandleArgs(args ?? Array.Empty<String>());
-                    Run();
+                    return Run();
                 }
-                catch(Exception)
+                catch (Exception exception)
                 {
-                    Started = false;
+                    throw new InitializeException($"Exception when starting {GetType()} instance!", exception);
                 }
             }
         }
@@ -51,19 +57,24 @@ namespace NetExtender.Domains.View
         private void StartInitialize()
         {
             InitializeInternal();
-            
+
             Initialize();
         }
 
         protected abstract void InitializeInternal();
-        
+
         protected virtual void Initialize()
         {
         }
 
         protected void HandleArgs(String[] args)
         {
-            Arguments = args.ToImmutableArray();
+            if (args is null)
+            {
+                throw new ArgumentNullException(nameof(args));
+            }
+
+            Arguments = args.WhereNotNullOrEmpty().ToImmutableArray();
             HandleArgs(this, args);
         }
 
@@ -71,14 +82,16 @@ namespace NetExtender.Domains.View
         {
         }
 
-        protected virtual void Run()
+        protected virtual IApplicationView Run()
         {
             Domain.Run();
+            return this;
         }
-        
-        protected virtual void Run<T>(T window) where T : IWindow
+
+        protected virtual IApplicationView Run<T>(T window) where T : IWindow
         {
             Domain.Run(window);
+            return this;
         }
 
         private Boolean _disposed;

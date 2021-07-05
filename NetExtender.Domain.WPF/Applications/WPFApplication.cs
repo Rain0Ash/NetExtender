@@ -4,6 +4,7 @@
 using System;
 using System.Reflection;
 using System.Windows;
+using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Types.Dispatchers;
 using NetExtender.Types.Dispatchers.Interfaces;
 using WPFApp = System.Windows.Application;
@@ -45,26 +46,27 @@ namespace NetExtender.Domains.Applications
             Application = application ?? throw new ArgumentNullException();
         }
         
-        public override void Run()
+        public override IApplication Run()
         {
             InitializeComponent();
             Application.Run();
+            return this;
         }
 
-        public void Run(Window? window)
+        public IApplication Run(Window? window)
         {
-            if (window is not null)
+            if (window is null)
             {
-                Application.Run(window);
-                return;
+                return Run();
             }
-            
-            Run();
+
+            Application.Run(window);
+            return this;
         }
         
-        public override void Run<T>(T window)
+        public override IApplication Run<T>(T window)
         {
-            Run(window as Window);
+            return Run(window as Window);
         }
 
         public override void Shutdown(Int32 code = 0)

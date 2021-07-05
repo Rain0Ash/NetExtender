@@ -3,6 +3,7 @@
 
 using System;
 using System.Windows.Forms;
+using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Exceptions;
 using NetExtender.Types.Dispatchers.Interfaces;
 
@@ -34,26 +35,27 @@ namespace NetExtender.Domains.Applications
         }
         
         [STAThread]
-        public override void Run()
+        public override IApplication Run()
         {
             System.Windows.Forms.Application.Run();
+            return this;
         }
 
         [STAThread]
-        public void Run(Form? form)
+        public IApplication Run(Form? form)
         {
-            if (form is not null)
+            if (form is null)
             {
-                System.Windows.Forms.Application.Run(form);
-                return;
+                return Run();
             }
-            
-            Run();
+
+            System.Windows.Forms.Application.Run(form);
+            return this;
         }
         
-        public override void Run<T>(T window)
+        public override IApplication Run<T>(T window)
         {
-            Run(window as Form);
+            return Run(window as Form);
         }
     }
 }

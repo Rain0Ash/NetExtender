@@ -4,6 +4,7 @@
 using System;
 using System.Windows;
 using NetExtender.Domains.Applications;
+using NetExtender.Domains.View.Interfaces;
 using NetExtender.Exceptions;
 
 namespace NetExtender.Domains.View
@@ -26,19 +27,19 @@ namespace NetExtender.Domains.View
             Domain.ShutdownMode = ApplicationShutdownMode.OnExplicitShutdown;
         }
         
-        protected override void Run()
+        protected override IApplicationView Run()
         {
-            Run(Context);
+            return Run(Context);
         }
 
-        protected virtual void Run(Window? window)
+        protected virtual IApplicationView Run(Window? window)
         {
             WPFApplication application = Domain.Current.Application as WPFApplication ?? throw new InitializeException("Application is not wpf");
             
             if (window is null)
             {
                 application.Run();
-                return;
+                return this;
             }
 
             Context ??= window;
@@ -49,11 +50,12 @@ namespace NetExtender.Domains.View
             
             Context.Closed += OnFormClosed;
             application.Run(Context);
+            return this;
         }
         
-        protected void Run<T>() where T : Window, new()
+        protected IApplicationView Run<T>() where T : Window, new()
         {
-            Run(new T());
+            return Run(new T());
         }
 
         protected virtual void OnFormClosed(Object? sender, EventArgs args)

@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.Interfaces;
+using NetExtender.Domains.View.Interfaces;
 using NetExtender.Exceptions;
 using NetExtender.Types.Dispatchers.Interfaces;
 using NetExtender.UserInterface.Interfaces;
@@ -169,15 +170,49 @@ namespace NetExtender.Domains
                 Application = application ?? throw new ArgumentNullException(nameof(application));
                 return this;
             }
-
-            public void Run()
+            
+            public IDomain View(IApplicationView view)
             {
-                Application.Run();
+                if (view is null)
+                {
+                    throw new ArgumentNullException(nameof(view));
+                }
+
+                view.Start();
+                return this;
             }
             
-            public void Run<T>(T window) where T : IWindow
+            public IDomain View(IApplicationView view, String[]? args)
+            {
+                if (view is null)
+                {
+                    throw new ArgumentNullException(nameof(view));
+                }
+
+                view.Start(args);
+                return this;
+            }
+            
+            IApplication IApplication.Run()
+            {
+                return Run();
+            }
+
+            public IDomain Run()
+            {
+                Application.Run();
+                return this;
+            }
+            
+            IApplication IApplication.Run<T>(T window)
+            {
+                return Run(window);
+            }
+            
+            public IDomain Run<T>(T window) where T : IWindow
             {
                 Application.Run(window);
+                return this;
             }
 
             public void Shutdown(Int32 code = 0)

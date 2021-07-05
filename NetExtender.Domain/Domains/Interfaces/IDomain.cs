@@ -4,6 +4,7 @@
 using System;
 using System.Globalization;
 using NetExtender.Domains.Applications.Interfaces;
+using NetExtender.Domains.View.Interfaces;
 
 namespace NetExtender.Domains.Interfaces
 {
@@ -30,6 +31,7 @@ namespace NetExtender.Domains.Interfaces
         public String BranchData { get; }
 
         public String AppName { get; }
+        
         public String AppShortName { get; }
         
         public CultureInfo Culture { get; set; }
@@ -37,5 +39,8 @@ namespace NetExtender.Domains.Interfaces
         public Boolean AlreadyStarted { get; }
         
         public IDomain Initialize(IApplication application);
+        
+        public IDomain View(IApplicationView view);
+        public IDomain View(IApplicationView view, String[]? args);
     }
 }

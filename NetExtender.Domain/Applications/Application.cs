@@ -16,8 +16,8 @@ namespace NetExtender.Domains.Applications
         public abstract IDispatcher? Dispatcher { get; }
         public abstract ApplicationShutdownMode ShutdownMode { get; set; }
 
-        public abstract void Run();
-        public abstract void Run<T>(T window) where T : IWindow;
+        public abstract IApplication Run();
+        public abstract IApplication Run<T>(T window) where T : IWindow;
 
         public virtual void Shutdown(Int32 code = 0)
         {

@@ -15,8 +15,8 @@ namespace NetExtender.Domains.Applications.Interfaces
         public IDispatcher? Dispatcher { get; }
         public ApplicationShutdownMode ShutdownMode { get; set; }
         
-        public void Run();
-        public void Run<T>(T window) where T : IWindow;
+        public IApplication Run();
+        public IApplication Run<T>(T window) where T : IWindow;
         public void Shutdown(Int32 code = 0);
         public void Shutdown(Boolean force);
         public void Shutdown(Int32 code, Boolean force);
