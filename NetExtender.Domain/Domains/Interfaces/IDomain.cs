@@ -30,9 +30,9 @@ namespace NetExtender.Domains.Interfaces
         
         public String BranchData { get; }
 
-        public String AppName { get; }
+        public String ApplicationName { get; }
         
-        public String AppShortName { get; }
+        public String ApplicationShortName { get; }
         
         public CultureInfo Culture { get; set; }
         

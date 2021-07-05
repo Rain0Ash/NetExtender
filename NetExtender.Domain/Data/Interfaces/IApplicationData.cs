@@ -32,9 +32,9 @@ namespace NetExtender.Domains.Interfaces
         
         public Guid Guid { get; }
         
-        public String AppName { get; }
+        public String ApplicationName { get; }
         
-        public String AppShortName { get; }
+        public String ApplicationShortName { get; }
         
         public DateTime StartedAt { get; }
 

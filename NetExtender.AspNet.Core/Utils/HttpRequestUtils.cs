@@ -16,7 +16,7 @@ namespace NetExtender.Utils.AspNetCore.Types
                 throw new ArgumentNullException(nameof(request));
             }
 
-            return request.Headers.TryGetValue("User-Agent", out StringValues agent) ? agent : null;
+            return request.Headers.TryGetValue("User-Agent", out StringValues agent) ? agent.ToString() : null;
         }
     }
 }

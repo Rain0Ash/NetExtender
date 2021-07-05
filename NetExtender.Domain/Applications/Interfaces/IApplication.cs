@@ -17,7 +17,8 @@ namespace NetExtender.Domains.Applications.Interfaces
         
         public IApplication Run();
         public IApplication Run<T>(T window) where T : IWindow;
-        public void Shutdown(Int32 code = 0);
+        public void Shutdown();
+        public void Shutdown(Int32 code);
         public void Shutdown(Boolean force);
         public void Shutdown(Int32 code, Boolean force);
         public Task<Boolean> ShutdownAsync(Int32 code, Int32 milli);

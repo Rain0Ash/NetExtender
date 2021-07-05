@@ -11,13 +11,13 @@ namespace NetExtender.Domains.View
 {
     public class WPFView : ApplicationView
     {
-        public Window? Context { get; private set; }
+        protected Window? Context { get; private set; }
         
         public WPFView()
         {
         }
 
-        public WPFView(Window context)
+        public WPFView(Window? context)
         {
             Context = context;
         }
@@ -34,7 +34,7 @@ namespace NetExtender.Domains.View
 
         protected virtual IApplicationView Run(Window? window)
         {
-            WPFApplication application = Domain.Current.Application as WPFApplication ?? throw new InitializeException("Application is not wpf");
+            WPFApplication application = Domain.Current.Application as WPFApplication ?? throw new InitializeException("Application is not WPF");
             
             if (window is null)
             {

@@ -11,9 +11,9 @@ namespace NetExtender.Domains
     {
         public Guid Guid { get; }
         
-        public String AppName { get; }
+        public String ApplicationName { get; }
         
-        public String AppShortName { get; }
+        public String ApplicationShortName { get; }
         
         public DateTime StartedAt { get; }
 
@@ -27,8 +27,8 @@ namespace NetExtender.Domains
         public ApplicationInfoMessage(Guid guid, String name, String shortname, DateTime startedAt, ApplicationVersion version, ApplicationInfo information, ApplicationStatus status, ApplicationBranch branch)
         {
             Guid = guid;
-            AppName = name;
-            AppShortName = shortname;
+            ApplicationName = name;
+            ApplicationShortName = shortname;
             StartedAt = startedAt;
             Version = version;
             Information = information;

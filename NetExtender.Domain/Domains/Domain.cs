@@ -130,51 +130,51 @@ namespace NetExtender.Domains
             }
         }
 
-        public static String AppName
+        public static String ApplicationName
         {
             get
             {
-                return Current.AppName;
+                return Current.ApplicationName;
             }
         }
         
-        public static String AppShortName
+        public static String ApplicationShortName
         {
             get
             {
-                return Current.AppShortName;
+                return Current.ApplicationShortName;
             }
         }
 
-        public static String? AppNameOrPath
+        public static String? ApplicationNameOrPath
         {
             get
             {
-                return IsInitialized ? AppName : ApplicationUtils.Path;
+                return IsInitialized ? ApplicationName : ApplicationUtils.Path;
             }
         }
 
-        public static String? AppNameOrFriendlyName
+        public static String? ApplicationNameOrFriendlyName
         {
             get
             {
-                return IsInitialized ? AppName : ApplicationUtils.FriendlyName;
+                return IsInitialized ? ApplicationName : ApplicationUtils.FriendlyName;
             }
         }
         
-        public static String? AppShortNameOrPath
+        public static String? ApplicationShortNameOrPath
         {
             get
             {
-                return IsInitialized ? AppShortName : ApplicationUtils.Path;
+                return IsInitialized ? ApplicationShortName : ApplicationUtils.Path;
             }
         }
 
-        public static String? AppShortNameOrFriendlyName
+        public static String? ApplicationShortNameOrFriendlyName
         {
             get
             {
-                return IsInitialized ? AppShortName : ApplicationUtils.FriendlyName;
+                return IsInitialized ? ApplicationShortName : ApplicationUtils.FriendlyName;
             }
         }
 

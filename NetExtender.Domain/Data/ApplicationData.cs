@@ -85,15 +85,15 @@ namespace NetExtender.Domains
         {
             get
             {
-                return new ApplicationInfoMessage(Guid, AppName, AppShortName, StartedAt, Version, Information, Status, Branch);
+                return new ApplicationInfoMessage(Guid, ApplicationName, ApplicationShortName, StartedAt, Version, Information, Status, Branch);
             }
         }
 
         public Guid Guid { get; }
         
-        public String AppName { get; }
+        public String ApplicationName { get; }
         
-        public String AppShortName { get; }
+        public String ApplicationShortName { get; }
         
         public DateTime StartedAt { get; }
 
@@ -124,7 +124,7 @@ namespace NetExtender.Domains
         {
             get
             {
-                return MutexUtils.CaptureMutex(AppName);
+                return MutexUtils.CaptureMutex(ApplicationName);
             }
         }
 
@@ -173,14 +173,14 @@ namespace NetExtender.Domains
             }
             
             Guid = Guid.NewGuid();
-            AppName = name.Trim();
-            AppShortName = shortname.Trim();
+            ApplicationName = name.Trim();
+            ApplicationShortName = shortname.Trim();
             StartedAt = DateTime.Now;
             Version = version;
             Information = information;
             Status = status;
             Branch = branch;
-            MutexUtils.RegisterMutex(AppName);
+            MutexUtils.RegisterMutex(ApplicationName);
         }
 
         public Int32 CompareTo(IApplicationData? other)
@@ -195,7 +195,7 @@ namespace NetExtender.Domains
                 return 2;
             }
             
-            if (AppName != other.AppName)
+            if (ApplicationName != other.ApplicationName)
             {
                 throw new ArgumentException("Applications name is not equals");
             }
@@ -256,7 +256,7 @@ namespace NetExtender.Domains
 
             if (disposing)
             {
-                MutexUtils.UnregisterMutex(AppName);
+                MutexUtils.UnregisterMutex(ApplicationName);
             }
 
             _disposed = true;

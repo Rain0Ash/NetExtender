@@ -54,7 +54,7 @@ namespace NetExtender.Domains.AspNetCore.Applications
             return Run();
         }
 
-        public override void Shutdown(Int32 code = 0)
+        public override void Shutdown(Int32 code)
         {
             try
             {

@@ -13,7 +13,7 @@ namespace NetExtender.Windows.Protocols
     {
         public String Name { get; }
 
-        private String URLAppName
+        private String URLApplicationName
         {
             get
             {
@@ -162,7 +162,7 @@ namespace NetExtender.Windows.Protocols
 
         public virtual Boolean Register()
         {
-            return Register(URLAppName);
+            return Register(URLApplicationName);
         }
 
         public virtual Boolean Register(String about)

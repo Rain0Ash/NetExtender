@@ -19,7 +19,12 @@ namespace NetExtender.Domains.Applications
         public abstract IApplication Run();
         public abstract IApplication Run<T>(T window) where T : IWindow;
 
-        public virtual void Shutdown(Int32 code = 0)
+        public void Shutdown()
+        {
+            Shutdown(0);
+        }
+
+        public virtual void Shutdown(Int32 code)
         {
             ApplicationUtils.Shutdown(code);
         }

@@ -11,7 +11,7 @@ namespace NetExtender.Domains.View
 {
     public class WinFormsView : ApplicationView
     {
-        public Form? Context { get; private set; }
+        protected Form? Context { get; private set; }
 
         public virtual Boolean VisualStyle
         {
@@ -25,7 +25,7 @@ namespace NetExtender.Domains.View
         {
         }
 
-        public WinFormsView(Form context)
+        public WinFormsView(Form? context)
         {
             Context = context;
         }
@@ -42,13 +42,13 @@ namespace NetExtender.Domains.View
 
         protected override IApplicationView Run()
         {
-            if (Context is null)
+            if (Context is not null)
             {
-                System.Windows.Forms.Application.Run();
-                return this;
+                return Run(Context);
             }
-            
-            return Run(Context);
+
+            System.Windows.Forms.Application.Run();
+            return this;
         }
 
         protected virtual IApplicationView Run(Form? form)
@@ -66,7 +66,7 @@ namespace NetExtender.Domains.View
             
             Context.Closed += OnFormClosed;
             
-            WinFormsApplication application = Domain.Current.Application as WinFormsApplication ?? throw new InitializeException("Application is not winforms");
+            WinFormsApplication application = Domain.Current.Application as WinFormsApplication ?? throw new InitializeException("Application is not WinForms");
             application.Run(Context);
             return this;
         }

@@ -123,19 +123,19 @@ namespace NetExtender.Domains
                 }
             }
 
-            public String AppName
+            public String ApplicationName
             {
                 get
                 {
-                    return Data.AppName;
+                    return Data.ApplicationName;
                 }
             }
             
-            public String AppShortName
+            public String ApplicationShortName
             {
                 get
                 {
-                    return Data.AppShortName;
+                    return Data.ApplicationShortName;
                 }
             }
 
@@ -214,8 +214,13 @@ namespace NetExtender.Domains
                 Application.Run(window);
                 return this;
             }
+            
+            public void Shutdown()
+            {
+                Application.Shutdown();
+            }
 
-            public void Shutdown(Int32 code = 0)
+            public void Shutdown(Int32 code)
             {
                 Application.Shutdown(code);
             }
