@@ -124,50 +124,12 @@ namespace NetExtender.Utils.Windows.IO
             {
                 throw new ArgumentNullException(nameof(files));
             }
+            
+            FileInfo[] values = files.Where(item => item?.Directory?.FullName is not null)
+                .WhereSameBy(item => item!.Directory!.FullName, StringComparer.FromComparison(comparison))
+                .DistinctBy(item => item!.FullName).ToArray()!;
 
-            FileInfo? first = null;
-
-            IEnumerable<FileInfo> Filter()
-            {
-                using IEnumerator<FileInfo?> enumerator = files.GetEnumerator();
-
-                while (enumerator.MoveNext())
-                {
-                    FileInfo? item = enumerator.Current;
-
-                    if (item?.Directory is null || !item.Exists)
-                    {
-                        continue;
-                    }
-
-                    first = item;
-                    yield return item;
-                    break;
-                }
-
-                if (first is null)
-                {
-                    yield break;
-                }
-                
-                while (enumerator.MoveNext())
-                {
-                    FileInfo? item = enumerator.Current;
-                    if (item?.Directory is null || !item.Exists)
-                    {
-                        continue;
-                    }
-
-                    if (String.Equals(item.Directory.FullName, first.Directory!.FullName, comparison))
-                    {
-                        yield return item;
-                    }
-                }
-            }
-
-            FileInfo[] values = Filter().Distinct().ToArray();
-
-            return first is not null && OpenExplorerWithSelection(first.Directory!.FullName, values.Select(item => item.Name), comparison);
+            return values.Length > 0 && OpenExplorerWithSelection(values[0].Directory!.FullName, values.Select(item => item.Name), comparison);
         }
         
         public static Boolean OpenExplorerWithSelection(params FileInfo[] files)
@@ -240,6 +202,32 @@ namespace NetExtender.Utils.Windows.IO
             return OpenExplorerWithSelection(directory, files, StringComparison.OrdinalIgnoreCase);
         }
 
+        private static IEnumerable<String> OpenExplorerWithSelectionFilter(IEnumerable<String?> files, String directory, StringComparison comparison)
+        {
+            foreach (String? file in files)
+            {
+                if (String.IsNullOrEmpty(file))
+                {
+                    continue;
+                }
+
+                if (!PathUtils.IsFullPath(file))
+                {
+                    yield return file;
+                    continue;
+                }
+
+                String? path = PathUtils.GetFullPath(file);
+
+                if (path is null || !String.Equals(directory, PathUtils.GetDirectoryName(path), comparison) || !PathUtils.IsExistAsFile(path))
+                {
+                    continue;
+                }
+                
+                yield return PathUtils.GetFileName(path);
+            }
+        }
+
         public static Boolean OpenExplorerWithSelection(String directory, IEnumerable<String?>? files, StringComparison comparison)
         {
             if (directory is null)
@@ -266,37 +254,7 @@ namespace NetExtender.Utils.Windows.IO
                 return OpenExplorer(directory);
             }
 
-            static IEnumerable<String> Filter(IEnumerable<String?> files, String directory, StringComparison comparison)
-            {
-                foreach (String? file in files)
-                {
-                    if (String.IsNullOrEmpty(file))
-                    {
-                        continue;
-                    }
-
-                    if (PathUtils.IsFullPath(file))
-                    {
-                        String? path = PathUtils.GetFullPath(file);
-
-                        if (path is null)
-                        {
-                            continue;
-                        }
-                        
-                        if (String.Equals(directory, PathUtils.GetDirectoryName(path), comparison) && PathUtils.IsExistAsFile(path))
-                        {
-                            yield return PathUtils.GetFileName(path);
-                        }
-                        
-                        continue;
-                    }
-
-                    yield return file;
-                }
-            }
-            
-            String[] filename = Filter(files, directory, comparison).Distinct().ToArray();
+            String[] filename = OpenExplorerWithSelectionFilter(files, directory, comparison).Distinct().ToArray();
             if (filename.Length <= 0)
             {
                 return OpenExplorer(directory);

@@ -5,7 +5,6 @@ using System;
 using System.Collections.Immutable;
 using NetExtender.Domains.View.Interfaces;
 using NetExtender.Exceptions;
-using NetExtender.UserInterface.Interfaces;
 using NetExtender.Utils.Types;
 
 namespace NetExtender.Domains.View
@@ -85,12 +84,6 @@ namespace NetExtender.Domains.View
         protected virtual IApplicationView Run()
         {
             Domain.Run();
-            return this;
-        }
-
-        protected virtual IApplicationView Run<T>(T window) where T : IWindow
-        {
-            Domain.Run(window);
             return this;
         }
 

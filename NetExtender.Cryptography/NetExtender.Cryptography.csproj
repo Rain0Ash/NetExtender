@@ -3,9 +3,12 @@
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <Configurations>Debug;Release;Release | x64</Configurations>
-        <Platforms>AnyCPU</Platforms>
+        <OutputType>Library</OutputType>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<LangVersion>9</LangVersion>
+		<Authors>Rain0Ash</Authors>
+        <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
+        <Version>0.7.9</Version>
     </PropertyGroup>
 
     <ItemGroup>

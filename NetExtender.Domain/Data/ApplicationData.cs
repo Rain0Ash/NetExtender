@@ -131,7 +131,7 @@ namespace NetExtender.Domains
         [return: NotNullIfNotNull("name")]
         protected static String? ToShortName(String? name)
         {
-            return name?.ToLower().Replace(" ", String.Empty);
+            return name is not null ? Regex.Replace(name, @"[^a-zA-Z0-9]", String.Empty) : null;
         }
 
         public ApplicationData(ApplicationVersion version, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
@@ -162,19 +162,16 @@ namespace NetExtender.Domains
         
         public ApplicationData(String name, String shortname, ApplicationVersion version, ApplicationInfo information, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
         {
-            if (String.IsNullOrWhiteSpace(name) || String.IsNullOrWhiteSpace(shortname))
+            name = name.Trim();
+            shortname = ToShortName(shortname);
+            if (String.IsNullOrEmpty(name) || String.IsNullOrEmpty(shortname))
             {
                 throw new ArgumentException("Not null or whitespace app name");
             }
 
-            if (!Regex.IsMatch(shortname, "^[\x21-\x7E]+$"))
-            {
-                throw new ArgumentException(@"Only latin chars and digits", nameof(shortname));
-            }
-            
             Guid = Guid.NewGuid();
-            ApplicationName = name.Trim();
-            ApplicationShortName = shortname.Trim();
+            ApplicationName = name;
+            ApplicationShortName = shortname;
             StartedAt = DateTime.Now;
             Version = version;
             Information = information;

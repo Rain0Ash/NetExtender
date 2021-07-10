@@ -3,7 +3,11 @@
     <PropertyGroup>
         <TargetFramework>net5.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
-        <OutputType>Exe</OutputType>
+		<OutputType>Library</OutputType>
+		<LangVersion>9</LangVersion>
+		<Authors>Rain0Ash</Authors>
+        <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
+        <Version>0.7.9</Version>
     </PropertyGroup>
 
     <ItemGroup>
@@ -14,6 +18,7 @@
       <PackageReference Include="NAudio.Wasapi" Version="2.0.0" />
       <PackageReference Include="NAudio.WinForms" Version="2.0.1" />
       <PackageReference Include="NAudio.WinMM" Version="2.0.1" />
+      <PackageReference Include="SharpGrabber" Version="1.5.2" />
     </ItemGroup>
 
     <ItemGroup>

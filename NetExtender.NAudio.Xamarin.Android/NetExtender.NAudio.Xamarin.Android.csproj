@@ -7,7 +7,12 @@
         <SchemaVersion>2.0</SchemaVersion>
         <ProjectGuid>{7E15DFE1-B6DA-4509-9C76-833B2230DF6E}</ProjectGuid>
         <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+        <Nullable>enable</Nullable>
         <OutputType>Library</OutputType>
+        <LangVersion>9</LangVersion>
+		<Authors>Rain0Ash</Authors>
+        <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
+        <Version>0.7.9</Version>
         <AppDesignerFolder>Properties</AppDesignerFolder>
         <RootNamespace>NetExtender.NAudio.Xamarin.Android</RootNamespace>
         <AssemblyName>NetExtender.NAudio.Xamarin.Android</AssemblyName>
@@ -16,8 +21,6 @@
         <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
         <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
         <TargetFrameworkVersion>v11.0</TargetFrameworkVersion>
-        <LangVersion>9</LangVersion>
-        <Nullable>enable</Nullable>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <DebugSymbols>true</DebugSymbols>

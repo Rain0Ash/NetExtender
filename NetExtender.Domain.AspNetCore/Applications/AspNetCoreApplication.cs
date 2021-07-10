@@ -11,6 +11,8 @@ namespace NetExtender.Domains.AspNetCore.Applications
 {
     public class AspNetCoreApplication : Application
     {
+        protected IHost? Context { get; set; }
+        
         public override IDispatcher? Dispatcher
         {
             get
@@ -29,8 +31,6 @@ namespace NetExtender.Domains.AspNetCore.Applications
             {
             }
         }
-        
-        protected IHost? Context { get; set; }
 
         public override IApplication Run()
         {
@@ -47,11 +47,6 @@ namespace NetExtender.Domains.AspNetCore.Applications
             Context = host;
             Context.Run();
             return this;
-        }
-
-        public override IApplication Run<T>(T window)
-        {
-            return Run();
         }
 
         public override void Shutdown(Int32 code)

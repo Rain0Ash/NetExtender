@@ -10,7 +10,7 @@ using NetExtender.Utils.Application;
 using NetExtender.Utils.IO;
 using NetExtender.Utils.Registry;
 
-namespace NetExtender.Configuration.Registry
+namespace NetExtender.Configuration.Windows.Registry
 {
     public sealed class RegistryConfigBehavior : ConfigBehavior
     {

@@ -10,7 +10,7 @@ using NetExtender.Exceptions;
 
 namespace NetExtender.AspNet.Core.Types.Initializers
 {
-    public class AspNetCoreInitializerBuilder
+    public class AspNetCoreInitializerBuilder : IStartupProvider
     {
         public static AspNetCoreInitializerBuilder Create(WebHostBuilderContext context)
         {

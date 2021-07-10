@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -26,26 +27,50 @@ namespace NetExtender.Utils.Network
     {
         public const String Localhost = "localhost";
         public const String LocalhostIP = "127.0.0.1";
+        
+        public static String LocalhostPort(UInt16 port)
+        {
+            return $"{Localhost}:{port}";
+        }
+        
+        public static String LocalhostIPPort(UInt16 port)
+        {
+            return $"{LocalhostIP}:{port}";
+        }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ValidateIPv4(String ip)
         {
             return !String.IsNullOrEmpty(ip) && ip.Count(c => c == '.') == 3 && IPAddress.TryParse(ip, out _);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IList<Byte> ConvertIP(String ip)
+        public static Byte[]? ConvertIP(String ip)
         {
-            return IPAddress.TryParse(ip, out IPAddress address) ? ConvertIP(address) : null;
+            return IPAddress.TryParse(ip, out IPAddress? address) ? ConvertIP(address) : null;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean ConvertIP(String ip, [MaybeNullWhen(false)] out Byte[]? bytes)
+        {
+            if (IPAddress.TryParse(ip, out IPAddress? address))
+            {
+                bytes = ConvertIP(address);
+                return true;
+            }
+
+            bytes = default;
+            return false;
         }
 
-        public static IList<Byte> ConvertIP(this IPAddress address)
+        public static Byte[] ConvertIP(this IPAddress address)
         {
             if (address is null)
             {
                 throw new ArgumentNullException(nameof(address));
             }
 
-            return address.GetAddressBytes().Reverse().ToImmutableArray();
+            return address.GetAddressBytes().InnerReverse();
         }
 
         public static UInt16 Count(this PortType type)
@@ -174,7 +199,7 @@ namespace NetExtender.Utils.Network
             return reply?.Status == IPStatus.Success;
         }
 
-        public static async Task<Boolean> IsSuccessfulAsync(this Task<PingReply?> reply)
+        public static async Task<Boolean> IsSuccessfulAsync(this Task<PingReply> reply)
         {
             if (reply is null)
             {

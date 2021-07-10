@@ -900,6 +900,133 @@ namespace NetExtender.Utils.Types
                 }
             }
         }
+        
+        public static IEnumerable<T> WhereNotSame<T>(this IEnumerable<T> source)
+        {
+            return WhereNotSame(source, null);
+        }
+
+        public static IEnumerable<T> WhereNotSame<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                yield break;
+            }
+            
+            comparer ??= EqualityComparer<T>.Default;
+            T first = enumerator.Current;
+            yield return first;
+
+            while (enumerator.MoveNext())
+            {
+                T item = enumerator.Current;
+                if (!comparer.Equals(first, item))
+                {
+                    yield return item;
+                }
+            }
+        }
+        
+        public static IEnumerable<T> WhereNotSameBy<T, TComparable>(this IEnumerable<T> source, Func<T, TComparable> selector)
+        {
+            return WhereNotSameBy(source, selector, (IEqualityComparer<TComparable>?) null);
+        }
+
+        public static IEnumerable<T> WhereNotSameBy<T, TComparable>(this IEnumerable<T> source, Func<T, TComparable> selector, IEqualityComparer<TComparable>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                yield break;
+            }
+            
+            comparer ??= EqualityComparer<TComparable>.Default;
+            TComparable comparable = selector(enumerator.Current);
+            yield return enumerator.Current;
+
+            while (enumerator.MoveNext())
+            {
+                T item = enumerator.Current;
+                if (!comparer.Equals(comparable, selector(item)))
+                {
+                    yield return item;
+                }
+            }
+        }
+        
+        public static IEnumerable<T> WhereNotSameBy<T, TComparable>(this IEnumerable<T> source, T sample, Func<T, TComparable> selector)
+        {
+            return WhereNotSameBy(source, sample, selector, null);
+        }
+
+        public static IEnumerable<T> WhereNotSameBy<T, TComparable>(this IEnumerable<T> source, T sample, Func<T, TComparable> selector, IEqualityComparer<TComparable>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (sample is null)
+            {
+                throw new ArgumentNullException(nameof(sample));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return WhereNotSameBy(source, selector(sample), selector, comparer);
+        }
+        
+        public static IEnumerable<T> WhereNotSameBy<T, TComparable>(this IEnumerable<T> source, TComparable sample, Func<T, TComparable> selector)
+        {
+            return WhereNotSameBy(source, sample, selector, null);
+        }
+
+        public static IEnumerable<T> WhereNotSameBy<T, TComparable>(this IEnumerable<T> source, TComparable sample, Func<T, TComparable> selector, IEqualityComparer<TComparable>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            comparer ??= EqualityComparer<TComparable>.Default;
+            
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            while (enumerator.MoveNext())
+            {
+                T item = enumerator.Current;
+                if (!comparer.Equals(sample, selector(item)))
+                {
+                    yield return item;
+                }
+            }
+        }
 
         /// <inheritdoc cref="Every{T}(System.Collections.Generic.IEnumerable{T},int,bool)"/>>
         public static IEnumerable<T> Every<T>(this IEnumerable<T> source, Int32 every)

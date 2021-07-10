@@ -7,8 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.Interfaces;
+using NetExtender.Domains.View.Interfaces;
 using NetExtender.Exceptions;
-using NetExtender.UserInterface.Interfaces;
 using NetExtender.Utils.Application;
 using NetExtender.Utils.Types;
 
@@ -80,26 +80,32 @@ namespace NetExtender.Domains
         
         public static IDomain Create(String name)
         {
-            CurrentDomain.ThrowIfAlreadyInitialized();
             return Create(new ApplicationData(name, ApplicationVersion.Default));
         }
 
         public static IDomain Create(IApplicationData data)
         {
-            CurrentDomain.ThrowIfAlreadyInitialized();
             return Create(new InternalDomain(data));
         }
         
         public static IDomain Create(String name, IApplication application)
         {
-            CurrentDomain.ThrowIfAlreadyInitialized();
-            return Create(new ApplicationData(name, ApplicationVersion.Default), application);
+            return Create(name).Initialize(application);
         }
         
         public static IDomain Create(IApplicationData data, IApplication application)
         {
-            CurrentDomain.ThrowIfAlreadyInitialized();
             return Create(data).Initialize(application);
+        }
+        
+        public static IDomain Create(String name, IApplication application, IApplicationView view)
+        {
+            return Create(name, application).View(view);
+        }
+        
+        public static IDomain Create(IApplicationData data, IApplication application, IApplicationView view)
+        {
+            return Create(data, application).View(view);
         }
 
         public static DateTime StartedAt
@@ -201,11 +207,6 @@ namespace NetExtender.Domains
         public static void Run()
         {
             Current.Run();
-        }
-        
-        public static void Run<T>(T window) where T : IWindow
-        {
-            Current.Run(window);
         }
 
         public static void Shutdown(Int32 code = 0)

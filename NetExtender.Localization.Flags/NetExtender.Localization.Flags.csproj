@@ -2,8 +2,13 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0-windows</TargetFramework>
-        <UseWindowsForms>true</UseWindowsForms>
         <Nullable>enable</Nullable>
+		<OutputType>Library</OutputType>
+        <UseWindowsForms>true</UseWindowsForms>
+		<LangVersion>9</LangVersion>
+		<Authors>Rain0Ash</Authors>
+        <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
+        <Version>0.7.9</Version>
     </PropertyGroup>
 
     <ItemGroup>

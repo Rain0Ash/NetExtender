@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using NetExtender.Configuration.Interfaces;
 using NetExtender.Utils.Types;
-using NetExtender.Configuration.Registry;
+using NetExtender.Configuration.Windows.Registry;
 using NetExtender.Registry;
 
 namespace NetExtender.Workstation
@@ -86,30 +86,12 @@ namespace NetExtender.Workstation
         [DllImport("kernel32.dll", SetLastError = true, CallingConvention = CallingConvention.Winapi, CharSet = CharSet.Unicode)]
         private static extern IntPtr GetProcAddress(IntPtr hwnd, String procedure);
 
-        private delegate Boolean IsWow64ProcessDelegate([In] IntPtr handle, [Out] out Boolean isWow64Process);
-
-        private static IsWow64ProcessDelegate GetIsWow64ProcessDelegate()
-        {
-            IntPtr handle = LoadLibrary("kernel32.dll");
-
-            if (handle == IntPtr.Zero)
-            {
-                return null;
-            }
-
-            IntPtr proc = GetProcAddress(handle, "IsWow64Process");
-
-            if (proc != IntPtr.Zero)
-            {
-                return (IsWow64ProcessDelegate) Marshal.GetDelegateForFunctionPointer(proc, typeof(IsWow64ProcessDelegate));
-            }
-
-            return null;
-        }
+        [DllImport("kernel32.dll")]
+        private static extern Boolean IsWow64Process([In] IntPtr handle, [Out] out Boolean isWow64Process);
 
         private static Boolean Is32BitProcessOn64BitProcessor()
         {
-            return GetIsWow64ProcessDelegate().Invoke(Process.GetCurrentProcess().Handle, out Boolean isWow64) && isWow64;
+            return IsWow64Process(Process.GetCurrentProcess().Handle, out Boolean isWow64) && isWow64;
         }
 
         public static SoftwareArchitecture GetOSArchitecture()
@@ -128,8 +110,8 @@ namespace NetExtender.Workstation
 
         private static Boolean IsWindows10()
         {
-            String product = Config.GetValue("ProductName");
-            return product.StartsWith("Windows 10", StringComparison.OrdinalIgnoreCase);
+            String? product = Config.GetValue("ProductName");
+            return product is not null && product.StartsWith("Windows 10", StringComparison.OrdinalIgnoreCase);
         }
 
         private static Int32 MajorVersion
@@ -141,7 +123,7 @@ namespace NetExtender.Workstation
                     return 10;
                 }
 
-                String exact = OSVersionRegistry;
+                String? exact = OSVersionRegistry;
 
                 if (String.IsNullOrEmpty(exact))
                 {
@@ -163,7 +145,7 @@ namespace NetExtender.Workstation
                     return 0;
                 }
 
-                String exact = OSVersionRegistry;
+                String? exact = OSVersionRegistry;
 
                 if (String.IsNullOrEmpty(exact))
                 {
@@ -176,7 +158,7 @@ namespace NetExtender.Workstation
             }
         }
 
-        private static String OSVersionRegistry
+        private static String? OSVersionRegistry
         {
             get
             {
@@ -218,6 +200,7 @@ namespace NetExtender.Workstation
             }
         }
 
+        // ReSharper disable once CognitiveComplexity
         public static OSData GetOSVersion()
         {
             SoftwareArchitecture architecture = GetOSArchitecture();

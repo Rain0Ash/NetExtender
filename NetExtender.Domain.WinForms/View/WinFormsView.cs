@@ -66,7 +66,7 @@ namespace NetExtender.Domains.View
             
             Context.Closed += OnFormClosed;
             
-            WinFormsApplication application = Domain.Current.Application as WinFormsApplication ?? throw new InitializeException("Application is not WinForms");
+            WinFormsApplication application = Domain.Current.Application as WinFormsApplication ?? throw new InitializeException($"{nameof(Domain.Current.Application)} is not {nameof(WinFormsApplication)}");
             application.Run(Context);
             return this;
         }

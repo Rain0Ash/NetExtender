@@ -1,116 +1,112 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Core", "NetExtender.Core\NetExtender.Core.csproj", "{19E3C7A6-6110-4CA1-9F8E-049BB5191C28}"
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Core", "NetExtender.Core\NetExtender.Core.csproj", "{19E3C7A6-6110-4CA1-9F8E-049BB5191C28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.AspNet.Core", "NetExtender.AspNet.Core\NetExtender.AspNet.Core.csproj", "{9E3F450B-F1ED-4BC7-93C1-251835DCC98E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.AspNet.Core", "NetExtender.AspNet.Core\NetExtender.AspNet.Core.csproj", "{9E3F450B-F1ED-4BC7-93C1-251835DCC98E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.EntityFramework.Core", "NetExtender.EntityFramework.Core\NetExtender.EntityFramework.Core.csproj", "{1566851A-7963-45CA-A2B6-6ACEDF041ACA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.EntityFramework.Core", "NetExtender.EntityFramework.Core\NetExtender.EntityFramework.Core.csproj", "{1566851A-7963-45CA-A2B6-6ACEDF041ACA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.AutoMapper", "NetExtender.AutoMapper\NetExtender.AutoMapper.csproj", "{6F121305-43B4-4F3A-BBC3-7A8C1689D17B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.AutoMapper", "NetExtender.AutoMapper\NetExtender.AutoMapper.csproj", "{6F121305-43B4-4F3A-BBC3-7A8C1689D17B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Windows", "NetExtender.Windows\NetExtender.Windows.csproj", "{40412617-CA47-4C9D-A9A3-C34365D6895B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Windows", "NetExtender.Windows\NetExtender.Windows.csproj", "{40412617-CA47-4C9D-A9A3-C34365D6895B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Cryptography", "NetExtender.Cryptography\NetExtender.Cryptography.csproj", "{A876A04B-A1C8-45A8-8072-CA7A40A3F6F3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Cryptography", "NetExtender.Cryptography\NetExtender.Cryptography.csproj", "{A876A04B-A1C8-45A8-8072-CA7A40A3F6F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration", "NetExtender.Configuration\NetExtender.Configuration.csproj", "{122AEC2E-FC14-481F-A81B-0305ACE86ECC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Configuration", "NetExtender.Configuration\NetExtender.Configuration.csproj", "{122AEC2E-FC14-481F-A81B-0305ACE86ECC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Domain", "NetExtender.Domain\NetExtender.Domain.csproj", "{565276E6-CCA8-4E40-A700-9DB9861F7AC8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain", "NetExtender.Domain\NetExtender.Domain.csproj", "{565276E6-CCA8-4E40-A700-9DB9861F7AC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Ini", "NetExtender.Configuration.Ini\NetExtender.Configuration.Ini.csproj", "{7582CB59-4A44-4938-8A6E-00A5B91C91A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Configuration.Windows.Ini", "NetExtender.Configuration.Windows.Ini\NetExtender.Configuration.Windows.Ini.csproj", "{7582CB59-4A44-4938-8A6E-00A5B91C91A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Registry", "NetExtender.Registry\NetExtender.Registry.csproj", "{C78BDA6F-B9C6-4245-9462-9EBD6FE2DC13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Registry", "NetExtender.Registry\NetExtender.Registry.csproj", "{C78BDA6F-B9C6-4245-9462-9EBD6FE2DC13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.BouncyCastle", "NetExtender.BouncyCastle\NetExtender.BouncyCastle.csproj", "{ECAF556B-AFC3-4EB4-9A85-5A1C3B9CDDA8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.BouncyCastle", "NetExtender.BouncyCastle\NetExtender.BouncyCastle.csproj", "{ECAF556B-AFC3-4EB4-9A85-5A1C3B9CDDA8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.UserInterface", "NetExtender.UserInterface\NetExtender.UserInterface.csproj", "{879289F6-2ED8-48D7-AC55-C0528E036D88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface", "NetExtender.UserInterface\NetExtender.UserInterface.csproj", "{879289F6-2ED8-48D7-AC55-C0528E036D88}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Registry", "NetExtender.Configuration.Registry\NetExtender.Configuration.Registry.csproj", "{CE0CABC3-EC8A-4A18-A4EF-624F6DAF5A6A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Configuration.Windows.Registry", "NetExtender.Configuration.Windows.Registry\NetExtender.Configuration.Windows.Registry.csproj", "{CE0CABC3-EC8A-4A18-A4EF-624F6DAF5A6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.UserInterface.WinForms", "NetExtender.UserInterface.WinForms\NetExtender.UserInterface.WinForms.csproj", "{7AF8C949-E014-43DE-A0FE-4D49735536D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WinForms", "NetExtender.UserInterface.WinForms\NetExtender.UserInterface.WinForms.csproj", "{7AF8C949-E014-43DE-A0FE-4D49735536D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Localization.Flags", "NetExtender.Localization.Flags\NetExtender.Localization.Flags.csproj", "{96A15B1D-FFE0-49D8-A8B9-5386C11FCAF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Localization.Flags", "NetExtender.Localization.Flags\NetExtender.Localization.Flags.csproj", "{96A15B1D-FFE0-49D8-A8B9-5386C11FCAF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.ImageSharp", "NetExtender.ImageSharp\NetExtender.ImageSharp.csproj", "{8F13ECC7-6A93-4863-A03F-E7DF616DB603}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.ImageSharp", "NetExtender.ImageSharp\NetExtender.ImageSharp.csproj", "{8F13ECC7-6A93-4863-A03F-E7DF616DB603}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Drawing.Images", "NetExtender.Drawing.Images\NetExtender.Drawing.Images.csproj", "{3165AF7B-F29C-4FC7-BAF0-13A92CB0ACDB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Drawing.Images", "NetExtender.Drawing.Images\NetExtender.Drawing.Images.csproj", "{3165AF7B-F29C-4FC7-BAF0-13A92CB0ACDB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.ImageSharp.Drawing", "NetExtender.ImageSharp.Drawing\NetExtender.ImageSharp.Drawing.csproj", "{99270A76-B263-403E-AA32-1885325E67AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.ImageSharp.Drawing", "NetExtender.ImageSharp.Drawing\NetExtender.ImageSharp.Drawing.csproj", "{99270A76-B263-403E-AA32-1885325E67AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Physics", "NetExtender.Physics\NetExtender.Physics.csproj", "{3314520A-0185-4F2D-9A0F-E23630A5B585}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Physics", "NetExtender.Physics\NetExtender.Physics.csproj", "{3314520A-0185-4F2D-9A0F-E23630A5B585}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.UserInterface.WPF", "NetExtender.UserInterface.WPF\NetExtender.UserInterface.WPF.csproj", "{893248EA-B992-462C-AD27-628EB72EFF59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WPF", "NetExtender.UserInterface.WPF\NetExtender.UserInterface.WPF.csproj", "{893248EA-B992-462C-AD27-628EB72EFF59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.UserInterface.Xamarin", "NetExtender.UserInterface.Xamarin\NetExtender.UserInterface.Xamarin.csproj", "{F1AB5887-46C7-4F74-A0CF-D861A74A7E61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.Xamarin", "NetExtender.UserInterface.Xamarin\NetExtender.UserInterface.Xamarin.csproj", "{F1AB5887-46C7-4F74-A0CF-D861A74A7E61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Domain.WinForms", "NetExtender.Domain.WinForms\NetExtender.Domain.WinForms.csproj", "{7E0E72A6-A871-474B-83E0-377B5276766C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.WinForms", "NetExtender.Domain.WinForms\NetExtender.Domain.WinForms.csproj", "{7E0E72A6-A871-474B-83E0-377B5276766C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Domain.WPF", "NetExtender.Domain.WPF\NetExtender.Domain.WPF.csproj", "{265EEED3-7DFD-4CEF-9E88-8F3BEC4F0994}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.WPF", "NetExtender.Domain.WPF\NetExtender.Domain.WPF.csproj", "{265EEED3-7DFD-4CEF-9E88-8F3BEC4F0994}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Domain.Xamarin", "NetExtender.Domain.Xamarin\NetExtender.Domain.Xamarin.csproj", "{B1628C4E-3A11-4A9D-B592-3982E2B0EB7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.Xamarin", "NetExtender.Domain.Xamarin\NetExtender.Domain.Xamarin.csproj", "{B1628C4E-3A11-4A9D-B592-3982E2B0EB7A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Domain.AspNetCore", "NetExtender.Domain.AspNetCore\NetExtender.Domain.AspNetCore.csproj", "{0F17D558-04C4-4238-9135-EA27F581C690}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.AspNetCore", "NetExtender.Domain.AspNetCore\NetExtender.Domain.AspNetCore.csproj", "{0F17D558-04C4-4238-9135-EA27F581C690}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.UserInterface.Windows", "NetExtender.UserInterface.Windows\NetExtender.UserInterface.Windows.csproj", "{DD3793F2-6663-4150-8221-4CF7FF6BF120}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.Windows", "NetExtender.UserInterface.Windows\NetExtender.UserInterface.Windows.csproj", "{DD3793F2-6663-4150-8221-4CF7FF6BF120}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.WinForms", "NetExtender.WinForms\NetExtender.WinForms.csproj", "{DAB909F0-FDE0-44FB-B977-0776FF1E01B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.WinForms", "NetExtender.WinForms\NetExtender.WinForms.csproj", "{DAB909F0-FDE0-44FB-B977-0776FF1E01B5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.WPF", "NetExtender.WPF\NetExtender.WPF.csproj", "{A37F702C-DB88-4391-84B6-7220C0141002}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.WPF", "NetExtender.WPF\NetExtender.WPF.csproj", "{A37F702C-DB88-4391-84B6-7220C0141002}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.WPFForms", "NetExtender.WPFForms\NetExtender.WPFForms.csproj", "{8431E4DB-6D77-4A20-AFE9-655C48CC8181}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.WPFForms", "NetExtender.WPFForms\NetExtender.WPFForms.csproj", "{8431E4DB-6D77-4A20-AFE9-655C48CC8181}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.UserInterface.WPFForms", "NetExtender.UserInterface.WPFForms\NetExtender.UserInterface.WPFForms.csproj", "{947201F3-F6F9-488F-934B-BA40166C9748}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WPFForms", "NetExtender.UserInterface.WPFForms\NetExtender.UserInterface.WPFForms.csproj", "{947201F3-F6F9-488F-934B-BA40166C9748}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.NAudio", "NetExtender.NAudio\NetExtender.NAudio.csproj", "{F0BD0491-EA66-44A1-93CA-7A663568DA10}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.NAudio", "NetExtender.NAudio\NetExtender.NAudio.csproj", "{F0BD0491-EA66-44A1-93CA-7A663568DA10}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Domain.Service", "NetExtender.Domain.Service\NetExtender.Domain.Service.csproj", "{F03DD29F-3866-41B8-A478-7F7C506A2D0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.Windows.Service", "NetExtender.Domain.Windows.Service\NetExtender.Domain.Windows.Service.csproj", "{F03DD29F-3866-41B8-A478-7F7C506A2D0F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.NAudio.Windows", "NetExtender.NAudio.Windows\NetExtender.NAudio.Windows.csproj", "{8D3D9988-3DE2-4E48-B9CA-C15FFD95F3B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.NAudio.Windows", "NetExtender.NAudio.Windows\NetExtender.NAudio.Windows.csproj", "{8D3D9988-3DE2-4E48-B9CA-C15FFD95F3B6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.NAudio.Xamarin.Android", "NetExtender.NAudio.Xamarin.Android\NetExtender.NAudio.Xamarin.Android.csproj", "{7E15DFE1-B6DA-4509-9C76-833B2230DF6E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Windows.Services", "NetExtender.Windows.Services\NetExtender.Windows.Services.csproj", "{6DC163F4-82DD-40D7-AEA5-A12F76859CC5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.AspNetCore.Windows.Service", "NetExtender.Domain.AspNetCore.Windows.Service\NetExtender.Domain.AspNetCore.Windows.Service.csproj", "{D6A48FD6-BFEF-4618-BF09-A05C3B86D8E0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.AspNetCore.Windows.Services", "NetExtender.AspNetCore.Windows.Services\NetExtender.AspNetCore.Windows.Services.csproj", "{489FE9F3-4D7F-464D-BD5F-B242CFEC3CC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Release | x64|Any CPU = Release | x64|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9E3F450B-F1ED-4BC7-93C1-251835DCC98E}.Release | x64|Any CPU.ActiveCfg = Release | x64|Any CPU
-		{9E3F450B-F1ED-4BC7-93C1-251835DCC98E}.Release | x64|Any CPU.Build.0 = Release | x64|Any CPU
-		{9E3F450B-F1ED-4BC7-93C1-251835DCC98E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9E3F450B-F1ED-4BC7-93C1-251835DCC98E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9E3F450B-F1ED-4BC7-93C1-251835DCC98E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9E3F450B-F1ED-4BC7-93C1-251835DCC98E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6F121305-43B4-4F3A-BBC3-7A8C1689D17B}.Release | x64|Any CPU.ActiveCfg = Release | x64|Any CPU
-		{6F121305-43B4-4F3A-BBC3-7A8C1689D17B}.Release | x64|Any CPU.Build.0 = Release | x64|Any CPU
-		{6F121305-43B4-4F3A-BBC3-7A8C1689D17B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F121305-43B4-4F3A-BBC3-7A8C1689D17B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F121305-43B4-4F3A-BBC3-7A8C1689D17B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F121305-43B4-4F3A-BBC3-7A8C1689D17B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{19E3C7A6-6110-4CA1-9F8E-049BB5191C28}.Release | x64|Any CPU.ActiveCfg = Release | x64|Any CPU
-		{19E3C7A6-6110-4CA1-9F8E-049BB5191C28}.Release | x64|Any CPU.Build.0 = Release | x64|Any CPU
 		{19E3C7A6-6110-4CA1-9F8E-049BB5191C28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{19E3C7A6-6110-4CA1-9F8E-049BB5191C28}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19E3C7A6-6110-4CA1-9F8E-049BB5191C28}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19E3C7A6-6110-4CA1-9F8E-049BB5191C28}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A876A04B-A1C8-45A8-8072-CA7A40A3F6F3}.Release | x64|Any CPU.ActiveCfg = Release | x64|Any CPU
-		{A876A04B-A1C8-45A8-8072-CA7A40A3F6F3}.Release | x64|Any CPU.Build.0 = Release | x64|Any CPU
-		{A876A04B-A1C8-45A8-8072-CA7A40A3F6F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A876A04B-A1C8-45A8-8072-CA7A40A3F6F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A876A04B-A1C8-45A8-8072-CA7A40A3F6F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A876A04B-A1C8-45A8-8072-CA7A40A3F6F3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1566851A-7963-45CA-A2B6-6ACEDF041ACA}.Release | x64|Any CPU.ActiveCfg = Release | x64|Any CPU
-		{1566851A-7963-45CA-A2B6-6ACEDF041ACA}.Release | x64|Any CPU.Build.0 = Release | x64|Any CPU
+		{9E3F450B-F1ED-4BC7-93C1-251835DCC98E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E3F450B-F1ED-4BC7-93C1-251835DCC98E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E3F450B-F1ED-4BC7-93C1-251835DCC98E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E3F450B-F1ED-4BC7-93C1-251835DCC98E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1566851A-7963-45CA-A2B6-6ACEDF041ACA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1566851A-7963-45CA-A2B6-6ACEDF041ACA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1566851A-7963-45CA-A2B6-6ACEDF041ACA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1566851A-7963-45CA-A2B6-6ACEDF041ACA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{40412617-CA47-4C9D-A9A3-C34365D6895B}.Release | x64|Any CPU.ActiveCfg = Release | x64|Any CPU
-		{40412617-CA47-4C9D-A9A3-C34365D6895B}.Release | x64|Any CPU.Build.0 = Release | x64|Any CPU
+		{6F121305-43B4-4F3A-BBC3-7A8C1689D17B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F121305-43B4-4F3A-BBC3-7A8C1689D17B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F121305-43B4-4F3A-BBC3-7A8C1689D17B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F121305-43B4-4F3A-BBC3-7A8C1689D17B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{40412617-CA47-4C9D-A9A3-C34365D6895B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{40412617-CA47-4C9D-A9A3-C34365D6895B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{40412617-CA47-4C9D-A9A3-C34365D6895B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{40412617-CA47-4C9D-A9A3-C34365D6895B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A876A04B-A1C8-45A8-8072-CA7A40A3F6F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A876A04B-A1C8-45A8-8072-CA7A40A3F6F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A876A04B-A1C8-45A8-8072-CA7A40A3F6F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A876A04B-A1C8-45A8-8072-CA7A40A3F6F3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{122AEC2E-FC14-481F-A81B-0305ACE86ECC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{122AEC2E-FC14-481F-A81B-0305ACE86ECC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{122AEC2E-FC14-481F-A81B-0305ACE86ECC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -219,9 +215,28 @@ Global
 		{8D3D9988-3DE2-4E48-B9CA-C15FFD95F3B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8D3D9988-3DE2-4E48-B9CA-C15FFD95F3B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8D3D9988-3DE2-4E48-B9CA-C15FFD95F3B6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7E15DFE1-B6DA-4509-9C76-833B2230DF6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7E15DFE1-B6DA-4509-9C76-833B2230DF6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7E15DFE1-B6DA-4509-9C76-833B2230DF6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7E15DFE1-B6DA-4509-9C76-833B2230DF6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DC163F4-82DD-40D7-AEA5-A12F76859CC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DC163F4-82DD-40D7-AEA5-A12F76859CC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DC163F4-82DD-40D7-AEA5-A12F76859CC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DC163F4-82DD-40D7-AEA5-A12F76859CC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6A48FD6-BFEF-4618-BF09-A05C3B86D8E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6A48FD6-BFEF-4618-BF09-A05C3B86D8E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6A48FD6-BFEF-4618-BF09-A05C3B86D8E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6A48FD6-BFEF-4618-BF09-A05C3B86D8E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{489FE9F3-4D7F-464D-BD5F-B242CFEC3CC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{489FE9F3-4D7F-464D-BD5F-B242CFEC3CC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{489FE9F3-4D7F-464D-BD5F-B242CFEC3CC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{489FE9F3-4D7F-464D-BD5F-B242CFEC3CC0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0FBEDCF4-3CBE-406D-B1B7-FE62D983A079}
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Release | x64|Any CPU = Release | x64|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 EndGlobal

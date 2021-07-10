@@ -6,7 +6,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Types.Dispatchers.Interfaces;
-using NetExtender.UserInterface.Interfaces;
 using NetExtender.Utils.Application;
 
 namespace NetExtender.Domains.Applications
@@ -17,7 +16,6 @@ namespace NetExtender.Domains.Applications
         public abstract ApplicationShutdownMode ShutdownMode { get; set; }
 
         public abstract IApplication Run();
-        public abstract IApplication Run<T>(T window) where T : IWindow;
 
         public void Shutdown()
         {

@@ -10,7 +10,6 @@ using NetExtender.Domains.Interfaces;
 using NetExtender.Domains.View.Interfaces;
 using NetExtender.Exceptions;
 using NetExtender.Types.Dispatchers.Interfaces;
-using NetExtender.UserInterface.Interfaces;
 
 namespace NetExtender.Domains
 {
@@ -161,8 +160,8 @@ namespace NetExtender.Domains
 
             public InternalDomain(IApplicationData data)
             {
+                Data = data ?? throw new ArgumentNullException(nameof(data));
                 Culture = CultureInfo.InvariantCulture;
-                Data = data;
             }
             
             public IDomain Initialize(IApplication application)
@@ -203,18 +202,7 @@ namespace NetExtender.Domains
                 Application.Run();
                 return this;
             }
-            
-            IApplication IApplication.Run<T>(T window)
-            {
-                return Run(window);
-            }
-            
-            public IDomain Run<T>(T window) where T : IWindow
-            {
-                Application.Run(window);
-                return this;
-            }
-            
+
             public void Shutdown()
             {
                 Application.Shutdown();

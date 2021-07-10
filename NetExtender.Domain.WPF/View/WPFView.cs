@@ -34,7 +34,7 @@ namespace NetExtender.Domains.View
 
         protected virtual IApplicationView Run(Window? window)
         {
-            WPFApplication application = Domain.Current.Application as WPFApplication ?? throw new InitializeException("Application is not WPF");
+            WPFApplication application = Domain.Current.Application as WPFApplication ?? throw new InitializeException($"{nameof(Domain.Current.Application)} is not {nameof(WPFApplication)}");
             
             if (window is null)
             {

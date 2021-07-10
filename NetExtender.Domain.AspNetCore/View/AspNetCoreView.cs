@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using NetExtender.Domains.AspNetCore.Applications;
@@ -39,7 +40,12 @@ namespace NetExtender.Domains.AspNetCore.View
 
         protected virtual IHostBuilder CreateHostBuilder(String[] args)
         {
-            return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(Builder!);
+            return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(Build);
+        }
+
+        protected virtual void Build(IWebHostBuilder builder)
+        {
+            Builder?.Invoke(builder);
         }
 
         protected override IApplicationView Run()
@@ -60,14 +66,9 @@ namespace NetExtender.Domains.AspNetCore.View
                 throw new ArgumentException($"{nameof(host)} not reference equals with {nameof(Context)}");
             }
             
-            AspNetCoreApplication application = Domain.Current.Application as AspNetCoreApplication ?? throw new InitializeException("Application is not AspNetCore");
+            AspNetCoreApplication application = Domain.Current.Application as AspNetCoreApplication ?? throw new InitializeException($"{nameof(Domain.Current.Application)} is not {nameof(AspNetCoreApplication)}");
             application.Run(Context);
             return this;
-        }
-
-        protected override IApplicationView Run<T>(T window)
-        {
-            return Run();
         }
     }
 }

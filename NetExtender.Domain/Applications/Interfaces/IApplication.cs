@@ -5,7 +5,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Types.Dispatchers.Interfaces;
-using NetExtender.UserInterface.Interfaces;
 using NetExtender.Utils.Application;
 
 namespace NetExtender.Domains.Applications.Interfaces
@@ -16,7 +15,6 @@ namespace NetExtender.Domains.Applications.Interfaces
         public ApplicationShutdownMode ShutdownMode { get; set; }
         
         public IApplication Run();
-        public IApplication Run<T>(T window) where T : IWindow;
         public void Shutdown();
         public void Shutdown(Int32 code);
         public void Shutdown(Boolean force);

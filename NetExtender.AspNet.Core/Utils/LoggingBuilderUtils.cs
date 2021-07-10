@@ -8,7 +8,7 @@ namespace NetExtender.Utils.AspNetCore.Types
 {
     public static class LoggingBuilderUtils
     {
-        public static void DisableLogging(this ILoggingBuilder builder)
+        public static void LoggingOff(this ILoggingBuilder builder)
         {
             if (builder is null)
             {

@@ -10,7 +10,7 @@ using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Utils.Static;
 using NetExtender.Utils.Types;
 
-namespace NetExtender.Configuration.Ini
+namespace NetExtender.Configuration.Windows.Ini
 {
     public class IniConfigBehavior : ConfigBehavior
     {

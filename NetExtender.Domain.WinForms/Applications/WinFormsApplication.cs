@@ -52,10 +52,5 @@ namespace NetExtender.Domains.Applications
             System.Windows.Forms.Application.Run(form);
             return this;
         }
-        
-        public override IApplication Run<T>(T window)
-        {
-            return Run(window as Form);
-        }
     }
 }

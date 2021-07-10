@@ -63,11 +63,6 @@ namespace NetExtender.Domains.Applications
             Application.Run(window);
             return this;
         }
-        
-        public override IApplication Run<T>(T window)
-        {
-            return Run(window as Window);
-        }
 
         public override void Shutdown(Int32 code = 0)
         {
