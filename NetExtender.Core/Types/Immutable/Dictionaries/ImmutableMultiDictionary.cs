@@ -6,7 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using NetExtender.Resources;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Dictionaries.Interfaces;
 using NetExtender.Types.Immutable.Dictionaries.Interfaces;
@@ -435,7 +434,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
                     return value;
                 }
 
-                throw new KeyNotFoundException(SystemResources.Arg_KeyNotFoundWithKey.Format(key));
+                throw new KeyNotFoundException($"The given key '{key}' was not present in the dictionary.");
             }
         }
         

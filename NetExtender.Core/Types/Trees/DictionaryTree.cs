@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.Serialization;
-using NetExtender.Resources;
 using NetExtender.Utils.Types;
 using NetExtender.Types.Trees.Interfaces;
 using NetExtender.Types.Trees.Json;
@@ -204,7 +203,7 @@ namespace NetExtender.Types.Trees
         {
             if (!TryAdd(key, value))
             {
-                throw new ArgumentException(SystemResources.Argument_AddingDuplicateWithKey.Format(key));
+                throw new ArgumentException($"An item with the same key has already been added. Key: {key}");
             }
         }
 
@@ -212,7 +211,7 @@ namespace NetExtender.Types.Trees
         {
             if (!TryAdd(key, sections, value))
             {
-                throw new ArgumentException(SystemResources.Argument_AddingDuplicateWithKey.Format(key));
+                throw new ArgumentException($"An item with the same key has already been added. Key: {key}");
             }
         }
 

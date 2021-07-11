@@ -7,7 +7,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
 {
     public class PrimaryForm : CenterForm
     {
-        protected override void BringToFront(Object sender, EventArgs args)
+        protected override void BringToFront(Object? sender, EventArgs args)
         {
             BringToForeground();
         }

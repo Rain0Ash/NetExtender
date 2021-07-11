@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.Serialization;
-using NetExtender.Resources;
 using NetExtender.Types.Dictionaries.Interfaces;
 using NetExtender.Utils.Types;
 
@@ -233,19 +232,19 @@ namespace NetExtender.Types.Dictionaries
 
             if ((UInt32) arrayIndex > (UInt32) array.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(arrayIndex), SystemResources.ArgumentOutOfRange_NeedNonNegNum.ToString());
+                throw new ArgumentOutOfRangeException(nameof(arrayIndex), "Non-negative number required.");
             }
 
             if (array.Length - arrayIndex < Count)
             {
-                throw new ArgumentException(SystemResources.Arg_ArrayPlusOffTooSmall.ToString(), nameof(array));
+                throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.", nameof(array));
             }
 
             ImmutableArray<KeyValuePair<TKey, TValue>> collection = ((IEnumerable<KeyValuePair<TKey, TValue>>) this).ToImmutableArray();
             
             if (array.Length - arrayIndex < collection.Length)
             {
-                throw new ArgumentException(SystemResources.Arg_ArrayPlusOffTooSmall.ToString(), nameof(array));
+                throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.", nameof(array));
             }
 
             collection.CopyTo(array, arrayIndex);
@@ -286,7 +285,7 @@ namespace NetExtender.Types.Dictionaries
                     return value;
                 }
 
-                throw new KeyNotFoundException(SystemResources.Arg_KeyNotFoundWithKey.Format(key));
+                throw new KeyNotFoundException($"The given key '{key}' was not present in the dictionary.");
             }
             set
             {

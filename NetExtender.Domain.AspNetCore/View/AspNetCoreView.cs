@@ -3,7 +3,6 @@
 
 using System;
 using System.Linq;
-using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using NetExtender.Domains.AspNetCore.Applications;

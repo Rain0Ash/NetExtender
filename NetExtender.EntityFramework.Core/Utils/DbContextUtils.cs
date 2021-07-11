@@ -91,7 +91,7 @@ namespace NetExtender.Utils.EntityFrameworkCore
             return entity is not null ? context.Remove(entity) : null;
         }
         
-        public static String GetTableName<TEntity>(this DbContext context)
+        public static String? GetTableName<TEntity>(this DbContext context)
         {
             if (context is null)
             {
@@ -101,7 +101,7 @@ namespace NetExtender.Utils.EntityFrameworkCore
             return context.Model.GetTableName<TEntity>();
         }
         
-        public static String GetTableName(this DbContext context, Type type)
+        public static String? GetTableName(this DbContext context, Type type)
         {
             if (context is null)
             {

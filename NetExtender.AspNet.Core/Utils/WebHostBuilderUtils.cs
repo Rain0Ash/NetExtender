@@ -2,11 +2,13 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using AspNet.Core.Types.Initializers.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using NetExtender.AspNet.Core.Types.Initializers;
 
 namespace NetExtender.Utils.AspNetCore.Types
@@ -53,6 +55,138 @@ namespace NetExtender.Utils.AspNetCore.Types
             }
 
             return builder.UseStartup(new AspNetCoreStartupInitializer(services, configuration));
+        }
+
+        private static class BuilderInitializer
+        {
+            private static ConcurrentDictionary<IWebHostBuilder, IStartupRegistrationProvider> Initializers { get; }
+
+            static BuilderInitializer()
+            {
+                Initializers = new ConcurrentDictionary<IWebHostBuilder, IStartupRegistrationProvider>();
+            }
+            
+            public static IStartupRegistrationProvider Initialize(IWebHostBuilder builder)
+            {
+                if (builder is null)
+                {
+                    throw new ArgumentNullException(nameof(builder));
+                }
+
+                IStartupRegistrationProvider provider = Initializers.GetOrAdd(builder, _ => new AspNetCoreStartupInitializer());
+                builder.UseStartup(provider);
+                return provider;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IStartupRegistrationProvider InitializeBuilder(this IWebHostBuilder builder)
+        {
+            return BuilderInitializer.Initialize(builder);
+        }
+
+        public static IWebHostBuilder Register(this IWebHostBuilder builder, Action<IServiceCollection> service)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (service is null)
+            {
+                throw new ArgumentNullException(nameof(service));
+            }
+
+            builder.InitializeBuilder().Register(service);
+            return builder;
+        }
+
+        public static IWebHostBuilder Register(this IWebHostBuilder builder, Action<IApplicationBuilder> application)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (application is null)
+            {
+                throw new ArgumentNullException(nameof(application));
+            }
+            
+            builder.InitializeBuilder().Register(application);
+            return builder;
+        }
+        
+        public static IWebHostBuilder Register(this IWebHostBuilder builder, Action<IWebHostEnvironment> environment)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (environment is null)
+            {
+                throw new ArgumentNullException(nameof(environment));
+            }
+            
+            builder.InitializeBuilder().Register(environment);
+            return builder;
+        }
+        
+        public static IWebHostBuilder Register(this IWebHostBuilder builder, Action<IApplicationBuilder> application, Action<IWebHostEnvironment> environment)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (application is null)
+            {
+                throw new ArgumentNullException(nameof(application));
+            }
+
+            if (environment is null)
+            {
+                throw new ArgumentNullException(nameof(environment));
+            }
+            
+            builder.InitializeBuilder().Register(application, environment);
+            return builder;
+        }
+        
+        public static IWebHostBuilder Register(this IWebHostBuilder builder, Action<IApplicationBuilder, IWebHostEnvironment> configuration)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (configuration is null)
+            {
+                throw new ArgumentNullException(nameof(configuration));
+            }
+            
+            builder.InitializeBuilder().Register(configuration);
+            return builder;
+        }
+        
+        public static IWebHostBuilder UseDevelopmentExceptionPage(this IWebHostBuilder builder)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            static void UseDeveloperPage(IApplicationBuilder application, IWebHostEnvironment environment)
+            {
+                if (environment.IsDevelopment())
+                {
+                    application.UseDeveloperExceptionPage();
+                }
+            }
+            
+            builder.Register(UseDeveloperPage);
+            return builder;
         }
         
         public static IWebHostBuilder LoggingOff(this IWebHostBuilder builder)

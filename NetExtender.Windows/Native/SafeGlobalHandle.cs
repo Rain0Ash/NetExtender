@@ -21,9 +21,6 @@ namespace NetExtender.Windows
         /// <param name="size">
         /// The size of this memory block, in bytes.
         /// </param>
-#pragma warning disable 618
-        [ReliabilityContract(Consistency.WillNotCorruptState, Cer.Success)]
-#pragma warning restore 618
         private SafeGlobalHandle(IntPtr toManage, Int32 size)
             : base(IntPtr.Zero, true)
         {
