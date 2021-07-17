@@ -11,7 +11,7 @@ namespace NetExtender.Random
     /// <typeparam name="T">Type of items that gets randomly returned</typeparam>
     public interface IRandomSelectorBuilder<out T>
     {
-        IRandomSelector<T> Build();
-        IRandomSelector<T> Build(Int32 seed);
+        public IRandomSelector<T> Build();
+        public IRandomSelector<T> Build(Int32 seed);
     }
 }

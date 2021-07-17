@@ -54,8 +54,33 @@ namespace NetExtender.Utils.Types
 
         public const String DefaultSeparator = " ";
 
+        public const String NewLine = "\n";
+
         public const String FormatVariableRegexPattern = @"\{([^\{\}]+)\}";
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? ToString<T>(T value)
+        {
+            return value?.ToString();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? ToString<T>(T value, IFormatProvider? provider)
+        {
+            return ToString(value, null, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? ToString<T>(T value, String? format, IFormatProvider? provider)
+        {
+            if (value is IFormattable formattable)
+            {
+                return formattable.ToString(format, provider);
+            }
+
+            return value?.ToString();
+        }
+        
         public static Int32 CharLength(this String?[] values)
         {
             if (values is null)
@@ -1081,6 +1106,7 @@ namespace NetExtender.Utils.Types
             return SplitByUpperCase(str.ToString(), options);
         }
 
+        // ReSharper disable once CognitiveComplexity
         private static IEnumerable<String> SplitByUpperCaseInternal(String str, StringSplitOptions options)
         {
             if (str is null)
@@ -1199,17 +1225,17 @@ namespace NetExtender.Utils.Types
             return source.ToStringBuilder().ToString();
         }
 
-        public static String Join<T>(this String? separator, IEnumerable<T>? values)
+        public static String Join<T>(this String? separator, IEnumerable<T?>? values)
         {
             return values is not null ? String.Join(separator, values) : String.Empty;
         }
 
-        public static String Join(this String? separator, IEnumerable<String>? values)
+        public static String Join(this String? separator, IEnumerable<String?>? values)
         {
             return values is not null ? String.Join(separator, values) : String.Empty;
         }
 
-        public static String Join(this String? separator, IEnumerable<String>? values, JoinType type)
+        public static String Join(this String? separator, IEnumerable<String?>? values, JoinType type)
         {
             if (values is null)
             {
@@ -1225,22 +1251,22 @@ namespace NetExtender.Utils.Types
             };
         }
 
-        public static String Join<T>(this String? separator, params T[]? values)
+        public static String Join<T>(this String? separator, params T?[]? values)
         {
             return values is not null ? String.Join(separator, values) : String.Empty;
         }
 
-        public static String Join(this String? separator, params String[]? values)
+        public static String Join(this String? separator, params String?[]? values)
         {
             return values is not null ? String.Join(separator, values) : String.Empty;
         }
 
-        public static String Join(this String? separator, JoinType type, params String[]? values)
+        public static String Join(this String? separator, JoinType type, params String?[]? values)
         {
             return Join(separator, values, type);
         }
 
-        public static String Join(this String? separator, Func<String, Boolean> predicate, IEnumerable<String>? values)
+        public static String Join(this String? separator, Func<String?, Boolean> predicate, IEnumerable<String?>? values)
         {
             if (values is null)
             {
@@ -1255,7 +1281,7 @@ namespace NetExtender.Utils.Types
             return String.Join(separator, values.Where(predicate));
         }
 
-        public static String Join(this String? separator, Func<String, Boolean> predicate, params String[]? values)
+        public static String Join(this String? separator, Func<String?, Boolean> predicate, params String?[]? values)
         {
             if (values is null)
             {
@@ -1268,6 +1294,286 @@ namespace NetExtender.Utils.Types
             }
 
             return values.Length > 0 ? String.Join(separator, values.Where(predicate)) : String.Empty;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Join<T>(this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Join(String.Empty, source);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Join<T>(this IEnumerable<T> source, String? separator)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Join(separator, source);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Join<T>(this IEnumerable<T> source, String? separator, String? end)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return $"{Join(separator, source)}{end}";
+        }
+
+        /// <summary>
+        /// Concatenates all elements of a sequence using the specified separator between each element.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+        /// <param name="source">A sequence that contains the objects to concatenate.</param>
+        /// <param name="separator">The string to use as a separator.</param>
+        /// <param name="start">Start with</param>
+        /// <param name="end">End with</param>
+        /// <returns>A string holding the concatenated values.</returns>
+        public static String Join<T>(this IEnumerable<T> source, String? separator, String? start, String? end)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return $"{start}{Join(separator, source)}{end}";
+        }
+        
+        public static String JoinNewLine<T>(this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Join(source, NewLine);
+        }
+        
+        public static String JoinNewLine<T>(this IEnumerable<T> source, String? end)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Join(source, NewLine, end);
+        }
+        
+        public static String JoinNewLine<T>(this IEnumerable<T> source, String? start, String? end)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Join(source, NewLine, start, end);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Join<T>(this IEnumerable<T> source, JoinType type)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Join(String.Empty, source.ToStringEnumerable(), type);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Join<T>(this IEnumerable<T> source, String? separator, JoinType type)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Join(separator, source.ToStringEnumerable(), type);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Join<T>(this IEnumerable<T> source, String? separator, JoinType type, String? end)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return $"{Join(source, separator, type)}{end}";
+        }
+
+        public static String Join<T>(this IEnumerable<T> source, String? separator, JoinType type, String? start, String? end)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return $"{start}{Join(source, separator, type)}{end}";
+        }
+        
+        public static String JoinNewLine<T>(this IEnumerable<T> source, JoinType type)
+        {
+            return Join(source, NewLine, type);
+        }
+        
+        public static String JoinNewLine<T>(this IEnumerable<T> source, JoinType type, String? end)
+        {
+            return Join(source, NewLine, type, end);
+        }
+        
+        public static String JoinNewLine<T>(this IEnumerable<T> source, JoinType type, String? start, String? end)
+        {
+            return Join(source, NewLine, type, start, end);
+        }
+        
+        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Join(source.Select(predicate));
+        }
+        
+        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, String? separator)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Join(source.Select(predicate), separator);
+        }
+        
+        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, String? separator, String? end)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Join(source.Select(predicate), separator, end);
+        }
+
+        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, String? separator, String? start, String? end)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Join(source.Select(predicate), separator, start, end);
+        }
+        
+        public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Join(source.Select(predicate), NewLine);
+        }
+        
+        public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, String? start)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Join(source.Select(predicate), NewLine, start);
+        }
+        
+        public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, String? start, String? end)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Join(source.Select(predicate), NewLine, start, end);
+        }
+        
+        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, JoinType type)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Join(source.Select(predicate), type);
+        }
+        
+        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, String? separator, JoinType type)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Join(source.Select(predicate), separator, type);
+        }
+        
+        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, String? separator, JoinType type, String? end)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Join(source.Select(predicate), separator, type, end);
+        }
+
+        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, String? separator, JoinType type, String? start, String? end)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Join(source.Select(predicate), separator, type, start, end);
+        }
+        
+        public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, JoinType type)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return JoinNewLine(source.Select(predicate), type);
+        }
+        
+        public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, JoinType type, String? start)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return JoinNewLine(source.Select(predicate), type, start);
+        }
+        
+        public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, JoinType type, String? start, String? end)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return JoinNewLine(source.Select(predicate), type, start, end);
         }
 
         public static String ReplaceInsert(this String value, ReadOnlySpan<Char> replace)

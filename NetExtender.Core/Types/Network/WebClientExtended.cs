@@ -8,11 +8,11 @@ using NetExtender.Utils.Network;
 
 namespace NetExtender.Types.Network
 {
-    public class FixedWebClient : WebClient
+    public class WebClientExtended : WebClient
     {
         public Boolean HeadOnly { get; set; }
         
-        public FixedWebClient()
+        public WebClientExtended()
         {
             Encoding = Encoding.UTF8;
             Headers.Add(UserAgentUtils.OtherUserAgent);
@@ -21,8 +21,13 @@ namespace NetExtender.Types.Network
         protected override WebRequest? GetWebRequest(Uri address)
         {
             WebRequest? request = base.GetWebRequest(address);
+
+            if (request is null!)
+            {
+                return null;
+            }
             
-            if (HeadOnly && request?.Method == "GET")
+            if (HeadOnly && request.Method == "GET")
             {
                 request.Method = "HEAD";
             }

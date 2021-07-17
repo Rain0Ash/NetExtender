@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -27,7 +28,7 @@ namespace NetExtender.Utils.Types
         FullWithNull = Null | Full
     }
     
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
+    [SuppressMessage("ReSharper", "UnusedParameter.Global")]
     public static class ConvertUtils
     {
         public const EscapeType DefaultEscapeType = EscapeType.Null;
@@ -121,6 +122,11 @@ namespace NetExtender.Utils.Types
 
         public static IEnumerable<T> Convert<T>(this IEnumerable source)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
             return source switch
             {
                 IEnumerable<T> enumerable => enumerable,
@@ -159,12 +165,12 @@ namespace NetExtender.Utils.Types
             return source.Select(value => value.Convert<T>(info));
         }
 
-        public static IEnumerable<T?> TryConvert<T>(this IEnumerable<String> source)
+        public static IEnumerable<T> TryConvert<T>(this IEnumerable<String> source)
         {
             return TryConvert<T>(source, CultureInfo.InvariantCulture);
         }
         
-        public static IEnumerable<T?> TryConvert<T>(this IEnumerable<String> source, CultureInfo? info)
+        public static IEnumerable<T> TryConvert<T>(this IEnumerable<String> source, CultureInfo? info)
         {
             if (source is null)
             {
@@ -176,7 +182,7 @@ namespace NetExtender.Utils.Types
                 return TryConvert(input, info, out result);
             }
             
-            return source.TryParse<String?, T?>(TryConvertInner);
+            return source.TryParse<String?, T>(TryConvertInner);
         }
 
         #region DecimalConvert
@@ -299,44 +305,94 @@ namespace NetExtender.Utils.Types
 
         #endregion
 
-        public static Byte[] ToBytes(this String input)
+        public static Byte[] ToBytes(this String? input)
         {
             return ToBytes(input, Encoding.UTF8);
         }
 
-        public static Byte[] ToBytes(this String input, Encoding encoding)
+        public static Byte[] ToBytes(this String? input, Encoding encoding)
         {
-            return input is null ? null : encoding.GetBytes(input);
+            return input is not null ? encoding.GetBytes(input) : Array.Empty<Byte>();
         }
 
         #region ToString
 
-        public static String GetString<T>(this T value)
+        public static IEnumerable<String?> ToStringEnumerable<T>(this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Select(StringUtils.ToString);
+        }
+        
+        public static IEnumerable<String?> ToStringEnumerable<T>(this IEnumerable<T> source, IFormatProvider? provider)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Select(item => StringUtils.ToString(item, provider));
+        }
+        
+        public static IEnumerable<String?> ToStringEnumerable<T>(this IEnumerable<T> source, String? format, IFormatProvider? provider)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Select(item => StringUtils.ToString(item, format, provider));
+        }
+        
+        public static IEnumerable<String?> GetStringEnumerable<T>(this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Select(GetString);
+        }
+        
+        public static IEnumerable<String?> GetStringEnumerable<T>(this IEnumerable<T> source, IFormatProvider? provider)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Select(item => GetString(item, provider));
+        }
+
+        public static String? GetString<T>(this T value)
         {
             return GetString(value, EscapeType.None);
         }
         
-        public static String GetStringEscape<T>(T value)
+        public static String? GetStringEscape<T>(T value)
         {
             return GetString(value, EscapeType.FullWithNull);
         }
         
-        public static String GetString<T>(this T value, EscapeType escape)
+        public static String? GetString<T>(this T value, EscapeType escape)
         {
             return GetString(value, escape, CultureInfo.InvariantCulture);
         }
 
-        public static String GetString<T>(this T value, IFormatProvider provider)
+        public static String? GetString<T>(this T value, IFormatProvider? provider)
         {
             return GetString(value, EscapeType.None, provider);
         }
 
-        public static String GetStringEscape<T>(T value, IFormatProvider provider)
+        public static String? GetStringEscape<T>(T value, IFormatProvider? provider)
         {
             return GetString(value, EscapeType.FullWithNull, provider);
         }
 
-        public static String? GetString<T>(this T? value, EscapeType escape, IFormatProvider? provider)
+        public static String? GetString<T>(this T value, EscapeType escape, IFormatProvider? provider)
         {
             return value switch
             {
@@ -367,18 +423,24 @@ namespace NetExtender.Utils.Types
             };
         }
 
-        private static String GetStringUnknown(Object value, EscapeType escape, IFormatProvider provider)
+        private static String? GetStringUnknown(Object? value, EscapeType escape, IFormatProvider? provider)
         {
-            return GetStringUnknownInternal(value, escape, provider, out String result) ? result : value.GetString(escape, provider);
+            return GetStringUnknownInternal(value, escape, provider, out String? result) ? result : value.GetString(escape, provider);
         }
         
-        private static String ToStringUnknown(Object value, EscapeType escape, IFormatProvider provider)
+        private static String? ToStringUnknown(Object? value, EscapeType escape, IFormatProvider? provider)
         {
-            return GetStringUnknownInternal(value, escape, provider, out String result) ? result : value.ToString();
+            return GetStringUnknownInternal(value, escape, provider, out String? result) ? result : value?.ToString();
         }
-
-        private static Boolean GetStringUnknownInternal(Object value, EscapeType escape, IFormatProvider provider, out String result)
+        
+        private static Boolean GetStringUnknownInternal(Object? value, EscapeType escape, IFormatProvider? provider, [MaybeNullWhen(false)] out String? result)
         {
+            if (value is null)
+            {
+                result = default;
+                return false;
+            }
+            
             if (value.GetType().TryGetGenericTypeDefinition() == KeyValuePairType)
             {
                 dynamic item = value;
@@ -403,7 +465,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Boolean value, IFormatProvider provider)
+        public static String GetString(this Boolean value, IFormatProvider? provider)
         {
             return value.ToString();
         }
@@ -415,7 +477,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Char value, IFormatProvider provider)
+        public static String GetString(this Char value, IFormatProvider? provider)
         {
             return Char.ToString(value);
         }
@@ -427,7 +489,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this SByte value, IFormatProvider provider)
+        public static String GetString(this SByte value, IFormatProvider? provider)
         {
             return value.ToString(provider);
         }
@@ -439,7 +501,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Byte value, IFormatProvider provider)
+        public static String GetString(this Byte value, IFormatProvider? provider)
         {
             return value.ToString(provider);
         }
@@ -451,7 +513,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Int16 value, IFormatProvider provider)
+        public static String GetString(this Int16 value, IFormatProvider? provider)
         {
             return value.ToString(provider);
         }
@@ -463,7 +525,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this UInt16 value, IFormatProvider provider)
+        public static String GetString(this UInt16 value, IFormatProvider? provider)
         {
             return value.ToString(provider);
         }
@@ -475,7 +537,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Int32 value, IFormatProvider provider)
+        public static String GetString(this Int32 value, IFormatProvider? provider)
         {
             return value.ToString(provider);
         }
@@ -487,7 +549,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this UInt32 value, IFormatProvider provider)
+        public static String GetString(this UInt32 value, IFormatProvider? provider)
         {
             return value.ToString(provider);
         }
@@ -499,7 +561,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Int64 value, IFormatProvider provider)
+        public static String GetString(this Int64 value, IFormatProvider? provider)
         {
             return value.ToString(provider);
         }
@@ -511,7 +573,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this UInt64 value, IFormatProvider provider)
+        public static String GetString(this UInt64 value, IFormatProvider? provider)
         {
             return value.ToString(provider);
         }
@@ -523,7 +585,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Single value, IFormatProvider provider)
+        public static String GetString(this Single value, IFormatProvider? provider)
         {
             return value.ToString(provider);
         }
@@ -535,7 +597,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Double value, IFormatProvider provider)
+        public static String GetString(this Double value, IFormatProvider? provider)
         {
             return value.ToString(provider);
         }
@@ -547,7 +609,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Decimal value, IFormatProvider provider)
+        public static String GetString(this Decimal value, IFormatProvider? provider)
         {
             return value.Normalize().ToString(provider);
         }
@@ -559,7 +621,7 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this BigInteger value, IFormatProvider provider)
+        public static String GetString(this BigInteger value, IFormatProvider? provider)
         {
             return value.ToString(provider);
         }
@@ -571,7 +633,7 @@ namespace NetExtender.Utils.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this DateTime value, IFormatProvider provider)
+        public static String GetString(this DateTime value, IFormatProvider? provider)
         {
             return value.ToString(provider);
         }
@@ -583,43 +645,44 @@ namespace NetExtender.Utils.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this TimeSpan value, IFormatProvider provider)
+        public static String GetString(this TimeSpan value, IFormatProvider? provider)
         {
             return value.ToString();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Enum value)
+        public static String GetString(this Enum? value)
         {
             return GetStringEscape(value?.ToString());
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Enum value, EscapeType escape)
+        public static String GetString(this Enum? value, EscapeType escape)
         {
             return value is not null ? GetStringEscape(escape.HasFlag(EscapeType.Full) ? $"{value.GetType().Name}.{value.ToString()}" : value.ToString()) : StringUtils.NullString;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Enum value, IFormatProvider provider)
+        public static String GetString(this Enum value, IFormatProvider? provider)
         {
             return GetString(value);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this Enum value, EscapeType escape, IFormatProvider provider)
+        public static String GetString(this Enum value, EscapeType escape, IFormatProvider? provider)
         {
             return GetString(value, escape);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this String value)
+        [return: NotNullIfNotNull("value")]
+        public static String? GetString(this String? value)
         {
             return value;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetStringEscape(this String value)
+        public static String GetStringEscape(this String? value)
         {
             return value ?? StringUtils.NullString;
         }
@@ -631,55 +694,55 @@ namespace NetExtender.Utils.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this String value, IFormatProvider provider)
+        public static String? GetString(this String? value, IFormatProvider? provider)
         {
             return value?.ToString(provider);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetStringEscape(String value, IFormatProvider provider)
+        public static String GetStringEscape(String? value, IFormatProvider? provider)
         {
             return value?.ToString(provider) ?? StringUtils.NullString;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this String value, IFormatProvider provider, EscapeType escape)
+        public static String? GetString(this String? value, IFormatProvider? provider, EscapeType escape)
         {
             return escape.HasFlag(EscapeType.Null) ? GetStringEscape(value, provider) : GetString(value, provider);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this IEnumerable source)
+        public static String? GetString(this IEnumerable source)
         {
             return GetString(source, EscapeType.None);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetStringEscape(IEnumerable source)
+        public static String? GetStringEscape(IEnumerable source)
         {
             return GetString(source, EscapeType.FullWithNull);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this IEnumerable source, EscapeType escape)
+        public static String? GetString(this IEnumerable source, EscapeType escape)
         {
             return GetString(source, escape, CultureInfo.InvariantCulture);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetString(this IEnumerable source, IFormatProvider provider)
+        public static String? GetString(this IEnumerable source, IFormatProvider? provider)
         {
             return GetString(source, EscapeType.None, provider);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String GetStringEscape(IEnumerable source, IFormatProvider provider)
+        public static String? GetStringEscape(IEnumerable source, IFormatProvider? provider)
         {
             return GetString(source, EscapeType.FullWithNull, provider);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public static String GetString(this IEnumerable source, EscapeType escape, IFormatProvider provider)
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        public static String? GetString(this IEnumerable? source, EscapeType escape, IFormatProvider? provider)
         {
             if (source is null)
             {
@@ -711,35 +774,35 @@ namespace NetExtender.Utils.Types
 
         private static Type KeyValuePairType { get; } = typeof(KeyValuePair<,>);
 
-        private static IEnumerable<String> PairGetString(this IEnumerable dictionary, EscapeType escape, IFormatProvider provider)
+        private static IEnumerable<String?> PairGetString(this IEnumerable dictionary, EscapeType escape, IFormatProvider? provider)
         {
             if (dictionary is null)
             {
                 throw new ArgumentNullException(nameof(dictionary));
             }
 
-            foreach (Object obj in dictionary)
+            foreach (Object? obj in dictionary)
             {
                 yield return GetStringUnknown(obj, escape, provider);
             }
         }
 
-        private static String DictionaryGetString(this IEnumerable dictionary, EscapeType escape, IFormatProvider provider)
+        private static String DictionaryGetString(this IEnumerable dictionary, EscapeType escape, IFormatProvider? provider)
         {
             return $"{{{String.Join(", ", dictionary.PairGetString(escape, provider))}}}";
         }
 
-        private static String SetGetString(this IEnumerable set, EscapeType escape, IFormatProvider provider)
+        private static String SetGetString(this IEnumerable set, EscapeType escape, IFormatProvider? provider)
         {
             return $"{{{String.Join(", ", set.Cast<Object>().Select(item => item.GetString(escape, provider)))}}}";
         }
 
-        private static String JaggedGetString(this IEnumerable<IEnumerable> jagged, EscapeType escape, IFormatProvider provider)
+        private static String JaggedGetString(this IEnumerable<IEnumerable> jagged, EscapeType escape, IFormatProvider? provider)
         {
             return $"[{String.Join(", ", jagged.Select(e => e.GetString(escape, provider)))}]";
         }
 
-        private static String EnumerableGetString(this IEnumerable source, EscapeType escape, IFormatProvider provider)
+        private static String EnumerableGetString(this IEnumerable source, EscapeType escape, IFormatProvider? provider)
         {
             return $"[{String.Join(", ", source.Cast<Object>().Select(item => item.GetString(escape, provider)))}]";
         }

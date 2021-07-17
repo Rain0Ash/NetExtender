@@ -9,18 +9,12 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Win32;
 using NetExtender.Utils.Windows;
 
 namespace NetExtender.Workstation
 {
     public static class WorkStation
     {
-        static WorkStation()
-        {
-            SystemEvents.SessionSwitch += OnSessionSwitch;
-        }
-
         public static OSData Data { get; } = Software.GetOSVersion();
         
         public static String? CurrentUserSID { get; } = GetCurrentUserSID();
@@ -40,38 +34,24 @@ namespace NetExtender.Workstation
             }
         }
 
-        private static void OnSessionSwitch(Object sender, SessionSwitchEventArgs args)
-        {
-            switch (args.Reason)
-            {
-                case SessionSwitchReason.SessionLock:
-                    islocked = true;
-                    break;
-                case SessionSwitchReason.SessionUnlock:
-                    islocked = false;
-                    break;
-                default:
-                    return;
-            }
-        }
-
-        private static Boolean islocked = IsLocked;
         public static Boolean IsLocked
         {
             get
             {
-                return islocked = Process.GetProcessesByName("logonui").Any();
+                return Process.GetProcessesByName("logonui").Any();
             }
             set
             {
-                if (value && islocked)
+                Boolean locked = IsLocked;
+                
+                if (value && locked)
                 {
                     return;
                 }
 
                 if (!value)
                 {
-                    if (islocked)
+                    if (locked)
                     {
                         throw new NotSupportedException("Windows can't be unlocked programmatically.");
                     }
@@ -79,10 +59,7 @@ namespace NetExtender.Workstation
                     return;
                 }
 
-                if (LockWorkStation())
-                {
-                    islocked = true;
-                }
+                LockWorkStation();
             }
         }
         
@@ -192,14 +169,7 @@ namespace NetExtender.Workstation
                 }
             }
 
-            Boolean succesfull = LockWorkStation();
-
-            if (succesfull)
-            {
-                islocked = true;
-            }
-
-            return succesfull;
+            return LockWorkStation();
         }
 
         [DllImport("user32.dll")]

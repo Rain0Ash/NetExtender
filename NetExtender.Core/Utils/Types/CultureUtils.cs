@@ -4,7 +4,6 @@
 using System;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using NetExtender.Types.Culture;
 
 namespace NetExtender.Utils.Types

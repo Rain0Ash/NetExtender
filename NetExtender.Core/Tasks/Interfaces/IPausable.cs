@@ -7,8 +7,8 @@ namespace NetExtender.Tasks.Interfaces
 {
     public interface IEventPausable : IPausable
     {
-        event EmptyHandler Resumed;
-        event EmptyHandler Paused;
+        public event EventHandler Resumed;
+        public event EventHandler Paused;
     }
 
     public interface IPausable

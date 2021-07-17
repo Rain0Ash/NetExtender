@@ -9,28 +9,28 @@ using NetExtender.Types.Sets.Interfaces;
 namespace NetExtender.Types.Sets
 {
     [Serializable]
-    public class FixedSortedSet<T> : SortedSet<T>, ISet
+    public class SortedSetExtended<T> : SortedSet<T>, ISet
     {
-        public FixedSortedSet()
+        public SortedSetExtended()
         {
         }
 
-        public FixedSortedSet(IComparer<T>? comparer)
+        public SortedSetExtended(IComparer<T>? comparer)
             : base(comparer)
         {
         }
 
-        public FixedSortedSet(IEnumerable<T> collection)
+        public SortedSetExtended(IEnumerable<T> collection)
             : base(collection)
         {
         }
 
-        public FixedSortedSet(IEnumerable<T> collection, IComparer<T>? comparer)
+        public SortedSetExtended(IEnumerable<T> collection, IComparer<T>? comparer)
             : base(collection, comparer)
         {
         }
 
-        protected FixedSortedSet(SerializationInfo info, StreamingContext context)
+        protected SortedSetExtended(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

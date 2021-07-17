@@ -225,6 +225,7 @@
             }
         }
 
+        /// <inheritdoc cref="SortedSet{T}.IsProperSubsetOf"/>
         public Boolean IsProperSubsetOf(IEnumerable<T> other)
         {
             if (other is null)
@@ -241,6 +242,7 @@
             };
         }
 
+        /// <inheritdoc cref="SortedSet{T}.IsProperSupersetOf"/>
         public Boolean IsProperSupersetOf(IEnumerable<T> other)
         {
             if (other is null)
@@ -257,6 +259,7 @@
             };
         }
 
+        /// <inheritdoc cref="SortedSet{T}.IsSubsetOf"/>
         public Boolean IsSubsetOf(IEnumerable<T> other)
         {
             if (other is null)
@@ -273,6 +276,7 @@
             };
         }
 
+        /// <inheritdoc cref="SortedSet{T}.IsSupersetOf"/>
         public Boolean IsSupersetOf(IEnumerable<T> other)
         {
             if (other is null)
@@ -289,6 +293,7 @@
             };
         }
 
+        /// <inheritdoc cref="SortedSet{T}.Overlaps"/>
         public Boolean Overlaps(IEnumerable<T> other)
         {
             if (other is null)
@@ -299,6 +304,7 @@
             return other.Any(Contains);
         }
 
+        /// <inheritdoc cref="SortedSet{T}.SetEquals"/>
         public Boolean SetEquals(IEnumerable<T> other)
         {
             if (other is null)

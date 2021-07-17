@@ -10,7 +10,7 @@ using NetExtender.Types.Sets.Interfaces;
 namespace NetExtender.Types.Sets
 {
     [Serializable]
-    public class FixedHashSet<T> : HashSet<T>, ISet
+    public class HashSetExtended<T> : HashSet<T>, ISet
     {
         Boolean ICollection.IsSynchronized
         {
@@ -28,31 +28,31 @@ namespace NetExtender.Types.Sets
             }
         }
 
-        public FixedHashSet()
+        public HashSetExtended()
         {
         }
 
-        public FixedHashSet(IEnumerable<T> collection)
+        public HashSetExtended(IEnumerable<T> collection)
             : base(collection)
         {
         }
 
-        public FixedHashSet(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
+        public HashSetExtended(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
             : base(collection, comparer)
         {
         }
 
-        public FixedHashSet(IEqualityComparer<T>? comparer)
+        public HashSetExtended(IEqualityComparer<T>? comparer)
             : base(comparer)
         {
         }
 
-        public FixedHashSet(Int32 capacity, IEqualityComparer<T>? comparer)
+        public HashSetExtended(Int32 capacity, IEqualityComparer<T>? comparer)
             : base(capacity, comparer)
         {
         }
 
-        protected FixedHashSet(SerializationInfo info, StreamingContext context)
+        protected HashSetExtended(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

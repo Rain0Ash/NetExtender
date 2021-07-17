@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 
 namespace NetExtender.Utils.Network
 {
-    public static partial class WebUtils
+    public static partial class UserAgentUtils
     {
         public static class BrowserUserAgent
         {

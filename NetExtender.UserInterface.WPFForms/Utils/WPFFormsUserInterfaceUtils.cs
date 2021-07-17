@@ -4,7 +4,6 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using NetExtender.Utils.UserInterface;
 using NetExtender.Workstation;
 using NetExtender.WPF.Utils;
 

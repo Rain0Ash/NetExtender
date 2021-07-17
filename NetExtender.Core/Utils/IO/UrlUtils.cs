@@ -3,7 +3,6 @@
 
 using System;
 using NetExtender.Types.Network;
-using NetExtender.Utils.Types;
 
 namespace NetExtender.Utils.IO
 {
@@ -22,7 +21,7 @@ namespace NetExtender.Utils.IO
                 return false;
             }
 
-            using FixedWebClient client = new FixedWebClient
+            using WebClientExtended client = new WebClientExtended
             {
                 HeadOnly = true
             };

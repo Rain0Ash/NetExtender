@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -27,6 +28,25 @@ namespace NetExtender.Utils.Types
         public static T RandomEnumValue<T>() where T : unmanaged, Enum
         {
             return CacheValues<T>.Values.GetRandom();
+        }
+
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        public static T GetRandomEnumValue<T>(this IEnumerable<T> source) where T : unmanaged, Enum
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            Int32? count = source.CountIfMaterialized();
+
+            if (count is not null)
+            {
+                return count > 0 ? source.GetRandom() : RandomEnumValue<T>();
+            }
+
+            List<T> items = source.ToList();
+            return items.Count > 0 ? items.GetRandom() : RandomEnumValue<T>();
         }
 
         public static IEnumerable<Decimal> AsDecimal<T>() where T : unmanaged, Enum

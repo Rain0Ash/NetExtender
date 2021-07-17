@@ -12,13 +12,11 @@ namespace NetExtender.Random
     /// Good for small sized number of items
     /// </summary>
     /// <typeparam name="T">Type of items you wish this selector returns</typeparam>
-    public class StaticRandomSelectorLinear<T> : IRandomSelector<T>
+    public class StaticRandomSelectorLinear<T> : RandomSelector<T>
     {
-        private readonly IRandom _random;
-
-        // internal buffers
-        private readonly T[] _items;
-        private readonly Double[] _cda;
+        private IRandom Random { get; }
+        private T[] Items { get; }
+        private Double[] Distribution { get; }
 
         /// <summary>
         /// Constructor, used by StaticRandomSelectorBuilder
@@ -29,9 +27,9 @@ namespace NetExtender.Random
         /// <param name="seed">Seed for internal random generator</param>
         public StaticRandomSelectorLinear(T[] items, Double[] cda, Int32 seed)
         {
-            _items = items;
-            _cda = cda;
-            _random = RandomUtils.Create(seed);
+            Items = items;
+            Distribution = cda;
+            Random = RandomUtils.Create(seed);
         }
 
         /// <summary>
@@ -39,9 +37,14 @@ namespace NetExtender.Random
         /// Uses linear search for random selection.
         /// </summary>
         /// <returns>Returns item</returns>
-        public T SelectRandomItem(Double value)
+        public override T GetRandom(Double value)
         {
-            return _items[_cda.SelectIndexBinarySearch(value)];
+            if (Items.Length <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(Items), "Container is empty");
+            }
+            
+            return Items[SelectIndexBinarySearch(Distribution, value)];
         }
 
         /// <summary>
@@ -49,9 +52,14 @@ namespace NetExtender.Random
         /// Uses linear search for random selection.
         /// </summary>
         /// <returns>Returns item</returns>
-        public T SelectRandomItem()
+        public override T GetRandom()
         {
-            return _items[_cda.SelectIndexBinarySearch(_random.NextDouble())];
+            if (Items.Length <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(Items), "Container is empty");
+            }
+            
+            return Items[SelectIndexBinarySearch(Distribution, Random.NextDouble())];
         }
     }
 }

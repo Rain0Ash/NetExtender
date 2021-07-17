@@ -9,11 +9,6 @@ namespace NetExtender.Types.Culture
 {
     public readonly struct LCID : IEquatable<LCID>, IEquatable<Int32>, IEquatable<UInt16>, IEquatable<CultureLCID>
     {
-        public static LCID En { get; } = new LCID(0x409);
-        public static LCID Ru { get; } = new LCID(0x419);
-        public static LCID De { get; } = new LCID(0x407);
-        public static LCID Fr { get; } = new LCID(0x40c);
-        
         public static Boolean operator ==(LCID first, LCID second)
         {
             return first.Equals(second);

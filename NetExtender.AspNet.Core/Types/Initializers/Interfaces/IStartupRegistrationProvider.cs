@@ -15,5 +15,6 @@ namespace AspNet.Core.Types.Initializers.Interfaces
         public IStartupRegistrationProvider Register(Action<IWebHostEnvironment> environment);
         public IStartupRegistrationProvider Register(Action<IApplicationBuilder> application, Action<IWebHostEnvironment> environment);
         public IStartupRegistrationProvider Register(Action<IApplicationBuilder, IWebHostEnvironment> configuration);
+        public IStartupRegistrationProvider RegisterCallback(Action callback);
     }
 }

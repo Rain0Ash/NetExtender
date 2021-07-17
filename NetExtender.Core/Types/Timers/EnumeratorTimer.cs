@@ -28,7 +28,7 @@ namespace NetExtender.Types.Timers
             }
         }
 
-        public event EmptyHandler Finished = null!;
+        public event EventHandler Finished = null!;
         public event ItemTickHandler<T> ItemTick = null!;
 
         public T Current
@@ -109,7 +109,7 @@ namespace NetExtender.Types.Timers
 
             if (!IsReset || !Reset())
             {
-                Finished?.Invoke();
+                Finished?.Invoke(null, EventArgs.Empty);
                 Dispose();
             }
         }

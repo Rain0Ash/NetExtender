@@ -5,9 +5,6 @@ namespace NetExtender.Tasks.Interfaces
 {
     public interface ITask : IStartable, IPausable
     {
-        public void Cancel()
-        {
-            Stop();
-        }
+        public void Cancel();
     }
 }

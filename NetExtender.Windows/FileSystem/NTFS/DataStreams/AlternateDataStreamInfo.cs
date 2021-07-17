@@ -6,7 +6,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Security;
 using Microsoft.Win32.SafeHandles;
-using NetExtender.Utils.IO;
 using NetExtender.Utils.Types;
 using NetExtender.Utils.Windows.IO;
 using NetExtender.Utils.Windows.IO.NTFS;

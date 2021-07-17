@@ -2,7 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using NetExtender.Domains.View;
 using NetExtender.Utils.IO;
 
 namespace NetExtender.Domains.View.Console

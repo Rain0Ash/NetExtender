@@ -5,7 +5,6 @@ using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
-using NetExtender.UserInterface;
 using NetExtender.UserInterface.Events;
 using NetExtender.UserInterface.Interfaces;
 using NetExtender.UserInterface.Utils;

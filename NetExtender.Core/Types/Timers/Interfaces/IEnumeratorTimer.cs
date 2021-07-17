@@ -9,7 +9,7 @@ namespace NetExtender.Times.Timers.Interfaces
 {
     public interface IEnumeratorTimer<out T> : ITimer, IEnumerator<T>
     {
-        public event EmptyHandler Finished;
+        public event EventHandler Finished;
         public event ItemTickHandler<T?> ItemTick;
         public new Boolean Reset();
     }

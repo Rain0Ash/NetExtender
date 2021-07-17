@@ -7,7 +7,6 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using NetExtender.Utils.Types;
 
 namespace NetExtender.Utils.Numerics
 {

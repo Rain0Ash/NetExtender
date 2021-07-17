@@ -31,7 +31,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return new FixedHashSet<T>(source);
+            return new HashSetExtended<T>(source);
         }
         
         public static HashSet<T> ToHashSet<T>(IEnumerable<T> source, IEqualityComparer<T> comparer)
@@ -41,7 +41,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return new FixedHashSet<T>(source, comparer);
+            return new HashSetExtended<T>(source, comparer);
         }
         
         public static HashSet<T> AsHashSet<T>(IEnumerable<T> source)
@@ -51,7 +51,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source as HashSet<T> ?? new FixedHashSet<T>(source);
+            return source as HashSet<T> ?? new HashSetExtended<T>(source);
         }
         
         public static HashSet<T> AsHashSet<T>(IEnumerable<T> source, IEqualityComparer<T> comparer)
@@ -61,7 +61,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source as HashSet<T> ?? new FixedHashSet<T>(source, comparer);
+            return source as HashSet<T> ?? new HashSetExtended<T>(source, comparer);
         }
 
         public static SortedSet<T> ToSortedSet<T>(this IEnumerable<T> source)
@@ -71,7 +71,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return new FixedSortedSet<T>(source);
+            return new SortedSetExtended<T>(source);
         }
         
         public static SortedSet<T> ToSortedSet<T>(this IEnumerable<T> source, IComparer<T>? comparer)
@@ -81,7 +81,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return new FixedSortedSet<T>(source, comparer);
+            return new SortedSetExtended<T>(source, comparer);
         }
         
         public static SortedSet<T> AsSortedSet<T>(this IEnumerable<T> source)
@@ -91,7 +91,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source as SortedSet<T> ?? new FixedSortedSet<T>(source);
+            return source as SortedSet<T> ?? new SortedSetExtended<T>(source);
         }
         
         public static SortedSet<T> AsSortedSet<T>(this IEnumerable<T> source, IComparer<T>? comparer)
@@ -101,7 +101,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source as SortedSet<T> ?? new FixedSortedSet<T>(source, comparer);
+            return source as SortedSet<T> ?? new SortedSetExtended<T>(source, comparer);
         }
 
         public static OrderedSet<T> ToOrderedSet<T>(this IEnumerable<T> source)

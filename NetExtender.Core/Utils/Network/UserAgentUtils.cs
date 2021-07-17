@@ -5,31 +5,29 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using NetExtender.Exceptions;
-using NetExtender.Random;
 using NetExtender.Utils.Types;
 
 namespace NetExtender.Utils.Network
 {
-    public static class UserAgentUtils
+    public static partial class UserAgentUtils
     {
         public const String OtherUserAgent = "User-Agent: Other";
         
         private static IDictionary<BrowserType, IList<String>> UserAgents { get; } = new Dictionary<BrowserType, IList<String>>
         {
-            [BrowserType.Chrome] = WebUtils.BrowserUserAgent.Chrome,
-            [BrowserType.IE] = WebUtils.BrowserUserAgent.InternetExplorer,
-            [BrowserType.Edge] = WebUtils.BrowserUserAgent.Chrome,
-            [BrowserType.Opera] = WebUtils.BrowserUserAgent.Opera,
-            [BrowserType.Firefox] = WebUtils.BrowserUserAgent.Firefox,
-            [BrowserType.Safari] = WebUtils.BrowserUserAgent.Safari,
+            [BrowserType.Chrome] = BrowserUserAgent.Chrome,
+            [BrowserType.InternetExplorer] = BrowserUserAgent.InternetExplorer,
+            [BrowserType.Edge] = BrowserUserAgent.Chrome,
+            [BrowserType.Opera] = BrowserUserAgent.Opera,
+            [BrowserType.Firefox] = BrowserUserAgent.Firefox,
+            [BrowserType.Safari] = BrowserUserAgent.Safari,
         }.ToImmutableDictionary();
 
-        private static IRandomSelector<BrowserType> Selector { get; } = new RandomSelectorBuilder<BrowserType>(BrowserUtils.Browsers).Build();
         public static String RandomUserAgent
         {
             get
             {
-                return CreateUserAgent(Selector.SelectRandomItem());
+                return CreateUserAgent(BrowserUtils.RandomBrowser);
             }
         }
 
@@ -42,13 +40,18 @@ namespace NetExtender.Utils.Network
             }
             private set
             {
+                if (value is null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+                
                 ThrowIfSessionUserAgentAlreadyInitialized();
                 if (!ValidateUserAgent(value))
                 {
                     throw new ArgumentException(@"Is not valid user agent", nameof(value));
                 }
                 
-                current = value;
+                session = value;
             }
         }
 
@@ -61,6 +64,11 @@ namespace NetExtender.Utils.Network
             }
             set
             {
+                if (value is null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+                
                 if (!ValidateUserAgent(value))
                 {
                     throw new ArgumentException(@"Is not valid user agent", nameof(value));
@@ -92,6 +100,11 @@ namespace NetExtender.Utils.Network
         
         public static String InitializeSessionUserAgent(String agent)
         {
+            if (agent is null)
+            {
+                throw new ArgumentNullException(nameof(agent));
+            }
+
             ThrowIfSessionUserAgentAlreadyInitialized();
             SessionUserAgent = agent;
             return SessionUserAgent;
@@ -99,7 +112,7 @@ namespace NetExtender.Utils.Network
         
         public static String CreateUserAgent(BrowserType type)
         {
-            return UserAgents.TryGetValue(type, out IList<String>? agents) ? agents.GetRandom() : OtherUserAgent;
+            return UserAgents.TryGetValue(type, out IList<String>? agents) ? agents.GetRandom() ?? OtherUserAgent : OtherUserAgent;
         }
         
         public static Boolean ValidateUserAgent(String agent)
@@ -109,6 +122,11 @@ namespace NetExtender.Utils.Network
         
         private static Boolean IsInternetExplorer(String agent)
         {
+            if (agent is null)
+            {
+                throw new ArgumentNullException(nameof(agent));
+            }
+
             return agent.Contains("MSIE") || agent.Contains("Trident");
         }
     }

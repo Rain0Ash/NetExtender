@@ -105,7 +105,7 @@ namespace NetExtender.Utils.Types
             }
         }
 
-        public static IEnumerable<(Int32 counter, T item)> Enumerate<T>(this IEnumerable<T> source)
+        public static IEnumerable<(Int32 Counter, T Item)> Enumerate<T>(this IEnumerable<T> source)
         {
             if (source is null)
             {
@@ -116,7 +116,7 @@ namespace NetExtender.Utils.Types
             return source.Select(item => (counter++, item));
         }
 
-        public static IEnumerable<(Int64 counter, T item)> LongEnumerate<T>(this IEnumerable<T> source)
+        public static IEnumerable<(Int64 Counter, T Item)> LongEnumerate<T>(this IEnumerable<T> source)
         {
             if (source is null)
             {
@@ -3133,68 +3133,37 @@ namespace NetExtender.Utils.Types
         /// of the source Enumerable in the first position with the element that has the same
         /// index in the second Enumerable in the second position.
         /// </summary>
-        /// <typeparam name="T1">The type of the elements of <paramref name="source"/>.</typeparam>
-        /// <typeparam name="T2">The type of the elements of <paramref name="other"/>.</typeparam>
-        /// <param name="source">The first sequence.</param>
-        /// <param name="other">The second sequence.</param>
+        /// <typeparam name="T1">The type of the elements of <paramref name="first"/>.</typeparam>
+        /// <typeparam name="T2">The type of the elements of <paramref name="second"/>.</typeparam>
+        /// <typeparam name="T3">The type of the elements of <paramref name="third"/>.</typeparam>
+        /// <param name="first">The first sequence.</param>
+        /// <param name="second">The second sequence.</param>
+        /// <param name="third">The third sequence.</param>
         /// <returns>The output sequence will be as long as the shortest input sequence.</returns>
-        public static IEnumerable<(T1, T2)> Zip<T1, T2>(this IEnumerable<T1> source, IEnumerable<T2> other)
+        public static IEnumerable<(T1 First, T2 Second, T3 Third)> Zip<T1, T2, T3>(this IEnumerable<T1> first, IEnumerable<T2> second, IEnumerable<T3> third)
         {
-            if (source is null)
+            if (first is null)
             {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentNullException(nameof(first));
             }
 
-            if (other is null)
+            if (second is null)
             {
-                throw new ArgumentNullException(nameof(other));
+                throw new ArgumentNullException(nameof(second));
             }
 
-            using IEnumerator<T1> first = source.GetEnumerator();
-            using IEnumerator<T2> second = other.GetEnumerator();
-
-            while (first.MoveNext() && second.MoveNext())
+            if (third is null)
             {
-                yield return (first.Current, second.Current);
-            }
-        }
-
-        /// <summary>
-        /// Combines two Enumerable objects into a sequence of Tuples containing each element
-        /// of the source Enumerable in the first position with the element that has the same
-        /// index in the second Enumerable in the second position.
-        /// </summary>
-        /// <typeparam name="T1">The type of the elements of <paramref name="source"/>.</typeparam>
-        /// <typeparam name="T2">The type of the elements of <paramref name="next"/>.</typeparam>
-        /// <typeparam name="T3">The type of the elements of <paramref name="other"/>.</typeparam>
-        /// <param name="source">The first sequence.</param>
-        /// <param name="next">The second sequence.</param>
-        /// <param name="other">The third sequence.</param>
-        /// <returns>The output sequence will be as long as the shortest input sequence.</returns>
-        public static IEnumerable<(T1, T2, T3)> Zip<T1, T2, T3>(this IEnumerable<T1> source, IEnumerable<T2> next, IEnumerable<T3> other)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentNullException(nameof(third));
             }
 
-            if (next is null)
-            {
-                throw new ArgumentNullException(nameof(next));
-            }
+            using IEnumerator<T1> fenumerator = first.GetEnumerator();
+            using IEnumerator<T2> senumerator = second.GetEnumerator();
+            using IEnumerator<T3> tenumerator = third.GetEnumerator();
 
-            if (other is null)
+            while (fenumerator.MoveNext() && senumerator.MoveNext() && tenumerator.MoveNext())
             {
-                throw new ArgumentNullException(nameof(other));
-            }
-
-            using IEnumerator<T1> first = source.GetEnumerator();
-            using IEnumerator<T2> second = next.GetEnumerator();
-            using IEnumerator<T3> third = other.GetEnumerator();
-
-            while (first.MoveNext() && second.MoveNext() && third.MoveNext())
-            {
-                yield return (first.Current, second.Current, third.Current);
+                yield return (fenumerator.Current, senumerator.Current, tenumerator.Current);
             }
         }
 
@@ -3227,46 +3196,6 @@ namespace NetExtender.Utils.Types
                     yield return item;
                 }
             }
-        }
-
-        /// <summary>
-        /// Concatenates all elements of a sequence using the specified separator between each element.
-        /// </summary>
-        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-        /// <param name="source">A sequence that contains the objects to concatenate.</param>
-        /// <param name="separator">The string to use as a separator.</param>
-        /// <param name="start">Start with</param>
-        /// <param name="end">End with</param>
-        /// <returns>A string holding the concatenated values.</returns>
-        public static String Join<T>(this IEnumerable<T> source, String separator = "", String start = "", String end = "")
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return $"{start}{String.Join(separator, source)}{end}";
-        }
-
-        /// <summary>
-        /// Concatenates all elements of a sequence using the specified separator between each element.
-        /// </summary>
-        /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
-        /// <typeparam name="TOut">The type of the elements of <paramref name="predicate"/> which will be joined.</typeparam>
-        /// <param name="source">A sequence that contains the objects to concatenate.</param>
-        /// <param name="predicate">Convert <typeparam name="T"> to <typeparam name="TOut"></typeparam></typeparam>></param>
-        /// <param name="separator">The string to use as a separator.</param>
-        /// <param name="start">Start with</param>
-        /// <param name="end">End with</param>
-        /// <returns>A string holding the concatenated values.</returns>
-        public static String Join<T, TOut>(this IEnumerable<T> source, Func<T, TOut> predicate, String separator = "", String start = "", String end = "")
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return Join(source.Select(predicate), separator, start, end);
         }
 
         /// <summary>

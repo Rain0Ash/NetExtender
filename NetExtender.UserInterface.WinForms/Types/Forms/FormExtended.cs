@@ -12,7 +12,7 @@ using NetExtender.Windows;
 
 namespace NetExtender.UserInterface.WinForms.Forms
 {
-    public abstract class FixedForm : Form, IWindow
+    public abstract class FormExtended : Form, IWindow
     {
         public String Title
         {
@@ -66,7 +66,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
 
         public event SizeChangeToggleHandler SizeChangeToggle = null!;
 
-        protected FixedForm()
+        protected FormExtended()
         {
             Load += OnLoad;
             Load += BringToFront;

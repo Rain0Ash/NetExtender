@@ -11,8 +11,9 @@ namespace NetExtender.AspNet.Core.Types.Initializers
 {
     public sealed record AspNetCoreStartupInitializer : IStartupRegistrationProvider
     {
-        public Action<IServiceCollection>? Service { get; private set; }
-        public Action<IApplicationBuilder, IWebHostEnvironment>? Configuration { get; private set; }
+        private Action<IServiceCollection>? Service { get; set; }
+        private Action<IApplicationBuilder, IWebHostEnvironment>? Configuration { get; set; }
+        private Action? Callback { get; set; }
 
         public AspNetCoreStartupInitializer()
         {
@@ -114,6 +115,12 @@ namespace NetExtender.AspNet.Core.Types.Initializers
             return this;
         }
 
+        public IStartupRegistrationProvider RegisterCallback(Action callback)
+        {
+            Callback += callback ?? throw new ArgumentNullException(nameof(callback));
+            return this;
+        }
+
         public void ConfigureServices(IServiceCollection collection)
         {
             Service?.Invoke(collection);
@@ -122,6 +129,7 @@ namespace NetExtender.AspNet.Core.Types.Initializers
         public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)
         {
             Configuration?.Invoke(application, environment);
+            Callback?.Invoke();
         }
     }
 }

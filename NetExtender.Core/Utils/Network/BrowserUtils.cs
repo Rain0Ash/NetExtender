@@ -5,13 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using NetExtender.Random;
 
 namespace NetExtender.Utils.Network
 {
     public enum BrowserType
     {
         Chrome,
-        IE,
+        InternetExplorer,
         Edge,
         Opera,
         Firefox,
@@ -28,7 +29,7 @@ namespace NetExtender.Utils.Network
             IDictionary<BrowserType, Double> browsers = new Dictionary<BrowserType, Double>
             {
                 [BrowserType.Chrome] = 81.4,
-                [BrowserType.IE] = 1.85,
+                [BrowserType.InternetExplorer] = 1.85,
                 [BrowserType.Edge] = 1.55,
                 [BrowserType.Opera] = 1.5,
                 [BrowserType.Firefox] = 9.1,
@@ -37,6 +38,18 @@ namespace NetExtender.Utils.Network
             
             browsers.Add(BrowserType.Other, 100 - browsers.Values.Sum());
             Browsers = browsers.ToImmutableDictionary();
+            
+            Selector = new RandomSelectorBuilder<BrowserType>(Browsers).Build();
+        }
+        
+        private static IRandomSelector<BrowserType> Selector { get; }
+
+        public static BrowserType RandomBrowser
+        {
+            get
+            {
+                return Selector.GetRandom();
+            }
         }
     }
 }

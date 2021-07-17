@@ -407,7 +407,7 @@ namespace NetExtender.Utils.Numerics
                     return include.NextDoubleWithOne();
                 }
 
-                return random.NextDouble().Round(16);
+                return random.NextDouble().Round(15);
             }
         }
 
@@ -426,7 +426,7 @@ namespace NetExtender.Utils.Numerics
                     return include.NextDoubleWithOne();
                 }
 
-                return random.NextDouble().Round(16);
+                return random.NextDouble().Round(15);
             }
         }
 

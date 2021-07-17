@@ -7,7 +7,7 @@ using NetExtender.UserInterface.WinForms.ToolTips;
 
 namespace NetExtender.UserInterface.WinForms.Forms
 {
-    public abstract class HelpToolTipForm : FixedForm
+    public abstract class HelpToolTipForm : FormExtended
     {
         private HelpToolTip ToolTip { get; }
 

@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 
 namespace NetExtender.Random
 {
@@ -9,9 +10,9 @@ namespace NetExtender.Random
     /// Interface for Random selector
     /// </summary>
     /// <typeparam name="T">Type of items that gets randomly returned</typeparam>
-    public interface IRandomSelector<out T>
+    public interface IRandomSelector<out T> : IEnumerable<T>
     {
-        T SelectRandomItem();
-        T SelectRandomItem(Double value);
+        public T GetRandom();
+        public T GetRandom(Double value);
     }
 }

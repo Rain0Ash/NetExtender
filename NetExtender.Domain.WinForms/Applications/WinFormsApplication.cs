@@ -4,7 +4,6 @@
 using System;
 using System.Windows.Forms;
 using NetExtender.Domains.Applications.Interfaces;
-using NetExtender.Exceptions;
 using NetExtender.Types.Dispatchers.Interfaces;
 
 namespace NetExtender.Domains.Applications

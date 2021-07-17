@@ -3,10 +3,7 @@
 
 using System;
 using System.IO;
-using System.Linq;
 using System.Security.AccessControl;
-using System.Security.Principal;
-using NetExtender.Utils.IO;
 
 namespace NetExtender.Utils.Windows.IO
 {

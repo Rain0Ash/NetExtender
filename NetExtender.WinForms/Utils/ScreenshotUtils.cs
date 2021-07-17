@@ -10,7 +10,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using NetExtender.Types.Native.Windows;
-using NetExtender.Utils.Static;
 
 namespace NetExtender.Utils.Windows
 {

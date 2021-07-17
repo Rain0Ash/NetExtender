@@ -12,24 +12,34 @@ namespace NetExtender.Random
     /// Good for large sized number of items
     /// </summary>
     /// <typeparam name="T">Type of items you wish this selector returns</typeparam>
-    public class StaticRandomSelectorBinary<T> : IRandomSelector<T>
+    public class StaticRandomSelectorBinary<T> : RandomSelector<T>
     {
-        private readonly IRandom _random;
-        private readonly T[] _items;
-        private readonly Double[] _cda;
+        private IRandom Random { get; }
+        private T[] Items { get; }
+        private Double[] Distribution { get; }
 
+        public StaticRandomSelectorBinary(T[] items, Double[] cda)
+            : this(items ?? throw new ArgumentNullException(nameof(items)), cda ?? throw new ArgumentNullException(nameof(cda)), RandomUtils.Create())
+        {
+        }
+        
+        public StaticRandomSelectorBinary(T[] items, Double[] cda, Int32 seed)
+            : this(items ?? throw new ArgumentNullException(nameof(items)), cda ?? throw new ArgumentNullException(nameof(cda)), RandomUtils.Create(seed))
+        {
+        }
+        
         /// <summary>
         /// Constructor, used by StaticRandomSelectorBuilder
         /// Needs array of items and CDA (Cummulative Distribution Array). 
         /// </summary>
         /// <param name="items">Items of type T</param>
         /// <param name="cda">Cummulative Distribution Array</param>
-        /// <param name="seed">Seed for internal random generator</param>
-        public StaticRandomSelectorBinary(T[] items, Double[] cda, Int32 seed)
+        /// <param name="random">Random generator</param>
+        public StaticRandomSelectorBinary(T[] items, Double[] cda, IRandom random)
         {
-            _items = items;
-            _cda = cda;
-            _random = RandomUtils.Create(seed);
+            Random = random ?? throw new ArgumentNullException(nameof(random));
+            Items = items ?? throw new ArgumentNullException(nameof(items));
+            Distribution = cda ?? throw new ArgumentNullException(nameof(cda));
         }
 
         /// <summary>
@@ -37,9 +47,14 @@ namespace NetExtender.Random
         /// Uses binary search for random selection.
         /// </summary>
         /// <returns>Returns item</returns>
-        public T SelectRandomItem()
+        public override T GetRandom()
         {
-            return _items[_cda.SelectIndexBinarySearch(_random.NextDouble())];
+            if (Items.Length <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(Items), "Container is empty");
+            }
+            
+            return Items[SelectIndexBinarySearch(Distribution, Random.NextDouble())];
         }
 
         /// <summary>
@@ -48,9 +63,14 @@ namespace NetExtender.Random
         /// </summary>
         /// <param name="value">Random value from your uniform generator</param>
         /// <returns>Returns item</returns>
-        public T SelectRandomItem(Double value)
+        public override T GetRandom(Double value)
         {
-            return _items[_cda.SelectIndexBinarySearch(value)];
+            if (Items.Length <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(Items), "Container is empty");
+            }
+            
+            return Items[SelectIndexBinarySearch(Distribution, value)];
         }
     }
 }

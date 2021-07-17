@@ -61,13 +61,13 @@ namespace NetExtender.Types.Sets
         public OrderedSortedSet()
         {
             Inner = new OrderedComparer<T>();
-            Set = new FixedSortedSet<T>((IComparer<T>) Inner);
+            Set = new SortedSetExtended<T>((IComparer<T>) Inner);
         }
         
         public OrderedSortedSet(IComparer<T>? comparer)
         {
             Inner = new OrderedComparer<T>(comparer);
-            Set = new FixedSortedSet<T>((IComparer<T>) Inner);
+            Set = new SortedSetExtended<T>((IComparer<T>) Inner);
         }
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
@@ -81,7 +81,7 @@ namespace NetExtender.Types.Sets
             source = source.Materialize();
 
             Inner = new OrderedComparer<T>(source);
-            Set = new FixedSortedSet<T>(source, Inner);
+            Set = new SortedSetExtended<T>(source, Inner);
         }
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
@@ -95,7 +95,7 @@ namespace NetExtender.Types.Sets
             source = source.Materialize();
 
             Inner = new OrderedComparer<T>(source, comparer);
-            Set = new FixedSortedSet<T>(source, Inner);
+            Set = new SortedSetExtended<T>(source, Inner);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
@@ -109,7 +109,7 @@ namespace NetExtender.Types.Sets
             source = source.Materialize();
 
             Inner = new OrderedComparer<T>(order?.Append(source) ?? source);
-            Set = new FixedSortedSet<T>(source, Inner);
+            Set = new SortedSetExtended<T>(source, Inner);
         }
 
         /// <inheritdoc cref="SortedSet{T}.Contains"/>

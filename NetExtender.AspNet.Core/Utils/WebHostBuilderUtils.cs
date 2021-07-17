@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using AspNet.Core.Types.Initializers.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -65,6 +66,41 @@ namespace NetExtender.Utils.AspNetCore.Types
             {
                 Initializers = new ConcurrentDictionary<IWebHostBuilder, IStartupRegistrationProvider>();
             }
+
+            public static Boolean Contains(IWebHostBuilder builder)
+            {
+                if (builder is null)
+                {
+                    throw new ArgumentNullException(nameof(builder));
+                }
+
+                return Initializers.ContainsKey(builder);
+            }
+            
+            public static Boolean TryGetProvider(IWebHostBuilder builder, [MaybeNullWhen(false)] out IStartupRegistrationProvider? provider)
+            {
+                if (builder is null)
+                {
+                    throw new ArgumentNullException(nameof(builder));
+                }
+
+                return Initializers.TryGetValue(builder, out provider);
+            }
+            
+            public static Boolean Remove(IWebHostBuilder builder, [MaybeNullWhen(false)] out IStartupRegistrationProvider? provider)
+            {
+                if (builder is null)
+                {
+                    throw new ArgumentNullException(nameof(builder));
+                }
+
+                return Initializers.TryRemove(builder, out provider);
+            }
+            
+            private static IStartupRegistrationProvider Factory(IWebHostBuilder builder)
+            {
+                return new AspNetCoreStartupInitializer().RegisterCallback(() => Remove(builder, out _));
+            }
             
             public static IStartupRegistrationProvider Initialize(IWebHostBuilder builder)
             {
@@ -73,7 +109,7 @@ namespace NetExtender.Utils.AspNetCore.Types
                     throw new ArgumentNullException(nameof(builder));
                 }
 
-                IStartupRegistrationProvider provider = Initializers.GetOrAdd(builder, _ => new AspNetCoreStartupInitializer());
+                IStartupRegistrationProvider provider = Initializers.GetOrAdd(builder, Factory);
                 builder.UseStartup(provider);
                 return provider;
             }
@@ -185,8 +221,7 @@ namespace NetExtender.Utils.AspNetCore.Types
                 }
             }
             
-            builder.Register(UseDeveloperPage);
-            return builder;
+            return builder.Register(UseDeveloperPage);
         }
         
         public static IWebHostBuilder LoggingOff(this IWebHostBuilder builder)
