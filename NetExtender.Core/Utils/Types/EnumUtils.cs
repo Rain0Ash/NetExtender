@@ -25,7 +25,7 @@ namespace NetExtender.Utils.Types
     {
         private const String IsDefinedTypeMismatchMessage = "The underlying type of the enum and the value must be the same type.";
 
-        public static T RandomEnumValue<T>() where T : unmanaged, Enum
+        public static T Random<T>() where T : unmanaged, Enum
         {
             return CacheValues<T>.Values.GetRandom();
         }
@@ -42,11 +42,11 @@ namespace NetExtender.Utils.Types
 
             if (count is not null)
             {
-                return count > 0 ? source.GetRandom() : RandomEnumValue<T>();
+                return count > 0 ? source.GetRandom() : Random<T>();
             }
 
             List<T> items = source.ToList();
-            return items.Count > 0 ? items.GetRandom() : RandomEnumValue<T>();
+            return items.Count > 0 ? items.GetRandom() : Random<T>();
         }
 
         public static IEnumerable<Decimal> AsDecimal<T>() where T : unmanaged, Enum

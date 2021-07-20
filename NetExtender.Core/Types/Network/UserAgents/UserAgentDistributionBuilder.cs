@@ -17,9 +17,9 @@ namespace NetExtender.Types.Network.UserAgents
         public Boolean ArchitectureDistribution { get; set; }
         public Boolean CultureDistribution { get; set; }
         
-        protected RandomSelectorBuilder<BrowserType> BrowserDistributorBuilder { get; }
-        protected RandomSelectorBuilder<UserAgentArchitecture> ArchitectureDistributorBuilder { get; }
-        protected RandomSelectorBuilder<CultureInfo> CultureDistributorBuilder { get; }
+        protected RandomSelectorBuilder<BrowserType> BrowserDistributionBuilder { get; }
+        protected RandomSelectorBuilder<UserAgentArchitecture> ArchitectureDistributionBuilder { get; }
+        protected RandomSelectorBuilder<CultureInfo> CultureDistributionBuilder { get; }
 
         protected override BrowserType RandomBrowser
         {
@@ -27,7 +27,12 @@ namespace NetExtender.Types.Network.UserAgents
             {
                 try
                 {
-                    return BrowserDistribution ? BrowserDistributorBuilder.Build().GetRandom() : base.RandomBrowser;
+                    if (!BrowserDistribution)
+                    {
+                        return base.RandomBrowser;
+                    }
+
+                    return BrowserDistributionBuilder.Count > 0 ? BrowserDistributionBuilder.Build().GetRandom() : BrowserUtils.RandomBrowserWithDistribution;
                 }
                 catch (Exception)
                 {
@@ -42,7 +47,12 @@ namespace NetExtender.Types.Network.UserAgents
             {
                 try
                 {
-                    return ArchitectureDistribution ? ArchitectureDistributorBuilder.Build().GetRandom() : base.RandomArchitecture;
+                    if (!ArchitectureDistribution)
+                    {
+                        return base.RandomArchitecture;
+                    }
+                    
+                    return ArchitectureDistributionBuilder.Count > 0 ? ArchitectureDistributionBuilder.Build().GetRandom() : base.RandomArchitecture; //TODO: random distribution
                 }
                 catch (Exception)
                 {
@@ -57,7 +67,12 @@ namespace NetExtender.Types.Network.UserAgents
             {
                 try
                 {
-                    return CultureDistribution ? CultureDistributorBuilder.Build().GetRandom() : base.RandomCulture;
+                    if (!CultureDistribution)
+                    {
+                        return base.RandomCulture;
+                    }
+                    
+                    return CultureDistributionBuilder.Count > 0 ? CultureDistributionBuilder.Build().GetRandom() : base.RandomCulture; //TODO: random distribution
                 }
                 catch (Exception)
                 {
@@ -68,11 +83,11 @@ namespace NetExtender.Types.Network.UserAgents
 
         public UserAgentDistributionBuilder()
         {
-            BrowserDistributorBuilder = new RandomSelectorBuilder<BrowserType>();
-            ArchitectureDistributorBuilder = new RandomSelectorBuilder<UserAgentArchitecture>();
-            CultureDistributorBuilder = new RandomSelectorBuilder<CultureInfo>();
+            BrowserDistributionBuilder = new RandomSelectorBuilder<BrowserType>();
+            ArchitectureDistributionBuilder = new RandomSelectorBuilder<UserAgentArchitecture>();
+            CultureDistributionBuilder = new RandomSelectorBuilder<CultureInfo>();
         }
-
+        
         public IUserAgentDistributionBuilder UseDistribution()
         {
             UseBrowserDistribution();
@@ -113,7 +128,7 @@ namespace NetExtender.Types.Network.UserAgents
             }
 
             Browsers.Add(browser);
-            BrowserDistributorBuilder[browser] = BrowserUtils.Browsers.TryGetValue(browser);
+            BrowserDistributionBuilder[browser] = BrowserUtils.Distribution.TryGetValue(browser);
             return this;
         }
 
@@ -132,7 +147,7 @@ namespace NetExtender.Types.Network.UserAgents
         public new IUserAgentDistributionBuilder RemoveBrowsers(BrowserType browser)
         {
             Browsers.Remove(browser);
-            BrowserDistributorBuilder.Remove(browser);
+            BrowserDistributionBuilder.Remove(browser);
             return this;
         }
 

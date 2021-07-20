@@ -27,9 +27,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Utils\Network\UserAgents.cs">
-        <DependentUpon>UserAgentUtils.cs</DependentUpon>
-      </Compile>
       <Compile Update="Utils\Types\HLSColor.cs">
         <DependentUpon>ColorUtils.cs</DependentUpon>
       </Compile>
@@ -39,6 +36,16 @@
       <Compile Update="Types\Enums\UnderlyingEnumOperation.cs">
         <DependentUpon>UnderlyingOperation.cs</DependentUpon>
       </Compile>
+      <Compile Update="Utils\Numerics\GenericMathUtils.cs">
+        <DependentUpon>GenericMathUtils.tt</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="Utils\Numerics\GenericMathUtils.tt">
+        <Generator>TextTemplatingFileGenerator</Generator>
+        <LastGenOutput>GenericMathUtils.cs</LastGenOutput>
+      </None>
     </ItemGroup>
 
 </Project>

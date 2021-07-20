@@ -1372,6 +1372,20 @@ namespace NetExtender.Utils.Numerics
     {
         ForEach(types.Where(NotChar).Where(IsIntType), ReverseFunc);
     }
+
+    void IsTypeFunc(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} Is{type}({nameof(String)}? value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {type}.TryParse(value, out _);");
+        WriteLine("\t\t}");
+    }
+
+    void IsType()
+    {
+        ForEach(types, IsTypeFunc);
+    }
 #>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
     public static partial class MathUtils
@@ -1434,6 +1448,8 @@ namespace NetExtender.Utils.Numerics
     StandardDeviation();
     WriteLine(String.Empty);
     Reverse();
+    WriteLine(String.Empty);
+    IsType();
 #>
     }
 

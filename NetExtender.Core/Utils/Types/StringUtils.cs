@@ -652,11 +652,11 @@ namespace NetExtender.Utils.Types
             return FormatSafe(source.ToString(), provider, args);
         }
 
-        public static Boolean EndsWith(this String str, IEnumerable<Char> chars)
+        public static Boolean EndsWith(this String value, IEnumerable<Char> chars)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
             if (chars is null)
@@ -664,24 +664,24 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(chars));
             }
 
-            return chars.Any(str.EndsWith);
+            return chars.Any(value.EndsWith);
         }
 
-        public static Boolean EndsWith(this IString str, IEnumerable<Char> chars)
+        public static Boolean EndsWith(this IString value, IEnumerable<Char> chars)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return EndsWith(str.ToString(), chars);
+            return EndsWith(value.ToString(), chars);
         }
 
-        public static Boolean EndsWith(this String str, IEnumerable<String> substrings)
+        public static Boolean EndsWith(this String value, IEnumerable<String> substrings)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
             if (substrings is null)
@@ -689,173 +689,173 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(substrings));
             }
 
-            return substrings.Any(str.EndsWith);
+            return substrings.Any(value.EndsWith);
         }
 
-        public static Boolean EndsWith(this IString str, IEnumerable<String> substrings)
+        public static Boolean EndsWith(this IString value, IEnumerable<String> substrings)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return EndsWith(str.ToString(), substrings);
+            return EndsWith(value.ToString(), substrings);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNull(this String? str)
+        public static Boolean IsNull(this String? value)
         {
-            return str is null;
+            return value is null;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNull(this IString? str)
+        public static Boolean IsNull(this IString? value)
         {
-            return str?.ToString() is null;
+            return value?.ToString() is null;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNotNull(this String? str)
+        public static Boolean IsNotNull(this String? value)
         {
-            return str is not null;
+            return value is not null;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNotNull(this IString? str)
+        public static Boolean IsNotNull(this IString? value)
         {
-            return str?.ToString() is not null;
+            return value?.ToString() is not null;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsEmpty(this String? str)
+        public static Boolean IsEmpty(this String? value)
         {
-            return str == String.Empty;
+            return value == String.Empty;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsEmpty(this IString? str)
+        public static Boolean IsEmpty(this IString? value)
         {
-            return str is not null && str.Length <= 0;
+            return value is not null && value.Length <= 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNotEmpty(this String? str)
+        public static Boolean IsNotEmpty(this String? value)
         {
-            return !IsEmpty(str);
+            return !IsEmpty(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNotEmpty(this IString? str)
+        public static Boolean IsNotEmpty(this IString? value)
         {
-            return !IsEmpty(str);
+            return !IsEmpty(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsWhiteSpace(this String? str)
+        public static Boolean IsWhiteSpace(this String? value)
         {
-            return str is not null && str.Length > 0 && str.All(Char.IsWhiteSpace);
+            return value is not null && value.Length > 0 && value.All(Char.IsWhiteSpace);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsWhiteSpace(this IString? str)
+        public static Boolean IsWhiteSpace(this IString? value)
         {
-            return str is not null && str.Length > 0 && str.All(Char.IsWhiteSpace);
+            return value is not null && value.Length > 0 && value.All(Char.IsWhiteSpace);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNotWhiteSpace(this String? str)
+        public static Boolean IsNotWhiteSpace(this String? value)
         {
-            return !IsWhiteSpace(str);
+            return !IsWhiteSpace(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNotWhiteSpace(this IString? str)
+        public static Boolean IsNotWhiteSpace(this IString? value)
         {
-            return !IsWhiteSpace(str);
+            return !IsWhiteSpace(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsEmptyOrWhiteSpace(this String? str)
+        public static Boolean IsEmptyOrWhiteSpace(this String? value)
         {
-            return str is not null && (str.Length <= 0 || str.All(Char.IsWhiteSpace));
+            return value is not null && (value.Length <= 0 || value.All(Char.IsWhiteSpace));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsEmptyOrWhiteSpace(this IString? str)
+        public static Boolean IsEmptyOrWhiteSpace(this IString? value)
         {
-            return str is not null && (str.Length <= 0 || str.All(Char.IsWhiteSpace));
+            return value is not null && (value.Length <= 0 || value.All(Char.IsWhiteSpace));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNullOrEmpty(this String? str)
+        public static Boolean IsNullOrEmpty(this String? value)
         {
-            return String.IsNullOrEmpty(str);
+            return String.IsNullOrEmpty(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNullOrEmpty(this IString? str)
+        public static Boolean IsNullOrEmpty(this IString? value)
         {
-            return str is null || str.Length <= 0;
+            return value is null || value.Length <= 0;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNullOrWhiteSpace(this String? str)
+        public static Boolean IsNullOrWhiteSpace(this String? value)
         {
-            return String.IsNullOrWhiteSpace(str);
+            return String.IsNullOrWhiteSpace(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNullOrWhiteSpace(this IString? str)
+        public static Boolean IsNullOrWhiteSpace(this IString? value)
         {
-            return str is null || str.Length <= 0 || str.All(Char.IsWhiteSpace);
+            return value is null || value.Length <= 0 || value.All(Char.IsWhiteSpace);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNotNullOrEmpty(this String? str)
+        public static Boolean IsNotNullOrEmpty(this String? value)
         {
-            return !IsNullOrEmpty(str);
+            return !IsNullOrEmpty(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNotNullOrEmpty(this IString? str)
+        public static Boolean IsNotNullOrEmpty(this IString? value)
         {
-            return !IsNullOrEmpty(str);
+            return !IsNullOrEmpty(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNotNullOrWhiteSpace(this String? str)
+        public static Boolean IsNotNullOrWhiteSpace(this String? value)
         {
-            return !IsNullOrWhiteSpace(str);
+            return !IsNullOrWhiteSpace(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNotNullOrWhiteSpace(this IString? str)
+        public static Boolean IsNotNullOrWhiteSpace(this IString? value)
         {
-            return !IsNullOrWhiteSpace(str);
+            return !IsNullOrWhiteSpace(value);
         }
 
         /// <inheritdoc cref="Char.GetUnicodeCategory(String,Int32)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UnicodeCategory GetUnicodeCategory(this String str, Int32 index)
+        public static UnicodeCategory GetUnicodeCategory(this String value, Int32 index)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return Char.GetUnicodeCategory(str, index);
+            return Char.GetUnicodeCategory(value, index);
         }
 
         /// <inheritdoc cref="Char.GetUnicodeCategory(String,Int32)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UnicodeCategory GetUnicodeCategory(this IString str, Int32 index)
+        public static UnicodeCategory GetUnicodeCategory(this IString value, Int32 index)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return GetUnicodeCategory(str.ToString(), index);
+            return GetUnicodeCategory(value.ToString(), index);
         }
 
         public static Boolean IsAllCharacterInRange(this String value, Int32 min, Int32 max)
@@ -964,157 +964,157 @@ namespace NetExtender.Utils.Types
             return IsAsciiCharacters(value.ToString());
         }
 
-        public static String[] SplitByChars(String str)
+        public static String[] SplitByChars(String value)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return str.Split();
+            return value.Split();
         }
 
-        public static String[] SplitByChars(IString str)
+        public static String[] SplitByChars(IString value)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return SplitByChars(str.ToString());
+            return SplitByChars(value.ToString());
         }
 
-        public static String[] SplitByNewLine(String str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLine(String value, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            return SplitByNewLine(str, Int32.MaxValue, options);
+            return SplitByNewLine(value, Int32.MaxValue, options);
         }
 
-        public static String[] SplitByNewLine(String str, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLine(String value, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return str.Split('\n', count, options);
+            return value.Split(NewLine, count, options);
         }
 
-        public static String[] SplitByNewLine(IString str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLine(IString value, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return SplitByNewLine(str.ToString(), options);
+            return SplitByNewLine(value.ToString(), options);
         }
 
-        public static String[] SplitByNewLine(IString str, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLine(IString value, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return SplitByNewLine(str.ToString(), count, options);
+            return SplitByNewLine(value.ToString(), count, options);
         }
 
-        public static String[] SplitBySpace(String str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitBySpace(String value, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            return SplitBySpace(str, Int32.MaxValue, options);
+            return SplitBySpace(value, Int32.MaxValue, options);
         }
 
-        public static String[] SplitBySpace(String str, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitBySpace(String value, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return str.Split(' ', count, options);
+            return value.Split(' ', count, options);
         }
 
-        public static String[] SplitBySpace(IString str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitBySpace(IString value, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return SplitBySpace(str.ToString(), options);
+            return SplitBySpace(value.ToString(), options);
         }
 
-        public static String[] SplitBySpace(IString str, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitBySpace(IString value, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return SplitBySpace(str.ToString(), count, options);
+            return SplitBySpace(value.ToString(), count, options);
         }
 
         private static readonly Char[] NewLineAndSpaceChars = {'\n', ' '};
 
-        public static String[] SplitByNewLineAndSpace(String str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLineAndSpace(String value, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            return SplitByNewLineAndSpace(str, Int32.MaxValue, options);
+            return SplitByNewLineAndSpace(value, Int32.MaxValue, options);
         }
 
-        public static String[] SplitByNewLineAndSpace(String str, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLineAndSpace(String value, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return str.Split(NewLineAndSpaceChars, count, options);
+            return value.Split(NewLineAndSpaceChars, count, options);
         }
 
-        public static String[] SplitByNewLineAndSpace(IString str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLineAndSpace(IString value, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return SplitByNewLineAndSpace(str.ToString(), options);
+            return SplitByNewLineAndSpace(value.ToString(), options);
         }
 
-        public static String[] SplitByNewLineAndSpace(IString str, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLineAndSpace(IString value, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return SplitByNewLineAndSpace(str.ToString(), count, options);
+            return SplitByNewLineAndSpace(value.ToString(), count, options);
         }
 
-        public static String[] SplitByUpperCase(String str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByUpperCase(String value, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            return SplitByUpperCaseInternal(str, options).ToArray();
+            return SplitByUpperCaseInternal(value, options).ToArray();
         }
 
-        public static String[] SplitByUpperCase(IString str, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByUpperCase(IString value, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return SplitByUpperCase(str.ToString(), options);
+            return SplitByUpperCase(value.ToString(), options);
         }
 
         // ReSharper disable once CognitiveComplexity
-        private static IEnumerable<String> SplitByUpperCaseInternal(String str, StringSplitOptions options)
+        private static IEnumerable<String> SplitByUpperCaseInternal(String value, StringSplitOptions options)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            if (str.Length <= 0)
+            if (value.Length <= 0)
             {
                 yield break;
             }
@@ -1122,11 +1122,11 @@ namespace NetExtender.Utils.Types
             Boolean allentries = options == StringSplitOptions.None;
 
             Int32 index = 0;
-            UnicodeCategory ctype = str.GetUnicodeCategory(index);
-            String value;
-            for (Int32 pos = 1; pos < str.Length; pos++)
+            UnicodeCategory ctype = value.GetUnicodeCategory(index);
+            String result;
+            for (Int32 pos = 1; pos < value.Length; pos++)
             {
-                Char current = str[pos];
+                Char current = value[pos];
                 UnicodeCategory type = current.GetUnicodeCategory();
 
                 if (ctype == type)
@@ -1139,10 +1139,10 @@ namespace NetExtender.Utils.Types
                     Int32 token = pos - 1;
                     if (token != index)
                     {
-                        value = str.Substring(index, token - index);
-                        if (allentries || !String.IsNullOrWhiteSpace(value))
+                        result = value.Substring(index, token - index);
+                        if (allentries || !String.IsNullOrWhiteSpace(result))
                         {
-                            yield return value;
+                            yield return result;
                         }
 
                         index = token;
@@ -1150,10 +1150,10 @@ namespace NetExtender.Utils.Types
                 }
                 else
                 {
-                    value = str.Substring(index, pos - index);
-                    if (allentries || !String.IsNullOrWhiteSpace(value))
+                    result = value.Substring(index, pos - index);
+                    if (allentries || !String.IsNullOrWhiteSpace(result))
                     {
-                        yield return value;
+                        yield return result;
                     }
 
                     index = pos;
@@ -1162,10 +1162,10 @@ namespace NetExtender.Utils.Types
                 ctype = type;
             }
 
-            value = str.Substring(index, str.Length - index);
-            if (allentries || !String.IsNullOrWhiteSpace(value))
+            result = value.Substring(index, value.Length - index);
+            if (allentries || !String.IsNullOrWhiteSpace(result))
             {
-                yield return value;
+                yield return result;
             }
         }
 
@@ -1179,35 +1179,35 @@ namespace NetExtender.Utils.Types
             return split.SelectManyWhereNotNull(str => SplitByUpperCase(str, options)).ToArray();
         }
 
-        public static String[] SplitBy(this String str, SplitType split = SplitType.NewLine, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitBy(this String value, SplitType split = SplitType.NewLine, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
             return split switch
             {
-                SplitType.Chars => SplitByChars(str),
-                SplitType.NewLine => SplitByNewLine(str, options),
-                SplitType.Space => SplitBySpace(str, options),
-                SplitType.UpperCase => SplitByUpperCase(str, options),
-                SplitType.NewLineAndSpace => SplitByNewLineAndSpace(str, options),
-                SplitType.NewLineAndUpperCase => SplitByUpperCase(SplitByNewLine(str, options), options),
-                SplitType.SpaceAndUpperCase => SplitByUpperCase(SplitBySpace(str, options), options),
-                SplitType.All => SplitByUpperCase(SplitByNewLineAndSpace(str, options), options),
+                SplitType.Chars => SplitByChars(value),
+                SplitType.NewLine => SplitByNewLine(value, options),
+                SplitType.Space => SplitBySpace(value, options),
+                SplitType.UpperCase => SplitByUpperCase(value, options),
+                SplitType.NewLineAndSpace => SplitByNewLineAndSpace(value, options),
+                SplitType.NewLineAndUpperCase => SplitByUpperCase(SplitByNewLine(value, options), options),
+                SplitType.SpaceAndUpperCase => SplitByUpperCase(SplitBySpace(value, options), options),
+                SplitType.All => SplitByUpperCase(SplitByNewLineAndSpace(value, options), options),
                 _ => throw new NotSupportedException()
             };
         }
 
-        public static String[] SplitBy(this IString str, SplitType split = SplitType.NewLine, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitBy(this IString value, SplitType split = SplitType.NewLine, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return SplitBy(str.ToString(), split, options);
+            return SplitBy(value.ToString(), split, options);
         }
 
         public static String Concat(this IEnumerable<Char> source)
@@ -1268,32 +1268,22 @@ namespace NetExtender.Utils.Types
 
         public static String Join(this String? separator, Func<String?, Boolean> predicate, IEnumerable<String?>? values)
         {
-            if (values is null)
-            {
-                return String.Empty;
-            }
-
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-
-            return String.Join(separator, values.Where(predicate));
+            
+            return values is not null ? String.Join(separator, values.Where(predicate)) : String.Empty;
         }
 
         public static String Join(this String? separator, Func<String?, Boolean> predicate, params String?[]? values)
         {
-            if (values is null)
-            {
-                return String.Empty;
-            }
-
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-
-            return values.Length > 0 ? String.Join(separator, values.Where(predicate)) : String.Empty;
+            
+            return values is not null && values.Length > 0 ? String.Join(separator, values.Where(predicate)) : String.Empty;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1436,144 +1426,214 @@ namespace NetExtender.Utils.Types
             return Join(source, NewLine, type, start, end);
         }
         
-        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate)
+        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return Join(source.Select(predicate));
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Join(source.Select(selector));
         }
         
-        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, String? separator)
+        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, String? separator)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return Join(source.Select(predicate), separator);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Join(source.Select(selector), separator);
         }
         
-        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, String? separator, String? end)
+        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, String? separator, String? end)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return Join(source.Select(predicate), separator, end);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Join(source.Select(selector), separator, end);
         }
 
-        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, String? separator, String? start, String? end)
+        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, String? separator, String? start, String? end)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return Join(source.Select(predicate), separator, start, end);
-        }
-        
-        public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate)
-        {
-            if (source is null)
+            if (selector is null)
             {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentNullException(nameof(selector));
             }
 
-            return Join(source.Select(predicate), NewLine);
-        }
-        
-        public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, String? start)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return Join(source.Select(predicate), NewLine, start);
+            return Join(source.Select(selector), separator, start, end);
         }
         
-        public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, String? start, String? end)
+        public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return Join(source.Select(predicate), NewLine, start, end);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Join(source.Select(selector), NewLine);
         }
         
-        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, JoinType type)
+        public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, String? start)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return Join(source.Select(predicate), type);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Join(source.Select(selector), NewLine, start);
         }
         
-        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, String? separator, JoinType type)
+        public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, String? start, String? end)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return Join(source.Select(predicate), separator, type);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Join(source.Select(selector), NewLine, start, end);
         }
         
-        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, String? separator, JoinType type, String? end)
+        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, JoinType type)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return Join(source.Select(predicate), separator, type, end);
-        }
-
-        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, String? separator, JoinType type, String? start, String? end)
-        {
-            if (source is null)
+            if (selector is null)
             {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentNullException(nameof(selector));
             }
 
-            return Join(source.Select(predicate), separator, type, start, end);
+            return Join(source.Select(selector), type);
         }
         
-        public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, JoinType type)
+        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, String? separator, JoinType type)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return JoinNewLine(source.Select(predicate), type);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Join(source.Select(selector), separator, type);
         }
         
-        public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, JoinType type, String? start)
+        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, String? separator, JoinType type, String? end)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return JoinNewLine(source.Select(predicate), type, start);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Join(source.Select(selector), separator, type, end);
+        }
+
+        public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, String? separator, JoinType type, String? start, String? end)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return Join(source.Select(selector), separator, type, start, end);
         }
         
-        public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> predicate, JoinType type, String? start, String? end)
+        public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, JoinType type)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return JoinNewLine(source.Select(predicate), type, start, end);
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return JoinNewLine(source.Select(selector), type);
+        }
+        
+        public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, JoinType type, String? start)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return JoinNewLine(source.Select(selector), type, start);
+        }
+        
+        public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, JoinType type, String? start, String? end)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return JoinNewLine(source.Select(selector), type, start, end);
         }
 
         public static String ReplaceInsert(this String value, ReadOnlySpan<Char> replace)
@@ -2166,41 +2226,41 @@ namespace NetExtender.Utils.Types
         /// Returns a new string in which all occurences of the specified value are removed.
         /// </summary>
         /// <param name="value">The text.</param>
-        /// <param name="str">The string to seek and remove.</param>
-        public static String RemoveAllOf(this String value, String str)
+        /// <param name="occurence">The string to seek and remove.</param>
+        public static String RemoveAllOf(this String value, String occurence)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
 
-            if (str is null)
+            if (occurence is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(occurence));
             }
 
-            return value.Replace(str, String.Empty);
+            return value.Replace(occurence, String.Empty);
         }
 
         /// <summary>
         /// Returns a new string in which the first occurence of the specified value is removed.
         /// </summary>
         /// <param name="value">The text.</param>
-        /// <param name="str">The string to seek and remove its first occurence.</param>
-        public static String RemoveFirstOf(this String value, String str)
+        /// <param name="occurence">The string to seek and remove its first occurence.</param>
+        public static String RemoveFirstOf(this String value, String occurence)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
 
-            if (str is null)
+            if (occurence is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(occurence));
             }
 
-            Int32 index = value.IndexOf(str, StringComparison.Ordinal);
-            return index < 0 ? value : value.Remove(index, str.Length);
+            Int32 index = value.IndexOf(occurence, StringComparison.Ordinal);
+            return index < 0 ? value : value.Remove(index, occurence.Length);
         }
 
         public static unsafe String RemoveAllWhiteSpace(this String value)

@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.Generic;
+using NetExtender.Types.Dictionaries.Interfaces;
 
 namespace NetExtender.Random
 {
@@ -10,12 +10,7 @@ namespace NetExtender.Random
     /// Interface for Random Selector Builders.
     /// </summary>
     /// <typeparam name="T">Type of items that gets randomly returned</typeparam>
-    public interface IRandomSelectorBuilder<T>
+    public interface IRandomDictionarySelectorBuilder<T> : IRandomSelectorBuilder<T>, IIndexDictionary<T, Double> where T : notnull
     {
-        public void Add(IEnumerable<KeyValuePair<T, Double>> items);
-        public void Add(KeyValuePair<T, Double> item);
-        
-        public IRandomSelector<T> Build();
-        public IRandomSelector<T> Build(Int32 seed);
     }
 }

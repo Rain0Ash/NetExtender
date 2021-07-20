@@ -8,19 +8,20 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NetExtender.Utils.Types;
 using NetExtender.Types.Dictionaries.Interfaces;
+using NetExtender.Utils.Numerics;
 
 namespace NetExtender.Types.Dictionaries
 {
     public class IndexDictionary<TKey, TValue> : IIndexDictionary<TKey, TValue>, IReadOnlyIndexDictionary<TKey, TValue> where TKey : notnull
     {
-        private readonly List<TKey> _order;
-        private readonly Dictionary<TKey, TValue> _dictionary;
-        
+        private Dictionary<TKey, TValue> Dictionary { get; }
+        private List<TKey> Order { get; }
+
         public Int32 Count
         {
             get
             {
-                return _dictionary.Count;
+                return Dictionary.Count;
             }
         }
 
@@ -28,7 +29,7 @@ namespace NetExtender.Types.Dictionaries
         {
             get
             {
-                return ((ICollection<KeyValuePair<TKey, TValue>>) _dictionary).IsReadOnly;
+                return ((ICollection<KeyValuePair<TKey, TValue>>) Dictionary).IsReadOnly;
             }
         }
 
@@ -36,7 +37,7 @@ namespace NetExtender.Types.Dictionaries
         {
             get
             {
-                return _dictionary.Keys;
+                return Dictionary.Keys;
             }
         }
         
@@ -44,7 +45,7 @@ namespace NetExtender.Types.Dictionaries
         {
             get
             {
-                return _dictionary.Values;
+                return Dictionary.Values;
             }
         }
         
@@ -52,7 +53,7 @@ namespace NetExtender.Types.Dictionaries
         {
             get
             {
-                return _dictionary.Keys;
+                return Dictionary.Keys;
             }
         }
 
@@ -60,7 +61,7 @@ namespace NetExtender.Types.Dictionaries
         {
             get
             {
-                return _dictionary.Values;
+                return Dictionary.Values;
             }
         }
 
@@ -68,7 +69,7 @@ namespace NetExtender.Types.Dictionaries
         {
             get
             {
-                return _dictionary.Keys;
+                return Dictionary.Keys;
             }
         }
 
@@ -76,7 +77,7 @@ namespace NetExtender.Types.Dictionaries
         {
             get
             {
-                return _dictionary.Values;
+                return Dictionary.Values;
             }
         }
 
@@ -84,14 +85,14 @@ namespace NetExtender.Types.Dictionaries
         {
             get
             {
-                return _order;
+                return Order;
             }
         }
 
         public IndexDictionary()
         {
-            _dictionary = new Dictionary<TKey, TValue>();
-            _order = new List<TKey>();
+            Dictionary = new Dictionary<TKey, TValue>();
+            Order = new List<TKey>();
         }
 
         public IndexDictionary(IDictionary<TKey, TValue> dictionary)
@@ -101,8 +102,8 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(dictionary));
             }
 
-            _dictionary = new Dictionary<TKey, TValue>(dictionary);
-            _order = new List<TKey>(dictionary.Keys);
+            Dictionary = new Dictionary<TKey, TValue>(dictionary);
+            Order = new List<TKey>(dictionary.Keys);
         }
 
         public IndexDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? comparer)
@@ -112,8 +113,8 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(dictionary));
             }
 
-            _dictionary = new Dictionary<TKey, TValue>(dictionary, comparer);
-            _order = new List<TKey>(dictionary.Keys);
+            Dictionary = new Dictionary<TKey, TValue>(dictionary, comparer);
+            Order = new List<TKey>(dictionary.Keys);
         }
 
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
@@ -126,8 +127,8 @@ namespace NetExtender.Types.Dictionaries
             
             collection = collection.Materialize();
 
-            _dictionary = new Dictionary<TKey, TValue>(collection);
-            _order = new List<TKey>(collection.Select(pair => pair.Key));
+            Dictionary = new Dictionary<TKey, TValue>(collection);
+            Order = new List<TKey>(collection.Select(pair => pair.Key));
         }
 
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
@@ -140,53 +141,92 @@ namespace NetExtender.Types.Dictionaries
 
             collection = collection.Materialize();
 
-            _dictionary = new Dictionary<TKey, TValue>(collection, comparer);
-            _order = new List<TKey>(collection.Select(pair => pair.Key));
+            Dictionary = new Dictionary<TKey, TValue>(collection, comparer);
+            Order = new List<TKey>(collection.Select(pair => pair.Key));
         }
 
         public IndexDictionary(IEqualityComparer<TKey>? comparer)
         {
-            _dictionary = new Dictionary<TKey, TValue>(comparer);
-            _order = new List<TKey>();
+            Dictionary = new Dictionary<TKey, TValue>(comparer);
+            Order = new List<TKey>();
         }
 
         public IndexDictionary(Int32 capacity)
         {
-            _dictionary = new Dictionary<TKey, TValue>(capacity);
-            _order = new List<TKey>(capacity);
+            Dictionary = new Dictionary<TKey, TValue>(capacity);
+            Order = new List<TKey>(capacity);
         }
 
         public IndexDictionary(Int32 capacity, IEqualityComparer<TKey>? comparer)
         {
-            _dictionary = new Dictionary<TKey, TValue>(capacity, comparer);
-            _order = new List<TKey>(capacity);
+            Dictionary = new Dictionary<TKey, TValue>(capacity, comparer);
+            Order = new List<TKey>(capacity);
+        }
+
+        public Int32 EnsureCapacity(Int32 capacity)
+        {
+            if (Count >= capacity)
+            {
+                return Count;
+            }
+            
+            Int32 ensure = Dictionary.EnsureCapacity(capacity);
+            Order.Capacity = ensure;
+            return ensure;
+        }
+
+        public void TrimExcess()
+        {
+            TrimExcess(Count);
+        }
+        
+        public void TrimExcess(Int32 capacity)
+        {
+            Int32 count = Count;
+            if (capacity < count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(capacity));
+            }
+
+            if (capacity == count)
+            {
+                return;
+            }
+            
+            Dictionary.TrimExcess(capacity);
+            Order.Capacity = capacity;
+        }
+        
+        public TKey GetKeyByIndex(Int32 index)
+        {
+            if (index < 0 || index >= Order.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+            
+            return Order[index];
         }
 
         public TValue GetValueByIndex(Int32 index)
         {
-            if (index < 0 || index >= _order.Count)
-            {
-                throw new ArgumentOutOfRangeException(nameof(index));
-            }
-            
-            return this[_order[index]];
+            return this[GetKeyByIndex(index)];
         }
 
         public KeyValuePair<TKey, TValue> GetKeyValuePairByIndex(Int32 index)
         {
-            if (index < 0 || index >= _order.Count)
+            if (index < 0 || index >= Order.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
             
-            return this.GetPair(_order[index]);
+            return this.GetPair(Order[index]);
         }
 
         public Boolean TryGetKeyValuePairByIndex(Int32 index, out KeyValuePair<TKey, TValue> pair)
         {
-            if (index >= 0 && index < _order.Count)
+            if (index >= 0 && index < Order.Count)
             {
-                return this.TryGetPair(_order[index], out pair);
+                return this.TryGetPair(Order[index], out pair);
             }
 
             pair = default;
@@ -195,7 +235,7 @@ namespace NetExtender.Types.Dictionaries
 
         public Int32 IndexOf(TKey key)
         {
-            return _order.IndexOf(key);
+            return Order.IndexOf(key);
         }
 
         public void Add(TKey key, TValue value)
@@ -205,18 +245,18 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
 
-            _dictionary.Add(key, value);
-            _order.Add(key);
+            Dictionary.Add(key, value);
+            Order.Add(key);
         }
 
         public Boolean ContainsKey(TKey key)
         {
-            return _dictionary.ContainsKey(key);
+            return Dictionary.ContainsKey(key);
         }
 
         public Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
-            return _dictionary.TryGetValue(key, out value);
+            return Dictionary.TryGetValue(key, out value);
         }
 
         public Boolean TryAdd(TKey key, TValue value)
@@ -226,12 +266,12 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
 
-            if (!_dictionary.TryAdd(key, value))
+            if (!Dictionary.TryAdd(key, value))
             {
                 return false;
             }
 
-            _order.Add(key);
+            Order.Add(key);
             return true;
         }
 
@@ -247,13 +287,13 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
 
-            if (index < 0 || index > _order.Count)
+            if (index < 0 || index > Order.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
 
-            _dictionary.Add(key, value);
-            _order.Insert(index, key);
+            Dictionary.Add(key, value);
+            Order.Insert(index, key);
         }
 
         public Boolean TryInsert(TKey key, TValue value)
@@ -263,69 +303,98 @@ namespace NetExtender.Types.Dictionaries
 
         public Boolean TryInsert(Int32 index, TKey key, TValue value)
         {
-            if (index < 0 || index >= _order.Count)
+            if (index < 0 || index >= Order.Count)
             {
                 return false;
             }
 
-            if (!_dictionary.TryAdd(key, value))
+            if (!Dictionary.TryAdd(key, value))
             {
                 return false;
             }
 
-            _order.Insert(index, key);
+            Order.Insert(index, key);
             return true;
         }
 
         public void Swap(Int32 index1, Int32 index2)
         {
-            _order.Swap(index1, index2);
+            Order.Swap(index1, index2);
         }
 
         public Boolean Remove(TKey key)
         {
-            return _dictionary.Remove(key) | _order.Remove(key);
+            return Dictionary.Remove(key) | Order.Remove(key);
         }
 
         public Boolean Remove(TKey key, out TValue? value)
         {
-            return _dictionary.Remove(key, out value) | _order.Remove(key);
+            return Dictionary.Remove(key, out value) | Order.Remove(key);
+        }
+
+        public Boolean RemoveAt(Int32 index)
+        {
+            return RemoveAt(index, out _);
+        }
+        
+        public Boolean RemoveAt(Int32 index, out KeyValuePair<TKey, TValue> pair)
+        {
+            if (!index.InRange(0, Count - 1))
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+            
+            if (!Order.TryGetValue(index, out TKey? key))
+            {
+                pair = default;
+                return false;
+            }
+            
+            Order.RemoveAt(index);
+            if (Dictionary.Remove(key, out TValue? value))
+            {
+                pair = new KeyValuePair<TKey, TValue>(key, value);
+                return true;
+            }
+
+            pair = default;
+            return false;
         }
 
         public void Reverse()
         {
-            _order.Reverse();
+            Order.Reverse();
         }
 
         public void Reverse(Int32 index, Int32 count)
         {
-            _order.Reverse(index, count);
+            Order.Reverse(index, count);
         }
 
         public void Sort()
         {
-            _order.Sort();
+            Order.Sort();
         }
 
         public void Sort(Comparison<TKey> comparison)
         {
-            _order.Sort(comparison);
+            Order.Sort(comparison);
         }
 
         public void Sort(IComparer<TKey>? comparer)
         {
-            _order.Sort(comparer);
+            Order.Sort(comparer);
         }
 
         public void Sort(Int32 index, Int32 count, IComparer<TKey>? comparer)
         {
-            _order.Sort(index, count, comparer);
+            Order.Sort(index, count, comparer);
         }
 
         public void Add(KeyValuePair<TKey, TValue> item)
         {
             (TKey key, TValue value) = item;
-            if (key is null)
+            if (key is null!)
             {
                 return;
             }
@@ -335,24 +404,24 @@ namespace NetExtender.Types.Dictionaries
 
         public void Clear()
         {
-            _dictionary.Clear();
-            _order.Clear();
+            Dictionary.Clear();
+            Order.Clear();
         }
 
         public Boolean Contains(KeyValuePair<TKey, TValue> item)
         {
-            return ((ICollection<KeyValuePair<TKey, TValue>>) _dictionary).Contains(item);
+            return ((ICollection<KeyValuePair<TKey, TValue>>) Dictionary).Contains(item);
         }
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 arrayIndex)
         {
-            ((ICollection<KeyValuePair<TKey, TValue>>) _dictionary).CopyTo(array, arrayIndex);
+            ((ICollection<KeyValuePair<TKey, TValue>>) Dictionary).CopyTo(array, arrayIndex);
         }
 
         public Boolean Remove(KeyValuePair<TKey, TValue> item)
         {
             (TKey key, TValue value) = item;
-            if (_dictionary.TryGetValue(key, out TValue? result) && Equals(result, value))
+            if (Dictionary.TryGetValue(key, out TValue? result) && Equals(result, value))
             {
                 return Remove(key);
             }
@@ -364,7 +433,7 @@ namespace NetExtender.Types.Dictionaries
         {
             get
             {
-                return _dictionary[key];
+                return Dictionary[key];
             }
             set
             {
@@ -379,23 +448,23 @@ namespace NetExtender.Types.Dictionaries
                     return;
                 }
 
-                _dictionary[key] = value;
+                Dictionary[key] = value;
             }
         }
 
         public IEnumerator<TKey> GetKeyEnumerator()
         {
-            return _order.GetEnumerator();
+            return Order.GetEnumerator();
         }
 
         public IEnumerator<TValue> GetValueEnumerator()
         {
-            return _order.Select(key => this[key]).GetEnumerator();
+            return Order.Select(key => this[key]).GetEnumerator();
         }
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            return _order.Select(key => new KeyValuePair<TKey, TValue>(key, this[key])).GetEnumerator();
+            return Order.Select(key => new KeyValuePair<TKey, TValue>(key, this[key])).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

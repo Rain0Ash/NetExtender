@@ -15,6 +15,66 @@ namespace NetExtender.Utils.Types
 {
     public static class QueryableUtils
     {
+        public static IQueryable<T> WhereIf<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return condition ? source.Where(predicate) : source;
+        }
+        
+        public static IQueryable<T> WhereIf<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> predicate, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return condition ? source.Where(predicate) : source;
+        }
+        
+        public static IQueryable<T> WhereNotIf<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return condition ? source.WhereNot(predicate) : source;
+        }
+        
+        public static IQueryable<T> WhereNotIf<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> predicate, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return condition ? source.WhereNot(predicate) : source;
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> WhereNot<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate)
         {

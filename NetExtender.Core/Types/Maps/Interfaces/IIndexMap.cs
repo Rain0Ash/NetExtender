@@ -11,8 +11,6 @@ namespace NetExtender.Types.Maps.Interfaces
     {
         public Int32 IndexOfValue(TValue key);
 
-        public TKey GetKeyByIndex(Int32 index);
-
         public KeyValuePair<TValue, TKey> GetValueKeyPairByIndex(Int32 index);
 
         public Boolean TryGetValueKeyPairByIndex(Int32 index, out KeyValuePair<TValue, TKey> pair);

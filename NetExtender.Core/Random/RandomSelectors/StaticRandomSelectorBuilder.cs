@@ -4,7 +4,9 @@
 using System.Collections.Generic;
 using System;
 using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using NetExtender.Random.Interfaces;
+using NetExtender.Types.Dictionaries;
 using NetExtender.Utils.Numerics;
 using NetExtender.Utils.Types;
 
@@ -14,9 +16,11 @@ namespace NetExtender.Random
     /// 
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class RandomSelectorBuilder<T> : RandomSelector<T>, IRandomSelectorBuilder<T>, IDictionary<T, Double> where T : notnull
+    public class RandomSelectorBuilder<T> : RandomSelector<T>, IRandomDictionarySelectorBuilder<T> where T : notnull
     {
-        public Boolean IsReadOnly
+        public const Int32 DefaultCapacity = 32;
+        
+        Boolean ICollection<KeyValuePair<T, Double>>.IsReadOnly
         {
             get
             {
@@ -24,8 +28,8 @@ namespace NetExtender.Random
             }
         }
         
-        protected IRandom Random { get; }
-        protected Dictionary<T, Double> Items { get; }
+        protected IRandom Random { get; set; }
+        protected IndexDictionary<T, Double> Items { get; }
         
         public Int32 Count
         {
@@ -42,6 +46,14 @@ namespace NetExtender.Random
                 return Items.Keys;
             }
         }
+        
+        public IReadOnlyList<T> OrderedKeys
+        {
+            get
+            {
+                return Items.OrderedKeys;
+            }
+        }
 
         public ICollection<Double> Values
         {
@@ -56,14 +68,25 @@ namespace NetExtender.Random
         {
         }
 
-        public RandomSelectorBuilder(Int32 seed)
-            : this(RandomUtils.Create(seed))
+        public RandomSelectorBuilder(Int32 capacity)
+            : this(capacity, RandomUtils.Create())
+        {
+        }
+        
+        public RandomSelectorBuilder(Int32 capacity, Int32 seed)
+            : this(capacity, RandomUtils.Create(seed))
         {
         }
 
         public RandomSelectorBuilder(IRandom random)
             : this(null, random)
         {
+        }
+        
+        public RandomSelectorBuilder(Int32 capacity, IRandom random)
+        {
+            Random = random ?? throw new ArgumentNullException(nameof(random));
+            Items = new IndexDictionary<T, Double>(capacity.ToRange(8));
         }
 
         public RandomSelectorBuilder(IEnumerable<KeyValuePair<T, Double>>? items)
@@ -76,17 +99,36 @@ namespace NetExtender.Random
         {
         }
 
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public RandomSelectorBuilder(IEnumerable<KeyValuePair<T, Double>>? items, IRandom random)
         {
             Random = random ?? throw new ArgumentNullException(nameof(random));
-            Items = new Dictionary<T, Double>();
+            Items = new IndexDictionary<T, Double>(items?.CountIfMaterialized()?.ToRange(8) ?? DefaultCapacity);
 
-            if (items is not null)
+            if (items is null)
             {
-                Add(items);
+                return;
             }
+
+            Add(items);
+            TrimExcess(Count.ToRange(8));
+        }
+
+        public Int32 EnsureCapacity(Int32 capacity)
+        {
+            return Items.EnsureCapacity(capacity);
+        }
+
+        public void TrimExcess()
+        {
+            Items.TrimExcess();
         }
         
+        public void TrimExcess(Int32 capacity)
+        {
+            Items.TrimExcess(capacity);
+        }
+
         public Boolean ContainsKey(T key)
         {
             return Items.ContainsKey(key);
@@ -97,9 +139,34 @@ namespace NetExtender.Random
             return Items.Contains(item);
         }
         
+        public Int32 IndexOf(T key)
+        {
+            return Items.IndexOf(key);
+        }
+        
         public Boolean TryGetValue(T key, out Double value)
         {
             return Items.TryGetValue(key, out value);
+        }
+        
+        public T GetKeyByIndex(Int32 index)
+        {
+            return Items.GetKeyByIndex(index);
+        }
+
+        public Double GetValueByIndex(Int32 index)
+        {
+            return Items.GetValueByIndex(index);
+        }
+
+        public KeyValuePair<T, Double> GetKeyValuePairByIndex(Int32 index)
+        {
+            return Items.GetKeyValuePairByIndex(index);
+        }
+
+        public Boolean TryGetKeyValuePairByIndex(Int32 index, out KeyValuePair<T, Double> pair)
+        {
+            return Items.TryGetKeyValuePairByIndex(index, out pair);
         }
 
         /// <summary>
@@ -127,7 +194,6 @@ namespace NetExtender.Random
             }
         }
 
-        // ReSharper disable once UseDeconstructionOnParameter
         public void Add(KeyValuePair<T, Double> item)
         {
             Add(item.Key, item.Value);
@@ -149,6 +215,55 @@ namespace NetExtender.Random
             }
         }
         
+        public void Insert(T item, Double weight)
+        {
+            Insert(0, item, weight);
+        }
+
+        public void Insert(Int32 index, T item, Double weight)
+        {
+            if (Math.Abs(weight) < Double.Epsilon)
+            {
+                return;
+            }
+
+            lock (Items)
+            {
+                if (Items.ContainsKey(item))
+                {
+                    Items[item] += weight;
+                    return;
+                }
+            
+                Items.Insert(item, weight);
+            }
+        }
+
+        public Boolean TryInsert(T item, Double weight)
+        {
+            return TryInsert(0, item, weight);
+        }
+
+        public Boolean TryInsert(Int32 index, T item, Double weight)
+        {
+            if (Math.Abs(weight) < Double.Epsilon)
+            {
+                return false;
+            }
+
+            lock (Items)
+            {
+                if (Items.ContainsKey(item))
+                {
+                    Items[item] += weight;
+                    return true;
+                }
+            
+                Items.Insert(item, weight);
+                return true;
+            }
+        }
+
         public Boolean Remove(T key)
         {
             return Items.Remove(key);
@@ -158,8 +273,53 @@ namespace NetExtender.Random
         {
             return Items.Remove(item);
         }
+        
+        public Boolean RemoveAt(Int32 index)
+        {
+            return Items.RemoveAt(index);
+        }
 
-        public void Clear()
+        public Boolean RemoveAt(Int32 index, out KeyValuePair<T, Double> pair)
+        {
+            return Items.RemoveAt(index, out pair);
+        }
+        
+        public void Swap(Int32 index1, Int32 index2)
+        {
+            Items.Swap(index1, index2);
+        }
+
+        public void Reverse()
+        {
+            Items.Reverse();
+        }
+
+        public void Reverse(Int32 index, Int32 count)
+        {
+            Items.Reverse(index, count);
+        }
+
+        public void Sort()
+        {
+            Items.Sort();
+        }
+
+        public void Sort(Comparison<T> comparison)
+        {
+            Items.Sort(comparison);
+        }
+
+        public void Sort(IComparer<T>? comparer)
+        {
+            Items.Sort(comparer);
+        }
+
+        public void Sort(Int32 index, Int32 count, IComparer<T>? comparer)
+        {
+            Items.Sort(index, count, comparer);
+        }
+
+        public virtual void Clear()
         {
             Items.Clear();
         }
@@ -175,8 +335,13 @@ namespace NetExtender.Random
         /// </summary>
         /// <param name="seed">Seed for random selector. If you leave it -1, the internal random will generate one.</param>
         /// <returns>Returns IRandomSelector, underlying objects are either StaticRandomSelectorLinear or StaticRandomSelectorBinary. Both are non-mutable.</returns>
-        public IRandomSelector<T> Build(Int32 seed)
+        public virtual IRandomSelector<T> Build(Int32 seed)
         {
+            if (Items.Count <= 0)
+            {
+                throw new InvalidOperationException("Cannot build with no items.");
+            }
+            
             T[] items;
             Double[] cda;
             
@@ -210,7 +375,7 @@ namespace NetExtender.Random
             return new StaticRandomSelectorBinary<T>(items, cda, seed);
         }
 
-        private static readonly RandomSelectorBuilder<T> StaticBuilder = new RandomSelectorBuilder<T>();
+        protected static RandomSelectorBuilder<T> StaticBuilder { get; } = new RandomSelectorBuilder<T>();
 
         /// <summary>
         /// non-instance based, Double threaded only. For ease of use. 
@@ -221,8 +386,6 @@ namespace NetExtender.Random
         /// <returns></returns>
         public static IRandomSelector<T> Build(T[] items, Double[] weights)
         {
-            StaticBuilder.Clear();
-
             for (Int32 i = 0; i < items.Length; i++)
             {
                 StaticBuilder.Add(items[i], weights[i]);
@@ -240,8 +403,6 @@ namespace NetExtender.Random
         /// <returns></returns>
         public static IRandomSelector<T> Build(List<T> items, List<Double> weights)
         {
-            StaticBuilder.Clear();
-
             for (Int32 i = 0; i < items.Count; i++)
             {
                 StaticBuilder.Add(items[i], weights[i]);
@@ -273,6 +434,16 @@ namespace NetExtender.Random
         IEnumerator<KeyValuePair<T, Double>> IEnumerable<KeyValuePair<T, Double>>.GetEnumerator()
         {
             return Items.GetEnumerator();
+        }
+        
+        public IEnumerator<T> GetKeyEnumerator()
+        {
+            return Items.GetKeyEnumerator();
+        }
+
+        public IEnumerator<Double> GetValueEnumerator()
+        {
+            return Items.GetValueEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

@@ -45,8 +45,8 @@ namespace NetExtender.Types.Maps
             }
         }
         
-        protected IDictionary<TKey, TValue> Base { get; }
-        protected IDictionary<TValue, TKey> Reversed { get; }
+        protected Dictionary<TKey, TValue> Base { get; }
+        protected Dictionary<TValue, TKey> Reversed { get; }
 
         public Int32 Count
         {
@@ -164,6 +164,44 @@ namespace NetExtender.Types.Maps
         {
             Base = new Dictionary<TKey, TValue>(capacity, keyComparer);
             Reversed = new Dictionary<TValue, TKey>(capacity, valueComparer);
+        }
+        
+        public virtual Int32 EnsureCapacity(Int32 capacity)
+        {
+            if (Count >= capacity)
+            {
+                return Count;
+            }
+            
+            Int32 ensure = Base.EnsureCapacity(capacity);
+            if (ensure != Reversed.EnsureCapacity(capacity))
+            {
+                throw new CollectionSyncException();
+            }
+            
+            return ensure;
+        }
+
+        public void TrimExcess()
+        {
+            TrimExcess(Count);
+        }
+        
+        public virtual void TrimExcess(Int32 capacity)
+        {
+            Int32 count = Count;
+            if (capacity < count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(capacity));
+            }
+
+            if (capacity == count)
+            {
+                return;
+            }
+            
+            Base.TrimExcess(capacity);
+            Reversed.TrimExcess(capacity);
         }
 
         public Boolean Contains(TKey key, TValue value)

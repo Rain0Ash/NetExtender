@@ -22,14 +22,14 @@ namespace NetExtender.Types.Sets
         {
             return set is not null ? Set.Create(set) : null;
         }
-        
-        private readonly ISet<T> _set;
+
+        private ISet<T> Internal { get; }
 
         public Int32 Count
         {
             get
             {
-                return _set.Count;
+                return Internal.Count;
             }
         }
 
@@ -53,7 +53,7 @@ namespace NetExtender.Types.Sets
         {
             get
             {
-                return _set.IsReadOnly;
+                return Internal.IsReadOnly;
             }
         }
 
@@ -64,97 +64,97 @@ namespace NetExtender.Types.Sets
         
         public Set(ISet<T> set)
         {
-            _set = set ?? throw new ArgumentNullException(nameof(set));
+            Internal = set ?? throw new ArgumentNullException(nameof(set));
         }
 
         void ICollection<T>.Add(T item)
         {
-            _set.Add(item ?? throw new ArgumentNullException(nameof(item)));
+            Internal.Add(item ?? throw new ArgumentNullException(nameof(item)));
         }
 
         public void ExceptWith(IEnumerable<T> other)
         {
-            _set.ExceptWith(other);
+            Internal.ExceptWith(other);
         }
 
         public void IntersectWith(IEnumerable<T> other)
         {
-            _set.IntersectWith(other);
+            Internal.IntersectWith(other);
         }
 
         public Boolean IsProperSubsetOf(IEnumerable<T> other)
         {
-            return _set.IsProperSubsetOf(other);
+            return Internal.IsProperSubsetOf(other);
         }
 
         public Boolean IsProperSupersetOf(IEnumerable<T> other)
         {
-            return _set.IsProperSupersetOf(other);
+            return Internal.IsProperSupersetOf(other);
         }
 
         public Boolean IsSubsetOf(IEnumerable<T> other)
         {
-            return _set.IsSubsetOf(other);
+            return Internal.IsSubsetOf(other);
         }
 
         public Boolean IsSupersetOf(IEnumerable<T> other)
         {
-            return _set.IsSupersetOf(other);
+            return Internal.IsSupersetOf(other);
         }
 
         public Boolean Overlaps(IEnumerable<T> other)
         {
-            return _set.Overlaps(other);
+            return Internal.Overlaps(other);
         }
 
         public Boolean SetEquals(IEnumerable<T> other)
         {
-            return _set.SetEquals(other);
+            return Internal.SetEquals(other);
         }
 
         public void SymmetricExceptWith(IEnumerable<T> other)
         {
-            _set.SymmetricExceptWith(other);
+            Internal.SymmetricExceptWith(other);
         }
 
         public void UnionWith(IEnumerable<T> other)
         {
-            _set.UnionWith(other);
+            Internal.UnionWith(other);
         }
 
         Boolean ISet<T>.Add(T item)
         {
-            return _set.Add(item);
+            return Internal.Add(item);
         }
 
         public Boolean Contains(T item)
         {
-            return _set.Contains(item);
+            return Internal.Contains(item);
         }
 
         public Boolean Remove(T item)
         {
-            return _set.Remove(item);
+            return Internal.Remove(item);
         }
         
         public void Clear()
         {
-            _set.Clear();
+            Internal.Clear();
         }
         
         void ICollection.CopyTo(Array array, Int32 index)
         {
-            _set.CopyTo((T[]) array, index);
+            Internal.CopyTo((T[]) array, index);
         }
 
         public void CopyTo(T[] array, Int32 arrayIndex)
         {
-            _set.CopyTo(array, arrayIndex);
+            Internal.CopyTo(array, arrayIndex);
         }
         
         public IEnumerator<T> GetEnumerator()
         {
-            return _set.GetEnumerator();
+            return Internal.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

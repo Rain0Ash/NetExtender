@@ -3,10 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Diagnostics.CodeAnalysis;
 using NetExtender.Exceptions;
 using NetExtender.Random.Interfaces;
 using NetExtender.Utils.Numerics;
+using NetExtender.Utils.Types;
 
 namespace NetExtender.Random
 {
@@ -17,31 +18,26 @@ namespace NetExtender.Random
     /// depending on count of items, making it more performant for general use case.
     /// </summary>
     /// <typeparam name="T">Type of items you wish this selector returns</typeparam>
-    public class DynamicRandomSelector<T> : RandomSelector<T>, IRandomSelectorBuilder<T>
+    public class DynamicRandomSelector<T> : RandomSelectorBuilder<T> where T : notnull
     {
-        public const Int32 DefaultCapacity = 32;
-        
-        private IRandom Random { get; set; }
-
-        private List<T> Items { get; }
-        private List<Double> Weights { get; }
-        private List<Double> Distribution { get; }
-
-        private Func<List<Double>, Double, Int32>? Selector { get; set; }
+        protected List<Double> Distribution { get; }
+        protected Func<List<Double>, Double, Int32>? Selector { get; set; }
 
         public DynamicRandomSelector()
-            : this(DefaultCapacity)
         {
+            Distribution = new List<Double>(DefaultCapacity);
         }
         
         public DynamicRandomSelector(Int32 capacity)
-            : this(capacity, RandomUtils.Create())
+            : base(capacity)
         {
+            Distribution = new List<Double>(capacity);
         }
 
         public DynamicRandomSelector(Int32 capacity, Int32 seed)
-            : this(capacity, RandomUtils.Create(seed))
+            : base(capacity, seed)
         {
+            Distribution = new List<Double>(capacity);
         }
 
         /// <summary>
@@ -50,31 +46,19 @@ namespace NetExtender.Random
         /// <param name="random">Random generator</param>
         /// <param name="capacity">Set this if you know how much items the collection will hold, to minimize Garbage Collection</param>
         public DynamicRandomSelector(Int32 capacity, IRandom random)
+            : base(capacity, random)
         {
-            Random = random ?? throw new ArgumentNullException(nameof(random));
-
-            if (capacity < 0)
-            {
-                capacity = 0;
-            }
-
-            Items = new List<T>(capacity);
-            Weights = new List<Double>(capacity);
+            MathUtils.ToRange(ref capacity, 8);
             Distribution = new List<Double>(capacity);
         }
 
-        public DynamicRandomSelector(IEnumerable<T> items, IEnumerable<Double> weights)
-            : this(items, weights, DefaultCapacity)
+        public DynamicRandomSelector(IEnumerable<KeyValuePair<T, Double>>? items)
+            : this(items, RandomUtils.Create())
         {
         }
 
-        public DynamicRandomSelector(IEnumerable<T> items, IEnumerable<Double> weights, Int32 capacity)
-            : this(items ?? throw new ArgumentNullException(nameof(items)), weights ?? throw new ArgumentNullException(nameof(weights)), capacity, RandomUtils.Create())
-        {
-        }
-
-        public DynamicRandomSelector(IEnumerable<T> items, IEnumerable<Double> weights, Int32 capacity, Int32 seed)
-            : this(items ?? throw new ArgumentNullException(nameof(items)), weights ?? throw new ArgumentNullException(nameof(weights)), capacity, RandomUtils.Create(seed))
+        public DynamicRandomSelector(IEnumerable<KeyValuePair<T, Double>>? items, Int32 seed)
+            : this(items, RandomUtils.Create(seed))
         {
         }
 
@@ -82,110 +66,12 @@ namespace NetExtender.Random
         /// Constructor, where you can preload collection with items/weights list. 
         /// </summary>
         /// <param name="items">Items that will get returned on random selections</param>
-        /// <param name="weights">Un-normalized weights/chances of items, should be same length as items array</param>
         /// <param name="random">Random generator</param>
-        /// <param name="capacity">Set this if you know how much items the collection will hold, to minimize Garbage Collection</param>
-        public DynamicRandomSelector(IEnumerable<T> items, IEnumerable<Double> weights, Int32 capacity, IRandom random)
-            : this(capacity, random)
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        public DynamicRandomSelector(IEnumerable<KeyValuePair<T, Double>>? items, IRandom random)
+            : base(items, random)
         {
-            if (items is null)
-            {
-                throw new ArgumentNullException(nameof(items));
-            }
-
-            if (weights is null)
-            {
-                throw new ArgumentNullException(nameof(weights));
-            }
-
-            foreach ((T item, Double weight) in items.Zip(weights))
-            {
-                Add(item, weight);
-            }
-
-            Build();
-        }
-        
-        public DynamicRandomSelector(IDictionary<T, Double> source)
-            : this(source, DefaultCapacity)
-        {
-        }
-
-        public DynamicRandomSelector(IDictionary<T, Double> source, Int32 capacity)
-            : this(source ?? throw new ArgumentNullException(nameof(source)), capacity, RandomUtils.Create())
-        {
-        }
-
-        public DynamicRandomSelector(IDictionary<T, Double> source, Int32 capacity, Int32 seed)
-            : this(source ?? throw new ArgumentNullException(nameof(source)), capacity, RandomUtils.Create(seed))
-        {
-        }
-
-        /// <summary>
-        /// Constructor, where you can preload collection with items/weights list. 
-        /// </summary>
-        /// <param name="source">Items that will get returned on random selections</param>
-        /// <param name="random">Random generator</param>
-        /// <param name="capacity">Set this if you know how much items the collection will hold, to minimize Garbage Collection</param>
-        public DynamicRandomSelector(IDictionary<T, Double> source, Int32 capacity, IRandom random)
-            : this(capacity, random)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            foreach ((T item, Double weight) in source)
-            {
-                Add(item, weight);
-            }
-
-            Build();
-        }
-
-        /// <summary>
-        /// Add new item with weight into collection. Items with zero weight will be ignored.
-        /// Do not add duplicate items, because removing them will be buggy (you will need to call remove for duplicates too!).
-        /// Be sure to call Build() after you are done adding items.
-        /// </summary>
-        /// <param name="item">Item that will be returned on random selection</param>
-        /// <param name="weight">Non-zero non-normalized weight</param>
-        public void Add(T item, Double weight)
-        {
-            // ignore zero weight items
-            if (Math.Abs(weight) < Double.Epsilon)
-            {
-                return;
-            }
-
-            Items.Add(item);
-            Weights.Add(weight);
-        }
-
-        /// <summary>
-        /// Remove existing item with weight into collection.
-        /// Be sure to call Build() after you are done removing items.
-        /// </summary>
-        /// <param name="item">Item that will be removed out of collection, if found</param>
-        public void Remove(T item)
-        {
-            Int32 index = Items.IndexOf(item);
-
-            // nothing was found
-            if (index == -1)
-            {
-                return;
-            }
-
-            Items.RemoveAt(index);
-            Weights.RemoveAt(index);
-            // no need to remove from CDL, should be rebuilt instead
-        }
-
-        /// <inheritdoc cref="Build(int)"/>
-        public IRandomSelector<T> Build()
-        {
-            return Build(-1);
+            Distribution = new List<Double>(items?.CountIfMaterialized()?.ToRange(8) ?? DefaultCapacity);
         }
 
         /// <summary>
@@ -196,20 +82,15 @@ namespace NetExtender.Random
         /// </summary>
         /// <param name="seed">You can specify seed for internal random gen or leave it alone</param>
         /// <returns>Returns itself</returns>
-        public IRandomSelector<T> Build(Int32 seed)
+        public override IRandomSelector<T> Build(Int32 seed)
         {
-            if (Items.Count == 0)
+            if (Items.Count <= 0)
             {
-                throw new Exception("Cannot build with no items.");
+                throw new InvalidOperationException("Cannot build with no items.");
             }
-
-            // clear list and then transfer weights
+            
             Distribution.Clear();
-            foreach (Double weight in Weights)
-            {
-                Distribution.Add(weight);
-            }
-
+            Distribution.AddRange(Items.Values);
             BuildCumulativeDistribution(Distribution);
 
             // default behavior
@@ -325,7 +206,7 @@ namespace NetExtender.Random
                 throw new ArgumentOutOfRangeException(nameof(Items), "Container is empty");
             }
 
-            return Items[Selector(Distribution, Random.NextDouble())];
+            return Items.GetKeyByIndex(Selector(Distribution, Random.NextDouble()));
         }
 
         /// <summary>
@@ -346,16 +227,12 @@ namespace NetExtender.Random
                 throw new ArgumentOutOfRangeException(nameof(Items), "Container is empty");
             }
 
-            return Items[Selector(Distribution, value)];
+            return Items.GetKeyByIndex(Selector(Distribution, value));
         }
 
-        /// <summary>
-        /// Clears internal buffers, should make no garbage (unless internal lists hold objects that aren't referenced anywhere else)
-        /// </summary>
-        public void Clear()
+        public override void Clear()
         {
-            Items.Clear();
-            Weights.Clear();
+            base.Clear();
             Distribution.Clear();
         }
 

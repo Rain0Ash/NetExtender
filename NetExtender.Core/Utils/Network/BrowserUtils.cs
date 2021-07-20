@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using NetExtender.Random;
+using NetExtender.Utils.Types;
 
 namespace NetExtender.Utils.Network
 {
@@ -22,33 +23,52 @@ namespace NetExtender.Utils.Network
     
     public static class BrowserUtils
     {
-        public static IDictionary<BrowserType, Double> Browsers { get; }
-
-        static BrowserUtils()
+        private static class BrowserDistribution
         {
-            IDictionary<BrowserType, Double> browsers = new Dictionary<BrowserType, Double>
-            {
-                [BrowserType.Chrome] = 81.4,
-                [BrowserType.InternetExplorer] = 1.85,
-                [BrowserType.Edge] = 1.55,
-                [BrowserType.Opera] = 1.5,
-                [BrowserType.Firefox] = 9.1,
-                [BrowserType.Safari] = 3.8
-            };
-            
-            browsers.Add(BrowserType.Other, 100 - browsers.Values.Sum());
-            Browsers = browsers.ToImmutableDictionary();
-            
-            Selector = new RandomSelectorBuilder<BrowserType>(Browsers).Build();
-        }
+            public static IDictionary<BrowserType, Double> Browsers { get; }
         
-        private static IRandomSelector<BrowserType> Selector { get; }
+            static BrowserDistribution()
+            {
+                IDictionary<BrowserType, Double> browsers = new Dictionary<BrowserType, Double>
+                {
+                    [BrowserType.Chrome] = 81.4,
+                    [BrowserType.InternetExplorer] = 1.85,
+                    [BrowserType.Edge] = 1.55,
+                    [BrowserType.Opera] = 1.5,
+                    [BrowserType.Firefox] = 9.1,
+                    [BrowserType.Safari] = 3.8
+                };
+            
+                browsers.Add(BrowserType.Other, 100 - browsers.Values.Sum());
+                Browsers = browsers.ToImmutableDictionary();
+            
+                Selector = new RandomSelectorBuilder<BrowserType>(Browsers).Build();
+            }
+        
+            public static IRandomSelector<BrowserType> Selector { get; }
+        }
+
+        public static IDictionary<BrowserType, Double> Distribution
+        {
+            get
+            {
+                return BrowserDistribution.Browsers;
+            }
+        }
 
         public static BrowserType RandomBrowser
         {
             get
             {
-                return Selector.GetRandom();
+                return EnumUtils.Random<BrowserType>();
+            }
+        }
+        
+        public static BrowserType RandomBrowserWithDistribution
+        {
+            get
+            {
+                return BrowserDistribution.Selector.GetRandom();
             }
         }
     }

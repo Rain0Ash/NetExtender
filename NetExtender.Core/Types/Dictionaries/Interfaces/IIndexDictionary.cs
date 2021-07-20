@@ -10,6 +10,7 @@ namespace NetExtender.Types.Dictionaries.Interfaces
     public interface IIndexDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     {
         public IReadOnlyList<TKey> OrderedKeys { get; }
+        public TKey GetKeyByIndex(Int32 index);
         public TValue GetValueByIndex(Int32 index);
         public KeyValuePair<TKey, TValue> GetKeyValuePairByIndex(Int32 index);
         public Boolean TryGetKeyValuePairByIndex(Int32 index, out KeyValuePair<TKey, TValue> pair);
@@ -20,6 +21,8 @@ namespace NetExtender.Types.Dictionaries.Interfaces
         public void Insert(Int32 index, TKey key, TValue value);
         public Boolean TryInsert(TKey key, TValue value);
         public Boolean TryInsert(Int32 index, TKey key, TValue value);
+        public Boolean RemoveAt(Int32 index);
+        public Boolean RemoveAt(Int32 index, out KeyValuePair<TKey, TValue> pair);
         public void Swap(Int32 index1, Int32 index2);
         public void Reverse();
         public void Reverse(Int32 index, Int32 count);

@@ -4,76 +4,106 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NetExtender.Types.Immutable.Stacks;
 using NetExtender.Utils.Types;
 using NetExtender.Types.Maps.Interfaces;
+using NetExtender.Utils.Numerics;
 
 namespace NetExtender.Types.Maps
 {
     public class IndexMap<TKey, TValue> : Map<TKey, TValue>, IIndexMap<TKey, TValue>, IReadOnlyIndexMap<TKey, TValue> where TKey : notnull where TValue : notnull
     {
-        private readonly List<TKey> _order;
+        private List<TKey> Order { get; }
+
         public IReadOnlyList<TKey> OrderedKeys
         {
             get
             {
-                return _order;
+                return Order;
             }
         }
 
         public IndexMap()
         {
-            _order = new List<TKey>();
+            Order = new List<TKey>();
         }
 
         public IndexMap(IDictionary<TKey, TValue> dictionary)
             : base(dictionary ?? throw new ArgumentNullException(nameof(dictionary)))
         {
-            IEnumerable<String?> stack = new ImmutableReversedStack<String?>(Array.Empty<String>()).Reverse();
-            _order = new List<TKey>(dictionary.Keys);
+            Order = new List<TKey>(dictionary.Keys);
         }
 
         public IndexMap(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? keyComparer,
             IEqualityComparer<TValue>? valueComparer)
             : base(dictionary ?? throw new ArgumentNullException(nameof(dictionary)), keyComparer, valueComparer)
         {
-            _order = new List<TKey>(dictionary.Keys);
+            Order = new List<TKey>(dictionary.Keys);
         }
 
         public IndexMap(IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
             : base(keyComparer, valueComparer)
         {
-            _order = new List<TKey>();
+            Order = new List<TKey>();
         }
 
         public IndexMap(IEnumerable<KeyValuePair<TKey, TValue>> collection)
             : base(collection = collection?.Materialize() ?? throw new ArgumentNullException(nameof(collection)))
         {
-            _order = new List<TKey>(collection.Select(pair => pair.Key));
+            Order = new List<TKey>(collection.Select(pair => pair.Key));
         }
 
         public IndexMap(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? keyComparer,
             IEqualityComparer<TValue>? valueComparer)
             : base(collection = collection?.Materialize() ?? throw new ArgumentNullException(nameof(collection)), keyComparer, valueComparer)
         {
-            _order = new List<TKey>(collection.Select(pair => pair.Key));
+            Order = new List<TKey>(collection.Select(pair => pair.Key));
         }
 
         public IndexMap(Int32 capacity)
             : base(capacity)
         {
-            _order = new List<TKey>(capacity);
+            Order = new List<TKey>(capacity);
         }
 
         public IndexMap(Int32 capacity, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
             : base(capacity, keyComparer, valueComparer)
         {
-            _order = new List<TKey>(capacity);
+            Order = new List<TKey>(capacity);
+        }
+        
+        public override Int32 EnsureCapacity(Int32 capacity)
+        {
+            if (Count >= capacity)
+            {
+                return Count;
+            }
+
+            Int32 ensure = base.EnsureCapacity(capacity);
+            Order.Capacity = ensure;
+            
+            return ensure;
+        }
+        
+        public override void TrimExcess(Int32 capacity)
+        {
+            Int32 count = Count;
+            if (capacity < count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(capacity));
+            }
+
+            if (capacity == count)
+            {
+                return;
+            }
+            
+            base.TrimExcess(capacity);
+            Order.Capacity = capacity;
         }
         
         public TKey GetKeyByIndex(Int32 index)
         {
-            return _order[index];
+            return Order[index];
         }
         
         public TValue GetValueByIndex(Int32 index)
@@ -103,7 +133,7 @@ namespace NetExtender.Types.Maps
 
         public Int32 IndexOf(TKey key)
         {
-            return _order.IndexOf(key);
+            return Order.IndexOf(key);
         }
 
         public Int32 IndexOfValue(TValue key)
@@ -114,7 +144,7 @@ namespace NetExtender.Types.Maps
         public override void Add(TKey key, TValue value)
         {
             base.Add(key, value);
-            _order.Add(key);
+            Order.Add(key);
         }
 
         public void Insert(TKey key, TValue value)
@@ -134,7 +164,7 @@ namespace NetExtender.Types.Maps
                 throw new ArgumentNullException(nameof(value));
             }
             
-            if (index < 0 || index >= _order.Count)
+            if (index < 0 || index >= Order.Count)
             {
                 throw new ArgumentException(@"Less than zero or more than count", nameof(index));
             }
@@ -150,7 +180,7 @@ namespace NetExtender.Types.Maps
             }
             
             base.Add(key, value);
-            _order.Insert(index, key);
+            Order.Insert(index, key);
         }
 
         public void Insert(TValue key, TKey value)
@@ -180,7 +210,7 @@ namespace NetExtender.Types.Maps
                 throw new ArgumentNullException(nameof(value));
             }
             
-            if (index < 0 || index >= _order.Count)
+            if (index < 0 || index >= Order.Count)
             {
                 return false;
             }
@@ -206,7 +236,7 @@ namespace NetExtender.Types.Maps
 
         public void Swap(Int32 index1, Int32 index2)
         {
-            _order.Swap(index1, index2);
+            Order.Swap(index1, index2);
         }
 
         public override Boolean Remove(TKey key, TValue value)
@@ -216,44 +246,73 @@ namespace NetExtender.Types.Maps
                 return false;
             }
             
-            _order.Remove(key);
+            Order.Remove(key);
             return true;
+        }
+        
+        public Boolean RemoveAt(Int32 index)
+        {
+            return RemoveAt(index, out _);
+        }
+        
+        public Boolean RemoveAt(Int32 index, out KeyValuePair<TKey, TValue> pair)
+        {
+            if (!index.InRange(0, Count - 1))
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+            
+            if (!Order.TryGetValue(index, out TKey? key))
+            {
+                pair = default;
+                return false;
+            }
+            
+            Order.RemoveAt(index);
+            if (base.Remove(key, out TValue? value))
+            {
+                pair = new KeyValuePair<TKey, TValue>(key, value);
+                return true;
+            }
+
+            pair = default;
+            return false;
         }
 
         public void Reverse()
         {
-            _order.Reverse();
+            Order.Reverse();
         }
 
         public void Reverse(Int32 index, Int32 count)
         {
-            _order.Reverse(index, count);
+            Order.Reverse(index, count);
         }
 
         public void Sort()
         {
-            _order.Sort();
+            Order.Sort();
         }
 
         public void Sort(Comparison<TKey> comparison)
         {
-            _order.Sort(comparison);
+            Order.Sort(comparison);
         }
 
         public void Sort(IComparer<TKey>? comparer)
         {
-            _order.Sort(comparer);
+            Order.Sort(comparer);
         }
 
         public void Sort(Int32 index, Int32 count, IComparer<TKey>? comparer)
         {
-            _order.Sort(index, count, comparer);
+            Order.Sort(index, count, comparer);
         }
 
         public override void Clear()
         {
             base.Clear();
-            _order.Clear();
+            Order.Clear();
         }
 
         public override TValue this[TKey key]
@@ -270,19 +329,19 @@ namespace NetExtender.Types.Maps
                 
                 if (!contains)
                 {
-                    _order.Add(key);
+                    Order.Add(key);
                 }
             }
         }
 
         public IEnumerator<TKey> GetKeyEnumerator()
         {
-            return _order.GetEnumerator();
+            return Order.GetEnumerator();
         }
 
         public IEnumerator<TValue> GetValueEnumerator()
         {
-            return _order.Select(key => this[key]).GetEnumerator();
+            return Order.Select(key => this[key]).GetEnumerator();
         }
     }
 }

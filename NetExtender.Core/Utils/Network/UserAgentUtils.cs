@@ -4,30 +4,35 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Globalization;
 using NetExtender.Exceptions;
-using NetExtender.Utils.Types;
+using NetExtender.Types.Network.UserAgents;
+using NetExtender.Types.Network.UserAgents.Interfaces;
+using NetExtender.Types.Network.UserAgents.Specific;
 
 namespace NetExtender.Utils.Network
 {
-    public static partial class UserAgentUtils
+    public static class UserAgentUtils
     {
         public const String OtherUserAgent = "User-Agent: Other";
         
-        private static IDictionary<BrowserType, IList<String>> UserAgents { get; } = new Dictionary<BrowserType, IList<String>>
-        {
-            [BrowserType.Chrome] = BrowserUserAgent.Chrome,
-            [BrowserType.InternetExplorer] = BrowserUserAgent.InternetExplorer,
-            [BrowserType.Edge] = BrowserUserAgent.Chrome,
-            [BrowserType.Opera] = BrowserUserAgent.Opera,
-            [BrowserType.Firefox] = BrowserUserAgent.Firefox,
-            [BrowserType.Safari] = BrowserUserAgent.Safari,
-        }.ToImmutableDictionary();
+        public static IImmutableDictionary<BrowserType, IUserAgentSpecificBuilder> UserAgents { get; } =
+            new Dictionary<BrowserType, IUserAgentSpecificBuilder>
+            {
+                [BrowserType.Chrome] = ChromeUserAgentBuilder.Default,
+                [BrowserType.InternetExplorer] = InternetExplorerUserAgentBuilder.Default,
+                [BrowserType.Edge] = EdgeUserAgentBuilder.Default,
+                [BrowserType.Opera] = OperaUserAgentBuilder.Default,
+                [BrowserType.Firefox] = FirefoxUserAgentBuilder.Default,
+                [BrowserType.Safari] = SafariUserAgentBuilder.Default,
+                [BrowserType.Other] = UserAgentSpecificBuilder.Default
+            }.ToImmutableDictionary();
 
         public static String RandomUserAgent
         {
             get
             {
-                return CreateUserAgent(BrowserUtils.RandomBrowser);
+                return BrowserUtils.RandomBrowserWithDistribution.CreateUserAgent();
             }
         }
 
@@ -92,10 +97,39 @@ namespace NetExtender.Utils.Network
             return InitializeSessionUserAgent(RandomUserAgent);
         }
         
+        public static String InitializeSessionUserAgent(IUserAgentBuilder builder)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            ThrowIfSessionUserAgentAlreadyInitialized();
+            return InitializeSessionUserAgent(builder.Build());
+        }
+        
         public static String InitializeSessionUserAgent(BrowserType type)
         {
             ThrowIfSessionUserAgentAlreadyInitialized();
-            return InitializeSessionUserAgent(CreateUserAgent(type));
+            return InitializeSessionUserAgent(type.CreateUserAgent());
+        }
+
+        public static String InitializeSessionUserAgent(BrowserType type, UserAgentArchitecture? architecture)
+        {
+            ThrowIfSessionUserAgentAlreadyInitialized();
+            return InitializeSessionUserAgent(type.CreateUserAgent(architecture));
+        }
+
+        public static String InitializeSessionUserAgent(BrowserType type, CultureInfo? info)
+        {
+            ThrowIfSessionUserAgentAlreadyInitialized();
+            return InitializeSessionUserAgent(type.CreateUserAgent(info));
+        }
+        
+        public static String InitializeSessionUserAgent(BrowserType type, UserAgentArchitecture? architecture, CultureInfo? info)
+        {
+            ThrowIfSessionUserAgentAlreadyInitialized();
+            return InitializeSessionUserAgent(type.CreateUserAgent(architecture, info));
         }
         
         public static String InitializeSessionUserAgent(String agent)
@@ -110,11 +144,26 @@ namespace NetExtender.Utils.Network
             return SessionUserAgent;
         }
         
-        public static String CreateUserAgent(BrowserType type)
+        public static String CreateUserAgent(this BrowserType type)
         {
-            return UserAgents.TryGetValue(type, out IList<String>? agents) ? agents.GetRandom() ?? OtherUserAgent : OtherUserAgent;
+            return CreateUserAgent(type, null, null);
         }
         
+        public static String CreateUserAgent(this BrowserType type, UserAgentArchitecture? architecture)
+        {
+            return CreateUserAgent(type, architecture, null);
+        }
+        
+        public static String CreateUserAgent(this BrowserType type, CultureInfo? info)
+        {
+            return CreateUserAgent(type, null, info);
+        }
+        
+        public static String CreateUserAgent(this BrowserType type, UserAgentArchitecture? architecture, CultureInfo? info)
+        {
+            return UserAgents.TryGetValue(type, out IUserAgentSpecificBuilder? builder) ? builder.Build(architecture, info) ?? OtherUserAgent : throw new NotSupportedException();
+        }
+
         public static Boolean ValidateUserAgent(String agent)
         {
             return !String.IsNullOrEmpty(agent);

@@ -704,6 +704,66 @@ namespace NetExtender.Utils.Types
             }
         }
 
+        public static IEnumerable<T> WhereIf<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return condition ? source.Where(predicate) : source;
+        }
+        
+        public static IEnumerable<T> WhereIf<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return condition ? source.Where(predicate) : source;
+        }
+        
+        public static IEnumerable<T> WhereNotIf<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return condition ? source.WhereNot(predicate) : source;
+        }
+        
+        public static IEnumerable<T> WhereNotIf<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return condition ? source.WhereNot(predicate) : source;
+        }
+
         public static IEnumerable<T> WhereNot<T>(this IEnumerable<T> source, Func<T, Boolean> predicate)
         {
             if (source is null)

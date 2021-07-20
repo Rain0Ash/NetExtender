@@ -6109,6 +6109,78 @@ namespace NetExtender.Utils.Numerics
 
 			return reverse;
 		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean IsChar(String? value)
+		{
+			return Char.TryParse(value, out _);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean IsSByte(String? value)
+		{
+			return SByte.TryParse(value, out _);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean IsByte(String? value)
+		{
+			return Byte.TryParse(value, out _);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean IsInt16(String? value)
+		{
+			return Int16.TryParse(value, out _);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean IsUInt16(String? value)
+		{
+			return UInt16.TryParse(value, out _);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean IsInt32(String? value)
+		{
+			return Int32.TryParse(value, out _);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean IsUInt32(String? value)
+		{
+			return UInt32.TryParse(value, out _);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean IsInt64(String? value)
+		{
+			return Int64.TryParse(value, out _);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean IsUInt64(String? value)
+		{
+			return UInt64.TryParse(value, out _);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean IsSingle(String? value)
+		{
+			return Single.TryParse(value, out _);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean IsDouble(String? value)
+		{
+			return Double.TryParse(value, out _);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean IsDecimal(String? value)
+		{
+			return Decimal.TryParse(value, out _);
+		}
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "InvertIf")]

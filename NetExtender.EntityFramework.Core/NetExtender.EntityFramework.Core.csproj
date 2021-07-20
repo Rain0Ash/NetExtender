@@ -30,4 +30,8 @@
       <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Utils\Types" />
+    </ItemGroup>
+
 </Project>
