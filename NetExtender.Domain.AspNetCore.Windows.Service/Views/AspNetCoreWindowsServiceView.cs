@@ -5,7 +5,7 @@ using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using NetExtender.Domains.AspNetCore.View;
-using NetExtender.Domain.AspNetCore.Windows.Service.Applications;
+using NetExtender.Domains.AspNetCore.Windows.Service.Applications;
 using NetExtender.Domains.View.Interfaces;
 using NetExtender.Exceptions;
 
@@ -19,9 +19,14 @@ namespace NetExtender.Domains.Windows.Service.AspNetCore.Views
             : base(host)
         {
         }
-
+        
         public AspNetCoreWindowsServiceView(Action<IWebHostBuilder> builder)
             : base(builder)
+        {
+        }
+
+        public AspNetCoreWindowsServiceView(Action<IWebHostBuilder> builder, Boolean initialize)
+            : base(builder, initialize)
         {
         }
 

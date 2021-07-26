@@ -43,6 +43,26 @@ namespace NetExtender.Domains.Applications
             Shutdown(code);
         }
 
+        public Task<Boolean> ShutdownAsync()
+        {
+            return ShutdownAsync(0);
+        }
+
+        public Task<Boolean> ShutdownAsync(CancellationToken token)
+        {
+            return ShutdownAsync(0, token);
+        }
+
+        public Task<Boolean> ShutdownAsync(Int32 code)
+        {
+            return ShutdownAsync(code, CancellationToken.None);
+        }
+
+        public Task<Boolean> ShutdownAsync(Int32 code, CancellationToken token)
+        {
+            return ShutdownAsync(code, 0, token);
+        }
+
         public Task<Boolean> ShutdownAsync(Int32 code, Int32 milli)
         {
             return ShutdownAsync(code, milli, CancellationToken.None);
@@ -81,19 +101,29 @@ namespace NetExtender.Domains.Applications
             return true;
         }
 
-        public void Restart(Int32 milli = ApplicationUtils.DefaultMilliRestart)
+        public void Restart()
         {
-            Restart(milli, CancellationToken.None);
+            ApplicationUtils.Restart(0).RunSynchronously();
         }
 
-        public void Restart(CancellationToken token)
+        public Task<Boolean> RestartAsync()
         {
-            Restart(ApplicationUtils.DefaultMilliRestart, token);
+            return RestartAsync(ApplicationUtils.DefaultMilliRestart);
         }
 
-        public virtual void Restart(Int32 milli, CancellationToken token)
+        public Task<Boolean> RestartAsync(Int32 milli)
         {
-            ApplicationUtils.Restart(milli, Dispatcher, Shutdown, token);
+            return RestartAsync(milli, CancellationToken.None);
+        }
+
+        public Task<Boolean> RestartAsync(CancellationToken token)
+        {
+            return RestartAsync(ApplicationUtils.DefaultMilliRestart, token);
+        }
+
+        public virtual Task<Boolean> RestartAsync(Int32 milli, CancellationToken token)
+        {
+            return ApplicationUtils.Restart(milli, Dispatcher, Shutdown, token);
         }
     }
 }

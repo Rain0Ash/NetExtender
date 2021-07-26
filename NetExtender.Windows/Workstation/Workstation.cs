@@ -4,7 +4,7 @@
 using System;
 using System.Diagnostics;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using System.Management;
 using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Threading;
@@ -44,61 +44,40 @@ namespace NetExtender.Workstation
             {
                 Boolean locked = IsLocked;
                 
-                if (value && locked)
+                switch (value)
                 {
-                    return;
-                }
-
-                if (!value)
-                {
-                    if (locked)
-                    {
+                    case true when locked:
+                        return;
+                    case false when locked:
                         throw new NotSupportedException("Windows can't be unlocked programmatically.");
-                    }
-                    
-                    return;
+                    case false:
+                        return;
+                    default:
+                        LockWorkStation();
+                        break;
                 }
-
-                LockWorkStation();
             }
         }
         
         [DllImport("user32.dll")]
         private static extern Boolean LockWorkStation();
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static async Task<Boolean> ExecuteAsync(String execute, String arguments, String cancel, String cancelargs, Int32 seconds, CancellationToken token)
+        private static Boolean WmiShutdown(Boolean reboot)
         {
             try
             {
-                if (seconds < 0)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(seconds));
-                }
+                ManagementClass system = new ManagementClass("Win32_OperatingSystem");
+                system.Get();
+
+                system.Scope.Options.EnablePrivileges = true;
                 
-                Process? exit = Process.Start(execute, arguments);
-
-                if (seconds <= 0 || !token.CanBeCanceled)
+                ManagementBaseObject parameters = system.GetMethodParameters("Win32Shutdown");
+                parameters["Flags"] = reboot ? "2" : "1";
+                parameters["Reserved"] = "0";
+                
+                foreach (ManagementObject? management in system.GetInstances().OfType<ManagementObject>())
                 {
-                    return true;
-                }
-
-                try
-                {
-                    await Task.Delay(seconds * 1000, token).ConfigureAwait(false);
-                }
-                catch (Exception)
-                {
-                    // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-                    if (exit is null)
-                    {
-                        return false;
-                    }
-
-                    exit.Kill(true);
-                    Process.Start(cancel, cancelargs);
-                    
-                    return false;
+                    management.InvokeMethod("Win32Shutdown", parameters, null);
                 }
 
                 return true;
@@ -114,14 +93,43 @@ namespace NetExtender.Workstation
             return ShutdownAsync().GetAwaiter().GetResult();
         }
         
-        public static Task<Boolean> ShutdownAsync(Int32 seconds = 0)
+        public static Task<Boolean> ShutdownAsync()
         {
-            return ShutdownAsync(seconds, CancellationToken.None);
+            return ShutdownAsync(TimeSpan.Zero, CancellationToken.None);
         }
         
-        public static Task<Boolean> ShutdownAsync(Int32 seconds, CancellationToken token)
+        public static Task<Boolean> ShutdownAsync(Int32 milliseconds)
         {
-            return ExecuteAsync("shutdown", $"/s /t {seconds}", "shutdown", "/a", seconds, token);
+            return ShutdownAsync(milliseconds, CancellationToken.None);
+        }
+        
+        public static Task<Boolean> ShutdownAsync(TimeSpan wait)
+        {
+            return ShutdownAsync(wait, CancellationToken.None);
+        }
+
+        public static Task<Boolean> ShutdownAsync(Int32 milliseconds, CancellationToken token)
+        {
+            return ShutdownAsync(TimeSpan.FromMilliseconds(milliseconds), token);
+        }
+
+        public static async Task<Boolean> ShutdownAsync(TimeSpan wait, CancellationToken token)
+        {
+            if (wait.Ticks <= 0)
+            {
+                WmiShutdown(false);
+            }
+
+            try
+            {
+                await Task.Delay(wait, token).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return WmiShutdown(false);
         }
         
         public static Boolean Restart()
@@ -129,44 +137,89 @@ namespace NetExtender.Workstation
             return RestartAsync().GetAwaiter().GetResult();
         }
         
-        public static Task<Boolean> RestartAsync(Int32 seconds = 0)
+        public static Task<Boolean> RestartAsync()
         {
-            return RestartAsync(seconds, CancellationToken.None);
+            return RestartAsync(TimeSpan.Zero, CancellationToken.None);
         }
         
-        public static Task<Boolean> RestartAsync(Int32 seconds, CancellationToken token)
+        public static Task<Boolean> RestartAsync(Int32 milliseconds)
         {
-            return ExecuteAsync("shutdown", $"/r /t {seconds}", "shutdown", "/a", seconds, token);
+            return RestartAsync(milliseconds, CancellationToken.None);
         }
         
+        public static Task<Boolean> RestartAsync(TimeSpan wait)
+        {
+            return RestartAsync(wait, CancellationToken.None);
+        }
+        
+        public static Task<Boolean> RestartAsync(Int32 milliseconds, CancellationToken token)
+        {
+            return RestartAsync(TimeSpan.FromMilliseconds(milliseconds), token);
+        }
+
+        public static async Task<Boolean> RestartAsync(TimeSpan wait, CancellationToken token)
+        {
+            if (wait.Ticks <= 0)
+            {
+                WmiShutdown(true);
+            }
+
+            try
+            {
+                await Task.Delay(wait, token).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return WmiShutdown(true);
+        }
+
         public static Boolean Lock()
         {
             return LockAsync().GetAwaiter().GetResult();
         }
         
-        public static Task<Boolean> LockAsync(Int32 milli = 0)
+        public static Task<Boolean> LockAsync()
         {
-            return LockAsync(milli, CancellationToken.None);
+            return LockAsync(TimeSpan.Zero, CancellationToken.None);
         }
         
-        public static async Task<Boolean> LockAsync(Int32 milli, CancellationToken token)
+        public static Task<Boolean> LockAsync(Int32 milliseconds)
         {
-            if (milli < 0)
+            return LockAsync(milliseconds, CancellationToken.None);
+        }
+        
+        public static Task<Boolean> LockAsync(TimeSpan wait)
+        {
+            return LockAsync(wait, CancellationToken.None);
+        }
+
+        public static Task<Boolean> LockAsync(Int32 milliseconds, CancellationToken token)
+        {
+            if (milliseconds < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(milli));
+                throw new ArgumentOutOfRangeException(nameof(milliseconds));
             }
-            
-            // ReSharper disable once InvertIf
-            if (milli > 0)
+
+            return LockAsync(TimeSpan.FromMilliseconds(milliseconds), token);
+        }
+
+        public static async Task<Boolean> LockAsync(TimeSpan wait, CancellationToken token)
+        {
+            if (wait.Ticks <= 0)
             {
-                try
-                {
-                    await Task.Delay(milli, token).ConfigureAwait(false);
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
+                return LockWorkStation();
+            }
+
+            try
+            {
+                await Task.Delay(wait, token).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return false;
             }
 
             return LockWorkStation();
@@ -180,29 +233,40 @@ namespace NetExtender.Workstation
             return LogoffAsync().GetAwaiter().GetResult();
         }
         
-        public static Task<Boolean> LogoffAsync(Int32 milli = 0)
+        public static Task<Boolean> LogoffAsync()
         {
-            return LogoffAsync(milli, CancellationToken.None);
+            return LogoffAsync(TimeSpan.Zero, CancellationToken.None);
         }
         
-        public static async Task<Boolean> LogoffAsync(Int32 milli, CancellationToken token)
+        public static Task<Boolean> LogoffAsync(Int32 milliseconds)
         {
-            if (milli < 0)
+            return LogoffAsync(milliseconds, CancellationToken.None);
+        }
+        
+        public static Task<Boolean> LogoffAsync(TimeSpan wait)
+        {
+            return LogoffAsync(wait, CancellationToken.None);
+        }
+
+        public static Task<Boolean> LogoffAsync(Int32 milliseconds, CancellationToken token)
+        {
+            return LogoffAsync(TimeSpan.FromMilliseconds(milliseconds), token);
+        }
+
+        public static async Task<Boolean> LogoffAsync(TimeSpan wait, CancellationToken token)
+        {
+            if (wait.Ticks <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(milli));
+                return ExitWindowsEx(0, 0);
             }
-            
-            // ReSharper disable once InvertIf
-            if (milli > 0)
+
+            try
             {
-                try
-                {
-                    await Task.Delay(milli, token).ConfigureAwait(false);
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
+                await Task.Delay(wait, token).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return false;
             }
 
             return ExitWindowsEx(0, 0);
@@ -210,6 +274,11 @@ namespace NetExtender.Workstation
         
         [DllImport("PowrProf.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         private static extern Boolean SetSuspendState(Boolean hibernate, Boolean forceCritical, Boolean disableWakeEvent);
+
+        private static Boolean SetSuspendStateSleep(Boolean wake)
+        {
+            return SetSuspendState(false, true, !wake);
+        }
         
         public static Boolean Sleep()
         {
@@ -218,50 +287,76 @@ namespace NetExtender.Workstation
         
         public static Boolean Sleep(Boolean wake)
         {
-            return SleepAsync().GetAwaiter().GetResult();
+            return SetSuspendStateSleep(wake);
         }
         
         public static Task<Boolean> SleepAsync()
         {
-            return SleepAsync(0);
+            return SleepAsync(TimeSpan.Zero);
         }
         
-        public static Task<Boolean> SleepAsync(Int32 milli)
+        public static Task<Boolean> SleepAsync(Boolean wake)
         {
-            return SleepAsync(milli, CancellationToken.None);
+            return SleepAsync(TimeSpan.Zero, wake);
         }
         
-        public static Task<Boolean> SleepAsync(Int32 milli, CancellationToken token)
+        public static Task<Boolean> SleepAsync(Int32 milliseconds)
         {
-            return SleepAsync(milli, false, token);
+            return SleepAsync(milliseconds, CancellationToken.None);
         }
         
-        public static Task<Boolean> SleepAsync(Int32 milli, Boolean wake)
+        public static Task<Boolean> SleepAsync(TimeSpan wait)
         {
-            return SleepAsync(milli, wake, CancellationToken.None);
+            return SleepAsync(wait, CancellationToken.None);
         }
         
-        public static async Task<Boolean> SleepAsync(Int32 milli, Boolean wake, CancellationToken token)
+        public static Task<Boolean> SleepAsync(Int32 milliseconds, CancellationToken token)
         {
-            if (milli < 0)
+            return SleepAsync(milliseconds, false, token);
+        }
+        
+        public static Task<Boolean> SleepAsync(TimeSpan wait, CancellationToken token)
+        {
+            return SleepAsync(wait, false, token);
+        }
+        
+        public static Task<Boolean> SleepAsync(Int32 milliseconds, Boolean wake)
+        {
+            return SleepAsync(milliseconds, wake, CancellationToken.None);
+        }
+        
+        public static Task<Boolean> SleepAsync(TimeSpan wait, Boolean wake)
+        {
+            return SleepAsync(wait, wake, CancellationToken.None);
+        }
+
+        public static Task<Boolean> SleepAsync(Int32 milliseconds, Boolean wake, CancellationToken token)
+        {
+            return SleepAsync(TimeSpan.FromMilliseconds(milliseconds), wake, token);
+        }
+
+        public static async Task<Boolean> SleepAsync(TimeSpan wait, Boolean wake, CancellationToken token)
+        {
+            if (wait.Ticks <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(milli));
-            }
-            
-            // ReSharper disable once InvertIf
-            if (milli > 0)
-            {
-                try
-                {
-                    await Task.Delay(milli, token).ConfigureAwait(false);
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
+                return SetSuspendStateSleep(wake);
             }
 
-            return SetSuspendState(false, true, !wake);
+            try
+            {
+                await Task.Delay(wait, token).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return SetSuspendStateSleep(wake);
+        }
+        
+        private static Boolean SetSuspendStateHibernate(Boolean wake)
+        {
+            return SetSuspendState(true, true, !wake);
         }
         
         public static Boolean Hibernate()
@@ -271,50 +366,71 @@ namespace NetExtender.Workstation
         
         public static Boolean Hibernate(Boolean wake)
         {
-            return HibernateAsync(0, wake).GetAwaiter().GetResult();
+            return SetSuspendStateHibernate(wake);
         }
         
         public static Task<Boolean> HibernateAsync()
         {
-            return HibernateAsync(0);
+            return HibernateAsync(TimeSpan.Zero);
         }
         
-        public static Task<Boolean> HibernateAsync(Int32 milli)
+        public static Task<Boolean> HibernateAsync(Boolean wake)
         {
-            return HibernateAsync(milli, CancellationToken.None);
+            return HibernateAsync(TimeSpan.Zero, wake);
+        }
+        
+        public static Task<Boolean> HibernateAsync(Int32 milliseconds)
+        {
+            return HibernateAsync(milliseconds, CancellationToken.None);
+        }
+        
+        public static Task<Boolean> HibernateAsync(TimeSpan wait)
+        {
+            return HibernateAsync(wait, CancellationToken.None);
         }
 
-        public static Task<Boolean> HibernateAsync(Int32 milli, Boolean wake)
+        public static Task<Boolean> HibernateAsync(Int32 milliseconds, Boolean wake)
         {
-            return HibernateAsync(milli, wake, CancellationToken.None);
+            return HibernateAsync(milliseconds, wake, CancellationToken.None);
+        }
+        
+        public static Task<Boolean> HibernateAsync(TimeSpan wait, Boolean wake)
+        {
+            return HibernateAsync(wait, wake, CancellationToken.None);
         }
 
-        public static Task<Boolean> HibernateAsync(Int32 milli, CancellationToken token)
+        public static Task<Boolean> HibernateAsync(Int32 milliseconds, CancellationToken token)
         {
-            return HibernateAsync(milli, false, token);
+            return HibernateAsync(milliseconds, false, token);
+        }
+        
+        public static Task<Boolean> HibernateAsync(TimeSpan wait, CancellationToken token)
+        {
+            return HibernateAsync(wait, false, token);
         }
 
-        public static async Task<Boolean> HibernateAsync(Int32 milli, Boolean wake, CancellationToken token)
+        public static Task<Boolean> HibernateAsync(Int32 milliseconds, Boolean wake, CancellationToken token)
         {
-            if (milli < 0)
+            return HibernateAsync(TimeSpan.FromMilliseconds(milliseconds), wake, token);
+        }
+
+        public static async Task<Boolean> HibernateAsync(TimeSpan wait, Boolean wake, CancellationToken token)
+        {
+            if (wait.Ticks <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(milli));
-            }
-            
-            // ReSharper disable once InvertIf
-            if (milli > 0)
-            {
-                try
-                {
-                    await Task.Delay(milli, token).ConfigureAwait(false);
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
+                return SetSuspendStateHibernate(wake);
             }
 
-            return SetSuspendState(true, true, !wake);
+            try
+            {
+                await Task.Delay(wait, token).ConfigureAwait(false);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
+            return SetSuspendStateHibernate(wake);
         }
     }
 }

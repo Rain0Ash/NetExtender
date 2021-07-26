@@ -23,16 +23,26 @@ namespace NetExtender.Utils.Static
                 SegfaultDelegate?.Invoke();
             }
 
-            public static Task CrashAsync(Int32 milli)
+            public static Task CrashAsync(Int32 milliseconds)
             {
-                return CrashAsync(milli, CancellationToken.None);
+                return CrashAsync(milliseconds, CancellationToken.None);
             }
             
-            public static async Task CrashAsync(Int32 milli, CancellationToken token)
+            public static Task CrashAsync(TimeSpan wait)
+            {
+                return CrashAsync(wait, CancellationToken.None);
+            }
+
+            public static Task CrashAsync(Int32 milliseconds, CancellationToken token)
+            {
+                return CrashAsync(TimeSpan.FromMilliseconds(milliseconds), token);
+            }
+
+            public static async Task CrashAsync(TimeSpan wait, CancellationToken token)
             {
                 try
                 {
-                    await Task.Delay(milli, token).ContinueWith(Crash, token).ConfigureAwait(false);
+                    await Task.Delay(wait, token).ContinueWith(Crash, token).ConfigureAwait(false);
                 }
                 catch (TaskCanceledException)
                 {

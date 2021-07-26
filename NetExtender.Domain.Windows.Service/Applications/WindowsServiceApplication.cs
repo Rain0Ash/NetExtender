@@ -1,10 +1,14 @@
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
+using System;
+using System.IO;
 using System.ServiceProcess;
 using NetExtender.Domains.Applications;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Types.Dispatchers.Interfaces;
+using NetExtender.Utils.Application;
+using NetExtender.Windows.Services.Utils;
 
 namespace NetExtender.Domains.Service.Applications
 {
@@ -40,7 +44,19 @@ namespace NetExtender.Domains.Service.Applications
             {
                 return this;
             }
-            
+
+            String name = Domain.ApplicationShortName;
+            if (WindowsServiceUtils.IsServiceExist(name))
+            {
+                WindowsServiceUtils.UninstallService(name);
+            }
+                
+            String? path = ApplicationUtils.Path;
+            if (path is not null)
+            {
+                WindowsServiceUtils.InstallService(path, name);
+            }
+
             ServiceBase.Run(service);
             return this;
         }

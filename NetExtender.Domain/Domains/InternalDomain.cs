@@ -222,6 +222,26 @@ namespace NetExtender.Domains
             {
                 Application.Shutdown(code, force);
             }
+            
+            public Task<Boolean> ShutdownAsync()
+            {
+                return Application.ShutdownAsync();
+            }
+
+            public Task<Boolean> ShutdownAsync(CancellationToken token)
+            {
+                return Application.ShutdownAsync(token);
+            }
+
+            public Task<Boolean> ShutdownAsync(Int32 code)
+            {
+                return Application.ShutdownAsync(code);
+            }
+
+            public Task<Boolean> ShutdownAsync(Int32 code, CancellationToken token)
+            {
+                return Application.ShutdownAsync(code, token);
+            }
 
             public Task<Boolean> ShutdownAsync(Int32 code, Int32 milli)
             {
@@ -247,20 +267,25 @@ namespace NetExtender.Domains
             {
                 Application.Restart();
             }
-
-            public void Restart(Int32 milli)
+            
+            public Task<Boolean> RestartAsync()
             {
-                Application.Restart(milli);
+                return Application.RestartAsync();
             }
 
-            public void Restart(CancellationToken token)
+            public Task<Boolean> RestartAsync(Int32 milli)
             {
-                Application.Restart(token);
+                return Application.RestartAsync(milli);
             }
 
-            public void Restart(Int32 milli, CancellationToken token)
+            public Task<Boolean> RestartAsync(CancellationToken token)
             {
-                Application.Restart(milli, token);
+                return Application.RestartAsync(token);
+            }
+
+            public Task<Boolean> RestartAsync(Int32 milli, CancellationToken token)
+            {
+                return Application.RestartAsync(milli, token);
             }
 
             private Boolean _disposed;

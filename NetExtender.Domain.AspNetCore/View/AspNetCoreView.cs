@@ -16,15 +16,22 @@ namespace NetExtender.Domains.AspNetCore.View
     {
         protected IHost? Context { get; private set; }
         protected Action<IWebHostBuilder>? Builder { get; }
+        protected Boolean UseDefaultHostBuilder { get; }
         
         public AspNetCoreView(IHost host)
         {
             Context = host ?? throw new ArgumentNullException(nameof(host));
         }
-        
+
         public AspNetCoreView(Action<IWebHostBuilder> builder)
+            : this(builder, false)
+        {
+        }
+
+        public AspNetCoreView(Action<IWebHostBuilder> builder, Boolean initialize)
         {
             Builder = builder ?? throw new ArgumentNullException(nameof(builder));
+            UseDefaultHostBuilder = initialize;
         }
 
         protected override void InitializeInternal()
@@ -39,7 +46,8 @@ namespace NetExtender.Domains.AspNetCore.View
 
         protected virtual IHostBuilder CreateHostBuilder(String[] args)
         {
-            return Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(Build);
+            IHostBuilder builder = UseDefaultHostBuilder ? Host.CreateDefaultBuilder(args) : new HostBuilder();
+            return builder.ConfigureWebHostDefaults(Build);
         }
 
         protected virtual void Build(IWebHostBuilder builder)

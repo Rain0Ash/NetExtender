@@ -19,12 +19,18 @@ namespace NetExtender.Domains.Applications.Interfaces
         public void Shutdown(Int32 code);
         public void Shutdown(Boolean force);
         public void Shutdown(Int32 code, Boolean force);
+        public Task<Boolean> ShutdownAsync();
+        public Task<Boolean> ShutdownAsync(CancellationToken token);
+        public Task<Boolean> ShutdownAsync(Int32 code);
+        public Task<Boolean> ShutdownAsync(Int32 code, CancellationToken token);
         public Task<Boolean> ShutdownAsync(Int32 code, Int32 milli);
         public Task<Boolean> ShutdownAsync(Int32 code, Int32 milli, CancellationToken token);
         public Task<Boolean> ShutdownAsync(Int32 code, Int32 milli, Boolean force);
         public Task<Boolean> ShutdownAsync(Int32 code, Int32 milli, Boolean force, CancellationToken token);
-        public void Restart(Int32 milli = ApplicationUtils.DefaultMilliRestart);
-        public void Restart(CancellationToken token);
-        public void Restart(Int32 milli, CancellationToken token);
+        public void Restart();
+        public Task<Boolean> RestartAsync();
+        public Task<Boolean> RestartAsync(Int32 milli);
+        public Task<Boolean> RestartAsync(CancellationToken token);
+        public Task<Boolean> RestartAsync(Int32 milli, CancellationToken token);
     }
 }

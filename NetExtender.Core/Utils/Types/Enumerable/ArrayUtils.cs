@@ -724,8 +724,6 @@ namespace NetExtender.Utils.Types
             return new ReadOnlyArray<T>(source);
         }
 
-        #region EqualsTo
-
         private const Int32 BoundLength = 5;
 
         /// <summary>
@@ -1302,7 +1300,5 @@ namespace NetExtender.Utils.Types
                 return MemoryUtils.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(T));
             }
         }
-
-        #endregion
     }
 }

@@ -209,7 +209,12 @@ namespace NetExtender.Domains
             Current.Run();
         }
 
-        public static void Shutdown(Int32 code = 0)
+        public static void Shutdown()
+        {
+            Current.Shutdown();
+        }
+        
+        public static void Shutdown(Int32 code)
         {
             Current.Shutdown(code);
         }
@@ -222,6 +227,26 @@ namespace NetExtender.Domains
         public static void Shutdown(Int32 code, Boolean force)
         {
             Current.Shutdown(code, force);
+        }
+
+        public static Task<Boolean> ShutdownAsync()
+        {
+            return Current.ShutdownAsync();
+        }
+
+        public static Task<Boolean> ShutdownAsync(CancellationToken token)
+        {
+            return Current.ShutdownAsync(token);
+        }
+
+        public static Task<Boolean> ShutdownAsync(Int32 code)
+        {
+            return Current.ShutdownAsync(code);
+        }
+
+        public static Task<Boolean> ShutdownAsync(Int32 code, CancellationToken token)
+        {
+            return Current.ShutdownAsync(code, token);
         }
 
         public static Task<Boolean> ShutdownAsync(Int32 code, Int32 milli)
@@ -248,20 +273,25 @@ namespace NetExtender.Domains
         {
             Current.Restart();
         }
-
-        public static void Restart(Int32 milli)
+        
+        public static Task<Boolean> RestartAsync()
         {
-            Current.Restart(milli);
+            return Current.RestartAsync();
         }
 
-        public static void Restart(CancellationToken token)
+        public static Task<Boolean> RestartAsync(Int32 milli)
         {
-            Current.Restart(token);
+            return Current.RestartAsync(milli);
         }
 
-        public static void Restart(Int32 milli, CancellationToken token)
+        public static Task<Boolean> RestartAsync(CancellationToken token)
         {
-            Current.Restart(milli, token);
+            return Current.RestartAsync(token);
+        }
+
+        public static Task<Boolean> RestartAsync(Int32 milli, CancellationToken token)
+        {
+            return Current.RestartAsync(milli, token);
         }
     }
 }

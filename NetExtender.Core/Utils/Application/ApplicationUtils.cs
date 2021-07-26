@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using NetExtender.Types.Dispatchers.Interfaces;
 using NetExtender.Utils.Numerics;
 using NetExtender.Utils.IO;
+using NetExtender.Utils.Static;
 using NetExtender.Utils.Types;
 
 namespace NetExtender.Utils.Application
@@ -176,98 +177,133 @@ namespace NetExtender.Utils.Application
         
         public const Int32 DefaultMilliRestart = 1000;
         
-        public static Task Restart()
+        public static Task<Boolean> Restart()
         {
             return Restart(DefaultMilliRestart);
         }
         
-        public static Task Restart(Int32 milli)
+        public static Task<Boolean> Restart(Int32 milliseconds)
         {
-            return Restart(milli, null);
+            return Restart(milliseconds, null);
+        }
+        
+        public static Task<Boolean> Restart(TimeSpan wait)
+        {
+            return Restart(wait, null);
         }
 
-        public static Task Restart(CancellationToken token)
+        public static Task<Boolean> Restart(CancellationToken token)
         {
             return Restart(DefaultMilliRestart, token);
         }
         
-        public static Task Restart(Int32 milli, CancellationToken token)
+        public static Task<Boolean> Restart(Int32 milliseconds, CancellationToken token)
         {
-            return Restart(milli, null, token);
+            return Restart(milliseconds, null, token);
+        }
+        
+        public static Task<Boolean> Restart(TimeSpan wait, CancellationToken token)
+        {
+            return Restart(wait, null, token);
         }
 
-        public static Task Restart(Action<Int32>? shutdown)
+        public static Task<Boolean> Restart(Action<Int32>? shutdown)
         {
             return Restart(DefaultMilliRestart, shutdown);
         }
         
-        public static Task Restart(Int32 milli, Action<Int32>? shutdown)
+        public static Task<Boolean> Restart(Int32 milliseconds, Action<Int32>? shutdown)
         {
-            return Restart(milli, shutdown, CancellationToken.None);
+            return Restart(milliseconds, shutdown, CancellationToken.None);
+        }
+        
+        public static Task<Boolean> Restart(TimeSpan wait, Action<Int32>? shutdown)
+        {
+            return Restart(wait, shutdown, CancellationToken.None);
         }
 
-        public static Task Restart(Action<Int32>? shutdown, CancellationToken token)
+        public static Task<Boolean> Restart(Action<Int32>? shutdown, CancellationToken token)
         {
             return Restart(DefaultMilliRestart, shutdown, token);
         }
         
-        public static Task Restart(Int32 milli, Action<Int32>? shutdown, CancellationToken token)
+        public static Task<Boolean> Restart(Int32 milliseconds, Action<Int32>? shutdown, CancellationToken token)
         {
-            return Restart(milli, null, shutdown, token);
+            return Restart(milliseconds, null, shutdown, token);
+        }
+        
+        public static Task<Boolean> Restart(TimeSpan wait, Action<Int32>? shutdown, CancellationToken token)
+        {
+            return Restart(wait, null, shutdown, token);
         }
 
-        public static Task Restart(this IDispatcher? dispatcher, Action<Int32>? shutdown)
+        public static Task<Boolean> Restart(this IDispatcher? dispatcher, Action<Int32>? shutdown)
         {
             return Restart(DefaultMilliRestart, dispatcher, shutdown);
         }
 
-        public static Task Restart(Int32 milli, IDispatcher? dispatcher, Action<Int32>? shutdown)
+        public static Task<Boolean> Restart(Int32 milliseconds, IDispatcher? dispatcher, Action<Int32>? shutdown)
         {
-            return Restart(milli, dispatcher, shutdown, CancellationToken.None);
+            return Restart(milliseconds, dispatcher, shutdown, CancellationToken.None);
+        }
+        
+        public static Task<Boolean> Restart(TimeSpan wait, IDispatcher? dispatcher, Action<Int32>? shutdown)
+        {
+            return Restart(wait, dispatcher, shutdown, CancellationToken.None);
         }
 
-        public static Task Restart(this IDispatcher? dispatcher, Action<Int32>? shutdown, CancellationToken token)
+        public static Task<Boolean> Restart(this IDispatcher? dispatcher, Action<Int32>? shutdown, CancellationToken token)
         {
             return Restart(DefaultMilliRestart, dispatcher, shutdown, token);
         }
 
-        public static Task Restart(this IDispatcher? dispatcher, Int32 milli, Action<Int32>? shutdown, CancellationToken token)
+        public static Task<Boolean> Restart(this IDispatcher? dispatcher, Int32 milliseconds, Action<Int32>? shutdown, CancellationToken token)
         {
-            return Restart(milli, dispatcher, shutdown, token);
+            return Restart(milliseconds, dispatcher, shutdown, token);
+        }
+        
+        public static Task<Boolean> Restart(this IDispatcher? dispatcher, TimeSpan wait, Action<Int32>? shutdown, CancellationToken token)
+        {
+            return Restart(wait, dispatcher, shutdown, token);
         }
 
-        public static async Task Restart(Int32 milli, IDispatcher? dispatcher, Action<Int32>? shutdown, CancellationToken token)
+        public static Task<Boolean> Restart(Int32 milliseconds, IDispatcher? dispatcher, Action<Int32>? shutdown, CancellationToken token)
         {
-            const Int32 close = 1000;
-            MathUtils.ToRange(ref milli, close);
-            
+            return Restart(TimeSpan.FromMilliseconds(milliseconds), dispatcher, shutdown, token);
+        }
+
+        //TODO: refactoring
+        public static async Task<Boolean> Restart(TimeSpan wait, IDispatcher? dispatcher, Action<Int32>? shutdown, CancellationToken token)
+        {
             String? path = Path;
 
             if (String.IsNullOrEmpty(path))
             {
-                return;
+                return false;
             }
             
-            Process? restart = ProcessUtils.StartProcess(path, milli, token);
+            Process? restart = await ProcessUtils.StartProcessAsync(path, wait, token);
 
             if (restart is null)
             {
-                return;
+                return false;
             }
 
             try
             {
-                Int32 wait = milli - close;
-                if (wait > 0)
+                TimeSpan left = wait - Time.Second.One;
+                if (left.Ticks > 0)
                 {
                     await Task.Delay(wait, token).ConfigureAwait(false);
                 }
 
                 Shutdown(dispatcher, shutdown);
+                return true;
             }
             catch (TaskCanceledException)
             {
                 restart.Kill(true);
+                return false;
             }
         }
     }

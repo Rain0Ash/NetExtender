@@ -176,11 +176,28 @@ namespace NetExtender.Utils.Types
             return Delay(-1, token);
         }
 
+        public static Task Delay(Int32 milliseconds)
+        {
+            return Delay(milliseconds, CancellationToken.None);
+        }
+        
         public static Task Delay(TimeSpan delay)
         {
             return Delay(delay, CancellationToken.None);
         }
-
+        
+        public static async Task Delay(Int32 milliseconds, CancellationToken token)
+        {
+            try
+            {
+                await Task.Delay(milliseconds, token).ConfigureAwait(false);
+            }
+            catch (TaskCanceledException)
+            {
+                //ignored
+            }
+        }
+        
         public static async Task Delay(TimeSpan delay, CancellationToken token)
         {
             try
@@ -192,37 +209,41 @@ namespace NetExtender.Utils.Types
                 //ignored
             }
         }
-        
-        public static Task Delay(Int32 milli)
-        {
-            return Delay(milli, CancellationToken.None);
-        }
-        
-        public static async Task Delay(Int32 milli, CancellationToken token)
-        {
-            try
-            {
-                await Task.Delay(milli, token).ConfigureAwait(false);
-            }
-            catch (TaskCanceledException)
-            {
-                //ignored
-            }
-        }
+
+        private const Int32 DefaultWaitDelay = 25;
 
         public static Task WaitAsync(CancellationToken token)
         {
-            return WaitAsync(null, token);
+            return WaitAsync(DefaultWaitDelay, token);
+        }
+        
+        public static Task WaitAsync(Int32 milliseconds, CancellationToken token)
+        {
+            return WaitAsync(TimeSpan.FromMilliseconds(milliseconds), token);
+        }
+        
+        public static async Task WaitAsync(TimeSpan delay, CancellationToken token)
+        {
+            while (!token.IsCancellationRequested)
+            {
+                await Task.Delay(delay, token).ConfigureAwait(false);
+            }
         }
 
         public static Task WaitAsync(Func<Boolean>? condition, CancellationToken token)
         {
-            return WaitAsync(condition, 25, token);
+            return WaitAsync(condition, DefaultWaitDelay, token);
         }
 
         public static async Task WaitAsync(Func<Boolean>? condition, Int32 delay, CancellationToken token)
         {
-            while (condition?.Invoke() != false && !token.IsCancellationRequested)
+            if (condition is null)
+            {
+                await WaitAsync(token);
+                return;
+            }
+            
+            while (condition.Invoke() && !token.IsCancellationRequested)
             {
                 await Task.Delay(delay, token).ConfigureAwait(false);
             }
@@ -241,17 +262,44 @@ namespace NetExtender.Utils.Types
         
         public static Task<Boolean> TryWaitAsync(CancellationToken token)
         {
-            return TryWaitAsync(null, token);
+            return TryWaitAsync(DefaultWaitDelay, token);
+        }
+        
+        public static Task<Boolean> TryWaitAsync(Int32 milliseconds, CancellationToken token)
+        {
+            return TryWaitAsync(TimeSpan.FromMilliseconds(milliseconds), token);
+        }
+        
+        public static async Task<Boolean> TryWaitAsync(TimeSpan delay, CancellationToken token)
+        {
+            while (!token.IsCancellationRequested)
+            {
+                try
+                {
+                    await Task.Delay(delay, token).ConfigureAwait(false);
+                }
+                catch (TaskCanceledException)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public static Task<Boolean> TryWaitAsync(Func<Boolean>? condition, CancellationToken token)
         {
-            return TryWaitAsync(condition, 25, token);
+            return TryWaitAsync(condition, DefaultWaitDelay, token);
         }
 
         public static async Task<Boolean> TryWaitAsync(Func<Boolean>? condition, Int32 delay, CancellationToken token)
         {
-            while (condition?.Invoke() != false && !token.IsCancellationRequested)
+            if (condition is null)
+            {
+                return await TryWaitAsync(delay, token);
+            }
+            
+            while (condition.Invoke() && !token.IsCancellationRequested)
             {
                 try
                 {
@@ -283,11 +331,16 @@ namespace NetExtender.Utils.Types
         
         public static Task WaitHandleAsync(WaitHandle handle, Int32 timeout = Timeout.Infinite)
         {
+            if (handle is null)
+            {
+                throw new ArgumentNullException(nameof(handle));
+            }
+
             TaskCompletionSource<Object?> task = new TaskCompletionSource<Object?>();
 
-            void Callback(Object? state, Boolean timedOut)
+            void Callback(Object? state, Boolean timedout)
             {
-                if (timedOut)
+                if (timedout)
                 {
                     task.TrySetCanceled();
                 }
@@ -342,12 +395,32 @@ namespace NetExtender.Utils.Types
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task})"/>
         public static Task ContinueWith(this Task source, Action action)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             return source.ContinueWith(_ => action());
         }
         
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, CancellationToken)"/>
         public static Task ContinueWith(this Task source, Action action, CancellationToken token)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             return source.ContinueWith(_ => action(), token);
         }
         
@@ -355,44 +428,144 @@ namespace NetExtender.Utils.Types
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "CA1068")]
         public static Task ContinueWith(this Task source, Action action, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+
             return source.ContinueWith(_ => action(), token, options, scheduler);
         }
         
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, TaskContinuationOptions)"/>
         public static Task ContinueWith(this Task source, Action action, TaskContinuationOptions options)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             return source.ContinueWith(_ => action(), options);
         }
         
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, TaskScheduler)"/>
         public static Task ContinueWith(this Task source, Action action, TaskScheduler scheduler)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+
             return source.ContinueWith(_ => action(), scheduler);
         }
         
         public static Task<T> ContinueWith<T>(this Task source, Func<T> function)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
             return source.ContinueWith(_ => function());
         }
         
         public static Task<T> ContinueWith<T>(this Task source, Func<T> function, CancellationToken token)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
             return source.ContinueWith(_ => function(), token);
         }
         
         [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "CA1068")]
         public static Task<T> ContinueWith<T>(this Task source, Func<T> function, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+
             return source.ContinueWith(_ => function(), token, options, scheduler);
         }
         
         public static Task<T> ContinueWith<T>(this Task source, Func<T> function, TaskContinuationOptions options)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
             return source.ContinueWith(_ => function(), options);
         }
         
         public static Task<T> ContinueWith<T>(this Task source, Func<T> function, TaskScheduler scheduler)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+
             return source.ContinueWith(_ => function(), scheduler);
         }
         
@@ -418,7 +591,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(tasks));
             }
 
-            return Task.WaitAll(tasks.ToArray(), timeout, token);
+            return Task.WaitAll(tasks.AsArray(), timeout, token);
         }
 
         /// <summary>
@@ -443,7 +616,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(tasks));
             }
 
-            return Task.WaitAll(tasks.ToArray(), (Int32) timeout.TotalMilliseconds, token);
+            return Task.WaitAll(tasks.AsArray(), (Int32) timeout.TotalMilliseconds, token);
         }
 
         /// <summary>
@@ -465,7 +638,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(tasks));
             }
 
-            Task.WaitAll(tasks.ToArray(), token);
+            Task.WaitAll(tasks.AsArray(), token);
         }
 
         /// <summary>
@@ -487,7 +660,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(tasks));
             }
 
-            return Task.WaitAll(tasks.ToArray(), timeout);
+            return Task.WaitAll(tasks.AsArray(), timeout);
         }
 
         /// <summary>
@@ -509,7 +682,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(tasks));
             }
 
-            return Task.WaitAll(tasks.ToArray(), timeout);
+            return Task.WaitAll(tasks.AsArray(), timeout);
         }
 
         /// <summary>
@@ -527,7 +700,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(tasks));
             }
 
-            Task.WaitAll(tasks.ToArray());
+            Task.WaitAll(tasks.AsArray());
         }
 
         /// <summary>
@@ -822,9 +995,9 @@ namespace NetExtender.Utils.Types
                     action?.Invoke(null);
                 }
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                action?.Invoke(e);
+                action?.Invoke(exception);
             }
         }
         
@@ -839,9 +1012,9 @@ namespace NetExtender.Utils.Types
             {
                 await task.ConfigureAwait(false);
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
-                action?.Invoke(e);
+                action?.Invoke(exception);
             }
         }
 
