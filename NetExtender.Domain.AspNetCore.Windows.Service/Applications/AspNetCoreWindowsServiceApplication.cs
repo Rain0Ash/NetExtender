@@ -25,16 +25,10 @@ namespace NetExtender.Domains.AspNetCore.Windows.Service.Applications
                 return this;
             }
             
-            String name = Domain.ApplicationShortName;
-            if (WindowsServiceUtils.IsServiceExist(name))
-            {
-                WindowsServiceUtils.UninstallService(name);
-            }
-                
             String? path = ApplicationUtils.Path;
             if (path is not null)
             {
-                WindowsServiceUtils.InstallService(path, name);
+                WindowsServiceUtils.InstallServiceIfNotExists(path, Domain.ApplicationShortName);
             }
 
             Context = host;

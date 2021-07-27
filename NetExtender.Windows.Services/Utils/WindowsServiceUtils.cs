@@ -33,6 +33,45 @@ namespace NetExtender.Windows.Services.Utils
         [DllImport("kernel32.dll")]
         private static extern Int32 GetLastError();
         
+        public static Boolean CheckServiceExist(String name)
+        {
+            return IsServiceExistInternal(name, true);
+        }
+        
+        public static Boolean IsServiceExist(String name)
+        {
+            return IsServiceExistInternal(name, false);
+        }
+
+        public static Boolean IsServiceExistInternal(String name, Boolean isThrow)
+        {
+            if (String.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+            }
+
+            IntPtr manager = OpenSCManager(null, null, 0x0005);
+            if (manager == IntPtr.Zero)
+            {
+                if (isThrow)
+                {
+                    throw new Win32Exception(GetLastError());
+                }
+                
+                return false;
+            }
+
+            IntPtr service = OpenService(manager, name, 0x20000);
+            if (service == IntPtr.Zero)
+            {
+                CloseServiceHandle(manager);
+                return false;
+            }
+
+            CloseServiceHandle(manager);
+            return true;
+        }
+        
         public static Boolean InstallService(String path, String name)
         {
             return InstallService(path, name, name);
@@ -244,43 +283,179 @@ namespace NetExtender.Windows.Services.Utils
             return false;
         }
 
-        public static Boolean CheckServiceExist(String name)
+        public static Boolean ReinstallService(String path, String name)
         {
-            return IsServiceExistInternal(name, true);
-        }
-        
-        public static Boolean IsServiceExist(String name)
-        {
-            return IsServiceExistInternal(name, false);
+            return ReinstallService(path, name, name);
         }
 
-        public static Boolean IsServiceExistInternal(String name, Boolean isThrow)
+        public static Boolean ReinstallService(String path, String name, String? displayname)
         {
+            if (String.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(path));
+            }
+
             if (String.IsNullOrEmpty(name))
             {
                 throw new ArgumentException("Value cannot be null or empty.", nameof(name));
             }
 
-            IntPtr manager = OpenSCManager(null, null, 0x0005);
-            if (manager == IntPtr.Zero)
+            return ReinstallService(new FileInfo(path), name, displayname);
+        }
+
+        public static Boolean ReinstallService(FileInfo info, String name)
+        {
+            return ReinstallService(info, name, name);
+        }
+        
+        public static Boolean ReinstallService(FileInfo info, String name, String? displayname)
+        {
+            return ReinstallServiceInternal(info, name, displayname, true);
+        }
+        
+        public static Boolean TryReinstallService(String path, String name)
+        {
+            return TryReinstallService(path, name, name);
+        }
+
+        public static Boolean TryReinstallService(String path, String name, String? displayname)
+        {
+            if (String.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(path));
+            }
+
+            if (String.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+            }
+
+            return TryReinstallService(new FileInfo(path), name, displayname);
+        }
+
+        public static Boolean TryReinstallService(FileInfo info, String name)
+        {
+            return TryReinstallService(info, name, name);
+        }
+        
+        public static Boolean TryReinstallService(FileInfo info, String name, String? displayname)
+        {
+            return ReinstallServiceInternal(info, name, displayname, false);
+        }
+
+        private static Boolean ReinstallServiceInternal(FileInfo info, String name, String? displayname, Boolean isThrow)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            if (String.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+            }
+
+            if (!info.Exists)
             {
                 if (isThrow)
                 {
-                    throw new Win32Exception(GetLastError());
+                    throw new ArgumentException("File doesn't exist", nameof(info));
                 }
                 
                 return false;
             }
 
-            IntPtr service = OpenService(manager, name, 0x20000);
-            if (service == IntPtr.Zero)
+            if (IsServiceExist(name))
             {
-                CloseServiceHandle(manager);
-                return false;
+                TryUninstallService(name);
+            }
+            
+            return InstallServiceInternal(info, name, displayname, isThrow);
+        }
+        
+        public static Boolean InstallServiceIfNotExists(String path, String name)
+        {
+            return InstallServiceIfNotExists(path, name, name);
+        }
+
+        public static Boolean InstallServiceIfNotExists(String path, String name, String? displayname)
+        {
+            if (String.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(path));
             }
 
-            CloseServiceHandle(manager);
-            return true;
+            if (String.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+            }
+
+            return InstallServiceIfNotExists(new FileInfo(path), name, displayname);
+        }
+
+        public static Boolean InstallServiceIfNotExists(FileInfo info, String name)
+        {
+            return InstallServiceIfNotExists(info, name, name);
+        }
+        
+        public static Boolean InstallServiceIfNotExists(FileInfo info, String name, String? displayname)
+        {
+            return InstallServiceIfNotExistsInternal(info, name, displayname, true);
+        }
+        
+        public static Boolean TryInstallServiceIfNotExists(String path, String name)
+        {
+            return TryInstallServiceIfNotExists(path, name, name);
+        }
+
+        public static Boolean TryInstallServiceIfNotExists(String path, String name, String? displayname)
+        {
+            if (String.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(path));
+            }
+
+            if (String.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+            }
+
+            return TryInstallServiceIfNotExists(new FileInfo(path), name, displayname);
+        }
+
+        public static Boolean TryInstallServiceIfNotExists(FileInfo info, String name)
+        {
+            return TryInstallServiceIfNotExists(info, name, name);
+        }
+        
+        public static Boolean TryInstallServiceIfNotExists(FileInfo info, String name, String? displayname)
+        {
+            return InstallServiceIfNotExistsInternal(info, name, displayname, false);
+        }
+
+        private static Boolean InstallServiceIfNotExistsInternal(FileInfo info, String name, String? displayname, Boolean isThrow)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            if (String.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+            }
+
+            if (info.Exists)
+            {
+                return IsServiceExist(name) || InstallServiceInternal(info, name, displayname, isThrow);
+            }
+
+            if (isThrow)
+            {
+                throw new ArgumentException("File doesn't exist", nameof(info));
+            }
+                
+            return false;
         }
     }
 }

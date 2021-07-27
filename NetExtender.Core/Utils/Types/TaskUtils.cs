@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -10,7 +11,6 @@ using System.Threading.Tasks;
 
 namespace NetExtender.Utils.Types
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "AsyncConverter.AsyncMethodNamingHighlighting")]
     public static class TaskUtils
     {
         /// <summary>
@@ -48,7 +48,7 @@ namespace NetExtender.Utils.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<T> ToTask<T>(this T value)
         {
-            return Task.FromResult(value);
+            return value is null ? TaskCache<T>.Default! : Task.FromResult(value);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -95,9 +95,9 @@ namespace NetExtender.Utils.Types
             return ToTasksCompletionQueue(tasks, token);
         }
         
-        public static IAsyncEnumerable<Task> ToTasksCompletionQueue(this Task task, CancellationToken token, params Task[] tasks)
+        public static IAsyncEnumerable<Task> ToTasksCompletionQueue(this Task source, CancellationToken token, params Task[]? tasks)
         {
-            return ToTasksCompletionQueue(tasks.Prepend(task), token);
+            return ToTasksCompletionQueue(tasks.Prepend(source), token);
         }
         
         public static IAsyncEnumerable<Task> ToTasksCompletionQueue(this IEnumerable<Task> source)
@@ -138,9 +138,9 @@ namespace NetExtender.Utils.Types
             return ToTasksCompletionQueue(tasks, token);
         }
         
-        public static IAsyncEnumerable<Task<T>> ToTasksCompletionQueue<T>(this Task<T> task, CancellationToken token, params Task<T>[] tasks)
+        public static IAsyncEnumerable<Task<T>> ToTasksCompletionQueue<T>(this Task<T> source, CancellationToken token, params Task<T>[]? tasks)
         {
-            return ToTasksCompletionQueue(tasks.Prepend(task), token);
+            return ToTasksCompletionQueue(tasks.Prepend(source), token);
         }
         
         public static IAsyncEnumerable<Task<T>> ToTasksCompletionQueue<T>(this IEnumerable<Task<T>> source)
@@ -391,6 +391,230 @@ namespace NetExtender.Utils.Types
 
             return default;
         }
+        
+        /// <inheritdoc cref="Task.Run(Action)"/>
+        public static Task Run(Action action)
+        {
+            return Task.Run(action);
+        }
+
+        /// <inheritdoc cref="Task.Run(Action,CancellationToken)"/>
+        public static Task Run(Action action, CancellationToken token)
+        {
+            return Task.Run(action, token);
+        }
+
+        /// <inheritdoc cref="Task.Run{T}(Func{T})"/>
+        public static Task<T> Run<T>(Func<T> function)
+        {
+            return Task.Run(function);
+        }
+
+        /// <inheritdoc cref="Task.Run{T}(Func{T})"/>
+        public static Task<T> Run<T>(Func<T> function, CancellationToken token)
+        {
+            return Task.Run(function, token);
+        }
+
+        /// <inheritdoc cref="Task.Run(Func{Task?})"/>
+        public static Task Run(Func<Task?> function)
+        {
+            return Task.Run(function);
+        }
+        
+        /// <inheritdoc cref="Task.Run(Func{Task?},CancellationToken)"/>
+        public static Task Run(Func<Task?> function, CancellationToken token)
+        {
+            return Task.Run(function, token);
+        }
+
+        /// <inheritdoc cref="Task.Run{T}(Func{Task{T}?})"/>
+        public static Task<T> Run<T>(Func<Task<T>?> function)
+        {
+            return Task.Run(function);
+        }
+
+        /// <inheritdoc cref="Task.Run{T}(Func{Task{T}?},CancellationToken)"/>
+        public static Task<T> Run<T>(Func<Task<T>?> function, CancellationToken token)
+        {
+            return Task.Run(function, token);
+        }
+        
+        /// <inheritdoc cref="Task.Run(Action)"/>
+        public static Task RunWithDelay(Action action, Int32 milliseconds)
+        {
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            return Task.Delay(milliseconds).ContinueWith(action);
+        }
+        
+        /// <inheritdoc cref="Task.Run(Action)"/>
+        public static Task RunWithDelay(Action action, TimeSpan delay)
+        {
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+            
+            return Task.Delay(delay).ContinueWith(action);
+        }
+
+        /// <inheritdoc cref="Task.Run(Action,CancellationToken)"/>
+        public static Task RunWithDelay(Action action, Int32 milliseconds, CancellationToken token)
+        {
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+            
+            return Task.Delay(milliseconds, token).ContinueWith(action, token);
+        }
+
+        /// <inheritdoc cref="Task.Run(Action,CancellationToken)"/>
+        public static Task RunWithDelay(Action action, TimeSpan delay, CancellationToken token)
+        {
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+            
+            return Task.Delay(delay, token).ContinueWith(action, token);
+        }
+
+        /// <inheritdoc cref="Task.Run{T}(Func{T})"/>
+        public static Task<T> RunWithDelay<T>(Func<T> function, Int32 milliseconds)
+        {
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            return Task.Delay(milliseconds).ContinueWith(function);
+        }
+
+        /// <inheritdoc cref="Task.Run{T}(Func{T})"/>
+        public static Task<T> RunWithDelay<T>(Func<T> function, TimeSpan delay)
+        {
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return Task.Delay(delay).ContinueWith(function);
+        }
+
+        /// <inheritdoc cref="Task.Run{T}(Func{T})"/>
+        public static Task<T> RunWithDelay<T>(Func<T> function, TimeSpan delay, CancellationToken token)
+        {
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return Task.Delay(delay, token).ContinueWith(function, token);
+        }
+
+        /// <inheritdoc cref="Task.Run{T}(Func{T})"/>
+        public static Task<T> RunWithDelay<T>(Func<T> function, Int32 milliseconds, CancellationToken token)
+        {
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return Task.Delay(milliseconds, token).ContinueWith(function, token);
+        }
+
+        /// <inheritdoc cref="Task.Run(Func{Task?})"/>
+        public static Task RunWithDelay(Func<Task?> function, Int32 milliseconds)
+        {
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return Task.Delay(milliseconds).ContinueWith(function);
+        }
+
+        /// <inheritdoc cref="Task.Run(Func{Task?})"/>
+        public static Task RunWithDelay(Func<Task?> function, TimeSpan delay)
+        {
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return Task.Delay(delay).ContinueWith(function);
+        }
+        
+        /// <inheritdoc cref="Task.Run(Func{Task?},CancellationToken)"/>
+        public static Task RunWithDelay(Func<Task?> function, Int32 milliseconds, CancellationToken token)
+        {
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return Task.Delay(milliseconds, token).ContinueWith(function, token);
+        }
+        
+        /// <inheritdoc cref="Task.Run(Func{Task?},CancellationToken)"/>
+        public static Task RunWithDelay(Func<Task?> function, TimeSpan delay, CancellationToken token)
+        {
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return Task.Delay(delay, token).ContinueWith(function, token);
+        }
+
+        /// <inheritdoc cref="Task.Run{T}(Func{Task{T}?})"/>
+        public static Task<T> RunWithDelay<T>(Func<Task<T>?> function, Int32 milliseconds)
+        {
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return Task.Delay(milliseconds).ContinueWith(function);
+        }
+
+        /// <inheritdoc cref="Task.Run{T}(Func{Task{T}?})"/>
+        public static Task<T> RunWithDelay<T>(Func<Task<T>?> function, TimeSpan delay)
+        {
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return Task.Delay(delay).ContinueWith(function);
+        }
+
+        /// <inheritdoc cref="Task.Run{T}(Func{Task{T}?},CancellationToken)"/>
+        public static Task<T> RunWithDelay<T>(Func<Task<T>?> function, Int32 milliseconds, CancellationToken token)
+        {
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return Task.Delay(milliseconds, token).ContinueWith(function, token);
+        }
+
+        /// <inheritdoc cref="Task.Run{T}(Func{Task{T}?},CancellationToken)"/>
+        public static Task<T> RunWithDelay<T>(Func<Task<T>?> function, TimeSpan delay, CancellationToken token)
+        {
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return Task.Delay(delay, token).ContinueWith(function, token);
+        }
 
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task})"/>
         public static Task ContinueWith(this Task source, Action action)
@@ -425,7 +649,7 @@ namespace NetExtender.Utils.Types
         }
         
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, CancellationToken, TaskContinuationOptions, TaskScheduler)"/>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "CA1068")]
+        [SuppressMessage("ReSharper", "CA1068")]
         public static Task ContinueWith(this Task source, Action action, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
         {
             if (source is null)
@@ -513,7 +737,7 @@ namespace NetExtender.Utils.Types
             return source.ContinueWith(_ => function(), token);
         }
         
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "CA1068")]
+        [SuppressMessage("ReSharper", "CA1068")]
         public static Task<T> ContinueWith<T>(this Task source, Func<T> function, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
         {
             if (source is null)
@@ -569,11 +793,1363 @@ namespace NetExtender.Utils.Types
             return source.ContinueWith(_ => function(), scheduler);
         }
         
+        public static async Task<T> ContinueWith<T>(this Task source, Func<Task<T>?> function)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            Task<Task<T>?> task = source.ContinueWith(_ => function());
+            Task<T>? next = await task;
+
+            if (next is null)
+            {
+                throw new TaskCanceledException(task);
+            }
+
+            return await next;
+        }
+        
+        public static async Task<T> ContinueWith<T>(this Task source, Func<Task<T>?> function, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            Task<Task<T>?> task = source.ContinueWith(_ => function(), token);
+            Task<T>? next = await task;
+
+            if (next is null)
+            {
+                throw new TaskCanceledException(task);
+            }
+
+            return await next;
+        }
+        
+        [SuppressMessage("ReSharper", "CA1068")]
+        public static async Task<T> ContinueWith<T>(this Task source, Func<Task<T>?> function, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+
+            Task<Task<T>?> task = source.ContinueWith(_ => function(), token, options, scheduler);
+            Task<T>? next = await task;
+
+            if (next is null)
+            {
+                throw new TaskCanceledException(task);
+            }
+
+            return await next;
+        }
+        
+        public static async Task<T> ContinueWith<T>(this Task source, Func<Task<T>?> function, TaskContinuationOptions options)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            Task<Task<T>?> task = source.ContinueWith(_ => function(), options);
+            Task<T>? next = await task;
+
+            if (next is null)
+            {
+                throw new TaskCanceledException(task);
+            }
+
+            return await next;
+        }
+        
+        public static async Task<T> ContinueWith<T>(this Task source, Func<Task<T>?> function, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+
+            Task<Task<T>?> task = source.ContinueWith(_ => function(), scheduler);
+            Task<T>? next = await task;
+
+            if (next is null)
+            {
+                throw new TaskCanceledException(task);
+            }
+
+            return await next;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task ContinueWithDelay(this Task source, Int32 milliseconds)
+        {
+            return ContinueWithDelay(source, milliseconds, CancellationToken.None);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task ContinueWithDelay(this Task source, Int32 milliseconds, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (milliseconds < -1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(milliseconds));
+            }
+            
+            return source.ContinueWith(_ => Task.Delay(milliseconds, token), token);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task ContinueWithDelay(this Task source, TimeSpan delay)
+        {
+            return ContinueWithDelay(source, delay, CancellationToken.None);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task ContinueWithDelay(this Task source, TimeSpan delay, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (!delay.IsTimeout())
+            {
+                throw new ArgumentOutOfRangeException(nameof(delay));
+            }
+
+            return source.ContinueWith(_ => Task.Delay(delay, token), token);
+        }
+        
+        public static Task ContinueWithDelay(this Task source, Action<Task> action, Int32 milliseconds)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+            
+            return source.ContinueWithDelay(milliseconds).ContinueWith(action);
+        }
+        
+        public static Task ContinueWithDelay(this Task source, Action<Task> action, TimeSpan delay)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            return source.ContinueWithDelay(delay).ContinueWith(action);
+        }
+
+        public static Task ContinueWithDelay(this Task source, Action<Task> action, Int32 milliseconds, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            return source.ContinueWithDelay(milliseconds, token).ContinueWith(action, token);
+        }
+
+        public static Task ContinueWithDelay(this Task source, Action<Task> action, TimeSpan delay, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+            
+            return source.ContinueWithDelay(delay, token).ContinueWith(action, token);
+        }
+
+        public static Task ContinueWithDelay(this Task source, Action<Task> action, Int32 milliseconds, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+
+            return source.ContinueWithDelay(milliseconds).ContinueWith(action, scheduler);
+        }
+
+        public static Task ContinueWithDelay(this Task source, Action<Task> action, TimeSpan delay, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+            
+            return source.ContinueWithDelay(delay).ContinueWith(action, scheduler);
+        }
+
+        public static Task ContinueWithDelay(this Task source, Action<Task> action, Int32 milliseconds, TaskContinuationOptions options)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+            
+            return source.ContinueWithDelay(milliseconds).ContinueWith(action, options);
+        }
+
+        public static Task ContinueWithDelay(this Task source, Action<Task> action, TimeSpan delay, TaskContinuationOptions options)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+            
+            return source.ContinueWithDelay(delay).ContinueWith(action, options);
+        }
+
+        [SuppressMessage("ReSharper", "CA1068")]
+        public static Task ContinueWithDelay(this Task source, Action<Task> action, Int32 milliseconds, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+            
+            return source.ContinueWithDelay(milliseconds, token).ContinueWith(action, token, options, scheduler);
+        }
+
+        [SuppressMessage("ReSharper", "CA1068")]
+        public static Task ContinueWithDelay(this Task source, Action<Task> action, TimeSpan delay, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+            
+            return source.ContinueWithDelay(delay, token).ContinueWith(action, token, options, scheduler);
+        }
+
+        public static Task ContinueWithDelay(this Task source, Action<Task, Object?> action, Int32 milliseconds, Object? state)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            return source.ContinueWithDelay(milliseconds).ContinueWith(action, state);
+        }
+
+        public static Task ContinueWithDelay(this Task source, Action<Task, Object?> action, TimeSpan delay, Object? state)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+            
+            return source.ContinueWithDelay(delay).ContinueWith(action, state);
+        }
+
+        public static Task ContinueWithDelay(this Task source, Action<Task, Object?> action, Int32 milliseconds, Object? state, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+            
+            return source.ContinueWithDelay(milliseconds, token).ContinueWith(action, state, token);
+        }
+
+        public static Task ContinueWithDelay(this Task source, Action<Task, Object?> action, TimeSpan delay, Object? state, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+            
+            return source.ContinueWithDelay(delay, token).ContinueWith(action, state, token);
+        }
+        
+        public static Task ContinueWithDelay(this Task source, Action<Task, Object?> action, Int32 milliseconds, Object? state, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+
+            return source.ContinueWithDelay(milliseconds).ContinueWith(action, state, scheduler);
+        }
+        
+        public static Task ContinueWithDelay(this Task source, Action<Task, Object?> action, TimeSpan delay, Object? state, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+            
+            return source.ContinueWithDelay(delay).ContinueWith(action, state, scheduler);
+        }
+
+        public static Task ContinueWithDelay(this Task source, Action<Task, Object?> action, Int32 milliseconds, Object? state, TaskContinuationOptions options)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+            
+            return source.ContinueWithDelay(milliseconds).ContinueWith(action, state, options);
+        }
+
+        public static Task ContinueWithDelay(this Task source, Action<Task, Object?> action, TimeSpan delay, Object? state, TaskContinuationOptions options)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+            
+            return source.ContinueWithDelay(delay).ContinueWith(action, state, options);
+        }
+        
+        [SuppressMessage("ReSharper", "CA1068")]
+        public static Task ContinueWithDelay(this Task source, Action<Task, Object?> action, Int32 milliseconds, Object? state, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+            
+            return source.ContinueWithDelay(milliseconds, token).ContinueWith(action, state, token, options, scheduler);
+        }
+        
+        [SuppressMessage("ReSharper", "CA1068")]
+        public static Task ContinueWithDelay(this Task source, Action<Task, Object?> action, TimeSpan delay, Object? state, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+            
+            return source.ContinueWithDelay(delay, token).ContinueWith(action, state, token, options, scheduler);
+        }
+
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, TResult> function, Int32 milliseconds)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return source.ContinueWithDelay(milliseconds).ContinueWith(function);
+        }
+
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, TResult> function, TimeSpan delay)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return source.ContinueWithDelay(delay).ContinueWith(function);
+        }
+
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, TResult> function, Int32 milliseconds, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return source.ContinueWithDelay(milliseconds, token).ContinueWith(function, token);
+        }
+
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, TResult> function, TimeSpan delay, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return source.ContinueWithDelay(delay, token).ContinueWith(function, token);
+        }
+
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, TResult> function, Int32 milliseconds, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+            
+            return source.ContinueWithDelay(milliseconds).ContinueWith(function, scheduler);
+        }
+
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, TResult> function, TimeSpan delay, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+            
+            return source.ContinueWithDelay(delay).ContinueWith(function, scheduler);
+        }
+
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, TResult> function, Int32 milliseconds, TaskContinuationOptions options)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return source.ContinueWithDelay(milliseconds).ContinueWith(function, options);
+        }
+
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, TResult> function, TimeSpan delay, TaskContinuationOptions options)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return source.ContinueWithDelay(delay).ContinueWith(function, options);
+        }
+
+        [SuppressMessage("ReSharper", "CA1068")]
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, TResult> function, Int32 milliseconds, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+            
+            return source.ContinueWithDelay(milliseconds, token).ContinueWith(function, token, options, scheduler);
+        }
+
+        [SuppressMessage("ReSharper", "CA1068")]
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, TResult> function, TimeSpan delay, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+            
+            return source.ContinueWithDelay(delay, token).ContinueWith(function, token, options, scheduler);
+        }
+
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, Object?, TResult> function, Int32 milliseconds, Object? state)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return source.ContinueWithDelay(milliseconds).ContinueWith(function, state);
+        }
+
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, Object?, TResult> function, TimeSpan delay, Object? state)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return source.ContinueWithDelay(delay).ContinueWith(function, state);
+        }
+
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, Object?, TResult> function, Int32 milliseconds, Object? state, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return source.ContinueWithDelay(milliseconds, token).ContinueWith(function, state, token);
+        }
+
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, Object?, TResult> function, TimeSpan delay, Object? state, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return source.ContinueWithDelay(delay, token).ContinueWith(function, state, token);
+        }
+
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, Object?, TResult> function, Int32 milliseconds, Object? state, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+            
+            return source.ContinueWithDelay(milliseconds).ContinueWith(function, state, scheduler);
+        }
+
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, Object?, TResult> function, TimeSpan delay, Object? state, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+            
+            return source.ContinueWithDelay(delay).ContinueWith(function, state, scheduler);
+        }
+
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, Object?, TResult> function, Int32 milliseconds, Object? state, TaskContinuationOptions options)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return source.ContinueWithDelay(milliseconds).ContinueWith(function, state, options);
+        }
+
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, Object?, TResult> function, TimeSpan delay, Object? state, TaskContinuationOptions options)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+            
+            return source.ContinueWithDelay(delay).ContinueWith(function, state, options);
+        }
+
+        [SuppressMessage("ReSharper", "CA1068")]
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, Object?, TResult> function, Int32 milliseconds, Object? state, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+            
+            return source.ContinueWithDelay(milliseconds, token).ContinueWith(function, state, token, options, scheduler);
+        }
+
+        [SuppressMessage("ReSharper", "CA1068")]
+        public static Task<TResult> ContinueWithDelay<TResult>(this Task source, Func<Task, Object?, TResult> function, TimeSpan delay, Object? state, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+            
+            return source.ContinueWithDelay(delay, token).ContinueWith(function, state, token, options, scheduler);
+        }
+        
+        /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, CancellationToken)"/>
+        public static Task ContinueWithDelay(this Task source, Action action, Int32 milliseconds, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            return source.ContinueWithDelay(milliseconds, token).ContinueWith(action, token);
+        }
+        
+        /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, CancellationToken)"/>
+        public static Task ContinueWithDelay(this Task source, Action action, TimeSpan delay, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            return source.ContinueWithDelay(delay, token).ContinueWith(action, token);
+        }
+        
+        /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, CancellationToken, TaskContinuationOptions, TaskScheduler)"/>
+        [SuppressMessage("ReSharper", "CA1068")]
+        public static Task ContinueWithDelay(this Task source, Action action, Int32 milliseconds, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+
+            return source.ContinueWithDelay(milliseconds, token).ContinueWith(action, token, options, scheduler);
+        }
+        
+        /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, CancellationToken, TaskContinuationOptions, TaskScheduler)"/>
+        [SuppressMessage("ReSharper", "CA1068")]
+        public static Task ContinueWithDelay(this Task source, Action action, TimeSpan delay, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+
+            return source.ContinueWithDelay(delay, token).ContinueWith(action, token, options, scheduler);
+        }
+        
+        /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, TaskContinuationOptions)"/>
+        public static Task ContinueWithDelay(this Task source, Action action, Int32 milliseconds, TaskContinuationOptions options)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            return source.ContinueWithDelay(milliseconds).ContinueWith(action, options);
+        }
+        
+        /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, TaskContinuationOptions)"/>
+        public static Task ContinueWithDelay(this Task source, Action action, TimeSpan delay, TaskContinuationOptions options)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            return source.ContinueWithDelay(delay).ContinueWith(action, options);
+        }
+        
+        /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, TaskScheduler)"/>
+        public static Task ContinueWithDelay(this Task source, Action action, Int32 milliseconds, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+
+            return source.ContinueWithDelay(milliseconds).ContinueWith(action, scheduler);
+        }
+        
+        /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, TaskScheduler)"/>
+        public static Task ContinueWithDelay(this Task source, Action action, TimeSpan delay, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+
+            return source.ContinueWithDelay(delay).ContinueWith(action, scheduler);
+        }
+        
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, Int32 milliseconds)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            return source.ContinueWithDelay(milliseconds).ContinueWith(function);
+        }
+        
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, TimeSpan delay)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            return source.ContinueWithDelay(delay).ContinueWith(function);
+        }
+        
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, Int32 milliseconds, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            return source.ContinueWithDelay(milliseconds, token).ContinueWith(function, token);
+        }
+        
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, TimeSpan delay, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            return source.ContinueWithDelay(delay, token).ContinueWith(function, token);
+        }
+        
+        [SuppressMessage("ReSharper", "CA1068")]
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, Int32 milliseconds, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+
+            return source.ContinueWithDelay(milliseconds, token).ContinueWith(function, token, options, scheduler);
+        }
+        
+        [SuppressMessage("ReSharper", "CA1068")]
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, TimeSpan delay, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+
+            return source.ContinueWithDelay(delay, token).ContinueWith(function, token, options, scheduler);
+        }
+        
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, Int32 milliseconds, TaskContinuationOptions options)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            return source.ContinueWithDelay(milliseconds).ContinueWith(function, options);
+        }
+        
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, TimeSpan delay, TaskContinuationOptions options)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            return source.ContinueWithDelay(delay).ContinueWith(function, options);
+        }
+        
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, Int32 milliseconds, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+
+            return source.ContinueWithDelay(milliseconds).ContinueWith(function, scheduler);
+        }
+        
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, TimeSpan delay, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+
+            return source.ContinueWithDelay(delay).ContinueWith(function, scheduler);
+        }
+        
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, Int32 milliseconds)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            return source.ContinueWithDelay(milliseconds).ContinueWith(function);
+        }
+        
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, TimeSpan delay)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            return source.ContinueWithDelay(delay).ContinueWith(function);
+        }
+        
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, Int32 milliseconds, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            return source.ContinueWithDelay(milliseconds, token).ContinueWith(function, token);
+        }
+        
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, TimeSpan delay, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            return source.ContinueWithDelay(delay, token).ContinueWith(function, token);
+        }
+        
+        [SuppressMessage("ReSharper", "CA1068")]
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, Int32 milliseconds, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+
+            return source.ContinueWithDelay(milliseconds, token).ContinueWith(function, token, options, scheduler);
+        }
+        
+        [SuppressMessage("ReSharper", "CA1068")]
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, TimeSpan delay, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+
+            return source.ContinueWithDelay(delay, token).ContinueWith(function, token, options, scheduler);
+        }
+        
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, Int32 milliseconds, TaskContinuationOptions options)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            return source.ContinueWithDelay(milliseconds).ContinueWith(function, options);
+        }
+        
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, TimeSpan delay, TaskContinuationOptions options)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            return source.ContinueWithDelay(delay).ContinueWith(function, options);
+        }
+        
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, Int32 milliseconds, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+            
+            return source.ContinueWithDelay(milliseconds).ContinueWith(function, scheduler);
+        }
+        
+        public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, TimeSpan delay, TaskScheduler scheduler)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (function is null)
+            {
+                throw new ArgumentNullException(nameof(function));
+            }
+
+            if (scheduler is null)
+            {
+                throw new ArgumentNullException(nameof(scheduler));
+            }
+            
+            return source.ContinueWithDelay(delay).ContinueWith(function, scheduler);
+        }
+
         /// <summary>
         /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
         /// milliseconds or until the wait is cancelled.
         /// </summary>
-        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
         /// <param name="timeout">
         /// The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.
         /// </param>
@@ -584,21 +2160,21 @@ namespace NetExtender.Utils.Types
         /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
         /// <c>false</c>.
         /// </returns>
-        public static Boolean WaitAll(this IEnumerable<Task> tasks, Int32 timeout, CancellationToken token)
+        public static Boolean WaitAll(this IEnumerable<Task> source, Int32 timeout, CancellationToken token)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            return Task.WaitAll(tasks.AsArray(), timeout, token);
+            return Task.WaitAll(source.AsArray(), timeout, token);
         }
 
         /// <summary>
         /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified
         /// <see cref="TimeSpan"/> or until the wait is cancelled.
         /// </summary>
-        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
         /// <param name="timeout">
         /// A <see cref="TimeSpan"/> to wait, or <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
         /// </param>
@@ -609,21 +2185,21 @@ namespace NetExtender.Utils.Types
         /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
         /// <c>false</c>.
         /// </returns>
-        public static Boolean WaitAll(this IEnumerable<Task> tasks, TimeSpan timeout, CancellationToken token)
+        public static Boolean WaitAll(this IEnumerable<Task> source, TimeSpan timeout, CancellationToken token)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            return Task.WaitAll(tasks.AsArray(), (Int32) timeout.TotalMilliseconds, token);
+            return Task.WaitAll(source.AsArray(), (Int32) timeout.TotalMilliseconds, token);
         }
 
         /// <summary>
         /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
         /// milliseconds or until the wait is cancelled.
         /// </summary>
-        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
         /// <param name="token">
         /// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
         /// </param>
@@ -631,21 +2207,21 @@ namespace NetExtender.Utils.Types
         /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
         /// <c>false</c>.
         /// </returns>
-        public static void WaitAll(this IEnumerable<Task> tasks, CancellationToken token)
+        public static void WaitAll(this IEnumerable<Task> source, CancellationToken token)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            Task.WaitAll(tasks.AsArray(), token);
+            Task.WaitAll(source.AsArray(), token);
         }
 
         /// <summary>
         /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
         /// milliseconds or until the wait is cancelled.
         /// </summary>
-        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
         /// <param name="timeout">
         /// The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.
         /// </param>
@@ -653,21 +2229,21 @@ namespace NetExtender.Utils.Types
         /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
         /// <c>false</c>.
         /// </returns>
-        public static Boolean WaitAll(this IEnumerable<Task> tasks, Int32 timeout)
+        public static Boolean WaitAll(this IEnumerable<Task> source, Int32 timeout)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            return Task.WaitAll(tasks.AsArray(), timeout);
+            return Task.WaitAll(source.AsArray(), timeout);
         }
 
         /// <summary>
         /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified
         /// <see cref="TimeSpan"/> or until the wait is cancelled.
         /// </summary>
-        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
         /// <param name="timeout">
         /// A <see cref="TimeSpan"/> to wait, or <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
         /// </param>
@@ -675,49 +2251,49 @@ namespace NetExtender.Utils.Types
         /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
         /// <c>false</c>.
         /// </returns>
-        public static Boolean WaitAll(this IEnumerable<Task> tasks, TimeSpan timeout)
+        public static Boolean WaitAll(this IEnumerable<Task> source, TimeSpan timeout)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            return Task.WaitAll(tasks.AsArray(), timeout);
+            return Task.WaitAll(source.AsArray(), timeout);
         }
 
         /// <summary>
         /// Waits for all of the provided <see cref="Task"/> objects to complete execution.
         /// </summary>
-        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
         /// <returns>
         /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
         /// <c>false</c>.
         /// </returns>
-        public static void WaitAll(this IEnumerable<Task> tasks)
+        public static void WaitAll(this IEnumerable<Task> source)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            Task.WaitAll(tasks.AsArray());
+            Task.WaitAll(source.AsArray());
         }
 
         /// <summary>
         /// Creates a task that will complete when all of the <see cref="Task"/> objects in an enumerable collection
         /// have completed.
         /// </summary>
-        /// <param name="tasks">The tasks to wait on for completion.</param>
+        /// <param name="source">The tasks to wait on for completion.</param>
         /// <returns>A task that represents the completion of all of the supplied tasks.</returns>
         // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
-        public static Task WhenAll(this IEnumerable<Task> tasks)
+        public static Task WhenAll(this IEnumerable<Task> source)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            return Task.WhenAll(tasks);
+            return Task.WhenAll(source);
         }
 
         /// <summary>
@@ -725,63 +2301,63 @@ namespace NetExtender.Utils.Types
         /// have completed.
         /// </summary>
         /// <typeparam name="T">The type of the completed Task.</typeparam>
-        /// <param name="tasks">The tasks to wait on for completion.</param>
+        /// <param name="source">The tasks to wait on for completion.</param>
         /// <returns>A task that represents the completion of all of the supplied tasks.</returns>
         // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
-        public static Task<T[]> WhenAll<T>(this IEnumerable<Task<T>> tasks)
+        public static Task<T[]> WhenAll<T>(this IEnumerable<Task<T>> source)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            return Task.WhenAll(tasks);
+            return Task.WhenAll(source);
         }
 
         /// <summary>
         /// Creates a task that will complete when any of the supplied tasks have completed.
         /// </summary>
         /// <typeparam name="T">The type of the completed Task.</typeparam>
-        /// <param name="tasks">The tasks to wait on for completion.</param>
+        /// <param name="source">The tasks to wait on for completion.</param>
         /// <returns>
         /// A task that represents the completion of one of the supplied tasks. The return task's Result is the task that
         /// completed.
         /// </returns>
         // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
-        public static Task<Task<T>> WhenAny<T>(this IEnumerable<Task<T>> tasks)
+        public static Task<Task<T>> WhenAny<T>(this IEnumerable<Task<T>> source)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            return Task.WhenAny(tasks);
+            return Task.WhenAny(source);
         }
 
         /// <summary>
         /// Creates a task that will complete when any of the supplied tasks have completed.
         /// </summary>
-        /// <param name="tasks">The tasks to wait on for completion.</param>
+        /// <param name="source">The tasks to wait on for completion.</param>
         /// <returns>
         /// A task that represents the completion of one of the supplied tasks. The return task's Result is the task that
         /// completed.
         /// </returns>
         // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
-        public static Task<Task> WhenAny(this IEnumerable<Task> tasks)
+        public static Task<Task> WhenAny(this IEnumerable<Task> source)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            return Task.WhenAny(tasks);
+            return Task.WhenAny(source);
         }
         
         /// <summary>
         /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
         /// milliseconds or until the wait is cancelled.
         /// </summary>
-        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
         /// <param name="timeout">
         /// The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.
         /// </param>
@@ -792,21 +2368,21 @@ namespace NetExtender.Utils.Types
         /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
         /// <c>false</c>.
         /// </returns>
-        public static Boolean WaitAll(this Task[] tasks, Int32 timeout, CancellationToken token)
+        public static Boolean WaitAll(this Task[] source, Int32 timeout, CancellationToken token)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            return Task.WaitAll(tasks, timeout, token);
+            return Task.WaitAll(source, timeout, token);
         }
 
         /// <summary>
         /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified
         /// <see cref="TimeSpan"/> or until the wait is cancelled.
         /// </summary>
-        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
         /// <param name="timeout">
         /// A <see cref="TimeSpan"/> to wait, or <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
         /// </param>
@@ -817,21 +2393,21 @@ namespace NetExtender.Utils.Types
         /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
         /// <c>false</c>.
         /// </returns>
-        public static Boolean WaitAll(this Task[] tasks, TimeSpan timeout, CancellationToken token)
+        public static Boolean WaitAll(this Task[] source, TimeSpan timeout, CancellationToken token)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            return Task.WaitAll(tasks, (Int32) timeout.TotalMilliseconds, token);
+            return Task.WaitAll(source, (Int32) timeout.TotalMilliseconds, token);
         }
 
         /// <summary>
         /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
         /// milliseconds or until the wait is cancelled.
         /// </summary>
-        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
         /// <param name="token">
         /// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
         /// </param>
@@ -839,21 +2415,21 @@ namespace NetExtender.Utils.Types
         /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
         /// <c>false</c>.
         /// </returns>
-        public static void WaitAll(this Task[] tasks, CancellationToken token)
+        public static void WaitAll(this Task[] source, CancellationToken token)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            Task.WaitAll(tasks, token);
+            Task.WaitAll(source, token);
         }
 
         /// <summary>
         /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
         /// milliseconds or until the wait is cancelled.
         /// </summary>
-        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
         /// <param name="timeout">
         /// The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.
         /// </param>
@@ -861,21 +2437,21 @@ namespace NetExtender.Utils.Types
         /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
         /// <c>false</c>.
         /// </returns>
-        public static Boolean WaitAll(this Task[] tasks, Int32 timeout)
+        public static Boolean WaitAll(this Task[] source, Int32 timeout)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            return Task.WaitAll(tasks, timeout);
+            return Task.WaitAll(source, timeout);
         }
 
         /// <summary>
         /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified
         /// <see cref="TimeSpan"/> or until the wait is cancelled.
         /// </summary>
-        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
         /// <param name="timeout">
         /// A <see cref="TimeSpan"/> to wait, or <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
         /// </param>
@@ -883,48 +2459,48 @@ namespace NetExtender.Utils.Types
         /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
         /// <c>false</c>.
         /// </returns>
-        public static Boolean WaitAll(this Task[] tasks, TimeSpan timeout)
+        public static Boolean WaitAll(this Task[] source, TimeSpan timeout)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            return Task.WaitAll(tasks, timeout);
+            return Task.WaitAll(source, timeout);
         }
 
         /// <summary>
         /// Waits for all of the provided <see cref="Task"/> objects to complete execution.
         /// </summary>
-        /// <param name="tasks"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
         /// <returns>
         /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
         /// <c>false</c>.
         /// </returns>
-        public static void WaitAll(this Task[] tasks)
+        public static void WaitAll(this Task[] source)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            Task.WaitAll(tasks);
+            Task.WaitAll(source);
         }
 
         /// <summary>
         /// Creates a task that will complete when all of the <see cref="Task"/> objects in an enumerable collection
         /// have completed.
         /// </summary>
-        /// <param name="tasks">The tasks to wait on for completion.</param>
+        /// <param name="source">The tasks to wait on for completion.</param>
         /// <returns>A task that represents the completion of all of the supplied tasks.</returns>
-        public static Task WhenAll(this Task[] tasks)
+        public static Task WhenAll(this Task[] source)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            return Task.WhenAll(tasks);
+            return Task.WhenAll(source);
         }
 
         /// <summary>
@@ -932,65 +2508,92 @@ namespace NetExtender.Utils.Types
         /// have completed.
         /// </summary>
         /// <typeparam name="T">The type of the completed Task.</typeparam>
-        /// <param name="tasks">The tasks to wait on for completion.</param>
+        /// <param name="source">The tasks to wait on for completion.</param>
         /// <returns>A task that represents the completion of all of the supplied tasks.</returns>
-        public static Task<T[]> WhenAll<T>(this Task<T>[] tasks)
+        public static Task<T[]> WhenAll<T>(this Task<T>[] source)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            return Task.WhenAll(tasks);
+            return Task.WhenAll(source);
         }
 
         /// <summary>
         /// Creates a task that will complete when any of the supplied tasks have completed.
         /// </summary>
         /// <typeparam name="T">The type of the completed Task.</typeparam>
-        /// <param name="tasks">The tasks to wait on for completion.</param>
+        /// <param name="source">The tasks to wait on for completion.</param>
         /// <returns>
         /// A task that represents the completion of one of the supplied tasks. The return task's Result is the task that
         /// completed.
         /// </returns>
-        public static Task<Task<T>> WhenAny<T>(this Task<T>[] tasks)
+        public static Task<Task<T>> WhenAny<T>(this Task<T>[] source)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            return Task.WhenAny(tasks);
+            return Task.WhenAny(source);
         }
 
         /// <summary>
         /// Creates a task that will complete when any of the supplied tasks have completed.
         /// </summary>
-        /// <param name="tasks">The tasks to wait on for completion.</param>
+        /// <param name="source">The tasks to wait on for completion.</param>
         /// <returns>
         /// A task that represents the completion of one of the supplied tasks. The return task's Result is the task that
         /// completed.
         /// </returns>
-        public static Task<Task> WhenAny(this Task[] tasks)
+        public static Task<Task> WhenAny(this Task[] source)
         {
-            if (tasks is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(tasks));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            return Task.WhenAny(tasks);
+            return Task.WhenAny(source);
         }
-        
-        public static async void ErrorHandle(this Task<Boolean> task, Action<Exception?>? action = null)
+
+        public static Task ErrorHandle(this Task source)
         {
-            if (task is null)
+            return ErrorHandle(source, null);
+        }
+
+        public static async Task ErrorHandle(this Task source, Action<Exception?>? action)
+        {
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(task));
+                throw new ArgumentNullException(nameof(source));
             }
 
             try
             {
-                if (!await task.ConfigureAwait(false))
+                await source.ConfigureAwait(false);
+            }
+            catch (Exception exception)
+            {
+                action?.Invoke(exception);
+            }
+        }
+
+        public static Task ErrorHandle(this Task<Boolean> source)
+        {
+            return ErrorHandle(source, null);
+        }
+
+        public static async Task ErrorHandle(this Task<Boolean> source, Action<Exception?>? action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            try
+            {
+                if (!await source.ConfigureAwait(false))
                 {
                     action?.Invoke(null);
                 }
@@ -1000,32 +2603,15 @@ namespace NetExtender.Utils.Types
                 action?.Invoke(exception);
             }
         }
-        
-        public static async void ErrorHandle(this Task task, Action<Exception?>? action = null)
+
+        public static Task<T>[] InitializeTasks<T>(this IEnumerable<Task<T>> source)
         {
-            if (task is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(task));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            try
-            {
-                await task.ConfigureAwait(false);
-            }
-            catch (Exception exception)
-            {
-                action?.Invoke(exception);
-            }
-        }
-
-        public static Task<T>[] InitializeTasks<T>(this IEnumerable<Task<T>> tasks)
-        {
-            if (tasks is null)
-            {
-                throw new ArgumentNullException(nameof(tasks));
-            }
-
-            return tasks.ToArray();
+            return source.ToArray();
         }
     }
 }

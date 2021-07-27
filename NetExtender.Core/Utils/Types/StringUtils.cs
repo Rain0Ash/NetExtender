@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -14,6 +13,8 @@ using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using NetExtender.Types.Maps;
+using NetExtender.Types.Maps.Interfaces;
 using NetExtender.Types.Strings;
 using NetExtender.Types.Strings.Interfaces;
 
@@ -218,14 +219,16 @@ namespace NetExtender.Utils.Types
                 .Select(format => Regex.Replace(format.ToLower(), @"\{|\}", String.Empty));
         }
 
-        private static readonly IImmutableDictionary<Char, Char> BracketPairs = new Dictionary<Char, Char>
+        //TODO: To ImmutableMap
+        private static IMap<Char, Char> Brackets { get; } = new Map<Char, Char>(4)
         {
             {'(', ')'},
             {'{', '}'},
             {'[', ']'},
             {'<', '>'}
-        }.ToImmutableDictionary();
+        };
 
+        // ReSharper disable once CognitiveComplexity
         public static Boolean IsBracketsWellFormed(this String value)
         {
             if (value is null)
@@ -233,42 +236,40 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(value));
             }
 
-            if (value.Length == 0)
+            if (value.Length <= 0)
             {
                 return true;
             }
 
             Stack<Char> brackets = new Stack<Char>();
 
-            try
+            foreach (Char character in value)
             {
-                foreach (Char chr in value)
+                if (Brackets.ContainsKey(character))
                 {
-                    if (BracketPairs.Keys.Contains(chr))
-                    {
-                        brackets.Push(chr);
-                        continue;
-                    }
-
-                    if (!BracketPairs.Values.Contains(chr))
-                    {
-                        continue;
-                    }
-
-                    if (chr != BracketPairs[brackets.Peek()])
-                    {
-                        return false;
-                    }
-
-                    brackets.Pop();
+                    brackets.Push(character);
+                    continue;
                 }
-            }
-            catch (Exception)
-            {
-                return false;
+
+                if (!Brackets.ContainsValue(character))
+                {
+                    continue;
+                }
+                    
+                if (brackets.Count <= 0)
+                {
+                    return false;
+                }
+
+                if (character != Brackets[brackets.Peek()])
+                {
+                    return false;
+                }
+
+                brackets.Pop();
             }
 
-            return !brackets.Any();
+            return brackets.Count <= 0;
         }
 
         public static String ReplaceFrom<T>(this String source, IEnumerable<KeyValuePair<String, T?>> dictionary)
@@ -2571,9 +2572,9 @@ namespace NetExtender.Utils.Types
             String normalize = value.Normalize(NormalizationForm.FormD);
             StringBuilder builder = new StringBuilder(normalize.Length);
 
-            foreach (Char chr in normalize.Where(chr => CharUnicodeInfo.GetUnicodeCategory(chr) != UnicodeCategory.NonSpacingMark))
+            foreach (Char character in normalize.Where(character => CharUnicodeInfo.GetUnicodeCategory(character) != UnicodeCategory.NonSpacingMark))
             {
-                builder.Append(chr);
+                builder.Append(character);
             }
 
             return builder.ToString().Normalize(NormalizationForm.FormC);

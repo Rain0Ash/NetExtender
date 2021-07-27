@@ -8,7 +8,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Types.Dispatchers.Interfaces;
-using NetExtender.Utils.Numerics;
 using NetExtender.Utils.IO;
 using NetExtender.Utils.Static;
 using NetExtender.Utils.Types;

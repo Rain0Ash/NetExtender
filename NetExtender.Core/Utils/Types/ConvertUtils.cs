@@ -397,7 +397,7 @@ namespace NetExtender.Utils.Types
             return value switch
             {
                 null => escape.HasFlag(EscapeType.Null) ? StringUtils.NullString : null,
-                Char chr => escape.HasFlag(EscapeType.Full) ? $"\'{chr.GetString(provider)}\'" : chr.GetString(provider),
+                Char character => escape.HasFlag(EscapeType.Full) ? $"\'{character.GetString(provider)}\'" : character.GetString(provider),
                 String str => escape.HasFlag(EscapeType.Full) ? $"\"{str.GetString(provider)}\"" : str.GetString(provider),
                 Boolean number => number.GetString(provider),
                 SByte number => number.GetString(provider),

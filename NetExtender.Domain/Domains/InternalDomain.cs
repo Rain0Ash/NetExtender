@@ -298,6 +298,7 @@ namespace NetExtender.Domains
 
             protected virtual void Dispose(Boolean disposing)
             {
+                Shutdown();
             }
 
             private void DisposeInternal(Boolean disposing)

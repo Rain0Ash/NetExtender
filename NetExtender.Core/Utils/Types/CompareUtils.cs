@@ -110,15 +110,15 @@ namespace NetExtender.Utils.Types
 
             Decimal fc = first switch
             {
-                DateTime dt => Convert.ToDecimal(dt.UnixTime()),
-                Char chr => Convert.ToDecimal(Convert.ToInt16(chr)),
+                DateTime datetime => Convert.ToDecimal(datetime.UnixTime()),
+                Char character => Convert.ToDecimal(Convert.ToInt16(character)),
                 _ => Convert.ToDecimal(first)
             };
 
             Decimal sc = second switch
             {
-                DateTime dt => Convert.ToDecimal(dt.UnixTime()),
-                Char chr => Convert.ToDecimal(Convert.ToInt16(chr)),
+                DateTime datetime => Convert.ToDecimal(datetime.UnixTime()),
+                Char character => Convert.ToDecimal(Convert.ToInt16(character)),
                 _ => Convert.ToDecimal(second)
             };
 

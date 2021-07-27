@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using NetExtender.Utils.Numerics;
 
@@ -11,6 +12,42 @@ namespace NetExtender.Utils.Types
 {
     public static class TimeSpanUtils
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsDefault(this TimeSpan value)
+        {
+            return value == default;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotDefault(this TimeSpan value)
+        {
+            return !IsDefault(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsPositive(this TimeSpan value)
+        {
+            return value.Ticks >= 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNegative(this TimeSpan value)
+        {
+            return value.Ticks < 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsInfinity(this TimeSpan value)
+        {
+            return value == Timeout.InfiniteTimeSpan;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsTimeout(this TimeSpan value)
+        {
+            return IsPositive(value) || IsInfinity(value);
+        }
+        
         public static TimeSpan From(this TimeType type, Double count = 1)
         {
             return type switch

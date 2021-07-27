@@ -16,13 +16,13 @@ namespace NetExtender.Utils.Types
     public static class StringBuilderUtils
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static StringBuilder ToStringBuilder(this String value)
+        public static StringBuilder ToStringBuilder(this String? value)
         {
             return new StringBuilder(value);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static StringBuilder ToStringBuilder(this String value, Int32 capacity)
+        public static StringBuilder ToStringBuilder(this String? value, Int32 capacity)
         {
             return new StringBuilder(value, capacity);
         }
@@ -42,9 +42,9 @@ namespace NetExtender.Utils.Types
             // ReSharper disable once PossibleMultipleEnumeration
             StringBuilder builder = new StringBuilder(source.CountIfMaterialized() ?? 16);
             // ReSharper disable once PossibleMultipleEnumeration
-            foreach (Char chr in source)
+            foreach (Char character in source)
             {
-                builder.Append(chr);
+                builder.Append(character);
             }
             
             return builder;
@@ -196,7 +196,7 @@ namespace NetExtender.Utils.Types
             return builder.Append(value);
         }
         
-        public static StringBuilder AddSuffix(this StringBuilder builder, params String[] values)
+        public static StringBuilder AddSuffix(this StringBuilder builder, params String[]? values)
         {
             if (builder is null)
             {
@@ -226,7 +226,7 @@ namespace NetExtender.Utils.Types
             }
         }
         
-        public static StringBuilder AddPrefix(this StringBuilder builder, String value)
+        public static StringBuilder AddPrefix(this StringBuilder builder, String? value)
         {
             if (builder is null)
             {
@@ -236,12 +236,12 @@ namespace NetExtender.Utils.Types
             return builder.Insert(0, value);
         }
         
-        public static StringBuilder AddPrefix(this StringBuilder builder, StringBuilder value)
+        public static StringBuilder AddPrefix(this StringBuilder builder, StringBuilder? value)
         {
-            return AddPrefix(builder, value.ToString());
+            return AddPrefix(builder, value?.ToString());
         }
 
-        public static StringBuilder AddPrefix(this StringBuilder builder, params String[] values)
+        public static StringBuilder AddPrefix(this StringBuilder builder, params String[]? values)
         {
             if (builder is null)
             {
@@ -272,7 +272,7 @@ namespace NetExtender.Utils.Types
             }
         }
 
-        public static StringBuilder AddPrefixAndSuffix(this StringBuilder builder, String value)
+        public static StringBuilder AddPrefixAndSuffix(this StringBuilder builder, String? value)
         {
             if (builder is null)
             {
@@ -292,14 +292,14 @@ namespace NetExtender.Utils.Types
             return builder.AddPrefix(value).AddSuffix(value);
         }
         
-        public static StringBuilder AddPrefixAndSuffix(this StringBuilder builder, StringBuilder value)
+        public static StringBuilder AddPrefixAndSuffix(this StringBuilder builder, StringBuilder? value)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            if (IsNullOrEmpty(value))
+            if (value is null || value.Length <= 0)
             {
                 return builder;
             }
@@ -312,7 +312,7 @@ namespace NetExtender.Utils.Types
             return builder.AddPrefix(value).AddSuffix(value);
         }
         
-        public static StringBuilder AddPrefixAndSuffix(this StringBuilder builder, params String[] values)
+        public static StringBuilder AddPrefixAndSuffix(this StringBuilder builder, params String[]? values)
         {
             if (builder is null)
             {
@@ -337,12 +337,12 @@ namespace NetExtender.Utils.Types
             };
         }
         
-        public static StringBuilder RemovePrefix(this StringBuilder builder, String prefix)
+        public static StringBuilder RemovePrefix(this StringBuilder builder, String? prefix)
         {
             return RemovePrefix(builder, prefix, StringComparison.Ordinal);
         }
 
-        public static StringBuilder RemovePrefix(this StringBuilder builder, String prefix, StringComparison comparison)
+        public static StringBuilder RemovePrefix(this StringBuilder builder, String? prefix, StringComparison comparison)
         {
             if (builder is null)
             {
@@ -351,7 +351,7 @@ namespace NetExtender.Utils.Types
 
             if (prefix is null)
             {
-                throw new ArgumentNullException(nameof(prefix));
+                return builder;
             }
 
             if (prefix.Length > builder.Length || !builder.StartsWith(prefix, comparison))
@@ -362,12 +362,12 @@ namespace NetExtender.Utils.Types
             return builder.Remove(0, prefix.Length);
         }
 
-        public static StringBuilder RemoveSuffix(this StringBuilder builder, String suffix)
+        public static StringBuilder RemoveSuffix(this StringBuilder builder, String? suffix)
         {
             return RemoveSuffix(builder, suffix, StringComparison.Ordinal);
         }
 
-        public static StringBuilder RemoveSuffix(this StringBuilder builder, String suffix, StringComparison comparison)
+        public static StringBuilder RemoveSuffix(this StringBuilder builder, String? suffix, StringComparison comparison)
         {
             if (builder is null)
             {
@@ -376,7 +376,7 @@ namespace NetExtender.Utils.Types
 
             if (suffix is null)
             {
-                throw new ArgumentNullException(nameof(suffix));
+                return builder;
             }
 
             if (builder.Length < suffix.Length || !builder.EndsWith(suffix, comparison))
@@ -392,11 +392,16 @@ namespace NetExtender.Utils.Types
             return RemovePrefixAndSuffix(builder, trim, StringComparison.Ordinal);
         }
 
-        public static StringBuilder RemovePrefixAndSuffix(this StringBuilder builder, String trim, StringComparison comparison)
+        public static StringBuilder RemovePrefixAndSuffix(this StringBuilder builder, String? trim, StringComparison comparison)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (trim is null)
+            {
+                return builder;
             }
 
             if (builder.Length < trim.Length)

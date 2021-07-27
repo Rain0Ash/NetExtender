@@ -2400,14 +2400,14 @@ namespace NetExtender.Utils.Numerics
 
             Int32 max = ZeroChar + @base + (@base > 10 ? 7 : 0);
 
-            foreach (Char chr in value.ToUpper().Trim().TrimStart('0'))
+            foreach (Char character in value.ToUpper().Trim().TrimStart('0'))
             {
-                if (chr < ZeroChar || chr >= max || @base > 10 && chr > '9' && chr < 'A')
+                if (character < ZeroChar || character >= max || @base > 10 && character > '9' && character < 'A')
                 {
                     throw new ArgumentOutOfRangeException(nameof(value));
                 }
 
-                Byte number = (Byte) (chr >= 'A' ? chr - 'A' + 10 : chr - ZeroChar);
+                Byte number = (Byte) (character >= 'A' ? character - 'A' + 10 : character - ZeroChar);
 
                 result = result * @base + number;
             }

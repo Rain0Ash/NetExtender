@@ -5,7 +5,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Types.Dispatchers.Interfaces;
-using NetExtender.Utils.Application;
 
 namespace NetExtender.Domains.Applications.Interfaces
 {
