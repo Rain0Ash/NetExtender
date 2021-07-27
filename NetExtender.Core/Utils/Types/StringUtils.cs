@@ -219,7 +219,7 @@ namespace NetExtender.Utils.Types
                 .Select(format => Regex.Replace(format.ToLower(), @"\{|\}", String.Empty));
         }
 
-        //TODO: To ImmutableMap
+        //TODO: To ImmutableMap; add Include/Exclude pairs
         private static IMap<Char, Char> Brackets { get; } = new Map<Char, Char>(4)
         {
             {'(', ')'},
@@ -261,7 +261,7 @@ namespace NetExtender.Utils.Types
                     return false;
                 }
 
-                if (character != Brackets[brackets.Peek()])
+                if (character != Brackets.GetValue(brackets.Peek()))
                 {
                     return false;
                 }
