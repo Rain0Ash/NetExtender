@@ -82,6 +82,11 @@ namespace NetExtender.Domains
         {
             return Create(new ApplicationData(name, ApplicationVersion.Default));
         }
+        
+        public static IDomain Create(String name, String identifier)
+        {
+            return Create(new ApplicationData(name, identifier, ApplicationVersion.Default));
+        }
 
         public static IDomain Create(IApplicationData data)
         {
@@ -93,6 +98,11 @@ namespace NetExtender.Domains
             return Create(name).Initialize(application);
         }
         
+        public static IDomain Create(String name, String identifier, IApplication application)
+        {
+            return Create(name, identifier).Initialize(application);
+        }
+        
         public static IDomain Create(IApplicationData data, IApplication application)
         {
             return Create(data).Initialize(application);
@@ -101,6 +111,11 @@ namespace NetExtender.Domains
         public static IDomain Create(String name, IApplication application, IApplicationView view)
         {
             return Create(name, application).View(view);
+        }
+        
+        public static IDomain Create(String name, String identifier, IApplication application, IApplicationView view)
+        {
+            return Create(name, identifier, application).View(view);
         }
         
         public static IDomain Create(IApplicationData data, IApplication application, IApplicationView view)
@@ -144,11 +159,11 @@ namespace NetExtender.Domains
             }
         }
         
-        public static String ApplicationShortName
+        public static String ApplicationIdentifier
         {
             get
             {
-                return Current.ApplicationShortName;
+                return Current.ApplicationIdentifier;
             }
         }
 
@@ -168,19 +183,19 @@ namespace NetExtender.Domains
             }
         }
         
-        public static String? ApplicationShortNameOrPath
+        public static String? ApplicationIdentifierOrPath
         {
             get
             {
-                return IsInitialized ? ApplicationShortName : ApplicationUtils.Path;
+                return IsInitialized ? ApplicationIdentifier : ApplicationUtils.Path;
             }
         }
 
-        public static String? ApplicationShortNameOrFriendlyName
+        public static String? ApplicationIdentifierOrFriendlyName
         {
             get
             {
-                return IsInitialized ? ApplicationShortName : ApplicationUtils.FriendlyName;
+                return IsInitialized ? ApplicationIdentifier : ApplicationUtils.FriendlyName;
             }
         }
 

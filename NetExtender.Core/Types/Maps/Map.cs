@@ -4,11 +4,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using NetExtender.Utils.Types;
 using NetExtender.Exceptions;
 using NetExtender.Types.Maps.Interfaces;
-using NetExtender.Utils.IO;
 
 namespace NetExtender.Types.Maps
 {

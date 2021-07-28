@@ -34,7 +34,7 @@ namespace NetExtender.Domains.Interfaces
         
         public String ApplicationName { get; }
         
-        public String ApplicationShortName { get; }
+        public String ApplicationIdentifier { get; }
         
         public DateTime StartedAt { get; }
 

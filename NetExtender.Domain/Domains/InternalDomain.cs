@@ -130,11 +130,11 @@ namespace NetExtender.Domains
                 }
             }
             
-            public String ApplicationShortName
+            public String ApplicationIdentifier
             {
                 get
                 {
-                    return Data.ApplicationShortName;
+                    return Data.ApplicationIdentifier;
                 }
             }
 

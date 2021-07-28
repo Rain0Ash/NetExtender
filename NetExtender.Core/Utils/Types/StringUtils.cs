@@ -2451,6 +2451,7 @@ namespace NetExtender.Utils.Types
             return DamerauLevenshteinDistance(first, second, comparison, new Int32[first.Length + 1, second.Length + 1]);
         }
 
+        // ReSharper disable once CognitiveComplexity
         public static Int32 DamerauLevenshteinDistance(this String first, String second, Int32[,] values)
         {
             if (first is null)

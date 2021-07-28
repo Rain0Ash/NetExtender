@@ -47,10 +47,10 @@ namespace NetExtender.Domains.Service.Applications
             String? path = ApplicationUtils.Path;
             if (path is not null)
             {
-                WindowsServiceUtils.InstallServiceIfNotExists(path, Domain.ApplicationShortName);
+                WindowsServiceUtils.InstallServiceIfNotExists(path, Domain.ApplicationIdentifier);
             }
 
-            ServiceBase.Run(service);
+            service.RunQuiet();
             return this;
         }
     }

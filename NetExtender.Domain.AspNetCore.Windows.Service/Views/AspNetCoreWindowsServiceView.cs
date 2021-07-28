@@ -44,7 +44,7 @@ namespace NetExtender.Domains.Windows.Service.AspNetCore.Views
             }
             
             AspNetCoreWindowsServiceApplication application = Domain.Current.Application as AspNetCoreWindowsServiceApplication ?? throw new InitializeException($"{nameof(Domain.Current.Application)} is not {nameof(AspNetCoreWindowsServiceApplication)}");
-            application.RunAsService(Context);
+            application.Run(Context);
             return this;
         }
     }

@@ -6,13 +6,13 @@ using System;
 namespace NetExtender.Domains
 {
     [Serializable]
-    public readonly struct ApplicationInfoMessage
+    public record ApplicationInfoMessage
     {
         public Guid Guid { get; }
         
         public String ApplicationName { get; }
         
-        public String ApplicationShortName { get; }
+        public String ApplicationIdentifier { get; }
         
         public DateTime StartedAt { get; }
 
@@ -23,11 +23,11 @@ namespace NetExtender.Domains
 
         public ApplicationBranch Branch { get; }
 
-        public ApplicationInfoMessage(Guid guid, String name, String shortname, DateTime startedAt, ApplicationVersion version, ApplicationInfo information, ApplicationStatus status, ApplicationBranch branch)
+        public ApplicationInfoMessage(Guid guid, String name, String identifier, DateTime startedAt, ApplicationVersion version, ApplicationInfo information, ApplicationStatus status, ApplicationBranch branch)
         {
             Guid = guid;
             ApplicationName = name;
-            ApplicationShortName = shortname;
+            ApplicationIdentifier = identifier;
             StartedAt = startedAt;
             Version = version;
             Information = information;

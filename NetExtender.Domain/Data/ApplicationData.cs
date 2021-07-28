@@ -81,11 +81,12 @@ namespace NetExtender.Domains
             return first.CompareTo(second) <= 0;
         }
 
+        private ApplicationInfoMessage? _message;
         public ApplicationInfoMessage Message
         {
             get
             {
-                return new ApplicationInfoMessage(Guid, ApplicationName, ApplicationShortName, StartedAt, Version, Information, Status, Branch);
+                return _message ??= new ApplicationInfoMessage(Guid, ApplicationName, ApplicationIdentifier, StartedAt, Version, Information, Status, Branch);
             }
         }
 
@@ -93,7 +94,7 @@ namespace NetExtender.Domains
         
         public String ApplicationName { get; }
         
-        public String ApplicationShortName { get; }
+        public String ApplicationIdentifier { get; }
         
         public DateTime StartedAt { get; }
 
@@ -129,7 +130,7 @@ namespace NetExtender.Domains
         }
 
         [return: NotNullIfNotNull("name")]
-        protected static String? ToShortName(String? name)
+        protected static String? ToIdentifier(String? name)
         {
             return name is not null ? Regex.Replace(name, @"[^a-zA-Z0-9]", String.Empty) : null;
         }
@@ -151,27 +152,47 @@ namespace NetExtender.Domains
         }
         
         public ApplicationData(String name, ApplicationVersion version, ApplicationInfo information, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
-            : this(name, ToShortName(name), version, information, status, branch)
-        {
-        }
-
-        public ApplicationData(String name, String shortname, ApplicationVersion version, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
-            : this(name, shortname, version, ApplicationInfo.Default, status, branch)
+            : this(name, name, version, information, status, branch)
         {
         }
         
-        public ApplicationData(String name, String shortname, ApplicationVersion version, ApplicationInfo information, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
+        public ApplicationData(String name, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
+            : this(name, name, status, branch)
         {
-            name = name.Trim();
-            shortname = ToShortName(shortname);
-            if (String.IsNullOrEmpty(name) || String.IsNullOrEmpty(shortname))
+        }
+        
+        public ApplicationData(String name, String identifier, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
+            : this(name, identifier, ApplicationVersion.Default, status, branch)
+        {
+        }
+
+        public ApplicationData(String name, String identifier, ApplicationVersion version, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
+            : this(name, identifier, version, ApplicationInfo.Default, status, branch)
+        {
+        }
+        
+        public ApplicationData(String name, String identifier, ApplicationVersion version, ApplicationInfo information, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
+        {
+            if (name is null)
             {
-                throw new ArgumentException("Not null or whitespace app name");
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            name = name.Trim();
+            if (String.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(name));
+            }
+
+            identifier = ToIdentifier(identifier);
+            if (String.IsNullOrEmpty(identifier))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(identifier));
             }
 
             Guid = Guid.NewGuid();
             ApplicationName = name;
-            ApplicationShortName = shortname;
+            ApplicationIdentifier = identifier;
             StartedAt = DateTime.Now;
             Version = version;
             Information = information;

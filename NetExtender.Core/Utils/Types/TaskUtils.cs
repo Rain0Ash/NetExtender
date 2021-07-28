@@ -194,7 +194,6 @@ namespace NetExtender.Utils.Types
             }
             catch (TaskCanceledException)
             {
-                //ignored
             }
         }
         
@@ -206,50 +205,166 @@ namespace NetExtender.Utils.Types
             }
             catch (TaskCanceledException)
             {
-                //ignored
             }
         }
 
         private const Int32 DefaultWaitDelay = 25;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task WaitAsync(CancellationToken token)
         {
             return WaitAsync(DefaultWaitDelay, token);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task WaitAsync(Int32 milliseconds, CancellationToken token)
         {
             return WaitAsync(TimeSpan.FromMilliseconds(milliseconds), token);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task WaitAsync(TimeSpan delay, CancellationToken token)
         {
-            while (!token.IsCancellationRequested)
+            try
             {
-                await Task.Delay(delay, token).ConfigureAwait(false);
+                while (!token.IsCancellationRequested)
+                {
+                    await Task.Delay(delay, token).ConfigureAwait(false);
+                }
+            }
+            catch (TaskCanceledException)
+            {
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task WaitAsync(Func<Boolean> condition)
+        {
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return WaitAsync(condition, CancellationToken.None);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task WaitAsync(Func<Boolean>? condition, CancellationToken token)
         {
             return WaitAsync(condition, DefaultWaitDelay, token);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task WaitAsync(Func<Boolean> condition, Int32 delay)
+        {
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
 
-        public static async Task WaitAsync(Func<Boolean>? condition, Int32 delay, CancellationToken token)
+            return WaitAsync(condition, delay, CancellationToken.None);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task WaitAsync(Func<Boolean>? condition, Int32 delay, CancellationToken token)
+        {
+            return WaitAsync(condition, TimeSpan.FromMilliseconds(delay), token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task WaitAsync(Func<Boolean> condition, TimeSpan delay)
+        {
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return WaitAsync(condition, delay, CancellationToken.None);
+        }
+
+        public static async Task WaitAsync(Func<Boolean>? condition, TimeSpan delay, CancellationToken token)
         {
             if (condition is null)
             {
                 await WaitAsync(token);
                 return;
             }
-            
-            while (condition.Invoke() && !token.IsCancellationRequested)
+
+            try
             {
-                await Task.Delay(delay, token).ConfigureAwait(false);
+                while (condition.Invoke() && !token.IsCancellationRequested)
+                {
+                    await Task.Delay(delay, token).ConfigureAwait(false);
+                }
+            }
+            catch (TaskCanceledException)
+            {
             }
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task WaitAsync(Func<Boolean> condition, Int32 delay, Int32 timeout)
+        {
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
 
-        public static async Task WaitAsync(Func<Boolean>? condition, Int32 delay, Int32 timeout, CancellationToken token)
+            return WaitAsync(condition, delay, timeout, CancellationToken.None);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task WaitAsync(Func<Boolean>? condition, Int32 delay, Int32 timeout, CancellationToken token)
+        {
+            return WaitAsync(condition, TimeSpan.FromMilliseconds(delay), TimeSpan.FromMilliseconds(timeout), token);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task WaitAsync(Func<Boolean> condition, TimeSpan delay, Int32 timeout)
+        {
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return WaitAsync(condition, delay, timeout, CancellationToken.None);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task WaitAsync(Func<Boolean>? condition, TimeSpan delay, Int32 timeout, CancellationToken token)
+        {
+            return WaitAsync(condition, delay, TimeSpan.FromMilliseconds(timeout), token);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task WaitAsync(Func<Boolean> condition, Int32 delay, TimeSpan timeout)
+        {
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return WaitAsync(condition, delay, timeout, CancellationToken.None);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task WaitAsync(Func<Boolean>? condition, Int32 delay, TimeSpan timeout, CancellationToken token)
+        {
+            return WaitAsync(condition, TimeSpan.FromMilliseconds(delay), timeout, token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task WaitAsync(Func<Boolean> condition, TimeSpan delay, TimeSpan timeout)
+        {
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return WaitAsync(condition, delay, timeout, CancellationToken.None);
+        }
+
+        public static async Task WaitAsync(Func<Boolean>? condition, TimeSpan delay, TimeSpan timeout, CancellationToken token)
         {
             Task time = Task.Delay(timeout, token);
             Task wait = WaitAsync(condition, delay, token);
@@ -272,19 +387,33 @@ namespace NetExtender.Utils.Types
         
         public static async Task<Boolean> TryWaitAsync(TimeSpan delay, CancellationToken token)
         {
-            while (!token.IsCancellationRequested)
+            try
             {
-                try
+                while (!token.IsCancellationRequested)
                 {
                     await Task.Delay(delay, token).ConfigureAwait(false);
                 }
-                catch (TaskCanceledException)
-                {
-                    return false;
-                }
+            }
+            catch (TaskCanceledException)
+            {
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
             }
 
             return true;
+        }
+        
+        public static Task<Boolean> TryWaitAsync(Func<Boolean> condition)
+        {
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return TryWaitAsync(condition, CancellationToken.None);
         }
 
         public static Task<Boolean> TryWaitAsync(Func<Boolean>? condition, CancellationToken token)
@@ -292,7 +421,32 @@ namespace NetExtender.Utils.Types
             return TryWaitAsync(condition, DefaultWaitDelay, token);
         }
 
-        public static async Task<Boolean> TryWaitAsync(Func<Boolean>? condition, Int32 delay, CancellationToken token)
+        public static Task<Boolean> TryWaitAsync(Func<Boolean> condition, Int32 delay)
+        {
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return TryWaitAsync(condition, delay, CancellationToken.None);
+        }
+        
+        public static Task<Boolean> TryWaitAsync(Func<Boolean>? condition, Int32 delay, CancellationToken token)
+        {
+            return TryWaitAsync(condition, TimeSpan.FromMilliseconds(delay), token);
+        }
+
+        public static Task<Boolean> TryWaitAsync(Func<Boolean> condition, TimeSpan delay)
+        {
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return TryWaitAsync(condition, delay, CancellationToken.None);
+        }
+
+        public static async Task<Boolean> TryWaitAsync(Func<Boolean>? condition, TimeSpan delay, CancellationToken token)
         {
             if (condition is null)
             {
@@ -313,8 +467,63 @@ namespace NetExtender.Utils.Types
 
             return true;
         }
+        
+        public static Task<Boolean> TryWaitAsync(Func<Boolean> condition, Int32 delay, Int32 timeout)
+        {
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
 
-        public static async Task<Boolean> TryWaitAsync(Func<Boolean>? condition, Int32 delay, Int32 timeout, CancellationToken token)
+            return TryWaitAsync(condition, delay, timeout, CancellationToken.None);
+        }
+
+        public static Task<Boolean> TryWaitAsync(Func<Boolean>? condition, Int32 delay, Int32 timeout, CancellationToken token)
+        {
+            return TryWaitAsync(condition, TimeSpan.FromMilliseconds(delay), TimeSpan.FromMilliseconds(timeout), token);
+        }
+        
+        public static Task<Boolean> TryWaitAsync(Func<Boolean> condition, TimeSpan delay, Int32 timeout)
+        {
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return TryWaitAsync(condition, delay, timeout, CancellationToken.None);
+        }
+
+        public static Task<Boolean> TryWaitAsync(Func<Boolean>? condition, TimeSpan delay, Int32 timeout, CancellationToken token)
+        {
+            return TryWaitAsync(condition, delay, TimeSpan.FromMilliseconds(timeout), token);
+        }
+        
+        public static Task<Boolean> TryWaitAsync(Func<Boolean> condition, Int32 delay, TimeSpan timeout)
+        {
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return TryWaitAsync(condition, delay, timeout, CancellationToken.None);
+        }
+
+        public static Task<Boolean> TryWaitAsync(Func<Boolean>? condition, Int32 delay, TimeSpan timeout, CancellationToken token)
+        {
+            return TryWaitAsync(condition, TimeSpan.FromMilliseconds(delay), timeout, token);
+        }
+
+        public static Task<Boolean> TryWaitAsync(Func<Boolean> condition, TimeSpan delay, TimeSpan timeout)
+        {
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return TryWaitAsync(condition, delay, timeout, CancellationToken.None);
+        }
+
+        public static async Task<Boolean> TryWaitAsync(Func<Boolean>? condition, TimeSpan delay, TimeSpan timeout, CancellationToken token)
         {
             try
             {
@@ -328,8 +537,18 @@ namespace NetExtender.Utils.Types
                 return false;
             }
         }
-        
-        public static Task WaitHandleAsync(WaitHandle handle, Int32 timeout = Timeout.Infinite)
+
+        public static Task WaitHandleAsync(WaitHandle handle)
+        {
+            return WaitHandleAsync(handle, Timeout.InfiniteTimeSpan);
+        }
+
+        public static Task WaitHandleAsync(WaitHandle handle, Int32 timeout)
+        {
+            return WaitHandleAsync(handle, TimeSpan.FromMilliseconds(timeout));
+        }
+
+        public static Task WaitHandleAsync(WaitHandle handle, TimeSpan timeout)
         {
             if (handle is null)
             {

@@ -13,12 +13,7 @@ namespace NetExtender.Domains.AspNetCore.Windows.Service.Applications
 {
     public class AspNetCoreWindowsServiceApplication : AspNetCoreApplication
     {
-        public virtual IApplication RunAsService()
-        {
-            return RunAsService(null);
-        }
-        
-        public virtual IApplication RunAsService(IHost? host)
+        public override IApplication Run(IHost? host)
         {
             if (host is null)
             {
@@ -28,11 +23,11 @@ namespace NetExtender.Domains.AspNetCore.Windows.Service.Applications
             String? path = ApplicationUtils.Path;
             if (path is not null)
             {
-                WindowsServiceUtils.InstallServiceIfNotExists(path, Domain.ApplicationShortName);
+                WindowsServiceUtils.InstallServiceIfNotExists(path, Domain.ApplicationIdentifier, Domain.ApplicationName);
             }
 
             Context = host;
-            Context.RunAsService();
+            Context.RunAsServiceQuiet();
             return this;
         }
     }
