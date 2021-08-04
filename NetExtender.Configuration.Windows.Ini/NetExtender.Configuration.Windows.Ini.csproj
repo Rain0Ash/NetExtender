@@ -12,6 +12,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj" />
+      <ProjectReference Include="..\NetExtender.Windows\NetExtender.Windows.csproj" />
     </ItemGroup>
 
 </Project>

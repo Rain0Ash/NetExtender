@@ -275,7 +275,7 @@ namespace NetExtender.Utils.UserInterface
 
                 if (!GetCurrentConsoleFontEx(WindowsConsoleUtils.ConsoleOutputHandle, false, ref font))
                 {
-                    InteropUtils.ThrowLastWin32Exception();
+                    WindowsInteropUtils.ThrowLastWin32Exception();
                 }
 
                 return font;
@@ -284,7 +284,7 @@ namespace NetExtender.Utils.UserInterface
             {
                 if (!SetCurrentConsoleFontEx(WindowsConsoleUtils.ConsoleOutputHandle, false, ref value))
                 {
-                    InteropUtils.ThrowLastWin32Exception();
+                    WindowsInteropUtils.ThrowLastWin32Exception();
                 }
             }
         }
@@ -437,7 +437,7 @@ namespace NetExtender.Utils.UserInterface
         {
             if (!SetWindowPos(ConsoleWindow, IntPtr.Zero, x, y, size.Width, size.Height, 0x4 | 0x10))
             {
-                InteropUtils.ThrowLastWin32Exception();
+                WindowsInteropUtils.ThrowLastWin32Exception();
             }
         }
 

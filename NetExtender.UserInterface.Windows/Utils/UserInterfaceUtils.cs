@@ -47,7 +47,7 @@ namespace NetExtender.Utils.UserInterface
         {
             if (!GetWindowRect(handle, out WinRectangle rectangle))
             {
-                InteropUtils.ThrowLastWin32Exception();
+                WindowsInteropUtils.ThrowLastWin32Exception();
             }
 
             return rectangle;

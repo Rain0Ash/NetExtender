@@ -22,7 +22,7 @@ namespace NetExtender.Utils.Types
 {
     public enum SplitType
     {
-        Chars,
+        Characters,
         NewLine,
         Space,
         NewLineAndSpace,
@@ -424,6 +424,28 @@ namespace NetExtender.Utils.Types
 
             Match match = Regex.Match(value, FormatVariableRegexPattern, RegexOptions.Compiled);
             return match.Success ? value.Substring(0, match.Index) : null;
+        }
+
+        public static String Reverse(this String value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (value.Length <= 1)
+            {
+                return value;
+            }
+
+            Span<Char> buffer = value.Length <= 10000 ? stackalloc Char[value.Length] : new Char[value.Length];
+
+            for (Int32 i = 0; i < value.Length; i++)
+            {
+                buffer[i] = value[^i];
+            }
+
+            return new String(buffer);
         }
 
         public static String Format(this String format, Object? arg0)
@@ -1189,7 +1211,7 @@ namespace NetExtender.Utils.Types
 
             return split switch
             {
-                SplitType.Chars => SplitByChars(value),
+                SplitType.Characters => SplitByChars(value),
                 SplitType.NewLine => SplitByNewLine(value, options),
                 SplitType.Space => SplitBySpace(value, options),
                 SplitType.UpperCase => SplitByUpperCase(value, options),

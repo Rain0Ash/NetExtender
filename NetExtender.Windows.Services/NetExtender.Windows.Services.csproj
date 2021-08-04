@@ -18,6 +18,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
+      <ProjectReference Include="..\NetExtender.Windows\NetExtender.Windows.csproj" />
     </ItemGroup>
 
 </Project>

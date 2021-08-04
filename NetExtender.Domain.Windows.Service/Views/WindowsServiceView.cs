@@ -2,19 +2,19 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.ServiceProcess;
 using NetExtender.Domains.Service.Applications;
 using NetExtender.Domains.View;
 using NetExtender.Domains.View.Interfaces;
 using NetExtender.Exceptions;
+using NetExtender.Windows.Services.Types.Services.Interfaces;
 
 namespace NetExtender.Domains.Service.Views
 {
     public class WindowsServiceView : ApplicationView
     {
-        protected ServiceBase Context { get; set; }
+        protected IWindowsService Context { get; set; }
 
-        public WindowsServiceView(ServiceBase service)
+        public WindowsServiceView(IWindowsService service)
         {
             Context = service ?? throw new ArgumentNullException(nameof(service));
         }
@@ -29,7 +29,7 @@ namespace NetExtender.Domains.Service.Views
             return Run(Context);
         }
 
-        protected virtual IApplicationView Run(ServiceBase? service)
+        protected virtual IApplicationView Run(IWindowsService? service)
         {
             if (service is null)
             {

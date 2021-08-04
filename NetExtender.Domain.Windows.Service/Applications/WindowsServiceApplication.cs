@@ -2,11 +2,13 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.ServiceProcess;
 using NetExtender.Domains.Applications;
 using NetExtender.Domains.Applications.Interfaces;
+using NetExtender.Exceptions;
 using NetExtender.Types.Dispatchers.Interfaces;
 using NetExtender.Utils.Application;
+using NetExtender.Windows.Services.Types.Installers;
+using NetExtender.Windows.Services.Types.Services.Interfaces;
 using NetExtender.Windows.Services.Utils;
 
 namespace NetExtender.Domains.Service.Applications
@@ -31,23 +33,64 @@ namespace NetExtender.Domains.Service.Applications
             {
             }
         }
+        
+        private WindowsServiceInstaller? _installer;
+        public WindowsServiceInstaller? Installer
+        {
+            get
+            {
+                if (_installer is not null)
+                {
+                    return _installer;
+                }
+                
+                String? path = ApplicationUtils.Path;
+                if (path is null)
+                {
+                    return null;
+                }
+
+                return _installer ??= new WindowsServiceInstaller(path, Domain.ApplicationIdentifier, Domain.ApplicationName);
+            }
+            init
+            {
+                _installer = value;
+            }
+        }
+
+        public WindowsServiceApplication()
+            : this(null)
+        {
+        }
+        
+        public WindowsServiceApplication(WindowsServiceInstaller? installer)
+        {
+            Installer = installer;
+        }
 
         public override IApplication Run()
         {
             return Run(null);
         }
 
-        public virtual IApplication Run(ServiceBase? service)
+        public virtual IApplication Run(IWindowsService? service)
         {
             if (service is null)
             {
                 return this;
             }
 
-            String? path = ApplicationUtils.Path;
-            if (path is not null)
+            if (Installer is not null && !Installer.TryInstallServiceIfNotExist())
             {
-                WindowsServiceUtils.InstallServiceIfNotExists(path, Domain.ApplicationIdentifier);
+                throw new InitializeException("Can't initialize service. Maybe need elevate execute for install service.");
+            }
+            
+            if (WindowsServiceUtils.IsServiceExist(Domain.ApplicationIdentifier))
+            {
+                if (!WindowsServiceUtils.TryStartService(Domain.ApplicationIdentifier))
+                {
+                    throw new InitializeException("Can't start service. Maybe need elevate execute for starting service.");
+                }
             }
 
             service.RunQuiet();

@@ -106,7 +106,7 @@ namespace NetExtender.Utils.IO
             return Path.ChangeExtension(path, extension);
         }
 
-        public static String RemoveIllegalChars(String path)
+        public static String RemoveIllegalCharacters(String path)
         {
             if (path is null)
             {

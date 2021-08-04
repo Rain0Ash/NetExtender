@@ -81,7 +81,7 @@ namespace NetExtender.Configuration.Windows.Ini
         {
             if (WritePrivateProfileString(section, key, value, Path) == 0)
             {
-                InteropUtils.ThrowLastWin32Exception();
+                WindowsInteropUtils.ThrowLastWin32Exception();
             }
             
             return true;

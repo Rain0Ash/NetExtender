@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using NetExtender.Types.Native.Windows;
+using NetExtender.Utils.IO;
 using NetExtender.Utils.Static;
 
 namespace NetExtender.Utils.Windows
@@ -73,13 +74,13 @@ namespace NetExtender.Utils.Windows
 
             if (monitor == IntPtr.Zero)
             {
-                InteropUtils.ThrowLastWin32Exception();
+                WindowsInteropUtils.ThrowLastWin32Exception();
             }
             
             MonitorInfo screen = new MonitorInfo();
             if (!GetMonitorInfo(monitor, screen))
             {
-                InteropUtils.ThrowLastWin32Exception();
+                WindowsInteropUtils.ThrowLastWin32Exception();
             }
 
             return screen;
@@ -107,14 +108,11 @@ namespace NetExtender.Utils.Windows
                 throw new ArgumentNullException(nameof(path));
             }
 
-            if (!path.EndsWith("\\"))
-            {
-                path += '\\';
-            }
+            path = PathUtils.AddEndSeparator(path);
 
             if (!GetDiskFreeSpaceEx(path, out UInt64 free, out UInt64 total, out UInt64 totalfree))
             {
-                InteropUtils.ThrowLastWin32Exception();
+                WindowsInteropUtils.ThrowLastWin32Exception();
             }
 
             return new DiskSpace(path, total, totalfree, free);
