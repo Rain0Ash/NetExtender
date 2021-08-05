@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Types.Dispatchers.Interfaces;
 using NetExtender.Utils.IO;
-using NetExtender.Utils.Static;
 using NetExtender.Utils.Types;
 
 namespace NetExtender.Utils.Application
@@ -271,7 +270,6 @@ namespace NetExtender.Utils.Application
             return Restart(TimeSpan.FromMilliseconds(milliseconds), dispatcher, shutdown, token);
         }
 
-        //TODO: refactoring
         public static async Task<Boolean> Restart(TimeSpan wait, IDispatcher? dispatcher, Action<Int32>? shutdown, CancellationToken token)
         {
             String? path = Path;
@@ -288,20 +286,20 @@ namespace NetExtender.Utils.Application
                 return false;
             }
 
+            if (token.IsCancellationRequested)
+            {
+                restart.TryKill(true);
+                return false;
+            }
+
             try
             {
-                TimeSpan left = wait - Time.Second.One;
-                if (left.Ticks > 0)
-                {
-                    await Task.Delay(wait, token).ConfigureAwait(false);
-                }
-
                 Shutdown(dispatcher, shutdown);
                 return true;
             }
             catch (TaskCanceledException)
             {
-                restart.Kill(true);
+                restart.TryKill(true);
                 return false;
             }
         }

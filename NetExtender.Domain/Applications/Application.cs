@@ -12,6 +12,16 @@ namespace NetExtender.Domains.Applications
 {
     public abstract class Application : IApplication
     {
+        public virtual Boolean? Elevate { get; init; }
+        
+        protected virtual Boolean? IsElevate
+        {
+            get
+            {
+                return null;
+            }
+        }
+        
         public abstract IDispatcher? Dispatcher { get; }
         public abstract ApplicationShutdownMode ShutdownMode { get; set; }
 
@@ -103,7 +113,7 @@ namespace NetExtender.Domains.Applications
 
         public void Restart()
         {
-            ApplicationUtils.Restart(0).RunSynchronously();
+            RestartAsync(0).GetAwaiter().GetResult();
         }
 
         public Task<Boolean> RestartAsync()
@@ -124,6 +134,16 @@ namespace NetExtender.Domains.Applications
         public virtual Task<Boolean> RestartAsync(Int32 milli, CancellationToken token)
         {
             return ApplicationUtils.Restart(milli, Dispatcher, Shutdown, token);
+        }
+
+        protected void ElevateRestart()
+        {
+            ElevateRestartAsync().GetAwaiter().GetResult();
+        }
+
+        protected virtual Task<Boolean> ElevateRestartAsync()
+        {
+            return RestartAsync(0);
         }
     }
 }

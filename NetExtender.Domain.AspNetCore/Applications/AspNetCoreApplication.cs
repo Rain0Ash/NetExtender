@@ -53,7 +53,7 @@ namespace NetExtender.Domains.AspNetCore.Applications
         {
             try
             {
-                Context?.StopAsync().RunSynchronously();
+                Context?.StopAsync().GetAwaiter().GetResult();
             }
             finally
             {

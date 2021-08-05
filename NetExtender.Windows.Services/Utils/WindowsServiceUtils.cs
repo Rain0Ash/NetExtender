@@ -3163,7 +3163,7 @@ namespace NetExtender.Windows.Services.Utils
             {
                 if (isThrow)
                 {
-                    throw new ArgumentException($"File '{info.FullName}' doesn't exist.", nameof(info));
+                    throw new FileNotFoundException("File doesn't exist.", info.FullName);
                 }
 
                 return false;
@@ -3408,7 +3408,7 @@ namespace NetExtender.Windows.Services.Utils
             {
                 if (isThrow)
                 {
-                    throw new ArgumentException($"File '{info.FullName}' doesn't exist.", nameof(info));
+                    throw new FileNotFoundException("File doesn't exist.", info.FullName);
                 }
 
                 return false;
@@ -3467,7 +3467,7 @@ namespace NetExtender.Windows.Services.Utils
 
             if (isThrow)
             {
-                throw new ArgumentException($"File '{info.FullName}' doesn't exist.", nameof(info));
+                throw new FileNotFoundException("File doesn't exist.", info.FullName);
             }
 
             return false;

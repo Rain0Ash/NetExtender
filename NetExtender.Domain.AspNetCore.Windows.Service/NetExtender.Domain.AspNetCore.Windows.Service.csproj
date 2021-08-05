@@ -14,6 +14,7 @@
       <ProjectReference Include="..\NetExtender.AspNet.Core\NetExtender.AspNet.Core.csproj" />
       <ProjectReference Include="..\NetExtender.AspNetCore.Windows.Services\NetExtender.AspNetCore.Windows.Services.csproj" />
       <ProjectReference Include="..\NetExtender.Domain.AspNetCore\NetExtender.Domain.AspNetCore.csproj" />
+      <ProjectReference Include="..\NetExtender.Domain.Windows.Service\NetExtender.Domain.Windows.Service.csproj" />
       <ProjectReference Include="..\NetExtender.Domain\NetExtender.Domain.csproj" />
     </ItemGroup>
 

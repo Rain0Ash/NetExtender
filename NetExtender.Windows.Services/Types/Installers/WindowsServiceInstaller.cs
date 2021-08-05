@@ -80,7 +80,7 @@ namespace NetExtender.Windows.Services.Types.Installers
 
             if (!path.Exists)
             {
-                throw new ArgumentException($"File '{path.FullName}' doesn't exist.");
+                throw new FileNotFoundException("File doesn't exist.", path.FullName);
             }
 
             if (!WindowsServiceUtils.IsValidServiceName(name))

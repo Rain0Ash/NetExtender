@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,7 +16,8 @@ namespace NetExtender.Domains
 {
     public static partial class Domain
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
+        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
+        [SuppressMessage("ReSharper", "ClassWithVirtualMembersNeverInherited.Local")]
         private class InternalDomain : IDomain
         {
             private IApplication? _application;
@@ -45,6 +47,8 @@ namespace NetExtender.Domains
             }
 
             public IApplicationData Data { get; }
+
+            public Boolean? Elevate { get; init; }
 
             public IDispatcher? Dispatcher
             {

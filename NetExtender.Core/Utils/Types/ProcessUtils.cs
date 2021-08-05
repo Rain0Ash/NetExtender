@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -76,77 +77,23 @@ namespace NetExtender.Utils.Types
                 return false;
             }
         }
-
-        public static Process StartProcess(String path)
+        
+        public static Boolean TryKill(this Process process, Boolean entireProcessTree)
         {
-            return Process.Start(path);
-        }
-
-        public static Task<Process?> StartProcessAsync(String path, Int32 milliseconds)
-        {
-            return StartProcessAsync(path, milliseconds, CancellationToken.None);
-        }
-
-        public static Task<Process?> StartProcessAsync(String path, TimeSpan wait)
-        {
-            return StartProcessAsync(path, wait, CancellationToken.None);
-        }
-
-        public static Task<Process?> StartProcessAsync(String path, Int32 milliseconds, CancellationToken token)
-        {
-            return StartProcessAsync(path, TimeSpan.FromMilliseconds(milliseconds), token);
-        }
-
-        //TODO: refactoring
-        public static async Task<Process?> StartProcessAsync(String path, TimeSpan wait, CancellationToken token)
-        {
-            if (!PathUtils.IsExistAsFile(path))
+            if (process is null)
             {
-                throw new ArgumentException(@"File not exist", nameof(path));
+                throw new ArgumentNullException(nameof(process));
             }
-
-            ProcessStartInfo info = new ProcessStartInfo
-            {
-                Arguments = $"/C {(wait.Ticks > 0 ? $"ping 127.0.0.1 -n {((Int64) wait.TotalMilliseconds + 1000) / 1000} > nul && " : String.Empty)}\"{path}\"",
-                WindowStyle = ProcessWindowStyle.Hidden,
-                CreateNoWindow = true,
-                FileName = "cmd.exe"
-            };
-
-            Process? process;
 
             try
             {
-                process = Process.Start(info);
+                process.Kill(entireProcessTree);
+                return true;
             }
             catch (Exception)
             {
-                return null;
+                return false;
             }
-
-            if (process is null)
-            {
-                return process;
-            }
-
-            await using CancellationTokenRegistration registration = token.Register(() =>
-            {
-                try
-                {
-                    if (process.HasExited)
-                    {
-                        return;
-                    }
-
-                    process.Kill(true);
-                }
-                catch (Exception)
-                {
-                    //ignored
-                }
-            });
-
-            return process;
         }
 
         public static Task<Boolean> WaitForExitAsync(this Process process, Int32 milliseconds)
@@ -422,6 +369,136 @@ namespace NetExtender.Utils.Types
             {
                 return null;
             }
+        }
+
+        public static Process StartProcess(String path)
+        {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (!PathUtils.IsExistAsFile(path))
+            {
+                throw new FileNotFoundException("File doesn't exist.", path);
+            }
+
+            return Process.Start(path);
+        }
+
+        public static Task<Process?> StartProcessAsync(String path, Int32 milliseconds)
+        {
+            return StartProcessAsync(path, milliseconds, CancellationToken.None);
+        }
+
+        public static Task<Process?> StartProcessAsync(String path, TimeSpan wait)
+        {
+            return StartProcessAsync(path, wait, CancellationToken.None);
+        }
+
+        public static Task<Process?> StartProcessAsync(String path, Int32 milliseconds, CancellationToken token)
+        {
+            return StartProcessAsync(path, TimeSpan.FromMilliseconds(milliseconds), token);
+        }
+
+        public static Task<Process?> StartProcessAsync(String path, TimeSpan wait, CancellationToken token)
+        {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (!PathUtils.IsExistAsFile(path))
+            {
+                throw new FileNotFoundException("File doesn't exist.", path);
+            }
+
+            return StartProcessAsync(new FileInfo(path), wait, token);
+        }
+
+        public static Process StartProcess(FileInfo path)
+        {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (!path.Exists)
+            {
+                throw new FileNotFoundException("File doesn't exist.", path.FullName);
+            }
+
+            return Process.Start(path.FullName);
+        }
+
+        public static Task<Process?> StartProcessAsync(FileInfo path, Int32 milliseconds)
+        {
+            return StartProcessAsync(path, milliseconds, CancellationToken.None);
+        }
+
+        public static Task<Process?> StartProcessAsync(FileInfo path, TimeSpan wait)
+        {
+            return StartProcessAsync(path, wait, CancellationToken.None);
+        }
+
+        public static Task<Process?> StartProcessAsync(FileInfo path, Int32 milliseconds, CancellationToken token)
+        {
+            return StartProcessAsync(path, TimeSpan.FromMilliseconds(milliseconds), token);
+        }
+
+        public static async Task<Process?> StartProcessAsync(FileInfo path, TimeSpan wait, CancellationToken token)
+        {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (!path.Exists)
+            {
+                throw new ArgumentException(@"File not exist", nameof(path));
+            }
+
+            ProcessStartInfo info = new ProcessStartInfo(path.FullName)
+            {
+                WindowStyle = ProcessWindowStyle.Hidden,
+                CreateNoWindow = true
+            };
+
+            Process? process;
+
+            try
+            {
+                await Task.Delay(wait, token);
+                process = Process.Start(info);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+            if (process is null)
+            {
+                return process;
+            }
+
+            await using CancellationTokenRegistration registration = token.Register(() =>
+            {
+                try
+                {
+                    if (process.HasExited)
+                    {
+                        return;
+                    }
+
+                    process.Kill(true);
+                }
+                catch (Exception)
+                {
+                    //ignored
+                }
+            });
+
+            return process;
         }
     }
 }

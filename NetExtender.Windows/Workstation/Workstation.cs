@@ -25,12 +25,19 @@ namespace NetExtender.Workstation
             return user?.User?.Value;
         }
 
-        public static Boolean IsAdministrator
+        public static Boolean? IsAdministrator
         {
             get
             {
-                using WindowsIdentity identity = WindowsIdentity.GetCurrent();
-                return identity.HasRole(WindowsBuiltInRole.Administrator);
+                try
+                {
+                    using WindowsIdentity identity = WindowsIdentity.GetCurrent();
+                    return identity.HasRole(WindowsBuiltInRole.Administrator);
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
             }
         }
 
