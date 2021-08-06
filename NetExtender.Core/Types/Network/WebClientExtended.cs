@@ -5,6 +5,7 @@ using System;
 using System.Net;
 using System.Text;
 using NetExtender.Utils.Network;
+#pragma warning disable 8764
 
 namespace NetExtender.Types.Network
 {

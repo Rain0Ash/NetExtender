@@ -104,7 +104,7 @@ namespace NetExtender.Utils.Types
             return source as SortedSet<T> ?? new SortedSetExtended<T>(source, comparer);
         }
 
-        public static OrderedSet<T> ToOrderedSet<T>(this IEnumerable<T> source)
+        public static OrderedSet<T> ToOrderedSet<T>(this IEnumerable<T> source) where T : notnull
         {
             if (source is null)
             {
@@ -114,7 +114,7 @@ namespace NetExtender.Utils.Types
             return new OrderedSet<T>(source);
         }
         
-        public static OrderedSet<T> ToOrderedSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer)
+        public static OrderedSet<T> ToOrderedSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer) where T : notnull
         {
             if (source is null)
             {
@@ -124,7 +124,7 @@ namespace NetExtender.Utils.Types
             return new OrderedSet<T>(source, comparer);
         }
         
-        public static OrderedSet<T> AsOrderedSet<T>(this IEnumerable<T> source)
+        public static OrderedSet<T> AsOrderedSet<T>(this IEnumerable<T> source) where T : notnull
         {
             if (source is null)
             {
@@ -134,7 +134,7 @@ namespace NetExtender.Utils.Types
             return source as OrderedSet<T> ?? new OrderedSet<T>(source);
         }
         
-        public static OrderedSet<T> AsOrderedSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer)
+        public static OrderedSet<T> AsOrderedSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer) where T : notnull
         {
             if (source is null)
             {

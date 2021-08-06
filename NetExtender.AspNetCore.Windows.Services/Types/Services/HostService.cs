@@ -9,40 +9,43 @@ namespace NetExtender.AspNetCore.Windows.Services.Types.Services
     /// <summary>
     ///     Provides an implementation of a Windows service that hosts ASP.NET Core.
     /// </summary>
-    public class HostService : AspHostService
+    public sealed class HostService : AspHostService
     {
-        protected IHost Host { get; }
-        
-        protected override IServiceProvider Provider
-        {
-            get
-            {
-                return Host.Services;
-            }
-        }
+        private IHost Host { get; }
 
         /// <summary>
         /// Creates an instance of <c>WebHostService</c> which hosts the specified web application.
         /// </summary>
         /// <param name="host">The configured web host containing the web application to host in the Windows service.</param>
         public HostService(IHost host)
+            : base(host?.Services ?? throw new ArgumentNullException(nameof(host)))
         {
             Host = host ?? throw new ArgumentNullException(nameof(host));
         }
 
-        protected override void StartHost()
+        protected override Boolean StartInternal(String[] args)
         {
-            Host.Start();
+            try
+            {
+                Host.Start();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
-        protected override void StopHost()
+        protected override Boolean StopInternal()
         {
             Host.StopAsync().GetAwaiter().GetResult();
+            return true;
         }
 
-        protected override void DisposeHost()
+        protected override Boolean FinallyStopInternalHandler()
         {
             Host.Dispose();
+            return true;
         }
     }
 }

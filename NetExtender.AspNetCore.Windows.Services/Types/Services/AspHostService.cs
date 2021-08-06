@@ -4,36 +4,31 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NetExtender.AspNetCore.Windows.Services.Services.Interfaces;
 using NetExtender.Windows.Services.Types.Services;
 
 namespace NetExtender.AspNetCore.Windows.Services.Types.Services
 {
     public abstract class AspHostService : WindowsService
     {
-        protected Boolean StopRequestedByWindows { get; set; }
-        
-        protected abstract IServiceProvider Provider { get; }
+        protected Boolean StopRequestsByWindows { get; set; }
 
-        protected internal void Start()
+        protected IServiceProvider Provider { get; }
+
+        protected AspHostService(IServiceProvider provider)
         {
-            OnStart(Array.Empty<String>());
-        }
-        
-        /// <inheritdoc />
-        protected override void OnStart(String[] args)
-        {
-            OnStarting(args);
-
-            StartHost();
-
-            OnStarted();
+            Provider = provider ?? throw new ArgumentNullException(nameof(provider));
             
-            OnStartRegistration(Provider);
+            PauseHandler = Provider.GetService<IWindowsServicePauseService>();
+            CanPauseAndContinue = PauseHandler is not null;
         }
 
-        protected abstract void StartHost();
-        
-        protected virtual void OnStartRegistration(IServiceProvider provider)
+        protected override Boolean AfterStartInternal(String[] args)
+        {
+            return OnStartRegistration(Provider);
+        }
+
+        protected virtual Boolean OnStartRegistration(IServiceProvider provider)
         {
             if (provider is null)
             {
@@ -44,62 +39,21 @@ namespace NetExtender.AspNetCore.Windows.Services.Types.Services
             // started the service, because otherwise we might introduce unwanted
             // race conditions.
             provider.GetRequiredService<IHostApplicationLifetime>().ApplicationStopping.Register(StopCancellationTokenRegister);
+            return true;
         }
-
+        
         protected virtual void StopCancellationTokenRegister()
         {
-            if (!StopRequestedByWindows)
+            if (!StopRequestsByWindows)
             {
                 Stop();
             }
         }
-
-        /// <inheritdoc />
-        protected override void OnStop()
+        
+        protected override Boolean BeforeStopInternal()
         {
-            StopRequestedByWindows = true;
-            OnStopping();
-            try
-            {
-                StopHost();
-            }
-            finally
-            {
-                DisposeHost();
-                OnStopped();
-            }
-        }
-
-        protected abstract void StopHost();
-        protected abstract void DisposeHost();
-
-        /// <summary>
-        /// Executes before ASP.NET Core starts.
-        /// </summary>
-        /// <param name="args">The command line arguments passed to the service.</param>
-        protected virtual void OnStarting(String[] args)
-        {
-        }
-
-        /// <summary>
-        /// Executes after ASP.NET Core starts.
-        /// </summary>
-        protected virtual void OnStarted()
-        {
-        }
-
-        /// <summary>
-        /// Executes before ASP.NET Core shuts down.
-        /// </summary>
-        protected virtual void OnStopping()
-        {
-        }
-
-        /// <summary>
-        /// Executes after ASP.NET Core shuts down.
-        /// </summary>
-        protected virtual void OnStopped()
-        {
+            StopRequestsByWindows = true;
+            return base.BeforeStopInternal();
         }
     }
 }

@@ -14,7 +14,7 @@ namespace NetExtender.Domains.Applications
     {
         public virtual Boolean? Elevate { get; init; }
         
-        protected virtual Boolean? IsElevate
+        public virtual Boolean? IsElevate
         {
             get
             {
@@ -134,16 +134,6 @@ namespace NetExtender.Domains.Applications
         public virtual Task<Boolean> RestartAsync(Int32 milli, CancellationToken token)
         {
             return ApplicationUtils.Restart(milli, Dispatcher, Shutdown, token);
-        }
-
-        protected void ElevateRestart()
-        {
-            ElevateRestartAsync().GetAwaiter().GetResult();
-        }
-
-        protected virtual Task<Boolean> ElevateRestartAsync()
-        {
-            return RestartAsync(0);
         }
     }
 }

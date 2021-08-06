@@ -31,7 +31,7 @@ namespace NetExtender.Domains.Service.Applications
             }
         }
         
-        protected override Boolean? IsElevate
+        public override Boolean? IsElevate
         {
             get
             {

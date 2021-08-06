@@ -909,6 +909,7 @@ namespace NetExtender.Utils.Types
             return ReplaceInsert(builder, replace, 0);
         }
 
+        // ReSharper disable once CognitiveComplexity
         public static StringBuilder ReplaceInsert(this StringBuilder builder, ReadOnlySpan<Char> replace, Int32 index)
         {
             if (builder is null)
@@ -1069,7 +1070,7 @@ namespace NetExtender.Utils.Types
             return ToUpper(builder, null);
         }
 
-        public static StringBuilder ToUpper(this StringBuilder builder, CultureInfo info)
+        public static StringBuilder ToUpper(this StringBuilder builder, CultureInfo? info)
         {
             if (builder is null)
             {
@@ -1096,7 +1097,7 @@ namespace NetExtender.Utils.Types
             return ToLower(builder, null);
         }
 
-        public static StringBuilder ToLower(this StringBuilder builder, CultureInfo info)
+        public static StringBuilder ToLower(this StringBuilder builder, CultureInfo? info)
         {
             if (builder is null)
             {
@@ -1123,7 +1124,7 @@ namespace NetExtender.Utils.Types
             return ToCapitalizeFirstChar(builder, null);
         }
         
-        public static StringBuilder ToCapitalizeFirstChar(this StringBuilder builder, CultureInfo info)
+        public static StringBuilder ToCapitalizeFirstChar(this StringBuilder builder, CultureInfo? info)
         {
             if (builder is null)
             {
@@ -1151,7 +1152,7 @@ namespace NetExtender.Utils.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.Length > 0 ? ToCapitalizeFirstChar(builder.ToLower(info), info) : builder;
+            return builder.Length > 0 ? ToCapitalizeFirstChar(builder.ToLower(info ?? CultureInfo.CurrentCulture), info) : builder;
         }
 
         public static StringBuilder ToTitleCase(this StringBuilder builder)

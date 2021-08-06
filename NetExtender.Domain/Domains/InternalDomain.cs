@@ -48,7 +48,24 @@ namespace NetExtender.Domains
 
             public IApplicationData Data { get; }
 
-            public Boolean? Elevate { get; init; }
+            public Boolean? Elevate
+            {
+                get
+                {
+                    return Current.Elevate;
+                }
+                init
+                {
+                }
+            }
+
+            public Boolean? IsElevate
+            {
+                get
+                {
+                    return Current.IsElevate;
+                }
+            }
 
             public IDispatcher? Dispatcher
             {

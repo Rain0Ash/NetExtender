@@ -2,9 +2,15 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Threading.Tasks;
+using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.View.Interfaces;
 using NetExtender.Exceptions;
+using NetExtender.Utils.Application;
 using NetExtender.Utils.Types;
 
 namespace NetExtender.Domains.View
@@ -18,6 +24,26 @@ namespace NetExtender.Domains.View
         protected Boolean Started { get; private set; }
 
         public ImmutableArray<String> Arguments { get; private set; }
+
+        protected virtual ProcessStartInfo? DefaultProcessStartInfo
+        {
+            get
+            {
+                String? path = ApplicationUtils.Path;
+
+                if (path is null)
+                {
+                    return null;
+                }
+                
+                return new ProcessStartInfo(path)
+                {
+                    UseShellExecute = true,
+                    CreateNoWindow = false,
+                    WindowStyle = ProcessWindowStyle.Hidden
+                };
+            }
+        }
 
         public IApplicationView Start()
         {
@@ -40,10 +66,18 @@ namespace NetExtender.Domains.View
 
                 try
                 {
+                    SaveArguments(args);
+
+                    IApplication application = Domain.Current.Application;
+                    if (application.Elevate == true && application.IsElevate == false)
+                    {
+                        Elevate(application);
+                    }
+                    
                     StartInitialize();
                     Current = this;
                     Started = true;
-                    HandleArgs(args ?? Array.Empty<String>());
+                    HandleArguments(Arguments);
                     return Run();
                 }
                 catch (Exception exception)
@@ -66,18 +100,17 @@ namespace NetExtender.Domains.View
         {
         }
 
-        protected void HandleArgs(String[] args)
+        protected virtual void SaveArguments(IEnumerable<String>? args)
         {
-            if (args is null)
-            {
-                throw new ArgumentNullException(nameof(args));
-            }
-
-            Arguments = args.WhereNotNullOrEmpty().ToImmutableArray();
-            HandleArgs(this, args);
+            Arguments = args?.WhereNotNullOrEmpty().ToImmutableArray() ?? ImmutableArray<String>.Empty;
+        }
+        
+        private void HandleArguments(ImmutableArray<String> args)
+        {
+            HandleArguments(this, args);
         }
 
-        protected virtual void HandleArgs(Object sender, String[] args)
+        protected virtual void HandleArguments(Object sender, ImmutableArray<String> args)
         {
         }
 
@@ -85,6 +118,73 @@ namespace NetExtender.Domains.View
         {
             Domain.Run();
             return this;
+        }
+
+        protected Boolean Elevate(IApplication application)
+        {
+            if (application is null)
+            {
+                throw new ArgumentNullException(nameof(application));
+            }
+
+            return ElevateAsync(application).GetAwaiter().GetResult();
+        }
+        
+        protected virtual Task<Boolean> ElevateAsync(IApplication application)
+        {
+            if (application is null)
+            {
+                throw new ArgumentNullException(nameof(application));
+            }
+
+            if (application.IsElevate != false)
+            {
+                return TaskUtils.True;
+            }
+
+            ProcessStartInfo? info = GetProcessElevateInfo(application);
+
+            if (info is null)
+            {
+                return TaskUtils.False;
+            }
+
+            Process? process = Process.Start(info);
+            return process is null ? TaskUtils.False : application.ShutdownAsync();
+        }
+
+        protected virtual ProcessStartInfo? GetProcessElevateInfo(IApplication application)
+        {
+            if (application is null)
+            {
+                throw new ArgumentNullException(nameof(application));
+            }
+
+            String? path = ApplicationUtils.Path;
+
+            if (path is null)
+            {
+                return null;
+            }
+
+            ProcessStartInfo? info = DefaultProcessStartInfo;
+
+            if (info is null)
+            {
+                return null;
+            }
+            
+            info.Verb = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "runas" : "sudo";
+            info.ArgumentList.AddRange(Arguments);
+
+            String? directory = ApplicationUtils.Directory;
+
+            if (directory is not null)
+            {
+                info.WorkingDirectory = directory;
+            }
+
+            return info;
         }
 
         private Boolean _disposed;

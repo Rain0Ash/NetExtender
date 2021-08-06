@@ -138,6 +138,14 @@ namespace NetExtender.Domains
                 return Current.Elevate;
             }
         }
+        
+        public static Boolean? IsElevate
+        {
+            get
+            {
+                return Current.IsElevate;
+            }
+        }
 
         public static ApplicationShutdownMode ShutdownMode
         {
