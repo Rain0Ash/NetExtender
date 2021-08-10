@@ -3,7 +3,7 @@
 
 namespace NetExtender.Comparers.Common
 {
-    #if !NET5_0
+#if !NET5_0
     /// <summary>
     /// Equality comparer that uses the <see cref="object.ReferenceEquals(object, object)"/> to compare values.
     /// </summary>
@@ -75,5 +75,5 @@ namespace NetExtender.Comparers.Common
             return obj.GetHashCode();
         }
     }
-    #endif
+#endif
 }

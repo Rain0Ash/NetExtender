@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+		<OutputType>Library</OutputType>
+        <UseWpf>true</UseWpf>
+		<LangVersion>9</LangVersion>
+		<Authors>Rain0Ash</Authors>
+        <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
+        <Version>0.8.0</Version>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Utils\Alt.cs">
+        <DependentUpon>KeyboardUtils.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utils\Ctrl.cs">
+        <DependentUpon>KeyboardUtils.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utils\Shift.cs">
+        <DependentUpon>KeyboardUtils.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utils\Win.cs">
+        <DependentUpon>KeyboardUtils.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>

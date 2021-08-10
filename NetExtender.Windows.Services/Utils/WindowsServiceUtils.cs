@@ -7,15 +7,20 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Management;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Win32;
 using NetExtender.Core.Types.TextWriters;
 using NetExtender.Utils.Static;
 using NetExtender.Utils.Types;
+using NetExtender.Windows.Services.Exceptions;
+using NetExtender.Windows.Services.Types;
+using NetExtender.Windows.Services.Types.Installers;
 using NetExtender.Windows.Services.Types.Services;
 using NetExtender.Windows.Services.Types.Services.Interfaces;
 using NetExtender.Windows.Services.Types.TextWriters;
@@ -53,36 +58,84 @@ namespace NetExtender.Windows.Services.Utils
             }
         }
 
-        [DllImport("advapi32.dll", CharSet = CharSet.Unicode)]
-        private static extern IntPtr OpenSCManager(String? lpMachineName, String? lpSCDB, Int32 scParameter);
+        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        private static extern IntPtr OpenSCManager(String? lpMachineName, String? lpscdb, Int32 scParameter);
 
-        [DllImport("Advapi32.dll", CharSet = CharSet.Unicode)]
-        private static extern IntPtr CreateService(IntPtr SC_HANDLE, String? lpSvcName, String? lpDisplayName,
-            Int32 dwDesiredAccess, Int32 dwServiceType, Int32 dwStartType, Int32 dwErrorControl, String? lpPathName,
+        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        private static extern IntPtr CreateService(IntPtr handle, String? lpSvcName, String? lpDisplayName,
+            UInt32 dwDesiredAccess, ServiceType dwServiceType, ServiceStartMode dwStartMode, ServiceErrorControl dwErrorControl, String? lpPathName,
             String? lpLoadOrderGroup, IntPtr lpdwTagId, String? lpDependencies, String? lpServiceStartName, String? lpPassword);
 
         [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern Boolean ChangeServiceConfig2(IntPtr serviceHandle, UInt32 infoLevel, ref ServiceDescription serviceDesc);
+        private static extern Boolean ChangeServiceConfig(IntPtr handle, ServiceType dwServiceType, ServiceStartMode dwStartType, ServiceErrorControl dwErrorControl, String? lpPathName,
+            String? lpLoadOrderGroup, IntPtr lpdwTagId, String? lpDependencies, String? lpServiceStartName, String? lpPassword, String? lpDisplayName);
 
         [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern Boolean ChangeServiceConfig2(IntPtr serviceHandle, UInt32 infoLevel, ref ServiceDelayedAutostartInfo serviceDesc);
+        private static extern Boolean ChangeServiceConfig2(IntPtr handle, UInt32 infoLevel, ref ServiceDescription description);
+
+        [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern Boolean ChangeServiceConfig2(IntPtr handle, UInt32 infoLevel, ref ServiceDelayedAutostartInfo autostart);
 
         [DllImport("advapi32.dll")]
-        private static extern void CloseServiceHandle(IntPtr schandle);
+        private static extern void CloseServiceHandle(IntPtr handle);
 
         [DllImport("advapi32.dll", CharSet = CharSet.Unicode)]
-        private static extern Int32 StartService(IntPtr svhandle, Int32 dwNumServiceArgs, String? lpServiceArgVectors);
+        private static extern Boolean StartService(IntPtr handle, Int32 dwNumServiceArgs, String? lpServiceArgVectors);
 
         [DllImport("advapi32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        private static extern IntPtr OpenService(IntPtr schandle, String lpSvcName, Int32 dwNumServiceArgs);
+        private static extern IntPtr OpenService(IntPtr handle, String lpSvcName, Int32 dwNumServiceArgs);
 
         [DllImport("advapi32.dll")]
-        private static extern Int32 DeleteService(IntPtr svhandle);
+        private static extern Boolean DeleteService(IntPtr handle);
 
         [DllImport("kernel32.dll")]
         private static extern Int32 GetLastError();
+
+        private sealed class ServiceHandleManager : IDisposable
+        {
+            public static implicit operator IntPtr(ServiceHandleManager? manager)
+            {
+                return manager?.Handle ?? IntPtr.Zero;
+            }
+            
+            public IntPtr Handle { get; }
+
+            public Boolean Successful
+            {
+                get
+                {
+                    return Handle != IntPtr.Zero;
+                }
+            }
+            
+            public ServiceHandleManager(Int32 right, Boolean isThrow = true)
+            {
+                Handle = OpenSCManager(null, null, right);
+
+                if (isThrow)
+                {
+                    ThrowIfNotSuccessful();
+                }
+            }
+
+            public void ThrowIfNotSuccessful()
+            {
+                if (!Successful)
+                {
+                    throw new Win32Exception(GetLastError());
+                }
+            }
+
+            public void Dispose()
+            {
+                if (Successful)
+                {
+                    CloseServiceHandle(Handle);
+                }
+            }
+        }
 
         public static IEnumerable<ServiceController> ConvertToServiceControllers(IEnumerable<String?> controllers)
         {
@@ -204,7 +257,7 @@ namespace NetExtender.Windows.Services.Utils
         {
             return Run(service, false);
         }
-        
+
         public static WindowsService Run(this WindowsService service)
         {
             if (service is null)
@@ -215,7 +268,7 @@ namespace NetExtender.Windows.Services.Utils
             Run((ServiceBase) service);
             return service;
         }
-        
+
         public static IWindowsService Run(this IWindowsService service)
         {
             if (service is null)
@@ -242,7 +295,7 @@ namespace NetExtender.Windows.Services.Utils
             RunQuiet((ServiceBase) service);
             return service;
         }
-        
+
         public static IWindowsService RunQuiet(this IWindowsService service)
         {
             if (service is null)
@@ -298,7 +351,7 @@ namespace NetExtender.Windows.Services.Utils
         {
             Run(services, false);
         }
-        
+
         public static void Run(this WindowsService[] services)
         {
             Run(services, false);
@@ -318,7 +371,7 @@ namespace NetExtender.Windows.Services.Utils
         {
             Run(services, true);
         }
-        
+
         public static void RunQuiet(this IWindowsService[] services)
         {
             Run(services, true);
@@ -340,14 +393,14 @@ namespace NetExtender.Windows.Services.Utils
             using TextWriter filter = new ConsoleOutLockedFilterTextWriter {ServiceRunMessage};
             ServiceBase.Run(services);
         }
-        
+
         public static void Run(this WindowsService[] services, Boolean quiet)
         {
             if (services is null)
             {
                 throw new ArgumentNullException(nameof(services));
             }
-            
+
             Run(services.Cast<ServiceBase>().ToArray(), quiet);
         }
 
@@ -357,7 +410,7 @@ namespace NetExtender.Windows.Services.Utils
             {
                 throw new ArgumentNullException(nameof(services));
             }
-            
+
             Run(services.SelectWhereNotNull(service => service.Service).ToArray(), quiet);
         }
 
@@ -673,7 +726,7 @@ namespace NetExtender.Windows.Services.Utils
 
                 if (isThrow)
                 {
-                    throw new System.TimeoutException();
+                    throw;
                 }
 
                 return false;
@@ -1197,7 +1250,7 @@ namespace NetExtender.Windows.Services.Utils
                         throw new NotSupportedException();
                 }
             }
-            catch (System.TimeoutException)
+            catch (System.ServiceProcess.TimeoutException)
             {
                 if (await controller.TryWaitForTimeoutAsync(ServiceControllerStatus.Running, timeout == Timeout.InfiniteTimeSpan ? Time.Second.Three : timeout, token))
                 {
@@ -1404,7 +1457,7 @@ namespace NetExtender.Windows.Services.Utils
 
                 if (isThrow)
                 {
-                    throw new System.TimeoutException();
+                    throw;
                 }
 
                 return false;
@@ -1707,7 +1760,7 @@ namespace NetExtender.Windows.Services.Utils
                         throw new NotSupportedException();
                 }
             }
-            catch (System.TimeoutException)
+            catch (System.ServiceProcess.TimeoutException)
             {
                 if (await controller.TryWaitForTimeoutAsync(ServiceControllerStatus.Stopped, timeout == Timeout.InfiniteTimeSpan ? Time.Second.Three : timeout, token))
                 {
@@ -2019,7 +2072,7 @@ namespace NetExtender.Windows.Services.Utils
 
                 if (isThrow)
                 {
-                    throw new System.TimeoutException();
+                    throw;
                 }
 
                 return false;
@@ -2543,7 +2596,7 @@ namespace NetExtender.Windows.Services.Utils
                         throw new NotSupportedException();
                 }
             }
-            catch (System.TimeoutException)
+            catch (System.ServiceProcess.TimeoutException)
             {
                 if (await controller.TryWaitForTimeoutAsync(ServiceControllerStatus.Running, timeout == Timeout.InfiniteTimeSpan ? Time.Second.Three : timeout, token))
                 {
@@ -2743,7 +2796,7 @@ namespace NetExtender.Windows.Services.Utils
 
                 if (isThrow)
                 {
-                    throw new System.TimeoutException();
+                    throw;
                 }
 
                 return false;
@@ -3039,6 +3092,20 @@ namespace NetExtender.Windows.Services.Utils
                         throw new NotSupportedException();
                 }
             }
+            catch (System.ServiceProcess.TimeoutException)
+            {
+                if (await controller.TryWaitForTimeoutAsync(ServiceControllerStatus.Paused, timeout == Timeout.InfiniteTimeSpan ? Time.Second.Three : timeout, token))
+                {
+                    return true;
+                }
+
+                if (isThrow)
+                {
+                    throw;
+                }
+
+                return false;
+            }
             catch (Exception)
             {
                 if (isThrow)
@@ -3061,8 +3128,8 @@ namespace NetExtender.Windows.Services.Utils
         {
             return IsServiceExistInternal(name, false);
         }
-        
-        public static Boolean CheckServiceExist(this Types.Installers.WindowsServiceInstaller installer)
+
+        public static Boolean CheckServiceExist(this WindowsServiceInstaller installer)
         {
             if (installer is null)
             {
@@ -3072,7 +3139,7 @@ namespace NetExtender.Windows.Services.Utils
             return IsServiceExistInternal(installer.Name, true);
         }
 
-        public static Boolean IsServiceExist(this Types.Installers.WindowsServiceInstaller installer)
+        public static Boolean IsServiceExist(this WindowsServiceInstaller installer)
         {
             if (installer is null)
             {
@@ -3094,49 +3161,482 @@ namespace NetExtender.Windows.Services.Utils
                 throw new ArgumentException("Service name is invalid.", nameof(name));
             }
 
-            IntPtr manager = OpenSCManager(null, null, 0x0005);
-            if (manager == IntPtr.Zero)
+            using ServiceHandleManager manager = new ServiceHandleManager(5, isThrow);
+            if (!manager.Successful)
             {
-                if (isThrow)
-                {
-                    throw new Win32Exception(GetLastError());
-                }
-
                 return false;
             }
 
             IntPtr service = OpenService(manager, name, 0x20000);
-            if (service == IntPtr.Zero)
+            return service != IntPtr.Zero;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? GetServiceDescription(String name)
+        {
+            return GetServiceDescriptionInternal(name, true);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? TryGetServiceDescription(String name)
+        {
+            return GetServiceDescriptionInternal(name, false);
+        }
+
+        private static String? GetServiceDescriptionInternal(String name, Boolean isThrow)
+        {
+            if (name is null)
             {
-                CloseServiceHandle(manager);
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (!IsValidServiceName(name))
+            {
+                throw new ArgumentException("Service name is invalid.", nameof(name));
+            }
+
+            if (!IsServiceExistInternal(name, isThrow))
+            {
+                throw new WindowsServiceNotFoundException($"Windows service with name '{name}' not exist.", name);
+            }
+
+            try
+            {
+                using ManagementObject service = new ManagementObject(new ManagementPath($"Win32_Service.Name='{name}'"));
+                service.Get();
+
+                Object? description = service["Description"];
+                return description?.ToString();
+            }
+            catch (Exception)
+            {
+                if (isThrow)
+                {
+                    throw;
+                }
+
+                return null;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? GetServiceDescription(this ServiceController controller)
+        {
+            return GetServiceDescriptionInternal(controller, true);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? TryGetServiceDescription(this ServiceController controller)
+        {
+            return GetServiceDescriptionInternal(controller, false);
+        }
+
+        private static String? GetServiceDescriptionInternal(this ServiceController controller, Boolean isThrow)
+        {
+            if (controller is null)
+            {
+                throw new ArgumentNullException(nameof(controller));
+            }
+
+            try
+            {
+                return GetServiceDescriptionInternal(controller.ServiceName, isThrow);
+            }
+            catch (Exception)
+            {
+                if (isThrow)
+                {
+                    throw;
+                }
+
+                return null;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? GetServicePath(String name)
+        {
+            return GetServicePathInternal(name, true);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? TryGetServicePath(String name)
+        {
+            return GetServicePathInternal(name, false);
+        }
+
+        private static String? GetServicePathInternal(String name, Boolean isThrow)
+        {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (!IsValidServiceName(name))
+            {
+                throw new ArgumentException("Service name is invalid.", nameof(name));
+            }
+
+            if (!IsServiceExistInternal(name, isThrow))
+            {
+                throw new WindowsServiceNotFoundException($"Windows service with name '{name}' not exist.", name);
+            }
+
+            try
+            {
+                using ManagementObject service = new ManagementObject(new ManagementPath($"Win32_Service.Name='{name}'"));
+                service.Get();
+
+                Object? path = service["PathName"];
+
+                if (path is null && isThrow)
+                {
+                    throw new InvalidOperationException($"Can't get service {name} path");
+                }
+
+                return path?.ToString();
+            }
+            catch (Exception)
+            {
+                if (isThrow)
+                {
+                    throw;
+                }
+
+                return null;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? GetServicePath(this ServiceController controller)
+        {
+            return GetServicePathInternal(controller, true);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? TryGetServicePath(this ServiceController controller)
+        {
+            return GetServicePathInternal(controller, false);
+        }
+
+        private static String? GetServicePathInternal(this ServiceController controller, Boolean isThrow)
+        {
+            if (controller is null)
+            {
+                throw new ArgumentNullException(nameof(controller));
+            }
+
+            try
+            {
+                return GetServicePathInternal(controller.ServiceName, isThrow);
+            }
+            catch (Exception)
+            {
+                if (isThrow)
+                {
+                    throw;
+                }
+
+                return null;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? GetServiceUsername(String name)
+        {
+            return GetServiceUsernameInternal(name, true);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? TryGetServiceUsername(String name)
+        {
+            return GetServiceUsernameInternal(name, false);
+        }
+
+        private static String? GetServiceUsernameInternal(String name, Boolean isThrow)
+        {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (!IsValidServiceName(name))
+            {
+                throw new ArgumentException("Service name is invalid.", nameof(name));
+            }
+
+            if (!IsServiceExistInternal(name, isThrow))
+            {
+                throw new WindowsServiceNotFoundException($"Windows service with name '{name}' not exist.", name);
+            }
+
+            try
+            {
+                using ManagementObject service = new ManagementObject(new ManagementPath($"Win32_Service.Name='{name}'"));
+                service.Get();
+
+                Object? startname = service["StartName"];
+                return startname?.ToString();
+            }
+            catch (Exception)
+            {
+                if (isThrow)
+                {
+                    throw;
+                }
+
+                return null;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? GetServiceUsername(this ServiceController controller)
+        {
+            return GetServiceUsernameInternal(controller, true);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? TryGetServiceUsername(this ServiceController controller)
+        {
+            return GetServiceUsernameInternal(controller, false);
+        }
+
+        private static String? GetServiceUsernameInternal(this ServiceController controller, Boolean isThrow)
+        {
+            if (controller is null)
+            {
+                throw new ArgumentNullException(nameof(controller));
+            }
+
+            try
+            {
+                return GetServiceUsernameInternal(controller.ServiceName, isThrow);
+            }
+            catch (Exception)
+            {
+                if (isThrow)
+                {
+                    throw;
+                }
+
+                return null;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean CheckServiceDelayedAutostart(String name)
+        {
+            return IsServiceDelayedAutostartInternal(name, true);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsServiceDelayedAutostart(String name)
+        {
+            return IsServiceDelayedAutostartInternal(name, false);
+        }
+
+        private static Boolean IsServiceDelayedAutostartInternal(String name, Boolean isThrow)
+        {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (!IsValidServiceName(name))
+            {
+                throw new ArgumentException("Service name is invalid.", nameof(name));
+            }
+
+            if (!IsServiceExistInternal(name, isThrow))
+            {
+                throw new WindowsServiceNotFoundException($"Windows service with name '{name}' not exist.", name);
+            }
+
+            try
+            {
+                using RegistryKey? registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"System\CurrentControlSet\Services\" + name, false);
+
+                if (registry is null)
+                {
+                    return false;
+                }
+
+                return Convert.ToInt64(registry.GetValue("DelayedAutostart")) != 0;
+            }
+            catch (Exception)
+            {
+                if (isThrow)
+                {
+                    throw;
+                }
+
                 return false;
             }
-
-            CloseServiceHandle(manager);
-            return true;
         }
 
-        public static Boolean InstallService(this Types.Installers.WindowsServiceInstaller installer)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean CheckServiceDelayedAutostart(this ServiceController controller)
         {
-            if (installer is null)
+            return IsServiceDelayedAutostartInternal(controller, true);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsServiceDelayedAutostart(this ServiceController controller)
+        {
+            return IsServiceDelayedAutostartInternal(controller, false);
+        }
+
+        private static Boolean IsServiceDelayedAutostartInternal(this ServiceController controller, Boolean isThrow)
+        {
+            if (controller is null)
             {
-                throw new ArgumentNullException(nameof(installer));
+                throw new ArgumentNullException(nameof(controller));
             }
 
-            return InstallServiceInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.ServiceStartMode, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, true);
+            try
+            {
+                return IsServiceDelayedAutostartInternal(controller.ServiceName, isThrow);
+            }
+            catch (Exception)
+            {
+                if (isThrow)
+                {
+                    throw;
+                }
+
+                return false;
+            }
         }
         
-        public static Boolean TryInstallService(this Types.Installers.WindowsServiceInstaller installer)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ServiceErrorControl GetServiceErrorControl(String name)
+        {
+            return GetServiceErrorControlInternal(name, ServiceErrorControl.Normal, true);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ServiceErrorControl TryGetServiceErrorControl(String name)
+        {
+            return TryGetServiceErrorControl(name, ServiceErrorControl.Normal);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ServiceErrorControl TryGetServiceErrorControl(String name, ServiceErrorControl @default)
+        {
+            return GetServiceErrorControlInternal(name, @default, false);
+        }
+
+        private static ServiceErrorControl GetServiceErrorControlInternal(String name, ServiceErrorControl @default, Boolean isThrow)
+        {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (!IsValidServiceName(name))
+            {
+                throw new ArgumentException("Service name is invalid.", nameof(name));
+            }
+
+            if (!IsServiceExistInternal(name, isThrow))
+            {
+                throw new WindowsServiceNotFoundException($"Windows service with name '{name}' not exist.", name);
+            }
+
+            try
+            {
+                using RegistryKey? registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"System\CurrentControlSet\Services\" + name, false);
+
+                if (registry is null)
+                {
+                    return @default;
+                }
+
+                Int64 control = Convert.ToInt64(registry.GetValue("ErrorControl"));
+
+                return control switch
+                {
+                    0 => ServiceErrorControl.Ignore,
+                    1 => ServiceErrorControl.Normal,
+                    2 => ServiceErrorControl.Severe,
+                    3 => ServiceErrorControl.Critical,
+                    _ => !isThrow ? @default : throw new ArgumentOutOfRangeException(nameof(control))
+                };
+            }
+            catch (Exception)
+            {
+                if (isThrow)
+                {
+                    throw;
+                }
+
+                return @default;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ServiceErrorControl GetServiceErrorControl(this ServiceController controller)
+        {
+            return GetServiceErrorControlInternal(controller, ServiceErrorControl.Normal, true);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ServiceErrorControl TryGetServiceErrorControl(this ServiceController controller)
+        {
+            return TryGetServiceErrorControl(controller, ServiceErrorControl.Normal);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ServiceErrorControl TryGetServiceErrorControl(this ServiceController controller, ServiceErrorControl @default)
+        {
+            return GetServiceErrorControlInternal(controller, @default, false);
+        }
+
+        private static ServiceErrorControl GetServiceErrorControlInternal(this ServiceController controller, ServiceErrorControl @default, Boolean isThrow)
+        {
+            if (controller is null)
+            {
+                throw new ArgumentNullException(nameof(controller));
+            }
+
+            try
+            {
+                return GetServiceErrorControlInternal(controller.ServiceName, @default, isThrow);
+            }
+            catch (Exception)
+            {
+                if (isThrow)
+                {
+                    throw;
+                }
+
+                return @default;
+            }
+        }
+
+        public static Boolean InstallService(this WindowsServiceInstaller installer)
         {
             if (installer is null)
             {
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return InstallServiceInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.ServiceStartMode, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, false);
+            return InstallServiceInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode, installer.ErrorControl,
+                installer.AutoStart, installer.Dependency, installer.Username, installer.Password, true);
         }
 
-        private static Boolean InstallServiceInternal(FileInfo info, String name, String? displayname, String? description, ServiceType type, ServiceStartMode mode, Boolean autostart,
+        public static Boolean TryInstallService(this WindowsServiceInstaller installer)
+        {
+            if (installer is null)
+            {
+                throw new ArgumentNullException(nameof(installer));
+            }
+
+            return InstallServiceInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode, installer.ErrorControl,
+                installer.AutoStart, installer.Dependency, installer.Username, installer.Password, false);
+        }
+
+        private static Boolean InstallServiceInternal(FileInfo info, String name, String? displayname, String? description, ServiceType type, ServiceStartMode mode, ServiceErrorControl error, Boolean autostart,
             IEnumerable<ServiceController?>? dependency, String? username, String? password, Boolean isThrow)
         {
             if (info is null)
@@ -3169,6 +3669,16 @@ namespace NetExtender.Windows.Services.Utils
                 return false;
             }
 
+            if (IsServiceExist(name))
+            {
+                if (isThrow)
+                {
+                    throw new InvalidOperationException("Service already installed.");
+                }
+
+                return false;
+            }
+
             String path;
             try
             {
@@ -3184,25 +3694,18 @@ namespace NetExtender.Windows.Services.Utils
                 return false;
             }
 
-            IntPtr manager = OpenSCManager(null, null, 0x0002);
-            if (manager == IntPtr.Zero)
+            using ServiceHandleManager manager = new ServiceHandleManager(2, isThrow);
+            if (!manager.Successful)
             {
-                if (isThrow)
-                {
-                    throw new Win32Exception(GetLastError());
-                }
-
                 return false;
             }
 
             IntPtr service = CreateService(manager, name, displayname,
-                983551, (Int32) type, (Int32) mode, 1,
+                983551, type, mode, error,
                 path, null, IntPtr.Zero, dependency.ConvertToDependencyString(), username, password);
 
             if (service == IntPtr.Zero)
             {
-                CloseServiceHandle(manager);
-
                 if (isThrow)
                 {
                     throw new Win32Exception(GetLastError());
@@ -3252,21 +3755,17 @@ namespace NetExtender.Windows.Services.Utils
                 }
             }
 
-            Int32 i = StartService(service, 0, null);
-            if (i == 0)
+            if (StartService(service, 0, null))
             {
-                CloseServiceHandle(manager);
-
-                if (isThrow)
-                {
-                    throw new Win32Exception(GetLastError());
-                }
-
-                return false;
+                return true;
             }
 
-            CloseServiceHandle(manager);
-            return true;
+            if (isThrow)
+            {
+                throw new Win32Exception(GetLastError());
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -3286,12 +3785,12 @@ namespace NetExtender.Windows.Services.Utils
         {
             return UninstallServiceInternal(name, false);
         }
-        
+
         /// <summary>
         /// This method uninstalls the service from the service control manager.
         /// </summary>
         /// <param name="installer">Installer of the service.</param>
-        public static Boolean UninstallService(this Types.Installers.WindowsServiceInstaller installer)
+        public static Boolean UninstallService(this WindowsServiceInstaller installer)
         {
             if (installer is null)
             {
@@ -3305,7 +3804,7 @@ namespace NetExtender.Windows.Services.Utils
         /// This method uninstalls the service from the service control manager.
         /// </summary>
         /// <param name="installer">Installer of the service.</param>
-        public static Boolean TryUninstallService(this Types.Installers.WindowsServiceInstaller installer)
+        public static Boolean TryUninstallService(this WindowsServiceInstaller installer)
         {
             if (installer is null)
             {
@@ -3327,14 +3826,9 @@ namespace NetExtender.Windows.Services.Utils
                 throw new ArgumentException("Service name is invalid.", nameof(name));
             }
 
-            IntPtr manager = OpenSCManager(null, null, 0x40000000);
-            if (manager == IntPtr.Zero)
+            using ServiceHandleManager manager = new ServiceHandleManager(0x40000000, isThrow);
+            if (!manager.Successful)
             {
-                if (isThrow)
-                {
-                    throw new Win32Exception(GetLastError());
-                }
-
                 return false;
             }
 
@@ -3349,44 +3843,42 @@ namespace NetExtender.Windows.Services.Utils
                 return false;
             }
 
-            Int32 i = DeleteService(service);
-            if (i != 0)
+            if (DeleteService(service))
             {
-                CloseServiceHandle(manager);
-
-                if (isThrow)
-                {
-                    throw new Win32Exception(GetLastError());
-                }
-
                 return true;
             }
 
-            CloseServiceHandle(manager);
+            if (isThrow)
+            {
+                throw new Win32Exception(GetLastError());
+            }
+
             return false;
         }
-        
-        public static Boolean ReinstallService(this Types.Installers.WindowsServiceInstaller installer)
+
+        public static Boolean ReinstallService(this WindowsServiceInstaller installer)
         {
             if (installer is null)
             {
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return ReinstallServiceInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.ServiceStartMode, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, true);
+            return ReinstallServiceInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
+                installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, true);
         }
-        
-        public static Boolean TryReinstallService(this Types.Installers.WindowsServiceInstaller installer)
+
+        public static Boolean TryReinstallService(this WindowsServiceInstaller installer)
         {
             if (installer is null)
             {
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return ReinstallServiceInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.ServiceStartMode, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, false);
+            return ReinstallServiceInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
+                installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, false);
         }
 
-        private static Boolean ReinstallServiceInternal(FileInfo info, String name, String? displayname, String? description, ServiceType type, ServiceStartMode mode, Boolean autostart,
+        private static Boolean ReinstallServiceInternal(FileInfo info, String name, String? displayname, String? description, ServiceType type, ServiceStartMode mode, ServiceErrorControl error, Boolean autostart,
             IEnumerable<ServiceController?>? dependency, String? username, String? password, Boolean isThrow)
         {
             if (info is null)
@@ -3419,31 +3911,33 @@ namespace NetExtender.Windows.Services.Utils
                 TryUninstallService(name);
             }
 
-            return InstallServiceInternal(info, name, displayname, description, type, mode, autostart, dependency, username, password, isThrow);
+            return InstallServiceInternal(info, name, displayname, description, type, mode, error, autostart, dependency, username, password, isThrow);
         }
 
-        public static Boolean InstallServiceIfNotExist(this Types.Installers.WindowsServiceInstaller installer)
+        public static Boolean InstallServiceIfNotExist(this WindowsServiceInstaller installer)
         {
             if (installer is null)
             {
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return InstallServiceIfNotExistInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.ServiceStartMode, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, true);
+            return InstallServiceIfNotExistInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
+                installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, true);
         }
-        
-        public static Boolean TryInstallServiceIfNotExist(this Types.Installers.WindowsServiceInstaller installer)
+
+        public static Boolean TryInstallServiceIfNotExist(this WindowsServiceInstaller installer)
         {
             if (installer is null)
             {
                 throw new ArgumentNullException(nameof(installer));
             }
 
-            return InstallServiceIfNotExistInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.ServiceStartMode, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, false);
+            return InstallServiceIfNotExistInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
+                installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, false);
         }
 
-        private static Boolean InstallServiceIfNotExistInternal(FileInfo info, String name, String? displayname, String? description, ServiceType type, ServiceStartMode mode, Boolean autostart,
-            IEnumerable<ServiceController?>? dependency, String? username, String? password, Boolean isThrow)
+        private static Boolean InstallServiceIfNotExistInternal(FileInfo info, String name, String? displayname, String? description, ServiceType type, ServiceStartMode mode,
+            ServiceErrorControl error, Boolean autostart, IEnumerable<ServiceController?>? dependency, String? username, String? password, Boolean isThrow)
         {
             if (info is null)
             {
@@ -3462,12 +3956,199 @@ namespace NetExtender.Windows.Services.Utils
 
             if (info.Exists)
             {
-                return IsServiceExist(name) || InstallServiceInternal(info, name, displayname, description, type, mode, autostart, dependency, username, password, isThrow);
+                return IsServiceExist(name) || InstallServiceInternal(info, name, displayname, description, type, mode, error, autostart, dependency, username, password, isThrow);
             }
 
             if (isThrow)
             {
                 throw new FileNotFoundException("File doesn't exist.", info.FullName);
+            }
+
+            return false;
+        }
+
+        public static Boolean ChangeServiceConfig(this WindowsServiceInstaller installer)
+        {
+            if (installer is null)
+            {
+                throw new ArgumentNullException(nameof(installer));
+            }
+
+            return ChangeServiceConfigInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
+                installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, false, true);
+        }
+        
+        public static Boolean TryChangeServiceConfig(this WindowsServiceInstaller installer)
+        {
+            if (installer is null)
+            {
+                throw new ArgumentNullException(nameof(installer));
+            }
+
+            return ChangeServiceConfigInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
+                installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, false, false);
+        }
+        
+        public static Boolean InstallServiceOrChangeServiceConfig(this WindowsServiceInstaller installer)
+        {
+            if (installer is null)
+            {
+                throw new ArgumentNullException(nameof(installer));
+            }
+
+            return ChangeServiceConfigInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
+                installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, true, true);
+        }
+        
+        public static Boolean TryInstallServiceOrChangeServiceConfig(this WindowsServiceInstaller installer)
+        {
+            if (installer is null)
+            {
+                throw new ArgumentNullException(nameof(installer));
+            }
+
+            return ChangeServiceConfigInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
+                installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, true, false);
+        }
+
+        private static Boolean ChangeServiceConfigInternal(FileInfo info, String name, String? displayname, String? description, ServiceType type, ServiceStartMode mode,
+            ServiceErrorControl error, Boolean autostart, IEnumerable<ServiceController?>? dependency, String? username, String? password, Boolean isInstall, Boolean isThrow)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (!IsValidServiceName(name))
+            {
+                throw new ArgumentException("Service name is invalid.", nameof(name));
+            }
+
+            if (String.IsNullOrEmpty(displayname))
+            {
+                displayname = name;
+            }
+
+            String path;
+            try
+            {
+                path = info.FullName;
+            }
+            catch (Exception)
+            {
+                if (isThrow)
+                {
+                    throw;
+                }
+
+                return false;
+            }
+
+            using ServiceHandleManager manager = new ServiceHandleManager(2, isThrow);
+            if (!manager.Successful)
+            {
+                return false;
+            }
+            
+            IntPtr service = OpenService(manager, name, 0x20000);
+            if (service == IntPtr.Zero)
+            {
+                if (!isInstall)
+                {
+                    if (isThrow)
+                    {
+                        throw new Win32Exception(GetLastError());
+                    }
+
+                    return false;
+                }
+                
+                service = CreateService(manager, name, displayname, 983551, type, mode, error,
+                    path, null, IntPtr.Zero, dependency.ConvertToDependencyString(), username, password);
+                
+                if (service == IntPtr.Zero)
+                {
+                    if (isThrow)
+                    {
+                        throw new Win32Exception(GetLastError());
+                    }
+
+                    return false;
+                }
+            }
+            else
+            {
+                if (!ChangeServiceConfig(service, type, mode, error, path,
+                    null, IntPtr.Zero, dependency.ConvertToDependencyString(), username, password, displayname))
+                {
+                    if (isThrow)
+                    {
+                        throw new Win32Exception(GetLastError());
+                    }
+
+                    return false;
+                }
+            }
+
+            try
+            {
+                if (Environment.OSVersion.Version.Major > 5 && mode == ServiceStartMode.Automatic)
+                {
+                    ServiceDelayedAutostartInfo autoinfo = new ServiceDelayedAutostartInfo(autostart);
+                    if (!ChangeServiceConfig2(service, 3U, ref autoinfo))
+                    {
+                        if (isThrow)
+                        {
+                            throw new Win32Exception(GetLastError());
+                        }
+
+                        return false;
+                    }
+                }
+            }
+            catch (InvalidOperationException)
+            {
+            }
+
+            if (!String.IsNullOrEmpty(description))
+            {
+                ServiceDescription descriptioninfo = new ServiceDescription(description);
+                try
+                {
+                    if (!ChangeServiceConfig2(service, 1U, ref descriptioninfo))
+                    {
+                        if (isThrow)
+                        {
+                            throw new Win32Exception(GetLastError());
+                        }
+
+                        return false;
+                    }
+                }
+                finally
+                {
+                    descriptioninfo.Dispose();
+                }
+            }
+
+            if (!isInstall)
+            {
+                return true;
+            }
+
+            if (StartService(service, 0, null))
+            {
+                return true;
+            }
+
+            if (isThrow)
+            {
+                throw new Win32Exception(GetLastError());
             }
 
             return false;
@@ -3513,34 +4194,31 @@ namespace NetExtender.Windows.Services.Utils
             return WaitForStatusAsync(controller, status, TimeSpan.FromMilliseconds(milliseconds), token);
         }
 
-        public static async Task WaitForStatusAsync(this ServiceController controller, ServiceControllerStatus status, TimeSpan timeout, CancellationToken token)
+        public static Task WaitForStatusAsync(this ServiceController controller, ServiceControllerStatus status, TimeSpan timeout, CancellationToken token)
         {
             if (controller is null)
             {
                 throw new ArgumentNullException(nameof(controller));
             }
 
+            if (token.IsCancellationRequested)
+            {
+                return Task.CompletedTask;
+            }
+
             try
             {
-                await Task.Run(() => controller.WaitForStatus(status, timeout), token);
+                controller.WaitForStatus(status, timeout);
             }
             catch (System.ServiceProcess.TimeoutException)
             {
-                try
+                if (!token.IsCancellationRequested)
                 {
-                    controller.Refresh();
-                    if (controller.Status == status)
-                    {
-                        return;
-                    }
+                    throw;
                 }
-                catch (Exception)
-                {
-                    // ignored
-                }
-
-                throw new System.TimeoutException();
             }
+            
+            return Task.CompletedTask;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

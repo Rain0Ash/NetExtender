@@ -2,6 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using NetExtender.Domains.Service.Applications;
 using NetExtender.Domains.View;
 using NetExtender.Domains.View.Interfaces;
@@ -24,16 +26,16 @@ namespace NetExtender.Domains.Service.Views
             Domain.ShutdownMode = ApplicationShutdownMode.OnExplicitShutdown;
         }
 
-        protected override IApplicationView Run()
+        protected override Task<IApplicationView> RunAsync(CancellationToken token)
         {
-            return Run(Context);
+            return RunAsync(Context, token);
         }
 
-        protected virtual IApplicationView Run(IWindowsService? service)
+        protected virtual async Task<IApplicationView> RunAsync(IWindowsService? service, CancellationToken token)
         {
             if (service is null)
             {
-                return Run();
+                return await RunAsync(token);
             }
             
             Context ??= service;
@@ -43,7 +45,7 @@ namespace NetExtender.Domains.Service.Views
             }
             
             WindowsServiceApplication application = Domain.Current.Application as WindowsServiceApplication ?? throw new InitializeException($"{nameof(Domain.Current.Application)} is not {nameof(WindowsServiceApplication)}");
-            application.Run(Context);
+            await application.RunAsync(Context, token);
             return this;
         }
     }

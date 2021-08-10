@@ -19,7 +19,7 @@ namespace NetExtender.Windows.Services.Types.Services
         
         protected String[]? Arguments { get; set; }
 
-        protected IWindowsServicePauseHandler? PauseHandler { get; init; }
+        protected IWindowsServicePauseStateHandler? PauseStateHandler { get; init; }
 
         protected sealed override void OnCustomCommand(Int32 command)
         {
@@ -326,17 +326,17 @@ namespace NetExtender.Windows.Services.Types.Services
 
         protected virtual Boolean BeforePauseInternal()
         {
-            return PauseHandler is not null && !PauseHandler.IsPaused;
+            return PauseStateHandler is not null && !PauseStateHandler.IsPaused;
         }
 
         protected virtual Boolean PauseInternal()
         {
-            if (PauseHandler is null || PauseHandler.IsPaused)
+            if (PauseStateHandler is null || PauseStateHandler.IsPaused)
             {
                 return false;
             }
             
-            PauseHandler.Pause();
+            PauseStateHandler.Pause();
             return true;
         }
 
@@ -386,17 +386,17 @@ namespace NetExtender.Windows.Services.Types.Services
 
         protected virtual Boolean BeforeContinueInternal()
         {
-            return PauseHandler is not null && PauseHandler.IsPaused;
+            return PauseStateHandler is not null && PauseStateHandler.IsPaused;
         }
 
         protected virtual Boolean ContinueInternal()
         {
-            if (PauseHandler is null || !PauseHandler.IsPaused)
+            if (PauseStateHandler is null || !PauseStateHandler.IsPaused)
             {
                 return false;
             }
             
-            PauseHandler.Resume();
+            PauseStateHandler.Resume();
             return true;
         }
 

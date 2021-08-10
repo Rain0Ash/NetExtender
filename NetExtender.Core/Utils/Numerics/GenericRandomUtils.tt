@@ -870,9 +870,17 @@ namespace NetExtender.Utils.Numerics
             if (IsIntType(type))
             {
                 WriteLine($"\t\t\t{ToUnsignedType(type)} difference = max.DiscreteIncludeDifference(min, {ToUnsignedType(type)}.MaxValue);");
-                WriteLine($"\t\t\treturn difference <= ({nameof(Byte)}.MaxValue + 1) * 4 ?");
-                WriteLine($"\t\t\t\tUniqueShuffleRange({item.Value.Item2}, min, max, {(!IsSmallType(type) ? $"({nameof(Int32)}) " : String.Empty)}difference) :");
-                WriteLine($"\t\t\t\tUniqueSetRange({item.Value.Item2}, min, max);");
+                
+                if (type != nameof(Byte) && type != nameof(SByte))
+                {
+                    WriteLine($"\t\t\treturn difference <= ({nameof(Byte)}.MaxValue + 1) * 4 ?");
+                    WriteLine($"\t\t\t\tUniqueShuffleRange({item.Value.Item2}, min, max, {(!IsSmallType(type) ? $"({nameof(Int32)}) " : String.Empty)}difference) :");
+                    WriteLine($"\t\t\t\tUniqueSetRange({item.Value.Item2}, min, max);");
+                }
+                else
+                {
+                    WriteLine($"\t\t\treturn UniqueShuffleRange({item.Value.Item2}, min, max, {(!IsSmallType(type) ? $"({nameof(Int32)}) " : String.Empty)}difference);");
+                }
             }
             else
             {

@@ -14,8 +14,11 @@ namespace NetExtender.Domains.Applications.Interfaces
         public Boolean? IsElevate { get; }
         public IDispatcher? Dispatcher { get; }
         public ApplicationShutdownMode ShutdownMode { get; set; }
+        public CancellationToken ShutdownToken { get; }
         
         public IApplication Run();
+        public Task<IApplication> RunAsync();
+        public Task<IApplication> RunAsync(CancellationToken token);
         public void Shutdown();
         public void Shutdown(Int32 code);
         public void Shutdown(Boolean force);

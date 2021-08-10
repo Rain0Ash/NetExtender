@@ -3,6 +3,8 @@
 
 using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using NetExtender.Domains.AspNetCore.Applications;
@@ -55,16 +57,16 @@ namespace NetExtender.Domains.AspNetCore.View
             Builder?.Invoke(builder);
         }
 
-        protected override IApplicationView Run()
+        protected override Task<IApplicationView> RunAsync(CancellationToken token)
         {
-            return Run(Context ?? CreateHostBuilder().Build());
+            return RunAsync(Context ?? CreateHostBuilder().Build(), token);
         }
 
-        protected virtual IApplicationView Run(IHost? host)
+        protected virtual async Task<IApplicationView> RunAsync(IHost? host, CancellationToken token)
         {
             if (host is null)
             {
-                return Run();
+                return await RunAsync(token);
             }
 
             Context ??= host;
@@ -74,7 +76,7 @@ namespace NetExtender.Domains.AspNetCore.View
             }
             
             AspNetCoreApplication application = Domain.Current.Application as AspNetCoreApplication ?? throw new InitializeException($"{nameof(Domain.Current.Application)} is not {nameof(AspNetCoreApplication)}");
-            application.Run(Context);
+            await application.RunAsync(Context, token);
             return this;
         }
     }

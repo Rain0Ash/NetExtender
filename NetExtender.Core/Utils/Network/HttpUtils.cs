@@ -3,24 +3,22 @@
 
 using System;
 using System.Net;
+using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utils.Network
 {
     public static class HttpUtils
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsClientErrorCode(this HttpStatusCode code)
         {
-            return code >= HttpStatusCode.BadRequest && code < HttpStatusCode.InternalServerError;
+            return code is >= HttpStatusCode.BadRequest and < HttpStatusCode.InternalServerError;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetHttpStatusName(this HttpStatusCode code)
         {
             return GetHttpStatusName((Int32) code);
-        }
-
-        public static Int32 StatusCode(this HttpStatusCode code)
-        {
-            return (Int32) code;
         }
 
         public static String GetHttpStatusName(Int32 code)

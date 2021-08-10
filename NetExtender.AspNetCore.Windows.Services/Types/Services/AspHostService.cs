@@ -19,8 +19,8 @@ namespace NetExtender.AspNetCore.Windows.Services.Types.Services
         {
             Provider = provider ?? throw new ArgumentNullException(nameof(provider));
             
-            PauseHandler = Provider.GetService<IWindowsServicePauseService>();
-            CanPauseAndContinue = PauseHandler is not null;
+            PauseStateHandler = Provider.GetService<IWindowsServicePauseStateService>();
+            CanPauseAndContinue = PauseStateHandler is not null;
         }
 
         protected override Boolean AfterStartInternal(String[] args)

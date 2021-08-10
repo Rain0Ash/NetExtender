@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading;
@@ -18,6 +19,7 @@ namespace NetExtender.Domains
     {
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         [SuppressMessage("ReSharper", "ClassWithVirtualMembersNeverInherited.Local")]
+        [SuppressMessage("ReSharper", "MethodSupportsCancellation")]
         private class InternalDomain : IDomain
         {
             private IApplication? _application;
@@ -84,6 +86,14 @@ namespace NetExtender.Domains
                 set
                 {
                     Application.ShutdownMode = value;
+                }
+            }
+
+            public CancellationToken ShutdownToken
+            {
+                get
+                {
+                    return Application.ShutdownToken;
                 }
             }
 
@@ -202,7 +212,7 @@ namespace NetExtender.Domains
                 return this;
             }
             
-            public IDomain View(IApplicationView view, String[]? args)
+            public IDomain View(IApplicationView view, IEnumerable<String>? args)
             {
                 if (view is null)
                 {
@@ -213,15 +223,114 @@ namespace NetExtender.Domains
                 return this;
             }
             
-            IApplication IApplication.Run()
+            public IDomain View(IApplicationView view, params String[]? args)
             {
-                return Run();
+                if (view is null)
+                {
+                    throw new ArgumentNullException(nameof(view));
+                }
+
+                view.Start(args);
+                return this;
+            }
+
+            public async Task<IDomain> ViewAsync(IApplicationView view)
+            {
+                if (view is null)
+                {
+                    throw new ArgumentNullException(nameof(view));
+                }
+
+                await view.StartAsync();
+                return this;
+            }
+
+            public async Task<IDomain> ViewAsync(IApplicationView view, CancellationToken token)
+            {
+                if (view is null)
+                {
+                    throw new ArgumentNullException(nameof(view));
+                }
+
+                await view.StartAsync(token);
+                return this;
+            }
+
+            public async Task<IDomain> ViewAsync(IApplicationView view, IEnumerable<String>? args)
+            {
+                if (view is null)
+                {
+                    throw new ArgumentNullException(nameof(view));
+                }
+
+                await view.StartAsync(args);
+                return this;
+            }
+            
+            public async Task<IDomain> ViewAsync(IApplicationView view, params String[]? args)
+            {
+                if (view is null)
+                {
+                    throw new ArgumentNullException(nameof(view));
+                }
+
+                await view.StartAsync(args);
+                return this;
+            }
+
+            public async Task<IDomain> ViewAsync(IApplicationView view, IEnumerable<String>? args, CancellationToken token)
+            {
+                if (view is null)
+                {
+                    throw new ArgumentNullException(nameof(view));
+                }
+
+                await view.StartAsync(args, token);
+                return this;
+            }
+
+            public async Task<IDomain> ViewAsync(IApplicationView view, CancellationToken token, params String[]? args)
+            {
+                if (view is null)
+                {
+                    throw new ArgumentNullException(nameof(view));
+                }
+
+                await view.StartAsync(args, token);
+                return this;
             }
 
             public IDomain Run()
             {
                 Application.Run();
                 return this;
+            }
+            
+            public async Task<IDomain> RunAsync()
+            {
+                await Application.RunAsync();
+                return this;
+            }
+            
+            public async Task<IDomain> RunAsync(CancellationToken token)
+            {
+                await Application.RunAsync(token);
+                return this;
+            }
+            
+            IApplication IApplication.Run()
+            {
+                return Application.Run();
+            }
+
+            Task<IApplication> IApplication.RunAsync()
+            {
+                return Application.RunAsync();
+            }
+
+            Task<IApplication> IApplication.RunAsync(CancellationToken token)
+            {
+                return Application.RunAsync(token);
             }
 
             public void Shutdown()

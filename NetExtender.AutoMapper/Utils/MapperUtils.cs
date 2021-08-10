@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using AutoMapper;
 using NetExtender.Utils.Types;
@@ -113,7 +114,7 @@ namespace NetExtender.Utils
             return TryMapSelect<T, TMap>(source, Mapper);
         }
 
-        public static IEnumerable<TMap> TryMapSelect<T, TMap>(this IEnumerable<T?> source, IMapper mapper)
+        public static IEnumerable<TMap> TryMapSelect<T, TMap>(this IEnumerable<T> source, IMapper mapper)
         {
             if (source is null)
             {
@@ -125,7 +126,7 @@ namespace NetExtender.Utils
                 throw new ArgumentNullException(nameof(mapper));
             }
             
-            Boolean MapInternal(T? item, out TMap? result)
+            Boolean MapInternal(T item, [MaybeNullWhen(false)] out TMap? result)
             {
                 return mapper.TryMap(item, out result);
             }

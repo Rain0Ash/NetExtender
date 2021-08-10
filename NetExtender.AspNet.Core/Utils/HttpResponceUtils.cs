@@ -3,18 +3,20 @@
 
 using System;
 using System.Net;
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Http;
-using NetExtender.Utils.Network;
 
 namespace NetExtender.Utils.AspNetCore.Types
 {
     public static class HttpResponceUtils
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T SetStatusCode<T>(this T response, HttpStatusCode code) where T : HttpResponse
         {
-            return SetStatusCode(response, code.StatusCode());
+            return SetStatusCode(response, (Int32) code);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T SetStatusCode<T>(this T response, Int32 code) where T : HttpResponse
         {
             if (response is null)

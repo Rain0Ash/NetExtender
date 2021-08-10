@@ -18,12 +18,12 @@ namespace NetExtender.Utils.AspNetCore.Types
             }
 
             ConnectionInfo connection = request.HttpContext.Connection;
-            if (connection.RemoteIpAddress != null)
+            if (connection.RemoteIpAddress is not null)
             {
-                return connection.LocalIpAddress != null ? connection.RemoteIpAddress.Equals(connection.LocalIpAddress) : IPAddress.IsLoopback(connection.RemoteIpAddress);
+                return connection.LocalIpAddress is not null ? connection.RemoteIpAddress.Equals(connection.LocalIpAddress) : IPAddress.IsLoopback(connection.RemoteIpAddress);
             }
 
-            return connection.RemoteIpAddress == null && connection.LocalIpAddress == null;
+            return connection.RemoteIpAddress is null && connection.LocalIpAddress is null;
         }
         
         public static String? GetUserAgent(this HttpRequest request)

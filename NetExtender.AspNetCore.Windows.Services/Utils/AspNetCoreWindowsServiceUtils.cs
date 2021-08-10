@@ -2,15 +2,18 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Net;
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NetExtender.AspNetCore.Windows.Services.Middlewares;
+using NetExtender.AspNet.Core.Middlewares;
 using NetExtender.AspNetCore.Windows.Services.Services;
 using NetExtender.AspNetCore.Windows.Services.Services.Interfaces;
 using NetExtender.AspNetCore.Windows.Services.Types.Services;
+using NetExtender.Utils.AspNetCore.Types;
 using NetExtender.Windows.Services.Types.Services;
 using NetExtender.Windows.Services.Utils;
 
@@ -88,34 +91,51 @@ namespace NetExtender.AspNetCore.Windows.Services.Utils
             return host;
         }
 
-        public static IServiceCollection AddWindowsServicePause(this IServiceCollection collection)
+        public static IServiceCollection AddWindowsServicePauseStateService(this IServiceCollection collection)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            return collection.AddSingleton<IWindowsServicePauseService, WindowsServicePauseService>();
+            return collection.AddSingleton<IWindowsServicePauseStateService, WindowsServicePauseStateService>();
         }
 
-        public static IApplicationBuilder UseLocalhostPauseWindowsServiceMiddleware(this IApplicationBuilder builder)
+        private static Boolean UseExternalAccessRestrictionMiddlewareOnWindowsServicePauseStateCondition(HttpContext context)
+        {
+            IWindowsServicePauseStateService? service = ServiceProviderServiceExtensions.GetService<IWindowsServicePauseStateService>(context.RequestServices);
+
+            return service is not null && service.IsPaused;
+        }
+
+        public static IApplicationBuilder UseExternalAccessRestrictionMiddlewareOnWindowsServicePauseState(this IApplicationBuilder builder)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.UseMiddleware<LocalhostPauseWindowsServiceMiddleware>();
+            return builder.UseMiddlewareWhen<ExternalAccessRestrictionMiddleware>(UseExternalAccessRestrictionMiddlewareOnWindowsServicePauseStateCondition);
+        }
+
+        public static IApplicationBuilder UseExternalAccessRestrictionMiddlewareOnWindowsServicePauseState(this IApplicationBuilder builder, Int32 reject)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+            
+            return builder.UseMiddlewareWhen<ExternalAccessRestrictionMiddleware>(UseExternalAccessRestrictionMiddlewareOnWindowsServicePauseStateCondition, reject);
         }
         
-        public static IApplicationBuilder UseLocalhostPauseWindowsServiceMiddleware(this IApplicationBuilder builder, Int32 code)
+        public static IApplicationBuilder UseExternalAccessRestrictionMiddlewareOnWindowsServicePauseState(this IApplicationBuilder builder, HttpStatusCode reject)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-
-            return builder.UseMiddleware<LocalhostPauseWindowsServiceMiddleware>(code);
+            
+            return builder.UseMiddlewareWhen<ExternalAccessRestrictionMiddleware>(UseExternalAccessRestrictionMiddlewareOnWindowsServicePauseStateCondition, reject);
         }
     }
 }

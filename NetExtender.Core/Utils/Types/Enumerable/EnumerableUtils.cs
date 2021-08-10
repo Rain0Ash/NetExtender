@@ -18,6 +18,7 @@ using NetExtender.Utils.Core;
 namespace NetExtender.Utils.Types
 {
     [SuppressMessage("ReSharper", "IteratorNeverReturns")]
+    [SuppressMessage("ReSharper", "CognitiveComplexity")]
     public static class EnumerableUtils
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1417,9 +1418,9 @@ namespace NetExtender.Utils.Types
 
             foreach (T item in source)
             {
-                if (predicate(item, out TOutput value))
+                if (predicate(item, out TOutput? value))
                 {
-                    yield return value;
+                    yield return value!;
                 }
             }
         }
@@ -4574,6 +4575,91 @@ namespace NetExtender.Utils.Types
             }
 
             return sum / count;
+        }
+        
+        public static T? Median<T>(this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            return Median(source, (x, _) => x, x => x);
+        }
+
+        public static T? Median<T>(this IEnumerable<T> source, Func<T, T> order)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (order is null)
+            {
+                throw new ArgumentNullException(nameof(order));
+            }
+            
+            return Median(source, (x, _) => x, order);
+        }
+        
+        public static T? Median<T>(this IEnumerable<T> source, Func<T, T, T> average)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (average is null)
+            {
+                throw new ArgumentNullException(nameof(average));
+            }
+            
+            return Median(source, average, x => x);
+        }
+
+        /// <summary>
+        /// Gets the median from the list
+        /// </summary>
+        /// <typeparam name="T">The data type of the list</typeparam>
+        /// <param name="source">The list of values</param>
+        /// <param name="average">
+        /// Function used to find the average of two values if the number of values is even.
+        /// </param>
+        /// <param name="order">Function used to order the values</param>
+        /// <returns>The median value</returns>
+        public static T? Median<T>(this IEnumerable<T> source, Func<T, T, T> average, Func<T, T> order)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (average is null)
+            {
+                throw new ArgumentNullException(nameof(average));
+            }
+
+            if (order is null)
+            {
+                throw new ArgumentNullException(nameof(order));
+            }
+
+            List<T> values = source.OrderBy(order).ToList();
+            
+            if (values.Count <= 0)
+            {
+                return default;
+            }
+
+            if (values.Count % 2 != 0)
+            {
+                return values[values.Count / 2];
+            }
+
+            T first = values[values.Count / 2];
+            T second = values[values.Count / 2 - 1];
+
+            return average(first, second);
         }
 
         /// <summary>

@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -65,6 +66,166 @@ namespace NetExtender.Domains
                 return CurrentDomain.Current;
             }
         }
+        
+        public static async Task<IDomain> Initialize(this Task<IDomain> source, IApplication application)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (application is null)
+            {
+                throw new ArgumentNullException(nameof(application));
+            }
+
+            IDomain domain = await source;
+            return domain.Initialize(application);
+        }
+
+        public static IDomain View(this Task<IDomain> source, IApplicationView view)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (view is null)
+            {
+                throw new ArgumentNullException(nameof(view));
+            }
+            
+            IDomain domain = source.GetAwaiter().GetResult();
+            return domain.View(view);
+        }
+        
+        public static IDomain View(this Task<IDomain> source, IApplicationView view, IEnumerable<String>? args)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (view is null)
+            {
+                throw new ArgumentNullException(nameof(view));
+            }
+
+            IDomain domain = source.GetAwaiter().GetResult();
+            return domain.View(view, args);
+        }
+        
+        public static IDomain View(this Task<IDomain> source, IApplicationView view, params String[]? args)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (view is null)
+            {
+                throw new ArgumentNullException(nameof(view));
+            }
+            
+            IDomain domain = source.GetAwaiter().GetResult();
+            return domain.View(view, args);
+        }
+        
+        public static async Task<IDomain> ViewAsync(this Task<IDomain> source, IApplicationView view)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (view is null)
+            {
+                throw new ArgumentNullException(nameof(view));
+            }
+
+            IDomain domain = await source;
+            return await domain.ViewAsync(view);
+        }
+        
+        public static async Task<IDomain> ViewAsync(this Task<IDomain> source, IApplicationView view, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (view is null)
+            {
+                throw new ArgumentNullException(nameof(view));
+            }
+            
+            IDomain domain = await source;
+            return await domain.ViewAsync(view, token);
+        }
+        
+        public static async Task<IDomain> ViewAsync(this Task<IDomain> source, IApplicationView view, IEnumerable<String>? args)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (view is null)
+            {
+                throw new ArgumentNullException(nameof(view));
+            }
+            
+            IDomain domain = await source;
+            return await domain.ViewAsync(view, args);
+        }
+        
+        public static async Task<IDomain> ViewAsync(this Task<IDomain> source, IApplicationView view, params String[]? args)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (view is null)
+            {
+                throw new ArgumentNullException(nameof(view));
+            }
+            
+            IDomain domain = await source;
+            return await domain.ViewAsync(view, args);
+        }
+        
+        public static async Task<IDomain> ViewAsync(this Task<IDomain> source, IApplicationView view, IEnumerable<String>? args, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (view is null)
+            {
+                throw new ArgumentNullException(nameof(view));
+            }
+            
+            IDomain domain = await source;
+            return await domain.ViewAsync(view, args, token);
+        }
+
+        public static async Task<IDomain> ViewAsync(this Task<IDomain> source, IApplicationView view, CancellationToken token, params String[] args)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (view is null)
+            {
+                throw new ArgumentNullException(nameof(view));
+            }
+            
+            IDomain domain = await source;
+            return await domain.ViewAsync(view, token, args);
+        }
 
         public static IDomain Create(IDomain domain)
         {
@@ -121,6 +282,96 @@ namespace NetExtender.Domains
         public static IDomain Create(IApplicationData data, IApplication application, IApplicationView view)
         {
             return Create(data, application).View(view);
+        }
+        
+        public static Task<IDomain> CreateAsync(String name)
+        {
+            return Task.FromResult(Create(new ApplicationData(name, ApplicationVersion.Default)));
+        }
+        
+        public static Task<IDomain> CreateAsync(String name, CancellationToken token)
+        {
+            return Task.FromResult(Create(new ApplicationData(name, ApplicationVersion.Default)));
+        }
+        
+        public static Task<IDomain> CreateAsync(String name, String identifier)
+        {
+            return Task.FromResult(Create(new ApplicationData(name, identifier, ApplicationVersion.Default)));
+        }
+        
+        public static Task<IDomain> CreateAsync(String name, String identifier, CancellationToken token)
+        {
+            return Task.FromResult(Create(new ApplicationData(name, identifier, ApplicationVersion.Default)));
+        }
+
+        public static Task<IDomain> CreateAsync(IApplicationData data)
+        {
+            return Task.FromResult(Create(new InternalDomain(data)));
+        }
+
+        public static Task<IDomain> CreateAsync(IApplicationData data, CancellationToken token)
+        {
+            return Task.FromResult(Create(new InternalDomain(data)));
+        }
+        
+        public static Task<IDomain> CreateAsync(String name, IApplication application)
+        {
+            return Task.FromResult(Create(name).Initialize(application));
+        }
+        
+        public static Task<IDomain> CreateAsync(String name, IApplication application, CancellationToken token)
+        {
+            return Task.FromResult(Create(name).Initialize(application));
+        }
+        
+        public static Task<IDomain> CreateAsync(String name, String identifier, IApplication application)
+        {
+            return Task.FromResult(Create(name, identifier).Initialize(application));
+        }
+        
+        public static Task<IDomain> CreateAsync(String name, String identifier, IApplication application, CancellationToken token)
+        {
+            return Task.FromResult(Create(name, identifier).Initialize(application));
+        }
+        
+        public static Task<IDomain> CreateAsync(IApplicationData data, IApplication application)
+        {
+            return Task.FromResult(Create(data).Initialize(application));
+        }
+        
+        public static Task<IDomain> CreateAsync(IApplicationData data, IApplication application, CancellationToken token)
+        {
+            return Task.FromResult(Create(data).Initialize(application));
+        }
+        
+        public static Task<IDomain> CreateAsync(String name, IApplication application, IApplicationView view)
+        {
+            return Create(name, application).ViewAsync(view);
+        }
+        
+        public static Task<IDomain> CreateAsync(String name, IApplication application, IApplicationView view, CancellationToken token)
+        {
+            return Create(name, application).ViewAsync(view, token);
+        }
+        
+        public static Task<IDomain> CreateAsync(String name, String identifier, IApplication application, IApplicationView view)
+        {
+            return Create(name, identifier, application).ViewAsync(view);
+        }
+        
+        public static Task<IDomain> CreateAsync(String name, String identifier, IApplication application, IApplicationView view, CancellationToken token)
+        {
+            return Create(name, identifier, application).ViewAsync(view, token);
+        }
+        
+        public static Task<IDomain> CreateAsync(IApplicationData data, IApplication application, IApplicationView view)
+        {
+            return Create(data, application).ViewAsync(view);
+        }
+        
+        public static Task<IDomain> CreateAsync(IApplicationData data, IApplication application, IApplicationView view, CancellationToken token)
+        {
+            return Create(data, application).ViewAsync(view, token);
         }
 
         public static DateTime StartedAt
@@ -235,9 +486,19 @@ namespace NetExtender.Domains
             }
         }
 
-        public static void Run()
+        public static IDomain Run()
         {
-            Current.Run();
+            return Current.Run();
+        }
+        
+        public static Task<IDomain> RunAsync()
+        {
+            return Current.RunAsync();
+        }
+            
+        public static Task<IDomain> RunAsync(CancellationToken token)
+        {
+            return Current.RunAsync(token);
         }
 
         public static void Shutdown()

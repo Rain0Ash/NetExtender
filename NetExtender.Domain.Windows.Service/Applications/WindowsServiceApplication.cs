@@ -5,6 +5,8 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.ServiceProcess;
+using System.Threading;
+using System.Threading.Tasks;
 using NetExtender.Domains.Applications;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Exceptions;
@@ -239,12 +241,12 @@ namespace NetExtender.Domains.Service.Applications
             Installer = installer;
         }
 
-        public override IApplication Run()
+        public override Task<IApplication> RunAsync(CancellationToken token)
         {
-            return Run(null);
+            return RunAsync(null, token);
         }
 
-        public virtual IApplication Run(IWindowsService? service)
+        public virtual async Task<IApplication> RunAsync(IWindowsService? service, CancellationToken token)
         {
             if (service is null)
             {
@@ -258,12 +260,13 @@ namespace NetExtender.Domains.Service.Applications
             
             if (WindowsServiceUtils.IsServiceExist(Domain.ApplicationIdentifier))
             {
-                if (!WindowsServiceUtils.TryStartService(Domain.ApplicationIdentifier))
+                if (!await WindowsServiceUtils.StartServiceAsync(Domain.ApplicationIdentifier, token))
                 {
                     throw new InitializeException("Can't start service. Maybe need elevate execute for starting service.");
                 }
             }
-            
+
+            RegisterShutdownToken(token);
             Initializer.Initialize(service).Run(Quiet);
             return this;
         }

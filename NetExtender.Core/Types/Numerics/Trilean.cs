@@ -14,21 +14,21 @@ namespace NetExtender.Types.Numerics
         public static Trilean True { get; } = new Trilean(VTrue);
         public static Trilean Trit { get; } = new Trilean(VTrit);
         public static Trilean False { get; } = new Trilean(VFalse);
-        
+
         public static implicit operator Boolean(Trilean value)
         {
-            #if TritIsFalse
+#if TritIsFalse
             return value.IsTrue;
-            #else
+#else
             return !value.IsFalse;
-            #endif
+#endif
         }
-        
+
         public static implicit operator Trilean(Boolean value)
         {
             return value ? True : False;
         }
-        
+
         public static implicit operator Boolean?(Trilean value)
         {
             return value._trilean switch
@@ -39,7 +39,7 @@ namespace NetExtender.Types.Numerics
                 _ => throw new ArgumentOutOfRangeException(nameof(value))
             };
         }
-        
+
         public static implicit operator Trilean(Boolean? value)
         {
             return value switch
@@ -49,27 +49,27 @@ namespace NetExtender.Types.Numerics
                 null => Trit
             };
         }
-        
+
         public static Boolean operator ==(Trilean first, Trilean second)
         {
             return first._trilean == second._trilean;
         }
-        
+
         public static Boolean operator !=(Trilean first, Trilean second)
         {
             return first._trilean != second._trilean;
         }
-        
+
         public static Boolean operator ==(Trilean first, Boolean second)
         {
             return (Boolean) first == second;
         }
-        
+
         public static Boolean operator !=(Trilean first, Boolean second)
         {
             return (Boolean) first != second;
         }
-        
+
         public static Boolean operator ==(Trilean first, Boolean? second)
         {
             return second switch
@@ -79,32 +79,32 @@ namespace NetExtender.Types.Numerics
                 null => first.IsTrit
             };
         }
-        
+
         public static Boolean operator !=(Trilean first, Boolean? second)
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator ==(Boolean first, Trilean second)
         {
             return first == (Boolean) second;
         }
-        
+
         public static Boolean operator !=(Boolean first, Trilean second)
         {
             return first != (Boolean) second;
         }
-        
+
         public static Boolean operator ==(Boolean? first, Trilean second)
         {
             return first switch
             {
                 true => second.IsTrue,
                 false => second.IsFalse,
-                null => second.IsTrit 
+                null => second.IsTrit
             };
         }
-        
+
         public static Boolean operator !=(Boolean? first, Trilean second)
         {
             return !(first == second);
@@ -120,7 +120,7 @@ namespace NetExtender.Types.Numerics
                 _ => throw new ArgumentOutOfRangeException(nameof(value))
             };
         }
-        
+
         public static Trilean operator &(Trilean first, Trilean second)
         {
             return first._trilean switch
@@ -154,7 +154,7 @@ namespace NetExtender.Types.Numerics
                 _ => throw new ArgumentOutOfRangeException(nameof(first))
             };
         }
-        
+
         public static Trilean operator &(Trilean first, Boolean? second)
         {
             return first._trilean switch
@@ -180,7 +180,7 @@ namespace NetExtender.Types.Numerics
         {
             return second & first;
         }
-        
+
         public static Trilean operator &(Boolean? first, Trilean second)
         {
             return second & first;
@@ -208,7 +208,7 @@ namespace NetExtender.Types.Numerics
                 _ => throw new ArgumentOutOfRangeException(nameof(first))
             };
         }
-        
+
         public static Trilean operator |(Trilean first, Boolean second)
         {
             return first._trilean switch
@@ -219,7 +219,7 @@ namespace NetExtender.Types.Numerics
                 _ => throw new ArgumentOutOfRangeException(nameof(first))
             };
         }
-        
+
         public static Trilean operator |(Trilean first, Boolean? second)
         {
             return first._trilean switch
@@ -245,12 +245,12 @@ namespace NetExtender.Types.Numerics
         {
             return second | first;
         }
-        
+
         public static Trilean operator |(Boolean? first, Trilean second)
         {
             return second | first;
         }
-        
+
         public static Trilean operator ^(Trilean first, Trilean second)
         {
             return first._trilean switch
@@ -273,7 +273,7 @@ namespace NetExtender.Types.Numerics
                 _ => throw new ArgumentOutOfRangeException(nameof(first))
             };
         }
-        
+
         public static Trilean operator ^(Trilean first, Boolean second)
         {
             return first._trilean switch
@@ -284,7 +284,7 @@ namespace NetExtender.Types.Numerics
                 _ => throw new ArgumentOutOfRangeException(nameof(first))
             };
         }
-        
+
         public static Trilean operator ^(Trilean first, Boolean? second)
         {
             return first._trilean switch
@@ -310,7 +310,7 @@ namespace NetExtender.Types.Numerics
         {
             return second ^ first;
         }
-        
+
         public static Trilean operator ^(Boolean? first, Trilean second)
         {
             return second ^ first;
@@ -325,7 +325,7 @@ namespace NetExtender.Types.Numerics
                 return _trilean == VTrue;
             }
         }
-        
+
         public Boolean IsTrit
         {
             get
@@ -333,7 +333,7 @@ namespace NetExtender.Types.Numerics
                 return _trilean == VTrit;
             }
         }
-        
+
         public Boolean IsFalse
         {
             get
@@ -348,7 +348,7 @@ namespace NetExtender.Types.Numerics
             {
                 throw new ArgumentOutOfRangeException(nameof(value));
             }
-            
+
             _trilean = value;
         }
 
@@ -461,17 +461,17 @@ namespace NetExtender.Types.Numerics
                 _ => false
             };
         }
-        
+
         public Boolean Equals(Trilean other)
         {
             return _trilean == other._trilean;
         }
-        
+
         public Boolean Equals(Boolean other)
         {
             return this == other;
         }
-        
+
         public Boolean Equals(Boolean? other)
         {
             return this == other;

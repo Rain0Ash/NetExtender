@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+		<OutputType>Library</OutputType>
+        <UseWindowsForms>true</UseWindowsForms>
+        <UseWpf>true</UseWpf>
+		<LangVersion>9</LangVersion>
+		<Authors>Rain0Ash</Authors>
+        <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
+        <Version>0.8.0</Version>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NetExtender.UserInterface.WinForms\NetExtender.UserInterface.WinForms.csproj" />
+      <ProjectReference Include="..\NetExtender.UserInterface.WindowsPresentation\NetExtender.UserInterface.WindowsPresentation.csproj" />
+    </ItemGroup>
+
+</Project>

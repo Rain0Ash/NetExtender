@@ -5,6 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using NAudio.Wave;
+using NetExtender.Core.Types.Multithreading;
 using NetExtender.NAudio.Types.Streams;
 
 namespace NetExtender.Utils.NAudio
@@ -23,7 +24,7 @@ namespace NetExtender.Utils.NAudio
                 throw new ArgumentNullException(nameof(player));
             }
             
-            using SemaphoreSlim signal = new SemaphoreSlim(0, 1);
+            using MutexSlim signal = new MutexSlim();
 
             void Release(Object? sender, StoppedEventArgs args)
             {

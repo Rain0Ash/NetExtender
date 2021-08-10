@@ -2,6 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using NetExtender.AspNetCore.Windows.Services.Utils;
 using NetExtender.Domains.Applications.Interfaces;
@@ -34,12 +36,12 @@ namespace NetExtender.Domains.AspNetCore.Windows.Service.Applications
         {
         }
         
-        public override IApplication Run()
+        public override Task<IApplication> RunAsync(CancellationToken token)
         {
-            return Run(null);
+            return RunAsync(null, token);
         }
 
-        public virtual IApplication Run(IHost? host)
+        public virtual async Task<IApplication> RunAsync(IHost? host, CancellationToken token)
         {
             if (host is null)
             {
@@ -47,7 +49,8 @@ namespace NetExtender.Domains.AspNetCore.Windows.Service.Applications
             }
 
             Context = host;
-            return Run(Context.AsService());
+            RegisterShutdownToken(token);
+            return await RunAsync(Context.AsService(), token);
         }
         
         public override void Shutdown(Int32 code)

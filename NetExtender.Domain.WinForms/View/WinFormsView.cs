@@ -2,6 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using NetExtender.Domains.Applications;
 using NetExtender.Domains.View.Interfaces;
@@ -40,22 +42,22 @@ namespace NetExtender.Domains.View
             Domain.ShutdownMode = ApplicationShutdownMode.OnExplicitShutdown;
         }
 
-        protected override IApplicationView Run()
+        protected override Task<IApplicationView> RunAsync(CancellationToken token)
         {
             if (Context is not null)
             {
-                return Run(Context);
+                return RunAsync(Context, token);
             }
 
             System.Windows.Forms.Application.Run();
-            return this;
+            return Task.FromResult<IApplicationView>(this);
         }
 
-        protected virtual IApplicationView Run(Form? form)
+        protected virtual async Task<IApplicationView> RunAsync(Form? form, CancellationToken token)
         {
             if (form is null)
             {
-                return Run();
+                return await RunAsync(token);
             }
 
             Context ??= form;
@@ -67,13 +69,18 @@ namespace NetExtender.Domains.View
             Context.Closed += OnFormClosed;
             
             WinFormsApplication application = Domain.Current.Application as WinFormsApplication ?? throw new InitializeException($"{nameof(Domain.Current.Application)} is not {nameof(WinFormsApplication)}");
-            application.Run(Context);
+            await application.RunAsync(Context, token);
             return this;
         }
 
-        protected IApplicationView Run<T>() where T : Form, new()
+        protected Task<IApplicationView> RunAsync<T>() where T : Form, new()
         {
-            return Run(new T());
+            return RunAsync<T>(CancellationToken.None);
+        }
+        
+        protected virtual Task<IApplicationView> RunAsync<T>(CancellationToken token) where T : Form, new()
+        {
+            return RunAsync(new T(), token);
         }
 
         protected virtual void OnFormClosed(Object? sender, EventArgs args)

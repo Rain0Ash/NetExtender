@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
+using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.View.Interfaces;
@@ -18,8 +18,6 @@ namespace NetExtender.Domains.View
     public abstract class ApplicationView : IApplicationView
     {
         public static IApplicationView? Current { get; private set; }
-
-        protected static Object SyncObject { get; } = new Object();
 
         protected Boolean Started { get; private set; }
 
@@ -35,7 +33,7 @@ namespace NetExtender.Domains.View
                 {
                     return null;
                 }
-                
+
                 return new ProcessStartInfo(path)
                 {
                     UseShellExecute = true,
@@ -50,41 +48,79 @@ namespace NetExtender.Domains.View
             return Start(null);
         }
 
-        public IApplicationView Start(String[]? args)
+        public IApplicationView Start(IEnumerable<String>? args)
         {
-            lock (SyncObject)
+            return StartAsync(args).GetAwaiter().GetResult();
+        }
+
+        public IApplicationView Start(params String[]? args)
+        {
+            return StartAsync(args).GetAwaiter().GetResult();
+        }
+
+        public Task<IApplicationView> StartAsync()
+        {
+            return StartAsync(CancellationToken.None);
+        }
+
+        public Task<IApplicationView> StartAsync(CancellationToken token)
+        {
+            return StartAsync(null, token);
+        }
+
+        public Task<IApplicationView> StartAsync(IEnumerable<String>? args)
+        {
+            return StartAsync(args, CancellationToken.None);
+        }
+
+        public Task<IApplicationView> StartAsync(params String[]? args)
+        {
+            return StartAsync(args, CancellationToken.None);
+        }
+
+        public async Task<IApplicationView> StartAsync(IEnumerable<String>? args, CancellationToken token)
+        {
+            if (Started)
             {
-                if (Started)
+                if (Current == this)
                 {
-                    if (Current == this)
-                    {
-                        return this;
-                    }
-
-                    throw new AlreadyInitializedException("View already initialized", nameof(Current));
+                    return this;
                 }
 
-                try
-                {
-                    SaveArguments(args);
-
-                    IApplication application = Domain.Current.Application;
-                    if (application.Elevate == true && application.IsElevate == false)
-                    {
-                        Elevate(application);
-                    }
-                    
-                    StartInitialize();
-                    Current = this;
-                    Started = true;
-                    HandleArguments(Arguments);
-                    return Run();
-                }
-                catch (Exception exception)
-                {
-                    throw new InitializeException($"Exception when starting {GetType()} instance!", exception);
-                }
+                throw new AlreadyInitializedException("View already initialized", nameof(Current));
             }
+
+            token.ThrowIfCancellationRequested();
+
+            try
+            {
+                SaveArguments(args);
+
+                IApplication application = Domain.Current.Application;
+                if (application.Elevate == true && application.IsElevate == false)
+                {
+                    await ElevateAsync(application, token);
+                }
+
+                StartInitialize();
+                Current = this;
+                Started = true;
+                HandleArguments(Arguments);
+                return await RunAsync(token);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                throw new InitializeException($"Exception when starting {GetType()} instance!", exception);
+            }
+        }
+
+        public Task<IApplicationView> StartAsync(CancellationToken token, params String[]? args)
+        {
+            return StartAsync(args, token);
         }
 
         private void StartInitialize()
@@ -104,7 +140,7 @@ namespace NetExtender.Domains.View
         {
             Arguments = args?.WhereNotNullOrEmpty().ToImmutableArray() ?? ImmutableArray<String>.Empty;
         }
-        
+
         private void HandleArguments(ImmutableArray<String> args)
         {
             HandleArguments(this, args);
@@ -116,7 +152,17 @@ namespace NetExtender.Domains.View
 
         protected virtual IApplicationView Run()
         {
-            Domain.Run();
+            return RunAsync().GetAwaiter().GetResult();
+        }
+
+        protected Task<IApplicationView> RunAsync()
+        {
+            return RunAsync(CancellationToken.None);
+        }
+
+        protected virtual async Task<IApplicationView> RunAsync(CancellationToken token)
+        {
+            await Domain.RunAsync(token);
             return this;
         }
 
@@ -129,8 +175,13 @@ namespace NetExtender.Domains.View
 
             return ElevateAsync(application).GetAwaiter().GetResult();
         }
-        
-        protected virtual Task<Boolean> ElevateAsync(IApplication application)
+
+        protected Task<Boolean> ElevateAsync(IApplication application)
+        {
+            return ElevateAsync(application, CancellationToken.None);
+        }
+
+        protected virtual Task<Boolean> ElevateAsync(IApplication application, CancellationToken token)
         {
             if (application is null)
             {
@@ -150,7 +201,7 @@ namespace NetExtender.Domains.View
             }
 
             Process? process = Process.Start(info);
-            return process is null ? TaskUtils.False : application.ShutdownAsync();
+            return process is null ? TaskUtils.False : application.ShutdownAsync(token);
         }
 
         protected virtual ProcessStartInfo? GetProcessElevateInfo(IApplication application)
@@ -173,8 +224,9 @@ namespace NetExtender.Domains.View
             {
                 return null;
             }
-            
-            info.Verb = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? "runas" : "sudo";
+
+            info.Verb = RuntimeInformationUtils.ElevateVerbose ?? throw new PlatformNotSupportedException();
+
             info.ArgumentList.AddRange(Arguments);
 
             String? directory = ApplicationUtils.Directory;

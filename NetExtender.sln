@@ -41,13 +41,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.ImageSharp.Draw
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Physics", "NetExtender.Physics\NetExtender.Physics.csproj", "{3314520A-0185-4F2D-9A0F-E23630A5B585}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WPF", "NetExtender.UserInterface.WPF\NetExtender.UserInterface.WPF.csproj", "{893248EA-B992-462C-AD27-628EB72EFF59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WindowsPresentation", "NetExtender.UserInterface.WindowsPresentation\NetExtender.UserInterface.WindowsPresentation.csproj", "{893248EA-B992-462C-AD27-628EB72EFF59}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.Xamarin", "NetExtender.UserInterface.Xamarin\NetExtender.UserInterface.Xamarin.csproj", "{F1AB5887-46C7-4F74-A0CF-D861A74A7E61}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.WinForms", "NetExtender.Domain.WinForms\NetExtender.Domain.WinForms.csproj", "{7E0E72A6-A871-474B-83E0-377B5276766C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.WPF", "NetExtender.Domain.WPF\NetExtender.Domain.WPF.csproj", "{265EEED3-7DFD-4CEF-9E88-8F3BEC4F0994}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.WindowsPresentation", "NetExtender.Domain.WindowsPresentation\NetExtender.Domain.WindowsPresentation.csproj", "{265EEED3-7DFD-4CEF-9E88-8F3BEC4F0994}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.Xamarin", "NetExtender.Domain.Xamarin\NetExtender.Domain.Xamarin.csproj", "{B1628C4E-3A11-4A9D-B592-3982E2B0EB7A}"
 EndProject
@@ -57,11 +57,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.WinForms", "NetExtender.WinForms\NetExtender.WinForms.csproj", "{DAB909F0-FDE0-44FB-B977-0776FF1E01B5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.WPF", "NetExtender.WPF\NetExtender.WPF.csproj", "{A37F702C-DB88-4391-84B6-7220C0141002}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.WindowsPresentation", "NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj", "{A37F702C-DB88-4391-84B6-7220C0141002}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.WPFForms", "NetExtender.WPFForms\NetExtender.WPFForms.csproj", "{8431E4DB-6D77-4A20-AFE9-655C48CC8181}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.WindowsPresentationForms", "NetExtender.WindowsPresentationForms\NetExtender.WindowsPresentationForms.csproj", "{8431E4DB-6D77-4A20-AFE9-655C48CC8181}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WPFForms", "NetExtender.UserInterface.WPFForms\NetExtender.UserInterface.WPFForms.csproj", "{947201F3-F6F9-488F-934B-BA40166C9748}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WindowsPresentationForms", "NetExtender.UserInterface.WindowsPresentationForms\NetExtender.UserInterface.WindowsPresentationForms.csproj", "{947201F3-F6F9-488F-934B-BA40166C9748}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.NAudio", "NetExtender.NAudio\NetExtender.NAudio.csproj", "{F0BD0491-EA66-44A1-93CA-7A663568DA10}"
 EndProject

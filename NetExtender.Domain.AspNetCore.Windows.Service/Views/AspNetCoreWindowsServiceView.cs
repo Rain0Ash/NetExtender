@@ -2,6 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using NetExtender.Domains.AspNetCore.View;
@@ -30,11 +32,11 @@ namespace NetExtender.Domains.Windows.Service.AspNetCore.Views
         {
         }
 
-        protected override IApplicationView Run(IHost? host)
+        protected override async Task<IApplicationView> RunAsync(IHost? host, CancellationToken token)
         {
             if (host is null)
             {
-                return Run();
+                return await RunAsync(token);
             }
 
             Context ??= host;
@@ -44,7 +46,7 @@ namespace NetExtender.Domains.Windows.Service.AspNetCore.Views
             }
             
             AspNetCoreWindowsServiceApplication application = Domain.Current.Application as AspNetCoreWindowsServiceApplication ?? throw new InitializeException($"{nameof(Domain.Current.Application)} is not {nameof(AspNetCoreWindowsServiceApplication)}");
-            application.Run(Context);
+            await application.RunAsync(Context, token);
             return this;
         }
     }

@@ -2832,5 +2832,12 @@ namespace NetExtender.Utils.Types
 
             return source.ToArray();
         }
+        
+#if AWAIT_AS_IN_JAVASCRIPT
+        public static ValueTaskAwaiter<T> GetAwaiter<T>(this T value)
+        {
+            return ValueTask.FromResult(value).GetAwaiter();
+        }
+#endif
     }
 }

@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Domains.Applications.Interfaces;
@@ -10,6 +11,7 @@ using NetExtender.Utils.Application;
 
 namespace NetExtender.Domains.Applications
 {
+    [SuppressMessage("ReSharper", "MethodSupportsCancellation")]
     public abstract class Application : IApplication
     {
         public virtual Boolean? Elevate { get; init; }
@@ -25,7 +27,25 @@ namespace NetExtender.Domains.Applications
         public abstract IDispatcher? Dispatcher { get; }
         public abstract ApplicationShutdownMode ShutdownMode { get; set; }
 
-        public abstract IApplication Run();
+        public virtual CancellationToken ShutdownToken { get; protected set; }
+
+        protected virtual CancellationTokenRegistration RegisterShutdownToken(CancellationToken token)
+        {
+            ShutdownToken = token;
+            return ShutdownToken.Register(Shutdown);
+        }
+
+        public virtual IApplication Run()
+        {
+            return RunAsync().GetAwaiter().GetResult();
+        }
+
+        public Task<IApplication> RunAsync()
+        {
+            return RunAsync(CancellationToken.None);
+        }
+        
+        public abstract Task<IApplication> RunAsync(CancellationToken token);
 
         public void Shutdown()
         {

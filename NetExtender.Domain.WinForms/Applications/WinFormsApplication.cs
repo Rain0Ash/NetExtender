@@ -2,6 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Types.Dispatchers.Interfaces;
@@ -29,27 +31,25 @@ namespace NetExtender.Domains.Applications
             }
         }
 
-        protected internal WinFormsApplication()
-        {
-        }
-        
         [STAThread]
-        public override IApplication Run()
+        public override Task<IApplication> RunAsync(CancellationToken token)
         {
+            RegisterShutdownToken(token);
             System.Windows.Forms.Application.Run();
-            return this;
+            return Task.FromResult<IApplication>(this);
         }
 
         [STAThread]
-        public IApplication Run(Form? form)
+        public virtual Task<IApplication> RunAsync(Form? form, CancellationToken token)
         {
             if (form is null)
             {
-                return Run();
+                return RunAsync(token);
             }
 
+            RegisterShutdownToken(token);
             System.Windows.Forms.Application.Run(form);
-            return this;
+            return Task.FromResult<IApplication>(this);
         }
     }
 }

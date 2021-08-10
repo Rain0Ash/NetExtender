@@ -340,39 +340,10 @@ namespace NetExtender.Utils.Numerics
             return result * PowerN(DecimalE, count);
         }
 
-        private static Dictionary<UInt32, BigInteger> FactorialCache { get; } = new Dictionary<UInt32, BigInteger>(64);
-
-        private static BigInteger Factorial(this UInt32 value)
-        {
-            if (value <= 1)
-            {
-                return 1;
-            }
-
-            if (FactorialCache.TryGetValue(value, out BigInteger result))
-            {
-                return result;
-            }
-
-            //TODO: use already cached values for multiply
-
-            result = 1;
-
-            for (UInt32 i = 2; i < value; ++i)
-            {
-                result *= i;
-            }
-
-            result *= value;
-
-            FactorialCache.Add(value, result);
-            return result;
-        }
-
         private static Boolean IsInteger(Decimal value)
         {
-            Int64 longValue = (Int64) value;
-            return Abs(value - longValue) <= DecimalEpsilon;
+            Int64 @long = (Int64) value;
+            return Abs(value - @long) <= DecimalEpsilon;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1132,22 +1103,22 @@ namespace NetExtender.Utils.Numerics
         {
             TruncateToPeriodicInterval(ref value);
 
-            if (value >= -DecimalPIx2 && value <= -DecimalPI)
+            if (value is >= -DecimalPIx2 and <= -DecimalPI)
             {
                 return true;
             }
 
-            if (value >= -DecimalPI && value <= Decimal.Zero)
+            if (value is >= -DecimalPI and <= Decimal.Zero)
             {
                 return false;
             }
 
-            if (value >= Decimal.Zero && value <= DecimalPI)
+            if (value is >= Decimal.Zero and <= DecimalPI)
             {
                 return true;
             }
 
-            if (value >= DecimalPI && value <= DecimalPIx2)
+            if (value is >= DecimalPI and <= DecimalPIx2)
             {
                 return false;
             }
@@ -1245,12 +1216,12 @@ namespace NetExtender.Utils.Numerics
             //truncating to  [-2*PI;2*PI]
             TruncateToPeriodicInterval(ref value);
 
-            if (value >= DecimalPI && value <= DecimalPIx2)
+            if (value is >= DecimalPI and <= DecimalPIx2)
             {
                 return -Cos(value - DecimalPI);
             }
 
-            if (value >= -DecimalPIx2 && value <= -DecimalPI)
+            if (value is >= -DecimalPIx2 and <= -DecimalPI)
             {
                 return -Cos(value + DecimalPI);
             }
@@ -2226,43 +2197,6 @@ namespace NetExtender.Utils.Numerics
             return source.Select(Convert.ToDecimal);
         }
 
-        /// <summary>
-        /// Gets the median from the list
-        /// </summary>
-        /// <typeparam name="T">The data type of the list</typeparam>
-        /// <param name="values">The list of values</param>
-        /// <param name="average">
-        /// Function used to find the average of two values if the number of values is even.
-        /// </param>
-        /// <param name="order">Function used to order the values</param>
-        /// <returns>The median value</returns>
-        public static T Median<T>(this IList<T> values, Func<T, T, T> average = null, Func<T, T> order = null)
-        {
-            if (values is null)
-            {
-                throw new ArgumentNullException(nameof(values));
-            }
-
-            if (values.Count <= 0)
-            {
-                return default;
-            }
-
-            average ??= (x, _) => x;
-            order ??= x => x;
-            values = values.OrderBy(order).ToList();
-
-            if (values.Count % 2 != 0)
-            {
-                return values[values.Count / 2];
-            }
-
-            T first = values[values.Count / 2];
-            T second = values[values.Count / 2 - 1];
-
-            return average(first, second);
-        }
-
         public static String ToBase(this Single value, Byte @base, UInt16 precise = 16 * sizeof(Single))
         {
             return IsEpsilon(value) ? "0" : ToBase((Double) value, @base, precise);
@@ -2321,7 +2255,7 @@ namespace NetExtender.Utils.Numerics
                 buffer[i++] = (Char) (number < 10 ? ZeroChar + number : AlphabetStart + number);
 
                 remainder = nv.GetDigitsAfterPoint();
-            } while (!(remainder < Double.Epsilon && remainder > -Double.Epsilon) && i < precise);
+            } while (!(remainder is < Double.Epsilon and > -Double.Epsilon) && i < precise);
 
             return $"{(negative ? "-" : String.Empty)}" + new String(buffer.Slice(0, i));
         }
@@ -2402,7 +2336,7 @@ namespace NetExtender.Utils.Numerics
 
             foreach (Char character in value.ToUpper().Trim().TrimStart('0'))
             {
-                if (character < ZeroChar || character >= max || @base > 10 && character > '9' && character < 'A')
+                if (character < ZeroChar || character >= max || @base > 10 && character is > '9' and < 'A')
                 {
                     throw new ArgumentOutOfRangeException(nameof(value));
                 }

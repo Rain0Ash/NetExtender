@@ -6532,9 +6532,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Byte difference = max.DiscreteIncludeDifference(min, Byte.MaxValue);
-			return difference <= (Byte.MaxValue + 1) * 4 ?
-				UniqueShuffleRange(random, min, max, difference) :
-				UniqueSetRange(random, min, max);
+			return UniqueShuffleRange(random, min, max, difference);
 		}
 
 		public static IEnumerable<SByte> UniqueRange<T>(this T random, SByte min, SByte max) where T : IRandom
@@ -6555,9 +6553,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Byte difference = max.DiscreteIncludeDifference(min, Byte.MaxValue);
-			return difference <= (Byte.MaxValue + 1) * 4 ?
-				UniqueShuffleRange(random, min, max, difference) :
-				UniqueSetRange(random, min, max);
+			return UniqueShuffleRange(random, min, max, difference);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -6740,9 +6736,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Byte difference = max.DiscreteIncludeDifference(min, Byte.MaxValue);
-			return difference <= (Byte.MaxValue + 1) * 4 ?
-				UniqueShuffleRange(random, min, max, difference) :
-				UniqueSetRange(random, min, max);
+			return UniqueShuffleRange(random, min, max, difference);
 		}
 
 		public static IEnumerable<Byte> UniqueRange<T>(this T random, Byte min, Byte max) where T : IRandom
@@ -6763,9 +6757,7 @@ namespace NetExtender.Utils.Numerics
 			}
 
 			Byte difference = max.DiscreteIncludeDifference(min, Byte.MaxValue);
-			return difference <= (Byte.MaxValue + 1) * 4 ?
-				UniqueShuffleRange(random, min, max, difference) :
-				UniqueSetRange(random, min, max);
+			return UniqueShuffleRange(random, min, max, difference);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
