@@ -8,7 +8,7 @@ using System.Linq;
 using NetExtender.Configuration.Interfaces.Property.Common;
 using NetExtender.Crypto;
 using NetExtender.Crypto.CryptKey.Interfaces;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration
 {

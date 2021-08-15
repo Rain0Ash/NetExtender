@@ -8,7 +8,7 @@ using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Dictionaries.Interfaces;
 using NetExtender.Types.Maps;
 using NetExtender.Types.Maps.Interfaces;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration
 {

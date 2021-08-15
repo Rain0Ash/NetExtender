@@ -172,7 +172,7 @@ namespace NetExtender.Crypto.Base
         /// <param name="output">Stream that the encoded text is written to.</param>
         public override void Encode(Stream input, TextWriter output)
         {
-            StreamHelper.Encode(input, output, (buffer, lastBlock) => Encode(buffer.Span));
+            StreamHelper.Encode(input, output, (buffer, _) => Encode(buffer.Span));
         }
 
         /// <summary>
@@ -183,8 +183,7 @@ namespace NetExtender.Crypto.Base
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public override Task EncodeAsync(Stream input, TextWriter output)
         {
-            return StreamHelper.EncodeAsync(input, output, (buffer, lastBlock) =>
-                Encode(buffer.Span));
+            return StreamHelper.EncodeAsync(input, output, (buffer, _) => Encode(buffer.Span));
         }
 
         /// <summary>

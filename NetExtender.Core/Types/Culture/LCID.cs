@@ -3,7 +3,7 @@
 
 using System;
 using System.Globalization;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Culture
 {
@@ -111,7 +111,7 @@ namespace NetExtender.Types.Culture
 
         public static implicit operator CultureInfo(LCID lcid)
         {
-            return lcid == CultureUtils.Default ? CultureInfo.InvariantCulture : CultureInfo.GetCultureInfo(lcid);
+            return lcid == CultureUtilities.Default ? CultureInfo.InvariantCulture : CultureInfo.GetCultureInfo(lcid);
         }
 
         public static implicit operator LCID(CultureInfo info)
@@ -141,7 +141,7 @@ namespace NetExtender.Types.Culture
         
         public LCID(Int32 lcid)
         {
-            Code = lcid > 0 ? lcid : CultureUtils.Default;
+            Code = lcid > 0 ? lcid : CultureUtilities.Default;
         }
 
         public Boolean Equals(LCID other)

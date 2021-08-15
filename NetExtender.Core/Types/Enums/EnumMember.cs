@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using NetExtender.Types.Enums.Attributes;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Enums
 {
@@ -63,7 +63,7 @@ namespace NetExtender.Types.Enums
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public IReadOnlyList<TAttribute> GetAttributes<TAttribute>() where TAttribute : Attribute
         {
-            return EnumUtils.CacheAttributes<T, TAttribute>.Cache[Value];
+            return EnumUtilities.CacheAttributes<T, TAttribute>.Cache[Value];
         }
 
         /// <summary>

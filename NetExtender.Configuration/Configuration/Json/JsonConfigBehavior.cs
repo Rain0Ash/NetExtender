@@ -7,7 +7,7 @@ using NetExtender.Configuration.File;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.NewtonSoft;
 using NetExtender.Types.Trees;
-using NetExtender.Utils.Serialization;
+using NetExtender.Utilities.Serialization;
 using Newtonsoft.Json;
 
 namespace NetExtender.Configuration.Json

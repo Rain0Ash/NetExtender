@@ -7,7 +7,7 @@ using System.IO.Compression;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 using NetExtender.Crypto.Compression;
 
 namespace NetExtender.Crypto
@@ -183,7 +183,7 @@ namespace NetExtender.Crypto
             }
 
             await using MemoryStream stream = new MemoryStream();
-            await CompressAsync(data.ToStream(), stream, level, type, token).ConfigureAwait(false);
+            await CompressAsync(await data.ToStreamAsync().ConfigureAwait(false), stream, level, type, token).ConfigureAwait(false);
             return stream.ToArray();
         }
 
@@ -213,7 +213,7 @@ namespace NetExtender.Crypto
             }
 
             await using MemoryStream stream = new MemoryStream();
-            await DecompressAsync(data.ToStream(), stream, type, token).ConfigureAwait(false);
+            await DecompressAsync(await data.ToStreamAsync().ConfigureAwait(false), stream, type, token).ConfigureAwait(false);
             return stream.ToArray();
         }
 

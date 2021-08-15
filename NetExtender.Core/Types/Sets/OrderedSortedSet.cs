@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NetExtender.Comparers;
 using NetExtender.Types.Sets.Interfaces;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Sets
 {
@@ -70,7 +70,6 @@ namespace NetExtender.Types.Sets
             Set = new SortedSetExtended<T>((IComparer<T>) Inner);
         }
         
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public OrderedSortedSet(IEnumerable<T> source)
         {
             if (source is null)
@@ -84,7 +83,6 @@ namespace NetExtender.Types.Sets
             Set = new SortedSetExtended<T>(source, Inner);
         }
         
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public OrderedSortedSet(IEnumerable<T> source, IComparer<T>? comparer)
         {
             if (source is null)
@@ -98,7 +96,6 @@ namespace NetExtender.Types.Sets
             Set = new SortedSetExtended<T>(source, Inner);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public OrderedSortedSet(IEnumerable<T> source, IEnumerable<T> order)
         {
             if (source is null)

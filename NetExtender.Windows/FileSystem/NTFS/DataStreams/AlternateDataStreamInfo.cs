@@ -6,9 +6,9 @@ using System.ComponentModel;
 using System.IO;
 using System.Security;
 using Microsoft.Win32.SafeHandles;
-using NetExtender.Utils.Types;
-using NetExtender.Utils.Windows.IO;
-using NetExtender.Utils.Windows.IO.NTFS;
+using NetExtender.Utilities.Types;
+using NetExtender.Utilities.Windows.IO;
+using NetExtender.Utilities.Windows.IO.NTFS;
 using NetExtender.Windows.IO;
 
 namespace NetExtender.IO.FileSystem.NTFS.DataStreams
@@ -130,7 +130,7 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
             Size = info.StreamSize;
             Exists = true;
 
-            FullPath = NTFSAlternateStreamUtils.BuildStreamPath(Path, Name);
+            FullPath = NTFSAlternateStreamUtilities.BuildStreamPath(Path, Name);
         }
 
         /// <summary>
@@ -176,12 +176,12 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
 
             Path = path;
             Name = name;
-            FullPath = stream ?? NTFSAlternateStreamUtils.BuildStreamPath(path, name);
+            FullPath = stream ?? NTFSAlternateStreamUtilities.BuildStreamPath(path, name);
             Exists = exists;
 
             if (Exists)
             {
-                Size = (Int64) WindowsFileUtils.GetFileSize(FullPath);
+                Size = (Int64) WindowsFileUtilities.GetFileSize(FullPath);
             }
         }
 
@@ -226,20 +226,20 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
         /// <exception cref="Win32Exception">
         /// There was an error opening the stream.
         /// </exception>
-        public FileStream? Open(FileMode mode, FileAccess access, FileShare share = FileShare.None, Int32 bufferSize = BufferUtils.DefaultBuffer, Boolean overlapped = false)
+        public FileStream? Open(FileMode mode, FileAccess access, FileShare share = FileShare.None, Int32 bufferSize = BufferUtilities.DefaultBuffer, Boolean overlapped = false)
         {
             if (bufferSize <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(bufferSize), bufferSize, null);
             }
 
-            SafeFileHandle handle = WindowsPathUtils.Safe.CreateFile(FullPath, access.ToNative(), share, IntPtr.Zero, mode, overlapped ? NativeFileFlags.Overlapped : 0, IntPtr.Zero);
+            SafeFileHandle handle = WindowsPathUtilities.Safe.CreateFile(FullPath, access.ToNative(), share, IntPtr.Zero, mode, overlapped ? NativeFileFlags.Overlapped : 0, IntPtr.Zero);
             if (!handle.IsInvalid)
             {
                 return new FileStream(handle, access, bufferSize, overlapped);
             }
 
-            Exception? exception = WindowsPathUtils.Safe.GetLastIOException(FullPath);
+            Exception? exception = WindowsPathUtilities.Safe.GetLastIOException(FullPath);
 
             if (exception is not null)
             {
@@ -380,7 +380,7 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
         /// </exception>
         public Boolean Delete()
         {
-            return WindowsPathUtils.Safe.DeleteFile(FullPath);
+            return WindowsPathUtilities.Safe.DeleteFile(FullPath);
         }
 
         /// <summary>

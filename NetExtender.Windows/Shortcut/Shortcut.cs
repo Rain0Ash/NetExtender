@@ -6,7 +6,7 @@ using System.IO;
 using System.Reflection;
 using NetExtender.IO.Shortcut.Interfaces;
 using NetExtender.Windows.Shortcut.Interfaces;
-using NetExtender.Utils.IO;
+using NetExtender.Utilities.IO;
 
 namespace NetExtender.Windows.Shortcut
 {
@@ -19,7 +19,7 @@ namespace NetExtender.Windows.Shortcut
                 return null;
             }
 
-            if (!PathUtils.IsExistAsFile(path))
+            if (!PathUtilities.IsExistAsFile(path))
             {
                 return null;
             }
@@ -173,7 +173,7 @@ namespace NetExtender.Windows.Shortcut
         {
             get
             {
-                return SaveDirectory is not null ? Path.Join(PathUtils.IsValidPath(SaveDirectory) ? SaveDirectory : WorkingDirectory, Name) : null;
+                return SaveDirectory is not null ? Path.Join(PathUtilities.IsValidPath(SaveDirectory) ? SaveDirectory : WorkingDirectory, Name) : null;
             }
         }
 
@@ -191,7 +191,7 @@ namespace NetExtender.Windows.Shortcut
                     throw new ArgumentNullException(nameof(value));
                 }
                 
-                if (!PathUtils.IsValidPath(value))
+                if (!PathUtilities.IsValidPath(value))
                 {
                     throw new ArgumentException(@"Path is not valid", nameof(value));
                 }

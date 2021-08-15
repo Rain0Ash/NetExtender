@@ -7,26 +7,59 @@ using System.Collections.Generic;
 
 namespace NetExtender.Types.Collections
 {
-    public sealed class CollectionWrapper<T> : IReadOnlyCollection<T>
+    public sealed class CollectionWrapper<T> : ICollection<T>, IReadOnlyCollection<T>
     {
-        private readonly ICollection<T> _collection;
-        
+        private ICollection<T> Collection { get; }
+
         public Int32 Count
         {
             get
             {
-                return _collection.Count;
+                return Collection.Count;
+            }
+        }
+
+        public Boolean IsReadOnly
+        {
+            get
+            {
+                return Collection.IsReadOnly;
             }
         }
 
         public CollectionWrapper(ICollection<T> collection)
         {
-            _collection = collection ?? throw new ArgumentNullException(nameof(collection));
+            Collection = collection ?? throw new ArgumentNullException(nameof(collection));
         }
         
+        public Boolean Contains(T item)
+        {
+            return Collection.Contains(item);
+        }
+        
+        public void Add(T item)
+        {
+            Collection.Add(item);
+        }
+
+        public Boolean Remove(T item)
+        {
+            return Collection.Remove(item);
+        }
+        
+        public void Clear()
+        {
+            Collection.Clear();
+        }
+
+        public void CopyTo(T[] array, Int32 arrayIndex)
+        {
+            Collection.CopyTo(array, arrayIndex);
+        }
+
         public IEnumerator<T> GetEnumerator()
         {
-            return _collection.GetEnumerator();
+            return Collection.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

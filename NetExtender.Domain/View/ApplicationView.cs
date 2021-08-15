@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.View.Interfaces;
 using NetExtender.Exceptions;
-using NetExtender.Utils.Application;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Application;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Domains.View
 {
@@ -27,7 +27,7 @@ namespace NetExtender.Domains.View
         {
             get
             {
-                String? path = ApplicationUtils.Path;
+                String? path = ApplicationUtilities.Path;
 
                 if (path is null)
                 {
@@ -99,14 +99,14 @@ namespace NetExtender.Domains.View
                 IApplication application = Domain.Current.Application;
                 if (application.Elevate == true && application.IsElevate == false)
                 {
-                    await ElevateAsync(application, token);
+                    await ElevateAsync(application, token).ConfigureAwait(false);
                 }
 
                 StartInitialize();
                 Current = this;
                 Started = true;
                 HandleArguments(Arguments);
-                return await RunAsync(token);
+                return await RunAsync(token).ConfigureAwait(false);
             }
             catch (OperationCanceledException)
             {
@@ -162,7 +162,7 @@ namespace NetExtender.Domains.View
 
         protected virtual async Task<IApplicationView> RunAsync(CancellationToken token)
         {
-            await Domain.RunAsync(token);
+            await Domain.RunAsync(token).ConfigureAwait(false);
             return this;
         }
 
@@ -190,18 +190,18 @@ namespace NetExtender.Domains.View
 
             if (application.IsElevate != false)
             {
-                return TaskUtils.True;
+                return TaskUtilities.True;
             }
 
             ProcessStartInfo? info = GetProcessElevateInfo(application);
 
             if (info is null)
             {
-                return TaskUtils.False;
+                return TaskUtilities.False;
             }
 
             Process? process = Process.Start(info);
-            return process is null ? TaskUtils.False : application.ShutdownAsync(token);
+            return process is null ? TaskUtilities.False : application.ShutdownAsync(token);
         }
 
         protected virtual ProcessStartInfo? GetProcessElevateInfo(IApplication application)
@@ -211,7 +211,7 @@ namespace NetExtender.Domains.View
                 throw new ArgumentNullException(nameof(application));
             }
 
-            String? path = ApplicationUtils.Path;
+            String? path = ApplicationUtilities.Path;
 
             if (path is null)
             {
@@ -225,11 +225,11 @@ namespace NetExtender.Domains.View
                 return null;
             }
 
-            info.Verb = RuntimeInformationUtils.ElevateVerbose ?? throw new PlatformNotSupportedException();
+            info.Verb = RuntimeInformationUtilities.ElevateVerbose ?? throw new PlatformNotSupportedException();
 
             info.ArgumentList.AddRange(Arguments);
 
-            String? directory = ApplicationUtils.Directory;
+            String? directory = ApplicationUtilities.Directory;
 
             if (directory is not null)
             {

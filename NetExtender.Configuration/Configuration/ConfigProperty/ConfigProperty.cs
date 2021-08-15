@@ -7,7 +7,7 @@ using NetExtender.Configuration.Interfaces.Property;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Exceptions;
 using NetExtender.Interfaces;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration
 {
@@ -91,7 +91,7 @@ namespace NetExtender.Configuration
             Config = config ?? throw new ArgumentNullException(nameof(config));
             DefaultValue = defaultValue;
             Validate = validate;
-            Converter = converter ?? ConvertUtils.TryConvert;
+            Converter = converter ?? ConvertUtilities.TryConvert;
         }
 
         private Boolean Initialize()

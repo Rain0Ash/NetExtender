@@ -6,8 +6,9 @@ using System.Drawing;
 using System.Windows.Forms;
 using NetExtender.UserInterface.Events;
 using NetExtender.UserInterface.Interfaces;
-using NetExtender.Utils.Numerics;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.Types;
+using NetExtender.Utilities.UserInterface;
 using NetExtender.Windows;
 
 namespace NetExtender.UserInterface.WinForms.Forms
@@ -149,7 +150,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
 
         public Boolean BringToForeground()
         {
-            return this.BringToForeground();
+            return WinFormsUserInterfaceUtilities.BringToForeground(this);
         }
 
         public new InterfaceDialogResult ShowDialog()

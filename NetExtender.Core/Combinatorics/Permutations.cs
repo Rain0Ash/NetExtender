@@ -5,8 +5,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using NetExtender.Combinatorics.Interfaces;
-using NetExtender.Utils.Numerics;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Combinatorics
 {
@@ -188,7 +188,7 @@ namespace NetExtender.Combinatorics
             Int32 count = 1;
             for (Int32 i = 1; i < Orders.Length; ++i)
             {
-                numerators.AddRange(PrimeUtils.Factor(i + 1));
+                numerators.AddRange(PrimeUtilities.Factor(i + 1));
                 
                 if (Orders[i] == Orders[i - 1])
                 {
@@ -198,7 +198,7 @@ namespace NetExtender.Combinatorics
 
                 for (Int32 factor = 2; factor <= count; ++factor)
                 {
-                    divisors.AddRange(PrimeUtils.Factor(factor));
+                    divisors.AddRange(PrimeUtilities.Factor(factor));
                 }
 
                 count = 1;
@@ -206,10 +206,10 @@ namespace NetExtender.Combinatorics
 
             for (Int32 factor = 2; factor <= count; ++factor)
             {
-                divisors.AddRange(PrimeUtils.Factor(factor));
+                divisors.AddRange(PrimeUtilities.Factor(factor));
             }
 
-            return PrimeUtils.EvaluatePrimeFactors(PrimeUtils.DividePrimeFactors(numerators, divisors));
+            return PrimeUtilities.EvaluatePrimeFactors(PrimeUtilities.DividePrimeFactors(numerators, divisors));
         }
 
         /// <summary>

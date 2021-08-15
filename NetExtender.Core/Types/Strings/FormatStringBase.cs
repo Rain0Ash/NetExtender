@@ -3,7 +3,7 @@
 
 using System;
 using NetExtender.Types.Strings.Interfaces;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Strings
 {

@@ -3,7 +3,7 @@
 
 using System;
 using NetExtender.Types.Strings.Interfaces;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Strings
 {
@@ -18,7 +18,7 @@ namespace NetExtender.Types.Strings
         
         public virtual String Format(IFormatProvider? provider)
         {
-            return Arguments > 0 ? Format(provider, StringUtils.FormatSafeGetArguments(FormatArguments, Arguments)) : NonFormatToString(provider);
+            return Arguments > 0 ? Format(provider, StringUtilities.FormatSafeGetArguments(FormatArguments, Arguments)) : NonFormatToString(provider);
         }
         
         public override String ToString()

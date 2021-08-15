@@ -12,7 +12,7 @@ using NetExtender.Configuration.Interfaces;
 using NetExtender.Crypto;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Exceptions;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration
 {
@@ -251,7 +251,7 @@ namespace NetExtender.Configuration
         private T GetValueInternalCrypt<T>(String value, T defaultValue, ICryptKey crypt, TryConverter<String, T> converter)
         {
             crypt ??= Crypt;
-            converter ??= ConvertUtils.TryConvert;
+            converter ??= ConvertUtilities.TryConvert;
             
             T cval;
             if (!crypt.IsDecrypt || value is null)
@@ -284,7 +284,7 @@ namespace NetExtender.Configuration
 
         public T GetValue<T>(String key, T defaultValue, ICryptKey crypt, IEnumerable<String> sections)
         {
-            return GetValue(key, defaultValue, crypt, ConvertUtils.TryConvert, sections);
+            return GetValue(key, defaultValue, crypt, ConvertUtilities.TryConvert, sections);
         }
 
         public T GetValue<T>(String key, T defaultValue, TryConverter<String, T> converter, IEnumerable<String> sections)
@@ -315,7 +315,7 @@ namespace NetExtender.Configuration
         
         public Task<T> GetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, IEnumerable<String> sections, CancellationToken token)
         {
-            return GetValueAsync(key, defaultValue, crypt, ConvertUtils.TryConvert, sections, token);
+            return GetValueAsync(key, defaultValue, crypt, ConvertUtilities.TryConvert, sections, token);
         }
         
         public Task<T> GetValueAsync<T>(String key, T defaultValue, TryConverter<String, T> converter, IEnumerable<String> sections)
@@ -421,7 +421,7 @@ namespace NetExtender.Configuration
         public Boolean GetOrSetValueInternalCrypt<T>(String value, T defaultValue, ICryptKey crypt, TryConverter<String, T> converter, out T result)
         {
             crypt ??= Crypt;
-            converter ??= ConvertUtils.TryConvert;
+            converter ??= ConvertUtilities.TryConvert;
             
             if (value is null)
             {
@@ -445,7 +445,7 @@ namespace NetExtender.Configuration
         
         public T GetOrSetValue<T>(String key, T defaultValue, ICryptKey crypt, IEnumerable<String> sections)
         {
-            return GetOrSetValue(key, defaultValue, crypt, ConvertUtils.TryConvert, sections);
+            return GetOrSetValue(key, defaultValue, crypt, ConvertUtilities.TryConvert, sections);
         }
 
         public T GetOrSetValue<T>(String key, T defaultValue, TryConverter<String, T> converter, IEnumerable<String> sections)
@@ -489,7 +489,7 @@ namespace NetExtender.Configuration
         
         public Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, IEnumerable<String> sections, CancellationToken token)
         {
-            return GetOrSetValueAsync(key, defaultValue, crypt, ConvertUtils.TryConvert, sections, token);
+            return GetOrSetValueAsync(key, defaultValue, crypt, ConvertUtilities.TryConvert, sections, token);
         }
         
         public Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, TryConverter<String, T> converter, IEnumerable<String> sections)
@@ -609,7 +609,7 @@ namespace NetExtender.Configuration
                 return GetAsync(key, sections, token);
             }
 
-            return StringUtils.Null;
+            return StringUtilities.Null;
         }
 
         private Boolean SetInternalCrypt(ref String key, ref String value, ref IEnumerable<String> sections)
@@ -649,7 +649,7 @@ namespace NetExtender.Configuration
                 return SetAsync(key, value, sections, token);
             }
 
-            return TaskUtils.False;
+            return TaskUtilities.False;
         }
 
         private Boolean CheckReadOnly()

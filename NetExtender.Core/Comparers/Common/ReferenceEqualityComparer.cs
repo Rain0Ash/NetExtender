@@ -1,9 +1,9 @@
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
+#if !NET5_0
 namespace NetExtender.Comparers.Common
 {
-#if !NET5_0
     /// <summary>
     /// Equality comparer that uses the <see cref="object.ReferenceEquals(object, object)"/> to compare values.
     /// </summary>
@@ -75,5 +75,5 @@ namespace NetExtender.Comparers.Common
             return obj.GetHashCode();
         }
     }
-#endif
 }
+#endif

@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
-using NetExtender.AspNetCore.Windows.Services.Utils;
+using NetExtender.AspNetCore.Windows.Services.Utilities;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.Service.Applications;
 using NetExtender.Windows.Services.Types.Installers;

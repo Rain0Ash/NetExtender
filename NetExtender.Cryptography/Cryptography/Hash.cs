@@ -3,7 +3,7 @@
 
 using System;
 using System.Security.Cryptography;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 using Md5 = System.Security.Cryptography.MD5;
 
 namespace NetExtender.Crypto
@@ -267,12 +267,11 @@ namespace NetExtender.Crypto
 
             public static Byte Crc8(ReadOnlySpan<Byte> data, Int32 size)
             {
-                Int32 len = size;
                 UInt32 checksum = 0;
 
                 unchecked
                 {
-                    for (Int32 i = 0; i <= len - 1; i++)
+                    for (Int32 i = 0; i <= size - 1; i++)
                     {
                         checksum *= 0x13;
                         checksum += data[i];

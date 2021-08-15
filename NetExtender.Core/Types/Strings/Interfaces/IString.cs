@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Strings.Interfaces
 {
@@ -332,52 +332,52 @@ namespace NetExtender.Types.Strings.Interfaces
 
         public IString[] Split(Char separator, StringSplitOptions options = StringSplitOptions.None)
         {
-            return ToString().Split(separator, options).Select(StringUtils.ToIString).ToArray();
+            return ToString().Split(separator, options).Select(StringUtilities.ToIString).ToArray();
         }
 
         public IString[] Split(Char separator, Int32 count, StringSplitOptions options = StringSplitOptions.None)
         {
-            return ToString().Split(separator, count, options).Select(StringUtils.ToIString).ToArray();
+            return ToString().Split(separator, count, options).Select(StringUtilities.ToIString).ToArray();
         }
 
         public IString[] Split(params Char[]? separator)
         {
-            return ToString().Split(separator).Select(StringUtils.ToIString).ToArray();
+            return ToString().Split(separator).Select(StringUtilities.ToIString).ToArray();
         }
 
         public IString[] Split(Char[]? separator, Int32 count)
         {
-            return ToString().Split(separator, count).Select(StringUtils.ToIString).ToArray();
+            return ToString().Split(separator, count).Select(StringUtilities.ToIString).ToArray();
         }
 
         public IString[] Split(Char[]? separator, StringSplitOptions options)
         {
-            return ToString().Split(separator, options).Select(StringUtils.ToIString).ToArray();
+            return ToString().Split(separator, options).Select(StringUtilities.ToIString).ToArray();
         }
 
         public IString[] Split(Char[]? separator, Int32 count, StringSplitOptions options)
         {
-            return ToString().Split(separator, count, options).Select(StringUtils.ToIString).ToArray();
+            return ToString().Split(separator, count, options).Select(StringUtilities.ToIString).ToArray();
         }
 
         public IString[] Split(String? separator, StringSplitOptions options = StringSplitOptions.None)
         {
-            return ToString().Split(separator, options).Select(StringUtils.ToIString).ToArray();
+            return ToString().Split(separator, options).Select(StringUtilities.ToIString).ToArray();
         }
 
         public IString[] Split(String? separator, Int32 count, StringSplitOptions options = StringSplitOptions.None)
         {
-            return ToString().Split(separator, count, options).Select(StringUtils.ToIString).ToArray();
+            return ToString().Split(separator, count, options).Select(StringUtilities.ToIString).ToArray();
         }
 
         public IString[] Split(String[]? separator, StringSplitOptions options)
         {
-            return ToString().Split(separator, options).Select(StringUtils.ToIString).ToArray();
+            return ToString().Split(separator, options).Select(StringUtilities.ToIString).ToArray();
         }
 
         public IString[] Split(String[]? separator, Int32 count, StringSplitOptions options)
         {
-            return ToString().Split(separator, count, options).Select(StringUtils.ToIString).ToArray();
+            return ToString().Split(separator, count, options).Select(StringUtilities.ToIString).ToArray();
         }
 
         public IString Insert(Int32 start, String value)

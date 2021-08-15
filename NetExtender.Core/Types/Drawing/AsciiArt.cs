@@ -7,12 +7,11 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.IO;
-using NetExtender.Utils.IO;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Drawing
 {
-    public class AsciiArt : IConsoleMessage
+    public class AsciiArt
     {
         [return : NotNullIfNotNull("art")]
         public static implicit operator String?(AsciiArt? art)
@@ -55,11 +54,6 @@ namespace NetExtender.Types.Drawing
             
             Size = array.GetMatrixSize();
             Art = array;
-        }
-
-        public String GetConsoleText(IFormatProvider? provider = null)
-        {
-            return this;
         }
         
         public override String ToString()

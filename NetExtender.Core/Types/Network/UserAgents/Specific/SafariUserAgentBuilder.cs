@@ -4,7 +4,7 @@
 using System;
 using System.Globalization;
 using NetExtender.Types.Network.UserAgents.Interfaces;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Network.UserAgents.Specific
 {

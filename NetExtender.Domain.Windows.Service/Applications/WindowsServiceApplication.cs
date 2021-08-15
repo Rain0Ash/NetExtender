@@ -11,11 +11,11 @@ using NetExtender.Domains.Applications;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Exceptions;
 using NetExtender.Types.Dispatchers.Interfaces;
-using NetExtender.Utils.Application;
+using NetExtender.Utilities.Application;
 using NetExtender.Windows.Services.Types.Installers;
 using NetExtender.Windows.Services.Types.Services;
 using NetExtender.Windows.Services.Types.Services.Interfaces;
-using NetExtender.Windows.Services.Utils;
+using NetExtender.Windows.Services.Utilities;
 using NetExtender.Workstation;
 
 namespace NetExtender.Domains.Service.Applications
@@ -204,7 +204,7 @@ namespace NetExtender.Domains.Service.Applications
                     return _installer;
                 }
                 
-                String? path = ApplicationUtils.Path;
+                String? path = ApplicationUtilities.Path;
                 if (path is null)
                 {
                     return null;
@@ -258,9 +258,9 @@ namespace NetExtender.Domains.Service.Applications
                 throw new InitializeException("Can't initialize service. Maybe need elevate execute for install service.");
             }
             
-            if (WindowsServiceUtils.IsServiceExist(Domain.ApplicationIdentifier))
+            if (WindowsServiceUtilities.IsServiceExist(Domain.ApplicationIdentifier))
             {
-                if (!await WindowsServiceUtils.StartServiceAsync(Domain.ApplicationIdentifier, token))
+                if (!await WindowsServiceUtilities.StartServiceAsync(Domain.ApplicationIdentifier, token))
                 {
                     throw new InitializeException("Can't start service. Maybe need elevate execute for starting service.");
                 }

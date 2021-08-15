@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using NetExtender.Utils.Numerics;
+using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Types.Numerics
 {

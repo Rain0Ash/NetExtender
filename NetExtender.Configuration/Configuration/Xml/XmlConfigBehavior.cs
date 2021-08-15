@@ -7,7 +7,7 @@ using System.Linq;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Json;
 using NetExtender.Crypto.CryptKey.Interfaces;
-using NetExtender.Utils.Serialization;
+using NetExtender.Utilities.Serialization;
 using NetExtender.Types.Trees;
 
 namespace NetExtender.Configuration.Xml
@@ -46,7 +46,7 @@ namespace NetExtender.Configuration.Xml
 
         protected override String SerializeConfig()
         {
-            return XmlUtils.ToXml(base.SerializeConfig(), "Config");
+            return XmlUtilities.ToXml(base.SerializeConfig(), "Config");
         }
 
         protected override DictionaryTree<String, String> DeserializeConfig(String config)
@@ -58,7 +58,7 @@ namespace NetExtender.Configuration.Xml
             
             try
             {
-                return base.DeserializeConfig(JsonUtils.ToJson(config));
+                return base.DeserializeConfig(JsonUtilities.ToJson(config));
             }
             catch (Exception)
             {

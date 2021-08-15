@@ -8,7 +8,7 @@ using NetExtender.Configuration.Interfaces.Property.Common;
 using NetExtender.Crypto;
 using NetExtender.Crypto.CryptKey;
 using NetExtender.Crypto.CryptKey.Interfaces;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Interfaces.Property
 {
@@ -107,7 +107,7 @@ namespace NetExtender.Configuration.Interfaces.Property
 
         public IReadOnlyConfigProperty<T> GetProperty<T>(String? key, T value, Func<T, Boolean>? validate, ICryptKey? crypt, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetProperty(key, value, validate, crypt, options, ConvertUtils.TryConvert, sections);
+            return GetProperty(key, value, validate, crypt, options, ConvertUtilities.TryConvert, sections);
         }
 
         public IReadOnlyConfigProperty<T> GetProperty<T>(String? key, T value, Func<T, Boolean>? validate, ICryptKey? crypt, ConfigPropertyOptions options, params String[]? sections)

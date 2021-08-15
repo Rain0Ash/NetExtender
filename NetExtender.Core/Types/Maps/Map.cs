@@ -4,7 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 using NetExtender.Exceptions;
 using NetExtender.Types.Maps.Interfaces;
 
@@ -98,7 +98,6 @@ namespace NetExtender.Types.Maps
             Reversed = new Dictionary<TValue, TKey>(valueComparer);
         }
         
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public Map(IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             if (source is null)
@@ -112,7 +111,6 @@ namespace NetExtender.Types.Maps
             Reversed = new Dictionary<TValue, TKey>(source.ReversePairs());
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public Map(IEnumerable<KeyValuePair<TValue, TKey>> source)
         {
             if (source is null)
@@ -126,7 +124,6 @@ namespace NetExtender.Types.Maps
             Reversed = new Dictionary<TValue, TKey>(source);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public Map(IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
         {
             if (source is null)
@@ -140,7 +137,6 @@ namespace NetExtender.Types.Maps
             Reversed = new Dictionary<TValue, TKey>(source.ReversePairs(), valueComparer);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public Map(IEnumerable<KeyValuePair<TValue, TKey>> source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
         {
             if (source is null)

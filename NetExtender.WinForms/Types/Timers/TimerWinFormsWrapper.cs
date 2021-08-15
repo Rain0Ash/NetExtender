@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using NetExtender.Events;
 using NetExtender.Times.Timers.Interfaces;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Timers
 {
@@ -44,7 +44,7 @@ namespace NetExtender.Types.Timers
             }
             set
             {
-                _timer.Interval = TimerUtils.ToInterval(value);
+                _timer.Interval = TimerUtilities.ToInterval(value);
             }
         }
 
@@ -56,7 +56,7 @@ namespace NetExtender.Types.Timers
         }
         
         public TimerWinFormsWrapper(Double interval)
-            : this(TimerUtils.ToInterval(interval))
+            : this(TimerUtilities.ToInterval(interval))
         {
         }
         

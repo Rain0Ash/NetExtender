@@ -3,7 +3,7 @@
 
 using System;
 using System.Runtime.InteropServices;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace Core.Types.Handle
 {

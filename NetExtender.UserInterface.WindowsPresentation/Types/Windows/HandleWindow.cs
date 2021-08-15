@@ -4,7 +4,7 @@
 using System;
 using System.Windows;
 using NetExtender.UserInterface.Interfaces;
-using NetExtender.Utils.UserInterface;
+using NetExtender.Utilities.UserInterface;
 
 namespace NetExtender.UserInterface.WindowsPresentation.Windows
 {

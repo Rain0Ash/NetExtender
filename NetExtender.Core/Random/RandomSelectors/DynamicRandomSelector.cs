@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using NetExtender.Exceptions;
 using NetExtender.Random.Interfaces;
-using NetExtender.Utils.Numerics;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Random
 {
@@ -48,17 +48,17 @@ namespace NetExtender.Random
         public DynamicRandomSelector(Int32 capacity, IRandom random)
             : base(capacity, random)
         {
-            MathUtils.ToRange(ref capacity, 8);
+            MathUtilities.ToRange(ref capacity, 8);
             Distribution = new List<Double>(capacity);
         }
-
+        
         public DynamicRandomSelector(IEnumerable<KeyValuePair<T, Double>>? items)
-            : this(items, RandomUtils.Create())
+            : this(items.Materialize())
         {
         }
 
         public DynamicRandomSelector(IEnumerable<KeyValuePair<T, Double>>? items, Int32 seed)
-            : this(items, RandomUtils.Create(seed))
+            : this(items.Materialize(), seed)
         {
         }
 
@@ -67,11 +67,30 @@ namespace NetExtender.Random
         /// </summary>
         /// <param name="items">Items that will get returned on random selections</param>
         /// <param name="random">Random generator</param>
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public DynamicRandomSelector(IEnumerable<KeyValuePair<T, Double>>? items, IRandom random)
+            : this(items.Materialize(), random)
+        {
+        }
+
+        protected DynamicRandomSelector(IReadOnlyCollection<KeyValuePair<T, Double>>? items)
+            : this(items, RandomUtilities.Create())
+        {
+        }
+
+        protected DynamicRandomSelector(IReadOnlyCollection<KeyValuePair<T, Double>>? items, Int32 seed)
+            : this(items, RandomUtilities.Create(seed))
+        {
+        }
+
+        /// <summary>
+        /// Constructor, where you can preload collection with items/weights list. 
+        /// </summary>
+        /// <param name="items">Items that will get returned on random selections</param>
+        /// <param name="random">Random generator</param>
+        protected DynamicRandomSelector(IReadOnlyCollection<KeyValuePair<T, Double>>? items, IRandom random)
             : base(items, random)
         {
-            Distribution = new List<Double>(items?.CountIfMaterialized()?.ToRange(8) ?? DefaultCapacity);
+            Distribution = new List<Double>(items?.Count ?? DefaultCapacity);
         }
 
         /// <summary>
@@ -103,7 +122,7 @@ namespace NetExtender.Random
                     seed = Random.Next();
                 }
 
-                Random = RandomUtils.Create(seed);
+                Random = RandomUtilities.Create(seed);
             }
 
             // RandomMath.ListBreakpoint decides where to use Linear or Binary search, based on internal buffer size

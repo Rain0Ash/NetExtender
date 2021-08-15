@@ -3,10 +3,10 @@
 
 using System;
 using System.Security.Cryptography;
-using NetExtender.Utils.Numerics;
+using NetExtender.Utilities.Numerics;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Exceptions;
-using NetExtender.Utils.Crypto;
+using NetExtender.Utilities.Crypto;
 using Rsa = System.Security.Cryptography.RSA;
 
 namespace NetExtender.Crypto.CryptKey.RSA

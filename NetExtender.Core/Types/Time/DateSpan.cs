@@ -3,7 +3,7 @@
 
 using System;
 using System.Globalization;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Times
 {

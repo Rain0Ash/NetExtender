@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using NetExtender.Configuration.Interfaces;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 using NetExtender.Configuration.Windows.Registry;
 using NetExtender.Registry;
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Buffers;
 using System.IO;
- using NetExtender.Utils.Types;
+ using NetExtender.Utilities.Types;
 
  namespace NetExtender.Crypto.Hashes.XXHash
 {
@@ -14,7 +14,7 @@ using System.IO;
         /// <param name="bufferSize">The buffer size</param>
         /// <param name="seed">The seed number</param>
         /// <returns>The hash</returns>
-        public static UInt32 ComputeHash(Stream stream, Int32 bufferSize = BufferUtils.DefaultBuffer, UInt32 seed = 0)
+        public static UInt32 ComputeHash(Stream stream, Int32 bufferSize = BufferUtilities.DefaultBuffer, UInt32 seed = 0)
         {
             // Optimizing memory allocation
             Byte[] buffer = ArrayPool<Byte>.Shared.Rent(bufferSize + 16);

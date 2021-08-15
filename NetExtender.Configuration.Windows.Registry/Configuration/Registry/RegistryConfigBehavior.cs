@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using NetExtender.Configuration.Common;
 using NetExtender.Registry;
 using NetExtender.Registry.Interfaces;
-using NetExtender.Utils.Application;
-using NetExtender.Utils.IO;
-using NetExtender.Utils.Registry;
+using NetExtender.Utilities.Application;
+using NetExtender.Utilities.IO;
+using NetExtender.Utilities.Registry;
 
 namespace NetExtender.Configuration.Windows.Registry
 {
@@ -25,15 +25,15 @@ namespace NetExtender.Configuration.Windows.Registry
         }
 
         public RegistryConfigBehavior(String? path = null, ConfigOptions options = ConfigOptions.None)
-            : base(String.IsNullOrEmpty(path) ? $"Software\\{ApplicationUtils.FriendlyName}" : path, options)
+            : base(String.IsNullOrEmpty(path) ? $"Software\\{ApplicationUtilities.FriendlyName}" : path, options)
         {
-            Registry = RegistryKeys.CurrentUser.Create(Path.Split(PathUtils.Separators), !IsReadOnly);
+            Registry = RegistryKeys.CurrentUser.Create(Path.Split(PathUtilities.Separators), !IsReadOnly);
         }
 
         public RegistryConfigBehavior(RegistryKeys key, String path, ConfigOptions options = ConfigOptions.None)
             : base(path, options)
         {
-            Registry = key.Create(Path.Split(PathUtils.Separators), !IsReadOnly);
+            Registry = key.Create(Path.Split(PathUtilities.Separators), !IsReadOnly);
         }
 
         public override String? Get(String key, IEnumerable<String>? sections)

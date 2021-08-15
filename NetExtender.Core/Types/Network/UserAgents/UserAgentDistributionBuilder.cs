@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using NetExtender.Random;
 using NetExtender.Types.Network.UserAgents.Interfaces;
-using NetExtender.Utils.Network;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Network;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Network.UserAgents
 {
@@ -32,7 +32,7 @@ namespace NetExtender.Types.Network.UserAgents
                         return base.RandomBrowser;
                     }
 
-                    return BrowserDistributionBuilder.Count > 0 ? BrowserDistributionBuilder.Build().GetRandom() : BrowserUtils.RandomBrowserWithDistribution;
+                    return BrowserDistributionBuilder.Count > 0 ? BrowserDistributionBuilder.Build().GetRandom() : BrowserUtilities.RandomBrowserWithDistribution;
                 }
                 catch (Exception)
                 {
@@ -128,7 +128,7 @@ namespace NetExtender.Types.Network.UserAgents
             }
 
             Browsers.Add(browser);
-            BrowserDistributionBuilder[browser] = BrowserUtils.Distribution.TryGetValue(browser);
+            BrowserDistributionBuilder[browser] = BrowserUtilities.Distribution.TryGetValue(browser);
             return this;
         }
 

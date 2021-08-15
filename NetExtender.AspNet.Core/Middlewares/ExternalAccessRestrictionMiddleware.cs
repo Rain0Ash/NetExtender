@@ -4,7 +4,7 @@
 using System;
 using System.Net;
 using Microsoft.AspNetCore.Http;
-using NetExtender.Utils.AspNetCore.Types;
+using NetExtender.Utilities.AspNetCore.Types;
 
 namespace NetExtender.AspNet.Core.Middlewares
 {

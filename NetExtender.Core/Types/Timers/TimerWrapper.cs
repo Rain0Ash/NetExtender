@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Timers;
 using NetExtender.Times.Timers.Interfaces;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Timers
 {
@@ -46,7 +46,7 @@ namespace NetExtender.Types.Timers
             }
             set
             {
-                _timer.Interval = TimerUtils.CheckInterval(value.TotalMilliseconds);
+                _timer.Interval = TimerUtilities.CheckInterval(value.TotalMilliseconds);
             }
         }
 

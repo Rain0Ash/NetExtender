@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
- using NetExtender.Utils.Types;
+ using NetExtender.Utilities.Types;
 
  namespace NetExtender.Crypto.Hashes.XXHash
 {
@@ -39,30 +39,30 @@ using System.Runtime.CompilerServices;
                     do
                     {
                         v1 += *(UInt32*) ptr * P2;
-                        v1 = BitUtils.RotateLeft(v1, 13); // rotl 13
+                        v1 = BitUtilities.RotateLeft(v1, 13); // rotl 13
                         v1 *= P1;
                         ptr += 4;
 
                         v2 += *(UInt32*) ptr * P2;
-                        v2 = BitUtils.RotateLeft(v2, 13); // rotl 13
+                        v2 = BitUtilities.RotateLeft(v2, 13); // rotl 13
                         v2 *= P1;
                         ptr += 4;
 
                         v3 += *(UInt32*) ptr * P2;
-                        v3 = BitUtils.RotateLeft(v3, 13); // rotl 13
+                        v3 = BitUtilities.RotateLeft(v3, 13); // rotl 13
                         v3 *= P1;
                         ptr += 4;
 
                         v4 += *(UInt32*) ptr * P2;
-                        v4 = BitUtils.RotateLeft(v4, 13); // rotl 13
+                        v4 = BitUtilities.RotateLeft(v4, 13); // rotl 13
                         v4 *= P1;
                         ptr += 4;
                     } while (ptr <= limit);
 
-                    h32 = BitUtils.RotateLeft(v1, 1) + // rotl 1
-                          BitUtils.RotateLeft(v2, 7) + // rotl 7
-                          BitUtils.RotateLeft(v3, 12) + // rotl 12
-                          BitUtils.RotateLeft(v4, 18); // rotl 18
+                    h32 = BitUtilities.RotateLeft(v1, 1) + // rotl 1
+                          BitUtilities.RotateLeft(v2, 7) + // rotl 7
+                          BitUtilities.RotateLeft(v3, 12) + // rotl 12
+                          BitUtilities.RotateLeft(v4, 18); // rotl 18
                 }
                 else
                 {
@@ -75,14 +75,14 @@ using System.Runtime.CompilerServices;
                 while (ptr <= end - 4)
                 {
                     h32 += *(UInt32*) ptr * P3;
-                    h32 = BitUtils.RotateLeft(h32, 17) * P4; // (rotl 17) * p4
+                    h32 = BitUtilities.RotateLeft(h32, 17) * P4; // (rotl 17) * p4
                     ptr += 4;
                 }
 
                 while (ptr < end)
                 {
                     h32 += *ptr * P5;
-                    h32 = BitUtils.RotateLeft(h32, 11) * P1; // (rotl 11) * p1
+                    h32 = BitUtilities.RotateLeft(h32, 11) * P1; // (rotl 11) * p1
                     ptr += 1;
                 }
 
@@ -119,22 +119,22 @@ using System.Runtime.CompilerServices;
                     do
                     {
                         v1 += *(UInt32*) ptr * P2;
-                        v1 = BitUtils.RotateLeft(v1, 13); // rotl 13
+                        v1 = BitUtilities.RotateLeft(v1, 13); // rotl 13
                         v1 *= P1;
                         ptr += 4;
 
                         v2 += *(UInt32*) ptr * P2;
-                        v2 = BitUtils.RotateLeft(v2, 13); // rotl 13
+                        v2 = BitUtilities.RotateLeft(v2, 13); // rotl 13
                         v2 *= P1;
                         ptr += 4;
 
                         v3 += *(UInt32*) ptr * P2;
-                        v3 = BitUtils.RotateLeft(v3, 13); // rotl 13
+                        v3 = BitUtilities.RotateLeft(v3, 13); // rotl 13
                         v3 *= P1;
                         ptr += 4;
 
                         v4 += *(UInt32*) ptr * P2;
-                        v4 = BitUtils.RotateLeft(v4, 13); // rotl 13
+                        v4 = BitUtilities.RotateLeft(v4, 13); // rotl 13
                         v4 *= P1;
                         ptr += 4;
                     } while (ptr < limit);
@@ -167,10 +167,10 @@ using System.Runtime.CompilerServices;
 
                     if (length >= 16)
                     {
-                        h32 = BitUtils.RotateLeft(v1, 1) + // rotl 1
-                              BitUtils.RotateLeft(v2, 7) + // rotl 7
-                              BitUtils.RotateLeft(v3, 12) + // rotl 12
-                              BitUtils.RotateLeft(v4, 18); // rotl 18
+                        h32 = BitUtilities.RotateLeft(v1, 1) + // rotl 1
+                              BitUtilities.RotateLeft(v2, 7) + // rotl 7
+                              BitUtilities.RotateLeft(v3, 12) + // rotl 12
+                              BitUtilities.RotateLeft(v4, 18); // rotl 18
                     }
                     else
                     {
@@ -183,14 +183,14 @@ using System.Runtime.CompilerServices;
                     while (ptr <= end - 4)
                     {
                         h32 += *(UInt32*) ptr * P3;
-                        h32 = BitUtils.RotateLeft(h32, 17) * P4; // (rotl 17) * p4
+                        h32 = BitUtilities.RotateLeft(h32, 17) * P4; // (rotl 17) * p4
                         ptr += 4;
                     }
 
                     while (ptr < end)
                     {
                         h32 += *ptr * P5;
-                        h32 = BitUtils.RotateLeft(h32, 11) * P1; // (rotl 11) * p1
+                        h32 = BitUtilities.RotateLeft(h32, 11) * P1; // (rotl 11) * p1
                         ptr += 1;
                     }
 

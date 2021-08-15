@@ -6,8 +6,8 @@ using System.ComponentModel;
 using System.Windows.Forms;
 using NetExtender.UserInterface.Events;
 using NetExtender.UserInterface.Interfaces;
-using NetExtender.Utils.Numerics;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.UserInterface.WinForms.Forms
 {

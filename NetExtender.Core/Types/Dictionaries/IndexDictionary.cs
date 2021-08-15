@@ -6,9 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 using NetExtender.Types.Dictionaries.Interfaces;
-using NetExtender.Utils.Numerics;
+using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Types.Dictionaries
 {
@@ -117,7 +117,6 @@ namespace NetExtender.Types.Dictionaries
             Order = new List<TKey>(dictionary.Keys);
         }
 
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public IndexDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection)
         {
             if (collection is null)
@@ -131,7 +130,6 @@ namespace NetExtender.Types.Dictionaries
             Order = new List<TKey>(collection.Select(pair => pair.Key));
         }
 
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public IndexDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? comparer)
         {
             if (collection is null)

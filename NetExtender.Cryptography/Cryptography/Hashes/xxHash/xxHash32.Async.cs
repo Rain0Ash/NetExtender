@@ -3,7 +3,7 @@ using System.Buffers;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
- using NetExtender.Utils.Types;
+ using NetExtender.Utilities.Types;
 
  namespace NetExtender.Crypto.Hashes.XXHash
 {
@@ -16,7 +16,7 @@ using System.Threading.Tasks;
         /// <param name="bufferSize">The buffer size</param>
         /// <param name="seed">The seed number</param>
         /// <returns>The hash</returns>
-        public static ValueTask<UInt32> ComputeHashAsync(Stream stream, Int32 bufferSize = BufferUtils.DefaultBuffer, UInt32 seed = 0)
+        public static ValueTask<UInt32> ComputeHashAsync(Stream stream, Int32 bufferSize = BufferUtilities.DefaultBuffer, UInt32 seed = 0)
         {
             return ComputeHashAsync(stream, bufferSize, seed, CancellationToken.None);
         }

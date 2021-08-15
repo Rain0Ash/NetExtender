@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Types.Dispatchers.Interfaces;
-using NetExtender.Utils.Application;
+using NetExtender.Utilities.Application;
 
 namespace NetExtender.Domains.Applications
 {
@@ -54,7 +54,7 @@ namespace NetExtender.Domains.Applications
 
         public virtual void Shutdown(Int32 code)
         {
-            ApplicationUtils.Shutdown(code);
+            ApplicationUtilities.Shutdown(code);
         }
         
         public void Shutdown(Boolean force)
@@ -138,7 +138,7 @@ namespace NetExtender.Domains.Applications
 
         public Task<Boolean> RestartAsync()
         {
-            return RestartAsync(ApplicationUtils.DefaultMilliRestart);
+            return RestartAsync(ApplicationUtilities.DefaultMilliRestart);
         }
 
         public Task<Boolean> RestartAsync(Int32 milli)
@@ -148,12 +148,12 @@ namespace NetExtender.Domains.Applications
 
         public Task<Boolean> RestartAsync(CancellationToken token)
         {
-            return RestartAsync(ApplicationUtils.DefaultMilliRestart, token);
+            return RestartAsync(ApplicationUtilities.DefaultMilliRestart, token);
         }
 
         public virtual Task<Boolean> RestartAsync(Int32 milli, CancellationToken token)
         {
-            return ApplicationUtils.Restart(milli, Dispatcher, Shutdown, token);
+            return ApplicationUtilities.Restart(milli, Dispatcher, Shutdown, token);
         }
     }
 }

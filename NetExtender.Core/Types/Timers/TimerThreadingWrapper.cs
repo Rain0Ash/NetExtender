@@ -7,8 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Events;
 using NetExtender.Times.Timers.Interfaces;
-using NetExtender.Utils.Types;
-using NetExtender.Utils.Static;
+using NetExtender.Utilities.Types;
+using NetExtender.Utilities.Static;
 
 namespace NetExtender.Types.Timers
 {
@@ -40,7 +40,7 @@ namespace NetExtender.Types.Timers
                     return;
                 }
                 
-                _interval = TimerUtils.CheckInterval(value);
+                _interval = TimerUtilities.CheckInterval(value);
             }
         }
 
@@ -55,13 +55,13 @@ namespace NetExtender.Types.Timers
         }
 
         public TimerThreadingWrapper(Double interval)
-            : this(TimeSpan.FromMilliseconds(TimerUtils.CheckInterval(interval)))
+            : this(TimeSpan.FromMilliseconds(TimerUtilities.CheckInterval(interval)))
         {
         }
         
         public TimerThreadingWrapper(TimeSpan interval)
         {
-            interval = TimerUtils.CheckInterval(interval);
+            interval = TimerUtilities.CheckInterval(interval);
             
             _timer = new Timer(OnTick);
             Interval = interval;

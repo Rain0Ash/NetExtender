@@ -7,7 +7,7 @@ using System.Collections.Immutable;
 using NetExtender.Configuration.Common;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Types.Trees;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Ram
 {

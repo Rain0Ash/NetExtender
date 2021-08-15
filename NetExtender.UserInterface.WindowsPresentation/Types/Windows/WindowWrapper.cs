@@ -6,8 +6,8 @@ using System.ComponentModel;
 using System.Windows;
 using NetExtender.UserInterface.Events;
 using NetExtender.UserInterface.Interfaces;
-using NetExtender.UserInterface.Utils;
-using NetExtender.Utils.UserInterface;
+using NetExtender.UserInterface.Utilities;
+using NetExtender.Utilities.UserInterface;
 
 namespace NetExtender.UserInterface.WindowsPresentation.Windows
 {
@@ -143,7 +143,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
         public InterfaceDialogResult ShowDialog()
         {
-            return InterfaceDialogResultUtils.ToInterfaceDialogResult(Window.ShowDialog());
+            return InterfaceDialogResultUtilities.ToInterfaceDialogResult(Window.ShowDialog());
         }
 
         public Boolean Activate()

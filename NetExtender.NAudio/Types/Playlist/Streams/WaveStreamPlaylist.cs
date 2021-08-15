@@ -6,8 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using NAudio.Wave;
 using NetExtender.NAudio.Types.Playlist.Interfaces;
-using NetExtender.Utils.NAudio;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.NAudio;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.NAudio.Types.Playlist
 {
@@ -64,7 +64,7 @@ namespace NetExtender.NAudio.Types.Playlist
         {
             get
             {
-                return Current?.WaveFormat ?? WaveFormatUtils.Empty;
+                return Current?.WaveFormat ?? WaveFormatUtilities.Empty;
             }
         }
 

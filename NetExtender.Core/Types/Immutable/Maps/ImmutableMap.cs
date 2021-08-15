@@ -8,7 +8,7 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NetExtender.Types.Immutable.Maps.Interfaces;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Immutable.Maps
 {
@@ -104,7 +104,6 @@ namespace NetExtender.Types.Immutable.Maps
             return Add(key, value);
         }
 
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public ImmutableMap<TKey, TValue> AddRange(IEnumerable<KeyValuePair<TKey, TValue>> pairs)
         {
             if (pairs is null)
@@ -205,7 +204,6 @@ namespace NetExtender.Types.Immutable.Maps
             return RemoveByValue(item);
         }
 
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public ImmutableMap<TKey, TValue> RemoveRange(IEnumerable<TKey> keys)
         {
             if (keys is null)
@@ -215,8 +213,7 @@ namespace NetExtender.Types.Immutable.Maps
 
             keys = keys.Materialize();
             
-            return new ImmutableMap<TKey, TValue>(Base.RemoveRange(keys),
-                Reversed.RemoveRange(keys.WhereNotNull(key => Base.ContainsKey(key)).Select(key => Base[key])));
+            return new ImmutableMap<TKey, TValue>(Base.RemoveRange(keys), Reversed.RemoveRange(keys.WhereNotNull(key => Base.ContainsKey(key)).Select(key => Base[key])));
         }
 
         IImmutableMap<TKey, TValue> IImmutableMap<TKey, TValue>.RemoveRange(IEnumerable<TKey> keys)
@@ -234,7 +231,6 @@ namespace NetExtender.Types.Immutable.Maps
             return SetItem(key, value);
         }
 
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public ImmutableMap<TKey, TValue> SetItems(IEnumerable<KeyValuePair<TKey, TValue>> items)
         {
             if (items is null)

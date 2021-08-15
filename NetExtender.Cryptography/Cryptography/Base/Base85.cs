@@ -122,7 +122,7 @@ namespace NetExtender.Crypto.Base
         /// <param name="output">Output writer.</param>
         public override void Encode(Stream input, TextWriter output)
         {
-            StreamHelper.Encode(input, output, (buffer, lastBlock) => Encode(buffer.Span));
+            StreamHelper.Encode(input, output, (buffer, _) => Encode(buffer.Span));
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace NetExtender.Crypto.Base
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public override Task EncodeAsync(Stream input, TextWriter output)
         {
-            return StreamHelper.EncodeAsync(input, output, (buffer, lastBlock) => Encode(buffer.Span));
+            return StreamHelper.EncodeAsync(input, output, (buffer, _) => Encode(buffer.Span));
         }
 
         /// <summary>
@@ -143,7 +143,7 @@ namespace NetExtender.Crypto.Base
         /// <param name="output">Output stream.</param>
         public override void Decode(TextReader input, Stream output)
         {
-            StreamHelper.Decode(input, output, (text) => Decode(text.Span).ToArray(), DecodeBufferSize);
+            StreamHelper.Decode(input, output, text => Decode(text.Span).ToArray(), DecodeBufferSize);
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace NetExtender.Crypto.Base
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public override Task DecodeAsync(TextReader input, Stream output)
         {
-            return StreamHelper.DecodeAsync(input, output, (text) => Decode(text.Span).ToArray(), DecodeBufferSize);
+            return StreamHelper.DecodeAsync(input, output, text => Decode(text.Span).ToArray(), DecodeBufferSize);
         }
 
         /// <summary>

@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using NetExtender.Types.Network.UserAgents.Interfaces;
-using NetExtender.Utils.Network;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Network;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Network.UserAgents
 {
@@ -67,7 +67,7 @@ namespace NetExtender.Types.Network.UserAgents
 
         public virtual String Build(BrowserType browser, UserAgentArchitecture? architecture, CultureInfo? culture)
         {
-            return UserAgentUtils.UserAgents.TryGetValue(browser)?.Build(architecture, culture) ?? throw new NotSupportedException();
+            return UserAgentUtilities.UserAgents.TryGetValue(browser)?.Build(architecture, culture) ?? throw new NotSupportedException();
         }
 
         public virtual String Build(IUserAgentSpecificBuilder builder)
@@ -82,7 +82,7 @@ namespace NetExtender.Types.Network.UserAgents
 
         public virtual IUserAgentBuilder AddBrowsers()
         {
-            return AddBrowsers(EnumUtils.GetValues<BrowserType>());
+            return AddBrowsers(EnumUtilities.GetValues<BrowserType>());
         }
 
         public virtual IUserAgentBuilder AddBrowsers(BrowserType browser)
@@ -139,7 +139,7 @@ namespace NetExtender.Types.Network.UserAgents
 
         public virtual IUserAgentBuilder AddArchitectures()
         {
-            return AddArchitectures(EnumUtils.Random<UserAgentArchitecture>());
+            return AddArchitectures(EnumUtilities.Random<UserAgentArchitecture>());
         }
 
         public virtual IUserAgentBuilder AddArchitectures(UserAgentArchitecture architecture)

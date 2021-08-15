@@ -7,8 +7,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using NetExtender.Configuration.Common;
 using NetExtender.Crypto.CryptKey.Interfaces;
-using NetExtender.Utils.Static;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Static;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Windows.Ini
 {
@@ -81,7 +81,7 @@ namespace NetExtender.Configuration.Windows.Ini
         {
             if (WritePrivateProfileString(section, key, value, Path) == 0)
             {
-                WindowsInteropUtils.ThrowLastWin32Exception();
+                WindowsInteropUtilities.ThrowLastWin32Exception();
             }
             
             return true;

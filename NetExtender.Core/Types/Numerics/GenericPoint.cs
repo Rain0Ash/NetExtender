@@ -3,7 +3,7 @@
 
 using System;
 using System.Runtime.CompilerServices;
-using NetExtender.Utils.Numerics;
+using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Types.Numerics
 {

@@ -3,7 +3,7 @@
 
 using System;
 using NetExtender.Random.Interfaces;
-using NetExtender.Utils.Numerics;
+using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Random
 {
@@ -29,7 +29,7 @@ namespace NetExtender.Random
         {
             Items = items;
             Distribution = cda;
-            Random = RandomUtils.Create(seed);
+            Random = RandomUtilities.Create(seed);
         }
 
         /// <summary>

@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using NetExtender.Crypto.CryptHash.Common;
 using NetExtender.Crypto.CryptHash.Interfaces;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Crypto.CryptHash
 {
@@ -134,7 +134,7 @@ namespace NetExtender.Crypto.CryptHash
         public Byte[] Hashing(Byte[] value, Byte[] lsalt, Byte[] rsalt, Byte[] lpepper, Byte[] rpepper, UInt16 iterations)
         {
             // ReSharper disable once InvokeAsExtensionMethod
-            Byte[] buffer = BufferUtils.Combine(lpepper, lsalt, value, rsalt, rpepper).Hashing(HashType);
+            Byte[] buffer = BufferUtilities.Combine(lpepper, lsalt, value, rsalt, rpepper).Hashing(HashType);
 
             while (--iterations > 0)
             {

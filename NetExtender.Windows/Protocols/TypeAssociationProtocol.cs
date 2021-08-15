@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 using Microsoft.Win32;
 using NetExtender.Registry;
 using NetExtender.Registry.Interfaces;
-using NetExtender.Utils.IO;
-using NetExtender.Utils.Registry;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.IO;
+using NetExtender.Utilities.Registry;
+using NetExtender.Utilities.Types;
 using NetExtender.Workstation;
 
 namespace NetExtender.Windows.Protocols
@@ -84,12 +84,12 @@ namespace NetExtender.Windows.Protocols
 
         public static IEnumerable<KeyValuePair<String?, String?>> GetFileTypeAssociationProgIdUserChoice()
         {
-            return GetFileTypeAssociationUserChoice().Select(KeyValuePairUtils.FlattenByKey);
+            return GetFileTypeAssociationUserChoice().Select(KeyValuePairUtilities.FlattenByKey);
         }
 
         public static IEnumerable<KeyValuePair<String?, String?>> GetFileTypeAssociationHashUserChoice()
         {
-            return GetFileTypeAssociationUserChoice().Select(KeyValuePairUtils.FlattenByValue);
+            return GetFileTypeAssociationUserChoice().Select(KeyValuePairUtilities.FlattenByValue);
         }
 
         public static KeyValuePair<String?, String?>? GetProtocolTypeAssociation([NotNull] String protocol)
@@ -151,12 +151,12 @@ namespace NetExtender.Windows.Protocols
 
         public static IEnumerable<KeyValuePair<String?, String?>> GetProtocolTypeAssociationProgIdUserChoice()
         {
-            return GetProtocolTypeAssociationUserChoice().Select(KeyValuePairUtils.FlattenByKey);
+            return GetProtocolTypeAssociationUserChoice().Select(KeyValuePairUtilities.FlattenByKey);
         }
 
         public static IEnumerable<KeyValuePair<String?, String?>> GetProtocolTypeAssociationHashUserChoice()
         {
-            return GetProtocolTypeAssociationUserChoice().Select(KeyValuePairUtils.FlattenByValue);
+            return GetProtocolTypeAssociationUserChoice().Select(KeyValuePairUtilities.FlattenByValue);
         }
 
         [DllImport("shell32.dll")]
@@ -179,14 +179,14 @@ namespace NetExtender.Windows.Protocols
                 throw new ArgumentException(@"Value cannot be null or empty.", nameof(extension));
             }
 
-            if (!PathUtils.IsExistAsFile(path))
+            if (!PathUtilities.IsExistAsFile(path))
             {
                 throw new FileNotFoundException("File not exist", path);
             }
 
             if (String.IsNullOrEmpty(progid))
             {
-                progid = $"SFTA.{PathUtils.ChangeExtension(PathUtils.GetFileNameWithoutExtension(path).RemoveAllWhiteSpace(), extension)}";
+                progid = $"SFTA.{PathUtilities.ChangeExtension(PathUtilities.GetFileNameWithoutExtension(path).RemoveAllWhiteSpace(), extension)}";
             }
 
             using IRegistry registry = RegistryKeys.CurrentUser.Create(FileAccess.ReadWrite, "Software", "Classes");
@@ -221,9 +221,9 @@ namespace NetExtender.Windows.Protocols
                 throw new ArgumentException(@"Value cannot be null or empty.", nameof(extension));
             }
 
-            if (PathUtils.IsExistAsFile(progid))
+            if (PathUtilities.IsExistAsFile(progid))
             {
-                progid = $"SFTA.{PathUtils.ChangeExtension(PathUtils.GetFileNameWithoutExtension(progid).RemoveAllWhiteSpace(), extension)}";
+                progid = $"SFTA.{PathUtilities.ChangeExtension(PathUtilities.GetFileNameWithoutExtension(progid).RemoveAllWhiteSpace(), extension)}";
             }
 
             String? sid = GetUserSID();
@@ -265,9 +265,9 @@ namespace NetExtender.Windows.Protocols
                 throw new ArgumentException(@"Value cannot be null or empty.", nameof(extension));
             }
 
-            if (PathUtils.IsExistAsFile(progid))
+            if (PathUtilities.IsExistAsFile(progid))
             {
-                progid = $"SFTA.{PathUtils.ChangeExtension(PathUtils.GetFileNameWithoutExtension(progid).RemoveAllWhiteSpace(), extension)}";
+                progid = $"SFTA.{PathUtilities.ChangeExtension(PathUtilities.GetFileNameWithoutExtension(progid).RemoveAllWhiteSpace(), extension)}";
             }
 
             using (IRegistry registry = RegistryKeys.CurrentUser.Create(true, "Software", "Microsoft", "Windows", "CurrentVersion", "Explorer", "FileExts", extension))

@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using NetExtender.Crypto;
 using NetExtender.Crypto.CryptKey;
 using NetExtender.Crypto.CryptKey.Interfaces;
-using NetExtender.Utils.Application;
-using NetExtender.Utils.IO;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Application;
+using NetExtender.Utilities.IO;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Common
 {
@@ -26,12 +26,12 @@ namespace NetExtender.Configuration.Common
                 filename += extension.StartsWith('.') ? extension : '.' + extension;
             }
 
-            return System.IO.Path.Combine(ApplicationUtils.Directory ?? Environment.CurrentDirectory, filename);
+            return System.IO.Path.Combine(ApplicationUtilities.Directory ?? Environment.CurrentDirectory, filename);
         }
         
         protected static String ValidatePathOrGetDefault(String? path, String? extension)
         {
-            return !String.IsNullOrWhiteSpace(path) && PathUtils.IsValidFilePath(path) ? path : GetDefaultPath(extension);
+            return !String.IsNullOrWhiteSpace(path) && PathUtilities.IsValidFilePath(path) ? path : GetDefaultPath(extension);
         }
         
         public String Path { get; }

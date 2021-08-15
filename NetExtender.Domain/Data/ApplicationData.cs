@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using NetExtender.Domains.Interfaces;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Domains
 {
@@ -125,7 +125,7 @@ namespace NetExtender.Domains
         {
             get
             {
-                return MutexUtils.CaptureMutex(ApplicationName);
+                return MutexUtilities.CaptureMutex(ApplicationName);
             }
         }
 
@@ -198,7 +198,7 @@ namespace NetExtender.Domains
             Information = information;
             Status = status;
             Branch = branch;
-            MutexUtils.RegisterMutex(ApplicationName);
+            MutexUtilities.RegisterMutex(ApplicationName);
         }
 
         public Int32 CompareTo(IApplicationData? other)
@@ -274,7 +274,7 @@ namespace NetExtender.Domains
 
             if (disposing)
             {
-                MutexUtils.UnregisterMutex(ApplicationName);
+                MutexUtilities.UnregisterMutex(ApplicationName);
             }
 
             _disposed = true;

@@ -27,31 +27,31 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Utils\Types\HLSColor.cs">
-        <DependentUpon>ColorUtils.cs</DependentUpon>
+      <Compile Update="Utilities\Types\HLSColor.cs">
+        <DependentUpon>ColorUtilities.cs</DependentUpon>
       </Compile>
-      <Compile Update="Utils\Numerics\TrileanLogicUtils.cs">
-        <DependentUpon>LogicUtils.cs</DependentUpon>
+      <Compile Update="Utilities\Numerics\TrileanLogicUtilities.cs">
+        <DependentUpon>LogicUtilities.cs</DependentUpon>
       </Compile>
       <Compile Update="Types\Enums\UnderlyingEnumOperation.cs">
         <DependentUpon>UnderlyingOperation.cs</DependentUpon>
       </Compile>
-      <Compile Update="Utils\Numerics\GenericMathUtils.cs">
-        <DependentUpon>GenericMathUtils.tt</DependentUpon>
+      <Compile Update="Utilities\Numerics\GenericMathUtilities.cs">
+        <DependentUpon>GenericMathUtilities.tt</DependentUpon>
       </Compile>
-      <Compile Update="Utils\Numerics\GenericRandomUtils.cs">
-        <DependentUpon>GenericRandomUtils.tt</DependentUpon>
+      <Compile Update="Utilities\Numerics\GenericRandomUtilities.cs">
+        <DependentUpon>GenericRandomUtilities.tt</DependentUpon>
       </Compile>
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Utils\Numerics\GenericMathUtils.tt">
+      <None Update="Utilities\Numerics\GenericMathUtilities.tt">
         <Generator>TextTemplatingFileGenerator</Generator>
-        <LastGenOutput>GenericMathUtils.cs</LastGenOutput>
+        <LastGenOutput>GenericMathUtilities.cs</LastGenOutput>
       </None>
-      <None Update="Utils\Numerics\GenericRandomUtils.tt">
+      <None Update="Utilities\Numerics\GenericRandomUtilities.tt">
         <Generator>TextTemplatingFileGenerator</Generator>
-        <LastGenOutput>GenericRandomUtils.cs</LastGenOutput>
+        <LastGenOutput>GenericRandomUtilities.cs</LastGenOutput>
       </None>
     </ItemGroup>
 

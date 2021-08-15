@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using NetExtender.Utils.IO;
+using NetExtender.Utilities.IO;
 
 namespace NetExtender.Domains.View.Console
 {
@@ -11,7 +11,7 @@ namespace NetExtender.Domains.View.Console
         protected override void InitializeInternal()
         {
             Domain.ShutdownMode = ApplicationShutdownMode.OnExplicitShutdown;
-            ConsoleUtils.CancelKeyPress += ExitHandle;
+            ConsoleUtilities.CancelKeyPress += ExitHandle;
         }
 
         protected virtual void ExitHandle(Object? sender, ConsoleCancelEventArgs cancel)

@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Utils.Windows;
+using NetExtender.Utilities.Windows;
 
 namespace NetExtender.Workstation
 {

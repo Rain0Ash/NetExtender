@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
-using NetExtender.Utils.Application;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Application;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Domains
 {
@@ -109,7 +109,7 @@ namespace NetExtender.Domains
         }
 
         public ApplicationVersion(UInt32 major, UInt32 minor = 0, UInt32 patch = 0)
-            : this(major, minor, patch, ApplicationUtils.BuildDateTime)
+            : this(major, minor, patch, ApplicationUtilities.BuildDateTime)
         {
         }
         

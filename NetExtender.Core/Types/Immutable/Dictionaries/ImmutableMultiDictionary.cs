@@ -9,7 +9,7 @@ using System.Linq;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Dictionaries.Interfaces;
 using NetExtender.Types.Immutable.Dictionaries.Interfaces;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Immutable.Dictionaries
 {

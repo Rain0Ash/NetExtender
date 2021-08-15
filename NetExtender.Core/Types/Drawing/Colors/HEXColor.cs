@@ -4,7 +4,7 @@
 using System;
 using System.Drawing;
 using NetExtender.Types.Drawing.Colors.Interfaces;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Drawing.Colors
 {
@@ -70,7 +70,7 @@ namespace NetExtender.Types.Drawing.Colors
         }
         
         public HEXColor(String value)
-            : this(ColorUtils.HEXToARGB(value))
+            : this(ColorUtilities.HEXToARGB(value))
         {
         }
 
@@ -107,7 +107,7 @@ namespace NetExtender.Types.Drawing.Colors
 
         public override String ToString()
         {
-            return ColorUtils.RGBToHEX(A, R, G, B);
+            return ColorUtilities.RGBToHEX(A, R, G, B);
         }
     }
 }

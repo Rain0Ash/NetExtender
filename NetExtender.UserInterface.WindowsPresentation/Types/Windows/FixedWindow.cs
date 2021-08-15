@@ -7,9 +7,9 @@ using System.Windows;
 using System.Windows.Input;
 using NetExtender.UserInterface.Events;
 using NetExtender.UserInterface.Interfaces;
-using NetExtender.UserInterface.Utils;
+using NetExtender.UserInterface.Utilities;
 using NetExtender.UserInterface.Windows.Types;
-using NetExtender.Utils.Windows.IO;
+using NetExtender.Utilities.Windows.IO;
 using NetExtender.Windows;
 
 namespace NetExtender.UserInterface.WindowsPresentation.Windows
@@ -134,7 +134,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                 return;
             }
 
-            if (KeyboardUtils.Alt.IsAlt && Keyboard.IsKeyDown(Key.F4))
+            if (KeyboardUtilities.Alt.IsAlt && Keyboard.IsKeyDown(Key.F4))
             {
                 return;
             }
@@ -156,7 +156,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
         public new InterfaceDialogResult ShowDialog()
         {
-            return InterfaceDialogResultUtils.ToInterfaceDialogResult(base.ShowDialog());
+            return InterfaceDialogResultUtilities.ToInterfaceDialogResult(base.ShowDialog());
         }
     }
 }

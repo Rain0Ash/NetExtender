@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 

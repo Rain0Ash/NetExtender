@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.ServiceProcess;
 using NetExtender.Exceptions;
 using NetExtender.Windows.Services.Types.Services.Interfaces;
-using NetExtender.Windows.Services.Utils;
+using NetExtender.Windows.Services.Utilities;
 
 namespace NetExtender.Windows.Services.Types.Services
 {
@@ -77,7 +77,7 @@ namespace NetExtender.Windows.Services.Types.Services
             }
             set
             {
-                if (!WindowsServiceUtils.IsValidServiceName(value))
+                if (!WindowsServiceUtilities.IsValidServiceName(value))
                 {
                     throw new ArgumentException("Service name is invalid.", nameof(value));
                 }

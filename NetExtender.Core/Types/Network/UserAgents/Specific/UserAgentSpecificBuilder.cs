@@ -5,7 +5,7 @@ using System;
 using System.Globalization;
 using NetExtender.Random.Interfaces;
 using NetExtender.Types.Network.UserAgents.Interfaces;
-using NetExtender.Utils.Numerics;
+using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Types.Network.UserAgents.Specific
 {
@@ -13,7 +13,7 @@ namespace NetExtender.Types.Network.UserAgents.Specific
     {
         public static IUserAgentSpecificBuilder Default { get; } = new UserAgentBuilder();
 
-        protected IRandom Random { get; } = RandomUtils.Create();
+        protected IRandom Random { get; } = RandomUtilities.Create();
         
         protected virtual String GetWindowsNTVersionX32(String version)
         {

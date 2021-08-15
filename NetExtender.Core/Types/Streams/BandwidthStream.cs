@@ -5,8 +5,8 @@ using System;
 using System.IO;
 using System.Reactive.Concurrency;
 using System.Threading;
-using NetExtender.Utils.Numerics;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Streams
 {

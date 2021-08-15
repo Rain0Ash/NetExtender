@@ -16,8 +16,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Utils\IO\ConsoleAsyncInput.cs">
-        <DependentUpon>ConsoleAsyncInputUtils.cs</DependentUpon>
+      <Compile Update="Utilities\IO\ConsoleAsyncInput.cs">
+        <DependentUpon>ConsoleAsyncInputUtilities.cs</DependentUpon>
       </Compile>
     </ItemGroup>
 

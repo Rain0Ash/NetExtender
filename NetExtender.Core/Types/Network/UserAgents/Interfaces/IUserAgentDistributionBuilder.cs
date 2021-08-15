@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using NetExtender.Utils.Network;
+using NetExtender.Utilities.Network;
 
 namespace NetExtender.Types.Network.UserAgents.Interfaces
 {

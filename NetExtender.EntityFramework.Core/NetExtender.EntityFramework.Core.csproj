@@ -31,7 +31,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Utils\Types" />
+      <Folder Include="Utilities\Types" />
     </ItemGroup>
 
 </Project>

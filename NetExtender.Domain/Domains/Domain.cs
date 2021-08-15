@@ -10,8 +10,8 @@ using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.Interfaces;
 using NetExtender.Domains.View.Interfaces;
 using NetExtender.Exceptions;
-using NetExtender.Utils.Application;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Application;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Domains
 {
@@ -438,7 +438,7 @@ namespace NetExtender.Domains
         {
             get
             {
-                return IsInitialized ? ApplicationName : ApplicationUtils.Path;
+                return IsInitialized ? ApplicationName : ApplicationUtilities.Path;
             }
         }
 
@@ -446,7 +446,7 @@ namespace NetExtender.Domains
         {
             get
             {
-                return IsInitialized ? ApplicationName : ApplicationUtils.FriendlyName;
+                return IsInitialized ? ApplicationName : ApplicationUtilities.FriendlyName;
             }
         }
         
@@ -454,7 +454,7 @@ namespace NetExtender.Domains
         {
             get
             {
-                return IsInitialized ? ApplicationIdentifier : ApplicationUtils.Path;
+                return IsInitialized ? ApplicationIdentifier : ApplicationUtilities.Path;
             }
         }
 
@@ -462,7 +462,7 @@ namespace NetExtender.Domains
         {
             get
             {
-                return IsInitialized ? ApplicationIdentifier : ApplicationUtils.FriendlyName;
+                return IsInitialized ? ApplicationIdentifier : ApplicationUtilities.FriendlyName;
             }
         }
 
@@ -470,7 +470,7 @@ namespace NetExtender.Domains
         {
             get
             {
-                return IsInitialized ? Current.Culture : CultureUtils.System;
+                return IsInitialized ? Current.Culture : CultureUtilities.System;
             }
             set
             {

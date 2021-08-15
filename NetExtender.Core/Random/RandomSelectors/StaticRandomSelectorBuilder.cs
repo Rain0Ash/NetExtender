@@ -7,8 +7,8 @@ using System.Collections;
 using System.Diagnostics.CodeAnalysis;
 using NetExtender.Random.Interfaces;
 using NetExtender.Types.Dictionaries;
-using NetExtender.Utils.Numerics;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Random
 {
@@ -64,17 +64,17 @@ namespace NetExtender.Random
         }
 
         public RandomSelectorBuilder()
-            : this(null, RandomUtils.Create())
+            : this(null, RandomUtilities.Create())
         {
         }
 
         public RandomSelectorBuilder(Int32 capacity)
-            : this(capacity, RandomUtils.Create())
+            : this(capacity, RandomUtilities.Create())
         {
         }
         
         public RandomSelectorBuilder(Int32 capacity, Int32 seed)
-            : this(capacity, RandomUtils.Create(seed))
+            : this(capacity, RandomUtilities.Create(seed))
         {
         }
 
@@ -88,22 +88,36 @@ namespace NetExtender.Random
             Random = random ?? throw new ArgumentNullException(nameof(random));
             Items = new IndexDictionary<T, Double>(capacity.ToRange(8));
         }
-
+        
         public RandomSelectorBuilder(IEnumerable<KeyValuePair<T, Double>>? items)
-            : this(items, RandomUtils.Create())
+            : this(items.Materialize())
         {
         }
 
         public RandomSelectorBuilder(IEnumerable<KeyValuePair<T, Double>>? items, Int32 seed)
-            : this(items, RandomUtils.Create(seed))
+            : this(items.Materialize(), seed)
         {
         }
 
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public RandomSelectorBuilder(IEnumerable<KeyValuePair<T, Double>>? items, IRandom random)
+            : this(items.Materialize(), random)
+        {
+        }
+
+        protected RandomSelectorBuilder(IReadOnlyCollection<KeyValuePair<T, Double>>? items)
+            : this(items, RandomUtilities.Create())
+        {
+        }
+
+        protected RandomSelectorBuilder(IReadOnlyCollection<KeyValuePair<T, Double>>? items, Int32 seed)
+            : this(items, RandomUtilities.Create(seed))
+        {
+        }
+
+        protected RandomSelectorBuilder(IReadOnlyCollection<KeyValuePair<T, Double>>? items, IRandom random)
         {
             Random = random ?? throw new ArgumentNullException(nameof(random));
-            Items = new IndexDictionary<T, Double>(items?.CountIfMaterialized()?.ToRange(8) ?? DefaultCapacity);
+            Items = new IndexDictionary<T, Double>(items?.Count ?? DefaultCapacity);
 
             if (items is null)
             {

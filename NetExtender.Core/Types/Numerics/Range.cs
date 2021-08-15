@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Numerics
 {
@@ -57,7 +57,7 @@ namespace NetExtender.Types.Numerics
 
         public Range(T min, T max)
         {
-            (Min, Max) = CompareUtils.Sort(min, max);
+            (Min, Max) = CompareUtilities.Sort(min, max);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

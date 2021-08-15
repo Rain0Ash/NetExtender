@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using NAudio.Wave;
 using NetExtender.NAudio.Types.Playlist.Interfaces;
-using NetExtender.Utils.Numerics;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.NAudio.Types.Playlist
 {

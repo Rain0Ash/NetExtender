@@ -36,7 +36,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
         public void CenterToParent()
         {
-            Window? parent = Owner ?? System.Windows.Application.Current.MainWindow;
+            Window? parent = Owner ?? Application.Current.MainWindow;
 
             if (parent is null)
             {

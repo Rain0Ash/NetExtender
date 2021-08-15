@@ -5,8 +5,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NetExtender.Utils.Numerics;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Deques
 {
@@ -627,9 +627,8 @@ namespace NetExtender.Types.Deques
                 // Move lower items down: [0, index) -> [Capacity - collectionCount, Capacity - collectionCount + index)
                 // This clears out the low "index" number of items, moving them "collectionCount" places down;
                 //   after rotation, there will be a "collectionCount"-sized hole at "index".
-                Int32 copyCount = index;
                 Int32 writeIndex = Capacity - collectionCount;
-                for (Int32 j = 0; j != copyCount; ++j)
+                for (Int32 j = 0; j != index; ++j)
                 {
                     _buffer[DequeIndexToBufferIndex(writeIndex + j)] = _buffer[DequeIndexToBufferIndex(j)];
                 }
@@ -689,11 +688,9 @@ namespace NetExtender.Types.Deques
                 // Removing from first half of list
 
                 // Move lower items up: [0, index) -> [collectionCount, collectionCount + index)
-                Int32 copyCount = index;
-                Int32 writeIndex = collectionCount;
-                for (Int32 j = copyCount - 1; j != -1; --j)
+                for (Int32 j = index - 1; j != -1; --j)
                 {
-                    _buffer[DequeIndexToBufferIndex(writeIndex + j)] = _buffer[DequeIndexToBufferIndex(j)];
+                    _buffer[DequeIndexToBufferIndex(collectionCount + j)] = _buffer[DequeIndexToBufferIndex(j)];
                 }
 
                 // Rotate to new view

@@ -4,7 +4,7 @@
 using System;
 using System.Net;
 using System.Text;
-using NetExtender.Utils.Network;
+using NetExtender.Utilities.Network;
 #pragma warning disable 8764
 
 namespace NetExtender.Types.Network
@@ -16,7 +16,7 @@ namespace NetExtender.Types.Network
         public WebClientExtended()
         {
             Encoding = Encoding.UTF8;
-            Headers.Add(UserAgentUtils.OtherUserAgent);
+            Headers.Add(UserAgentUtilities.OtherUserAgent);
         }
         
         protected override WebRequest? GetWebRequest(Uri address)

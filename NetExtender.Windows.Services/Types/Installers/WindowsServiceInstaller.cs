@@ -6,7 +6,7 @@ using System.Collections.Immutable;
 using System.IO;
 using System.ServiceProcess;
 using NetExtender.Windows.Services.Exceptions;
-using NetExtender.Windows.Services.Utils;
+using NetExtender.Windows.Services.Utilities;
 
 namespace NetExtender.Windows.Services.Types.Installers
 {
@@ -19,12 +19,12 @@ namespace NetExtender.Windows.Services.Types.Installers
                 throw new ArgumentNullException(nameof(name));
             }
 
-            if (!WindowsServiceUtils.IsValidServiceName(name))
+            if (!WindowsServiceUtilities.IsValidServiceName(name))
             {
                 throw new ArgumentException("Service name is invalid.", nameof(name));
             }
 
-            if (!WindowsServiceUtils.CheckServiceExist(name))
+            if (!WindowsServiceUtilities.CheckServiceExist(name))
             {
                 throw new WindowsServiceNotFoundException($"Windows service with name '{name}' not exist.", name);
             }
@@ -126,7 +126,7 @@ namespace NetExtender.Windows.Services.Types.Installers
                 throw new FileNotFoundException("File doesn't exist.", path.FullName);
             }
 
-            if (!WindowsServiceUtils.IsValidServiceName(name))
+            if (!WindowsServiceUtilities.IsValidServiceName(name))
             {
                 throw new ArgumentException("Service name is invalid.", nameof(name));
             }

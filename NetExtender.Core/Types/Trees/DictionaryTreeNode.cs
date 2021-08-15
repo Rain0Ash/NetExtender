@@ -8,7 +8,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using NetExtender.Types.Trees.Interfaces;
 using NetExtender.Types.Trees.Json;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 
 namespace NetExtender.Types.Trees
@@ -548,7 +548,7 @@ namespace NetExtender.Types.Trees
 
         public IEnumerator<KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>>> GetEnumerator()
         {
-            return HasTree ? Tree.GetEnumerator() : EnumerableUtils.GetEmptyEnumerator<KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>>>();
+            return HasTree ? Tree.GetEnumerator() : EnumerableUtilities.GetEmptyEnumerator<KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>>>();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

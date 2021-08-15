@@ -3,7 +3,7 @@
 
 using System;
 using NetExtender.Random.Interfaces;
-using NetExtender.Utils.Numerics;
+using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Random
 {
@@ -19,12 +19,12 @@ namespace NetExtender.Random
         private Double[] Distribution { get; }
 
         public StaticRandomSelectorBinary(T[] items, Double[] cda)
-            : this(items ?? throw new ArgumentNullException(nameof(items)), cda ?? throw new ArgumentNullException(nameof(cda)), RandomUtils.Create())
+            : this(items ?? throw new ArgumentNullException(nameof(items)), cda ?? throw new ArgumentNullException(nameof(cda)), RandomUtilities.Create())
         {
         }
         
         public StaticRandomSelectorBinary(T[] items, Double[] cda, Int32 seed)
-            : this(items ?? throw new ArgumentNullException(nameof(items)), cda ?? throw new ArgumentNullException(nameof(cda)), RandomUtils.Create(seed))
+            : this(items ?? throw new ArgumentNullException(nameof(items)), cda ?? throw new ArgumentNullException(nameof(cda)), RandomUtilities.Create(seed))
         {
         }
         

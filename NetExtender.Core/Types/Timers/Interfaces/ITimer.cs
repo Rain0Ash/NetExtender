@@ -3,7 +3,7 @@
 
 using System;
 using NetExtender.Tasks.Interfaces;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Times.Timers.Interfaces
 {

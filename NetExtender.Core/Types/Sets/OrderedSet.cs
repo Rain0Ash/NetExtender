@@ -7,7 +7,7 @@
  using System.Collections.Immutable;
  using System.Linq;
  using NetExtender.Types.Sets.Interfaces;
- using NetExtender.Utils.Types;
+ using NetExtender.Utilities.Types;
 
  namespace NetExtender.Types.Sets
 {

@@ -4,17 +4,18 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.AccessControl;
 using Microsoft.Win32;
 using NetExtender.Registry.Interfaces;
-using NetExtender.Utils.Registry;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Registry;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Registry
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "InvertIf")]
+    [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+    [SuppressMessage("ReSharper", "InvertIf")]
     public sealed class Registry : IRegistry, IReadOnlyRegistry
     {
         private static IImmutableDictionary<RegistryKeys, RegistryKey> Keys { get; } = new Dictionary<RegistryKeys, RegistryKey>
@@ -403,6 +404,7 @@ namespace NetExtender.Registry
             return GetValue<T>(key);
         }
         
+        [SuppressMessage("ReSharper", "CognitiveComplexity")]
         public Boolean GetValue<T>(String? key, out T? result)
         {
             try
@@ -423,13 +425,13 @@ namespace NetExtender.Registry
 
                 if (typeof(T) == typeof(String))
                 {
-                    result = (T) (Object) value.GetString();
+                    result = (T?) (Object?) value.GetString();
                     return true;
                 }
                 
                 if (value is IConvertible convertible)
                 {
-                    result = (T) Convert.ChangeType(convertible, typeof(T));
+                    result = (T?) Convert.ChangeType(convertible, typeof(T));
                     return true;
                 }
 
@@ -1059,6 +1061,7 @@ namespace NetExtender.Registry
             return GetSubKeyNames();
         }
 
+        [SuppressMessage("ReSharper", "CognitiveComplexity")]
         private IEnumerable<RegistryEntry> DumpInternal()
         {
             RegistryEntry[]? entries = GetValues();

@@ -20,7 +20,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         
         private void DuplicateOwnerIcon(Object sender, RoutedEventArgs args)
         {
-            Icon ??= Owner?.Icon ?? System.Windows.Application.Current.MainWindow?.Icon;
+            Icon ??= Owner?.Icon ?? Application.Current.MainWindow?.Icon;
         }
 
         protected override void CenterTo()

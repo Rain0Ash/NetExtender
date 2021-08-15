@@ -4,7 +4,7 @@
 using System;
 using Microsoft.Win32;
 using NetExtender.Exceptions;
-using NetExtender.Utils.Application;
+using NetExtender.Utilities.Application;
 using NetExtender.Windows.Protocols.Interfaces;
 
 namespace NetExtender.Windows.Protocols
@@ -61,7 +61,7 @@ namespace NetExtender.Windows.Protocols
         {
             get
             {
-                return ApplicationUtils.Path;
+                return ApplicationUtilities.Path;
             }
         }
 
@@ -88,7 +88,7 @@ namespace NetExtender.Windows.Protocols
         }
 
         public UrlSchemeProtocol()
-            : this(ApplicationUtils.FriendlyName ?? throw new InitializeException())
+            : this(ApplicationUtilities.FriendlyName ?? throw new InitializeException())
         {
         }
 

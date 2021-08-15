@@ -4,7 +4,7 @@
 using System;
 using System.Drawing;
 using NetExtender.Types.Drawing.Colors.Interfaces;
-using NetExtender.Utils.Types;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Drawing.Colors
 {
@@ -52,7 +52,7 @@ namespace NetExtender.Types.Drawing.Colors
 
         public Color ToColor()
         {
-            return ColorUtils.XYZToRGB(X, Y, Z);
+            return ColorUtilities.XYZToRGB(X, Y, Z);
         }
 
         public Boolean ToColor(out Color color)
