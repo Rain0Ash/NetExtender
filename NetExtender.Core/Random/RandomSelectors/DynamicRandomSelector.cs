@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using NetExtender.Exceptions;
 using NetExtender.Random.Interfaces;
 using NetExtender.Utilities.Numerics;
@@ -48,7 +47,7 @@ namespace NetExtender.Random
         public DynamicRandomSelector(Int32 capacity, IRandom random)
             : base(capacity, random)
         {
-            MathUtilities.ToRange(ref capacity, 8);
+            capacity = capacity.Clamp(8, Int32.MaxValue);
             Distribution = new List<Double>(capacity);
         }
         

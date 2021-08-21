@@ -29,11 +29,11 @@ namespace NetExtender.Utilities.Windows.IO
                 throw new ArgumentNullException(nameof(info));
             }
 
-            return info.LatestExist()
+            return info.LatestExist()?
                 .GetAccessControl()
                 .GetAccessRules(true, true, typeof(NTAccount))
                 .OfType<FileSystemAccessRule>()
-                .Any(rule => (rule.FileSystemRights & access) == access);
+                .Any(rule => (rule.FileSystemRights & access) == access) ?? throw new ArgumentException("Can't get parent directory.", nameof(info));
         }
 
         public static Boolean IsHasPermissions(this DirectoryInfo info, FileSystemRights access)

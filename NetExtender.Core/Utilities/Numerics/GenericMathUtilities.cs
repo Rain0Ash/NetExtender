@@ -807,283 +807,505 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void ToRange(ref Char value, Char minimum = Char.MinValue, Char maximum = Char.MaxValue, Boolean looped = false)
+		public static Char ToRange(this Char value)
 		{
-			 value = ToRange(value, minimum, maximum, looped);
+			return Clamp(value);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Char ToRange(this Char value, Char minimum = Char.MinValue, Char maximum = Char.MaxValue, Boolean looped = false)
+		public static Char ToRange(this Char value, Boolean looped)
 		{
-			if (value > maximum)
-			{
-				return looped ? minimum : maximum;
-			}
-
-			if (value < minimum)
-			{
-				return looped ? maximum : minimum;
-			}
-
-			return value;
+			return Clamp(value, looped);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void ToRange(ref SByte value, SByte minimum = 0, SByte maximum = SByte.MaxValue, Boolean looped = false)
+		public static Char ToRange(this Char value, Char maximum)
 		{
-			 value = ToRange(value, minimum, maximum, looped);
+			return Clamp(value, maximum);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static SByte ToRange(this SByte value, SByte minimum = 0, SByte maximum = SByte.MaxValue, Boolean looped = false)
+		public static Char ToRange(this Char value, Char maximum, Boolean looped)
 		{
-			if (value > maximum)
-			{
-				return looped ? minimum : maximum;
-			}
-
-			if (value < minimum)
-			{
-				return looped ? maximum : minimum;
-			}
-
-			return value;
+			return Clamp(value, maximum, looped);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void ToRange(ref Byte value, Byte minimum = 0, Byte maximum = Byte.MaxValue, Boolean looped = false)
+		public static Char ToRange(this Char value, Char minimum, Char maximum)
 		{
-			 value = ToRange(value, minimum, maximum, looped);
+			return Clamp(value, minimum, maximum);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Byte ToRange(this Byte value, Byte minimum = 0, Byte maximum = Byte.MaxValue, Boolean looped = false)
+		public static Char ToRange(this Char value, Char minimum, Char maximum, Boolean looped)
 		{
-			if (value > maximum)
-			{
-				return looped ? minimum : maximum;
-			}
-
-			if (value < minimum)
-			{
-				return looped ? maximum : minimum;
-			}
-
-			return value;
+			return Clamp(value, minimum, maximum, looped);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void ToRange(ref Int16 value, Int16 minimum = 0, Int16 maximum = Int16.MaxValue, Boolean looped = false)
+		public static SByte ToRange(this SByte value)
 		{
-			 value = ToRange(value, minimum, maximum, looped);
+			return Clamp(value);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Int16 ToRange(this Int16 value, Int16 minimum = 0, Int16 maximum = Int16.MaxValue, Boolean looped = false)
+		public static SByte ToRange(this SByte value, Boolean looped)
 		{
-			if (value > maximum)
-			{
-				return looped ? minimum : maximum;
-			}
-
-			if (value < minimum)
-			{
-				return looped ? maximum : minimum;
-			}
-
-			return value;
+			return Clamp(value, looped);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void ToRange(ref UInt16 value, UInt16 minimum = 0, UInt16 maximum = UInt16.MaxValue, Boolean looped = false)
+		public static SByte ToRange(this SByte value, SByte maximum)
 		{
-			 value = ToRange(value, minimum, maximum, looped);
+			return Clamp(value, maximum);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static UInt16 ToRange(this UInt16 value, UInt16 minimum = 0, UInt16 maximum = UInt16.MaxValue, Boolean looped = false)
+		public static SByte ToRange(this SByte value, SByte maximum, Boolean looped)
 		{
-			if (value > maximum)
-			{
-				return looped ? minimum : maximum;
-			}
-
-			if (value < minimum)
-			{
-				return looped ? maximum : minimum;
-			}
-
-			return value;
+			return Clamp(value, maximum, looped);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void ToRange(ref Int32 value, Int32 minimum = 0, Int32 maximum = Int32.MaxValue, Boolean looped = false)
+		public static SByte ToRange(this SByte value, SByte minimum, SByte maximum)
 		{
-			 value = ToRange(value, minimum, maximum, looped);
+			return Clamp(value, minimum, maximum);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Int32 ToRange(this Int32 value, Int32 minimum = 0, Int32 maximum = Int32.MaxValue, Boolean looped = false)
+		public static SByte ToRange(this SByte value, SByte minimum, SByte maximum, Boolean looped)
 		{
-			if (value > maximum)
-			{
-				return looped ? minimum : maximum;
-			}
-
-			if (value < minimum)
-			{
-				return looped ? maximum : minimum;
-			}
-
-			return value;
+			return Clamp(value, minimum, maximum, looped);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void ToRange(ref UInt32 value, UInt32 minimum = 0, UInt32 maximum = UInt32.MaxValue, Boolean looped = false)
+		public static Byte ToRange(this Byte value)
 		{
-			 value = ToRange(value, minimum, maximum, looped);
+			return Clamp(value);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static UInt32 ToRange(this UInt32 value, UInt32 minimum = 0, UInt32 maximum = UInt32.MaxValue, Boolean looped = false)
+		public static Byte ToRange(this Byte value, Boolean looped)
 		{
-			if (value > maximum)
-			{
-				return looped ? minimum : maximum;
-			}
-
-			if (value < minimum)
-			{
-				return looped ? maximum : minimum;
-			}
-
-			return value;
+			return Clamp(value, looped);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void ToRange(ref Int64 value, Int64 minimum = 0, Int64 maximum = Int64.MaxValue, Boolean looped = false)
+		public static Byte ToRange(this Byte value, Byte maximum)
 		{
-			 value = ToRange(value, minimum, maximum, looped);
+			return Clamp(value, maximum);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Int64 ToRange(this Int64 value, Int64 minimum = 0, Int64 maximum = Int64.MaxValue, Boolean looped = false)
+		public static Byte ToRange(this Byte value, Byte maximum, Boolean looped)
 		{
-			if (value > maximum)
-			{
-				return looped ? minimum : maximum;
-			}
-
-			if (value < minimum)
-			{
-				return looped ? maximum : minimum;
-			}
-
-			return value;
+			return Clamp(value, maximum, looped);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void ToRange(ref UInt64 value, UInt64 minimum = 0, UInt64 maximum = UInt64.MaxValue, Boolean looped = false)
+		public static Byte ToRange(this Byte value, Byte minimum, Byte maximum)
 		{
-			 value = ToRange(value, minimum, maximum, looped);
+			return Clamp(value, minimum, maximum);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static UInt64 ToRange(this UInt64 value, UInt64 minimum = 0, UInt64 maximum = UInt64.MaxValue, Boolean looped = false)
+		public static Byte ToRange(this Byte value, Byte minimum, Byte maximum, Boolean looped)
 		{
-			if (value > maximum)
-			{
-				return looped ? minimum : maximum;
-			}
-
-			if (value < minimum)
-			{
-				return looped ? maximum : minimum;
-			}
-
-			return value;
+			return Clamp(value, minimum, maximum, looped);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void ToRange(ref Single value, Single minimum = 0, Single maximum = Single.MaxValue, Boolean looped = false)
+		public static Int16 ToRange(this Int16 value)
 		{
-			 value = ToRange(value, minimum, maximum, looped);
+			return Clamp(value);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Single ToRange(this Single value, Single minimum = 0, Single maximum = Single.MaxValue, Boolean looped = false)
+		public static Int16 ToRange(this Int16 value, Boolean looped)
 		{
-			if (value > maximum)
-			{
-				return looped ? minimum : maximum;
-			}
-
-			if (value < minimum)
-			{
-				return looped ? maximum : minimum;
-			}
-
-			return value;
+			return Clamp(value, looped);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void ToRange(ref Double value, Double minimum = 0, Double maximum = Double.MaxValue, Boolean looped = false)
+		public static Int16 ToRange(this Int16 value, Int16 maximum)
 		{
-			 value = ToRange(value, minimum, maximum, looped);
+			return Clamp(value, maximum);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Double ToRange(this Double value, Double minimum = 0, Double maximum = Double.MaxValue, Boolean looped = false)
+		public static Int16 ToRange(this Int16 value, Int16 maximum, Boolean looped)
 		{
-			if (value > maximum)
-			{
-				return looped ? minimum : maximum;
-			}
-
-			if (value < minimum)
-			{
-				return looped ? maximum : minimum;
-			}
-
-			return value;
+			return Clamp(value, maximum, looped);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static void ToRange(ref Decimal value, Decimal minimum = 0, Decimal maximum = Decimal.MaxValue, Boolean looped = false)
+		public static Int16 ToRange(this Int16 value, Int16 minimum, Int16 maximum)
 		{
-			 value = ToRange(value, minimum, maximum, looped);
+			return Clamp(value, minimum, maximum);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Decimal ToRange(this Decimal value, Decimal minimum = 0, Decimal maximum = Decimal.MaxValue, Boolean looped = false)
+		public static Int16 ToRange(this Int16 value, Int16 minimum, Int16 maximum, Boolean looped)
 		{
-			if (value > maximum)
-			{
-				return looped ? minimum : maximum;
-			}
-
-			if (value < minimum)
-			{
-				return looped ? maximum : minimum;
-			}
-
-			return value;
+			return Clamp(value, minimum, maximum, looped);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Char value, MathPositionType comparison = MathPositionType.Both)
+		public static UInt16 ToRange(this UInt16 value)
+		{
+			return Clamp(value);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 ToRange(this UInt16 value, Boolean looped)
+		{
+			return Clamp(value, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 ToRange(this UInt16 value, UInt16 maximum)
+		{
+			return Clamp(value, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 ToRange(this UInt16 value, UInt16 maximum, Boolean looped)
+		{
+			return Clamp(value, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 ToRange(this UInt16 value, UInt16 minimum, UInt16 maximum)
+		{
+			return Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 ToRange(this UInt16 value, UInt16 minimum, UInt16 maximum, Boolean looped)
+		{
+			return Clamp(value, minimum, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 ToRange(this Int32 value)
+		{
+			return Clamp(value);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 ToRange(this Int32 value, Boolean looped)
+		{
+			return Clamp(value, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 ToRange(this Int32 value, Int32 maximum)
+		{
+			return Clamp(value, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 ToRange(this Int32 value, Int32 maximum, Boolean looped)
+		{
+			return Clamp(value, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 ToRange(this Int32 value, Int32 minimum, Int32 maximum)
+		{
+			return Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 ToRange(this Int32 value, Int32 minimum, Int32 maximum, Boolean looped)
+		{
+			return Clamp(value, minimum, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 ToRange(this UInt32 value)
+		{
+			return Clamp(value);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 ToRange(this UInt32 value, Boolean looped)
+		{
+			return Clamp(value, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 ToRange(this UInt32 value, UInt32 maximum)
+		{
+			return Clamp(value, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 ToRange(this UInt32 value, UInt32 maximum, Boolean looped)
+		{
+			return Clamp(value, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 ToRange(this UInt32 value, UInt32 minimum, UInt32 maximum)
+		{
+			return Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 ToRange(this UInt32 value, UInt32 minimum, UInt32 maximum, Boolean looped)
+		{
+			return Clamp(value, minimum, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 ToRange(this Int64 value)
+		{
+			return Clamp(value);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 ToRange(this Int64 value, Boolean looped)
+		{
+			return Clamp(value, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 ToRange(this Int64 value, Int64 maximum)
+		{
+			return Clamp(value, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 ToRange(this Int64 value, Int64 maximum, Boolean looped)
+		{
+			return Clamp(value, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 ToRange(this Int64 value, Int64 minimum, Int64 maximum)
+		{
+			return Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 ToRange(this Int64 value, Int64 minimum, Int64 maximum, Boolean looped)
+		{
+			return Clamp(value, minimum, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 ToRange(this UInt64 value)
+		{
+			return Clamp(value);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 ToRange(this UInt64 value, Boolean looped)
+		{
+			return Clamp(value, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 ToRange(this UInt64 value, UInt64 maximum)
+		{
+			return Clamp(value, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 ToRange(this UInt64 value, UInt64 maximum, Boolean looped)
+		{
+			return Clamp(value, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 ToRange(this UInt64 value, UInt64 minimum, UInt64 maximum)
+		{
+			return Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 ToRange(this UInt64 value, UInt64 minimum, UInt64 maximum, Boolean looped)
+		{
+			return Clamp(value, minimum, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single ToRange(this Single value)
+		{
+			return Clamp(value);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single ToRange(this Single value, Boolean looped)
+		{
+			return Clamp(value, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single ToRange(this Single value, Single maximum)
+		{
+			return Clamp(value, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single ToRange(this Single value, Single maximum, Boolean looped)
+		{
+			return Clamp(value, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single ToRange(this Single value, Single minimum, Single maximum)
+		{
+			return Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single ToRange(this Single value, Single minimum, Single maximum, Boolean looped)
+		{
+			return Clamp(value, minimum, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double ToRange(this Double value)
+		{
+			return Clamp(value);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double ToRange(this Double value, Boolean looped)
+		{
+			return Clamp(value, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double ToRange(this Double value, Double maximum)
+		{
+			return Clamp(value, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double ToRange(this Double value, Double maximum, Boolean looped)
+		{
+			return Clamp(value, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double ToRange(this Double value, Double minimum, Double maximum)
+		{
+			return Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double ToRange(this Double value, Double minimum, Double maximum, Boolean looped)
+		{
+			return Clamp(value, minimum, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal ToRange(this Decimal value)
+		{
+			return Clamp(value);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal ToRange(this Decimal value, Boolean looped)
+		{
+			return Clamp(value, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal ToRange(this Decimal value, Decimal maximum)
+		{
+			return Clamp(value, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal ToRange(this Decimal value, Decimal maximum, Boolean looped)
+		{
+			return Clamp(value, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal ToRange(this Decimal value, Decimal minimum, Decimal maximum)
+		{
+			return Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal ToRange(this Decimal value, Decimal minimum, Decimal maximum, Boolean looped)
+		{
+			return Clamp(value, minimum, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static BigInteger ToRange(this BigInteger value)
+		{
+			return Clamp(value);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static BigInteger ToRange(this BigInteger value, Boolean looped)
+		{
+			return Clamp(value, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static BigInteger ToRange(this BigInteger value, BigInteger maximum)
+		{
+			return Clamp(value, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static BigInteger ToRange(this BigInteger value, BigInteger maximum, Boolean looped)
+		{
+			return Clamp(value, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static BigInteger ToRange(this BigInteger value, BigInteger minimum, BigInteger maximum)
+		{
+			return Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static BigInteger ToRange(this BigInteger value, BigInteger minimum, BigInteger maximum, Boolean looped)
+		{
+			return Clamp(value, minimum, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Char value)
+		{
+			return InRange(value, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Char value, MathPositionType comparison)
 		{
 			return InRange(value, default, Char.MaxValue, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Char value, Char maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Char value, Char maximum)
+		{
+			return InRange(value, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Char value, Char maximum, MathPositionType comparison)
 		{
 			return InRange(value, default, maximum, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Char value, Char minimum, Char maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Char value, Char minimum, Char maximum)
+		{
+			return InRange(value, minimum, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Char value, Char minimum, Char maximum, MathPositionType comparison)
 		{
 			return comparison switch
 			{
@@ -1096,19 +1318,37 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this SByte value, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this SByte value)
+		{
+			return InRange(value, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this SByte value, MathPositionType comparison)
 		{
 			return InRange(value, default, SByte.MaxValue, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this SByte value, SByte maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this SByte value, SByte maximum)
+		{
+			return InRange(value, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this SByte value, SByte maximum, MathPositionType comparison)
 		{
 			return InRange(value, default, maximum, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this SByte value, SByte minimum, SByte maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this SByte value, SByte minimum, SByte maximum)
+		{
+			return InRange(value, minimum, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this SByte value, SByte minimum, SByte maximum, MathPositionType comparison)
 		{
 			return comparison switch
 			{
@@ -1121,19 +1361,37 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Byte value, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Byte value)
+		{
+			return InRange(value, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Byte value, MathPositionType comparison)
 		{
 			return InRange(value, default, Byte.MaxValue, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Byte value, Byte maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Byte value, Byte maximum)
+		{
+			return InRange(value, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Byte value, Byte maximum, MathPositionType comparison)
 		{
 			return InRange(value, default, maximum, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Byte value, Byte minimum, Byte maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Byte value, Byte minimum, Byte maximum)
+		{
+			return InRange(value, minimum, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Byte value, Byte minimum, Byte maximum, MathPositionType comparison)
 		{
 			return comparison switch
 			{
@@ -1146,19 +1404,37 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Int16 value, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Int16 value)
+		{
+			return InRange(value, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Int16 value, MathPositionType comparison)
 		{
 			return InRange(value, default, Int16.MaxValue, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Int16 value, Int16 maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Int16 value, Int16 maximum)
+		{
+			return InRange(value, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Int16 value, Int16 maximum, MathPositionType comparison)
 		{
 			return InRange(value, default, maximum, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Int16 value, Int16 minimum, Int16 maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Int16 value, Int16 minimum, Int16 maximum)
+		{
+			return InRange(value, minimum, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Int16 value, Int16 minimum, Int16 maximum, MathPositionType comparison)
 		{
 			return comparison switch
 			{
@@ -1171,19 +1447,37 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this UInt16 value, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this UInt16 value)
+		{
+			return InRange(value, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this UInt16 value, MathPositionType comparison)
 		{
 			return InRange(value, default, UInt16.MaxValue, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this UInt16 value, UInt16 maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this UInt16 value, UInt16 maximum)
+		{
+			return InRange(value, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this UInt16 value, UInt16 maximum, MathPositionType comparison)
 		{
 			return InRange(value, default, maximum, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this UInt16 value, UInt16 minimum, UInt16 maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this UInt16 value, UInt16 minimum, UInt16 maximum)
+		{
+			return InRange(value, minimum, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this UInt16 value, UInt16 minimum, UInt16 maximum, MathPositionType comparison)
 		{
 			return comparison switch
 			{
@@ -1196,19 +1490,37 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Int32 value, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Int32 value)
+		{
+			return InRange(value, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Int32 value, MathPositionType comparison)
 		{
 			return InRange(value, default, Int32.MaxValue, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Int32 value, Int32 maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Int32 value, Int32 maximum)
+		{
+			return InRange(value, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Int32 value, Int32 maximum, MathPositionType comparison)
 		{
 			return InRange(value, default, maximum, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Int32 value, Int32 minimum, Int32 maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Int32 value, Int32 minimum, Int32 maximum)
+		{
+			return InRange(value, minimum, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Int32 value, Int32 minimum, Int32 maximum, MathPositionType comparison)
 		{
 			return comparison switch
 			{
@@ -1221,19 +1533,37 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this UInt32 value, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this UInt32 value)
+		{
+			return InRange(value, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this UInt32 value, MathPositionType comparison)
 		{
 			return InRange(value, default, UInt32.MaxValue, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this UInt32 value, UInt32 maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this UInt32 value, UInt32 maximum)
+		{
+			return InRange(value, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this UInt32 value, UInt32 maximum, MathPositionType comparison)
 		{
 			return InRange(value, default, maximum, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this UInt32 value, UInt32 minimum, UInt32 maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this UInt32 value, UInt32 minimum, UInt32 maximum)
+		{
+			return InRange(value, minimum, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this UInt32 value, UInt32 minimum, UInt32 maximum, MathPositionType comparison)
 		{
 			return comparison switch
 			{
@@ -1246,19 +1576,37 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Int64 value, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Int64 value)
+		{
+			return InRange(value, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Int64 value, MathPositionType comparison)
 		{
 			return InRange(value, default, Int64.MaxValue, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Int64 value, Int64 maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Int64 value, Int64 maximum)
+		{
+			return InRange(value, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Int64 value, Int64 maximum, MathPositionType comparison)
 		{
 			return InRange(value, default, maximum, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Int64 value, Int64 minimum, Int64 maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Int64 value, Int64 minimum, Int64 maximum)
+		{
+			return InRange(value, minimum, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Int64 value, Int64 minimum, Int64 maximum, MathPositionType comparison)
 		{
 			return comparison switch
 			{
@@ -1271,19 +1619,37 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this UInt64 value, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this UInt64 value)
+		{
+			return InRange(value, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this UInt64 value, MathPositionType comparison)
 		{
 			return InRange(value, default, UInt64.MaxValue, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this UInt64 value, UInt64 maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this UInt64 value, UInt64 maximum)
+		{
+			return InRange(value, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this UInt64 value, UInt64 maximum, MathPositionType comparison)
 		{
 			return InRange(value, default, maximum, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this UInt64 value, UInt64 minimum, UInt64 maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this UInt64 value, UInt64 minimum, UInt64 maximum)
+		{
+			return InRange(value, minimum, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this UInt64 value, UInt64 minimum, UInt64 maximum, MathPositionType comparison)
 		{
 			return comparison switch
 			{
@@ -1296,19 +1662,37 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Single value, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Single value)
+		{
+			return InRange(value, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Single value, MathPositionType comparison)
 		{
 			return InRange(value, default, Single.MaxValue, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Single value, Single maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Single value, Single maximum)
+		{
+			return InRange(value, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Single value, Single maximum, MathPositionType comparison)
 		{
 			return InRange(value, default, maximum, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Single value, Single minimum, Single maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Single value, Single minimum, Single maximum)
+		{
+			return InRange(value, minimum, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Single value, Single minimum, Single maximum, MathPositionType comparison)
 		{
 			return comparison switch
 			{
@@ -1321,19 +1705,37 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Double value, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Double value)
+		{
+			return InRange(value, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Double value, MathPositionType comparison)
 		{
 			return InRange(value, default, Double.MaxValue, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Double value, Double maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Double value, Double maximum)
+		{
+			return InRange(value, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Double value, Double maximum, MathPositionType comparison)
 		{
 			return InRange(value, default, maximum, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Double value, Double minimum, Double maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Double value, Double minimum, Double maximum)
+		{
+			return InRange(value, minimum, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Double value, Double minimum, Double maximum, MathPositionType comparison)
 		{
 			return comparison switch
 			{
@@ -1346,19 +1748,37 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Decimal value, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Decimal value)
+		{
+			return InRange(value, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Decimal value, MathPositionType comparison)
 		{
 			return InRange(value, default, Decimal.MaxValue, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Decimal value, Decimal maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Decimal value, Decimal maximum)
+		{
+			return InRange(value, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Decimal value, Decimal maximum, MathPositionType comparison)
 		{
 			return InRange(value, default, maximum, comparison);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Boolean InRange(this Decimal value, Decimal minimum, Decimal maximum, MathPositionType comparison = MathPositionType.Both)
+		public static Boolean InRange(this Decimal value, Decimal minimum, Decimal maximum)
+		{
+			return InRange(value, minimum, maximum, MathPositionType.Both);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Boolean InRange(this Decimal value, Decimal minimum, Decimal maximum, MathPositionType comparison)
 		{
 			return comparison switch
 			{
@@ -3251,9 +3671,9 @@ namespace NetExtender.Utilities.Numerics
 
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Double Sqrt(this Single value)
+		public static Single Sqrt(this Single value)
 		{
-			return Math.Sqrt(value);
+			return MathF.Sqrt(value);
 		}
 
 		/// <inheritdoc cref="Math.Sqrt"/>
@@ -3269,18 +3689,21 @@ namespace NetExtender.Utilities.Numerics
 		{
 			return Math.Log(value);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Double Log(this SByte value, Double newBase)
+		public static Double Log(this SByte value, Double @base)
 		{
-			return Math.Log(value, newBase);
+			return Math.Log(value, @base);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log2(this SByte value)
 		{
 			return Math.Log2(value);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log10(this SByte value)
@@ -3294,18 +3717,21 @@ namespace NetExtender.Utilities.Numerics
 		{
 			return Math.Log(value);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Double Log(this Byte value, Double newBase)
+		public static Double Log(this Byte value, Double @base)
 		{
-			return Math.Log(value, newBase);
+			return Math.Log(value, @base);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log2(this Byte value)
 		{
 			return Math.Log2(value);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log10(this Byte value)
@@ -3319,18 +3745,21 @@ namespace NetExtender.Utilities.Numerics
 		{
 			return Math.Log(value);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Double Log(this Int16 value, Double newBase)
+		public static Double Log(this Int16 value, Double @base)
 		{
-			return Math.Log(value, newBase);
+			return Math.Log(value, @base);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log2(this Int16 value)
 		{
 			return Math.Log2(value);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log10(this Int16 value)
@@ -3344,18 +3773,21 @@ namespace NetExtender.Utilities.Numerics
 		{
 			return Math.Log(value);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Double Log(this UInt16 value, Double newBase)
+		public static Double Log(this UInt16 value, Double @base)
 		{
-			return Math.Log(value, newBase);
+			return Math.Log(value, @base);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log2(this UInt16 value)
 		{
 			return Math.Log2(value);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log10(this UInt16 value)
@@ -3369,18 +3801,21 @@ namespace NetExtender.Utilities.Numerics
 		{
 			return Math.Log(value);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Double Log(this Int32 value, Double newBase)
+		public static Double Log(this Int32 value, Double @base)
 		{
-			return Math.Log(value, newBase);
+			return Math.Log(value, @base);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log2(this Int32 value)
 		{
 			return Math.Log2(value);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log10(this Int32 value)
@@ -3394,18 +3829,21 @@ namespace NetExtender.Utilities.Numerics
 		{
 			return Math.Log(value);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Double Log(this UInt32 value, Double newBase)
+		public static Double Log(this UInt32 value, Double @base)
 		{
-			return Math.Log(value, newBase);
+			return Math.Log(value, @base);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log2(this UInt32 value)
 		{
 			return Math.Log2(value);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log10(this UInt32 value)
@@ -3419,18 +3857,21 @@ namespace NetExtender.Utilities.Numerics
 		{
 			return Math.Log(value);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Double Log(this Int64 value, Double newBase)
+		public static Double Log(this Int64 value, Double @base)
 		{
-			return Math.Log(value, newBase);
+			return Math.Log(value, @base);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log2(this Int64 value)
 		{
 			return Math.Log2(value);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log10(this Int64 value)
@@ -3444,23 +3885,578 @@ namespace NetExtender.Utilities.Numerics
 		{
 			return Math.Log(value);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Double Log(this UInt64 value, Double newBase)
+		public static Double Log(this UInt64 value, Double @base)
 		{
-			return Math.Log(value, newBase);
+			return Math.Log(value, @base);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log2(this UInt64 value)
 		{
 			return Math.Log2(value);
 		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log10(this UInt64 value)
 		{
 			return Math.Log10(value);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Char Clamp(this Char value)
+		{
+			return Clamp(value, default(Char));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Char Clamp(this Char value, Boolean looped)
+		{
+			return Clamp(value, default, Char.MaxValue, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Char Clamp(this Char value, Char maximum)
+		{
+			return Clamp(value, default, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Char Clamp(this Char value, Char maximum, Boolean looped)
+		{
+			return Clamp(value, default, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Char Clamp(this Char value, Char minimum, Char maximum)
+		{
+			return (Char) Math.Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Char Clamp(this Char value, Char minimum, Char maximum, Boolean looped)
+		{
+			if (value > maximum)
+			{
+				return looped ? minimum : maximum;
+			}
+
+			if (value < minimum)
+			{
+				return looped ? maximum : minimum;
+			}
+
+			return value;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte Clamp(this SByte value)
+		{
+			return Clamp(value, default(SByte));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte Clamp(this SByte value, Boolean looped)
+		{
+			return Clamp(value, default, SByte.MaxValue, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte Clamp(this SByte value, SByte maximum)
+		{
+			return Clamp(value, default, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte Clamp(this SByte value, SByte maximum, Boolean looped)
+		{
+			return Clamp(value, default, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte Clamp(this SByte value, SByte minimum, SByte maximum)
+		{
+			return Math.Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte Clamp(this SByte value, SByte minimum, SByte maximum, Boolean looped)
+		{
+			if (value > maximum)
+			{
+				return looped ? minimum : maximum;
+			}
+
+			if (value < minimum)
+			{
+				return looped ? maximum : minimum;
+			}
+
+			return value;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte Clamp(this Byte value)
+		{
+			return Clamp(value, default(Byte));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte Clamp(this Byte value, Boolean looped)
+		{
+			return Clamp(value, default, Byte.MaxValue, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte Clamp(this Byte value, Byte maximum)
+		{
+			return Clamp(value, default, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte Clamp(this Byte value, Byte maximum, Boolean looped)
+		{
+			return Clamp(value, default, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte Clamp(this Byte value, Byte minimum, Byte maximum)
+		{
+			return Math.Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte Clamp(this Byte value, Byte minimum, Byte maximum, Boolean looped)
+		{
+			if (value > maximum)
+			{
+				return looped ? minimum : maximum;
+			}
+
+			if (value < minimum)
+			{
+				return looped ? maximum : minimum;
+			}
+
+			return value;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 Clamp(this Int16 value)
+		{
+			return Clamp(value, default(Int16));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 Clamp(this Int16 value, Boolean looped)
+		{
+			return Clamp(value, default, Int16.MaxValue, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 Clamp(this Int16 value, Int16 maximum)
+		{
+			return Clamp(value, default, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 Clamp(this Int16 value, Int16 maximum, Boolean looped)
+		{
+			return Clamp(value, default, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 Clamp(this Int16 value, Int16 minimum, Int16 maximum)
+		{
+			return Math.Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 Clamp(this Int16 value, Int16 minimum, Int16 maximum, Boolean looped)
+		{
+			if (value > maximum)
+			{
+				return looped ? minimum : maximum;
+			}
+
+			if (value < minimum)
+			{
+				return looped ? maximum : minimum;
+			}
+
+			return value;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 Clamp(this UInt16 value)
+		{
+			return Clamp(value, default(UInt16));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 Clamp(this UInt16 value, Boolean looped)
+		{
+			return Clamp(value, default, UInt16.MaxValue, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 Clamp(this UInt16 value, UInt16 maximum)
+		{
+			return Clamp(value, default, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 Clamp(this UInt16 value, UInt16 maximum, Boolean looped)
+		{
+			return Clamp(value, default, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 Clamp(this UInt16 value, UInt16 minimum, UInt16 maximum)
+		{
+			return Math.Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 Clamp(this UInt16 value, UInt16 minimum, UInt16 maximum, Boolean looped)
+		{
+			if (value > maximum)
+			{
+				return looped ? minimum : maximum;
+			}
+
+			if (value < minimum)
+			{
+				return looped ? maximum : minimum;
+			}
+
+			return value;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 Clamp(this Int32 value)
+		{
+			return Clamp(value, default(Int32));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 Clamp(this Int32 value, Boolean looped)
+		{
+			return Clamp(value, default, Int32.MaxValue, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 Clamp(this Int32 value, Int32 maximum)
+		{
+			return Clamp(value, default, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 Clamp(this Int32 value, Int32 maximum, Boolean looped)
+		{
+			return Clamp(value, default, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 Clamp(this Int32 value, Int32 minimum, Int32 maximum)
+		{
+			return Math.Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 Clamp(this Int32 value, Int32 minimum, Int32 maximum, Boolean looped)
+		{
+			if (value > maximum)
+			{
+				return looped ? minimum : maximum;
+			}
+
+			if (value < minimum)
+			{
+				return looped ? maximum : minimum;
+			}
+
+			return value;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 Clamp(this UInt32 value)
+		{
+			return Clamp(value, default(UInt32));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 Clamp(this UInt32 value, Boolean looped)
+		{
+			return Clamp(value, default, UInt32.MaxValue, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 Clamp(this UInt32 value, UInt32 maximum)
+		{
+			return Clamp(value, default, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 Clamp(this UInt32 value, UInt32 maximum, Boolean looped)
+		{
+			return Clamp(value, default, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 Clamp(this UInt32 value, UInt32 minimum, UInt32 maximum)
+		{
+			return Math.Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 Clamp(this UInt32 value, UInt32 minimum, UInt32 maximum, Boolean looped)
+		{
+			if (value > maximum)
+			{
+				return looped ? minimum : maximum;
+			}
+
+			if (value < minimum)
+			{
+				return looped ? maximum : minimum;
+			}
+
+			return value;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 Clamp(this Int64 value)
+		{
+			return Clamp(value, default(Int64));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 Clamp(this Int64 value, Boolean looped)
+		{
+			return Clamp(value, default, Int64.MaxValue, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 Clamp(this Int64 value, Int64 maximum)
+		{
+			return Clamp(value, default, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 Clamp(this Int64 value, Int64 maximum, Boolean looped)
+		{
+			return Clamp(value, default, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 Clamp(this Int64 value, Int64 minimum, Int64 maximum)
+		{
+			return Math.Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 Clamp(this Int64 value, Int64 minimum, Int64 maximum, Boolean looped)
+		{
+			if (value > maximum)
+			{
+				return looped ? minimum : maximum;
+			}
+
+			if (value < minimum)
+			{
+				return looped ? maximum : minimum;
+			}
+
+			return value;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 Clamp(this UInt64 value)
+		{
+			return Clamp(value, default(UInt64));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 Clamp(this UInt64 value, Boolean looped)
+		{
+			return Clamp(value, default, UInt64.MaxValue, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 Clamp(this UInt64 value, UInt64 maximum)
+		{
+			return Clamp(value, default, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 Clamp(this UInt64 value, UInt64 maximum, Boolean looped)
+		{
+			return Clamp(value, default, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 Clamp(this UInt64 value, UInt64 minimum, UInt64 maximum)
+		{
+			return Math.Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 Clamp(this UInt64 value, UInt64 minimum, UInt64 maximum, Boolean looped)
+		{
+			if (value > maximum)
+			{
+				return looped ? minimum : maximum;
+			}
+
+			if (value < minimum)
+			{
+				return looped ? maximum : minimum;
+			}
+
+			return value;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single Clamp(this Single value)
+		{
+			return Clamp(value, default(Single));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single Clamp(this Single value, Boolean looped)
+		{
+			return Clamp(value, default, Single.MaxValue, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single Clamp(this Single value, Single maximum)
+		{
+			return Clamp(value, default, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single Clamp(this Single value, Single maximum, Boolean looped)
+		{
+			return Clamp(value, default, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single Clamp(this Single value, Single minimum, Single maximum)
+		{
+			return Math.Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single Clamp(this Single value, Single minimum, Single maximum, Boolean looped)
+		{
+			if (value > maximum)
+			{
+				return looped ? minimum : maximum;
+			}
+
+			if (value < minimum)
+			{
+				return looped ? maximum : minimum;
+			}
+
+			return value;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Clamp(this Double value)
+		{
+			return Clamp(value, default(Double));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Clamp(this Double value, Boolean looped)
+		{
+			return Clamp(value, default, Double.MaxValue, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Clamp(this Double value, Double maximum)
+		{
+			return Clamp(value, default, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Clamp(this Double value, Double maximum, Boolean looped)
+		{
+			return Clamp(value, default, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Clamp(this Double value, Double minimum, Double maximum)
+		{
+			return Math.Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double Clamp(this Double value, Double minimum, Double maximum, Boolean looped)
+		{
+			if (value > maximum)
+			{
+				return looped ? minimum : maximum;
+			}
+
+			if (value < minimum)
+			{
+				return looped ? maximum : minimum;
+			}
+
+			return value;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal Clamp(this Decimal value)
+		{
+			return Clamp(value, default(Decimal));
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal Clamp(this Decimal value, Boolean looped)
+		{
+			return Clamp(value, default, Decimal.MaxValue, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal Clamp(this Decimal value, Decimal maximum)
+		{
+			return Clamp(value, default, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal Clamp(this Decimal value, Decimal maximum, Boolean looped)
+		{
+			return Clamp(value, default, maximum, looped);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal Clamp(this Decimal value, Decimal minimum, Decimal maximum)
+		{
+			return Math.Clamp(value, minimum, maximum);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal Clamp(this Decimal value, Decimal minimum, Decimal maximum, Boolean looped)
+		{
+			if (value > maximum)
+			{
+				return looped ? minimum : maximum;
+			}
+
+			if (value < minimum)
+			{
+				return looped ? maximum : minimum;
+			}
+
+			return value;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

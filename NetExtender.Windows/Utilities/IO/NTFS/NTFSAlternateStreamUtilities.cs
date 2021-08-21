@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -43,7 +44,7 @@ namespace NetExtender.Utilities.Windows.IO.NTFS
         /// </exception>
         public static IDictionary<String, AlternateDataStreamInfo> GetAlternateDataStreams(this FileSystemInfo file)
         {
-            return GetAlternateDataStreams(file?.FullName);
+            return GetAlternateDataStreams(file?.FullName ?? throw new ArgumentNullException(nameof(file)));
         }
 
         /// <summary>
@@ -110,7 +111,7 @@ namespace NetExtender.Utilities.Windows.IO.NTFS
         /// </exception>
         public static Boolean AlternateDataStreamExists(this FileSystemInfo file, String name)
         {
-            return AlternateDataStreamExists(file?.FullName, name);
+            return AlternateDataStreamExists(file?.FullName ?? throw new ArgumentNullException(nameof(file)), name);
         }
 
         /// <summary>
@@ -187,7 +188,7 @@ namespace NetExtender.Utilities.Windows.IO.NTFS
         /// </exception>
         public static AlternateDataStreamInfo OpenAlternateDataStream(this FileSystemInfo file, String name, FileMode mode = FileMode.OpenOrCreate)
         {
-            return OpenAlternateDataStream(file?.FullName, name, mode);
+            return OpenAlternateDataStream(file?.FullName ?? throw new ArgumentNullException(nameof(file)), name, mode);
         }
 
         /// <summary>
@@ -296,7 +297,7 @@ namespace NetExtender.Utilities.Windows.IO.NTFS
         /// </exception>
         public static Boolean DeleteAlternateDataStream(this FileSystemInfo file, String name)
         {
-            return DeleteAlternateDataStream(file?.FullName, name);
+            return DeleteAlternateDataStream(file?.FullName ?? throw new ArgumentNullException(nameof(file)), name);
         }
 
         /// <summary>
@@ -454,7 +455,7 @@ namespace NetExtender.Utilities.Windows.IO.NTFS
             }
         }
 
-
+        [SuppressMessage("ReSharper", "CognitiveComplexity")]
         private static IEnumerable<Win32StreamInfo> GetDataStreams(String path)
         {
             if (String.IsNullOrEmpty(path))
@@ -498,7 +499,7 @@ namespace NetExtender.Utilities.Windows.IO.NTFS
                     }
 
                     // Read the stream name:
-                    String name;
+                    String? name;
                     if (streamId.StreamNameSize <= 0)
                     {
                         name = null;

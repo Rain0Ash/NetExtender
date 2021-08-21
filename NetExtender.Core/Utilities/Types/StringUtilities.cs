@@ -219,7 +219,7 @@ namespace NetExtender.Utilities.Types
                 .Select(format => Regex.Replace(format.ToLower(), @"\{|\}", String.Empty));
         }
 
-        //TODO: To ImmutableMap; add Include/Exclude pairs
+        //TODO: To ImmutableMap;
         private static IMap<Char, Char> Brackets { get; } = new Map<Char, Char>(4)
         {
             {'(', ')'},
@@ -228,12 +228,22 @@ namespace NetExtender.Utilities.Types
             {'<', '>'}
         };
 
-        // ReSharper disable once CognitiveComplexity
         public static Boolean IsBracketsWellFormed(this String value)
+        {
+            return IsBracketsWellFormed(value, Brackets);
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public static Boolean IsBracketsWellFormed(this String value, IEnumerable<KeyValuePair<Char, Char>> pairs)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
+            }
+
+            if (pairs is null)
+            {
+                throw new ArgumentNullException(nameof(pairs));
             }
 
             if (value.Length <= 0)
@@ -241,35 +251,37 @@ namespace NetExtender.Utilities.Types
                 return true;
             }
 
-            Stack<Char> brackets = new Stack<Char>();
+            IReadOnlyMap<Char, Char> brackets = pairs.AsIReadOnlyMap();
+
+            Stack<Char> order = new Stack<Char>();
 
             foreach (Char character in value)
             {
-                if (Brackets.ContainsKey(character))
+                if (brackets.ContainsKey(character))
                 {
-                    brackets.Push(character);
+                    order.Push(character);
                     continue;
                 }
 
-                if (!Brackets.ContainsValue(character))
+                if (!brackets.ContainsValue(character))
                 {
                     continue;
                 }
                     
-                if (brackets.Count <= 0)
+                if (order.Count <= 0)
                 {
                     return false;
                 }
 
-                if (character != Brackets.GetValue(brackets.Peek()))
+                if (character != brackets.GetValue(order.Peek()))
                 {
                     return false;
                 }
 
-                brackets.Pop();
+                order.Pop();
             }
 
-            return brackets.Count <= 0;
+            return order.Count <= 0;
         }
 
         public static String ReplaceFrom<T>(this String source, IEnumerable<KeyValuePair<String, T?>> dictionary)
@@ -2701,6 +2713,93 @@ namespace NetExtender.Utilities.Types
             stream.Position = 0;
 
             return stream;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String UnsafeChangeString(this String value, Char character)
+        {
+            return UnsafeChangeString(value, character, 0);
+        }
+
+        public static unsafe String UnsafeChangeString(this String value, Char character, Int32 position)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (position < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(position));
+            }
+
+            if (position > value.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(position));
+            }
+            
+            fixed (Char* pinned = value)
+            {
+                pinned[position] = character;
+            }
+
+            return value;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String UnsafeChangeString(this String value, String result)
+        {
+            return UnsafeChangeString(value, result, 0);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String UnsafeChangeString(this String value, String result, Int32 position)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (result is null)
+            {
+                throw new ArgumentNullException(nameof(result));
+            }
+
+            return UnsafeChangeString(value, result.AsSpan(), position);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String UnsafeChangeString(this String value, ReadOnlySpan<Char> span)
+        {
+            return UnsafeChangeString(value, span, 0);
+        }
+
+        public static unsafe String UnsafeChangeString(this String value, ReadOnlySpan<Char> span, Int32 position)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (position < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(position));
+            }
+
+            if (position + span.Length > value.Length)
+            {
+                throw new ArgumentOutOfRangeException(span.Length > value.Length ? nameof(span) : nameof(position));
+            }
+            
+            fixed (Char* pinned = value)
+            {
+                for (Int32 i = 0; i < span.Length; i++)
+                {
+                    pinned[position + i] = span[i];
+                }
+            }
+
+            return value;
         }
 
         /// <summary>

@@ -4,11 +4,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utilities.Types
 {
     public static class LinkedListUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static LinkedList<T> ToLinkedList<T>(this IEnumerable<T> source)
         {
             if (source is null)

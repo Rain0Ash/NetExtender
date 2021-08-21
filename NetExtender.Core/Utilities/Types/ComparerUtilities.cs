@@ -10,7 +10,7 @@ using NetExtender.Comparers.Interfaces;
 
 namespace NetExtender.Utilities.Types
 {
-    public static class CompareUtilities
+    public static class ComparerUtilities
     {
         public static IEqualityComparer<T> ToEqualityComparer<T>(this Func<T?, T?, Boolean> comparison)
         {

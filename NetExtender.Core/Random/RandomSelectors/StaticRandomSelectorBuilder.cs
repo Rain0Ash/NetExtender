@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using System;
 using System.Collections;
-using System.Diagnostics.CodeAnalysis;
 using NetExtender.Random.Interfaces;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Utilities.Numerics;
@@ -86,7 +85,7 @@ namespace NetExtender.Random
         public RandomSelectorBuilder(Int32 capacity, IRandom random)
         {
             Random = random ?? throw new ArgumentNullException(nameof(random));
-            Items = new IndexDictionary<T, Double>(capacity.ToRange(8));
+            Items = new IndexDictionary<T, Double>(capacity.Clamp(8, Int32.MaxValue));
         }
         
         public RandomSelectorBuilder(IEnumerable<KeyValuePair<T, Double>>? items)
@@ -125,7 +124,7 @@ namespace NetExtender.Random
             }
 
             Add(items);
-            TrimExcess(Count.ToRange(8));
+            TrimExcess(Count.Clamp(8, Int32.MaxValue));
         }
 
         public Int32 EnsureCapacity(Int32 capacity)

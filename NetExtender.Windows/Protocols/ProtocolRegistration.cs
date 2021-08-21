@@ -6,6 +6,7 @@ using NetExtender.Windows.Protocols.Interfaces;
 
 namespace NetExtender.Windows.Protocols
 {
+    //TODO: registration
     public abstract class ProtocolRegistration : IProtocol
     {
         public String Name { get; }
@@ -17,5 +18,11 @@ namespace NetExtender.Windows.Protocols
         public abstract Boolean Register();
 
         public abstract Boolean Unregister();
+
+        protected ProtocolRegistration(String name, ProtocolStatus status)
+        {
+            Name = name ?? throw new ArgumentNullException(nameof(name));
+            Status = status;
+        }
     }
 }

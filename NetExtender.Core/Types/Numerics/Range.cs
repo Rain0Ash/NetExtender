@@ -57,7 +57,7 @@ namespace NetExtender.Types.Numerics
 
         public Range(T min, T max)
         {
-            (Min, Max) = CompareUtilities.Sort(min, max);
+            (Min, Max) = ComparerUtilities.Sort(min, max);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

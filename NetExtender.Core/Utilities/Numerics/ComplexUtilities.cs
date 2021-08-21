@@ -88,156 +88,159 @@ namespace NetExtender.Utilities.Numerics
         
         /// <inheritdoc cref="Complex.Sin"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Sin(Complex value)
+        public static Complex Sin(this Complex value)
         {
             return Complex.Sin(value);
         }
 
         /// <inheritdoc cref="Complex.Sinh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Sinh(Complex value)
+        public static Complex Sinh(this Complex value)
         {
             return Complex.Sinh(value);
         }
 
         /// <inheritdoc cref="Complex.Asin"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Asin(Complex value)
+        public static Complex Asin(this Complex value)
         {
             return Complex.Asin(value);
         }
 
-        /// <inheritdoc cref="Complex.Asinh"/>
+        /// <inheritdoc cref="Math.Asinh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Asinh(Complex value)
+        public static Complex Asinh(this Complex value)
         {
-            throw new NotImplementedException();
+            value = Asin(new Complex(-value.Imaginary, value.Real));
+            return new Complex(value.Imaginary, -value.Real);
         }
 
         /// <inheritdoc cref="Complex.Cos"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Cos(Complex value)
+        public static Complex Cos(this Complex value)
         {
             return Complex.Cos(value);
         }
 
         /// <inheritdoc cref="Complex.Cosh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Cosh(Complex value)
+        public static Complex Cosh(this Complex value)
         {
             return Complex.Cosh(value);
         }
 
         /// <inheritdoc cref="Complex.Acos"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Acos(Complex value)
+        public static Complex Acos(this Complex value)
         {
             return Complex.Acos(value);
         }
 
-        /// <inheritdoc cref="Complex.Acosh"/>
+        /// <inheritdoc cref="Math.Acosh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Acosh(Complex value)
+        public static Complex Acosh(this Complex value)
         {
-            throw new NotImplementedException();
+            value = Complex.Acos(value);
+            return value.Imaginary > 0.0 ? new Complex(value.Imaginary, -value.Real) : new Complex(-value.Imaginary, value.Real);
         }
 
         /// <inheritdoc cref="Complex.Tan"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Tan(Complex value)
+        public static Complex Tan(this Complex value)
         {
             return Complex.Tan(value);
         }
 
         /// <inheritdoc cref="Complex.Tanh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Tanh(Complex value)
+        public static Complex Tanh(this Complex value)
         {
             return Complex.Tanh(value);
         }
 
         /// <inheritdoc cref="Complex.Atan"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Atan(Complex value)
+        public static Complex Atan(this Complex value)
         {
             return Complex.Atan(value);
         }
 
-        /// <inheritdoc cref="Complex.Atanh"/>
+        /// <inheritdoc cref="Math.Atanh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Atanh(Complex value)
+        public static Complex Atanh(this Complex value)
         {
-            throw new NotImplementedException();
+            value = Complex.Atan(new Complex(-value.Imaginary, value.Real));
+            return new Complex(value.Imaginary, -value.Real);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Cot(Complex value)
+        public static Complex Cot(this Complex value)
         {
             return Complex.One / Complex.Tan(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Coth(Complex value)
+        public static Complex Coth(this Complex value)
         {
             return Complex.One / Complex.Tanh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Acot(Complex value)
+        public static Complex Acot(this Complex value)
         {
             return Complex.Atan(Complex.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Acoth(Complex value)
+        public static Complex Acoth(this Complex value)
         {
             return Atanh(Complex.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Sec(Complex value)
+        public static Complex Sec(this Complex value)
         {
             return Complex.One / Complex.Cos(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Sech(Complex value)
+        public static Complex Sech(this Complex value)
         {
             return Complex.One / Complex.Cosh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Asec(Complex value)
+        public static Complex Asec(this Complex value)
         {
             return Complex.Acos(Complex.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Asech(Complex value)
+        public static Complex Asech(this Complex value)
         {
             return Complex.Cosh(Complex.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Csc(Complex value)
+        public static Complex Csc(this Complex value)
         {
             return Complex.One / Complex.Sin(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Csch(Complex value)
+        public static Complex Csch(this Complex value)
         {
             return Complex.One / Complex.Sinh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Acsc(Complex value)
+        public static Complex Acsc(this Complex value)
         {
             return Complex.Asin(Complex.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Acsch(Complex value)
+        public static Complex Acsch(this Complex value)
         {
             return Asinh(Complex.One / value);
         }

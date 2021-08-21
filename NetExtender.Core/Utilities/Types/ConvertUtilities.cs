@@ -190,56 +190,56 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SByte ToSByte(this Decimal value)
         {
-            return System.Convert.ToSByte(value.ToRange(SByte.MinValue, SByte.MaxValue));
+            return System.Convert.ToSByte(value.Clamp(SByte.MinValue, SByte.MaxValue));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte ToByte(this Decimal value)
         {
             return value >= 0
-                ? System.Convert.ToByte(value.ToRange(Byte.MinValue, Byte.MaxValue))
+                ? System.Convert.ToByte(value.Clamp(Byte.MinValue, Byte.MaxValue))
                 : ConvertToUnsigned(ToSByte(value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int16 ToInt16(this Decimal value)
         {
-            return System.Convert.ToInt16(value.ToRange(Int16.MinValue, Int16.MaxValue));
+            return System.Convert.ToInt16(value.Clamp(Int16.MinValue, Int16.MaxValue));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt16 ToUInt16(this Decimal value)
         {
             return value >= 0
-                ? System.Convert.ToUInt16(value.ToRange(UInt16.MinValue, UInt16.MaxValue))
+                ? System.Convert.ToUInt16(value.Clamp(UInt16.MinValue, UInt16.MaxValue))
                 : ConvertToUnsigned(ToInt16(value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 ToInt32(this Decimal value)
         {
-            return System.Convert.ToInt32(value.ToRange(Int32.MinValue, Int32.MaxValue));
+            return System.Convert.ToInt32(value.Clamp(Int32.MinValue, Int32.MaxValue));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt32 ToUInt32(this Decimal value)
         {
             return value >= 0
-                ? System.Convert.ToUInt32(value.ToRange(UInt32.MinValue, UInt32.MaxValue))
+                ? System.Convert.ToUInt32(value.Clamp(UInt32.MinValue, UInt32.MaxValue))
                 : ConvertToUnsigned(ToInt32(value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int64 ToInt64(this Decimal value)
         {
-            return System.Convert.ToInt64(value.ToRange(Int64.MinValue, Int64.MaxValue));
+            return System.Convert.ToInt64(value.Clamp(Int64.MinValue, Int64.MaxValue));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ToUInt64(this Decimal value)
         {
             return value >= 0
-                ? System.Convert.ToUInt64(value.ToRange(UInt64.MinValue, UInt64.MaxValue))
+                ? System.Convert.ToUInt64(value.Clamp(UInt64.MinValue, UInt64.MaxValue))
                 : ConvertToUnsigned(ToInt64(value));
         }
 
@@ -749,9 +749,9 @@ namespace NetExtender.Utilities.Types
                 return escape.HasFlag(EscapeType.Null) ? StringUtilities.NullString : null;
             }
 
-            if (source is String str)
+            if (source is String result)
             {
-                return escape.HasFlag(EscapeType.Full) ? $"\"{str.GetString(provider)}\"" : str.GetString(provider);
+                return escape.HasFlag(EscapeType.Full) ? $"\"{result.GetString(provider)}\"" : result.GetString(provider);
             }
 
             switch (source.GetCollectionType())

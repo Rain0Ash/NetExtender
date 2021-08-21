@@ -66,9 +66,9 @@ namespace NetExtender.Workstation
             return null;
         }
         
-        public static DateTime GetWmiPropertyValueAsDateTime(String queryString, String propertyName)
+        public static DateTime GetWmiPropertyValueAsDateTime(String query, String property)
         {
-            String? value = GetWmiPropertyValueAsString(queryString, propertyName);
+            String? value = GetWmiPropertyValueAsString(query, property);
 
             if (String.IsNullOrEmpty(value))
             {
@@ -131,23 +131,22 @@ namespace NetExtender.Workstation
         /// Retrieving System MAC Address.
         /// </summary>
         /// <returns></returns>
-        public static String GetMACAddress()
+        public static String? GetMACAddress()
         {
-            ManagementClass mc = new ManagementClass("Win32_NetworkAdapterConfiguration");
-            ManagementObjectCollection moc = mc.GetInstances();
-            String mac = String.Empty;
-            foreach (ManagementBaseObject o in moc)
+            ManagementObjectCollection collection = new ManagementClass("Win32_NetworkAdapterConfiguration").GetInstances();
+            
+            String? mac = String.Empty;
+            foreach (ManagementObject management in collection.OfType<ManagementObject>())
             {
-                ManagementObject mo = (ManagementObject) o;
                 if (mac.IsEmpty())
                 {
-                    if ((Boolean) mo["IPEnabled"])
+                    if ((Boolean) management["IPEnabled"])
                     {
-                        mac = mo["MacAddress"].ToString();
+                        mac = management["MacAddress"].ToString();
                     }
                 }
 
-                mo.Dispose();
+                management.Dispose();
             }
 
             return mac;
@@ -157,14 +156,15 @@ namespace NetExtender.Workstation
         /// Retrieving Motherboard Manufacturer.
         /// </summary>
         /// <returns></returns>
-        public static String GetBoardMaker()
+        public static String? GetBoardMaker()
         {
             ManagementObjectSearcher searcher =
                 new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
 
-            foreach (ManagementBaseObject o in searcher.Get())
+            foreach (ManagementBaseObject management in searcher.Get())
             {
-                ManagementObject wmi = (ManagementObject) o;
+                ManagementObject wmi = (ManagementObject) management;
+                
                 try
                 {
                     return wmi.GetPropertyValue("Manufacturer").ToString();
@@ -175,14 +175,14 @@ namespace NetExtender.Workstation
                 }
             }
 
-            return "Board Maker: Unknown";
+            return null;
         }
 
         /// <summary>
         /// Retrieving Motherboard Product Id.
         /// </summary>
         /// <returns></returns>
-        public static String GetBoardProductID()
+        public static String? GetBoardProductID()
         {
             ManagementObjectSearcher searcher =
                 new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
@@ -199,14 +199,14 @@ namespace NetExtender.Workstation
                 }
             }
 
-            return "Product: Unknown";
+            return null;
         }
 
         /// <summary>
         /// Retrieving CD-DVD Drive Path.
         /// </summary>
         /// <returns></returns>
-        public static String GetCDRomDrive()
+        public static String? GetCDRomDrive()
         {
             ManagementObjectSearcher searcher =
                 new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_CDROMDrive");
@@ -223,14 +223,14 @@ namespace NetExtender.Workstation
                 }
             }
 
-            return "CD ROM Drive Letter: Unknown";
+            return null;
         }
 
         /// <summary>
         /// Retrieving BIOS Maker.
         /// </summary>
         /// <returns></returns>
-        public static String GetBIOSMaker()
+        public static String? GetBIOSMaker()
         {
             ManagementObjectSearcher searcher =
                 new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BIOS");
@@ -247,14 +247,14 @@ namespace NetExtender.Workstation
                 }
             }
 
-            return "BIOS Maker: Unknown";
+            return null;
         }
 
         /// <summary>
         /// Retrieving BIOS Serial Number.
         /// </summary>
         /// <returns></returns>
-        public static String GetBIOSSerialNumber()
+        public static String? GetBIOSSerialNumber()
         {
             ManagementObjectSearcher searcher =
                 new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BIOS");
@@ -271,14 +271,14 @@ namespace NetExtender.Workstation
                 }
             }
 
-            return "BIOS Serial Number: Unknown";
+            return null;
         }
 
         /// <summary>
         /// Retrieving BIOS Caption.
         /// </summary>
         /// <returns></returns>
-        public static String GetBIOSCaption()
+        public static String? GetBIOSCaption()
         {
             ManagementObjectSearcher searcher =
                 new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BIOS");
@@ -295,17 +295,16 @@ namespace NetExtender.Workstation
                 }
             }
 
-            return "BIOS Caption: Unknown";
+            return null;
         }
 
         /// <summary>
         /// Retrieving System Account Name.
         /// </summary>
         /// <returns></returns>
-        public static String GetAccountName()
+        public static String? GetAccountName()
         {
-            ManagementObjectSearcher searcher =
-                new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_UserAccount");
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_UserAccount");
 
             foreach (ManagementBaseObject wmi in searcher.Get())
             {
@@ -319,7 +318,7 @@ namespace NetExtender.Workstation
                 }
             }
 
-            return "User Account Name: Unknown";
+            return null;
         }
 
         /// <summary>
@@ -372,21 +371,22 @@ namespace NetExtender.Workstation
         /// using the WMI class
         /// </summary>
         /// <returns>CPU Manufacturer</returns>
-        public static String GetCPUManufacturer()
+        public static String? GetCPUManufacturer()
         {
-            String cpu = String.Empty;
             //create an instance of the Managemnet class with the
             //Win32_Processor class
             ManagementClass mgmt = new ManagementClass("Win32_Processor");
             //create a ManagementObjectCollection to loop through
-            ManagementObjectCollection objCol = mgmt.GetInstances();
+            ManagementObjectCollection collection = mgmt.GetInstances();
+            
+            String? cpu = String.Empty;
             //start our loop for all processors found
-            foreach (ManagementBaseObject obj in objCol)
+            foreach (ManagementBaseObject management in collection)
             {
                 if (cpu.IsEmpty())
                 {
                     // only return manufacturer from first CPU
-                    cpu = obj.Properties["Manufacturer"].Value.ToString();
+                    cpu = management.Properties["Manufacturer"].Value.ToString();
                 }
             }
 
@@ -425,17 +425,19 @@ namespace NetExtender.Workstation
         /// default IP gateway using WMI
         /// </summary>
         /// <returns>adapters default IP gateway</returns>
-        public static String GetDefaultIPGateway()
+        public static String? GetDefaultIPGateway()
         {
             //create out management class object using the
             //Win32_NetworkAdapterConfiguration class to get the attributes
             //of the network adapter
             ManagementClass mgmt = new ManagementClass("Win32_NetworkAdapterConfiguration");
             //create our ManagementObjectCollection to get the attributes with
-            ManagementObjectCollection objCol = mgmt.GetInstances();
-            String gateway = String.Empty;
+            ManagementObjectCollection collection = mgmt.GetInstances();
+            
+            String? gateway = String.Empty;
+            
             //loop through all the objects we find
-            foreach (ManagementBaseObject obj in objCol)
+            foreach (ManagementBaseObject management in collection)
             {
                 if (gateway.IsEmpty()) // only return MAC Address from first card
                 {
@@ -444,21 +446,18 @@ namespace NetExtender.Workstation
                     //network adapters found as well
                     //check to see if the adapter's IPEnabled
                     //equals true
-                    if ((Boolean) obj["IPEnabled"])
+                    if ((Boolean) management["IPEnabled"])
                     {
-                        gateway = obj["DefaultIPGateway"].ToString();
+                        gateway = management["DefaultIPGateway"].ToString();
                     }
                 }
 
                 //dispose of our object
-                obj.Dispose();
+                management.Dispose();
             }
 
-            //replace the ":" with an empty space, this could also
-            //be removed if you wish
-            gateway = gateway.Replace(":", String.Empty);
             //return the mac address
-            return gateway;
+            return gateway?.Replace(":", String.Empty);
         }
 
         /// <summary>
@@ -498,14 +497,14 @@ namespace NetExtender.Workstation
                 }
             }
 
-            return "BIOS Maker: Unknown";
+            return null;
         }
 
         /// <summary>
         /// Retrieving Current Language.
         /// </summary>
         /// <returns></returns>
-        public static String GetOSInformation()
+        public static String? GetOSInformation()
         {
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem");
 
@@ -521,7 +520,7 @@ namespace NetExtender.Workstation
                 }
             }
 
-            return "BIOS Maker: Unknown";
+            return null;
         }
 
         /// <summary>

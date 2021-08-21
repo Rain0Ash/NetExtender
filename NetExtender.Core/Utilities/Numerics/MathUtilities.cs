@@ -57,93 +57,130 @@ namespace NetExtender.Utilities.Numerics
 
     public static partial class MathUtilities
     {
-        public const Single SingleZero = 0;
-        public const Single SingleOne = 1;
-        public const Single SinglePI = (Single) Math.PI;
-        public const Single SingleE = (Single) Math.E;
-        public const Single SingleRad = SinglePI / 180;
-        public const Single SingleSqrt2 = (Single) DoubleSqrt2;
-        public const Single SingleInvertedSqrt2 = (Single) DoubleInvertedSqrt2;
-        public const Single SingleSqrt3 = (Single) DoubleSqrt3;
-        public const Single SingleInvertedSqrt3 = (Single) DoubleInvertedSqrt3;
+        public static class SingleConstants
+        {
+            public const Single Epsilon = Single.Epsilon;
+            
+            public const Single Zero = 0F;
+            public const Single Half = 0.5F;
+            public const Single One = 1F;
+            
+            public const Single PI = MathF.PI;
+            public const Single E = MathF.E;
+            public const Single Radian = PI / 180F;
+            
+            public const Single Sqrt2 = (Single) DecimalConstants.Sqrt2;
+            public const Single InvertedSqrt2 = (Single) DecimalConstants.InvertedSqrt2;
+            public const Single Sqrt3 = (Single) DecimalConstants.Sqrt3;
+            public const Single InvertedSqrt3 = (Single) DecimalConstants.InvertedSqrt3;
+            public const Single Sqrt5 = (Single) DecimalConstants.Sqrt5;
+            public const Single InvertedSqrt5 = (Single) DecimalConstants.InvertedSqrt5;
+            public const Single Sqrt7 = (Single) DecimalConstants.Sqrt7;
+            public const Single InvertedSqrt7 = (Single) DecimalConstants.InvertedSqrt7;
+            public const Single Sqrt17 = (Single) DecimalConstants.Sqrt17;
+            public const Single InvertedSqrt17 = (Single) DecimalConstants.InvertedSqrt17;
+        }
 
-        public const Double DoubleZero = 0;
-        public const Double DoubleOne = 1;
-        public const Double DoublePI = Math.PI;
-        public const Double DoubleE = Math.E;
-        public const Double DoubleRad = DoublePI / 180;
-        public const Double DoubleSqrt2 = (Double) DecimalSqrt2;
-        public const Double DoubleInvertedSqrt2 = (Double) DecimalInvertedSqrt3;
-        public const Double DoubleSqrt3 = (Double) DecimalSqrt2;
-        public const Double DoubleInvertedSqrt3 = (Double) DecimalInvertedSqrt3;
+        public static class DoubleConstants
+        {
+            public const Double Epsilon = Double.Epsilon;
+            
+            public const Double Zero = 0D;
+            public const Double Half = 0.5D;
+            public const Double One = 1D;
+            
+            public const Double PI = Math.PI;
+            public const Double E = Math.E;
+            public const Double Radian = PI / 180D;
+            
+            public const Double Sqrt2 = (Double) DecimalConstants.Sqrt2;
+            public const Double InvertedSqrt2 = (Double) DecimalConstants.InvertedSqrt3;
+            public const Double Sqrt3 = (Double) DecimalConstants.Sqrt3;
+            public const Double InvertedSqrt3 = (Double) DecimalConstants.InvertedSqrt3;
+            public const Double Sqrt5 = (Double) DecimalConstants.Sqrt5;
+            public const Double InvertedSqrt5 = (Double) DecimalConstants.InvertedSqrt5;
+            public const Double Sqrt7 = (Double) DecimalConstants.Sqrt7;
+            public const Double InvertedSqrt7 = (Double) DecimalConstants.InvertedSqrt7;
+            public const Double Sqrt17 = (Double) DecimalConstants.Sqrt17;
+            public const Double InvertedSqrt17 = (Double) DecimalConstants.InvertedSqrt17;
+        }
 
-        public const Decimal DecimalZero = Decimal.Zero;
-        public const Decimal DecimalMaxPlaces = 1.000000000000000000000000000000000M;
-        public const Decimal DecimalMinusOne = Decimal.MinusOne;
-        public const Decimal DecimalSqrt2 = 1.41421356237309504880168872420969807856967187537694807317667973799073247846210703M;
-        public const Decimal DecimalInvertedSqrt2 = 1M / DecimalSqrt2;
-        public const Decimal DecimalSqrt3 = 1.73205080756887729352744634150587236694280525381038062805580697945193301690880003M;
-        public const Decimal DecimalInvertedSqrt3 = 1M / DecimalSqrt3;
+        public static class DecimalConstants
+        {
+            /// <summary>
+            /// Represents Epsilon
+            /// </summary>
+            public const Decimal Epsilon = 0.0000000000000000001M;
+            
+            public const Decimal Zero = Decimal.Zero;
+            public const Decimal Half = Decimal.One / 2;
+            public const Decimal One = Decimal.One;
+            public const Decimal MinusOne = Decimal.MinusOne;
+            public const Decimal MaxPlaces = 1.000000000000000000000000000000000M;
+            
+            public const Decimal Sqrt2 = 1.41421356237309504880168872420969807856967187537694807317667973799073247846210703M;
+            public const Decimal InvertedSqrt2 = 1M / Sqrt2;
+            public const Decimal Sqrt3 = 1.73205080756887729352744634150587236694280525381038062805580697945193301690880003M;
+            public const Decimal InvertedSqrt3 = 1M / Sqrt3;
+            public const Decimal Sqrt5 = 2.23606797749978969640917366873127623544061835961152572427089724541052092563780489M;
+            public const Decimal InvertedSqrt5 = 1M / Sqrt5;
+            public const Decimal Sqrt7 = 2.64575131106459059050161575363926042571025918308245018036833445920106882323028362M;
+            public const Decimal InvertedSqrt7 = 1M / Sqrt7;
+            public const Decimal Sqrt17 = 4.12310562561766054982140985597407702514719922537362043439863357309495434633762159M;
+            public const Decimal InvertedSqrt17 = 1M / Sqrt17;
+            
+            /// <summary>
+            /// Represents PI
+            /// </summary>
+            public const Decimal PI = 3.14159265358979323846264338327950288419716939937510M;
+            
+            /// <summary>
+            /// Represents 2*PI
+            /// </summary>
+            public const Decimal PIx2 = 6.28318530717958647692528676655900576839433879875021M;
 
-        /// <summary>
-        /// Represents PI
-        /// </summary>
-        public const Decimal DecimalPI = 3.14159265358979323846264338327950288419716939937510M;
+            /// <summary>
+            /// Represents PI/2
+            /// </summary>
+            public const Decimal PIdiv2 = 1.570796326794896619231321691639751442098584699687552910487M;
 
-        /// <summary>
-        /// Represents PI / 180
-        /// </summary>
-        public const Decimal DecimalRad = DecimalPI / 180;
+            /// <summary>
+            /// Represents PI/4
+            /// </summary>
+            public const Decimal PIdiv4 = 0.785398163397448309615660845819875721049292349843776455243M;
+            
+            /// <summary>
+            /// Represents E
+            /// </summary>
+            public const Decimal E = 2.7182818284590452353602874713526624977572470936999595749M;
 
-        /// <summary>
-        /// represents 2*PI
-        /// </summary>
-        public const Decimal DecimalPIx2 = 6.28318530717958647692528676655900576839433879875021M;
+            /// <summary>
+            /// Represents 1.0/E
+            /// </summary>
+            public const Decimal InvertedE = 0.3678794411714423215955237701614608674458111310317678M;
 
-        /// <summary>
-        /// represents PI/2
-        /// </summary>
-        public const Decimal DecimalPIdiv2 = 1.570796326794896619231321691639751442098584699687552910487M;
+            /// <summary>
+            /// Represents PI / 180
+            /// </summary>
+            public const Decimal Radian = PI / 180M;
 
-        /// <summary>
-        /// represents PI/4
-        /// </summary>
-        public const Decimal DecimalPIdiv4 = 0.785398163397448309615660845819875721049292349843776455243M;
+            /// <summary>
+            /// Represents log(2,E) factor
+            /// </summary>
+            public const Decimal InvertedLog2 = 1.442695040888963407359924681001892137426645954152985934135M;
 
-        /// <summary>
-        /// Represents Epsilon
-        /// </summary>
-        public const Decimal DecimalEpsilon = 0.0000000000000000001M;
-
-        /// <summary>
-        /// Represents E
-        /// </summary>
-        public const Decimal DecimalE = 2.7182818284590452353602874713526624977572470936999595749M;
-
-        /// <summary>
-        /// represents 1.0/E
-        /// </summary>
-        private const Decimal DecimalInvertedE = 0.3678794411714423215955237701614608674458111310317678M;
-
-        /// <summary>
-        /// log(2,E) factor
-        /// </summary>
-        private const Decimal DecimalInvertedLog2 = 1.442695040888963407359924681001892137426645954152985934135M;
-
-        /// <summary>
-        /// log(10,E) factor
-        /// </summary>
-        private const Decimal DecimalInvertedLog10 = 0.434294481903251827651128918916605082294397005803666566114M;
-
-        /// <summary>
-        /// Represents 0.5M
-        /// </summary>
-        private const Decimal DecimalHalf = Decimal.One / 2;
+            /// <summary>
+            /// Represents log(10,E) factor
+            /// </summary>
+            public const Decimal InvertedLog10 = 0.434294481903251827651128918916605082294397005803666566114M;
+        }
 
         /// <summary>
         /// Max iterations count in Taylor series
         /// </summary>
         private const Int32 DecimalMaxIteration = 100;
+
+        public static BigInteger DecimalMaximumBigInteger { get; } = new BigInteger(Decimal.MaxValue);
 
         /// <summary>
         /// Returns the greatest common denominator between value1 and value2
@@ -251,6 +288,13 @@ namespace NetExtender.Utilities.Numerics
             return first == 0 ? second : first;
         }
 
+        /// <inheritdoc cref="MathF.Floor(Single)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Floor(this Single value)
+        {
+            return MathF.Floor(value);
+        }
+
         /// <inheritdoc cref="Math.Floor(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Floor(this Double value)
@@ -263,6 +307,13 @@ namespace NetExtender.Utilities.Numerics
         public static Decimal Floor(this Decimal value)
         {
             return Math.Floor(value);
+        }
+
+        /// <inheritdoc cref="MathF.Ceiling(Single)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Ceiling(this Single value)
+        {
+            return MathF.Ceiling(value);
         }
 
         /// <inheritdoc cref="Math.Ceiling(Double)"/>
@@ -278,6 +329,13 @@ namespace NetExtender.Utilities.Numerics
         {
             return Math.Ceiling(value);
         }
+        
+        /// <inheritdoc cref="MathF.Truncate(Single)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Truncate(this Single value)
+        {
+            return MathF.Truncate(value);
+        }
 
         /// <inheritdoc cref="Math.Truncate(Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -292,6 +350,13 @@ namespace NetExtender.Utilities.Numerics
         {
             return Math.Truncate(value);
         }
+        
+        /// <inheritdoc cref="MathF.Exp"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Exp(this Single value)
+        {
+            return MathF.Exp(value);
+        }
 
         /// <inheritdoc cref="Math.Exp"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -303,22 +368,22 @@ namespace NetExtender.Utilities.Numerics
         /// <summary>
         /// Analogy of Math.Exp method
         /// </summary>
-        /// <param name="x"></param>
+        /// <param name="value"></param>
         /// <returns></returns>
-        public static Decimal Exp(this Decimal x)
+        public static Decimal Exp(this Decimal value)
         {
             Int32 count = 0;
 
-            if (x > Decimal.One)
+            if (value > Decimal.One)
             {
-                count = Decimal.ToInt32(Decimal.Truncate(x));
-                x -= Decimal.Truncate(x);
+                count = Decimal.ToInt32(Decimal.Truncate(value));
+                value -= Decimal.Truncate(value);
             }
 
-            if (x < Decimal.Zero)
+            if (value < Decimal.Zero)
             {
-                count = Decimal.ToInt32(Decimal.Truncate(x) - 1);
-                x = Decimal.One + (x - Decimal.Truncate(x));
+                count = Decimal.ToInt32(Decimal.Truncate(value) - 1);
+                value = Decimal.One + (value - Decimal.Truncate(value));
             }
 
             Int32 iteration = 1;
@@ -328,7 +393,7 @@ namespace NetExtender.Utilities.Numerics
             do
             {
                 cached = result;
-                factorial *= x / iteration++;
+                factorial *= value / iteration++;
                 result += factorial;
             } while (cached != result);
 
@@ -337,13 +402,25 @@ namespace NetExtender.Utilities.Numerics
                 return result;
             }
 
-            return result * PowerN(DecimalE, count);
+            return result * PowerN(DecimalConstants.E, count);
         }
 
         private static Boolean IsInteger(Decimal value)
         {
             Int64 @long = (Int64) value;
-            return Abs(value - @long) <= DecimalEpsilon;
+            return Abs(value - @long) <= DecimalConstants.Epsilon;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Pow(this Single value, Single pow)
+        {
+            return MathF.Pow(value, pow);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Pow(this Single value, Double pow)
+        {
+            return Math.Pow(value, pow);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -450,26 +527,26 @@ namespace NetExtender.Utilities.Numerics
                 return prod;
             }
         }
-        
-        /// <inheritdoc cref="Math.Log(Double)"/>
+
+        /// <inheritdoc cref="MathF.Log(Single)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Log(this Single value)
         {
-            return (Single) Math.Log(value);
+            return MathF.Log(value);
         }
 
-        /// <inheritdoc cref="Math.Log(Double,Double)"/>
+        /// <inheritdoc cref="MathF.Log(Single,Single)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Log(this Single value, Single baseValue)
+        public static Single Log(this Single value, Single @base)
         {
-            return (Single) Math.Log(value, baseValue);
+            return MathF.Log(value, @base);
         }
         
         /// <inheritdoc cref="Math.Log(Double,Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Log(this Single value, Double baseValue)
+        public static Single Log(this Single value, Double @base)
         {
-            return (Single) Math.Log(value, baseValue);
+            return (Single) Math.Log(value, @base);
         }
 
         /// <inheritdoc cref="Math.Log(Double)"/>
@@ -481,9 +558,9 @@ namespace NetExtender.Utilities.Numerics
 
         /// <inheritdoc cref="Math.Log(Double,Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Log(this Double value, Double baseValue)
+        public static Double Log(this Double value, Double @base)
         {
-            return Math.Log(value, baseValue);
+            return Math.Log(value, @base);
         }
 
         /// <summary>
@@ -501,13 +578,13 @@ namespace NetExtender.Utilities.Numerics
             Int32 count = 0;
             while (value >= Decimal.One)
             {
-                value *= DecimalInvertedE;
+                value *= DecimalConstants.InvertedE;
                 count++;
             }
 
-            while (value <= DecimalInvertedE)
+            while (value <= DecimalConstants.InvertedE)
             {
-                value *= DecimalE;
+                value *= DecimalConstants.E;
                 count--;
             }
 
@@ -537,18 +614,18 @@ namespace NetExtender.Utilities.Numerics
         /// Analogy of Math.Log
         /// </summary>
         /// <param name="value"></param>
-        /// <param name="baseValue"></param>
+        /// <param name="base"></param>
         /// <returns></returns>
-        public static Decimal Log(this Decimal value, Decimal baseValue)
+        public static Decimal Log(this Decimal value, Decimal @base)
         {
-            return Log(value) / Log(baseValue);
+            return Log(value) / Log(@base);
         }
         
         /// <inheritdoc cref="Math.Log2"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Log2(this Single value)
         {
-            return (Single) Math.Log2(value);
+            return MathF.Log2(value);
         }
 
         /// <inheritdoc cref="Math.Log2"/>
@@ -565,14 +642,14 @@ namespace NetExtender.Utilities.Numerics
         /// <returns></returns>
         public static Decimal Log2(this Decimal value)
         {
-            return Log(value) * DecimalInvertedLog2;
+            return Log(value) * DecimalConstants.InvertedLog2;
         }
 
         /// <inheritdoc cref="Math.Log10"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Log10(this Single value)
         {
-            return (Single) Math.Log10(value);
+            return MathF.Log10(value);
         }
 
         /// <inheritdoc cref="Math.Log10"/>
@@ -589,7 +666,45 @@ namespace NetExtender.Utilities.Numerics
         /// <returns></returns>
         public static Decimal Log10(this Decimal value)
         {
-            return Log(value) * DecimalInvertedLog10;
+            return Log(value) * DecimalConstants.InvertedLog10;
+        }
+        
+        /// <inheritdoc cref="MathF.ILogB"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single LogInteger(this Single value)
+        {
+            return MathF.ILogB(value);
+        }
+        
+        /// <inheritdoc cref="Math.ILogB"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double LogInteger(this Double value)
+        {
+            return Math.ILogB(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Log(this BigInteger value)
+        {
+            return BigInteger.Log(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Log(this BigInteger value, Double @base)
+        {
+            return BigInteger.Log(value, @base);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Log2(this BigInteger value)
+        {
+            return BigInteger.Log(value, 2);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Log10(this BigInteger value)
+        {
+            return BigInteger.Log10(value);
         }
         
         /// <summary>
@@ -625,201 +740,257 @@ namespace NetExtender.Utilities.Numerics
                     return Decimal.Zero;
                 }
 
-                current = (previous + value / previous) * DecimalHalf;
+                current = (previous + value / previous) * DecimalConstants.Half;
                 
             } while (Abs(previous - current) > epsilon);
 
             return current;
         }
         
+        /// <inheritdoc cref="MathF.ScaleB"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Scale(this Single value, Int32 scale)
+        {
+            return MathF.ScaleB(value, scale);
+        }
+        
+        /// <inheritdoc cref="Math.ScaleB"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Scale(this Double value, Int32 scale)
+        {
+            return Math.ScaleB(value, scale);
+        }
+        
+        /// <inheritdoc cref="MathF.IEEERemainder"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Remainder(this Single value, Single remainder)
+        {
+            return MathF.IEEERemainder(value, remainder);
+        }
+        
+        /// <inheritdoc cref="Math.IEEERemainder"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Remainder(this Single value, Double remainder)
+        {
+            return Math.IEEERemainder(value, remainder);
+        }
+        
+        /// <inheritdoc cref="Math.IEEERemainder"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Remainder(this Double value, Double remainder)
+        {
+            return Math.IEEERemainder(value, remainder);
+        }
+        
+        /// <inheritdoc cref="MathF.CopySign"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single CopySign(this Single value, Single sign)
+        {
+            return MathF.CopySign(value, sign);
+        }
+        
+        /// <inheritdoc cref="Math.CopySign"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double CopySign(this Single value, Double sign)
+        {
+            return Math.CopySign(value, sign);
+        }
+        
+        /// <inheritdoc cref="Math.CopySign"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double CopySign(this Double value, Double sign)
+        {
+            return Math.CopySign(value, sign);
+        }
+
         public static Single ToDegrees(this Single radians)
         {
-            return 180 / SinglePI * radians;
+            return 180 / SingleConstants.PI * radians;
         }
         
         public static Double ToDegrees(this Double radians)
         {
-            return 180 / DoublePI * radians;
+            return 180 / DoubleConstants.PI * radians;
         }
         
         public static Decimal ToDegrees(this Decimal radians)
         {
-            return 180 / DecimalPI * radians;
+            return 180 / DecimalConstants.PI * radians;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single ToRadians(this Single value)
         {
-            return value * SingleRad;
+            return value * SingleConstants.Radian;
         }
 
         /// <inheritdoc cref="Math.Sin"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Sin(Single value)
+        public static Single Sin(this Single value)
         {
-            return (Single) Math.Sin(value);
+            return MathF.Sin(value);
         }
 
         /// <inheritdoc cref="Math.Sinh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Sinh(Single value)
+        public static Single Sinh(this Single value)
         {
-            return (Single) Math.Sinh(value);
+            return MathF.Sinh(value);
         }
 
         /// <inheritdoc cref="Math.Asin"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Asin(Single value)
+        public static Single Asin(this Single value)
         {
-            return (Single) Math.Asin(value);
+            return MathF.Asin(value);
         }
 
         /// <inheritdoc cref="Math.Asinh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Asinh(Single value)
+        public static Single Asinh(this Single value)
         {
-            return (Single) Math.Asinh(value);
+            return MathF.Asinh(value);
         }
 
         /// <inheritdoc cref="Math.Cos"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Cos(Single value)
+        public static Single Cos(this Single value)
         {
-            return (Single) Math.Cos(value);
+            return MathF.Cos(value);
         }
 
         /// <inheritdoc cref="Math.Cosh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Cosh(Single value)
+        public static Single Cosh(this Single value)
         {
-            return (Single) Math.Cosh(value);
+            return MathF.Cosh(value);
         }
 
         /// <inheritdoc cref="Math.Acos"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Acos(Single value)
+        public static Single Acos(this Single value)
         {
-            return (Single) Math.Acos(value);
+            return MathF.Acos(value);
         }
 
         /// <inheritdoc cref="Math.Acosh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Acosh(Single value)
+        public static Single Acosh(this Single value)
         {
-            return (Single) Math.Acosh(value);
+            return MathF.Acosh(value);
         }
 
         /// <inheritdoc cref="Math.Tan"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Tan(Single value)
+        public static Single Tan(this Single value)
         {
-            return (Single) Math.Tan(value);
+            return MathF.Tan(value);
         }
 
         /// <inheritdoc cref="Math.Tanh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Tanh(Single value)
+        public static Single Tanh(this Single value)
         {
-            return (Single) Math.Tanh(value);
+            return MathF.Tanh(value);
         }
 
         /// <inheritdoc cref="Math.Atan"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Atan(Single value)
+        public static Single Atan(this Single value)
         {
-            return (Single) Math.Atan(value);
+            return MathF.Atan(value);
         }
 
         /// <inheritdoc cref="Math.Atan2"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Atan2(Single value, Single second)
+        public static Single Atan2(this Single value, Single second)
         {
-            return (Single) Math.Atan2(value, second);
+            return MathF.Atan2(value, second);
         }
 
         /// <inheritdoc cref="Math.Atanh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Atanh(Single value)
+        public static Single Atanh(this Single value)
         {
-            return (Single) Math.Atanh(value);
+            return MathF.Atanh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Cot(Single value)
+        public static Single Cot(this Single value)
         {
-            return SingleOne / Tan(value);
+            return SingleConstants.One / Tan(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Coth(Single value)
+        public static Single Coth(this Single value)
         {
-            return SingleOne / Tanh(value);
+            return SingleConstants.One / Tanh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Acot(Single value)
+        public static Single Acot(this Single value)
         {
-            return Atan(SingleOne / value);
+            return Atan(SingleConstants.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Acot2(Single value, Single second)
+        public static Single Acot2(this Single value, Single second)
         {
             return Atan2(second, value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Acoth(Single value)
+        public static Single Acoth(this Single value)
         {
-            return Atanh(SingleOne / value);
+            return Atanh(SingleConstants.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Sec(Single value)
+        public static Single Sec(this Single value)
         {
-            return SingleOne / Cos(value);
+            return SingleConstants.One / Cos(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Sech(Single value)
+        public static Single Sech(this Single value)
         {
-            return SingleOne / Cosh(value);
+            return SingleConstants.One / Cosh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Asec(Single value)
+        public static Single Asec(this Single value)
         {
-            return Acos(SingleOne / value);
+            return Acos(SingleConstants.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Asech(Single value)
+        public static Single Asech(this Single value)
         {
-            return Cosh(SingleOne / value);
+            return Cosh(SingleConstants.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Csc(Single value)
+        public static Single Csc(this Single value)
         {
-            return SingleOne / Sin(value);
+            return SingleConstants.One / Sin(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Csch(Single value)
+        public static Single Csch(this Single value)
         {
-            return SingleOne / Sinh(value);
+            return SingleConstants.One / Sinh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Acsc(Single value)
+        public static Single Acsc(this Single value)
         {
-            return Asin(SingleOne / value);
+            return Asin(SingleConstants.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single Acsch(Single value)
+        public static Single Acsch(this Single value)
         {
-            return Asinh(SingleOne / value);
+            return Asinh(SingleConstants.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -858,176 +1029,176 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double ToRadians(this Double value)
         {
-            return value * DoubleRad;
+            return value * DoubleConstants.Radian;
         }
 
         /// <inheritdoc cref="Math.Sin"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Sin(Double value)
+        public static Double Sin(this Double value)
         {
             return Math.Sin(value);
         }
 
         /// <inheritdoc cref="Math.Sinh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Sinh(Double value)
+        public static Double Sinh(this Double value)
         {
             return Math.Sinh(value);
         }
 
         /// <inheritdoc cref="Math.Asin"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Asin(Double value)
+        public static Double Asin(this Double value)
         {
             return Math.Asin(value);
         }
 
         /// <inheritdoc cref="Math.Asinh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Asinh(Double value)
+        public static Double Asinh(this Double value)
         {
             return Math.Asinh(value);
         }
 
         /// <inheritdoc cref="Math.Cos"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Cos(Double value)
+        public static Double Cos(this Double value)
         {
             return Math.Cos(value);
         }
 
         /// <inheritdoc cref="Math.Cosh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Cosh(Double value)
+        public static Double Cosh(this Double value)
         {
             return Math.Cosh(value);
         }
 
         /// <inheritdoc cref="Math.Acos"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Acos(Double value)
+        public static Double Acos(this Double value)
         {
             return Math.Acos(value);
         }
 
         /// <inheritdoc cref="Math.Acosh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Acosh(Double value)
+        public static Double Acosh(this Double value)
         {
             return Math.Acosh(value);
         }
 
         /// <inheritdoc cref="Math.Tan"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Tan(Double value)
+        public static Double Tan(this Double value)
         {
             return Math.Tan(value);
         }
 
         /// <inheritdoc cref="Math.Tanh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Tanh(Double value)
+        public static Double Tanh(this Double value)
         {
             return Math.Tanh(value);
         }
 
         /// <inheritdoc cref="Math.Atan"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Atan(Double value)
+        public static Double Atan(this Double value)
         {
             return Math.Atan(value);
         }
 
         /// <inheritdoc cref="Math.Atan2"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Atan2(Double value, Double second)
+        public static Double Atan2(this Double value, Double second)
         {
             return Math.Atan2(value, second);
         }
 
         /// <inheritdoc cref="Math.Atanh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Atanh(Double value)
+        public static Double Atanh(this Double value)
         {
             return Math.Atanh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Cot(Double value)
+        public static Double Cot(this Double value)
         {
-            return DoubleOne / Math.Tan(value);
+            return DoubleConstants.One / Math.Tan(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Coth(Double value)
+        public static Double Coth(this Double value)
         {
-            return DoubleOne / Math.Tanh(value);
+            return DoubleConstants.One / Math.Tanh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Acot(Double value)
+        public static Double Acot(this Double value)
         {
-            return Math.Atan(DoubleOne / value);
+            return Math.Atan(DoubleConstants.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Acot2(Double value, Double second)
+        public static Double Acot2(this Double value, Double second)
         {
             return Math.Atan2(second, value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Acoth(Double value)
+        public static Double Acoth(this Double value)
         {
-            return Math.Atanh(DoubleOne / value);
+            return Math.Atanh(DoubleConstants.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Sec(Double value)
+        public static Double Sec(this Double value)
         {
-            return DoubleOne / Math.Cos(value);
+            return DoubleConstants.One / Math.Cos(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Sech(Double value)
+        public static Double Sech(this Double value)
         {
-            return DoubleOne / Math.Cosh(value);
+            return DoubleConstants.One / Math.Cosh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Asec(Double value)
+        public static Double Asec(this Double value)
         {
-            return Math.Acos(DoubleOne / value);
+            return Math.Acos(DoubleConstants.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Asech(Double value)
+        public static Double Asech(this Double value)
         {
-            return Math.Cosh(DoubleOne / value);
+            return Math.Cosh(DoubleConstants.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Csc(Double value)
+        public static Double Csc(this Double value)
         {
-            return DoubleOne / Math.Sin(value);
+            return DoubleConstants.One / Math.Sin(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Csch(Double value)
+        public static Double Csch(this Double value)
         {
-            return DoubleOne / Math.Sinh(value);
+            return DoubleConstants.One / Math.Sinh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Acsc(Double value)
+        public static Double Acsc(this Double value)
         {
-            return Math.Asin(DoubleOne / value);
+            return Math.Asin(DoubleConstants.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Acsch(Double value)
+        public static Double Acsch(this Double value)
         {
-            return Math.Asinh(DoubleOne / value);
+            return Math.Asinh(DoubleConstants.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1066,7 +1237,7 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal ToRadians(this Decimal value)
         {
-            return value * DecimalRad;
+            return value * DecimalConstants.Radian;
         }
 
         /// <summary>
@@ -1086,16 +1257,16 @@ namespace NetExtender.Utilities.Numerics
         /// <param name="value"></param>
         public static void TruncateToPeriodicInterval(ref Decimal value)
         {
-            while (value >= DecimalPIx2)
+            while (value >= DecimalConstants.PIx2)
             {
-                Int32 divide = Math.Abs(Decimal.ToInt32(value / DecimalPIx2));
-                value -= divide * DecimalPIx2;
+                Int32 divide = Math.Abs(Decimal.ToInt32(value / DecimalConstants.PIx2));
+                value -= divide * DecimalConstants.PIx2;
             }
 
-            while (value <= -DecimalPIx2)
+            while (value <= -DecimalConstants.PIx2)
             {
-                Int32 divide = Math.Abs(Decimal.ToInt32(value / DecimalPIx2));
-                value += divide * DecimalPIx2;
+                Int32 divide = Math.Abs(Decimal.ToInt32(value / DecimalConstants.PIx2));
+                value += divide * DecimalConstants.PIx2;
             }
         }
 
@@ -1103,22 +1274,22 @@ namespace NetExtender.Utilities.Numerics
         {
             TruncateToPeriodicInterval(ref value);
 
-            if (value is >= -DecimalPIx2 and <= -DecimalPI)
+            if (value is >= -DecimalConstants.PIx2 and <= -DecimalConstants.PI)
             {
                 return true;
             }
 
-            if (value is >= -DecimalPI and <= Decimal.Zero)
+            if (value is >= -DecimalConstants.PI and <= Decimal.Zero)
             {
                 return false;
             }
 
-            if (value is >= Decimal.Zero and <= DecimalPI)
+            if (value is >= Decimal.Zero and <= DecimalConstants.PI)
             {
                 return true;
             }
 
-            if (value is >= DecimalPI and <= DecimalPIx2)
+            if (value is >= DecimalConstants.PI and <= DecimalConstants.PIx2)
             {
                 return false;
             }
@@ -1140,22 +1311,22 @@ namespace NetExtender.Utilities.Numerics
 
         /// <inheritdoc cref="Math.Sin"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal Sin(Decimal value)
+        public static Decimal Sin(this Decimal value)
         {
             return CalculateSinFromCos(value, Cos(value));
         }
 
         /// <inheritdoc cref="Math.Sinh"/>
-        public static Decimal Sinh(Decimal value)
+        public static Decimal Sinh(this Decimal value)
         {
             Decimal exp = Exp(value);
             Decimal x = Decimal.One / exp;
 
-            return (exp - x) * DecimalHalf;
+            return (exp - x) * DecimalConstants.Half;
         }
 
         /// <inheritdoc cref="Math.Asin"/>
-        public static Decimal Asin(Decimal value)
+        public static Decimal Asin(this Decimal value)
         {
             if (value > Decimal.One || value < -Decimal.One)
             {
@@ -1167,7 +1338,7 @@ namespace NetExtender.Utilities.Numerics
                 case Decimal.Zero:
                     return Decimal.Zero;
                 case Decimal.One:
-                    return DecimalPIdiv2;
+                    return DecimalConstants.PIdiv2;
             }
 
             if (value < Decimal.Zero)
@@ -1180,7 +1351,7 @@ namespace NetExtender.Utilities.Numerics
             if (Abs(value) > Abs(nx))
             {
                 Decimal t = Asin(nx);
-                return DecimalHalf * (DecimalPIdiv2 - t);
+                return DecimalConstants.Half * (DecimalConstants.PIdiv2 - t);
             }
 
             Decimal x = Decimal.Zero;
@@ -1194,7 +1365,7 @@ namespace NetExtender.Utilities.Numerics
             do
             {
                 cached = result;
-                result *= px * (Decimal.One - DecimalHalf / i);
+                result *= px * (Decimal.One - DecimalConstants.Half / i);
                 x += result / ((i << 1) + 1);
                 i++;
             } while (cached != result);
@@ -1204,31 +1375,31 @@ namespace NetExtender.Utilities.Numerics
 
         /// <inheritdoc cref="Math.Asinh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal Asinh(Decimal value)
+        public static Decimal Asinh(this Decimal value)
         {
             //TODO: fix
             return (Decimal) Asinh((Double) value);
         }
 
         /// <inheritdoc cref="Math.Cos"/>
-        public static Decimal Cos(Decimal value)
+        public static Decimal Cos(this Decimal value)
         {
             //truncating to  [-2*PI;2*PI]
             TruncateToPeriodicInterval(ref value);
 
-            if (value is >= DecimalPI and <= DecimalPIx2)
+            if (value is >= DecimalConstants.PI and <= DecimalConstants.PIx2)
             {
-                return -Cos(value - DecimalPI);
+                return -Cos(value - DecimalConstants.PI);
             }
 
-            if (value is >= -DecimalPIx2 and <= -DecimalPI)
+            if (value is >= -DecimalConstants.PIx2 and <= -DecimalConstants.PI)
             {
-                return -Cos(value + DecimalPI);
+                return -Cos(value + DecimalConstants.PI);
             }
 
             value *= value;
 
-            Decimal px = -value * DecimalHalf;
+            Decimal px = -value * DecimalConstants.Half;
             Decimal x = Decimal.One + px;
             Decimal cached = x - Decimal.One;
 
@@ -1236,7 +1407,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 cached = x;
                 Decimal factor = i * ((i << 1) + 3) + 1;
-                factor = -DecimalHalf / factor;
+                factor = -DecimalConstants.Half / factor;
                 px *= value * factor;
                 x += px;
             }
@@ -1245,42 +1416,42 @@ namespace NetExtender.Utilities.Numerics
         }
 
         /// <inheritdoc cref="Math.Cosh"/>
-        public static Decimal Cosh(Decimal value)
+        public static Decimal Cosh(this Decimal value)
         {
             Decimal exp = Exp(value);
             Decimal x = Decimal.One / exp;
 
-            return (exp + x) * DecimalHalf;
+            return (exp + x) * DecimalConstants.Half;
         }
 
         /// <inheritdoc cref="Math.Acos"/>
-        public static Decimal Acos(Decimal value)
+        public static Decimal Acos(this Decimal value)
         {
             switch (value)
             {
                 case Decimal.Zero:
-                    return DecimalPIdiv2;
+                    return DecimalConstants.PIdiv2;
                 case Decimal.One:
                     return Decimal.Zero;
             }
 
             if (value < Decimal.Zero)
             {
-                return DecimalPI - Acos(-value);
+                return DecimalConstants.PI - Acos(-value);
             }
 
-            return DecimalPIdiv2 - Asin(value);
+            return DecimalConstants.PIdiv2 - Asin(value);
         }
 
         /// <inheritdoc cref="Math.Acosh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal Acosh(Decimal value)
+        public static Decimal Acosh(this Decimal value)
         {
             return (Decimal) Acosh((Double) value);
         }
 
         /// <inheritdoc cref="Math.Tan"/>
-        public static Decimal Tan(Decimal value)
+        public static Decimal Tan(this Decimal value)
         {
             Decimal cos = Cos(value);
 
@@ -1293,7 +1464,7 @@ namespace NetExtender.Utilities.Numerics
         }
 
         /// <inheritdoc cref="Math.Tanh"/>
-        public static Decimal Tanh(Decimal value)
+        public static Decimal Tanh(this Decimal value)
         {
             Decimal exp = Exp(value);
             Decimal x = Decimal.One / exp;
@@ -1302,18 +1473,18 @@ namespace NetExtender.Utilities.Numerics
         }
 
         /// <inheritdoc cref="Math.Atan"/>
-        public static Decimal Atan(Decimal value)
+        public static Decimal Atan(this Decimal value)
         {
             return value switch
             {
                 Decimal.Zero => Decimal.Zero,
-                Decimal.One => DecimalPIdiv4,
+                Decimal.One => DecimalConstants.PIdiv4,
                 _ => Asin(value / Sqrt(Decimal.One + value * value))
             };
         }
 
         /// <inheritdoc cref="Math.Atan2"/>
-        public static Decimal Atan2(Decimal value, Decimal second)
+        public static Decimal Atan2(this Decimal value, Decimal second)
         {
             if (second > Decimal.Zero)
             {
@@ -1322,30 +1493,30 @@ namespace NetExtender.Utilities.Numerics
 
             if (second < Decimal.Zero && value >= Decimal.Zero)
             {
-                return Atan(value / second) + DecimalPI;
+                return Atan(value / second) + DecimalConstants.PI;
             }
 
             if (second < Decimal.Zero && value < Decimal.Zero)
             {
-                return Atan(value / second) - DecimalPI;
+                return Atan(value / second) - DecimalConstants.PI;
             }
 
             return second switch
             {
-                Decimal.Zero when value > Decimal.Zero => DecimalPIdiv2,
-                Decimal.Zero when value < Decimal.Zero => -DecimalPIdiv2,
+                Decimal.Zero when value > Decimal.Zero => DecimalConstants.PIdiv2,
+                Decimal.Zero when value < Decimal.Zero => -DecimalConstants.PIdiv2,
                 _ => throw new ArgumentException()
             };
         }
 
         /// <inheritdoc cref="Math.Atanh"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal Atanh(Decimal value)
+        public static Decimal Atanh(this Decimal value)
         {
             return (Decimal) Atanh((Double) value);
         }
 
-        public static Decimal Cot(Decimal value)
+        public static Decimal Cot(this Decimal value)
         {
             Decimal cos = Cos(value);
             Decimal sin = CalculateSinFromCos(value, cos);
@@ -1359,73 +1530,73 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal Coth(Decimal value)
+        public static Decimal Coth(this Decimal value)
         {
             return Decimal.One / Tanh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal Acot(Decimal value)
+        public static Decimal Acot(this Decimal value)
         {
             return Atan(Decimal.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal Acot2(Decimal value, Decimal second)
+        public static Decimal Acot2(this Decimal value, Decimal second)
         {
             return Atan2(second, value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal Acoth(Decimal value)
+        public static Decimal Acoth(this Decimal value)
         {
             return Atanh(Decimal.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal Sec(Decimal value)
+        public static Decimal Sec(this Decimal value)
         {
             return Decimal.One / Cos(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal Sech(Decimal value)
+        public static Decimal Sech(this Decimal value)
         {
             return Decimal.One / Tanh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal Asec(Decimal value)
+        public static Decimal Asec(this Decimal value)
         {
             return Acos(Decimal.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal Asech(Decimal value)
+        public static Decimal Asech(this Decimal value)
         {
             return Acosh(Decimal.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal Csc(Decimal value)
+        public static Decimal Csc(this Decimal value)
         {
             return Decimal.One / Sin(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal Csch(Decimal value)
+        public static Decimal Csch(this Decimal value)
         {
             return Decimal.One / Tanh(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal Acsc(Decimal value)
+        public static Decimal Acsc(this Decimal value)
         {
             return Asin(Decimal.One / value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Decimal Acsch(Decimal value)
+        public static Decimal Acsch(this Decimal value)
         {
             return Asinh(Decimal.One / value);
         }
@@ -1491,30 +1662,6 @@ namespace NetExtender.Utilities.Numerics
             }
 
             return multiplier - remainder + value;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Log(this BigInteger value)
-        {
-            return BigInteger.Log(value);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Log(this BigInteger value, Double @base)
-        {
-            return BigInteger.Log(value, @base);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Log2(this BigInteger value)
-        {
-            return BigInteger.Log(value, 2);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double Log10(this BigInteger value)
-        {
-            return BigInteger.Log10(value);
         }
 
         public static Boolean IsPowerOf2(UInt64 value)
@@ -1676,7 +1823,7 @@ namespace NetExtender.Utilities.Numerics
         {
             Decimal abs = Abs(value - between);
 
-            if (abs < DecimalEpsilon)
+            if (abs < DecimalConstants.Epsilon)
             {
                 return 1;
             }
@@ -1862,7 +2009,7 @@ namespace NetExtender.Utilities.Numerics
         
         public static Decimal Normalize(this Decimal value)
         {
-            return value/DecimalMaxPlaces;
+            return value/DecimalConstants.MaxPlaces;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1905,29 +2052,110 @@ namespace NetExtender.Utilities.Numerics
                 return result;
             }
         }
-
-        public static void ToRange(ref IConvertible value, Decimal minimum = Decimal.Zero, Decimal maximum = Decimal.MaxValue,
-            Boolean looped = false)
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger Clamp(this BigInteger value)
         {
-            value = ToRange(value, minimum, maximum, looped);
+            return value >= BigInteger.Zero ? value : BigInteger.Zero;
+        }
+        
+        public static BigInteger Clamp(this BigInteger value, Boolean looped)
+        {
+            return value >= BigInteger.Zero ? value : looped ? DecimalMaximumBigInteger : 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger Clamp(this BigInteger value, BigInteger maximum)
+        {
+            return Clamp(value, BigInteger.Zero, maximum);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger Clamp(this BigInteger value, BigInteger maximum, Boolean looped)
+        {
+            return Clamp(value, BigInteger.Zero, maximum, looped);
         }
 
-        public static Decimal ToRange(this IConvertible value, Decimal minimum = Decimal.Zero, Decimal maximum = Decimal.MaxValue,
-            Boolean looped = false)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger Clamp(this BigInteger value, BigInteger minimum, BigInteger maximum)
         {
-            Decimal convert = Convert.ToDecimal(value);
+            if (value > maximum)
+            {
+                return maximum;
+            }
 
-            if (convert > maximum)
+            if (value < minimum)
+            {
+                return minimum;
+            }
+
+            return value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger Clamp(this BigInteger value, BigInteger minimum, BigInteger maximum, Boolean looped)
+        {
+            if (value > maximum)
             {
                 return looped ? minimum : maximum;
             }
 
-            if (convert < minimum)
+            if (value < minimum)
             {
                 return looped ? maximum : minimum;
             }
 
-            return convert;
+            return value;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean InRange(this BigInteger value)
+        {
+            return InRange(value, MathPositionType.Both);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean InRange(this BigInteger value, MathPositionType comparison)
+        {
+            return comparison switch
+            {
+                MathPositionType.None => value > BigInteger.Zero,
+                MathPositionType.Left => value >= BigInteger.Zero,
+                MathPositionType.Right => value > BigInteger.Zero,
+                MathPositionType.Both => value >= BigInteger.Zero,
+                _ => throw new NotSupportedException(comparison.ToString())
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean InRange(this BigInteger value, BigInteger maximum)
+        {
+            return InRange(value, maximum, MathPositionType.Both);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean InRange(this BigInteger value, BigInteger maximum, MathPositionType comparison)
+        {
+            return InRange(value, BigInteger.Zero, maximum, comparison);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean InRange(this BigInteger value, BigInteger minimum, BigInteger maximum)
+        {
+            return InRange(value, minimum, maximum, MathPositionType.Both);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean InRange(this BigInteger value, BigInteger minimum, BigInteger maximum, MathPositionType comparison)
+        {
+            return comparison switch
+            {
+                MathPositionType.None => value > minimum && value < maximum,
+                MathPositionType.Left => value >= minimum && value < maximum,
+                MathPositionType.Right => value > minimum && value <= maximum,
+                MathPositionType.Both => value >= minimum && value <= maximum,
+                _ => throw new NotSupportedException(comparison.ToString())
+            };
         }
 
         public static Decimal Truncate(this Decimal value, Byte digits)
@@ -1963,7 +2191,20 @@ namespace NetExtender.Utilities.Numerics
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(ref Single value, Int32 digits)
+        {
+            value = Round(value, digits);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Round(ref Single value, Byte digits, MidpointRounding rounding)
+        {
+            value = Round(value, digits, rounding);
+        }
+        
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(ref Single value, Int32 digits, MidpointRounding rounding)
         {
             value = Round(value, digits, rounding);
         }
@@ -1971,25 +2212,37 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Round(this Single value)
         {
-            return (Single) Round((Double) value);
+            return MathF.Round(value);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Round(this Single value, MidpointRounding rounding)
         {
-            return (Single) Round((Double) value, rounding);
+            return MathF.Round(value, rounding);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Round(this Single value, Byte digits)
         {
-            return (Single) Round((Double) value, digits);
+            return MathF.Round(value, digits.Clamp(0, 6));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Round(this Single value, Int32 digits)
+        {
+            return MathF.Round(value, digits.Clamp(0, 6));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Round(this Single value, Byte digits, MidpointRounding rounding)
         {
-            return (Single) Round((Double) value, digits, rounding);
+            return MathF.Round(value, digits.Clamp(0, 6), rounding);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single Round(this Single value, Int32 digits, MidpointRounding rounding)
+        {
+            return MathF.Round(value, digits.Clamp(0, 6), rounding);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2011,7 +2264,19 @@ namespace NetExtender.Utilities.Numerics
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(ref Double value, Int32 digits)
+        {
+            value = Round(value, digits);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Round(ref Double value, Byte digits, MidpointRounding rounding)
+        {
+            value = Round(value, digits, rounding);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(ref Double value, Int32 digits, MidpointRounding rounding)
         {
             value = Round(value, digits, rounding);
         }
@@ -2031,13 +2296,25 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Round(this Double value, Byte digits)
         {
-            return Math.Round(value, digits);
+            return Math.Round(value, digits.Clamp(0, 15));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Round(this Double value, Int32 digits)
+        {
+            return Math.Round(value, digits.Clamp(0, 15));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double Round(this Double value, Byte digits, MidpointRounding rounding)
         {
-            return Math.Round(value, digits, rounding);
+            return Math.Round(value, digits.Clamp(0, 15), rounding);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double Round(this Double value, Int32 digits, MidpointRounding rounding)
+        {
+            return Math.Round(value, digits.Clamp(0, 15), rounding);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2059,7 +2336,19 @@ namespace NetExtender.Utilities.Numerics
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(ref Decimal value, Int32 digits)
+        {
+            value = Round(value, digits);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Round(ref Decimal value, Byte digits, MidpointRounding rounding)
+        {
+            value = Round(value, digits, rounding);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Round(ref Decimal value, Int32 digits, MidpointRounding rounding)
         {
             value = Round(value, digits, rounding);
         }
@@ -2079,13 +2368,49 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal Round(this Decimal value, Byte digits)
         {
-            return Math.Round(value, digits);
+            return Math.Round(value, digits.Clamp(0, 28));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal Round(this Decimal value, Int32 digits)
+        {
+            return Math.Round(value, digits.Clamp(0, 28));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal Round(this Decimal value, Byte digits, MidpointRounding rounding)
         {
-            return Math.Round(value, digits, rounding);
+            return Math.Round(value, digits.Clamp(0, 28), rounding);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal Round(this Decimal value, Int32 digits, MidpointRounding rounding)
+        {
+            return Math.Round(value, digits.Clamp(0, 28), rounding);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single BitIncrement(this Single value)
+        {
+            return MathF.BitIncrement(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single BitDecrement(this Single value)
+        {
+            return MathF.BitDecrement(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double BitIncrement(this Double value)
+        {
+            return Math.BitIncrement(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double BitDecrement(this Double value)
+        {
+            return Math.BitDecrement(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2107,84 +2432,6 @@ namespace NetExtender.Utilities.Numerics
             {
                 yield return i;
             }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ToRange(ref BigInteger value, Boolean looped = false)
-        {
-            ToRange(ref value, BigInteger.Zero, looped);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ToRange(ref BigInteger value, BigInteger minimum, Boolean looped = false)
-        {
-            ToRange(ref value, minimum, new BigInteger(Decimal.MaxValue), looped);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void ToRange(ref BigInteger value, BigInteger minimum, BigInteger maximum, Boolean looped = false)
-        {
-            value = ToRange(value, minimum, maximum, looped);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static BigInteger ToRange(this BigInteger value, Boolean looped = false)
-        {
-            return ToRange(value, BigInteger.Zero, looped);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static BigInteger ToRange(this BigInteger value, BigInteger minimum, Boolean looped = false)
-        {
-            return ToRange(value, minimum, new BigInteger(Decimal.MaxValue), looped);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static BigInteger ToRange(this BigInteger value, BigInteger minimum, BigInteger maximum, Boolean looped = false)
-        {
-            if (value > maximum)
-            {
-                return looped ? minimum : maximum;
-            }
-
-            if (value < minimum)
-            {
-                return looped ? maximum : minimum;
-            }
-
-            return value;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean InRange(this BigInteger value, MathPositionType comparison = MathPositionType.Both)
-        {
-            return comparison switch
-            {
-                MathPositionType.None => value > BigInteger.Zero,
-                MathPositionType.Left => value >= BigInteger.Zero,
-                MathPositionType.Right => value > BigInteger.Zero,
-                MathPositionType.Both => value >= BigInteger.Zero,
-                _ => throw new NotSupportedException(comparison.ToString())
-            };
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean InRange(this BigInteger value, BigInteger maximum, MathPositionType comparison = MathPositionType.Both)
-        {
-            return InRange(value, BigInteger.Zero, maximum, comparison);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean InRange(this BigInteger value, BigInteger minimum, BigInteger maximum, MathPositionType comparison = MathPositionType.Both)
-        {
-            return comparison switch
-            {
-                MathPositionType.None => value > minimum && value < maximum,
-                MathPositionType.Left => value >= minimum && value < maximum,
-                MathPositionType.Right => value > minimum && value <= maximum,
-                MathPositionType.Both => value >= minimum && value <= maximum,
-                _ => throw new NotSupportedException(comparison.ToString())
-            };
         }
 
         public static IEnumerable<Decimal> ToDecimal(this IEnumerable<IConvertible> source)

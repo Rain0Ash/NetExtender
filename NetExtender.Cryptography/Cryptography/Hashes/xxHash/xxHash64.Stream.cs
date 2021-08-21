@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Buffers;
 using System.IO;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Crypto.Hashes.XXHash
 {
@@ -48,7 +49,7 @@ namespace NetExtender.Crypto.Hashes.XXHash
                     UnsafeAlign(buffer, l, ref v1, ref v2, ref v3, ref v4);
 
                     // Put remaining bytes to buffer
-                    UnsafeBuffer.BlockCopy(buffer, l, buffer, 0, r);
+                    BufferUtilities.BlockCopyUnsafe(buffer, l, buffer, 0, r);
                     offset = r;
                 }
 

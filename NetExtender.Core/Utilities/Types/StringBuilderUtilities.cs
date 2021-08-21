@@ -28,7 +28,6 @@ namespace NetExtender.Utilities.Types
             return new StringBuilder(value, capacity);
         }
 
-        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public static StringBuilder ToStringBuilder(this IEnumerable<Char> source)
         {
             if (source is null)
@@ -41,14 +40,8 @@ namespace NetExtender.Utilities.Types
                 return new StringBuilder(result);
             }
 
-            StringBuilder builder = new StringBuilder(source.CountIfMaterialized() ?? 16);
-            
-            foreach (Char character in source)
-            {
-                builder.Append(character);
-            }
-            
-            return builder;
+            Char[] values = source.ToArray();
+            return new StringBuilder(values.Length).Append(values);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

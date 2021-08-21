@@ -5,13 +5,16 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Immutable.Dictionaries;
 
 namespace NetExtender.Utilities.Types
 {
     public static class DictionaryUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source) where TKey : notnull
         {
             if (source is null)
@@ -22,6 +25,18 @@ namespace NetExtender.Utilities.Types
             return new Dictionary<TKey, TValue>(source);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? comparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return new Dictionary<TKey, TValue>(source, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source) where TKey : notnull
         {
             if (source is null)
@@ -30,6 +45,366 @@ namespace NetExtender.Utilities.Types
             }
 
             return source.ToKeyValuePairs().ToDictionary();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source, IEqualityComparer<TKey>? comparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.ToKeyValuePairs().ToDictionary(comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source) where TKey : notnull
+        {
+            return ToSortedDictionary(source, (IComparer<TKey>?) null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? equality) where TKey : notnull
+        {
+            return ToSortedDictionary(source, equality, null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            SortedDictionary<TKey, TValue> sorted = new SortedDictionary<TKey, TValue>(comparer);
+            sorted.AddRange(source);
+            
+            return sorted;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? equality, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return new SortedDictionary<TKey, TValue>(source.ToDictionary(equality), comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.ToKeyValuePairs().ToSortedDictionary();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source, IEqualityComparer<TKey>? equality) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.ToKeyValuePairs().ToSortedDictionary(equality);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.ToKeyValuePairs().ToSortedDictionary(comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source, IEqualityComparer<TKey>? equality, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.ToKeyValuePairs().ToSortedDictionary(equality, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SortedDictionary<TKey, TSource> ToSortedDictionary<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
+            return new SortedDictionary<TKey, TSource>(source.ToDictionary(keySelector));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SortedDictionary<TKey, TSource> ToSortedDictionary<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? equality) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
+            return new SortedDictionary<TKey, TSource>(source.ToDictionary(keySelector, equality));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SortedDictionary<TKey, TSource> ToSortedDictionary<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
+            return new SortedDictionary<TKey, TSource>(source.ToDictionary(keySelector), comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SortedDictionary<TKey, TSource> ToSortedDictionary<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
+            IEqualityComparer<TKey>? equality, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
+            return new SortedDictionary<TKey, TSource>(source.ToDictionary(keySelector, equality), comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SortedDictionary<TKey, TElement> ToSortedDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
+            Func<TSource, TElement> elementSelector) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
+            if (elementSelector is null)
+            {
+                throw new ArgumentNullException(nameof(elementSelector));
+            }
+
+            return new SortedDictionary<TKey, TElement>(source.ToDictionary(keySelector, elementSelector));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SortedDictionary<TKey, TElement> ToSortedDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
+            Func<TSource, TElement> elementSelector, IEqualityComparer<TKey>? equality) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
+            if (elementSelector is null)
+            {
+                throw new ArgumentNullException(nameof(elementSelector));
+            }
+
+            return new SortedDictionary<TKey, TElement>(source.ToDictionary(keySelector, elementSelector, equality));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SortedDictionary<TKey, TElement> ToSortedDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
+            Func<TSource, TElement> elementSelector, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
+            if (elementSelector is null)
+            {
+                throw new ArgumentNullException(nameof(elementSelector));
+            }
+
+            return new SortedDictionary<TKey, TElement>(source.ToDictionary(keySelector, elementSelector), comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SortedDictionary<TKey, TElement> ToSortedDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
+            Func<TSource, TElement> elementSelector, IEqualityComparer<TKey>? equality, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
+            if (elementSelector is null)
+            {
+                throw new ArgumentNullException(nameof(elementSelector));
+            }
+
+            return new SortedDictionary<TKey, TElement>(source.ToDictionary(keySelector, elementSelector, equality), comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IndexDictionary<TKey, TValue> ToIndexDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source) where TKey : notnull
+        {
+            return ToIndexDictionary(source, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IndexDictionary<TKey, TValue> ToIndexDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? comparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return new IndexDictionary<TKey, TValue>(source, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IndexDictionary<TKey, TValue> ToIndexDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.ToKeyValuePairs().ToIndexDictionary();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IndexDictionary<TKey, TValue> ToIndexDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source, IEqualityComparer<TKey>? comparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.ToKeyValuePairs().ToIndexDictionary(comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IndexDictionary<TKey, TSource> ToIndexDictionary<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
+            return new IndexDictionary<TKey, TSource>(source.Select(item => new KeyValuePair<TKey, TSource>(keySelector(item), item)));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IndexDictionary<TKey, TSource> ToIndexDictionary<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? comparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
+            return new IndexDictionary<TKey, TSource>(source.Select(item => new KeyValuePair<TKey, TSource>(keySelector(item), item)), comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IndexDictionary<TKey, TElement> ToIndexDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
+            Func<TSource, TElement> elementSelector) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
+            if (elementSelector is null)
+            {
+                throw new ArgumentNullException(nameof(elementSelector));
+            }
+
+            return new IndexDictionary<TKey, TElement>(source.Select(item => new KeyValuePair<TKey, TElement>(keySelector(item), elementSelector(item))));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IndexDictionary<TKey, TElement> ToIndexDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
+            Func<TSource, TElement> elementSelector, IEqualityComparer<TKey>? comparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (keySelector is null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
+            if (elementSelector is null)
+            {
+                throw new ArgumentNullException(nameof(elementSelector));
+            }
+
+            return new IndexDictionary<TKey, TElement>(source.Select(item => new KeyValuePair<TKey, TElement>(keySelector(item), elementSelector(item))), comparer);
         }
         
         public static Boolean Contains<TKey, TValue>(this ICollection<KeyValuePair<TKey, TValue>> source, KeyValuePair<TKey, TValue> pair)
@@ -135,7 +510,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static Boolean TryGetValue<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TKey key, Func<TKey, TValue> factory, [MaybeNullWhen(false)] out TValue result)
+        public static Boolean TryGetValue<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TKey key, Func<TKey, TValue> factory, [MaybeNullWhen(false)] out TValue? result)
         {
             if (source is null)
             {
@@ -371,6 +746,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
+        [SuppressMessage("ReSharper", "CognitiveComplexity")]
         public static Boolean TryGetPair<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TKey key, out KeyValuePair<TKey, TValue> pair)
         {
             if (source is null)

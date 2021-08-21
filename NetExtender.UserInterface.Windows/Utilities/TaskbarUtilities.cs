@@ -159,7 +159,7 @@ namespace NetExtender.Utilities.UserInterface
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean SetNotifyStatus(IntPtr handle, UInt32 value, UInt32 maximum, TaskbarProgressBarState state)
         {
-            return SetProgressState(handle, state) & SetProgressValue(handle, value.ToRange(0, maximum), maximum);
+            return SetProgressState(handle, state) & SetProgressValue(handle, value.Clamp(0, maximum), maximum);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -208,7 +208,7 @@ namespace NetExtender.Utilities.UserInterface
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Notify(IntPtr handle, Double value, TaskbarFlashState state)
         {
-            return Notify(handle, (UInt32) value.ToRange(0, 1).Round(2) * 100, state);
+            return Notify(handle, (UInt32) value.Clamp(0, 1).Round(2) * 100, state);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

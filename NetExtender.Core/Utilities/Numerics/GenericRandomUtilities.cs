@@ -8187,7 +8187,7 @@ namespace NetExtender.Utilities.Numerics
 				(min, max) = (max, min);
 			}
 
-			MathUtilities.ToRange(ref digits, 0, 15);
+			digits = digits.Clamp(0, 15);
 
 			Decimal difference = max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue);
 			return difference <= (Byte.MaxValue + 1) * 4 ? UniqueSetRange(random, min, max, digits, rounding, (Int32) difference) : UniqueSetRange(random, min, max, digits, rounding);
@@ -8222,7 +8222,7 @@ namespace NetExtender.Utilities.Numerics
 				(min, max) = (max, min);
 			}
 
-			MathUtilities.ToRange(ref digits, 0, 15);
+			digits = digits.Clamp(0, 15);
 
 			Decimal difference = max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue);
 			return difference <= (Byte.MaxValue + 1) * 4 ? UniqueSetRange(random, min, max, digits, rounding, (Int32) difference) : UniqueSetRange(random, min, max, digits, rounding);
@@ -8283,7 +8283,7 @@ namespace NetExtender.Utilities.Numerics
 				(min, max) = (max, min);
 			}
 
-			MathUtilities.ToRange(ref digits, 0, 15);
+			digits = digits.Clamp(0, 15);
 
 			return UniqueSetRange(random, min, max, digits, rounding, (Int32) Math.Min(count, max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue)));
 		}
@@ -8325,7 +8325,7 @@ namespace NetExtender.Utilities.Numerics
 				(min, max) = (max, min);
 			}
 
-			MathUtilities.ToRange(ref digits, 0, 15);
+			digits = digits.Clamp(0, 15);
 
 			return UniqueSetRange(random, min, max, digits, rounding, (Int32) Math.Min(count, max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue)));
 		}
@@ -8439,7 +8439,7 @@ namespace NetExtender.Utilities.Numerics
 				(min, max) = (max, min);
 			}
 
-			MathUtilities.ToRange(ref digits, 0, 15);
+			digits = digits.Clamp(0, 15);
 
 			Decimal difference = max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue);
 			return difference <= (Byte.MaxValue + 1) * 4 ? UniqueSetRange(random, min, max, digits, rounding, (Int32) difference) : UniqueSetRange(random, min, max, digits, rounding);
@@ -8474,7 +8474,7 @@ namespace NetExtender.Utilities.Numerics
 				(min, max) = (max, min);
 			}
 
-			MathUtilities.ToRange(ref digits, 0, 15);
+			digits = digits.Clamp(0, 15);
 
 			Decimal difference = max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue);
 			return difference <= (Byte.MaxValue + 1) * 4 ? UniqueSetRange(random, min, max, digits, rounding, (Int32) difference) : UniqueSetRange(random, min, max, digits, rounding);
@@ -8535,7 +8535,7 @@ namespace NetExtender.Utilities.Numerics
 				(min, max) = (max, min);
 			}
 
-			MathUtilities.ToRange(ref digits, 0, 15);
+			digits = digits.Clamp(0, 15);
 
 			return UniqueSetRange(random, min, max, digits, rounding, (Int32) Math.Min(count, max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue)));
 		}
@@ -8577,7 +8577,7 @@ namespace NetExtender.Utilities.Numerics
 				(min, max) = (max, min);
 			}
 
-			MathUtilities.ToRange(ref digits, 0, 15);
+			digits = digits.Clamp(0, 15);
 
 			return UniqueSetRange(random, min, max, digits, rounding, (Int32) Math.Min(count, max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue)));
 		}
@@ -8691,7 +8691,7 @@ namespace NetExtender.Utilities.Numerics
 				(min, max) = (max, min);
 			}
 
-			MathUtilities.ToRange(ref digits, 0, 15);
+			digits = digits.Clamp(0, 15);
 
 			Decimal difference = max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue);
 			return difference <= (Byte.MaxValue + 1) * 4 ? UniqueSetRange(random, min, max, digits, rounding, (Int32) difference) : UniqueSetRange(random, min, max, digits, rounding);
@@ -8726,7 +8726,7 @@ namespace NetExtender.Utilities.Numerics
 				(min, max) = (max, min);
 			}
 
-			MathUtilities.ToRange(ref digits, 0, 15);
+			digits = digits.Clamp(0, 15);
 
 			Decimal difference = max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue);
 			return difference <= (Byte.MaxValue + 1) * 4 ? UniqueSetRange(random, min, max, digits, rounding, (Int32) difference) : UniqueSetRange(random, min, max, digits, rounding);
@@ -8787,7 +8787,7 @@ namespace NetExtender.Utilities.Numerics
 				(min, max) = (max, min);
 			}
 
-			MathUtilities.ToRange(ref digits, 0, 15);
+			digits = digits.Clamp(0, 15);
 
 			return UniqueSetRange(random, min, max, digits, rounding, (Int32) Math.Min(count, max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue)));
 		}
@@ -8829,7 +8829,7 @@ namespace NetExtender.Utilities.Numerics
 				(min, max) = (max, min);
 			}
 
-			MathUtilities.ToRange(ref digits, 0, 15);
+			digits = digits.Clamp(0, 15);
 
 			return UniqueSetRange(random, min, max, digits, rounding, (Int32) Math.Min(count, max.DiscreteIncludeDifference(min, digits, Decimal.MaxValue)));
 		}

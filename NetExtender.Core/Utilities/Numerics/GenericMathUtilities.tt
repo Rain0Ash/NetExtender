@@ -427,47 +427,70 @@ namespace NetExtender.Utilities.Numerics
 
     void ToRangeImplementation(String type)
     {
-        String func =
-            $"public static {{0}} {nameof(ToRange)}({{1}}{type} value, {type} minimum = {(type == "Char" ? $"{type}.MinValue" : "0")}, {type} maximum = {type}.MaxValue, Boolean looped = {false.ToString().ToLower()})";
-
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-        WriteLine($"\t\t{String.Format(func, "void", "ref ")}");
+        WriteLine($"\t\tpublic static {type} {nameof(ToRange)}(this {type} value)");
         WriteLine("\t\t{");
-        WriteLine($"\t\t\t value = {nameof(ToRange)}(value, minimum, maximum, looped);");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value);");
         WriteLine("\t\t}");
         
         WriteLine(String.Empty);
-
+        
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-        WriteLine($"\t\t{String.Format(func, type, "this ")}");
+        WriteLine($"\t\tpublic static {type} {nameof(ToRange)}(this {type} value, {nameof(Boolean)} looped)");
         WriteLine("\t\t{");
-        WriteLine("\t\t\tif (value > maximum)");
-        WriteLine("\t\t\t{");
-        WriteLine("\t\t\t\treturn looped ? minimum : maximum;");
-        WriteLine("\t\t\t}");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value, looped);");
+        WriteLine("\t\t}");
         
         WriteLine(String.Empty);
         
-        WriteLine("\t\t\tif (value < minimum)");
-        WriteLine("\t\t\t{");
-        WriteLine("\t\t\t\treturn looped ? maximum : minimum;");
-        WriteLine("\t\t\t}");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(ToRange)}(this {type} value, {type} maximum)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value, maximum);");
+        WriteLine("\t\t}");
         
         WriteLine(String.Empty);
         
-        WriteLine("\t\t\treturn value;");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(ToRange)}(this {type} value, {type} maximum, {nameof(Boolean)} looped)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value, maximum, looped);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(ToRange)}(this {type} value, {type} minimum, {type} maximum)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value, minimum, maximum);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(ToRange)}(this {type} value, {type} minimum, {type} maximum, {nameof(Boolean)} looped)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value, minimum, maximum, looped);");
         WriteLine("\t\t}");
     }
 
     void ToRange()
     {
-        ForEach(types, ToRangeImplementation);
+        ForEach(types.Append(biginteger), ToRangeImplementation);
     }
 
     void InRangeImplementation(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, MathPositionType comparison = MathPositionType.Both)");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(InRange)}(value, MathPositionType.Both);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, MathPositionType comparison)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(InRange)}(value, default, {type}.MaxValue, comparison);");
         WriteLine("\t\t}");
@@ -475,7 +498,15 @@ namespace NetExtender.Utilities.Numerics
         WriteLine(String.Empty);
         
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, {type} maximum, MathPositionType comparison = MathPositionType.Both)");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, {type} maximum)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(InRange)}(value, maximum, MathPositionType.Both);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, {type} maximum, MathPositionType comparison)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(InRange)}(value, default, maximum, comparison);");
         WriteLine("\t\t}");
@@ -483,8 +514,15 @@ namespace NetExtender.Utilities.Numerics
         WriteLine(String.Empty);
         
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-        WriteLine(
-            $"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, {type} minimum, {type} maximum, MathPositionType comparison = MathPositionType.Both)");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, {type} minimum, {type} maximum)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(InRange)}(value, minimum, maximum, MathPositionType.Both);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, {type} minimum, {type} maximum, MathPositionType comparison)");
         WriteLine("\t\t{");
         WriteLine("\t\t\treturn comparison switch");
         WriteLine("\t\t\t{");
@@ -852,9 +890,9 @@ namespace NetExtender.Utilities.Numerics
     {
         WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-        WriteLine($"\t\tpublic static {nameof(Double)} {nameof(Sqrt)}(this {type} value)");
+        WriteLine($"\t\tpublic static {(type == nameof(Single) ? nameof(Single) : nameof(Double))} {nameof(Sqrt)}(this {type} value)");
         WriteLine("\t\t{");
-        WriteLine("\t\t\treturn Math.Sqrt(value);");
+        WriteLine($"\t\t\treturn {(type == nameof(Single) ? $"{nameof(Math)}F" : nameof(Math))}.Sqrt(value);");
         WriteLine("\t\t}");
     }
     
@@ -867,36 +905,122 @@ namespace NetExtender.Utilities.Numerics
     {
         WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-        WriteLine($"\t\tpublic static {nameof(Double)} {nameof(Log)}(this {type} value)");
+        WriteLine($"\t\tpublic static {(type == nameof(Single) ? nameof(Single) : nameof(Double))} {nameof(Log)}(this {type} value)");
         WriteLine("\t\t{");
-        WriteLine("\t\t\treturn Math.Log(value);");
+        WriteLine($"\t\t\treturn {(type == nameof(Single) ? $"{nameof(Math)}F" : nameof(Math))}.Log(value);");
         WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
         
         WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-        WriteLine($"\t\tpublic static {nameof(Double)} {nameof(Log)}(this {type} value, {nameof(Double)} newBase)");
+        WriteLine($"\t\tpublic static {(type == nameof(Single) ? nameof(Single) : nameof(Double))} {nameof(Log)}(this {type} value, {(type == nameof(Single) ? nameof(Single) : nameof(Double))} @base)");
         WriteLine("\t\t{");
-        WriteLine("\t\t\treturn Math.Log(value, newBase);");
+        WriteLine($"\t\t\treturn {(type == nameof(Single) ? $"{nameof(Math)}F" : nameof(Math))}.Log(value, @base);");
         WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+
+        if (type == nameof(Single))
+        {
+            WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {nameof(Single)} {nameof(Log)}(this {type} value, {nameof(Double)} @base)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\treturn {nameof(Math)}.Log(value, @base);");
+            WriteLine("\t\t}");
+            
+            WriteLine(String.Empty);
+        }
+
+        WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {(type == nameof(Single) ? nameof(Single) : nameof(Double))} {nameof(Log)}2(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {(type == nameof(Single) ? $"{nameof(Math)}F" : nameof(Math))}.Log2(value);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
         
         WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-        WriteLine($"\t\tpublic static {nameof(Double)} {nameof(Log)}2(this {type} value)");
+        WriteLine($"\t\tpublic static {(type == nameof(Single) ? nameof(Single) : nameof(Double))} {nameof(Log)}10(this {type} value)");
         WriteLine("\t\t{");
-        WriteLine("\t\t\treturn Math.Log2(value);");
-        WriteLine("\t\t}");
-        
-        WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
-        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-        WriteLine($"\t\tpublic static {nameof(Double)} {nameof(Log)}10(this {type} value)");
-        WriteLine("\t\t{");
-        WriteLine("\t\t\treturn Math.Log10(value);");
+        WriteLine($"\t\t\treturn {(type == nameof(Single) ? $"{nameof(Math)}F" : nameof(Math))}.Log10(value);");
         WriteLine("\t\t}");
     }
     
     void Log()
     {
         ForEach(types.Where(type => IsIntType(type) && type != nameof(Char)), LogImplementation);
+    }
+
+    void ClampImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Clamp)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value, default({type}));");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Clamp)}(this {type} value, {nameof(Boolean)} looped)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value, default, {type}.MaxValue, looped);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Clamp)}(this {type} value, {type} maximum)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value, default, maximum);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Clamp)}(this {type} value, {type} maximum, {nameof(Boolean)} looped)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Clamp)}(value, default, maximum, looped);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Clamp)}(this {type} value, {type} minimum, {type} maximum)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {(type == nameof(Char) ? $"({nameof(Char)}) " : String.Empty)}{nameof(Math)}.{nameof(Clamp)}(value, minimum, maximum);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Clamp)}(this {type} value, {type} minimum, {type} maximum, {nameof(Boolean)} looped)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tif (value > maximum)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn looped ? minimum : maximum;");
+        WriteLine("\t\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t\tif (value < minimum)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn looped ? maximum : minimum;");
+        WriteLine("\t\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t\treturn value;");
+        WriteLine("\t\t}");
+    }
+
+    void Clamp()
+    {
+        ForEach(types, ClampImplementation);
     }
     
     void DifferenceImplementation(String type)
@@ -1466,6 +1590,8 @@ namespace NetExtender.Utilities.Numerics
     Sqrt();
     WriteLine(String.Empty);
     Log();
+    WriteLine(String.Empty);
+    Clamp();
     WriteLine(String.Empty);
     Difference();
     WriteLine(String.Empty);

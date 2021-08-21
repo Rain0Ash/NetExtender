@@ -38,7 +38,7 @@ namespace NetExtender.NAudio.Types.Playlist
             {
                 lock (Queue)
                 {
-                    return _index.ToRange(0, Queue.Count);
+                    return _index.Clamp(0, Queue.Count);
                 }
             }
             set

@@ -33,11 +33,23 @@ namespace NetExtender.Types.Maps
             Order = new List<TKey>(dictionary.Keys);
         }
 
+        public IndexMap(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? comparer)
+            : base(dictionary, comparer)
+        {
+            Order = new List<TKey>(dictionary.Keys);
+        }
+
         public IndexMap(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? keyComparer,
             IEqualityComparer<TValue>? valueComparer)
             : base(dictionary ?? throw new ArgumentNullException(nameof(dictionary)), keyComparer, valueComparer)
         {
             Order = new List<TKey>(dictionary.Keys);
+        }
+        
+        public IndexMap(IEqualityComparer<TKey>? comparer)
+            : base(comparer)
+        {
+            Order = new List<TKey>();
         }
 
         public IndexMap(IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
@@ -52,8 +64,13 @@ namespace NetExtender.Types.Maps
             Order = new List<TKey>(collection.Select(pair => pair.Key));
         }
 
-        public IndexMap(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? keyComparer,
-            IEqualityComparer<TValue>? valueComparer)
+        public IndexMap(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? comparer)
+            : base(collection = collection?.Materialize() ?? throw new ArgumentNullException(nameof(collection)), comparer)
+        {
+            Order = new List<TKey>(collection.Select(pair => pair.Key));
+        }
+
+        public IndexMap(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
             : base(collection = collection?.Materialize() ?? throw new ArgumentNullException(nameof(collection)), keyComparer, valueComparer)
         {
             Order = new List<TKey>(collection.Select(pair => pair.Key));

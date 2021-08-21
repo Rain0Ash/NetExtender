@@ -84,12 +84,12 @@ namespace NetExtender.Windows.Protocols
 
         public static IEnumerable<KeyValuePair<String?, String?>> GetFileTypeAssociationProgIdUserChoice()
         {
-            return GetFileTypeAssociationUserChoice().Select(KeyValuePairUtilities.FlattenByKey);
+            return GetFileTypeAssociationUserChoice().Select(KeyValuePairUtilities.FlattenByKey!)!;
         }
 
         public static IEnumerable<KeyValuePair<String?, String?>> GetFileTypeAssociationHashUserChoice()
         {
-            return GetFileTypeAssociationUserChoice().Select(KeyValuePairUtilities.FlattenByValue);
+            return GetFileTypeAssociationUserChoice().Select(KeyValuePairUtilities.FlattenByValue!)!;
         }
 
         public static KeyValuePair<String?, String?>? GetProtocolTypeAssociation([NotNull] String protocol)
@@ -151,12 +151,12 @@ namespace NetExtender.Windows.Protocols
 
         public static IEnumerable<KeyValuePair<String?, String?>> GetProtocolTypeAssociationProgIdUserChoice()
         {
-            return GetProtocolTypeAssociationUserChoice().Select(KeyValuePairUtilities.FlattenByKey);
+            return GetProtocolTypeAssociationUserChoice().Select(KeyValuePairUtilities.FlattenByKey!)!;
         }
 
         public static IEnumerable<KeyValuePair<String?, String?>> GetProtocolTypeAssociationHashUserChoice()
         {
-            return GetProtocolTypeAssociationUserChoice().Select(KeyValuePairUtilities.FlattenByValue);
+            return GetProtocolTypeAssociationUserChoice().Select(KeyValuePairUtilities.FlattenByValue!)!;
         }
 
         [DllImport("shell32.dll")]

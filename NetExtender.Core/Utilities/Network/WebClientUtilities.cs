@@ -7,7 +7,6 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Utilities.IO;
-using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Static;
 using NetExtender.Utilities.Types;
 
@@ -23,7 +22,7 @@ namespace NetExtender.Utilities.Network
         {
             get
             {
-                return (Double) Current / Bytes * 100;
+                return (Double) Current / Bytes * 100D;
             }
         }
 
@@ -31,7 +30,7 @@ namespace NetExtender.Utilities.Network
         {
             Address = address;
             Current = current;
-            Bytes = bytes.ToRange(1);
+            Bytes = bytes != 0 ? bytes : 1;
         }
     }
     

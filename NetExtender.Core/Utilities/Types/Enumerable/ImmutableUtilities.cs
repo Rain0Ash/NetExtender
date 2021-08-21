@@ -405,15 +405,60 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableDictionary<TKey, TValue> AsIImmutableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer) where TKey : notnull
+        {
+            return source is not null ? source as IImmutableDictionary<TKey, TValue> ?? source.ToImmutableDictionary(comparer) : ImmutableDictionary<TKey, TValue>.Empty.WithComparers(comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableDictionary<TKey, TValue> AsIImmutableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source,
+            IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer) where TKey : notnull
+        {
+            return source is not null ? source as IImmutableDictionary<TKey, TValue> ?? source.ToImmutableDictionary(keyComparer, valueComparer) : ImmutableDictionary<TKey, TValue>.Empty.WithComparers(keyComparer, valueComparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableDictionary<TKey, TValue> AsImmutableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull
         {
             return source is not null ? source as ImmutableDictionary<TKey, TValue> ?? source.ToImmutableDictionary() : ImmutableDictionary<TKey, TValue>.Empty;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableDictionary<TKey, TValue> AsImmutableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer) where TKey : notnull
+        {
+            return source is not null ? source as ImmutableDictionary<TKey, TValue> ?? source.ToImmutableDictionary(comparer) : ImmutableDictionary<TKey, TValue>.Empty.WithComparers(comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableDictionary<TKey, TValue> AsImmutableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source,
+            IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue> valueComparer) where TKey : notnull
+        {
+            return source is not null ? source as ImmutableDictionary<TKey, TValue> ?? source.ToImmutableDictionary(keyComparer, valueComparer) : ImmutableDictionary<TKey, TValue>.Empty.WithComparers(keyComparer, valueComparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedDictionary<TKey, TValue> AsImmutableSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull
         {
             return source is not null ? source as ImmutableSortedDictionary<TKey, TValue> ?? source.ToImmutableSortedDictionary() : ImmutableSortedDictionary<TKey, TValue>.Empty;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedDictionary<TKey, TValue> AsImmutableSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            return source is not null ? source as ImmutableSortedDictionary<TKey, TValue> ?? source.ToImmutableSortedDictionary(comparer) : ImmutableSortedDictionary<TKey, TValue>.Empty.WithComparers(comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedDictionary<TKey, TValue> AsImmutableSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TValue>? equality) where TKey : notnull
+        {
+            return source is not null ? source as ImmutableSortedDictionary<TKey, TValue> ?? source.ToImmutableSortedDictionary() : ImmutableSortedDictionary<TKey, TValue>.Empty.WithValueComparer(equality);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedDictionary<TKey, TValue> AsImmutableSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source,
+            IComparer<TKey>? keyComparer, IEqualityComparer<TValue> valueComparer) where TKey : notnull
+        {
+            return source is not null ? source as ImmutableSortedDictionary<TKey, TValue> ?? source.ToImmutableSortedDictionary(keyComparer, valueComparer) : ImmutableSortedDictionary<TKey, TValue>.Empty.WithComparers(keyComparer, valueComparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -586,6 +631,72 @@ namespace NetExtender.Utilities.Types
             }
 
             return values.Length > 0 ? source.RemoveRange(values, comparer) : source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableDictionary<TKey, TValue> WithDefaultComparers<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.WithComparers(null, null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableDictionary<TKey, TValue> WithKeyComparer<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, IEqualityComparer<TKey>? keyComparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.WithComparers(keyComparer, source.ValueComparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableDictionary<TKey, TValue> WithValueComparer<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, IEqualityComparer<TValue>? valueComparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.WithComparers(source.KeyComparer, valueComparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedDictionary<TKey, TValue> WithDefaultComparers<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.WithComparers(null, null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedDictionary<TKey, TValue> WithKeyComparer<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, IComparer<TKey>? keyComparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.WithComparers(keyComparer, source.ValueComparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableSortedDictionary<TKey, TValue> WithValueComparer<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, IEqualityComparer<TValue>? valueComparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.WithComparers(source.KeyComparer, valueComparer);
         }
     }
 }

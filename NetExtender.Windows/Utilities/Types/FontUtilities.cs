@@ -3,7 +3,6 @@
 
 using System;
 using System.Drawing;
-using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
@@ -28,7 +27,7 @@ namespace NetExtender.Utilities.Types
 
             Single size = font.SizeInPoints + delta;
 
-            return Resize(font, size.ToRange(0.01f));
+            return Resize(font, size.Clamp(0.01f, Single.MaxValue));
         }
     }
 }

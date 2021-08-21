@@ -81,6 +81,11 @@ namespace NetExtender.Types.Maps
             Reversed = new Dictionary<TValue, TKey>(dictionary.Reverse());
         }
 
+        public Map(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? comparer)
+            : this(dictionary, comparer, null)
+        {
+        }
+        
         public Map(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
         {
             if (dictionary is null)
@@ -90,6 +95,11 @@ namespace NetExtender.Types.Maps
 
             Base = new Dictionary<TKey, TValue>(dictionary, keyComparer);
             Reversed = new Dictionary<TValue, TKey>(dictionary.Reverse(), valueComparer);
+        }
+
+        public Map(IEqualityComparer<TKey>? comparer)
+            : this(comparer, null)
+        {
         }
 
         public Map(IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
@@ -122,6 +132,11 @@ namespace NetExtender.Types.Maps
 
             Base = new Dictionary<TKey, TValue>(source.ReversePairs());
             Reversed = new Dictionary<TValue, TKey>(source);
+        }
+
+        public Map(IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? comparer)
+            : this(source, comparer, null)
+        {
         }
 
         public Map(IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
