@@ -331,14 +331,22 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(Range)}({type} stop)");
         WriteLine("\t\t{");
-        WriteLine($"\t\t\treturn {nameof(Range)}({(IsSmallType(type) ? $"({type}) " : String.Empty)}0, stop);");
+        WriteLine($"\t\t\treturn {nameof(Range)}(default, stop);");
         WriteLine("\t\t}");
 
         WriteLine(String.Empty);
         
-        WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(Range)}({type} start, {type} stop, {type} step = 1)");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(Range)}({type} start, {type} stop)");
         WriteLine("\t\t{");
-        WriteLine($"\t\t\tif ({(type == nameof(Single) || type == nameof(Double) ? $"Math.Abs(step) < {type}.Epsilon" : "step == 0")})");
+        WriteLine($"\t\t\treturn {nameof(Range)}(start, stop, {(IsSmallType(type) ? $"({type}) " : String.Empty)}1);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+        
+        WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(Range)}({type} start, {type} stop, {type} step)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tif ({(type == nameof(Single) || type == nameof(Double) ? $"{nameof(Math)}.Abs(step) < {type}.Epsilon" : "step == 0")})");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\tthrow new ArgumentException(\"Step cannot be equals zero.\");");
         WriteLine("\t\t\t}");
@@ -347,7 +355,15 @@ namespace NetExtender.Utilities.Numerics
 
         if (IsUnsignedType(type))
         {
-            WriteLine($"\t\t\tfor ({type} i = start; i < stop; i += step)");
+            WriteLine($"\t\t\tstop = {(IsSmallType(type) ? $"({type}) " : String.Empty)}{nameof(Math)}.{nameof(Math.Min)}(stop, {type}.MaxValue - step);");
+            WriteLine(String.Empty);
+            WriteLine($"\t\t\t{type} i;");
+            WriteLine("\t\t\tfor (i = start; i < stop; i += step)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\tyield return i;");
+            WriteLine("\t\t\t}");
+            WriteLine(String.Empty);
+            WriteLine($"\t\t\tif (i >= {type}.MaxValue - step)");
             WriteLine("\t\t\t{");
             WriteLine("\t\t\t\tyield return i;");
             WriteLine("\t\t\t}");
@@ -356,14 +372,30 @@ namespace NetExtender.Utilities.Numerics
         {
             WriteLine("\t\t\tif (start < stop && step > 0)");
             WriteLine("\t\t\t{");
-            WriteLine($"\t\t\t\tfor ({type} i = start; i < stop; i += step)");
+            WriteLine($"\t\t\t\tstop = {(IsSmallType(type) ? $"({type}) " : String.Empty)}{nameof(Math)}.{nameof(Math.Min)}(stop, {type}.MaxValue - step);");
+            WriteLine(String.Empty);
+            WriteLine($"\t\t\t\t{type} i;");
+            WriteLine("\t\t\t\tfor (i = start; i < stop; i += step)");
+            WriteLine("\t\t\t\t{");
+            WriteLine("\t\t\t\t\tyield return i;");
+            WriteLine("\t\t\t\t}");
+            WriteLine(String.Empty);
+            WriteLine($"\t\t\t\tif (i >= {type}.MaxValue - step)");
             WriteLine("\t\t\t\t{");
             WriteLine("\t\t\t\t\tyield return i;");
             WriteLine("\t\t\t\t}");
             WriteLine("\t\t\t}");
             WriteLine("\t\t\telse if (start > stop && step < 0)");
             WriteLine("\t\t\t{");
-            WriteLine($"\t\t\t\tfor ({type} i = start; i > stop; i += step)");
+            WriteLine($"\t\t\t\tstop = {(IsSmallType(type) ? $"({type}) " : String.Empty)}{nameof(Math)}.{nameof(Math.Max)}(stop, {type}.MinValue - step);");
+            WriteLine(String.Empty);
+            WriteLine($"\t\t\t\t{type} i;");
+            WriteLine("\t\t\t\tfor (i = start; i > stop; i += step)");
+            WriteLine("\t\t\t\t{");
+            WriteLine("\t\t\t\t\tyield return i;");
+            WriteLine("\t\t\t\t}");
+            WriteLine(String.Empty);
+            WriteLine($"\t\t\t\tif (i <= {type}.MinValue - step)");
             WriteLine("\t\t\t\t{");
             WriteLine("\t\t\t\t\tyield return i;");
             WriteLine("\t\t\t\t}");
@@ -375,7 +407,7 @@ namespace NetExtender.Utilities.Numerics
     
     void Range()
     {
-        ForEach(types.Where(NotChar), RangeImplementation);
+        ForEach(types.Where(NotChar).Where(IsIntType), RangeImplementation);
     }
     
     void RangeIncludeImplementation(String type)
@@ -383,14 +415,22 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(RangeInclude)}({type} stop)");
         WriteLine("\t\t{");
-        WriteLine($"\t\t\treturn {nameof(RangeInclude)}({(IsSmallType(type) ? $"({type}) " : String.Empty)}0, stop);");
+        WriteLine($"\t\t\treturn {nameof(RangeInclude)}(default, stop);");
         WriteLine("\t\t}");
 
         WriteLine(String.Empty);
         
-        WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(RangeInclude)}({type} start, {type} stop, {type} step = 1)");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(RangeInclude)}({type} start, {type} stop)");
         WriteLine("\t\t{");
-        WriteLine($"\t\t\tif ({(type == nameof(Single) || type == nameof(Double) ? $"Math.Abs(step) < {type}.Epsilon" : "step == 0")})");
+        WriteLine($"\t\t\treturn {nameof(RangeInclude)}(start, stop, {(IsSmallType(type) ? $"({type}) " : String.Empty)}1);");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+        
+        WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(RangeInclude)}({type} start, {type} stop, {type} step)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tif ({(type == nameof(Single) || type == nameof(Double) ? $"{nameof(Math)}.Abs(step) < {type}.Epsilon" : "step == 0")})");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\tthrow new ArgumentException(\"Step cannot be equals zero.\");");
         WriteLine("\t\t\t}");
@@ -399,26 +439,41 @@ namespace NetExtender.Utilities.Numerics
 
         if (IsUnsignedType(type))
         {
-            WriteLine($"\t\t\tfor ({type} i = start; i <= stop; i += step)");
+            WriteLine($"\t\t\tstop = {(IsSmallType(type) ? $"({type}) " : String.Empty)}{nameof(Math)}.{nameof(Math.Min)}(stop, {type}.MaxValue - step + 1);");
+            WriteLine(String.Empty);
+            WriteLine($"\t\t\t{type} i;");
+            WriteLine("\t\t\tfor (i = start; i < stop; i += step)");
             WriteLine("\t\t\t{");
             WriteLine("\t\t\t\tyield return i;");
             WriteLine("\t\t\t}");
+            WriteLine(String.Empty);
+            WriteLine("\t\t\tyield return i;");
         }
         else
         {
             WriteLine("\t\t\tif (start < stop && step > 0)");
             WriteLine("\t\t\t{");
-            WriteLine($"\t\t\t\tfor ({type} i = start; i <= stop; i += step)");
+            WriteLine($"\t\t\t\tstop = {(IsSmallType(type) ? $"({type}) " : String.Empty)}{nameof(Math)}.{nameof(Math.Min)}(stop, {type}.MaxValue - step + 1);");
+            WriteLine(String.Empty);
+            WriteLine($"\t\t\t\t{type} i;");
+            WriteLine("\t\t\t\tfor (i = start; i < stop; i += step)");
             WriteLine("\t\t\t\t{");
             WriteLine("\t\t\t\t\tyield return i;");
             WriteLine("\t\t\t\t}");
+            WriteLine(String.Empty);
+            WriteLine("\t\t\t\tyield return i;");
             WriteLine("\t\t\t}");
             WriteLine("\t\t\telse if (start > stop && step < 0)");
             WriteLine("\t\t\t{");
-            WriteLine($"\t\t\t\tfor ({type} i = start; i >= stop; i += step)");
+            WriteLine($"\t\t\t\tstop = {(IsSmallType(type) ? $"({type}) " : String.Empty)}{nameof(Math)}.{nameof(Math.Max)}(stop, {type}.MinValue - step - 1);");
+            WriteLine(String.Empty);
+            WriteLine($"\t\t\t\t{type} i;");
+            WriteLine("\t\t\t\tfor (i = start; i > stop; i += step)");
             WriteLine("\t\t\t\t{");
             WriteLine("\t\t\t\t\tyield return i;");
             WriteLine("\t\t\t\t}");
+            WriteLine(String.Empty);
+            WriteLine("\t\t\t\tyield return i;");
             WriteLine("\t\t\t}");
         }
 
@@ -427,7 +482,7 @@ namespace NetExtender.Utilities.Numerics
     
     void RangeInclude()
     {
-        ForEach(types.Where(NotChar), RangeIncludeImplementation);
+        ForEach(types.Where(NotChar).Where(IsIntType), RangeIncludeImplementation);
     }
 
     void ToRangeImplementation(String type)

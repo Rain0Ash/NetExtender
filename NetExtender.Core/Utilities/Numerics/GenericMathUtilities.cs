@@ -251,10 +251,16 @@ namespace NetExtender.Utilities.Numerics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<SByte> Range(SByte stop)
 		{
-			return Range((SByte) 0, stop);
+			return Range(default, stop);
 		}
 
-		public static IEnumerable<SByte> Range(SByte start, SByte stop, SByte step = 1)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<SByte> Range(SByte start, SByte stop)
+		{
+			return Range(start, stop, (SByte) 1);
+		}
+
+		public static IEnumerable<SByte> Range(SByte start, SByte stop, SByte step)
 		{
 			if (step == 0)
 			{
@@ -263,14 +269,30 @@ namespace NetExtender.Utilities.Numerics
 
 			if (start < stop && step > 0)
 			{
-				for (SByte i = start; i < stop; i += step)
+				stop = (SByte) Math.Min(stop, SByte.MaxValue - step);
+
+				SByte i;
+				for (i = start; i < stop; i += step)
+				{
+					yield return i;
+				}
+
+				if (i >= SByte.MaxValue - step)
 				{
 					yield return i;
 				}
 			}
 			else if (start > stop && step < 0)
 			{
-				for (SByte i = start; i > stop; i += step)
+				stop = (SByte) Math.Max(stop, SByte.MinValue - step);
+
+				SByte i;
+				for (i = start; i > stop; i += step)
+				{
+					yield return i;
+				}
+
+				if (i <= SByte.MinValue - step)
 				{
 					yield return i;
 				}
@@ -280,17 +302,31 @@ namespace NetExtender.Utilities.Numerics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Byte> Range(Byte stop)
 		{
-			return Range((Byte) 0, stop);
+			return Range(default, stop);
 		}
 
-		public static IEnumerable<Byte> Range(Byte start, Byte stop, Byte step = 1)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Byte> Range(Byte start, Byte stop)
+		{
+			return Range(start, stop, (Byte) 1);
+		}
+
+		public static IEnumerable<Byte> Range(Byte start, Byte stop, Byte step)
 		{
 			if (step == 0)
 			{
 				throw new ArgumentException("Step cannot be equals zero.");
 			}
 
-			for (Byte i = start; i < stop; i += step)
+			stop = (Byte) Math.Min(stop, Byte.MaxValue - step);
+
+			Byte i;
+			for (i = start; i < stop; i += step)
+			{
+				yield return i;
+			}
+
+			if (i >= Byte.MaxValue - step)
 			{
 				yield return i;
 			}
@@ -299,10 +335,16 @@ namespace NetExtender.Utilities.Numerics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Int16> Range(Int16 stop)
 		{
-			return Range((Int16) 0, stop);
+			return Range(default, stop);
 		}
 
-		public static IEnumerable<Int16> Range(Int16 start, Int16 stop, Int16 step = 1)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int16> Range(Int16 start, Int16 stop)
+		{
+			return Range(start, stop, (Int16) 1);
+		}
+
+		public static IEnumerable<Int16> Range(Int16 start, Int16 stop, Int16 step)
 		{
 			if (step == 0)
 			{
@@ -311,14 +353,30 @@ namespace NetExtender.Utilities.Numerics
 
 			if (start < stop && step > 0)
 			{
-				for (Int16 i = start; i < stop; i += step)
+				stop = (Int16) Math.Min(stop, Int16.MaxValue - step);
+
+				Int16 i;
+				for (i = start; i < stop; i += step)
+				{
+					yield return i;
+				}
+
+				if (i >= Int16.MaxValue - step)
 				{
 					yield return i;
 				}
 			}
 			else if (start > stop && step < 0)
 			{
-				for (Int16 i = start; i > stop; i += step)
+				stop = (Int16) Math.Max(stop, Int16.MinValue - step);
+
+				Int16 i;
+				for (i = start; i > stop; i += step)
+				{
+					yield return i;
+				}
+
+				if (i <= Int16.MinValue - step)
 				{
 					yield return i;
 				}
@@ -328,17 +386,31 @@ namespace NetExtender.Utilities.Numerics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<UInt16> Range(UInt16 stop)
 		{
-			return Range((UInt16) 0, stop);
+			return Range(default, stop);
 		}
 
-		public static IEnumerable<UInt16> Range(UInt16 start, UInt16 stop, UInt16 step = 1)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt16> Range(UInt16 start, UInt16 stop)
+		{
+			return Range(start, stop, (UInt16) 1);
+		}
+
+		public static IEnumerable<UInt16> Range(UInt16 start, UInt16 stop, UInt16 step)
 		{
 			if (step == 0)
 			{
 				throw new ArgumentException("Step cannot be equals zero.");
 			}
 
-			for (UInt16 i = start; i < stop; i += step)
+			stop = (UInt16) Math.Min(stop, UInt16.MaxValue - step);
+
+			UInt16 i;
+			for (i = start; i < stop; i += step)
+			{
+				yield return i;
+			}
+
+			if (i >= UInt16.MaxValue - step)
 			{
 				yield return i;
 			}
@@ -347,10 +419,16 @@ namespace NetExtender.Utilities.Numerics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Int32> Range(Int32 stop)
 		{
-			return Range(0, stop);
+			return Range(default, stop);
 		}
 
-		public static IEnumerable<Int32> Range(Int32 start, Int32 stop, Int32 step = 1)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int32> Range(Int32 start, Int32 stop)
+		{
+			return Range(start, stop, 1);
+		}
+
+		public static IEnumerable<Int32> Range(Int32 start, Int32 stop, Int32 step)
 		{
 			if (step == 0)
 			{
@@ -359,14 +437,30 @@ namespace NetExtender.Utilities.Numerics
 
 			if (start < stop && step > 0)
 			{
-				for (Int32 i = start; i < stop; i += step)
+				stop = Math.Min(stop, Int32.MaxValue - step);
+
+				Int32 i;
+				for (i = start; i < stop; i += step)
+				{
+					yield return i;
+				}
+
+				if (i >= Int32.MaxValue - step)
 				{
 					yield return i;
 				}
 			}
 			else if (start > stop && step < 0)
 			{
-				for (Int32 i = start; i > stop; i += step)
+				stop = Math.Max(stop, Int32.MinValue - step);
+
+				Int32 i;
+				for (i = start; i > stop; i += step)
+				{
+					yield return i;
+				}
+
+				if (i <= Int32.MinValue - step)
 				{
 					yield return i;
 				}
@@ -376,17 +470,31 @@ namespace NetExtender.Utilities.Numerics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<UInt32> Range(UInt32 stop)
 		{
-			return Range(0, stop);
+			return Range(default, stop);
 		}
 
-		public static IEnumerable<UInt32> Range(UInt32 start, UInt32 stop, UInt32 step = 1)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt32> Range(UInt32 start, UInt32 stop)
+		{
+			return Range(start, stop, 1);
+		}
+
+		public static IEnumerable<UInt32> Range(UInt32 start, UInt32 stop, UInt32 step)
 		{
 			if (step == 0)
 			{
 				throw new ArgumentException("Step cannot be equals zero.");
 			}
 
-			for (UInt32 i = start; i < stop; i += step)
+			stop = Math.Min(stop, UInt32.MaxValue - step);
+
+			UInt32 i;
+			for (i = start; i < stop; i += step)
+			{
+				yield return i;
+			}
+
+			if (i >= UInt32.MaxValue - step)
 			{
 				yield return i;
 			}
@@ -395,10 +503,16 @@ namespace NetExtender.Utilities.Numerics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Int64> Range(Int64 stop)
 		{
-			return Range(0, stop);
+			return Range(default, stop);
 		}
 
-		public static IEnumerable<Int64> Range(Int64 start, Int64 stop, Int64 step = 1)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int64> Range(Int64 start, Int64 stop)
+		{
+			return Range(start, stop, 1);
+		}
+
+		public static IEnumerable<Int64> Range(Int64 start, Int64 stop, Int64 step)
 		{
 			if (step == 0)
 			{
@@ -407,14 +521,30 @@ namespace NetExtender.Utilities.Numerics
 
 			if (start < stop && step > 0)
 			{
-				for (Int64 i = start; i < stop; i += step)
+				stop = Math.Min(stop, Int64.MaxValue - step);
+
+				Int64 i;
+				for (i = start; i < stop; i += step)
+				{
+					yield return i;
+				}
+
+				if (i >= Int64.MaxValue - step)
 				{
 					yield return i;
 				}
 			}
 			else if (start > stop && step < 0)
 			{
-				for (Int64 i = start; i > stop; i += step)
+				stop = Math.Max(stop, Int64.MinValue - step);
+
+				Int64 i;
+				for (i = start; i > stop; i += step)
+				{
+					yield return i;
+				}
+
+				if (i <= Int64.MinValue - step)
 				{
 					yield return i;
 				}
@@ -424,116 +554,49 @@ namespace NetExtender.Utilities.Numerics
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<UInt64> Range(UInt64 stop)
 		{
-			return Range(0, stop);
+			return Range(default, stop);
 		}
 
-		public static IEnumerable<UInt64> Range(UInt64 start, UInt64 stop, UInt64 step = 1)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt64> Range(UInt64 start, UInt64 stop)
+		{
+			return Range(start, stop, 1);
+		}
+
+		public static IEnumerable<UInt64> Range(UInt64 start, UInt64 stop, UInt64 step)
 		{
 			if (step == 0)
 			{
 				throw new ArgumentException("Step cannot be equals zero.");
 			}
 
-			for (UInt64 i = start; i < stop; i += step)
+			stop = Math.Min(stop, UInt64.MaxValue - step);
+
+			UInt64 i;
+			for (i = start; i < stop; i += step)
 			{
 				yield return i;
 			}
-		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> Range(Single stop)
-		{
-			return Range(0, stop);
-		}
-
-		public static IEnumerable<Single> Range(Single start, Single stop, Single step = 1)
-		{
-			if (Math.Abs(step) < Single.Epsilon)
+			if (i >= UInt64.MaxValue - step)
 			{
-				throw new ArgumentException("Step cannot be equals zero.");
-			}
-
-			if (start < stop && step > 0)
-			{
-				for (Single i = start; i < stop; i += step)
-				{
-					yield return i;
-				}
-			}
-			else if (start > stop && step < 0)
-			{
-				for (Single i = start; i > stop; i += step)
-				{
-					yield return i;
-				}
-			}
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> Range(Double stop)
-		{
-			return Range(0, stop);
-		}
-
-		public static IEnumerable<Double> Range(Double start, Double stop, Double step = 1)
-		{
-			if (Math.Abs(step) < Double.Epsilon)
-			{
-				throw new ArgumentException("Step cannot be equals zero.");
-			}
-
-			if (start < stop && step > 0)
-			{
-				for (Double i = start; i < stop; i += step)
-				{
-					yield return i;
-				}
-			}
-			else if (start > stop && step < 0)
-			{
-				for (Double i = start; i > stop; i += step)
-				{
-					yield return i;
-				}
-			}
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> Range(Decimal stop)
-		{
-			return Range(0, stop);
-		}
-
-		public static IEnumerable<Decimal> Range(Decimal start, Decimal stop, Decimal step = 1)
-		{
-			if (step == 0)
-			{
-				throw new ArgumentException("Step cannot be equals zero.");
-			}
-
-			if (start < stop && step > 0)
-			{
-				for (Decimal i = start; i < stop; i += step)
-				{
-					yield return i;
-				}
-			}
-			else if (start > stop && step < 0)
-			{
-				for (Decimal i = start; i > stop; i += step)
-				{
-					yield return i;
-				}
+				yield return i;
 			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<SByte> RangeInclude(SByte stop)
 		{
-			return RangeInclude((SByte) 0, stop);
+			return RangeInclude(default, stop);
 		}
 
-		public static IEnumerable<SByte> RangeInclude(SByte start, SByte stop, SByte step = 1)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<SByte> RangeInclude(SByte start, SByte stop)
+		{
+			return RangeInclude(start, stop, (SByte) 1);
+		}
+
+		public static IEnumerable<SByte> RangeInclude(SByte start, SByte stop, SByte step)
 		{
 			if (step == 0)
 			{
@@ -542,46 +605,73 @@ namespace NetExtender.Utilities.Numerics
 
 			if (start < stop && step > 0)
 			{
-				for (SByte i = start; i <= stop; i += step)
+				stop = (SByte) Math.Min(stop, SByte.MaxValue - step + 1);
+
+				SByte i;
+				for (i = start; i < stop; i += step)
 				{
 					yield return i;
 				}
+
+				yield return i;
 			}
 			else if (start > stop && step < 0)
 			{
-				for (SByte i = start; i >= stop; i += step)
+				stop = (SByte) Math.Max(stop, SByte.MinValue - step - 1);
+
+				SByte i;
+				for (i = start; i > stop; i += step)
 				{
 					yield return i;
 				}
+
+				yield return i;
 			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Byte> RangeInclude(Byte stop)
 		{
-			return RangeInclude((Byte) 0, stop);
+			return RangeInclude(default, stop);
 		}
 
-		public static IEnumerable<Byte> RangeInclude(Byte start, Byte stop, Byte step = 1)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Byte> RangeInclude(Byte start, Byte stop)
+		{
+			return RangeInclude(start, stop, (Byte) 1);
+		}
+
+		public static IEnumerable<Byte> RangeInclude(Byte start, Byte stop, Byte step)
 		{
 			if (step == 0)
 			{
 				throw new ArgumentException("Step cannot be equals zero.");
 			}
 
-			for (Byte i = start; i <= stop; i += step)
+			stop = (Byte) Math.Min(stop, Byte.MaxValue - step + 1);
+
+			Byte i;
+			for (i = start; i < stop; i += step)
 			{
 				yield return i;
 			}
+
+			yield return i;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Int16> RangeInclude(Int16 stop)
 		{
-			return RangeInclude((Int16) 0, stop);
+			return RangeInclude(default, stop);
 		}
 
-		public static IEnumerable<Int16> RangeInclude(Int16 start, Int16 stop, Int16 step = 1)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int16> RangeInclude(Int16 start, Int16 stop)
+		{
+			return RangeInclude(start, stop, (Int16) 1);
+		}
+
+		public static IEnumerable<Int16> RangeInclude(Int16 start, Int16 stop, Int16 step)
 		{
 			if (step == 0)
 			{
@@ -590,46 +680,73 @@ namespace NetExtender.Utilities.Numerics
 
 			if (start < stop && step > 0)
 			{
-				for (Int16 i = start; i <= stop; i += step)
+				stop = (Int16) Math.Min(stop, Int16.MaxValue - step + 1);
+
+				Int16 i;
+				for (i = start; i < stop; i += step)
 				{
 					yield return i;
 				}
+
+				yield return i;
 			}
 			else if (start > stop && step < 0)
 			{
-				for (Int16 i = start; i >= stop; i += step)
+				stop = (Int16) Math.Max(stop, Int16.MinValue - step - 1);
+
+				Int16 i;
+				for (i = start; i > stop; i += step)
 				{
 					yield return i;
 				}
+
+				yield return i;
 			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<UInt16> RangeInclude(UInt16 stop)
 		{
-			return RangeInclude((UInt16) 0, stop);
+			return RangeInclude(default, stop);
 		}
 
-		public static IEnumerable<UInt16> RangeInclude(UInt16 start, UInt16 stop, UInt16 step = 1)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt16> RangeInclude(UInt16 start, UInt16 stop)
+		{
+			return RangeInclude(start, stop, (UInt16) 1);
+		}
+
+		public static IEnumerable<UInt16> RangeInclude(UInt16 start, UInt16 stop, UInt16 step)
 		{
 			if (step == 0)
 			{
 				throw new ArgumentException("Step cannot be equals zero.");
 			}
 
-			for (UInt16 i = start; i <= stop; i += step)
+			stop = (UInt16) Math.Min(stop, UInt16.MaxValue - step + 1);
+
+			UInt16 i;
+			for (i = start; i < stop; i += step)
 			{
 				yield return i;
 			}
+
+			yield return i;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Int32> RangeInclude(Int32 stop)
 		{
-			return RangeInclude(0, stop);
+			return RangeInclude(default, stop);
 		}
 
-		public static IEnumerable<Int32> RangeInclude(Int32 start, Int32 stop, Int32 step = 1)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int32> RangeInclude(Int32 start, Int32 stop)
+		{
+			return RangeInclude(start, stop, 1);
+		}
+
+		public static IEnumerable<Int32> RangeInclude(Int32 start, Int32 stop, Int32 step)
 		{
 			if (step == 0)
 			{
@@ -638,46 +755,73 @@ namespace NetExtender.Utilities.Numerics
 
 			if (start < stop && step > 0)
 			{
-				for (Int32 i = start; i <= stop; i += step)
+				stop = Math.Min(stop, Int32.MaxValue - step + 1);
+
+				Int32 i;
+				for (i = start; i < stop; i += step)
 				{
 					yield return i;
 				}
+
+				yield return i;
 			}
 			else if (start > stop && step < 0)
 			{
-				for (Int32 i = start; i >= stop; i += step)
+				stop = Math.Max(stop, Int32.MinValue - step - 1);
+
+				Int32 i;
+				for (i = start; i > stop; i += step)
 				{
 					yield return i;
 				}
+
+				yield return i;
 			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<UInt32> RangeInclude(UInt32 stop)
 		{
-			return RangeInclude(0, stop);
+			return RangeInclude(default, stop);
 		}
 
-		public static IEnumerable<UInt32> RangeInclude(UInt32 start, UInt32 stop, UInt32 step = 1)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt32> RangeInclude(UInt32 start, UInt32 stop)
+		{
+			return RangeInclude(start, stop, 1);
+		}
+
+		public static IEnumerable<UInt32> RangeInclude(UInt32 start, UInt32 stop, UInt32 step)
 		{
 			if (step == 0)
 			{
 				throw new ArgumentException("Step cannot be equals zero.");
 			}
 
-			for (UInt32 i = start; i <= stop; i += step)
+			stop = Math.Min(stop, UInt32.MaxValue - step + 1);
+
+			UInt32 i;
+			for (i = start; i < stop; i += step)
 			{
 				yield return i;
 			}
+
+			yield return i;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<Int64> RangeInclude(Int64 stop)
 		{
-			return RangeInclude(0, stop);
+			return RangeInclude(default, stop);
 		}
 
-		public static IEnumerable<Int64> RangeInclude(Int64 start, Int64 stop, Int64 step = 1)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<Int64> RangeInclude(Int64 start, Int64 stop)
+		{
+			return RangeInclude(start, stop, 1);
+		}
+
+		public static IEnumerable<Int64> RangeInclude(Int64 start, Int64 stop, Int64 step)
 		{
 			if (step == 0)
 			{
@@ -686,124 +830,58 @@ namespace NetExtender.Utilities.Numerics
 
 			if (start < stop && step > 0)
 			{
-				for (Int64 i = start; i <= stop; i += step)
+				stop = Math.Min(stop, Int64.MaxValue - step + 1);
+
+				Int64 i;
+				for (i = start; i < stop; i += step)
 				{
 					yield return i;
 				}
+
+				yield return i;
 			}
 			else if (start > stop && step < 0)
 			{
-				for (Int64 i = start; i >= stop; i += step)
+				stop = Math.Max(stop, Int64.MinValue - step - 1);
+
+				Int64 i;
+				for (i = start; i > stop; i += step)
 				{
 					yield return i;
 				}
+
+				yield return i;
 			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static IEnumerable<UInt64> RangeInclude(UInt64 stop)
 		{
-			return RangeInclude(0, stop);
+			return RangeInclude(default, stop);
 		}
 
-		public static IEnumerable<UInt64> RangeInclude(UInt64 start, UInt64 stop, UInt64 step = 1)
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static IEnumerable<UInt64> RangeInclude(UInt64 start, UInt64 stop)
+		{
+			return RangeInclude(start, stop, 1);
+		}
+
+		public static IEnumerable<UInt64> RangeInclude(UInt64 start, UInt64 stop, UInt64 step)
 		{
 			if (step == 0)
 			{
 				throw new ArgumentException("Step cannot be equals zero.");
 			}
 
-			for (UInt64 i = start; i <= stop; i += step)
+			stop = Math.Min(stop, UInt64.MaxValue - step + 1);
+
+			UInt64 i;
+			for (i = start; i < stop; i += step)
 			{
 				yield return i;
 			}
-		}
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Single> RangeInclude(Single stop)
-		{
-			return RangeInclude(0, stop);
-		}
-
-		public static IEnumerable<Single> RangeInclude(Single start, Single stop, Single step = 1)
-		{
-			if (Math.Abs(step) < Single.Epsilon)
-			{
-				throw new ArgumentException("Step cannot be equals zero.");
-			}
-
-			if (start < stop && step > 0)
-			{
-				for (Single i = start; i <= stop; i += step)
-				{
-					yield return i;
-				}
-			}
-			else if (start > stop && step < 0)
-			{
-				for (Single i = start; i >= stop; i += step)
-				{
-					yield return i;
-				}
-			}
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Double> RangeInclude(Double stop)
-		{
-			return RangeInclude(0, stop);
-		}
-
-		public static IEnumerable<Double> RangeInclude(Double start, Double stop, Double step = 1)
-		{
-			if (Math.Abs(step) < Double.Epsilon)
-			{
-				throw new ArgumentException("Step cannot be equals zero.");
-			}
-
-			if (start < stop && step > 0)
-			{
-				for (Double i = start; i <= stop; i += step)
-				{
-					yield return i;
-				}
-			}
-			else if (start > stop && step < 0)
-			{
-				for (Double i = start; i >= stop; i += step)
-				{
-					yield return i;
-				}
-			}
-		}
-
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static IEnumerable<Decimal> RangeInclude(Decimal stop)
-		{
-			return RangeInclude(0, stop);
-		}
-
-		public static IEnumerable<Decimal> RangeInclude(Decimal start, Decimal stop, Decimal step = 1)
-		{
-			if (step == 0)
-			{
-				throw new ArgumentException("Step cannot be equals zero.");
-			}
-
-			if (start < stop && step > 0)
-			{
-				for (Decimal i = start; i <= stop; i += step)
-				{
-					yield return i;
-				}
-			}
-			else if (start > stop && step < 0)
-			{
-				for (Decimal i = start; i >= stop; i += step)
-				{
-					yield return i;
-				}
-			}
+			yield return i;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

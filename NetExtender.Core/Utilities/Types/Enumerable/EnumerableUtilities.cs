@@ -261,6 +261,29 @@ namespace NetExtender.Utilities.Types
             return -1;
         }
 
+        public static IEnumerable<T> Except<T>(this IEnumerable<T> source, ISet<T> except)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (except is null)
+            {
+                throw new ArgumentNullException(nameof(except));
+            }
+
+            foreach (T item in source)
+            {
+                if (except.Contains(item))
+                {
+                    continue;
+                }
+
+                yield return item;
+            }
+        }
+
         public static IEnumerable<T> Append<T>(this IEnumerable<T>? source, IEnumerable<T>? additional)
         {
             if (source is null)
