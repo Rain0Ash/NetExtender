@@ -8,7 +8,6 @@ namespace NetExtender.Types.Strings
 {
     public abstract class StringBase : IString
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SpecifyACultureInStringConversionExplicitly")]
         public static explicit operator String(StringBase value)
         {
             return value.ToString();

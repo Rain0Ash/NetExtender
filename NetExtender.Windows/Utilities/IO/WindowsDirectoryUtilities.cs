@@ -3,12 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using System.Text.RegularExpressions;
 using NetExtender.Utilities.IO;
+using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Windows.IO
@@ -78,9 +80,9 @@ namespace NetExtender.Utilities.Windows.IO
         }
         
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "InconsistentNaming")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Local")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
+        [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Local")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
         private struct WIN32_FIND_DATA
         {
             public static implicit operator FileData(WIN32_FIND_DATA data)
@@ -165,6 +167,7 @@ namespace NetExtender.Utilities.Windows.IO
             return GetEntries(path, regex, recursive, PathType.File);
         }
 
+        [SuppressMessage("ReSharper", "CognitiveComplexity")]
         private static IEnumerable<KeyValuePair<String, WIN32_FIND_DATA>> GetFilesWindowsData(String path, Boolean recursive = false)
         {
             if (String.IsNullOrEmpty(path))
@@ -246,6 +249,7 @@ namespace NetExtender.Utilities.Windows.IO
             return GetEntries(path, new Regex(pattern), recursive, type);
         }
 
+        [SuppressMessage("ReSharper", "CognitiveComplexity")]
         public static IEnumerable<String> GetEntries(String path, Boolean recursive = false, PathType type = PathType.All)
         {
             if (String.IsNullOrEmpty(path))

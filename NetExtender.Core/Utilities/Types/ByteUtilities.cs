@@ -3,30 +3,31 @@
 
 using System;
 using System.Runtime.CompilerServices;
+using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
     public enum InformationSize : UInt64
     {
         Bit = 1,
-        Byte = ByteUtilities.BitInBytes,
+        Byte = ByteUtilities.BitInByte,
         KiloBit = Bit * ByteUtilities.ByteMultiplier,
-        KiloByte = ByteUtilities.BitInBytes * KiloBit,
+        KiloByte = ByteUtilities.BitInByte * KiloBit,
         MegaBit = KiloBit * KiloBit,
-        MegaByte = ByteUtilities.BitInBytes * MegaBit,
+        MegaByte = ByteUtilities.BitInByte * MegaBit,
         GigaBit = MegaBit * KiloBit,
-        GigaByte = ByteUtilities.BitInBytes * GigaBit,
+        GigaByte = ByteUtilities.BitInByte * GigaBit,
         TeraBit = MegaBit * MegaBit,
-        TeraByte = ByteUtilities.BitInBytes * TeraBit,
+        TeraByte = ByteUtilities.BitInByte * TeraBit,
         PetaBit = GigaBit * MegaBit,
-        PetaByte = ByteUtilities.BitInBytes * PetaBit,
+        PetaByte = ByteUtilities.BitInByte * PetaBit,
         ZettaBit = GigaBit * GigaBit,
-        ZettaByte = ByteUtilities.BitInBytes * ZettaBit,
+        ZettaByte = ByteUtilities.BitInByte * ZettaBit,
     }
 
     public static class ByteUtilities
     {
-        public const Int32 BitInBytes = 8;
+        public const Int32 BitInByte = BitUtilities.BitInByte;
         public const Int32 ByteMultiplier = 1024;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -189,7 +190,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ConvertToBit(UInt32 value, InformationSize from)
         {
-            return ConvertToBytes(value, from) * BitInBytes;
+            return ConvertToBytes(value, from) * BitInByte;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -213,7 +214,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ConvertToBit(UInt64 value, InformationSize from)
         {
-            return ConvertToBytes(value, from) * BitInBytes;
+            return ConvertToBytes(value, from) * BitInByte;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -225,7 +226,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double ConvertToBit(Double value, InformationSize from)
         {
-            return ConvertToBytes(value, from) * BitInBytes;
+            return ConvertToBytes(value, from) * BitInByte;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -237,7 +238,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal ConvertToBit(Decimal value, InformationSize from)
         {
-            return ConvertToBytes(value, from) * BitInBytes;
+            return ConvertToBytes(value, from) * BitInByte;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -287,9 +288,9 @@ namespace NetExtender.Utilities.Types
         {
             return from switch
             {
-                InformationSize.Bit => value / BitInBytes,
+                InformationSize.Bit => value / BitInByte,
                 InformationSize.Byte => value,
-                _ => value * ((UInt64) from / BitInBytes)
+                _ => value * ((UInt64) from / BitInByte)
             };
         }
         
@@ -304,9 +305,9 @@ namespace NetExtender.Utilities.Types
         {
             return from switch
             {
-                InformationSize.Bit => value / BitInBytes,
+                InformationSize.Bit => value / BitInByte,
                 InformationSize.Byte => value,
-                _ => value * ((UInt64) from / (Double) BitInBytes)
+                _ => value * ((UInt64) from / (Double) BitInByte)
             };
         }
         
@@ -321,9 +322,9 @@ namespace NetExtender.Utilities.Types
         {
             return from switch
             {
-                InformationSize.Bit => value / BitInBytes,
+                InformationSize.Bit => value / BitInByte,
                 InformationSize.Byte => value,
-                _ => value * ((UInt64) from / (Decimal) BitInBytes)
+                _ => value * ((UInt64) from / (Decimal) BitInByte)
             };
         }
 

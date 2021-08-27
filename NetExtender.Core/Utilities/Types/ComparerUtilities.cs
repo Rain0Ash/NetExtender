@@ -178,50 +178,30 @@ namespace NetExtender.Utilities.Types
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality<T>(this T value, T comparable, IComparer<T> comparer)
+        public static Boolean Equality<T>(this T value, T comparable, IComparer<T>? comparer)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
-            return comparer.Compare(value, comparable) == 0;
+            return (comparer ?? Comparer<T>.Default).Compare(value, comparable) == 0;
         }
         
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality<T>(this T value, T comparable, IComparer<T> comparer, out Int32 compare)
+        public static Boolean Equality<T>(this T value, T comparable, IComparer<T>? comparer, out Int32 compare)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
-            compare = comparer.Compare(value, comparable);
+            compare = (comparer ?? Comparer<T>.Default).Compare(value, comparable);
             return compare == 0;
         }
         
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality<T>(this IComparer<T> comparer, T first, T second)
+        public static Boolean Equality<T>(this IComparer<T>? comparer, T first, T second)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
             return Equality(first, second, comparer);
         }
         
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Equality<T>(this IComparer<T> comparer, T first, T second, out Int32 compare)
+        public static Boolean Equality<T>(this IComparer<T>? comparer, T first, T second, out Int32 compare)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
             return Equality(first, second, comparer, out compare);
         }
         
@@ -251,49 +231,29 @@ namespace NetExtender.Utilities.Types
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean NotEquality<T>(this T value, T comparable, IComparer<T> comparer)
+        public static Boolean NotEquality<T>(this T value, T comparable, IComparer<T>? comparer)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
             return !Equality(value, comparable, comparer);
         }
         
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean NotEquality<T>(this T value, T comparable, IComparer<T> comparer, out Int32 compare)
+        public static Boolean NotEquality<T>(this T value, T comparable, IComparer<T>? comparer, out Int32 compare)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
             return !Equality(value, comparable, comparer, out compare);
         }
         
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean NotEquality<T>(this IComparer<T> comparer, T first, T second)
+        public static Boolean NotEquality<T>(this IComparer<T>? comparer, T first, T second)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
             return NotEquality(first, second, comparer);
         }
         
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean NotEquality<T>(this IComparer<T> comparer, T first, T second, out Int32 compare)
+        public static Boolean NotEquality<T>(this IComparer<T>? comparer, T first, T second, out Int32 compare)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
             return NotEquality(first, second, comparer, out compare);
         }
         
@@ -311,25 +271,15 @@ namespace NetExtender.Utilities.Types
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean More<T>(this T value, T comparable, IComparer<T> comparer)
+        public static Boolean More<T>(this T value, T comparable, IComparer<T>? comparer)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
-            return comparer.Compare(value, comparable) > 0;
+            return (comparer ?? Comparer<T>.Default).Compare(value, comparable) > 0;
         }
         
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean More<T>(this IComparer<T> comparer, T first, T second)
+        public static Boolean More<T>(this IComparer<T>? comparer, T first, T second)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
             return More(first, second, comparer);
         }
         
@@ -347,25 +297,15 @@ namespace NetExtender.Utilities.Types
         
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean MoreEquals<T>(this T value, T comparable, IComparer<T> comparer)
+        public static Boolean MoreEquals<T>(this T value, T comparable, IComparer<T>? comparer)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
-            return comparer.Compare(value, comparable) >= 0;
+            return (comparer ?? Comparer<T>.Default).Compare(value, comparable) >= 0;
         }
         
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean MoreEquals<T>(this IComparer<T> comparer, T first, T second)
+        public static Boolean MoreEquals<T>(this IComparer<T>? comparer, T first, T second)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
             return MoreEquals(first, second, comparer);
         }
         
@@ -383,25 +323,15 @@ namespace NetExtender.Utilities.Types
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Less<T>(this T value, T comparable, IComparer<T> comparer)
+        public static Boolean Less<T>(this T value, T comparable, IComparer<T>? comparer)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
-            return comparer.Compare(value, comparable) < 0;
+            return (comparer ?? Comparer<T>.Default).Compare(value, comparable) < 0;
         }
         
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Less<T>(this IComparer<T> comparer, T first, T second)
+        public static Boolean Less<T>(this IComparer<T>? comparer, T first, T second)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
             return Less(first, second, comparer);
         }
         
@@ -419,37 +349,22 @@ namespace NetExtender.Utilities.Types
         
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean LessEquals<T>(this T value, T comparable, IComparer<T> comparer)
+        public static Boolean LessEquals<T>(this T value, T comparable, IComparer<T>? comparer)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
-            return comparer.Compare(value, comparable) <= 0;
+            return (comparer ?? Comparer<T>.Default).Compare(value, comparable) <= 0;
         }
         
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean LessEquals<T>(this IComparer<T> comparer, T first, T second)
+        public static Boolean LessEquals<T>(this IComparer<T>? comparer, T first, T second)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
             return LessEquals(first, second, comparer);
         }
 
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 Compare<T>(this IComparer<T> comparer, T first, T second, IComparer<T> next)
+        public static Int32 Compare<T>(this IComparer<T>? comparer, T first, T second, IComparer<T> next)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
             if (next is null)
             {
                 throw new ArgumentNullException(nameof(next));
@@ -460,13 +375,8 @@ namespace NetExtender.Utilities.Types
         
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 Compare<T>(this IComparer<T> comparer, T first, T second, Func<T, T, Int32> next)
+        public static Int32 Compare<T>(this IComparer<T>? comparer, T first, T second, Func<T, T, Int32> next)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
             if (next is null)
             {
                 throw new ArgumentNullException(nameof(next));
@@ -497,27 +407,16 @@ namespace NetExtender.Utilities.Types
         /// <param name="comparer">Comparer to use</param>
         /// <returns>The maximum value</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Max<T>(this T first, T second, IComparer<T> comparer)
+        public static T Max<T>(this T first, T second, IComparer<T>? comparer)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
-            comparer ??= Comparer<T>.Default;
-            return comparer.MoreEquals(first, second) ? first : second;
+            return (comparer ?? Comparer<T>.Default).MoreEquals(first, second) ? first : second;
         }
         
         /// <inheritdoc cref="Max{T}(T,T,System.Collections.Generic.IComparer{T})"/>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Max<T>(this IComparer<T> comparer, T first, T second)
+        public static T Max<T>(this IComparer<T>? comparer, T first, T second)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
             return Max(first, second, comparer);
         }
         
@@ -543,27 +442,16 @@ namespace NetExtender.Utilities.Types
         /// <param name="comparer">Comparer to use</param>
         /// <returns>The minimum value</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Min<T>(this T first, T second, IComparer<T> comparer)
+        public static T Min<T>(this T first, T second, IComparer<T>? comparer)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
-            comparer ??= Comparer<T>.Default;
-            return comparer.LessEquals(first, second) ? first : second;
+            return (comparer ?? Comparer<T>.Default).LessEquals(first, second) ? first : second;
         }
         
         /// <inheritdoc cref="Min{T}(T,T,System.Collections.Generic.IComparer{T})"/>
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Min<T>(this IComparer<T> comparer, T first, T second)
+        public static T Min<T>(this IComparer<T>? comparer, T first, T second)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
             return Min(first, second, comparer);
         }
         
@@ -594,32 +482,22 @@ namespace NetExtender.Utilities.Types
         /// <param name="comparer">Comparer used to compare the values (defaults to GenericComparer)"</param>
         /// <returns>True if it is between the values, false otherwise</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Between<T>(this T value, T min, T max, IComparer<T> comparer)
+        public static Boolean Between<T>(this T value, T min, T max, IComparer<T>? comparer)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
             comparer ??= Comparer<T>.Default;
             return comparer.MoreEquals(max, value) && comparer.LessEquals(min, value);
         }
         
         /// <inheritdoc cref="Between{T}(T,T,T,System.Collections.Generic.IComparer{T})"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Between<T>(this IComparer<T> comparer, T value, T min, T max)
+        public static Boolean Between<T>(this IComparer<T>? comparer, T value, T min, T max)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
             return Between(value, min, max, comparer);
         }
         
-        /// <inheritdoc cref="Clamp{T}(T,T,T,System.Collections.Generic.IComparer{T})"/>
+        /// <inheritdoc cref="CompareClamp{T}(T,T,T,System.Collections.Generic.IComparer{T})"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Clamp<T>(this T value, T min, T max) where T : IComparable<T>
+        public static T CompareClamp<T>(this T value, T min, T max) where T : IComparable<T>
         {
             if (value is null)
             {
@@ -644,13 +522,8 @@ namespace NetExtender.Utilities.Types
         /// <param name="comparer">Comparer to use (defaults to GenericComparer)</param>
         /// <returns>The value set between Min and Max</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Clamp<T>(this T value, T min, T max, IComparer<T> comparer)
+        public static T CompareClamp<T>(this T value, T min, T max, IComparer<T>? comparer)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
             comparer ??= Comparer<T>.Default;
             
             if (comparer.MoreEquals(value, max))
@@ -661,16 +534,11 @@ namespace NetExtender.Utilities.Types
             return comparer.Less(value, min) ? min : value;
         }
         
-        /// <inheritdoc cref="Clamp{T}(T,T,T,System.Collections.Generic.IComparer{T})"/>
+        /// <inheritdoc cref="CompareClamp{T}(T,T,T,System.Collections.Generic.IComparer{T})"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Clamp<T>(this IComparer<T> comparer, T value, T min, T max)
+        public static T CompareClamp<T>(this IComparer<T>? comparer, T value, T min, T max)
         {
-            if (comparer is null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
-
-            return Clamp(value, min, max, comparer);
+            return CompareClamp(value, min, max, comparer);
         }
     }
 }

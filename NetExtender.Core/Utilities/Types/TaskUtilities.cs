@@ -2823,6 +2823,39 @@ namespace NetExtender.Utilities.Types
                 action?.Invoke(exception);
             }
         }
+        
+        public static void FireAndForget(this Task task)
+        {
+            if (task is null)
+            {
+                throw new ArgumentNullException(nameof(task));
+            }
+
+            task.ContinueWith(continuation => continuation.Exception, TaskContinuationOptions.OnlyOnFaulted);
+        }
+
+        public static void FireAndForget(this Task task, Action<Exception> handler)
+        {
+            if (task is null)
+            {
+                throw new ArgumentNullException(nameof(task));
+            }
+
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            void Handle(Task continuation)
+            {
+                if (continuation.Exception is not null)
+                {
+                    handler.Invoke(continuation.Exception);
+                }
+            }
+
+            task.ContinueWith(Handle, TaskContinuationOptions.OnlyOnFaulted);
+        }
 
         public static Task<T>[] InitializeTasks<T>(this IEnumerable<Task<T>> source)
         {
@@ -2840,6 +2873,7 @@ namespace NetExtender.Utilities.Types
         }
         
 #if AWAIT_AS_IN_JAVASCRIPT
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ValueTaskAwaiter<T> GetAwaiter<T>(this T value)
         {
             return ValueTask.FromResult(value).GetAwaiter();

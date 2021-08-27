@@ -7,345 +7,11 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NetExtender.Utilities.Static;
 
-namespace NetExtender.Utilities.Types
+namespace NetExtender.Utilities.Numerics
 {
-    public static class BitUtilities
+    public static partial class BitUtilities
     {
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static SByte RotateLeft(this SByte value, Int32 offset)
-        {
-            const Int32 size = sizeof(SByte) * 8;
-
-            unchecked
-            {
-                switch (offset)
-                {
-                    case 0:
-                        return value;
-                    case < 0:
-                        offset = -offset % size;
-                        return (SByte) ((value >> offset) | (value << (size - offset)));
-                    default:
-                        offset %= size;
-                        return (SByte) ((value << offset) | (value >> (size - offset)));
-                }
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Byte RotateLeft(this Byte value, Int32 offset)
-        {
-            const Int32 size = sizeof(Byte) * 8;
-
-            unchecked
-            {
-                switch (offset)
-                {
-                    case 0:
-                        return value;
-                    case < 0:
-                        offset = -offset % size;
-                        return (Byte) ((value >> offset) | (value << (size - offset)));
-                    default:
-                        offset %= size;
-                        return (Byte) ((value << offset) | (value >> (size - offset)));
-                }
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int16 RotateLeft(this Int16 value, Int32 offset)
-        {
-            const Int32 size = sizeof(Int16) * 8;
-
-            unchecked
-            {
-                switch (offset)
-                {
-                    case 0:
-                        return value;
-                    case < 0:
-                        offset = -offset % size;
-                        return (Int16) ((value >> offset) | (value << (size - offset)));
-                    default:
-                        offset %= size;
-                        return (Int16) ((value << offset) | (value >> (size - offset)));
-                }
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UInt16 RotateLeft(this UInt16 value, Int32 offset)
-        {
-            const Int32 size = sizeof(UInt16) * 8;
-
-            unchecked
-            {
-                switch (offset)
-                {
-                    case 0:
-                        return value;
-                    case < 0:
-                        offset = -offset % size;
-                        return (UInt16) ((value >> offset) | (value << (size - offset)));
-                    default:
-                        offset %= size;
-                        return (UInt16) ((value << offset) | (value >> (size - offset)));
-                }
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 RotateLeft(this Int32 value, Int32 offset)
-        {
-            const Int32 size = sizeof(Int32) * 8;
-
-            unchecked
-            {
-                switch (offset)
-                {
-                    case 0:
-                        return value;
-                    case < 0:
-                        offset = -offset % size;
-                        return (value >> offset) | (value << (size - offset));
-                    default:
-                        offset %= size;
-                        return (value << offset) | (value >> (size - offset));
-                }
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UInt32 RotateLeft(this UInt32 value, Int32 offset)
-        {
-            const Int32 size = sizeof(UInt32) * 8;
-
-            unchecked
-            {
-                switch (offset)
-                {
-                    case 0:
-                        return value;
-                    case < 0:
-                        offset = -offset % size;
-                        return (value >> offset) | (value << (size - offset));
-                    default:
-                        offset %= size;
-                        return (value << offset) | (value >> (size - offset));
-                }
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int64 RotateLeft(this Int64 value, Int32 offset)
-        {
-            const Int32 size = sizeof(UInt64) * 8;
-
-            unchecked
-            {
-                switch (offset)
-                {
-                    case 0:
-                        return value;
-                    case < 0:
-                        offset = -offset % size;
-                        return (value >> offset) | (value << (size - offset));
-                    default:
-                        offset %= size;
-                        return (value << offset) | (value >> (size - offset));
-                }
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UInt64 RotateLeft(this UInt64 value, Int32 offset)
-        {
-            const Int32 size = sizeof(UInt64) * 8;
-
-            unchecked
-            {
-                switch (offset)
-                {
-                    case 0:
-                        return value;
-                    case < 0:
-                        offset = -offset % size;
-                        return (value >> offset) | (value << (size - offset));
-                    default:
-                        offset %= size;
-                        return (value << offset) | (value >> (size - offset));
-                }
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static SByte RotateRight(this SByte value, Int32 offset)
-        {
-            const Int32 size = sizeof(SByte) * 8;
-
-            unchecked
-            {
-                switch (offset)
-                {
-                    case 0:
-                        return value;
-                    case < 0:
-                        offset = -offset % size;
-                        return (SByte) ((value << offset) | (value >> (size - offset)));
-                    default:
-                        offset %= size;
-                        return (SByte) ((value >> offset) | (value << (size - offset)));
-                }
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Byte RotateRight(this Byte value, Int32 offset)
-        {
-            const Int32 size = sizeof(Byte) * 8;
-
-            unchecked
-            {
-                switch (offset)
-                {
-                    case 0:
-                        return value;
-                    case < 0:
-                        offset = -offset % size;
-                        return (Byte) ((value << offset) | (value >> (size - offset)));
-                    default:
-                        offset %= size;
-                        return (Byte) ((value >> offset) | (value << (size - offset)));
-                }
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int16 RotateRight(this Int16 value, Int32 offset)
-        {
-            const Int32 size = sizeof(Int16) * 8;
-
-            unchecked
-            {
-                switch (offset)
-                {
-                    case 0:
-                        return value;
-                    case < 0:
-                        offset = -offset % size;
-                        return (Int16) ((value << offset) | (value >> (size - offset)));
-                    default:
-                        offset %= size;
-                        return (Int16) ((value >> offset) | (value << (size - offset)));
-                }
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UInt16 RotateRight(this UInt16 value, Int32 offset)
-        {
-            const Int32 size = sizeof(UInt16) * 8;
-
-            unchecked
-            {
-                switch (offset)
-                {
-                    case 0:
-                        return value;
-                    case < 0:
-                        offset = -offset % size;
-                        return (UInt16) ((value << offset) | (value >> (size - offset)));
-                    default:
-                        offset %= size;
-                        return (UInt16) ((value >> offset) | (value << (size - offset)));
-                }
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 RotateRight(this Int32 value, Int32 offset)
-        {
-            const Int32 size = sizeof(Int32) * 8;
-
-            unchecked
-            {
-                switch (offset)
-                {
-                    case 0:
-                        return value;
-                    case < 0:
-                        offset = -offset % size;
-                        return (value << offset) | (value >> (size - offset));
-                    default:
-                        offset %= size;
-                        return (value >> offset) | (value << (size - offset));
-                }
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UInt32 RotateRight(this UInt32 value, Int32 offset)
-        {
-            const Int32 size = sizeof(UInt32) * 8;
-
-            unchecked
-            {
-                switch (offset)
-                {
-                    case 0:
-                        return value;
-                    case < 0:
-                        offset = -offset % size;
-                        return (value << offset) | (value >> (size - offset));
-                    default:
-                        offset %= size;
-                        return (value >> offset) | (value << (size - offset));
-                }
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int64 RotateRight(this Int64 value, Int32 offset)
-        {
-            const Int32 size = sizeof(Int64) * 8;
-
-            unchecked
-            {
-                switch (offset)
-                {
-                    case 0:
-                        return value;
-                    case < 0:
-                        offset = -offset % size;
-                        return (value << offset) | (value >> (size - offset));
-                    default:
-                        offset %= size;
-                        return (value >> offset) | (value << (size - offset));
-                }
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static UInt64 RotateRight(this UInt64 value, Int32 offset)
-        {
-            const Int32 size = sizeof(UInt64) * 8;
-
-            unchecked
-            {
-                switch (offset)
-                {
-                    case 0:
-                        return value;
-                    case < 0:
-                        offset = -offset % size;
-                        return (value << offset) | (value >> (size - offset));
-                    default:
-                        offset %= size;
-                        return (value >> offset) | (value << (size - offset));
-                }
-            }
-        }
+        public const Int32 BitInByte = 8;
 
         public static Int16 ToInt16(SByte high, SByte low)
         {
@@ -359,13 +25,13 @@ namespace NetExtender.Utilities.Types
         {
             unchecked
             {
-                return (Int16) (high << (sizeof(SByte) * 8) | low);
+                return (Int16) (high << (sizeof(SByte) * BitInByte) | low);
             }
         }
 
         public static UInt16 ToUInt16(Byte high, Byte low)
         {
-            return (UInt16) ((high << (sizeof(Byte) * 8)) | low);
+            return (UInt16) ((high << (sizeof(Byte) * BitInByte)) | low);
         }
 
         public static Int32 ToInt32(Int16 high, Int16 low)
@@ -378,12 +44,12 @@ namespace NetExtender.Utilities.Types
 
         public static Int32 ToInt32(Int16 high, UInt16 low)
         {
-            return high << (sizeof(Int16) * 8) | low;
+            return high << (sizeof(Int16) * BitInByte) | low;
         }
 
         public static UInt32 ToUInt32(UInt16 high, UInt16 low)
         {
-            return ((UInt32) high << (sizeof(UInt16) * 8)) | low;
+            return ((UInt32) high << (sizeof(UInt16) * BitInByte)) | low;
         }
 
         public static Int64 ToInt64(Int32 high, Int32 low)
@@ -396,206 +62,56 @@ namespace NetExtender.Utilities.Types
 
         public static Int64 ToInt64(Int32 high, UInt32 low)
         {
-            return (Int64) high << (sizeof(Int32) * 8) | low;
+            return (Int64) high << (sizeof(Int32) * BitInByte) | low;
         }
 
         public static UInt64 ToUInt64(UInt32 high, UInt32 low)
         {
-            return ((UInt64) high << (sizeof(UInt32) * 8)) | low;
-        }
-
-        public static SByte High(this Int16 value)
-        {
-            unchecked
-            {
-                return (SByte) (value >> sizeof(SByte) * 8);
-            }
-        }
-
-        public static SByte Low(this Int16 value)
-        {
-            unchecked
-            {
-                return (SByte) (value & SByte.MinValue);
-            }
-        }
-
-        public static Byte High(this UInt16 value)
-        {
-            unchecked
-            {
-                return (Byte) (value >> sizeof(Byte) * 8);
-            }
-        }
-
-        public static Byte Low(this UInt16 value)
-        {
-            unchecked
-            {
-                return (Byte) (value & Byte.MaxValue);
-            }
-        }
-
-        public static Int16 High(this Int32 value)
-        {
-            unchecked
-            {
-                return (Int16) (value >> sizeof(Int16) * 8);
-            }
-        }
-
-        public static Int16 Low(this Int32 value)
-        {
-            unchecked
-            {
-                return (Int16) (value & Int16.MinValue);
-            }
-        }
-
-        public static UInt16 High(this UInt32 value)
-        {
-            unchecked
-            {
-                return (UInt16) (value >> sizeof(UInt16) * 8);
-            }
-        }
-
-        public static UInt16 Low(this UInt32 value)
-        {
-            unchecked
-            {
-                return (UInt16) (value & UInt16.MaxValue);
-            }
-        }
-
-        public static Int32 High(this Int64 value)
-        {
-            unchecked
-            {
-                return (Int32) (value >> sizeof(Int32) * 8);
-            }
-        }
-
-        public static Int32 Low(this Int64 value)
-        {
-            unchecked
-            {
-                return (Int32) (value & Int32.MinValue);
-            }
-        }
-
-        public static UInt32 High(this UInt64 value)
-        {
-            unchecked
-            {
-                return (UInt32) (value >> sizeof(UInt32) * 8);
-            }
-        }
-
-        public static UInt32 Low(this UInt64 value)
-        {
-            unchecked
-            {
-                return (UInt32) (value & UInt32.MaxValue);
-            }
+            return ((UInt64) high << (sizeof(UInt32) * BitInByte)) | low;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 PopCount(this SByte value)
+        public static unsafe Int32 BitwisePopCount(this Single value)
         {
-            unchecked
-            {
-                return PopCount((UInt32) value);
-            }
+            return BitOperations.PopCount(Unsafe.Read<UInt32>(&value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 PopCount(this Byte value)
-        {
-            return BitOperations.PopCount(value);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 PopCount(this Int16 value)
-        {
-            unchecked
-            {
-                return PopCount((UInt32) value);
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 PopCount(this UInt16 value)
-        {
-            return BitOperations.PopCount(value);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 PopCount(this Int32 value)
-        {
-            unchecked
-            {
-                return PopCount((UInt32) value);
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 PopCount(this UInt32 value)
-        {
-            return BitOperations.PopCount(value);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 PopCount(this Int64 value)
-        {
-            unchecked
-            {
-                return PopCount((UInt64) value);
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 PopCount(this UInt64 value)
-        {
-            return BitOperations.PopCount(value);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe Int32 PopCount(this Single value)
-        {
-            return PopCount(Unsafe.Read<UInt32>(&value));
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe Int32 PopCount(this Double value)
+        public static unsafe Int32 BitwisePopCount(this Double value)
         {
             return BitOperations.PopCount(Unsafe.Read<UInt64>(&value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-        public static unsafe Int32 PopCount(this Decimal value)
+        public static unsafe Int32 BitwisePopCount(this Decimal value)
         {
             void* pointer = &value;
             return BitOperations.PopCount(Unsafe.Read<UInt64>(pointer)) + BitOperations.PopCount(Unsafe.Read<UInt64>(UnsafeUtilities.Add(pointer, sizeof(UInt64))));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe Int32 PopCount<T>(this T value) where T : unmanaged
+        public static unsafe Int32 BitwisePopCount<T>(this T value) where T : unmanaged
         {
-            return PopCount(&value, sizeof(T));
+            return BitwisePopCount(&value, sizeof(T));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe Int32 PopCount<T>(in T value) where T : unmanaged
+        public static unsafe Int32 BitwisePopCount<T>(in T value) where T : unmanaged
         {
             fixed (T* pointer = &value)
             {
-                return PopCount(pointer, sizeof(T));
+                return BitwisePopCount(pointer, sizeof(T));
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe Int32 BitwisePopCount(void* pointer, Int32 length)
+        {
+            return length > 0 ? (Int32) BitwisePopCount(pointer, (UInt32) length) : 0;
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public static unsafe Int32 PopCount(void* pointer, Int32 length)
+        public static unsafe UInt32 BitwisePopCount(void* pointer, UInt32 length)
         {
             if (length <= 0)
             {
@@ -604,33 +120,59 @@ namespace NetExtender.Utilities.Types
 
             unchecked
             {
-                Int32 count = 0;
-                Int32 position = 0;
+                UInt32 count = 0;
+                UInt32 position = 0;
 
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                static T Read<T>(void* pointer, UInt32 position) where T : unmanaged
+                {
+                    return Unsafe.Read<T>(UnsafeUtilities.Add(pointer, position));
+                }
+                
                 while (position < length)
                 {
                     switch (length - position)
                     {
-                        case >= sizeof(UInt64):
-                            count += BitOperations.PopCount(Unsafe.Read<UInt64>((void*) ((UIntPtr) pointer + position)));
+                        case > sizeof(UInt64):
+                            count += (UInt32) BitOperations.PopCount(Read<UInt64>(pointer, position));
                             position += sizeof(UInt64);
 
                             break;
-                        case >= sizeof(UInt32):
-                            count += BitOperations.PopCount(Unsafe.Read<UInt32>((void*) ((UIntPtr) pointer + position)));
+                        
+                        case sizeof(UInt64):
+                            return count + (UInt32) BitOperations.PopCount(Read<UInt64>(pointer, position));
+                        
+                        case sizeof(UInt32) + sizeof(UInt16) + sizeof(Byte):
+                            count += (UInt32) BitOperations.PopCount(Read<UInt32>(pointer, position));
                             position += sizeof(UInt32);
-
-                            break;
-                        case >= sizeof(UInt16):
-                            count += BitOperations.PopCount(Unsafe.Read<UInt16>((void*) ((UIntPtr) pointer + position)));
+                            goto case sizeof(UInt16) + sizeof(Byte);
+                            
+                        case sizeof(UInt32) + sizeof(UInt16):
+                            count += (UInt32) BitOperations.PopCount(Read<UInt32>(pointer, position));
+                            position += sizeof(UInt32);
+                            goto case sizeof(UInt16);
+                            
+                        case sizeof(UInt32) + sizeof(Byte):
+                            count += (UInt32) BitOperations.PopCount(Read<UInt32>(pointer, position));
+                            position += sizeof(UInt32);
+                            goto case sizeof(Byte);
+                            
+                        case sizeof(UInt32):
+                            return count + (UInt32) BitOperations.PopCount(Read<UInt32>(pointer, position));
+                        
+                        case sizeof(UInt16) + sizeof(Byte):
+                            count += (UInt32) BitOperations.PopCount(Read<UInt16>(pointer, position));
                             position += sizeof(UInt16);
-
-                            break;
-                        case >= sizeof(Byte):
-                            count += BitOperations.PopCount(Unsafe.Read<Byte>((void*) ((UIntPtr) pointer + position)));
-                            position += sizeof(Byte);
-
-                            break;
+                            goto case sizeof(Byte);
+                            
+                        case sizeof(UInt16):
+                            return count + (UInt32) BitOperations.PopCount(Read<UInt16>(pointer, position));
+                        
+                        case sizeof(Byte):
+                            return count + (UInt32) BitOperations.PopCount(Read<Byte>(pointer, position));
+                        
+                        default:
+                            return count;
                     }
                 }
 
@@ -667,7 +209,7 @@ namespace NetExtender.Utilities.Types
 
             unchecked
             {
-                for (Int32 i = 0; i < sizeof(T); i++)
+                for (UInt32 i = 0; i < sizeof(T); i++)
                 {
                     if (pf[i] != ps[i])
                     {
@@ -679,8 +221,14 @@ namespace NetExtender.Utilities.Types
             return true;
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe Boolean BitwiseEquals(void* source, void* pointer, Int32 length)
+        {
+            return length <= 0 || BitwiseEquals(source, pointer, (UInt32) length);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static unsafe Boolean BitwiseEquals(void* source, void* pointer, UInt32 length)
         {
             if (length <= 0)
             {
@@ -692,7 +240,7 @@ namespace NetExtender.Utilities.Types
 
             unchecked
             {
-                for (Int32 i = 0; i < length; i++)
+                for (UInt32 i = 0; i < length; i++)
                 {
                     if (ps[i] != pp[i])
                     {
@@ -760,8 +308,19 @@ namespace NetExtender.Utilities.Types
             return MemoryMarshal.Read<T>(alloc);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void BitwiseNot(void* source, Int32 length)
+        {
+            if (length <= 0)
+            {
+                return;
+            }
+
+            BitwiseNot(source, (UInt32) length);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static unsafe void BitwiseNot(void* source, UInt32 length)
         {
             if (length <= 0)
             {
@@ -772,7 +331,7 @@ namespace NetExtender.Utilities.Types
 
             unchecked
             {
-                for (Int32 i = 0; i < length; i++)
+                for (UInt32 i = 0; i < length; i++)
                 {
                     pointer[i] = (Byte) (~pointer[i]);
                 }
@@ -836,8 +395,19 @@ namespace NetExtender.Utilities.Types
             return MemoryMarshal.Read<T>(alloc);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void BitwiseAnd(void* source, void* pointer, Int32 length)
+        {
+            if (length <= 0)
+            {
+                return;
+            }
+
+            BitwiseAnd(source, pointer, (UInt32) length);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static unsafe void BitwiseAnd(void* source, void* pointer, UInt32 length)
         {
             if (length <= 0)
             {
@@ -849,7 +419,7 @@ namespace NetExtender.Utilities.Types
 
             unchecked
             {
-                for (Int32 i = 0; i < length; i++)
+                for (UInt32 i = 0; i < length; i++)
                 {
                     ps[i] = (Byte) (ps[i] & pp[i]);
                 }
@@ -914,8 +484,19 @@ namespace NetExtender.Utilities.Types
             return MemoryMarshal.Read<T>(alloc);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void BitwiseOr(void* source, void* pointer, Int32 length)
+        {
+            if (length <= 0)
+            {
+                return;
+            }
+
+            BitwiseOr(source, pointer, (UInt32) length);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static unsafe void BitwiseOr(void* source, void* pointer, UInt32 length)
         {
             if (length <= 0)
             {
@@ -927,7 +508,7 @@ namespace NetExtender.Utilities.Types
 
             unchecked
             {
-                for (Int32 i = 0; i < length; i++)
+                for (UInt32 i = 0; i < length; i++)
                 {
                     ps[i] = (Byte) (ps[i] | pp[i]);
                 }
@@ -992,8 +573,19 @@ namespace NetExtender.Utilities.Types
             return MemoryMarshal.Read<T>(alloc);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void BitwiseXor(void* source, void* pointer, Int32 length)
+        {
+            if (length <= 0)
+            {
+                return;
+            }
+
+            BitwiseXor(source, pointer, (UInt32) length);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static unsafe void BitwiseXor(void* source, void* pointer, UInt32 length)
         {
             if (length <= 0)
             {
@@ -1005,7 +597,7 @@ namespace NetExtender.Utilities.Types
 
             unchecked
             {
-                for (Int32 i = 0; i < length; i++)
+                for (UInt32 i = 0; i < length; i++)
                 {
                     ps[i] = (Byte) (ps[i] ^ pp[i]);
                 }
@@ -1064,8 +656,19 @@ namespace NetExtender.Utilities.Types
             return MemoryMarshal.Read<T>(alloc);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void BitwiseShiftLeft(void* source, Int32 length, Int32 shift)
+        {
+            if (length <= 0)
+            {
+                return;
+            }
+
+            BitwiseShiftLeft(source, (UInt32) length, shift);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static unsafe void BitwiseShiftLeft(void* source, UInt32 length, Int32 shift)
         {
             if (length <= 0 || shift == 0)
             {
@@ -1078,7 +681,7 @@ namespace NetExtender.Utilities.Types
                 return;
             }
 
-            if (shift >= length * 8)
+            if ((UInt64) shift >= (UInt64) length * BitInByte)
             {
                 UnsafeUtilities.Fill(source, length);
                 return;
@@ -1088,12 +691,12 @@ namespace NetExtender.Utilities.Types
             {
                 Byte* pointer = (Byte*) source;
 
-                Int32 offset = Math.DivRem(shift, 8, out shift);
+                Int64 offset = Math.DivRem(shift, BitInByte, out shift);
                 Byte carry = (Byte) ((1 << shift) - 1);
 
-                for (Int32 i = 0; i < length; i++)
+                for (Int64 i = 0; i < length; i++)
                 {
-                    Int32 position = i + offset;
+                    Int64 position = i + offset;
                     if (position >= length)
                     {
                         pointer[i] = Byte.MinValue;
@@ -1101,7 +704,7 @@ namespace NetExtender.Utilities.Types
                     }
 
                     pointer[i] = position + 1 < length
-                        ? (Byte) ((Byte) (pointer[position] << shift) | (Byte) (pointer[position + 1] >> (8 - shift) & carry))
+                        ? (Byte) ((Byte) (pointer[position] << shift) | (Byte) (pointer[position + 1] >> (BitInByte - shift) & carry))
                         : (Byte) (pointer[position] << shift);
                 }
             }
@@ -1158,8 +761,19 @@ namespace NetExtender.Utilities.Types
             return MemoryMarshal.Read<T>(alloc);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void BitwiseShiftRight(void* source, Int32 length, Int32 shift)
+        {
+            if (length <= 0)
+            {
+                return;
+            }
+
+            BitwiseShiftRight(source, (UInt32) length, shift);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static unsafe void BitwiseShiftRight(void* source, UInt32 length, Int32 shift)
         {
             if (length <= 0 || shift == 0)
             {
@@ -1172,7 +786,7 @@ namespace NetExtender.Utilities.Types
                 return;
             }
 
-            if (shift >= length * 8)
+            if ((UInt64) shift >= (UInt64) length * BitInByte)
             {
                 UnsafeUtilities.Fill(source, length);
                 return;
@@ -1182,12 +796,12 @@ namespace NetExtender.Utilities.Types
             {
                 Byte* pointer = (Byte*) source;
 
-                Int32 offset = Math.DivRem(shift, 8, out shift);
-                Byte carry = (Byte) (0xFF << (8 - shift));
+                Int64 offset = Math.DivRem(shift, BitInByte, out shift);
+                Byte carry = (Byte) (0xFF << (BitInByte - shift));
 
-                for (Int32 i = length - 1; i >= 0; i--)
+                for (Int64 i = length - 1; i >= 0; i--)
                 {
-                    Int32 position = i - offset;
+                    Int64 position = i - offset;
                     if (position < 0)
                     {
                         pointer[i] = Byte.MinValue;
@@ -1195,7 +809,7 @@ namespace NetExtender.Utilities.Types
                     }
 
                     pointer[i] = position - 1 >= 0
-                        ? (Byte) ((Byte) ((0xff & pointer[position]) >> shift) | (Byte) (pointer[position - 1] << (8 - shift) & carry))
+                        ? (Byte) ((Byte) ((0xff & pointer[position]) >> shift) | (Byte) (pointer[position - 1] << (BitInByte - shift) & carry))
                         : (Byte) ((0xff & pointer[position]) >> shift);
                 }
             }
@@ -1215,5 +829,7 @@ namespace NetExtender.Utilities.Types
                 return BitwiseShiftRight<T>((Byte*) pointer, shift);
             }
         }
+        
+        //TODO: bitwise rotate
     }
 }

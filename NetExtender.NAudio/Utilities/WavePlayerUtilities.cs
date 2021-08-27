@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using NAudio.Wave;
-using NetExtender.Core.Types.Multithreading;
+using NetExtender.Types.Multithreading;
 using NetExtender.NAudio.Types.Streams;
 
 namespace NetExtender.Utilities.NAudio

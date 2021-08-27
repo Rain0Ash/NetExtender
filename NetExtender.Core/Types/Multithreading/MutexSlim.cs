@@ -4,7 +4,7 @@
 using System;
 using System.Threading;
 
-namespace NetExtender.Core.Types.Multithreading
+namespace NetExtender.Types.Multithreading
 {
     public class MutexSlim : SemaphoreSlim
     {

@@ -15,7 +15,7 @@ namespace NetExtender.IO.FileSystem.Lock
 
         public String Name { get; }
 
-        private String Path { get; set; }
+        public String Path { get; }
         
         public FileLock(String name, TimeSpan timeout)
         {
@@ -50,16 +50,16 @@ namespace NetExtender.IO.FileSystem.Lock
                 return AcquireLock();
             }
             
-            DateTime writeTime = new DateTime(content.Timestamp);
+            DateTime timestamp = new DateTime(content.Timestamp);
 
             //This lock belongs to this process - we can reacquire the lock
-            if (content.PID == Process.GetCurrentProcess().Id)
+            if (content.PID == Environment.ProcessId)
             {
                 return AcquireLock();
             }
 
             //The lock has not timed out - we can't acquire it
-            return Math.Abs((DateTime.Now - writeTime).TotalSeconds) > Timeout.TotalSeconds && AcquireLock();
+            return Math.Abs((DateTime.Now - timestamp).TotalSeconds) > Timeout.TotalSeconds && AcquireLock();
         }
 
 

@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
- using NetExtender.Utilities.Types;
+using NetExtender.Utilities.Numerics;
 
- namespace NetExtender.Crypto.Hashes.XXHash
+namespace NetExtender.Crypto.Hashes.XXHash
 {
     public static partial class XXHash64
     {
@@ -39,55 +39,55 @@ using System.Runtime.CompilerServices;
                     do
                     {
                         v1 += *(UInt64*) ptr * P2;
-                        v1 = BitUtilities.RotateLeft(v1, 31); // rotl 31
+                        v1 = v1.BitwiseRotateLeft(31); // rotl 31
                         v1 *= P1;
                         ptr += 8;
 
                         v2 += *(UInt64*) ptr * P2;
-                        v2 = BitUtilities.RotateLeft(v2, 31); // rotl 31
+                        v2 = v2.BitwiseRotateLeft(31); // rotl 31
                         v2 *= P1;
                         ptr += 8;
 
                         v3 += *(UInt64*) ptr * P2;
-                        v3 = BitUtilities.RotateLeft(v3, 31); // rotl 31
+                        v3 = v3.BitwiseRotateLeft(31); // rotl 31
                         v3 *= P1;
                         ptr += 8;
 
                         v4 += *(UInt64*) ptr * P2;
-                        v4 = BitUtilities.RotateLeft(v4, 31); // rotl 31
+                        v4 = v4.BitwiseRotateLeft(31); // rotl 31
                         v4 *= P1;
                         ptr += 8;
                     } while (ptr <= limit);
 
-                    h64 = BitUtilities.RotateLeft(v1, 1) + // rotl 1
-                          BitUtilities.RotateLeft(v2, 7) + // rotl 7
-                          BitUtilities.RotateLeft(v3, 12) + // rotl 12
-                          BitUtilities.RotateLeft(v4, 18); // rotl 18
+                    h64 = v1.BitwiseRotateLeft(1) + // rotl 1
+                          v2.BitwiseRotateLeft(7) + // rotl 7
+                          v3.BitwiseRotateLeft(12) + // rotl 12
+                          v4.BitwiseRotateLeft(18); // rotl 18
 
                     // merge round
                     v1 *= P2;
-                    v1 = BitUtilities.RotateLeft(v1, 31); // rotl 31
+                    v1 = v1.BitwiseRotateLeft(31); // rotl 31
                     v1 *= P1;
                     h64 ^= v1;
                     h64 = h64 * P1 + P4;
 
                     // merge round
                     v2 *= P2;
-                    v2 = BitUtilities.RotateLeft(v2, 31); // rotl 31
+                    v2 = v2.BitwiseRotateLeft(31); // rotl 31
                     v2 *= P1;
                     h64 ^= v2;
                     h64 = h64 * P1 + P4;
 
                     // merge round
                     v3 *= P2;
-                    v3 = BitUtilities.RotateLeft(v3, 31); // rotl 31
+                    v3 = v3.BitwiseRotateLeft(31); // rotl 31
                     v3 *= P1;
                     h64 ^= v3;
                     h64 = h64 * P1 + P4;
 
                     // merge round
                     v4 *= P2;
-                    v4 = BitUtilities.RotateLeft(v4, 31); // rotl 31
+                    v4 = v4.BitwiseRotateLeft(31); // rotl 31
                     v4 *= P1;
                     h64 ^= v4;
                     h64 = h64 * P1 + P4;
@@ -103,24 +103,24 @@ using System.Runtime.CompilerServices;
                 while (ptr <= end - 8)
                 {
                     UInt64 t1 = *(UInt64*) ptr * P2;
-                    t1 = BitUtilities.RotateLeft(t1, 31); // rotl 31
+                    t1 = t1.BitwiseRotateLeft(31); // rotl 31
                     t1 *= P1;
                     h64 ^= t1;
-                    h64 = BitUtilities.RotateLeft(h64, 27) * P1 + P4; // (rotl 27) * p1 + p4
+                    h64 = h64.BitwiseRotateLeft(27) * P1 + P4; // (rotl 27) * p1 + p4
                     ptr += 8;
                 }
 
                 if (ptr <= end - 4)
                 {
                     h64 ^= *(UInt32*) ptr * P1;
-                    h64 = BitUtilities.RotateLeft(h64, 23) * P2 + P3; // (rotl 23) * p2 + p3
+                    h64 = h64.BitwiseRotateLeft(23) * P2 + P3; // (rotl 23) * p2 + p3
                     ptr += 4;
                 }
 
                 while (ptr < end)
                 {
                     h64 ^= *ptr * P5;
-                    h64 = BitUtilities.RotateLeft(h64, 11) * P1; // (rotl 11) * p1
+                    h64 = h64.BitwiseRotateLeft(11) * P1; // (rotl 11) * p1
                     ptr += 1;
                 }
 
@@ -157,22 +157,22 @@ using System.Runtime.CompilerServices;
                     do
                     {
                         v1 += *(UInt64*) ptr * P2;
-                        v1 = BitUtilities.RotateLeft(v1, 31); // rotl 31
+                        v1 = v1.BitwiseRotateLeft(31); // rotl 31
                         v1 *= P1;
                         ptr += 8;
 
                         v2 += *(UInt64*) ptr * P2;
-                        v2 = BitUtilities.RotateLeft(v2, 31); // rotl 31
+                        v2 = v2.BitwiseRotateLeft(31); // rotl 31
                         v2 *= P1;
                         ptr += 8;
 
                         v3 += *(UInt64*) ptr * P2;
-                        v3 = BitUtilities.RotateLeft(v3, 31); // rotl 31
+                        v3 = v3.BitwiseRotateLeft(31); // rotl 31
                         v3 *= P1;
                         ptr += 8;
 
                         v4 += *(UInt64*) ptr * P2;
-                        v4 = BitUtilities.RotateLeft(v4, 31); // rotl 31
+                        v4 = v4.BitwiseRotateLeft(31); // rotl 31
                         v4 *= P1;
                         ptr += 8;
                     } while (ptr < limit);
@@ -205,35 +205,35 @@ using System.Runtime.CompilerServices;
 
                     if (length >= 32)
                     {
-                        h64 = BitUtilities.RotateLeft(v1, 1) + // rotl 1
-                              BitUtilities.RotateLeft(v2, 7) + // rotl 7
-                              BitUtilities.RotateLeft(v3, 12) + // rotl 12
-                              BitUtilities.RotateLeft(v4, 18); // rotl 18
+                        h64 = v1.BitwiseRotateLeft(1) + // rotl 1
+                              v2.BitwiseRotateLeft(7) + // rotl 7
+                              v3.BitwiseRotateLeft(12) + // rotl 12
+                              v4.BitwiseRotateLeft(18); // rotl 18
 
                         // merge round
                         v1 *= P2;
-                        v1 = BitUtilities.RotateLeft(v1, 31); // rotl 31
+                        v1 = v1.BitwiseRotateLeft(31); // rotl 31
                         v1 *= P1;
                         h64 ^= v1;
                         h64 = h64 * P1 + P4;
 
                         // merge round
                         v2 *= P2;
-                        v2 = BitUtilities.RotateLeft(v2, 31); // rotl 31
+                        v2 = v2.BitwiseRotateLeft(31); // rotl 31
                         v2 *= P1;
                         h64 ^= v2;
                         h64 = h64 * P1 + P4;
 
                         // merge round
                         v3 *= P2;
-                        v3 = BitUtilities.RotateLeft(v3, 31); // rotl 31
+                        v3 = v3.BitwiseRotateLeft(31); // rotl 31
                         v3 *= P1;
                         h64 ^= v3;
                         h64 = h64 * P1 + P4;
 
                         // merge round
                         v4 *= P2;
-                        v4 = BitUtilities.RotateLeft(v4, 31); // rotl 31
+                        v4 = v4.BitwiseRotateLeft(31); // rotl 31
                         v4 *= P1;
                         h64 ^= v4;
                         h64 = h64 * P1 + P4;
@@ -249,24 +249,24 @@ using System.Runtime.CompilerServices;
                     while (ptr <= end - 8)
                     {
                         UInt64 t1 = *(UInt64*) ptr * P2;
-                        t1 = BitUtilities.RotateLeft(t1, 31); // rotl 31
+                        t1 = t1.BitwiseRotateLeft(31); // rotl 31
                         t1 *= P1;
                         h64 ^= t1;
-                        h64 = BitUtilities.RotateLeft(h64, 27) * P1 + P4; // (rotl 27) * p1 + p4
+                        h64 = h64.BitwiseRotateLeft(27) * P1 + P4; // (rotl 27) * p1 + p4
                         ptr += 8;
                     }
 
                     if (ptr <= end - 4)
                     {
                         h64 ^= *(UInt32*) ptr * P1;
-                        h64 = BitUtilities.RotateLeft(h64, 23) * P2 + P3; // (rotl 27) * p2 + p3
+                        h64 = h64.BitwiseRotateLeft(23) * P2 + P3; // (rotl 27) * p2 + p3
                         ptr += 4;
                     }
 
                     while (ptr < end)
                     {
                         h64 ^= *ptr * P5;
-                        h64 = BitUtilities.RotateLeft(h64, 11) * P1; // (rotl 11) * p1
+                        h64 = h64.BitwiseRotateLeft(11) * P1; // (rotl 11) * p1
                         ptr += 1;
                     }
 

@@ -3,7 +3,7 @@
 
 using System;
 using System.IO;
-using NetExtender.Core.Types.TextWriters;
+using NetExtender.Types.TextWriters;
 
 namespace NetExtender.Windows.Services.Types.TextWriters
 {

@@ -1,0 +1,406 @@
+<#@ template language="C#v3.5" #>
+<#@ output extension=".cs" encoding="utf-8"#>
+<#@ assembly name="System.Core"#>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
+using System;
+using System.Numerics;
+using System.Runtime.CompilerServices;
+
+namespace NetExtender.Utilities.Numerics
+{
+<#
+    List<Type> vtypes = new List<Type>
+    {
+        typeof(Char),
+        typeof(SByte),
+        typeof(Byte),
+        typeof(Int16),
+        typeof(UInt16),
+        typeof(Int32),
+        typeof(UInt32),
+        typeof(Int64),
+        typeof(UInt64),
+        typeof(Single),
+        typeof(Double),
+        typeof(Decimal)
+    };
+
+    List<String> types = new List<String>
+    {
+        nameof(Char),
+        nameof(SByte),
+        nameof(Byte),
+        nameof(Int16),
+        nameof(UInt16),
+        nameof(Int32),
+        nameof(UInt32),
+        nameof(Int64),
+        nameof(UInt64),
+        nameof(Single),
+        nameof(Double),
+        nameof(Decimal)
+    };
+
+    static Boolean NotChar(String type)
+    {
+        return type != nameof(Char);
+    }
+    
+    static Boolean IsSmallType(String type)
+    {
+        return type == nameof(Char) || type == nameof(Byte) || type == nameof(SByte) || type == nameof(Int16) || type == nameof(UInt16);
+    }
+
+    static Boolean IsUnsignedType(String type)
+    {
+        return type == nameof(Char) || type == nameof(Byte) || type == nameof(UInt16) || type == nameof(UInt32) || type == nameof(UInt64);
+    }
+    
+    Boolean IsIntType(String type)
+    {
+        return type == nameof(Char) || type == nameof(SByte) || type == nameof(Byte) || type == nameof(Int16) || type == nameof(UInt16) || type == nameof(Int32) || type == nameof(UInt32) || type == nameof(Int64) || type == nameof(UInt64);
+    }
+
+    String ToLessType(String type)
+    {
+        return type switch
+        {
+            nameof(SByte) => nameof(SByte),
+            nameof(Byte) => nameof(Byte),
+            nameof(Int16) => nameof(SByte),
+            nameof(UInt16) => nameof(Byte),
+            nameof(Int32) => nameof(Int16),
+            nameof(UInt32) => nameof(UInt16),
+            nameof(Int64) => nameof(Int32),
+            nameof(UInt64) => nameof(UInt32),
+            nameof(Single) => nameof(Single),
+            nameof(Double) => nameof(Single),
+            nameof(Decimal) => nameof(Double),
+            _ => type
+        };
+    }
+    
+    String ToGreaterType(String type, String second)
+    {
+        return type switch
+        {
+            nameof(SByte) => nameof(Int16),
+            nameof(Byte) => nameof(UInt16),
+            nameof(Int16) => nameof(Int32),
+            nameof(UInt16) => nameof(UInt32),
+            nameof(Int32) => nameof(Int64),
+            nameof(UInt32) => nameof(UInt64),
+            nameof(Int64) => nameof(Int64),
+            nameof(UInt64) => nameof(UInt64),
+            nameof(Single) => nameof(Double),
+            nameof(Double) => nameof(Decimal),
+            nameof(Decimal) => nameof(Decimal),
+            _ => type
+            };
+    }
+    
+    static String ToSignedType(String type)
+    {
+        return type switch
+        {
+            nameof(Byte) => nameof(SByte),
+            nameof(UInt16) => nameof(Int16),
+            nameof(UInt32) => nameof(Int32),
+            nameof(UInt64) => nameof(Int64),
+            _ => type
+        };
+    }
+
+    static String ToUnsignedType(String type)
+    {
+        return type switch
+        {
+            nameof(SByte) => nameof(Byte),
+            nameof(Int16) => nameof(UInt16),
+            nameof(Int32) => nameof(UInt32),
+            nameof(Int64) => nameof(UInt64),
+            _ => type
+        };
+    }
+
+    void ForEach(IEnumerable<String> types, Action<String> action, Boolean line = true)
+    {
+        String[] type = types.ToArray();
+
+        for (Int32 i = 0; i < type.Length; i++)
+        {
+            action(type[i]);
+
+            if (line && i <= type.Length - 2)
+            {
+                WriteLine(String.Empty);
+            }
+        }
+    }
+    
+    void BitwiseShiftImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(BitwiseShift)}Left(this {type} value, {nameof(Int32)} shift)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tunchecked");
+        WriteLine("\t\t\t{");
+        const String shiftleftpart = "shift >= 0 ? value << shift : value >> -shift";
+        WriteLine($"\t\t\t\treturn {(!IsSmallType(type) ? shiftleftpart : $"({type}) ({shiftleftpart})")};");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveOptimization)]");
+        WriteLine($"\t\tpublic static {type} {nameof(BitwiseShift)}LeftTrue(this {type} value, {nameof(Int32)} shift)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tunchecked");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\treturn shift switch");
+        WriteLine("\t\t\t\t{");
+        WriteLine("\t\t\t\t\t0 => value,");
+        WriteLine($"\t\t\t\t\t< 0 => {nameof(BitwiseShift)}RightTrue(value, -shift),");
+        WriteLine($"\t\t\t\t\t>= sizeof({ToUnsignedType(type)}) * BitInByte => {(!IsUnsignedType(type) ? $"({type}) " : String.Empty)}{ToUnsignedType(type)}.MaxValue,");
+        const String shiftlefttruepart = "value << shift";
+        String shiftlefttruefullpart = $"{(!IsSmallType(type) && !IsUnsignedType(type) ? $"({ToUnsignedType(type)}) {shiftlefttruepart}" : shiftlefttruepart)} | ({ToUnsignedType(type)}.MaxValue >> (sizeof({ToUnsignedType(type)}) * BitInByte - shift))";
+        WriteLine($"\t\t\t\t\t_ => {(IsSmallType(type) || !IsUnsignedType(type) ? $"({type}) ({shiftlefttruefullpart})" : shiftlefttruefullpart)}");
+        WriteLine("\t\t\t\t};");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(BitwiseShift)}Right(this {type} value, {nameof(Int32)} shift)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tunchecked");
+        WriteLine("\t\t\t{");
+        const String shiftrightpart = "shift >= 0 ? value >> shift : value << -shift";
+        WriteLine($"\t\t\t\treturn {(!IsSmallType(type) ? shiftrightpart : $"({type}) ({shiftrightpart})")};");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveOptimization)]");
+        WriteLine($"\t\tpublic static {type} {nameof(BitwiseShift)}RightTrue(this {type} value, {nameof(Int32)} shift)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tunchecked");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\treturn shift switch");
+        WriteLine("\t\t\t\t{");
+        WriteLine("\t\t\t\t\t0 => value,");
+        WriteLine($"\t\t\t\t\t< 0 => {nameof(BitwiseShift)}LeftTrue(value, -shift),");
+        WriteLine($"\t\t\t\t\t>= sizeof({ToUnsignedType(type)}) * BitInByte => {(!IsUnsignedType(type) ? $"({type}) " : String.Empty)}{ToUnsignedType(type)}.MaxValue,");
+        const String shiftrighttruepart = "value >> shift";
+        String shiftrighttruefullpart = $"{(!IsSmallType(type) && !IsUnsignedType(type) ? $"({ToUnsignedType(type)}) {shiftrighttruepart}" : shiftrighttruepart)} | ({ToUnsignedType(type)}.MaxValue << (sizeof({ToUnsignedType(type)}) * BitInByte - shift))";
+        WriteLine($"\t\t\t\t\t_ => {(IsSmallType(type) || !IsUnsignedType(type) ? $"({type}) ({shiftrighttruefullpart})" : shiftrighttruefullpart)}");
+        WriteLine("\t\t\t\t};");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+    }
+    
+    void BitwiseShift()
+    {
+        ForEach(types.Where(NotChar).Where(IsIntType), BitwiseShiftImplementation);
+    }
+
+    void BitwiseRotateImplementation(String type)
+    {
+        const String leftpart = "(value << offset) | (value >> (size - offset))";
+        const String rightpart = "(value >> offset) | (value << (size - offset))";
+
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveOptimization)]");
+        WriteLine($"\t\tpublic static {type} {nameof(BitwiseRotate)}Left(this {type} value, Int32 offset)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tconst {nameof(Int32)} size = sizeof({type}) * BitInByte;");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\tunchecked");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tswitch (offset)");
+        WriteLine("\t\t\t\t{");
+        WriteLine("\t\t\t\t\tcase 0:");
+        WriteLine("\t\t\t\t\t\treturn value;");
+        WriteLine("\t\t\t\t\tcase > 0:");
+        WriteLine("\t\t\t\t\t\toffset %= size;");
+        WriteLine($"\t\t\t\t\t\treturn {(IsSmallType(type) ? $"({type}) ({leftpart})" : leftpart)};");
+        WriteLine("\t\t\t\t\tdefault:");
+        WriteLine("\t\t\t\t\t\toffset = -offset % size;");
+        WriteLine($"\t\t\t\t\t\treturn {(IsSmallType(type) ? $"({type}) ({rightpart})" : rightpart)};");
+        WriteLine("\t\t\t\t}");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveOptimization)]");
+        WriteLine($"\t\tpublic static {type} {nameof(BitwiseRotate)}Right(this {type} value, Int32 offset)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tconst {nameof(Int32)} size = sizeof({type}) * BitInByte;");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\tunchecked");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tswitch (offset)");
+        WriteLine("\t\t\t\t{");
+        WriteLine("\t\t\t\t\tcase 0:");
+        WriteLine("\t\t\t\t\t\treturn value;");
+        WriteLine("\t\t\t\t\tcase > 0:");
+        WriteLine("\t\t\t\t\t\toffset %= size;");
+        WriteLine($"\t\t\t\t\t\treturn {(IsSmallType(type) ? $"({type}) ({rightpart})" : rightpart)};");
+        WriteLine("\t\t\t\t\tdefault:");
+        WriteLine("\t\t\t\t\t\toffset = -offset % size;");
+        WriteLine($"\t\t\t\t\t\treturn {(IsSmallType(type) ? $"({type}) ({leftpart})" : leftpart)};");
+        WriteLine("\t\t\t\t}");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+    }
+
+    void BitwiseRotate()
+    {
+        ForEach(types.Where(NotChar).Where(IsIntType), BitwiseRotateImplementation);
+    }
+    
+    void BitwisePopCountImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Int32)} BitwisePopCount(this {type} value)");
+        WriteLine("\t\t{");
+        
+        if (IsUnsignedType(type))
+        {
+            WriteLine("\t\t\treturn BitOperations.PopCount(value);");
+        }
+        else
+        {
+            WriteLine("\t\t\tunchecked");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\treturn BitwisePopCount(({(type == nameof(Int64) ? nameof(UInt64) : nameof(UInt32))}) value);");
+            WriteLine("\t\t\t}");
+        }
+        
+        WriteLine("\t\t}");
+    }
+
+    void BitwisePopCount()
+    {
+        ForEach(types.Where(NotChar).Where(IsIntType), BitwisePopCountImplementation);
+    }
+
+    void BitwiseFillImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveOptimization)]");
+        WriteLine($"\t\tpublic static {type} {nameof(BitwiseFill)}Left(this {type} value, {nameof(Int32)} count, {nameof(Boolean)} bit)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tif (count <= 0)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn value;");
+        WriteLine("\t\t\t}");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\tunchecked");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\tif (count >= sizeof({ToUnsignedType(type)}) * BitInByte)");
+        WriteLine("\t\t\t\t{");
+        WriteLine($"\t\t\t\t\treturn bit ? {(!IsUnsignedType(type) ? $"({type}) " : String.Empty)}{ToUnsignedType(type)}.MaxValue : default;");
+        WriteLine("\t\t\t\t}");
+        WriteLine(String.Empty);
+
+        String leftorpart = $"{(!IsUnsignedType(type) ? $"({ToUnsignedType(type)}) " : String.Empty)}value | ({ToUnsignedType(type)}.MaxValue << (sizeof({ToUnsignedType(type)}) * BitInByte - count))";
+        String leftandpart = $"{(!IsUnsignedType(type) ? $"({ToUnsignedType(type)}) " : String.Empty)}value & ({ToUnsignedType(type)}.MaxValue >> (sizeof({ToUnsignedType(type)}) * BitInByte - count))";
+        
+        WriteLine("\t\t\t\treturn bit");
+        WriteLine($"\t\t\t\t\t? {(IsSmallType(type) || !IsUnsignedType(type) ? $"({type}) ({leftorpart})" : leftorpart)}");
+        WriteLine($"\t\t\t\t\t: {(IsSmallType(type) || !IsUnsignedType(type) ? $"({type}) ({leftandpart})" : leftandpart)};");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveOptimization)]");
+        WriteLine($"\t\tpublic static {type} {nameof(BitwiseFill)}Right(this {type} value, {nameof(Int32)} count, {nameof(Boolean)} bit)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tif (count <= 0)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn value;");
+        WriteLine("\t\t\t}");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\tunchecked");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\tif (count >= sizeof({ToUnsignedType(type)}) * BitInByte)");
+        WriteLine("\t\t\t\t{");
+        WriteLine($"\t\t\t\t\treturn bit ? {(!IsUnsignedType(type) ? $"({type}) " : String.Empty)}{ToUnsignedType(type)}.MaxValue : default;");
+        WriteLine("\t\t\t\t}");
+        WriteLine(String.Empty);
+
+        String rightorpart = $"{(!IsUnsignedType(type) ? $"({ToUnsignedType(type)}) " : String.Empty)}value | ({ToUnsignedType(type)}.MaxValue >> (sizeof({ToUnsignedType(type)}) * BitInByte - count))";
+        String rightandpart = $"{(!IsUnsignedType(type) ? $"({ToUnsignedType(type)}) " : String.Empty)}value & ({ToUnsignedType(type)}.MaxValue << (sizeof({ToUnsignedType(type)}) * BitInByte - count))";
+        
+        WriteLine("\t\t\t\treturn bit");
+        WriteLine($"\t\t\t\t\t? {(IsSmallType(type) || !IsUnsignedType(type) ? $"({type}) ({rightorpart})" : rightorpart)}");
+        WriteLine($"\t\t\t\t\t: {(IsSmallType(type) || !IsUnsignedType(type) ? $"({type}) ({rightandpart})" : rightandpart)};");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+    }
+
+    void BitwiseFill()
+    {
+        ForEach(types.Where(NotChar).Where(IsIntType), BitwiseFillImplementation);
+    }
+
+    void HighImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {ToLessType(type)} {nameof(High)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tunchecked");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\treturn ({ToLessType(type)}) (value >> sizeof({ToLessType(type)}) * BitInByte);");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+    }
+    
+    void High()
+    {
+        ForEach(types.Where(NotChar).Where(IsIntType).Where(type => type != nameof(SByte) && type != nameof(Byte)), HighImplementation);
+    }
+
+    void LowImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {ToUnsignedType(ToLessType(type))} {nameof(Low)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tunchecked");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\treturn ({ToUnsignedType(ToLessType(type))}) (value & {ToUnsignedType(ToLessType(type))}.MaxValue);");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+    }
+
+    void Low()
+    {
+        ForEach(types.Where(NotChar).Where(IsIntType).Where(type => type != nameof(SByte) && type != nameof(Byte)), LowImplementation);
+    }
+    
+#>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
+    public static partial class BitUtilities
+    {
+<#
+    BitwiseShift();
+    WriteLine(String.Empty);
+    BitwiseRotate();
+    WriteLine(String.Empty);
+    BitwisePopCount();
+    WriteLine(String.Empty);
+    BitwiseFill();
+    WriteLine(String.Empty);
+    High();
+    WriteLine(String.Empty);
+    Low();
+#>
+    }
+}

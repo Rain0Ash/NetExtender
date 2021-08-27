@@ -15,7 +15,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32;
-using NetExtender.Core.Types.TextWriters;
+using NetExtender.Types.TextWriters;
 using NetExtender.Utilities.Static;
 using NetExtender.Utilities.Types;
 using NetExtender.Windows.Services.Exceptions;

@@ -245,7 +245,6 @@ namespace NetExtender.Utilities.Numerics
             return Asinh(Complex.One / value);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Complex Trigonometry(this Complex value, TrigonometryType type)
         {
             return type switch

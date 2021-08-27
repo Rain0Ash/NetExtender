@@ -3,7 +3,7 @@
 
 using System;
 
-namespace NetExtender.Core.Types.Progress.Interface
+namespace NetExtender.Types.Progress.Interface
 {
     public interface IProgress<T1, T2> : IProgress<(T1, T2)>
     {

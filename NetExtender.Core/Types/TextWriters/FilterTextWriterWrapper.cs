@@ -10,7 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NetExtender.Core.Types.TextWriters
+namespace NetExtender.Types.TextWriters
 {
     public class FilterTextWriterWrapper : TextWriter, ISet<String>
     {

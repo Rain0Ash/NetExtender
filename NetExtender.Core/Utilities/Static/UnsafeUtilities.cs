@@ -31,23 +31,85 @@ namespace NetExtender.Utilities.Static
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void Fill(void* destination, Int32 length)
+        public static unsafe void Fill(void* destination, UInt32 length)
         {
-            Byte* pointer = (Byte*) destination;
-            for (Int32 i = 0; i < length; i++)
-            {
-                pointer[i] = Byte.MinValue;
-            }
+            Fill(destination, Byte.MinValue, length);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Fill(void* destination, Boolean value, UInt32 length)
+        {
+            Unsafe.InitBlock(destination, value ? Byte.MaxValue : Byte.MinValue, length);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Fill(void* destination, Byte value, UInt32 length)
+        {
+            Unsafe.InitBlock(destination, value, length);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void Fill<T>(void* destination, Int32 count)
+        public static void Fill(ref Byte start, UInt32 length)
+        {
+            Fill(ref start, Byte.MinValue, length);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Fill(ref Byte start, Boolean value, UInt32 length)
+        {
+            Unsafe.InitBlock(ref start, value ? Byte.MaxValue : Byte.MinValue, length);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Fill(ref Byte start, Byte value, UInt32 length)
+        {
+            Unsafe.InitBlock(ref start, value, length);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void FillUnaligned(void* destination, UInt32 length)
+        {
+            FillUnaligned(destination, Byte.MinValue, length);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void FillUnaligned(void* destination, Boolean value, UInt32 length)
+        {
+            Unsafe.InitBlockUnaligned(destination, value ? Byte.MaxValue : Byte.MinValue, length);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void FillUnaligned(void* destination, Byte value, UInt32 length)
+        {
+            Unsafe.InitBlockUnaligned(destination, value, length);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void FillUnaligned(ref Byte start, UInt32 length)
+        {
+            FillUnaligned(ref start, Byte.MinValue, length);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void FillUnaligned(ref Byte start, Boolean value, UInt32 length)
+        {
+            Unsafe.InitBlock(ref start, value ? Byte.MaxValue : Byte.MinValue, length);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void FillUnaligned(ref Byte start, Byte value, UInt32 length)
+        {
+            Unsafe.InitBlock(ref start, value, length);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Fill<T>(void* destination, UInt32 count)
         {
             Fill<T>(destination, default, count);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void Fill<T>(void* destination, T? value, Int32 count)
+        public static unsafe void Fill<T>(void* destination, T? value, UInt32 count)
         {
             for (Int32 i = 0; i < count; i++)
             {
@@ -99,51 +161,117 @@ namespace NetExtender.Utilities.Static
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void CopyBlock(void* destination, void* source, UInt32 byteCount)
+        public static unsafe void CopyBlock(void* destination, void* source, UInt32 length)
         {
-            Unsafe.CopyBlock(destination, source, byteCount);
+            Unsafe.CopyBlock(destination, source, length);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void CopyBlock(ref Byte destination, ref Byte source, UInt32 byteCount)
+        public static void CopyBlock(ref Byte destination, ref Byte source, UInt32 length)
         {
-            Unsafe.CopyBlock(ref destination, ref source, byteCount);
+            Unsafe.CopyBlock(ref destination, ref source, length);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void CopyBlockUnaligned(void* destination, void* source, UInt32 byteCount)
+        public static unsafe void CopyBlockUnaligned(void* destination, void* source, UInt32 length)
         {
-            Unsafe.CopyBlockUnaligned(destination, source, byteCount);
+            Unsafe.CopyBlockUnaligned(destination, source, length);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void CopyBlockUnaligned(ref Byte destination, ref Byte source, UInt32 byteCount)
+        public static void CopyBlockUnaligned(ref Byte destination, ref Byte source, UInt32 length)
         {
-            Unsafe.CopyBlockUnaligned(ref destination, ref source, byteCount);
+            Unsafe.CopyBlockUnaligned(ref destination, ref source, length);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void InitBlock(void* startAddress, Byte value, UInt32 byteCount)
+        public static unsafe void InitBlock(void* destination, Byte value, UInt32 length)
         {
-            Unsafe.InitBlock(startAddress, value, byteCount);
+            Unsafe.InitBlock(destination, value, length);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void InitBlock(ref Byte startAddress, Byte value, UInt32 byteCount)
+        public static void InitBlock(ref Byte destination, Byte value, UInt32 length)
         {
-            Unsafe.InitBlock(ref startAddress, value, byteCount);
+            Unsafe.InitBlock(ref destination, value, length);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void InitBlockUnaligned(void* startAddress, Byte value, UInt32 byteCount)
+        public static unsafe void InitBlockUnaligned(void* destination, Byte value, UInt32 length)
         {
-            Unsafe.InitBlockUnaligned(startAddress, value, byteCount);
+            Unsafe.InitBlockUnaligned(destination, value, length);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void InitBlockUnaligned(ref Byte startAddress, Byte value, UInt32 byteCount)
+        public static void InitBlockUnaligned(ref Byte destination, Byte value, UInt32 length)
         {
-            Unsafe.InitBlockUnaligned(ref startAddress, value, byteCount);
+            Unsafe.InitBlockUnaligned(ref destination, value, length);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void SwapBlock(void* destination, void* source, UInt32 length)
+        {
+            SwapBlock(destination, source, length, 0);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static unsafe void SwapBlock(void* destination, void* source, UInt32 length, Int32 stackbuffer)
+        {
+            if (length <= 0)
+            {
+                return;
+            }
+
+            Span<Byte> buffer = stackbuffer switch
+            {
+                0 => stackalloc Byte[(Int32) Math.Min(length, UInt16.MaxValue + 1)],
+                > 0 => stackalloc Byte[(Int32) Math.Min(length, (UInt32) stackbuffer)],
+                _ => new Byte[Math.Min(length, (UInt32) (-stackbuffer))]
+            };
+            
+            SwapBlock(destination, source, length, buffer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static unsafe void SwapBlock(void* destination, void* source, UInt32 length, Span<Byte> buffer)
+        {
+            if (length <= 0)
+            {
+                return;
+            }
+
+            unchecked
+            {
+                fixed (void* pointer = buffer)
+                {
+                    UInt32 count = Math.Min(length, (UInt32) buffer.Length);
+                    
+                    UInt64 position = 0;
+
+                    while (position < length - count)
+                    {
+                        Unsafe.CopyBlock(pointer, destination, count);
+                        Unsafe.CopyBlock(destination, source, count);
+                        Unsafe.CopyBlock(source, pointer, count);
+
+                        Increment(ref source, count);
+                        Increment(ref destination, count);
+
+                        position += count;
+                    }
+
+                    if (position >= length)
+                    {
+                        return;
+                    }
+
+                    count = length - (UInt32) position;
+
+                    Unsafe.CopyBlock(pointer, destination, count);
+                    Unsafe.CopyBlock(destination, source, count);
+                    Unsafe.CopyBlock(source, pointer, count);
+                }
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -183,21 +311,98 @@ namespace NetExtender.Utilities.Static
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void* Add(void* source)
+        {
+            return Add(source, 1);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Add(ref void* source)
+        {
+            source = Add(source);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void* Increment(ref void* source)
+        {
+            Add(ref source);
+            return source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void* Add(void* source, Int32 byteOffset)
         {
             return (void*) ((IntPtr) source + byteOffset);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void* Add(void* source, UInt32 byteOffset)
+        {
+            return byteOffset <= Int32.MaxValue ? Add(source, (Int32) byteOffset) : Add(Add(source, Int32.MaxValue), (Int32) (byteOffset - Int32.MaxValue));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Add(ref void* source, Int32 byteOffset)
+        {
+            source = Add(source, byteOffset);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Add(ref void* source, UInt32 byteOffset)
+        {
+            source = Add(source, byteOffset);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void* Increment(ref void* source, Int32 byteOffset)
+        {
+            Add(ref source, byteOffset);
+            return source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void* Increment(ref void* source, UInt32 byteOffset)
+        {
+            Add(ref source, byteOffset);
+            return source;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void* Add<T>(void* source)
         {
-            return Unsafe.Add<T>(source, 1);
+            return Add<T>(source, 1);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Add<T>(ref void* source)
+        {
+            source = Add<T>(source);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void* Increment<T>(ref void* source)
+        {
+            Add<T>(ref source);
+            return source;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void* Add<T>(void* source, Int32 elementOffset)
         {
             return Unsafe.Add<T>(source, elementOffset);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Add<T>(ref void* source, Int32 elementOffset)
+        {
+            source = Add<T>(source, elementOffset);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void* Increment<T>(ref void* source, Int32 elementOffset)
+        {
+            Add<T>(ref source, elementOffset);
+            return source;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -225,21 +430,98 @@ namespace NetExtender.Utilities.Static
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void* Subtract(void* source)
+        {
+            return Subtract(source, 1);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Subtract(ref void* source)
+        {
+            source = Subtract(source);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void* Decrement(ref void* source)
+        {
+            Subtract(ref source);
+            return source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void* Subtract(void* source, Int32 byteOffset)
         {
             return (void*) ((IntPtr) source - byteOffset);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void* Subtract(void* source, UInt32 byteOffset)
+        {
+            return byteOffset <= Int32.MaxValue ? Subtract(source, (Int32) byteOffset) : Subtract(Subtract(source, Int32.MaxValue), (Int32) (byteOffset - Int32.MaxValue));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Subtract(ref void* source, Int32 byteOffset)
+        {
+            source = Subtract(source, byteOffset);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Subtract(ref void* source, UInt32 byteOffset)
+        {
+            source = Subtract(source, byteOffset);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void* Decrement(ref void* source, Int32 byteOffset)
+        {
+            Subtract(ref source, byteOffset);
+            return source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void* Decrement(ref void* source, UInt32 byteOffset)
+        {
+            Subtract(ref source, byteOffset);
+            return source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void* Subtract<T>(void* source)
         {
-            return Unsafe.Subtract<T>(source, 1);
+            return Subtract<T>(source, 1);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Subtract<T>(ref void* source)
+        {
+            source = Subtract<T>(source);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void* Decrement<T>(ref void* source)
+        {
+            Subtract<T>(ref source);
+            return source;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void* Subtract<T>(void* source, Int32 elementOffset)
         {
             return Unsafe.Subtract<T>(source, elementOffset);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Subtract<T>(ref void* source, Int32 elementOffset)
+        {
+            source = Subtract<T>(source, elementOffset);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void* Decrement<T>(ref void* source, Int32 elementOffset)
+        {
+            Subtract<T>(ref source, elementOffset);
+            return source;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

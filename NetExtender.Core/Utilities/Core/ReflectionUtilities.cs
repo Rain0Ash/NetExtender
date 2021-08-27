@@ -296,7 +296,7 @@ namespace NetExtender.Utilities.Core
         /// </summary>
         /// <param name="obj">The object or type that has the property or field.</param>
         /// <param name="name">The name of the property or field.</param>
-        public static T GetPropertyValue<T>(this Object obj, String name)
+        public static T? GetPropertyValue<T>(this Object obj, String name)
         {
             if (obj is null)
             {
@@ -308,12 +308,12 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(name));
             }
 
-            Object value = GetPropertyValue(obj, name);
+            Object? value = GetPropertyValue(obj, name);
             return value switch
             {
                 null => default,
                 T result => result,
-                _ => value.TryConvert(out T result) ? result : throw new InvalidCastException()
+                _ => value.TryConvert(out T? result) ? result : throw new InvalidCastException()
             };
         }
 
@@ -323,7 +323,7 @@ namespace NetExtender.Utilities.Core
         /// <param name="obj">The object or type that has the property or field.</param>
         /// <param name="name">The name of the property or field.</param>
         /// <param name="converter">Converter function</param>
-        public static T GetPropertyValue<T>(this Object obj, String name, ParseHandler<Object, T> converter)
+        public static T GetPropertyValue<T>(this Object obj, String name, ParseHandler<Object?, T> converter)
         {
             if (obj is null)
             {
@@ -349,7 +349,7 @@ namespace NetExtender.Utilities.Core
         /// <param name="obj">The object or type that has the property or field.</param>
         /// <param name="name">The name of the property or field.</param>
         /// <param name="result">Result value</param>
-        public static Boolean TryGetPropertyValue<T>(this Object obj, String name, out T result)
+        public static Boolean TryGetPropertyValue<T>(this Object obj, String name, out T? result)
         {
             if (obj is null)
             {
@@ -361,7 +361,7 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(name));
             }
 
-            if (GetPropertyValue(obj, name, out Object value))
+            if (GetPropertyValue(obj, name, out Object? value))
             {
                 if (value is T resval)
                 {
@@ -391,7 +391,7 @@ namespace NetExtender.Utilities.Core
         /// <param name="name">The name of the property or field.</param>
         /// <param name="converter">Converter function</param>
         /// <param name="result">Result value</param>
-        public static Boolean TryGetPropertyValue<T>(this Object obj, String name, TryParseHandler<Object, T> converter, out T? result)
+        public static Boolean TryGetPropertyValue<T>(this Object obj, String name, TryParseHandler<Object?, T> converter, out T? result)
         {
             if (obj is null)
             {
@@ -408,7 +408,7 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(converter));
             }
             
-            if (GetPropertyValue(obj, name, out Object value) && converter(value, out result))
+            if (GetPropertyValue(obj, name, out Object? value) && converter(value, out result))
             {
                 return true;
             }

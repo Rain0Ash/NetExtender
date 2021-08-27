@@ -75,32 +75,32 @@ namespace NetExtender.Utilities.Types
             return value;
         }
         
-        public static IEnumerable<T> CastConvert<T>(this String? input, String? separator)
+        public static IEnumerable<T?> CastConvert<T>(this String? input, String? separator)
         {
             return CastConvert<T>(input, separator, CultureInfo.InvariantCulture);
         }
         
-        public static IEnumerable<T> CastConvert<T>(this String? input, String? separator, CultureInfo? info)
+        public static IEnumerable<T?> CastConvert<T>(this String? input, String? separator, CultureInfo? info)
         {
             return String.IsNullOrEmpty(input) ? Enumerable.Empty<T>() : CastConvert<T>(input.Split(separator, StringSplitOptions.RemoveEmptyEntries), info);
         }
 
-        public static IEnumerable<T> CastConvert<T>(this String? input, String[]? separators, CultureInfo? info)
+        public static IEnumerable<T?> CastConvert<T>(this String? input, String[]? separators, CultureInfo? info)
         {
             return String.IsNullOrEmpty(input) ? Enumerable.Empty<T>() : CastConvert<T>(input.Split(separators, StringSplitOptions.RemoveEmptyEntries), info);
         }
         
-        public static IEnumerable<T> Convert<T>(this String? input, String? separator)
+        public static IEnumerable<T?> Convert<T>(this String? input, String? separator)
         {
             return Convert<T>(input, separator, CultureInfo.InvariantCulture);
         }
         
-        public static IEnumerable<T> Convert<T>(this String? input, String? separator, CultureInfo? info)
+        public static IEnumerable<T?> Convert<T>(this String? input, String? separator, CultureInfo? info)
         {
             return String.IsNullOrEmpty(input) ? Enumerable.Empty<T>() : Convert<T>(input.Split(separator, StringSplitOptions.RemoveEmptyEntries), info);
         }
 
-        public static IEnumerable<T> Convert<T>(this String? input, String[]? separators, CultureInfo? info)
+        public static IEnumerable<T?> Convert<T>(this String? input, String[]? separators, CultureInfo? info)
         {
             return String.IsNullOrEmpty(input) ? Enumerable.Empty<T>() : Convert<T>(input.Split(separators, StringSplitOptions.RemoveEmptyEntries), info);
         }
@@ -120,7 +120,7 @@ namespace NetExtender.Utilities.Types
             return String.IsNullOrEmpty(input) ? Enumerable.Empty<T>() : TryConvert<T>(input.Split(separators, StringSplitOptions.RemoveEmptyEntries), info);
         }
 
-        public static IEnumerable<T> Convert<T>(this IEnumerable source)
+        public static IEnumerable<T?> Convert<T>(this IEnumerable source)
         {
             if (source is null)
             {
@@ -744,31 +744,29 @@ namespace NetExtender.Utilities.Types
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public static String? GetString(this IEnumerable? source, EscapeType escape, IFormatProvider? provider)
         {
-            if (source is null)
+            switch (source)
             {
-                return escape.HasFlag(EscapeType.Null) ? StringUtilities.NullString : null;
-            }
-
-            if (source is String result)
-            {
-                return escape.HasFlag(EscapeType.Full) ? $"\"{result.GetString(provider)}\"" : result.GetString(provider);
-            }
-
-            switch (source.GetCollectionType())
-            {
-                case CollectionType.Set:
-                case CollectionType.GenericSet:
-                    return source.SetGetString(escape, provider);
-                case CollectionType.Dictionary:
-                case CollectionType.GenericDictionary:
-                    return source.DictionaryGetString(escape, provider);
+                case null:
+                    return escape.HasFlag(EscapeType.Null) ? StringUtilities.NullString : null;
+                case String result:
+                    return escape.HasFlag(EscapeType.Full) ? $"\"{result.GetString(provider)}\"" : result.GetString(provider);
                 default:
-                    if (source is IEnumerable<IEnumerable> jagged)
+                    switch (source.GetCollectionType())
                     {
-                        return jagged.JaggedGetString(escape, provider);
-                    }
+                        case CollectionType.Set:
+                        case CollectionType.GenericSet:
+                            return source.SetGetString(escape, provider);
+                        case CollectionType.Dictionary:
+                        case CollectionType.GenericDictionary:
+                            return source.DictionaryGetString(escape, provider);
+                        default:
+                            if (source is IEnumerable<IEnumerable> jagged)
+                            {
+                                return jagged.JaggedGetString(escape, provider);
+                            }
                     
-                    return source.EnumerableGetString(escape, provider);
+                            return source.EnumerableGetString(escape, provider);
+                    }
             }
         }
 
@@ -827,15 +825,15 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TOutput Convert<T, TOutput>(this TryParseHandler<T, TOutput> converter, T input)
+        public static TOutput? Convert<T, TOutput>(this TryParseHandler<T, TOutput> converter, T input)
         {
             return Convert(input, converter);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TOutput Convert<T, TOutput>(this T input, TryParseHandler<T, TOutput> converter)
+        public static TOutput? Convert<T, TOutput>(this T input, TryParseHandler<T, TOutput> converter)
         {
-            return Convert(input, converter, default(TOutput));
+            return Convert(input, converter!, default(TOutput?));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -852,7 +850,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(converter));
             }
 
-            return converter.Invoke(input, out TOutput result) ? result : @default;
+            return converter.Invoke(input, out TOutput? result) ? result! : @default;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -874,7 +872,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(generator));
             }
 
-            return converter.Invoke(input, out TOutput result) ? result : generator();
+            return converter.Invoke(input, out TOutput? result) ? result! : generator();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -884,7 +882,7 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TOut Convert<T, TOut>(this T input, TryParseHandler<T, TOut> converter, Func<T, TOut> generator)
+        public static TOutput Convert<T, TOutput>(this T input, TryParseHandler<T, TOutput> converter, Func<T, TOutput> generator)
         {
             if (converter is null)
             {
@@ -896,24 +894,24 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(generator));
             }
 
-            return converter.Invoke(input, out TOut result) ? result : generator(input);
+            return converter.Invoke(input, out TOutput? result) ? result! : generator(input);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Convert<T, TOut>(this TryParseHandler<T, TOut> converter, T input, out TOut result)
+        public static Boolean Convert<T, TOutput>(this TryParseHandler<T, TOutput> converter, T input, out TOutput result)
         {
             return Convert(input, converter, out result);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Convert<T, TOut>(this T input, TryParseHandler<T, TOut> converter, out TOut result)
+        public static Boolean Convert<T, TOutput>(this T input, TryParseHandler<T, TOutput> converter, out TOutput result)
         {
             if (converter is null)
             {
                 throw new ArgumentNullException(nameof(converter));
             }
 
-            return converter.Invoke(input, out result);
+            return converter.Invoke(input, out result!);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

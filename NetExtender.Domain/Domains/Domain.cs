@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,9 +16,10 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Domains
 {
+    [SuppressMessage("ReSharper", "AsyncConverter.AsyncMethodNamingHighlighting")]
     public static partial class Domain
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
+        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         private static class CurrentDomain
         {
             private static IDomain? current;
@@ -79,7 +81,7 @@ namespace NetExtender.Domains
                 throw new ArgumentNullException(nameof(application));
             }
 
-            IDomain domain = await source;
+            IDomain domain = await source.ConfigureAwait(false);
             return domain.Initialize(application);
         }
 
@@ -143,8 +145,8 @@ namespace NetExtender.Domains
                 throw new ArgumentNullException(nameof(view));
             }
 
-            IDomain domain = await source;
-            return await domain.ViewAsync(view);
+            IDomain domain = await source.ConfigureAwait(false);
+            return await domain.ViewAsync(view).ConfigureAwait(false);
         }
         
         public static async Task<IDomain> ViewAsync(this Task<IDomain> source, IApplicationView view, CancellationToken token)
@@ -159,8 +161,8 @@ namespace NetExtender.Domains
                 throw new ArgumentNullException(nameof(view));
             }
             
-            IDomain domain = await source;
-            return await domain.ViewAsync(view, token);
+            IDomain domain = await source.ConfigureAwait(false);
+            return await domain.ViewAsync(view, token).ConfigureAwait(false);
         }
         
         public static async Task<IDomain> ViewAsync(this Task<IDomain> source, IApplicationView view, IEnumerable<String>? args)
@@ -175,8 +177,8 @@ namespace NetExtender.Domains
                 throw new ArgumentNullException(nameof(view));
             }
             
-            IDomain domain = await source;
-            return await domain.ViewAsync(view, args);
+            IDomain domain = await source.ConfigureAwait(false);
+            return await domain.ViewAsync(view, args).ConfigureAwait(false);
         }
         
         public static async Task<IDomain> ViewAsync(this Task<IDomain> source, IApplicationView view, params String[]? args)
@@ -191,8 +193,8 @@ namespace NetExtender.Domains
                 throw new ArgumentNullException(nameof(view));
             }
             
-            IDomain domain = await source;
-            return await domain.ViewAsync(view, args);
+            IDomain domain = await source.ConfigureAwait(false);
+            return await domain.ViewAsync(view, args).ConfigureAwait(false);
         }
         
         public static async Task<IDomain> ViewAsync(this Task<IDomain> source, IApplicationView view, IEnumerable<String>? args, CancellationToken token)
@@ -207,8 +209,8 @@ namespace NetExtender.Domains
                 throw new ArgumentNullException(nameof(view));
             }
             
-            IDomain domain = await source;
-            return await domain.ViewAsync(view, args, token);
+            IDomain domain = await source.ConfigureAwait(false);
+            return await domain.ViewAsync(view, args, token).ConfigureAwait(false);
         }
 
         public static async Task<IDomain> ViewAsync(this Task<IDomain> source, IApplicationView view, CancellationToken token, params String[] args)
@@ -223,8 +225,8 @@ namespace NetExtender.Domains
                 throw new ArgumentNullException(nameof(view));
             }
             
-            IDomain domain = await source;
-            return await domain.ViewAsync(view, token, args);
+            IDomain domain = await source.ConfigureAwait(false);
+            return await domain.ViewAsync(view, token, args).ConfigureAwait(false);
         }
 
         public static IDomain Create(IDomain domain)

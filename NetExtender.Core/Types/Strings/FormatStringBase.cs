@@ -38,7 +38,6 @@ namespace NetExtender.Types.Strings
 
         protected String NonFormatToString()
         {
-            // ReSharper disable once SpecifyACultureInStringConversionExplicitly
             return base.ToString();
         }
 

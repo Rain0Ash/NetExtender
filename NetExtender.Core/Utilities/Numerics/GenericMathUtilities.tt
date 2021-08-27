@@ -3,7 +3,6 @@
 <#@ assembly name="System.Core"#>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Linq" #>
-<#@ import namespace="System.Runtime.InteropServices" #>
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
@@ -48,8 +47,6 @@ namespace NetExtender.Utilities.Numerics
         nameof(Decimal)
     };
 
-    Dictionary<String, Type> typedict = vtypes.ToDictionary(type => type.Name, type => type);
-
     Dictionary<String, String> operands = new Dictionary<String, String>
     {
         {"+", "Add"},
@@ -92,37 +89,45 @@ namespace NetExtender.Utilities.Numerics
     {
         return type == nameof(Char) || type == nameof(SByte) || type == nameof(Byte) || type == nameof(Int16) || type == nameof(UInt16) || type == nameof(Int32) || type == nameof(UInt32) || type == nameof(Int64) || type == nameof(UInt64) || type == biginteger;
     }
-
-    String ToLessType(String type, String second)
+    
+    String ToLessType(String type)
     {
-        if (type == second)
+        return type switch
         {
-            return type;
-        }
-
-        return (Marshal.SizeOf(typedict[type]) - Marshal.SizeOf(typedict[second])) switch
-        {
-            < 0 => type,
-            0 => ToSignedType(type),
-            > 0 => second
-        };
+            nameof(SByte) => nameof(SByte),
+            nameof(Byte) => nameof(Byte),
+            nameof(Int16) => nameof(SByte),
+            nameof(UInt16) => nameof(Byte),
+            nameof(Int32) => nameof(Int16),
+            nameof(UInt32) => nameof(UInt16),
+            nameof(Int64) => nameof(Int32),
+            nameof(UInt64) => nameof(UInt32),
+            nameof(Single) => nameof(Single),
+            nameof(Double) => nameof(Single),
+            nameof(Decimal) => nameof(Double),
+            _ => type
+            };
     }
     
     String ToGreaterType(String type, String second)
     {
-        if (type == second)
+        return type switch
         {
-            return type;
-        }
-
-        return (Marshal.SizeOf(typedict[type]) - Marshal.SizeOf(typedict[second])) switch
-        {
-            < 0 => second,
-            0 => ToUnsignedType(type),
-            > 0 => type
-        };
+            nameof(SByte) => nameof(Int16),
+            nameof(Byte) => nameof(UInt16),
+            nameof(Int16) => nameof(Int32),
+            nameof(UInt16) => nameof(UInt32),
+            nameof(Int32) => nameof(Int64),
+            nameof(UInt32) => nameof(UInt64),
+            nameof(Int64) => nameof(Int64),
+            nameof(UInt64) => nameof(UInt64),
+            nameof(Single) => nameof(Double),
+            nameof(Double) => nameof(Decimal),
+            nameof(Decimal) => nameof(Decimal),
+            _ => type
+            };
     }
-    
+
     static String ToSignedType(String type)
     {
         return type switch

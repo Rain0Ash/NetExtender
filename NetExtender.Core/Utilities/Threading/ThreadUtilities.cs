@@ -60,7 +60,7 @@ namespace NetExtender.Utilities.Threading
 
             Exception? exception = null;
             Thread thread = new Thread(() => exception = SafeInvoke(action));
-            thread.SetApartmentState(state);
+            thread.TrySetApartmentState(state);
             thread.Start();
             thread.Join();
 
@@ -300,7 +300,7 @@ namespace NetExtender.Utilities.Threading
             Exception? exception = null;
             TResult? result = default;
             Thread thread = new Thread(() => exception = SafeInvoke(() => result = function.Invoke()));
-            thread.SetApartmentState(state);
+            thread.TrySetApartmentState(state);
             thread.Start();
             thread.Join();
 

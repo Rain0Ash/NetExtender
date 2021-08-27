@@ -2716,12 +2716,12 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String UnsafeChangeString(this String value, Char character)
+        public static String MutateString(this String value, Char character)
         {
-            return UnsafeChangeString(value, character, 0);
+            return MutateString(value, character, 0);
         }
 
-        public static unsafe String UnsafeChangeString(this String value, Char character, Int32 position)
+        public static unsafe String MutateString(this String value, Char character, Int32 position)
         {
             if (value is null)
             {
@@ -2747,34 +2747,34 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String UnsafeChangeString(this String value, String result)
+        public static String MutateString(this String value, String mutate)
         {
-            return UnsafeChangeString(value, result, 0);
+            return MutateString(value, mutate, 0);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String UnsafeChangeString(this String value, String result, Int32 position)
+        public static String MutateString(this String value, String mutate, Int32 position)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
 
-            if (result is null)
+            if (mutate is null)
             {
-                throw new ArgumentNullException(nameof(result));
+                throw new ArgumentNullException(nameof(mutate));
             }
 
-            return UnsafeChangeString(value, result.AsSpan(), position);
+            return MutateString(value, mutate.AsSpan(), position);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String UnsafeChangeString(this String value, ReadOnlySpan<Char> span)
+        public static String MutateString(this String value, ReadOnlySpan<Char> span)
         {
-            return UnsafeChangeString(value, span, 0);
+            return MutateString(value, span, 0);
         }
 
-        public static unsafe String UnsafeChangeString(this String value, ReadOnlySpan<Char> span, Int32 position)
+        public static unsafe String MutateString(this String value, ReadOnlySpan<Char> span, Int32 position)
         {
             if (value is null)
             {

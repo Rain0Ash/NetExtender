@@ -2,9 +2,9 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using NetExtender.Core.Types.Progress.Interface;
+using NetExtender.Types.Progress.Interface;
 
-namespace NetExtender.Core.Types.Progress
+namespace NetExtender.Types.Progress
 {
     public class Progress<T1, T2> : Progress<(T1, T2)>, IProgress<T1, T2>
     {

@@ -42,6 +42,11 @@
       <Compile Update="Utilities\Numerics\GenericRandomUtilities.cs">
         <DependentUpon>GenericRandomUtilities.tt</DependentUpon>
       </Compile>
+      <Compile Update="Utilities\Numerics\GenericBitUtilities.cs">
+        <AutoGen>True</AutoGen>
+        <DesignTime>True</DesignTime>
+        <DependentUpon>GenericBitUtilities.tt</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -52,6 +57,10 @@
       <None Update="Utilities\Numerics\GenericRandomUtilities.tt">
         <Generator>TextTemplatingFileGenerator</Generator>
         <LastGenOutput>GenericRandomUtilities.cs</LastGenOutput>
+      </None>
+      <None Update="Utilities\Numerics\GenericBitUtilities.tt">
+        <Generator>TextTemplatingFileGenerator</Generator>
+        <LastGenOutput>GenericBitUtilities.cs</LastGenOutput>
       </None>
     </ItemGroup>
 

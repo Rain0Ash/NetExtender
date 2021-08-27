@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Runtime.CompilerServices;
-using NetExtender.Core.Types.Multithreading;
+using NetExtender.Types.Multithreading;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.IO

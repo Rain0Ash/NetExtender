@@ -3,6 +3,7 @@
 
 using System;
 using System.Drawing;
+using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
