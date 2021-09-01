@@ -201,6 +201,33 @@ namespace NetExtender.Utilities.UserInterface
             }
         }
 
+        public static Boolean TryGetTitle([MaybeNullWhen(false)] out String result)
+        {
+            try
+            {
+                result = Console.Title;
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+
+        public static Boolean TrySetTitle(String? value)
+        {
+            try
+            {
+                Console.Title = value ?? String.Empty;
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         private static Icon? icon;
         public static Icon? ConsoleIcon
         {
@@ -355,18 +382,69 @@ namespace NetExtender.Utilities.UserInterface
         {
             get
             {
-                return new Size(Console.BufferWidth, Console.BufferHeight);
+                return GetBufferSize();
             }
             set
             {
-                SetBufferSize(value.Width, value.Height);
+                SetBufferSize(value);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Size GetBufferSize()
+        {
+            return new Size(Console.BufferWidth, Console.BufferHeight);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetBufferSize(out Size result)
+        {
+            try
+            {
+                result = GetBufferSize();
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
             }
         }
 
         /// <inheritdoc cref="Console.SetBufferSize"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetBufferSize(Int32 width, Int32 height)
         {
             Console.SetBufferSize(width, height);
+        }
+
+        /// <inheritdoc cref="Console.SetBufferSize"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetBufferSize(Size value)
+        {
+            SetBufferSize(value.Width, value.Height);
+        }
+
+        /// <inheritdoc cref="Console.SetBufferSize"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TrySetBufferSize(Int32 width, Int32 height)
+        {
+            try
+            {
+                SetBufferSize(width, height);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        /// <inheritdoc cref="Console.SetBufferSize"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TrySetBufferSize(Size value)
+        {
+            return TrySetBufferSize(value.Width, value.Height);
         }
 
         /// <inheritdoc cref="Console.SetWindowSize"/>
@@ -374,14 +452,71 @@ namespace NetExtender.Utilities.UserInterface
         {
             get
             {
-                return new Size(Console.WindowWidth, Console.WindowHeight);
+                return GetWindowSize();
             }
             set
             {
-                SetWindowSize(Math.Min(value.Width, Console.LargestWindowWidth), Math.Min(value.Height, Console.LargestWindowHeight));
+                SetWindowSize(value);
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Size GetWindowSize()
+        {
+            return new Size(Console.WindowWidth, Console.WindowHeight);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetWindowSize(out Size result)
+        {
+            try
+            {
+                result = GetWindowSize();
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+
+        /// <inheritdoc cref="Console.SetWindowSize"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetWindowSize(Int32 width, Int32 height)
+        {
+            Console.SetWindowSize(Math.Min(width, Console.LargestWindowWidth), Math.Min(height, Console.LargestWindowHeight));
+        }
+
+        /// <inheritdoc cref="Console.SetWindowSize"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetWindowSize(Size value)
+        {
+           SetWindowSize(value.Width, value.Height);
+        }
+
+        /// <inheritdoc cref="Console.SetWindowSize"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TrySetWindowSize(Int32 width, Int32 height)
+        {
+            try
+            {
+                SetWindowSize(width, height);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        /// <inheritdoc cref="Console.SetWindowSize"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TrySetWindowSize(Size value)
+        {
+            return TrySetWindowSize(value.Width, value.Height);
+        }
+        
         public static Rectangle Rectangle
         {
             get
@@ -398,23 +533,45 @@ namespace NetExtender.Utilities.UserInterface
             return Graphics.FromHwnd(ConsoleWindow);
         }
 
-        /// <inheritdoc cref="Console.SetWindowSize"/>
-        public static void SetWindowSize(Int32 width, Int32 height)
-        {
-            Console.SetWindowSize(width, height);
-        }
-
         /// <inheritdoc cref="Console.SetWindowPosition"/>
         public static Point Position
         {
             get
             {
-                return new Point(Console.WindowLeft, Console.WindowTop);
+                return GetWindowPosition();
             }
             set
             {
                 SetWindowPosition(value.X, value.Y);
             }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Point GetWindowPosition()
+        {
+            return new Point(Console.WindowLeft, Console.WindowTop);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetWindowPosition(out Point point)
+        {
+            try
+            {
+                point = GetWindowPosition();
+                return true;
+            }
+            catch (Exception)
+            {
+                point = default;
+                return false;
+            }
+        }
+
+        /// <inheritdoc cref="Console.SetWindowPosition"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetWindowPosition(Point position)
+        {
+            SetWindowPosition(position.X, position.Y);
         }
 
         /// <inheritdoc cref="Console.SetWindowPosition"/>
@@ -423,6 +580,13 @@ namespace NetExtender.Utilities.UserInterface
         {
             SetWindowPosition(x, y, Rectangle);
         }
+        
+        /// <inheritdoc cref="Console.SetWindowPosition"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetWindowPosition(Point position, Rectangle rectangle)
+        {
+            SetWindowPosition(position.X, position.Y, rectangle);
+        }
 
         /// <inheritdoc cref="Console.SetWindowPosition"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -430,15 +594,64 @@ namespace NetExtender.Utilities.UserInterface
         {
             SetWindowPosition(x, y, rectangle.Size);
         }
+        
+        /// <inheritdoc cref="Console.SetWindowPosition"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void SetWindowPosition(Point position, Size size)
+        {
+            SetWindowPosition(position.X, position.Y, size);
+        }
 
         /// <inheritdoc cref="Console.SetWindowPosition"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetWindowPosition(Int32 x, Int32 y, Size size)
         {
-            if (!SetWindowPos(ConsoleWindow, IntPtr.Zero, x, y, size.Width, size.Height, 0x4 | 0x10))
+            if (!TrySetWindowPosition(x, y, size))
             {
                 WindowsInteropUtilities.ThrowLastWin32Exception();
             }
+        }
+        
+        /// <inheritdoc cref="Console.SetWindowPosition"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TrySetWindowPosition(Point position)
+        {
+            return TrySetWindowPosition(position.X, position.Y);
+        }
+
+        /// <inheritdoc cref="Console.SetWindowPosition"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TrySetWindowPosition(Int32 x, Int32 y)
+        {
+            return TrySetWindowPosition(x, y, Rectangle);
+        }
+        
+        /// <inheritdoc cref="Console.SetWindowPosition"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TrySetWindowPosition(Point position, Rectangle rectangle)
+        {
+            return TrySetWindowPosition(position.X, position.Y, rectangle);
+        }
+
+        /// <inheritdoc cref="Console.SetWindowPosition"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TrySetWindowPosition(Int32 x, Int32 y, Rectangle rectangle)
+        {
+            return TrySetWindowPosition(x, y, rectangle.Size);
+        }
+        
+        /// <inheritdoc cref="Console.SetWindowPosition"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TrySetWindowPosition(Point position, Size size)
+        {
+            return TrySetWindowPosition(position.X, position.Y, size);
+        }
+
+        /// <inheritdoc cref="Console.SetWindowPosition"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TrySetWindowPosition(Int32 x, Int32 y, Size size)
+        {
+            return SetWindowPos(ConsoleWindow, IntPtr.Zero, x, y, size.Width, size.Height, 0x4 | 0x10);
         }
 
         public static void CenterToScreen(IScreen screen)

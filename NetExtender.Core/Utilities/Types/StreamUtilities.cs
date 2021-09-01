@@ -565,14 +565,43 @@ namespace NetExtender.Utilities.Types
         }
 
         private const Int32 DefaultBufferSize = 1024;
-        
+
+        /// <summary>
+        /// Wraps <paramref name="stream" /> with <see cref="StreamReader" />.
+        /// </summary>
+        /// <param name="stream">The stream to read.</param>
+        public static StreamReader ToStreamReader(this Stream stream)
+        {
+            return ToStreamReader(stream, null, true);
+        }
+
+        /// <summary>
+        /// Wraps <paramref name="stream" /> with <see cref="StreamReader" />.
+        /// </summary>
+        /// <param name="stream">The stream to read.</param>
+        /// <param name="encoding">The character encoding to use.</param>
+        public static StreamReader ToStreamReader(this Stream stream, Encoding? encoding)
+        {
+            return ToStreamReader(stream, encoding, true);
+        }
+
+        /// <summary>
+        /// Wraps <paramref name="stream" /> with <see cref="StreamReader" />.
+        /// </summary>
+        /// <param name="stream">The stream to read.</param>
+        /// <param name="leaveOpen">true to leave the stream open after the <see cref="StreamReader" /> object is disposed; otherwise, false.</param>
+        public static StreamReader ToStreamReader(this Stream stream, Boolean leaveOpen)
+        {
+            return ToStreamReader(stream, null, leaveOpen);
+        }
+
         /// <summary>
         /// Wraps <paramref name="stream" /> with <see cref="StreamReader" />.
         /// </summary>
         /// <param name="stream">The stream to read.</param>
         /// <param name="encoding">The character encoding to use.</param>
         /// <param name="leaveOpen">true to leave the stream open after the <see cref="StreamReader" /> object is disposed; otherwise, false.</param>
-        public static StreamReader ToStreamReader(this Stream stream, Encoding? encoding = null, Boolean leaveOpen = false)
+        public static StreamReader ToStreamReader(this Stream stream, Encoding? encoding, Boolean leaveOpen)
         {
             if (stream is null)
             {
@@ -586,9 +615,38 @@ namespace NetExtender.Utilities.Types
         /// Wraps <paramref name="stream"/> with <see cref="BinaryReader"/>.
         /// </summary>
         /// <param name="stream">The stream to read.</param>
+        public static BinaryReader ToBinaryReader(this Stream stream)
+        {
+            return ToBinaryReader(stream, null, true);
+        }
+
+        /// <summary>
+        /// Wraps <paramref name="stream"/> with <see cref="BinaryReader"/>.
+        /// </summary>
+        /// <param name="stream">The stream to read.</param>
+        /// <param name="encoding">The character encoding to use.</param>
+        public static BinaryReader ToBinaryReader(this Stream stream, Encoding? encoding)
+        {
+            return ToBinaryReader(stream, encoding, true);
+        }
+
+        /// <summary>
+        /// Wraps <paramref name="stream"/> with <see cref="BinaryReader"/>.
+        /// </summary>
+        /// <param name="stream">The stream to read.</param>
+        /// <param name="leaveOpen">true to leave the stream open after the <see cref="BinaryReader" /> object is disposed; otherwise, false.</param>
+        public static BinaryReader ToBinaryReader(this Stream stream, Boolean leaveOpen)
+        {
+            return ToBinaryReader(stream, null, leaveOpen);
+        }
+
+        /// <summary>
+        /// Wraps <paramref name="stream"/> with <see cref="BinaryReader"/>.
+        /// </summary>
+        /// <param name="stream">The stream to read.</param>
         /// <param name="encoding">The character encoding to use.</param>
         /// <param name="leaveOpen">true to leave the stream open after the <see cref="BinaryReader" /> object is disposed; otherwise, false.</param>
-        public static BinaryReader ToBinaryReader(this Stream stream, Encoding? encoding = null, Boolean leaveOpen = false)
+        public static BinaryReader ToBinaryReader(this Stream stream, Encoding? encoding, Boolean leaveOpen)
         {
             if (stream is null)
             {
@@ -602,9 +660,38 @@ namespace NetExtender.Utilities.Types
         /// Wraps <paramrefref name="stream"/> with <see cref="StreamWriter"/>.
         /// </summary>
         /// <param name="stream">The stream to write.</param>
+        public static StreamWriter ToStreamWriter(this Stream stream)
+        {
+            return ToStreamWriter(stream, null, true);
+        }
+
+        /// <summary>
+        /// Wraps <paramrefref name="stream"/> with <see cref="StreamWriter"/>.
+        /// </summary>
+        /// <param name="stream">The stream to write.</param>
+        /// <param name="encoding">The character encoding to use.</param>
+        public static StreamWriter ToStreamWriter(this Stream stream, Encoding? encoding)
+        {
+            return ToStreamWriter(stream, encoding, true);
+        }
+
+        /// <summary>
+        /// Wraps <paramrefref name="stream"/> with <see cref="StreamWriter"/>.
+        /// </summary>
+        /// <param name="stream">The stream to write.</param>
+        /// <param name="leaveOpen">true to leave the stream open after the <see cref="StreamWriter" /> object is disposed; otherwise, false.</param>
+        public static StreamWriter ToStreamWriter(this Stream stream, Boolean leaveOpen)
+        {
+            return ToStreamWriter(stream, null, leaveOpen);
+        }
+
+        /// <summary>
+        /// Wraps <paramrefref name="stream"/> with <see cref="StreamWriter"/>.
+        /// </summary>
+        /// <param name="stream">The stream to write.</param>
         /// <param name="encoding">The character encoding to use.</param>
         /// <param name="leaveOpen">true to leave the stream open after the <see cref="StreamWriter" /> object is disposed; otherwise, false.</param>
-        public static StreamWriter ToStreamWriter(this Stream stream, Encoding? encoding = null, Boolean leaveOpen = false)
+        public static StreamWriter ToStreamWriter(this Stream stream, Encoding? encoding, Boolean leaveOpen)
         {
             if (stream is null)
             {
@@ -618,9 +705,38 @@ namespace NetExtender.Utilities.Types
         /// Wraps <paramref name="stream"/> with <see cref="BinaryWriter"/>.
         /// </summary>
         /// <param name="stream">The stream to write.</param>
+        public static BinaryWriter ToBinaryWriter(this Stream stream)
+        {
+            return ToBinaryWriter(stream, null, true);
+        }
+
+        /// <summary>
+        /// Wraps <paramref name="stream"/> with <see cref="BinaryWriter"/>.
+        /// </summary>
+        /// <param name="stream">The stream to write.</param>
+        /// <param name="encoding">The character encoding to use.</param>
+        public static BinaryWriter ToBinaryWriter(this Stream stream, Encoding? encoding)
+        {
+            return ToBinaryWriter(stream, encoding, true);
+        }
+        
+        /// <summary>
+        /// Wraps <paramref name="stream"/> with <see cref="BinaryWriter"/>.
+        /// </summary>
+        /// <param name="stream">The stream to write.</param>
+        /// <param name="leaveOpen">true to leave the stream open after the <see cref="BinaryWriter" /> object is disposed; otherwise, false.</param>
+        public static BinaryWriter ToBinaryWriter(this Stream stream, Boolean leaveOpen)
+        {
+            return ToBinaryWriter(stream, null, leaveOpen);
+        }
+        
+        /// <summary>
+        /// Wraps <paramref name="stream"/> with <see cref="BinaryWriter"/>.
+        /// </summary>
+        /// <param name="stream">The stream to write.</param>
         /// <param name="encoding">The character encoding to use.</param>
         /// <param name="leaveOpen">true to leave the stream open after the <see cref="BinaryWriter" /> object is disposed; otherwise, false.</param>
-        public static BinaryWriter ToBinaryWriter(this Stream stream, Encoding? encoding = null, Boolean leaveOpen = false)
+        public static BinaryWriter ToBinaryWriter(this Stream stream, Encoding? encoding, Boolean leaveOpen)
         {
             if (stream is null)
             {
@@ -634,8 +750,17 @@ namespace NetExtender.Utilities.Types
         /// Returns content of the stream as a byte array.
         /// </summary>
         /// <param name="stream">The stream to read.</param>
+        public static String ReadAsString(this Stream stream)
+        {
+            return ReadAsString(stream, null);
+        }
+
+        /// <summary>
+        /// Returns content of the stream as a byte array.
+        /// </summary>
+        /// <param name="stream">The stream to read.</param>
         /// <param name="encoding">The character encoding to use.</param>
-        public static String ReadAsString(this Stream stream, Encoding? encoding = null)
+        public static String ReadAsString(this Stream stream, Encoding? encoding)
         {
             if (stream is null)
             {
@@ -645,23 +770,66 @@ namespace NetExtender.Utilities.Types
             using StreamReader reader = stream.ToStreamReader(encoding, true);
             return reader.ReadToEnd();
         }
+        
+        /// <summary>
+        /// Returns content of the stream as a string.
+        /// </summary>
+        /// <param name="stream">The stream to read.</param>
+        public static Task<String> ReadAsStringAsync(this Stream stream)
+        {
+            return ReadAsStringAsync(stream, null);
+        }
+
+        /// <summary>
+        /// Returns content of the stream as a string.
+        /// </summary>
+        /// <param name="stream">The stream to read.</param>
+        /// <param name="encoding">The character encoding to use.</param>
+        public static async Task<String> ReadAsStringAsync(this Stream stream, Encoding? encoding)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            using StreamReader reader = stream.ToStreamReader(encoding, true);
+            return await reader.ReadToEndAsync().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Returns content of the stream as a byte array.
+        /// </summary>
+        /// <param name="stream">The stream to read.</param>
+        public static String[] ReadAsLines(this Stream stream)
+        {
+            return ReadAsLines(stream, null);
+        }
 
         /// <summary>
         /// Returns content of the stream as a byte array.
         /// </summary>
         /// <param name="stream">The stream to read.</param>
         /// <param name="encoding">The character encoding to use.</param>
-        public static String[] ReadAsLines(this Stream stream, Encoding? encoding = null)
+        public static String[] ReadAsLines(this Stream stream, Encoding? encoding)
         {
             return ReadAsSequential(stream, encoding).ToArray();
         }
-        
+
+        /// <summary>
+        /// Returns content of the stream as a byte array.
+        /// </summary>
+        /// <param name="stream">The stream to read.</param>
+        public static IEnumerable<String> ReadAsSequential(this Stream stream)
+        {
+            return ReadAsSequential(stream, null);
+        }
+
         /// <summary>
         /// Returns content of the stream as a byte array.
         /// </summary>
         /// <param name="stream">The stream to read.</param>
         /// <param name="encoding">The character encoding to use.</param>
-        public static IEnumerable<String> ReadAsSequential(this Stream stream, Encoding? encoding = null)
+        public static IEnumerable<String> ReadAsSequential(this Stream stream, Encoding? encoding)
         {
             if (stream is null)
             {
@@ -676,21 +844,269 @@ namespace NetExtender.Utilities.Types
                 yield return line;
             }
         }
+        
+        public static void Write(this Stream stream, ReadOnlySpan<Char> buffer)
+        {
+            Write(stream, buffer, null);
+        }
 
-        /// <summary>
-        /// Returns content of the stream as a string.
-        /// </summary>
-        /// <param name="stream">The stream to read.</param>
-        /// <param name="encoding">The character encoding to use.</param>
-        public static async Task<String> ReadAsStringAsync(this Stream stream, Encoding? encoding = null)
+        public static void Write(this Stream stream, ReadOnlySpan<Char> buffer, Encoding? encoding)
         {
             if (stream is null)
             {
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            using StreamReader reader = stream.ToStreamReader(encoding, true);
-            return await reader.ReadToEndAsync().ConfigureAwait(false);
+            using StreamWriter writer = stream.ToStreamWriter(encoding, true);
+            writer.Write(buffer);
+        }
+
+        public static void Write(this Stream stream, String? value)
+        {
+            Write(stream, value, null);
+        }
+
+        public static void Write(this Stream stream, String? value, Encoding? encoding)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            using StreamWriter writer = stream.ToStreamWriter(encoding, true);
+            writer.Write(value);
+        }
+        
+        public static void Write(this Stream stream, StringBuilder? value)
+        {
+            Write(stream, value, null);
+        }
+
+        public static void Write(this Stream stream, StringBuilder? value, Encoding? encoding)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            using StreamWriter writer = stream.ToStreamWriter(encoding, true);
+            writer.Write(value);
+        }
+        
+        public static void WriteLine(this Stream stream)
+        {
+            WriteLine(stream, (Encoding?) null);
+        }
+
+        public static void WriteLine(this Stream stream, Encoding? encoding)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            using StreamWriter writer = stream.ToStreamWriter(encoding, true);
+            writer.WriteLine();
+        }
+
+        public static void WriteLine(this Stream stream, ReadOnlySpan<Char> buffer)
+        {
+            WriteLine(stream, buffer, null);
+        }
+
+        public static void WriteLine(this Stream stream, ReadOnlySpan<Char> buffer, Encoding? encoding)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            using StreamWriter writer = stream.ToStreamWriter(encoding, true);
+            writer.WriteLine(buffer);
+        }
+
+        public static void WriteLine(this Stream stream, String? value)
+        {
+            WriteLine(stream, value, null);
+        }
+
+        public static void WriteLine(this Stream stream, String? value, Encoding? encoding)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            using StreamWriter writer = stream.ToStreamWriter(encoding, true);
+            writer.WriteLine(value);
+        }
+
+        public static void WriteLine(this Stream stream, StringBuilder? value)
+        {
+            WriteLine(stream, value, null);
+        }
+
+        public static void WriteLine(this Stream stream, StringBuilder? value, Encoding? encoding)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            using StreamWriter writer = stream.ToStreamWriter(encoding, true);
+            writer.WriteLine(value);
+        }
+
+        public static Task WriteAsync(this Stream stream, ReadOnlyMemory<Char> buffer)
+        {
+            return WriteAsync(stream, buffer, null, CancellationToken.None);
+        }
+
+        public static Task WriteAsync(this Stream stream, ReadOnlyMemory<Char> buffer, Encoding? encoding)
+        {
+            return WriteAsync(stream, buffer, encoding, CancellationToken.None);
+        }
+
+        public static Task WriteAsync(this Stream stream, ReadOnlyMemory<Char> buffer, CancellationToken token)
+        {
+            return WriteAsync(stream, buffer, null, token);
+        }
+
+        public static async Task WriteAsync(this Stream stream, ReadOnlyMemory<Char> buffer, Encoding? encoding, CancellationToken token)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            await using StreamWriter writer = stream.ToStreamWriter(encoding, true);
+            await writer.WriteAsync(buffer, token);
+        }
+
+        public static Task WriteAsync(this Stream stream, String? value)
+        {
+            return WriteAsync(stream, value, null);
+        }
+
+        public static async Task WriteAsync(this Stream stream, String? value, Encoding? encoding)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            await using StreamWriter writer = stream.ToStreamWriter(encoding, true);
+            await writer.WriteAsync(value);
+        }
+        
+        public static Task WriteAsync(this Stream stream, StringBuilder? value)
+        {
+            return WriteAsync(stream, value, null, CancellationToken.None);
+        }
+
+        public static Task WriteAsync(this Stream stream, StringBuilder? value, Encoding? encoding)
+        {
+            return WriteAsync(stream, value, encoding, CancellationToken.None);
+        }
+
+        public static Task WriteAsync(this Stream stream, StringBuilder? value, CancellationToken token)
+        {
+            return WriteAsync(stream, value, null, token);
+        }
+
+        public static async Task WriteAsync(this Stream stream, StringBuilder? value, Encoding? encoding, CancellationToken token)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            await using StreamWriter writer = stream.ToStreamWriter(encoding, true);
+            await writer.WriteAsync(value, token);
+        }
+        
+        public static Task WriteLineAsync(this Stream stream)
+        {
+            return WriteLineAsync(stream, (Encoding?) null);
+        }
+
+        public static async Task WriteLineAsync(this Stream stream, Encoding? encoding)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            await using StreamWriter writer = stream.ToStreamWriter(encoding, true);
+            await writer.WriteLineAsync();
+        }
+
+        public static Task WriteLineAsync(this Stream stream, ReadOnlyMemory<Char> buffer)
+        {
+            return WriteLineAsync(stream, buffer, null, CancellationToken.None);
+        }
+
+        public static Task WriteLineAsync(this Stream stream, ReadOnlyMemory<Char> buffer, Encoding? encoding)
+        {
+            return WriteLineAsync(stream, buffer, encoding, CancellationToken.None);
+        }
+
+        public static Task WriteLineAsync(this Stream stream, ReadOnlyMemory<Char> buffer, CancellationToken token)
+        {
+            return WriteLineAsync(stream, buffer, null, token);
+        }
+
+        public static async Task WriteLineAsync(this Stream stream, ReadOnlyMemory<Char> buffer, Encoding? encoding, CancellationToken token)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            await using StreamWriter writer = stream.ToStreamWriter(encoding, true);
+            await writer.WriteLineAsync(buffer, token);
+        }
+
+        public static Task WriteLineAsync(this Stream stream, String? value)
+        {
+            return WriteLineAsync(stream, value, null);
+        }
+
+        public static async Task WriteLineAsync(this Stream stream, String? value, Encoding? encoding)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            await using StreamWriter writer = stream.ToStreamWriter(encoding, true);
+            await writer.WriteLineAsync(value);
+        }
+        
+        public static Task WriteLineAsync(this Stream stream, StringBuilder? value)
+        {
+            return WriteLineAsync(stream, value, null, CancellationToken.None);
+        }
+
+        public static Task WriteLineAsync(this Stream stream, StringBuilder? value, Encoding? encoding)
+        {
+            return WriteLineAsync(stream, value, encoding, CancellationToken.None);
+        }
+
+        public static Task WriteLineAsync(this Stream stream, StringBuilder? value, CancellationToken token)
+        {
+            return WriteLineAsync(stream, value, null, token);
+        }
+
+        public static async Task WriteLineAsync(this Stream stream, StringBuilder? value, Encoding? encoding, CancellationToken token)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            await using StreamWriter writer = stream.ToStreamWriter(encoding, true);
+            await writer.WriteLineAsync(value, token);
         }
 
         /// <summary>

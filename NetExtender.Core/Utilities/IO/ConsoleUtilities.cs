@@ -40,49 +40,49 @@ namespace NetExtender.Utilities.IO
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<T>? CastReadAsEnumerable<T>()
+        public static IEnumerable<T?>? CastReadAsEnumerable<T>()
         {
             return CastReadAsEnumerable<T>(CultureInfo.InvariantCulture);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<T>? CastReadAsEnumerable<T>(CultureInfo info)
+        public static IEnumerable<T?>? CastReadAsEnumerable<T>(CultureInfo info)
         {
             return CastReadAsEnumerable<T>(StringUtilities.DefaultSeparator, info);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<T>? CastReadAsEnumerable<T>(String separator, CultureInfo info)
+        public static IEnumerable<T?>? CastReadAsEnumerable<T>(String separator, CultureInfo info)
         {
             return Console.ReadLine()?.CastConvert<T>(separator, info);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<T>? CastReadAsEnumerable<T>(String[] separators, CultureInfo info)
+        public static IEnumerable<T?>? CastReadAsEnumerable<T>(String[] separators, CultureInfo info)
         {
             return Console.ReadLine()?.CastConvert<T>(separators, info);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<T>? ReadAsEnumerable<T>()
+        public static IEnumerable<T?>? ReadAsEnumerable<T>()
         {
             return ReadAsEnumerable<T>(CultureInfo.InvariantCulture);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<T>? ReadAsEnumerable<T>(CultureInfo info)
+        public static IEnumerable<T?>? ReadAsEnumerable<T>(CultureInfo info)
         {
             return ReadAsEnumerable<T>(StringUtilities.DefaultSeparator, info);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<T>? ReadAsEnumerable<T>(String separator, CultureInfo info)
+        public static IEnumerable<T?>? ReadAsEnumerable<T>(String separator, CultureInfo info)
         {
             return Console.ReadLine()?.Convert<T>(separator, info);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<T>? ReadAsEnumerable<T>(String[] separators, CultureInfo info)
+        public static IEnumerable<T?>? ReadAsEnumerable<T>(String[] separators, CultureInfo info)
         {
             return Console.ReadLine()?.Convert<T>(separators, info);
         }

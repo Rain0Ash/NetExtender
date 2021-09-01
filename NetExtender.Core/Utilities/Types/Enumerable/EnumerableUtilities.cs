@@ -4963,12 +4963,12 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static IImmutableDictionary<T, Int32> CountGroup<T>(this IEnumerable<T> source) where T : notnull
+        public static IEnumerable<IGrouping<T, Int32>> CountGroup<T>(this IEnumerable<T> source) where T : notnull
         {
             return CountGroup(source, null);
         }
 
-        public static IImmutableDictionary<T, Int32> CountGroup<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer) where T : notnull
+        public static IEnumerable<IGrouping<T, Int32>> CountGroup<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer) where T : notnull
         {
             if (source is null)
             {
@@ -4988,15 +4988,15 @@ namespace NetExtender.Utilities.Types
                 counter[item] = 1;
             }
 
-            return counter.ToImmutableDictionary();
+            return counter.GroupManyByKey();
         }
         
-        public static IImmutableDictionary<TKey, Int32> CountGroupBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector) where TKey : notnull
+        public static IEnumerable<IGrouping<TKey, Int32>> CountGroupBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector) where TKey : notnull
         {
             return CountGroupBy(source, selector, null);
         }
 
-        public static IImmutableDictionary<TKey, Int32> CountGroupBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IEqualityComparer<TKey>? comparer) where TKey : notnull
+        public static IEnumerable<IGrouping<TKey, Int32>> CountGroupBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IEqualityComparer<TKey>? comparer) where TKey : notnull
         {
             if (source is null)
             {
@@ -5011,12 +5011,12 @@ namespace NetExtender.Utilities.Types
             return source.Select(selector).CountGroup(comparer);
         }
         
-        public static IImmutableDictionary<T, Int64> LongCountGroup<T>(this IEnumerable<T> source) where T : notnull
+        public static IEnumerable<IGrouping<T, Int64>> LongCountGroup<T>(this IEnumerable<T> source) where T : notnull
         {
             return LongCountGroup(source, null);
         }
 
-        public static IImmutableDictionary<T, Int64> LongCountGroup<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer) where T : notnull
+        public static IEnumerable<IGrouping<T, Int64>> LongCountGroup<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer) where T : notnull
         {
             if (source is null)
             {
@@ -5036,15 +5036,15 @@ namespace NetExtender.Utilities.Types
                 counter[item] = 1;
             }
 
-            return counter.ToImmutableDictionary();
+            return counter.GroupManyByKey();
         }
         
-        public static IImmutableDictionary<TKey, Int64> LongCountGroupBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector) where TKey : notnull
+        public static IEnumerable<IGrouping<TKey, Int64>> LongCountGroupBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector) where TKey : notnull
         {
             return LongCountGroupBy(source, selector, null);
         }
 
-        public static IImmutableDictionary<TKey, Int64> LongCountGroupBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IEqualityComparer<TKey>? comparer) where TKey : notnull
+        public static IEnumerable<IGrouping<TKey, Int64>> LongCountGroupBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IEqualityComparer<TKey>? comparer) where TKey : notnull
         {
             if (source is null)
             {

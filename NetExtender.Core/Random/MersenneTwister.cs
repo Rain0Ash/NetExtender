@@ -427,5 +427,9 @@ namespace NetExtender.Random
             // Why? (Is it the FMUL instruction? Does this count in .Net? Will the JITter notice?)
             //return BitConverter.Int64BitsToDouble((a << 26) + b));
         }
+
+        void IDisposable.Dispose()
+        {
+        }
     }
 }

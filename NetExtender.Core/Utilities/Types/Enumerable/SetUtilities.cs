@@ -173,38 +173,6 @@ namespace NetExtender.Utilities.Types
         {
             return NearestLower(set, value, out T? result) ? result : default;
         }
-        
-        public static IEnumerable<T> NearestsLower<T>(this SortedSet<T> set, T value)
-        {
-            if (set is null)
-            {
-                throw new ArgumentNullException(nameof(set));
-            }
-
-            return NearestsLower(set, value, set.Comparer);
-        }
-        
-        public static IEnumerable<T> NearestsLower<T>(this SortedSet<T> set, T value, Int32 count)
-        {
-            return NearestsLower(set, value).Take(count);
-        }
-
-        public static IEnumerable<T> NearestsLower<T>(this SortedSet<T> set, T value, IComparer<T>? comparer)
-        {
-            if (set is null)
-            {
-                throw new ArgumentNullException(nameof(set));
-            }
-
-            comparer ??= set.Comparer;
-
-            return set.Where(item => comparer.Compare(item, value) < 0);
-        }
-        
-        public static IEnumerable<T> NearestsLower<T>(this SortedSet<T> set, T value, IComparer<T>? comparer, Int32 count)
-        {
-            return NearestsLower(set, value, comparer).Take(count);
-        }
 
         public static Boolean NearestLower<T>(this SortedSet<T> set, T value, [MaybeNullWhen(false)] out T result)
         {
@@ -241,38 +209,6 @@ namespace NetExtender.Utilities.Types
                 default:
                     return set.TryGetLast(item => comparer.Compare(item, value) < 0, out result);
             }
-        }
-        
-        public static IEnumerable<T> NearestsHigher<T>(this SortedSet<T> set, T value)
-        {
-            if (set is null)
-            {
-                throw new ArgumentNullException(nameof(set));
-            }
-
-            return NearestsHigher(set, value, set.Comparer);
-        }
-        
-        public static IEnumerable<T> NearestsHigher<T>(this SortedSet<T> set, T value, Int32 count)
-        {
-            return NearestsHigher(set, value).Take(count);
-        }
-
-        public static IEnumerable<T> NearestsHigher<T>(this SortedSet<T> set, T value, IComparer<T>? comparer)
-        {
-            if (set is null)
-            {
-                throw new ArgumentNullException(nameof(set));
-            }
-
-            comparer ??= set.Comparer;
-
-            return set.Where(item => comparer.Compare(item, value) > 0);
-        }
-        
-        public static IEnumerable<T> NearestsHigher<T>(this SortedSet<T> set, T value, IComparer<T>? comparer, Int32 count)
-        {
-            return NearestsHigher(set, value, comparer).Take(count);
         }
 
         public static T? NearestHigher<T>(this SortedSet<T> set, T value)
@@ -363,38 +299,6 @@ namespace NetExtender.Utilities.Types
 
             return (left, right);
         }
-        
-        public static IEnumerable<T> NearestsLower<T>(this ImmutableSortedSet<T> set, T value)
-        {
-            if (set is null)
-            {
-                throw new ArgumentNullException(nameof(set));
-            }
-
-            return NearestsLower(set, value, set.KeyComparer);
-        }
-        
-        public static IEnumerable<T> NearestsLower<T>(this ImmutableSortedSet<T> set, T value, Int32 count)
-        {
-            return NearestsLower(set, value).Take(count);
-        }
-
-        public static IEnumerable<T> NearestsLower<T>(this ImmutableSortedSet<T> set, T value, IComparer<T>? comparer)
-        {
-            if (set is null)
-            {
-                throw new ArgumentNullException(nameof(set));
-            }
-
-            comparer ??= set.KeyComparer;
-
-            return set.Where(item => comparer.Compare(item, value) < 0);
-        }
-        
-        public static IEnumerable<T> NearestsLower<T>(this ImmutableSortedSet<T> set, T value, IComparer<T>? comparer, Int32 count)
-        {
-            return NearestsLower(set, value, comparer).Take(count);
-        }
 
         public static Boolean NearestLower<T>(this ImmutableSortedSet<T> set, T value, [MaybeNullWhen(false)] out T result)
         {
@@ -431,38 +335,6 @@ namespace NetExtender.Utilities.Types
                 default:
                     return set.TryGetLast(item => comparer.Compare(item, value) < 0, out result);
             }
-        }
-        
-        public static IEnumerable<T> NearestsHigher<T>(this ImmutableSortedSet<T> set, T value)
-        {
-            if (set is null)
-            {
-                throw new ArgumentNullException(nameof(set));
-            }
-
-            return NearestsHigher(set, value, set.KeyComparer);
-        }
-        
-        public static IEnumerable<T> NearestsHigher<T>(this ImmutableSortedSet<T> set, T value, Int32 count)
-        {
-            return NearestsHigher(set, value).Take(count);
-        }
-
-        public static IEnumerable<T> NearestsHigher<T>(this ImmutableSortedSet<T> set, T value, IComparer<T>? comparer)
-        {
-            if (set is null)
-            {
-                throw new ArgumentNullException(nameof(set));
-            }
-
-            comparer ??= set.KeyComparer;
-
-            return set.Where(item => comparer.Compare(item, value) > 0);
-        }
-        
-        public static IEnumerable<T> NearestsHigher<T>(this ImmutableSortedSet<T> set, T value, IComparer<T>? comparer, Int32 count)
-        {
-            return NearestsHigher(set, value, comparer).Take(count);
         }
 
         public static T? NearestHigher<T>(this ImmutableSortedSet<T> set, T value)

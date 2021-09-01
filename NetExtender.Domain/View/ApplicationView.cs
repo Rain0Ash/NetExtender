@@ -200,7 +200,7 @@ namespace NetExtender.Domains.View
                 return TaskUtilities.False;
             }
 
-            Process? process = Process.Start(info);
+            using Process? process = Process.Start(info);
             return process is null ? TaskUtilities.False : application.ShutdownAsync(token);
         }
 

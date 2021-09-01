@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Types.Dispatchers.Interfaces;
 using NetExtender.Utilities.IO;
-using NetExtender.Utilities.Types;
+using NetExtender.Utilities.Threading;
 
 namespace NetExtender.Utilities.Application
 {
@@ -278,8 +278,13 @@ namespace NetExtender.Utilities.Application
             {
                 return false;
             }
-            
-            Process? restart = await ProcessUtilities.StartProcessAsync(path, wait, token);
+
+            using Process? restart = await new ProcessStartInfo(path)
+            {
+                WindowStyle = ProcessWindowStyle.Hidden,
+                CreateNoWindow = true
+                
+            }.StartProcessAsync(wait, token);
 
             if (restart is null)
             {

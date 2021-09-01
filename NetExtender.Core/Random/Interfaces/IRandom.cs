@@ -5,7 +5,7 @@ using System;
 
 namespace NetExtender.Random.Interfaces
 {
-    public interface IRandom
+    public interface IRandom : IDisposable
     {
         public Int32 Next();
 

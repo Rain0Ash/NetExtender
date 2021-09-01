@@ -9,7 +9,7 @@ namespace NetExtender.Utilities.Network
 {
     public static class ProxyUtilities
     {
-        public static async Task<HttpStatusCode> CheckProxyAsync(this WebProxy proxy)
+        public static async Task<HttpStatusCode> GetProxyStatusAsync(this WebProxy proxy)
         {
             if (proxy?.Address is null)
             {

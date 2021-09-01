@@ -94,11 +94,11 @@ namespace NetExtender.Utilities.Threading
             
             foreach (TSource item in source)
             {
-                pqueue.EnqueueItem(() =>
+                pqueue.Enqueue(() =>
                 {
                     TTarget value = function(item);
                     // ReSharper disable once AccessToDisposedClosure
-                    cqueue.EnqueueItem(() => action(value));
+                    cqueue.Enqueue(() => action(value));
                 });
             }
 
@@ -146,7 +146,7 @@ namespace NetExtender.Utilities.Threading
             
             foreach (Action action in source)
             {
-                queue.EnqueueItem(action);
+                queue.Enqueue(action);
             }
 
             queue.WaitAll();
@@ -187,7 +187,7 @@ namespace NetExtender.Utilities.Threading
             
             foreach (T item in source)
             {
-                queue.EnqueueItem(() => action(item));
+                queue.Enqueue(() => action(item));
             }
 
             queue.WaitAll();

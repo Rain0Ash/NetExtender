@@ -82,5 +82,9 @@ namespace NetExtender.Random
         {
             return _random.ToString();
         }
+
+        void IDisposable.Dispose()
+        {
+        }
     }
 }

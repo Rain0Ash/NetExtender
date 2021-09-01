@@ -10,22 +10,32 @@ namespace NetExtender.Types.Queues
 {
     internal sealed class ParallelQueue : IDisposable
     {
-        private readonly BlockingCollection<Action> _queue = new BlockingCollection<Action>();
-        
-        private readonly List<Exception> _exceptions = new List<Exception>();
-        
-        private readonly Thread[] _workers;
-        
+        private BlockingCollection<Action?> Queue { get; } = new BlockingCollection<Action?>();
+
+        private List<Exception> Exceptions { get; } = new List<Exception>();
+
+        private Thread[] Workers { get; }
+
         private Int32 _finished;
 
         public ParallelQueue(Int32 workers, String? name = null)
         {
-            _workers = new Thread[Math.Max(1, workers)];
+            Workers = new Thread[Math.Max(1, workers)];
 
             for (Int32 i = 0; i < workers; i++)
             {
-                (_workers[i] = new Thread(Work) { Name = name + i }).Start();
+                (Workers[i] = new Thread(Work) { Name = name + i }).Start();
             }
+        }
+        
+        public void Enqueue(Action item)
+        {
+            if (item is null)
+            {
+                throw new ArgumentNullException(nameof(item));
+            }
+
+            Queue.Add(item);
         }
 
         public void WaitAll()
@@ -35,40 +45,29 @@ namespace NetExtender.Types.Queues
                 return;
             }
 
-            foreach (Thread _ in _workers)
+            foreach (Thread _ in Workers)
             {
-                _queue.Add(null!);
+                Queue.Add(null);
             }
 
-            foreach (Thread worker in _workers)
+            foreach (Thread worker in Workers)
             {
                 worker.Join();
             }
 
-            _queue.CompleteAdding();
+            Queue.CompleteAdding();
 
-            if (_exceptions.Count > 0)
+            if (Exceptions.Count > 0)
             {
-                throw new AggregateException(_exceptions[0].Message, _exceptions);
+                throw new AggregateException(Exceptions[0].Message, Exceptions);
             }
-        }
-
-        public void EnqueueItem(Action item)
-        {
-            if (item is null)
-            {
-                throw new ArgumentNullException(nameof(item));
-            }
-
-            _queue.Add(item);
         }
 
         private void Work()
         {
-            foreach (Action? action in _queue.GetConsumingEnumerable())
+            foreach (Action? action in Queue.GetConsumingEnumerable())
             {
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-                if (action is null || _exceptions.Count != 0)
+                if (action is null || Exceptions.Count != 0)
                 {
                     return;
                 }
@@ -77,9 +76,9 @@ namespace NetExtender.Types.Queues
                 {
                     action();
                 }
-                catch (Exception ex)
+                catch (Exception exception)
                 {
-                    _exceptions.Add(ex);
+                    Exceptions.Add(exception);
                 }
             }
         }
@@ -87,7 +86,7 @@ namespace NetExtender.Types.Queues
         public void Dispose()
         {
             WaitAll();
-            _queue.Dispose();
+            Queue.Dispose();
         }
     }
 }

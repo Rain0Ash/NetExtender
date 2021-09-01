@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Dictionaries.Interfaces;
@@ -63,7 +64,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
 
-            return Dictionary.TryGetValue(key, out ImmutableHashSet<TValue> result) && result.Contains(value);
+            return Dictionary.TryGetValue(key, out ImmutableHashSet<TValue>? result) && result.Contains(value);
         }
         
         // ReSharper disable once UseDeconstructionOnParameter
@@ -94,14 +95,14 @@ namespace NetExtender.Types.Immutable.Dictionaries
             return Dictionary.ContainsKey(key);
         }
         
-        public Boolean TryGetValue(TKey key, out TValue value)
+        public Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
             if (key is null)
             {
                 throw new ArgumentNullException(nameof(key));
             }
 
-            if (TryGetValue(key, out ImmutableHashSet<TValue> result) && result?.Count > 0)
+            if (TryGetValue(key, out ImmutableHashSet<TValue>? result) && result?.Count > 0)
             {
                 value = result.First();
                 return true;
@@ -111,7 +112,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
             return false;
         }
 
-        public Boolean TryGetValue(TKey key, out ImmutableHashSet<TValue> value)
+        public Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out ImmutableHashSet<TValue> value)
         {
             if (key is null)
             {
@@ -228,7 +229,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
 
-            return TryGetValue(key, out ImmutableHashSet<TValue> result) && result is not null && result.Contains(value) ?
+            return TryGetValue(key, out ImmutableHashSet<TValue>? result) && result is not null! && result.Contains(value) ?
                 new ImmutableMultiDictionary<TKey, TValue>(Dictionary.SetItem(key, result.Remove(value))) : this;
         }
 
@@ -279,7 +280,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
 
         public ImmutableMultiDictionary<TKey, TValue> SetItem(TKey key, TValue value)
         {
-            if (TryGetValue(key, out ImmutableHashSet<TValue> result) && result is not null)
+            if (TryGetValue(key, out ImmutableHashSet<TValue>? result) && result is not null!)
             {
                 return new ImmutableMultiDictionary<TKey, TValue>(Dictionary.SetItem(key, result.Add(value)));
             }
@@ -303,7 +304,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
             
             foreach ((TKey key, TValue value) in items)
             {
-                if (key is null)
+                if (key is null!)
                 {
                     continue;
                 }
@@ -314,7 +315,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
             ImmutableDictionary<TKey, ImmutableHashSet<TValue>> dictionary = Dictionary;
             foreach ((TKey key, ImmutableHashSet<TValue> set) in itemdict)
             {
-                if (dictionary.TryGetValue(key, out ImmutableHashSet<TValue> result) && result is not null && !result.IsEmpty)
+                if (dictionary.TryGetValue(key, out ImmutableHashSet<TValue>? result) && result is not null! && !result.IsEmpty)
                 {
                     dictionary = dictionary.SetItem(key, result.Intersect(set));
                 }
@@ -429,7 +430,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
                     throw new ArgumentNullException(nameof(key));
                 }
                 
-                if (TryGetValue(key, out TValue value))
+                if (TryGetValue(key, out TValue? value))
                 {
                     return value;
                 }
@@ -442,7 +443,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
         {
             foreach ((TKey key, ImmutableHashSet<TValue> value) in this)
             {
-                if (value is null || value.IsEmpty)
+                if (value is null! || value.IsEmpty)
                 {
                     continue;
                 }

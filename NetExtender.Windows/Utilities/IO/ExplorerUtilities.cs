@@ -3,10 +3,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Types;
 
@@ -275,6 +278,52 @@ namespace NetExtender.Utilities.Windows.IO
             ptrfiles.ForEach(Marshal.FreeCoTaskMem);
             
             return hresult == 0;
+        }
+
+        public static Task<String?> ShowInNotepadAsync(String? value)
+        {
+            return ShowInNotepadAsync(value, CancellationToken.None);
+        }
+
+        public static async Task<String?> ShowInNotepadAsync(String? value, CancellationToken token)
+        {
+            if (token.IsCancellationRequested)
+            {
+                return null;
+            }
+            
+            FileInfo? info = null;
+
+            try
+            {
+                info = new FileInfo(Path.GetTempFileName());
+                
+                await using (FileStream write = info.OpenWrite())
+                {
+                    await write.WriteAsync(value);
+                }
+
+                using Process? process = Process.Start("notepad.exe", info.FullName);
+
+                if (process is null!)
+                {
+                    return null;
+                }
+
+                await process.WaitForExitAsync(token);
+
+                await using FileStream stream = info.OpenRead();
+
+                return await stream.ReadAsStringAsync();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            finally
+            {
+                info?.Delete();
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Immutable.Dictionaries;
+using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
@@ -510,7 +511,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static Boolean TryGetValue<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TKey key, Func<TKey, TValue> factory, [MaybeNullWhen(false)] out TValue? result)
+        public static Boolean TryGetValue<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TKey key, Func<TKey, TValue> factory, [MaybeNullWhen(false)] out TValue result)
         {
             if (source is null)
             {
@@ -820,6 +821,583 @@ namespace NetExtender.Utilities.Types
             return dictionary;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<IGrouping<TKey, KeyValuePair<TKey, TValue>>> GroupBy<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.GroupBy(item => item.Key);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<IGrouping<TKey, KeyValuePair<TKey, TValue>>> GroupByKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.GroupBy(item => item.Key);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<IGrouping<TValue, KeyValuePair<TKey, TValue>>> GroupByValue<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.GroupBy(item => item.Value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<IGrouping<TKey, TValue>> GroupManyByKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.GroupBy(item => item.Key, item => item.Value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<IGrouping<TValue, TKey>> GroupManyByValue<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.GroupBy(item => item.Value, item => item.Key);
+        }
+
+        public static KeyValuePair<TKey, TValue>? NearestLower<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value) where TKey : notnull
+        {
+            return NearestLower(source, value, out KeyValuePair<TKey, TValue>? result) ? result : default;
+        }
+
+        public static Boolean NearestLower<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, out KeyValuePair<TKey, TValue>? result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return NearestLower(source, value, source.Comparer, out result);
+        }
+
+        public static KeyValuePair<TKey, TValue>? NearestLower<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            return NearestLower(source, value, comparer, out KeyValuePair<TKey, TValue>? result) ? result : default;
+        }
+
+        public static Boolean NearestLower<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer, out KeyValuePair<TKey, TValue>? result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            comparer ??= source.Comparer;
+
+            switch (source.Count)
+            {
+                case 0:
+                    result = default;
+                    return false;
+                case 1:
+                    result = source.First();
+                    return true;
+                default:
+                    Boolean successful = source.TryGetLast(item => comparer.Compare(item.Key, value) < 0, out KeyValuePair<TKey, TValue> pair);
+                    result = pair;
+                    return successful;
+            }
+        }
+
+        public static KeyValuePair<TKey, TValue>? NearestHigher<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value) where TKey : notnull
+        {
+            return NearestHigher(source, value, out KeyValuePair<TKey, TValue>? result) ? result : default;
+        }
+        
+        public static Boolean NearestHigher<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, out KeyValuePair<TKey, TValue>? result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return NearestHigher(source, value, source.Comparer, out result);
+        }
+
+        public static KeyValuePair<TKey, TValue>? NearestHigher<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            return NearestHigher(source, value, comparer, out KeyValuePair<TKey, TValue>? result) ? result : default;
+        }
+
+        public static Boolean NearestHigher<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer, out KeyValuePair<TKey, TValue>? result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            switch (source.Count)
+            {
+                case 0:
+                    result = default;
+                    return false;
+                case 1:
+                    result = source.First();
+                    return true;
+                default:
+                    comparer ??= source.Comparer;
+                    Boolean successful = source.TryGetFirst(item => comparer.Compare(item.Key, value) > 0, out KeyValuePair<TKey, TValue> pair);
+                    result = pair;
+                    return successful;
+            }
+        }
+
+        public static (KeyValuePair<TKey, TValue>?, KeyValuePair<TKey, TValue>?) Nearest<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value) where TKey : notnull
+        {
+            return Nearest(source, value, out _);
+        }
+
+        public static (KeyValuePair<TKey, TValue>?, KeyValuePair<TKey, TValue>?) Nearest<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, out MathPositionType result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Nearest(source, value, source.Comparer, out result);
+        }
+
+        public static (KeyValuePair<TKey, TValue>?, KeyValuePair<TKey, TValue>?) Nearest<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            return Nearest(source, value, comparer, out _);
+        }
+
+        public static (KeyValuePair<TKey, TValue>?, KeyValuePair<TKey, TValue>?) Nearest<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer, out MathPositionType result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            comparer ??= source.Comparer;
+
+            if (source.Count <= 0)
+            {
+                result = MathPositionType.None;
+                return default;
+            }
+            
+            Boolean first = source.TryGetLast(item => comparer.Compare(item.Key, value) < 0, out KeyValuePair<TKey, TValue> left);
+            Boolean second = source.TryGetFirst(item => comparer.Compare(item.Key, value) > 0, out KeyValuePair<TKey, TValue> right);
+
+            result = first switch
+            {
+                true when second => MathPositionType.Both,
+                true => MathPositionType.Left,
+                _ => second ? MathPositionType.Right : MathPositionType.None
+            };
+
+            return (left, right);
+        }
+
+        public static Boolean NearestLower<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, out KeyValuePair<TKey, TValue>? result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return NearestLower(source, value, source.KeyComparer, out result);
+        }
+
+        public static KeyValuePair<TKey, TValue>? NearestLower<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            return NearestLower(source, value, comparer, out KeyValuePair<TKey, TValue>? result) ? result : default;
+        }
+
+        public static Boolean NearestLower<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer, out KeyValuePair<TKey, TValue>? result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            comparer ??= source.KeyComparer;
+
+            switch (source.Count)
+            {
+                case 0:
+                    result = default;
+                    return false;
+                case 1:
+                    result = source.First();
+                    return true;
+                default:
+                    Boolean successful = source.TryGetLast(item => comparer.Compare(item.Key, value) < 0, out KeyValuePair<TKey, TValue> pair);
+                    result = pair;
+                    return successful;
+            }
+        }
+        
+        public static KeyValuePair<TKey, TValue>? NearestHigher<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value) where TKey : notnull
+        {
+            return NearestHigher(source, value, out KeyValuePair<TKey, TValue>? result) ? result : default;
+        }
+        
+        public static Boolean NearestHigher<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, out KeyValuePair<TKey, TValue>? result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return NearestHigher(source, value, source.KeyComparer, out result);
+        }
+
+        public static KeyValuePair<TKey, TValue>? NearestHigher<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            return NearestHigher(source, value, comparer, out KeyValuePair<TKey, TValue>? result) ? result : default;
+        }
+
+        public static Boolean NearestHigher<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer, out KeyValuePair<TKey, TValue>? result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            switch (source.Count)
+            {
+                case 0:
+                    result = default;
+                    return false;
+                case 1:
+                    result = source.First();
+                    return true;
+                default:
+                    comparer ??= source.KeyComparer;
+                    Boolean successful = source.TryGetFirst(item => comparer.Compare(item.Key, value) > 0, out KeyValuePair<TKey, TValue> pair);
+                    result = pair;
+                    return successful;
+            }
+        }
+
+        public static (KeyValuePair<TKey, TValue>?, KeyValuePair<TKey, TValue>?) Nearest<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value) where TKey : notnull
+        {
+            return Nearest(source, value, out _);
+        }
+
+        public static (KeyValuePair<TKey, TValue>?, KeyValuePair<TKey, TValue>?) Nearest<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, out MathPositionType result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Nearest(source, value, source.KeyComparer, out result);
+        }
+
+        public static (KeyValuePair<TKey, TValue>?, KeyValuePair<TKey, TValue>?) Nearest<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            return Nearest(source, value, comparer, out _);
+        }
+
+        public static (KeyValuePair<TKey, TValue>?, KeyValuePair<TKey, TValue>?) Nearest<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer, out MathPositionType result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (source.Count <= 0)
+            {
+                result = MathPositionType.None;
+                return default;
+            }
+            
+            comparer ??= source.KeyComparer;
+            
+            Boolean first = source.TryGetLast(item => comparer.Compare(item.Key, value) < 0, out KeyValuePair<TKey, TValue> left);
+            Boolean second = source.TryGetFirst(item => comparer.Compare(item.Key, value) > 0, out KeyValuePair<TKey, TValue> right);
+
+            result = first switch
+            {
+                true when second => MathPositionType.Both,
+                true => MathPositionType.Left,
+                _ => second ? MathPositionType.Right : MathPositionType.None
+            };
+
+            return (left, right);
+        }
+        
+        public static TKey? NearestLowerKey<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value) where TKey : notnull
+        {
+            return NearestLowerKey(source, value, out TKey? result) ? result : default;
+        }
+
+        public static Boolean NearestLowerKey<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, [MaybeNullWhen(false)] out TKey result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return NearestLowerKey(source, value, source.Comparer, out result);
+        }
+
+        public static TKey? NearestLowerKey<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            return NearestLowerKey(source, value, comparer, out TKey? result) ? result : default;
+        }
+
+        public static Boolean NearestLowerKey<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer, [MaybeNullWhen(false)] out TKey result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            comparer ??= source.Comparer;
+
+            switch (source.Count)
+            {
+                case 0:
+                    result = default;
+                    return false;
+                case 1:
+                    result = source.Keys.First();
+                    return true;
+                default:
+                    return source.Keys.TryGetLast(item => comparer.Compare(item, value) < 0, out result);
+            }
+        }
+
+        public static TKey? NearestHigherKey<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value) where TKey : notnull
+        {
+            return NearestHigherKey(source, value, out TKey? result) ? result : default;
+        }
+        
+        public static Boolean NearestHigherKey<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, [MaybeNullWhen(false)] out TKey result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return NearestHigherKey(source, value, source.Comparer, out result);
+        }
+
+        public static TKey? NearestHigherKey<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            return NearestHigherKey(source, value, comparer, out TKey? result) ? result : default;
+        }
+
+        public static Boolean NearestHigherKey<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer, [MaybeNullWhen(false)] out TKey result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            switch (source.Count)
+            {
+                case 0:
+                    result = default;
+                    return false;
+                case 1:
+                    result = source.Keys.First();
+                    return true;
+                default:
+                    comparer ??= source.Comparer;
+                    return source.Keys.TryGetFirst(item => comparer.Compare(item, value) > 0, out result);
+            }
+        }
+
+        public static (TKey?, TKey?) NearestKey<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value) where TKey : notnull
+        {
+            return NearestKey(source, value, out _);
+        }
+
+        public static (TKey?, TKey?) NearestKey<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, out MathPositionType result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return NearestKey(source, value, source.Comparer, out result);
+        }
+
+        public static (TKey?, TKey?) NearestKey<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            return NearestKey(source, value, comparer, out _);
+        }
+
+        public static (TKey?, TKey?) NearestKey<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer, out MathPositionType result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            comparer ??= source.Comparer;
+
+            if (source.Count <= 0)
+            {
+                result = MathPositionType.None;
+                return default;
+            }
+            
+            Boolean first = source.Keys.TryGetLast(item => comparer.Compare(item, value) < 0, out TKey? left);
+            Boolean second = source.Keys.TryGetFirst(item => comparer.Compare(item, value) > 0, out TKey? right);
+
+            result = first switch
+            {
+                true when second => MathPositionType.Both,
+                true => MathPositionType.Left,
+                _ => second ? MathPositionType.Right : MathPositionType.None
+            };
+
+            return (left, right);
+        }
+
+        public static Boolean NearestLowerKey<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, [MaybeNullWhen(false)] out TKey result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return NearestLowerKey(source, value, source.KeyComparer, out result);
+        }
+
+        public static TKey? NearestLowerKey<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            return NearestLowerKey(source, value, comparer, out TKey? result) ? result : default;
+        }
+
+        public static Boolean NearestLowerKey<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer, [MaybeNullWhen(false)] out TKey result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            comparer ??= source.KeyComparer;
+
+            switch (source.Count)
+            {
+                case 0:
+                    result = default;
+                    return false;
+                case 1:
+                    result = source.Keys.First();
+                    return true;
+                default:
+                    return source.Keys.TryGetLast(item => comparer.Compare(item, value) < 0, out result);
+            }
+        }
+
+        public static TKey? NearestHigherKey<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value) where TKey : notnull
+        {
+            return NearestHigherKey(source, value, out TKey? result) ? result : default;
+        }
+        
+        public static Boolean NearestHigherKey<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, [MaybeNullWhen(false)] out TKey result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return NearestHigherKey(source, value, source.KeyComparer, out result);
+        }
+
+        public static TKey? NearestHigherKey<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            return NearestHigherKey(source, value, comparer, out TKey? result) ? result : default;
+        }
+
+        public static Boolean NearestHigherKey<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer, [MaybeNullWhen(false)] out TKey result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            switch (source.Count)
+            {
+                case 0:
+                    result = default;
+                    return false;
+                case 1:
+                    result = source.Keys.First();
+                    return true;
+                default:
+                    comparer ??= source.KeyComparer;
+                    return source.Keys.TryGetFirst(item => comparer.Compare(item, value) > 0, out result);
+            }
+        }
+
+        public static (TKey?, TKey?) NearestKey<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value) where TKey : notnull
+        {
+            return NearestKey(source, value, out _);
+        }
+
+        public static (TKey?, TKey?) NearestKey<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, out MathPositionType result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return NearestKey(source, value, source.KeyComparer, out result);
+        }
+
+        public static (TKey?, TKey?) NearestKey<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            return NearestKey(source, value, comparer, out _);
+        }
+
+        public static (TKey?, TKey?) NearestKey<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer, out MathPositionType result) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (source.Count <= 0)
+            {
+                result = MathPositionType.None;
+                return default;
+            }
+            
+            comparer ??= source.KeyComparer;
+            
+            Boolean first = source.Keys.TryGetLast(item => comparer.Compare(item, value) < 0, out TKey? left);
+            Boolean second = source.Keys.TryGetFirst(item => comparer.Compare(item, value) > 0, out TKey? right);
+
+            result = first switch
+            {
+                true when second => MathPositionType.Both,
+                true => MathPositionType.Left,
+                _ => second ? MathPositionType.Right : MathPositionType.None
+            };
+
+            return (left, right);
+        }
+
         public static Dictionary<TKey, TValue> Clone<TKey, TValue>(this Dictionary<TKey, TValue> source) where TKey : notnull where TValue : ICloneable
         {
             if (source is null)
@@ -860,6 +1438,6 @@ namespace NetExtender.Utilities.Types
             }
             
             return ImmutableMultiDictionary<TKey, TValue>.Empty.AddRange(source);
-        } 
+        }
     }
 }

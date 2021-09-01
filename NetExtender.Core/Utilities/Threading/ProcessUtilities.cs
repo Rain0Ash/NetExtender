@@ -8,9 +8,9 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Utilities.IO;
+using NetExtender.Utilities.Types;
 
-namespace NetExtender.Utilities.Types
+namespace NetExtender.Utilities.Threading
 {
     /// <summary>
     /// Contains information about process after it has exited.
@@ -44,20 +44,57 @@ namespace NetExtender.Utilities.Types
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                Process.Start(new ProcessStartInfo(url) {UseShellExecute = true});
+                using Process? process = Process.Start(new ProcessStartInfo(url) {UseShellExecute = true});
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
-                Process.Start("xdg-open", url);
+                using Process process = Process.Start("xdg-open", url);
             }
             else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                Process.Start("open", url);
+                using Process process = Process.Start("open", url);
             }
             else
             {
                 throw new NotSupportedException();
             }
+        }
+
+        public static void Kill(this Process process, Boolean entireProcessTree, Boolean dispose)
+        {
+            if (process is null)
+            {
+                throw new ArgumentNullException(nameof(process));
+            }
+
+            process.Kill(entireProcessTree);
+            
+            if (dispose)
+            {
+                process.Dispose();
+            }
+        }
+
+        public static void DisposeKill(this Process process)
+        {
+            if (process is null)
+            {
+                throw new ArgumentNullException(nameof(process));
+            }
+
+            process.Kill();
+            process.Dispose();
+        }
+
+        public static void DisposeKill(this Process process, Boolean entireProcessTree)
+        {
+            if (process is null)
+            {
+                throw new ArgumentNullException(nameof(process));
+            }
+
+            process.Kill(entireProcessTree);
+            process.Dispose();
         }
 
         public static Boolean TryKill(this Process process)
@@ -88,6 +125,54 @@ namespace NetExtender.Utilities.Types
             try
             {
                 process.Kill(entireProcessTree);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        
+        public static Boolean TryKill(this Process process, Boolean entireProcessTree, Boolean dispose)
+        {
+            if (process is null)
+            {
+                throw new ArgumentNullException(nameof(process));
+            }
+
+            return dispose ? TryKill(process, entireProcessTree) : TryDisposeKill(process, entireProcessTree);
+        }
+        
+        public static Boolean TryDisposeKill(this Process process)
+        {
+            if (process is null)
+            {
+                throw new ArgumentNullException(nameof(process));
+            }
+
+            try
+            {
+                process.Kill();
+                process.Dispose();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        
+        public static Boolean TryDisposeKill(this Process process, Boolean entireProcessTree)
+        {
+            if (process is null)
+            {
+                throw new ArgumentNullException(nameof(process));
+            }
+
+            try
+            {
+                process.Kill(entireProcessTree);
+                process.Dispose();
                 return true;
             }
             catch (Exception)
@@ -216,25 +301,24 @@ namespace NetExtender.Utilities.Types
 
             TaskCompletionSource<DateTime> start = new TaskCompletionSource<DateTime>();
 
-            process.Exited += async (_, _) =>
+            async void OnProcessOnExited(Object? obj, EventArgs args)
             {
-                source.TrySetResult(
-                    new ProcessResult(process,
-                        await start.Task.ConfigureAwait(false),
-                        await output.ConfigureAwait(false),
-                        await error.ConfigureAwait(false))
-                );
-            };
+                source.TrySetResult(new ProcessResult(process, await start.Task.ConfigureAwait(false), await output.ConfigureAwait(false), await error.ConfigureAwait(false)));
+            }
 
-            await using (token.Register(() =>
+            void Cancellation()
             {
-                source.TrySetCanceled();
+                source.TrySetCanceled(token);
 
                 if (!process.HasExited)
                 {
-                    process.TryKill();
+                    process.TryDisposeKill();
                 }
-            }))
+            }
+
+            process.Exited += OnProcessOnExited;
+
+            await using (token.Register(Cancellation))
             {
                 token.ThrowIfCancellationRequested();
 
@@ -309,7 +393,7 @@ namespace NetExtender.Utilities.Types
 
             try
             {
-                return await GetProcessOutputAsync(process)!;
+                return await GetProcessOutputAsync(process);
             }
             catch (Exception)
             {
@@ -363,7 +447,7 @@ namespace NetExtender.Utilities.Types
 
             try
             {
-                return await GetProcessErrorAsync(process)!;
+                return await GetProcessErrorAsync(process);
             }
             catch (Exception)
             {
@@ -378,12 +462,32 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(path));
             }
 
-            if (!PathUtilities.IsExistAsFile(path))
+            return Process.Start(path);
+        }
+
+        public static Process StartProcess(String path, String? arguments)
+        {
+            if (path is null)
             {
-                throw new FileNotFoundException("File doesn't exist.", path);
+                throw new ArgumentNullException(nameof(path));
             }
 
-            return Process.Start(path);
+            return arguments is not null ? Process.Start(path, arguments) : StartProcess(path);
+        }
+
+        public static Process StartProcess(String path, IEnumerable<String> arguments)
+        {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (arguments is null)
+            {
+                throw new ArgumentNullException(nameof(arguments));
+            }
+
+            return Process.Start(path, arguments);
         }
 
         public static Task<Process?> StartProcessAsync(String path, Int32 milliseconds)
@@ -403,17 +507,73 @@ namespace NetExtender.Utilities.Types
 
         public static Task<Process?> StartProcessAsync(String path, TimeSpan wait, CancellationToken token)
         {
+            return StartProcessAsync(path, (String?) null, wait, token);
+        }
+        
+        public static Task<Process?> StartProcessAsync(String path, String? arguments, Int32 milliseconds)
+        {
+            return StartProcessAsync(path, arguments, milliseconds, CancellationToken.None);
+        }
+
+        public static Task<Process?> StartProcessAsync(String path, String? arguments, TimeSpan wait)
+        {
+            return StartProcessAsync(path, arguments, wait, CancellationToken.None);
+        }
+
+        public static Task<Process?> StartProcessAsync(String path, String? arguments, Int32 milliseconds, CancellationToken token)
+        {
+            return StartProcessAsync(path, arguments, TimeSpan.FromMilliseconds(milliseconds), token);
+        }
+
+        public static Task<Process?> StartProcessAsync(String path, String? arguments, TimeSpan wait, CancellationToken token)
+        {
             if (path is null)
             {
                 throw new ArgumentNullException(nameof(path));
             }
 
-            if (!PathUtilities.IsExistAsFile(path))
+            if (arguments is null)
             {
-                throw new FileNotFoundException("File doesn't exist.", path);
+                return StartProcessAsync(path, wait, token);
             }
 
-            return StartProcessAsync(new FileInfo(path), wait, token);
+            ProcessStartInfo info = new ProcessStartInfo(path, arguments);
+
+            return StartProcessAsync(info, wait, token);
+        }
+        
+        public static Task<Process?> StartProcessAsync(String path, IEnumerable<String> arguments, Int32 milliseconds)
+        {
+            return StartProcessAsync(path, arguments, milliseconds, CancellationToken.None);
+        }
+
+        public static Task<Process?> StartProcessAsync(String path, IEnumerable<String> arguments, TimeSpan wait)
+        {
+            return StartProcessAsync(path, arguments, wait, CancellationToken.None);
+        }
+
+        public static Task<Process?> StartProcessAsync(String path, IEnumerable<String> arguments, Int32 milliseconds, CancellationToken token)
+        {
+            return StartProcessAsync(path, arguments, TimeSpan.FromMilliseconds(milliseconds), token);
+        }
+
+        public static Task<Process?> StartProcessAsync(String path, IEnumerable<String> arguments, TimeSpan wait, CancellationToken token)
+        {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (arguments is null)
+            {
+                throw new ArgumentNullException(nameof(arguments));
+            }
+
+            ProcessStartInfo info = new ProcessStartInfo(path);
+            
+            info.ArgumentList.AddRange(arguments);
+
+            return StartProcessAsync(info, wait, token);
         }
 
         public static Process StartProcess(FileInfo path)
@@ -423,12 +583,32 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(path));
             }
 
-            if (!path.Exists)
+            return Process.Start(path.FullName);
+        }
+
+        public static Process StartProcess(FileInfo path, String? arguments)
+        {
+            if (path is null)
             {
-                throw new FileNotFoundException("File doesn't exist.", path.FullName);
+                throw new ArgumentNullException(nameof(path));
             }
 
-            return Process.Start(path.FullName);
+            return arguments is not null ? Process.Start(path.FullName, arguments) : Process.Start(path.FullName);
+        }
+
+        public static Process StartProcess(FileInfo path, IEnumerable<String> arguments)
+        {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            if (arguments is null)
+            {
+                throw new ArgumentNullException(nameof(arguments));
+            }
+
+            return Process.Start(path.FullName, arguments);
         }
 
         public static Task<Process?> StartProcessAsync(FileInfo path, Int32 milliseconds)
@@ -446,23 +626,95 @@ namespace NetExtender.Utilities.Types
             return StartProcessAsync(path, TimeSpan.FromMilliseconds(milliseconds), token);
         }
 
-        public static async Task<Process?> StartProcessAsync(FileInfo path, TimeSpan wait, CancellationToken token)
+        public static Task<Process?> StartProcessAsync(FileInfo path, TimeSpan wait, CancellationToken token)
         {
             if (path is null)
             {
                 throw new ArgumentNullException(nameof(path));
             }
 
-            if (!path.Exists)
+            ProcessStartInfo info = new ProcessStartInfo(path.FullName);
+
+            return StartProcessAsync(info, wait, token);
+        }
+        
+        public static Task<Process?> StartProcessAsync(FileInfo path, String? arguments, Int32 milliseconds)
+        {
+            return StartProcessAsync(path, arguments , milliseconds, CancellationToken.None);
+        }
+
+        public static Task<Process?> StartProcessAsync(FileInfo path, String? arguments, TimeSpan wait)
+        {
+            return StartProcessAsync(path, arguments, wait, CancellationToken.None);
+        }
+
+        public static Task<Process?> StartProcessAsync(FileInfo path, String? arguments, Int32 milliseconds, CancellationToken token)
+        {
+            return StartProcessAsync(path, arguments, TimeSpan.FromMilliseconds(milliseconds), token);
+        }
+
+        public static Task<Process?> StartProcessAsync(FileInfo path, String? arguments, TimeSpan wait, CancellationToken token)
+        {
+            if (arguments is null)
             {
-                throw new ArgumentException(@"File not exist", nameof(path));
+                return StartProcessAsync(path, wait, token);
+            }
+            
+            ProcessStartInfo info = new ProcessStartInfo(path.FullName, arguments);
+
+            return StartProcessAsync(info, wait, token);
+        }
+        
+        public static Task<Process?> StartProcessAsync(FileInfo path, IEnumerable<String> arguments, Int32 milliseconds)
+        {
+            return StartProcessAsync(path, arguments, milliseconds, CancellationToken.None);
+        }
+
+        public static Task<Process?> StartProcessAsync(FileInfo path, IEnumerable<String> arguments, TimeSpan wait)
+        {
+            return StartProcessAsync(path, arguments, wait, CancellationToken.None);
+        }
+
+        public static Task<Process?> StartProcessAsync(FileInfo path, IEnumerable<String> arguments, Int32 milliseconds, CancellationToken token)
+        {
+            return StartProcessAsync(path, arguments, TimeSpan.FromMilliseconds(milliseconds), token);
+        }
+
+        public static Task<Process?> StartProcessAsync(FileInfo path, IEnumerable<String> arguments, TimeSpan wait, CancellationToken token)
+        {
+            if (arguments is null)
+            {
+                throw new ArgumentNullException(nameof(arguments));
             }
 
-            ProcessStartInfo info = new ProcessStartInfo(path.FullName)
+            ProcessStartInfo info = new ProcessStartInfo(path.FullName);
+            
+            info.ArgumentList.AddRange(arguments);
+
+            return StartProcessAsync(info, wait, token);
+        }
+
+        public static Task<Process?> StartProcessAsync(this ProcessStartInfo info, Int32 milliseconds)
+        {
+            return StartProcessAsync(info, milliseconds, CancellationToken.None);
+        }
+
+        public static Task<Process?> StartProcessAsync(this ProcessStartInfo info, TimeSpan wait)
+        {
+            return StartProcessAsync(info, wait, CancellationToken.None);
+        }
+
+        public static Task<Process?> StartProcessAsync(this ProcessStartInfo info, Int32 milliseconds, CancellationToken token)
+        {
+            return StartProcessAsync(info, TimeSpan.FromMilliseconds(milliseconds), token);
+        }
+
+        public static async Task<Process?> StartProcessAsync(this ProcessStartInfo info, TimeSpan wait, CancellationToken token)
+        {
+            if (info is null)
             {
-                WindowStyle = ProcessWindowStyle.Hidden,
-                CreateNoWindow = true
-            };
+                throw new ArgumentNullException(nameof(info));
+            }
 
             Process? process;
 
@@ -481,7 +733,7 @@ namespace NetExtender.Utilities.Types
                 return process;
             }
 
-            await using CancellationTokenRegistration registration = token.Register(() =>
+            void Cancellation()
             {
                 try
                 {
@@ -496,7 +748,9 @@ namespace NetExtender.Utilities.Types
                 {
                     //ignored
                 }
-            });
+            }
+
+            await using CancellationTokenRegistration registration = token.Register(Cancellation);
 
             return process;
         }
