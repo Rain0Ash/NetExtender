@@ -3,11 +3,14 @@
 
 using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using NetExtender.Types.Drawing.Colors.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Drawing.Colors
 {
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct ARGBColor : IColor<ARGBColor>
     {
         public static implicit operator Color(ARGBColor color)
@@ -90,6 +93,30 @@ namespace NetExtender.Types.Drawing.Colors
         public override String ToString()
         {
             return $"A:{A} R:{R} G:{G} B:{B}";
+        }
+        
+        public String ToString(String? format)
+        {
+            return ToString(format, null);
+        }
+
+        public String ToString(String? format, IFormatProvider? provider)
+        {
+            if (String.IsNullOrEmpty(format))
+            {
+                return ToString();
+            }
+            
+            String a = A.ToString(provider);
+            String r = R.ToString(provider);
+            String g = G.ToString(provider);
+            String b = B.ToString(provider);
+
+            return format.Replace("{COLOR}", $"A:{a} R:{r} G:{g} B:{b}")
+                .Replace("{A}", $"{a}")
+                .Replace("{R}", $"{r}")
+                .Replace("{G}", $"{g}")
+                .Replace("{B}", $"{b}");
         }
     }
 }

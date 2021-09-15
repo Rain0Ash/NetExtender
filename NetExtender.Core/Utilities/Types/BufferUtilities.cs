@@ -102,8 +102,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void BlockCopyUnsafe(Byte[] src, Int32 srcOffset, Byte[] dst, Int32 dstOffset, Int32 count)
         {
-            fixed (Byte* pSrc = &src[srcOffset])
-            fixed (Byte* pDst = &dst[dstOffset])
+            fixed (Byte* pSrc = &src[srcOffset], pDst = &dst[dstOffset])
             {
                 Byte* ptrSrc = pSrc;
                 Byte* ptrDst = pDst;

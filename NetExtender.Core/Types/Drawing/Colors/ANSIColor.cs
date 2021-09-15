@@ -1,4 +1,4 @@
-﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
@@ -9,26 +9,34 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Drawing.Colors
 {
+    public enum AnsiColorSequenceMode
+    {
+        None,
+        Foreground,
+        Background,
+        Fill
+    }
+
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]
-    public readonly struct RGBColor : IColor<RGBColor>
+    public readonly struct ANSIColor : IColor<ANSIColor>
     {
-        public static implicit operator Color(RGBColor color)
+        public static implicit operator Color(ANSIColor color)
         {
             return color.ToColor();
         }
-        
-        public static implicit operator RGBColor(Color color)
+
+        public static implicit operator ANSIColor(Color color)
         {
-            return new RGBColor(color.R, color.G, color.B);
+            return new ANSIColor(color.R, color.G, color.B);
         }
-        
-        public static Boolean operator ==(RGBColor left, RGBColor right)
+
+        public static Boolean operator ==(ANSIColor left, ANSIColor right)
         {
             return left.Equals(right);
         }
 
-        public static Boolean operator !=(RGBColor left, RGBColor right)
+        public static Boolean operator !=(ANSIColor left, ANSIColor right)
         {
             return !(left == right);
         }
@@ -37,21 +45,29 @@ namespace NetExtender.Types.Drawing.Colors
         {
             get
             {
-                return ColorType.RGB;
+                return ColorType.ANSI;
             }
         }
+
+        public AnsiColorSequenceMode Mode { get; }
 
         public Byte R { get; init; }
         public Byte G { get; init; }
         public Byte B { get; init; }
 
-        public RGBColor(Byte r, Byte g, Byte b)
+        public ANSIColor(Byte r, Byte g, Byte b)
+            : this(r, g, b, AnsiColorSequenceMode.Foreground)
+        {
+        }
+
+        public ANSIColor(Byte r, Byte g, Byte b, AnsiColorSequenceMode mode)
         {
             R = r;
             G = g;
             B = b;
+            Mode = mode;
         }
-        
+
         public Color ToColor()
         {
             return Color.FromArgb(R, G, B);
@@ -62,7 +78,7 @@ namespace NetExtender.Types.Drawing.Colors
             color = ToColor();
             return true;
         }
-        
+
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(R, G, B);
@@ -70,10 +86,10 @@ namespace NetExtender.Types.Drawing.Colors
 
         public override Boolean Equals(Object? obj)
         {
-            return obj is RGBColor result && Equals(result);
+            return obj is ANSIColor result && Equals(result);
         }
 
-        public Boolean Equals(RGBColor other)
+        public Boolean Equals(ANSIColor other)
         {
             return R == other.R && G == other.G && B == other.B;
         }
@@ -83,31 +99,45 @@ namespace NetExtender.Types.Drawing.Colors
             return color is not null && ToColor(out Color first) && color.ToColor(out Color second) && first.Equals(second);
         }
 
+        public ANSIColor Clone(AnsiColorSequenceMode mode)
+        {
+            return new ANSIColor(R, G, B, mode);
+        }
+
         public override String ToString()
         {
-            return $"R:{R} G:{G} B:{B}";
+            return $"\x1b[38;2;{R};{G};{B}m";
         }
-        
+
         public String ToString(String? format)
         {
             return ToString(format, null);
         }
-        
+
         public String ToString(String? format, IFormatProvider? provider)
         {
             if (String.IsNullOrEmpty(format))
             {
                 return ToString();
             }
-            
+
             String r = R.ToString(provider);
             String g = G.ToString(provider);
             String b = B.ToString(provider);
 
-            return format.Replace("{COLOR}", $"R:{r} G:{g} B:{b}")
-                .Replace("{R}", $"{r}")
-                .Replace("{G}", $"{g}")
-                .Replace("{B}", $"{b}");
+            String result = format.Replace("{FILL}", $"\x1b[38;2;{r};{g};{b};48;2;{r};{g};{b}m")
+                .Replace("{FOREGROUND}", $"\x1b[38;2;{r};{g};{b}m")
+                .Replace("{BACKGROUND}", $"\x1b[48;2;{r};{g};{b}m")
+                .Replace("{END}", "\x1b[0m");
+
+            return format != result ? format : Mode switch
+            {
+                AnsiColorSequenceMode.None => format,
+                AnsiColorSequenceMode.Foreground => $"\x1b[38;2;{r};{g};{b}m{format}\x1b[0m",
+                AnsiColorSequenceMode.Background => $"\x1b[48;2;{r};{g};{b}m{format}\x1b[0m",
+                AnsiColorSequenceMode.Fill => $"\x1b[38;2;{r};{g};{b};48;2;{r};{g};{b}m{format}\x1b[0m",
+                _ => throw new NotSupportedException()
+            };
         }
     }
 }

@@ -4,13 +4,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using NetExtender.Utilities.Types;
 using NetExtender.Exceptions;
 using NetExtender.Types.Maps.Interfaces;
 
 namespace NetExtender.Types.Maps
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UseDeconstructionOnParameter")]
+    [SuppressMessage("ReSharper", "UseDeconstructionOnParameter")]
     public class Map<TKey, TValue> : IMap<TKey, TValue>, IReadOnlyMap<TKey, TValue> where TKey : notnull where TValue : notnull
     {
         public ICollection<TKey> Keys
@@ -265,12 +266,12 @@ namespace NetExtender.Types.Maps
             return this[value];
         }
         
-        public Boolean TryGetValue(TKey key, out TValue? value)
+        public Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
             return Base.TryGetValue(key, out value);
         }
         
-        public Boolean TryGetKey(TValue key, out TKey? value)
+        public Boolean TryGetKey(TValue key, [MaybeNullWhen(false)] out TKey value)
         {
             return Reversed.TryGetValue(key, out value);
         }
@@ -363,7 +364,7 @@ namespace NetExtender.Types.Maps
             return Remove(key, out _);
         }
         
-        public Boolean Remove(TKey key, out TValue value)
+        public Boolean Remove(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
             if (!ContainsKey(key))
             {
@@ -402,7 +403,7 @@ namespace NetExtender.Types.Maps
             return RemoveByValue(key, out _);
         }
 
-        public Boolean RemoveByValue(TValue key, out TKey value)
+        public Boolean RemoveByValue(TValue key, [MaybeNullWhen(false)] out TKey value)
         {
             if (!ContainsValue(key))
             {

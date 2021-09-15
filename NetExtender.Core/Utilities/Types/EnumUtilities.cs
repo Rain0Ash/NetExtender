@@ -99,8 +99,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe Boolean HasFlags<T>(in T first, in T second) where T : unmanaged, Enum
         {
-            fixed (T* pf = &first)
-            fixed (T* ps = &second)
+            fixed (T* pf = &first, ps = &second)
             {
                 return HasFlags(pf, ps);
             }
@@ -140,8 +139,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void SetFlags<T>(ref T first, in T second) where T : unmanaged, Enum
         {
-            fixed (T* pf = &first)
-            fixed (T* ps = &second)
+            fixed (T* pf = &first, ps = &second)
             {
                 first = SetFlags(pf, ps);
             }
@@ -181,8 +179,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void RemoveFlags<T>(ref T first, in T second) where T : unmanaged, Enum
         {
-            fixed (T* pf = &first)
-            fixed (T* ps = &second)
+            fixed (T* pf = &first, ps = &second)
             {
                 first = RemoveFlags(pf, ps);
             }

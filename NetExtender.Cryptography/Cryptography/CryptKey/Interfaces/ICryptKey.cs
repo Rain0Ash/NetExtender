@@ -16,29 +16,29 @@ namespace NetExtender.Crypto.CryptKey.Interfaces
         public Boolean IsEncrypt { get; }
         public Boolean IsDecrypt { get; }
 
-        public String Encrypt(String value);
+        public String? Encrypt(String value);
 
-        public String EncryptString(String value);
+        public String? EncryptString(String value);
         
-        public IEnumerable<String> Encrypt(IEnumerable<String> source);
+        public IEnumerable<String?> Encrypt(IEnumerable<String> source);
 
-        public IEnumerable<String> EncryptString(IEnumerable<String> source);
+        public IEnumerable<String?> EncryptString(IEnumerable<String> source);
 
-        public Byte[] Encrypt(Byte[] value);
+        public Byte[]? Encrypt(Byte[] value);
         
-        public Byte[] EncryptBytes(Byte[] value);
+        public Byte[]? EncryptBytes(Byte[] value);
 
-        public String Decrypt(String value);
+        public String? Decrypt(String value);
         
-        public String DecryptString(String value);
+        public String? DecryptString(String value);
         
-        public IEnumerable<String> Decrypt(IEnumerable<String> source);
+        public IEnumerable<String?> Decrypt(IEnumerable<String> source);
 
-        public IEnumerable<String> DecryptString(IEnumerable<String> source);
+        public IEnumerable<String?> DecryptString(IEnumerable<String> source);
 
-        public Byte[] Decrypt(Byte[] value);
+        public Byte[]? Decrypt(Byte[] value);
         
-        public Byte[] DecryptBytes(Byte[] value);
+        public Byte[]? DecryptBytes(Byte[] value);
 
         public ICryptKey Clone(CryptAction crypt);
     }

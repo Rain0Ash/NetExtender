@@ -13,7 +13,7 @@ namespace NetExtender.Types.Maps.Interfaces
         public Boolean ContainsByValue(TValue key, TKey value);
         public Boolean ContainsByValue(KeyValuePair<TValue, TKey> item);
         public TValue GetValue(TKey key);
-        public TKey GetKey(TValue key);
+        public TKey GetKey(TValue value);
         public Boolean TryGetKey(TValue key, [MaybeNullWhen(false)] out TKey value);
         public new TValue this[TKey key] { get; }
         public TKey this[TValue key] { get; }

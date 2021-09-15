@@ -2,7 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Linq;
 using System.Security.Cryptography;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Exceptions;
@@ -11,7 +10,7 @@ namespace NetExtender.Crypto.CryptKey.AES
 {
     public class AESCryptKey : CryptKey, ISymmetricCryptKey
     {
-        public static ICryptKey Default { get; } = new AESCryptKey(Cryptography.DefaultHash.AsSpan(), Cryptography.AES.DefaultIV.ToArray(), false);
+        public static ICryptKey Default { get; } = new AESCryptKey(Cryptography.DefaultHash.AsSpan(), Cryptography.AES.DefaultIV.AsSpan(), false);
 
         protected Aes Aes { get; }
 
@@ -76,8 +75,8 @@ namespace NetExtender.Crypto.CryptKey.AES
         {
         }
 
-        private AESCryptKey(Boolean disposable)
-            : this(Aes.Create() ?? throw new FactoryException("Unknown exception"), disposable)
+        protected AESCryptKey(Boolean disposable)
+            : this(Aes.Create() ?? throw new FactoryException(), disposable)
         {
         }
         
@@ -91,34 +90,59 @@ namespace NetExtender.Crypto.CryptKey.AES
         {
         }
 
-        private AESCryptKey(ReadOnlySpan<Byte> key, ReadOnlySpan<Byte> iv, Boolean disposable)
+        protected AESCryptKey(ReadOnlySpan<Byte> key, ReadOnlySpan<Byte> iv, Boolean disposable)
             : this(Cryptography.AES.Create(key, iv), disposable)
         {
         }
 
-        public AESCryptKey(Aes aes, Boolean disposable = false)
+        public AESCryptKey(Aes aes)
+            : this(aes, false)
+        {
+        }
+
+        public AESCryptKey(Aes aes, Boolean disposable)
             : base(disposable)
         {
             Aes = aes ?? throw new ArgumentNullException(nameof(aes));
         }
 
-        public override String EncryptString(String value)
+        public override String? EncryptString(String value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             return Cryptography.AES.Encrypt(value, Aes);
         }
 
-        public override Byte[] EncryptBytes(Byte[] value)
+        public override Byte[]? EncryptBytes(Byte[] value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             return Cryptography.AES.Encrypt(value, Aes);
         }
 
-        public override String DecryptString(String value)
+        public override String? DecryptString(String value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             return Cryptography.AES.Decrypt(value, Aes);
         }
 
-        public override Byte[] DecryptBytes(Byte[] value)
+        public override Byte[]? DecryptBytes(Byte[] value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             return Cryptography.AES.Decrypt(value, Aes);
         }
 

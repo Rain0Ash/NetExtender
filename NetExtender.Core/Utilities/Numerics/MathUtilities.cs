@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Numerics;
@@ -1340,14 +1341,12 @@ namespace NetExtender.Utilities.Numerics
             //truncating to  [-2*PI;2*PI]
             TruncateToPeriodicInterval(ref value);
 
-            if (value is >= DecimalConstants.PI and <= DecimalConstants.PIx2)
+            switch (value)
             {
-                return -Cos(value - DecimalConstants.PI);
-            }
-
-            if (value is >= -DecimalConstants.PIx2 and <= -DecimalConstants.PI)
-            {
-                return -Cos(value + DecimalConstants.PI);
+                case >= DecimalConstants.PI and <= DecimalConstants.PIx2:
+                    return -Cos(value - DecimalConstants.PI);
+                case >= -DecimalConstants.PIx2 and <= -DecimalConstants.PI:
+                    return -Cos(value + DecimalConstants.PI);
             }
 
             value *= value;
@@ -1965,7 +1964,7 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
+        [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
         public static BigInteger Multiply(this IEnumerable<BigInteger> source)
         {
             if (source is null)

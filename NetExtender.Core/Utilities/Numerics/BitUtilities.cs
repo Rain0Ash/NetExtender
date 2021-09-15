@@ -194,8 +194,7 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe Boolean BitwiseEquals<T>(this Span<T> first, ReadOnlySpan<T> second) where T : unmanaged
         {
-            fixed (void* pf = first)
-            fixed (void* ps = second)
+            fixed (void* pf = first, ps = second)
             {
                 return BitwiseEquals(pf, ps, Math.Min(first.Length, second.Length) * sizeof(T));
             }
@@ -227,6 +226,7 @@ namespace NetExtender.Utilities.Numerics
             return length <= 0 || BitwiseEquals(source, pointer, (UInt32) length);
         }
 
+        //TODO: optimize
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static unsafe Boolean BitwiseEquals(void* source, void* pointer, UInt32 length)
         {
@@ -261,8 +261,7 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe Boolean BitwiseEquals<T>(in T first, in T second) where T : unmanaged
         {
-            fixed (T* pf = &first)
-            fixed (T* ps = &second)
+            fixed (T* pf = &first, ps = &second)
             {
                 return BitwiseEquals<T>((Byte*) pf, (Byte*) ps);
             }
@@ -368,8 +367,7 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe Span<T> BitwiseAnd<T>(this Span<T> first, ReadOnlySpan<T> second) where T : unmanaged
         {
-            fixed (void* pf = first)
-            fixed (void* ps = second)
+            fixed (void* pf = first, ps = second)
             {
                 BitwiseAnd(pf, ps, Math.Min(first.Length, second.Length) * sizeof(T));
                 return first;
@@ -457,8 +455,7 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe Span<T> BitwiseOr<T>(this Span<T> first, ReadOnlySpan<T> second) where T : unmanaged
         {
-            fixed (void* pf = first)
-            fixed (void* ps = second)
+            fixed (void* pf = first, ps = second)
             {
                 BitwiseOr(pf, ps, Math.Min(first.Length, second.Length) * sizeof(T));
                 return first;
@@ -546,8 +543,7 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe Span<T> BitwiseXor<T>(this Span<T> first, ReadOnlySpan<T> second) where T : unmanaged
         {
-            fixed (void* pf = first)
-            fixed (void* ps = second)
+            fixed (void* pf = first, ps = second)
             {
                 BitwiseXor(pf, ps, Math.Min(first.Length, second.Length) * sizeof(T));
                 return first;
@@ -613,8 +609,7 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe T BitwiseXor<T>(in T first, in T second) where T : unmanaged
         {
-            fixed (T* pf = &first)
-            fixed (T* ps = &second)
+            fixed (T* pf = &first, ps = &second)
             {
                 return BitwiseXor<T>((Byte*) pf, (Byte*) ps);
             }

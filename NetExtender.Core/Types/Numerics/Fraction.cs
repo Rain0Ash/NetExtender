@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Types.Numerics
@@ -453,7 +454,7 @@ namespace NetExtender.Types.Numerics
         /// Gets the hash code of the fraction
         /// </summary>
         /// <returns>The hash code of the fraction</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
+        [SuppressMessage("ReSharper", "NonReadonlyMemberInGetHashCode")]
         public override Int32 GetHashCode()
         {
             return Numerator.GetHashCode() % Denominator.GetHashCode();

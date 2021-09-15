@@ -9,6 +9,7 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 using NetExtender.Random.Interfaces;
 using NetExtender.Types.Collections;
@@ -108,6 +109,34 @@ namespace NetExtender.Utilities.Types
             while (true)
             {
                 yield return generator();
+            }
+        }
+
+        public static IEnumerable<T> GetEnumerableFrom<T>(Func<Int32, T> generator)
+        {
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
+            Int32 i = 0;
+            while (true)
+            {
+                yield return generator(i++);
+            }
+        }
+
+        public static IEnumerable<T> GetEnumerableFrom<T>(Func<Int64, T> generator)
+        {
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
+            Int64 i = 0;
+            while (true)
+            {
+                yield return generator(i++);
             }
         }
 
@@ -1677,6 +1706,583 @@ namespace NetExtender.Utilities.Types
 
             return source.WhereNot(where).Select(selector);
         }
+        
+        public static IEnumerable<SByte> WhereInRange(this IEnumerable<SByte> source, SByte maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum));
+        }
+
+        public static IEnumerable<SByte> WhereInRange(this IEnumerable<SByte> source, SByte maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum, comparison));
+        }
+        
+        public static IEnumerable<SByte> WhereInRange(this IEnumerable<SByte> source, SByte minimum, SByte maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum));
+        }
+
+        public static IEnumerable<SByte> WhereInRange(this IEnumerable<SByte> source, SByte minimum, SByte maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum, comparison));
+        }
+        
+        public static IEnumerable<Byte> WhereInRange(this IEnumerable<Byte> source, Byte maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum));
+        }
+
+        public static IEnumerable<Byte> WhereInRange(this IEnumerable<Byte> source, Byte maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum, comparison));
+        }
+        
+        public static IEnumerable<Byte> WhereInRange(this IEnumerable<Byte> source, Byte minimum, Byte maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum));
+        }
+
+        public static IEnumerable<Byte> WhereInRange(this IEnumerable<Byte> source, Byte minimum, Byte maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum, comparison));
+        }
+        
+        public static IEnumerable<Int16> WhereInRange(this IEnumerable<Int16> source, Int16 maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum));
+        }
+
+        public static IEnumerable<Int16> WhereInRange(this IEnumerable<Int16> source, Int16 maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum, comparison));
+        }
+        
+        public static IEnumerable<Int16> WhereInRange(this IEnumerable<Int16> source, Int16 minimum, Int16 maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum));
+        }
+
+        public static IEnumerable<Int16> WhereInRange(this IEnumerable<Int16> source, Int16 minimum, Int16 maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum, comparison));
+        }
+        
+        public static IEnumerable<UInt16> WhereInRange(this IEnumerable<UInt16> source, UInt16 maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum));
+        }
+
+        public static IEnumerable<UInt16> WhereInRange(this IEnumerable<UInt16> source, UInt16 maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum, comparison));
+        }
+        
+        public static IEnumerable<UInt16> WhereInRange(this IEnumerable<UInt16> source, UInt16 minimum, UInt16 maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum));
+        }
+
+        public static IEnumerable<UInt16> WhereInRange(this IEnumerable<UInt16> source, UInt16 minimum, UInt16 maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum, comparison));
+        }
+        
+        public static IEnumerable<Int32> WhereInRange(this IEnumerable<Int32> source, Int32 maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum));
+        }
+
+        public static IEnumerable<Int32> WhereInRange(this IEnumerable<Int32> source, Int32 maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange( maximum, comparison));
+        }
+        
+        public static IEnumerable<Int32> WhereInRange(this IEnumerable<Int32> source, Int32 minimum, Int32 maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum));
+        }
+
+        public static IEnumerable<Int32> WhereInRange(this IEnumerable<Int32> source, Int32 minimum, Int32 maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum, comparison));
+        }
+        
+        public static IEnumerable<UInt32> WhereInRange(this IEnumerable<UInt32> source, UInt32 maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum));
+        }
+
+        public static IEnumerable<UInt32> WhereInRange(this IEnumerable<UInt32> source, UInt32 maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum, comparison));
+        }
+        
+        public static IEnumerable<UInt32> WhereInRange(this IEnumerable<UInt32> source, UInt32 minimum, UInt32 maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum));
+        }
+
+        public static IEnumerable<UInt32> WhereInRange(this IEnumerable<UInt32> source, UInt32 minimum, UInt32 maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum, comparison));
+        }
+        
+        public static IEnumerable<Int64> WhereInRange(this IEnumerable<Int64> source, Int64 maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum));
+        }
+
+        public static IEnumerable<Int64> WhereInRange(this IEnumerable<Int64> source, Int64 maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum, comparison));
+        }
+        
+        public static IEnumerable<Int64> WhereInRange(this IEnumerable<Int64> source, Int64 minimum, Int64 maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum));
+        }
+
+        public static IEnumerable<Int64> WhereInRange(this IEnumerable<Int64> source, Int64 minimum, Int64 maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum, comparison));
+        }
+        
+        public static IEnumerable<UInt64> WhereInRange(this IEnumerable<UInt64> source, UInt64 maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum));
+        }
+
+        public static IEnumerable<UInt64> WhereInRange(this IEnumerable<UInt64> source, UInt64 maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum, comparison));
+        }
+        
+        public static IEnumerable<UInt64> WhereInRange(this IEnumerable<UInt64> source, UInt64 minimum, UInt64 maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum));
+        }
+
+        public static IEnumerable<UInt64> WhereInRange(this IEnumerable<UInt64> source, UInt64 minimum, UInt64 maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum, comparison));
+        }
+        
+        public static IEnumerable<Single> WhereInRange(this IEnumerable<Single> source, Single maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum));
+        }
+
+        public static IEnumerable<Single> WhereInRange(this IEnumerable<Single> source, Single maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum, comparison));
+        }
+        
+        public static IEnumerable<Single> WhereInRange(this IEnumerable<Single> source, Single minimum, Single maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum));
+        }
+
+        public static IEnumerable<Single> WhereInRange(this IEnumerable<Single> source, Single minimum, Single maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum, comparison));
+        }
+        
+        public static IEnumerable<Double> WhereInRange(this IEnumerable<Double> source, Double maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum));
+        }
+
+        public static IEnumerable<Double> WhereInRange(this IEnumerable<Double> source, Double maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum, comparison));
+        }
+        
+        public static IEnumerable<Double> WhereInRange(this IEnumerable<Double> source, Double minimum, Double maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum));
+        }
+
+        public static IEnumerable<Double> WhereInRange(this IEnumerable<Double> source, Double minimum, Double maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum, comparison));
+        }
+        
+        public static IEnumerable<Decimal> WhereInRange(this IEnumerable<Decimal> source, Decimal maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum));
+        }
+
+        public static IEnumerable<Decimal> WhereInRange(this IEnumerable<Decimal> source, Decimal maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum, comparison));
+        }
+        
+        public static IEnumerable<Decimal> WhereInRange(this IEnumerable<Decimal> source, Decimal minimum, Decimal maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum));
+        }
+
+        public static IEnumerable<Decimal> WhereInRange(this IEnumerable<Decimal> source, Decimal minimum, Decimal maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum, comparison));
+        }
+        
+        public static IEnumerable<BigInteger> WhereInRange(this IEnumerable<BigInteger> source, BigInteger maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum));
+        }
+
+        public static IEnumerable<BigInteger> WhereInRange(this IEnumerable<BigInteger> source, BigInteger maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(maximum, comparison));
+        }
+        
+        public static IEnumerable<BigInteger> WhereInRange(this IEnumerable<BigInteger> source, BigInteger minimum, BigInteger maximum)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum));
+        }
+
+        public static IEnumerable<BigInteger> WhereInRange(this IEnumerable<BigInteger> source, BigInteger minimum, BigInteger maximum, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(value => value.InRange(minimum, maximum, comparison));
+        }
+
+        public static IEnumerable<T> WhereCompareInRange<T>(this IEnumerable<T> source, T minimum, T maximum, IComparer<T>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(item => item.CompareInRange(minimum, maximum, comparer));
+        }
+
+        public static IEnumerable<T> WhereCompareInRange<T>(this IEnumerable<T> source, T minimum, T maximum, MathPositionType comparison) where T : IComparable<T>
+        {
+            return WhereCompareInRange(source, minimum, maximum, Comparer<T>.Default, comparison);
+        }
+
+        public static IEnumerable<T> WhereCompareInRange<T>(this IEnumerable<T> source, T minimum, T maximum, IComparer<T>? comparer, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Where(item => item.CompareInRange(minimum, maximum, comparer, comparison));
+        }
+        
+        public static IEnumerable<T> WhereCompareInRangeBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, TKey minimum, TKey maximum) where TKey : IComparable<TKey>
+        {
+            return WhereCompareInRangeBy(source, selector, minimum, maximum, Comparer<TKey>.Default);
+        }
+
+        public static IEnumerable<T> WhereCompareInRangeBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, TKey minimum, TKey maximum, IComparer<TKey>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            foreach (T item in source)
+            {
+                if (selector(item).CompareInRange(minimum, maximum, comparer))
+                {
+                    yield return item;
+                }
+            }
+        }
+
+        public static IEnumerable<T> WhereCompareInRangeBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, TKey minimum, TKey maximum, MathPositionType comparison) where TKey : IComparable<TKey>
+        {
+            return WhereCompareInRangeBy(source, selector, minimum, maximum, Comparer<TKey>.Default, comparison);
+        }
+
+        public static IEnumerable<T> WhereCompareInRangeBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, TKey minimum, TKey maximum, IComparer<TKey>? comparer, MathPositionType comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            foreach (T item in source)
+            {
+                if (selector(item).CompareInRange(minimum, maximum, comparer, comparison))
+                {
+                    yield return item;
+                }
+            }
+        }
+        
+        public static IEnumerable<T> Change<T>(this IEnumerable<T> source, T what, T to)
+        {
+            return Change(source, what, to, EqualityComparer<T>.Default);
+        }
+
+        public static IEnumerable<T> Change<T>(this IEnumerable<T> source, T what, T to, IEqualityComparer<T>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            comparer ??= EqualityComparer<T>.Default;
+
+            foreach (T item in source)
+            {
+                yield return comparer.Equals(item, what) ? to : item;
+            }
+        }
 
         public static IEnumerable<T> Change<T>(this IEnumerable<T> source, Func<T, T> selector)
         {
@@ -1887,6 +2493,51 @@ namespace NetExtender.Utilities.Types
 
             return ChangeWhere(source, (item, index) => !where(item, index), selector);
         }
+        
+        public static IEnumerable<T> ChangeWhereNull<T>(this IEnumerable<T?> source, T @default)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (@default is null)
+            {
+                throw new ArgumentNullException(nameof(@default));
+            }
+
+            return source.Select(item => item ?? @default);
+        }
+        
+        public static IEnumerable<T> ChangeWhereNull<T>(this IEnumerable<T?> source, Func<T> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Select(item => item ?? selector());
+        }
+        
+        public static IEnumerable<T> ChangeWhereNull<T>(this IEnumerable<T?> source, Func<Int32, T> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Select((item, index) => item ?? selector(index));
+        }
 
         public static IEnumerable<TTo?> SelectAs<TFrom, TTo>(this IEnumerable<TFrom> source) where TTo : class
         {
@@ -2054,7 +2705,7 @@ namespace NetExtender.Utilities.Types
             return OrderBy(source, comparer);
         }
 
-        public static IOrderedEnumerable<T> Sort<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
+        public static IOrderedEnumerable<T> SortBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
         {
             if (source is null)
             {
@@ -2069,7 +2720,7 @@ namespace NetExtender.Utilities.Types
             return source.OrderBy(selector);
         }
 
-        public static IOrderedEnumerable<T> Sort<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        public static IOrderedEnumerable<T> SortBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
         {
             if (source is null)
             {
@@ -2104,7 +2755,7 @@ namespace NetExtender.Utilities.Types
             return OrderByDescending(source, comparer);
         }
 
-        public static IOrderedEnumerable<T> SortDescending<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
+        public static IOrderedEnumerable<T> SortByDescending<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
         {
             if (source is null)
             {
@@ -2119,7 +2770,7 @@ namespace NetExtender.Utilities.Types
             return source.OrderByDescending(selector);
         }
 
-        public static IOrderedEnumerable<T> SortDescending<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        public static IOrderedEnumerable<T> SortByDescending<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
         {
             if (source is null)
             {
@@ -3139,21 +3790,6 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static IEnumerable<T> Replace<T>(this IEnumerable<T> source, T what, T to, IEqualityComparer<T>? comparer = null)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            comparer ??= EqualityComparer<T>.Default;
-
-            foreach (T item in source)
-            {
-                yield return comparer.Equals(item, what) ? to : item;
-            }
-        }
-
         /// <summary>
         /// Splits the given sequence into chunks of the given size.
         /// If the sequence length isn't evenly divisible by the chunk size,
@@ -3934,7 +4570,7 @@ namespace NetExtender.Utilities.Types
             return source.OrderByDescending(selector).FirstOrDefault();
         }
 
-        public static T? MaxBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IComparer<TKey> comparer)
+        public static T? MaxBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
         {
             if (source is null)
             {
@@ -3964,7 +4600,7 @@ namespace NetExtender.Utilities.Types
             return source.OrderByDescending(selector).Take(count);
         }
 
-        public static IEnumerable<T> MaxBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IComparer<TKey> comparer, Int32 count)
+        public static IEnumerable<T> MaxBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer, Int32 count)
         {
             if (source is null)
             {
@@ -3994,7 +4630,7 @@ namespace NetExtender.Utilities.Types
             return source.OrderBy(selector).FirstOrDefault();
         }
 
-        public static T? MinBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IComparer<TKey> comparer)
+        public static T? MinBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
         {
             if (source is null)
             {
@@ -4024,7 +4660,7 @@ namespace NetExtender.Utilities.Types
             return source.OrderBy(selector).Take(count);
         }
 
-        public static IEnumerable<T> MinBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IComparer<TKey> comparer, Int32 count)
+        public static IEnumerable<T> MinBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer, Int32 count)
         {
             if (source is null)
             {

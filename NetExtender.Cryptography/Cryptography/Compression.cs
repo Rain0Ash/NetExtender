@@ -28,192 +28,192 @@ namespace NetExtender.Crypto
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String Compress(this String input)
+        public static String Compress(this String value)
         {
-            return Compress(input, Compression.DefaultCompressionType);
+            return Compress(value, Compression.DefaultCompressionType);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String Compress(this String input, CompressionType type)
+        public static String Compress(this String value, CompressionType type)
         {
-            return Compress(input, Compression.DefaultCompressionLevel, type);
+            return Compress(value, Compression.DefaultCompressionLevel, type);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String Compress(this String input, CompressionLevel level)
+        public static String Compress(this String value, CompressionLevel level)
         {
-            return Compress(input, level, Compression.DefaultCompressionType);
+            return Compress(value, level, Compression.DefaultCompressionType);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String Compress(this String input, CompressionType type, CompressionLevel level)
+        public static String Compress(this String value, CompressionType type, CompressionLevel level)
         {
-            return Compress(input, level, type);
+            return Compress(value, level, type);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String Compress(this String input, CompressionLevel level, CompressionType type)
+        public static String Compress(this String value, CompressionLevel level, CompressionType type)
         {
-            if (input is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(input));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return Compress(input.ToBytes(), level, type).GetStringFromBytes();
+            return Compress(value.ToBytes(), level, type).GetStringFromBytes();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String Decompress(this String input)
+        public static String Decompress(this String value)
         {
-            return Decompress(input, Compression.DefaultCompressionType);
+            return Decompress(value, Compression.DefaultCompressionType);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String Decompress(this String input, CompressionType type)
+        public static String Decompress(this String value, CompressionType type)
         {
-            if (input is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(input));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return Decompress(input.ToBytes(), type).GetStringFromBytes();
+            return Decompress(value.ToBytes(), type).GetStringFromBytes();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Byte[] Compress(this Byte[] data)
+        public static Byte[] Compress(this Byte[] value)
         {
-            return Compress(data, Compression.DefaultCompressionType);
+            return Compress(value, Compression.DefaultCompressionType);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Byte[] Compress(this Byte[] data, CompressionType type)
+        public static Byte[] Compress(this Byte[] value, CompressionType type)
         {
-            return Compress(data, Compression.DefaultCompressionLevel, type);
+            return Compress(value, Compression.DefaultCompressionLevel, type);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Byte[] Compress(this Byte[] data, CompressionLevel level)
+        public static Byte[] Compress(this Byte[] value, CompressionLevel level)
         {
-            return Compress(data, level, Compression.DefaultCompressionType);
+            return Compress(value, level, Compression.DefaultCompressionType);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Byte[] Compress(this Byte[] data, CompressionType type, CompressionLevel level)
+        public static Byte[] Compress(this Byte[] value, CompressionType type, CompressionLevel level)
         {
-            return Compress(data, level, type);
+            return Compress(value, level, type);
         }
 
-        public static Byte[] Compress(this Byte[] data, CompressionLevel level, CompressionType type)
+        public static Byte[] Compress(this Byte[] value, CompressionLevel level, CompressionType type)
         {
-            if (data is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(data));
-            }
-
-            using MemoryStream stream = new MemoryStream();
-            Compress(data.ToStream(), stream, level, type);
-            return stream.ToArray();
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Byte[] Decompress(this Byte[] data)
-        {
-            return Decompress(data, Compression.DefaultCompressionType);
-        }
-
-        public static Byte[] Decompress(this Byte[] data, CompressionType type)
-        {
-            if (data is null)
-            {
-                throw new ArgumentNullException(nameof(data));
+                throw new ArgumentNullException(nameof(value));
             }
 
             using MemoryStream stream = new MemoryStream();
-            Decompress(data.ToStream(), stream, type);
+            Compress(value.ToStream(), stream, level, type);
             return stream.ToArray();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Byte[]> CompressAsync(this Byte[] data, CompressionType type)
+        public static Byte[] Decompress(this Byte[] value)
         {
-            return CompressAsync(data, type, CancellationToken.None);
+            return Decompress(value, Compression.DefaultCompressionType);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Byte[]> CompressAsync(this Byte[] data, CompressionType type, CancellationToken token)
+        public static Byte[] Decompress(this Byte[] value, CompressionType type)
         {
-            return CompressAsync(data, Compression.DefaultCompressionLevel, type, token);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Byte[]> CompressAsync(this Byte[] data, CompressionLevel level)
-        {
-            return CompressAsync(data, level, CancellationToken.None);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Byte[]> CompressAsync(this Byte[] data, CompressionLevel level, CancellationToken token)
-        {
-            return CompressAsync(data, level, Compression.DefaultCompressionType, token);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Byte[]> CompressAsync(this Byte[] data, CompressionType type, CompressionLevel level)
-        {
-            return CompressAsync(data, type, level, CancellationToken.None);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Byte[]> CompressAsync(this Byte[] data, CompressionType type, CompressionLevel level, CancellationToken token)
-        {
-            return CompressAsync(data, level, type, token);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Byte[]> CompressAsync(this Byte[] data, CompressionLevel level, CompressionType type)
-        {
-            return CompressAsync(data, level, type, CancellationToken.None);
-        }
-
-        public static async Task<Byte[]> CompressAsync(this Byte[] data, CompressionLevel level, CompressionType type, CancellationToken token)
-        {
-            if (data is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(data));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            await using MemoryStream stream = new MemoryStream();
-            await CompressAsync(await data.ToStreamAsync().ConfigureAwait(false), stream, level, type, token).ConfigureAwait(false);
+            using MemoryStream stream = new MemoryStream();
+            Decompress(value.ToStream(), stream, type);
             return stream.ToArray();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Byte[]> DecompressAsync(this Byte[] data)
+        public static Task<Byte[]> CompressAsync(this Byte[] value, CompressionType type)
         {
-            return DecompressAsync(data, CancellationToken.None);
+            return CompressAsync(value, type, CancellationToken.None);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Byte[]> DecompressAsync(this Byte[] data, CancellationToken token)
+        public static Task<Byte[]> CompressAsync(this Byte[] value, CompressionType type, CancellationToken token)
         {
-            return DecompressAsync(data, Compression.DefaultCompressionType, token);
+            return CompressAsync(value, Compression.DefaultCompressionLevel, type, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Byte[]> DecompressAsync(this Byte[] data, CompressionType type)
+        public static Task<Byte[]> CompressAsync(this Byte[] value, CompressionLevel level)
         {
-            return DecompressAsync(data, type, CancellationToken.None);
+            return CompressAsync(value, level, CancellationToken.None);
         }
 
-        public static async Task<Byte[]> DecompressAsync(this Byte[] data, CompressionType type, CancellationToken token)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<Byte[]> CompressAsync(this Byte[] value, CompressionLevel level, CancellationToken token)
         {
-            if (data is null)
+            return CompressAsync(value, level, Compression.DefaultCompressionType, token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<Byte[]> CompressAsync(this Byte[] value, CompressionType type, CompressionLevel level)
+        {
+            return CompressAsync(value, type, level, CancellationToken.None);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<Byte[]> CompressAsync(this Byte[] value, CompressionType type, CompressionLevel level, CancellationToken token)
+        {
+            return CompressAsync(value, level, type, token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<Byte[]> CompressAsync(this Byte[] value, CompressionLevel level, CompressionType type)
+        {
+            return CompressAsync(value, level, type, CancellationToken.None);
+        }
+
+        public static async Task<Byte[]> CompressAsync(this Byte[] value, CompressionLevel level, CompressionType type, CancellationToken token)
+        {
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(data));
+                throw new ArgumentNullException(nameof(value));
             }
 
             await using MemoryStream stream = new MemoryStream();
-            await DecompressAsync(await data.ToStreamAsync().ConfigureAwait(false), stream, type, token).ConfigureAwait(false);
+            await CompressAsync(await value.ToStreamAsync().ConfigureAwait(false), stream, level, type, token).ConfigureAwait(false);
+            return stream.ToArray();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<Byte[]> DecompressAsync(this Byte[] value)
+        {
+            return DecompressAsync(value, CancellationToken.None);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<Byte[]> DecompressAsync(this Byte[] value, CancellationToken token)
+        {
+            return DecompressAsync(value, Compression.DefaultCompressionType, token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<Byte[]> DecompressAsync(this Byte[] value, CompressionType type)
+        {
+            return DecompressAsync(value, type, CancellationToken.None);
+        }
+
+        public static async Task<Byte[]> DecompressAsync(this Byte[] value, CompressionType type, CancellationToken token)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            await using MemoryStream stream = new MemoryStream();
+            await DecompressAsync(await value.ToStreamAsync().ConfigureAwait(false), stream, type, token).ConfigureAwait(false);
             return stream.ToArray();
         }
 

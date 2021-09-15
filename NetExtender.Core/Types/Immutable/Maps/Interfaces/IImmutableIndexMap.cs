@@ -4,18 +4,25 @@
 using System;
 using System.Collections.Generic;
 using NetExtender.Types.Immutable.Dictionaries.Interfaces;
+using NetExtender.Types.Maps.Interfaces;
 
 namespace NetExtender.Types.Immutable.Maps.Interfaces
 {
-    public interface IImmutableIndexMap<TKey, TValue> : IImmutableMap<TKey, TValue>, IImmutableIndexDictionary<TKey, TValue>
+    public interface IImmutableIndexMap<TKey, TValue> : IImmutableMap<TKey, TValue>, IImmutableIndexDictionary<TKey, TValue>, IReadOnlyIndexMap<TKey, TValue>
     {
-        public Int32 IndexOfValue(TValue key);
-
-        public TKey GetKeyByIndex(Int32 index);
-
-        public KeyValuePair<TValue, TKey> GetValueKeyPairByIndex(Int32 index);
-
-        public Boolean TryGetValueKeyPairByIndex(Int32 index, out KeyValuePair<TValue, TKey> pair);
+        public new IReadOnlyList<TKey> OrderedKeys { get; }
+        
+        public new TValue GetValueByIndex(Int32 index);
+        
+        public new KeyValuePair<TKey, TValue> GetKeyValuePairByIndex(Int32 index);
+        
+        public new Boolean TryGetKeyValuePairByIndex(Int32 index, out KeyValuePair<TKey, TValue> pair);
+        
+        public new Int32 IndexOf(TKey key);
+        
+        public new IEnumerator<TKey> GetKeyEnumerator();
+        
+        public new IEnumerator<TValue> GetValueEnumerator();
         
         public IImmutableIndexMap<TKey, TValue> Insert(TValue key, TKey value);
 

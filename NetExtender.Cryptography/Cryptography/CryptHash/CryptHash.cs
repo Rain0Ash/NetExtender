@@ -2,7 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using NetExtender.Crypto.CryptHash.Common;
 using NetExtender.Crypto.CryptHash.Interfaces;
 using NetExtender.Utilities.Types;
@@ -11,49 +10,66 @@ namespace NetExtender.Crypto.CryptHash
 {
     public class CryptHash : ICryptHash
     {
+        public const Int32 DefaultIterations = 1;
+        
         public HashType HashType { get; }
         
-        [NotNull]
-        public Byte[] DefaultFirstSalt { get; }
+        public Byte[] LeftSalt { get; }
         
-        [NotNull]
-        public Byte[] DefaultLastSalt { get; }
+        public Byte[] RightSalt { get; }
         
-        [NotNull]
-        public Byte[] DefaultFirstPepper { get; }
+        public Byte[] LeftPepper { get; }
         
-        [NotNull]
-        public Byte[] DefaultLastPepper { get; }
+        public Byte[] RightPepper { get; }
         
-        [NotNull]
-        public UInt16 DefaultIterations { get; }
+        public UInt16 Iterations { get; }
 
-        public CryptHash(HashType type, UInt16 iterations = 1)
+        public CryptHash(HashType type)
+            : this(type, DefaultIterations)
+        {
+        }
+        
+        public CryptHash(HashType type, UInt16 iterations)
             : this(type, null, iterations)
         {
         }
 
-        public CryptHash(HashType type, Byte[] salt, UInt16 iterations = 1)
+        public CryptHash(HashType type, Byte[]? salt)
+            : this(type, salt, DefaultIterations)
+        {
+        }
+
+        public CryptHash(HashType type, Byte[]? salt, UInt16 iterations)
             : this(type, salt, null, iterations)
         {
         }
 
-        public CryptHash(HashType type, Byte[] salt, Byte[] pepper, UInt16 iterations = 1)
+        public CryptHash(HashType type, Byte[]? salt, Byte[]? pepper)
+            : this(type, salt, salt, pepper, pepper, DefaultIterations)
+        {
+        }
+
+        public CryptHash(HashType type, Byte[]? salt, Byte[]? pepper, UInt16 iterations)
             : this(type, salt, salt, pepper, pepper, iterations)
         {
         }
 
-        public CryptHash(HashType type, Byte[] lsalt, Byte[] rsalt, Byte[] lpepper, Byte[] rpepper, UInt16 iterations = 1)
+        public CryptHash(HashType type, Byte[]? lsalt, Byte[]? rsalt, Byte[]? lpepper, Byte[]? rpepper)
+            : this(type, lsalt, rsalt, lpepper, rpepper, DefaultIterations)
+        {
+        }
+
+        public CryptHash(HashType type, Byte[]? lsalt, Byte[]? rsalt, Byte[]? lpepper, Byte[]? rpepper, UInt16 iterations)
         {
             HashType = type;
             
-            DefaultFirstSalt = lsalt ?? Array.Empty<Byte>();
-            DefaultLastSalt = rsalt ?? Array.Empty<Byte>();
+            LeftSalt = lsalt ?? Array.Empty<Byte>();
+            RightSalt = rsalt ?? Array.Empty<Byte>();
             
-            DefaultFirstPepper = lpepper ?? Array.Empty<Byte>();
-            DefaultLastPepper = rpepper ?? Array.Empty<Byte>();
+            LeftPepper = lpepper ?? Array.Empty<Byte>();
+            RightPepper = rpepper ?? Array.Empty<Byte>();
             
-            DefaultIterations = iterations;
+            Iterations = iterations;
         }
 
         public CryptHash(HashType type, CryptHashParameters parameters)
@@ -103,22 +119,22 @@ namespace NetExtender.Crypto.CryptHash
 
         public Byte[] Hashing(Byte[] value)
         {
-            return Hashing(value, DefaultFirstSalt, DefaultLastSalt, DefaultFirstPepper, DefaultLastPepper, DefaultIterations);
+            return Hashing(value, LeftSalt, RightSalt, LeftPepper, RightPepper, Iterations);
         }
 
         public Byte[] Hashing(Byte[] value, Byte[] salt)
         {
-            return Hashing(value, salt, DefaultIterations);
+            return Hashing(value, salt, Iterations);
         }
 
         public Byte[] Hashing(Byte[] value, Byte[] salt, UInt16 iterations)
         {
-            return Hashing(value, salt, salt, DefaultFirstPepper, DefaultLastPepper, iterations);
+            return Hashing(value, salt, salt, LeftPepper, RightPepper, iterations);
         }
 
         public Byte[] Hashing(Byte[] value, Byte[] salt, Byte[] pepper)
         {
-            return Hashing(value, salt, pepper, DefaultIterations);
+            return Hashing(value, salt, pepper, Iterations);
         }
 
         public Byte[] Hashing(Byte[] value, Byte[] salt, Byte[] pepper, UInt16 iterations)
@@ -128,7 +144,7 @@ namespace NetExtender.Crypto.CryptHash
 
         public Byte[] Hashing(Byte[] value, Byte[] lsalt, Byte[] rsalt, Byte[] lpepper, Byte[] rpepper)
         {
-            return Hashing(value, lsalt, rsalt, lpepper, rpepper, DefaultIterations);
+            return Hashing(value, lsalt, rsalt, lpepper, rpepper, Iterations);
         }
 
         public Byte[] Hashing(Byte[] value, Byte[] lsalt, Byte[] rsalt, Byte[] lpepper, Byte[] rpepper, UInt16 iterations)
@@ -156,7 +172,7 @@ namespace NetExtender.Crypto.CryptHash
         
         public Boolean Hashing(ReadOnlySpan<Byte> value, Span<Byte> destination, out Int32 written)
         {
-            return Hashing(value, DefaultFirstSalt, DefaultLastSalt, DefaultFirstPepper, DefaultLastPepper, DefaultIterations, destination, out written);
+            return Hashing(value, LeftSalt, RightSalt, LeftPepper, RightPepper, Iterations, destination, out written);
         }
 
         public Boolean Hashing(ReadOnlySpan<Byte> value, ReadOnlySpan<Byte> salt, Span<Byte> destination)
@@ -166,7 +182,7 @@ namespace NetExtender.Crypto.CryptHash
         
         public Boolean Hashing(ReadOnlySpan<Byte> value, ReadOnlySpan<Byte> salt, Span<Byte> destination, out Int32 written)
         {
-            return Hashing(value, salt, DefaultIterations, destination, out written);
+            return Hashing(value, salt, Iterations, destination, out written);
         }
 
         public Boolean Hashing(ReadOnlySpan<Byte> value, ReadOnlySpan<Byte> salt, UInt16 iterations, Span<Byte> destination)
@@ -176,7 +192,7 @@ namespace NetExtender.Crypto.CryptHash
         
         public Boolean Hashing(ReadOnlySpan<Byte> value, ReadOnlySpan<Byte> salt, UInt16 iterations, Span<Byte> destination, out Int32 written)
         {
-            return Hashing(value, salt, salt, DefaultFirstPepper, DefaultLastPepper, iterations, destination, out written);
+            return Hashing(value, salt, salt, LeftPepper, RightPepper, iterations, destination, out written);
         }
 
         public Boolean Hashing(ReadOnlySpan<Byte> value, ReadOnlySpan<Byte> salt, ReadOnlySpan<Byte> pepper, Span<Byte> destination)
@@ -186,7 +202,7 @@ namespace NetExtender.Crypto.CryptHash
         
         public Boolean Hashing(ReadOnlySpan<Byte> value, ReadOnlySpan<Byte> salt, ReadOnlySpan<Byte> pepper, Span<Byte> destination, out Int32 written)
         {
-            return Hashing(value, salt, pepper, DefaultIterations, destination, out written);
+            return Hashing(value, salt, pepper, Iterations, destination, out written);
         }
 
         public Boolean Hashing(ReadOnlySpan<Byte> value, ReadOnlySpan<Byte> salt, ReadOnlySpan<Byte> pepper, UInt16 iterations, Span<Byte> destination)
@@ -206,7 +222,7 @@ namespace NetExtender.Crypto.CryptHash
         
         public Boolean Hashing(ReadOnlySpan<Byte> value, ReadOnlySpan<Byte> lsalt, ReadOnlySpan<Byte> rsalt, ReadOnlySpan<Byte> lpepper, ReadOnlySpan<Byte> rpepper, Span<Byte> destination, out Int32 written)
         {
-            return Hashing(value, lsalt, rsalt, lpepper, rpepper, DefaultIterations, destination, out written);
+            return Hashing(value, lsalt, rsalt, lpepper, rpepper, Iterations, destination, out written);
         }
 
         public Boolean Hashing(ReadOnlySpan<Byte> value, ReadOnlySpan<Byte> lsalt, ReadOnlySpan<Byte> rsalt, ReadOnlySpan<Byte> lpepper, ReadOnlySpan<Byte> rpepper, UInt16 iterations, Span<Byte> destination)
@@ -223,16 +239,15 @@ namespace NetExtender.Crypto.CryptHash
             }
             
             Byte[] buffer = new Byte[value.Length + lsalt.Length + rsalt.Length + lpepper.Length + rpepper.Length];
-            Span<Byte> bufferspan = buffer.AsSpan();
-            
+
             Int32 offset = 0;
             
-            lpepper.CopyTo(bufferspan.Slice(offset, lpepper.Length));
-            lsalt.CopyTo(bufferspan.Slice(offset += lpepper.Length, lsalt.Length));
-            value.CopyTo(bufferspan.Slice(offset += lsalt.Length, value.Length));
-            rsalt.CopyTo(bufferspan.Slice(offset += value.Length, rsalt.Length));
+            lpepper.CopyTo(buffer.Slice(offset, lpepper.Length));
+            lsalt.CopyTo(buffer.Slice(offset += lpepper.Length, lsalt.Length));
+            value.CopyTo(buffer.Slice(offset += lsalt.Length, value.Length));
+            rsalt.CopyTo(buffer.Slice(offset += value.Length, rsalt.Length));
             // ReSharper disable once RedundantAssignment
-            rpepper.CopyTo(bufferspan.Slice(offset += rsalt.Length, rpepper.Length));
+            rpepper.CopyTo(buffer.Slice(offset += rsalt.Length, rpepper.Length));
             
             Span<Byte> current = stackalloc Byte[(UInt16) HashType];
             
@@ -246,13 +261,11 @@ namespace NetExtender.Crypto.CryptHash
             if (successfull)
             {
                 current.CopyTo(destination);
-            }
-            else
-            {
-                written = 0;
+                return true;
             }
 
-            return successfull;
+            written = 0;
+            return false;
         }
 
         public Boolean Hashing(ReadOnlySpan<Byte> value, CryptHashRefParameters parameters, Span<Byte> destination)

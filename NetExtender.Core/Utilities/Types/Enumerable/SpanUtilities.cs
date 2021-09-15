@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using NetExtender.Random.Interfaces;
+using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
@@ -331,6 +333,328 @@ namespace NetExtender.Utilities.Types
             }
 
             return result;
+        }
+        
+        public static Memory<T> Shuffle<T>(this Memory<T> source)
+        {
+            return Shuffle(source, RandomUtilities.Generator);
+        }
+
+        public static Memory<T> Shuffle<T>(this Memory<T> source, System.Random random)
+        {
+            Shuffle(source.Span, random);
+            return source;
+        }
+
+        public static Memory<T> Shuffle<T>(this Memory<T> source, IRandom random)
+        {
+            Shuffle(source.Span, random);
+            return source;
+        }
+
+        public static Span<T> Shuffle<T>(this Span<T> source)
+        {
+            return Shuffle(source, RandomUtilities.Generator);
+        }
+
+        public static Span<T> Shuffle<T>(this Span<T> source, System.Random random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            for (Int32 i = 0; i < source.Length; i++)
+            {
+                Int32 j = random.Next(i, source.Length);
+                (source[i], source[j]) = (source[j], source[i]);
+            }
+            
+            return source;
+        }
+
+        public static Span<T> Shuffle<T>(this Span<T> source, IRandom random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            for (Int32 i = 0; i < source.Length; i++)
+            {
+                Int32 j = random.Next(i, source.Length);
+                (source[i], source[j]) = (source[j], source[i]);
+            }
+
+            return source;
+        }
+        
+        public static T? Max<T>(this Memory<T> source)
+        {
+            return Max(source.Span);
+        }
+
+        public static T? Max<T>(this Memory<T> source, IComparer<T>? comparer)
+        {
+            return Max(source.Span, comparer);
+        }
+        
+        public static T? Min<T>(this Memory<T> source)
+        {
+            return Min(source.Span);
+        }
+
+        public static T? Min<T>(this Memory<T> source, IComparer<T>? comparer)
+        {
+            return Min(source.Span, comparer);
+        }
+        
+        public static T? Max<T>(this Span<T> source)
+        {
+            return Max((ReadOnlySpan<T>) source);
+        }
+
+        public static T? Max<T>(this Span<T> source, IComparer<T>? comparer)
+        {
+            return Max((ReadOnlySpan<T>) source, comparer);
+        }
+        
+        public static T? Min<T>(this Span<T> source)
+        {
+            return Min((ReadOnlySpan<T>) source);
+        }
+
+        public static T? Min<T>(this Span<T> source, IComparer<T>? comparer)
+        {
+            return Min((ReadOnlySpan<T>) source, comparer);
+        }
+        
+        public static T? Max<T>(this ReadOnlyMemory<T> source)
+        {
+            return Max(source.Span);
+        }
+
+        public static T? Max<T>(this ReadOnlyMemory<T> source, IComparer<T>? comparer)
+        {
+            return Max(source.Span, comparer);
+        }
+        
+        public static T? Min<T>(this ReadOnlyMemory<T> source)
+        {
+            return Min(source.Span);
+        }
+
+        public static T? Min<T>(this ReadOnlyMemory<T> source, IComparer<T>? comparer)
+        {
+            return Min(source.Span, comparer);
+        }
+
+        public static T? Max<T>(this ReadOnlySpan<T> source)
+        {
+            return Max(source, null);
+        }
+
+        public static T? Max<T>(this ReadOnlySpan<T> source, IComparer<T>? comparer)
+        {
+            switch (source.Length)
+            {
+                case <= 0:
+                    return default;
+                case 1:
+                    return source[0];
+            }
+
+            comparer ??= Comparer<T>.Default;
+            
+            T max = source[0];
+                    
+            for (Int32 i = 1; i < source.Length; i++)
+            {
+                T item = source[i];
+                if (comparer.Compare(max, item) >= 0)
+                {
+                    continue;
+                }
+
+                max = item;
+            }
+
+            return max;
+        }
+        
+        public static T? Min<T>(this ReadOnlySpan<T> source)
+        {
+            return Min(source, null);
+        }
+
+        public static T? Min<T>(this ReadOnlySpan<T> source, IComparer<T>? comparer)
+        {
+            switch (source.Length)
+            {
+                case <= 0:
+                    return default;
+                case 1:
+                    return source[0];
+            }
+
+            comparer ??= Comparer<T>.Default;
+            
+            T min = source[0];
+                    
+            for (Int32 i = 1; i < source.Length; i++)
+            {
+                T item = source[i];
+                if (comparer.Compare(min, item) <= 0)
+                {
+                    continue;
+                }
+
+                min = item;
+            }
+
+            return min;
+        }
+        
+        public static T? MaxBy<T, TKey>(this Memory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
+        {
+            return MaxBy(source.Span, selector);
+        }
+
+        public static T? MaxBy<T, TKey>(this Memory<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MaxBy(source.Span, selector, comparer);
+        }
+        
+        public static T? MinBy<T, TKey>(this Memory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
+        {
+            return MinBy(source.Span, selector);
+        }
+
+        public static T? MinBy<T, TKey>(this Memory<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MinBy(source.Span, selector, comparer);
+        }
+        
+        public static T? MaxBy<T, TKey>(this Span<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
+        {
+            return MaxBy((ReadOnlySpan<T>) source, selector);
+        }
+
+        public static T? MaxBy<T, TKey>(this Span<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MaxBy((ReadOnlySpan<T>) source, selector, comparer);
+        }
+        
+        public static T? MinBy<T, TKey>(this Span<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
+        {
+            return MinBy((ReadOnlySpan<T>) source, selector);
+        }
+
+        public static T? MinBy<T, TKey>(this Span<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MinBy((ReadOnlySpan<T>) source, selector, comparer);
+        }
+        
+        public static T? MaxBy<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
+        {
+            return MaxBy(source.Span, selector);
+        }
+
+        public static T? MaxBy<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MaxBy(source.Span, selector, comparer);
+        }
+        
+        public static T? MinBy<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
+        {
+            return MinBy(source.Span, selector);
+        }
+
+        public static T? MinBy<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MinBy(source.Span, selector, comparer);
+        }
+
+        public static T? MaxBy<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
+        {
+            return MaxBy(source, selector, null);
+        }
+
+        public static T? MaxBy<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            switch (source.Length)
+            {
+                case <= 0:
+                    return default;
+                case 1:
+                    return source[0];
+            }
+
+            comparer ??= Comparer<TKey>.Default;
+            
+            T max = source[0];
+            TKey maxby = selector(max);
+                    
+            for (Int32 i = 1; i < source.Length; i++)
+            {
+                T item = source[i];
+                TKey itemby = selector(item);
+                if (comparer.Compare(maxby, itemby) >= 0)
+                {
+                    continue;
+                }
+
+                max = item;
+                maxby = itemby;
+            }
+
+            return max;
+        }
+        
+        public static T? MinBy<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
+        {
+            return MinBy(source, selector, null);
+        }
+
+        public static T? MinBy<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            switch (source.Length)
+            {
+                case <= 0:
+                    return default;
+                case 1:
+                    return source[0];
+            }
+
+            comparer ??= Comparer<TKey>.Default;
+            
+            T min = source[0];
+            TKey minby = selector(min);
+                    
+            for (Int32 i = 1; i < source.Length; i++)
+            {
+                T item = source[i];
+                TKey itemby = selector(item);
+                if (comparer.Compare(minby, itemby) <= 0)
+                {
+                    continue;
+                }
+
+                min = item;
+                minby = itemby;
+            }
+
+            return min;
         }
 
         /// <summary>

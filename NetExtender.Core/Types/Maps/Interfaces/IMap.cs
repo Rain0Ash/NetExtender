@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace NetExtender.Types.Maps.Interfaces
 {
@@ -13,8 +14,8 @@ namespace NetExtender.Types.Maps.Interfaces
         public Boolean ContainsByValue(TValue key, TKey value);
         public Boolean ContainsByValue(KeyValuePair<TValue, TKey> item);
         public TValue GetValue(TKey key);
-        public TKey GetKey(TValue key);
-        public Boolean TryGetKey(TValue key, out TKey value);
+        public TKey GetKey(TValue value);
+        public Boolean TryGetKey(TValue key, [MaybeNullWhen(false)] out TKey value);
 
         public IEnumerator<KeyValuePair<TValue, TKey>> GetValuesEnumerator();
         
@@ -30,7 +31,7 @@ namespace NetExtender.Types.Maps.Interfaces
 
         public Boolean RemoveByValue(TValue key, TKey value);
 
-        public Boolean RemoveByValue(TValue key, out TKey value);
+        public Boolean RemoveByValue(TValue key, [MaybeNullWhen(false)] out TKey value);
         public Boolean RemoveByValue(KeyValuePair<TValue, TKey> item);
 
         public new TValue this[TKey key] { get; set; }

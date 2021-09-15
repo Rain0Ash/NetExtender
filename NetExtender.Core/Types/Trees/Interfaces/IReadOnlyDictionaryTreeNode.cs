@@ -3,9 +3,9 @@
 
 namespace NetExtender.Types.Trees.Interfaces
 {
-    public interface IReadOnlyDictionaryTreeNode<TKey, TValue> : IReadOnlyDictionaryTree<TKey, TValue?> where TKey : notnull
+    public interface IReadOnlyDictionaryTreeNode<TKey, TValue> : IReadOnlyDictionaryTree<TKey, TValue> where TKey : notnull
     {
         public TValue Value { get; }
-        public IDictionaryTree<TKey, TValue?> Tree { get; }
+        public IDictionaryTree<TKey, TValue> Tree { get; }
     }
 }

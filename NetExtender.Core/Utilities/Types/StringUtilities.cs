@@ -13,7 +13,7 @@ using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using NetExtender.Types.Maps;
+using NetExtender.Types.Immutable.Maps.Interfaces;
 using NetExtender.Types.Maps.Interfaces;
 using NetExtender.Types.Strings;
 using NetExtender.Types.Strings.Interfaces;
@@ -219,14 +219,13 @@ namespace NetExtender.Utilities.Types
                 .Select(format => Regex.Replace(format.ToLower(), @"\{|\}", String.Empty));
         }
 
-        //TODO: To ImmutableMap;
-        private static IMap<Char, Char> Brackets { get; } = new Map<Char, Char>(4)
+        private static IImmutableMap<Char, Char> Brackets { get; } = new Dictionary<Char, Char>(4)
         {
             {'(', ')'},
             {'{', '}'},
             {'[', ']'},
             {'<', '>'}
-        };
+        }.ToImmutableMap();
 
         public static Boolean IsBracketsWellFormed(this String value)
         {
@@ -251,6 +250,11 @@ namespace NetExtender.Utilities.Types
                 return true;
             }
 
+            if (value.Length % 2 == 1)
+            {
+                return false;
+            }
+
             IReadOnlyMap<Char, Char> brackets = pairs.AsIReadOnlyMap();
 
             Stack<Char> order = new Stack<Char>();
@@ -267,7 +271,7 @@ namespace NetExtender.Utilities.Types
                 {
                     continue;
                 }
-                    
+
                 if (order.Count <= 0)
                 {
                     return false;
@@ -647,6 +651,23 @@ namespace NetExtender.Utilities.Types
                 0 => args,
                 < 0 => args.Concat(Enumerable.Repeat(NullString, expected - args.Length)).ToArray(),
                 > 0 => args.Take(expected).ToArray()
+            };
+        }
+        
+        public static Object[] FormatSafeGetNotNullArguments(Object?[]? args, Int32 expected)
+        {
+            if (args is null)
+            {
+                return expected > 0 ? Enumerable.Repeat((Object) NullString, expected).ToArray() : Array.Empty<Object>();
+            }
+
+            Object[] values = args.ChangeWhereNull(NullString).ToArray();
+
+            return (values.Length - expected) switch
+            {
+                0 => values,
+                < 0 => values.Concat(Enumerable.Repeat(NullString, expected - values.Length)).ToArray(),
+                > 0 => values.Take(expected).ToArray()
             };
         }
 

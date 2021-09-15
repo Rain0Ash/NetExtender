@@ -33,29 +33,29 @@ namespace NetExtender.Utilities.Types
     {
         public const EscapeType DefaultEscapeType = EscapeType.Null;
 
-        public static T? CastConvert<T>(this Object? value)
+        public static T CastConvert<T>(this Object? value)
         {
-            if (TryConvert(value, out T? result))
+            if (!TryConvert(value, out T? result))
             {
-                return result;
+                throw new InvalidCastException();
             }
 
-            throw new InvalidCastException();
+            return result!;
         }
 
-        public static T? CastConvert<T>(this String? input)
+        public static T CastConvert<T>(this String? input)
         {
             return CastConvert<T>(input, CultureInfo.InvariantCulture);
         }
         
-        public static T? CastConvert<T>(this String? input, CultureInfo? info)
+        public static T CastConvert<T>(this String? input, CultureInfo? info)
         {
-            if (TryConvert(input, out T? value))
+            if (!TryConvert(input, out T? result))
             {
-                return value;
+                throw new InvalidCastException();
             }
 
-            throw new InvalidCastException();
+            return result!;
         }
         
         public static T? Convert<T>(this Object? obj)
@@ -75,17 +75,17 @@ namespace NetExtender.Utilities.Types
             return value;
         }
         
-        public static IEnumerable<T?> CastConvert<T>(this String? input, String? separator)
+        public static IEnumerable<T> CastConvert<T>(this String? input, String? separator)
         {
             return CastConvert<T>(input, separator, CultureInfo.InvariantCulture);
         }
         
-        public static IEnumerable<T?> CastConvert<T>(this String? input, String? separator, CultureInfo? info)
+        public static IEnumerable<T> CastConvert<T>(this String? input, String? separator, CultureInfo? info)
         {
             return String.IsNullOrEmpty(input) ? Enumerable.Empty<T>() : CastConvert<T>(input.Split(separator, StringSplitOptions.RemoveEmptyEntries), info);
         }
 
-        public static IEnumerable<T?> CastConvert<T>(this String? input, String[]? separators, CultureInfo? info)
+        public static IEnumerable<T> CastConvert<T>(this String? input, String[]? separators, CultureInfo? info)
         {
             return String.IsNullOrEmpty(input) ? Enumerable.Empty<T>() : CastConvert<T>(input.Split(separators, StringSplitOptions.RemoveEmptyEntries), info);
         }
@@ -135,12 +135,12 @@ namespace NetExtender.Utilities.Types
             };
         }
         
-        public static IEnumerable<T?> CastConvert<T>(this IEnumerable<String> source)
+        public static IEnumerable<T> CastConvert<T>(this IEnumerable<String> source)
         {
             return CastConvert<T>(source, CultureInfo.InvariantCulture);
         }
         
-        public static IEnumerable<T?> CastConvert<T>(this IEnumerable<String> source, CultureInfo? info)
+        public static IEnumerable<T> CastConvert<T>(this IEnumerable<String> source, CultureInfo? info)
         {
             if (source is null)
             {
@@ -177,7 +177,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            Boolean TryConvertInner(String? input, out T? result)
+            Boolean TryConvertInner(String? input, [MaybeNullWhen(false)] out T result)
             {
                 return TryConvert(input, info, out result);
             }
@@ -433,7 +433,7 @@ namespace NetExtender.Utilities.Types
             return GetStringUnknownInternal(value, escape, provider, out String? result) ? result : value?.ToString();
         }
         
-        private static Boolean GetStringUnknownInternal(Object? value, EscapeType escape, IFormatProvider? provider, [MaybeNullWhen(false)] out String? result)
+        private static Boolean GetStringUnknownInternal(Object? value, EscapeType escape, IFormatProvider? provider, [MaybeNullWhen(false)] out String result)
         {
             if (value is null)
             {
@@ -833,7 +833,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TOutput? Convert<T, TOutput>(this T input, TryParseHandler<T, TOutput> converter)
         {
-            return Convert(input, converter!, default(TOutput?));
+            return Convert(input, converter!, default(TOutput));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -915,16 +915,23 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean TryConvert<T>(this String? input, CultureInfo? info, out T? result)
+        public static Boolean TryConvert<T>(this String? input, CultureInfo? info, [MaybeNullWhen(false)] out T result)
         {
             return TryConvert(input, info, null, out result);
         }
 
-        public static Boolean TryConvert<T>(this String? input, CultureInfo? info, ITypeDescriptorContext? context, out T? result)
+        // ReSharper disable once CognitiveComplexity
+        public static Boolean TryConvert<T>(this String? input, CultureInfo? info, ITypeDescriptorContext? context, [MaybeNullWhen(false)] out T result)
         {
+            if (input is null)
+            {
+                result = default;
+                return false;
+            }
+            
             if (typeof(T) == typeof(String))
             {
-                result = (T?) (Object?) input;
+                result = Unsafe.As<String, T>(ref input);
                 return true;
             }
             
@@ -939,16 +946,48 @@ namespace NetExtender.Utilities.Types
             {
                 try
                 {
-                    result = (T?) System.Convert.ChangeType(input, typeof(T));
-                    return true;
+                    if (System.Convert.ChangeType(input, typeof(T)) is T value)
+                    {
+                        result = value;
+                        return true;
+                    }
+
+                    result = default;
+                    return false;
                 }
                 catch (Exception)
                 {
                     TypeConverter converter = TypeDescriptor.GetConverter(typeof(T));
 
-                    result = (T?) converter.ConvertFromString(context!, info!, input);
+                    if (context is null)
+                    {
+                        if (converter.ConvertFromInvariantString(input) is T invariantresult)
+                        {
+                            result = invariantresult;
+                            return true;
+                        }
 
-                    return true;
+                        result = default;
+                        return false;
+                    }
+
+                    if (info is not null)
+                    {
+                        if (converter.ConvertFromString(context, info, input) is T fullresult)
+                        {
+                            result = fullresult;
+                            return true;
+                        }
+                    }
+                        
+                    if (converter.ConvertFromString(context, input) is T contextresult)
+                    {
+                        result = contextresult;
+                        return true;
+                    }
+                        
+                    result = default;
+                    return false;
                 }
             }
             catch (Exception)
@@ -958,11 +997,11 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static Boolean TryConvert<TInput, TOutput>(this TInput input, out TOutput? result)
+        public static Boolean TryConvert<TInput, TOutput>(this TInput input, [MaybeNullWhen(false)] out TOutput result)
         {
             if (typeof(TInput) == typeof(TOutput))
             {
-                result = (TOutput?) (Object?) input;
+                result = Unsafe.As<TInput, TOutput>(ref input);
                 return true;
             }
             
@@ -976,7 +1015,7 @@ namespace NetExtender.Utilities.Types
             if (input is null)
             {
                 result = default;
-                return true;
+                return false;
             }
 
             try
@@ -990,9 +1029,14 @@ namespace NetExtender.Utilities.Types
                 {
                     TypeConverter converter = TypeDescriptor.GetConverter(typeof(TOutput));
 
-                    result = converter.ConvertFrom(input) is TOutput output ? output : default;
+                    if (converter.ConvertFrom(input) is TOutput output)
+                    {
+                        result = output;
+                        return true;
+                    }
 
-                    return true;
+                    result = default;
+                    return false;
                 }
             }
             catch (Exception)

@@ -3,11 +3,14 @@
 
 using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using NetExtender.Types.Drawing.Colors.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Drawing.Colors
 {
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct XYZColor : IColor<XYZColor>
     {
         public static implicit operator Color(XYZColor color)
@@ -84,6 +87,28 @@ namespace NetExtender.Types.Drawing.Colors
         public override String ToString()
         {
             return $"X:{X} Y:{Y} Z:{Z}";
+        }
+        
+        public String ToString(String? format)
+        {
+            return ToString(format, null);
+        }
+        
+        public String ToString(String? format, IFormatProvider? provider)
+        {
+            if (String.IsNullOrEmpty(format))
+            {
+                return ToString();
+            }
+
+            String x = X.ToString(provider);
+            String y = Y.ToString(provider);
+            String z = Z.ToString(provider);
+
+            return format.Replace("{COLOR}", $"X:{x} Y:{y} Z:{z}")
+                .Replace("{X}", x)
+                .Replace("{Y}", y)
+                .Replace("{Z}", z);
         }
     }
 }

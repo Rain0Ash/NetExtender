@@ -15,7 +15,7 @@ namespace NetExtender.Utilities.Types
     {
         public static Boolean TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key, [MaybeNullWhen(false)] out TKey result)
         {
-            return TryGetKey(source!, key, default(TKey), out result);
+            return TryGetKey(source, key, default(TKey)!, out result);
         }
         
         public static Boolean TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key, TKey @default, [MaybeNullWhen(false)] out TKey result)
@@ -92,7 +92,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return TryGetKey(source, key, default(TKey?)!);
+            return TryGetKey(source!, key, default(TKey));
         }
         
         public static TKey TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key, TKey @default)

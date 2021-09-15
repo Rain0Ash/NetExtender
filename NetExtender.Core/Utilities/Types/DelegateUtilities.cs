@@ -2,12 +2,13 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utilities.Types
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "CoVariantArrayConversion")]
+    [SuppressMessage("ReSharper", "CoVariantArrayConversion")]
     public static class DelegateUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

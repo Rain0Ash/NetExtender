@@ -2,12 +2,13 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utilities.Numerics
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
+    [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
     public static partial class BitUtilities
     {
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -20,14 +20,14 @@ namespace NetExtender.Crypto
 
     public static partial class Cryptography
     {
-        public static String GetBase64StringFromBytes(this ReadOnlySpan<Byte> data, Base64FormattingOptions options = Base64FormattingOptions.None)
+        public static String GetBase64StringFromBytes(this ReadOnlySpan<Byte> value, Base64FormattingOptions options = Base64FormattingOptions.None)
         {
-            return Convert.ToBase64String(data, options);
+            return Convert.ToBase64String(value, options);
         }
 
-        public static String GetBase64StringFromBytes(this Byte[] data, Base64FormattingOptions options = Base64FormattingOptions.None)
+        public static String GetBase64StringFromBytes(this Byte[] value, Base64FormattingOptions options = Base64FormattingOptions.None)
         {
-            return Convert.ToBase64String(data, options);
+            return Convert.ToBase64String(value, options);
         }
 
         public static String EncodeBase(this String plain, BaseCryptType type = Base.DefaultBaseCryptType)
@@ -35,9 +35,9 @@ namespace NetExtender.Crypto
             return Base.Encode(plain, type);
         }
 
-        public static String EncodeBase(this Byte[] data, BaseCryptType type = Base.DefaultBaseCryptType)
+        public static String EncodeBase(this Byte[] value, BaseCryptType type = Base.DefaultBaseCryptType)
         {
-            return Base.Encode(data, type);
+            return Base.Encode(value, type);
         }
 
         public static String DecodeBase(this String encoded, BaseCryptType type = Base.DefaultBaseCryptType)
@@ -45,9 +45,9 @@ namespace NetExtender.Crypto
             return Base.Decode(encoded, type);
         }
 
-        public static String DecodeBase(this Byte[] data, BaseCryptType type = Base.DefaultBaseCryptType)
+        public static String DecodeBase(this Byte[] value, BaseCryptType type = Base.DefaultBaseCryptType)
         {
-            return Base.Decode(data, type);
+            return Base.Decode(value, type);
         }
 
         public static class Base
@@ -72,15 +72,15 @@ namespace NetExtender.Crypto
                 };
             }
 
-            public static String Encode(Byte[] data, BaseCryptType type = DefaultBaseCryptType)
+            public static String Encode(Byte[] value, BaseCryptType type = DefaultBaseCryptType)
             {
                 return type switch
                 {
-                    BaseCryptType.Base16 => Encode(Base16, data),
-                    BaseCryptType.Base32 => Encode(Base32, data),
-                    BaseCryptType.Base58 => Encode(Base58, data),
-                    BaseCryptType.Base64 => Base64Encode(data),
-                    BaseCryptType.Base85 => Encode(Base85, data),
+                    BaseCryptType.Base16 => Encode(Base16, value),
+                    BaseCryptType.Base32 => Encode(Base32, value),
+                    BaseCryptType.Base58 => Encode(Base58, value),
+                    BaseCryptType.Base64 => Base64Encode(value),
+                    BaseCryptType.Base85 => Encode(Base85, value),
                     _ => throw new NotSupportedException()
                 };
             }
@@ -98,15 +98,15 @@ namespace NetExtender.Crypto
                 };
             }
 
-            public static String Decode(Byte[] data, BaseCryptType type = DefaultBaseCryptType)
+            public static String Decode(Byte[] value, BaseCryptType type = DefaultBaseCryptType)
             {
                 return type switch
                 {
-                    BaseCryptType.Base16 => Decode(Base16, data),
-                    BaseCryptType.Base32 => Decode(Base32, data),
-                    BaseCryptType.Base58 => Decode(Base58, data),
-                    BaseCryptType.Base64 => Base64Decode(data),
-                    BaseCryptType.Base85 => Decode(Base85, data),
+                    BaseCryptType.Base16 => Decode(Base16, value),
+                    BaseCryptType.Base32 => Decode(Base32, value),
+                    BaseCryptType.Base58 => Decode(Base58, value),
+                    BaseCryptType.Base64 => Base64Decode(value),
+                    BaseCryptType.Base85 => Decode(Base85, value),
                     _ => throw new NotSupportedException()
                 };
             }
@@ -116,9 +116,9 @@ namespace NetExtender.Crypto
                 return crypt.Encode(Encoding.UTF8.GetBytes(plain));
             }
 
-            public static String Encode(IBaseCrypt crypt, Byte[] data)
+            public static String Encode(IBaseCrypt crypt, Byte[] value)
             {
-                return crypt.Encode(data);
+                return crypt.Encode(value);
             }
 
             public static String Decode(IBaseCrypt crypt, String encoded)
@@ -126,14 +126,14 @@ namespace NetExtender.Crypto
                 return Decode(crypt, encoded.ToCharArray());
             }
 
-            public static String Decode(IBaseCrypt crypt, Byte[] data)
+            public static String Decode(IBaseCrypt crypt, Byte[] value)
             {
-                return Decode(crypt, Encoding.UTF8.GetString(data).ToCharArray());
+                return Decode(crypt, Encoding.UTF8.GetString(value).ToCharArray());
             }
 
-            public static String Decode(IBaseCrypt crypt, Char[] data)
+            public static String Decode(IBaseCrypt crypt, Char[] value)
             {
-                return Encoding.UTF8.GetString(crypt.Decode(data));
+                return Encoding.UTF8.GetString(crypt.Decode(value));
             }
 
             public static String Base64Encode(String plain)

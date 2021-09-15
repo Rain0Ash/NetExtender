@@ -823,181 +823,181 @@ namespace NetExtender.Utilities.IO
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(CancellationToken token)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(CancellationToken token)
         {
             return ReadAsEnumerableAsync<T>(CultureInfo.InvariantCulture, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String separator, CancellationToken token)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String separator, CancellationToken token)
         {
             return ReadAsEnumerableAsync<T>(separator, CultureInfo.InvariantCulture, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String[] separators, CancellationToken token)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String[] separators, CancellationToken token)
         {
             return ReadAsEnumerableAsync<T>(separators, CultureInfo.InvariantCulture, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(CultureInfo? info, CancellationToken token)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(CultureInfo? info, CancellationToken token)
         {
             return ReadAsEnumerableAsync<T>(StringUtilities.DefaultSeparator, info, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String separator, CultureInfo? info, CancellationToken token)
+        public static async Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String separator, CultureInfo? info, CancellationToken token)
         {
             return (await ReadLineAsync(token).ConfigureAwait(false))?.Convert<T>(separator, info);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String[] separators, CultureInfo? info, CancellationToken token)
+        public static async Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String[] separators, CultureInfo? info, CancellationToken token)
         {
             return (await ReadLineAsync(token).ConfigureAwait(false))?.Convert<T>(separators, info);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(Int32 milliseconds)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(Int32 milliseconds)
         {
             return ReadAsEnumerableAsync<T>(StringUtilities.DefaultSeparator, milliseconds);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(TimeSpan timeout)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(TimeSpan timeout)
         {
             return ReadAsEnumerableAsync<T>(StringUtilities.DefaultSeparator, timeout);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String separator, Int32 milliseconds)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String separator, Int32 milliseconds)
         {
             return ReadAsEnumerableAsync<T>(separator, milliseconds, CultureInfo.InvariantCulture);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String separator, TimeSpan timeout)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String separator, TimeSpan timeout)
         {
             return ReadAsEnumerableAsync<T>(separator, timeout, CultureInfo.InvariantCulture);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String[] separators, Int32 milliseconds)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String[] separators, Int32 milliseconds)
         {
             return ReadAsEnumerableAsync<T>(separators, milliseconds, CultureInfo.InvariantCulture);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String[] separators, TimeSpan timeout)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String[] separators, TimeSpan timeout)
         {
             return ReadAsEnumerableAsync<T>(separators, timeout, CultureInfo.InvariantCulture);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(Int32 milliseconds, CultureInfo? info)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(Int32 milliseconds, CultureInfo? info)
         {
             return ReadAsEnumerableAsync<T>(StringUtilities.DefaultSeparator, milliseconds, info);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(TimeSpan timeout, CultureInfo? info)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(TimeSpan timeout, CultureInfo? info)
         {
             return ReadAsEnumerableAsync<T>(StringUtilities.DefaultSeparator, timeout, info);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String separator, Int32 milliseconds, CultureInfo? info)
+        public static async Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String separator, Int32 milliseconds, CultureInfo? info)
         {
             return (await ReadLineAsync(milliseconds).ConfigureAwait(false))?.Convert<T>(separator, info);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String separator, TimeSpan timeout, CultureInfo? info)
+        public static async Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String separator, TimeSpan timeout, CultureInfo? info)
         {
             return (await ReadLineAsync(timeout).ConfigureAwait(false))?.Convert<T>(separator, info);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String[] separators, Int32 milliseconds, CultureInfo? info)
+        public static async Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String[] separators, Int32 milliseconds, CultureInfo? info)
         {
             return (await ReadLineAsync(milliseconds).ConfigureAwait(false))?.Convert<T>(separators, info);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String[] separators, TimeSpan timeout, CultureInfo? info)
+        public static async Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String[] separators, TimeSpan timeout, CultureInfo? info)
         {
             return (await ReadLineAsync(timeout).ConfigureAwait(false))?.Convert<T>(separators, info);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(Int32 milliseconds, CancellationToken token)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(Int32 milliseconds, CancellationToken token)
         {
             return ReadAsEnumerableAsync<T>(StringUtilities.DefaultSeparator, milliseconds, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(TimeSpan timeout, CancellationToken token)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(TimeSpan timeout, CancellationToken token)
         {
             return ReadAsEnumerableAsync<T>(StringUtilities.DefaultSeparator, timeout, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String separator, Int32 milliseconds, CancellationToken token)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String separator, Int32 milliseconds, CancellationToken token)
         {
             return ReadAsEnumerableAsync<T>(separator, milliseconds, CultureInfo.InvariantCulture, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String separator, TimeSpan timeout, CancellationToken token)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String separator, TimeSpan timeout, CancellationToken token)
         {
             return ReadAsEnumerableAsync<T>(separator, timeout, CultureInfo.InvariantCulture, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String[] separators, Int32 milliseconds, CancellationToken token)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String[] separators, Int32 milliseconds, CancellationToken token)
         {
             return ReadAsEnumerableAsync<T>(separators, milliseconds, CultureInfo.InvariantCulture, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String[] separators, TimeSpan timeout, CancellationToken token)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String[] separators, TimeSpan timeout, CancellationToken token)
         {
             return ReadAsEnumerableAsync<T>(separators, timeout, CultureInfo.InvariantCulture, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(Int32 milliseconds, CultureInfo? info, CancellationToken token)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(Int32 milliseconds, CultureInfo? info, CancellationToken token)
         {
             return ReadAsEnumerableAsync<T>(StringUtilities.DefaultSeparator, milliseconds, info, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(TimeSpan timeout, CultureInfo? info, CancellationToken token)
+        public static Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(TimeSpan timeout, CultureInfo? info, CancellationToken token)
         {
             return ReadAsEnumerableAsync<T>(StringUtilities.DefaultSeparator, timeout, info, token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String separator, Int32 milliseconds, CultureInfo? info, CancellationToken token)
+        public static async Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String separator, Int32 milliseconds, CultureInfo? info, CancellationToken token)
         {
             return (await ReadLineAsync(milliseconds, token).ConfigureAwait(false))?.Convert<T>(separator, info);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String separator, TimeSpan timeout, CultureInfo? info, CancellationToken token)
+        public static async Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String separator, TimeSpan timeout, CultureInfo? info, CancellationToken token)
         {
             return (await ReadLineAsync(timeout, token).ConfigureAwait(false))?.Convert<T>(separator, info);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String[] separators, Int32 milliseconds, CultureInfo? info, CancellationToken token)
+        public static async Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String[] separators, Int32 milliseconds, CultureInfo? info, CancellationToken token)
         {
             return (await ReadLineAsync(milliseconds, token).ConfigureAwait(false))?.Convert<T>(separators, info);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<IEnumerable<T>?> ReadAsEnumerableAsync<T>(String[] separators, TimeSpan timeout, CultureInfo? info, CancellationToken token)
+        public static async Task<IEnumerable<T?>?> ReadAsEnumerableAsync<T>(String[] separators, TimeSpan timeout, CultureInfo? info, CancellationToken token)
         {
             return (await ReadLineAsync(timeout, token).ConfigureAwait(false))?.Convert<T>(separators, info);
         }

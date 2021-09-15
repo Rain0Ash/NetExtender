@@ -17,7 +17,7 @@ namespace NetExtender.Types.Multithreading
         }
         
         public MutexSlim()
-            : base(0, 1)
+            : base(1, 1)
         {
         }
     }

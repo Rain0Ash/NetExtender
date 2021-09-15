@@ -3,9 +3,7 @@
 
 using System;
 using System.Security.Cryptography;
-using NetExtender.Utilities.Numerics;
 using NetExtender.Crypto.CryptKey.Interfaces;
-using NetExtender.Exceptions;
 using NetExtender.Utilities.Crypto;
 using Rsa = System.Security.Cryptography.RSA;
 
@@ -57,16 +55,30 @@ namespace NetExtender.Crypto.CryptKey.RSA
             }
         }
 
-        public RSACryptKey(Int32 length = 2048)
+        public RSACryptKey()
+            : this(2048)
+        {
+        }
+
+        public RSACryptKey(Int32 length)
             : this(length, true)
         {
         }
 
-        private RSACryptKey(Int32 length, Boolean disposable)
-            : this(Rsa.Create(length.InRange(384, 16384) ? 
-                       length % 8 == 0 ? length : throw new ArgumentException("Length must be a multiple of 8") : throw new ArgumentOutOfRangeException(nameof(length)))
-                   ?? throw new FactoryException("Unknown exception"), disposable)
+        protected RSACryptKey(Int32 length, Boolean disposable)
+            : base(disposable)
         {
+            if (length < 384 || length > 16384)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length));
+            }
+
+            if (length % 8 != 0)
+            {
+                throw new ArgumentException("Length must be a multiple of 8");
+            }
+            
+            Rsa = Rsa.Create(length);
         }
 
         public RSACryptKey(RSAParameters parameters)
@@ -75,39 +87,79 @@ namespace NetExtender.Crypto.CryptKey.RSA
             Rsa = Rsa.Create(parameters);
         }
 
-        public RSACryptKey(ReadOnlySpan<Byte> key, RSAKeyType type = RSAKeyType.RSA, RSAParameters? parameters = null)
+        public RSACryptKey(ReadOnlySpan<Byte> key)
+            : this(key, null)
+        {
+        }
+
+        public RSACryptKey(ReadOnlySpan<Byte> key, RSAKeyType type)
+            : this(key, type, null)
+        {
+        }
+
+        public RSACryptKey(ReadOnlySpan<Byte> key, RSAParameters? parameters)
+            : this(key, RSAKeyType.RSA, parameters)
+        {
+        }
+
+        public RSACryptKey(ReadOnlySpan<Byte> key, RSAKeyType type, RSAParameters? parameters)
             : this(key, type, parameters, true)
         {
         }
         
-        private RSACryptKey(ReadOnlySpan<Byte> key, RSAKeyType type, RSAParameters? parameters, Boolean disposable)
+        protected RSACryptKey(ReadOnlySpan<Byte> key, RSAKeyType type, RSAParameters? parameters, Boolean disposable)
             : this(Cryptography.RSA.Create(key, type, parameters), disposable)
         {
         }
 
-        public RSACryptKey(Rsa rsa, Boolean disposable = false)
+        public RSACryptKey(Rsa rsa)
+            : this(rsa, false)
+        {
+        }
+
+        public RSACryptKey(Rsa rsa, Boolean disposable)
             : base(disposable)
         {
             Rsa = rsa ?? throw new ArgumentNullException(nameof(rsa));
         }
 
-        public override String EncryptString(String value)
+        public override String? EncryptString(String value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             return Cryptography.RSA.Encrypt(value, Rsa);
         }
 
         public override Byte[] EncryptBytes(Byte[] value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             return Cryptography.RSA.Encrypt(value, Rsa);
         }
 
-        public override String DecryptString(String value)
+        public override String? DecryptString(String value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             return Cryptography.RSA.Decrypt(value, Rsa);
         }
 
         public override Byte[] DecryptBytes(Byte[] value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             return Cryptography.RSA.Decrypt(value, Rsa);
         }
         

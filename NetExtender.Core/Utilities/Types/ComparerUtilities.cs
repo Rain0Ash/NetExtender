@@ -7,6 +7,7 @@ using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using NetExtender.Comparers.Common;
 using NetExtender.Comparers.Interfaces;
+using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
@@ -493,6 +494,41 @@ namespace NetExtender.Utilities.Types
         public static Boolean Between<T>(this IComparer<T>? comparer, T value, T min, T max)
         {
             return Between(value, min, max, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean CompareInRange<T>(this T value, T minimum, T maximum) where T : IComparable<T>
+        {
+            return CompareInRange(value, minimum, maximum, Comparer<T>.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean CompareInRange<T>(this T value, T minimum, T maximum, IComparer<T>? comparer)
+        {
+            return CompareInRange(value, minimum, maximum, comparer, MathPositionType.Both);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean CompareInRange<T>(this T value, T minimum, T maximum, MathPositionType comparison) where T : IComparable<T>
+        {
+            return CompareInRange(value, minimum, maximum, Comparer<T>.Default, comparison);
+        }
+
+        public static Boolean CompareInRange<T>(this T value, T minimum, T maximum, IComparer<T>? comparer, MathPositionType comparison)
+        {
+            comparer ??= Comparer<T>.Default;
+
+            Int32 min = comparer.Compare(value, minimum);
+            Int32 max = comparer.Compare(value,  maximum);
+
+            return comparison switch
+            {
+                MathPositionType.None => min > 0 && max < 0,
+                MathPositionType.Left => min >= 0 && max < 0,
+                MathPositionType.Right => min > 0 && max <= 0,
+                MathPositionType.Both => min >= 0 && max <= 0,
+                _ => throw new NotSupportedException()
+            };
         }
         
         /// <inheritdoc cref="CompareClamp{T}(T,T,T,System.Collections.Generic.IComparer{T})"/>

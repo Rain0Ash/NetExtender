@@ -96,6 +96,14 @@ namespace NetExtender.Utilities.Types
 
     public static class DateTimeUtilities
     {
+        public static DateTime Epoch
+        {
+            get
+            {
+                return new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            }
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeSpan Elapsed(this DateTime value)
         {
@@ -219,17 +227,28 @@ namespace NetExtender.Utilities.Types
         /// Calculates age based on date supplied
         /// </summary>
         /// <param name="date">Birth date</param>
-        /// <param name="second">Date to calculate from</param>
         /// <returns>The total age in years</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 Age(this DateTime date, DateTime second = default)
+        public static Int32 Age(this DateTime date)
         {
-            if (second == default)
+            return Age(date, DateTime.Now);
+        }
+
+        /// <summary>
+        /// Calculates age based on date supplied
+        /// </summary>
+        /// <param name="date">Birth date</param>
+        /// <param name="at">Date to calculate from</param>
+        /// <returns>The total age in years</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Age(this DateTime date, DateTime at)
+        {
+            if (at < date)
             {
-                second = DateTime.Now;
+                throw new ArgumentOutOfRangeException(nameof(at));
             }
 
-            return (second - date).Years();
+            return (at - date).Years();
         }
 
         /// <summary>
@@ -237,11 +256,23 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <param name="date">Date to base off of</param>
         /// <param name="frame">Time frame to use</param>
-        /// <param name="info">Culture to use for calculating (defaults to the current culture)</param>
         /// <returns>The beginning of a specific time frame</returns>
-        public static DateTime BeginningOf(this DateTime date, TimeFrame frame, CultureInfo? info = null)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime BeginningOf(this DateTime date, TimeFrame frame)
         {
-            info ??= CultureInfo.CurrentCulture;
+            return BeginningOf(date, frame, null);
+        }
+
+        /// <summary>
+        /// Beginning of a specific time frame
+        /// </summary>
+        /// <param name="date">Date to base off of</param>
+        /// <param name="frame">Time frame to use</param>
+        /// <param name="info">Culture to use for calculating (defaults to the invariant culture)</param>
+        /// <returns>The beginning of a specific time frame</returns>
+        public static DateTime BeginningOf(this DateTime date, TimeFrame frame, CultureInfo? info)
+        {
+            info ??= CultureInfo.InvariantCulture;
             return frame switch
             {
                 TimeFrame.Day => date.Date,
@@ -258,16 +289,29 @@ namespace NetExtender.Utilities.Types
         /// <param name="date">Date to base off of</param>
         /// <param name="frame">Time frame to use</param>
         /// <param name="start">Start of the first quarter</param>
-        /// <param name="info">Culture to use for calculating (defaults to the current culture)</param>
         /// <returns>The beginning of a specific time frame</returns>
-        public static DateTime BeginningOf(this DateTime date, TimeFrame frame, DateTime start, CultureInfo? info = null)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime BeginningOf(this DateTime date, TimeFrame frame, DateTime start)
+        {
+            return BeginningOf(date, frame, start, null);
+        }
+
+        /// <summary>
+        /// Beginning of a specific time frame
+        /// </summary>
+        /// <param name="date">Date to base off of</param>
+        /// <param name="frame">Time frame to use</param>
+        /// <param name="start">Start of the first quarter</param>
+        /// <param name="info">Culture to use for calculating (defaults to the invariant culture)</param>
+        /// <returns>The beginning of a specific time frame</returns>
+        public static DateTime BeginningOf(this DateTime date, TimeFrame frame, DateTime start, CultureInfo? info)
         {
             if (frame != TimeFrame.Quarter)
             {
                 return date.BeginningOf(frame, info);
             }
 
-            info ??= CultureInfo.CurrentCulture;
+            info ??= CultureInfo.InvariantCulture;
             if (date.Between(start, start.AddMonths(3).AddDays(-1).EndOf(TimeFrame.Day, info)))
             {
                 return start.Date;
@@ -291,11 +335,23 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <param name="date">Date</param>
         /// <param name="frame">Time frame to calculate the number of days from</param>
-        /// <param name="info">Culture to use for calculating (defaults to the current culture)</param>
         /// <returns>The number of days in the time frame</returns>
-        public static Int32 DaysIn(this DateTime date, TimeFrame frame, CultureInfo? info = null)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 DaysIn(this DateTime date, TimeFrame frame)
         {
-            info ??= CultureInfo.CurrentCulture;
+            return DaysIn(date, frame, null);
+        }
+
+        /// <summary>
+        /// Gets the number of days in the time frame specified based on the date
+        /// </summary>
+        /// <param name="date">Date</param>
+        /// <param name="frame">Time frame to calculate the number of days from</param>
+        /// <param name="info">Culture to use for calculating (defaults to the invariant culture)</param>
+        /// <returns>The number of days in the time frame</returns>
+        public static Int32 DaysIn(this DateTime date, TimeFrame frame, CultureInfo? info)
+        {
+            info ??= CultureInfo.InvariantCulture;
             return frame switch
             {
                 TimeFrame.Day => 1,
@@ -311,18 +367,31 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <param name="date">Date</param>
         /// <param name="frame">Time frame to calculate the number of days from</param>
-        /// <param name="startOfQuarter1">Start of the first quarter</param>
-        /// <param name="info">Culture to use for calculating (defaults to the current culture)</param>
+        /// <param name="quarter">Start of the first quarter</param>
         /// <returns>The number of days in the time frame</returns>
-        public static Int32 DaysIn(this DateTime date, TimeFrame frame, DateTime startOfQuarter1, CultureInfo? info = null)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 DaysIn(this DateTime date, TimeFrame frame, DateTime quarter)
+        {
+            return DaysIn(date, frame, quarter, null);
+        }
+
+        /// <summary>
+        /// Gets the number of days in the time frame specified based on the date
+        /// </summary>
+        /// <param name="date">Date</param>
+        /// <param name="frame">Time frame to calculate the number of days from</param>
+        /// <param name="quarter">Start of the first quarter</param>
+        /// <param name="info">Culture to use for calculating (defaults to the invariant culture)</param>
+        /// <returns>The number of days in the time frame</returns>
+        public static Int32 DaysIn(this DateTime date, TimeFrame frame, DateTime quarter, CultureInfo? info)
         {
             if (frame != TimeFrame.Quarter)
             {
                 date.DaysIn(frame, info);
             }
 
-            info ??= CultureInfo.CurrentCulture;
-            return date.EndOf(TimeFrame.Quarter, info).DayOfYear - startOfQuarter1.DayOfYear;
+            info ??= CultureInfo.InvariantCulture;
+            return date.EndOf(TimeFrame.Quarter, info).DayOfYear - quarter.DayOfYear;
         }
 
         /// <summary>
@@ -330,11 +399,23 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <param name="date">Date</param>
         /// <param name="frame">Time frame to calculate the number of days left</param>
-        /// <param name="info">Culture to use for calculating (defaults to the current culture)</param>
         /// <returns>The number of days left in the time frame</returns>
-        public static Int32 DaysLeftIn(this DateTime date, TimeFrame frame, CultureInfo? info = null)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 DaysLeftIn(this DateTime date, TimeFrame frame)
         {
-            info ??= CultureInfo.CurrentCulture;
+            return DaysLeftIn(date, frame, null);
+        }
+
+        /// <summary>
+        /// Gets the number of days left in the time frame specified based on the date
+        /// </summary>
+        /// <param name="date">Date</param>
+        /// <param name="frame">Time frame to calculate the number of days left</param>
+        /// <param name="info">Culture to use for calculating (defaults to the invariant culture)</param>
+        /// <returns>The number of days left in the time frame</returns>
+        public static Int32 DaysLeftIn(this DateTime date, TimeFrame frame, CultureInfo? info)
+        {
+            info ??= CultureInfo.InvariantCulture;
             return frame switch
             {
                 TimeFrame.Day => 1,
@@ -351,16 +432,29 @@ namespace NetExtender.Utilities.Types
         /// <param name="date">Date</param>
         /// <param name="frame">Time frame to calculate the number of days left</param>
         /// <param name="start">Start of the first quarter</param>
-        /// <param name="info">Culture to use for calculating (defaults to the current culture)</param>
         /// <returns>The number of days left in the time frame</returns>
-        public static Int32 DaysLeftIn(this DateTime date, TimeFrame frame, DateTime start, CultureInfo? info = null)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 DaysLeftIn(this DateTime date, TimeFrame frame, DateTime start)
+        {
+            return DaysLeftIn(date, frame, start, null);
+        }
+
+        /// <summary>
+        /// Gets the number of days left in the time frame specified based on the date
+        /// </summary>
+        /// <param name="date">Date</param>
+        /// <param name="frame">Time frame to calculate the number of days left</param>
+        /// <param name="start">Start of the first quarter</param>
+        /// <param name="info">Culture to use for calculating (defaults to the invariant culture)</param>
+        /// <returns>The number of days left in the time frame</returns>
+        public static Int32 DaysLeftIn(this DateTime date, TimeFrame frame, DateTime start, CultureInfo? info)
         {
             if (frame != TimeFrame.Quarter)
             {
                 return date.DaysLeftIn(frame, info);
             }
 
-            info ??= CultureInfo.CurrentCulture;
+            info ??= CultureInfo.InvariantCulture;
             return date.DaysIn(TimeFrame.Quarter, start, info) - (date.DayOfYear - start.DayOfYear);
         }
 
@@ -369,14 +463,29 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <param name="date">Date to base off of</param>
         /// <param name="frame">Time frame to use</param>
-        /// <param name="info">Culture to use for calculating (defaults to the current culture)</param>
         /// <returns>
         /// The end of a specific time frame (TimeFrame.Day is the only one that sets the time to
         /// 12: 59:59 PM, all else are the beginning of the day)
         /// </returns>
-        public static DateTime EndOf(this DateTime date, TimeFrame frame, CultureInfo? info = null)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime EndOf(this DateTime date, TimeFrame frame)
         {
-            info ??= CultureInfo.CurrentCulture;
+            return EndOf(date, frame, null);
+        }
+
+        /// <summary>
+        /// End of a specific time frame
+        /// </summary>
+        /// <param name="date">Date to base off of</param>
+        /// <param name="frame">Time frame to use</param>
+        /// <param name="info">Culture to use for calculating (defaults to the invariant culture)</param>
+        /// <returns>
+        /// The end of a specific time frame (TimeFrame.Day is the only one that sets the time to
+        /// 12: 59:59 PM, all else are the beginning of the day)
+        /// </returns>
+        public static DateTime EndOf(this DateTime date, TimeFrame frame, CultureInfo? info)
+        {
+            info ??= CultureInfo.InvariantCulture;
             return frame switch
             {
                 TimeFrame.Day => new DateTime(date.Year, date.Month, date.Day, 23, 59, 59),
@@ -393,19 +502,35 @@ namespace NetExtender.Utilities.Types
         /// <param name="date">Date to base off of</param>
         /// <param name="frame">Time frame to use</param>
         /// <param name="start">Start of the first quarter</param>
-        /// <param name="info">Culture to use for calculating (defaults to the current culture)</param>
         /// <returns>
         /// The end of a specific time frame (TimeFrame.Day is the only one that sets the time to
         /// 12: 59:59 PM, all else are the beginning of the day)
         /// </returns>
-        public static DateTime EndOf(this DateTime date, TimeFrame frame, DateTime start, CultureInfo? info = null)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime EndOf(this DateTime date, TimeFrame frame, DateTime start)
+        {
+            return EndOf(date, frame, start, null);
+        }
+
+        /// <summary>
+        /// End of a specific time frame
+        /// </summary>
+        /// <param name="date">Date to base off of</param>
+        /// <param name="frame">Time frame to use</param>
+        /// <param name="start">Start of the first quarter</param>
+        /// <param name="info">Culture to use for calculating (defaults to the invariant culture)</param>
+        /// <returns>
+        /// The end of a specific time frame (TimeFrame.Day is the only one that sets the time to
+        /// 12: 59:59 PM, all else are the beginning of the day)
+        /// </returns>
+        public static DateTime EndOf(this DateTime date, TimeFrame frame, DateTime start, CultureInfo? info)
         {
             if (frame != TimeFrame.Quarter)
             {
                 return date.EndOf(frame, info);
             }
 
-            info ??= CultureInfo.CurrentCulture;
+            info ??= CultureInfo.InvariantCulture;
             if (date.Between(start, start.AddMonths(3).AddDays(-1).EndOf(TimeFrame.Day, info)))
             {
                 return start.AddMonths(3).AddDays(-1).Date;
@@ -458,15 +583,22 @@ namespace NetExtender.Utilities.Types
         /// Returns the date in int format based on an Epoch (defaults to unix epoch of 1/1/1970)
         /// </summary>
         /// <param name="date">Date to convert</param>
+        /// <returns>The date in Unix format</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 To(this DateTime date)
+        {
+            return To(date, Epoch);
+        }
+
+        /// <summary>
+        /// Returns the date in int format based on an Epoch (defaults to unix epoch of 1/1/1970)
+        /// </summary>
+        /// <param name="date">Date to convert</param>
         /// <param name="epoch">Epoch to use (defaults to unix epoch of 1/1/1970)</param>
         /// <returns>The date in Unix format</returns>
-        public static Int32 To(this DateTime date, DateTime epoch = default)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 To(this DateTime date, DateTime epoch)
         {
-            if (epoch == default)
-            {
-                epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            }
-
             return (Int32) ((date.ToUniversalTime() - epoch).Ticks / TimeSpan.TicksPerSecond);
         }
 
@@ -474,16 +606,11 @@ namespace NetExtender.Utilities.Types
         /// Returns the date in DateTime format based on an Epoch (defaults to unix epoch of 1/1/1970)
         /// </summary>
         /// <param name="date">Date to convert</param>
-        /// <param name="epoch">Epoch to use (defaults to unix epoch of 1/1/1970)</param>
         /// <returns>The Unix Date in DateTime format</returns>
-        public static DateTime ToDateTime(this Int32 date, DateTime epoch = default)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime ToDateTime(this Int32 date)
         {
-            if (epoch == default)
-            {
-                epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            }
-
-            return new DateTime(date * TimeSpan.TicksPerSecond + epoch.Ticks, DateTimeKind.Utc);
+            return ToDateTime(date, Epoch);
         }
 
         /// <summary>
@@ -492,13 +619,32 @@ namespace NetExtender.Utilities.Types
         /// <param name="date">Date to convert</param>
         /// <param name="epoch">Epoch to use (defaults to unix epoch of 1/1/1970)</param>
         /// <returns>The Unix Date in DateTime format</returns>
-        public static DateTime ToDateTime(this Int64 date, DateTime epoch = default)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime ToDateTime(this Int32 date, DateTime epoch)
         {
-            if (epoch == default)
-            {
-                epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            }
+            return new DateTime(date * TimeSpan.TicksPerSecond + epoch.Ticks, DateTimeKind.Utc);
+        }
 
+        /// <summary>
+        /// Returns the date in DateTime format based on an Epoch (defaults to unix epoch of 1/1/1970)
+        /// </summary>
+        /// <param name="date">Date to convert</param>
+        /// <returns>The Unix Date in DateTime format</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime ToDateTime(this Int64 date)
+        {
+            return ToDateTime(date, Epoch);
+        }
+
+        /// <summary>
+        /// Returns the date in DateTime format based on an Epoch (defaults to unix epoch of 1/1/1970)
+        /// </summary>
+        /// <param name="date">Date to convert</param>
+        /// <param name="epoch">Epoch to use (defaults to unix epoch of 1/1/1970)</param>
+        /// <returns>The Unix Date in DateTime format</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime ToDateTime(this Int64 date, DateTime epoch)
+        {
             return new DateTime(date * TimeSpan.TicksPerSecond + epoch.Ticks, DateTimeKind.Utc);
         }
 

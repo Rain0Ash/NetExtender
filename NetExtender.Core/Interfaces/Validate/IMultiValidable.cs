@@ -13,23 +13,23 @@ namespace NetExtender.Interfaces
     
     public interface IMultiValidable<T> : IBaseValidable
     {
-        public Func<T?, Boolean> ValidateItem { get; set; }
+        public Func<T, Boolean> ValidateItem { get; set; }
         
         public new Boolean IsValid
         {
             get
             {
                 // ReSharper disable once SuspiciousTypeConversion.Global
-                if (this is IEnumerable<T?> enumerable)
+                if (this is IEnumerable<T> enumerable)
                 {
                     return enumerable.All(IsValidItem);
                 }
             
-                throw new NotImplementedException();
+                throw new NotSupportedException();
             }
         }
 
-        public Boolean IsValidItem(T? item)
+        public Boolean IsValidItem(T item)
         {
             return ValidateItem?.Invoke(item) != false;
         }

@@ -36,52 +36,54 @@ namespace NetExtender.Utilities.Types
             return first.AsSpan().SequenceEqual(second.AsSpan());
         }
 
-        /// <summary>
-        /// Creates hex representation of byte array.
-        /// </summary>
-        /// <param name="data">Byte array.</param>
-        /// <param name="separator">Separator between bytes. If null - no separator used.</param>
-        /// <returns>
-        /// <paramref name="data"/> represented as a series of hexadecimal representations divided by separator.
-        /// </returns>
-        /// <exception cref="ArgumentNullException"><paramref name="data"/> is null.</exception>
-        public static unsafe String ToHexString(this ReadOnlySpan<Byte> data, String? separator)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String ToHexString(this Byte[] array)
         {
-            if (data.Length <= 0)
+            return ToHexString((ReadOnlySpan<Byte>) array);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String ToHexString(this Memory<Byte> memory)
+        {
+            return ToHexString(memory.Span);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String ToHexString(this Span<Byte> span)
+        {
+            return ToHexString((ReadOnlySpan<Byte>) span);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String ToHexString(this ReadOnlyMemory<Byte> memory)
+        {
+            return ToHexString(memory.Span);
+        }
+
+        public static unsafe String ToHexString(this ReadOnlySpan<Byte> span)
+        {
+            if (span.Length <= 0)
             {
                 return String.Empty;
             }
 
-            Boolean hasSeparator = !String.IsNullOrEmpty(separator);
-            Int32 length = data.Length * 2;
-            if (hasSeparator)
-            {
-                length += (data.Length - 1) * separator.Length;
-            }
+            Int32 length = span.Length * 2;
 
             String result = new String('\0', length);
 
-            fixed (Char* res = result, sep = separator)
-            fixed (Byte* buf = &data[0])
+            fixed (Char* value = result)
+            fixed (Byte* buffer = span)
             {
-                Char* pres = res;
+                Char* pointer = value;
 
-                for (Int32 i = 0; i < data.Length; pres += 2, i++)
+                for (Int32 i = 0; i < span.Length; pointer += 2, i++)
                 {
-                    if (hasSeparator & (i != 0))
-                    {
-                        for (Int32 j = 0; j < separator.Length; pres++, j++)
-                        {
-                            pres[0] = sep[j];
-                        }
-                    }
+                    Byte @byte = buffer[i];
+                    Int32 number = @byte >> 4;
+                    pointer[0] = (Char) (55 + number + (((number - 10) >> 31) & -7));
 
-                    Byte b = buf[i];
-                    Int32 n = b >> 4;
-                    pres[0] = (Char) (55 + n + (((n - 10) >> 31) & -7));
-
-                    n = b & 0xF;
-                    pres[1] = (Char) (55 + n + (((n - 10) >> 31) & -7));
+                    number = @byte & 0xF;
+                    pointer[1] = (Char) (55 + number + (((number - 10) >> 31) & -7));
                 }
 
                 return result;

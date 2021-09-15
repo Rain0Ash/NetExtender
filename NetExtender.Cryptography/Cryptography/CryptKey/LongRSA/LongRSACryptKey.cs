@@ -12,8 +12,23 @@ namespace NetExtender.Crypto.CryptKey.RSA
 {
     public class LongRSACryptKey : AESCryptKey, IAsymmetricCryptKey
     {
+        public static LongRSACryptKey GetLongRSACryptKeyFromEncryptedAES(ReadOnlySpan<Byte> encryptedkey, ReadOnlySpan<Byte> encryptediv, ReadOnlySpan<Byte> privatekey)
+        {
+            return GetLongRSACryptKeyFromEncryptedAES(encryptedkey, encryptediv, privatekey, null);
+        }
+        
+        public static LongRSACryptKey GetLongRSACryptKeyFromEncryptedAES(ReadOnlySpan<Byte> encryptedkey, ReadOnlySpan<Byte> encryptediv, ReadOnlySpan<Byte> privatekey, RSAParameters? parameters)
+        {
+            return GetLongRSACryptKeyFromEncryptedAES(encryptedkey, encryptediv, privatekey, Cryptography.RSA.DefaultRSAKeyType, parameters);
+        }
+        
+        public static LongRSACryptKey GetLongRSACryptKeyFromEncryptedAES(ReadOnlySpan<Byte> encryptedkey, ReadOnlySpan<Byte> encryptediv, ReadOnlySpan<Byte> privatekey, RSAKeyType type)
+        {
+            return GetLongRSACryptKeyFromEncryptedAES(encryptedkey, encryptediv, privatekey, type, null);
+        }
+
         public static LongRSACryptKey GetLongRSACryptKeyFromEncryptedAES(ReadOnlySpan<Byte> encryptedkey, ReadOnlySpan<Byte> encryptediv,
-            ReadOnlySpan<Byte> privatekey, RSAKeyType type = Cryptography.RSA.DefaultRSAKeyType, RSAParameters? parameters = null)
+            ReadOnlySpan<Byte> privatekey, RSAKeyType type, RSAParameters? parameters)
         {
             Rsa rsa = Cryptography.RSA.Create(privatekey, type, parameters);
             ReadOnlySpan<Byte> key = rsa.Decrypt(encryptedkey.ToArray());
@@ -55,7 +70,12 @@ namespace NetExtender.Crypto.CryptKey.RSA
         
         protected Rsa Rsa { get; }
         
-        public LongRSACryptKey(Int32 length = 2048)
+        public LongRSACryptKey()
+            : this(2048)
+        {
+        }
+        
+        public LongRSACryptKey(Int32 length)
         {
             Rsa = Rsa.Create(length);
         }
@@ -81,26 +101,46 @@ namespace NetExtender.Crypto.CryptKey.RSA
             : this(key, iv, rsakey, Cryptography.RSA.DefaultRSAKeyType, parameters)
         {
         }
+
+        public LongRSACryptKey(ReadOnlySpan<Byte> key, ReadOnlySpan<Byte> iv, ReadOnlySpan<Byte> rsakey, RSAKeyType type)
+            : this(key, iv, rsakey, type, null)
+        {
+        }
         
-        public LongRSACryptKey(ReadOnlySpan<Byte> key, ReadOnlySpan<Byte> iv, ReadOnlySpan<Byte> rsakey, RSAKeyType type = Cryptography.RSA.DefaultRSAKeyType, RSAParameters? parameters = null)
+        public LongRSACryptKey(ReadOnlySpan<Byte> key, ReadOnlySpan<Byte> iv, ReadOnlySpan<Byte> rsakey, RSAKeyType type, RSAParameters? parameters)
             : base(key, iv)
         {
             Rsa = Cryptography.RSA.Create(rsakey, type, parameters);
         }
 
-        public LongRSACryptKey(Aes aes, Boolean disposable = false)
+        public LongRSACryptKey(Aes aes)
+            : this(aes, false)
+        {
+        }
+
+        public LongRSACryptKey(Aes aes, Boolean disposable)
             : base(aes, disposable)
         {
             Rsa = Rsa.Create();
         }
         
-        public LongRSACryptKey(Aes aes, RSAParameters parameters, Boolean disposable = false)
+        public LongRSACryptKey(Aes aes, RSAParameters parameters)
+            : this(aes, parameters, false)
+        {
+        }
+        
+        public LongRSACryptKey(Aes aes, RSAParameters parameters, Boolean disposable)
             : base(aes, disposable)
         {
             Rsa = Rsa.Create(parameters);
         }
         
-        public LongRSACryptKey(Aes aes, Rsa rsa, Boolean disposable = false)
+        public LongRSACryptKey(Aes aes, Rsa rsa)
+            : this(aes, rsa, false)
+        {
+        }
+        
+        public LongRSACryptKey(Aes aes, Rsa rsa, Boolean disposable)
             : base(aes, disposable)
         {
             Rsa = rsa;

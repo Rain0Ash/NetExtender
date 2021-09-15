@@ -2,13 +2,13 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using NetExtender.Random.Interfaces;
 using NetExtender.Types.Drawing.Colors;
 using NetExtender.Types.Drawing.Colors.Interfaces;
-using NetExtender.Types.Maps;
-using NetExtender.Types.Maps.Interfaces;
+using NetExtender.Types.Immutable.Maps.Interfaces;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
@@ -23,15 +23,15 @@ namespace NetExtender.Utilities.Types
         HSV,
         HSL,
         CIELAB,
-        XYZ
+        XYZ,
+        ANSI
     }
     
     public static partial class ColorUtilities
     {
         public const ColorType DefaultColorType = ColorType.RGB;
         
-        //TODO: IImmutableMap
-        private static readonly IMap<Color, ConsoleColor> ColorMap = new Map<Color, ConsoleColor>
+        private static readonly IImmutableMap<Color, ConsoleColor> ColorMap = new Dictionary<Color, ConsoleColor>(16)
         {
             [Color.Black] = ConsoleColor.Black,
             [Color.Blue] = ConsoleColor.Blue,
@@ -49,24 +49,183 @@ namespace NetExtender.Utilities.Types
             [Color.DarkMagenta] = ConsoleColor.DarkMagenta,
             [Color.DarkRed] = ConsoleColor.DarkRed,
             [Color.Orange] = ConsoleColor.DarkYellow
-        };
+        }.ToImmutableMap();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ConsoleColor ToConsoleColor(this Color color)
+        public static ConsoleColor? ToConsoleColor(this Color color)
         {
-            return ToConsoleColor(color, out ConsoleColor result) ? result : ConsoleColor.White;
+            return ToConsoleColor(color, out ConsoleColor result) ? result : null;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ConsoleColor? ToConsoleColor<TColor>(this TColor? color) where TColor : IColor
+        {
+            return color is not null ? color.ToColor().ToConsoleColor() : null;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToConsoleColor(this Color color, out ConsoleColor result)
         {
+            return NearestConsoleColor(color, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean ToConsoleColor<TColor>(this TColor? color, out ConsoleColor result) where TColor : IColor
+        {
+            if (color is not null)
+            {
+                color.ToColor().ToConsoleColor(out result);
+            }
+
+            result = default;
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean ToConsoleColor(this Color color, out ConsoleColor? result)
+        {
+            return NearestConsoleColor(color, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean ToConsoleColor<TColor>(this TColor? color, out ConsoleColor? result) where TColor : IColor
+        {
+            if (color is not null)
+            {
+                color.ToColor().ToConsoleColor(out result);
+            }
+
+            result = default;
+            return false;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetConsoleColor(this Color color, out ConsoleColor result)
+        {
             return ColorMap.TryGetValue(color, out result);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetConsoleColor<TColor>(this TColor? color, out ConsoleColor result) where TColor : IColor
+        {
+            if (color is not null)
+            {
+                return color.ToColor().TryGetConsoleColor(out result);
+            }
+
+            result = default;
+            return false;
+        }
+
+        public static Boolean NearestConsoleColor(this Color color, out ConsoleColor result)
+        {
+            if (TryGetConsoleColor(color, out result))
+            {
+                return true;
+            }
+
+            Double r = color.R;
+            Double g = color.G;
+            Double b = color.B;
+            Double delta = Double.MaxValue;
+            result = default;
+
+            foreach (ConsoleColor console in Enum.GetValues(typeof(ConsoleColor)))
+            {
+                String? name = Enum.GetName(typeof(ConsoleColor), console);
+
+                if (name is null)
+                {
+                    result = default;
+                    return false;
+                }
+                
+                Color value = Color.FromName(name == "DarkYellow" ? "Orange" : name);
+                Double temp = Math.Pow(value.R - r, 2) + Math.Pow(value.G - g, 2) + Math.Pow(value.B - b, 2);
+                
+                if (Math.Abs(temp) < Double.Epsilon)
+                {
+                    result = console;
+                    return true;
+                }
+
+                if (temp >= delta)
+                {
+                    continue;
+                }
+
+                delta = temp;
+                result = console;
+            }
+            
+            return true;
+        }
+
+        public static Boolean NearestConsoleColor<TColor>(this TColor? color, out ConsoleColor result) where TColor : IColor
+        {
+            if (color is not null)
+            {
+                return color.ToColor().NearestConsoleColor(out result);
+            }
+
+            result = default;
+            return false;
+        }
+
+        public static Boolean NearestConsoleColor(this Color color, out ConsoleColor? result)
+        {
+            if (NearestConsoleColor(color, out ConsoleColor value))
+            {
+                result = value;
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
+
+        public static Boolean NearestConsoleColor<TColor>(this TColor? color, out ConsoleColor? result) where TColor : IColor
+        {
+            if (color is not null)
+            {
+                return color.ToColor().NearestConsoleColor(out result);
+            }
+
+            result = default;
+            return false;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color FromConsoleColor(this ConsoleColor color)
         {
-            return ColorMap.TryGetKey(color, Color.White);
+            return ColorMap.TryGetKey(color);
+        }
+
+        private static ColorConverter ColorConverter { get; } = new ColorConverter();
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Color Parse(String value)
+        {
+            return value is not null ? (Color) ColorConverter.ConvertFromInvariantString(value) : throw new ArgumentNullException(nameof(value));
+        }
+        
+        public static Boolean TryParse(String value, out Color color)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            try
+            {
+                color = Parse(value);
+                return true;
+            }
+            catch (Exception)
+            {
+                color = default;
+                return false;
+            }
         }
         
         /// <summary>
@@ -1071,6 +1230,10 @@ namespace NetExtender.Utilities.Types
                 {
                     RGBToXYZ(r, g, b, out Double x, out Double y, out Double z);
                     return new XYZColor(x, y, z);
+                }
+                case ColorType.ANSI:
+                {
+                    return new ANSIColor(r, g, b);
                 }
                 default:
                     throw new NotSupportedException();

@@ -3,11 +3,14 @@
 
 using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using NetExtender.Types.Drawing.Colors.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Drawing.Colors
 {
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct HEXColor : IColor<HEXColor>
     {
         public static implicit operator Color(HEXColor color)
@@ -108,6 +111,30 @@ namespace NetExtender.Types.Drawing.Colors
         public override String ToString()
         {
             return ColorUtilities.RGBToHEX(A, R, G, B);
+        }
+        
+        public String ToString(String? format)
+        {
+            return ToString(format, null);
+        }
+        
+        public String ToString(String? format, IFormatProvider? provider)
+        {
+            if (String.IsNullOrEmpty(format))
+            {
+                return ToString();
+            }
+
+            String a = A.ToString(provider);
+            String r = R.ToString(provider);
+            String g = G.ToString(provider);
+            String b = B.ToString(provider);
+
+            return format.Replace("{COLOR}", ColorUtilities.RGBToHEX(A, R, G, B).ToString(provider))
+                .Replace("{A}", a)
+                .Replace("{R}", r)
+                .Replace("{G}", g)
+                .Replace("{B}", b);
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Arrays;
+using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
@@ -738,19 +739,17 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
 
-            if (first.Length <= 0)
+            switch (first.Length)
             {
-                return true;
+                case <= 0:
+                    return true;
+                case < BoundLength:
+                    return !first.Where((value, i) => value != second[i]).Any();
             }
 
-            if (first.Length < BoundLength)
+            fixed (void* pf = first, ps = second)
             {
-                return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pa = &first[0], pb = &second[0])
-            {
-                return MemoryUtilities.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(Char));
+                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
             }
         }
 
@@ -777,19 +776,17 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
 
-            if (first.Length <= 0)
+            switch (first.Length)
             {
-                return true;
+                case <= 0:
+                    return true;
+                case < BoundLength:
+                    return !first.Where((value, i) => value != second[i]).Any();
             }
 
-            if (first.Length < BoundLength)
+            fixed (void* pf = first, ps = second)
             {
-                return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pa = &first[0], pb = &second[0])
-            {
-                return MemoryUtilities.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(SByte));
+                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
             }
         }
 
@@ -816,19 +813,17 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
 
-            if (first.Length <= 0)
+            switch (first.Length)
             {
-                return true;
+                case <= 0:
+                    return true;
+                case < BoundLength:
+                    return !first.Where((value, i) => value != second[i]).Any();
             }
 
-            if (first.Length < BoundLength)
+            fixed (void* pf = first, ps = second)
             {
-                return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pa = &first[0], pb = &second[0])
-            {
-                return MemoryUtilities.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(Byte));
+                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
             }
         }
 
@@ -855,19 +850,17 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
 
-            if (first.Length <= 0)
+            switch (first.Length)
             {
-                return true;
+                case <= 0:
+                    return true;
+                case < BoundLength:
+                    return !first.Where((value, i) => value != second[i]).Any();
             }
 
-            if (first.Length < BoundLength)
+            fixed (void* pf = first, ps = second)
             {
-                return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pa = &first[0], pb = &second[0])
-            {
-                return MemoryUtilities.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(Int16));
+                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
             }
         }
 
@@ -894,19 +887,17 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
 
-            if (first.Length <= 0)
+            switch (first.Length)
             {
-                return true;
+                case <= 0:
+                    return true;
+                case < BoundLength:
+                    return !first.Where((value, i) => value != second[i]).Any();
             }
 
-            if (first.Length < BoundLength)
+            fixed (void* pf = first, ps = second)
             {
-                return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pa = &first[0], pb = &second[0])
-            {
-                return MemoryUtilities.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(UInt16));
+                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
             }
         }
 
@@ -933,19 +924,17 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
 
-            if (first.Length <= 0)
+            switch (first.Length)
             {
-                return true;
+                case <= 0:
+                    return true;
+                case < BoundLength:
+                    return !first.Where((value, i) => value != second[i]).Any();
             }
 
-            if (first.Length < BoundLength)
+            fixed (void* pf = first, ps = second)
             {
-                return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pa = &first[0], pb = &second[0])
-            {
-                return MemoryUtilities.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(Int32));
+                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
             }
         }
 
@@ -972,19 +961,17 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
 
-            if (first.Length <= 0)
+            switch (first.Length)
             {
-                return true;
+                case <= 0:
+                    return true;
+                case < BoundLength:
+                    return !first.Where((value, i) => value != second[i]).Any();
             }
 
-            if (first.Length < BoundLength)
+            fixed (void* pf = first, ps = second)
             {
-                return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pa = &first[0], pb = &second[0])
-            {
-                return MemoryUtilities.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(UInt32));
+                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
             }
         }
 
@@ -1011,19 +998,17 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
 
-            if (first.Length <= 0)
+            switch (first.Length)
             {
-                return true;
+                case <= 0:
+                    return true;
+                case < BoundLength:
+                    return !first.Where((value, i) => value != second[i]).Any();
             }
 
-            if (first.Length < BoundLength)
+            fixed (void* pf = first, ps = second)
             {
-                return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pa = &first[0], pb = &second[0])
-            {
-                return MemoryUtilities.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(Int64));
+                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
             }
         }
 
@@ -1050,19 +1035,17 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
 
-            if (first.Length <= 0)
+            switch (first.Length)
             {
-                return true;
+                case <= 0:
+                    return true;
+                case < BoundLength:
+                    return !first.Where((value, i) => value != second[i]).Any();
             }
 
-            if (first.Length < BoundLength)
+            fixed (void* pf = first, ps = second)
             {
-                return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pa = &first[0], pb = &second[0])
-            {
-                return MemoryUtilities.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(UInt64));
+                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
             }
         }
 
@@ -1089,19 +1072,17 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
 
-            if (first.Length <= 0)
+            switch (first.Length)
             {
-                return true;
+                case <= 0:
+                    return true;
+                case < BoundLength:
+                    return !first.Where((value, i) => Math.Abs(value - second[i]) >= Single.Epsilon).Any();
             }
 
-            if (first.Length < BoundLength)
+            fixed (void* pf = first, ps = second)
             {
-                return !first.Where((value, i) => Math.Abs(value - second[i]) >= Single.Epsilon).Any();
-            }
-
-            fixed (void* pa = &first[0], pb = &second[0])
-            {
-                return MemoryUtilities.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(Single));
+                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
             }
         }
 
@@ -1128,19 +1109,17 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
 
-            if (first.Length <= 0)
+            switch (first.Length)
             {
-                return true;
+                case <= 0:
+                    return true;
+                case < BoundLength:
+                    return !first.Where((value, i) => Math.Abs(value - second[i]) >= Double.Epsilon).Any();
             }
 
-            if (first.Length < BoundLength)
+            fixed (void* pf = first, ps = second)
             {
-                return !first.Where((value, i) => Math.Abs(value - second[i]) >= Double.Epsilon).Any();
-            }
-
-            fixed (void* pa = &first[0], pb = &second[0])
-            {
-                return MemoryUtilities.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(Double));
+                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
             }
         }
 
@@ -1167,19 +1146,17 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
 
-            if (first.Length <= 0)
+            switch (first.Length)
             {
-                return true;
+                case <= 0:
+                    return true;
+                case < BoundLength:
+                    return !first.Where((value, i) => value != second[i]).Any();
             }
 
-            if (first.Length < BoundLength)
+            fixed (void* pf = first, ps = second)
             {
-                return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pa = &first[0], pb = &second[0])
-            {
-                return MemoryUtilities.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(Decimal));
+                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
             }
         }
 
@@ -1206,19 +1183,17 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
 
-            if (first.Length <= 0)
+            switch (first.Length)
             {
-                return true;
+                case <= 0:
+                    return true;
+                case < BoundLength:
+                    return !first.Where((value, i) => value != second[i]).Any();
             }
 
-            if (first.Length < BoundLength)
+            fixed (void* pf = first, ps = second)
             {
-                return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pa = &first[0], pb = &second[0])
-            {
-                return MemoryUtilities.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(TimeSpan));
+                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
             }
         }
 
@@ -1250,9 +1225,9 @@ namespace NetExtender.Utilities.Types
                 return true;
             }
 
-            fixed (void* pa = &first[0], pb = &second[0])
+            fixed (void* pf = first, ps = second)
             {
-                return MemoryUtilities.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(Guid));
+                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
             }
         }
 
@@ -1284,9 +1259,9 @@ namespace NetExtender.Utilities.Types
                 return true;
             }
 
-            fixed (void* pa = &first[0], pb = &second[0])
+            fixed (void* pf = first, ps = second)
             {
-                return MemoryUtilities.Compare((Byte*) pa, (Byte*) pb, first.Length * sizeof(T));
+                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
             }
         }
     }

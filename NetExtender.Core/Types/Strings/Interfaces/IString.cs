@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -30,13 +31,13 @@ namespace NetExtender.Types.Strings.Interfaces
             return CompareTo(other);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringCompareToIsCultureSpecific")]
+        [SuppressMessage("ReSharper", "StringCompareToIsCultureSpecific")]
         public new Int32 CompareTo(String? other)
         {
             return ToString().CompareTo(other);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringCompareIsCultureSpecific.1")]
+        [SuppressMessage("ReSharper", "StringCompareIsCultureSpecific.1")]
         public Int32 CompareTo(String? other, IFormatProvider? provider)
         {
             return String.Compare(ToString(provider), other?.ToString(provider));
@@ -57,13 +58,13 @@ namespace NetExtender.Types.Strings.Interfaces
             return CompareTo(other);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringCompareToIsCultureSpecific")]
+        [SuppressMessage("ReSharper", "StringCompareToIsCultureSpecific")]
         public new Int32 CompareTo(IString? other)
         {
             return CompareTo(other?.ToString());
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringCompareToIsCultureSpecific")]
+        [SuppressMessage("ReSharper", "StringCompareToIsCultureSpecific")]
         public Int32 CompareTo(IString? other, IFormatProvider? provider)
         {
             return CompareTo(other?.ToString(provider), provider);
@@ -219,19 +220,19 @@ namespace NetExtender.Types.Strings.Interfaces
             return ToString().IndexOf(value, start, count);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringIndexOfIsCultureSpecific.1")]
+        [SuppressMessage("ReSharper", "StringIndexOfIsCultureSpecific.1")]
         public Int32 IndexOf(String value)
         {
             return ToString().IndexOf(value);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringIndexOfIsCultureSpecific.2")]
+        [SuppressMessage("ReSharper", "StringIndexOfIsCultureSpecific.2")]
         public Int32 IndexOf(String value, Int32 start)
         {
             return ToString().IndexOf(value, start);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringIndexOfIsCultureSpecific.3")]
+        [SuppressMessage("ReSharper", "StringIndexOfIsCultureSpecific.3")]
         public Int32 IndexOf(String value, Int32 start, Int32 count)
         {
             return ToString().IndexOf(value, start, count);
@@ -267,19 +268,19 @@ namespace NetExtender.Types.Strings.Interfaces
             return ToString().LastIndexOf(value, start, count);
         }
         
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringLastIndexOfIsCultureSpecific.1")]
+        [SuppressMessage("ReSharper", "StringLastIndexOfIsCultureSpecific.1")]
         public Int32 LastIndexOf(String value)
         {
             return ToString().LastIndexOf(value);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringLastIndexOfIsCultureSpecific.2")]
+        [SuppressMessage("ReSharper", "StringLastIndexOfIsCultureSpecific.2")]
         public Int32 LastIndexOf(String value, Int32 start)
         {
             return ToString().LastIndexOf(value, start);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "StringLastIndexOfIsCultureSpecific.3")]
+        [SuppressMessage("ReSharper", "StringLastIndexOfIsCultureSpecific.3")]
         public Int32 LastIndexOf(String value, Int32 start, Int32 count)
         {
             return ToString().LastIndexOf(value, start, count);

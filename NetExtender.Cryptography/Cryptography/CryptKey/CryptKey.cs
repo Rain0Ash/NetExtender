@@ -87,19 +87,29 @@ namespace NetExtender.Crypto.CryptKey
             Disposable = disposable;
         }
 
-        public String Encrypt(String value)
+        public String? Encrypt(String value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             return Crypt.HasFlag(CryptAction.Encrypt) ? EncryptString(value) : value;
         }
         
-        public IEnumerable<String> Encrypt(IEnumerable<String> source)
+        public IEnumerable<String?> Encrypt(IEnumerable<String> source)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
             return Crypt.HasFlag(CryptAction.Encrypt) ? EncryptString(source) : source;
         }
 
-        public abstract String EncryptString(String value);
+        public abstract String? EncryptString(String value);
 
-        public IEnumerable<String> EncryptString(IEnumerable<String> source)
+        public IEnumerable<String?> EncryptString(IEnumerable<String> source)
         {
             if (source is null)
             {
@@ -109,26 +119,41 @@ namespace NetExtender.Crypto.CryptKey
             return source.Select(EncryptString);
         }
 
-        public Byte[] Encrypt(Byte[] value)
+        public Byte[]? Encrypt(Byte[] value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             return Crypt.HasFlag(CryptAction.Encrypt) ? EncryptBytes(value) : value;
         }
         
-        public abstract Byte[] EncryptBytes(Byte[] value);
+        public abstract Byte[]? EncryptBytes(Byte[] value);
 
-        public String Decrypt(String value)
+        public String? Decrypt(String value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             return Crypt.HasFlag(CryptAction.Decrypt) ? DecryptString(value) : value;
         }
         
-        public IEnumerable<String> Decrypt(IEnumerable<String> source)
+        public IEnumerable<String?> Decrypt(IEnumerable<String> source)
         {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
             return Crypt.HasFlag(CryptAction.Decrypt) ? DecryptString(source) : source;
         }
         
-        public abstract String DecryptString(String value);
+        public abstract String? DecryptString(String value);
         
-        public IEnumerable<String> DecryptString(IEnumerable<String> source)
+        public IEnumerable<String?> DecryptString(IEnumerable<String> source)
         {
             if (source is null)
             {
@@ -138,12 +163,17 @@ namespace NetExtender.Crypto.CryptKey
             return source.Select(DecryptString);
         }
 
-        public Byte[] Decrypt(Byte[] value)
+        public Byte[]? Decrypt(Byte[] value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             return Crypt.HasFlag(CryptAction.Decrypt) ? DecryptBytes(value) : value;
         }
         
-        public abstract Byte[] DecryptBytes(Byte[] value);
+        public abstract Byte[]? DecryptBytes(Byte[] value);
 
         public ICryptKey Clone()
         {
@@ -155,8 +185,11 @@ namespace NetExtender.Crypto.CryptKey
         public void Dispose()
         {
             Dispose(Disposable);
+            GC.SuppressFinalize(this);
         }
 
-        protected abstract void Dispose(Boolean disposing);
+        protected virtual void Dispose(Boolean disposing)
+        {
+        }
     }
 }

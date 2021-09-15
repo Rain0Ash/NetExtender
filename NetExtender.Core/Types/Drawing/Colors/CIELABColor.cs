@@ -3,11 +3,14 @@
 
 using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using NetExtender.Types.Drawing.Colors.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Drawing.Colors
 {
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct CIELABColor : IColor<CIELABColor>
     {
         public static implicit operator Color(CIELABColor color)
@@ -83,7 +86,29 @@ namespace NetExtender.Types.Drawing.Colors
 
         public override String ToString()
         {
-            return $"X:{L} Y:{A} Z:{B}";
+            return $"L:{L} A:{A} B:{B}";
+        }
+        
+        public String ToString(String? format)
+        {
+            return ToString(format, null);
+        }
+        
+        public String ToString(String? format, IFormatProvider?provider)
+        {
+            if (String.IsNullOrEmpty(format))
+            {
+                return ToString();
+            }
+
+            String l = L.ToString(provider);
+            String a = A.ToString(provider);
+            String b = B.ToString(provider);
+
+            return format.Replace("{COLOR}", $"L:{l} A:{a} B:{b}")
+                .Replace("{L}", l)
+                .Replace("{A}", a)
+                .Replace("{B}", b);
         }
     }
 }

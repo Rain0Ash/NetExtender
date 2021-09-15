@@ -12,7 +12,7 @@ namespace NetExtender.Interfaces
     
     public interface ICopyable<out T>
     {
-        public T Copy()
+        public T? Copy()
         {
             if (this is T type)
             {

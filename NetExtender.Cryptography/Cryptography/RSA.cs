@@ -33,7 +33,7 @@ namespace NetExtender.Crypto
 
                 if (rsa is null)
                 {
-                    throw new FactoryException("Unknown exception");
+                    throw new FactoryException();
                 }
 
                 Int32 size = key.Length * 8;

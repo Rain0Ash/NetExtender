@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using NetExtender.Exceptions;
 using NetExtender.Types.Immutable.Maps.Interfaces;
 using NetExtender.Utilities.Types;
 
@@ -16,14 +17,28 @@ namespace NetExtender.Types.Immutable.Maps
     {
         public static ImmutableMap<TKey, TValue> Empty { get; } = new ImmutableMap<TKey, TValue>(ImmutableDictionary<TKey, TValue>.Empty, ImmutableDictionary<TValue, TKey>.Empty);
         
-        private IImmutableDictionary<TKey, TValue> Base { get; }
-        private IImmutableDictionary<TValue, TKey> Reversed { get; }
+        private ImmutableDictionary<TKey, TValue> Base { get; }
+        private ImmutableDictionary<TValue, TKey> Reversed { get; }
 
         public Int32 Count
         {
             get
             {
-                return Base.Count;
+                Int32 count = Base.Count;
+                if (count != Reversed.Count)
+                {
+                    throw new CollectionSyncException();
+                }
+                
+                return count;
+            }
+        }
+
+        public Boolean IsEmpty
+        {
+            get
+            {
+                return Count <= 0;
             }
         }
         
@@ -43,10 +58,31 @@ namespace NetExtender.Types.Immutable.Maps
             }
         }
 
-        private ImmutableMap(IImmutableDictionary<TKey, TValue> @base, IImmutableDictionary<TValue, TKey> reversed)
+        public IEqualityComparer<TKey> KeyComparer
+        {
+            get
+            {
+                return Base.KeyComparer;
+            }
+        }
+
+        public IEqualityComparer<TValue> ValueComparer
+        {
+            get
+            {
+                return Reversed.KeyComparer;
+            }
+        }
+
+        private ImmutableMap(ImmutableDictionary<TKey, TValue> @base, ImmutableDictionary<TValue, TKey> reversed)
         {
             Base = @base ?? throw new ArgumentNullException(nameof(@base));
             Reversed = reversed ?? throw new ArgumentNullException(nameof(reversed));
+        }
+
+        public ImmutableMap<TKey, TValue> WithComparers(IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
+        {
+            return new ImmutableMap<TKey, TValue>(Base.WithComparers(keyComparer), Reversed.WithComparers(valueComparer));
         }
 
         public Boolean ContainsKey(TKey key)
@@ -68,10 +104,20 @@ namespace NetExtender.Types.Immutable.Maps
         {
             return Reversed.Contains(item);
         }
-        
+
         public Boolean Contains(KeyValuePair<TKey, TValue> pair)
         {
             return Base.Contains(pair);
+        }
+        
+        public TValue GetValue(TKey key)
+        {
+            return this[key];
+        }
+
+        public TKey GetKey(TValue value)
+        {
+            return this[value];
         }
 
         public Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)

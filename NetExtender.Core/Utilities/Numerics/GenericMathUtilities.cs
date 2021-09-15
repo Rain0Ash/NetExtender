@@ -4,12 +4,13 @@
 using System;
 using System.Numerics;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utilities.Numerics
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
+    [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
     public static partial class MathUtilities
     {
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1868,7 +1869,7 @@ namespace NetExtender.Utilities.Numerics
 			};
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsPositive(this Char value)
 		{
@@ -1881,7 +1882,7 @@ namespace NetExtender.Utilities.Numerics
 			return value >= 0;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsPositive(this Byte value)
 		{
@@ -1894,7 +1895,7 @@ namespace NetExtender.Utilities.Numerics
 			return value >= 0;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsPositive(this UInt16 value)
 		{
@@ -1907,7 +1908,7 @@ namespace NetExtender.Utilities.Numerics
 			return value >= 0;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsPositive(this UInt32 value)
 		{
@@ -1920,7 +1921,7 @@ namespace NetExtender.Utilities.Numerics
 			return value >= 0;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsPositive(this UInt64 value)
 		{
@@ -1951,7 +1952,7 @@ namespace NetExtender.Utilities.Numerics
 			return value >= 0;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsNegative(this Char value)
 		{
@@ -1964,7 +1965,7 @@ namespace NetExtender.Utilities.Numerics
 			return value < 0;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsNegative(this Byte value)
 		{
@@ -1977,7 +1978,7 @@ namespace NetExtender.Utilities.Numerics
 			return value < 0;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsNegative(this UInt16 value)
 		{
@@ -1990,7 +1991,7 @@ namespace NetExtender.Utilities.Numerics
 			return value < 0;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsNegative(this UInt32 value)
 		{
@@ -2003,7 +2004,7 @@ namespace NetExtender.Utilities.Numerics
 			return value < 0;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Boolean IsNegative(this UInt64 value)
 		{
@@ -2034,7 +2035,7 @@ namespace NetExtender.Utilities.Numerics
 			return value < 0;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Char ToSign(this Char value)
 		{
@@ -2047,7 +2048,7 @@ namespace NetExtender.Utilities.Numerics
 			return value >= 0 ? '+' : '-';
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Char ToSign(this Byte value)
 		{
@@ -2060,7 +2061,7 @@ namespace NetExtender.Utilities.Numerics
 			return value >= 0 ? '+' : '-';
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Char ToSign(this UInt16 value)
 		{
@@ -2073,7 +2074,7 @@ namespace NetExtender.Utilities.Numerics
 			return value >= 0 ? '+' : '-';
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Char ToSign(this UInt32 value)
 		{
@@ -2086,7 +2087,7 @@ namespace NetExtender.Utilities.Numerics
 			return value >= 0 ? '+' : '-';
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnusedParameter.Global")]
+		[SuppressMessage("ReSharper", "UnusedParameter.Global")]
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Char ToSign(this UInt64 value)
 		{
@@ -6697,7 +6698,7 @@ namespace NetExtender.Utilities.Numerics
 			}
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
 		public static Double Average(this IEnumerable<SByte> source)
 		{
 			if (source is null)
@@ -6708,7 +6709,7 @@ namespace NetExtender.Utilities.Numerics
 			return source.Cast<Double>().Average();
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
 		public static Double Average(this IEnumerable<Byte> source)
 		{
 			if (source is null)
@@ -6719,7 +6720,7 @@ namespace NetExtender.Utilities.Numerics
 			return source.Cast<Double>().Average();
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
 		public static Double Average(this IEnumerable<Int16> source)
 		{
 			if (source is null)
@@ -6730,7 +6731,7 @@ namespace NetExtender.Utilities.Numerics
 			return source.Cast<Double>().Average();
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
 		public static Double Average(this IEnumerable<UInt16> source)
 		{
 			if (source is null)
@@ -6741,7 +6742,7 @@ namespace NetExtender.Utilities.Numerics
 			return source.Cast<Double>().Average();
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
 		public static Double Average(this IEnumerable<UInt32> source)
 		{
 			if (source is null)
@@ -6752,7 +6753,7 @@ namespace NetExtender.Utilities.Numerics
 			return source.Cast<Double>().Average();
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
 		public static Double Average(this IEnumerable<UInt64> source)
 		{
 			if (source is null)
@@ -7072,7 +7073,7 @@ namespace NetExtender.Utilities.Numerics
 			return source.Variance().Sqrt();
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
 		public static Int32 Reverse(this SByte value)
 		{
 			Int32 reverse = 0;
@@ -7086,7 +7087,7 @@ namespace NetExtender.Utilities.Numerics
 			return reverse;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
 		public static Int32 Reverse(this Byte value)
 		{
 			Int32 reverse = 0;
@@ -7100,7 +7101,7 @@ namespace NetExtender.Utilities.Numerics
 			return reverse;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
 		public static Int32 Reverse(this Int16 value)
 		{
 			Int32 reverse = 0;
@@ -7114,7 +7115,7 @@ namespace NetExtender.Utilities.Numerics
 			return reverse;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
 		public static Int32 Reverse(this UInt16 value)
 		{
 			Int32 reverse = 0;
@@ -7128,7 +7129,7 @@ namespace NetExtender.Utilities.Numerics
 			return reverse;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
 		public static Int32 Reverse(this Int32 value)
 		{
 			Int32 reverse = 0;
@@ -7142,7 +7143,7 @@ namespace NetExtender.Utilities.Numerics
 			return reverse;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
 		public static UInt32 Reverse(this UInt32 value)
 		{
 			UInt32 reverse = 0;
@@ -7156,7 +7157,7 @@ namespace NetExtender.Utilities.Numerics
 			return reverse;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
 		public static Int64 Reverse(this Int64 value)
 		{
 			Int64 reverse = 0;
@@ -7170,7 +7171,7 @@ namespace NetExtender.Utilities.Numerics
 			return reverse;
 		}
 
-		[System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
 		public static UInt64 Reverse(this UInt64 value)
 		{
 			UInt64 reverse = 0;
@@ -8709,7 +8710,7 @@ namespace NetExtender.Utilities.Numerics
 		}
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "InvertIf")]
+    [SuppressMessage("ReSharper", "InvertIf")]
     public static class MathUnsafe
     {
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

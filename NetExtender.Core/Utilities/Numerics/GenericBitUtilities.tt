@@ -386,7 +386,7 @@ namespace NetExtender.Utilities.Numerics
     }
     
 #>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
+    [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
     public static partial class BitUtilities
     {
 <#

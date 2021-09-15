@@ -11,12 +11,13 @@ namespace NetExtender.Types.Drawing.Colors.Interfaces
     {
     }
     
-    public interface IColor
+    public interface IColor : IFormattable
     {
         public ColorType Type { get; }
 
         public Color ToColor();
         public Boolean ToColor(out Color color);
         public Boolean Equals(IColor color);
+        public String ToString(String? format);
     }
 }

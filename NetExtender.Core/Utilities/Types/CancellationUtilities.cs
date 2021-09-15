@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
@@ -75,7 +76,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "CA1068")]
+        [SuppressMessage("ReSharper", "CA1068")]
         public static CancellationTokenSource CreateLinkedSource(this CancellationToken first, CancellationToken second, TimeSpan timeout)
         {
             CancellationTokenSource source = CreateLinkedSource(first, second);
@@ -84,7 +85,7 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "CA1068")]
+        [SuppressMessage("ReSharper", "CA1068")]
         public static CancellationTokenSource CreateLinkedSource(this CancellationToken first, CancellationToken second, TimeSpan? timeout)
         {
             return timeout.HasValue ? CreateLinkedSource(first, second, timeout.Value) : CreateLinkedSource(first, second);

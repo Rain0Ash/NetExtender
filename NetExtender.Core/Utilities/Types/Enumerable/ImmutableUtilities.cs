@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Immutable.Maps;
+using NetExtender.Types.Immutable.Maps.Interfaces;
 
 namespace NetExtender.Utilities.Types
 {
@@ -460,7 +462,46 @@ namespace NetExtender.Utilities.Types
         {
             return source is not null ? source as ImmutableSortedDictionary<TKey, TValue> ?? source.ToImmutableSortedDictionary(keyComparer, valueComparer) : ImmutableSortedDictionary<TKey, TValue>.Empty.WithComparers(keyComparer, valueComparer);
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableMap<TKey, TValue> ToImmutableMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull where TValue : notnull
+        {
+            return source is not null ? ImmutableMap<TKey, TValue>.Empty.AddRange(source) : ImmutableMap<TKey, TValue>.Empty;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableMap<TKey, TValue> ToImmutableMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source,
+            IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer) where TKey : notnull where TValue : notnull
+        {
+            return source is not null ? ImmutableMap<TKey, TValue>.Empty.WithComparers(keyComparer, valueComparer).AddRange(source) : ImmutableMap<TKey, TValue>.Empty.WithComparers(keyComparer, valueComparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableMap<TKey, TValue> AsIImmutableMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull where TValue : notnull
+        {
+            return source is not null ? source as IImmutableMap<TKey, TValue> ?? source.ToImmutableMap() : ImmutableMap<TKey, TValue>.Empty;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IImmutableMap<TKey, TValue> AsIImmutableMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source,
+            IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer) where TKey : notnull where TValue : notnull
+        {
+            return source is not null ? source as IImmutableMap<TKey, TValue> ?? source.ToImmutableMap(keyComparer, valueComparer) : ImmutableMap<TKey, TValue>.Empty.WithComparers(keyComparer, valueComparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableMap<TKey, TValue> AsImmutableMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull where TValue : notnull
+        {
+            return source is not null ? source as ImmutableMap<TKey, TValue> ?? source.ToImmutableMap() : ImmutableMap<TKey, TValue>.Empty;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableMap<TKey, TValue> AsImmutableMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source,
+            IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer) where TKey : notnull where TValue : notnull
+        {
+            return source is not null ? source as ImmutableMap<TKey, TValue> ?? source.ToImmutableMap(keyComparer, valueComparer) : ImmutableMap<TKey, TValue>.Empty.WithComparers(keyComparer, valueComparer);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<T> AddRange<T>(this ImmutableArray<T> source, params T[] values)
         {
@@ -690,6 +731,39 @@ namespace NetExtender.Utilities.Types
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedDictionary<TKey, TValue> WithValueComparer<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, IEqualityComparer<TValue>? valueComparer) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.WithComparers(source.KeyComparer, valueComparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableMap<TKey, TValue> WithDefaultComparers<TKey, TValue>(this ImmutableMap<TKey, TValue> source) where TKey : notnull where TValue : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.WithComparers(null, null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableMap<TKey, TValue> WithKeyComparer<TKey, TValue>(this ImmutableMap<TKey, TValue> source, IEqualityComparer<TKey>? keyComparer) where TKey : notnull where TValue : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.WithComparers(keyComparer, source.ValueComparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ImmutableMap<TKey, TValue> WithValueComparer<TKey, TValue>(this ImmutableMap<TKey, TValue> source, IEqualityComparer<TValue>? valueComparer) where TKey : notnull where TValue : notnull
         {
             if (source is null)
             {

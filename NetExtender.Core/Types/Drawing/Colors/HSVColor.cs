@@ -3,11 +3,14 @@
 
 using System;
 using System.Drawing;
+using System.Runtime.InteropServices;
 using NetExtender.Types.Drawing.Colors.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Drawing.Colors
 {
+    [Serializable]
+    [StructLayout(LayoutKind.Sequential)]
     public readonly struct HSVColor : IColor<HSVColor>
     {
         public static implicit operator Color(HSVColor color)
@@ -84,6 +87,28 @@ namespace NetExtender.Types.Drawing.Colors
         public override String ToString()
         {
             return $"H:{H}° S:{S} V:{V}";
+        }
+        
+        public String ToString(String? format)
+        {
+            return ToString(format, null);
+        }
+        
+        public String ToString(String? format, IFormatProvider? provider)
+        {
+            if (String.IsNullOrEmpty(format))
+            {
+                return ToString();
+            }
+
+            String h = H.ToString(provider);
+            String s = S.ToString(provider);
+            String v = V.ToString(provider);
+
+            return format.Replace("{COLOR}", $"H:{h}° S:{s} V:{v}")
+                .Replace("{H}", h)
+                .Replace("{S}", s)
+                .Replace("{V}", v);
         }
     }
 }

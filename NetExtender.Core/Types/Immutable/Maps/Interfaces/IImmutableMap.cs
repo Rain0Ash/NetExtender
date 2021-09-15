@@ -4,20 +4,14 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
+using NetExtender.Types.Maps.Interfaces;
 
 namespace NetExtender.Types.Immutable.Maps.Interfaces
 {
-    public interface IImmutableMap<TKey, TValue> : IImmutableDictionary<TKey, TValue>
+    public interface IImmutableMap<TKey, TValue> : IImmutableDictionary<TKey, TValue>, IReadOnlyMap<TKey, TValue>
     {
-        public Boolean ContainsValue(TValue key);
-        public Boolean ContainsByValue(TValue key, TKey value);
-        public Boolean ContainsByValue(KeyValuePair<TValue, TKey> item);
-        public Boolean TryGetKey(TValue key, [MaybeNullWhen(false)] out TKey value);
         public Boolean TryGetValue(TValue equalValue, out TValue actualValue);
 
-        public IEnumerator<KeyValuePair<TValue, TKey>> GetValuesEnumerator();
-        
         public IImmutableMap<TKey, TValue> AddByValue(TValue key, TKey value);
         public IImmutableMap<TKey, TValue> AddByValue(KeyValuePair<TValue, TKey> item);
 
@@ -29,8 +23,6 @@ namespace NetExtender.Types.Immutable.Maps.Interfaces
         public IImmutableMap<TKey, TValue> RemoveByValue(TValue key, TKey value);
         
         public IImmutableMap<TKey, TValue> RemoveByValue(KeyValuePair<TValue, TKey> item);
-
-        public TKey this[TValue key] { get; }
 
         /// <inheritdoc cref="IImmutableDictionary{TKey,TValue}.Clear"/>
         public new IImmutableMap<TKey, TValue> Clear();

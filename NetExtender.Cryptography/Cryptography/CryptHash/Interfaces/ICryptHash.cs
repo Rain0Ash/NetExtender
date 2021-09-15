@@ -12,18 +12,18 @@ namespace NetExtender.Crypto.CryptHash.Interfaces
         public HashType HashType { get; }
         
         [NotNull]
-        public Byte[] DefaultFirstSalt { get; }
+        public Byte[] LeftSalt { get; }
         
         [NotNull]
-        public Byte[] DefaultLastSalt { get; }
+        public Byte[] RightSalt { get; }
         
         [NotNull]
-        public Byte[] DefaultFirstPepper { get; }
+        public Byte[] LeftPepper { get; }
         
         [NotNull]
-        public Byte[] DefaultLastPepper { get; }
+        public Byte[] RightPepper { get; }
         
-        public UInt16 DefaultIterations { get; }
+        public UInt16 Iterations { get; }
 
         public Byte[] Hashing(String value);
         public Byte[] Hashing(String value, Byte[] salt);

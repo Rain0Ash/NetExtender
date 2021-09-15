@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -363,7 +364,7 @@ namespace NetExtender.Configuration
             return GetOrSetValue(key, defaultValue, crypt, null, sections);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public String GetOrSetValue(String key, String defaultValue, CryptAction crypt, ICryptKey cryptKey, IEnumerable<String> sections)
         {
             sections = sections.Materialize();
@@ -403,7 +404,7 @@ namespace NetExtender.Configuration
             return GetOrSetValueAsync(key, defaultValue, crypt, cryptKey, sections, CancellationToken.None);
         }
         
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public async Task<String> GetOrSetValueAsync(String key, String defaultValue, CryptAction crypt, ICryptKey cryptKey, IEnumerable<String> sections, CancellationToken token)
         {
             sections = sections.Materialize();
@@ -453,7 +454,7 @@ namespace NetExtender.Configuration
             return GetOrSetValue(key, defaultValue, null, converter, sections);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public T GetOrSetValue<T>(String key, T defaultValue, ICryptKey crypt, TryConverter<String, T> converter, IEnumerable<String> sections)
         {
             sections = sections.Materialize();
@@ -507,7 +508,7 @@ namespace NetExtender.Configuration
             return GetOrSetValueAsync(key, defaultValue, crypt, converter, sections, CancellationToken.None);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         public async Task<T> GetOrSetValueAsync<T>(String key, T defaultValue, ICryptKey crypt, TryConverter<String, T> converter, IEnumerable<String> sections, CancellationToken token)
         {
             sections = sections.Materialize();

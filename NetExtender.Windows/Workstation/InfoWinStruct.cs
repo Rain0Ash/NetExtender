@@ -2,19 +2,20 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace NetExtender.Workstation
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "InconsistentNaming")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Global")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnassignedField.Global")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "NotAccessedField.Global")]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Global")]
+    [SuppressMessage("ReSharper", "UnassignedField.Global")]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Global")]
+    [SuppressMessage("ReSharper", "NotAccessedField.Global")]
     public static partial class Hardware
     {
         [StructLayout(LayoutKind.Explicit)]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "InconsistentNaming")]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public struct _PROCESSOR_INFO_UNION
         {
             [FieldOffset(0)] internal UInt32 dwOemId;
@@ -23,7 +24,7 @@ namespace NetExtender.Workstation
         }
 
         [StructLayout(LayoutKind.Sequential)]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "InconsistentNaming")]
+        [SuppressMessage("ReSharper", "InconsistentNaming")]
         public struct SYSTEM_INFO
         {
             internal _PROCESSOR_INFO_UNION uProcessorInfo;
@@ -39,10 +40,10 @@ namespace NetExtender.Workstation
         }
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "InconsistentNaming")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "UnassignedField.Global")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Local")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
+    [SuppressMessage("ReSharper", "InconsistentNaming")]
+    [SuppressMessage("ReSharper", "UnassignedField.Global")]
+    [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Local")]
+    [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
     public static partial class Software
     {
         [DllImport("Kernel32.dll")]
