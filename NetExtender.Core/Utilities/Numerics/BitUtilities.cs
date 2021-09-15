@@ -203,14 +203,11 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static unsafe Boolean BitwiseEquals<T>(Byte* first, Byte* second) where T : unmanaged
         {
-            Byte* pf = (Byte*) &first;
-            Byte* ps = (Byte*) &second;
-
             unchecked
             {
                 for (UInt32 i = 0; i < sizeof(T); i++)
                 {
-                    if (pf[i] != ps[i])
+                    if (first[i] != second[i])
                     {
                         return false;
                     }
@@ -377,16 +374,13 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static unsafe T BitwiseAnd<T>(Byte* first, Byte* second) where T : unmanaged
         {
-            Byte* pf = (Byte*) &first;
-            Byte* ps = (Byte*) &second;
-
             Span<Byte> alloc = stackalloc Byte[sizeof(T)];
 
             unchecked
             {
                 for (Int32 i = 0; i < alloc.Length; i++)
                 {
-                    alloc[i] = (Byte) (pf[i] & ps[i]);
+                    alloc[i] = (Byte) (first[i] & second[i]);
                 }
             }
 
@@ -465,16 +459,13 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static unsafe T BitwiseOr<T>(Byte* first, Byte* second) where T : unmanaged
         {
-            Byte* pf = (Byte*) &first;
-            Byte* ps = (Byte*) &second;
-
             Span<Byte> alloc = stackalloc Byte[sizeof(T)];
 
             unchecked
             {
                 for (Int32 i = 0; i < alloc.Length; i++)
                 {
-                    alloc[i] = (Byte) (pf[i] | ps[i]);
+                    alloc[i] = (Byte) (first[i] | second[i]);
                 }
             }
 
@@ -553,16 +544,13 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static unsafe T BitwiseXor<T>(Byte* first, Byte* second) where T : unmanaged
         {
-            Byte* pf = (Byte*) &first;
-            Byte* ps = (Byte*) &second;
-
             Span<Byte> alloc = stackalloc Byte[sizeof(T)];
 
             unchecked
             {
                 for (Int32 i = 0; i < alloc.Length; i++)
                 {
-                    alloc[i] = (Byte) (pf[i] ^ ps[i]);
+                    alloc[i] = (Byte) (first[i] ^ second[i]);
                 }
             }
 
