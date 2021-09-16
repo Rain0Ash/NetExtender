@@ -9,14 +9,15 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security;
+using System.Threading.Tasks;
 using Microsoft.Win32.SafeHandles;
 using NetExtender.IO.FileSystem.NTFS.DataStreams;
 using NetExtender.Windows;
 using NetExtender.Windows.IO;
 
-namespace NetExtender.Utilities.Windows.IO.NTFS
+namespace NetExtender.Utilities.Windows.IO
 {
-    public static class NTFSAlternateStreamUtilities
+    public static class AlternateStreamUtilities
     {
         /// <summary>
         /// <span style="font-weight:bold;color:#a00;">(Extension Method)</span><br />
@@ -109,9 +110,9 @@ namespace NetExtender.Utilities.Windows.IO.NTFS
         /// <exception cref="ArgumentException">
         /// <paramref name="name"/> contains invalid characters.
         /// </exception>
-        public static Boolean AlternateDataStreamExists(this FileSystemInfo file, String name)
+        public static Boolean IsAlternateDataStreamExists(this FileSystemInfo file, String name)
         {
-            return AlternateDataStreamExists(file?.FullName ?? throw new ArgumentNullException(nameof(file)), name);
+            return IsAlternateDataStreamExists(file?.FullName ?? throw new ArgumentNullException(nameof(file)), name);
         }
 
         /// <summary>
@@ -135,16 +136,24 @@ namespace NetExtender.Utilities.Windows.IO.NTFS
         /// <para>-or-</para>
         /// <para><paramref name="name"/> contains invalid characters.</para>
         /// </exception>
-        public static Boolean AlternateDataStreamExists(String path, String name)
+        public static Boolean IsAlternateDataStreamExists(String path, String name)
         {
             if (String.IsNullOrEmpty(path))
             {
                 throw new ArgumentNullException(nameof(path));
             }
 
-            ValidateStreamName(name);
+            if (!IsValidStreamName(name))
+            {
+                throw new ArgumentException("The specified stream name contains invalid characters.");
+            }
 
             return WindowsPathUtilities.Safe.FileExists(BuildStreamPath(path, name));
+        }
+        
+        public static AlternateDataStreamInfo OpenAlternateDataStream(this FileSystemInfo file, String name)
+        {
+            return OpenAlternateDataStream(file?.FullName ?? throw new ArgumentNullException(nameof(file)), name, FileMode.OpenOrCreate);
         }
 
         /// <summary>
@@ -186,9 +195,14 @@ namespace NetExtender.Utilities.Windows.IO.NTFS
         /// <exception cref="UnauthorizedAccessException">
         /// The caller does not have the required permission, or the file is read-only.
         /// </exception>
-        public static AlternateDataStreamInfo OpenAlternateDataStream(this FileSystemInfo file, String name, FileMode mode = FileMode.OpenOrCreate)
+        public static AlternateDataStreamInfo OpenAlternateDataStream(this FileSystemInfo file, String name, FileMode mode)
         {
             return OpenAlternateDataStream(file?.FullName ?? throw new ArgumentNullException(nameof(file)), name, mode);
+        }
+
+        public static AlternateDataStreamInfo OpenAlternateDataStream(String path, String name)
+        {
+            return OpenAlternateDataStream(path, name, FileMode.OpenOrCreate);
         }
 
         /// <summary>
@@ -231,19 +245,27 @@ namespace NetExtender.Utilities.Windows.IO.NTFS
         /// <exception cref="UnauthorizedAccessException">
         /// The caller does not have the required permission, or the file is read-only.
         /// </exception>
-        public static AlternateDataStreamInfo OpenAlternateDataStream(String path, String name, FileMode mode = FileMode.OpenOrCreate)
+        public static AlternateDataStreamInfo OpenAlternateDataStream(String path, String name, FileMode mode)
         {
             if (String.IsNullOrEmpty(path))
             {
                 throw new ArgumentNullException(nameof(path));
             }
+            
+            if (String.IsNullOrEmpty(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
 
             if (!WindowsPathUtilities.Safe.FileExists(path))
             {
-                throw new FileNotFoundException("File not found", path);
+                throw new FileNotFoundException(null, path);
             }
 
-            ValidateStreamName(name);
+            if (!IsValidStreamName(name))
+            {
+                throw new ArgumentException("The specified stream name contains invalid characters.");
+            }
 
             if (mode == FileMode.Truncate || mode == FileMode.Append)
             {
@@ -264,6 +286,40 @@ namespace NetExtender.Utilities.Windows.IO.NTFS
             }
 
             return new AlternateDataStreamInfo(path, name, stream, exists);
+        }
+
+        public static String ReadAlternateDataStream(String path, String name)
+        {
+            if (String.IsNullOrEmpty(path))
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            AlternateDataStreamInfo info = OpenAlternateDataStream(path, name);
+
+            using StreamReader reader = info.OpenText();
+            return reader.ReadToEnd();
+        }
+
+        public static String ReadAlternateDataStream(this FileSystemInfo path, String name)
+        {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
+            AlternateDataStreamInfo info = OpenAlternateDataStream(path, name);
+
+            using StreamReader reader = info.OpenText();
+            return reader.ReadToEnd();
+        }
+
+        public static async Task<String> ReadAlternateDataStreamAsync(String path, String name)
+        {
+            AlternateDataStreamInfo info = OpenAlternateDataStream(path, name);
+
+            using StreamReader reader = info.OpenText();
+            return await reader.ReadToEndAsync();
         }
 
         /// <summary>
@@ -337,7 +393,10 @@ namespace NetExtender.Utilities.Windows.IO.NTFS
                 throw new ArgumentNullException(nameof(path));
             }
 
-            ValidateStreamName(name);
+            if (!IsValidStreamName(name))
+            {
+                throw new ArgumentException("The specified stream name contains invalid characters.");
+            }
 
             if (!WindowsPathUtilities.Safe.FileExists(path))
             {
@@ -447,12 +506,9 @@ namespace NetExtender.Utilities.Windows.IO.NTFS
             return result;
         }
 
-        public static void ValidateStreamName(String name)
+        public static Boolean IsValidStreamName(String name)
         {
-            if (!String.IsNullOrEmpty(name) && name.IndexOfAny(InvalidStreamNameChars) != -1)
-            {
-                throw new ArgumentException("The specified stream name contains invalid characters.");
-            }
+            return String.IsNullOrEmpty(name) || name.IndexOfAny(InvalidStreamNameChars) == -1;
         }
 
         [SuppressMessage("ReSharper", "CognitiveComplexity")]

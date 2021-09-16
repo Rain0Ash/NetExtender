@@ -13,9 +13,14 @@ namespace NetExtender.Utilities.Windows.IO
     {
         public static UInt64 GetFileSize(String path)
         {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
             if (!PathUtilities.IsExistAsFile(path))
             {
-                throw new FileNotFoundException($"File '{path}' not found!");
+                throw new FileNotFoundException(null, path);
             }
 
             using SafeFileHandle handle = WindowsPathUtilities.Safe.CreateFile(path, NativeFileAccess.GenericRead, FileShare.Read, IntPtr.Zero, FileMode.Open, 0, IntPtr.Zero);

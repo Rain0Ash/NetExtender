@@ -3663,7 +3663,7 @@ namespace NetExtender.Windows.Services.Utilities
             {
                 if (isThrow)
                 {
-                    throw new FileNotFoundException("File doesn't exist.", info.FullName);
+                    throw new FileNotFoundException(null, info.FullName);
                 }
 
                 return false;
@@ -3900,7 +3900,7 @@ namespace NetExtender.Windows.Services.Utilities
             {
                 if (isThrow)
                 {
-                    throw new FileNotFoundException("File doesn't exist.", info.FullName);
+                    throw new FileNotFoundException(null, info.FullName);
                 }
 
                 return false;
@@ -3961,7 +3961,7 @@ namespace NetExtender.Windows.Services.Utilities
 
             if (isThrow)
             {
-                throw new FileNotFoundException("File doesn't exist.", info.FullName);
+                throw new FileNotFoundException(null, info.FullName);
             }
 
             return false;

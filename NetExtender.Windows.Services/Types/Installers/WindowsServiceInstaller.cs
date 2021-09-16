@@ -123,7 +123,7 @@ namespace NetExtender.Windows.Services.Types.Installers
 
             if (!path.Exists)
             {
-                throw new FileNotFoundException("File doesn't exist.", path.FullName);
+                throw new FileNotFoundException(null, path.FullName);
             }
 
             if (!WindowsServiceUtilities.IsValidServiceName(name))

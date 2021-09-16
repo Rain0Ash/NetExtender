@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.InteropServices;
 using NetExtender.Windows;
-using NetExtender.Utilities.Windows.IO.NTFS;
+using NetExtender.Utilities.Windows.IO;
 
 namespace NetExtender.IO.FileSystem.NTFS.DataStreams
 {
@@ -97,7 +97,7 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
             }
 
             // Name is of the format ":NAME:$DATA\0"
-            Int32 sepindex = name.IndexOf(NTFSAlternateStreamUtilities.StreamSeparator, 1);
+            Int32 sepindex = name.IndexOf(AlternateStreamUtilities.StreamSeparator, 1);
             if (sepindex != -1)
             {
                 return name.Substring(1, sepindex - 1);

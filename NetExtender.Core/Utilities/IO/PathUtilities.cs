@@ -447,7 +447,12 @@ namespace NetExtender.Utilities.IO
             return IsExistAsFolder(path) || IsExistAsFile(path);
         }
 
-        public static Boolean IsExist(String path, PathType type = PathType.All)
+        public static Boolean IsExist(String path)
+        {
+            return IsExist(path, PathType.All);
+        }
+
+        public static Boolean IsExist(String path, PathType type)
         {
             if (path is null)
             {

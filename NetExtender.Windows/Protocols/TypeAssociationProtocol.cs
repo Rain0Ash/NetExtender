@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -37,12 +36,12 @@ namespace NetExtender.Windows.Protocols
             return new KeyValuePair<String?, String?>(registry.GetValue("ProgId", extension, "UserChoice"), registry.GetValue("Hash", extension, "UserChoice"));
         }
 
-        public static String? GetFileTypeAssociationProgId([NotNull] String extension)
+        public static String? GetFileTypeAssociationProgId(String extension)
         {
             return GetFileTypeAssociation(extension)?.Key;
         }
 
-        public static String? GetFileTypeAssociationHash([NotNull] String extension)
+        public static String? GetFileTypeAssociationHash(String extension)
         {
             return GetFileTypeAssociation(extension)?.Value;
         }
@@ -92,7 +91,7 @@ namespace NetExtender.Windows.Protocols
             return GetFileTypeAssociationUserChoice().Select(KeyValuePairUtilities.FlattenByValue!)!;
         }
 
-        public static KeyValuePair<String?, String?>? GetProtocolTypeAssociation([NotNull] String protocol)
+        public static KeyValuePair<String?, String?>? GetProtocolTypeAssociation(String protocol)
         {
             if (String.IsNullOrEmpty(protocol))
             {
@@ -104,12 +103,12 @@ namespace NetExtender.Windows.Protocols
             return new KeyValuePair<String?, String?>(registry.GetValue("ProgId", protocol, "UserChoice"), registry.GetValue("Hash", protocol, "UserChoice"));
         }
 
-        public static String? GetProtocolTypeAssociationProgId([NotNull] String protocol)
+        public static String? GetProtocolTypeAssociationProgId(String protocol)
         {
             return GetProtocolTypeAssociation(protocol)?.Key;
         }
 
-        public static String? GetProtocolTypeAssociationHash([NotNull] String protocol)
+        public static String? GetProtocolTypeAssociationHash(String protocol)
         {
             return GetProtocolTypeAssociation(protocol)?.Value;
         }
@@ -167,7 +166,7 @@ namespace NetExtender.Windows.Protocols
             SHChangeNotify(0x8000000, 0, IntPtr.Zero, IntPtr.Zero);
         }
 
-        public static Boolean RegisterFileTypeAssociation([NotNull] String path, [NotNull] String extension, String progid, String icon)
+        public static Boolean RegisterFileTypeAssociation(String path, String extension, String progid, String icon)
         {
             if (String.IsNullOrEmpty(path))
             {
@@ -181,7 +180,7 @@ namespace NetExtender.Windows.Protocols
 
             if (!PathUtilities.IsExistAsFile(path))
             {
-                throw new FileNotFoundException("File not exist", path);
+                throw new FileNotFoundException(null, path);
             }
 
             if (String.IsNullOrEmpty(progid))
@@ -204,12 +203,12 @@ namespace NetExtender.Windows.Protocols
             return SetFileTypeAssociation(progid, extension, icon);
         }
 
-        public static Boolean RegisterFileTypeAssociationProtocol([NotNull] String path, [NotNull] String protocol, String progid, String icon)
+        public static Boolean RegisterFileTypeAssociationProtocol(String path, String protocol, String progid, String icon)
         {
             return RegisterFileTypeAssociation(path, protocol, progid, icon);
         }
 
-        public static Boolean SetFileTypeAssociation([NotNull] String progid, [NotNull] String extension, String icon)
+        public static Boolean SetFileTypeAssociation(String progid, String extension, String icon)
         {
             if (String.IsNullOrEmpty(progid))
             {
@@ -248,12 +247,12 @@ namespace NetExtender.Windows.Protocols
             return true;
         }
 
-        public static Boolean SetProtocolTypeAssociation([NotNull] String progid, [NotNull] String protocol, String icon)
+        public static Boolean SetProtocolTypeAssociation(String progid, String protocol, String icon)
         {
             return SetFileTypeAssociation(progid, protocol, icon);
         }
 
-        public static Boolean RemoveFileTypeAssociation([NotNull] String progid, [NotNull] String extension)
+        public static Boolean RemoveFileTypeAssociation(String progid, String extension)
         {
             if (String.IsNullOrEmpty(progid))
             {
@@ -285,12 +284,12 @@ namespace NetExtender.Windows.Protocols
             return true;
         }
 
-        public static Boolean RemoveProtocolTypeAssociation([NotNull] String progid, [NotNull] String protocol)
+        public static Boolean RemoveProtocolTypeAssociation(String progid, String protocol)
         {
             return RemoveFileTypeAssociation(progid, protocol);
         }
 
-        private static Boolean WriteExtensionKeys([NotNull] String progid, [NotNull] String extension, [NotNull] String hash)
+        private static Boolean WriteExtensionKeys(String progid, String extension, String hash)
         {
             if (String.IsNullOrEmpty(progid))
             {
@@ -313,7 +312,7 @@ namespace NetExtender.Windows.Protocols
             return registry.SetValue("ProgId", progid);
         }
 
-        private static Boolean WriteProtocolKeys([NotNull] String progid, [NotNull] String protocol, [NotNull] String hash)
+        private static Boolean WriteProtocolKeys(String progid, String protocol, String hash)
         {
             if (String.IsNullOrEmpty(progid))
             {
@@ -397,7 +396,7 @@ namespace NetExtender.Windows.Protocols
             return BitConverter.ToInt32(bytes);
         }
 
-        private static String GetHash([NotNull] String info)
+        private static String GetHash(String info)
         {
             if (info is null)
             {

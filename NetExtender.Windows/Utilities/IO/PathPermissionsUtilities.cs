@@ -38,5 +38,7 @@ namespace NetExtender.Utilities.Windows.IO
                 _ => throw new NotSupportedException()
             };
         }
+
+        
     }
 }

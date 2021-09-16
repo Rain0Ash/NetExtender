@@ -8,7 +8,6 @@ using System.Security;
 using Microsoft.Win32.SafeHandles;
 using NetExtender.Utilities.Types;
 using NetExtender.Utilities.Windows.IO;
-using NetExtender.Utilities.Windows.IO.NTFS;
 using NetExtender.Windows.IO;
 
 namespace NetExtender.IO.FileSystem.NTFS.DataStreams
@@ -130,7 +129,7 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
             Size = info.StreamSize;
             Exists = true;
 
-            FullPath = NTFSAlternateStreamUtilities.BuildStreamPath(Path, Name);
+            FullPath = AlternateStreamUtilities.BuildStreamPath(Path, Name);
         }
 
         /// <summary>
@@ -176,7 +175,7 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
 
             Path = path;
             Name = name;
-            FullPath = stream ?? NTFSAlternateStreamUtilities.BuildStreamPath(path, name);
+            FullPath = stream ?? AlternateStreamUtilities.BuildStreamPath(path, name);
             Exists = exists;
 
             if (Exists)
