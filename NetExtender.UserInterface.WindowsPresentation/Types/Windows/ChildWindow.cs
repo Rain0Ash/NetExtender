@@ -14,11 +14,11 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             Started += DuplicateOwnerIcon;
         }
 
-        private void SetTaskbarVisible(Object sender, RoutedEventArgs args)
+        protected virtual void SetTaskbarVisible(Object sender, RoutedEventArgs args)
         {
         }
         
-        private void DuplicateOwnerIcon(Object sender, RoutedEventArgs args)
+        protected virtual void DuplicateOwnerIcon(Object sender, RoutedEventArgs args)
         {
             Icon ??= Owner?.Icon ?? Application.Current.MainWindow?.Icon;
         }

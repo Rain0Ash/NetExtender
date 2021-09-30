@@ -16,6 +16,8 @@ namespace NetExtender.Utilities.IO
 {
     public static class FileUtilities
     {
+        //TODO: try delete
+        
         public static Boolean HasAttribute(String path, FileAttributes attributes)
         {
             return HasAttribute(path, attributes, out _);

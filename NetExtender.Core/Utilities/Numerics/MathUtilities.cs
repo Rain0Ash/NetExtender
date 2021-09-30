@@ -1719,6 +1719,29 @@ namespace NetExtender.Utilities.Numerics
         {
             return BitConverter.GetBytes(Decimal.GetBits(value)[3])[2];
         }
+        
+        public static BigInteger Factorial(UInt32 value)
+        {
+            if (value <= 1)
+            {
+                return 1;
+            }
+            
+            BigInteger sum = value;
+            BigInteger result = value;
+            for (UInt32 i = value - 2; i > 1; i -= 2)
+            {
+                sum += i;
+                result *= sum;
+            }
+
+            if (value % 2 != 0)
+            {
+                result *= value / 2 + 1;
+            }
+
+            return result;
+        }
 
         public static Decimal DiscreteDifference(this Single value, Single between, Byte digits)
         {
@@ -2376,6 +2399,7 @@ namespace NetExtender.Utilities.Numerics
             return Range(start, stop, 1);
         }
 
+        // ReSharper disable once CognitiveComplexity
         public static IEnumerable<Single> Range(Single start, Single stop, Single step)
         {
             if (Math.Abs(step) < Single.Epsilon)
@@ -2423,6 +2447,7 @@ namespace NetExtender.Utilities.Numerics
             return Range(start, stop, 1);
         }
 
+        // ReSharper disable once CognitiveComplexity
         public static IEnumerable<Double> Range(Double start, Double stop, Double step)
         {
             if (Math.Abs(step) < Double.Epsilon)
@@ -2470,6 +2495,7 @@ namespace NetExtender.Utilities.Numerics
             return Range(start, stop, Decimal.One);
         }
 
+        // ReSharper disable once CognitiveComplexity
         public static IEnumerable<Decimal> Range(Decimal start, Decimal stop, Decimal step)
         {
             if (step == 0)
@@ -2570,6 +2596,7 @@ namespace NetExtender.Utilities.Numerics
             return RangeInclude(start, stop, 1);
         }
 
+        // ReSharper disable once CognitiveComplexity
         public static IEnumerable<Single> RangeInclude(Single start, Single stop, Single step)
         {
             if (Math.Abs(step) < Single.Epsilon)
@@ -2617,6 +2644,7 @@ namespace NetExtender.Utilities.Numerics
             return RangeInclude(start, stop, 1);
         }
 
+        // ReSharper disable once CognitiveComplexity
         public static IEnumerable<Double> RangeInclude(Double start, Double stop, Double step)
         {
             if (Math.Abs(step) < Double.Epsilon)
@@ -2664,6 +2692,7 @@ namespace NetExtender.Utilities.Numerics
             return RangeInclude(start, stop, Decimal.One);
         }
 
+        // ReSharper disable once CognitiveComplexity
         public static IEnumerable<Decimal> RangeInclude(Decimal start, Decimal stop, Decimal step)
         {
             if (step == 0)

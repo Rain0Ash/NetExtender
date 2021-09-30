@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using NetExtender.Random.Interfaces;
@@ -990,19 +991,113 @@ namespace NetExtender.Utilities.Types
             return false;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String ToHEX(this Color color)
         {
             return ColorTranslator.ToHtml(color);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String RGBToHEX(Byte r, Byte g, Byte b)
         {
             return ColorTranslator.ToHtml(Color.FromArgb(r, g, b));
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String RGBToHEX(Byte a, Byte r, Byte g, Byte b)
         {
             return ColorTranslator.ToHtml(Color.FromArgb(a, r, g, b));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TColor ToColor<TColor>(this Color color) where TColor : IColor
+        {
+            return ToColor<TColor>(color, out TColor? result) ? result : throw new InvalidCastException();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean ToColor<TColor>(this Color color, [MaybeNullWhen(false)] out TColor result) where TColor : IColor
+        {
+            if (typeof(TColor) == typeof(RGBColor))
+            {
+                result = (TColor) (Object) (RGBColor) color;
+                return true;
+            }
+
+            if (typeof(TColor) == typeof(ARGBColor))
+            {
+                result = (TColor) (Object) (ARGBColor) color;
+                return true;
+            }
+            
+            if (typeof(TColor) == typeof(CMYKColor))
+            {
+                result = (TColor) (Object) (CMYKColor) color;
+                return true;
+            }
+            
+            if (typeof(TColor) == typeof(HEXColor))
+            {
+                result = (TColor) (Object) (HEXColor) color;
+                return true;
+            }
+            
+            if (typeof(TColor) == typeof(HSVColor))
+            {
+                result = (TColor) (Object) (HSVColor) color;
+                return true;
+            }
+            
+            if (typeof(TColor) == typeof(HSLColor))
+            {
+                result = (TColor) (Object) (HSLColor) color;
+                return true;
+            }
+            
+            if (typeof(TColor) == typeof(CIELABColor))
+            {
+                result = (TColor) (Object) (CIELABColor) color;
+                return true;
+            }
+            
+            if (typeof(TColor) == typeof(XYZColor))
+            {
+                result = (TColor) (Object) (XYZColor) color;
+                return true;
+            }
+            
+            if (typeof(TColor) == typeof(ANSIColor))
+            {
+                result = (TColor) (Object) (ANSIColor) color;
+                return true;
+            }
+            
+            result = default;
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TOutput ToColor<TColor, TOutput>(this TColor? color) where TColor : IColor where TOutput : IColor
+        {
+            return ToColor<TColor, TOutput>(color, out TOutput? result) ? result : throw new InvalidCastException();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean ToColor<TColor, TOutput>(this TColor? color, [MaybeNullWhen(false)] out TOutput result) where TColor : IColor where TOutput : IColor
+        {
+            if (color is null)
+            {
+                result = default;
+                return false;
+            }
+
+            if (typeof(TColor) != typeof(TOutput))
+            {
+                return ToColor(color.ToColor(), out result);
+            }
+
+            result = Unsafe.As<TColor, TOutput>(ref color);
+            return true;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1012,9 +1107,23 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("color")]
+        public static TColor? Light<TColor>(this TColor? color, Single percent) where TColor : IColor
+        {
+            return color is not null ? color.ToColor().Light(percent).ToColor<TColor>() : default;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Light(this Color color, Double percent)
         {
             return Light(color, (Single) percent);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("color")]
+        public static TColor? Light<TColor>(this TColor? color, Double percent) where TColor : IColor
+        {
+            return color is not null ? color.ToColor().Light(percent).ToColor<TColor>() : default;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1024,9 +1133,23 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("color")]
+        public static TColor? Light<TColor>(this TColor? color) where TColor : IColor
+        {
+            return color is not null ? color.ToColor().Light().ToColor<TColor>() : default;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Lighter(this Color color)
         {
             return Light(color, 0.5f);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("color")]
+        public static TColor? Lighter<TColor>(this TColor? color) where TColor : IColor
+        {
+            return color is not null ? color.ToColor().Lighter().ToColor<TColor>() : default;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1036,15 +1159,36 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("color")]
+        public static TColor? Lightest<TColor>(this TColor? color) where TColor : IColor
+        {
+            return color is not null ? color.ToColor().Light().ToColor<TColor>() : default;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color SuperLight(this Color color)
         {
             return Light(color, 1.00f);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("color")]
+        public static TColor? SuperLight<TColor>(this TColor? color) where TColor : IColor
+        {
+            return color is not null ? color.ToColor().Light().ToColor<TColor>() : default;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Dark(this Color color, Single percent)
         {
             return new HLSColor(color).Darker(percent);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("color")]
+        public static TColor? Dark<TColor>(this TColor? color, Single percent) where TColor : IColor
+        {
+            return color is not null ? color.ToColor().Dark(percent).ToColor<TColor>() : default;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1054,9 +1198,23 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("color")]
+        public static TColor? Dark<TColor>(this TColor? color, Double percent) where TColor : IColor
+        {
+            return color is not null ? color.ToColor().Dark(percent).ToColor<TColor>() : default;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Dark(this Color color)
         {
             return Dark(color, 0.25f);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("color")]
+        public static TColor? Dark<TColor>(this TColor? color) where TColor : IColor
+        {
+            return color is not null ? color.ToColor().Dark().ToColor<TColor>() : default;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1066,9 +1224,23 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("color")]
+        public static TColor? Darker<TColor>(this TColor? color) where TColor : IColor
+        {
+            return color is not null ? color.ToColor().Darker().ToColor<TColor>() : default;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Darkest(this Color color)
         {
             return Dark(color, 0.75f);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("color")]
+        public static TColor? Darkest<TColor>(this TColor? color) where TColor : IColor
+        {
+            return color is not null ? color.ToColor().Darkest().ToColor<TColor>() : default;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1076,8 +1248,13 @@ namespace NetExtender.Utilities.Types
         {
             return Dark(color, 1.00f);
         }
-
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [return: NotNullIfNotNull("color")]
+        public static TColor? SuperDark<TColor>(this TColor? color) where TColor : IColor
+        {
+            return color is not null ? color.ToColor().SuperDark().ToColor<TColor>() : default;
+        }
 
         public static Boolean WaveLengthToRGB(Double wavelength, out Byte r, out Byte g, out Byte b)
         {

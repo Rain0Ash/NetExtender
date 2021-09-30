@@ -672,7 +672,7 @@ namespace NetExtender.Utilities.UserInterface
 
         public static void CenterToScreen(DefaultMonitorType type)
         {
-            MonitorInfo screen = DeviceUtilities.GetMonitorInfoFromWindow(ConsoleWindow, type);
+            MonitorInfo screen = WindowsDeviceUtilities.GetMonitorInfoFromWindow(ConsoleWindow, type);
 
             Rectangle rectangle = Rectangle;
             Rectangle area = screen.WorkingArea;

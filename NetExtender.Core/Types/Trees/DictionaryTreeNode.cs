@@ -561,7 +561,7 @@ namespace NetExtender.Types.Trees
 
         public IEnumerator<KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>>> GetEnumerator()
         {
-            return HasTree ? Tree.GetEnumerator() : EnumerableUtilities.GetEmptyEnumerator<KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>>>();
+            return HasTree ? Tree.GetEnumerator() : EnumeratorUtilities.GetEmptyEnumerator<KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>>>();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

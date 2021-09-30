@@ -196,12 +196,7 @@ namespace NetExtender.Crypto.Base
             }
         }
 
-        private unsafe Boolean InternalEncode(
-            Byte* inputPtr,
-            Int32 inputLen,
-            Char* outputPtr,
-            Int32 outputLen,
-            out Int32 numCharsWritten)
+        private unsafe Boolean InternalEncode(Byte* inputPtr, Int32 inputLen, Char* outputPtr, Int32 outputLen, out Int32 numCharsWritten)
         {
             unchecked
             {
@@ -217,9 +212,9 @@ namespace NetExtender.Crypto.Base
                 while (pInput != pInputEnd)
                 {
                     // build a 32-bit representation of input
-                    Int64 input = ((UInt32)(*pInput++) << 24)
-                                  | ((UInt32)(*pInput++) << 16)
-                                  | ((UInt32)(*pInput++) << 8)
+                    Int64 input = ((UInt32) (*pInput++) << 24)
+                                  | ((UInt32) (*pInput++) << 16)
+                                  | ((UInt32) (*pInput++) << 8)
                                   | *pInput++;
 
                     if (WriteEncodedValue(
@@ -245,7 +240,7 @@ namespace NetExtender.Crypto.Base
                     Int64 input = 0;
                     for (Int32 n = 0; n < remainingBytes; n++)
                     {
-                        input |= (UInt32)(*pInput++) << ((3 - n) << 3);
+                        input |= (UInt32) (*pInput++) << ((3 - n) << 3);
                     }
 
                     if (!WriteEncodedValue(
@@ -268,14 +263,7 @@ namespace NetExtender.Crypto.Base
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private unsafe Boolean WriteEncodedValue(
-            Int64 input,
-            ref Char* pOutput,
-            Char* pOutputEnd,
-            String table,
-            Int32 stringLength,
-            Boolean usesZeroShortcut,
-            Boolean usesSpaceShortcut)
+        private unsafe Boolean WriteEncodedValue(Int64 input, ref Char* pOutput, Char* pOutputEnd, String table, Int32 stringLength, Boolean usesZeroShortcut, Boolean usesSpaceShortcut)
         {
             unchecked
             {
@@ -324,12 +312,8 @@ namespace NetExtender.Crypto.Base
             }
         }
 
-        private unsafe Boolean InternalDecode(
-            Char* inputPtr,
-            Int32 inputLen,
-            Byte* outputPtr,
-            Int32 outputLen,
-            out Int32 numBytesWritten)
+        // ReSharper disable once CognitiveComplexity
+        private unsafe Boolean InternalDecode(Char* inputPtr, Int32 inputLen, Byte* outputPtr, Int32 outputLen, out Int32 numBytesWritten)
         {
             unchecked
             {
@@ -422,11 +406,7 @@ namespace NetExtender.Crypto.Base
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static unsafe Boolean WriteDecodedValue(
-            ref Byte* pOutput,
-            Byte* pOutputEnd,
-            Int64 value,
-            Int32 numBytesToWrite)
+        private static unsafe Boolean WriteDecodedValue(ref Byte* pOutput, Byte* pOutputEnd, Int64 value, Int32 numBytesToWrite)
         {
             unchecked
             {
@@ -452,11 +432,7 @@ namespace NetExtender.Crypto.Base
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static unsafe Boolean WriteShortcut(
-            ref Byte* pOutput,
-            Byte* pOutputEnd,
-            ref Int32 blockIndex,
-            Int64 value)
+        private static unsafe Boolean WriteShortcut(ref Byte* pOutput, Byte* pOutputEnd, ref Int32 blockIndex, Int64 value)
         {
             if (blockIndex != 0)
             {

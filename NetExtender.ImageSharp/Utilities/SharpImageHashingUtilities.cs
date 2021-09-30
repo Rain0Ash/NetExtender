@@ -130,6 +130,7 @@ namespace NetExtender.ImageSharp.Utilities
             return hash;
         }
         
+        // ReSharper disable once CognitiveComplexity
         public static UInt64 PerceptualHashing(Image<Rgba32> image)
         {
             const Int32 Size = 64;

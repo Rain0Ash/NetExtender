@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using NetExtender.Configuration.Behavior;
 using NetExtender.Configuration.Common;
 using NetExtender.Registry;
 using NetExtender.Registry.Interfaces;
@@ -36,12 +37,12 @@ namespace NetExtender.Configuration.Windows.Registry
             Registry = key.Create(Path.Split(PathUtilities.Separators), !IsReadOnly);
         }
 
-        public override String? Get(String key, IEnumerable<String>? sections)
+        public override String? Get(String? key, IEnumerable<String>? sections)
         {
             return Registry.GetValue(key, sections);
         }
 
-        public override Boolean Set(String key, String? value, IEnumerable<String>? sections)
+        public override Boolean Set(String? key, String? value, IEnumerable<String>? sections)
         {
             Registry.SetValue(key, value, sections);
             return true;

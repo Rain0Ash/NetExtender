@@ -170,13 +170,8 @@ namespace NetExtender.Crypto.Base
             }
         }
 
-        private unsafe Boolean InternalDecode(
-            Char* inputPtr,
-            Int32 inputLen,
-            Byte* outputPtr,
-            Int32 outputLen,
-            Int32 numZeroes,
-            out Int32 numBytesWritten)
+        // ReSharper disable once CognitiveComplexity
+        private unsafe Boolean InternalDecode(Char* inputPtr, Int32 inputLen, Byte* outputPtr, Int32 outputLen, Int32 numZeroes, out Int32 numBytesWritten)
         {
             unchecked
             {
@@ -234,13 +229,8 @@ namespace NetExtender.Crypto.Base
             }
         }
 
-        private unsafe Boolean InternalEncode(
-            Byte* inputPtr,
-            Int32 inputLen,
-            Char* outputPtr,
-            Int32 outputLen,
-            Int32 numZeroes,
-            out Int32 numCharsWritten)
+        // ReSharper disable once CognitiveComplexity
+        private unsafe Boolean InternalEncode(Byte* inputPtr, Int32 inputLen, Char* outputPtr, Int32 outputLen, Int32 numZeroes, out Int32 numCharsWritten)
         {
             unchecked
             {

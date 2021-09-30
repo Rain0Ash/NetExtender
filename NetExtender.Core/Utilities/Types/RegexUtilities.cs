@@ -297,7 +297,7 @@ namespace NetExtender.Utilities.Types
             }
 
             Dictionary<String, IList<String>> captures = new Dictionary<String, IList<String>>(8);
-            foreach (String? group in groups.WhereNotNull().WhereNotIf(MathUtilities.IsInt32, nogroup))
+            foreach (String? group in groups.WhereNotNull().WhereIfNot(MathUtilities.IsInt32, nogroup))
             {
                 foreach (Match match in matches)
                 {

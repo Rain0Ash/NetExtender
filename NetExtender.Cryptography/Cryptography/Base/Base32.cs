@@ -222,11 +222,7 @@ namespace NetExtender.Crypto.Base
         /// <param name="padding">Whether to use padding characters at the end.</param>
         /// <param name="numCharsWritten">Number of characters written to the output.</param>
         /// <returns>True if encoding is successful, false if the output is invalid.</returns>
-        public unsafe Boolean TryEncode(
-            ReadOnlySpan<Byte> bytes,
-            Span<Char> output,
-            Boolean padding,
-            out Int32 numCharsWritten)
+        public unsafe Boolean TryEncode(ReadOnlySpan<Byte> bytes, Span<Char> output, Boolean padding, out Int32 numCharsWritten)
         {
             unchecked
             {
@@ -274,13 +270,8 @@ namespace NetExtender.Crypto.Base
             }
         }
 
-        private unsafe Boolean InternalEncode(
-           Byte* inputPtr,
-           Int32 bytesLen,
-           Char* outputPtr,
-           Int32 outputLen,
-           Boolean padding,
-           out Int32 numCharsWritten)
+        // ReSharper disable once CognitiveComplexity
+        private unsafe Boolean InternalEncode(Byte* inputPtr, Int32 bytesLen, Char* outputPtr, Int32 outputLen, Boolean padding, out Int32 numCharsWritten)
         {
             unchecked
             {
@@ -300,7 +291,7 @@ namespace NetExtender.Crypto.Base
                         *pOutput++ = table[outputPad];
                         if (pOutput > pOutputEnd)
                         {
-                            goto Overflow;
+                            goto overflow;
                         }
 
                         currentByte &= (1 << bitsLeft) - 1;
@@ -319,7 +310,7 @@ namespace NetExtender.Crypto.Base
                     *pOutput++ = table[outputPad];
                     if (pOutput > pOutputEnd)
                     {
-                        goto Overflow;
+                        goto overflow;
                     }
                 }
 
@@ -331,14 +322,14 @@ namespace NetExtender.Crypto.Base
                         *pOutput++ = paddingChar;
                         if (pOutput > pOutputEnd)
                         {
-                            goto Overflow;
+                            goto overflow;
                         }
                     }
                 }
 
                 numCharsWritten = (Int32)(pOutput - outputPtr);
                 return true;
-                Overflow:
+                overflow:
                 numCharsWritten = (Int32)(pOutput - outputPtr);
                 return false;
             }
@@ -365,11 +356,7 @@ namespace NetExtender.Crypto.Base
             }
         }
 
-        private unsafe Boolean InternalDecode(
-            Char* inputPtr,
-            Int32 textLen,
-            Byte* outputPtr,
-            out Int32 numBytesWritten)
+        private unsafe Boolean InternalDecode(Char* inputPtr, Int32 textLen, Byte* outputPtr, out Int32 numBytesWritten)
         {
             unchecked
             {

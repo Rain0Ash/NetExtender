@@ -198,7 +198,7 @@ namespace System.Security.Cryptography
                     t1 = h + (((e >> 6) | (e << 26)) ^ ((e >> 11) | (e << 21)) ^ ((e >> 25) | (e << 7))) + ((e & f) ^ (~e & g)) + K1[i] + buff[i];
 
                     t2 = ((a >> 2) | (a << 30)) ^ ((a >> 13) | (a << 19)) ^ ((a >> 22) | (a << 10));
-                    t2 += ((a & b) ^ (a & c) ^ (b & c));
+                    t2 += (a & b) ^ (a & c) ^ (b & c);
                     h = g;
                     g = f;
                     f = e;

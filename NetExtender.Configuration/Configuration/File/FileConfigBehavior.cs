@@ -23,7 +23,7 @@ namespace NetExtender.Configuration.File
             Config = ReadConfig();
         }
 
-        private String ReadConfigText()
+        private String? ReadConfigText()
         {
             try
             {
@@ -41,16 +41,23 @@ namespace NetExtender.Configuration.File
         {
             try
             {
-                String config = ReadConfigText();
+                String? config = ReadConfigText();
 
+                if (config is null)
+                {
+                    return new DictionaryTree<String, String>();
+                }
+                
                 if (!IsCryptConfig)
                 {
                     return DeserializeConfig(config) ?? new DictionaryTree<String, String>();
                 }
 
-                String decrypted = Crypt.Decrypt(config);
+                String? decrypted = Crypt.Decrypt(config);
+                
+                DictionaryTree<String, String>? deserialize = String.IsNullOrEmpty(decrypted) ? DeserializeConfig(config) : DeserializeConfig(decrypted);
 
-                return !String.IsNullOrWhiteSpace(decrypted) ? DeserializeConfig(decrypted) : DeserializeConfig(config);
+                return deserialize ?? new DictionaryTree<String, String>();
             }
             catch (Exception)
             {
@@ -58,39 +65,41 @@ namespace NetExtender.Configuration.File
             }
         }
 
-        private void WriteConfigText(String? config)
+        private Boolean WriteConfigText(String? config)
         {
-            if (String.IsNullOrWhiteSpace(config))
-            {
-                return;
-            }
-            
-            System.IO.File.WriteAllText(Path, config);
-        }
-
-        protected abstract String SerializeConfig();
-
-        private void WriteConfig()
-        {
-            String config = SerializeConfig();
-
-            if (IsCryptConfig)
-            {
-                config = Crypt.Encrypt(config);
-            }
-            
-            WriteConfigText(config);
-        }
-
-        public override Boolean Set(String key, String? value, IEnumerable<String>? sections)
-        {
-            if (!base.Set(key, value, sections))
+            if (String.IsNullOrEmpty(config))
             {
                 return false;
             }
 
-            WriteConfig();
-            return true;
+            try
+            {
+                System.IO.File.WriteAllText(Path, config);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        protected abstract String? SerializeConfig();
+
+        private Boolean WriteConfig()
+        {
+            String? config = SerializeConfig();
+
+            if (config is not null && IsCryptConfig)
+            {
+                config = Crypt.Encrypt(config);
+            }
+            
+            return WriteConfigText(config);
+        }
+
+        public override Boolean Set(String? key, String? value, IEnumerable<String>? sections)
+        {
+            return base.Set(key, value, sections) && WriteConfig();
         }
     }
 }

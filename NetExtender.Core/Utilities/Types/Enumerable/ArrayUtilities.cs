@@ -3,14 +3,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using NetExtender.Types.Arrays;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
-    public static class ArrayUtilities
+    //TODO: array segment overload
+    public static partial class ArrayUtilities
     {
         /// <summary>
         /// Adds the provided item to the end of the array.
@@ -217,7 +218,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(action));
             }
 
-            if (array.LongLength == 0)
+            if (array.LongLength <= 0)
             {
                 return array;
             }
@@ -680,555 +681,38 @@ namespace NetExtender.Utilities.Types
         }
 
         /// <summary>
-        /// Converts to <see cref="ReadOnlyArray"/>.
+        /// Converts to <see cref="ReadOnlyCollection{T}"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlyArray<T> ToReadOnlyArray<T>(this IEnumerable<T> source)
+        public static ReadOnlyCollection<T> ToReadOnlyArray<T>(this IEnumerable<T> source)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source is T[] array ? ToReadOnlyArray(array) : new ReadOnlyArray<T>(source.ToArray());
+            return source is T[] array ? ToReadOnlyArray(array) : source.ToArray().ToReadOnlyArray();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlyArray<T> AsReadOnlyArray<T>(this IEnumerable<T>? source)
+        public static ReadOnlyCollection<T> AsReadOnlyArray<T>(this IEnumerable<T>? source)
         {
-            return source is not null ? source as ReadOnlyArray<T> ?? ToReadOnlyArray(source) : ReadOnlyArray.Empty<T>();
+            return source is not null ? source as ReadOnlyCollection<T> ?? ToReadOnlyArray(source) : ReadOnlyCollectionUtilities.Empty<T>();
         }
 
         /// <summary>
-        /// Converts to <see cref="ReadOnlyArray{T}"/>.
+        /// Converts to <see cref="ReadOnlyCollection{T}"/>.
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="source"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ReadOnlyArray<T> ToReadOnlyArray<T>(this T[] source)
+        public static ReadOnlyCollection<T> ToReadOnlyArray<T>(this T[] source)
         {
-            return new ReadOnlyArray<T>(source);
-        }
-
-        private const Int32 BoundLength = 5;
-
-        /// <summary>
-        /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-        /// </summary>
-        /// <param name="first">The first array to compare.</param>
-        /// <param name="second">The second array to compare.</param>
-        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-        public static unsafe Boolean EqualsTo(this Char[]? first, Char[]? second)
-        {
-            if (first == second)
-            {
-                return true;
-            }
-
-            if (first is null || second is null)
-            {
-                return false;
-            }
-
-            if (first.Length != second.Length)
-            {
-                return false;
-            }
-
-            switch (first.Length)
-            {
-                case <= 0:
-                    return true;
-                case < BoundLength:
-                    return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pf = first, ps = second)
-            {
-                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
-            }
-        }
-
-        /// <summary>
-        /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-        /// </summary>
-        /// <param name="first">The first array to compare.</param>
-        /// <param name="second">The second array to compare.</param>
-        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-        public static unsafe Boolean EqualsTo(this SByte[]? first, SByte[]? second)
-        {
-            if (first == second)
-            {
-                return true;
-            }
-
-            if (first is null || second is null)
-            {
-                return false;
-            }
-
-            if (first.Length != second.Length)
-            {
-                return false;
-            }
-
-            switch (first.Length)
-            {
-                case <= 0:
-                    return true;
-                case < BoundLength:
-                    return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pf = first, ps = second)
-            {
-                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
-            }
-        }
-
-        /// <summary>
-        /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-        /// </summary>
-        /// <param name="first">The first array to compare.</param>
-        /// <param name="second">The second array to compare.</param>
-        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-        public static unsafe Boolean EqualsTo(this Byte[]? first, Byte[]? second)
-        {
-            if (first == second)
-            {
-                return true;
-            }
-
-            if (first is null || second is null)
-            {
-                return false;
-            }
-
-            if (first.Length != second.Length)
-            {
-                return false;
-            }
-
-            switch (first.Length)
-            {
-                case <= 0:
-                    return true;
-                case < BoundLength:
-                    return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pf = first, ps = second)
-            {
-                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
-            }
-        }
-
-        /// <summary>
-        /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-        /// </summary>
-        /// <param name="first">The first array to compare.</param>
-        /// <param name="second">The second array to compare.</param>
-        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-        public static unsafe Boolean EqualsTo(this Int16[]? first, Int16[]? second)
-        {
-            if (first == second)
-            {
-                return true;
-            }
-
-            if (first is null || second is null)
-            {
-                return false;
-            }
-
-            if (first.Length != second.Length)
-            {
-                return false;
-            }
-
-            switch (first.Length)
-            {
-                case <= 0:
-                    return true;
-                case < BoundLength:
-                    return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pf = first, ps = second)
-            {
-                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
-            }
-        }
-
-        /// <summary>
-        /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-        /// </summary>
-        /// <param name="first">The first array to compare.</param>
-        /// <param name="second">The second array to compare.</param>
-        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-        public static unsafe Boolean EqualsTo(this UInt16[]? first, UInt16[]? second)
-        {
-            if (first == second)
-            {
-                return true;
-            }
-
-            if (first is null || second is null)
-            {
-                return false;
-            }
-
-            if (first.Length != second.Length)
-            {
-                return false;
-            }
-
-            switch (first.Length)
-            {
-                case <= 0:
-                    return true;
-                case < BoundLength:
-                    return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pf = first, ps = second)
-            {
-                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
-            }
-        }
-
-        /// <summary>
-        /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-        /// </summary>
-        /// <param name="first">The first array to compare.</param>
-        /// <param name="second">The second array to compare.</param>
-        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-        public static unsafe Boolean EqualsTo(this Int32[]? first, Int32[]? second)
-        {
-            if (first == second)
-            {
-                return true;
-            }
-
-            if (first is null || second is null)
-            {
-                return false;
-            }
-
-            if (first.Length != second.Length)
-            {
-                return false;
-            }
-
-            switch (first.Length)
-            {
-                case <= 0:
-                    return true;
-                case < BoundLength:
-                    return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pf = first, ps = second)
-            {
-                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
-            }
-        }
-
-        /// <summary>
-        /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-        /// </summary>
-        /// <param name="first">The first array to compare.</param>
-        /// <param name="second">The second array to compare.</param>
-        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-        public static unsafe Boolean EqualsTo(this UInt32[]? first, UInt32[]? second)
-        {
-            if (first == second)
-            {
-                return true;
-            }
-
-            if (first is null || second is null)
-            {
-                return false;
-            }
-
-            if (first.Length != second.Length)
-            {
-                return false;
-            }
-
-            switch (first.Length)
-            {
-                case <= 0:
-                    return true;
-                case < BoundLength:
-                    return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pf = first, ps = second)
-            {
-                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
-            }
-        }
-
-        /// <summary>
-        /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-        /// </summary>
-        /// <param name="first">The first array to compare.</param>
-        /// <param name="second">The second array to compare.</param>
-        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-        public static unsafe Boolean EqualsTo(this Int64[]? first, Int64[]? second)
-        {
-            if (first == second)
-            {
-                return true;
-            }
-
-            if (first is null || second is null)
-            {
-                return false;
-            }
-
-            if (first.Length != second.Length)
-            {
-                return false;
-            }
-
-            switch (first.Length)
-            {
-                case <= 0:
-                    return true;
-                case < BoundLength:
-                    return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pf = first, ps = second)
-            {
-                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
-            }
-        }
-
-        /// <summary>
-        /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-        /// </summary>
-        /// <param name="first">The first array to compare.</param>
-        /// <param name="second">The second array to compare.</param>
-        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-        public static unsafe Boolean EqualsTo(this UInt64[]? first, UInt64[]? second)
-        {
-            if (first == second)
-            {
-                return true;
-            }
-
-            if (first is null || second is null)
-            {
-                return false;
-            }
-
-            if (first.Length != second.Length)
-            {
-                return false;
-            }
-
-            switch (first.Length)
-            {
-                case <= 0:
-                    return true;
-                case < BoundLength:
-                    return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pf = first, ps = second)
-            {
-                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
-            }
-        }
-
-        /// <summary>
-        /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-        /// </summary>
-        /// <param name="first">The first array to compare.</param>
-        /// <param name="second">The second array to compare.</param>
-        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-        public static unsafe Boolean EqualsTo(this Single[]? first, Single[]? second)
-        {
-            if (first == second)
-            {
-                return true;
-            }
-
-            if (first is null || second is null)
-            {
-                return false;
-            }
-
-            if (first.Length != second.Length)
-            {
-                return false;
-            }
-
-            switch (first.Length)
-            {
-                case <= 0:
-                    return true;
-                case < BoundLength:
-                    return !first.Where((value, i) => Math.Abs(value - second[i]) >= Single.Epsilon).Any();
-            }
-
-            fixed (void* pf = first, ps = second)
-            {
-                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
-            }
-        }
-
-        /// <summary>
-        /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-        /// </summary>
-        /// <param name="first">The first array to compare.</param>
-        /// <param name="second">The second array to compare.</param>
-        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-        public static unsafe Boolean EqualsTo(this Double[]? first, Double[]? second)
-        {
-            if (first == second)
-            {
-                return true;
-            }
-
-            if (first is null || second is null)
-            {
-                return false;
-            }
-
-            if (first.Length != second.Length)
-            {
-                return false;
-            }
-
-            switch (first.Length)
-            {
-                case <= 0:
-                    return true;
-                case < BoundLength:
-                    return !first.Where((value, i) => Math.Abs(value - second[i]) >= Double.Epsilon).Any();
-            }
-
-            fixed (void* pf = first, ps = second)
-            {
-                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
-            }
-        }
-
-        /// <summary>
-        /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-        /// </summary>
-        /// <param name="first">The first array to compare.</param>
-        /// <param name="second">The second array to compare.</param>
-        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-        public static unsafe Boolean EqualsTo(this Decimal[]? first, Decimal[]? second)
-        {
-            if (first == second)
-            {
-                return true;
-            }
-
-            if (first is null || second is null)
-            {
-                return false;
-            }
-
-            if (first.Length != second.Length)
-            {
-                return false;
-            }
-
-            switch (first.Length)
-            {
-                case <= 0:
-                    return true;
-                case < BoundLength:
-                    return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pf = first, ps = second)
-            {
-                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
-            }
-        }
-
-        /// <summary>
-        /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-        /// </summary>
-        /// <param name="first">The first array to compare.</param>
-        /// <param name="second">The second array to compare.</param>
-        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-        public static unsafe Boolean EqualsTo(this TimeSpan[]? first, TimeSpan[]? second)
-        {
-            if (first == second)
-            {
-                return true;
-            }
-
-            if (first is null || second is null)
-            {
-                return false;
-            }
-
-            if (first.Length != second.Length)
-            {
-                return false;
-            }
-
-            switch (first.Length)
-            {
-                case <= 0:
-                    return true;
-                case < BoundLength:
-                    return !first.Where((value, i) => value != second[i]).Any();
-            }
-
-            fixed (void* pf = first, ps = second)
-            {
-                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
-            }
-        }
-
-        /// <summary>
-        /// Returns true, if length and content of <paramref name="first"/> equals <paramref name="second"/>.
-        /// </summary>
-        /// <param name="first">The first array to compare.</param>
-        /// <param name="second">The second array to compare.</param>
-        /// <returns>True, if length and content of <paramref name="first"/> equals <paramref name="second"/>.</returns>
-        public static unsafe Boolean EqualsTo(this Guid[]? first, Guid[]? second)
-        {
-            if (first == second)
-            {
-                return true;
-            }
-
-            if (first is null || second is null)
-            {
-                return false;
-            }
-
-            if (first.Length != second.Length)
-            {
-                return false;
-            }
-
-            if (first.Length <= 0)
-            {
-                return true;
-            }
-
-            fixed (void* pf = first, ps = second)
-            {
-                return BitUtilities.BitwiseEquals(pf, ps, first.Length);
-            }
+            return Array.AsReadOnly(source);
         }
 
         /// <summary>

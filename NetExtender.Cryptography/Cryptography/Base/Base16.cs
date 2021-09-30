@@ -318,11 +318,7 @@ namespace NetExtender.Crypto.Base
             }
         }
 
-        private static unsafe void InternalEncode(
-            ReadOnlySpan<Byte> bytes,
-            Int32 bytesLen,
-            String alphabet,
-            Char* outputPtr)
+        private static unsafe void InternalEncode(ReadOnlySpan<Byte> bytes, Int32 bytesLen, String alphabet, Char* outputPtr)
         {
             unchecked
             {

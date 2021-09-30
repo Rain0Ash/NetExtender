@@ -16,10 +16,10 @@ namespace NetExtender.Utilities.Types
     {
         public static Char ReadChar(this Stream stream)
         {
-            return ReadChar(stream, Encoding.UTF32);
+            return ReadChar(stream, Encoding.UTF8);
         }
 
-        internal static Char ReadChar(this Stream stream, Encoding? encoding)
+        public static Char ReadChar(this Stream stream, Encoding? encoding)
         {
             if (stream is null)
             {
@@ -31,7 +31,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentException("Stream not support reading");
             }
             
-            encoding ??= Encoding.UTF32;
+            encoding ??= Encoding.UTF8;
             
             Span<Byte> first = stackalloc Byte[1];
             if (stream.Read(first) != 1)
@@ -76,10 +76,10 @@ namespace NetExtender.Utilities.Types
 
         public static Char? TryReadChar(this Stream stream)
         {
-            return TryReadChar(stream, Encoding.UTF32);
+            return TryReadChar(stream, Encoding.UTF8);
         }
 
-        internal static Char? TryReadChar(this Stream stream, Encoding? encoding)
+        public static Char? TryReadChar(this Stream stream, Encoding? encoding)
         {
             if (stream is null)
             {
@@ -91,22 +91,55 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentException("Stream not support reading");
             }
 
-            try
-            {
-                return ReadChar(stream, encoding);
-            }
-            catch (Exception)
+            encoding ??= Encoding.UTF8;
+            
+            Span<Byte> first = stackalloc Byte[1];
+            if (stream.Read(first) != 1)
             {
                 return null;
             }
+
+            Span<Char> symbol = stackalloc Char[1];
+            
+            if (first[0] <= 0x7F)
+            {
+                if (encoding.GetChars(first, symbol) != 1)
+                {
+                    return null;
+                }
+
+                return symbol[0];
+            }
+
+            Int32 remaining = (first[0] & 240) == 240 ? 3 : (first[0] & 224) == 224 ? 2 : (first[0] & 192) == 192 ? 1 : -1;
+            
+            if (remaining <= 0)
+            {
+                return null;
+            }
+
+            Span<Byte> buffer = stackalloc Byte[remaining + 1];
+            buffer[0] = first[0];
+
+            if (stream.Read(buffer.Slice(1)) != remaining)
+            {
+                return null;
+            }
+
+            if (encoding.GetChars(buffer, symbol) != 1)
+            {
+                return null;
+            }
+
+            return symbol[0];
         }
 
         public static IEnumerable<Char> ReadCharSequence(this Stream stream)
         {
-            return ReadCharSequence(stream, Encoding.UTF32);
+            return ReadCharSequence(stream, Encoding.UTF8);
         }
 
-        internal static IEnumerable<Char> ReadCharSequence(this Stream stream, Encoding? encoding)
+        public static IEnumerable<Char> ReadCharSequence(this Stream stream, Encoding? encoding)
         {
             if (stream is null)
             {

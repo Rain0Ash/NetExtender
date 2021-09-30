@@ -36,7 +36,12 @@ namespace NetExtender.Crypto.CryptKey
             public static ICryptKey KeyNone { get; } = Default.Clone(CryptAction.None);
         }
 
-        public static ICryptKey Create(CryptAction crypt, CryptType type = CryptType.AES)
+        public static ICryptKey Create(CryptAction crypt)
+        {
+            return Create(crypt, CryptType.AES);
+        }
+
+        public static ICryptKey Create(CryptAction crypt, CryptType type)
         {
             return type switch
             {

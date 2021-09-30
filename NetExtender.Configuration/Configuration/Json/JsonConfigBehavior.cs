@@ -16,7 +16,7 @@ namespace NetExtender.Configuration.Json
     {
         protected static JsonSerializerSettings Default { get; } = new DefaultJsonSerializerSettings().RenameProperty(typeof(DictionaryTreeNode<String, String>), "Tree", "Config");
 
-        public JsonSerializerSettings Settings { get; init; } = Default;
+        public JsonSerializerSettings? Settings { get; init; } = Default;
         
         public JsonConfigBehavior(String? path = null)
             : this(path, ConfigOptions.None)
@@ -36,12 +36,12 @@ namespace NetExtender.Configuration.Json
         protected override DictionaryTree<String, String>? DeserializeConfig(String config)
         {
             return String.IsNullOrWhiteSpace(config) ? new DictionaryTree<String, String>() : 
-                JsonConvert.DeserializeObject<DictionaryTree<String, String>>(config, Settings);
+                JsonConvert.DeserializeObject<DictionaryTree<String, String>>(config, Settings ?? Default);
         }
 
-        protected override String SerializeConfig()
+        protected override String? SerializeConfig()
         {
-            return JsonConvert.SerializeObject(Config, Settings);
+            return JsonConvert.SerializeObject(Config, Settings ?? Default);
         }
     }
 }

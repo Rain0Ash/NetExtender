@@ -42,7 +42,7 @@ namespace NetExtender.Registry.Interfaces
         public Boolean GetValue<T>(String? key, IEnumerable<String>? sections, out T? result);
         public String? GetValue(String? key);
         public String? GetValue(String? key, params String[]? sections);
-        public String? GetValue(String key, IEnumerable<String>? sections);
+        public String? GetValue(String? key, IEnumerable<String>? sections);
         public String? GetValue(String? key, out RegistryValueKind kind);
         public String? GetValue(String? key, out RegistryValueKind kind, params String[]? sections);
         public String? GetValue(String? key, IEnumerable<String>? sections, out RegistryValueKind kind);

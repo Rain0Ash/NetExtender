@@ -47,6 +47,33 @@
         <DesignTime>True</DesignTime>
         <DependentUpon>GenericBitUtilities.tt</DependentUpon>
       </Compile>
+      <Compile Update="Utilities\Types\Enumerable\PredicateEnumerableUtilities.cs">
+        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utilities\Types\Enumerable\SelectorEnumerableUtilities.cs">
+        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utilities\Types\Enumerable\CollectionEnumerableUtilities.cs">
+        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utilities\Types\Enumerable\ConvertEnumerableUtilities.cs">
+        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utilities\Types\Enumerable\ItemEnumerableUtilities.cs">
+        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utilities\Types\Enumerable\MathEnumerableUtilities.cs">
+        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utilities\Types\Enumerable\FactoryEnumerableUtilities.cs">
+        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utilities\Types\Enumerable\ConcatEnumerableUtilities.cs">
+        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utilities\Types\Enumerable\MathArrayUtilities.cs">
+        <DependentUpon>ArrayUtilities.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>

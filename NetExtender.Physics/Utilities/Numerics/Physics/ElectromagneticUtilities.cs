@@ -272,7 +272,7 @@ namespace NetExtender.Utilities.Numerics.Physics
             {
                 <= 0 => frequency,
                 >= PhysicsUtilities.C => throw new ArgumentOutOfRangeException(nameof(velocity)),
-                _ => frequency * (1 - velocity * velocity / PhysicsUtilities.SquareC).Sqrt() / (1 - velocity / PhysicsUtilities.C * MathUtilities.Cos(angle))
+                _ => frequency * (1 - velocity * velocity / PhysicsUtilities.SquareC).Sqrt() / (1 - velocity / PhysicsUtilities.C * angle.Cos())
             };
         }
     }

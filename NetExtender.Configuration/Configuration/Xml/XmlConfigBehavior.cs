@@ -3,53 +3,58 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Json;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Utilities.Serialization;
 using NetExtender.Types.Trees;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Xml
 {
     public class XmlConfigBehavior : JsonConfigBehavior
     {
-        public XmlConfigBehavior(String path = null, ConfigOptions options = ConfigOptions.None)
+        public XmlConfigBehavior(String? path = null, ConfigOptions options = ConfigOptions.None)
             : this(path, null, options)
         {
         }
         
-        public XmlConfigBehavior(String path, ICryptKey crypt, ConfigOptions options = ConfigOptions.None)
+        public XmlConfigBehavior(String? path, ICryptKey? crypt, ConfigOptions options = ConfigOptions.None)
             : base(ValidatePathOrGetDefault(path, "xml"), crypt, options)
         {
         }
 
-        private static String Convert(String key)
+        [return: NotNullIfNotNull("key")]
+        private static String? Convert(String? key)
         {
-            return key.Replace(' ', '_');
+            return key?.Replace(' ', '_');
         }
         
-        private static IEnumerable<String> Convert(IEnumerable<String> sections)
+        [return: NotNullIfNotNull("sections")]
+        private static IEnumerable<String>? Convert(IEnumerable<String>? sections)
         {
-            return sections.Select(Convert);
+            return sections?.Select(Convert).WhereNotNull();
         }
 
-        public override String Get(String key, IEnumerable<String> sections)
+        public override String? Get(String? key, IEnumerable<String>? sections)
         {
             return base.Get(Convert(key), Convert(sections));
         }
 
-        public override Boolean Set(String key, String value, IEnumerable<String> sections)
+        public override Boolean Set(String? key, String? value, IEnumerable<String>? sections)
         {
             return base.Set(Convert(key), value, Convert(sections));
         }
 
-        protected override String SerializeConfig()
+        protected override String? SerializeConfig()
         {
-            return XmlUtilities.ToXml(base.SerializeConfig(), "Config");
+            String? json = base.SerializeConfig();
+            return json is not null ? XmlUtilities.ToXml(json, "Config") : json;
         }
 
-        protected override DictionaryTree<String, String> DeserializeConfig(String config)
+        protected override DictionaryTree<String, String>? DeserializeConfig(String config)
         {
             if (String.IsNullOrWhiteSpace(config))
             {

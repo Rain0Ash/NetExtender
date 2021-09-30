@@ -19,6 +19,6 @@ namespace NetExtender.Crypto
 
     public static partial class Cryptography
     {
-        public static ImmutableArray<Byte> DefaultHash { get; } = Hashing(Encoding.UTF8.GetBytes(Path.Join(Environment.MachineName, Environment.UserName))).ToImmutableArray();
+        public static ImmutableArray<Byte> DefaultHash { get; } = Hashing(Encoding.UTF8.GetBytes(Path.Join(Environment.MachineName, Environment.UserName)), HashType.MD5).ToImmutableArray();
     }
 }

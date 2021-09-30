@@ -356,7 +356,7 @@ namespace NetExtender.Utilities.Threading
 
             if (!process.StartInfo.RedirectStandardOutput)
             {
-                throw new ArgumentException("Process must redirect standart output");
+                throw new ArgumentException("Process must redirect standard output");
             }
 
             List<String> output = new List<String>(32);
@@ -410,7 +410,7 @@ namespace NetExtender.Utilities.Threading
 
             if (!process.StartInfo.RedirectStandardError)
             {
-                throw new ArgumentException("Process must redirect standart output");
+                throw new ArgumentException("Process must redirect standard output");
             }
 
             List<String> error = new List<String>(16);

@@ -33,21 +33,26 @@ namespace NetExtender.Configuration.Ram
         {
         }
 
-        public override Boolean Set(String key, String? value, IEnumerable<String>? sections)
+        public override Boolean Set(String? key, String? value, IEnumerable<String>? sections)
         {
+            if (key is null)
+            {
+                return false;
+            }
+            
             if (value is null)
             {
                 return Config.Remove(key);
             }
 
-            IImmutableList<String> imsections = sections.AsIImmutableList();
+            IImmutableList<String> immutable = sections.AsIImmutableList();
 
-            if (Get(key, imsections) == value)
+            if (Get(key, immutable) == value)
             {
                 return false;
             }
 
-            Config[key, imsections].Value = value;
+            Config[key, immutable].Value = value;
             return true;
         }
     }

@@ -15,9 +15,9 @@ namespace NetExtender.Configuration.Interfaces
         public String Path { get; }
         public ConfigOptions Options { get; }
         public Boolean IsReadOnly { get; }
-        public Boolean ThrowOnReadOnly { get; set; }
-        public Boolean CryptByDefault { get; set; }
-        public ConfigPropertyOptions DefaultOptions { get; set; }
+        public Boolean ThrowOnReadOnly { get; }
+        public Boolean CryptByDefault { get; }
+        public ConfigPropertyOptions DefaultOptions { get; }
 
         public String? GetValue(String? key, params String[]? sections)
         {

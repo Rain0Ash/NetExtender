@@ -4,13 +4,13 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using NetExtender.Exceptions;
 using NetExtender.Exceptions.Enum;
-using NetExtender.Types.Arrays;
 using NetExtender.Types.Enums;
 using NetExtender.Types.Enums.Attributes;
 using NetExtender.Types.Enums.Interfaces;
@@ -200,7 +200,7 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
-        public static IReadOnlyList<T> GetValues<T>() where T : unmanaged, Enum
+        public static ReadOnlyCollection<T> GetValues<T>() where T : unmanaged, Enum
         {
             return CacheValues<T>.Values;
         }
@@ -220,7 +220,7 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
-        public static IReadOnlyList<T> GetValuesWithoutDefault<T>() where T : unmanaged, Enum
+        public static ReadOnlyCollection<T> GetValuesWithoutDefault<T>() where T : unmanaged, Enum
         {
             return CacheValuesWithoutDefault<T>.Values;
         }
@@ -230,7 +230,7 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
-        public static IReadOnlyList<String> GetNames<T>() where T : unmanaged, Enum
+        public static ReadOnlyCollection<String> GetNames<T>() where T : unmanaged, Enum
         {
             return CacheNames<T>.Names;
         }
@@ -251,7 +251,7 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
-        public static IReadOnlyList<EnumMember<T>> GetMembers<T>() where T : unmanaged, Enum
+        public static ReadOnlyCollection<EnumMember<T>> GetMembers<T>() where T : unmanaged, Enum
         {
             return CacheMembers<T>.Members;
         }
@@ -852,7 +852,7 @@ namespace NetExtender.Utilities.Types
 
         private static class CacheValues<T> where T : unmanaged, Enum
         {
-            public static ReadOnlyArray<T> Values { get; }
+            public static ReadOnlyCollection<T> Values { get; }
             public static Boolean IsEmpty { get; }
 
             static CacheValues()
@@ -866,7 +866,7 @@ namespace NetExtender.Utilities.Types
         
         private static class CacheValuesWithoutDefault<T> where T : unmanaged, Enum
         {
-            public static ReadOnlyArray<T> Values { get; }
+            public static ReadOnlyCollection<T> Values { get; }
 
             public static Boolean IsEmpty
             {
@@ -884,7 +884,7 @@ namespace NetExtender.Utilities.Types
 
         private static class CacheNames<T> where T : unmanaged, Enum
         {
-            public static ReadOnlyArray<String> Names { get; }
+            public static ReadOnlyCollection<String> Names { get; }
 
             static CacheNames()
             {
@@ -895,7 +895,7 @@ namespace NetExtender.Utilities.Types
 
         private static class CacheMembers<T> where T : unmanaged, Enum
         {
-            public static ReadOnlyArray<EnumMember<T>> Members { get; }
+            public static ReadOnlyCollection<EnumMember<T>> Members { get; }
 
             static CacheMembers()
             {
@@ -926,7 +926,7 @@ namespace NetExtender.Utilities.Types
 
             static CacheMinMaxValues()
             {
-                ReadOnlyArray<T> values = CacheValues<T>.Values;
+                ReadOnlyCollection<T> values = CacheValues<T>.Values;
                 MinValue = values.DefaultIfEmpty().Min();
                 MaxValue = values.DefaultIfEmpty().Max();
             }

@@ -145,7 +145,7 @@ namespace NetExtender.Crypto.Hashes.XXHash
         /// <param name="v3"></param>
         /// <param name="v4"></param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static unsafe void UnsafeAlign(Byte[] data, Int32 l, ref UInt64 v1, ref UInt64 v2, ref UInt64 v3, ref UInt64 v4)
+        private static unsafe void UnsafeAlign(ReadOnlySpan<Byte> data, Int32 l, ref UInt64 v1, ref UInt64 v2, ref UInt64 v3, ref UInt64 v4)
         {
             unchecked
             {
@@ -193,7 +193,7 @@ namespace NetExtender.Crypto.Hashes.XXHash
         /// <param name="seed"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static unsafe UInt64 UnsafeFinal(Byte[] data, Int32 l, ref UInt64 v1, ref UInt64 v2, ref UInt64 v3, ref UInt64 v4, Int64 length, UInt64 seed)
+        private static unsafe UInt64 UnsafeFinal(ReadOnlySpan<Byte> data, Int32 l, ref UInt64 v1, ref UInt64 v2, ref UInt64 v3, ref UInt64 v4, Int64 length, UInt64 seed)
         {
             unchecked
             {

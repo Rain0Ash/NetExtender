@@ -14,10 +14,4 @@
       <ProjectReference Include="..\NetExtender.Cryptography\NetExtender.Cryptography.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Update="Configuration\Property.cs">
-        <DependentUpon>Config.cs</DependentUpon>
-      </Compile>
-    </ItemGroup>
-
 </Project>

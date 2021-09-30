@@ -1309,7 +1309,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
 
-            if (start + count >= builder.Length)
+            if (start + count > builder.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
@@ -1470,7 +1470,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return LastIndexOf(builder, value, start, builder.Length - start);
+            return LastIndexOf(builder, value, start, start + 1);
         }
 
         public static Int32 LastIndexOf(this StringBuilder builder, Char value, Int32 start, Int32 count)
@@ -1490,12 +1490,12 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
 
-            if (start + count >= builder.Length)
+            if (start + count > builder.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
             
-            for (Int32 i = builder.Length - count - 1; i >= start; i--)
+            for (Int32 i = builder.Length - count; i >= start; i--)
             {
                 if (builder[i] == value)
                 {

@@ -9,8 +9,8 @@ namespace NetExtender.Types.Sets
 {
     public sealed class BitSet : ISet
     {
-        private readonly BitArray _bits;
-        
+        private BitArray Bits { get; }
+
         public Int32 Count { get; }
         
         Boolean ICollection.IsSynchronized
@@ -32,27 +32,27 @@ namespace NetExtender.Types.Sets
         public BitSet(Int32 count)
         {
             Count = count;
-            _bits = new BitArray(count);
+            Bits = new BitArray(count);
         }
 
         public void Clear()
         {
-            _bits.SetAll(false);
+            Bits.SetAll(false);
         }
 
         public void Clear(Int32 index)
         {
-            _bits.Set(index, false);
+            Bits.Set(index, false);
         }
 
         public void Set(Int32 index)
         {
-            _bits.Set(index, true);
+            Bits.Set(index, true);
         }
 
         public Boolean Get(Int32 index)
         {
-            return _bits.Get(index);
+            return Bits.Get(index);
         }
 
         public Int32 NextSet(Int32 startFrom)
@@ -63,7 +63,7 @@ namespace NetExtender.Types.Sets
                 return -1;
             }
 
-            Boolean res = _bits.Get(offset);
+            Boolean res = Bits.Get(offset);
             // locate non-empty slot
             while (!res)
             {
@@ -72,7 +72,7 @@ namespace NetExtender.Types.Sets
                     return -1;
                 }
 
-                res = _bits.Get(offset);
+                res = Bits.Get(offset);
             }
 
             return offset;
@@ -86,7 +86,7 @@ namespace NetExtender.Types.Sets
                 return -1;
             }
 
-            Boolean res = _bits.Get(offset);
+            Boolean res = Bits.Get(offset);
             // locate non-empty slot
             while (res)
             {
@@ -95,7 +95,7 @@ namespace NetExtender.Types.Sets
                     return -1;
                 }
 
-                res = _bits.Get(offset);
+                res = Bits.Get(offset);
             }
 
             return offset;
@@ -105,32 +105,32 @@ namespace NetExtender.Types.Sets
         {
             for (Int32 i = 0; i < other.Count; i++)
             {
-                _bits[i] = other[i];
+                Bits[i] = other[i];
             }
         }
 
         public Int32[] ToIntArray()
         {
             Int32[] result = new Int32[Count / 32];
-            _bits.CopyTo(result, 0);
+            Bits.CopyTo(result, 0);
             return result;
         }
 
         public Byte[] ToByteArray()
         {
             Byte[] result = new Byte[Count / 8];
-            _bits.CopyTo(result, 0);
+            Bits.CopyTo(result, 0);
             return result;
         }
         
         void ICollection.CopyTo(Array array, Int32 index)
         {
-            _bits.CopyTo(array, index);
+            Bits.CopyTo(array, index);
         }
 
         public IEnumerator GetEnumerator()
         {
-            return _bits.GetEnumerator();
+            return Bits.GetEnumerator();
         }
         
         public Boolean this[Int32 index]

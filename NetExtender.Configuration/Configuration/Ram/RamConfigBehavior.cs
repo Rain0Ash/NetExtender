@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using NetExtender.Configuration.Behavior;
 using NetExtender.Configuration.Common;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Types.Trees;
@@ -31,16 +32,21 @@ namespace NetExtender.Configuration.Ram
         public RamConfigBehavior(DictionaryTree<String, String> config, String? path, ICryptKey? crypt, ConfigOptions options = ConfigOptions.None)
             : base(path ?? "RAM", crypt, options)
         {
-            Config = config;
+            Config = config ?? throw new ArgumentNullException(nameof(config));
         }
 
-        public override String Get(String key, IEnumerable<String>? sections)
+        public override String? Get(String? key, IEnumerable<String>? sections)
         {
-            return Config[key, sections].Value;
+            return key is not null ? Config[key, sections].Value : null;
         }
 
-        public override Boolean Set(String key, String? value, IEnumerable<String>? sections)
+        public override Boolean Set(String? key, String? value, IEnumerable<String>? sections)
         {
+            if (key is null)
+            {
+                return false;
+            }
+            
             if (value is null)
             {
                 return Config.Remove(key);
