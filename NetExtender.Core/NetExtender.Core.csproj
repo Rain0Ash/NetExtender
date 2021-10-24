@@ -74,6 +74,30 @@
       <Compile Update="Utilities\Types\Enumerable\MathArrayUtilities.cs">
         <DependentUpon>ArrayUtilities.cs</DependentUpon>
       </Compile>
+      <Compile Update="Utilities\Types\Enumerable\PredicateQueryableUtilities.cs">
+        <DependentUpon>QueryableUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utilities\Types\Enumerable\OrderEnumerableUtilities.cs">
+        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utilities\Types\Enumerable\GroupEnumerableUtilities.cs">
+        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utilities\Types\Enumerable\ItemQueryableUtilities.cs">
+        <DependentUpon>QueryableUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utilities\Types\Enumerable\MathQueryableUtilities.cs">
+        <DependentUpon>QueryableUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utilities\Types\Enumerable\OrderQueryableUtilities.cs">
+        <DependentUpon>QueryableUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utilities\Types\Enumerable\SelectorQueryableUtilities.cs">
+        <DependentUpon>QueryableUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utilities\Types\Enumerable\GroupQueryableUtilities.cs">
+        <DependentUpon>QueryableUtilities.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>

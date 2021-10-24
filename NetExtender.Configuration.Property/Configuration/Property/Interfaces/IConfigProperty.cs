@@ -10,7 +10,7 @@ namespace NetExtender.Configuration.Property.Interfaces
         public new T DefaultValue { get; set; }
         public new Boolean ThrowOnInvalid { get; set; }
         public new Boolean ThrowOnReadOnly { get; set; }
-        public new TryConverter<String, T> Converter {get; set; }
+        public new TryConverter<String, T> Converter { get; set; }
         public void SetValue(T value);
         public T? GetOrSetValue();
         public void ResetValue();

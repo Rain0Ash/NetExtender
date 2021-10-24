@@ -446,6 +446,11 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
             return source.WhereNotNull().SelectWhereNotNull().Select(selector);
         }
 
@@ -1156,6 +1161,81 @@ namespace NetExtender.Utilities.Types
             return TrySelectWhere(source, item => !where(item), predicate);
         }
         
+        /// <summary>
+        /// Return item if source is empty
+        /// </summary>
+        /// <param name="source">source</param>
+        /// <param name="alternate">returned item</param>
+        /// <typeparam name="T"></typeparam>
+        public static IEnumerable<T> WhereOr<T>(this IEnumerable<T> source, T alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                yield return alternate;
+                yield break;
+            }
+
+            do
+            {
+                yield return enumerator.Current;
+                
+            } while (enumerator.MoveNext());
+        }
+
+        /// <summary>
+        /// Return item if source is empty
+        /// </summary>
+        /// <param name="source">source</param>
+        /// <param name="predicate">predicate</param>
+        /// <param name="alternate">returned item</param>
+        /// <typeparam name="T"></typeparam>
+        public static IEnumerable<T> WhereOr<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, T alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.Where(predicate).WhereOr(alternate);
+        }
+
+        /// <summary>
+        /// Return item if predicate else return alternate
+        /// </summary>
+        /// <param name="source">source</param>
+        /// <param name="predicate">predicate</param>
+        /// <param name="alternate">returned item</param>
+        /// <typeparam name="T"></typeparam>
+        public static IEnumerable<T> WhereElse<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, T alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            foreach (T item in source)
+            {
+                yield return predicate(item) ? item : alternate;
+            }
+        }
+        
         public static IEnumerable<T> NotEmptyOr<T>(this IEnumerable<T>? source, params T[] alternate)
         {
             if (alternate is null)
@@ -1200,6 +1280,92 @@ namespace NetExtender.Utilities.Types
                 yield return enumerator.Current;
                 
             } while (enumerator.MoveNext());
+        }
+        
+        /// <summary>
+        /// Combines two Enumerable objects into a sequence of Tuples containing each element
+        /// of the source Enumerable in the first position with the element that has the same
+        /// index in the second Enumerable in the second position.
+        /// </summary>
+        /// <typeparam name="T1">The type of the elements of <paramref name="first"/>.</typeparam>
+        /// <typeparam name="T2">The type of the elements of <paramref name="second"/>.</typeparam>
+        /// <typeparam name="T3">The type of the elements of <paramref name="third"/>.</typeparam>
+        /// <param name="first">The first sequence.</param>
+        /// <param name="second">The second sequence.</param>
+        /// <param name="third">The third sequence.</param>
+        /// <returns>The output sequence will be as long as the shortest input sequence.</returns>
+        public static IEnumerable<(T1 First, T2 Second, T3 Third)> Zip<T1, T2, T3>(this IEnumerable<T1> first, IEnumerable<T2> second, IEnumerable<T3> third)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+
+            if (third is null)
+            {
+                throw new ArgumentNullException(nameof(third));
+            }
+
+            using IEnumerator<T1> enumerator1 = first.GetEnumerator();
+            using IEnumerator<T2> enumerator2 = second.GetEnumerator();
+            using IEnumerator<T3> enumerator3 = third.GetEnumerator();
+
+            while (enumerator1.MoveNext() && enumerator2.MoveNext() && enumerator3.MoveNext())
+            {
+                yield return (enumerator1.Current, enumerator2.Current, enumerator3.Current);
+            }
+        }
+
+        /// <summary>
+        /// Combines two Enumerable objects into a sequence of Tuples containing each element
+        /// of the source Enumerable in the first position with the element that has the same
+        /// index in the second Enumerable in the second position.
+        /// </summary>
+        /// <typeparam name="T1">The type of the elements of <paramref name="first"/>.</typeparam>
+        /// <typeparam name="T2">The type of the elements of <paramref name="second"/>.</typeparam>
+        /// <typeparam name="T3">The type of the elements of <paramref name="third"/>.</typeparam>
+        /// <typeparam name="T4">The type of the elements of <paramref name="fourth"/>.</typeparam>
+        /// <param name="first">The first sequence.</param>
+        /// <param name="second">The second sequence.</param>
+        /// <param name="third">The third sequence.</param>
+        /// <param name="fourth">The fourth sequence.</param>
+        /// <returns>The output sequence will be as long as the shortest input sequence.</returns>
+        public static IEnumerable<(T1 First, T2 Second, T3 Third, T4 Fourth)> Zip<T1, T2, T3, T4>(this IEnumerable<T1> first, IEnumerable<T2> second, IEnumerable<T3> third, IEnumerable<T4> fourth)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+
+            if (third is null)
+            {
+                throw new ArgumentNullException(nameof(third));
+            }
+
+            if (fourth is null)
+            {
+                throw new ArgumentNullException(nameof(fourth));
+            }
+
+            using IEnumerator<T1> enumerator1 = first.GetEnumerator();
+            using IEnumerator<T2> enumerator2 = second.GetEnumerator();
+            using IEnumerator<T3> enumerator3 = third.GetEnumerator();
+            using IEnumerator<T4> enumerator4 = fourth.GetEnumerator();
+
+            while (enumerator1.MoveNext() && enumerator2.MoveNext() && enumerator3.MoveNext() && enumerator4.MoveNext())
+            {
+                yield return (enumerator1.Current, enumerator2.Current, enumerator3.Current, enumerator4.Current);
+            }
         }
         
         /// <summary>

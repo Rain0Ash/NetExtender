@@ -250,11 +250,6 @@ namespace NetExtender.Utilities.Types
                 return true;
             }
 
-            if (value.Length % 2 == 1)
-            {
-                return false;
-            }
-
             IReadOnlyMap<Char, Char> brackets = pairs.AsIReadOnlyMap();
 
             Stack<Char> order = new Stack<Char>();

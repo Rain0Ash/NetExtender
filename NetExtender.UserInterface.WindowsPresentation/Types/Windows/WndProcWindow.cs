@@ -18,22 +18,22 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             Closed += DisposeWndProc;
         }
         
-        protected virtual void WndProc(ref WinMessage message)
+        protected virtual Boolean WndProc(ref WinMessage message)
         {
+            return false;
         }
         
         private IntPtr WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, ref Boolean handled)
         {
             WinMessage message = new WinMessage(hwnd, msg, wParam, lParam);
-
-            WndProc(ref message);
+            handled = WndProc(ref message);
 
             return IntPtr.Zero;
         }
 
         private void InitizalizeWndProc(Object? sender, RoutedEventArgs args)
         {
-            Hwnd = (HwndSource?) PresentationSource.FromDependencyObject(this);
+            Hwnd = HwndSource.FromHwnd(Handle);
             Hwnd?.AddHook(WndProc);
         }
 

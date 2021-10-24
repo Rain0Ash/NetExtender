@@ -36,25 +36,23 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            List<T> values = source.ToList();
-            return values.Count > 0 ? values.GetRandom() : Random<T>();
+            T[] values = source.ToArray();
+            return values.Length > 0 ? values.GetRandom() : Random<T>();
         }
 
         public static IEnumerable<Decimal> AsDecimal<T>() where T : unmanaged, Enum
         {
             return CacheValues<T>.Values.OfType<IConvertible>().ToDecimal();
         }
-
-        public static IEnumerable<UInt64> AsUInt64<T>(Boolean negative = true) where T : unmanaged, Enum
+        
+        public static IEnumerable<UInt64> AsUInt64<T>() where T : unmanaged, Enum
         {
-            IEnumerable<Decimal> decimals = AsDecimal<T>();
+            return AsDecimal<T>().Select(ConvertUtilities.ToUInt64);
+        }
 
-            if (!negative)
-            {
-                decimals = decimals.Where(MathUtilities.IsPositive);
-            }
-
-            return decimals.Select(ConvertUtilities.ToUInt64);
+        public static IEnumerable<UInt64> AsUInt64<T>(Boolean negative) where T : unmanaged, Enum
+        {
+            return negative ? AsUInt64<T>() : AsDecimal<T>().Where(MathUtilities.IsPositive).Select(ConvertUtilities.ToUInt64);
         }
 
         public static Int32 GetCountOfFlags<T>() where T : unmanaged, Enum
@@ -65,7 +63,6 @@ namespace NetExtender.Utilities.Types
             }
 
             UInt64[] values = AsUInt64<T>().ToArray();
-
             return values.Length < 2 ? values.Length : values.Count(MathUtilities.IsPowerOf2);
         }
 
@@ -723,7 +720,7 @@ namespace NetExtender.Utilities.Types
                 return SByteOperation<T>.IsDefined(ref value);
             }
 
-            throw new ArgumentException(IsDefinedTypeMismatchMessage);
+            throw new ArgumentException(IsDefinedTypeMismatchMessage, nameof(value));
         }
 
         /// <summary>
@@ -739,7 +736,7 @@ namespace NetExtender.Utilities.Types
                 return ByteOperation<T>.IsDefined(ref value);
             }
 
-            throw new ArgumentException(IsDefinedTypeMismatchMessage);
+            throw new ArgumentException(IsDefinedTypeMismatchMessage, nameof(value));
         }
 
         /// <summary>
@@ -755,7 +752,7 @@ namespace NetExtender.Utilities.Types
                 return Int16Operation<T>.IsDefined(ref value);
             }
 
-            throw new ArgumentException(IsDefinedTypeMismatchMessage);
+            throw new ArgumentException(IsDefinedTypeMismatchMessage, nameof(value));
         }
 
         /// <summary>
@@ -771,7 +768,7 @@ namespace NetExtender.Utilities.Types
                 return UInt16Operation<T>.IsDefined(ref value);
             }
 
-            throw new ArgumentException(IsDefinedTypeMismatchMessage);
+            throw new ArgumentException(IsDefinedTypeMismatchMessage, nameof(value));
         }
 
         /// <summary>
@@ -787,7 +784,7 @@ namespace NetExtender.Utilities.Types
                 return Int32Operation<T>.IsDefined(ref value);
             }
 
-            throw new ArgumentException(IsDefinedTypeMismatchMessage);
+            throw new ArgumentException(IsDefinedTypeMismatchMessage, nameof(value));
         }
 
         /// <summary>
@@ -803,7 +800,7 @@ namespace NetExtender.Utilities.Types
                 return UInt32Operation<T>.IsDefined(ref value);
             }
 
-            throw new ArgumentException(IsDefinedTypeMismatchMessage);
+            throw new ArgumentException(IsDefinedTypeMismatchMessage, nameof(value));
         }
 
         /// <summary>
@@ -819,7 +816,7 @@ namespace NetExtender.Utilities.Types
                 return Int64Operation<T>.IsDefined(ref value);
             }
 
-            throw new ArgumentException(IsDefinedTypeMismatchMessage);
+            throw new ArgumentException(IsDefinedTypeMismatchMessage, nameof(value));
         }
 
         /// <summary>
@@ -835,7 +832,7 @@ namespace NetExtender.Utilities.Types
                 return UInt64Operation<T>.IsDefined(ref value);
             }
 
-            throw new ArgumentException(IsDefinedTypeMismatchMessage);
+            throw new ArgumentException(IsDefinedTypeMismatchMessage, nameof(value));
         }
 
         private static class CacheType<T> where T : unmanaged, Enum

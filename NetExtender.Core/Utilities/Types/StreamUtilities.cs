@@ -152,6 +152,101 @@ namespace NetExtender.Utilities.Types
             }
         }
 
+        public static Int32 ReadUtfChar(this Stream stream)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            if (!stream.CanRead)
+            {
+                throw new ArgumentException("Stream not support reading");
+            }
+            
+            Span<Byte> first = stackalloc Byte[1];
+            if (stream.Read(first) != 1)
+            {
+                throw new EndOfStreamException();
+            }
+
+            if (first[0] <= 0x7F)
+            {
+                return first[0];
+            }
+
+            Int32 remaining = (first[0] & 240) == 240 ? 3 : (first[0] & 224) == 224 ? 2 : (first[0] & 192) == 192 ? 1 : -1;
+            
+            if (remaining <= 0)
+            {
+                throw new InvalidOperationException("Invalid sequence.");
+            }
+
+            Span<Byte> buffer = stackalloc Byte[remaining + 1];
+            buffer[0] = first[0];
+
+            if (stream.Read(buffer.Slice(1)) != remaining)
+            {
+                throw new EndOfStreamException();
+            }
+
+            return BitConverter.ToInt32(buffer);
+        }
+
+        public static Int32? TryReadUtfChar(this Stream stream)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            if (!stream.CanRead)
+            {
+                throw new ArgumentException("Stream not support reading");
+            }
+
+            Span<Byte> first = stackalloc Byte[1];
+            if (stream.Read(first) != 1)
+            {
+                return null;
+            }
+
+            if (first[0] <= 0x7F)
+            {
+                return first[0];
+            }
+
+            Int32 remaining = (first[0] & 240) == 240 ? 3 : (first[0] & 224) == 224 ? 2 : (first[0] & 192) == 192 ? 1 : -1;
+            
+            if (remaining <= 0)
+            {
+                return null;
+            }
+
+            Span<Byte> buffer = stackalloc Byte[remaining + 1];
+            buffer[0] = first[0];
+
+            if (stream.Read(buffer.Slice(1)) != remaining)
+            {
+                return null;
+            }
+
+            return BitConverter.ToInt32(buffer);
+        }
+
+        public static IEnumerable<Int32> ReadUtfCharSequence(this Stream stream)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            while (stream.TryReadUtfChar() is Int32 symbol)
+            {
+                yield return symbol;
+            }
+        }
+
         public static void CopyStream(this Stream input, Stream output)
         {
             CopyStream(input, output, 0);

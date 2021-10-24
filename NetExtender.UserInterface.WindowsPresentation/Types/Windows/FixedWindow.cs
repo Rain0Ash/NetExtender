@@ -29,6 +29,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         }
 
         private InterfaceCloseReason _reason;
+
         public InterfaceCloseReason CloseReason
         {
             get
@@ -48,7 +49,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             }
         }
 
-        public event InterfaceClosingEventHandler WindowClosing = null!;
+        public event InterfaceClosingEventHandler WindowClosing;
         public event SizeChangeToggleHandler SizeChangeToggle = null!;
 
         protected FixedWindow()
@@ -58,8 +59,8 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             Closing += OnClosing;
             WindowClosing += DisableIconClickExit;
         }
-        
-        protected override void WndProc(ref WinMessage m)
+
+        protected override Boolean WndProc(ref WinMessage m)
         {
             switch (m.Message)
             {
@@ -76,34 +77,23 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
                     break;
                 case WM.ENTERSIZEMOVE:
-                {
-                    SizeChangeToggleEventArgs args = new SizeChangeToggleEventArgs {End = false};
-                    OnSizeChangeToggle(args);
-
-                    if (args.Handled)
-                    {
-                        return;
-                    }
-                    
-                    break;
-                }
                 case WM.EXITSIZEMOVE:
                 {
-                    SizeChangeToggleEventArgs args = new SizeChangeToggleEventArgs {End = true};
+                    SizeChangeToggleEventArgs args = new SizeChangeToggleEventArgs { End = m.Message == WM.EXITSIZEMOVE };
                     OnSizeChangeToggle(args);
 
                     if (args.Handled)
                     {
-                        return;
+                        return true;
                     }
-                    
+
                     break;
                 }
                 default:
                     break;
             }
 
-            base.WndProc(ref m);
+            return base.WndProc(ref m);
         }
 
         protected virtual void OnSizeChangeToggle(SizeChangeToggleEventArgs args)

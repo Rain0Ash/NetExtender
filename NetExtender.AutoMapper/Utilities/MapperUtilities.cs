@@ -65,7 +65,7 @@ namespace NetExtender.Utilities
             return TryMap(Mapper, value, out result);
         }
 
-        public static Boolean TryMap<T>(this IMapper mapper, Object? value, out T? result)
+        public static Boolean TryMap<T>(this IMapper mapper, Object? value, [MaybeNullWhen(false)] out T result)
         {
             if (mapper is null)
             {
@@ -126,7 +126,7 @@ namespace NetExtender.Utilities
                 throw new ArgumentNullException(nameof(mapper));
             }
             
-            Boolean MapInternal(T item, [MaybeNullWhen(false)] out TMap? result)
+            Boolean MapInternal(T item, [MaybeNullWhen(false)] out TMap result)
             {
                 return mapper.TryMap(item, out result);
             }

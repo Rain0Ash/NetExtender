@@ -363,7 +363,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(random));
             }
-
+            
             for (Int32 i = 0; i < source.Length; i++)
             {
                 Int32 j = random.Next(i, source.Length);

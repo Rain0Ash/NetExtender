@@ -735,5 +735,271 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(item => !remove.Contains(item));
         }
+        
+        public static IEnumerable<T> Slice<T>(this IEnumerable<T> source, Int32 index, Int32 count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (index > 0)
+            {
+                source = source.Skip(index);
+            }
+
+            if (count > 0)
+            {
+                source = source.Take(count);
+            }
+
+            return source;
+        }
+        
+        public static IEnumerable<T> Page<T>(this IEnumerable<T> source, Int32 index, Int32 size)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (index > 1 && size > 0)
+            {
+                source = source.Skip((index - 1) * size);
+            }
+
+            if (size > 0)
+            {
+                source = source.Take(size);
+            }
+
+            return source;
+        }
+        
+        public static IEnumerable<T> ThrowIf<T, TException>(this IEnumerable<T> source, Func<T, Boolean> predicate) where TException : Exception, new()
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            foreach (T item in source)
+            {
+                if (predicate(item))
+                {
+                    throw new TException();
+                }
+                
+                yield return item;
+            }
+        }
+        
+        public static IEnumerable<T> ThrowIf<T, TException>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate) where TException : Exception, new()
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            Int32 counter = 0;
+            foreach (T item in source)
+            {
+                if (predicate(item, counter++))
+                {
+                    throw new TException();
+                }
+                
+                yield return item;
+            }
+        }
+        
+        public static IEnumerable<T> ThrowIfNot<T, TException>(this IEnumerable<T> source, Func<T, Boolean> predicate) where TException : Exception, new()
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            foreach (T item in source)
+            {
+                if (!predicate(item))
+                {
+                    throw new TException();
+                }
+                
+                yield return item;
+            }
+        }
+        
+        public static IEnumerable<T> ThrowIfNot<T, TException>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate) where TException : Exception, new()
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            Int32 counter = 0;
+            foreach (T item in source)
+            {
+                if (!predicate(item, counter++))
+                {
+                    throw new TException();
+                }
+                
+                yield return item;
+            }
+        }
+        
+        public static IEnumerable<T> ThrowIfNull<T>(this IEnumerable<T> source)
+        {
+            return ThrowIfNull<T, ArgumentNullException>(source);
+        }
+
+        public static IEnumerable<T> ThrowIfNull<T, TException>(this IEnumerable<T> source) where TException : Exception, new()
+        {
+            return ThrowIf<T, TException>(source, item => item is null);
+        }
+        
+        public static IEnumerable<T> ThrowIfNull<T>(this IEnumerable<T?> source) where T : struct
+        {
+            return ThrowIfNull<T, InvalidOperationException>(source);
+        }
+
+        public static IEnumerable<T> ThrowIfNull<T, TException>(this IEnumerable<T?> source) where T : struct where TException : Exception, new()
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            foreach (T? item in source)
+            {
+                if (!item.HasValue)
+                {
+                    throw new TException();
+                }
+                
+                yield return item.Value;
+            }
+        }
+        
+        public static IEnumerable<T> DistinctThrow<T>(this IEnumerable<T> source)
+        {
+            return DistinctThrow(source, null);
+        }
+        
+        public static IEnumerable<T> DistinctThrow<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            HashSet<T> already = new HashSet<T>(comparer);
+
+            foreach (T item in source)
+            {
+                if (!already.Add(item))
+                {
+                    throw new ArgumentException($"Item {item} already in {nameof(source)}");
+                }
+                
+                yield return item;
+            }
+        }
+
+        public static IEnumerable<T> DistinctByThrow<T, TDistinct>(this IEnumerable<T> source, Func<T, TDistinct> selector)
+        {
+            return DistinctByThrow(source, selector, null);
+        }
+
+        public static IEnumerable<T> DistinctByThrow<T, TDistinct>(this IEnumerable<T> source, Func<T, TDistinct> selector, IEqualityComparer<TDistinct>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            HashSet<TDistinct> already = new HashSet<TDistinct>(comparer);
+
+            foreach (T item in source)
+            {
+                TDistinct distinct = selector(item);
+                if (!already.Add(distinct))
+                {
+                    throw new ArgumentException($"Item \"{distinct}\" already in {nameof(source)}");
+                }
+                
+                yield return item;
+            }
+        }
+
+        /// <summary>
+        /// Returns distinct elements from a sequence using the provided value selector for equality comparison.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of source.</typeparam>
+        /// <typeparam name="TDistinct">The type of the value on which to distinct.</typeparam>
+        /// <param name="source">The source collection.</param>
+        /// <param name="selector">A transform function to apply to each element to select the value on which to distinct.</param>
+        public static IEnumerable<T> DistinctBy<T, TDistinct>(this IEnumerable<T> source, Func<T, TDistinct> selector)
+        {
+            return DistinctBy(source, selector, null);
+        }
+
+        /// <summary>
+        /// Returns distinct elements from a sequence using the provided value selector for equality comparison.
+        /// </summary>
+        /// <typeparam name="T">The type of the elements of source.</typeparam>
+        /// <typeparam name="TDistinct">The type of the value on which to distinct.</typeparam>
+        /// <param name="source">The source collection.</param>
+        /// <param name="selector">A transform function to apply to each element to select the value on which to distinct.</param>
+        /// <param name="comparer">Comparer</param>
+        public static IEnumerable<T> DistinctBy<T, TDistinct>(this IEnumerable<T> source, Func<T, TDistinct> selector, IEqualityComparer<TDistinct>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            HashSet<TDistinct> already = new HashSet<TDistinct>(comparer);
+
+            foreach (T item in source)
+            {
+                if (already.Add(selector(item)))
+                {
+                    yield return item;
+                }
+            }
+        }
     }
 }

@@ -12,8 +12,6 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Property
 {
-    
-    
     //TODO: refactoring
     public class ConfigProperty<T> : ConfigPropertyBase, IConfigProperty<T>, IReadOnlyValidable<T>, IFormattable
     {

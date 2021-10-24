@@ -3,20 +3,19 @@
 
 using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utilities.Types
 {
     public static partial class QueryableUtilities
     {
-        public static IOrderedEnumerable<T> AsOrderedEnumerable<T>(this IOrderedQueryable<T> source)
+        public static IQueryable<IGrouping<Type, T>> GroupByType<T>(this IQueryable<T> source)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return Unsafe.As<IOrderedQueryable<T>, IOrderedEnumerable<T>>(ref source);
+            return source.WhereNotNull().GroupBy(item => item!.GetType());
         }
     }
 }

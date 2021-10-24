@@ -10,8 +10,9 @@ namespace NetExtender.AspNet.Core.Middlewares
 {
     public class AccessRestrictionMiddleware
     {
+        public const Int32 AllowStatusCode = 0;
         public const Int32 DefaultRestrictionStatusCode = (Int32) HttpStatusCode.Forbidden;
-        
+
         protected RequestDelegate Next { get; }
 
         protected Func<HttpContext, Int32> AccessCondition { get; }
@@ -35,7 +36,7 @@ namespace NetExtender.AspNet.Core.Middlewares
         public AccessRestrictionMiddleware(RequestDelegate next, Func<HttpContext, Boolean>? access, Int32 reject)
         {
             Next = next ?? throw new ArgumentNullException(nameof(next));
-            AccessCondition = access is null ? Access : context => access(context) ? 0 : reject;
+            AccessCondition = access is null ? Access : context => access(context) ? AllowStatusCode : reject;
         }
 
         public AccessRestrictionMiddleware(RequestDelegate next, Func<HttpContext, HttpStatusCode>? access)
@@ -44,7 +45,7 @@ namespace NetExtender.AspNet.Core.Middlewares
             AccessCondition = access is null ? Access : context =>
             {
                 HttpStatusCode code = access(context);
-                return code >= HttpStatusCode.BadRequest ? (Int32) code : 0;
+                return code >= HttpStatusCode.BadRequest ? (Int32) code : AllowStatusCode;
             };
         }
 
@@ -56,13 +57,13 @@ namespace NetExtender.AspNet.Core.Middlewares
 
         protected virtual Int32 Access(HttpContext context)
         {
-            return 0;
+            return AllowStatusCode;
         }
         
         public async Task InvokeAsync(HttpContext context)
         {
             Int32 status = AccessCondition(context);
-            if (status > 0)
+            if (status > AllowStatusCode)
             {
                 context.Response.StatusCode = status;
                 return;

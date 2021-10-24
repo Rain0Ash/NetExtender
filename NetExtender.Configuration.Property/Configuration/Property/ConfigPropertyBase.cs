@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Reactive;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Property.Interfaces;
 using NetExtender.Configuration.Property.Interfaces.Common;

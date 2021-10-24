@@ -30,7 +30,7 @@ namespace NetExtender.AspNet.Core.Middlewares
 
         protected override Int32 Access(HttpContext context)
         {
-            return context.Request.IsLocalHost() ? 0 : RestrictionStatusCode;
+            return context.Request.IsLocalHost() ? AllowStatusCode : RestrictionStatusCode;
         }
     }
 }

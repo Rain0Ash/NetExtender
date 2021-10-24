@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
@@ -106,12 +107,15 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            foreach ((Int32 counter, T item) in source.Enumerate())
+            Int32 index = 0;
+            foreach (T item in source)
             {
                 if (predicate(item))
                 {
-                    return counter;
+                    return index;
                 }
+                
+                ++index;
             }
 
             return -1;
@@ -129,12 +133,15 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            foreach ((Int64 counter, T item) in source.LongEnumerate())
+            Int64 index = 0;
+            foreach (T item in source)
             {
                 if (predicate(item))
                 {
-                    return counter;
+                    return index;
                 }
+
+                ++index;
             }
 
             return -1;
@@ -1777,6 +1784,774 @@ namespace NetExtender.Utilities.Types
             return matches == count;
         }
         
+        public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            foreach (T item in source)
+            {
+                action(item);
+                yield return item;
+            }
+        }
+
+        public static IEnumerable<T> ForEachWhere<T>(this IEnumerable<T> source, Func<T, Boolean> where, Action<T> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            foreach (T item in source)
+            {
+                if (where(item))
+                {
+                    action(item);
+                }
+
+                yield return item;
+            }
+        }
+        
+        public static IEnumerable<T> ForEachWhere<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Action<T> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            Int32 index = 0;
+            foreach (T item in source)
+            {
+                if (where(item, index))
+                {
+                    action(item);
+                }
+
+                ++index;
+                yield return item;
+            }
+        }
+        
+        public static IEnumerable<T> ForEachWhereNot<T>(this IEnumerable<T> source, Func<T, Boolean> where, Action<T> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            return ForEachWhere(source, item => !where(item), action);
+        }
+        
+        public static IEnumerable<T> ForEachWhereNot<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Action<T> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            return ForEachWhere(source, (item, index) => !where(item, index), action);
+        }
+
+        public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            Int32 index = 0;
+            foreach (T item in source)
+            {
+                action(item, index);
+                ++index;
+                yield return item;
+            }
+        }
+
+        public static IEnumerable<T> ForEachWhere<T>(this IEnumerable<T> source, Func<T, Boolean> where, Action<T, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            Int32 index = 0;
+            foreach (T item in source)
+            {
+                if (where(item))
+                {
+                    action(item, index);
+                }
+
+                ++index;
+                yield return item;
+            }
+        }
+        
+        public static IEnumerable<T> ForEachWhere<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Action<T, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            Int32 index = 0;
+            foreach (T item in source)
+            {
+                if (where(item, index))
+                {
+                    action(item, index);
+                }
+
+                ++index;
+                yield return item;
+            }
+        }
+
+        public static IEnumerable<T> ForEachWhereNot<T>(this IEnumerable<T> source, Func<T, Boolean> where, Action<T, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            return ForEachWhere(source, item => !where(item), action);
+        }
+        
+        public static IEnumerable<T> ForEachWhereNot<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Action<T, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            return ForEachWhere(source, (item, index) => !where(item, index), action);
+        }
+        
+        public static IEnumerable<T> ForEachBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Action<TKey> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            foreach (T item in source)
+            {
+                action(selector(item));
+                yield return item;
+            }
+        }
+
+        public static IEnumerable<T> ForEachByWhere<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Boolean> where, Action<TKey> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            foreach (T item in source)
+            {
+                TKey select = selector(item);
+                if (where(select))
+                {
+                    action(select);
+                }
+
+                yield return item;
+            }
+        }
+        
+        public static IEnumerable<T> ForEachByWhere<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            Int32 index = 0;
+            foreach (T item in source)
+            {
+                TKey select = selector(item);
+                if (where(select, index))
+                {
+                    action(select);
+                }
+
+                ++index;
+                yield return item;
+            }
+        }
+        
+        public static IEnumerable<T> ForEachByWhereNot<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Boolean> where, Action<TKey> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            return ForEachByWhere(source, selector, item => !where(item), action);
+        }
+        
+        public static IEnumerable<T> ForEachByWhereNot<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            return ForEachByWhere(source, selector, (item, index) => !where(item, index), action);
+        }
+
+        public static IEnumerable<T> ForEachBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Action<TKey, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            Int32 index = 0;
+            foreach (T item in source)
+            {
+                action(selector(item), index);
+                ++index;
+                yield return item;
+            }
+        }
+
+        public static IEnumerable<T> ForEachByWhere<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Boolean> where, Action<TKey, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            Int32 index = 0;
+            foreach (T item in source)
+            {
+                TKey select = selector(item);
+                if (where(select))
+                {
+                    action(select, index);
+                }
+
+                ++index;
+                yield return item;
+            }
+        }
+        
+        public static IEnumerable<T> ForEachByWhere<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            Int32 index = 0;
+            foreach (T item in source)
+            {
+                TKey select = selector(item);
+                if (where(select, index))
+                {
+                    action(select, index);
+                }
+
+                ++index;
+                yield return item;
+            }
+        }
+
+        public static IEnumerable<T> ForEachByWhereNot<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Boolean> where, Action<TKey, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            return ForEachByWhere(source, selector, item => !where(item), action);
+        }
+        
+        public static IEnumerable<T> ForEachByWhereNot<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            return ForEachByWhere(source, selector, (item, index) => !where(item, index), action);
+        }
+
+        public static IEnumerable<T> ForEachEvery<T>(this IEnumerable<T> source, Action<T> action, Int32 every)
+        {
+            return ForEachEvery(source, action, every, false);
+        }
+
+        public static IEnumerable<T> ForEachEvery<T>(this IEnumerable<T> source, Action<T> action, Int32 every, Boolean first)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (every <= 1)
+            {
+                return ForEach(source, action);
+            }
+            
+            Int32 counter = first ? 0 : 1;
+            return source.ForEachWhere(_ => counter++ % every == 0, action);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> Progress<T>(this IEnumerable<T> source, IProgress<Int32> progress)
+        {
+            if (progress is null)
+            {
+                throw new ArgumentNullException(nameof(progress));
+            }
+
+            return Progress(source, progress.Report);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> Progress<T>(this IEnumerable<T> source, IProgress<Int32> progress, Int32 size)
+        {
+            if (progress is null)
+            {
+                throw new ArgumentNullException(nameof(progress));
+            }
+
+            return Progress(source, progress.Report, size);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> Progress<T>(this IEnumerable<T> source, Action callback)
+        {
+            if (callback is null)
+            {
+                throw new ArgumentNullException(nameof(callback));
+            }
+
+            return Progress(source, _ => callback.Invoke());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> Progress<T>(this IEnumerable<T> source, Action callback, Int32 size)
+        {
+            if (callback is null)
+            {
+                throw new ArgumentNullException(nameof(callback));
+            }
+
+            return Progress(source, _ => callback.Invoke(), size);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> Progress<T>(this IEnumerable<T> source, Action<Int32> callback)
+        {
+            return Progress(source, callback, 1);
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public static IEnumerable<T> Progress<T>(this IEnumerable<T> source, Action<Int32> callback, Int32 size)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (callback is null)
+            {
+                throw new ArgumentNullException(nameof(callback));
+            }
+
+            if (size <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(size));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                yield break;
+            }
+            
+            Int32 count = 0;
+            Int32 counter = 0;
+
+            do
+            {
+                T item = enumerator.Current;
+                
+                if (++counter >= size)
+                {
+                    count += counter;
+                    counter = 0;
+                    callback.Invoke(count);
+                }
+
+                if (!enumerator.MoveNext())
+                {
+                    count += counter;
+                    if (count % size > 0)
+                    {
+                        callback.Invoke(count);
+                    }
+
+                    yield return item;
+                    yield break;
+                }
+                
+                yield return item;
+
+            } while (true);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> LongProgress<T>(this IEnumerable<T> source, IProgress<Int64> progress)
+        {
+            if (progress is null)
+            {
+                throw new ArgumentNullException(nameof(progress));
+            }
+
+            return LongProgress(source, progress.Report);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> LongProgress<T>(this IEnumerable<T> source, IProgress<Int64> progress, Int64 size)
+        {
+            if (progress is null)
+            {
+                throw new ArgumentNullException(nameof(progress));
+            }
+
+            return LongProgress(source, progress.Report, size);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> LongProgress<T>(this IEnumerable<T> source, Action callback)
+        {
+            if (callback is null)
+            {
+                throw new ArgumentNullException(nameof(callback));
+            }
+
+            return LongProgress(source, _ => callback.Invoke());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> LongProgress<T>(this IEnumerable<T> source, Action callback, Int64 size)
+        {
+            if (callback is null)
+            {
+                throw new ArgumentNullException(nameof(callback));
+            }
+
+            return LongProgress(source, _ => callback.Invoke(), size);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> LongProgress<T>(this IEnumerable<T> source, Action<Int64> callback)
+        {
+            return LongProgress(source, callback, 1);
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public static IEnumerable<T> LongProgress<T>(this IEnumerable<T> source, Action<Int64> callback, Int64 size)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (callback is null)
+            {
+                throw new ArgumentNullException(nameof(callback));
+            }
+
+            if (size <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(size));
+            }
+            
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                yield break;
+            }
+            
+            Int64 count = 0;
+            Int64 counter = 0;
+
+            do
+            {
+                T item = enumerator.Current;
+                
+                if (++counter >= size)
+                {
+                    count += counter;
+                    counter = 0;
+                    callback.Invoke(count);
+                }
+
+                if (!enumerator.MoveNext())
+                {
+                    count += counter;
+                    if (count % size > 0)
+                    {
+                        callback.Invoke(count);
+                    }
+
+                    yield return item;
+                    yield break;
+                }
+                
+                yield return item;
+
+            } while (true);
+        }
+        
         /// <summary>
         /// Determines whether the given sequence is not empty.
         /// </summary>
@@ -1801,17 +2576,12 @@ namespace NetExtender.Utilities.Types
         /// </returns>
         public static Boolean IsNotEmpty<T>(this IEnumerable<T>? source, Func<T, Boolean> predicate)
         {
-            if (source is null)
-            {
-                return false;
-            }
-
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-
-            return source.Any(predicate);
+            
+            return source is not null && source.Any(predicate);
         }
 
         /// <summary>
@@ -1843,14 +2613,14 @@ namespace NetExtender.Utilities.Types
         /// </returns>
         public static Boolean IsEmpty<T>(this IEnumerable<T>? source, Func<T, Boolean> predicate)
         {
-            if (source is null)
-            {
-                return false;
-            }
-
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
+            }
+            
+            if (source is null)
+            {
+                return false;
             }
 
             return !source.Any(predicate);
@@ -1885,14 +2655,14 @@ namespace NetExtender.Utilities.Types
         /// </returns>
         public static Boolean IsNullOrEmpty<T>(this IEnumerable<T>? source, Func<T, Boolean> predicate)
         {
-            if (source is null)
-            {
-                return true;
-            }
-
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
+            }
+            
+            if (source is null)
+            {
+                return true;
             }
 
             return !source.Any(predicate);
