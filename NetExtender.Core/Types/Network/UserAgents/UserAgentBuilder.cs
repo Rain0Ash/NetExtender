@@ -44,7 +44,7 @@ namespace NetExtender.Types.Network.UserAgents
         {
             get
             {
-                return Cultures.GetRandom();
+                return Cultures.GetRandomOrDefault();
             }
         }
 

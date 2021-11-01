@@ -11,11 +11,11 @@ using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
-using NetExtender.Exceptions;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Collections;
 using NetExtender.Types.Strings.Interfaces;
-using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Core;
+using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {

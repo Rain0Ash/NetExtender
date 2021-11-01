@@ -4,9 +4,9 @@
 using System;
 using System.Security.Cryptography;
 using System.Text;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Crypto;
 using NetExtender.Utilities.Types;
-using NetExtender.Exceptions;
 using Rsa = System.Security.Cryptography.RSA;
 
 namespace NetExtender.Crypto

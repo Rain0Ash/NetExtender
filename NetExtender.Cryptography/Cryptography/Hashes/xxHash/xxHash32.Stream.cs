@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Buffers;
 using System.IO;
- using NetExtender.Utilities.Types;
+using NetExtender.Utilities.Types;
 
- namespace NetExtender.Crypto.Hashes.XXHash
+namespace NetExtender.Crypto.Hashes.XXHash
 {
     public static partial class XXHash32
     {

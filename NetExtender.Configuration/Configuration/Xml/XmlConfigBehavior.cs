@@ -8,20 +8,50 @@ using System.Linq;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Json;
 using NetExtender.Crypto.CryptKey.Interfaces;
-using NetExtender.Utilities.Serialization;
 using NetExtender.Types.Trees;
+using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Xml
 {
     public class XmlConfigBehavior : JsonConfigBehavior
     {
-        public XmlConfigBehavior(String? path = null, ConfigOptions options = ConfigOptions.None)
+        public XmlConfigBehavior()
+            : this(ConfigOptions.None)
+        {
+        }
+        
+        public XmlConfigBehavior(ConfigOptions options)
+            : this(null, null, options)
+        {
+        }
+        
+        public XmlConfigBehavior(ICryptKey? crypt)
+            : this(crypt, ConfigOptions.None)
+        {
+        }
+        
+        public XmlConfigBehavior(ICryptKey? crypt, ConfigOptions options)
+            : this(null, crypt, options)
+        {
+        }
+
+        public XmlConfigBehavior(String? path)
+            : this(path, ConfigOptions.None)
+        {
+        }
+
+        public XmlConfigBehavior(String? path, ConfigOptions options)
             : this(path, null, options)
         {
         }
         
-        public XmlConfigBehavior(String? path, ICryptKey? crypt, ConfigOptions options = ConfigOptions.None)
+        public XmlConfigBehavior(String? path, ICryptKey? crypt)
+            : this(path, crypt, ConfigOptions.None)
+        {
+        }
+        
+        public XmlConfigBehavior(String? path, ICryptKey? crypt, ConfigOptions options)
             : base(ValidatePathOrGetDefault(path, "xml"), crypt, options)
         {
         }

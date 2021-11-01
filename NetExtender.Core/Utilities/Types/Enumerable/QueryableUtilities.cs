@@ -3,7 +3,7 @@
 
 using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using NetExtender.Types.Collections;
 
 namespace NetExtender.Utilities.Types
 {
@@ -11,12 +11,7 @@ namespace NetExtender.Utilities.Types
     {
         public static IOrderedEnumerable<T> AsOrderedEnumerable<T>(this IOrderedQueryable<T> source)
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return Unsafe.As<IOrderedQueryable<T>, IOrderedEnumerable<T>>(ref source);
+            return new OrderedQueryableWrapper<T>(source ?? throw new ArgumentNullException(nameof(source)));
         }
     }
 }

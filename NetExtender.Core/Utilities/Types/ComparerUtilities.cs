@@ -5,14 +5,24 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
-using NetExtender.Comparers.Common;
-using NetExtender.Comparers.Interfaces;
+using NetExtender.Types.Comparers.Common;
+using NetExtender.Types.Comparers.Interfaces;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
     public static class ComparerUtilities
     {
+        public static IComparer<T> Reverse<T>(this IComparer<T> comparer)
+        {
+            return comparer switch
+            {
+                null => throw new ArgumentNullException(nameof(comparer)),
+                IReverseComparer<T> reverse => reverse.Original,
+                _ => new ReverseComparer<T>(comparer)
+            };
+        }
+
         public static IEqualityComparer<T> ToEqualityComparer<T>(this Func<T?, T?, Boolean> comparison)
         {
             if (comparison is null)

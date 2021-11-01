@@ -10,7 +10,7 @@ namespace NetExtender.Configuration.Property.Interfaces
         public event EventHandler<T> ValueChanged;  
         public Boolean ThrowOnInvalid { get; }
         public Boolean ThrowOnReadOnly { get; }
-        public T DefaultValue { get; }
+        public T Alternate { get; }
         public T Value { get; }
         public Boolean IsValid { get; }
         public Func<T?, Boolean> Validate { get; }

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using NetExtender.Configuration.Behavior;
 using NetExtender.Configuration.Common;
+using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Registry;
 using NetExtender.Registry.Interfaces;
 using NetExtender.Utilities.Application;
@@ -13,9 +14,9 @@ using NetExtender.Utilities.Registry;
 
 namespace NetExtender.Configuration.Windows.Registry
 {
-    public sealed class RegistryConfigBehavior : ConfigBehavior
+    public class RegistryConfigBehavior : ConfigBehavior
     {
-        private IRegistry Registry { get; }
+        protected IRegistry Registry { get; }
 
         public RegistryKeys RegistryKey
         {
@@ -25,14 +26,88 @@ namespace NetExtender.Configuration.Windows.Registry
             }
         }
 
-        public RegistryConfigBehavior(String? path = null, ConfigOptions options = ConfigOptions.None)
-            : base(String.IsNullOrEmpty(path) ? $"Software\\{ApplicationUtilities.FriendlyName}" : path, options)
+        protected static String GetDefaultPath(String? path)
         {
-            Registry = RegistryKeys.CurrentUser.Create(Path.Split(PathUtilities.Separators), !IsReadOnly);
+            return String.IsNullOrEmpty(path) ? $"Software\\{ApplicationUtilities.FriendlyName}" : path;
+        }
+        
+        public RegistryConfigBehavior()
+            : this(null, null, ConfigOptions.None)
+        {
+        }
+        
+        public RegistryConfigBehavior(ConfigOptions options)
+            : this(null, null, options)
+        {
+        }
+        
+        public RegistryConfigBehavior(ICryptKey? crypt)
+            : this(null, crypt, ConfigOptions.None)
+        {
+        }
+        
+        public RegistryConfigBehavior(ICryptKey? crypt, ConfigOptions options)
+            : this(null, crypt, options)
+        {
+        }
+        
+        public RegistryConfigBehavior(String? path)
+            : this(path, null, ConfigOptions.None)
+        {
+        }
+        
+        public RegistryConfigBehavior(String? path, ConfigOptions options)
+            : this(path, null, options)
+        {
+        }
+        
+        public RegistryConfigBehavior(String? path, ICryptKey? crypt)
+            : this(path, crypt, ConfigOptions.None)
+        {
         }
 
-        public RegistryConfigBehavior(RegistryKeys key, String path, ConfigOptions options = ConfigOptions.None)
-            : base(path, options)
+        public RegistryConfigBehavior(String? path, ICryptKey? crypt, ConfigOptions options)
+            : this(RegistryKeys.CurrentUser, path, crypt, options)
+        {
+        }
+        
+        public RegistryConfigBehavior(RegistryKeys key)
+            : this(key, null, null, ConfigOptions.None)
+        {
+        }
+        
+        public RegistryConfigBehavior(RegistryKeys key, ConfigOptions options)
+            : this(key, null, null, options)
+        {
+        }
+        
+        public RegistryConfigBehavior(RegistryKeys key, ICryptKey? crypt)
+            : this(key, null, crypt, ConfigOptions.None)
+        {
+        }
+
+        public RegistryConfigBehavior(RegistryKeys key, ICryptKey? crypt, ConfigOptions options)
+            : this(key, null, crypt, options)
+        {
+        }
+        
+        public RegistryConfigBehavior(RegistryKeys key, String? path)
+            : this(key, path, null, ConfigOptions.None)
+        {
+        }
+        
+        public RegistryConfigBehavior(RegistryKeys key, String? path, ConfigOptions options)
+            : this(key, path, null, options)
+        {
+        }
+        
+        public RegistryConfigBehavior(RegistryKeys key, String? path, ICryptKey? crypt)
+            : this(key, path, crypt, ConfigOptions.None)
+        {
+        }
+        
+        public RegistryConfigBehavior(RegistryKeys key, String? path, ICryptKey? crypt, ConfigOptions options)
+            : base(GetDefaultPath(path), crypt, options)
         {
             Registry = key.Create(Path.Split(PathUtilities.Separators), !IsReadOnly);
         }
@@ -46,6 +121,16 @@ namespace NetExtender.Configuration.Windows.Registry
         {
             Registry.SetValue(key, value, sections);
             return true;
+        }
+
+        public override String?[]? GetExistKeys()
+        {
+            return Registry.GetValueNames();
+        }
+
+        public override Boolean Reload()
+        {
+            return false;
         }
     }
 }

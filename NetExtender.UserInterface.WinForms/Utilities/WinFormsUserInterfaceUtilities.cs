@@ -5,10 +5,10 @@ using System;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Core.Workstation.Interfaces;
 using NetExtender.UserInterface;
 using NetExtender.UserInterface.Interfaces;
 using NetExtender.Workstation;
+using NetExtender.Workstation.Interfaces;
 
 namespace NetExtender.Utilities.UserInterface
 {

@@ -132,11 +132,11 @@ namespace NetExtender.Configuration.Property
 
         private Boolean _disposed;
 
-        protected ConfigPropertyBase(IPropertyConfigBase config, String key, ICryptKey cryptKey, ConfigPropertyOptions options, IEnumerable<String> sections)
+        protected ConfigPropertyBase(IPropertyConfigBase config, String key, ICryptKey cryptkey, ConfigPropertyOptions options, IEnumerable<String> sections)
         {
             Config = config;
             Key = key ?? throw new ArgumentNullException(nameof(key));
-            CryptKey = cryptKey;
+            CryptKey = cryptkey;
             Sections = sections.AsIImmutableList();
             Options = options;
         }

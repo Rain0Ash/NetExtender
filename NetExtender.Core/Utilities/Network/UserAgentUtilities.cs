@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
-using NetExtender.Exceptions;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Network.UserAgents;
 using NetExtender.Types.Network.UserAgents.Interfaces;
 using NetExtender.Types.Network.UserAgents.Specific;

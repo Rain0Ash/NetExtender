@@ -4,13 +4,42 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Microsoft.VisualBasic;
 using NetExtender.Combinatorics;
 
 namespace NetExtender.Utilities.Types
 {
     public static class CollectionUtilities
     {
+        public static T PopRandom<T>(this ICollection<T> collection)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            return TryPopRandom(collection, out T? result) ? result : throw new InvalidOperationException();
+        }
+        
+        public static Boolean TryPopRandom<T>(this ICollection<T> collection, [MaybeNullWhen(false)] out T result)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (collection.Count <= 0)
+            {
+                result = default;
+                return false;
+            }
+
+            result = collection.GetRandom();
+            return collection.Remove(result);
+        }
+        
         public static IList<IList<T>> GetCombinations<T>(this ICollection<T> collection, Int32 min = 1)
         {
             if (collection is null)
@@ -82,6 +111,41 @@ namespace NetExtender.Utilities.Types
             collection.AddRange(source.AsArray()!);
 
             return collection;
+        }
+
+        public static void CopyTo<T>(this IEnumerable<T> source, T[] array, Int32 index)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+            
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (source is ICollection<T> collection)
+            {
+                collection.CopyTo(array, index);
+            }
+
+            if (source is IReadOnlyCollection<T> count && count.Count + index > array.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(array));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            for (Int32 i = index; i < array.Length && enumerator.MoveNext(); i++)
+            {
+                array[i] = enumerator.Current;
+            }
         }
     }
 }

@@ -6,11 +6,11 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
-using Core.Workstation.Interfaces;
 using NetExtender.Types.Native.Windows;
 using NetExtender.UserInterface;
 using NetExtender.UserInterface.Interfaces;
 using NetExtender.Utilities.Static;
+using NetExtender.Workstation.Interfaces;
 
 namespace NetExtender.Utilities.UserInterface
 {

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using NetExtender.Domains.Applications;
 using NetExtender.Domains.View.Interfaces;
-using NetExtender.Exceptions;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Domains.View
 {

@@ -6,7 +6,7 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
-using NetExtender.Exceptions;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Crypto
 {

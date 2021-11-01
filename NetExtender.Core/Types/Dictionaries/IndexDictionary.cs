@@ -6,9 +6,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using NetExtender.Utilities.Types;
 using NetExtender.Types.Dictionaries.Interfaces;
 using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Dictionaries
 {
@@ -30,6 +30,14 @@ namespace NetExtender.Types.Dictionaries
             get
             {
                 return ((ICollection<KeyValuePair<TKey, TValue>>) Dictionary).IsReadOnly;
+            }
+        }
+
+        public IEqualityComparer<TKey> Comparer
+        {
+            get
+            {
+                return Dictionary.Comparer;
             }
         }
 
@@ -230,10 +238,90 @@ namespace NetExtender.Types.Dictionaries
             pair = default;
             return false;
         }
+        
+        public Boolean ContainsKey(TKey key)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return Dictionary.ContainsKey(key);
+        }
+        
+        Boolean ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
+        {
+            return ((ICollection<KeyValuePair<TKey, TValue>>) Dictionary).Contains(item);
+        }
+
+        public Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return Dictionary.TryGetValue(key, out value);
+        }
 
         public Int32 IndexOf(TKey key)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             return Order.IndexOf(key);
+        }
+
+        public Int32 IndexOf(TKey key, Int32 index)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return Order.IndexOf(key, index);
+        }
+
+        public Int32 IndexOf(TKey key, Int32 index, Int32 count)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return Order.IndexOf(key, index, count);
+        }
+
+        public Int32 LastIndexOf(TKey key)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return Order.IndexOf(key);
+        }
+
+        public Int32 LastIndexOf(TKey key, Int32 index)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return Order.IndexOf(key, index);
+        }
+
+        public Int32 LastIndexOf(TKey key, Int32 index, Int32 count)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return Order.IndexOf(key, index, count);
         }
 
         public void Add(TKey key, TValue value)
@@ -246,15 +334,16 @@ namespace NetExtender.Types.Dictionaries
             Dictionary.Add(key, value);
             Order.Add(key);
         }
-
-        public Boolean ContainsKey(TKey key)
+        
+        void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
         {
-            return Dictionary.ContainsKey(key);
-        }
+            (TKey key, TValue value) = item;
+            if (key is null!)
+            {
+                return;
+            }
 
-        public Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
-        {
-            return Dictionary.TryGetValue(key, out value);
+            Add(key, value);
         }
 
         public Boolean TryAdd(TKey key, TValue value)
@@ -301,6 +390,11 @@ namespace NetExtender.Types.Dictionaries
 
         public Boolean TryInsert(Int32 index, TKey key, TValue value)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             if (index < 0 || index >= Order.Count)
             {
                 return false;
@@ -319,15 +413,66 @@ namespace NetExtender.Types.Dictionaries
         {
             Order.Swap(index1, index2);
         }
+        
+        public void Reverse()
+        {
+            Order.Reverse();
+        }
+
+        public void Reverse(Int32 index, Int32 count)
+        {
+            Order.Reverse(index, count);
+        }
+
+        public void Sort()
+        {
+            Order.Sort();
+        }
+
+        public void Sort(Comparison<TKey> comparison)
+        {
+            Order.Sort(comparison);
+        }
+
+        public void Sort(IComparer<TKey>? comparer)
+        {
+            Order.Sort(comparer);
+        }
+
+        public void Sort(Int32 index, Int32 count, IComparer<TKey>? comparer)
+        {
+            Order.Sort(index, count, comparer);
+        }
 
         public Boolean Remove(TKey key)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             return Dictionary.Remove(key) | Order.Remove(key);
         }
 
         public Boolean Remove(TKey key, out TValue? value)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             return Dictionary.Remove(key, out value) | Order.Remove(key);
+        }
+        
+        Boolean ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
+        {
+            (TKey key, TValue value) = item;
+            if (Dictionary.TryGetValue(key, out TValue? result) && Equals(result, value))
+            {
+                return Remove(key);
+            }
+
+            return false;
         }
 
         public Boolean RemoveAt(Int32 index)
@@ -359,97 +504,17 @@ namespace NetExtender.Types.Dictionaries
             return false;
         }
 
-        public void Reverse()
-        {
-            Order.Reverse();
-        }
-
-        public void Reverse(Int32 index, Int32 count)
-        {
-            Order.Reverse(index, count);
-        }
-
-        public void Sort()
-        {
-            Order.Sort();
-        }
-
-        public void Sort(Comparison<TKey> comparison)
-        {
-            Order.Sort(comparison);
-        }
-
-        public void Sort(IComparer<TKey>? comparer)
-        {
-            Order.Sort(comparer);
-        }
-
-        public void Sort(Int32 index, Int32 count, IComparer<TKey>? comparer)
-        {
-            Order.Sort(index, count, comparer);
-        }
-
-        public void Add(KeyValuePair<TKey, TValue> item)
-        {
-            (TKey key, TValue value) = item;
-            if (key is null!)
-            {
-                return;
-            }
-
-            Add(key, value);
-        }
-
         public void Clear()
         {
             Dictionary.Clear();
             Order.Clear();
         }
 
-        public Boolean Contains(KeyValuePair<TKey, TValue> item)
-        {
-            return ((ICollection<KeyValuePair<TKey, TValue>>) Dictionary).Contains(item);
-        }
-
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 arrayIndex)
         {
             ((ICollection<KeyValuePair<TKey, TValue>>) Dictionary).CopyTo(array, arrayIndex);
         }
-
-        public Boolean Remove(KeyValuePair<TKey, TValue> item)
-        {
-            (TKey key, TValue value) = item;
-            if (Dictionary.TryGetValue(key, out TValue? result) && Equals(result, value))
-            {
-                return Remove(key);
-            }
-
-            return false;
-        }
-
-        public TValue this[TKey key]
-        {
-            get
-            {
-                return Dictionary[key];
-            }
-            set
-            {
-                if (key is null)
-                {
-                    throw new ArgumentNullException(nameof(key));
-                }
-                
-                if (!ContainsKey(key))
-                {
-                    Add(key, value);
-                    return;
-                }
-
-                Dictionary[key] = value;
-            }
-        }
-
+        
         public IEnumerator<TKey> GetKeyEnumerator()
         {
             return Order.GetEnumerator();
@@ -468,6 +533,39 @@ namespace NetExtender.Types.Dictionaries
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+        
+        public TValue this[TKey key]
+        {
+            get
+            {
+                if (key is null)
+                {
+                    throw new ArgumentNullException(nameof(key));
+                }
+
+                return Dictionary[key];
+            }
+            set
+            {
+                if (key is null)
+                {
+                    throw new ArgumentNullException(nameof(key));
+                }
+
+                if (key is null)
+                {
+                    throw new ArgumentNullException(nameof(key));
+                }
+                
+                if (!ContainsKey(key))
+                {
+                    Add(key, value);
+                    return;
+                }
+
+                Dictionary[key] = value;
+            }
         }
     }
 }

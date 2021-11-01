@@ -3,8 +3,8 @@
 
 using System;
 using System.Runtime.InteropServices;
-using NetExtender.Windows;
 using NetExtender.Utilities.Windows.IO;
+using NetExtender.Windows;
 
 namespace NetExtender.IO.FileSystem.NTFS.DataStreams
 {

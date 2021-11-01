@@ -4,7 +4,7 @@
 using System;
 using System.Security.Cryptography;
 using NetExtender.Crypto.CryptKey.Interfaces;
-using NetExtender.Exceptions;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Crypto.CryptKey.AES
 {

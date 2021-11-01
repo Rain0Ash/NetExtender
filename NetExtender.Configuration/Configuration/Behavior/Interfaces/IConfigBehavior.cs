@@ -16,17 +16,25 @@ namespace NetExtender.Configuration.Behavior.Interfaces
         public ICryptKey Crypt { get; }
         public ConfigOptions Options { get; }
         public Boolean IsReadOnly { get; }
+        public Boolean IsLazyWrite { get; }
         public Boolean IsCryptData { get; }
         public Boolean IsCryptConfig { get; }
         public Boolean IsCryptAll { get; }
-        public Boolean ThrowOnReadOnly { get; set; }
-        public Boolean CryptByDefault { get; set; }
-        public ConfigPropertyOptions DefaultOptions { get; set; }
+        public Boolean ThrowOnReadOnly { get; }
+        public Boolean CryptByDefault { get; }
+        public ConfigPropertyOptions DefaultOptions { get; }
+        public String Joiner { get; }
         public String? ConvertToValue<T>(T value);
         public T? ConvertFromValue<T>(String? value);
         public String? Get(String? key, IEnumerable<String>? sections);
         public Task<String?> GetAsync(String? key, IEnumerable<String>? sections, CancellationToken token);
         public Boolean Set(String? key, String? value, IEnumerable<String>? sections);
         public Task<Boolean> SetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token);
+        public String?[]? GetExistKeys();
+        public Task<String?[]?> GetExistKeysAsync();
+        public Task<String?[]?> GetExistKeysAsync(CancellationToken token);
+        public Boolean Reload();
+        public Task<Boolean> ReloadAsync();
+        public Task<Boolean> ReloadAsync(CancellationToken token);
     }
 }

@@ -19,7 +19,7 @@ namespace NetExtender.Configuration.Behavior
     public abstract class ConfigBehavior : IConfigBehavior
     {
         protected const String DefaultName = "config";
-        
+
         private static String GetDefaultPath(String? extension)
         {
             String filename = DefaultName;
@@ -30,12 +30,12 @@ namespace NetExtender.Configuration.Behavior
 
             return System.IO.Path.Combine(ApplicationUtilities.Directory ?? Environment.CurrentDirectory, filename);
         }
-        
+
         protected static String ValidatePathOrGetDefault(String? path, String? extension)
         {
             return !String.IsNullOrWhiteSpace(path) && PathUtilities.IsValidFilePath(path) ? path : GetDefaultPath(extension);
         }
-        
+
         public String Path { get; }
         public ICryptKey Crypt { get; }
         public ConfigOptions Options { get; }
@@ -47,7 +47,15 @@ namespace NetExtender.Configuration.Behavior
                 return Options.HasFlag(ConfigOptions.ReadOnly);
             }
         }
-        
+
+        public Boolean IsLazyWrite
+        {
+            get
+            {
+                return Options.HasFlag(ConfigOptions.LazyWrite);
+            }
+        }
+
         public Boolean IsCryptData
         {
             get
@@ -55,7 +63,7 @@ namespace NetExtender.Configuration.Behavior
                 return Options.HasFlag(ConfigOptions.CryptData);
             }
         }
-        
+
         public Boolean IsCryptConfig
         {
             get
@@ -63,7 +71,7 @@ namespace NetExtender.Configuration.Behavior
                 return Options.HasFlag(ConfigOptions.CryptConfig);
             }
         }
-        
+
         public Boolean IsCryptAll
         {
             get
@@ -72,29 +80,27 @@ namespace NetExtender.Configuration.Behavior
             }
         }
 
-        public Boolean ThrowOnReadOnly { get; set; } = true;
+        public Boolean ThrowOnReadOnly { get; init; } = true;
 
-        public Boolean CryptByDefault { get; set; }
+        public Boolean CryptByDefault { get; init; }
+
+        public ConfigPropertyOptions DefaultOptions { get; init; } = ConfigPropertyOptions.Caching;
         
-        public ConfigPropertyOptions DefaultOptions { get; set; } = ConfigPropertyOptions.Caching;
-        
+        public const String DefaultJoiner = ".";
+        public String Joiner { get; init; } = DefaultJoiner;
+
         protected ConfigBehavior(String path, ConfigOptions options)
             : this(path, null, options)
         {
         }
-        
+
         protected ConfigBehavior(String path, ICryptKey? crypt, ConfigOptions options)
         {
-            if (String.IsNullOrEmpty(path))
-            {
-                throw new ArgumentException(@"Not null or empty", nameof(path));
-            }
-            
-            Path = path;
+            Path = path ?? throw new ArgumentNullException(nameof(path));
             Crypt = crypt ?? CryptKey.Create(CryptAction.Crypt);
             Options = options;
         }
-        
+
         public virtual String? ConvertToValue<T>(T value)
         {
             return value.GetString();
@@ -104,24 +110,48 @@ namespace NetExtender.Configuration.Behavior
         {
             return value.Convert<T>();
         }
-        
+
         public abstract String? Get(String? key, IEnumerable<String>? sections);
         public abstract Boolean Set(String? key, String? value, IEnumerable<String>? sections);
-        
+        public abstract String?[]? GetExistKeys();
+
         public virtual Task<String?> GetAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
             String? result = Get(key, sections);
             return Task.FromResult(result);
         }
-        
+
         public virtual Task<Boolean> SetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
         {
             Boolean result = Set(key, value, sections);
             return result.ToTask();
         }
 
+        public Task<String?[]?> GetExistKeysAsync()
+        {
+            return GetExistKeysAsync(CancellationToken.None);
+        }
+
+        public virtual Task<String?[]?> GetExistKeysAsync(CancellationToken token)
+        {
+            String?[]? keys = !token.IsCancellationRequested ? GetExistKeys() : null;
+            return keys.ToTask();
+        }
+
+        public abstract Boolean Reload();
+
+        public Task<Boolean> ReloadAsync()
+        {
+            return ReloadAsync(CancellationToken.None);
+        }
+
+        public virtual Task<Boolean> ReloadAsync(CancellationToken token)
+        {
+            return Reload().ToTask();
+        }
+
         private Boolean _disposed;
-        
+
         public void Dispose()
         {
             DisposeInternal(true);
@@ -131,7 +161,7 @@ namespace NetExtender.Configuration.Behavior
         protected virtual void Dispose(Boolean disposing)
         {
         }
-        
+
         private void DisposeInternal(Boolean disposing)
         {
             if (_disposed)
@@ -143,7 +173,7 @@ namespace NetExtender.Configuration.Behavior
             {
                 Crypt.Dispose();
             }
-            
+
             Dispose(disposing);
             _disposed = true;
         }

@@ -3,8 +3,8 @@
 
 using System;
 using System.Threading;
-using NetExtender.Events;
 using NetExtender.Times.Timers.Interfaces;
+using NetExtender.Types.Events;
 using NetExtender.Types.Timers;
 using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Static;

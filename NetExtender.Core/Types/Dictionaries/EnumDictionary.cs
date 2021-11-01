@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using NetExtender.Comparers;
+using NetExtender.Types.Comparers;
 
 namespace NetExtender.Types.Dictionaries
 {

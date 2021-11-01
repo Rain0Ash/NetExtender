@@ -1415,21 +1415,6 @@ namespace NetExtender.Utilities.Types
             return dictionary;
         }
 
-        public static void CopyTo<TKey, TValue>(this ICollection<KeyValuePair<TKey, TValue>> source, KeyValuePair<TKey, TValue>[] array, Int32 index)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (array is null)
-            {
-                throw new ArgumentNullException(nameof(array));
-            }
-
-            source.CopyTo(array, index);
-        }
-
         public static ImmutableMultiDictionary<TKey, TValue> ToImmutableMultiDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, ImmutableHashSet<TValue>>> source) where TKey : notnull
         {
             if (source is null)

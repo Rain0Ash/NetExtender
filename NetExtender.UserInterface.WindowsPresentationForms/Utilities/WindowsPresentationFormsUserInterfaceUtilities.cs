@@ -4,8 +4,8 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using NetExtender.Workstation;
 using NetExtender.WindowsPresentation.Utilities;
+using NetExtender.Workstation;
 
 namespace NetExtender.Utilities.UserInterface
 {

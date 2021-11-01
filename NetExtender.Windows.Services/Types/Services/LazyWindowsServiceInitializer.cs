@@ -5,7 +5,7 @@ using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.ServiceProcess;
-using NetExtender.Exceptions;
+using NetExtender.Types.Exceptions;
 using NetExtender.Windows.Services.Types.Services.Interfaces;
 using NetExtender.Windows.Services.Utilities;
 

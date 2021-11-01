@@ -5,9 +5,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using NetExtender.Utilities.Types;
-using NetExtender.Exceptions;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Maps.Interfaces;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Maps
 {
@@ -248,11 +248,21 @@ namespace NetExtender.Types.Maps
         
         public Boolean ContainsKey(TKey key)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             return Base.ContainsKey(key);
         }
 
         public Boolean ContainsValue(TValue value)
         {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             return Reversed.ContainsKey(value);
         }
 
@@ -268,11 +278,21 @@ namespace NetExtender.Types.Maps
         
         public Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             return Base.TryGetValue(key, out value);
         }
         
         public Boolean TryGetKey(TValue key, [MaybeNullWhen(false)] out TKey value)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             return Reversed.TryGetValue(key, out value);
         }
 
@@ -366,6 +386,11 @@ namespace NetExtender.Types.Maps
         
         public Boolean Remove(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             if (!ContainsKey(key))
             {
                 value = default;
@@ -378,6 +403,16 @@ namespace NetExtender.Types.Maps
 
         public virtual Boolean Remove(TKey key, TValue value)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             if (!Contains(key, value))
             {
                 return false;
@@ -405,6 +440,11 @@ namespace NetExtender.Types.Maps
 
         public Boolean RemoveByValue(TValue key, [MaybeNullWhen(false)] out TKey value)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             if (!ContainsValue(key))
             {
                 value = default;
@@ -440,11 +480,31 @@ namespace NetExtender.Types.Maps
         {
             Reversed.CopyTo(array, index);
         }
+        
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+        {
+            return Base.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+        
+        public IEnumerator<KeyValuePair<TValue, TKey>> GetValuesEnumerator()
+        {
+            return Reversed.GetEnumerator();
+        }
 
         public virtual TValue this[TKey key]
         {
             get
             {
+                if (key is null)
+                {
+                    throw new ArgumentNullException(nameof(key));
+                }
+                
                 return Base[key];
             }
             set
@@ -459,17 +519,14 @@ namespace NetExtender.Types.Maps
                     throw new ArgumentNullException(nameof(value));
                 }
 
-                Boolean valueRemoved = Reversed.Remove(value, out TKey? rKey);
-                Boolean keyRemoved = Base.Remove(key, out TValue? rValue);
-                
-                if (valueRemoved)
+                if (Reversed.Remove(value, out TKey? removekey))
                 {
-                    Base.Remove(rKey!);
+                    Base.Remove(removekey);
                 }
                 
-                if (keyRemoved)
+                if (Base.Remove(key, out TValue? removevalue))
                 {
-                    Reversed.Remove(rValue!);
+                    Reversed.Remove(removevalue);
                 }
 
                 Base[key] = value;
@@ -481,27 +538,27 @@ namespace NetExtender.Types.Maps
         {
             get
             {
+                if (key is null)
+                {
+                    throw new ArgumentNullException(nameof(key));
+                }
+
                 return Reversed[key];
             }
             set
             {
+                if (key is null)
+                {
+                    throw new ArgumentNullException(nameof(key));
+                }
+                
+                if (value is null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+
                 this[value] = key;
             }
-        }
-
-        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
-        {
-            return Base.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-        
-        public IEnumerator<KeyValuePair<TValue, TKey>> GetValuesEnumerator()
-        {
-            return Reversed.GetEnumerator();
         }
     }
 }

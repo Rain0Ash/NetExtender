@@ -3,7 +3,7 @@
 
 using System;
 using System.Drawing;
-using Core.Workstation.Interfaces;
+using NetExtender.Workstation.Interfaces;
 
 namespace NetExtender.Utilities.Windows
 {

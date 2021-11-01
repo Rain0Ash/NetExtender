@@ -4,6 +4,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
+
 // ReSharper disable HeapView.CanAvoidClosure
 
 namespace NetExtender.Utilities.Threading

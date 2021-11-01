@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NetExtender.Utilities.Types;
 using NetExtender.Types.Maps.Interfaces;
 using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Maps
 {
@@ -150,16 +150,136 @@ namespace NetExtender.Types.Maps
 
         public Int32 IndexOf(TKey key)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             return Order.IndexOf(key);
+        }
+
+        public Int32 IndexOf(TKey key, Int32 index)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return Order.IndexOf(key, index);
+        }
+
+        public Int32 IndexOf(TKey key, Int32 index, Int32 count)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return Order.IndexOf(key, index, count);
+        }
+
+        public Int32 LastIndexOf(TKey key)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return Order.LastIndexOf(key);
+        }
+
+        public Int32 LastIndexOf(TKey key, Int32 index)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return Order.LastIndexOf(key, index);
+        }
+
+        public Int32 LastIndexOf(TKey key, Int32 index, Int32 count)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return Order.LastIndexOf(key, index, count);
         }
 
         public Int32 IndexOfValue(TValue key)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
             return IndexOf(Reversed[key]);
+        }
+
+        public Int32 IndexOfValue(TValue key, Int32 index)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return IndexOf(Reversed[key], index);
+        }
+
+        public Int32 IndexOfValue(TValue key, Int32 index, Int32 count)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return IndexOf(Reversed[key], index, count);
+        }
+
+        public Int32 LastIndexOfValue(TValue key)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return LastIndexOf(Reversed[key]);
+        }
+
+        public Int32 LastIndexOfValue(TValue key, Int32 index)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return LastIndexOf(Reversed[key], index);
+        }
+
+        public Int32 LastIndexOfValue(TValue key, Int32 index, Int32 count)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return LastIndexOf(Reversed[key], index, count);
         }
 
         public override void Add(TKey key, TValue value)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             base.Add(key, value);
             Order.Add(key);
         }
@@ -255,9 +375,49 @@ namespace NetExtender.Types.Maps
         {
             Order.Swap(index1, index2);
         }
+        
+        public void Reverse()
+        {
+            Order.Reverse();
+        }
+
+        public void Reverse(Int32 index, Int32 count)
+        {
+            Order.Reverse(index, count);
+        }
+
+        public void Sort()
+        {
+            Order.Sort();
+        }
+
+        public void Sort(Comparison<TKey> comparison)
+        {
+            Order.Sort(comparison);
+        }
+
+        public void Sort(IComparer<TKey>? comparer)
+        {
+            Order.Sort(comparer);
+        }
+
+        public void Sort(Int32 index, Int32 count, IComparer<TKey>? comparer)
+        {
+            Order.Sort(index, count, comparer);
+        }
 
         public override Boolean Remove(TKey key, TValue value)
         {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
             if (!base.Remove(key, value))
             {
                 return false;
@@ -296,50 +456,45 @@ namespace NetExtender.Types.Maps
             return false;
         }
 
-        public void Reverse()
-        {
-            Order.Reverse();
-        }
-
-        public void Reverse(Int32 index, Int32 count)
-        {
-            Order.Reverse(index, count);
-        }
-
-        public void Sort()
-        {
-            Order.Sort();
-        }
-
-        public void Sort(Comparison<TKey> comparison)
-        {
-            Order.Sort(comparison);
-        }
-
-        public void Sort(IComparer<TKey>? comparer)
-        {
-            Order.Sort(comparer);
-        }
-
-        public void Sort(Int32 index, Int32 count, IComparer<TKey>? comparer)
-        {
-            Order.Sort(index, count, comparer);
-        }
-
         public override void Clear()
         {
             base.Clear();
             Order.Clear();
+        }
+        
+        public IEnumerator<TKey> GetKeyEnumerator()
+        {
+            return Order.GetEnumerator();
+        }
+
+        public IEnumerator<TValue> GetValueEnumerator()
+        {
+            return Order.Select(key => this[key]).GetEnumerator();
         }
 
         public override TValue this[TKey key]
         {
             get
             {
+                if (key is null)
+                {
+                    throw new ArgumentNullException(nameof(key));
+                }
+
                 return base[key];
             }
             set
             {
+                if (key is null)
+                {
+                    throw new ArgumentNullException(nameof(key));
+                }
+                
+                if (value is null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+
                 Boolean contains = ContainsKey(key);
 
                 base[key] = value;
@@ -349,16 +504,6 @@ namespace NetExtender.Types.Maps
                     Order.Add(key);
                 }
             }
-        }
-
-        public IEnumerator<TKey> GetKeyEnumerator()
-        {
-            return Order.GetEnumerator();
-        }
-
-        public IEnumerator<TValue> GetValueEnumerator()
-        {
-            return Order.Select(key => this[key]).GetEnumerator();
         }
     }
 }

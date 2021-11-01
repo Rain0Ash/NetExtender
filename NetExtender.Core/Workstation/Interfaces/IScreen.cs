@@ -4,7 +4,7 @@
 using System;
 using System.Drawing;
 
-namespace Core.Workstation.Interfaces
+namespace NetExtender.Workstation.Interfaces
 {
     public interface IScreen
     {

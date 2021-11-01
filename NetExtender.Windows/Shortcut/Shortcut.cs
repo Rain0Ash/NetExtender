@@ -5,8 +5,8 @@ using System;
 using System.IO;
 using System.Reflection;
 using NetExtender.IO.Shortcut.Interfaces;
-using NetExtender.Windows.Shortcut.Interfaces;
 using NetExtender.Utilities.IO;
+using NetExtender.Windows.Shortcut.Interfaces;
 
 namespace NetExtender.Windows.Shortcut
 {

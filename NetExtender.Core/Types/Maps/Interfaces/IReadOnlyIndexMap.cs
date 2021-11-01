@@ -10,6 +10,11 @@ namespace NetExtender.Types.Maps.Interfaces
     public interface IReadOnlyIndexMap<TKey, TValue> : IReadOnlyMap<TKey, TValue>, IReadOnlyIndexDictionary<TKey, TValue>
     {
         public Int32 IndexOfValue(TValue key);
+        public Int32 IndexOfValue(TValue key, Int32 index);
+        public Int32 IndexOfValue(TValue key, Int32 index, Int32 count);
+        public Int32 LastIndexOfValue(TValue key);
+        public Int32 LastIndexOfValue(TValue key, Int32 index);
+        public Int32 LastIndexOfValue(TValue key, Int32 index, Int32 count);
         public KeyValuePair<TValue, TKey> GetValueKeyPairByIndex(Int32 index);
         public Boolean TryGetValueKeyPairByIndex(Int32 index, out KeyValuePair<TValue, TKey> pair);
     }

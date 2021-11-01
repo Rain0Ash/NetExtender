@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Events;
+using NetExtender.Types.Events;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.IO

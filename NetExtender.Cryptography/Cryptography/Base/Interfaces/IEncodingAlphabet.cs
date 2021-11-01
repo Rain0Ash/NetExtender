@@ -6,9 +6,9 @@
 // Licensed under Apache-2.0 License (see LICENSE.txt file for details)
 // </copyright>
 
- using System;
+using System;
 
- namespace NetExtender.Crypto.Base.Interfaces
+namespace NetExtender.Crypto.Base.Interfaces
 {
     /// <summary>
     /// Defines basic encoding alphabet.

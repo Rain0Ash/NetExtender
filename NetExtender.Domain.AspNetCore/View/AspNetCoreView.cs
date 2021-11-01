@@ -10,7 +10,7 @@ using Microsoft.Extensions.Hosting;
 using NetExtender.Domains.AspNetCore.Applications;
 using NetExtender.Domains.View;
 using NetExtender.Domains.View.Interfaces;
-using NetExtender.Exceptions;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Domains.AspNetCore.View
 {

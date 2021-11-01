@@ -18,17 +18,42 @@ namespace NetExtender.Configuration.Json
 
         public JsonSerializerSettings? Settings { get; init; } = Default;
         
-        public JsonConfigBehavior(String? path = null)
-            : this(path, ConfigOptions.None)
+        public JsonConfigBehavior()
+            : this(ConfigOptions.None)
         {
         }
         
+        public JsonConfigBehavior(ConfigOptions options)
+            : this(null, null, options)
+        {
+        }
+        
+        public JsonConfigBehavior(ICryptKey? crypt)
+            : this(crypt, ConfigOptions.None)
+        {
+        }
+        
+        public JsonConfigBehavior(ICryptKey? crypt, ConfigOptions options)
+            : this(null, crypt, options)
+        {
+        }
+
+        public JsonConfigBehavior(String? path)
+            : this(path, ConfigOptions.None)
+        {
+        }
+
         public JsonConfigBehavior(String? path, ConfigOptions options)
             : this(path, null, options)
         {
         }
         
-        public JsonConfigBehavior(String? path, ICryptKey? crypt, ConfigOptions options = ConfigOptions.None)
+        public JsonConfigBehavior(String? path, ICryptKey? crypt)
+            : this(path, crypt, ConfigOptions.None)
+        {
+        }
+        
+        public JsonConfigBehavior(String? path, ICryptKey? crypt, ConfigOptions options)
             : base(ValidatePathOrGetDefault(path, "json"), crypt, options)
         {
         }

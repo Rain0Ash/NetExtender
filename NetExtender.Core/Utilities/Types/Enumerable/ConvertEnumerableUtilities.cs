@@ -75,7 +75,7 @@ namespace NetExtender.Utilities.Types
             {
                 null => Array.Empty<T>(),
                 IReadOnlyCollection<T> collection => collection,
-                ICollection<T> collection => new ReadOnlyCollectionWrapper<T>(collection),
+                ICollection<T> collection => new CollectionReadOnlyWrapper<T>(collection),
                 ICollection collection => new NonGenericReadOnlyCollectionWrapper<T>(collection),
                 _ => source.ToArray()
             };

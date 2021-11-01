@@ -3,31 +3,38 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Ram;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Types.Trees;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.File
 {
-    public abstract class FileConfigBehavior : LazyWriteRamConfigBehavior
+    public abstract class FileConfigBehavior : RamConfigBehavior
     {
-        protected FileConfigBehavior(String path, ConfigOptions options)
+        public Encoding? Encoding { get; init; }
+        
+        protected FileConfigBehavior(String? path, ConfigOptions options)
             : this(path, null, options)
         {
         }
 
-        protected FileConfigBehavior(String path, ICryptKey? crypt, ConfigOptions options)
-            : base(ValidatePathOrGetDefault(path, "txt"), crypt, options)
+        protected FileConfigBehavior(String? path, ICryptKey? crypt, ConfigOptions options)
+            : base(ValidatePathOrGetDefault(path, "txt"), crypt, options | ConfigOptions.LazyWrite)
         {
             Config = ReadConfig();
         }
 
-        private String? ReadConfigText()
+        protected String? ReadConfigText()
         {
             try
             {
-                return System.IO.File.ReadAllText(Path);
+                return System.IO.File.ReadAllText(Path, Encoding ?? Encoding.UTF8);
             }
             catch (Exception)
             {
@@ -37,7 +44,12 @@ namespace NetExtender.Configuration.File
 
         protected abstract DictionaryTree<String, String>? DeserializeConfig(String config);
 
-        private DictionaryTree<String, String> ReadConfig()
+        protected DictionaryTree<String, String> ReadConfig()
+        {
+            return ReadConfig(out DictionaryTree<String, String>? result) ? result : new DictionaryTree<String, String>();
+        }
+
+        protected Boolean ReadConfig([MaybeNullWhen(false)] out DictionaryTree<String, String> result)
         {
             try
             {
@@ -45,27 +57,29 @@ namespace NetExtender.Configuration.File
 
                 if (config is null)
                 {
-                    return new DictionaryTree<String, String>();
+                    result = default;
+                    return false;
                 }
                 
                 if (!IsCryptConfig)
                 {
-                    return DeserializeConfig(config) ?? new DictionaryTree<String, String>();
+                    result = DeserializeConfig(config);
+                    return result is not null;
                 }
 
                 String? decrypted = Crypt.Decrypt(config);
                 
-                DictionaryTree<String, String>? deserialize = String.IsNullOrEmpty(decrypted) ? DeserializeConfig(config) : DeserializeConfig(decrypted);
-
-                return deserialize ?? new DictionaryTree<String, String>();
+                result = String.IsNullOrEmpty(decrypted) ? DeserializeConfig(config) : DeserializeConfig(decrypted);
+                return result is not null;
             }
             catch (Exception)
             {
-                return new DictionaryTree<String, String>();
+                result = default;
+                return false;
             }
         }
 
-        private Boolean WriteConfigText(String? config)
+        protected Boolean WriteConfigText(String? config)
         {
             if (String.IsNullOrEmpty(config))
             {
@@ -74,7 +88,25 @@ namespace NetExtender.Configuration.File
 
             try
             {
-                System.IO.File.WriteAllText(Path, config);
+                System.IO.File.WriteAllText(Path, config, Encoding ?? Encoding.UTF8);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        protected async Task<Boolean> WriteConfigTextAsync(String? config, CancellationToken token)
+        {
+            if (String.IsNullOrEmpty(config))
+            {
+                return false;
+            }
+
+            try
+            {
+                await System.IO.File.WriteAllTextAsync(Path, config, token);
                 return true;
             }
             catch (Exception)
@@ -85,7 +117,17 @@ namespace NetExtender.Configuration.File
 
         protected abstract String? SerializeConfig();
 
-        private Boolean WriteConfig()
+        protected Task<String?> SerializeConfigAsync()
+        {
+            return SerializeConfigAsync(CancellationToken.None);
+        }
+        
+        protected virtual Task<String?> SerializeConfigAsync(CancellationToken token)
+        {
+            return !token.IsCancellationRequested ? Task.FromResult(SerializeConfig()) : StringUtilities.Null;
+        }
+
+        protected Boolean WriteConfig()
         {
             String? config = SerializeConfig();
 
@@ -97,9 +139,47 @@ namespace NetExtender.Configuration.File
             return WriteConfigText(config);
         }
 
+        protected Task<Boolean> WriteConfigAsync()
+        {
+            return WriteConfigAsync(CancellationToken.None);
+        }
+
+        protected Task<Boolean> WriteConfigAsync(CancellationToken token)
+        {
+            if (token.IsCancellationRequested)
+            {
+                return TaskUtilities.False;
+            }
+            
+            String? config = SerializeConfig();
+
+            if (config is not null && IsCryptConfig)
+            {
+                config = Crypt.Encrypt(config);
+            }
+            
+            return WriteConfigTextAsync(config, token);
+        }
+
         public override Boolean Set(String? key, String? value, IEnumerable<String>? sections)
         {
             return base.Set(key, value, sections) && WriteConfig();
+        }
+
+        public override async Task<Boolean> SetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
+        {
+            return await base.SetAsync(key, value, sections, token) && await WriteConfigAsync(token);
+        }
+
+        public override Boolean Reload()
+        {
+            if (!ReadConfig(out DictionaryTree<String, String>? config))
+            {
+                return false;
+            }
+
+            Config = config;
+            return true;
         }
     }
 }

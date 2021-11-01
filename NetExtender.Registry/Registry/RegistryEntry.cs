@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Immutable;
 using Microsoft.Win32;
-using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Registry;
+using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;

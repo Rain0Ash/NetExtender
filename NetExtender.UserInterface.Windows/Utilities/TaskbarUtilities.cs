@@ -8,9 +8,9 @@ using NetExtender.UserInterface;
 using NetExtender.UserInterface.Interfaces;
 using NetExtender.UserInterface.Windows.Taskbar;
 using NetExtender.UserInterface.Windows.Taskbar.Interfaces;
-using NetExtender.Utilities.Types;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Numerics;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.UserInterface
 {

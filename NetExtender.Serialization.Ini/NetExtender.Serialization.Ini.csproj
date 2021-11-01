@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <OutputType>Library</OutputType>
+        <LangVersion>9</LangVersion>
+        <Authors>Rain0Ash</Authors>
+        <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
+        <Version>0.8.1</Version>
+        <RootNamespace>NetExtender.Serialize.Ini</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Serialization" />
+    </ItemGroup>
+
+</Project>

@@ -3,7 +3,7 @@
 
 using System;
 using Microsoft.Win32;
-using NetExtender.Exceptions;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Application;
 using NetExtender.Windows.Protocols.Interfaces;
 

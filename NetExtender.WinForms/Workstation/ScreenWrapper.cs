@@ -6,8 +6,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Core.Workstation.Interfaces;
 using NetExtender.Utilities.Types;
+using NetExtender.Workstation.Interfaces;
 
 namespace NetExtender.Workstation
 {

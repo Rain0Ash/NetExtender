@@ -7,7 +7,7 @@ namespace NetExtender.Configuration.Property.Interfaces
 {
     public interface IConfigProperty<T> : IReadOnlyConfigProperty<T>, IConfigPropertyBase
     {
-        public new T DefaultValue { get; set; }
+        public new T Alternate { get; set; }
         public new Boolean ThrowOnInvalid { get; set; }
         public new Boolean ThrowOnReadOnly { get; set; }
         public new TryConverter<String, T> Converter { get; set; }

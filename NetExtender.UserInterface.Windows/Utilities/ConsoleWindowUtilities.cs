@@ -6,12 +6,12 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using Core.Workstation.Interfaces;
-using NetExtender.Events;
+using NetExtender.Types.Events;
 using NetExtender.UserInterface;
 using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Static;
 using NetExtender.Utilities.Windows;
+using NetExtender.Workstation.Interfaces;
 
 namespace NetExtender.Utilities.UserInterface
 {

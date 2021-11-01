@@ -8,7 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
-using NetExtender.Comparers;
+using NetExtender.Types.Comparers;
 using NetExtender.Types.Strings;
 using NetExtender.Types.Strings.Interfaces;
 

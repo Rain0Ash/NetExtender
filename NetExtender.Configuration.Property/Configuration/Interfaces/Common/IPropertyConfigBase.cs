@@ -5,8 +5,12 @@ using System;
 
 namespace NetExtender.Configuration.Property.Interfaces.Common
 {
-    public interface IPropertyConfigBase : IReadOnlyPropertyConfigBase
+    public interface IPropertyConfigBase
     {
+        public T? GetValue<T>(IReadOnlyConfigProperty<T> property);
+
+        public Boolean KeyExist(IReadOnlyConfigPropertyBase property);
+        
         public Boolean SetValue<T>(IReadOnlyConfigProperty<T> property, T value);
 
         public T? GetOrSetValue<T>(IReadOnlyConfigProperty<T> property);

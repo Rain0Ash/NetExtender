@@ -7,9 +7,9 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.Serialization;
-using NetExtender.Utilities.Types;
 using NetExtender.Types.Trees.Interfaces;
 using NetExtender.Types.Trees.Json;
+using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 
 namespace NetExtender.Types.Trees

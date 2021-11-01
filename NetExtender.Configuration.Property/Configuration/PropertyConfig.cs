@@ -14,7 +14,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration
 {
-    public class PropertyConfig : Config, IPropertyConfig
+    public class PropertyConfig : Config, IPropertyConfig, IReadOnlyPropertyConfig
     {
         public new static IPropertyConfig Create(IConfigBehavior behavior)
         {
@@ -40,13 +40,13 @@ namespace NetExtender.Configuration
         public T? GetValue<T>(IReadOnlyConfigProperty<T> property)
         {
             ConfigurationPropertyObserver.ThrowIfPropertyNotLinked(property);
-            return GetValue(property.Key, property.DefaultValue, property.CryptKey, property.Converter, property.Sections);
+            return GetValue(property.Key, property.Alternate, property.CryptKey, property.Converter, property.Sections);
         }
 
-        public T GetOrSetValue<T>(IReadOnlyConfigProperty<T> property)
+        public T? GetOrSetValue<T>(IReadOnlyConfigProperty<T> property)
         {
             ConfigurationPropertyObserver.ThrowIfPropertyNotLinked(property);
-            return GetOrSetValue(property, property.DefaultValue);
+            return GetOrSetValue(property, property.Alternate);
         }
 
         public T? GetOrSetValue<T>(IReadOnlyConfigProperty<T> property, T value)
@@ -72,7 +72,7 @@ namespace NetExtender.Configuration
             return GetProperty(key, value, validate, crypt, options, converter, sections);
         }
         
-        public virtual IConfigProperty<T> GetProperty<T>(String? key, T value, Func<T, Boolean>? validate, ICryptKey? crypt, ConfigPropertyOptions options, TryConverter<String, T>? converter, IEnumerable<String>? sections)
+        public virtual IConfigProperty<T> GetProperty<T>(String? key, T value, Func<T, Boolean>? validate, ICryptKey? crypt, ConfigPropertyOptions options, TryConverter<String?, T>? converter, IEnumerable<String>? sections)
         {
             IImmutableList<String> materialized = sections.AsIImmutableList();
             return GetOrAddProperty<T>(this, key, materialized, () => new ConfigProperty<T>(this, key, value, validate, crypt, options, converter, materialized));

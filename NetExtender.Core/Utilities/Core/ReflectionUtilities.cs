@@ -906,6 +906,83 @@ namespace NetExtender.Utilities.Core
             return property is not null;
         }
 
+        private static Boolean IsMulticastDelegateFieldType(this Type? type)
+        {
+            return type is not null && (type == typeof(MulticastDelegate) || type.IsSubclassOf(typeof(MulticastDelegate)));
+        }
+        
+        // ReSharper disable once CognitiveComplexity
+        public static FieldInfo? GetEventField(this Type type, String eventname)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (eventname is null)
+            {
+                throw new ArgumentNullException(nameof(eventname));
+            }
+
+            FieldInfo? field = null;
+            
+            while (type is not null)
+            {
+                field = type.GetField(eventname, BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic);
+                
+                if (field is not null && field.FieldType.IsMulticastDelegateFieldType())
+                {
+                    break;
+                }
+
+                field = type.GetField("EVENT_" + eventname.ToUpper(), BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic);
+                
+                if (field is not null)
+                {
+                    break;
+                }
+
+                if (type.BaseType is null)
+                {
+                    break;
+                }
+                
+                type = type.BaseType;
+            }
+            
+            return field;
+        }
+
+        public static Boolean ClearEventInvocations(Object value, String eventname)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (eventname is null)
+            {
+                throw new ArgumentNullException(nameof(eventname));
+            }
+
+            try
+            {
+                FieldInfo? info = value.GetType().GetEventField(eventname);
+
+                if (info is null)
+                {
+                    return false;
+                }
+
+                info.SetValue(value, null);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         /// <summary>
         /// Determines whether this type implements the specified parent type. Returns false if both types are the same.
         /// </summary>

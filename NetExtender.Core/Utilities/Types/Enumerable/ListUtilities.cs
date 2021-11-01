@@ -10,7 +10,42 @@ namespace NetExtender.Utilities.Types
 {
     public static class ListUtilities
     {
-        public static T? GetRandom<T>(this IList<T> collection)
+        public static T GetRandom<T>(this IList<T> collection)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            return collection.Count > 0 ? collection[RandomUtilities.NextNonNegative(collection.Count - 1)] : throw new InvalidOperationException();
+        }
+        
+        public static T GetRandomOr<T>(this IList<T> collection, T alternate)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            return collection.Count > 0 ? collection[RandomUtilities.NextNonNegative(collection.Count - 1)] : alternate;
+        }
+        
+        public static T GetRandom<T>(this IList<T> collection, Func<T> alternate)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return collection.Count > 0 ? collection[RandomUtilities.NextNonNegative(collection.Count - 1)] : alternate();
+        }
+        
+        public static T? GetRandomOrDefault<T>(this IList<T> collection)
         {
             if (collection is null)
             {

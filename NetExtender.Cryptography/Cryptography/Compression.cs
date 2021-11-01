@@ -7,8 +7,8 @@ using System.IO.Compression;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Utilities.Types;
 using NetExtender.Crypto.Compression;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Crypto
 {

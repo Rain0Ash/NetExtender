@@ -347,7 +347,7 @@ namespace NetExtender.Utilities.Types
             return false;
         }
 
-        public static T? GetRandom<T>(this IEnumerable<T> source)
+        public static T GetRandom<T>(this IEnumerable<T> source)
         {
             if (source is null)
             {
@@ -357,10 +357,66 @@ namespace NetExtender.Utilities.Types
             return source switch
             {
                 IList<T> list => list.GetRandom(),
-                IReadOnlyList<T> list => list.Count <= 0 ? default : list[RandomUtilities.NextNonNegative(list.Count - 1)],
-                ICollection<T> collection => collection.Count <= 0 ? default : collection.ElementAtOrDefault(RandomUtilities.NextNonNegative(collection.Count - 1)),
-                IReadOnlyCollection<T> collection => collection.Count <= 0 ? default : collection.ElementAtOrDefault(RandomUtilities.NextNonNegative(collection.Count - 1)),
+                IReadOnlyList<T> list => list.Count > 0 ? list[RandomUtilities.NextNonNegative(list.Count - 1)] : throw new InvalidOperationException(),
+                ICollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : throw new InvalidOperationException(),
+                IReadOnlyCollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : throw new InvalidOperationException(),
                 _ => source.ToList().GetRandom()
+            };
+        }
+        
+        public static T GetRandomOr<T>(this IEnumerable<T> source, T alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source switch
+            {
+                IList<T> list => list.GetRandomOr(alternate),
+                IReadOnlyList<T> list => list.Count > 0 ? list[RandomUtilities.NextNonNegative(list.Count - 1)] : alternate,
+                ICollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : alternate,
+                IReadOnlyCollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : alternate,
+                _ => source.ToList().GetRandomOr(alternate)
+            };
+        }
+        
+        public static T GetRandomOr<T>(this IEnumerable<T> source, Func<T> alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            return source switch
+            {
+                IList<T> list => list.GetRandomOr(alternate),
+                IReadOnlyList<T> list => list.Count > 0 ? list[RandomUtilities.NextNonNegative(list.Count - 1)] : alternate(),
+                ICollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : alternate(),
+                IReadOnlyCollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : alternate(),
+                _ => source.ToList().GetRandomOr(alternate)
+            };
+        }
+
+        public static T? GetRandomOrDefault<T>(this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source switch
+            {
+                IList<T> list => list.GetRandomOrDefault(),
+                IReadOnlyList<T> list => list.Count > 0 ? list[RandomUtilities.NextNonNegative(list.Count - 1)] : default,
+                ICollection<T> collection => collection.Count > 0 ? collection.ElementAtOrDefault(RandomUtilities.NextNonNegative(collection.Count - 1)) : default,
+                IReadOnlyCollection<T> collection => collection.Count > 0 ? collection.ElementAtOrDefault(RandomUtilities.NextNonNegative(collection.Count - 1)) : default,
+                _ => source.ToList().GetRandomOrDefault()
             };
         }
         

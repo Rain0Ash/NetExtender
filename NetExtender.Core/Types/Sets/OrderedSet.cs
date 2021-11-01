@@ -1,15 +1,15 @@
 ﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
- using System;
- using System.Collections;
- using System.Collections.Generic;
- using System.Collections.Immutable;
- using System.Linq;
- using NetExtender.Types.Sets.Interfaces;
- using NetExtender.Utilities.Types;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using NetExtender.Types.Sets.Interfaces;
+using NetExtender.Utilities.Types;
 
- namespace NetExtender.Types.Sets
+namespace NetExtender.Types.Sets
 {
     public class OrderedSet<T> : ISet, ISet<T> where T : notnull
     {

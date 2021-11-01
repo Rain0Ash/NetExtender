@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NetExtender.Comparers;
+using NetExtender.Types.Comparers;
 using NetExtender.Types.Sets.Interfaces;
 using NetExtender.Utilities.Types;
 

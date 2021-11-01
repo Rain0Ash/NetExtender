@@ -8,12 +8,16 @@ namespace NetExtender.Types.Dictionaries.Interfaces
 {
     public interface IReadOnlyIndexDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
     {
-        public IReadOnlyList<TKey> OrderedKeys { get; }
         public TKey GetKeyByIndex(Int32 index);
         public TValue GetValueByIndex(Int32 index);
         public KeyValuePair<TKey, TValue> GetKeyValuePairByIndex(Int32 index);
         public Boolean TryGetKeyValuePairByIndex(Int32 index, out KeyValuePair<TKey, TValue> pair);
         public Int32 IndexOf(TKey key);
+        public Int32 IndexOf(TKey key, Int32 index);
+        public Int32 IndexOf(TKey key, Int32 index, Int32 count);
+        public Int32 LastIndexOf(TKey key);
+        public Int32 LastIndexOf(TKey key, Int32 index);
+        public Int32 LastIndexOf(TKey key, Int32 index, Int32 count);
         public IEnumerator<TKey> GetKeyEnumerator();
         public IEnumerator<TValue> GetValueEnumerator();
     }

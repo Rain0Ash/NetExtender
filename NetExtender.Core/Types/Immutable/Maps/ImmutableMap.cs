@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using NetExtender.Exceptions;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Immutable.Maps.Interfaces;
 using NetExtender.Utilities.Types;
 

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Property.Interfaces;
 using NetExtender.Crypto.CryptKey.Interfaces;
-using NetExtender.Exceptions;
+using NetExtender.Types.Exceptions;
 using NetExtender.Interfaces;
 using NetExtender.Utilities.Types;
 
@@ -34,7 +34,7 @@ namespace NetExtender.Configuration.Property
 
         private Boolean Initialized { get; set; }
         
-        public T DefaultValue { get; set; }
+        public T Alternate { get; set; }
 
         protected T InternalValue;
 
@@ -43,7 +43,7 @@ namespace NetExtender.Configuration.Property
             get
             {
                 Initialize();
-                return IsValid && !AlwaysDefault ? InternalValue : DefaultValue;
+                return IsValid && !AlwaysDefault ? InternalValue : Alternate;
             }
             protected set
             {
@@ -76,11 +76,11 @@ namespace NetExtender.Configuration.Property
         
         public TryConverter<String, T?> Converter { get; set; }
 
-        protected internal ConfigProperty(IPropertyConfig config, String key, T defaultValue, Func<T, Boolean> validate, ICryptKey crypt, ConfigPropertyOptions options, TryConverter<String, T?>? converter, IEnumerable<String> sections)
+        protected internal ConfigProperty(IPropertyConfig config, String key, T alternate, Func<T, Boolean> validate, ICryptKey crypt, ConfigPropertyOptions options, TryConverter<String, T?>? converter, IEnumerable<String> sections)
             : base(config, key ?? throw new ArgumentNullException(nameof(key)), crypt, options, sections)
         {
             Config = config ?? throw new ArgumentNullException(nameof(config));
-            DefaultValue = defaultValue;
+            Alternate = alternate;
             Validate = validate;
             Converter = converter ?? ConvertUtilities.TryConvert;
         }
@@ -137,7 +137,7 @@ namespace NetExtender.Configuration.Property
                 Read();
             }
 
-            return validate?.Invoke(InternalValue) != false ? InternalValue : DefaultValue;
+            return validate?.Invoke(InternalValue) != false ? InternalValue : Alternate;
         }
 
         public T GetOrSetValue()
@@ -154,7 +154,7 @@ namespace NetExtender.Configuration.Property
         
         public void ResetValue()
         {
-            Value = DefaultValue;
+            Value = Alternate;
         }
 
         public void RemoveValue()

@@ -6,54 +6,83 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Text;
-using NetExtender.Configuration.Behavior;
 using NetExtender.Configuration.Common;
+using NetExtender.Configuration.File;
 using NetExtender.Crypto.CryptKey.Interfaces;
+using NetExtender.Serialization.Ini;
+using NetExtender.Types.Trees;
 using NetExtender.Utilities.Static;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Windows.Ini
 {
-    public class IniConfigBehavior : ConfigBehavior
+    public class IniConfigBehavior : FileConfigBehavior
     {
-        public const String DefaultJoiner = ".";
         public const String DefaultSection = "Main";
         
         public String MainSection { get; }
-        public String Joiner { get; }
         
         protected StringBuilder Buffer { get; } = new StringBuilder(255);
 
-        public IniConfigBehavior(String? path = null, ConfigOptions options = ConfigOptions.None)
+        public IniConfigBehavior()
+            : this(ConfigOptions.None)
+        {
+        }
+        
+        public IniConfigBehavior(ConfigOptions options)
+            : this(null, DefaultSection, null, options)
+        {
+        }
+        
+        public IniConfigBehavior(ICryptKey? crypt)
+            : this(crypt, ConfigOptions.None)
+        {
+        }
+        
+        public IniConfigBehavior(ICryptKey? crypt, ConfigOptions options)
+            : this(null, DefaultSection, crypt, options)
+        {
+        }
+
+        public IniConfigBehavior(String? path)
+            : this(path, ConfigOptions.None)
+        {
+        }
+
+        public IniConfigBehavior(String? path, ConfigOptions options)
             : this(path, DefaultSection, options)
         {
         }
         
-        public IniConfigBehavior(String? path, String? section, ConfigOptions options = ConfigOptions.None)
-            : this(path, section, DefaultJoiner, options)
+        public IniConfigBehavior(String? path, ICryptKey? crypt)
+            : this(path, crypt, ConfigOptions.None)
         {
         }
         
-        public IniConfigBehavior(String? path, String? section, String joiner = DefaultJoiner, ConfigOptions options = ConfigOptions.None)
-            : this(path, section, joiner, null, options)
-        {
-        }
-        
-        public IniConfigBehavior(String? path, ICryptKey? crypt, ConfigOptions options = ConfigOptions.None)
+        public IniConfigBehavior(String? path, ICryptKey? crypt, ConfigOptions options)
             : this(path, DefaultSection, crypt, options)
         {
         }
 
-        public IniConfigBehavior(String? path, String? section, ICryptKey? crypt, ConfigOptions options = ConfigOptions.None)
-            : this(path, section, DefaultJoiner, crypt, options)
+        public IniConfigBehavior(String? path, String? section)
+            : this(path, section, ConfigOptions.None)
+        {
+        }
+
+        public IniConfigBehavior(String? path, String? section, ConfigOptions options)
+            : this(path, section, null, options)
         {
         }
         
-        public IniConfigBehavior(String? path, String? section, String? joiner, ICryptKey? crypt, ConfigOptions options = ConfigOptions.None)
+        public IniConfigBehavior(String? path, String? section, ICryptKey? crypt)
+            : this(path, section, crypt, ConfigOptions.None)
+        {
+        }
+        
+        public IniConfigBehavior(String? path, String? section, ICryptKey? crypt, ConfigOptions options)
             : base(ValidatePathOrGetDefault(path, "ini"), crypt, options)
         {
             MainSection = section ?? DefaultSection;
-            Joiner = joiner ?? DefaultJoiner;
         }
 
         [return: NotNullIfNotNull("sections")]
@@ -92,11 +121,22 @@ namespace NetExtender.Configuration.Windows.Ini
             return !String.IsNullOrEmpty(result) ? result : null;
         }
 
+        protected override DictionaryTree<String, String>? DeserializeConfig(String config)
+        {
+            IniFile file = new IniFile(StringComparer.Ordinal);
+            file.Read(config);
+        }
+
+        protected override String? SerializeConfig()
+        {
+            throw new NotImplementedException();
+        }
+
         public override Boolean Set(String? key, String? value, IEnumerable<String>? sections)
         {
             return Set(key, value, ToSection(sections));
         }
-        
+
         protected virtual Boolean Set(String? key, String? value, String? section)
         {
             if (key is null)
