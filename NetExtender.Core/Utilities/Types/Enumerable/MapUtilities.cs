@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Maps;
@@ -13,128 +12,6 @@ namespace NetExtender.Utilities.Types
 {
     public static class MapUtilities
     {
-        public static Boolean TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key, [MaybeNullWhen(false)] out TKey result)
-        {
-            return TryGetKey(source, key, default(TKey)!, out result);
-        }
-        
-        public static Boolean TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key, TKey @default, [MaybeNullWhen(false)] out TKey result)
-        {
-            switch (source)
-            {
-                case IMap<TKey, TValue> map when map.TryGetKey(key, out result):
-                    return true;
-                case IMap<TKey, TValue>:
-                    result = @default;
-                    return false;
-                case IReadOnlyMap<TKey, TValue> map when map.TryGetKey(key, out result):
-                    return true;
-                case IReadOnlyMap<TKey, TValue>:
-                    result = @default;
-                    return false;
-                default:
-                    return source.ReversePairs().TryGetValue(key, @default, out result);
-            }
-        }
-        
-        public static Boolean TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key, Func<TKey> factory, [MaybeNullWhen(false)] out TKey result)
-        {
-            if (factory is null)
-            {
-                throw new ArgumentNullException(nameof(factory));
-            }
-
-            switch (source)
-            {
-                case IMap<TKey, TValue> map when map.TryGetKey(key, out result):
-                    return true;
-                case IMap<TKey, TValue>:
-                    result = factory.Invoke();
-                    return false;
-                case IReadOnlyMap<TKey, TValue> map when map.TryGetKey(key, out result):
-                    return true;
-                case IReadOnlyMap<TKey, TValue>:
-                    result = factory.Invoke();
-                    return false;
-                default:
-                    return source.ReversePairs().TryGetValue(key, factory, out result);
-            }
-        }
-        
-        public static Boolean TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key, Func<TValue, TKey> factory, [MaybeNullWhen(false)] out TKey result)
-        {
-            if (factory is null)
-            {
-                throw new ArgumentNullException(nameof(factory));
-            }
-
-            switch (source)
-            {
-                case IMap<TKey, TValue> map when map.TryGetKey(key, out result):
-                    return true;
-                case IMap<TKey, TValue>:
-                    result = factory.Invoke(key);
-                    return false;
-                case IReadOnlyMap<TKey, TValue> map when map.TryGetKey(key, out result):
-                    return true;
-                case IReadOnlyMap<TKey, TValue>:
-                    result = factory.Invoke(key);
-                    return false;
-                default:
-                    return source.ReversePairs().TryGetValue(key, factory, out result);
-            }
-        }
-        
-        public static TKey? TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return TryGetKey(source!, key, default(TKey));
-        }
-        
-        public static TKey TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key, TKey @default)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return TryGetKey(source, key, @default, out TKey? result) ? result : @default;
-        }
-        
-        public static TKey TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key, Func<TKey> factory)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (factory is null)
-            {
-                throw new ArgumentNullException(nameof(factory));
-            }
-
-            return TryGetKey(source, key, out TKey? result) ? result : factory.Invoke();
-        }
-        
-        public static TKey TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key, Func<TValue, TKey> factory)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            if (factory is null)
-            {
-                throw new ArgumentNullException(nameof(factory));
-            }
-
-            return TryGetKey(source, key, out TKey? result) ? result : factory.Invoke(key);
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Map<TKey, TValue> ToMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source) where TKey : notnull where TValue : notnull
         {
@@ -327,6 +204,81 @@ namespace NetExtender.Utilities.Types
             }
 
             return new IndexMap<TKey, TElement>(source.Select(item => new KeyValuePair<TKey, TElement>(keySelector(item), elementSelector(item))), keyComparer, valueComparer);
+        }
+
+        public static TValue GetOrAdd<TKey, TValue>(this IMap<TKey, TValue> dictionary, TKey key, TValue value)
+        {
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(nameof(dictionary));
+            }
+
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (dictionary.TryGetValue(key, out TValue? result))
+            {
+                return result;
+            }
+
+            dictionary.Add(key, value);
+            return value;
+        }
+
+        public static TValue GetOrAdd<TKey, TValue>(this IMap<TKey, TValue> dictionary, TKey key, Func<TValue> factory)
+        {
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(nameof(dictionary));
+            }
+
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            if (dictionary.TryGetValue(key, out TValue? value))
+            {
+                return value;
+            }
+
+            value = factory.Invoke();
+            dictionary.Add(key, value);
+            return value;
+        }
+        
+        public static TValue GetOrAdd<TKey, TValue>(this IMap<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> factory)
+        {
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(nameof(dictionary));
+            }
+
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (factory is null)
+            {
+                throw new ArgumentNullException(nameof(factory));
+            }
+
+            if (dictionary.TryGetValue(key, out TValue? value))
+            {
+                return value;
+            }
+
+            value = factory.Invoke(key);
+            dictionary.Add(key, value);
+            return value;
         }
     }
 }

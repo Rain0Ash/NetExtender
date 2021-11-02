@@ -3,19 +3,30 @@
 
 using System;
 using System.Collections.Generic;
-using NetExtender.Types.Dictionaries.Interfaces;
 
 namespace NetExtender.Types.Maps.Interfaces
 {
-    public interface IReadOnlyIndexMap<TKey, TValue> : IReadOnlyMap<TKey, TValue>, IReadOnlyIndexDictionary<TKey, TValue>
+    public interface IReadOnlyIndexMap<TKey, TValue> : IReadOnlyMap<TKey, TValue>
     {
+        public TKey GetKeyByIndex(Int32 index);
+        public TValue GetValueByIndex(Int32 index);
+        public KeyValuePair<TKey, TValue> GetKeyValuePairByIndex(Int32 index);
+        public Boolean TryGetKeyValuePairByIndex(Int32 index, out KeyValuePair<TKey, TValue> pair);
+        public KeyValuePair<TValue, TKey> GetValueKeyPairByIndex(Int32 index);
+        public Boolean TryGetValueKeyPairByIndex(Int32 index, out KeyValuePair<TValue, TKey> pair);
+        public Int32 IndexOf(TKey key);
+        public Int32 IndexOf(TKey key, Int32 index);
+        public Int32 IndexOf(TKey key, Int32 index, Int32 count);
+        public Int32 LastIndexOf(TKey key);
+        public Int32 LastIndexOf(TKey key, Int32 index);
+        public Int32 LastIndexOf(TKey key, Int32 index, Int32 count);
         public Int32 IndexOfValue(TValue key);
         public Int32 IndexOfValue(TValue key, Int32 index);
         public Int32 IndexOfValue(TValue key, Int32 index, Int32 count);
         public Int32 LastIndexOfValue(TValue key);
         public Int32 LastIndexOfValue(TValue key, Int32 index);
         public Int32 LastIndexOfValue(TValue key, Int32 index, Int32 count);
-        public KeyValuePair<TValue, TKey> GetValueKeyPairByIndex(Int32 index);
-        public Boolean TryGetValueKeyPairByIndex(Int32 index, out KeyValuePair<TValue, TKey> pair);
+        public IEnumerator<TKey> GetKeyEnumerator();
+        public IEnumerator<TValue> GetValueEnumerator();
     }
 }

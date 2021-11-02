@@ -99,6 +99,9 @@
       <Compile Update="Utilities\Types\Enumerable\GroupQueryableUtilities.cs">
         <DependentUpon>QueryableUtilities.cs</DependentUpon>
       </Compile>
+      <Compile Update="Utilities\Types\Enumerable\KeyValuePairEnumerableUtilities.cs">
+        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>

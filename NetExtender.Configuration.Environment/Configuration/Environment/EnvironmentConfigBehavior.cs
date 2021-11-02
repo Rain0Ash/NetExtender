@@ -98,11 +98,11 @@ namespace NetExtender.Configuration.Environment
             }
         }
 
-        public override String?[]? GetExistKeys()
+        public override ConfigurationEntry[]? GetExists()
         {
             try
             {
-                return System.Environment.GetEnvironmentVariables().Keys.OfType<String>().ToArray();
+                return System.Environment.GetEnvironmentVariables().Keys.OfType<String>().Select(key => new ConfigurationEntry(key)).ToArray();
             }
             catch (Exception)
             {

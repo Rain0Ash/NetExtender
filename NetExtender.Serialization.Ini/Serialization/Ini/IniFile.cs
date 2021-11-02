@@ -8,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using NetExtender.Types.Dictionaries;
 
 namespace NetExtender.Serialization.Ini
 {
@@ -17,7 +18,7 @@ namespace NetExtender.Serialization.Ini
 
         public IEqualityComparer<String> Comparer { get; }
         
-        private Dictionary<String, IniSection> Sections { get; }
+        private IndexDictionary<String, IniSection> Sections { get; }
         
         Boolean ICollection<KeyValuePair<String, IniSection>>.IsReadOnly
         {
@@ -75,7 +76,7 @@ namespace NetExtender.Serialization.Ini
         public IniFile(IEqualityComparer<String>? comparer)
         {
             Comparer = comparer ?? DefaultComparer;
-            Sections = new Dictionary<String, IniSection>(Comparer);
+            Sections = new IndexDictionary<String, IniSection>(Comparer);
         }
         
         public Boolean ContainsKey(String section)

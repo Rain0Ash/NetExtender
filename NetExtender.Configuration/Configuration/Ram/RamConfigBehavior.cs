@@ -100,7 +100,7 @@ namespace NetExtender.Configuration.Ram
 
         public override String? Get(String? key, IEnumerable<String>? sections)
         {
-            return key is not null ? Config[key, sections].Value : null;
+            return key is not null ? Config[key, ToSection(sections)].Value : null;
         }
 
         public override Boolean Set(String? key, String? value, IEnumerable<String>? sections)
@@ -117,11 +117,11 @@ namespace NetExtender.Configuration.Ram
 
             if (!IsLazyWrite)
             {
-                Config[key, sections].Value = value;
+                Config[key, ToSection(sections)].Value = value;
                 return true;
             }
 
-            IImmutableList<String> immutable = sections.AsIImmutableList();
+            IImmutableList<String> immutable = ToSection(sections).AsIImmutableList();
 
             if (Get(key, immutable) == value)
             {
@@ -132,9 +132,9 @@ namespace NetExtender.Configuration.Ram
             return true;
         }
 
-        public override String?[] GetExistKeys()
+        public override ConfigurationEntry[]? GetExists()
         {
-            return Config.Keys.ToArray(); //TODO: full path
+            return Config.Dump()?.Select(entry => new ConfigurationEntry(entry.Key, entry.Sections)).ToArray();
         }
 
         public override Boolean Reload()

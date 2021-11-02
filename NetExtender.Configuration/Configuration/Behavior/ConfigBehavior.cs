@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Behavior.Interfaces;
@@ -85,7 +86,7 @@ namespace NetExtender.Configuration.Behavior
         public Boolean CryptByDefault { get; init; }
 
         public ConfigPropertyOptions DefaultOptions { get; init; } = ConfigPropertyOptions.Caching;
-        
+
         public const String DefaultJoiner = ".";
         public String Joiner { get; init; } = DefaultJoiner;
 
@@ -111,9 +112,25 @@ namespace NetExtender.Configuration.Behavior
             return value.Convert<T>();
         }
 
+        [return: NotNullIfNotNull("sections")]
+        protected virtual IEnumerable<String>? ToSection(IEnumerable<String>? sections)
+        {
+            return sections;
+        }
+
+        [return: NotNullIfNotNull("key")]
+        protected virtual IEnumerable<String>? ToSection<T>(String? key, IEnumerable<String>? sections)
+        {
+            if (key is null)
+            {
+                return default;
+            }
+
+            return sections is null ? new[] { key } : ToSection(sections.Append(key));
+        }
+
         public abstract String? Get(String? key, IEnumerable<String>? sections);
         public abstract Boolean Set(String? key, String? value, IEnumerable<String>? sections);
-        public abstract String?[]? GetExistKeys();
 
         public virtual Task<String?> GetAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
@@ -127,14 +144,16 @@ namespace NetExtender.Configuration.Behavior
             return result.ToTask();
         }
 
-        public Task<String?[]?> GetExistKeysAsync()
+        public abstract ConfigurationEntry[]? GetExists();
+
+        public Task<ConfigurationEntry[]?> GetExistsAsync()
         {
-            return GetExistKeysAsync(CancellationToken.None);
+            return GetExistsAsync(CancellationToken.None);
         }
 
-        public virtual Task<String?[]?> GetExistKeysAsync(CancellationToken token)
+        public virtual Task<ConfigurationEntry[]?> GetExistsAsync(CancellationToken token)
         {
-            String?[]? keys = !token.IsCancellationRequested ? GetExistKeys() : null;
+            ConfigurationEntry[]? keys = !token.IsCancellationRequested ? GetExists() : null;
             return keys.ToTask();
         }
 

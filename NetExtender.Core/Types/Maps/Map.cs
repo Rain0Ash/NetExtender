@@ -30,7 +30,7 @@ namespace NetExtender.Types.Maps
             }
         }
 
-        IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys
+        IEnumerable<TKey> IReadOnlyMap<TKey, TValue>.Keys
         {
             get
             {
@@ -38,7 +38,7 @@ namespace NetExtender.Types.Maps
             }
         }
 
-        IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values
+        IEnumerable<TValue> IReadOnlyMap<TKey, TValue>.Values
         {
             get
             {
@@ -188,7 +188,7 @@ namespace NetExtender.Types.Maps
             Int32 ensure = Base.EnsureCapacity(capacity);
             if (ensure != Reversed.EnsureCapacity(capacity))
             {
-                throw new CollectionSyncException();
+                throw new CollectionSynchronizationException();
             }
             
             return ensure;
@@ -358,7 +358,7 @@ namespace NetExtender.Types.Maps
 
             if (added ^ Reversed.TryAdd(value, key))
             {
-                throw new CollectionSyncException();
+                throw new CollectionSynchronizationException();
             }
 
             return added;
@@ -422,7 +422,7 @@ namespace NetExtender.Types.Maps
 
             if (removed ^ Reversed.Remove(value))
             {
-                throw new CollectionSyncException();
+                throw new CollectionSynchronizationException();
             }
 
             return removed;

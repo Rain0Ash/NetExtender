@@ -262,7 +262,7 @@ namespace NetExtender.Types.Trees
             return TryAdd(key, sections, value);
         }
 
-        public TValue GetValue(TKey key)
+        public TValue? GetValue(TKey key)
         {
             if (key is null)
             {
@@ -277,7 +277,7 @@ namespace NetExtender.Types.Trees
             return node.Value;
         }
         
-        public TValue GetValue(TKey key, IEnumerable<TKey>? sections)
+        public TValue? GetValue(TKey key, IEnumerable<TKey>? sections)
         {
             if (key is null)
             {
@@ -287,7 +287,7 @@ namespace NetExtender.Types.Trees
             return (GetChild(key, sections) ?? throw new KeyNotFoundException()).Value;
         }
 
-        public TValue GetValue(TKey key, params TKey[]? sections)
+        public TValue? GetValue(TKey key, params TKey[]? sections)
         {
             return GetValue(key, (IEnumerable<TKey>?) sections);
         }
@@ -325,16 +325,16 @@ namespace NetExtender.Types.Trees
             return Remove(key, sections, out value);
         }
 
-        public void RemoveEmpty()
+        public void ClearEmpty()
         {
             foreach (TKey key in Keys)
             {
-                RemoveEmpty(key);
+                ClearEmpty(key);
             }
         }
         
         // ReSharper disable once CognitiveComplexity
-        public void RemoveEmpty(TKey key)
+        public void ClearEmpty(TKey key)
         {
             if (key is null)
             {
@@ -367,12 +367,12 @@ namespace NetExtender.Types.Trees
                 }
                 else if (dictionary.Count > 0)
                 {
-                    dictionary.RemoveEmpty();
+                    dictionary.ClearEmpty();
                 }
             }
         }
 
-        public void RemoveEmpty(TKey key, IEnumerable<TKey> sections)
+        public void ClearEmpty(TKey key, IEnumerable<TKey> sections)
         {
             if (key is null)
             {
@@ -386,12 +386,59 @@ namespace NetExtender.Types.Trees
                 return;
             }
 
-            node.RemoveEmpty(key);
+            node.ClearEmpty(key);
         }
 
-        public void RemoveEmpty(TKey key, params TKey[] sections)
+        public void ClearEmpty(TKey key, params TKey[] sections)
         {
-            RemoveEmpty(key, (IEnumerable<TKey>) sections);
+            ClearEmpty(key, (IEnumerable<TKey>) sections);
+        }
+
+        private IEnumerable<DictionaryTreeEntry<TKey, TValue>> DumpInternal(IEnumerable<TKey>? sections)
+        {
+            ImmutableArray<TKey> section = sections.AsImmutableArray();
+            
+            foreach ((TKey key, IDictionaryTreeNode<TKey, TValue> node) in this)
+            {
+                if (node.HasValue)
+                {
+                    yield return new DictionaryTreeEntry<TKey, TValue>(key, node.Value, section);
+                }
+                
+                DictionaryTreeEntry<TKey, TValue>[]? dump = node.Dump(section.Add(key));
+
+                if (dump is null)
+                {
+                    continue;
+                }
+
+                foreach (DictionaryTreeEntry<TKey, TValue> entry in dump)
+                {
+                    yield return entry;
+                }
+            }
+        }
+        
+        public DictionaryTreeEntry<TKey, TValue>[]? Dump()
+        {
+            return Dump(null);
+        }
+
+        public DictionaryTreeEntry<TKey, TValue>[]? Dump(params TKey[]? sections)
+        {
+            return Dump((IEnumerable<TKey>?) sections);
+        }
+        
+        public DictionaryTreeEntry<TKey, TValue>[]? Dump(IEnumerable<TKey>? sections)
+        {
+            try
+            {
+                return DumpInternal(sections).ToArray();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public new IDictionaryTreeNode<TKey, TValue> this[TKey key]

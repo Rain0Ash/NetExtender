@@ -14,14 +14,6 @@ namespace NetExtender.Types.Maps
     {
         private List<TKey> Order { get; }
 
-        public IReadOnlyList<TKey> OrderedKeys
-        {
-            get
-            {
-                return Order;
-            }
-        }
-
         public IndexMap()
         {
             Order = new List<TKey>();
@@ -320,12 +312,12 @@ namespace NetExtender.Types.Maps
             Order.Insert(index, key);
         }
 
-        public void Insert(TValue key, TKey value)
+        public void InsertByValue(TValue key, TKey value)
         {
-            Insert(0, key, value);
+            InsertByValue(0, key, value);
         }
 
-        public void Insert(Int32 index, TValue key, TKey value)
+        public void InsertByValue(Int32 index, TValue key, TKey value)
         {
             Insert(index, value, key);
         }
@@ -361,12 +353,12 @@ namespace NetExtender.Types.Maps
             return true;
         }
 
-        public Boolean TryInsert(TValue key, TKey value)
+        public Boolean TryInsertByValue(TValue key, TKey value)
         {
-            return TryInsert(0, key, value);
+            return TryInsertByValue(0, key, value);
         }
 
-        public Boolean TryInsert(Int32 index, TValue key, TKey value)
+        public Boolean TryInsertByValue(Int32 index, TValue key, TKey value)
         {
             return TryInsert(index, value, key);
         }

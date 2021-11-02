@@ -27,7 +27,7 @@ namespace NetExtender.Types.Immutable.Maps
                 Int32 count = Base.Count;
                 if (count != Reversed.Count)
                 {
-                    throw new CollectionSyncException();
+                    throw new CollectionSynchronizationException();
                 }
                 
                 return count;
@@ -310,41 +310,6 @@ namespace NetExtender.Types.Immutable.Maps
             {
                 return Reversed[key];
             }
-        }
-        
-        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.Add(TKey key, TValue value)
-        {
-            return Add(key, value);
-        }
-
-        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.AddRange(IEnumerable<KeyValuePair<TKey, TValue>> pairs)
-        {
-            return AddRange(pairs);
-        }
-
-        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.Remove(TKey key)
-        {
-            return Remove(key);
-        }
-
-        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.RemoveRange(IEnumerable<TKey> keys)
-        {
-            return RemoveRange(keys);
-        }
-
-        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.SetItem(TKey key, TValue value)
-        {
-            return SetItem(key, value);
-        }
-
-        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.SetItems(IEnumerable<KeyValuePair<TKey, TValue>> items)
-        {
-            return SetItems(items);
-        }
-        
-        IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.Clear()
-        {
-            return Clear();
         }
         
         public TValue this[TKey key]

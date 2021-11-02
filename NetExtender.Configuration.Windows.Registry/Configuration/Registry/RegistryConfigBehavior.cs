@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NetExtender.Configuration.Behavior;
 using NetExtender.Configuration.Common;
 using NetExtender.Crypto.CryptKey.Interfaces;
@@ -123,9 +124,9 @@ namespace NetExtender.Configuration.Windows.Registry
             return true;
         }
 
-        public override String?[]? GetExistKeys()
+        public override ConfigurationEntry[]? GetExists()
         {
-            return Registry.GetValueNames();
+            return Registry.Dump()?.Select(item => new ConfigurationEntry(item.Name, item.Sections)).ToArray();
         }
 
         public override Boolean Reload()

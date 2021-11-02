@@ -42,7 +42,7 @@ namespace NetExtender.Registry
 
         public RegistryKeys Key { get; }
         
-        public IImmutableList<String> Sections { get; }
+        public ImmutableArray<String> Sections { get; }
         
         private String? _path;
         public String Path
@@ -74,12 +74,12 @@ namespace NetExtender.Registry
                     return _parent;
                 }
 
-                if (Sections.Count <= 0)
+                if (Sections.Length <= 0)
                 {
                     return _parent ??= new Registry(Key);
                 }
 
-                return _parent ??= new Registry(Key, Sections.RemoveAt(Sections.Count - 1));
+                return _parent ??= new Registry(Key, Sections.RemoveAt(Sections.Length - 1));
             }
         }
 
@@ -218,7 +218,7 @@ namespace NetExtender.Registry
         private Registry(RegistryKeys key, Registry nested, Boolean inherit, IEnumerable<String>? sections = null)
         {
             Key = nested?.Key ?? key;
-            Sections = nested?.Sections ?? ImmutableList<String>.Empty;
+            Sections = nested?.Sections ?? ImmutableArray<String>.Empty;
             if (sections is not null)
             {
                 Sections = Sections.AddRange(sections).RemoveAll(String.IsNullOrEmpty);
@@ -249,7 +249,7 @@ namespace NetExtender.Registry
         public Registry(RegistryKeys key, IEnumerable<String>? sections)
         {
             Key = key;
-            Sections = sections is not null ? sections.AsIImmutableList().RemoveAll(String.IsNullOrEmpty) : ImmutableList<String>.Empty;
+            Sections = sections is not null ? sections.AsImmutableArray().RemoveAll(String.IsNullOrEmpty) : ImmutableArray<String>.Empty;
         }
 
         public IRegistry SubKey(params String[]? sections)
@@ -1061,7 +1061,6 @@ namespace NetExtender.Registry
             return GetSubKeyNames();
         }
 
-        [SuppressMessage("ReSharper", "CognitiveComplexity")]
         private IEnumerable<RegistryEntry> DumpInternal()
         {
             RegistryEntry[]? entries = GetValues();
@@ -1076,21 +1075,25 @@ namespace NetExtender.Registry
 
             String[]? subkeys = GetSubKeyNames();
 
-            if (subkeys is not null)
+            if (subkeys is null)
             {
-                foreach (String subkey in subkeys)
-                {
-                    using IRegistry registry = NestedSubKey(subkey);
-                    
-                    RegistryEntry[]? subentries = registry.Dump();
+                yield break;
+            }
 
-                    if (subentries is not null)
-                    {
-                        foreach (RegistryEntry entry in subentries)
-                        {
-                            yield return entry;
-                        }
-                    }
+            foreach (String subkey in subkeys)
+            {
+                using IRegistry registry = NestedSubKey(subkey);
+                    
+                RegistryEntry[]? subentries = registry.Dump();
+
+                if (subentries is null)
+                {
+                    continue;
+                }
+
+                foreach (RegistryEntry entry in subentries)
+                {
+                    yield return entry;
                 }
             }
         }
@@ -1144,12 +1147,7 @@ namespace NetExtender.Registry
                     return false;
                 }
 
-                if (Sections.Count <= 0)
-                {
-                    return false;
-                }
-                
-                return Parent.RemoveSubKey(Sections[^1]);
+                return Sections.Length > 0 && Parent.RemoveSubKey(Sections[^1]);
             }
             catch (Exception)
             {
@@ -1310,12 +1308,7 @@ namespace NetExtender.Registry
                     return false;
                 }
 
-                if (Sections.Count <= 0)
-                {
-                    return false;
-                }
-                
-                return Parent.RemoveSubKeyTree(Sections[^1]);
+                return Sections.Length > 0 && Parent.RemoveSubKeyTree(Sections[^1]);
             }
             catch (Exception)
             {

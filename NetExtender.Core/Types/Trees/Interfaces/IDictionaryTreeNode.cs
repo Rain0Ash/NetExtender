@@ -5,7 +5,7 @@ namespace NetExtender.Types.Trees.Interfaces
 {
     public interface IDictionaryTreeNode<TKey, TValue> : IDictionaryTree<TKey, TValue> where TKey : notnull
     {
-        public TValue Value { get; set; }
+        public TValue? Value { get; set; }
         public IDictionaryTree<TKey, TValue> Tree { get; }
     }
 }

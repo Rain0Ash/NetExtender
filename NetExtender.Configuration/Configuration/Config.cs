@@ -214,13 +214,12 @@ namespace NetExtender.Configuration
 
         private String? GetValueInternalCrypt(String? value, Boolean decrypt, ICryptKey? crypt)
         {
-            crypt ??= Crypt;
-            
             if (!decrypt || value is null)
             {
                 return value;
             }
-
+            
+            crypt ??= Crypt;
             return crypt.Decrypt(value) ?? value;
         }
         
@@ -352,7 +351,7 @@ namespace NetExtender.Configuration
             converter ??= ConvertUtilities.TryConvert;
             
             T? convert;
-            if (!crypt.IsDecrypt || value is null)
+            if (value is null || !crypt.IsDecrypt)
             {
                 return converter(value, out convert) ? convert : alternate;
             }
@@ -514,13 +513,13 @@ namespace NetExtender.Configuration
 
         public Boolean GetOrSetValueInternalCrypt(String? value, CryptAction crypt, ICryptKey? cryptkey, out String? result)
         {
-            cryptkey ??= Crypt;
-
             if (value is null)
             {
                 result = default;
                 return false;
             }
+            
+            cryptkey ??= Crypt;
 
             result = crypt.HasFlag(CryptAction.Decrypt) ? cryptkey.Decrypt(value) ?? value : value;
             return true;
@@ -636,19 +635,20 @@ namespace NetExtender.Configuration
         
         public Boolean GetOrSetValueInternalCrypt<T>(String? value, T alternate, ICryptKey? crypt, TryConverter<String?, T>? converter, out T? result)
         {
-            crypt ??= Crypt;
-            converter ??= ConvertUtilities.TryConvert;
-            
             if (value is null)
             {
                 result = default;
                 return false;
             }
             
+            crypt ??= Crypt;
+
             if (crypt.IsDecrypt)
             {
                 value = crypt.Decrypt(value) ?? value;
             }
+            
+            converter ??= ConvertUtilities.TryConvert;
 
             result = converter(value, out T? convert) ? convert : alternate;
             return true;
@@ -830,19 +830,19 @@ namespace NetExtender.Configuration
             return await GetValueAsync(key, sections, token).ConfigureAwait(false) is not null;
         }
 
-        public String?[]? GetExistKeys()
+        public ConfigurationEntry[]? GetExists()
         {
-            return Behavior.GetExistKeys();
+            return Behavior.GetExists();
         }
 
-        public Task<String?[]?> GetExistKeysAsync()
+        public Task<ConfigurationEntry[]?> GetExistsAsync()
         {
-            return Behavior.GetExistKeysAsync();
+            return Behavior.GetExistsAsync();
         }
 
-        public Task<String?[]?> GetExistKeysAsync(CancellationToken token)
+        public Task<ConfigurationEntry[]?> GetExistsAsync(CancellationToken token)
         {
-            return Behavior.GetExistKeysAsync(token);
+            return Behavior.GetExistsAsync(token);
         }
         
         public Boolean RemoveValue(String? key, params String[]? sections)
@@ -943,6 +943,21 @@ namespace NetExtender.Configuration
         private Task<Boolean> SetInternalAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
         {
             return SetInternalCrypt(ref key, ref value, ref sections) ? SetAsync(key, value, sections, token) : TaskUtilities.False;
+        }
+        
+        public Boolean Reload()
+        {
+            return Behavior.Reload();
+        }
+
+        public Task<Boolean> ReloadAsync()
+        {
+            return Behavior.ReloadAsync();
+        }
+
+        public Task<Boolean> ReloadAsync(CancellationToken token)
+        {
+            return Behavior.ReloadAsync(token);
         }
 
         private Boolean CheckReadOnly()

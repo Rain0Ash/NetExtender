@@ -81,9 +81,9 @@ namespace NetExtender.Configuration.Interfaces
         public Task<Boolean> KeyExistAsync(String? key, IEnumerable<String>? sections);
         public Task<Boolean> KeyExistAsync(String? key, CancellationToken token, params String[]? sections);
         public Task<Boolean> KeyExistAsync(String? key, IEnumerable<String>? sections, CancellationToken token);
-        public String?[]? GetExistKeys();
-        public Task<String?[]?> GetExistKeysAsync();
-        public Task<String?[]?> GetExistKeysAsync(CancellationToken token);
+        public ConfigurationEntry[]? GetExists();
+        public Task<ConfigurationEntry[]?> GetExistsAsync();
+        public Task<ConfigurationEntry[]?> GetExistsAsync(CancellationToken token);
 
         public Boolean SetValue<T>(String? key, T value, params String[]? sections);
         public Boolean SetValue<T>(String? key, T value, IEnumerable<String>? sections);
@@ -145,5 +145,8 @@ namespace NetExtender.Configuration.Interfaces
         public Task<Boolean> RemoveValueAsync(String? key, IEnumerable<String>? sections);
         public Task<Boolean> RemoveValueAsync(String? key, CancellationToken token, params String[]? sections);
         public Task<Boolean> RemoveValueAsync(String? key, IEnumerable<String>? sections, CancellationToken token);
+        public Boolean Reload();
+        public Task<Boolean> ReloadAsync();
+        public Task<Boolean> ReloadAsync(CancellationToken token);
     }
 }

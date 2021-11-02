@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NetExtender.Types.Dictionaries;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Serialization.Ini
 {
@@ -148,12 +149,22 @@ namespace NetExtender.Serialization.Ini
 
         public Int32 IndexOf(String key)
         {
-            return IndexOf(key, 0, Dictionary.Count);
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return Dictionary.IndexOf(key);
         }
 
         public Int32 IndexOf(String key, Int32 index)
         {
-            return IndexOf(key, index, Dictionary.Count - index);
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            return Dictionary.IndexOf(key, index);
         }
 
         public Int32 IndexOf(String key, Int32 index, Int32 count)
@@ -163,27 +174,27 @@ namespace NetExtender.Serialization.Ini
                 throw new ArgumentNullException(nameof(key));
             }
 
-            Dictionary.IndexOf(key, index, count)
+            return Dictionary.IndexOf(key, index, count);
         }
 
         public Int32 LastIndexOf(String key)
         {
-            if (Order is null)
+            if (key is null)
             {
-                return -1;
+                throw new ArgumentNullException(nameof(key));
             }
 
-            return LastIndexOf(key, 0, Order.Count);
+            return Dictionary.LastIndexOf(key);
         }
 
         public Int32 LastIndexOf(String key, Int32 index)
         {
-            if (Order is null)
+            if (key is null)
             {
-                return -1;
+                throw new ArgumentNullException(nameof(key));
             }
 
-            return LastIndexOf(key, index, Order.Count - index);
+            return Dictionary.LastIndexOf(key, index);
         }
 
         public Int32 LastIndexOf(String key, Int32 index, Int32 count)
@@ -193,40 +204,12 @@ namespace NetExtender.Serialization.Ini
                 throw new ArgumentNullException(nameof(key));
             }
 
-            if (Order is null)
-            {
-                return -1;
-            }
-
-            if (index < 0 || index > Order.Count)
-            {
-                throw new ArgumentOutOfRangeException(nameof(index));
-            }
-
-            if (count < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(count));
-            }
-
-            if (index + count > Order.Count)
-            {
-                throw new ArgumentOutOfRangeException(nameof(count));
-            }
-
-            for (Int32 i = index + count - 1; i >= index; i--)
-            {
-                if (Comparer.Equals(Order[i], key))
-                {
-                    return i;
-                }
-            }
-
-            return -1;
+            return Dictionary.LastIndexOf(key, index, count);
         }
         
-        public ICollection<IniValue> GetOrderedValues()
+        public ICollection<IniValue> GetValues()
         {
-            return Order is not null ? Order.Select(key => Dictionary[key]).ToList() : Dictionary.OrderBy(pair => pair.Key).Select(pair => pair.Value).ToList();
+            return Dictionary.GetValueEnumerator().AsEnumerable().ToList();
         }
         
         public void Add(String key, IniValue value)
@@ -237,62 +220,21 @@ namespace NetExtender.Serialization.Ini
             }
 
             Dictionary.Add(key, value);
-            Order?.Add(key);
         }
         
         void ICollection<KeyValuePair<String, IniValue>>.Add(KeyValuePair<String, IniValue> item)
         {
-            ((IDictionary<String, IniValue>) Dictionary).Add(item);
-            Order?.Add(item.Key);
+            Dictionary.Add(item);
         }
         
         public void Insert(Int32 index, String key, IniValue value)
         {
-            if (key is null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
-            if (Order is null)
-            {
-                throw new InvalidOperationException("Cannot call Insert(int, string, IniValue) on IniSection: section was not ordered.");
-            }
-
-            if (index < 0 || index > Order.Count)
-            {
-                throw new IndexOutOfRangeException("Index must be within the bounds." + Environment.NewLine + "Parameter name: index");
-            }
-
-            Dictionary.Add(key, value);
-            Order.Insert(index, key);
-        }
-
-        public void InsertRange(Int32 index, IEnumerable<KeyValuePair<String, IniValue>> collection)
-        {
-            if (collection is null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
-            
-            if (Order is null)
-            {
-                return;
-            }
-
-            if (index < 0 || index > Order.Count)
-            {
-                throw new ArgumentOutOfRangeException(nameof(index));
-            }
-
-            foreach ((String key, IniValue value) in collection)
-            {
-                Insert(index++, key, value);
-            }
+            Dictionary.Insert(index, key, value);
         }
 
         public void Sort()
         {
-            Order?.Sort();
+            Dictionary.Sort();
         }
         
         public void Sort(Comparison<String> comparison)
@@ -302,42 +244,22 @@ namespace NetExtender.Serialization.Ini
                 throw new ArgumentNullException(nameof(comparison));
             }
             
-            Order?.Sort(comparison);
+            Dictionary.Sort(comparison);
         }
 
         public void Sort(IComparer<String>? comparer)
         {
-            Order?.Sort(comparer);
+            Dictionary.Sort(comparer);
         }
         
         public void Reverse()
         {
-            Order?.Reverse();
+            Dictionary.Reverse();
         }
 
         public void Reverse(Int32 index, Int32 count)
         {
-            if (Order is null)
-            {
-                return;
-            }
-
-            if (index < 0 || index > Order.Count)
-            {
-                throw new IndexOutOfRangeException("Index must be within the bounds." + Environment.NewLine + "Parameter name: index");
-            }
-
-            if (count < 0)
-            {
-                throw new IndexOutOfRangeException("Count cannot be less than zero." + Environment.NewLine + "Parameter name: count");
-            }
-
-            if (index + count > Order.Count)
-            {
-                throw new ArgumentException("Index and count were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
-            }
-
-            Order.Reverse(index, count);
+            Dictionary.Reverse(index, count);
         }
 
         public Boolean Remove(String key)
@@ -347,109 +269,32 @@ namespace NetExtender.Serialization.Ini
                 throw new ArgumentNullException(nameof(key));
             }
 
-            Boolean remove = Dictionary.Remove(key);
-            
-            if (Order is null || !remove)
-            {
-                return remove;
-            }
-
-            for (Int32 i = 0; i < Order.Count; i++)
-            {
-                if (!Comparer.Equals(Order[i], key))
-                {
-                    continue;
-                }
-
-                Order.RemoveAt(i);
-                break;
-            }
-
-            return remove;
+            return Dictionary.Remove(key);
         }
         
         Boolean ICollection<KeyValuePair<String, IniValue>>.Remove(KeyValuePair<String, IniValue> item)
         {
-            Boolean remove = ((IDictionary<String, IniValue>) Dictionary).Remove(item);
-            
-            if (Order is null || !remove)
-            {
-                return remove;
-            }
-
-            for (Int32 i = 0; i < Order.Count; i++)
-            {
-                if (!Comparer.Equals(Order[i], item.Key))
-                {
-                    continue;
-                }
-
-                Order.RemoveAt(i);
-                break;
-            }
-
-            return remove;
+            return Dictionary.Remove(item);
         }
 
-        public void RemoveAt(Int32 index)
+        public Boolean RemoveAt(Int32 index)
         {
-            if (Order is null)
-            {
-                throw new InvalidOperationException("Cannot call RemoveAt(int) on IniSection: section was not ordered.");
-            }
-
-            if (index < 0 || index > Order.Count)
-            {
-                throw new IndexOutOfRangeException("Index must be within the bounds." + Environment.NewLine + "Parameter name: index");
-            }
-
-            String key = Order[index];
-            Order.RemoveAt(index);
-            Dictionary.Remove(key);
-        }
-
-        public void RemoveRange(Int32 index, Int32 count)
-        {
-            if (Order is null)
-            {
-                throw new InvalidOperationException("Cannot call RemoveRange(int, int) on IniSection: section was not ordered.");
-            }
-
-            if (index < 0 || index > Order.Count)
-            {
-                throw new IndexOutOfRangeException("Index must be within the bounds." + Environment.NewLine + "Parameter name: index");
-            }
-
-            if (count < 0)
-            {
-                throw new IndexOutOfRangeException("Count cannot be less than zero." + Environment.NewLine + "Parameter name: count");
-            }
-
-            if (index + count > Order.Count)
-            {
-                throw new ArgumentException("Index and count were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection.");
-            }
-
-            for (Int32 i = 0; i < count; i++)
-            {
-                RemoveAt(index);
-            }
+            return Dictionary.RemoveAt(index);
         }
         
         public void Clear()
         {
             Dictionary.Clear();
-            Order?.Clear();
         }
 
         void ICollection<KeyValuePair<String, IniValue>>.CopyTo(KeyValuePair<String, IniValue>[] array, Int32 arrayIndex)
         {
-            ((IDictionary<String, IniValue>) Dictionary).CopyTo(array, arrayIndex);
+            Dictionary.CopyTo(array, arrayIndex);
         }
 
         public IEnumerator<KeyValuePair<String, IniValue>> GetEnumerator()
         {
-            return Order is not null ? Order.Select(key => new KeyValuePair<String, IniValue>(key, Dictionary[key])).GetEnumerator() : Dictionary.GetEnumerator();
+            return Dictionary.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -465,11 +310,6 @@ namespace NetExtender.Serialization.Ini
             }
             set
             {
-                if (Order is not null && !Order.Contains(key, Comparer))
-                {
-                    Order.Add(key);
-                }
-
                 Dictionary[key] = value;
             }
         }
@@ -478,32 +318,11 @@ namespace NetExtender.Serialization.Ini
         {
             get
             {
-                if (Order is null)
-                {
-                    throw new InvalidOperationException("Cannot index IniSection using integer key: section was not ordered.");
-                }
-
-                if (index < 0 || index >= Order.Count)
-                {
-                    throw new IndexOutOfRangeException("Index must be within the bounds." + Environment.NewLine + "Parameter name: index");
-                }
-
-                return Dictionary[Order[index]];
+                return Dictionary.GetValueByIndex(index);
             }
             set
             {
-                if (Order is null)
-                {
-                    throw new InvalidOperationException("Cannot index IniSection using integer key: section was not ordered.");
-                }
-
-                if (index < 0 || index >= Order.Count)
-                {
-                    throw new IndexOutOfRangeException("Index must be within the bounds." + Environment.NewLine + "Parameter name: index");
-                }
-
-                String key = Order[index];
-                Dictionary[key] = value;
+                Dictionary.TrySetValueByIndex(index, value);
             }
         }
     }

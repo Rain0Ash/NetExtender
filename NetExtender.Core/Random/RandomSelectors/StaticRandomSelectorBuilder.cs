@@ -11,10 +11,6 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Random
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
     public class RandomSelectorBuilder<T> : RandomSelector<T>, IRandomDictionarySelectorBuilder<T> where T : notnull
     {
         public const Int32 DefaultCapacity = 32;
@@ -43,14 +39,6 @@ namespace NetExtender.Random
             get
             {
                 return Items.Keys;
-            }
-        }
-        
-        public IReadOnlyList<T> OrderedKeys
-        {
-            get
-            {
-                return Items.OrderedKeys;
             }
         }
 
@@ -155,6 +143,31 @@ namespace NetExtender.Random
         public Int32 IndexOf(T key)
         {
             return Items.IndexOf(key);
+        }
+        
+        public Int32 IndexOf(T key, Int32 index)
+        {
+            return Items.IndexOf(key, index);
+        }
+        
+        public Int32 IndexOf(T key, Int32 index, Int32 count)
+        {
+            return Items.IndexOf(key, index, count);
+        }
+        
+        public Int32 LastIndexOf(T key)
+        {
+            return Items.LastIndexOf(key);
+        }
+        
+        public Int32 LastIndexOf(T key, Int32 index)
+        {
+            return Items.LastIndexOf(key, index);
+        }
+        
+        public Int32 LastIndexOf(T key, Int32 index, Int32 count)
+        {
+            return Items.LastIndexOf(key, index, count);
         }
         
         public Boolean TryGetValue(T key, out Double value)
@@ -275,6 +288,16 @@ namespace NetExtender.Random
                 Items.Insert(item, weight);
                 return true;
             }
+        }
+
+        public void SetValueByIndex(Int32 index, Double value)
+        {
+            Items.SetValueByIndex(index, value);
+        }
+
+        public Boolean TrySetValueByIndex(Int32 index, Double value)
+        {
+            return Items.TrySetValueByIndex(index, value);
         }
 
         public Boolean Remove(T key)

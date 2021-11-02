@@ -9,11 +9,11 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
-using NetExtender.Types.Exceptions;
-using NetExtender.Types.Exceptions.Enum;
 using NetExtender.Types.Enums;
 using NetExtender.Types.Enums.Attributes;
 using NetExtender.Types.Enums.Interfaces;
+using NetExtender.Types.Exceptions;
+using NetExtender.Types.Exceptions.Enum;
 using NetExtender.Utilities.Numerics;
 
 // ReSharper disable StaticMemberInGenericType

@@ -3,8 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using NetExtender.Types.Exceptions;
 using NetExtender.Random.Interfaces;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 

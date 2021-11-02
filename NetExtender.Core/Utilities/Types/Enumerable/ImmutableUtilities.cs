@@ -307,7 +307,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ImmutableArray<T> AsImmutableArray<T>(this IEnumerable<T> source)
+        public static ImmutableArray<T> AsImmutableArray<T>(this IEnumerable<T>? source)
         {
             return source?.ToImmutableArray() ?? ImmutableArray<T>.Empty;
         }

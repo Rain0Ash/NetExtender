@@ -4,41 +4,40 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices;
 using System.Text;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.File;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Serialization.Ini;
 using NetExtender.Types.Trees;
-using NetExtender.Utilities.Static;
+using NetExtender.Types.Trees.Interfaces;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Configuration.Windows.Ini
+namespace NetExtender.Configuration.Ini
 {
     public class IniConfigBehavior : FileConfigBehavior
     {
         public const String DefaultSection = "Main";
-        
+
         public String MainSection { get; }
-        
+
         protected StringBuilder Buffer { get; } = new StringBuilder(255);
 
         public IniConfigBehavior()
             : this(ConfigOptions.None)
         {
         }
-        
+
         public IniConfigBehavior(ConfigOptions options)
             : this(null, DefaultSection, null, options)
         {
         }
-        
+
         public IniConfigBehavior(ICryptKey? crypt)
             : this(crypt, ConfigOptions.None)
         {
         }
-        
+
         public IniConfigBehavior(ICryptKey? crypt, ConfigOptions options)
             : this(null, DefaultSection, crypt, options)
         {
@@ -53,12 +52,12 @@ namespace NetExtender.Configuration.Windows.Ini
             : this(path, DefaultSection, options)
         {
         }
-        
+
         public IniConfigBehavior(String? path, ICryptKey? crypt)
             : this(path, crypt, ConfigOptions.None)
         {
         }
-        
+
         public IniConfigBehavior(String? path, ICryptKey? crypt, ConfigOptions options)
             : this(path, DefaultSection, crypt, options)
         {
@@ -73,12 +72,12 @@ namespace NetExtender.Configuration.Windows.Ini
             : this(path, section, null, options)
         {
         }
-        
+
         public IniConfigBehavior(String? path, String? section, ICryptKey? crypt)
             : this(path, section, crypt, ConfigOptions.None)
         {
         }
-        
+
         public IniConfigBehavior(String? path, String? section, ICryptKey? crypt, ConfigOptions options)
             : base(ValidatePathOrGetDefault(path, "ini"), crypt, options)
         {
@@ -86,78 +85,71 @@ namespace NetExtender.Configuration.Windows.Ini
         }
 
         [return: NotNullIfNotNull("sections")]
-        protected virtual String? ToSection(IEnumerable<String>? sections)
+        protected override IEnumerable<String>? ToSection(IEnumerable<String>? sections)
         {
             if (sections is null)
             {
                 return null;
             }
-            
+
             String join = Joiner.Join(sections);
-
-            return !String.IsNullOrEmpty(join) ? join : MainSection;
-        }
-        
-        public override String? Get(String? key, IEnumerable<String>? sections)
-        {
-            return Get(key, ToSection(sections));
-        }
-
-        protected virtual String? Get(String? key, String? section)
-        {
-            if (key is null)
-            {
-                return null;
-            }
-
-            section ??= DefaultSection;
-            
-            if (GetPrivateProfileString(section, key, String.Empty, Buffer, 255, Path) == 0)
-            {
-                return null;
-            }
-
-            String result = Buffer.Pop();
-            return !String.IsNullOrEmpty(result) ? result : null;
+            return !String.IsNullOrEmpty(join) ? new[] { join } : new []{ MainSection };
         }
 
         protected override DictionaryTree<String, String>? DeserializeConfig(String config)
         {
-            IniFile file = new IniFile(StringComparer.Ordinal);
-            file.Read(config);
+            try
+            {
+                IniFile file = new IniFile(StringComparer.Ordinal);
+                file.Read(config);
+
+                DictionaryTree<String, String> tree = new DictionaryTree<String, String>();
+
+                foreach ((String section, IniSection ini) in file)
+                {
+                    foreach ((String key, IniValue value) in ini)
+                    {
+                        if (value.Value is null)
+                        {
+                            continue;
+                        }
+
+                        tree.Add(key, value.Value, section);
+                    }
+                }
+
+                return tree;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         protected override String? SerializeConfig()
         {
-            throw new NotImplementedException();
-        }
-
-        public override Boolean Set(String? key, String? value, IEnumerable<String>? sections)
-        {
-            return Set(key, value, ToSection(sections));
-        }
-
-        protected virtual Boolean Set(String? key, String? value, String? section)
-        {
-            if (key is null)
+            try
             {
-                return false;
+                IniFile file = new IniFile(StringComparer.Ordinal);
+
+                foreach ((String section, IDictionaryTreeNode<String, String> node) in Config)
+                {
+                    IniSection ini = new IniSection();
+
+                    foreach ((String key, IDictionaryTreeNode<String, String> value) in node)
+                    {
+                        ini.Add(key, value.Value);
+                    }
+
+                    file.Add(section, ini);
+                }
+
+                return file.Write();
             }
-            
-            section ??= DefaultSection;
-            
-            if (WritePrivateProfileString(section, key, value, Path) == 0)
+            catch (Exception)
             {
-                WindowsInteropUtilities.ThrowLastWin32Exception();
+                return null;
             }
-            
-            return true;
         }
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern Int32 WritePrivateProfileString(String section, String key, String? value, String path);
-
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern Int32 GetPrivateProfileString(String section, String key, String @default, StringBuilder result, Int32 size, String path);
     }
 }

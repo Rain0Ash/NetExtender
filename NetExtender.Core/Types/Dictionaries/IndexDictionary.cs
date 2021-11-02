@@ -89,14 +89,6 @@ namespace NetExtender.Types.Dictionaries
             }
         }
 
-        public IReadOnlyList<TKey> OrderedKeys
-        {
-            get
-            {
-                return Order;
-            }
-        }
-
         public IndexDictionary()
         {
             Dictionary = new Dictionary<TKey, TValue>();
@@ -301,7 +293,7 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
 
-            return Order.IndexOf(key);
+            return Order.LastIndexOf(key);
         }
 
         public Int32 LastIndexOf(TKey key, Int32 index)
@@ -311,7 +303,7 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
 
-            return Order.IndexOf(key, index);
+            return Order.LastIndexOf(key, index);
         }
 
         public Int32 LastIndexOf(TKey key, Int32 index, Int32 count)
@@ -321,7 +313,7 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
 
-            return Order.IndexOf(key, index, count);
+            return Order.LastIndexOf(key, index, count);
         }
 
         public void Add(TKey key, TValue value)
@@ -374,7 +366,7 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
 
-            if (index < 0 || index > Order.Count)
+            if (index < 0 || index >= Order.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
@@ -406,6 +398,27 @@ namespace NetExtender.Types.Dictionaries
             }
 
             Order.Insert(index, key);
+            return true;
+        }
+        
+        public void SetValueByIndex(Int32 index, TValue value)
+        {
+            if (index < 0 || index >= Order.Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            Dictionary[Order[index]] = value;
+        }
+
+        public Boolean TrySetValueByIndex(Int32 index, TValue value)
+        {
+            if (index < 0 || index >= Order.Count)
+            {
+                return false;
+            }
+
+            Dictionary[Order[index]] = value;
             return true;
         }
 

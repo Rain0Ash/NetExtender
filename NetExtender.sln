@@ -19,7 +19,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Configuration",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain", "NetExtender.Domain\NetExtender.Domain.csproj", "{565276E6-CCA8-4E40-A700-9DB9861F7AC8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Configuration.Windows.Ini", "NetExtender.Configuration.Windows.Ini\NetExtender.Configuration.Windows.Ini.csproj", "{7582CB59-4A44-4938-8A6E-00A5B91C91A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Configuration.Ini", "NetExtender.Configuration.Ini\NetExtender.Configuration.Ini.csproj", "{7582CB59-4A44-4938-8A6E-00A5B91C91A1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Registry", "NetExtender.Registry\NetExtender.Registry.csproj", "{C78BDA6F-B9C6-4245-9462-9EBD6FE2DC13}"
 EndProject

@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Property.Interfaces;
 using NetExtender.Crypto.CryptKey.Interfaces;
-using NetExtender.Types.Exceptions;
 using NetExtender.Interfaces;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Property

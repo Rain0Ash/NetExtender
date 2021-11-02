@@ -30,9 +30,9 @@ namespace NetExtender.Configuration.Behavior.Interfaces
         public Task<String?> GetAsync(String? key, IEnumerable<String>? sections, CancellationToken token);
         public Boolean Set(String? key, String? value, IEnumerable<String>? sections);
         public Task<Boolean> SetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token);
-        public String?[]? GetExistKeys();
-        public Task<String?[]?> GetExistKeysAsync();
-        public Task<String?[]?> GetExistKeysAsync(CancellationToken token);
+        public ConfigurationEntry[]? GetExists();
+        public Task<ConfigurationEntry[]?> GetExistsAsync();
+        public Task<ConfigurationEntry[]?> GetExistsAsync(CancellationToken token);
         public Boolean Reload();
         public Task<Boolean> ReloadAsync();
         public Task<Boolean> ReloadAsync(CancellationToken token);

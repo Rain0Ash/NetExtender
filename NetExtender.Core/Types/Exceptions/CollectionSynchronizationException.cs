@@ -7,23 +7,23 @@ using System.Runtime.Serialization;
 namespace NetExtender.Types.Exceptions
 {
     [Serializable]
-    public class CollectionSyncException : Exception
+    public class CollectionSynchronizationException : Exception
     {
-        public CollectionSyncException()
+        public CollectionSynchronizationException()
         {
         }
 
-        public CollectionSyncException(String? message)
+        public CollectionSynchronizationException(String? message)
             : base(message)
         {
         }
 
-        public CollectionSyncException(String? message, Exception? innerException)
+        public CollectionSynchronizationException(String? message, Exception? innerException)
             : base(message, innerException)
         {
         }
         
-        protected CollectionSyncException(SerializationInfo info, StreamingContext context)
+        protected CollectionSynchronizationException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

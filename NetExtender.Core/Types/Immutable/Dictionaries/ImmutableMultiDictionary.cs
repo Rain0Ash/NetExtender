@@ -300,7 +300,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
                 throw new ArgumentNullException(nameof(items));
             }
 
-            IMultiDictionary<TKey, TValue> itemdict = new MultiDictionary<TKey, TValue>(Dictionary.KeyComparer);
+            IMultiDictionary<TKey, TValue> dictionary = new MultiDictionary<TKey, TValue>(Dictionary.KeyComparer);
             
             foreach ((TKey key, TValue value) in items)
             {
@@ -309,23 +309,23 @@ namespace NetExtender.Types.Immutable.Dictionaries
                     continue;
                 }
 
-                itemdict.Add(key, value);
+                dictionary.Add(key, value);
             }
 
-            ImmutableDictionary<TKey, ImmutableHashSet<TValue>> dictionary = Dictionary;
-            foreach ((TKey key, ImmutableHashSet<TValue> set) in itemdict)
+            ImmutableDictionary<TKey, ImmutableHashSet<TValue>> immutable = Dictionary;
+            foreach ((TKey key, ImmutableHashSet<TValue> set) in dictionary)
             {
-                if (dictionary.TryGetValue(key, out ImmutableHashSet<TValue>? result) && result is not null! && !result.IsEmpty)
+                if (immutable.TryGetValue(key, out ImmutableHashSet<TValue>? result) && result is not null! && !result.IsEmpty)
                 {
-                    dictionary = dictionary.SetItem(key, result.Intersect(set));
+                    immutable = immutable.SetItem(key, result.Intersect(set));
                 }
                 else
                 {
-                    dictionary = dictionary.SetItem(key, set);
+                    immutable = immutable.SetItem(key, set);
                 }
             }
 
-            return new ImmutableMultiDictionary<TKey, TValue>(dictionary);
+            return new ImmutableMultiDictionary<TKey, TValue>(immutable);
         }
 
         IImmutableMultiDictionary<TKey, TValue> IImmutableMultiDictionary<TKey, TValue>.SetItems(IEnumerable<KeyValuePair<TKey, TValue>> items)

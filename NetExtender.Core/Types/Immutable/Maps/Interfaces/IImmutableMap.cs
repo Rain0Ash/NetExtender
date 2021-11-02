@@ -8,7 +8,7 @@ using NetExtender.Types.Maps.Interfaces;
 
 namespace NetExtender.Types.Immutable.Maps.Interfaces
 {
-    public interface IImmutableMap<TKey, TValue> : IImmutableDictionary<TKey, TValue>, IReadOnlyMap<TKey, TValue>
+    public interface IImmutableMap<TKey, TValue> : IReadOnlyMap<TKey, TValue>
     {
         public Boolean TryGetValue(TValue equalValue, out TValue actualValue);
 
@@ -24,25 +24,25 @@ namespace NetExtender.Types.Immutable.Maps.Interfaces
         
         public IImmutableMap<TKey, TValue> RemoveByValue(KeyValuePair<TValue, TKey> item);
 
-        /// <inheritdoc cref="IImmutableDictionary{TKey,TValue}.Clear"/>
-        public new IImmutableMap<TKey, TValue> Clear();
-
         /// <inheritdoc cref="IImmutableDictionary{TKey,TValue}.Add"/>
-        public new IImmutableMap<TKey, TValue> Add(TKey key, TValue value);
+        public IImmutableMap<TKey, TValue> Add(TKey key, TValue value);
 
         /// <inheritdoc cref="IImmutableDictionary{TKey,TValue}.AddRange"/>
-        public new IImmutableMap<TKey, TValue> AddRange(IEnumerable<KeyValuePair<TKey, TValue>> pairs);
+        public IImmutableMap<TKey, TValue> AddRange(IEnumerable<KeyValuePair<TKey, TValue>> pairs);
 
         /// <inheritdoc cref="IImmutableDictionary{TKey,TValue}.SetItem"/>
-        public new IImmutableMap<TKey, TValue> SetItem(TKey key, TValue value);
+        public IImmutableMap<TKey, TValue> SetItem(TKey key, TValue value);
 
         /// <inheritdoc cref="IImmutableDictionary{TKey,TValue}.SetItems"/>
-        public new IImmutableMap<TKey, TValue> SetItems(IEnumerable<KeyValuePair<TKey, TValue>> items);
-
-        /// <inheritdoc cref="IImmutableDictionary{TKey,TValue}.RemoveRange"/>
-        public new IImmutableMap<TKey, TValue> RemoveRange(IEnumerable<TKey> keys);
+        public IImmutableMap<TKey, TValue> SetItems(IEnumerable<KeyValuePair<TKey, TValue>> items);
 
         /// <inheritdoc cref="IImmutableDictionary{TKey,TValue}.Remove"/>
-        public new IImmutableMap<TKey, TValue> Remove(TKey key);
+        public IImmutableMap<TKey, TValue> Remove(TKey key);
+        
+        /// <inheritdoc cref="IImmutableDictionary{TKey,TValue}.RemoveRange"/>
+        public IImmutableMap<TKey, TValue> RemoveRange(IEnumerable<TKey> keys);
+        
+        /// <inheritdoc cref="IImmutableDictionary{TKey,TValue}.Clear"/>
+        public IImmutableMap<TKey, TValue> Clear();
     }
 }

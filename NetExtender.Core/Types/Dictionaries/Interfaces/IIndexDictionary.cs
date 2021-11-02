@@ -25,6 +25,8 @@ namespace NetExtender.Types.Dictionaries.Interfaces
         public void Insert(Int32 index, TKey key, TValue value);
         public Boolean TryInsert(TKey key, TValue value);
         public Boolean TryInsert(Int32 index, TKey key, TValue value);
+        public void SetValueByIndex(Int32 index, TValue value);
+        public Boolean TrySetValueByIndex(Int32 index, TValue value);
         public Boolean RemoveAt(Int32 index);
         public Boolean RemoveAt(Int32 index, out KeyValuePair<TKey, TValue> pair);
         public void Swap(Int32 index1, Int32 index2);

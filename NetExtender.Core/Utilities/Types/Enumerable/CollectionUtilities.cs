@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Microsoft.VisualBasic;
 using NetExtender.Combinatorics;
 
 namespace NetExtender.Utilities.Types
@@ -20,7 +19,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            return TryPopRandom(collection, out T? result) ? result : throw new InvalidOperationException();
+            return TryPopRandom(collection, out T? result) ? result : throw new NotSupportedException();
         }
         
         public static Boolean TryPopRandom<T>(this ICollection<T> collection, [MaybeNullWhen(false)] out T result)
@@ -30,14 +29,22 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            if (collection.Count <= 0)
+            if (collection.IsReadOnly || collection.Count <= 0)
             {
                 result = default;
                 return false;
             }
 
-            result = collection.GetRandom();
-            return collection.Remove(result);
+            try
+            {
+                result = collection.GetRandom();
+                return collection.Remove(result);
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
         }
         
         public static IList<IList<T>> GetCombinations<T>(this ICollection<T> collection, Int32 min = 1)
@@ -76,7 +83,47 @@ namespace NetExtender.Utilities.Types
 
             return combo.ToList();
         }
+        
+        public static Boolean IsReadOnly<T>(this ICollection<T> collection)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
 
+            return collection.IsReadOnly;
+        }
+
+        public static Boolean Contains<T>(this ICollection<T> collection, T item)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            return collection.Contains(item);
+        }
+
+        public static void Add<T>(this ICollection<T> collection, T item)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            collection.Add(item);
+        }
+        
+        public static Boolean Remove<T>(this ICollection<T> collection, T item)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            return collection.Remove(item);
+        }
+        
         public static void AddRange<T>(this ICollection<T> collection, params T[] items)
         {
             AddRange(collection, (IEnumerable<T>) items);
@@ -94,9 +141,42 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(items));
             }
 
+            if (collection.IsReadOnly)
+            {
+                throw new NotSupportedException();
+            }
+
             foreach (T item in items)
             {
                 collection.Add(item);
+            }
+        }
+
+        public static void RemoveRange<T>(this ICollection<T> collection, params T[] items)
+        {
+            RemoveRange(collection, (IEnumerable<T>) items);
+        }
+
+        public static void RemoveRange<T>(this ICollection<T> collection, IEnumerable<T> items)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (items is null)
+            {
+                throw new ArgumentNullException(nameof(items));
+            }
+
+            if (collection.IsReadOnly)
+            {
+                throw new NotSupportedException();
+            }
+
+            foreach (T item in items)
+            {
+                collection.Remove(item);
             }
         }
 

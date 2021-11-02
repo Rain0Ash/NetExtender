@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.Interfaces;
 using NetExtender.Domains.View.Interfaces;
-using NetExtender.Types.Exceptions;
 using NetExtender.Types.Dispatchers.Interfaces;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Domains
 {

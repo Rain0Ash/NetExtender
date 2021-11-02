@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Immutable;
+using System.Linq;
 using Microsoft.Win32;
 using NetExtender.Utilities.Registry;
 using NetExtender.Utilities.Serialization;
@@ -10,11 +11,30 @@ using Newtonsoft.Json.Converters;
 namespace NetExtender.Registry
 {
     [Serializable]
-    public readonly struct RegistryEntry
+    public readonly struct RegistryEntry : IEquatable<RegistryEntry>
     {
+        public static Boolean operator ==(RegistryEntry first, RegistryEntry second)
+        {
+            return first.Equals(second);
+        }
+
+        public static Boolean operator !=(RegistryEntry first, RegistryEntry second)
+        {
+            return !(first == second);
+        }
+        
         [JsonConverter(typeof(StringEnumConverter))]
         public RegistryKeys Key { get; init; }
-        public IImmutableList<String> Sections { get; init; }
+        public ImmutableArray<String> Sections { get; init; }
+        
+        [JsonIgnore]
+        public Int32 Length
+        {
+            get
+            {
+                return Sections.Length;
+            }
+        }
         
         [JsonIgnore]
         public String Path
@@ -41,6 +61,21 @@ namespace NetExtender.Registry
         
         public Object? Value { get; init; }
 
+        public Boolean Equals(RegistryEntry other)
+        {
+            return Key == other.Key && Name == other.Name && Kind == other.Kind && Equals(Value, other.Value) && Sections.SequenceEqual(other.Sections);
+        }
+
+        public override Boolean Equals(Object? obj)
+        {
+            return obj is RegistryEntry other && Equals(other);
+        }
+
+        public override Int32 GetHashCode()
+        {
+            return HashCode.Combine((Int32) Key, Sections, Name, (Int32) Kind, Value);
+        }
+        
         public override String ToString()
         {
             return this.JsonSerializeObject();
