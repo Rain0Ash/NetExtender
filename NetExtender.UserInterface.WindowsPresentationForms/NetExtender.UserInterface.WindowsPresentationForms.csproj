@@ -9,7 +9,7 @@
 		<LangVersion>9</LangVersion>
 		<Authors>Rain0Ash</Authors>
         <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
-        <Version>0.8.1</Version>
+        <Version>0.8.2</Version>
     </PropertyGroup>
 
     <ItemGroup>

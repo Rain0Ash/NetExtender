@@ -8,7 +8,7 @@ using NetExtender.Configuration.Interfaces;
 
 namespace NetExtender.Utilities.Configuration
 {
-    public static class ConfigurationPropertyUtilities
+    public static class ConfigurationBehaviorUtilities
     {
         public static IConfig Create(this IConfigBehavior behavior)
         {
