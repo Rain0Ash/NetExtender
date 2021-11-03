@@ -20,7 +20,7 @@ namespace NetExtender.Utilities.IO
                 return false;
             }
 
-            using WebClientExtended client = new WebClientExtended
+            using HeadOnlyWebClient client = new HeadOnlyWebClient
             {
                 HeadOnly = true
             };

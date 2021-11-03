@@ -31,7 +31,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return new HashSetExtended<T>(source);
+            return new HashSetCollection<T>(source);
         }
         
         public static HashSet<T> ToHashSet<T>(IEnumerable<T> source, IEqualityComparer<T> comparer)
@@ -41,7 +41,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return new HashSetExtended<T>(source, comparer);
+            return new HashSetCollection<T>(source, comparer);
         }
         
         public static HashSet<T> AsHashSet<T>(IEnumerable<T> source)
@@ -51,7 +51,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source as HashSet<T> ?? new HashSetExtended<T>(source);
+            return source as HashSet<T> ?? new HashSetCollection<T>(source);
         }
         
         public static HashSet<T> AsHashSet<T>(IEnumerable<T> source, IEqualityComparer<T> comparer)
@@ -61,7 +61,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source as HashSet<T> ?? new HashSetExtended<T>(source, comparer);
+            return source as HashSet<T> ?? new HashSetCollection<T>(source, comparer);
         }
 
         public static SortedSet<T> ToSortedSet<T>(this IEnumerable<T> source)
@@ -71,7 +71,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return new SortedSetExtended<T>(source);
+            return new SortedSetCollection<T>(source);
         }
         
         public static SortedSet<T> ToSortedSet<T>(this IEnumerable<T> source, IComparer<T>? comparer)
@@ -81,7 +81,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return new SortedSetExtended<T>(source, comparer);
+            return new SortedSetCollection<T>(source, comparer);
         }
         
         public static SortedSet<T> AsSortedSet<T>(this IEnumerable<T> source)
@@ -91,7 +91,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source as SortedSet<T> ?? new SortedSetExtended<T>(source);
+            return source as SortedSet<T> ?? new SortedSetCollection<T>(source);
         }
         
         public static SortedSet<T> AsSortedSet<T>(this IEnumerable<T> source, IComparer<T>? comparer)
@@ -101,7 +101,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source as SortedSet<T> ?? new SortedSetExtended<T>(source, comparer);
+            return source as SortedSet<T> ?? new SortedSetCollection<T>(source, comparer);
         }
 
         public static OrderedSet<T> ToOrderedSet<T>(this IEnumerable<T> source) where T : notnull
@@ -144,29 +144,64 @@ namespace NetExtender.Utilities.Types
             return source as OrderedSet<T> ?? new OrderedSet<T>(source, comparer);
         }
 
-        public static void ExceptWith<T>(this ISet<T> set, params T[] except)
+        public static void IntersectWith<T>(this ISet<T> set, params T[]? values)
         {
-            if (except is null)
+            if (set is null)
             {
-                throw new ArgumentNullException(nameof(except));
+                throw new ArgumentNullException(nameof(set));
             }
 
-            if (except.Length <= 0)
+            if (values is null)
             {
                 return;
             }
 
-            set.ExceptWith(except);
+            set.IntersectWith(values);
         }
-
-        public static void IntersectWith<T>(this ISet<T> set, params T[] intersect)
+        
+        public static void UnionWith<T>(this ISet<T> set, params T[]? values)
         {
-            if (intersect is null)
+            if (set is null)
             {
-                throw new ArgumentNullException(nameof(intersect));
+                throw new ArgumentNullException(nameof(set));
             }
 
-            set.IntersectWith(intersect);
+            if (values is null)
+            {
+                return;
+            }
+
+            set.UnionWith(values);
+        }
+        
+        public static void ExceptWith<T>(this ISet<T> set, params T[]? values)
+        {
+            if (set is null)
+            {
+                throw new ArgumentNullException(nameof(set));
+            }
+
+            if (values is null)
+            {
+                return;
+            }
+
+            set.ExceptWith(values);
+        }
+        
+        public static void SymmetricExceptWith<T>(this ISet<T> set, params T[]? values)
+        {
+            if (set is null)
+            {
+                throw new ArgumentNullException(nameof(set));
+            }
+
+            if (values is null)
+            {
+                return;
+            }
+
+            set.SymmetricExceptWith(values);
         }
 
         public static T? NearestLower<T>(this SortedSet<T> set, T value)

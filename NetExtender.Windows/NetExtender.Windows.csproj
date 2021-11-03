@@ -13,6 +13,7 @@
     <ItemGroup>
       <ProjectReference Include="..\NetExtender.Configuration.Windows.Registry\NetExtender.Configuration.Windows.Registry.csproj" />
       <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
+      <ProjectReference Include="..\NetExtender.Cryptography\NetExtender.Cryptography.csproj" />
       <ProjectReference Include="..\NetExtender.Registry\NetExtender.Registry.csproj" />
     </ItemGroup>
 

@@ -11,7 +11,7 @@ using NetExtender.Utilities.Types;
 namespace NetExtender.Types.Sets
 {
     [Serializable]
-    public class RangeSet<T> : SortedSetExtended<Range<T>> where T : IComparable<T>
+    public class RangeSet<T> : SortedSetCollection<Range<T>> where T : IComparable<T>
     {
         public RangeSet()
         {

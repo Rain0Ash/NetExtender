@@ -7,7 +7,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.File;
-using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Serialization.Ini;
 using NetExtender.Types.Trees;
 using NetExtender.Types.Trees.Interfaces;
@@ -29,17 +28,7 @@ namespace NetExtender.Configuration.Ini
         }
 
         public IniConfigBehavior(ConfigOptions options)
-            : this(null, DefaultSection, null, options)
-        {
-        }
-
-        public IniConfigBehavior(ICryptKey? crypt)
-            : this(crypt, ConfigOptions.None)
-        {
-        }
-
-        public IniConfigBehavior(ICryptKey? crypt, ConfigOptions options)
-            : this(null, DefaultSection, crypt, options)
+            : this(null, DefaultSection, options)
         {
         }
 
@@ -53,33 +42,13 @@ namespace NetExtender.Configuration.Ini
         {
         }
 
-        public IniConfigBehavior(String? path, ICryptKey? crypt)
-            : this(path, crypt, ConfigOptions.None)
-        {
-        }
-
-        public IniConfigBehavior(String? path, ICryptKey? crypt, ConfigOptions options)
-            : this(path, DefaultSection, crypt, options)
-        {
-        }
-
         public IniConfigBehavior(String? path, String? section)
             : this(path, section, ConfigOptions.None)
         {
         }
-
+        
         public IniConfigBehavior(String? path, String? section, ConfigOptions options)
-            : this(path, section, null, options)
-        {
-        }
-
-        public IniConfigBehavior(String? path, String? section, ICryptKey? crypt)
-            : this(path, section, crypt, ConfigOptions.None)
-        {
-        }
-
-        public IniConfigBehavior(String? path, String? section, ICryptKey? crypt, ConfigOptions options)
-            : base(ValidatePathOrGetDefault(path, "ini"), crypt, options)
+            : base(ValidatePathOrGetDefault(path, "ini"), options)
         {
             MainSection = section ?? DefaultSection;
         }

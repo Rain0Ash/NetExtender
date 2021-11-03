@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 
@@ -126,12 +127,17 @@ namespace NetExtender.Utilities.Crypto
                 throw new ArgumentNullException(nameof(rsa));
             }
 
+            if (padding is null)
+            {
+                throw new ArgumentNullException(nameof(padding));
+            }
+
             return rsa.TryEncrypt(data, destination, padding, out _);
         }
 
         /// <inheritdoc cref="RSA.TryEncrypt"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean TryEncrypt(this RSA rsa, ReadOnlySpan<Byte> data, out Byte[] buffer)
+        public static Boolean TryEncrypt(this RSA rsa, ReadOnlySpan<Byte> data, [MaybeNullWhen(false)] out Byte[] buffer)
         {
             if (rsa is null)
             {
@@ -143,15 +149,28 @@ namespace NetExtender.Utilities.Crypto
         
         /// <inheritdoc cref="RSA.TryEncrypt"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean TryEncrypt(this RSA rsa, ReadOnlySpan<Byte> data, RSAEncryptionPadding padding, out Byte[] buffer)
+        public static Boolean TryEncrypt(this RSA rsa, ReadOnlySpan<Byte> data, RSAEncryptionPadding padding, [MaybeNullWhen(false)] out Byte[] result)
         {
             if (rsa is null)
             {
                 throw new ArgumentNullException(nameof(rsa));
             }
 
-            buffer = new Byte[data.Length];
-            return rsa.TryEncrypt(data, buffer, padding, out _);
+            if (padding is null)
+            {
+                throw new ArgumentNullException(nameof(padding));
+            }
+
+            try
+            {
+                result = rsa.Encrypt(data.ToArray(), padding);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
         }
         
         /// <inheritdoc cref="RSA.TryEncrypt"/>
@@ -175,32 +194,50 @@ namespace NetExtender.Utilities.Crypto
                 throw new ArgumentNullException(nameof(rsa));
             }
 
+            if (padding is null)
+            {
+                throw new ArgumentNullException(nameof(padding));
+            }
+
             return rsa.TryDecrypt(data, destination, padding, out _);
         }
         
         /// <inheritdoc cref="RSA.TryDecrypt"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean TryDecrypt(this RSA rsa, ReadOnlySpan<Byte> data, out Byte[] buffer)
+        public static Boolean TryDecrypt(this RSA rsa, ReadOnlySpan<Byte> data, [MaybeNullWhen(false)] out Byte[] result)
         {
             if (rsa is null)
             {
                 throw new ArgumentNullException(nameof(rsa));
             }
 
-            return TryDecrypt(rsa, data, RSAEncryptionPadding.OaepSHA256, out buffer);
+            return TryDecrypt(rsa, data, RSAEncryptionPadding.OaepSHA256, out result);
         }
         
         /// <inheritdoc cref="RSA.TryDecrypt"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean TryDecrypt(this RSA rsa, ReadOnlySpan<Byte> data, RSAEncryptionPadding padding, out Byte[] buffer)
+        public static Boolean TryDecrypt(this RSA rsa, ReadOnlySpan<Byte> data, RSAEncryptionPadding padding, [MaybeNullWhen(false)] out Byte[] result)
         {
             if (rsa is null)
             {
                 throw new ArgumentNullException(nameof(rsa));
             }
 
-            buffer = new Byte[data.Length];
-            return rsa.TryDecrypt(data, buffer, padding, out _);
+            if (padding is null)
+            {
+                throw new ArgumentNullException(nameof(padding));
+            }
+
+            try
+            {
+                result = rsa.Decrypt(data.ToArray(), padding);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
         }
         
         /// <inheritdoc cref="RSA.ExportParameters"/>

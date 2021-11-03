@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.Configuration
                 throw new ArgumentNullException(nameof(behavior));
             }
 
-            return Config.Create(behavior);
+            return new Config(behavior);
         }
     }
 }

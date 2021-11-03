@@ -20,20 +20,83 @@ namespace NetExtender.Crypto.CryptKey
     {
         private static class AES
         {
-            public static ICryptKey Default { get; } = AESCryptKey.Default;
-            public static ICryptKey KeyCrypt { get; } = Default.Clone(CryptAction.Crypt);
-            public static ICryptKey KeyDecrypt { get; } = Default.Clone(CryptAction.Decrypt);
-            public static ICryptKey KeyEncrypt { get; } = Default.Clone(CryptAction.Encrypt);
-            public static ICryptKey KeyNone { get; } = Default.Clone(CryptAction.None);
+            public static ICryptKey Default
+            {
+                get
+                {
+                    return AESCryptKey.Default;
+                }
+            }
+
+            public static ICryptKey KeyCrypt
+            {
+                get
+                {
+                    return Default.Clone(CryptAction.Crypt);
+                }
+            }
+
+            public static ICryptKey KeyDecrypt
+            {
+                get
+                {
+                    return Default.Clone(CryptAction.Decrypt);
+                }
+            }
+            public static ICryptKey KeyEncrypt
+            {
+                get
+                {
+                    return Default.Clone(CryptAction.Encrypt);
+                }
+            }
+            public static ICryptKey KeyNone
+            {
+                get
+                {
+                    return Default.Clone(CryptAction.None);
+                }
+            }
         }
         
         private static class RSA
         {
-            public static ICryptKey Default { get; } = RSACryptKey.Default;
-            public static ICryptKey KeyCrypt { get; } = Default.Clone(CryptAction.Crypt);
-            public static ICryptKey KeyDecrypt { get; } = Default.Clone(CryptAction.Decrypt);
-            public static ICryptKey KeyEncrypt { get; } = Default.Clone(CryptAction.Encrypt);
-            public static ICryptKey KeyNone { get; } = Default.Clone(CryptAction.None);
+            public static IAsymmetricCryptKey Default
+            {
+                get
+                {
+                    return RSACryptKey.Default;
+                }
+            }
+
+            public static IAsymmetricCryptKey KeyCrypt
+            {
+                get
+                {
+                    return Default.Clone(CryptAction.Crypt);
+                }
+            }
+            public static IAsymmetricCryptKey KeyDecrypt
+            {
+                get
+                {
+                    return Default.Clone(CryptAction.Decrypt);
+                }
+            }
+            public static IAsymmetricCryptKey KeyEncrypt
+            {
+                get
+                {
+                    return Default.Clone(CryptAction.Encrypt);
+                }
+            }
+            public static IAsymmetricCryptKey KeyNone
+            {
+                get
+                {
+                    return Default.Clone(CryptAction.None);
+                }
+            }
         }
 
         public static ICryptKey Create(CryptAction crypt)
@@ -69,7 +132,7 @@ namespace NetExtender.Crypto.CryptKey
 
         protected Boolean Disposable { get; }
         
-        public CryptAction Crypt { get; set; } = CryptAction.Crypt;
+        public CryptAction Crypt { get; init; } = CryptAction.Crypt;
 
         public Boolean IsEncrypt
         {
@@ -86,6 +149,8 @@ namespace NetExtender.Crypto.CryptKey
                 return Crypt.HasFlag(CryptAction.Decrypt);
             }
         }
+
+        public abstract Boolean IsDeterministic { get; }
 
         protected CryptKey(Boolean disposable)
         {
@@ -180,7 +245,7 @@ namespace NetExtender.Crypto.CryptKey
         
         public abstract Byte[]? DecryptBytes(Byte[] value);
 
-        public ICryptKey Clone()
+        public virtual ICryptKey Clone()
         {
             return Clone(Crypt);
         }

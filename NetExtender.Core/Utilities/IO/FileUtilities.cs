@@ -16,8 +16,6 @@ namespace NetExtender.Utilities.IO
 {
     public static class FileUtilities
     {
-        //TODO: try delete
-        
         public static Boolean HasAttribute(String path, FileAttributes attributes)
         {
             return HasAttribute(path, attributes, out _);
@@ -66,6 +64,36 @@ namespace NetExtender.Utilities.IO
             {
                 return false;
             }
+        }
+        
+        public static FileInfo CopyTo(this FileInfo info, FileInfo destination)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            if (destination is null)
+            {
+                throw new ArgumentNullException(nameof(destination));
+            }
+
+            return info.CopyTo(destination.FullName);
+        }
+        
+        public static FileInfo CopyTo(this FileInfo info, FileInfo destination, Boolean overwrite)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            if (destination is null)
+            {
+                throw new ArgumentNullException(nameof(destination));
+            }
+
+            return info.CopyTo(destination.FullName, overwrite);
         }
         
         public static Boolean TryCopyTo(this FileInfo info, String destination)
@@ -122,6 +150,70 @@ namespace NetExtender.Utilities.IO
             catch (Exception)
             {
                 result = default;
+                return false;
+            }
+        }
+
+        public static Boolean TryCopyTo(this FileInfo info, FileInfo destination)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            if (destination is null)
+            {
+                throw new ArgumentNullException(nameof(destination));
+            }
+
+            try
+            {
+                info.CopyTo(destination);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        
+        public static Boolean TryCopyTo(this FileInfo info, FileInfo destination, Boolean overwrite)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            if (destination is null)
+            {
+                throw new ArgumentNullException(nameof(destination));
+            }
+
+            try
+            {
+                info.CopyTo(destination, overwrite);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static Boolean TryDelete(this FileInfo info)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            try
+            {
+                info.Delete();
+                return true;
+            }
+            catch (Exception)
+            {
                 return false;
             }
         }

@@ -8,10 +8,10 @@
 		<Authors>Rain0Ash</Authors>
         <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
         <Version>0.8.2</Version>
-        <RootNamespace>NetExtender.Configuration.Windows.Ini</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\NetExtender.Configuration.File\NetExtender.Configuration.File.csproj" />
       <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj" />
       <ProjectReference Include="..\NetExtender.Serialization.Ini\NetExtender.Serialization.Ini.csproj" />
     </ItemGroup>

@@ -9,7 +9,7 @@ using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
-    //TODO: add enumerable and list utils
+    //TODO: add enumerable and list analog utilities
     public static class SpanUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

@@ -11,7 +11,7 @@ namespace NetExtender.Crypto.CryptKey.RSA
 {
     public class RSACryptKey : CryptKey, IAsymmetricCryptKey
     {
-        public static ICryptKey Default { get; } = new RSACryptKey(2048, false);
+        public static IAsymmetricCryptKey Default { get; } = new RSACryptKey(2048, false);
         
         protected Rsa Rsa { get; }
 
@@ -123,6 +123,14 @@ namespace NetExtender.Crypto.CryptKey.RSA
             Rsa = rsa ?? throw new ArgumentNullException(nameof(rsa));
         }
 
+        public override Boolean IsDeterministic
+        {
+            get
+            {
+                return false;
+            }
+        }
+
         public override String? EncryptString(String value)
         {
             if (value is null)
@@ -163,7 +171,12 @@ namespace NetExtender.Crypto.CryptKey.RSA
             return Cryptography.RSA.Decrypt(value, Rsa);
         }
         
-        public override ICryptKey Clone(CryptAction crypt)
+        public override IAsymmetricCryptKey Clone()
+        {
+            return Clone(Crypt);
+        }
+
+        public override IAsymmetricCryptKey Clone(CryptAction crypt)
         {
             return new RSACryptKey(Cryptography.RSA.Clone(Rsa))
             {

@@ -18,7 +18,7 @@ namespace NetExtender
     
     public delegate Boolean TryParseHandler<in T, in THelper, TOutput>(T value, THelper helper, [MaybeNullWhen(false)] out TOutput result);
 
-    public delegate Boolean TryConverter<in TInput, TOutput>(TInput value, [MaybeNullWhen(false)] out TOutput converted);
+    public delegate Boolean TryConverter<in TInput, TOutput>(TInput value, [MaybeNullWhen(false)] out TOutput result);
     
     public delegate void TypeHandler<in T>(T type);
 }

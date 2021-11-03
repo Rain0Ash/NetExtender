@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace NetExtender.Types.TextWriters
 {
-    public class FilterTextWriterWrapper : TextWriter, ISet<String>
+    public class FilterTextWriterWrapper : TextWriter, ISet<String>, IReadOnlySet<String>
     {
         protected TextWriter Internal { get; }
         

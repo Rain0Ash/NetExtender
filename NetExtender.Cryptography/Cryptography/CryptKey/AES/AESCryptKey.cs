@@ -22,6 +22,14 @@ namespace NetExtender.Crypto.CryptKey.AES
             }
         }
         
+        public override Boolean IsDeterministic
+        {
+            get
+            {
+                return true;
+            }
+        }
+        
         public ReadOnlySpan<Byte> Key
         {
             get
@@ -133,7 +141,7 @@ namespace NetExtender.Crypto.CryptKey.AES
                 throw new ArgumentNullException(nameof(value));
             }
 
-            return Cryptography.AES.Decrypt(value, Aes);
+            return Cryptography.AES.Decrypt(value, Aes)?.TrimEnd('\0');
         }
 
         public override Byte[]? DecryptBytes(Byte[] value)

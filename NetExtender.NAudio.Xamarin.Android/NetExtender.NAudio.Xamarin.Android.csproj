@@ -14,7 +14,6 @@
         <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
         <Version>0.8.2</Version>
         <AppDesignerFolder>Properties</AppDesignerFolder>
-        <RootNamespace>NetExtender.NAudio.Xamarin.Android</RootNamespace>
         <AssemblyName>NetExtender.NAudio.Xamarin.Android</AssemblyName>
         <FileAlignment>512</FileAlignment>
         <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>

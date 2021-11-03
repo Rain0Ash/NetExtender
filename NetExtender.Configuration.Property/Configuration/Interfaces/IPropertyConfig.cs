@@ -14,7 +14,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Property.Interfaces
 {
-    public interface IPropertyConfig : IConfig, IPropertyConfigBase
+    public interface IPropertyConfig : IConverterConfig, IPropertyConfigBase
     {
         public IConfigProperty<T?> GetProperty<T>(String key, IEnumerable<String>? sections)
         {

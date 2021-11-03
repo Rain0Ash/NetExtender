@@ -7,7 +7,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NetExtender.Configuration.Behavior;
 using NetExtender.Configuration.Common;
-using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Environment
@@ -20,17 +19,7 @@ namespace NetExtender.Configuration.Environment
         }
         
         public EnvironmentConfigBehavior(ConfigOptions options)
-            : this(null, null, options)
-        {
-        }
-        
-        public EnvironmentConfigBehavior(ICryptKey? crypt)
-            : this(crypt, ConfigOptions.None)
-        {
-        }
-        
-        public EnvironmentConfigBehavior(ICryptKey? crypt, ConfigOptions options)
-            : this(null, crypt, options)
+            : this(null, options)
         {
         }
 
@@ -38,19 +27,9 @@ namespace NetExtender.Configuration.Environment
             : this(path, ConfigOptions.None)
         {
         }
-
+        
         public EnvironmentConfigBehavior(String? path, ConfigOptions options)
-            : this(path, null, options)
-        {
-        }
-        
-        public EnvironmentConfigBehavior(String? path, ICryptKey? crypt)
-            : this(path, crypt, ConfigOptions.None)
-        {
-        }
-        
-        public EnvironmentConfigBehavior(String? path, ICryptKey? crypt, ConfigOptions options)
-            : base(path ?? nameof(System.Environment), crypt, options)
+            : base(path ?? nameof(System.Environment), options)
         {
         }
         

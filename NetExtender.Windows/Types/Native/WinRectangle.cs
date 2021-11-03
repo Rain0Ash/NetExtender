@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 namespace NetExtender.Types.Native.Windows
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct WinRectangle
+    public readonly struct WinRectangle
     {
         public static implicit operator Rectangle(WinRectangle rectangle)
         {

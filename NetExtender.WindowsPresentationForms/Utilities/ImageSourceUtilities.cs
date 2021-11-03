@@ -4,6 +4,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
@@ -16,7 +17,7 @@ namespace NetExtender.Utilities.Types
     {
         [DllImport("gdi32.dll", SetLastError = true)]
         private static extern Boolean DeleteObject(IntPtr hObject);
-        
+
         public static ImageSource ToImageSource(this Icon icon)
         {
             if (icon is null)
@@ -26,7 +27,7 @@ namespace NetExtender.Utilities.Types
 
             return ToImageSource(icon.ToBitmap());
         }
-        
+
         public static ImageSource ToImageSource(this Bitmap image)
         {
             if (image is null)
@@ -36,7 +37,7 @@ namespace NetExtender.Utilities.Types
 
             IntPtr handle = image.GetHbitmap();
 
-            ImageSource source = Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+            ImageSource source = ToImageSourceInternal(handle);
 
             if (!DeleteObject(handle))
             {
@@ -44,6 +45,14 @@ namespace NetExtender.Utilities.Types
             }
 
             return source;
+        }
+
+        private static BitmapSizeOptions Options { get; } = BitmapSizeOptions.FromEmptyOptions();
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static ImageSource ToImageSourceInternal(IntPtr handle)
+        {
+            return Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, Options);
         }
     }
 }

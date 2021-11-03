@@ -870,14 +870,27 @@ namespace NetExtender.Utilities.Types
             }
         }
         
-        public static IEnumerable<T> ThrowIfNull<T>(this IEnumerable<T> source)
+        public static IEnumerable<T> ThrowIfNull<T>(this IEnumerable<T?> source)
         {
             return ThrowIfNull<T, ArgumentNullException>(source);
         }
 
-        public static IEnumerable<T> ThrowIfNull<T, TException>(this IEnumerable<T> source) where TException : Exception, new()
+        public static IEnumerable<T> ThrowIfNull<T, TException>(this IEnumerable<T?> source) where TException : Exception, new()
         {
-            return ThrowIf<T, TException>(source, item => item is null);
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            foreach (T? item in source)
+            {
+                if (item is null)
+                {
+                    throw new TException();
+                }
+                
+                yield return item;
+            }
         }
         
         public static IEnumerable<T> ThrowIfNull<T>(this IEnumerable<T?> source) where T : struct

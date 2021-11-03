@@ -8,9 +8,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Behavior.Interfaces;
 using NetExtender.Configuration.Common;
-using NetExtender.Crypto;
-using NetExtender.Crypto.CryptKey;
-using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Utilities.Application;
 using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Types;
@@ -37,8 +34,8 @@ namespace NetExtender.Configuration.Behavior
             return !String.IsNullOrWhiteSpace(path) && PathUtilities.IsValidFilePath(path) ? path : GetDefaultPath(extension);
         }
 
+        public event EventHandler<ConfigurationEntry> Changed = null!;
         public String Path { get; }
-        public ICryptKey Crypt { get; }
         public ConfigOptions Options { get; }
 
         public Boolean IsReadOnly
@@ -57,59 +54,13 @@ namespace NetExtender.Configuration.Behavior
             }
         }
 
-        public Boolean IsCryptData
-        {
-            get
-            {
-                return Options.HasFlag(ConfigOptions.CryptData);
-            }
-        }
-
-        public Boolean IsCryptConfig
-        {
-            get
-            {
-                return Options.HasFlag(ConfigOptions.CryptConfig);
-            }
-        }
-
-        public Boolean IsCryptAll
-        {
-            get
-            {
-                return Options.HasFlag(ConfigOptions.CryptAll);
-            }
-        }
-
-        public Boolean ThrowOnReadOnly { get; init; } = true;
-
-        public Boolean CryptByDefault { get; init; }
-
-        public ConfigPropertyOptions DefaultOptions { get; init; } = ConfigPropertyOptions.Caching;
-
         public const String DefaultJoiner = ".";
         public String Joiner { get; init; } = DefaultJoiner;
 
         protected ConfigBehavior(String path, ConfigOptions options)
-            : this(path, null, options)
-        {
-        }
-
-        protected ConfigBehavior(String path, ICryptKey? crypt, ConfigOptions options)
         {
             Path = path ?? throw new ArgumentNullException(nameof(path));
-            Crypt = crypt ?? CryptKey.Create(CryptAction.Crypt);
             Options = options;
-        }
-
-        public virtual String? ConvertToValue<T>(T value)
-        {
-            return value.GetString();
-        }
-
-        public virtual T? ConvertFromValue<T>(String? value)
-        {
-            return value.Convert<T>();
         }
 
         [return: NotNullIfNotNull("sections")]
@@ -129,72 +80,75 @@ namespace NetExtender.Configuration.Behavior
             return sections is null ? new[] { key } : ToSection(sections.Append(key));
         }
 
+        public virtual Boolean Contains(String? key, IEnumerable<String>? sections)
+        {
+            return Get(key, sections) is not null;
+        }
+
         public abstract String? Get(String? key, IEnumerable<String>? sections);
         public abstract Boolean Set(String? key, String? value, IEnumerable<String>? sections);
 
+        public virtual String? GetOrSet(String? key, String? value, IEnumerable<String>? sections)
+        {
+            sections = sections.Materialize();
+
+            String? result = Get(key, sections);
+            
+            if (result is not null)
+            {
+                return result;
+            }
+
+            return value is not null && Set(key, value, sections) ? value : null;
+        }
+        
+        public virtual Task<Boolean> ContainsAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
+        {
+            return Contains(key, sections).ToTask();
+        }
+
         public virtual Task<String?> GetAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
-            String? result = Get(key, sections);
-            return Task.FromResult(result);
+            return Get(key, sections).ToTask();
         }
 
         public virtual Task<Boolean> SetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
         {
-            Boolean result = Set(key, value, sections);
-            return result.ToTask();
+            return Set(key, value, sections).ToTask();
+        }
+        
+        public virtual Task<String?> GetOrSetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
+        {
+            return GetOrSet(key, value, sections).ToTask();
         }
 
         public abstract ConfigurationEntry[]? GetExists();
 
-        public Task<ConfigurationEntry[]?> GetExistsAsync()
-        {
-            return GetExistsAsync(CancellationToken.None);
-        }
-
         public virtual Task<ConfigurationEntry[]?> GetExistsAsync(CancellationToken token)
         {
-            ConfigurationEntry[]? keys = !token.IsCancellationRequested ? GetExists() : null;
-            return keys.ToTask();
+            return GetExists().ToTask();
         }
 
         public abstract Boolean Reload();
-
-        public Task<Boolean> ReloadAsync()
-        {
-            return ReloadAsync(CancellationToken.None);
-        }
 
         public virtual Task<Boolean> ReloadAsync(CancellationToken token)
         {
             return Reload().ToTask();
         }
 
-        private Boolean _disposed;
+        protected void InvokeChanged(ConfigurationEntry entry)
+        {
+            Changed?.Invoke(this, entry);
+        }
 
         public void Dispose()
         {
-            DisposeInternal(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(Boolean disposing)
         {
-        }
-
-        private void DisposeInternal(Boolean disposing)
-        {
-            if (_disposed)
-            {
-                return;
-            }
-
-            if (disposing)
-            {
-                Crypt.Dispose();
-            }
-
-            Dispose(disposing);
-            _disposed = true;
         }
     }
 }

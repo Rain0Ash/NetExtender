@@ -58,6 +58,12 @@ namespace NetExtender.Configuration.Common
             Sections = sections;
         }
 
+        public void Deconstruct(out String? key, out ImmutableArray<String> sections)
+        {
+            key = Key;
+            sections = Sections;
+        }
+
         public Int32 CompareTo(ConfigurationEntry other)
         {
             Int32 compare = Sections.Length.CompareTo(other.Sections.Length);
@@ -67,7 +73,7 @@ namespace NetExtender.Configuration.Common
                 return compare;
             }
 
-            foreach ((String first, String second) in Sections.Zip(other.Sections))
+            foreach ((String? first, String? second) in Sections.Zip(other.Sections))
             {
                 compare = String.Compare(first, second, StringComparison.Ordinal);
 

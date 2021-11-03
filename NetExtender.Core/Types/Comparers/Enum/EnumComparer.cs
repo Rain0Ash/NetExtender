@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace NetExtender.Types.Comparers
 {
-    public struct EnumEqualityComparer<TEnum> : IEqualityComparer<TEnum> where TEnum : Enum
+    public readonly struct EnumEqualityComparer<TEnum> : IEqualityComparer<TEnum> where TEnum : Enum
     {
         private static class BoxAvoidance
         {
@@ -44,7 +44,7 @@ namespace NetExtender.Types.Comparers
         }
     }
 
-    public struct EnumEqualityComparer<TEnum, T> : IEqualityComparer<TEnum> where TEnum : Enum where T : unmanaged, IConvertible, IEquatable<T>
+    public readonly struct EnumEqualityComparer<TEnum, T> : IEqualityComparer<TEnum> where TEnum : Enum where T : unmanaged, IConvertible, IEquatable<T>
     {
         private static class BoxAvoidance
         {

@@ -106,7 +106,7 @@ namespace NetExtender.Workstation
             return bit;
         }
 
-        private static readonly IReadOnlyConfig Config = new Configuration.Config(new RegistryConfigBehavior(RegistryKeys.LocalMachine, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion"));
+        private static readonly IConfig Config = new Configuration.Config(new RegistryConfigBehavior(RegistryKeys.LocalMachine, "SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion"));
 
         private static Boolean IsWindows10()
         {
@@ -178,7 +178,7 @@ namespace NetExtender.Workstation
         {
             get
             {
-                return Config.GetValue("CurrentBuildNumber", 0);
+                return Int32.TryParse(Config.GetValue("CurrentBuildNumber"), out Int32 version) ? version : 0;
             }
         }
 

@@ -129,81 +129,41 @@ namespace NetExtender.Serialization.Ini
 
         public Boolean ContainsKey(String key)
         {
-            if (key is null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
             return Dictionary.ContainsKey(key);
         }
         
         public Boolean TryGetValue(String key, out IniValue value)
         {
-            if (key is null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
             return Dictionary.TryGetValue(key, out value);
         }
 
         public Int32 IndexOf(String key)
         {
-            if (key is null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
             return Dictionary.IndexOf(key);
         }
 
         public Int32 IndexOf(String key, Int32 index)
         {
-            if (key is null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
             return Dictionary.IndexOf(key, index);
         }
 
         public Int32 IndexOf(String key, Int32 index, Int32 count)
         {
-            if (key is null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
             return Dictionary.IndexOf(key, index, count);
         }
 
         public Int32 LastIndexOf(String key)
         {
-            if (key is null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
             return Dictionary.LastIndexOf(key);
         }
 
         public Int32 LastIndexOf(String key, Int32 index)
         {
-            if (key is null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
             return Dictionary.LastIndexOf(key, index);
         }
 
         public Int32 LastIndexOf(String key, Int32 index, Int32 count)
         {
-            if (key is null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
             return Dictionary.LastIndexOf(key, index, count);
         }
         
@@ -214,11 +174,6 @@ namespace NetExtender.Serialization.Ini
         
         public void Add(String key, IniValue value)
         {
-            if (key is null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
             Dictionary.Add(key, value);
         }
         
@@ -239,11 +194,6 @@ namespace NetExtender.Serialization.Ini
         
         public void Sort(Comparison<String> comparison)
         {
-            if (comparison is null)
-            {
-                throw new ArgumentNullException(nameof(comparison));
-            }
-            
             Dictionary.Sort(comparison);
         }
 
@@ -264,11 +214,6 @@ namespace NetExtender.Serialization.Ini
 
         public Boolean Remove(String key)
         {
-            if (key is null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
             return Dictionary.Remove(key);
         }
         

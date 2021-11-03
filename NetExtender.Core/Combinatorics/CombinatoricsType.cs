@@ -7,10 +7,8 @@ namespace NetExtender.Combinatorics
     {
         Permutations,
         PermutationsWithRepetition,
-
         Combinations,
         CombinationsWithRepetition,
-
         Variations,
         VariationsWithRepetition
     }

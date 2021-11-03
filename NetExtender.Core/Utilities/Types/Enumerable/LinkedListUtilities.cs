@@ -120,7 +120,7 @@ namespace NetExtender.Utilities.Types
             Insert(collection, index.GetOffset(collection.Count), node);
         }
         
-        public static void RemoveAt<T>(this LinkedList<T> collection, Int32 index)
+        public static LinkedListNode<T> RemoveAt<T>(this LinkedList<T> collection, Int32 index)
         {
             if (collection is null)
             {
@@ -129,7 +129,7 @@ namespace NetExtender.Utilities.Types
 
             if (index < 0 || index >= collection.Count)
             {
-                throw new ArgumentNullException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index));
             }
 
             LinkedListNode<T>? node = collection.NodeAt(index);
@@ -140,6 +140,53 @@ namespace NetExtender.Utilities.Types
             }
             
             collection.Remove(node);
+            return node;
+        }
+
+        public static Boolean TryRemoveFirst<T>(this LinkedList<T> collection)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (collection.Count <= 0)
+            {
+                return false;
+            }
+
+            try
+            {
+                collection.RemoveFirst();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        
+        public static Boolean TryRemoveLast<T>(this LinkedList<T> collection)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (collection.Count <= 0)
+            {
+                return false;
+            }
+
+            try
+            {
+                collection.RemoveLast();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public static Int32 IndexOf<T>(this LinkedList<T> collection, T item)
@@ -173,6 +220,84 @@ namespace NetExtender.Utilities.Types
 
                     return -1;
             }
+        }
+
+        public static T Peek<T>(this LinkedList<T> collection)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            LinkedListNode<T>? node = collection.First;
+            return node is not null ? node.Value : throw new InvalidOperationException();
+        }
+        
+        public static Boolean TryPeek<T>(this LinkedList<T> collection, [MaybeNullWhen(false)] out T result)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            LinkedListNode<T>? node = collection.First;
+
+            if (node is null)
+            {
+                result = default;
+                return false;
+            }
+
+            result = node.Value;
+            return true;
+        }
+
+        public static void Enqueue<T>(this LinkedList<T> collection, T item)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            collection.AddLast(item);
+        }
+
+        public static T Dequeue<T>(this LinkedList<T> collection)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            LinkedListNode<T>? node = collection.First;
+
+            if (node is null)
+            {
+                throw new InvalidOperationException();
+            }
+            
+            collection.RemoveFirst();
+            return node.Value;
+        }
+        
+        public static Boolean TryDequeue<T>(this LinkedList<T> collection, [MaybeNullWhen(false)] out T result)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            LinkedListNode<T>? node = collection.First;
+
+            if (node is null)
+            {
+                result = default;
+                return false;
+            }
+            
+            collection.TryRemoveFirst();
+            result = node.Value;
+            return true;
         }
         
         public static void Swap<T>(this LinkedListNode<T> first, LinkedListNode<T> second)

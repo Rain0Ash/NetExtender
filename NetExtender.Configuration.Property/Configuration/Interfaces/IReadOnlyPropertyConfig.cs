@@ -14,7 +14,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Property.Interfaces
 {
-    public interface IReadOnlyPropertyConfig : IReadOnlyConfig, IReadOnlyPropertyConfigBase
+    public interface IReadOnlyPropertyConfig : IReadOnlyConverterConfig, IReadOnlyPropertyConfigBase
     {
         public IReadOnlyConfigProperty<T?> GetProperty<T>(String? key, IEnumerable<String>? sections)
         {

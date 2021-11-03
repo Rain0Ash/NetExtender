@@ -58,6 +58,18 @@ namespace NetExtender.Types.Trees
             Value = value;
             Sections = sections;
         }
+        
+        public void Deconstruct(out TKey key, out ImmutableArray<TKey> sections)
+        {
+            Deconstruct(out key, out _, out sections);
+        }
+        
+        public void Deconstruct(out TKey key, out TValue? value, out ImmutableArray<TKey> sections)
+        {
+            key = Key;
+            value = Value;
+            sections = Sections;
+        }
 
         public Boolean Equals(DictionaryTreeEntry<TKey, TValue> other)
         {

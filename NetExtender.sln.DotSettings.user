@@ -6,4 +6,11 @@
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=NetExtender_002ELocalization_002EFlags_002FFlags_002FFlagsImages/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/Initialized/@EntryValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=7e15dfe1_002Db6da_002D4509_002D9c76_002D833b2230df6e_0023NetExtender_002ENAudio_002EXamarin_002EAndroid/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=17e27756_002D46a4_002D4fb3_002Dab01_002D94424343c565_0023NetExtender_002EConfiguration_002EProperty/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=7818e998_002D4f00_002D4b82_002Dae9d_002Dcf2dfa9a719d_0023NetExtender_002EConfiguration_002ECryptography_002EConvert/@EntryIndexedValue">True</s:Boolean>
+	
+	
+	
+	
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=7e15dfe1_002Db6da_002D4509_002D9c76_002D833b2230df6e_0023NetExtender_002ENAudio_002EXamarin_002EAndroid/@EntryIndexedValue">True</s:Boolean>
+	</wpf:ResourceDictionary>

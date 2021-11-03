@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NetExtender.Configuration.Behavior;
 using NetExtender.Configuration.Common;
-using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Registry;
 using NetExtender.Registry.Interfaces;
 using NetExtender.Utilities.Application;
@@ -33,82 +32,42 @@ namespace NetExtender.Configuration.Windows.Registry
         }
         
         public RegistryConfigBehavior()
-            : this(null, null, ConfigOptions.None)
+            : this(null, ConfigOptions.None)
         {
         }
         
         public RegistryConfigBehavior(ConfigOptions options)
-            : this(null, null, options)
-        {
-        }
-        
-        public RegistryConfigBehavior(ICryptKey? crypt)
-            : this(null, crypt, ConfigOptions.None)
-        {
-        }
-        
-        public RegistryConfigBehavior(ICryptKey? crypt, ConfigOptions options)
-            : this(null, crypt, options)
+            : this(null, options)
         {
         }
         
         public RegistryConfigBehavior(String? path)
-            : this(path, null, ConfigOptions.None)
-        {
-        }
-        
-        public RegistryConfigBehavior(String? path, ConfigOptions options)
-            : this(path, null, options)
-        {
-        }
-        
-        public RegistryConfigBehavior(String? path, ICryptKey? crypt)
-            : this(path, crypt, ConfigOptions.None)
+            : this(path, ConfigOptions.None)
         {
         }
 
-        public RegistryConfigBehavior(String? path, ICryptKey? crypt, ConfigOptions options)
-            : this(RegistryKeys.CurrentUser, path, crypt, options)
+        public RegistryConfigBehavior(String? path, ConfigOptions options)
+            : this(RegistryKeys.CurrentUser, path, options)
         {
         }
         
         public RegistryConfigBehavior(RegistryKeys key)
-            : this(key, null, null, ConfigOptions.None)
-        {
-        }
-        
-        public RegistryConfigBehavior(RegistryKeys key, ConfigOptions options)
-            : this(key, null, null, options)
-        {
-        }
-        
-        public RegistryConfigBehavior(RegistryKeys key, ICryptKey? crypt)
-            : this(key, null, crypt, ConfigOptions.None)
+            : this(key, null, ConfigOptions.None)
         {
         }
 
-        public RegistryConfigBehavior(RegistryKeys key, ICryptKey? crypt, ConfigOptions options)
-            : this(key, null, crypt, options)
+        public RegistryConfigBehavior(RegistryKeys key, ConfigOptions options)
+            : this(key, null, options)
         {
         }
         
         public RegistryConfigBehavior(RegistryKeys key, String? path)
-            : this(key, path, null, ConfigOptions.None)
+            : this(key, path, ConfigOptions.None)
         {
         }
         
         public RegistryConfigBehavior(RegistryKeys key, String? path, ConfigOptions options)
-            : this(key, path, null, options)
-        {
-        }
-        
-        public RegistryConfigBehavior(RegistryKeys key, String? path, ICryptKey? crypt)
-            : this(key, path, crypt, ConfigOptions.None)
-        {
-        }
-        
-        public RegistryConfigBehavior(RegistryKeys key, String? path, ICryptKey? crypt, ConfigOptions options)
-            : base(GetDefaultPath(path), crypt, options)
+            : base(GetDefaultPath(path), options)
         {
             Registry = key.Create(Path.Split(PathUtilities.Separators), !IsReadOnly);
         }
