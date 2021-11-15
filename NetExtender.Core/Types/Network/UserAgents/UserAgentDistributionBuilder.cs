@@ -76,7 +76,7 @@ namespace NetExtender.Types.Network.UserAgents
                 }
                 catch (Exception)
                 {
-                    return null;
+                    return base.RandomCulture;
                 }
             }
         }

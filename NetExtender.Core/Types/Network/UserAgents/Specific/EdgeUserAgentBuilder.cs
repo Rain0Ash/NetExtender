@@ -12,7 +12,7 @@ namespace NetExtender.Types.Network.UserAgents.Specific
     {
         public new static IUserAgentSpecificBuilder Default { get; } = new EdgeUserAgentBuilder();
         
-        protected virtual (String Chrome, String Edge) RandomOperaVersion()
+        protected virtual (String Chrome, String Edge) RandomEdgeVersion()
         {
             Int32 chrome = Random.Next(74, 91);
             return ($"{chrome}.{0}.{Random.Next(1000, 4000)}.{Random.Next(75, 300)}",
@@ -23,7 +23,7 @@ namespace NetExtender.Types.Network.UserAgents.Specific
         {
             String arch = GetArchitecture(architecture);
             String culture = GetCultureName(info);
-            (String chrome, String edge) = RandomOperaVersion();
+            (String chrome, String edge) = RandomEdgeVersion();
 
             return $"Mozilla/5.0 {(!String.IsNullOrEmpty(arch) || !String.IsNullOrEmpty(culture) ? $"({"; ".Join(JoinType.NotEmpty, arch, culture)})" : String.Empty)} AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{chrome} Safari/537.36 Edg/{edge}";
         }

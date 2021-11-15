@@ -11,11 +11,6 @@ namespace NetExtender.Types.Network.UserAgents.Specific
     public class FirefoxUserAgentBuilder : UserAgentSpecificBuilder
     {
         public new static IUserAgentSpecificBuilder Default { get; } = new FirefoxUserAgentBuilder();
-        
-        protected virtual String RandomGeckoVersion()
-        {
-            return $"{Random.Next(82, 90)}.0";
-        }
 
         protected virtual Boolean UseGeckoCode
         {
@@ -25,12 +20,18 @@ namespace NetExtender.Types.Network.UserAgents.Specific
             }
         }
 
+        protected virtual String RandomGeckoVersion()
+        {
+            return $"{Random.Next(82, 90)}.0";
+        }
+
         public override String Build(UserAgentArchitecture? architecture, CultureInfo? info)
         {
             String arch = GetArchitecture(architecture);
             String culture = GetCultureName(info);
             String firefox = RandomGeckoVersion();
-            return $"Mozilla/5.0 ({(!String.IsNullOrEmpty(arch) ? $"{arch}; " : String.Empty)}{(!String.IsNullOrEmpty(culture) ? $"{culture}; " : String.Empty)}rv:{firefox}) Gecko/{(UseGeckoCode ? "20100101" : $"{firefox}")} Firefox/{firefox}";
+            return
+                $"Mozilla/5.0 ({(!String.IsNullOrEmpty(arch) ? $"{arch}; " : String.Empty)}{(!String.IsNullOrEmpty(culture) ? $"{culture}; " : String.Empty)}rv:{firefox}) Gecko/{(UseGeckoCode ? "20100101" : $"{firefox}")} Firefox/{firefox}";
         }
     }
 }

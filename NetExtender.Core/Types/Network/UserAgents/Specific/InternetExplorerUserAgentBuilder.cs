@@ -11,12 +11,6 @@ namespace NetExtender.Types.Network.UserAgents.Specific
     public class InternetExplorerUserAgentBuilder : UserAgentSpecificBuilder
     {
         public new static IUserAgentSpecificBuilder Default { get; } = new InternetExplorerUserAgentBuilder();
-        
-        protected virtual (String Explorer, String Trident) RandomInternetExplorerVersion()
-        {
-            Int32 version = Random.Next(9, 11);
-            return ($"{version}.0", $"{version - 4}.0");
-        }
 
         protected virtual Boolean UseTrident
         {
@@ -24,6 +18,12 @@ namespace NetExtender.Types.Network.UserAgents.Specific
             {
                 return Random.NextBoolean(0.8);
             }
+        }
+        
+        protected virtual (String Explorer, String Trident) RandomInternetExplorerVersion()
+        {
+            Int32 version = Random.Next(9, 11);
+            return ($"{version}.0", $"{version - 4}.0");
         }
 
         public override String Build(UserAgentArchitecture? architecture, CultureInfo? info)
