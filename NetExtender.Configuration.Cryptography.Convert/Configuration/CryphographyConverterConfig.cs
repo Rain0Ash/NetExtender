@@ -218,6 +218,16 @@ namespace NetExtender.Configuration.Cryptography.Convert
             return GetValue(key, default(T), sections);
         }
 
+        public T? GetValue<T>(String? key, TryConverter<String, T>? converter, params String[]? sections)
+        {
+            return GetValue(key, converter, (IEnumerable<String>?) sections);
+        }
+
+        public T? GetValue<T>(String? key, TryConverter<String, T>? converter, IEnumerable<String>? sections)
+        {
+            return GetValue(key, default(T), converter!, sections);
+        }
+
         public T GetValue<T>(String? key, T alternate, params String[]? sections)
         {
             return GetValue(key, alternate, (IEnumerable<String>?) sections);
@@ -469,7 +479,27 @@ namespace NetExtender.Configuration.Cryptography.Convert
 
         public Task<T?> GetValueAsync<T>(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
-            return GetValueAsync<T?>(key, default, sections, token);
+            return GetValueAsync(key, default(T), sections, token);
+        }
+
+        public Task<T?> GetValueAsync<T>(String? key, TryConverter<String, T>? converter, params String[]? sections)
+        {
+            return GetValueAsync(key, converter, (IEnumerable<String>?) sections);
+        }
+
+        public Task<T?> GetValueAsync<T>(String? key, TryConverter<String, T>? converter, IEnumerable<String>? sections)
+        {
+            return GetValueAsync(key, converter, sections, CancellationToken.None);
+        }
+
+        public Task<T?> GetValueAsync<T>(String? key, TryConverter<String, T>? converter, CancellationToken token, params String[]? sections)
+        {
+            return GetValueAsync(key, converter, sections, token);
+        }
+
+        public Task<T?> GetValueAsync<T>(String? key, TryConverter<String, T>? converter, IEnumerable<String>? sections, CancellationToken token)
+        {
+            return GetValueAsync(key, default, converter!, sections, token);
         }
 
         public Task<T> GetValueAsync<T>(String? key, T alternate, params String[]? sections)
@@ -520,44 +550,72 @@ namespace NetExtender.Configuration.Cryptography.Convert
             return converter(value, out T? result) ? result : alternate;
         }
         
-        public Task<String?> GetValueAsync(String? key, IStringCryptor? cryptor, params String[]? sections)
+        public Task<T?> GetValueAsync<T>(String? key, IStringCryptor? cryptor, params String[]? sections)
         {
-            return Config.GetValueAsync(key, cryptor, sections);
+            return GetValueAsync<T>(key, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public Task<String?> GetValueAsync(String? key, IStringCryptor? cryptor, IEnumerable<String>? sections)
+        public Task<T?> GetValueAsync<T>(String? key, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
-            return Config.GetValueAsync(key, cryptor, sections);
+            return GetValueAsync<T>(key, cryptor, sections, CancellationToken.None);
         }
 
-        public Task<String?> GetValueAsync(String? key, IStringCryptor? cryptor, CancellationToken token, params String[]? sections)
+        public Task<T?> GetValueAsync<T>(String? key, IStringCryptor? cryptor, CancellationToken token, params String[]? sections)
         {
-            return Config.GetValueAsync(key, cryptor, token, sections);
+            return GetValueAsync<T>(key, cryptor, sections, token);
         }
 
-        public Task<String?> GetValueAsync(String? key, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
+        public Task<T?> GetValueAsync<T>(String? key, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
         {
-            return Config.GetValueAsync(key, cryptor, sections, token);
+            return GetValueAsync<T?>(key, default, cryptor, sections, token);
         }
 
-        public Task<String?> GetValueAsync(String? key, String? alternate, IStringCryptor? cryptor, params String[]? sections)
+        public Task<T> GetValueAsync<T>(String? key, T alternate, IStringCryptor? cryptor, params String[]? sections)
         {
-            return Config.GetValueAsync(key, alternate, cryptor, sections);
+            return GetValueAsync(key, alternate, (IEnumerable<String>?) sections);
         }
 
-        public Task<String?> GetValueAsync(String? key, String? alternate, IStringCryptor? cryptor, IEnumerable<String>? sections)
+        public Task<T> GetValueAsync<T>(String? key, T alternate, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
-            return Config.GetValueAsync(key, alternate, cryptor, sections);
+            return GetValueAsync(key, alternate, sections, CancellationToken.None);
         }
 
-        public Task<String?> GetValueAsync(String? key, String? alternate, IStringCryptor? cryptor, CancellationToken token, params String[]? sections)
+        public Task<T> GetValueAsync<T>(String? key, T alternate, IStringCryptor? cryptor, CancellationToken token, params String[]? sections)
         {
-            return Config.GetValueAsync(key, alternate, cryptor, token, sections);
+            return GetValueAsync(key, alternate, sections, token);
         }
 
-        public Task<String?> GetValueAsync(String? key, String? alternate, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
+        public Task<T> GetValueAsync<T>(String? key, T alternate, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
         {
-            return Config.GetValueAsync(key, alternate, cryptor, sections, token);
+            return GetValueAsync(key, alternate, TryConvert, sections, token);
+        }
+
+        public Task<T> GetValueAsync<T>(String? key, T alternate, IStringCryptor? cryptor, TryConverter<String, T>? converter, params String[]? sections)
+        {
+            return GetValueAsync(key, alternate, converter, (IEnumerable<String>?) sections);
+        }
+
+        public Task<T> GetValueAsync<T>(String? key, T alternate, IStringCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections)
+        {
+            return GetValueAsync(key, alternate, converter, sections, CancellationToken.None);
+        }
+
+        public Task<T> GetValueAsync<T>(String? key, T alternate, IStringCryptor? cryptor, TryConverter<String, T>? converter, CancellationToken token, params String[]? sections)
+        {
+            return GetValueAsync(key, alternate, converter, sections, token);
+        }
+
+        public async Task<T> GetValueAsync<T>(String? key, T alternate, IStringCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections, CancellationToken token)
+        {
+            String? value = await GetValueAsync(key, cryptor, sections, token);
+
+            if (value is null)
+            {
+                return alternate;
+            }
+
+            converter ??= TryConvert;
+            return converter(value, out T? result) ? result : alternate;
         }
 
         public Task<T?> GetRawValueAsync<T>(String? key, params String[]? sections)

@@ -14,34 +14,34 @@ namespace NetExtender.Windows.Shortcut.Interfaces
         [DispId(0)]
         public String FullName { [return: MarshalAs(UnmanagedType.BStr)] [DispId(0)] get; }
         
-        [DispId(0x3e8)]
-        public String? Arguments { [return: MarshalAs(UnmanagedType.BStr)] [DispId(0x3e8)] get; [param: In, MarshalAs(UnmanagedType.BStr)] [DispId(0x3e8)] set; }
+        [DispId(0x3E8)]
+        public String? Arguments { [return: MarshalAs(UnmanagedType.BStr)] [DispId(0x3E8)] get; [param: In, MarshalAs(UnmanagedType.BStr)] [DispId(0x3E8)] set; }
         
-        [DispId(0x3e9)]
-        public String? Description { [return: MarshalAs(UnmanagedType.BStr)] [DispId(0x3e9)] get; [param: In, MarshalAs(UnmanagedType.BStr)] [DispId(0x3e9)] set; }
+        [DispId(0x3E9)]
+        public String? Description { [return: MarshalAs(UnmanagedType.BStr)] [DispId(0x3E9)] get; [param: In, MarshalAs(UnmanagedType.BStr)] [DispId(0x3E9)] set; }
         
-        [DispId(0x3ea)]
-        public String? Hotkey { [return: MarshalAs(UnmanagedType.BStr)] [DispId(0x3ea)] get; [param: In, MarshalAs(UnmanagedType.BStr)] [DispId(0x3ea)] set; }
+        [DispId(0x3EA)]
+        public String? Hotkey { [return: MarshalAs(UnmanagedType.BStr)] [DispId(0x3EA)] get; [param: In, MarshalAs(UnmanagedType.BStr)] [DispId(0x3EA)] set; }
         
-        [DispId(0x3eb)]
-        public String? IconLocation { [return: MarshalAs(UnmanagedType.BStr)] [DispId(0x3eb)] get; [param: In, MarshalAs(UnmanagedType.BStr)] [DispId(0x3eb)] set; }
+        [DispId(0x3EB)]
+        public String? IconLocation { [return: MarshalAs(UnmanagedType.BStr)] [DispId(0x3EB)] get; [param: In, MarshalAs(UnmanagedType.BStr)] [DispId(0x3EB)] set; }
         
-        [DispId(0x3ec)]
-        public String RelativePath { [param: In, MarshalAs(UnmanagedType.BStr)] [DispId(0x3ec)] set; }
+        [DispId(0x3EC)]
+        public String RelativePath { [param: In, MarshalAs(UnmanagedType.BStr)] [DispId(0x3EC)] set; }
         
-        [DispId(0x3ed)]
-        public String TargetPath { [return: MarshalAs(UnmanagedType.BStr)] [DispId(0x3ed)] get; [param: In, MarshalAs(UnmanagedType.BStr)] [DispId(0x3ed)] set; }
+        [DispId(0x3ED)]
+        public String TargetPath { [return: MarshalAs(UnmanagedType.BStr)] [DispId(0x3ED)] get; [param: In, MarshalAs(UnmanagedType.BStr)] [DispId(0x3ED)] set; }
         
-        [DispId(0x3ee)]
-        public Int32 WindowStyle { [DispId(0x3ee)] get; [param: In] [DispId(0x3ee)] set; }
+        [DispId(0x3EE)]
+        public Int32 WindowStyle { [DispId(0x3EE)] get; [param: In] [DispId(0x3EE)] set; }
         
-        [DispId(0x3ef)]
-        public String WorkingDirectory { [return: MarshalAs(UnmanagedType.BStr)] [DispId(0x3ef)] get; [param: In, MarshalAs(UnmanagedType.BStr)] [DispId(0x3ef)] set; }
+        [DispId(0x3EF)]
+        public String WorkingDirectory { [return: MarshalAs(UnmanagedType.BStr)] [DispId(0x3EF)] get; [param: In, MarshalAs(UnmanagedType.BStr)] [DispId(0x3EF)] set; }
         
-        [TypeLibFunc(0x40), DispId(0x7d0)]
+        [TypeLibFunc(0x40), DispId(0x7D0)]
         public void Load([In, MarshalAs(UnmanagedType.BStr)] String path);
         
-        [DispId(0x7d1)]
+        [DispId(0x7D1)]
         public void Save();
     }
 }

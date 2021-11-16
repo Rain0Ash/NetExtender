@@ -273,6 +273,72 @@ namespace NetExtender.Utilities.Static
                 }
             }
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void SwapBlockUnaligned(void* destination, void* source, UInt32 length)
+        {
+            SwapBlockUnaligned(destination, source, length, 0);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static unsafe void SwapBlockUnaligned(void* destination, void* source, UInt32 length, Int32 stackbuffer)
+        {
+            if (length <= 0)
+            {
+                return;
+            }
+
+            Span<Byte> buffer = stackbuffer switch
+            {
+                0 => stackalloc Byte[(Int32) Math.Min(length, UInt16.MaxValue + 1)],
+                > 0 => stackalloc Byte[(Int32) Math.Min(length, (UInt32) stackbuffer)],
+                _ => new Byte[Math.Min(length, (UInt32) (-stackbuffer))]
+            };
+            
+            SwapBlockUnaligned(destination, source, length, buffer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static unsafe void SwapBlockUnaligned(void* destination, void* source, UInt32 length, Span<Byte> buffer)
+        {
+            if (length <= 0)
+            {
+                return;
+            }
+
+            unchecked
+            {
+                fixed (void* pointer = buffer)
+                {
+                    UInt32 count = Math.Min(length, (UInt32) buffer.Length);
+                    
+                    UInt64 position = 0;
+
+                    while (position < length - count)
+                    {
+                        Unsafe.CopyBlockUnaligned(pointer, destination, count);
+                        Unsafe.CopyBlockUnaligned(destination, source, count);
+                        Unsafe.CopyBlockUnaligned(source, pointer, count);
+
+                        Increment(ref source, count);
+                        Increment(ref destination, count);
+
+                        position += count;
+                    }
+
+                    if (position >= length)
+                    {
+                        return;
+                    }
+
+                    count = length - (UInt32) position;
+
+                    Unsafe.CopyBlockUnaligned(pointer, destination, count);
+                    Unsafe.CopyBlockUnaligned(destination, source, count);
+                    Unsafe.CopyBlockUnaligned(source, pointer, count);
+                }
+            }
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T As<T>(Object value) where T : class

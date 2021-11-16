@@ -306,13 +306,13 @@ namespace NetExtender.Random
         /* Period parameters */
         private const Int32 N = 624;
         private const Int32 M = 397;
-        private const UInt32 MatrixA = 0x9908b0df; /* constant vector a */
+        private const UInt32 MatrixA = 0x9908B0DF; /* constant vector a */
         private const UInt32 UpperMask = 0x80000000; /* most significant w-r bits */
-        private const UInt32 LowerMask = 0x7fffffff; /* least significant r bits */
+        private const UInt32 LowerMask = 0x7FFFFFFF; /* least significant r bits */
 
         /* Tempering parameters */
-        private const UInt32 TemperingMaskB = 0x9d2c5680;
-        private const UInt32 TemperingMaskC = 0xefc60000;
+        private const UInt32 TemperingMaskB = 0x9D2C5680;
+        private const UInt32 TemperingMaskC = 0xEFC60000;
 
         private static UInt32 TemperingShiftU(UInt32 y)
         {
@@ -343,13 +343,13 @@ namespace NetExtender.Random
         {
             unchecked
             {
-                _mt[0] = seed & 0xffffffffU;
+                _mt[0] = seed & 0xFFFFFFFFU;
 
                 for (_mti = 1; _mti < N; _mti++)
                 {
                     _mt[_mti] = (UInt32) (1812433253U * (_mt[_mti - 1] ^ (_mt[_mti - 1] >> 30)) + _mti);
 
-                    _mt[_mti] &= 0xffffffffU;
+                    _mt[_mti] &= 0xFFFFFFFFU;
                     // for >32 bit machines
                 }
             }
@@ -369,7 +369,7 @@ namespace NetExtender.Random
                 for (; k > 0; k--)
                 {
                     _mt[i] = (UInt32) ((_mt[i] ^ ((_mt[i - 1] ^ (_mt[i - 1] >> 30)) * 1664525U)) + key[j] + j); /* non linear */
-                    _mt[i] &= 0xffffffffU; // for WORDSIZE > 32 machines
+                    _mt[i] &= 0xFFFFFFFFU; // for WORDSIZE > 32 machines
                     i++;
                     j++;
                     if (i >= N)
@@ -387,7 +387,7 @@ namespace NetExtender.Random
                 for (k = N - 1; k > 0; k--)
                 {
                     _mt[i] = (UInt32) ((_mt[i] ^ ((_mt[i - 1] ^ (_mt[i - 1] >> 30)) * 1566083941U)) - i); /* non linear */
-                    _mt[i] &= 0xffffffffU; // for WORDSIZE > 32 machines
+                    _mt[i] &= 0xFFFFFFFFU; // for WORDSIZE > 32 machines
                     i++;
 
                     if (i < N)

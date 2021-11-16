@@ -27,10 +27,10 @@ namespace NetExtender.Configuration.Cryptography.Interfaces
         public T GetRawValue<T>(String? key, T alternate, IEnumerable<String>? sections);
         public T GetRawValue<T>(String? key, T alternate, TryConverter<String, T>? converter, params String[]? sections);
         public T GetRawValue<T>(String? key, T alternate, TryConverter<String, T>? converter, IEnumerable<String>? sections);
-        public Task<T> GetValueAsync<T>(String? key, IStringCryptor? cryptor, params String[]? sections);
-        public Task<T> GetValueAsync<T>(String? key, IStringCryptor? cryptor, IEnumerable<String>? sections);
-        public Task<T> GetValueAsync<T>(String? key, IStringCryptor? cryptor, CancellationToken token, params String[]? sections);
-        public Task<T> GetValueAsync<T>(String? key, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token);
+        public Task<T?> GetValueAsync<T>(String? key, IStringCryptor? cryptor, params String[]? sections);
+        public Task<T?> GetValueAsync<T>(String? key, IStringCryptor? cryptor, IEnumerable<String>? sections);
+        public Task<T?> GetValueAsync<T>(String? key, IStringCryptor? cryptor, CancellationToken token, params String[]? sections);
+        public Task<T?> GetValueAsync<T>(String? key, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token);
         public Task<T> GetValueAsync<T>(String? key, T alternate, IStringCryptor? cryptor, params String[]? sections);
         public Task<T> GetValueAsync<T>(String? key, T alternate, IStringCryptor? cryptor, IEnumerable<String>? sections);
         public Task<T> GetValueAsync<T>(String? key, T alternate, IStringCryptor? cryptor, CancellationToken token, params String[]? sections);

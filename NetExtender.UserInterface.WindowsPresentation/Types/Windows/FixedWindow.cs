@@ -70,7 +70,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                     break;
 
                 case WM.SYSCOMMAND:
-                    if (((UInt16) m.WParam & 0xfff0) == 0xf060)
+                    if (((UInt16) m.WParam & 0xFFF0) == 0xF060)
                     {
                         CloseReason = InterfaceCloseReason.UserClosing;
                     }

@@ -965,8 +965,8 @@ namespace NetExtender.Windows
         /// The WM_WTSSESSION_CHANGE message notifies applications of changes in session state.
         /// </summary>
         WTSSESSION_CHANGE = 0x2B1,
-        TABLET_FIRST = 0x2c0,
-        TABLET_LAST = 0x2df,
+        TABLET_FIRST = 0x2C0,
+        TABLET_LAST = 0x2DF,
 
         /// <summary>
         /// An application sends a WM_CUT message to an edit control or combo box to delete (cut) the current selection, if any, in the edit control and copy the deleted text to the clipboard in CF_TEXT format.

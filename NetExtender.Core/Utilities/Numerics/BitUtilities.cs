@@ -792,8 +792,8 @@ namespace NetExtender.Utilities.Numerics
                     }
 
                     pointer[i] = position - 1 >= 0
-                        ? (Byte) ((Byte) ((0xff & pointer[position]) >> shift) | (Byte) (pointer[position - 1] << (BitInByte - shift) & carry))
-                        : (Byte) ((0xff & pointer[position]) >> shift);
+                        ? (Byte) ((Byte) ((0xFF & pointer[position]) >> shift) | (Byte) (pointer[position - 1] << (BitInByte - shift) & carry))
+                        : (Byte) ((0xFF & pointer[position]) >> shift);
                 }
             }
         }

@@ -256,7 +256,7 @@ namespace NetExtender.ImageSharp.Utilities
             UInt32 count = 0;
             for (; value > 0; value >>= 8)
             {
-                count += BitCounts[value & 0xff];
+                count += BitCounts[value & 0xFF];
             }
 
             return count;
