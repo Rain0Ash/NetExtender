@@ -1282,6 +1282,168 @@ namespace NetExtender.Utilities.Types
             } while (enumerator.MoveNext());
         }
         
+        public static TSource AggregateWhile<TSource>(this IEnumerable<TSource> source, Func<TSource, TSource, TSource> aggregator, Func<TSource, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (aggregator is null)
+            {
+                throw new ArgumentNullException(nameof(aggregator));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            using IEnumerator<TSource> enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                throw new InvalidOperationException();
+            }
+
+            TSource accumulate = enumerator.Current;
+
+            if (!predicate(accumulate))
+            {
+                return accumulate;
+            }
+
+            while (enumerator.MoveNext())
+            {
+                accumulate = aggregator(accumulate, enumerator.Current);
+                
+                if (!predicate(accumulate))
+                {
+                    return accumulate;
+                }
+            }
+
+            return accumulate;
+        }
+
+        public static TAccumulate AggregateWhile<TSource, TAccumulate>(this IEnumerable<TSource> source, TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> aggregator, Func<TAccumulate, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (aggregator is null)
+            {
+                throw new ArgumentNullException(nameof(aggregator));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+            
+            if (!predicate(seed))
+            {
+                return seed;
+            }
+
+            TAccumulate accumulate = seed;
+
+            foreach (TSource item in source)
+            {
+                accumulate = aggregator(accumulate, item);
+
+                if (!predicate(accumulate))
+                {
+                    return accumulate;
+                }
+            }
+
+            return accumulate;
+        }
+        
+        public static TSource AggregateWhileNot<TSource>(this IEnumerable<TSource> source, Func<TSource, TSource, TSource> aggregator, Func<TSource, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (aggregator is null)
+            {
+                throw new ArgumentNullException(nameof(aggregator));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            using IEnumerator<TSource> enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                throw new InvalidOperationException();
+            }
+
+            TSource accumulate = enumerator.Current;
+            
+            if (predicate(accumulate))
+            {
+                return accumulate;
+            }
+
+            while (enumerator.MoveNext())
+            {
+                accumulate = aggregator(accumulate, enumerator.Current);
+                
+                if (predicate(accumulate))
+                {
+                    return accumulate;
+                }
+            }
+
+            return accumulate;
+        }
+        
+        public static TAccumulate AggregateWhileNot<TSource, TAccumulate>(this IEnumerable<TSource> source, TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> aggregator, Func<TAccumulate, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (aggregator is null)
+            {
+                throw new ArgumentNullException(nameof(aggregator));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+            
+            if (predicate(seed))
+            {
+                return seed;
+            }
+
+            TAccumulate accumulate = seed;
+
+            foreach (TSource item in source)
+            {
+                accumulate = aggregator(accumulate, item);
+
+                if (predicate(accumulate))
+                {
+                    return accumulate;
+                }
+            }
+
+            return accumulate;
+        }
+
         /// <summary>
         /// Combines two Enumerable objects into a sequence of Tuples containing each element
         /// of the source Enumerable in the first position with the element that has the same
