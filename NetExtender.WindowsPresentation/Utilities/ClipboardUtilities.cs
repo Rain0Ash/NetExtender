@@ -172,14 +172,21 @@ namespace NetExtender.Utilities.Windows.IO
                 return Clear();
             }
 
-            if (ThreadUtilities.IsSTA)
+            try
             {
-                Clipboard.SetText(text);
+                if (ThreadUtilities.IsSTA)
+                {
+                    Clipboard.SetText(text);
+                    return true;
+                }
+
+                ThreadUtilities.STA(Clipboard.SetText, text);
                 return true;
             }
-
-            ThreadUtilities.STA(Clipboard.SetText, text);
-            return true;
+            catch (ExternalException)
+            {
+                return false;
+            }
         }
 
         public static Boolean SetText(String? text, TextDataFormat format)
@@ -189,14 +196,21 @@ namespace NetExtender.Utilities.Windows.IO
                 return Clear();
             }
 
-            if (ThreadUtilities.IsSTA)
+            try
             {
-                Clipboard.SetText(text, format);
+                if (ThreadUtilities.IsSTA)
+                {
+                    Clipboard.SetText(text, format);
+                    return true;
+                }
+
+                ThreadUtilities.STA(Clipboard.SetText, text, format);
                 return true;
             }
-
-            ThreadUtilities.STA(Clipboard.SetText, text, format);
-            return true;
+            catch (ExternalException)
+            {
+                return false;
+            }
         }
         
         public static Boolean SetRaw(Byte[]? raw)
@@ -291,14 +305,21 @@ namespace NetExtender.Utilities.Windows.IO
                 return Clear();
             }
 
-            if (ThreadUtilities.IsSTA)
+            try
             {
-                Clipboard.SetImage(image);
+                if (ThreadUtilities.IsSTA)
+                {
+                    Clipboard.SetImage(image);
+                    return true;
+                }
+
+                ThreadUtilities.STA(Clipboard.SetImage, image);
                 return true;
             }
-
-            ThreadUtilities.STA(Clipboard.SetImage, image);
-            return true;
+            catch (ExternalException)
+            {
+                return false;
+            }
         }
 
         public static Boolean SetAudio(Stream? stream)
@@ -308,14 +329,21 @@ namespace NetExtender.Utilities.Windows.IO
                 return Clear();
             }
 
-            if (ThreadUtilities.IsSTA)
+            try
             {
-                Clipboard.SetAudio(stream);
+                if (ThreadUtilities.IsSTA)
+                {
+                    Clipboard.SetAudio(stream);
+                    return true;
+                }
+
+                ThreadUtilities.STA(Clipboard.SetAudio, stream);
                 return true;
             }
-
-            ThreadUtilities.STA(Clipboard.SetAudio, stream);
-            return true;
+            catch (ExternalException)
+            {
+                return false;
+            }
         }
         
         public static Boolean SetAudio(Byte[]? audio)
@@ -325,24 +353,26 @@ namespace NetExtender.Utilities.Windows.IO
                 return Clear();
             }
 
-            if (ThreadUtilities.IsSTA)
+            try
             {
-                Clipboard.SetAudio(audio);
+                if (ThreadUtilities.IsSTA)
+                {
+                    Clipboard.SetAudio(audio);
+                    return true;
+                }
+
+                ThreadUtilities.STA(Clipboard.SetAudio, audio);
                 return true;
             }
-
-            ThreadUtilities.STA(Clipboard.SetAudio, audio);
-            return true;
+            catch (ExternalException)
+            {
+                return false;
+            }
         }
         
         public static Boolean SetFiles(IEnumerable<String>? files)
         {
-            if (files is null)
-            {
-                return Clear();
-            }
-
-            return SetFiles(files.ToStringCollection());
+            return files is not null ? SetFiles(files.ToStringCollection()) : Clear();
         }
         
         public static Boolean SetFiles(StringCollection? files)
@@ -352,14 +382,21 @@ namespace NetExtender.Utilities.Windows.IO
                 return Clear();
             }
 
-            if (ThreadUtilities.IsSTA)
+            try
             {
-                Clipboard.SetFileDropList(files);
+                if (ThreadUtilities.IsSTA)
+                {
+                    Clipboard.SetFileDropList(files);
+                    return true;
+                }
+
+                ThreadUtilities.STA(Clipboard.SetFileDropList, files);
                 return true;
             }
-
-            ThreadUtilities.STA(Clipboard.SetFileDropList, files);
-            return true;
+            catch (ExternalException)
+            {
+                return false;
+            }
         }
         
         public static Boolean SetData(IDataObject? data)
@@ -369,14 +406,21 @@ namespace NetExtender.Utilities.Windows.IO
                 return Clear();
             }
 
-            if (ThreadUtilities.IsSTA)
+            try
             {
-                Clipboard.SetDataObject(data);
+                if (ThreadUtilities.IsSTA)
+                {
+                    Clipboard.SetDataObject(data);
+                    return true;
+                }
+
+                ThreadUtilities.STA(Clipboard.SetDataObject, data);
                 return true;
             }
-
-            ThreadUtilities.STA(Clipboard.SetDataObject, data);
-            return true;
+            catch (ExternalException)
+            {
+                return false;
+            }
         }
         
         public static Boolean SetData(IDataObject? data, Boolean copy)
@@ -386,14 +430,21 @@ namespace NetExtender.Utilities.Windows.IO
                 return Clear();
             }
 
-            if (ThreadUtilities.IsSTA)
+            try
             {
-                Clipboard.SetDataObject(data, copy);
+                if (ThreadUtilities.IsSTA)
+                {
+                    Clipboard.SetDataObject(data, copy);
+                    return true;
+                }
+
+                ThreadUtilities.STA(Clipboard.SetDataObject, data, copy);
                 return true;
             }
-
-            ThreadUtilities.STA(Clipboard.SetDataObject, data, copy);
-            return true;
+            catch (ExternalException)
+            {
+                return false;
+            }
         }
         
         public static Boolean SetData(Object? data, String format)
@@ -407,15 +458,22 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 throw new ArgumentNullException(nameof(format));
             }
-
-            if (ThreadUtilities.IsSTA)
+            
+            try
             {
-                Clipboard.SetData(format, data);
+                if (ThreadUtilities.IsSTA)
+                {
+                    Clipboard.SetData(format, data);
+                    return true;
+                }
+
+                ThreadUtilities.STA(Clipboard.SetData, format, data);
                 return true;
             }
-
-            ThreadUtilities.STA(Clipboard.SetData, format, data);
-            return true;
+            catch (ExternalException)
+            {
+                return false;
+            }
         }
         
         public static Boolean FlushSetText(String text)
@@ -776,7 +834,14 @@ namespace NetExtender.Utilities.Windows.IO
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsCurrent(IDataObject? data)
         {
-            return data is null ? IsEmpty : ThreadUtilities.IsSTA ? Clipboard.IsCurrent(data) : ThreadUtilities.STA(Clipboard.IsCurrent, data);
+            try
+            {
+                return data is null ? IsEmpty : ThreadUtilities.IsSTA ? Clipboard.IsCurrent(data) : ThreadUtilities.STA(Clipboard.IsCurrent, data);
+            }
+            catch (ExternalException)
+            {
+                return false;
+            }
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -796,14 +861,7 @@ namespace NetExtender.Utilities.Windows.IO
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Flush()
         {
-            if (ThreadUtilities.IsSTA)
-            {
-                FlushInternal();
-                return true;
-            }
-
-            ThreadUtilities.STA(FlushInternal);
-            return true;
+            return ThreadUtilities.IsSTA ? FlushInternal() : ThreadUtilities.STA(FlushInternal);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -823,14 +881,7 @@ namespace NetExtender.Utilities.Windows.IO
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Clear()
         {
-            if (ThreadUtilities.IsSTA)
-            {
-                ClearInternal();
-                return true;
-            }
-
-            ThreadUtilities.STA(ClearInternal);
-            return true;
+            return ThreadUtilities.IsSTA ? ClearInternal() : ThreadUtilities.STA(ClearInternal);
         }
     }
 }

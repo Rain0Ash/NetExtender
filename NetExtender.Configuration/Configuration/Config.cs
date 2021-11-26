@@ -15,7 +15,7 @@ namespace NetExtender.Configuration
     {
         protected IConfigBehavior Behavior { get; }
 
-        public event EventHandler<ConfigurationEntry> Changed
+        public event ConfigurationChangedEventHandler Changed
         {
             add
             {

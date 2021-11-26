@@ -18,7 +18,7 @@ namespace NetExtender.Utilities.Types
             return TryGetValue(source, key, default(TValue)!, out result);
         }
         
-        public static Boolean TryGetValue<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TKey key, TValue @default, [MaybeNullWhen(false)] out TValue result)
+        public static Boolean TryGetValue<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TKey key, TValue alternate, [MaybeNullWhen(false)] out TValue result)
         {
             if (source is null)
             {
@@ -35,22 +35,22 @@ namespace NetExtender.Utilities.Types
                 case IDictionary<TKey, TValue> dictionary when dictionary.TryGetValue(key, out result):
                     return true;
                 case IDictionary<TKey, TValue>:
-                    result = @default;
+                    result = alternate;
                     return false;
                 case IReadOnlyDictionary<TKey, TValue> dictionary when dictionary.TryGetValue(key, out result):
                     return true;
                 case IReadOnlyDictionary<TKey, TValue>:
-                    result = @default;
+                    result = alternate;
                     return false;
                 case IMap<TKey, TValue> map when map.TryGetValue(key, out result):
                     return true;
                 case IMap<TKey, TValue>:
-                    result = @default;
+                    result = alternate;
                     return false;
                 case IReadOnlyMap<TKey, TValue> map when map.TryGetValue(key, out result):
                     return true;
                 case IReadOnlyMap<TKey, TValue>:
-                    result = @default;
+                    result = alternate;
                     return false;
                 default:
                     foreach ((TKey pkey, TValue pvalue) in source)
@@ -64,7 +64,7 @@ namespace NetExtender.Utilities.Types
                         return true;
                     }
                     
-                    result = @default;
+                    result = alternate;
                     return false;
             }
         }
@@ -188,9 +188,9 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TValue TryGetValue<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TKey key, TValue @default)
+        public static TValue TryGetValue<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TKey key, TValue alternate)
         {
-            return TryGetValue(source, key, out TValue? result) ? result : @default;
+            return TryGetValue(source, key, out TValue? result) ? result : alternate;
         }
         
         public static TValue TryGetValue<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TKey key, Func<TValue> factory)
@@ -239,22 +239,22 @@ namespace NetExtender.Utilities.Types
             return TryGetKey(source, key, default(TKey)!, out result);
         }
         
-        public static Boolean TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key, TKey @default, [MaybeNullWhen(false)] out TKey result)
+        public static Boolean TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key, TKey alternate, [MaybeNullWhen(false)] out TKey result)
         {
             switch (source)
             {
                 case IMap<TKey, TValue> map when map.TryGetKey(key, out result):
                     return true;
                 case IMap<TKey, TValue>:
-                    result = @default;
+                    result = alternate;
                     return false;
                 case IReadOnlyMap<TKey, TValue> map when map.TryGetKey(key, out result):
                     return true;
                 case IReadOnlyMap<TKey, TValue>:
-                    result = @default;
+                    result = alternate;
                     return false;
                 default:
-                    return source.ReversePairs().TryGetValue(key, @default, out result);
+                    return source.ReversePairs().TryGetValue(key, alternate, out result);
             }
         }
         
@@ -318,14 +318,14 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TKey TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key, TKey @default)
+        public static TKey TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key, TKey alternate)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return TryGetKey(source, key, @default, out TKey? result) ? result : @default;
+            return TryGetKey(source, key, alternate, out TKey? result) ? result : alternate;
         }
         
         public static TKey TryGetKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, TValue key, Func<TKey> factory)

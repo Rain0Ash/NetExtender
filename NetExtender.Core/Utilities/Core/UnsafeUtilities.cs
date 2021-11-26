@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Utilities.Static
+namespace NetExtender.Utilities.Core
 {
     public static class UnsafeUtilities
     {

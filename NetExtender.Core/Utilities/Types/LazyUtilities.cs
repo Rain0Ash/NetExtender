@@ -17,29 +17,29 @@ namespace NetExtender.Utilities.Types
             return source.Value;
         }
 
-        public static T ValueOr<T>(this Lazy<T> source, T @default)
+        public static T ValueOr<T>(this Lazy<T> source, T alternate)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.IsValueCreated ? source.Value : @default;
+            return source.IsValueCreated ? source.Value : alternate;
         }
         
-        public static T ValueOr<T>(this Lazy<T> source, Func<T> @default)
+        public static T ValueOr<T>(this Lazy<T> source, Func<T> alternate)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (@default is null)
+            if (alternate is null)
             {
-                throw new ArgumentNullException(nameof(@default));
+                throw new ArgumentNullException(nameof(alternate));
             }
 
-            return source.IsValueCreated ? source.Value : @default.Invoke();
+            return source.IsValueCreated ? source.Value : alternate.Invoke();
         }
         
         public static T? ValueOrDefault<T>(this Lazy<T> source)

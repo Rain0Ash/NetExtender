@@ -22,7 +22,7 @@ namespace NetExtender.Types.Dispatchers
 
         private Dispatcher Dispatcher { get; }
 
-        public event EventHandler<DispatcherShutdownState> Shutdown = null!;
+        public event DispatcherShutdownStateEventHandler Shutdown = null!;
         
         public DispatcherWrapper(Dispatcher dispatcher)
         {
@@ -33,12 +33,12 @@ namespace NetExtender.Types.Dispatchers
 
         private void OnShutdownStarted(Object? obj, EventArgs args)
         {
-            Shutdown?.Invoke(obj, DispatcherShutdownState.Started);
+            Shutdown?.Invoke(obj, new DispatcherShutdownStateEventArgs(DispatcherShutdownState.Started));
         }
         
         private void OnShutdownFinished(Object? obj, EventArgs args)
         {
-            Shutdown?.Invoke(obj, DispatcherShutdownState.Finished);
+            Shutdown?.Invoke(obj, new DispatcherShutdownStateEventArgs(DispatcherShutdownState.Finished));
         }
 
         public Thread Thread

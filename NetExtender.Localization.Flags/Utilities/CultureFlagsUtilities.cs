@@ -2,19 +2,24 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using NetExtender.Images.Flags;
 
 namespace NetExtender.Utilities.Types
 {
     public static class CultureFlagsUtilities
     {
-        private static IDictionary<CultureInfo, Image> ImagesCache { get; } = new Dictionary<CultureInfo, Image>();
+        private static ConditionalWeakTable<CultureInfo, Image> Images { get; } = new ConditionalWeakTable<CultureInfo, Image>();
 
-        private static Image? ReadImage(CultureInfo info)
+        private static Image? ReadFlagImage(CultureInfo info)
         {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
             try
             {
                 return FlagsImages.ResourceManager.GetObject(info.TwoLetterISOLanguageName) as Image ??
@@ -26,48 +31,50 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static Image? GetImage(this CultureInfo info)
+        public static Image? GetFlagImage(this CultureInfo info)
         {
             if (info is null)
             {
                 throw new ArgumentNullException(nameof(info));
             }
 
-            lock (ImagesCache)
+            lock (Images)
             {
-                if (ImagesCache.TryGetValue(info, out Image? image))
+                if (Images.TryGetValue(info, out Image? image))
                 {
                     return image;
                 }
 
-                image = ReadImage(info);
+                image = ReadFlagImage(info);
                 if (image is null)
                 {
                     return null;
                 }
 
-                ImagesCache.Add(info, image);
+                Images.Add(info, image);
                 return image;
             }
         }
 
-        public static void SetImage(this CultureInfo info, Image? image)
+        public static CultureInfo SetFlagImage(this CultureInfo info, Image? image)
         {
             if (info is null)
             {
                 throw new ArgumentNullException(nameof(info));
             }
 
-            lock (ImagesCache)
+            lock (Images)
             {
                 if (image is null)
                 {
-                    ImagesCache.Remove(info);
-                    return;
+                    Images.Remove(info);
+                    return info;
                 }
-
-                ImagesCache[info] = image;
+                
+                Images.AddOrUpdate(info, image);
             }
+
+            return info;
         }
     }
 }

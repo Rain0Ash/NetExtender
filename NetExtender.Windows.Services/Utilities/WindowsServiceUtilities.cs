@@ -16,7 +16,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32;
 using NetExtender.Types.TextWriters;
-using NetExtender.Utilities.Static;
 using NetExtender.Utilities.Types;
 using NetExtender.Windows.Services.Exceptions;
 using NetExtender.Windows.Services.Types;
@@ -3521,12 +3520,12 @@ namespace NetExtender.Windows.Services.Utilities
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ServiceErrorControl TryGetServiceErrorControl(String name, ServiceErrorControl @default)
+        public static ServiceErrorControl TryGetServiceErrorControl(String name, ServiceErrorControl alternate)
         {
-            return GetServiceErrorControlInternal(name, @default, false);
+            return GetServiceErrorControlInternal(name, alternate, false);
         }
 
-        private static ServiceErrorControl GetServiceErrorControlInternal(String name, ServiceErrorControl @default, Boolean isThrow)
+        private static ServiceErrorControl GetServiceErrorControlInternal(String name, ServiceErrorControl alternate, Boolean isThrow)
         {
             if (name is null)
             {
@@ -3549,7 +3548,7 @@ namespace NetExtender.Windows.Services.Utilities
 
                 if (registry is null)
                 {
-                    return @default;
+                    return alternate;
                 }
 
                 Int64 control = Convert.ToInt64(registry.GetValue("ErrorControl"));
@@ -3560,7 +3559,7 @@ namespace NetExtender.Windows.Services.Utilities
                     1 => ServiceErrorControl.Normal,
                     2 => ServiceErrorControl.Severe,
                     3 => ServiceErrorControl.Critical,
-                    _ => !isThrow ? @default : throw new ArgumentOutOfRangeException(nameof(control))
+                    _ => !isThrow ? alternate : throw new ArgumentOutOfRangeException(nameof(control))
                 };
             }
             catch (Exception)
@@ -3570,7 +3569,7 @@ namespace NetExtender.Windows.Services.Utilities
                     throw;
                 }
 
-                return @default;
+                return alternate;
             }
         }
 
@@ -3587,12 +3586,12 @@ namespace NetExtender.Windows.Services.Utilities
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ServiceErrorControl TryGetServiceErrorControl(this ServiceController controller, ServiceErrorControl @default)
+        public static ServiceErrorControl TryGetServiceErrorControl(this ServiceController controller, ServiceErrorControl alternate)
         {
-            return GetServiceErrorControlInternal(controller, @default, false);
+            return GetServiceErrorControlInternal(controller, alternate, false);
         }
 
-        private static ServiceErrorControl GetServiceErrorControlInternal(this ServiceController controller, ServiceErrorControl @default, Boolean isThrow)
+        private static ServiceErrorControl GetServiceErrorControlInternal(this ServiceController controller, ServiceErrorControl alternate, Boolean isThrow)
         {
             if (controller is null)
             {
@@ -3601,7 +3600,7 @@ namespace NetExtender.Windows.Services.Utilities
 
             try
             {
-                return GetServiceErrorControlInternal(controller.ServiceName, @default, isThrow);
+                return GetServiceErrorControlInternal(controller.ServiceName, alternate, isThrow);
             }
             catch (Exception)
             {
@@ -3610,7 +3609,7 @@ namespace NetExtender.Windows.Services.Utilities
                     throw;
                 }
 
-                return @default;
+                return alternate;
             }
         }
 

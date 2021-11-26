@@ -832,19 +832,19 @@ namespace NetExtender.Utilities.Types
             return ChangeWhere(source, (item, index) => !where(item, index), selector);
         }
         
-        public static IEnumerable<T> ChangeWhereNull<T>(this IEnumerable<T?> source, T @default)
+        public static IEnumerable<T> ChangeWhereNull<T>(this IEnumerable<T?> source, T alternate)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (@default is null)
+            if (alternate is null)
             {
-                throw new ArgumentNullException(nameof(@default));
+                throw new ArgumentNullException(nameof(alternate));
             }
 
-            return source.Select(item => item ?? @default);
+            return source.Select(item => item ?? alternate);
         }
         
         public static IEnumerable<T> ChangeWhereNull<T>(this IEnumerable<T?> source, Func<T> selector)

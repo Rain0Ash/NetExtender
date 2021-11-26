@@ -2,7 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 
 namespace NetExtender.Windows
 {
@@ -11,7 +10,6 @@ namespace NetExtender.Windows
     /// Defined in winuser.h from Windows SDK v6.1
     /// Documentation pulled from MSDN.
     /// </summary>
-    [SuppressMessage("ReSharper", "CA1069")]
     public enum WM
     {
         /// <summary>

@@ -77,7 +77,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 return Initializers.ContainsKey(builder);
             }
             
-            public static Boolean TryGetProvider(IWebHostBuilder builder, [MaybeNullWhen(false)] out IStartupRegistrationProvider? provider)
+            public static Boolean TryGetProvider(IWebHostBuilder builder, [MaybeNullWhen(false)] out IStartupRegistrationProvider provider)
             {
                 if (builder is null)
                 {
@@ -87,7 +87,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 return Initializers.TryGetValue(builder, out provider);
             }
             
-            public static Boolean Remove(IWebHostBuilder builder, [MaybeNullWhen(false)] out IStartupRegistrationProvider? provider)
+            public static Boolean Remove(IWebHostBuilder builder, [MaybeNullWhen(false)] out IStartupRegistrationProvider provider)
             {
                 if (builder is null)
                 {

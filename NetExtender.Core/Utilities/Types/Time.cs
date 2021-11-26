@@ -3,7 +3,7 @@
 
 using System;
 
-namespace NetExtender.Utilities.Static
+namespace NetExtender.Utilities.Types
 {
     public static class Time
     {

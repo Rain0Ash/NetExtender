@@ -8,7 +8,7 @@ namespace NetExtender.Types.Dispatchers.Interfaces
 {
     public interface IDispatcher
     {
-        public event EventHandler<DispatcherShutdownState> Shutdown;
+        public event DispatcherShutdownStateEventHandler Shutdown;
         public Thread Thread { get; }
         public Boolean IsShutdown { get; }
         public DispatcherShutdownState ShutdownState { get; }

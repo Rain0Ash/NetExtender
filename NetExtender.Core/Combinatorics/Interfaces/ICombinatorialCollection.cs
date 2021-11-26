@@ -18,22 +18,22 @@ namespace NetExtender.Combinatorics.Interfaces
         /// The type of the meta-collection, determining how the collections are 
         /// determined from the inputs.
         /// </summary>
-        Boolean Repetition { get; }
+        public Boolean Repetition { get; }
         
         /// <summary>
         /// The upper index of the meta-collection, which is the size of the input collection.
         /// </summary>
-        Int32 UpperIndex { get; }
+        public Int32 UpperIndex { get; }
 
         /// <summary>
         /// The lower index of the meta-collection, which is the size of each output collection.
         /// </summary>
-        Int32 LowerIndex { get; }
+        public Int32 LowerIndex { get; }
         
         /// <summary>
         /// The count of items in the collection. This is not inherited from
         /// ICollection since this meta-collection cannot be extended by users.
         /// </summary>
-        Int64 Count { get; }
+        public Int64 Count { get; }
     }
 }

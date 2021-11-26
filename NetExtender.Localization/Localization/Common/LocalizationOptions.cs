@@ -3,10 +3,11 @@
 
 using System;
 
-namespace NetExtender.Utilities.Static
+namespace NetExtender.Localization.Common
 {
-    public static class CompabilityUtilities
+    [Flags]
+    public enum LocalizationOptions
     {
-        public static Boolean IsRunningOnMono { get; } = Type.GetType("Mono.Runtime") is not null;
+        None = 0
     }
 }

@@ -6,7 +6,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace NetExtender.Utilities.Static
+namespace NetExtender.Utilities.Core
 {
     public static class WindowsInteropUtilities
     {

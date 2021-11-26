@@ -1071,7 +1071,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            String result = builder.ToString().ToUpper(info);
+            String result = builder.ToString().ToUpper(info ?? CultureInfo.InvariantCulture);
             return builder.Clear().Append(result);
         }
 
@@ -1098,7 +1098,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            String result = builder.ToString().ToLower(info);
+            String result = builder.ToString().ToLower(info ?? CultureInfo.InvariantCulture);
             return builder.Clear().Append(result);
         }
 

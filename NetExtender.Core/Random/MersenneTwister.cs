@@ -22,7 +22,7 @@ namespace NetExtender.Random
         /// is used for the seed.
         /// </remarks>
         public MersenneTwister()
-            : this(new System.Random().Next(-1, Int32.MaxValue) + 1) /* a default initial seed is used   */
+            : this(new System.Random().Next(-1, Int32.MaxValue) + 1)
         {
         }
 
@@ -93,7 +93,7 @@ namespace NetExtender.Random
         /// <exception cref="ArgumentOutOfRangeException">
         /// If <c><paramref name="min"/> &gt;= <paramref name="max"/></c>.
         /// </exception>
-        public UInt32 NextUInt32(UInt32 min, UInt32 max) /* throws ArgumentOutOfRangeException */
+        public UInt32 NextUInt32(UInt32 min, UInt32 max)
         {
             if (min > max)
             {
@@ -270,30 +270,30 @@ namespace NetExtender.Random
             {
                 UInt32 y;
 
-                /* _mag01[x] = x * MatrixA  for x=0,1 */
-                if (_mti >= N) /* generate N words at one time */
+                // _mag01[x] = x * MatrixA  for x=0,1
+                if (Mti >= N) // generate N words at one time
                 {
                     Int16 kk = 0;
 
                     for (; kk < N - M; ++kk)
                     {
-                        y = (_mt[kk] & UpperMask) | (_mt[kk + 1] & LowerMask);
-                        _mt[kk] = _mt[kk + M] ^ (y >> 1) ^ Mag01[y & 0x1];
+                        y = (Mt[kk] & UpperMask) | (Mt[kk + 1] & LowerMask);
+                        Mt[kk] = Mt[kk + M] ^ (y >> 1) ^ Mag01[y & 0x1];
                     }
 
                     for (; kk < N - 1; ++kk)
                     {
-                        y = (_mt[kk] & UpperMask) | (_mt[kk + 1] & LowerMask);
-                        _mt[kk] = _mt[kk + (M - N)] ^ (y >> 1) ^ Mag01[y & 0x1];
+                        y = (Mt[kk] & UpperMask) | (Mt[kk + 1] & LowerMask);
+                        Mt[kk] = Mt[kk + (M - N)] ^ (y >> 1) ^ Mag01[y & 0x1];
                     }
 
-                    y = (_mt[N - 1] & UpperMask) | (_mt[0] & LowerMask);
-                    _mt[N - 1] = _mt[M - 1] ^ (y >> 1) ^ Mag01[y & 0x1];
+                    y = (Mt[N - 1] & UpperMask) | (Mt[0] & LowerMask);
+                    Mt[N - 1] = Mt[M - 1] ^ (y >> 1) ^ Mag01[y & 0x1];
 
-                    _mti = 0;
+                    Mti = 0;
                 }
 
-                y = _mt[_mti++];
+                y = Mt[Mti++];
                 y ^= TemperingShiftU(y);
                 y ^= TemperingShiftS(y) & TemperingMaskB;
                 y ^= TemperingShiftT(y) & TemperingMaskC;
@@ -303,14 +303,14 @@ namespace NetExtender.Random
             }
         }
 
-        /* Period parameters */
+        // Period parameters
         private const Int32 N = 624;
         private const Int32 M = 397;
-        private const UInt32 MatrixA = 0x9908B0DF; /* constant vector a */
-        private const UInt32 UpperMask = 0x80000000; /* most significant w-r bits */
-        private const UInt32 LowerMask = 0x7FFFFFFF; /* least significant r bits */
+        private const UInt32 MatrixA = 0x9908B0DF; // Constant vector a
+        private const UInt32 UpperMask = 0x80000000; // Most significant w-r bits
+        private const UInt32 LowerMask = 0x7FFFFFFF; // Least significant r bits
 
-        /* Tempering parameters */
+        // Tempering parameters
         private const UInt32 TemperingMaskB = 0x9D2C5680;
         private const UInt32 TemperingMaskC = 0xEFC60000;
 
@@ -334,23 +334,22 @@ namespace NetExtender.Random
             return y >> 18;
         }
 
-        private readonly UInt32[] _mt = new UInt32[N]; /* the array for the state vector  */
-        private Int16 _mti;
+        private UInt32[] Mt { get; } = new UInt32[N];
+        private Int16 Mti { get; set; }
 
-        private static readonly UInt32[] Mag01 = {0x0, MatrixA};
+        private static UInt32[] Mag01 { get; } = { 0x0, MatrixA };
 
         private void Init(UInt32 seed)
         {
             unchecked
             {
-                _mt[0] = seed & 0xFFFFFFFFU;
+                Mt[0] = seed & 0xFFFFFFFFU;
 
-                for (_mti = 1; _mti < N; _mti++)
+                for (Mti = 1; Mti < N; Mti++)
                 {
-                    _mt[_mti] = (UInt32) (1812433253U * (_mt[_mti - 1] ^ (_mt[_mti - 1] >> 30)) + _mti);
-
-                    _mt[_mti] &= 0xFFFFFFFFU;
-                    // for >32 bit machines
+                    Mt[Mti] = (UInt32) (1812433253U * (Mt[Mti - 1] ^ (Mt[Mti - 1] >> 30)) + Mti);
+                    Mt[Mti] &= 0xFFFFFFFFU;
+                    // For >32 bit machines
                 }
             }
         }
@@ -368,13 +367,13 @@ namespace NetExtender.Random
 
                 for (; k > 0; k--)
                 {
-                    _mt[i] = (UInt32) ((_mt[i] ^ ((_mt[i - 1] ^ (_mt[i - 1] >> 30)) * 1664525U)) + key[j] + j); /* non linear */
-                    _mt[i] &= 0xFFFFFFFFU; // for WORDSIZE > 32 machines
+                    Mt[i] = (UInt32) ((Mt[i] ^ ((Mt[i - 1] ^ (Mt[i - 1] >> 30)) * 1664525U)) + key[j] + j);
+                    Mt[i] &= 0xFFFFFFFFU; // For WORDSIZE > 32 machines
                     i++;
                     j++;
                     if (i >= N)
                     {
-                        _mt[0] = _mt[N - 1];
+                        Mt[0] = Mt[N - 1];
                         i = 1;
                     }
 
@@ -386,8 +385,8 @@ namespace NetExtender.Random
 
                 for (k = N - 1; k > 0; k--)
                 {
-                    _mt[i] = (UInt32) ((_mt[i] ^ ((_mt[i - 1] ^ (_mt[i - 1] >> 30)) * 1566083941U)) - i); /* non linear */
-                    _mt[i] &= 0xFFFFFFFFU; // for WORDSIZE > 32 machines
+                    Mt[i] = (UInt32) ((Mt[i] ^ ((Mt[i - 1] ^ (Mt[i - 1] >> 30)) * 1566083941U)) - i);
+                    Mt[i] &= 0xFFFFFFFFU; // For WORDSIZE > 32 machines
                     i++;
 
                     if (i < N)
@@ -395,11 +394,11 @@ namespace NetExtender.Random
                         continue;
                     }
 
-                    _mt[0] = _mt[N - 1];
+                    Mt[0] = Mt[N - 1];
                     i = 1;
                 }
 
-                _mt[0] = 0x80000000U; // MSB is 1; assuring non-zero initial array
+                Mt[0] = 0x80000000U; // MSB is 1; assuring non-zero initial array
             }
         }
 
@@ -422,10 +421,6 @@ namespace NetExtender.Random
             // shift the 27 pseudo-random bits (a) over by 26 bits (* 67108864.0) and
             // add another pseudo-random 26 bits (+ b).
             return (a * 67108864.0 + b + translate) * scale;
-
-            // What about the following instead of the above? Is the multiply better? 
-            // Why? (Is it the FMUL instruction? Does this count in .Net? Will the JITter notice?)
-            //return BitConverter.Int64BitsToDouble((a << 26) + b));
         }
 
         void IDisposable.Dispose()

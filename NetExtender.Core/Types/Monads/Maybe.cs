@@ -5,8 +5,19 @@ using System;
 
 namespace NetExtender.Types.Monads
 {
+    [Serializable]
     public readonly struct Maybe<T>
     {
+        public static implicit operator Maybe<T>(T value)
+        {
+            return new Maybe<T>(value);
+        }
+
+        public static explicit operator T(Maybe<T> value)
+        {
+            return value.Value;
+        }
+        
         public static Boolean operator ==(Maybe<T> left, Maybe<T> right)
         {
             return left.Equals(right);
@@ -17,16 +28,6 @@ namespace NetExtender.Types.Monads
             return !(left == right);
         }
         
-        public static implicit operator Maybe<T>(T value)
-        {
-            return new Maybe<T>(value);
-        }
-
-        public static explicit operator T(Maybe<T> value)
-        {
-            return value.Value;
-        }
-
         private readonly T _value;
 
         public T Value
@@ -44,25 +45,31 @@ namespace NetExtender.Types.Monads
             _value = value;
             HasValue = true;
         }
-        
-        public T GetValueOrDefault()
+
+        public void Deconstruct(out Boolean has, out T value)
         {
-            return Value;
+            has = HasValue;
+            value = _value;
         }
-        
-        public T GetValueOrDefault(T @default)
-        {
-            return HasValue ? Value : @default;
-        }
-        
+
         public override Boolean Equals(Object? other)
         {
+            if (other is Maybe<T> maybe)
+            {
+                return Equals(maybe);
+            }
+            
             if (!HasValue)
             {
-                return other == null;
+                return other is null;
             }
 
             return other is not null && Equals(Value, other);
+        }
+        
+        public Boolean Equals(Maybe<T> other)
+        {
+            return !HasValue && !other.HasValue || HasValue && other.HasValue && Equals(Value, other.Value);
         }
         
         public override Int32 GetHashCode()

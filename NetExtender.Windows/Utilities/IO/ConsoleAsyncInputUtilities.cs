@@ -315,14 +315,14 @@ namespace NetExtender.Utilities.IO
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ReadAs<T>(TryParseHandler<String?, T> converter, T @default)
+        public static T ReadAs<T>(TryParseHandler<String?, T> converter, T alternate)
         {
             if (converter is null)
             {
                 throw new ArgumentNullException(nameof(converter));
             }
 
-            return Console.ReadLine().Convert(converter, @default);
+            return Console.ReadLine().Convert(converter, alternate);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -383,7 +383,7 @@ namespace NetExtender.Utilities.IO
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<T> ReadAsAsync<T>(TryParseHandler<String?, T> converter, T @default, CancellationToken token)
+        public static async Task<T> ReadAsAsync<T>(TryParseHandler<String?, T> converter, T alternate, CancellationToken token)
         {
             if (converter is null)
             {
@@ -391,7 +391,7 @@ namespace NetExtender.Utilities.IO
             }
 
             String? read = await ReadLineAsync(token).ConfigureAwait(false);
-            return read.Convert(converter, @default);
+            return read.Convert(converter, alternate);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -465,15 +465,15 @@ namespace NetExtender.Utilities.IO
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<T> ReadAsAsync<T>(Int32 milliseconds, TryParseHandler<String?, T> converter, T @default)
+        public static Task<T> ReadAsAsync<T>(Int32 milliseconds, TryParseHandler<String?, T> converter, T alternate)
         {
-            return ReadAsAsync(milliseconds, converter, @default, CancellationToken.None);
+            return ReadAsAsync(milliseconds, converter, alternate, CancellationToken.None);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<T> ReadAsAsync<T>(TimeSpan timeout, TryParseHandler<String?, T> converter, T @default)
+        public static Task<T> ReadAsAsync<T>(TimeSpan timeout, TryParseHandler<String?, T> converter, T alternate)
         {
-            return ReadAsAsync(timeout, converter, @default, CancellationToken.None);
+            return ReadAsAsync(timeout, converter, alternate, CancellationToken.None);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -551,7 +551,7 @@ namespace NetExtender.Utilities.IO
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<T> ReadAsAsync<T>(Int32 milliseconds, TryParseHandler<String?, T> converter, T @default, CancellationToken token)
+        public static async Task<T> ReadAsAsync<T>(Int32 milliseconds, TryParseHandler<String?, T> converter, T alternate, CancellationToken token)
         {
             if (converter is null)
             {
@@ -559,11 +559,11 @@ namespace NetExtender.Utilities.IO
             }
 
             String? read = await ReadLineAsync(milliseconds, token).ConfigureAwait(false);
-            return read.Convert(converter, @default);
+            return read.Convert(converter, alternate);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<T> ReadAsAsync<T>(TimeSpan timeout, TryParseHandler<String?, T> converter, T @default, CancellationToken token)
+        public static async Task<T> ReadAsAsync<T>(TimeSpan timeout, TryParseHandler<String?, T> converter, T alternate, CancellationToken token)
         {
             if (converter is null)
             {
@@ -571,7 +571,7 @@ namespace NetExtender.Utilities.IO
             }
 
             String? read = await ReadLineAsync(timeout, token).ConfigureAwait(false);
-            return read.Convert(converter, @default);
+            return read.Convert(converter, alternate);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

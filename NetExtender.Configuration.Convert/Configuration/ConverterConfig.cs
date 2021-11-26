@@ -18,7 +18,7 @@ namespace NetExtender.Configuration.Convert
     {
         private IConfig Config { get; }
 
-        public event EventHandler<ConfigurationEntry> Changed
+        public event ConfigurationChangedEventHandler Changed
         {
             add
             {

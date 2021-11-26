@@ -18,6 +18,7 @@ namespace NetExtender.Utilities.Types
             return ToDiagnosticString(source, null);
         }
 
+        // ReSharper disable once CognitiveComplexity
         private static String ToDiagnosticString(this Exception source, StringBuilder? builder)
         {
             if (source is null)

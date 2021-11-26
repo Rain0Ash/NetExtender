@@ -66,6 +66,25 @@ namespace NetExtender.Workstation
             }
         }
         
+        /// <summary>
+        /// Use WMI to get the DateTime the current user logged on.
+        /// <para>NOTE: Depending on Windows permissions settings, this may only work when the app is run as an administrator (i.e. the app has elevated privileges).</para>
+        /// </summary>
+        public static DateTime? LastLoginDateTime
+        {
+            get
+            {
+                try
+                {
+                    return Hardware.GetWmiPropertyValueAsDateTime("SELECT * FROM Win32_Session", "StartTime");
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+        }
+
         [DllImport("user32.dll")]
         private static extern Boolean LockWorkStation();
 

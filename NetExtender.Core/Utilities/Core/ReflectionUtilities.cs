@@ -29,7 +29,7 @@ namespace NetExtender.Utilities.Core
         All = String | Decimal | Complex | TimeSpan | DateTime | DateTimeOffset
     }
     
-    public static class ReflectionUtilities
+    public static partial class ReflectionUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type TryGetGenericTypeDefinition(this Type type)
@@ -1207,5 +1207,7 @@ namespace NetExtender.Utilities.Core
         {
             return default;
         }
+        
+        
     }
 }

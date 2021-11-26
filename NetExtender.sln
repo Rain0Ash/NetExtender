@@ -119,6 +119,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Windows", "NetE
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Compability", "NetExtender.Compability", "{0D61BFC7-C568-4F5F-983E-ADA30B66AD97}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Localization", "NetExtender.Localization\NetExtender.Localization.csproj", "{517CF6A6-39F4-4D76-ADD3-B4954A36B93A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.JavaScript", "NetExtender.JavaScript\NetExtender.JavaScript.csproj", "{0EF043EA-7AC4-40A7-8E50-53CA3691C281}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -309,6 +313,14 @@ Global
 		{7818E998-4F00-4B82-AE9D-CF2DFA9A719D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7818E998-4F00-4B82-AE9D-CF2DFA9A719D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7818E998-4F00-4B82-AE9D-CF2DFA9A719D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{517CF6A6-39F4-4D76-ADD3-B4954A36B93A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{517CF6A6-39F4-4D76-ADD3-B4954A36B93A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{517CF6A6-39F4-4D76-ADD3-B4954A36B93A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{517CF6A6-39F4-4D76-ADD3-B4954A36B93A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EF043EA-7AC4-40A7-8E50-53CA3691C281}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EF043EA-7AC4-40A7-8E50-53CA3691C281}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EF043EA-7AC4-40A7-8E50-53CA3691C281}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EF043EA-7AC4-40A7-8E50-53CA3691C281}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -317,7 +329,6 @@ Global
 		SolutionGuid = {0FBEDCF4-3CBE-406D-B1B7-FE62D983A079}
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Release | x64|Any CPU = Release | x64|Any CPU
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
@@ -367,5 +378,7 @@ Global
 		{DAB909F0-FDE0-44FB-B977-0776FF1E01B5} = {A7BE8994-15D1-4F4B-BD86-C308973371B6}
 		{6F121305-43B4-4F3A-BBC3-7A8C1689D17B} = {0D61BFC7-C568-4F5F-983E-ADA30B66AD97}
 		{ECAF556B-AFC3-4EB4-9A85-5A1C3B9CDDA8} = {0D61BFC7-C568-4F5F-983E-ADA30B66AD97}
+		{517CF6A6-39F4-4D76-ADD3-B4954A36B93A} = {F7A961F4-F974-4820-8FE6-E608A2FF4B24}
+		{0EF043EA-7AC4-40A7-8E50-53CA3691C281} = {0D61BFC7-C568-4F5F-983E-ADA30B66AD97}
 	EndGlobalSection
 EndGlobal

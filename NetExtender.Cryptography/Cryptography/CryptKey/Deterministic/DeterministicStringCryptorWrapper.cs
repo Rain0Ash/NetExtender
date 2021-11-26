@@ -54,7 +54,7 @@ namespace NetExtender.Crypto.CryptKey.Deterministic
     
     public class DeterministicStringCryptorWrapper<T> : DeterministicStringEncryptorWrapper where T : IStringCryptor
     {
-        public new T Cryptor { get; }
+        public T Cryptor { get; }
         
         public DeterministicStringCryptorWrapper(T cryptor)
             : base(cryptor)

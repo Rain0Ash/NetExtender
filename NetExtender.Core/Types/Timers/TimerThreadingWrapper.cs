@@ -7,7 +7,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Times.Timers.Interfaces;
 using NetExtender.Types.Events;
-using NetExtender.Utilities.Static;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Timers

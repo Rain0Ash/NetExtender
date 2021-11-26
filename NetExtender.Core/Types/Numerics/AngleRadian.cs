@@ -1,4 +1,7 @@
-﻿using System;
+﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
+using System;
 using System.Diagnostics.Contracts;
 using NetExtender.Utilities.Numerics;
 
@@ -190,9 +193,9 @@ namespace NetExtender.Types.Numerics
         /// <param name="second">Scalar value.</param>
         /// <returns>Result of the division.</returns>
         [Pure]
-        public static AngleDegree operator %(AngleRadian first, Double second)
+        public static AngleRadian operator %(AngleRadian first, Double second)
         {
-            return new AngleDegree(first.Radian % second);
+            return new AngleRadian(first.Radian % second);
         }
         
         /// <summary>

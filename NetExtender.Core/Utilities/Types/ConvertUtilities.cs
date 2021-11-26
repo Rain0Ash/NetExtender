@@ -837,20 +837,20 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TOutput Convert<T, TOutput>(this TryParseHandler<T, TOutput> converter, T input, TOutput @default)
+        public static TOutput Convert<T, TOutput>(this TryParseHandler<T, TOutput> converter, T input, TOutput alternate)
         {
-            return Convert(input, converter, @default);
+            return Convert(input, converter, alternate);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TOutput Convert<T, TOutput>(this T input, TryParseHandler<T, TOutput> converter, TOutput @default)
+        public static TOutput Convert<T, TOutput>(this T input, TryParseHandler<T, TOutput> converter, TOutput alternate)
         {
             if (converter is null)
             {
                 throw new ArgumentNullException(nameof(converter));
             }
 
-            return converter.Invoke(input, out TOutput? result) ? result! : @default;
+            return converter.Invoke(input, out TOutput? result) ? result! : alternate;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1069,12 +1069,12 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
 
-            if (value.Length != 1 || value.Length != 4)
+            if (value.Length != 1 && value.Length != 4)
             {
                 return false;
             }
             
-            return value?.ToUpper() switch
+            return value.ToUpper() switch
             {
                 "TRUE" => true,
                 "T" => true,

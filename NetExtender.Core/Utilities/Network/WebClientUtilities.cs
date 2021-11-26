@@ -7,7 +7,6 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Utilities.IO;
-using NetExtender.Utilities.Static;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Network

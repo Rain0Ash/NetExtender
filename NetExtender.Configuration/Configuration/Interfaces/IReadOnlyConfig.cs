@@ -11,7 +11,7 @@ namespace NetExtender.Configuration.Interfaces
 {
     public interface IReadOnlyConfig
     {
-        public event EventHandler<ConfigurationEntry> Changed;
+        public event ConfigurationChangedEventHandler Changed;
         public String Path { get; }
         public ConfigOptions Options { get; }
         public Boolean IsReadOnly { get; }

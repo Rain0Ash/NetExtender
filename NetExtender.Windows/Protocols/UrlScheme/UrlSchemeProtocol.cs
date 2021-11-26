@@ -2,17 +2,40 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.IO;
 using Microsoft.Win32;
 using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Application;
-using NetExtender.Windows.Protocols.Interfaces;
+using NetExtender.Utilities.IO;
 
 namespace NetExtender.Windows.Protocols
 {
-    public class UrlSchemeProtocol : IProtocol
+    public class UrlSchemeProtocol : ProtocolRegistration
     {
-        public String Name { get; }
+        private const String ShellSubKey = @"shell\open\command";
 
+        private const String URLProtocol = "URL Protocol";
+
+        private const String DefaultIcon = "DefaultIcon";
+
+        public String Path { get; }
+        
+        private String IconPath
+        {
+            get
+            {
+                return $"\"{Path}\",1";
+            }
+        }
+
+        private String CommandPath
+        {
+            get
+            {
+                return $"\"{Path}\" \"%1\"";
+            }
+        }
+        
         private String URLApplicationName
         {
             get
@@ -21,35 +44,7 @@ namespace NetExtender.Windows.Protocols
             }
         }
 
-        public virtual Boolean IsRegister
-        {
-            get
-            {
-                return Status == ProtocolStatus.Register;
-            }
-            set
-            {
-                if (value)
-                {
-                    if (Status == ProtocolStatus.Register)
-                    {
-                        return;
-                    }
-
-                    Register();
-                    return;
-                }
-
-                if (Status == ProtocolStatus.Unregister)
-                {
-                    return;
-                }
-
-                Unregister();
-            }
-        }
-
-        public virtual ProtocolStatus Status
+        public override ProtocolStatus Status
         {
             get
             {
@@ -57,60 +52,36 @@ namespace NetExtender.Windows.Protocols
             }
         }
 
-        private static String? Path
-        {
-            get
-            {
-                return ApplicationUtilities.Path;
-            }
-        }
-
-        private const String ShellSubKey = "shell\\open\\command";
-
-        private const String URLProtocol = "URL Protocol";
-
-        private const String DefaultIcon = "DefaultIcon";
-
-        private static String IconPath
-        {
-            get
-            {
-                return $"\"{Path}\",1";
-            }
-        }
-
-        private static String CommandPath
-        {
-            get
-            {
-                return $"\"{Path}\" \"%1\"";
-            }
-        }
-
         public UrlSchemeProtocol()
-            : this(ApplicationUtilities.FriendlyName ?? throw new InitializeException())
+            : this(ApplicationUtilities.Path ?? throw new InitializeException(), ApplicationUtilities.FriendlyName ?? throw new InitializeException())
         {
         }
 
-        public UrlSchemeProtocol(String name)
+        public UrlSchemeProtocol(String path, String name)
+            : base(name)
         {
+            if (String.IsNullOrEmpty(path))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(path));
+            }
+
             if (String.IsNullOrWhiteSpace(name))
             {
                 throw new ArgumentException(@"Value cannot be null or whitespace.", nameof(name));
             }
 
-            Name = name;
+            if (!PathUtilities.IsExistAsFile(path))
+            {
+                throw new FileNotFoundException(null, nameof(path));
+            }
+            
+            Path = path;
         }
 
         protected virtual ProtocolStatus IsRegisterInternal()
         {
             try
             {
-                if (String.IsNullOrEmpty(Path))
-                {
-                    return ProtocolStatus.Unknown;
-                }
-
                 using RegistryKey? registry = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(Name);
 
                 if (registry is null)
@@ -160,7 +131,7 @@ namespace NetExtender.Windows.Protocols
             }
         }
 
-        public virtual Boolean Register()
+        public override Boolean Register()
         {
             return Register(URLApplicationName);
         }
@@ -172,19 +143,13 @@ namespace NetExtender.Windows.Protocols
                 return true;
             }
 
-            if (String.IsNullOrEmpty(Path))
-            {
-                return false;
-            }
-
             about ??= String.Empty;
 
             try
             {
                 using RegistryKey? registry = Microsoft.Win32.Registry.ClassesRoot.CreateSubKey(Name);
 
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-                if (registry is null)
+                if (registry is null!)
                 {
                     return false;
                 }
@@ -195,8 +160,7 @@ namespace NetExtender.Windows.Protocols
 
                 using RegistryKey? icon = registry.CreateSubKey(DefaultIcon);
 
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-                if (icon is null)
+                if (icon is null!)
                 {
                     return false;
                 }
@@ -204,9 +168,8 @@ namespace NetExtender.Windows.Protocols
                 icon.SetValue(null, IconPath);
 
                 using RegistryKey? shell = registry.CreateSubKey(ShellSubKey);
-
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-                if (shell is null)
+                
+                if (shell is null!)
                 {
                     return false;
                 }
@@ -221,7 +184,7 @@ namespace NetExtender.Windows.Protocols
             }
         }
 
-        public virtual Boolean Unregister()
+        public override Boolean Unregister()
         {
             if (Status == ProtocolStatus.Unregister)
             {

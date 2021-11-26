@@ -9,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Types.Streams;
 using NetExtender.Utilities.IO;
-using NetExtender.Utilities.Static;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Network

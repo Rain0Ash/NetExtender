@@ -75,7 +75,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
             }
         }
 
-        public event EventHandler<ConfigurationEntry> Changed = null!;
+        public event ConfigurationChangedEventHandler Changed = null!;
 
         public String Path
         {
@@ -675,7 +675,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         
         protected void InvokeChanged(ConfigurationEntry entry)
         {
-            Changed?.Invoke(this, entry);
+            Changed?.Invoke(this, new ConfigurationChangedEventArgs(entry));
         }
         
         public void Dispose()

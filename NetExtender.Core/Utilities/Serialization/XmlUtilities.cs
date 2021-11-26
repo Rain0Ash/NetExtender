@@ -283,7 +283,7 @@ namespace NetExtender.Utilities.Serialization
         /// <exception cref="ArgumentNullException">
         /// <paramref name="element"/> or <paramref name="name"/> or <paramref name="parser"/> is null.
         /// </exception>
-        public static T? AttributeValueOrDefault<T>(this XElement element, XName name, Func<String, T> parser, T? @default)
+        public static T? AttributeValueOrDefault<T>(this XElement element, XName name, Func<String, T> parser, T? alternate)
         {
             if (element is null)
             {
@@ -301,7 +301,7 @@ namespace NetExtender.Utilities.Serialization
             }
 
             XAttribute? attribute = element.Attribute(name);
-            return attribute is not null ? parser(attribute.Value) : @default;
+            return attribute is not null ? parser(attribute.Value) : alternate;
         }
 
         /// <summary>
@@ -314,7 +314,7 @@ namespace NetExtender.Utilities.Serialization
         /// <exception cref="ArgumentNullException">
         /// <paramref name="element"/> or <paramref name="name"/> is null.
         /// </exception>
-        public static String? AttributeValueOrDefault(this XElement element, XName name, String? @default)
+        public static String? AttributeValueOrDefault(this XElement element, XName name, String? alternate)
         {
             if (element is null)
             {
@@ -326,7 +326,7 @@ namespace NetExtender.Utilities.Serialization
                 throw new ArgumentNullException(nameof(name));
             }
 
-            return element.Attribute(name)?.Value ?? @default;
+            return element.Attribute(name)?.Value ?? alternate;
         }
 
         /// <summary>
@@ -341,7 +341,7 @@ namespace NetExtender.Utilities.Serialization
         /// <exception cref="ArgumentNullException">
         /// <paramref name="parent"/> or <paramref name="selector"/> or <paramref name="names"/> is null.
         /// </exception>
-        public static T? ElementAltValueOrDefault<T>(this XElement parent, Func<XElement, T> selector, T? @default, params XName[] names)
+        public static T? ElementAltValueOrDefault<T>(this XElement parent, Func<XElement, T> selector, T? alternate, params XName[] names)
         {
             if (parent is null)
             {
@@ -359,7 +359,7 @@ namespace NetExtender.Utilities.Serialization
             }
 
             XElement? element = names.Select(parent.Element).FirstOrDefault(item => item is not null);
-            return element is not null ? selector(element) : @default;
+            return element is not null ? selector(element) : alternate;
         }
 
         /// <summary>
@@ -374,14 +374,14 @@ namespace NetExtender.Utilities.Serialization
         /// <exception cref="ArgumentNullException">
         /// <paramref name="parent"/> or <paramref name="selector"/> is null.
         /// </exception>
-        public static T? ElementValueOrDefault<T>(this XElement parent, XName name, Func<XElement, T> selector, T? @default)
+        public static T? ElementValueOrDefault<T>(this XElement parent, XName name, Func<XElement, T> selector, T? alternate)
         {
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
 
-            return ElementAltValueOrDefault(parent, selector, @default, name);
+            return ElementAltValueOrDefault(parent, selector, alternate, name);
         }
 
         /// <summary>
@@ -396,14 +396,14 @@ namespace NetExtender.Utilities.Serialization
         /// <exception cref="ArgumentNullException">
         /// <paramref name="parent"/> or <paramref name="name"/> or <paramref name="selector"/> is null.
         /// </exception>
-        public static T? ElementValueOrDefault<T>(this XElement parent, XName name, Func<String, T> selector, T? @default)
+        public static T? ElementValueOrDefault<T>(this XElement parent, XName name, Func<String, T> selector, T? alternate)
         {
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
 
-            return ElementAltValueOrDefault(parent, element => selector(element.Value), @default, name);
+            return ElementAltValueOrDefault(parent, element => selector(element.Value), alternate, name);
         }
 
         /// <summary>
@@ -416,14 +416,14 @@ namespace NetExtender.Utilities.Serialization
         /// <exception cref="ArgumentNullException">
         /// <paramref name="parent"/> or <paramref name="name"/> is null.
         /// </exception>
-        public static String? ElementValueOrDefault(this XElement parent, XName name, String? @default)
+        public static String? ElementValueOrDefault(this XElement parent, XName name, String? alternate)
         {
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
 
-            return ElementAltValueOrDefault(parent, element => element.Value, @default, name);
+            return ElementAltValueOrDefault(parent, element => element.Value, alternate, name);
         }
         
         /// <summary>

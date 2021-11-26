@@ -17,7 +17,7 @@ namespace NetExtender.Configuration.Cryptography
     {
         protected ICryptographyConfigBehavior Behavior { get; }
         
-        public event EventHandler<ConfigurationEntry> Changed
+        public event ConfigurationChangedEventHandler Changed
         {
             add
             {

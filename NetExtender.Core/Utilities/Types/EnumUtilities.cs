@@ -207,9 +207,9 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
-        public static IReadOnlyList<T> GetValues<T>(Boolean @default) where T : unmanaged, Enum
+        public static IReadOnlyList<T> GetValues<T>(Boolean alternate) where T : unmanaged, Enum
         {
-            return @default ? GetValues<T>() : GetValuesWithoutDefault<T>();
+            return alternate ? GetValues<T>() : GetValuesWithoutDefault<T>();
         }
 
         /// <summary>
@@ -597,7 +597,6 @@ namespace NetExtender.Utilities.Types
         {
             EnumMemberAttribute? attribute = value.ToMember().EnumMemberAttribute;
             
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (attribute is not null)
             {
                 member = attribute.Value;

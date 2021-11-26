@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NetExtender.Types.Queues;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
@@ -1009,6 +1010,88 @@ namespace NetExtender.Utilities.Types
             foreach (T item in source)
             {
                 if (already.Add(selector(item)))
+                {
+                    yield return item;
+                }
+            }
+        }
+
+        public static IEnumerable<T> DistinctCount<T>(this IEnumerable<T> source, Int32 count)
+        {
+            return DistinctCount(source, count, null);
+        }
+        
+        public static IEnumerable<T> DistinctCount<T>(this IEnumerable<T> source, Int32 count, IEqualityComparer<T>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (count <= 0)
+            {
+                yield break;
+            }
+            
+            SetQueue<T> set = new SetQueue<T>(count, comparer);
+
+            foreach (T item in source)
+            {
+                if (set.Contains(item))
+                {
+                    continue;
+                }
+
+                if (set.Count >= count)
+                {
+                    set.Dequeue();
+                }
+
+                if (set.Enqueue(item))
+                {
+                    yield return item;
+                }
+            }
+        }
+        
+        public static IEnumerable<T> DistinctCountBy<T, TDistinct>(this IEnumerable<T> source, Func<T, TDistinct> selector, Int32 count)
+        {
+            return DistinctCountBy(source, selector, count, null);
+        }
+        
+        public static IEnumerable<T> DistinctCountBy<T, TDistinct>(this IEnumerable<T> source, Func<T, TDistinct> selector, Int32 count, IEqualityComparer<TDistinct>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (count <= 0)
+            {
+                yield break;
+            }
+            
+            SetQueue<TDistinct> set = new SetQueue<TDistinct>(count, comparer);
+
+            foreach (T item in source)
+            {
+                TDistinct distinct = selector(item);
+                if (set.Contains(distinct))
+                {
+                    continue;
+                }
+
+                if (set.Count >= count)
+                {
+                    set.Dequeue();
+                }
+
+                if (set.Enqueue(distinct))
                 {
                     yield return item;
                 }

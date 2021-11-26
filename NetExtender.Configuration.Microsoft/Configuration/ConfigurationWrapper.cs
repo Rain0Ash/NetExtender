@@ -175,7 +175,7 @@ namespace NetExtender.Configuration.Microsoft
                 Source.Dispose();
             }
             
-            private void Dispose(Object? sender, ConfigurationEntry value)
+            private void Dispose(Object? sender, ConfigurationChangedEventArgs value)
             {
                 Dispose();
             }

@@ -333,7 +333,7 @@ namespace NetExtender.Types.Sets
                 return false;
             }
             
-            Boolean found = NodeDictionary.TryGetValue(item ?? throw new ArgumentNullException(nameof(item)), out LinkedListNode<T>? node);
+            Boolean found = NodeDictionary.TryGetValue(item, out LinkedListNode<T>? node);
             if (!found)
             {
                 return false;

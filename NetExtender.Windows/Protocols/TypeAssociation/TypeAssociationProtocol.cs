@@ -24,7 +24,7 @@ namespace NetExtender.Windows.Protocols
     /// </summary>
     public static class TypeAssociationProtocol
     {
-        public static KeyValuePair<String?, String?>? GetFileTypeAssociation(String extension)
+        public static KeyValuePair<String?, String?> GetFileTypeAssociation(String extension)
         {
             if (String.IsNullOrEmpty(extension))
             {
@@ -33,17 +33,20 @@ namespace NetExtender.Windows.Protocols
 
             using IRegistry registry = RegistryKeys.CurrentUser.Create(FileAccess.Read, "Software", "Microsoft", "Windows", "CurrentVersion", "Explorer", "FileExts");
 
-            return new KeyValuePair<String?, String?>(registry.GetValue("ProgId", extension, "UserChoice"), registry.GetValue("Hash", extension, "UserChoice"));
+            String? progid = registry.GetValue("ProgId", extension, "UserChoice");
+            String? hash = registry.GetValue("Hash", extension, "UserChoice");
+            
+            return new KeyValuePair<String?, String?>(progid, hash);
         }
 
         public static String? GetFileTypeAssociationProgId(String extension)
         {
-            return GetFileTypeAssociation(extension)?.Key;
+            return GetFileTypeAssociation(extension).Key;
         }
 
         public static String? GetFileTypeAssociationHash(String extension)
         {
-            return GetFileTypeAssociation(extension)?.Value;
+            return GetFileTypeAssociation(extension).Value;
         }
 
         public static IEnumerable<KeyValuePair<String, KeyValuePair<String?, String?>>> GetFileTypeAssociation()
@@ -91,7 +94,7 @@ namespace NetExtender.Windows.Protocols
             return GetFileTypeAssociationUserChoice().Select(KeyValuePairUtilities.FlattenByValue!)!;
         }
 
-        public static KeyValuePair<String?, String?>? GetProtocolTypeAssociation(String protocol)
+        public static KeyValuePair<String?, String?> GetProtocolTypeAssociation(String protocol)
         {
             if (String.IsNullOrEmpty(protocol))
             {
@@ -99,18 +102,21 @@ namespace NetExtender.Windows.Protocols
             }
 
             using IRegistry registry = RegistryKeys.CurrentUser.Create(FileAccess.Read, "Software", "Microsoft", "Windows", "Shell", "Associations", "UrlAssociations");
+            
+            String? progid = registry.GetValue("ProgId", protocol, "UserChoice");
+            String? hash = registry.GetValue("Hash", protocol, "UserChoice");
 
-            return new KeyValuePair<String?, String?>(registry.GetValue("ProgId", protocol, "UserChoice"), registry.GetValue("Hash", protocol, "UserChoice"));
+            return new KeyValuePair<String?, String?>(progid, hash);
         }
 
         public static String? GetProtocolTypeAssociationProgId(String protocol)
         {
-            return GetProtocolTypeAssociation(protocol)?.Key;
+            return GetProtocolTypeAssociation(protocol).Key;
         }
 
         public static String? GetProtocolTypeAssociationHash(String protocol)
         {
-            return GetProtocolTypeAssociation(protocol)?.Value;
+            return GetProtocolTypeAssociation(protocol).Value;
         }
 
         public static IEnumerable<KeyValuePair<String, KeyValuePair<String?, String?>>> GetProtocolTypeAssociation()
@@ -159,7 +165,7 @@ namespace NetExtender.Windows.Protocols
         }
 
         [DllImport("shell32.dll")]
-        private static extern Int32 SHChangeNotify(Int32 eventId, Int32 flags, IntPtr item1, IntPtr item2);
+        private static extern void SHChangeNotify(Int32 eventId, Int32 flags, IntPtr item1, IntPtr item2);
 
         private static void Refresh()
         {

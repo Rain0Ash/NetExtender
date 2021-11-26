@@ -6,7 +6,6 @@ using System.Data.SqlTypes;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using NetExtender.Utilities.Numerics;
-using NetExtender.Utilities.Static;
 
 namespace NetExtender.Utilities.Types
 {

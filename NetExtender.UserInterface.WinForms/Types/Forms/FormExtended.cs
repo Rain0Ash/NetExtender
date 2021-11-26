@@ -80,28 +80,30 @@ namespace NetExtender.UserInterface.WinForms.Forms
             {
                 case WM.ENTERSIZEMOVE:
                 {
-                    SizeChangeToggleEventArgs args = new SizeChangeToggleEventArgs {End = false};
+                    SizeChangeToggleEventArgs args = new SizeChangeToggleEventArgs { End = false };
                     OnSizeChangeToggle(args);
 
                     if (args.Handled)
                     {
                         return;
                     }
-                    
+
                     break;
                 }
                 case WM.EXITSIZEMOVE:
                 {
-                    SizeChangeToggleEventArgs args = new SizeChangeToggleEventArgs {End = true};
+                    SizeChangeToggleEventArgs args = new SizeChangeToggleEventArgs { End = true };
                     OnSizeChangeToggle(args);
 
                     if (args.Handled)
                     {
                         return;
                     }
-                    
+
                     break;
                 }
+                default:
+                    break;
             }
 
             base.WndProc(ref message);
@@ -157,7 +159,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
         {
             return base.ShowDialog().ToInterfaceDialogResult();
         }
-        
+
         protected override void Dispose(Boolean disposing)
         {
             if (disposing)
