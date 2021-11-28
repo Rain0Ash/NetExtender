@@ -893,7 +893,7 @@ namespace NetExtender.Utilities.Numerics
         }
 
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-        WriteLine($"\t\tpublic static void Abs(ref {type} value)");
+        WriteLine($"\t\tpublic static void {nameof(Abs)}(ref {type} value)");
         WriteLine("\t\t{");
         WriteLine("\t\t\tvalue = Abs(value);");
         WriteLine("\t\t}");
@@ -906,9 +906,33 @@ namespace NetExtender.Utilities.Numerics
         }
         
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-        WriteLine($"\t\tpublic static {type} Abs(this {type} value)");
+        WriteLine($"\t\tpublic static {type} {nameof(Abs)}(this {type} value)");
         WriteLine("\t\t{");
         WriteLine(!IsUnsignedType(type) ? "\t\t\treturn Math.Abs(value);" : "\t\t\treturn value;");
+        WriteLine("\t\t}");
+    }
+
+    void MathematicalModulo()
+    {
+        ForEach(types.Where(NotChar), MathematicalModuloImplementation);
+    }
+    
+    void MathematicalModuloImplementation(String type)
+    {
+        if (IsUnsignedType(type))
+        {
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {type} {nameof(MathematicalModulo)}(this {type} value, {type} modulo)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\treturn {(IsSmallType(type) ? $"({type}) (value % modulo)" : "value % modulo")};");
+            WriteLine("\t\t}");
+            return;
+        }
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(MathematicalModulo)}(this {type} value, {type} modulo)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {(IsSmallType(type) ? $"({type}) ((Math.Abs(value * modulo) + value) % modulo)" : "(Math.Abs(value * modulo) + value) % modulo")};");
         WriteLine("\t\t}");
     }
 
@@ -1645,6 +1669,8 @@ namespace NetExtender.Utilities.Numerics
     RoundToMultiplier();
     WriteLine(String.Empty);
     Abs();
+    WriteLine(String.Empty);
+    MathematicalModulo();
     WriteLine(String.Empty);
     Pow();
     WriteLine(String.Empty);

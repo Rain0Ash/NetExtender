@@ -2,10 +2,10 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Numerics;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utilities.Numerics
@@ -3600,6 +3600,72 @@ namespace NetExtender.Utilities.Numerics
 		public static Decimal Abs(this Decimal value)
 		{
 			return Math.Abs(value);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static SByte MathematicalModulo(this SByte value, SByte modulo)
+		{
+			return (SByte) ((Math.Abs(value * modulo) + value) % modulo);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte MathematicalModulo(this Byte value, Byte modulo)
+		{
+			return (Byte) (value % modulo);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int16 MathematicalModulo(this Int16 value, Int16 modulo)
+		{
+			return (Int16) ((Math.Abs(value * modulo) + value) % modulo);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 MathematicalModulo(this UInt16 value, UInt16 modulo)
+		{
+			return (UInt16) (value % modulo);
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 MathematicalModulo(this Int32 value, Int32 modulo)
+		{
+			return (Math.Abs(value * modulo) + value) % modulo;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 MathematicalModulo(this UInt32 value, UInt32 modulo)
+		{
+			return value % modulo;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int64 MathematicalModulo(this Int64 value, Int64 modulo)
+		{
+			return (Math.Abs(value * modulo) + value) % modulo;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 MathematicalModulo(this UInt64 value, UInt64 modulo)
+		{
+			return value % modulo;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Single MathematicalModulo(this Single value, Single modulo)
+		{
+			return (Math.Abs(value * modulo) + value) % modulo;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Double MathematicalModulo(this Double value, Double modulo)
+		{
+			return (Math.Abs(value * modulo) + value) % modulo;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Decimal MathematicalModulo(this Decimal value, Decimal modulo)
+		{
+			return (Math.Abs(value * modulo) + value) % modulo;
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]

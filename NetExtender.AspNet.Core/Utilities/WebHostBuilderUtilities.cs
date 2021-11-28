@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NetExtender.AspNet.Core.Exceptions;
 using NetExtender.AspNet.Core.Types.Initializers;
 
 namespace NetExtender.Utilities.AspNetCore.Types
@@ -38,12 +39,12 @@ namespace NetExtender.Utilities.AspNetCore.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IWebHostBuilder Configure(this IWebHostBuilder builder, Action<IApplicationBuilder, IWebHostEnvironment>? configuration)
+        public static IWebHostBuilder Configure(this IWebHostBuilder builder, Action<IApplicationBuilder, IServiceProvider>? configuration)
         {
             return Configure(builder, null, configuration);
         }
         
-        public static IWebHostBuilder Configure(this IWebHostBuilder builder, Action<IServiceCollection>? services, Action<IApplicationBuilder, IWebHostEnvironment>? configuration)
+        public static IWebHostBuilder Configure(this IWebHostBuilder builder, Action<IServiceCollection>? services, Action<IApplicationBuilder, IServiceProvider>? configuration)
         {
             if (builder is null)
             {
@@ -121,19 +122,19 @@ namespace NetExtender.Utilities.AspNetCore.Types
             return BuilderInitializer.Initialize(builder);
         }
 
-        public static IWebHostBuilder Register(this IWebHostBuilder builder, Action<IServiceCollection> service)
+        public static IWebHostBuilder Register(this IWebHostBuilder builder, Action<IServiceCollection> collection)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            if (service is null)
+            if (collection is null)
             {
-                throw new ArgumentNullException(nameof(service));
+                throw new ArgumentNullException(nameof(collection));
             }
 
-            builder.InitializeBuilder().Register(service);
+            builder.InitializeBuilder().Register(collection);
             return builder;
         }
 
@@ -153,23 +154,23 @@ namespace NetExtender.Utilities.AspNetCore.Types
             return builder;
         }
         
-        public static IWebHostBuilder Register(this IWebHostBuilder builder, Action<IWebHostEnvironment> environment)
+        public static IWebHostBuilder Register(this IWebHostBuilder builder, Action<IServiceProvider> provider)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            if (environment is null)
+            if (provider is null)
             {
-                throw new ArgumentNullException(nameof(environment));
+                throw new ArgumentNullException(nameof(provider));
             }
             
-            builder.InitializeBuilder().Register(environment);
+            builder.InitializeBuilder().Register(provider);
             return builder;
         }
         
-        public static IWebHostBuilder Register(this IWebHostBuilder builder, Action<IApplicationBuilder> application, Action<IWebHostEnvironment> environment)
+        public static IWebHostBuilder Register(this IWebHostBuilder builder, Action<IApplicationBuilder> application, Action<IServiceProvider> provider)
         {
             if (builder is null)
             {
@@ -181,16 +182,16 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 throw new ArgumentNullException(nameof(application));
             }
 
-            if (environment is null)
+            if (provider is null)
             {
-                throw new ArgumentNullException(nameof(environment));
+                throw new ArgumentNullException(nameof(provider));
             }
             
-            builder.InitializeBuilder().Register(application, environment);
+            builder.InitializeBuilder().Register(application, provider);
             return builder;
         }
         
-        public static IWebHostBuilder Register(this IWebHostBuilder builder, Action<IApplicationBuilder, IWebHostEnvironment> configuration)
+        public static IWebHostBuilder Register(this IWebHostBuilder builder, Action<IApplicationBuilder, IServiceProvider> configuration)
         {
             if (builder is null)
             {
@@ -213,7 +214,37 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            static void UseDeveloperPage(IApplicationBuilder application, IWebHostEnvironment environment)
+            static void UseDeveloperPage(IApplicationBuilder application, IServiceProvider provider)
+            {
+                IWebHostEnvironment? environment = provider.GetService<IWebHostEnvironment>();
+
+                if (environment is null)
+                {
+                    throw new ServiceNotFoundException(typeof(IWebHostEnvironment));
+                }
+                
+                if (environment.IsDevelopment())
+                {
+                    application.UseDeveloperExceptionPage();
+                }
+            }
+            
+            return builder.Register(UseDeveloperPage);
+        }
+        
+        public static IWebHostBuilder UseDevelopmentExceptionPage(this IWebHostBuilder builder, IWebHostEnvironment environment)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (environment is null)
+            {
+                throw new ArgumentNullException(nameof(environment));
+            }
+
+            void UseDeveloperPage(IApplicationBuilder application)
             {
                 if (environment.IsDevelopment())
                 {

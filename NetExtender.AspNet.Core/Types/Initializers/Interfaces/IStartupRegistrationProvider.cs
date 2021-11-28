@@ -3,18 +3,17 @@
 
 using System;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNet.Core.Types.Initializers.Interfaces
 {
     public interface IStartupRegistrationProvider : IStartupProvider
     {
-        public IStartupRegistrationProvider Register(Action<IServiceCollection> service);
+        public IStartupRegistrationProvider Register(Action<IServiceCollection> collection);
         public IStartupRegistrationProvider Register(Action<IApplicationBuilder> application);
-        public IStartupRegistrationProvider Register(Action<IWebHostEnvironment> environment);
-        public IStartupRegistrationProvider Register(Action<IApplicationBuilder> application, Action<IWebHostEnvironment> environment);
-        public IStartupRegistrationProvider Register(Action<IApplicationBuilder, IWebHostEnvironment> configuration);
+        public IStartupRegistrationProvider Register(Action<IServiceProvider> provider);
+        public IStartupRegistrationProvider Register(Action<IApplicationBuilder> application, Action<IServiceProvider> provider);
+        public IStartupRegistrationProvider Register(Action<IApplicationBuilder, IServiceProvider> configuration);
         public IStartupRegistrationProvider RegisterCallback(Action callback);
     }
 }

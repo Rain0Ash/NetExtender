@@ -4,34 +4,33 @@
 using System;
 using AspNet.Core.Types.Initializers.Interfaces;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace NetExtender.AspNet.Core.Types.Initializers
 {
     public sealed record AspNetCoreStartupInitializer : IStartupRegistrationProvider
     {
-        private Action<IServiceCollection>? Service { get; set; }
-        private Action<IApplicationBuilder, IWebHostEnvironment>? Configuration { get; set; }
+        private Action<IServiceCollection>? Collection { get; set; }
+        private Action<IApplicationBuilder, IServiceProvider>? Configuration { get; set; }
         private Action? Callback { get; set; }
 
         public AspNetCoreStartupInitializer()
         {
         }
         
-        public AspNetCoreStartupInitializer(Action<IServiceCollection>? service)
+        public AspNetCoreStartupInitializer(Action<IServiceCollection>? collection)
         {
-            Service = service;
+            Collection = collection;
         }
         
-        public AspNetCoreStartupInitializer(Action<IApplicationBuilder, IWebHostEnvironment>? configuration)
+        public AspNetCoreStartupInitializer(Action<IApplicationBuilder, IServiceProvider>? configuration)
         {
             Configuration = configuration;
         }
         
-        public AspNetCoreStartupInitializer(Action<IServiceCollection>? service, Action<IApplicationBuilder, IWebHostEnvironment>? configuration)
+        public AspNetCoreStartupInitializer(Action<IServiceCollection>? collection, Action<IApplicationBuilder, IServiceProvider>? configuration)
         {
-            Service = service;
+            Collection = collection;
             Configuration = configuration;
         }
         
@@ -40,34 +39,34 @@ namespace NetExtender.AspNet.Core.Types.Initializers
         {
         }
         
-        public AspNetCoreStartupInitializer(Action<IServiceCollection>? service, Action<IApplicationBuilder>? application)
-            : this(service, application is not null ? (app, _) => application.Invoke(app) : null)
+        public AspNetCoreStartupInitializer(Action<IServiceCollection>? collection, Action<IApplicationBuilder>? application)
+            : this(collection, application is not null ? (builder, _) => application.Invoke(builder) : null)
         {
         }
         
-        public AspNetCoreStartupInitializer(Action<IWebHostEnvironment>? environment)
-            : this((Action<IServiceCollection>?) null, environment)
+        public AspNetCoreStartupInitializer(Action<IServiceProvider>? provider)
+            : this((Action<IServiceCollection>?) null, provider)
         {
         }
         
-        public AspNetCoreStartupInitializer(Action<IServiceCollection>? service, Action<IWebHostEnvironment>? environment)
-            : this(service, environment is not null ? (_, env) => environment.Invoke(env) : null)
+        public AspNetCoreStartupInitializer(Action<IServiceCollection>? collection, Action<IServiceProvider>? provider)
+            : this(collection, provider is not null ? (_, service) => provider.Invoke(service) : null)
         {
         }
         
-        public AspNetCoreStartupInitializer(Action<IApplicationBuilder>? application, Action<IWebHostEnvironment>? environment)
-            : this(null, application, environment)
+        public AspNetCoreStartupInitializer(Action<IApplicationBuilder>? application, Action<IServiceProvider>? provider)
+            : this(null, application, provider)
         {
         }
         
-        public AspNetCoreStartupInitializer(Action<IServiceCollection>? service, Action<IApplicationBuilder>? application, Action<IWebHostEnvironment>? environment)
-            : this(service, application is not null && environment is not null ? (app, env) => { application?.Invoke(app); environment?.Invoke(env); } : null)
+        public AspNetCoreStartupInitializer(Action<IServiceCollection>? collection, Action<IApplicationBuilder>? application, Action<IServiceProvider>? provider)
+            : this(collection, application is not null && provider is not null ? (builder, service) => { application?.Invoke(builder); provider?.Invoke(service); } : null)
         {
         }
 
-        public IStartupRegistrationProvider Register(Action<IServiceCollection> service)
+        public IStartupRegistrationProvider Register(Action<IServiceCollection> collection)
         {
-            Service += service ?? throw new ArgumentNullException(nameof(service));
+            Collection += collection ?? throw new ArgumentNullException(nameof(collection));
             return this;
         }
 
@@ -78,38 +77,38 @@ namespace NetExtender.AspNet.Core.Types.Initializers
                 throw new ArgumentNullException(nameof(application));
             }
 
-            Register((app, _) => application.Invoke(app));
+            Register((builder, _) => application.Invoke(builder));
             return this;
         }
         
-        public IStartupRegistrationProvider Register(Action<IWebHostEnvironment> environment)
+        public IStartupRegistrationProvider Register(Action<IServiceProvider> provider)
         {
-            if (environment is null)
+            if (provider is null)
             {
-                throw new ArgumentNullException(nameof(environment));
+                throw new ArgumentNullException(nameof(provider));
             }
 
-            Register((_, env) => environment.Invoke(env));
+            Register((_, prov) => provider.Invoke(prov));
             return this;
         }
         
-        public IStartupRegistrationProvider Register(Action<IApplicationBuilder> application, Action<IWebHostEnvironment> environment)
+        public IStartupRegistrationProvider Register(Action<IApplicationBuilder> application, Action<IServiceProvider> provider)
         {
             if (application is null)
             {
                 throw new ArgumentNullException(nameof(application));
             }
 
-            if (environment is null)
+            if (provider is null)
             {
-                throw new ArgumentNullException(nameof(environment));
+                throw new ArgumentNullException(nameof(provider));
             }
             
-            Register((app, env) => { application?.Invoke(app); environment?.Invoke(env); });
+            Register((builder, service) => { application?.Invoke(builder); provider?.Invoke(service); });
             return this;
         }
         
-        public IStartupRegistrationProvider Register(Action<IApplicationBuilder, IWebHostEnvironment> configuration)
+        public IStartupRegistrationProvider Register(Action<IApplicationBuilder, IServiceProvider> configuration)
         {
             Configuration += configuration ?? throw new ArgumentNullException(nameof(configuration));
             return this;
@@ -123,12 +122,12 @@ namespace NetExtender.AspNet.Core.Types.Initializers
 
         public void ConfigureServices(IServiceCollection collection)
         {
-            Service?.Invoke(collection);
+            Collection?.Invoke(collection);
         }
 
-        public void Configure(IApplicationBuilder application, IWebHostEnvironment environment)
+        public void Configure(IApplicationBuilder application, IServiceProvider provider)
         {
-            Configuration?.Invoke(application, environment);
+            Configuration?.Invoke(application, provider);
             Callback?.Invoke();
         }
     }

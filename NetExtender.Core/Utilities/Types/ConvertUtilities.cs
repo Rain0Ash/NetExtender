@@ -1069,7 +1069,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
 
-            if (value.Length != 1 && value.Length != 4)
+            if (value.Length != 1 && value.Length != 3 && value.Length != 4)
             {
                 return false;
             }
@@ -1077,7 +1077,9 @@ namespace NetExtender.Utilities.Types
             return value.ToUpper() switch
             {
                 "TRUE" => true,
+                "YES" => true,
                 "T" => true,
+                "Y" => true,
                 "+" => true,
                 "1" => true,
                 _ => false
