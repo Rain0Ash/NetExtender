@@ -3,9 +3,6 @@
 
 using System;
 using NetExtender.Utilities.UserInterface;
-using WindowsMenuItemMask = NetExtender.Utilities.UserInterface.UserInterfaceUtilities.WindowsMenuItemMask;
-using WindowsMenuItemType = NetExtender.Utilities.UserInterface.UserInterfaceUtilities.WindowsMenuItemType;
-using WindowsMenuItemState = NetExtender.Utilities.UserInterface.UserInterfaceUtilities.WindowsMenuItemState;
 
 namespace NetExtender.UserInterface.Windows.Menu
 {
@@ -17,19 +14,19 @@ namespace NetExtender.UserInterface.Windows.Menu
         public static WindowsMenuItem Minimize { get; } = new WindowsMenuItem(0xF020);
         public static WindowsMenuItem Maximize { get; } = new WindowsMenuItem(0xF030);
         public static WindowsMenuItem Restore { get; } = new WindowsMenuItem(0xF120);
-        public static WindowsMenuItem Separator { get; } = new WindowsMenuItem((Int32) WindowsMenuItemType.Separator, WindowsMenuItemMask.Id, WindowsMenuItemType.Separator);
+        public static WindowsMenuItem Separator { get; } = new WindowsMenuItem((Int32) UserInterfaceUtilities.WindowsMenuItemType.Separator, UserInterfaceUtilities.WindowsMenuItemMask.Id, UserInterfaceUtilities.WindowsMenuItemType.Separator);
         
         public Int32 Command { get; }
-        internal WindowsMenuItemMask Mask { get; }
-        internal WindowsMenuItemType Type { get; }
-        internal WindowsMenuItemState State { get; }
+        internal UserInterfaceUtilities.WindowsMenuItemMask Mask { get; }
+        internal UserInterfaceUtilities.WindowsMenuItemType Type { get; }
+        internal UserInterfaceUtilities.WindowsMenuItemState State { get; }
 
         private protected WindowsMenuItem(Int32 command)
-            : this(command, WindowsMenuItemMask.String, WindowsMenuItemType.String)
+            : this(command, UserInterfaceUtilities.WindowsMenuItemMask.String, UserInterfaceUtilities.WindowsMenuItemType.String)
         {
         }
         
-        private protected WindowsMenuItem(Int32 command, WindowsMenuItemMask mask, WindowsMenuItemType type, WindowsMenuItemState state = WindowsMenuItemState.None)
+        private protected WindowsMenuItem(Int32 command, UserInterfaceUtilities.WindowsMenuItemMask mask, UserInterfaceUtilities.WindowsMenuItemType type, UserInterfaceUtilities.WindowsMenuItemState state = UserInterfaceUtilities.WindowsMenuItemState.None)
         {
             Command = command;
             Mask = mask;

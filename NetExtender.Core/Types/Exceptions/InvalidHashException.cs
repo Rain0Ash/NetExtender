@@ -13,11 +13,6 @@ namespace NetExtender.Types.Exceptions
         {
         }
 
-        protected InvalidHashException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
-
         public InvalidHashException(String? message)
             : base(message)
         {
@@ -25,6 +20,11 @@ namespace NetExtender.Types.Exceptions
 
         public InvalidHashException(String? message, Exception? innerException)
             : base(message, innerException)
+        {
+        }
+        
+        protected InvalidHashException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
         }
     }

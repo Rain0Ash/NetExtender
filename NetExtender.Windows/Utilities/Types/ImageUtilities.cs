@@ -178,7 +178,7 @@ namespace NetExtender.Utilities.Types
             return DrawingUtilities.GetAspectRatio(image.Width, image.Height);
         }
 
-        public static Icon IconFromImage(Image image)
+        public static Icon ToIcon(this Image image)
         {
             if (image is null)
             {

@@ -120,6 +120,11 @@ namespace NetExtender.Types.Stacks
             Stack.Clear();
         }
         
+        public void CopyTo(Array array, Int32 index)
+        {
+            ((ICollection) Stack).CopyTo(array, index);
+        }
+        
         public void CopyTo(T[] array, Int32 index)
         {
             Stack.CopyTo(array, index);
@@ -133,11 +138,6 @@ namespace NetExtender.Types.Stacks
         IEnumerator IEnumerable.GetEnumerator()
         {
             return ((IEnumerable) Stack).GetEnumerator();
-        }
-
-        public void CopyTo(Array array, Int32 index)
-        {
-            ((ICollection) Stack).CopyTo(array, index);
         }
     }
 }

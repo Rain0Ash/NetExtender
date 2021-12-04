@@ -23,7 +23,7 @@ namespace NetExtender.Utilities.IO
 
     public static class ConsoleUtilities
     {
-        private static Object Synchronization { get; } = new Object();
+        private static Object Synchronization { get; } = ConcurrentUtilities.Synchronization;
         
         public static event ConsoleCancelEventHandler CancelKeyPress
         {

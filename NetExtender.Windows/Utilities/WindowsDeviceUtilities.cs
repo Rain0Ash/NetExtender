@@ -6,8 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using NetExtender.Types.Native.Windows;
-using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Core;
+using NetExtender.Utilities.IO;
 
 namespace NetExtender.Utilities.Windows
 {

@@ -16,9 +16,9 @@ namespace NetExtender.Types.Dispatchers.Interfaces
         public void Invoke(Action callback, DispatcherPriority priority);
         public void Invoke(Action callback, DispatcherPriority priority, CancellationToken token);
         public void Invoke(Action callback, DispatcherPriority priority, TimeSpan timeout, CancellationToken token);
-        public TResult Invoke<TResult>(Func<TResult> callback);
-        public TResult Invoke<TResult>(Func<TResult> callback, DispatcherPriority priority);
-        public TResult Invoke<TResult>(Func<TResult> callback, DispatcherPriority priority, CancellationToken token);
-        public TResult Invoke<TResult>(Func<TResult> callback, DispatcherPriority priority, TimeSpan timeout, CancellationToken token);
+        public T Invoke<T>(Func<T> callback);
+        public T Invoke<T>(Func<T> callback, DispatcherPriority priority);
+        public T Invoke<T>(Func<T> callback, DispatcherPriority priority, CancellationToken token);
+        public T Invoke<T>(Func<T> callback, DispatcherPriority priority, TimeSpan timeout, CancellationToken token);
     }
 }

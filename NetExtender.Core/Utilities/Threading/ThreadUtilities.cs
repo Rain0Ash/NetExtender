@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -36,6 +37,76 @@ namespace NetExtender.Utilities.Threading
             {
                 return State == ApartmentState.MTA;
             }
+        }
+        
+        public static Thread SetName(this Thread thread, String? name)
+        {
+            if (thread is null)
+            {
+                throw new ArgumentNullException(nameof(thread));
+            }
+
+            thread.Name = name;
+            return thread;
+        }
+
+        public static Thread SetBackground(this Thread thread)
+        {
+            return SetBackground(thread, true);
+        }
+
+        public static Thread SetBackground(this Thread thread, Boolean background)
+        {
+            if (thread is null)
+            {
+                throw new ArgumentNullException(nameof(thread));
+            }
+
+            thread.IsBackground = background;
+            return thread;
+        }
+
+        public static Thread SetPriority(this Thread thread, ThreadPriority priority)
+        {
+            if (thread is null)
+            {
+                throw new ArgumentNullException(nameof(thread));
+            }
+
+            thread.Priority = priority;
+            return thread;
+        }
+
+        public static Thread SetCurrentCulture(this Thread thread, CultureInfo? info)
+        {
+            if (thread is null)
+            {
+                throw new ArgumentNullException(nameof(thread));
+            }
+
+            if (info is null)
+            {
+                return thread;
+            }
+
+            thread.CurrentCulture = info;
+            return thread;
+        }
+
+        public static Thread SetCurrentUICulture(this Thread thread, CultureInfo? info)
+        {
+            if (thread is null)
+            {
+                throw new ArgumentNullException(nameof(thread));
+            }
+
+            if (info is null)
+            {
+                return thread;
+            }
+
+            thread.CurrentUICulture = info;
+            return thread;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -291,7 +362,7 @@ namespace NetExtender.Utilities.Threading
             MTA(() => action.Invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9));
         }
         
-        private static TResult? Create<TResult>(Func<TResult> function, ApartmentState state)
+        private static T? Create<T>(Func<T> function, ApartmentState state)
         {
             if (function is null)
             {
@@ -299,7 +370,7 @@ namespace NetExtender.Utilities.Threading
             }
 
             Exception? exception = null;
-            TResult? result = default;
+            T? result = default;
             Thread thread = new Thread(() => exception = SafeInvoke(() => result = function.Invoke()));
             thread.TrySetApartmentState(state);
             thread.Start();

@@ -22,8 +22,8 @@ namespace NetExtender.NAudio.Types.Playlist
         {
         }
 
-        public WaveStreamPlaylist(IEnumerable<WaveStream> items)
-            : base(items)
+        public WaveStreamPlaylist(IEnumerable<WaveStream> source)
+            : base(source)
         {
         }
     }
@@ -149,14 +149,14 @@ namespace NetExtender.NAudio.Types.Playlist
         {
         }
 
-        public WaveStreamPlaylist(IEnumerable<T> items)
+        public WaveStreamPlaylist(IEnumerable<T> source)
         {
-            if (items is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(items));
+                throw new ArgumentNullException(nameof(source));
             }
             
-            Queue = new List<T>(items.WhereNotNull());
+            Queue = new List<T>(source.WhereNotNull());
         }
 
         public override Int32 Read(Byte[] buffer, Int32 offset, Int32 count)
@@ -216,14 +216,14 @@ namespace NetExtender.NAudio.Types.Playlist
             }
         }
 
-        public virtual void AddRange(IEnumerable<T> items)
+        public virtual void AddRange(IEnumerable<T> source)
         {
-            if (items is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(items));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            foreach (T item in items)
+            foreach (T item in source)
             {
                 Add(item);
             }

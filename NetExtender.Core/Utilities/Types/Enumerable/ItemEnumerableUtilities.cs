@@ -2396,6 +2396,21 @@ namespace NetExtender.Utilities.Types
             return source.ForEachWhere(_ => counter++ % every == 0, action);
         }
 
+        public static Int32 SequenceHashCode<T>(this IEnumerable<T> source)
+        {
+            return SequenceHashCode(source, null);
+        }
+
+        public static Int32 SequenceHashCode<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return HashCodeUtilities.Combine(source, comparer);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> Progress<T>(this IEnumerable<T> source, IProgress<Int32> progress)
         {

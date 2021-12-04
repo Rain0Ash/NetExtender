@@ -137,7 +137,175 @@ namespace NetExtender.Utilities.Numerics
         private const Int32 DecimalMaxIteration = 100;
 
         public static BigInteger DecimalMaximumBigInteger { get; } = new BigInteger(Decimal.MaxValue);
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNaN(this Single value)
+        {
+            return Single.IsNaN(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNaN(this Double value)
+        {
+            return Double.IsNaN(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsInfinity(this Single value)
+        {
+            return Single.IsInfinity(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsInfinity(this Double value)
+        {
+            return Double.IsInfinity(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsPositiveInfinity(this Single value)
+        {
+            return Single.IsPositiveInfinity(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsPositiveInfinity(this Double value)
+        {
+            return Double.IsPositiveInfinity(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNegativeInfinity(this Single value)
+        {
+            return Single.IsNegativeInfinity(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNegativeInfinity(this Double value)
+        {
+            return Double.IsNegativeInfinity(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNormal(this Single value)
+        {
+            return Single.IsNormal(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNormal(this Double value)
+        {
+            return Double.IsNormal(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsSubnormal(this Single value)
+        {
+            return Single.IsSubnormal(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsSubnormal(this Double value)
+        {
+            return Double.IsSubnormal(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsFinite(this Single value)
+        {
+            return Single.IsFinite(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsFinite(this Double value)
+        {
+            return Double.IsFinite(value);
+        }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single AsNaN(this Single value, Single alternate)
+        {
+            return Single.IsNaN(value) ? value : alternate;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double AsNaN(this Double value, Double alternate)
+        {
+            return Double.IsNaN(value) ? value : alternate;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single AsInfinity(this Single value, Single alternate)
+        {
+            return Single.IsInfinity(value) ? value : alternate;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double AsInfinity(this Double value, Double alternate)
+        {
+            return Double.IsInfinity(value) ? value : alternate;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single AsPositiveInfinity(this Single value, Single alternate)
+        {
+            return Single.IsPositiveInfinity(value) ? value : alternate;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double AsPositiveInfinity(this Double value, Double alternate)
+        {
+            return Double.IsPositiveInfinity(value) ? value : alternate;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single AsNegativeInfinity(this Single value, Single alternate)
+        {
+            return Single.IsNegativeInfinity(value) ? value : alternate;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double AsNegativeInfinity(this Double value, Double alternate)
+        {
+            return Double.IsNegativeInfinity(value) ? value : alternate;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single AsNormal(this Single value, Single alternate)
+        {
+            return Single.IsNormal(value) ? value : alternate;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double AsNormal(this Double value, Double alternate)
+        {
+            return Double.IsNormal(value) ? value : alternate;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single AsSubnormal(this Single value, Single alternate)
+        {
+            return Single.IsSubnormal(value) ? value : alternate;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double AsSubnormal(this Double value, Double alternate)
+        {
+            return Double.IsSubnormal(value) ? value : alternate;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single AsFinite(this Single value, Single alternate)
+        {
+            return Single.IsFinite(value) ? value : alternate;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double AsFinite(this Double value, Double alternate)
+        {
+            return Double.IsFinite(value) ? value : alternate;
+        }
+        
         /// <summary>
         /// Returns the greatest common denominator between value1 and value2
         /// </summary>
@@ -3195,7 +3363,5 @@ namespace NetExtender.Utilities.Numerics
 
             return Tuple.Create(q1, q2, q3);
         }
-
-        
     }
 }

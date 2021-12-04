@@ -1,7 +1,5 @@
 using System;
 using NetExtender.Utilities.UserInterface;
-using WindowsMenuItemMask = NetExtender.Utilities.UserInterface.UserInterfaceUtilities.WindowsMenuItemMask;
-using WindowsMenuItemType = NetExtender.Utilities.UserInterface.UserInterfaceUtilities.WindowsMenuItemType;
 
 namespace NetExtender.UserInterface.Windows.Menu
 {
@@ -10,7 +8,7 @@ namespace NetExtender.UserInterface.Windows.Menu
         public String Title { get; }
         
         public StringWindowsMenuItem(Byte command, String title)
-            : base(command, WindowsMenuItemMask.String, WindowsMenuItemType.String)
+            : base(command, UserInterfaceUtilities.WindowsMenuItemMask.String, UserInterfaceUtilities.WindowsMenuItemType.String)
         {
             Title = title ?? throw new ArgumentNullException(nameof(title));
         }

@@ -35,7 +35,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<T?> DefaultTask<T>()
+        public static Task<T?> Default<T>()
         {
             return TaskCache<T>.Default;
         }
@@ -2855,6 +2855,204 @@ namespace NetExtender.Utilities.Types
             }
 
             task.ContinueWith(Handle, TaskContinuationOptions.OnlyOnFaulted);
+        }
+        
+        public static Task ToAsync(this Task source, AsyncCallback? callback, Object? state)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            TaskCompletionSource<Object?> completion = new TaskCompletionSource<Object?>(state);
+            source.ContinueWith(_ =>
+            {
+                completion.SetFromTask(source);
+                callback?.Invoke(completion.Task);
+            });
+            
+            return completion.Task;
+        }
+        
+        public static Task<T> ToAsync<T>(this Task<T> source, AsyncCallback? callback, Object? state)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            TaskCompletionSource<T> completion = new TaskCompletionSource<T>(state);
+            source.ContinueWith(_ =>
+            {
+                completion.SetFromTask(source);
+                callback?.Invoke(completion.Task);
+            });
+            
+            return completion.Task;
+        }
+
+        private const TaskContinuationOptions TaskExceptionOptions = TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnFaulted;
+        
+        public static Task IgnoreException(this Task source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            source.ContinueWith(ActionUtilities.Default, CancellationToken.None, TaskExceptionOptions, TaskScheduler.Default);
+            return source;
+        }
+        
+        public static Task<T> IgnoreException<T>(this Task<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            source.ContinueWith(ActionUtilities.Default, CancellationToken.None, TaskExceptionOptions, TaskScheduler.Default);
+            return source;
+        }
+
+        private static void TaskFault(Task source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            Exception? exception = source.Exception;
+
+            if (exception is not null)
+            {
+                Environment.FailFast("A task faulted.", exception);
+            }
+        }
+        
+        public static Task FailFastOnException(this Task source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            source.ContinueWith(TaskFault, CancellationToken.None, TaskExceptionOptions, TaskScheduler.Default);
+            return source;
+        }
+        
+        public static Task<T> FailFastOnException<T>(this Task<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            source.ContinueWith(TaskFault, CancellationToken.None, TaskExceptionOptions, TaskScheduler.Default);
+            return source;
+        }
+        
+        public static Task PropagateException(this Task source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (source.IsFaulted)
+            {
+                source.Wait();
+            }
+
+            return source;
+        }
+        
+        public static Task<T> PropagateException<T>(this Task<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (source.IsFaulted)
+            {
+                source.Wait();
+            }
+
+            return source;
+        }
+        
+        public static IObservable<T> ToObservable<T>(this Task<T> task)
+        {
+            if (task is null)
+            {
+                throw new ArgumentNullException(nameof(task));
+            }
+
+            return new TaskObservable<T>(task);
+        }
+        
+        private class TaskObservable<T> : IObservable<T>
+        {
+            private Task<T> Internal { get; }
+
+            public TaskObservable(Task<T> task)
+            {
+                Internal = task ?? throw new ArgumentNullException(nameof(task));
+            }
+
+            public IDisposable Subscribe(IObserver<T> observer)
+            {
+                if (observer is null)
+                {
+                    throw new ArgumentNullException(nameof(observer));
+                }
+
+                CancellationTokenSource source = new CancellationTokenSource();
+
+                void ContinuationFunction(Task<T> task)
+                {
+                    switch (task.Status)
+                    {
+                        case TaskStatus.RanToCompletion:
+                            observer.OnNext(Internal.Result);
+                            observer.OnCompleted();
+                            break;
+                        case TaskStatus.Faulted:
+                            Exception? exception = Internal.Exception;
+                            if (exception is not null)
+                            {
+                                observer.OnError(exception);
+                            }
+
+                            break;
+                        case TaskStatus.Canceled:
+                            observer.OnError(new TaskCanceledException(task));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+
+                Internal.ContinueWith(ContinuationFunction, source.Token);
+                return new CancelOnDispose(source);
+            }
+
+            private class CancelOnDispose : IDisposable
+            {
+                private CancellationTokenSource Source { get; }
+
+                public CancelOnDispose(CancellationTokenSource source)
+                {
+                    Source = source ?? throw new ArgumentNullException(nameof(source));
+                }
+
+                public void Dispose()
+                {
+                    Source.Cancel();
+                    Source.Dispose();
+                }
+            }
         }
 
         public static Task<T>[] InitializeTasks<T>(this IEnumerable<Task<T>> source)

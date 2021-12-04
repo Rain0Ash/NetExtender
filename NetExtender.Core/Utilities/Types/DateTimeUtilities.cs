@@ -25,6 +25,14 @@ namespace NetExtender.Utilities.Types
         December
     }
 
+    public enum Quarter
+    {
+        First = 1,
+        Second = 2,
+        Third = 3,
+        Fourth = 4
+    }
+
     /// <summary>
     /// Date comparison type
     /// </summary>
@@ -811,9 +819,71 @@ namespace NetExtender.Utilities.Types
 
             return date.Date.AddDays(diff);
         }
+        
+        public static DateTime GetFirstDayOfMonth(this DateTime date)
+        {
+            return new DateTime(date.Year, date.Month, 1, 0, 0, 0, date.Kind);
+        }
+	
+        public static DateTime GetFirstDayOfMonth(this DateTime date, DayOfWeek day)
+        {
+            date = date.GetFirstDayOfMonth();
+	
+            DayOfWeek current = date.DayOfWeek;
+            
+            if (current == day)
+            {
+                return date;
+            }
+
+            Int32 lwd = day - date.DayOfWeek;
+            
+            if (lwd < 0)
+            {
+                lwd += 7;
+            }
+
+            return date.AddDays(lwd);
+        }
+	
+        public static DateTime GetLastDayOfMonth(this DateTime date)
+        {
+            Int32 year = date.Year;
+            Int32 month = date.Month;
+            return new DateTime(year, month, DateTime.DaysInMonth(year, month));
+        }
+	
+        public static DateTime GetLastDayOfMonth(this DateTime date, DayOfWeek day)
+        {
+            DateTime last = GetLastDayOfMonth(date);
+            Int32 lwd = day - last.DayOfWeek;
+            return last.AddDays(lwd);
+        }
+        
+        public static DateTime GetFirstDayOfPreviousMonth(this DateTime date)
+        {
+            Int32 month = date.Month;
+            return month <= 1 ?
+                new DateTime(date.Year - 1, 12, 1, 0, 0, 0, date.Kind) :
+                new DateTime(date.Year, month - 1, 1, 0, 0, 0, date.Kind);
+        }
+	
+        public static DateTime GetFirstDayOfNextMonth(this DateTime date)
+        {
+            Int32 month = date.Month;
+            return month >= 12 ?
+                new DateTime(date.Year + 1, 1, 1, 0, 0, 0, date.Kind) :
+                new DateTime(date.Year, month + 1, 1, 0, 0, 0, date.Kind);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Quarter Quarter(this DateTime date)
+        {
+            return (Quarter) QuarterNumber(date);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 Quarter(this DateTime date)
+        public static Int32 QuarterNumber(this DateTime date)
         {
             return (date.Month + 2) / 3;
         }
@@ -825,39 +895,49 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        // ReSharper disable once ParameterOnlyUsedForPreconditionCheck.Local
-        private static void CheckQuarter(Int32 quarter)
+        public static DateTime GetFirstDayOfQuarter(Int32 year, Int32 quarter)
         {
             if (quarter < 1 || quarter > 4)
             {
-                throw new ArgumentException(@"Quarter not in range", nameof(quarter));
+                throw new ArgumentOutOfRangeException(nameof(quarter), quarter, @"Quarter not in range");
             }
+            
+            return new DateTime(year, 1, 1).AddQuarters(quarter - 1);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime GetFirstDayOfQuarter(Int32 year, Int32 quarter)
+        public static DateTime GetFirstDayOfQuarter(Int32 year, Quarter quarter)
         {
-            CheckQuarter(quarter);
-            return new DateTime(year, 1, 1).AddQuarters(quarter - 1);
+            return new DateTime(year, 1, 1).AddQuarters((Int32) quarter - 1);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime FirstDayOfQuarter(this DateTime date)
         {
-            return new DateTime(date.Year, 1, 1).AddQuarters(date.Quarter() - 1);
+            return new DateTime(date.Year, 1, 1).AddQuarters(date.QuarterNumber() - 1);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime GetLastDayOfQuarter(Int32 year, Int32 quarter)
         {
-            CheckQuarter(quarter);
+            if (quarter < 1 || quarter > 4)
+            {
+                throw new ArgumentOutOfRangeException(nameof(quarter), quarter, @"Quarter not in range");
+            }
+            
             return new DateTime(year, 1, 1).AddQuarters(quarter).AddDays(-1);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime GetLastDayOfQuarter(Int32 year, Quarter quarter)
+        {
+            return new DateTime(year, 1, 1).AddQuarters((Int32) quarter).AddDays(-1);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTime LastDayOfQuarter(this DateTime date)
         {
-            return new DateTime(date.Year, 1, 1).AddQuarters(date.Quarter()).AddDays(-1);
+            return new DateTime(date.Year, 1, 1).AddQuarters(date.QuarterNumber()).AddDays(-1);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -869,7 +949,17 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsDateInYearAndQuarter(this DateTime date, Int32 year, Int32 quarter)
         {
-            CheckQuarter(quarter);
+            if (quarter < 1 || quarter > 4)
+            {
+                throw new ArgumentOutOfRangeException(nameof(quarter), quarter, @"Quarter not in range");
+            }
+            
+            return date.Year == year && date.QuarterNumber() == quarter;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsDateInYearAndQuarter(this DateTime date, Int32 year, Quarter quarter)
+        {
             return date.Year == year && date.Quarter() == quarter;
         }
 
@@ -1061,6 +1151,36 @@ namespace NetExtender.Utilities.Types
         public static DateTime SetTime(this DateTime date, TimeSpan time)
         {
             return date.Date.Add(time);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime TruncateToMilliseconds(this DateTime date)
+        {
+            return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Millisecond);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime TruncateToSeconds(this DateTime date)
+        {
+            return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, 0);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime TruncateToMinutes(this DateTime date)
+        {
+            return new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, 0, 0);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime TruncateToHours(this DateTime date)
+        {
+            return new DateTime(date.Year, date.Month, date.Day, date.Hour, 0, 0, 0);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime TruncateToDays(this DateTime date)
+        {
+            return new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, 0);
         }
         
         /// <summary>

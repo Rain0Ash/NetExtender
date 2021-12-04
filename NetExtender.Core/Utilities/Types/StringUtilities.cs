@@ -181,6 +181,21 @@ namespace NetExtender.Utilities.Types
 
             return values.WhereNotNull().Aggregate<IString, Int64>(0, (current, str) => current + str.Length);
         }
+        
+        public static Boolean IsNumeric(this String value)
+        {
+            return value.All(Char.IsDigit);
+        }
+        
+        public static Boolean IsAlphabetic(this String value)
+        {
+            return value.All(Char.IsLetter);
+        }
+
+        public static Boolean IsAlphanumeric(this String value)
+        {
+            return value.All(Char.IsLetterOrDigit);
+        }
 
         public static IEnumerable<Int32> AllIndexesOf(this String value, String pattern)
         {

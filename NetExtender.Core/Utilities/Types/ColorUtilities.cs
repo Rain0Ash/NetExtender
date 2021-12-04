@@ -229,6 +229,43 @@ namespace NetExtender.Utilities.Types
             }
         }
         
+        private const Double AccessibilityContrast = 4.5 / 21D;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsAccessibilityContrast(this Color color, Color other)
+        {
+            return IsAccessibilityContrast(color, other, AccessibilityContrast);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsAccessibilityContrast(this Color color, Color other, Double contrast)
+        {
+            return color.GetContrastRatio(other) >= contrast;
+        }
+
+        public static Double GetContrastRatio(this Color color, Color other)
+        {
+            static Double Getl(Color color)
+            {
+                static Double Gets(Int32 cv)
+                {
+                    Double d = cv / 255.0;
+                    d = d <= 0.03928 ? d / 12.92 : Math.Pow((d + 0.055) / 1.055, 2.4);
+                    return d;
+                }
+
+                Double r = Gets(color.R);
+                Double g = Gets(color.G);
+                Double b = Gets(color.B);
+                return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+            }
+
+            Double l1 = Getl(color);
+            Double l2 = Getl(other);
+
+            return (Math.Max(l1, l2) + 0.05) / (Math.Min(l1, l2) + 0.05) / 21;
+        }
+        
         /// <summary>
         /// Returns either black or white, depending on the luminosity of the specified background color.
         /// </summary>

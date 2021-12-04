@@ -65,104 +65,109 @@ namespace NetExtender.Utilities.Types
             collection.Insert(index.GetOffset(collection.Count), item);
         }
         
-        public static void Swap<T>(this IList<T> source, Int32 first, Int32 second)
+        public static void Swap<T>(this IList<T> collection, Int32 first, Int32 second)
         {
-            if (source is null)
+            if (collection is null)
             {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentNullException(nameof(collection));
             }
 
-            if (first < 0 || first >= source.Count)
+            if (first < 0 || first >= collection.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(first));
             }
             
-            if (second < 0 || second >= source.Count)
+            if (second < 0 || second >= collection.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(second));
             }
 
-            (source[first], source[second]) = (source[second], source[first]);
+            (collection[first], collection[second]) = (collection[second], collection[first]);
         }
         
-        public static Boolean TrySwap<T>(this IList<T> source, Int32 first, Int32 second)
+        public static Boolean TrySwap<T>(this IList<T> collection, Int32 first, Int32 second)
         {
-            if (source is null)
+            if (collection is null)
             {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentNullException(nameof(collection));
             }
 
-            if (first < 0 || first >= source.Count)
+            if (first < 0 || first >= collection.Count)
             {
                 return false;
             }
             
-            if (second < 0 || second >= source.Count)
+            if (second < 0 || second >= collection.Count)
             {
                 return false;
             }
 
-            (source[first], source[second]) = (source[second], source[first]);
+            (collection[first], collection[second]) = (collection[second], collection[first]);
             return true;
         }
         
-        public static void Swap(IList source, Int32 first, Int32 second)
+        public static void Swap(IList collection, Int32 first, Int32 second)
         {
-            if (source is null)
+            if (collection is null)
             {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentNullException(nameof(collection));
             }
 
-            if (first < 0 || first >= source.Count)
+            if (first < 0 || first >= collection.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(first));
             }
             
-            if (second < 0 || second >= source.Count)
+            if (second < 0 || second >= collection.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(second));
             }
 
-            (source[first], source[second]) = (source[second], source[first]);
+            (collection[first], collection[second]) = (collection[second], collection[first]);
         }
         
-        public static Boolean TrySwap(IList source, Int32 first, Int32 second)
+        public static Boolean TrySwap(IList collection, Int32 first, Int32 second)
         {
-            if (source is null)
+            if (collection is null)
             {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentNullException(nameof(collection));
             }
 
-            if (first < 0 || first >= source.Count)
+            if (first < 0 || first >= collection.Count)
             {
                 return false;
             }
             
-            if (second < 0 || second >= source.Count)
+            if (second < 0 || second >= collection.Count)
             {
                 return false;
             }
 
-            (source[first], source[second]) = (source[second], source[first]);
+            (collection[first], collection[second]) = (collection[second], collection[first]);
             return true;
         }
 
-        public static Int32 BinarySearch<T>(this IList<T> source, T value, IComparer<T>? comparer = null)
+        public static Int32 BinarySearch<T>(this IList<T> collection, T value)
         {
-            if (source is null)
+            return BinarySearch(collection, value, null);
+        }
+
+        public static Int32 BinarySearch<T>(this IList<T> collection, T value, IComparer<T>? comparer)
+        {
+            if (collection is null)
             {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentNullException(nameof(collection));
             }
 
             comparer ??= Comparer<T>.Default;
 
             Int32 lower = 0;
-            Int32 upper = source.Count - 1;
+            Int32 upper = collection.Count - 1;
 
             while (lower <= upper)
             {
                 Int32 middle = lower + (upper - lower) / 2;
-                Int32 comparison = comparer.Compare(value, source[middle]);
+                Int32 comparison = comparer.Compare(value, collection[middle]);
                 
                 switch (comparison)
                 {
@@ -180,32 +185,32 @@ namespace NetExtender.Utilities.Types
             return ~lower;
         }
 
-        public static Boolean IndexOf<T>(this IList<T> source, T item, out Int32 index)
+        public static Boolean IndexOf<T>(this IList<T> collection, T item, out Int32 index)
         {
-            if (source is null)
+            if (collection is null)
             {
-                throw new ArgumentNullException(nameof(source));
+                throw new ArgumentNullException(nameof(collection));
             }
 
-            index = source.IndexOf(item);
+            index = collection.IndexOf(item);
             return index >= 0;
         }
         
-        public static void InsertRange<T>(this IList<T> source, Int32 index, IEnumerable<T> items)
+        public static void InsertRange<T>(this IList<T> collection, Int32 index, IEnumerable<T> source)
         {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (items is null)
+            foreach (T item in source)
             {
-                throw new ArgumentNullException(nameof(items));
-            }
-
-            foreach (T item in items)
-            {
-                source.Insert(index++, item);
+                collection.Insert(index++, item);
             }
         }
     }

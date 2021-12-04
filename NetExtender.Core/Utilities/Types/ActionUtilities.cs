@@ -2,13 +2,36 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using NetExtender.Types.Exceptions;
+using NetExtender.Utilities.Application;
 
 namespace NetExtender.Utilities.Types
 {
     public static class ActionUtilities
     {
+        public static void Default()
+        {
+        }
+        
+        [SuppressMessage("ReSharper", "UnusedParameter.Global")]
+        public static void Default<T>(T first)
+        {
+        }
+        
+        [SuppressMessage("ReSharper", "UnusedParameter.Global")]
+        public static void Default<T1, T2>(T1 first, T2 second)
+        {
+        }
+        
+        [SuppressMessage("ReSharper", "UnusedParameter.Global")]
+        public static void Default<T1, T2, T3>(T1 first, T2 second, T3 third)
+        {
+        }
+        
         public static Task InBackground(this Action action)
         {
             return InBackground(action, false);
@@ -39,6 +62,34 @@ namespace NetExtender.Utilities.Types
             }
 
             return Task.Factory.StartNew(action, token, options, TaskScheduler.Default);
+        }
+
+        public static Action WithFailFast(this Action action)
+        {
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            void Action()
+            {
+                try
+                {
+                    action();
+                }
+                catch (Exception exception)
+                {
+                    if (!Debugger.IsAttached)
+                    {
+                        throw EnvironmentUtilities.FailFast(exception);
+                    }
+
+                    Debugger.Break();
+                    throw new NeverOperationException(exception);
+                }
+            }
+
+            return Action;
         }
     }
 }

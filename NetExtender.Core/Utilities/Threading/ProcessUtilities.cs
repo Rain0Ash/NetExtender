@@ -42,22 +42,40 @@ namespace NetExtender.Utilities.Threading
     {
         public static void OpenBrowser(String url)
         {
+            if (String.IsNullOrEmpty(url))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(url));
+            }
+
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                using Process? process = Process.Start(new ProcessStartInfo(url) {UseShellExecute = true});
+                using Process? process = Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
+                return;
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
             {
                 using Process process = Process.Start("xdg-open", url);
+                return;
             }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
                 using Process process = Process.Start("open", url);
+                return;
             }
-            else
+
+            throw new PlatformNotSupportedException();
+        }
+
+        public static void OpenBrowser(this Uri uri)
+        {
+            if (uri is null)
             {
-                throw new NotSupportedException();
+                throw new ArgumentNullException(nameof(uri));
             }
+            
+            OpenBrowser(uri.ToString());
         }
 
         public static void Kill(this Process process, Boolean entireProcessTree, Boolean dispose)

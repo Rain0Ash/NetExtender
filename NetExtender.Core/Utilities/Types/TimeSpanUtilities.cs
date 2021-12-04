@@ -47,8 +47,13 @@ namespace NetExtender.Utilities.Types
         {
             return IsPositive(value) || IsInfinity(value);
         }
-        
-        public static TimeSpan From(this TimeType type, Double count = 1)
+
+        public static TimeSpan From(this TimeType type)
+        {
+            return From(type, 1);
+        }
+
+        public static TimeSpan From(this TimeType type, Double count)
         {
             return type switch
             {
@@ -59,6 +64,26 @@ namespace NetExtender.Utilities.Types
                 TimeType.Days => TimeSpan.FromDays(count),
                 _ => throw new NotSupportedException()
             };
+        }
+
+        public static Int32 ToMilliseconds(this TimeSpan value)
+        {
+            return (Int32) value.TotalMilliseconds.ToRange(Int32.MinValue, Int32.MaxValue);
+        }
+        
+        public static Int64 ToLongMilliseconds(this TimeSpan value)
+        {
+            return (Int64) value.TotalMilliseconds.ToRange(Int64.MinValue, Int64.MaxValue);
+        }
+
+        public static Int32 ToTimeoutMilliseconds(this TimeSpan value)
+        {
+            if (value == Timeout.InfiniteTimeSpan)
+            {
+                return -1;
+            }
+            
+            return value > TimeSpan.Zero ? value.ToMilliseconds() : 0;
         }
 
         public static TimeSpan Sum(this IEnumerable<TimeSpan> source)
@@ -149,7 +174,19 @@ namespace NetExtender.Utilities.Types
         {
             return (DateTime.MinValue + span).Year - 1;
         }
-        
+
+        /// <summary>
+        /// Replaces negative <paramref name="timeout"/> value with <see cref="Timeout.InfiniteTimeSpan"/>.
+        /// </summary>
+        /// <remarks>
+        /// Use case scenario: methods that accept timeout often accept only <see cref="Timeout.InfiniteTimeSpan"/>
+        /// but not other negative values.
+        /// </remarks>
+        public static TimeSpan AdjustTimeout(this TimeSpan timeout)
+        {
+            return AdjustTimeout(timeout, false);
+        }
+
         /// <summary>
         /// Replaces negative <paramref name="timeout"/> value with <see cref="Timeout.InfiniteTimeSpan"/>.
         /// If <paramref name="infinity"/> is <c>true</c>, <see cref="TimeSpan.Zero"/> value is treated as <see cref="Timeout.InfiniteTimeSpan"/>
@@ -160,7 +197,7 @@ namespace NetExtender.Utilities.Types
         /// Motivation for <paramref name="infinity"/>:
         /// default timeout in configs often means 'infinite timeout', not 'do not wait and return immediately'.
         /// </remarks>
-        public static TimeSpan AdjustTimeout(this TimeSpan timeout, Boolean infinity = false)
+        public static TimeSpan AdjustTimeout(this TimeSpan timeout, Boolean infinity)
         {
             if (infinity)
             {
@@ -168,6 +205,19 @@ namespace NetExtender.Utilities.Types
             }
 
             return timeout < TimeSpan.Zero ? Timeout.InfiniteTimeSpan : timeout;
+        }
+
+        /// <summary>
+        /// Limits timeout by upper limit.
+        /// Replaces negative <paramref name="timeout"/> value with <see cref="Timeout.InfiniteTimeSpan"/>.
+        /// </summary>
+        /// <remarks>
+        /// Use case scenario: methods that accept timeout often accept only <see cref="Timeout.InfiniteTimeSpan"/>
+        /// but not other negative values.
+        /// </remarks>
+        public static TimeSpan AdjustTimeout(this TimeSpan timeout, TimeSpan upper)
+        {
+            return AdjustTimeout(timeout, upper, false);
         }
 
         /// <summary>
@@ -181,18 +231,16 @@ namespace NetExtender.Utilities.Types
         /// Motivation for <paramref name="infinite"/>:
         /// default timeout in configs often means 'infinite timeout', not 'do not wait and return immediately'.
         /// </remarks>
-        public static TimeSpan AdjustTimeout(this TimeSpan timeout, TimeSpan upper, Boolean infinite = false)
+        public static TimeSpan AdjustTimeout(this TimeSpan timeout, TimeSpan upper, Boolean infinite)
         {
             timeout = timeout.AdjustTimeout(infinite);
             upper = upper.AdjustTimeout(infinite);
 
-            // Ignore upper limit if negative
             if (upper < TimeSpan.Zero)
             {
                 return timeout;
             }
 
-            // Ignore timeout if negative or exceeds upper limit
             if (timeout < TimeSpan.Zero || timeout > upper)
             {
                 return upper;

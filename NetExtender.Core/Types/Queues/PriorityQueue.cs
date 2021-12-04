@@ -171,20 +171,20 @@ namespace NetExtender.Types.Queues
             }
         }
 
-        public void EnqueueRange(IEnumerable<T> items)
+        public void EnqueueRange(IEnumerable<T> source)
         {
-            EnqueueRange(Upper, items);
+            EnqueueRange(Upper, source);
         }
 
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
-        public void EnqueueRange(Int32 priority, IEnumerable<T> items)
+        public void EnqueueRange(Int32 priority, IEnumerable<T> source)
         {
-            if (items is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(items));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            using IEnumerator<T> enumerator = items.GetEnumerator();
+            using IEnumerator<T> enumerator = source.GetEnumerator();
 
             if (!enumerator.MoveNext())
             {
@@ -193,7 +193,7 @@ namespace NetExtender.Types.Queues
 
             if (!Queue.TryGetValue(priority, out Queue<T>? queue))
             {
-                queue = new Queue<T>(items.CountIfMaterialized() ?? Size);
+                queue = new Queue<T>(source.CountIfMaterialized() ?? Size);
                 Queue.Add(priority, queue);
             }
             

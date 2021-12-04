@@ -23,20 +23,20 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <typeparam name="T">The type of items in the stack</typeparam>
         /// <param name="stack">The stack to push into</param>
-        /// <param name="items">The items to push</param>
-        public static void PushRange<T>(this Stack<T> stack, IEnumerable<T> items)
+        /// <param name="source">The items to push</param>
+        public static void PushRange<T>(this Stack<T> stack, IEnumerable<T> source)
         {
             if (stack is null)
             {
                 throw new ArgumentNullException(nameof(stack));
             }
 
-            if (items is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(items));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            foreach (T item in items)
+            foreach (T item in source)
             {
                 stack.Push(item);
             }

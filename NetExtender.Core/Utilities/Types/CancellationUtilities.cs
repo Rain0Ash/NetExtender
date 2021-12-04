@@ -169,6 +169,17 @@ namespace NetExtender.Utilities.Types
 
             return timeout.HasValue ? CreateLinkedSource(tokens, timeout.Value) : CreateLinkedSource(tokens);
         }
+
+        public static void CancelAndThrow(this CancellationTokenSource source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            source.Cancel();
+            source.Token.ThrowIfCancellationRequested();
+        }
         
         /// <summary>
         /// Allows a cancellation token to be awaited.
@@ -205,7 +216,6 @@ namespace NetExtender.Utilities.Types
                 CancellationToken = token;
             }
 
-            // ReSharper disable once AsyncConverter.AsyncMethodNamingHighlighting
             public Task GetResult()
             {
                 if (IsCompleted)

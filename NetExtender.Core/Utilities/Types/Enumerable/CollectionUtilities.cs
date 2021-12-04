@@ -113,6 +113,112 @@ namespace NetExtender.Utilities.Types
 
             collection.Add(item);
         }
+
+        public static Boolean AddIf<T>(this ICollection<T> collection, T item, Boolean condition)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (!condition)
+            {
+                return false;
+            }
+
+            collection.Add(item);
+            return true;
+        }
+
+        public static Boolean AddIf<T>(this ICollection<T> collection, T item, Func<T, Boolean> predicate)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (!predicate(item))
+            {
+                return false;
+            }
+
+            collection.Add(item);
+            return true;
+        }
+
+        public static Boolean AddIfNot<T>(this ICollection<T> collection, T item, Boolean condition)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (condition)
+            {
+                return false;
+            }
+
+            collection.Add(item);
+            return true;
+        }
+
+        public static Boolean AddIfNot<T>(this ICollection<T> collection, T item, Func<T, Boolean> predicate)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (predicate(item))
+            {
+                return false;
+            }
+
+            collection.Add(item);
+            return true;
+        }
+
+        public static Boolean AddIfNotNull<T>(this ICollection<T> collection, T? item)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (item is null)
+            {
+                return false;
+            }
+
+            collection.Add(item);
+            return true;
+        }
+
+        public static Boolean AddIfUnique<T>(this ICollection<T> collection, T item)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (collection.Contains(item))
+            {
+                return false;
+            }
+            
+            collection.Add(item);
+            return true;
+        }
         
         public static Boolean Remove<T>(this ICollection<T> collection, T item)
         {
@@ -123,22 +229,72 @@ namespace NetExtender.Utilities.Types
 
             return collection.Remove(item);
         }
-        
-        public static void AddRange<T>(this ICollection<T> collection, params T[] items)
-        {
-            AddRange(collection, (IEnumerable<T>) items);
-        }
 
-        public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> items)
+        public static Boolean RemoveIf<T>(this ICollection<T> collection, T item, Boolean condition)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            if (items is null)
+            return condition && collection.Remove(item);
+        }
+        
+        public static Boolean RemoveIf<T>(this ICollection<T> collection, T item, Func<T, Boolean> predicate)
+        {
+            if (collection is null)
             {
-                throw new ArgumentNullException(nameof(items));
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return predicate(item) && collection.Remove(item);
+        }
+
+        public static Boolean RemoveIfNot<T>(this ICollection<T> collection, T item, Boolean condition)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            return !condition && collection.Remove(item);
+        }
+        
+        public static Boolean RemoveIfNot<T>(this ICollection<T> collection, T item, Func<T, Boolean> predicate)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return !predicate(item) && collection.Remove(item);
+        }
+        
+        public static void AddRange<T>(this ICollection<T> collection, params T[] items)
+        {
+            AddRange(collection, (IEnumerable<T>) items);
+        }
+
+        public static void AddRange<T>(this ICollection<T> collection, IEnumerable<T> source)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
             }
 
             if (collection.IsReadOnly)
@@ -146,7 +302,7 @@ namespace NetExtender.Utilities.Types
                 throw new NotSupportedException();
             }
 
-            foreach (T item in items)
+            foreach (T item in source)
             {
                 collection.Add(item);
             }
@@ -157,16 +313,16 @@ namespace NetExtender.Utilities.Types
             RemoveRange(collection, (IEnumerable<T>) items);
         }
 
-        public static void RemoveRange<T>(this ICollection<T> collection, IEnumerable<T> items)
+        public static void RemoveRange<T>(this ICollection<T> collection, IEnumerable<T> source)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            if (items is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(items));
+                throw new ArgumentNullException(nameof(source));
             }
 
             if (collection.IsReadOnly)
@@ -174,7 +330,7 @@ namespace NetExtender.Utilities.Types
                 throw new NotSupportedException();
             }
 
-            foreach (T item in items)
+            foreach (T item in source)
             {
                 collection.Remove(item);
             }

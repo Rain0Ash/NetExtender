@@ -78,14 +78,14 @@ namespace NetExtender.Types.Comparers
             Order.Add(item!);
         }
 
-        public void AddRange(IEnumerable<T> items)
+        public void AddRange(IEnumerable<T> source)
         {
-            if (items is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(items));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            Order.AddRange(items);
+            Order.AddRange(source);
         }
         
         public void Insert(Int32 index, T item)
@@ -93,14 +93,14 @@ namespace NetExtender.Types.Comparers
             Order.Insert(index, item!);
         }
 
-        public void InsertRange(Int32 index, IEnumerable<T> items)
+        public void InsertRange(Int32 index, IEnumerable<T> source)
         {
-            if (items is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(items));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            Order.InsertRange(index, items);
+            Order.InsertRange(index, source);
         }
 
         public Boolean Contains(T item)

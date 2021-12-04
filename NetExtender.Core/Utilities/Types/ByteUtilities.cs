@@ -30,6 +30,11 @@ namespace NetExtender.Utilities.Types
         public const Int32 BitInByte = BitUtilities.BitInByte;
         public const Int32 ByteMultiplier = 1024;
 
+        public static Boolean ToBoolean(this Byte value)
+        {
+            return Unsafe.As<Byte, Boolean>(ref value);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean SequenceEqual(this Byte[]? first, Byte[]? second)
         {

@@ -130,21 +130,21 @@ namespace NetExtender.Utilities.Numerics
         }
     }
 
-    public static class MathGeneric<TValue, TResult>
+    public static class MathGeneric<T, TResult>
     {
         static MathGeneric()
         {
-            ConvertInternal = new Lazy<Func<TValue, TResult>>(() => ExpressionUtilities.CreateExpression<TValue, TResult>(body => Expression.Convert(body, typeof(TResult))), true);
-            AddInternal = new Lazy<Func<TResult, TValue, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, TValue, TResult>(Expression.Add, true), true);
-            SubtractInternal = new Lazy<Func<TResult, TValue, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, TValue, TResult>(Expression.Subtract, true), true);
-            MultiplyInternal = new Lazy<Func<TResult, TValue, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, TValue, TResult>(Expression.Multiply, true), true);
-            DivideInternal = new Lazy<Func<TResult, TValue, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, TValue, TResult>(Expression.Divide, true), true);
-            ModuloInternal = new Lazy<Func<TResult, TValue, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, TValue, TResult>(Expression.Modulo, true), true);
+            ConvertInternal = new Lazy<Func<T, TResult>>(() => ExpressionUtilities.CreateExpression<T, TResult>(body => Expression.Convert(body, typeof(TResult))), true);
+            AddInternal = new Lazy<Func<TResult, T, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, T, TResult>(Expression.Add, true), true);
+            SubtractInternal = new Lazy<Func<TResult, T, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, T, TResult>(Expression.Subtract, true), true);
+            MultiplyInternal = new Lazy<Func<TResult, T, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, T, TResult>(Expression.Multiply, true), true);
+            DivideInternal = new Lazy<Func<TResult, T, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, T, TResult>(Expression.Divide, true), true);
+            ModuloInternal = new Lazy<Func<TResult, T, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, T, TResult>(Expression.Modulo, true), true);
         }
         
-        private static Lazy<Func<TValue, TResult>> ConvertInternal { get; }
+        private static Lazy<Func<T, TResult>> ConvertInternal { get; }
 
-        public static Func<TValue, TResult> Convert
+        public static Func<T, TResult> Convert
         {
             get
             {
@@ -152,9 +152,9 @@ namespace NetExtender.Utilities.Numerics
             }
         }
 
-        private static Lazy<Func<TResult, TValue, TResult>> AddInternal { get; }
+        private static Lazy<Func<TResult, T, TResult>> AddInternal { get; }
 
-        public static Func<TResult, TValue, TResult> Add
+        public static Func<TResult, T, TResult> Add
         {
             get
             {
@@ -162,9 +162,9 @@ namespace NetExtender.Utilities.Numerics
             }
         }
         
-        private static Lazy<Func<TResult, TValue, TResult>> SubtractInternal { get; }
+        private static Lazy<Func<TResult, T, TResult>> SubtractInternal { get; }
 
-        public static Func<TResult, TValue, TResult> Subtract
+        public static Func<TResult, T, TResult> Subtract
         {
             get
             {
@@ -172,9 +172,9 @@ namespace NetExtender.Utilities.Numerics
             }
         }
         
-        private static Lazy<Func<TResult, TValue, TResult>> MultiplyInternal { get; }
+        private static Lazy<Func<TResult, T, TResult>> MultiplyInternal { get; }
 
-        public static Func<TResult, TValue, TResult> Multiply
+        public static Func<TResult, T, TResult> Multiply
         {
             get
             {
@@ -182,9 +182,9 @@ namespace NetExtender.Utilities.Numerics
             }
         }
         
-        private static Lazy<Func<TResult, TValue, TResult>> DivideInternal { get; }
+        private static Lazy<Func<TResult, T, TResult>> DivideInternal { get; }
 
-        public static Func<TResult, TValue, TResult> Divide
+        public static Func<TResult, T, TResult> Divide
         {
             get
             {
@@ -192,9 +192,9 @@ namespace NetExtender.Utilities.Numerics
             }
         }
         
-        private static Lazy<Func<TResult, TValue, TResult>> ModuloInternal { get; }
+        private static Lazy<Func<TResult, T, TResult>> ModuloInternal { get; }
 
-        public static Func<TResult, TValue, TResult> Modulo
+        public static Func<TResult, T, TResult> Modulo
         {
             get
             {

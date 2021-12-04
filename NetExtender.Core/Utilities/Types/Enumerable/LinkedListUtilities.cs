@@ -299,6 +299,44 @@ namespace NetExtender.Utilities.Types
             result = node.Value;
             return true;
         }
+
+        public static T DequeueLast<T>(this LinkedList<T> collection)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            LinkedListNode<T>? node = collection.Last;
+
+            if (node is null)
+            {
+                throw new InvalidOperationException();
+            }
+            
+            collection.RemoveLast();
+            return node.Value;
+        }
+        
+        public static Boolean TryDequeueLast<T>(this LinkedList<T> collection, [MaybeNullWhen(false)] out T result)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            LinkedListNode<T>? node = collection.Last;
+
+            if (node is null)
+            {
+                result = default;
+                return false;
+            }
+            
+            collection.TryRemoveLast();
+            result = node.Value;
+            return true;
+        }
         
         public static void Swap<T>(this LinkedListNode<T> first, LinkedListNode<T> second)
         {

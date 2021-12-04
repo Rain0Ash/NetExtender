@@ -8,8 +8,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NetExtender.Types.Events;
 using NetExtender.UserInterface;
-using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Core;
+using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Windows;
 using NetExtender.Workstation.Interfaces;
 

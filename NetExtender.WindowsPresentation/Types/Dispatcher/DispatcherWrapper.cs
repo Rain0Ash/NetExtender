@@ -85,22 +85,22 @@ namespace NetExtender.Types.Dispatchers
             Dispatcher.Invoke(callback, (System.Windows.Threading.DispatcherPriority) priority, token, timeout);
         }
 
-        public TResult Invoke<TResult>(Func<TResult> callback)
+        public T Invoke<T>(Func<T> callback)
         {
             return Dispatcher.Invoke(callback);
         }
 
-        public TResult Invoke<TResult>(Func<TResult> callback, DispatcherPriority priority)
+        public T Invoke<T>(Func<T> callback, DispatcherPriority priority)
         {
             return Dispatcher.Invoke(callback, (System.Windows.Threading.DispatcherPriority) priority);
         }
 
-        public TResult Invoke<TResult>(Func<TResult> callback, DispatcherPriority priority, CancellationToken token)
+        public T Invoke<T>(Func<T> callback, DispatcherPriority priority, CancellationToken token)
         {
             return Dispatcher.Invoke(callback, (System.Windows.Threading.DispatcherPriority) priority, token);
         }
 
-        public TResult Invoke<TResult>(Func<TResult> callback, DispatcherPriority priority, TimeSpan timeout, CancellationToken token)
+        public T Invoke<T>(Func<T> callback, DispatcherPriority priority, TimeSpan timeout, CancellationToken token)
         {
             return Dispatcher.Invoke(callback, (System.Windows.Threading.DispatcherPriority) priority, token, timeout);
         }

@@ -22,8 +22,8 @@ namespace NetExtender.NAudio.Types.Playlist
         {
         }
 
-        public RepeatWaveStreamPlaylist(IEnumerable<WaveStream> items)
-            : base(items)
+        public RepeatWaveStreamPlaylist(IEnumerable<WaveStream> source)
+            : base(source)
         {
         }
     }
@@ -207,8 +207,8 @@ namespace NetExtender.NAudio.Types.Playlist
         {
         }
 
-        public RepeatWaveStreamPlaylist(IEnumerable<T> items)
-            : base(items)
+        public RepeatWaveStreamPlaylist(IEnumerable<T> source)
+            : base(source)
         {
         }
 

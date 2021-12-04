@@ -29,8 +29,178 @@ namespace NetExtender.Utilities.Core
         All = String | Decimal | Complex | TimeSpan | DateTime | DateTimeOffset
     }
     
-    public static partial class ReflectionUtilities
+    public static class ReflectionUtilities
     {
+        public static Boolean IsAssignableFrom<T>(this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return type.IsAssignableFrom(typeof(T));
+        }
+        
+        public static Boolean IsAssignableFrom<T>(this TypeInfo type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return type.IsAssignableFrom(typeof(T).GetTypeInfo());
+        }
+        
+        public static Boolean IsAssignableTo<T>(this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return type.IsAssignableTo(typeof(T));
+        }
+        
+        public static Boolean IsAssignableTo<T>(this TypeInfo type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return type.IsAssignableTo(typeof(T).GetTypeInfo());
+        }
+        
+        public static Boolean IsSameAsOrSubclassOf(this Type type, Type other)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return type == other || type.IsSubclassOf(other);
+        }
+        
+        public static Boolean IsSameAsOrSubclassOf(this TypeInfo type, Type other)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return type.AsType() == other || type.IsSubclassOf(other);
+        }
+	
+        public static Boolean IsSameAsOrSubclassOf<T>(this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return type.IsSameAsOrSubclassOf(typeof(T));
+        }
+	
+        public static Boolean IsSameAsOrSubclassOf<T>(this TypeInfo type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return type.IsSameAsOrSubclassOf(typeof(T));
+        }
+	
+        public static Boolean IsGenericTypeDefinedAs(this Type type, Type? other)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (other is null || !type.IsGenericType)
+            {
+                return false;
+            }
+
+            return type.GetGenericTypeDefinition() == other;
+        }
+	
+        public static Boolean IsGenericTypeDefinedAs(this TypeInfo type, Type? other)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (other is null || !type.IsGenericType)
+            {
+                return false;
+            }
+
+            return type.GetGenericTypeDefinition() == other;
+        }
+        
+        public static Boolean HasInterface<T>(this Type type) where T : class
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return type.HasInterface(typeof(T));
+        }
+        
+        public static Boolean HasInterface<T>(this TypeInfo type) where T : class
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return type.HasInterface(typeof(T));
+        }
+        
+        public static Boolean HasInterface(this Type type, Type @interface)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (@interface is null)
+            {
+                throw new ArgumentNullException(nameof(@interface));
+            }
+
+            return type.GetInterfaces().Contains(@interface);
+        }
+        
+        public static Boolean HasInterface(this TypeInfo type, Type @interface)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (@interface is null)
+            {
+                throw new ArgumentNullException(nameof(@interface));
+            }
+
+            return type.ImplementedInterfaces.Contains(@interface);
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type TryGetGenericTypeDefinition(this Type type)
         {
@@ -76,6 +246,70 @@ namespace NetExtender.Utilities.Core
             }
 
             return element.GetCustomAttribute(typeof(T), inherit) as T;
+        }
+        
+        public static FileInfo GetAssemblyFile(this Assembly assembly)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            return new FileInfo(assembly.Location);
+        }
+        
+        [Obsolete]
+        public static FileInfo GetAssemblyFileFromCodeBase(this Assembly assembly)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            String? code = assembly.EscapedCodeBase;
+            if (code is null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            Uri uri = new Uri(code);
+            
+            if (!uri.IsFile)
+            {
+                throw new InvalidOperationException();
+            }
+
+            return new FileInfo(uri.LocalPath);
+        }
+        
+        public static String? GetManifestResourceString(this Assembly assembly, String resource)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            if (String.IsNullOrEmpty(resource))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(resource));
+            }
+
+            try
+            {
+                using Stream? stream = assembly.GetManifestResourceStream(resource);
+                
+                if (stream is null)
+                {
+                    return null;
+                }
+                
+                using StreamReader reader = new StreamReader(stream);
+                return reader.ReadToEnd();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         /// <summary>
@@ -418,46 +652,6 @@ namespace NetExtender.Utilities.Core
         }
 
         /// <summary>
-        /// Sets the value of the property or field with the specified name in this object or type.
-        /// </summary>
-        /// <param name="obj">The objector type that has the property or field.</param>
-        /// <param name="name">The name of the property or field.</param>
-        /// <param name="value">The value to set.</param>
-        public static void SetValue(this Object obj, String name, Object? value)
-        {
-            if (obj is null)
-            {
-                throw new ArgumentNullException(nameof(obj));
-            }
-
-            if (name is null)
-            {
-                throw new ArgumentNullException(nameof(name));
-            }
-
-            if (obj is not Type type)
-            {
-                type = obj.GetType();
-            }
-
-            PropertyInfo? property = type.GetProperty(name);
-            if (property is not null)
-            {
-                property.SetValue(obj, value);
-                return;
-            }
-
-            FieldInfo? field = type.GetField(name);
-
-            if (field is null)
-            {
-                throw new Exception($"'{name}' is neither a property or a field of type '{type}'.");
-            }
-
-            field.SetValue(obj, value);
-        }
-        
-        /// <summary>
         /// Gets the type of the specified property in the type.
         /// <para>
         /// If the type is nullable, this function gets its generic definition."/>.
@@ -730,47 +924,53 @@ namespace NetExtender.Utilities.Core
         }
         
         /// <summary>
-        /// Sets the specified property to the provided value in the object.
+        /// Sets the value of the property or field with the specified name in this object or type.
         /// </summary>
-        /// <param name="obj">The object with the property.</param>
-        /// <param name="name">The name of the property to set.</param>
-        /// <param name="value">The value to set the property to.</param>
-        public static void SetProperty(this Object obj, String name, Object value)
+        /// <param name="obj">The objector type that has the property or field.</param>
+        /// <param name="name">The name of the property or field.</param>
+        /// <param name="value">The value to set.</param>
+        public static T SetValue<T>(this T obj, String name, Object? value)
         {
             if (obj is null)
             {
                 throw new ArgumentNullException(nameof(obj));
             }
 
-            PropertyInfo property = GetPropertyInfo(obj, name);
-            property.SetValue(obj, value);
-        }
-
-        /// <summary>
-        /// Sets the specified property to the provided value in the object.
-        /// </summary>
-        /// <param name="obj">The object with the property.</param>
-        /// <param name="name">The name of the property to set.</param>
-        /// <param name="value">The value to set the property to.</param>
-        /// <param name="binding">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
-        public static void SetProperty(this Object obj, String name, Object value, BindingFlags binding)
-        {
-            if (obj is null)
+            if (name is null)
             {
-                throw new ArgumentNullException(nameof(obj));
+                throw new ArgumentNullException(nameof(name));
             }
 
-            PropertyInfo property = GetPropertyInfo(obj, name, binding);
-            property.SetValue(obj, value);
-        }
+            if (obj is not Type type)
+            {
+                type = obj.GetType();
+            }
 
+            PropertyInfo? property = type.GetProperty(name);
+            if (property is not null)
+            {
+                property.SetValue(obj, value);
+                return obj;
+            }
+
+            FieldInfo? field = type.GetField(name);
+
+            if (field is null)
+            {
+                throw new Exception($"'{name}' is neither a property or a field of type '{type}'.");
+            }
+
+            field.SetValue(obj, value);
+            return obj;
+        }
+        
         /// <summary>
         /// Sets the specified field to the provided value in the object.
         /// </summary>
         /// <param name="obj">The object with the field.</param>
         /// <param name="name">The name of the field to set.</param>
         /// <param name="value">The value to set the field to.</param>
-        public static void SetField(this Object obj, String name, Object value)
+        public static T SetField<T>(this T obj, String name, Object value)
         {
             if (obj is null)
             {
@@ -779,15 +979,53 @@ namespace NetExtender.Utilities.Core
 
             FieldInfo field = GetFieldInfo(obj, name);
             field.SetValue(obj, value);
+            return obj;
         }
         
+        /// <summary>
+        /// Sets the specified property to the provided value in the object.
+        /// </summary>
+        /// <param name="obj">The object with the property.</param>
+        /// <param name="name">The name of the property to set.</param>
+        /// <param name="value">The value to set the property to.</param>
+        public static T SetProperty<T>(this T obj, String name, Object value)
+        {
+            if (obj is null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
+            PropertyInfo property = GetPropertyInfo(obj, name);
+            property.SetValue(obj, value);
+            return obj;
+        }
+
+        /// <summary>
+        /// Sets the specified property to the provided value in the object.
+        /// </summary>
+        /// <param name="obj">The object with the property.</param>
+        /// <param name="name">The name of the property to set.</param>
+        /// <param name="value">The value to set the property to.</param>
+        /// <param name="binding">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
+        public static T SetProperty<T>(this T obj, String name, Object value, BindingFlags binding)
+        {
+            if (obj is null)
+            {
+                throw new ArgumentNullException(nameof(obj));
+            }
+
+            PropertyInfo property = GetPropertyInfo(obj, name, binding);
+            property.SetValue(obj, value);
+            return obj;
+        }
+
         /// <summary>
         /// Sets the specified property to a value that will be extracted from the provided string value using the <see cref="TypeDescriptor.GetConverter(Type)"/> and <see cref="TypeConverter.ConvertFromString(string)"/>.
         /// </summary>
         /// <param name="obj">The object with the property.</param>
         /// <param name="name">The name of the property to set.</param>
         /// <param name="value">The string representation of the value to set to the property.</param>
-        public static void SetPropertyFromString(this Object obj, String name, String value)
+        public static T SetPropertyFromString<T>(this T obj, String name, String value)
         {
             if (obj is null)
             {
@@ -798,6 +1036,7 @@ namespace NetExtender.Utilities.Core
             TypeConverter converter = TypeDescriptor.GetConverter(property.PropertyType);
             Object? result = converter.ConvertFromString(value);
             property.SetValue(obj, result);
+            return obj;
         }
 
         /// <summary>
@@ -807,7 +1046,7 @@ namespace NetExtender.Utilities.Core
         /// <param name="name">The name of the property to set.</param>
         /// <param name="value">The string representation of the value to set to the property.</param>
         /// <param name="binding">A bitmask comprised of one or more <see cref="BindingFlags"/> that specify how the search is conducted. -or- Zero, to return null.</param>
-        public static void SetPropertyFromString(this Object obj, String name, String value, BindingFlags binding)
+        public static T SetPropertyFromString<T>(this T obj, String name, String value, BindingFlags binding)
         {
             if (obj is null)
             {
@@ -818,16 +1057,18 @@ namespace NetExtender.Utilities.Core
             TypeConverter converter = TypeDescriptor.GetConverter(property.PropertyType);
             Object? result = converter.ConvertFromString(value);
             property.SetValue(obj, result);
+            return obj;
         }
 
         /// <summary>
         /// Sets all fields and properties of the specified type in the provided object to the specified value.
         /// <para>Internal, protected and private fields are included, static are not.</para>
         /// </summary>
-        /// <typeparam name="T">The type of the properties.</typeparam>
+        /// <typeparam name="T">Object type</typeparam>
+        /// <typeparam name="TValue">The type of the properties.</typeparam>
         /// <param name="obj">The object.</param>
         /// <param name="value">The value to set the properties to.</param>
-        public static void SetAllPropertiesOfType<T>(this Object obj, T value)
+        public static T SetAllPropertiesOfType<T, TValue>(this T obj, TValue value)
         {
             if (obj is null)
             {
@@ -838,11 +1079,13 @@ namespace NetExtender.Utilities.Core
 
             foreach (FieldInfo field in fields)
             {
-                if (field.FieldType == typeof(T))
+                if (field.FieldType == typeof(TValue))
                 {
                     field.SetValue(obj, value);
                 }
             }
+
+            return obj;
         }
 
         /// <summary>
@@ -1207,7 +1450,5 @@ namespace NetExtender.Utilities.Core
         {
             return default;
         }
-        
-        
     }
 }

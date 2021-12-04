@@ -24,6 +24,33 @@ namespace NetExtender.Utilities.Types
     {
         private const String IsDefinedTypeMismatchMessage = "The underlying type of the enum and the value must be the same type.";
 
+        public static Boolean In<T>(this T value) where T : unmanaged, Enum
+        {
+            return CacheValues<T>.Values.Contains(value);
+        }
+        
+        public static Boolean NotIn<T>(this T value) where T : unmanaged, Enum
+        {
+            return !In(value);
+        }
+
+        public static Boolean NameConvert<T, TResult>(this T value, out TResult result) where T : unmanaged, Enum where TResult : unmanaged, Enum
+        {
+            return NameConvert(value, false, out result);
+        }
+
+        public static Boolean NameConvert<T, TResult>(this T value, Boolean insensitive, out TResult result) where T : unmanaged, Enum where TResult : unmanaged, Enum
+        {
+            if (Enum.TryParse(typeof(TResult), value.ToString(), insensitive, out Object? parse) && parse is TResult @enum)
+            {
+                result = @enum;
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
+
         public static T Random<T>() where T : unmanaged, Enum
         {
             return CacheValues<T>.Values.GetRandom();

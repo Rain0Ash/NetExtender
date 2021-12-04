@@ -9,8 +9,8 @@ namespace NetExtender.Types.Comparers.Interfaces
     // ReSharper disable once PossibleInterfaceMemberAmbiguity
     public interface IOrderedComparer<T> : IReadOnlyOrderedComparer<T>, ICollection<T>
     {
-        public void AddRange(IEnumerable<T> items);
+        public void AddRange(IEnumerable<T> source);
         public void Insert(Int32 index, T item);
-        public void InsertRange(Int32 index, IEnumerable<T> items);
+        public void InsertRange(Int32 index, IEnumerable<T> source);
     }
 }
