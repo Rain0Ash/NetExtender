@@ -4,7 +4,7 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NetExtender.AspNetCore.Windows.Services.Services.Interfaces;
+using NetExtender.AspNetCore.Windows.Services.Interfaces;
 using NetExtender.Windows.Services.Types.Services;
 
 namespace NetExtender.AspNetCore.Windows.Services.Types.Services

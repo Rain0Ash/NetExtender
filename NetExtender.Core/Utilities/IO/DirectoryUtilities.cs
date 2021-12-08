@@ -481,7 +481,7 @@ namespace NetExtender.Utilities.IO
 
             if (!source.Exists)
             {
-                throw new DirectoryNotFoundException($"Source directory {source.FullName} does not exist or could not be found.");
+                throw new DirectoryNotFoundException($"Directory {source.FullName} does not exist or could not be found.");
             }
 
             Boolean successful = false;

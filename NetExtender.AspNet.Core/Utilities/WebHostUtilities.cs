@@ -4,7 +4,7 @@
 using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using NetExtender.AspNet.Core.Types.Wrappers;
+using NetExtender.AspNetCore.Types.Wrappers;
 
 namespace NetExtender.Utilities.AspNetCore.Types
 {

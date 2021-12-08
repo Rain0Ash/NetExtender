@@ -9,7 +9,7 @@ using System.Net;
 using Microsoft.AspNetCore.Http;
 using NetExtender.Utilities.AspNetCore.Types;
 
-namespace NetExtender.AspNet.Core.Middlewares
+namespace NetExtender.AspNetCore.Types.Middlewares
 {
     public class UserAgentAccessRestrictionMiddleware : AccessRestrictionMiddleware, IReadOnlyCollection<String?>
     {

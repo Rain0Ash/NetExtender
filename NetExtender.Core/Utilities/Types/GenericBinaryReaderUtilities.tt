@@ -1,0 +1,129 @@
+<#@ template language="C#v3.5" #>
+<#@ output extension=".cs" encoding="utf-8"#>
+<#@ assembly name="System.Core"#>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.IO" #>
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Runtime.CompilerServices;
+
+namespace NetExtender.Utilities.Types
+{
+<#
+    List<String> types = new List<String>
+    {
+        nameof(SByte),
+        nameof(Byte),
+        nameof(Int16),
+        nameof(UInt16),
+        nameof(Int32),
+        nameof(UInt32),
+        nameof(Int64),
+        nameof(UInt64),
+        nameof(Single),
+        nameof(Double),
+        nameof(Decimal)
+    };
+
+    static Boolean IsSmallType(String type)
+    {
+        return type == nameof(Char) || type == nameof(Byte) || type == nameof(SByte) || type == nameof(Int16) || type == nameof(UInt16);
+    }
+
+    static Boolean IsUnsignedType(String type)
+    {
+        return type == nameof(Char) || type == nameof(Byte) || type == nameof(UInt16) || type == nameof(UInt32) || type == nameof(UInt64);
+    }
+
+    static Boolean IsIntType(String type)
+    {
+        return type == nameof(Char) || type == nameof(SByte) || type == nameof(Byte) || type == nameof(Int16) || type == nameof(UInt16) || type == nameof(Int32) ||
+               type == nameof(UInt32) || type == nameof(Int64) || type == nameof(UInt64);
+    }
+
+    static Boolean IsFloatType(String type)
+    {
+        return type == nameof(Single) || type == nameof(Double);
+    }
+    
+    static String ToSignedType(String type)
+    {
+        return type switch
+        {
+            nameof(Byte) => nameof(SByte),
+            nameof(UInt16) => nameof(Int16),
+            nameof(UInt32) => nameof(Int32),
+            nameof(UInt64) => nameof(Int64),
+            _ => type
+        };
+    }
+
+    static String ToUnsignedType(String type)
+    {
+        return type switch
+        {
+            nameof(SByte) => nameof(Byte),
+            nameof(Int16) => nameof(UInt16),
+            nameof(Int32) => nameof(UInt32),
+            nameof(Int64) => nameof(UInt64),
+            _ => type
+        };
+    }
+
+    void ForEach(IEnumerable<String> types, Action<String> action, Boolean line = true)
+    {
+        String[] type = types.ToArray();
+
+        for (Int32 i = 0; i < type.Length; i++)
+        {
+            action(type[i]);
+
+            if (line && i <= type.Length - 2)
+            {
+                WriteLine(String.Empty);
+            }
+        }
+    }
+
+    void TryReadImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveOptimization)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(TryRead)}(this {nameof(BinaryReader)} value, {(type == nameof(String) ? "[MaybeNullWhen(false)] " : String.Empty)}out {type} result)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(TryRead)}{type}(value, out result);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveOptimization)]");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(TryRead)}{type}(this {nameof(BinaryReader)} value, {(type == nameof(String) ? "[MaybeNullWhen(false)] " : String.Empty)}out {type} result)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\ttry");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\tresult = value.Read{type}();");
+        WriteLine("\t\t\t\treturn true;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t\tcatch (Exception)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tresult = default;");
+        WriteLine("\t\t\t\treturn false;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+    }
+    
+    void TryRead()
+    {
+        ForEach(types.Prepend(nameof(Boolean)).Append(nameof(String)), TryReadImplementation);
+    }
+#>
+    public static partial class BinaryReaderUtilities
+    {
+<#
+    TryRead();
+#>
+    }
+}

@@ -6,15 +6,15 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Net.Http.Headers;
 
-namespace AspNet.Core.Rules
+namespace NetExtender.AspNetCore.Types.Rules
 {
     /// <summary>
-    /// An <see cref="IRule" /> implementation that ensures a www prefix is not used with a domain
+    /// An <see cref="IRule" /> implementation that forces a site to be browsed using a www prefix
     /// </summary>
-    public class ForceNonWebRewriteRule : IRule
+    public class ForceWebRewriteRule : IRule
     {
         /// <summary>
-        /// Runs when applying the rule
+        /// Applies the rule to the context.  If the host starts with www no action is taken
         /// </summary>
         /// <param name="context">The rewrite context</param>
         public void ApplyRule(RewriteContext context)
@@ -25,15 +25,14 @@ namespace AspNet.Core.Rules
             }
 
             HttpRequest request = context.HttpContext.Request;
-            if (!request.Host.Value.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
+            if (request.Host.Value.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
 
-            String host = request.Host.Value.Substring(4);
-            String redirect = $"{request.Scheme}://{host}{request.Path}{request.QueryString}";
-
             HttpResponse response = context.HttpContext.Response;
+            String redirect = $"{request.Scheme}://www.{request.Host}{request.Path}{request.QueryString}";
+
             response.Headers[HeaderNames.Location] = redirect;
             response.StatusCode = StatusCodes.Status301MovedPermanently;
 

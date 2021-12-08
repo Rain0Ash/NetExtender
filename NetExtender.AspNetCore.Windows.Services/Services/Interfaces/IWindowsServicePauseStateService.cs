@@ -3,7 +3,7 @@
 
 using NetExtender.Windows.Services.Types.Services.Interfaces;
 
-namespace NetExtender.AspNetCore.Windows.Services.Services.Interfaces
+namespace NetExtender.AspNetCore.Windows.Services.Interfaces
 {
     public interface IWindowsServicePauseStateService : IWindowsServicePauseStateHandler
     {

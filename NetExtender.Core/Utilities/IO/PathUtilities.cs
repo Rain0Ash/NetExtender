@@ -324,7 +324,12 @@ namespace NetExtender.Utilities.IO
             return path + GetPathSeparator(path);
         }
 
-        public static Boolean IsValidPath(String path, Boolean network = true)
+        public static Boolean IsValidPath(String path)
+        {
+            return IsValidPath(path, true);
+        }
+
+        public static Boolean IsValidPath(String path, Boolean network)
         {
             if (path is null)
             {
@@ -334,7 +339,12 @@ namespace NetExtender.Utilities.IO
             return !String.IsNullOrEmpty(path) && !GetFullPath(path).IsNullOrEmpty() && (!IsNetworkPath(path) || network && IsValidNetworkPath(path));
         }
 
-        public static Boolean IsValidFolderPath(String path, Boolean network = true)
+        public static Boolean IsValidFolderPath(String path)
+        {
+            return IsValidFolderPath(path, true);
+        }
+
+        public static Boolean IsValidFolderPath(String path, Boolean network)
         {
             return IsValidPath(path, network);
         }
@@ -349,7 +359,12 @@ namespace NetExtender.Utilities.IO
             return IsValidFolderPath(path, network) && (!endseparator || IsPathContainsEndSeparator(path));
         }
 
-        public static Boolean IsValidFilePath(String path, Boolean network = true)
+        public static Boolean IsValidFilePath(String path)
+        {
+            return IsValidFilePath(path, true);
+        }
+
+        public static Boolean IsValidFilePath(String path, Boolean network)
         {
             if (path is null)
             {

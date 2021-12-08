@@ -4,14 +4,17 @@
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
 using AspNet.Core.Types.Initializers.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using NetExtender.AspNet.Core.Exceptions;
-using NetExtender.AspNet.Core.Types.Initializers;
+using NetExtender.AspNetCore.Types.Exceptions;
+using NetExtender.AspNetCore.Types.Initializers;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.AspNetCore.Types
 {
@@ -263,6 +266,46 @@ namespace NetExtender.Utilities.AspNetCore.Types
             }
 
             return builder.ConfigureLogging(LoggingBuilderUtilities.LoggingOff);
+        }
+
+        public static IWebHostBuilder UseHttpUrls(this IWebHostBuilder builder, params IPEndPoint[] endpoints)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.UseUrls(UriUtilities.HttpDelimiter, endpoints);
+        }
+        
+        public static IWebHostBuilder UseHttpsUrls(this IWebHostBuilder builder, params IPEndPoint[] endpoints)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.UseUrls(UriUtilities.HttpsDelimiter, endpoints);
+        }
+
+        public static IWebHostBuilder UseUrls(this IWebHostBuilder builder, String delemiter, params IPEndPoint[] endpoints)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.UseUrls(endpoints.SelectWhereNotNull(endpoint => delemiter + endpoint).ToArray());
+        }
+
+        public static IWebHostBuilder UseUrls(this IWebHostBuilder builder, IPEndPoint http, IPEndPoint https)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return builder.UseUrls(UriUtilities.HttpDelimiter + http, UriUtilities.HttpsDelimiter + https);
         }
     }
 }

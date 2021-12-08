@@ -6,7 +6,7 @@ using AspNet.Core.Types.Initializers.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace NetExtender.AspNet.Core.Types.Initializers
+namespace NetExtender.AspNetCore.Types.Initializers
 {
     public sealed record AspNetCoreStartupInitializer : IStartupRegistrationProvider
     {

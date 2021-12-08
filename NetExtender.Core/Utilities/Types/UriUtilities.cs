@@ -8,6 +8,134 @@ namespace NetExtender.Utilities.Types
 {
     public static class UriUtilities
     {
+        public static String File
+        {
+            get
+            {
+                return Uri.UriSchemeFile;
+            }
+        }
+
+        public static String FileDelimiter { get; } = File + Delimiter;
+
+        public static String Ftp
+        {
+            get
+            {
+                return Uri.UriSchemeFtp;
+            }
+        }
+        
+        public static String FtpDelimiter { get; } = Ftp + Delimiter;
+
+        public static String Gopher
+        {
+            get
+            {
+                return Uri.UriSchemeGopher;
+            }
+        }
+        
+        public static String GopherDelimiter { get; } = Gopher + Delimiter;
+
+        public static String Http
+        {
+            get
+            {
+                return Uri.UriSchemeHttp;
+            }
+        }
+        
+        public static String HttpDelimiter { get; } = Http + Delimiter;
+
+        public static String Https
+        {
+            get
+            {
+                return Uri.UriSchemeHttps;
+            }
+        }
+        
+        public static String HttpsDelimiter { get; } = Https + Delimiter;
+
+        public static String WebSocket
+        {
+            get
+            {
+                return "ws";
+            }
+        }
+        
+        public static String WebSocketDelimiter { get; } = WebSocket + Delimiter;
+
+        public static String WebSocketSecure
+        {
+            get
+            {
+                return "wss";
+            }
+        }
+        
+        public static String WebSocketSecureDelimiter { get; } = WebSocketSecure + Delimiter;
+
+        public static String MailTo
+        {
+            get
+            {
+                return Uri.UriSchemeMailto;
+            }
+        }
+        
+        public static String MailToDelimiter { get; } = MailTo + Delimiter;
+
+        public static String News
+        {
+            get
+            {
+                return Uri.UriSchemeNews;
+            }
+        }
+        
+        public static String NewsDelimiter { get; } = News + Delimiter;
+
+        public static String Nntp
+        {
+            get
+            {
+                return Uri.UriSchemeNntp;
+            }
+        }
+        
+        public static String NntpDelimiter { get; } = Nntp + Delimiter;
+
+        public static String NetTcp
+        {
+            get
+            {
+                return Uri.UriSchemeNetTcp;
+            }
+        }
+        
+        public static String NetTcpDelimiter { get; } = NetTcp + Delimiter;
+
+        public static String NetPipe
+        {
+            get
+            {
+                return Uri.UriSchemeNetPipe;
+            }
+        }
+        
+        public static String NetPipeDelimiter { get; } = NetPipe + Delimiter;
+
+        public static String Delimiter
+        {
+            get
+            {
+                return Uri.SchemeDelimiter;
+            }
+        }
+        
         public static Uri ToUri(this String uri)
         {
             if (uri is null)

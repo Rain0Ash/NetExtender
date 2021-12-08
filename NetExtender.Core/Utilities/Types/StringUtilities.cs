@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -13,6 +14,7 @@ using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Web;
 using NetExtender.Types.Immutable.Maps.Interfaces;
 using NetExtender.Types.Maps.Interfaces;
 using NetExtender.Types.Strings;
@@ -2443,6 +2445,66 @@ namespace NetExtender.Utilities.Types
         public static String ShortenWith3Dots(this String value, Int32 length, Boolean included)
         {
             return included ? ShortenWith3DotsIncluded(value, length) : ShortenWith3Dots(value, length);
+        }
+        
+        [return: NotNullIfNotNull("value")]
+        public static String? HtmlEncode(this String? value)
+        {
+            return HttpUtility.HtmlEncode(value);
+        }
+        
+        [return: NotNullIfNotNull("value")]
+        public static String? HtmlAttributeEncode(this String? value)
+        {
+            return HttpUtility.HtmlAttributeEncode(value);
+        }
+
+        [return: NotNullIfNotNull("value")]
+        public static String? HtmlDecode(this String? value)
+        {
+            return HttpUtility.HtmlDecode(value);
+        }
+        
+        [return: NotNullIfNotNull("value")]
+        public static String? UrlEncode(this String? value)
+        {
+            return HttpUtility.UrlEncode(value);
+        }
+        
+        [return: NotNullIfNotNull("value")]
+        public static String? UrlEncode(this String? value, Encoding? encoding)
+        {
+            return HttpUtility.UrlEncode(value, encoding ?? Encoding.UTF8);
+        }
+        
+        [return: NotNullIfNotNull("value")]
+        public static String? UrlEncodeUnicode(this String? value)
+        {
+            return HttpUtility.UrlEncodeUnicode(value);
+        }
+
+        [return: NotNullIfNotNull("value")]
+        public static String? UrlDecode(this String? value)
+        {
+            return HttpUtility.UrlDecode(value);
+        }
+
+        [return: NotNullIfNotNull("value")]
+        public static String? UrlDecode(this String? value, Encoding? encoding)
+        {
+            return HttpUtility.UrlDecode(value, encoding ?? Encoding.UTF8);
+        }
+
+        [return: NotNullIfNotNull("value")]
+        public static String? JavaScriptStringEncode(this String? value)
+        {
+            return value is not null ? HttpUtility.JavaScriptStringEncode(value) : null;
+        }
+
+        [return: NotNullIfNotNull("value")]
+        public static String? JavaScriptStringEncode(this String? value, Boolean quotes)
+        {
+            return value is not null ? HttpUtility.JavaScriptStringEncode(value, quotes) : null;
         }
 
         public static Int32 LevenshteinDistance(String first, String second)

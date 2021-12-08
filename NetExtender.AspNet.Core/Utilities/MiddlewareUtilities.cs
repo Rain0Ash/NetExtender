@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using NetExtender.AspNet.Core.Middlewares;
+using NetExtender.AspNetCore.Types.Middlewares;
 
 namespace NetExtender.Utilities.AspNetCore.Types
 {

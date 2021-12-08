@@ -2,9 +2,9 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using NetExtender.AspNetCore.Windows.Services.Services.Interfaces;
+using NetExtender.AspNetCore.Windows.Services.Interfaces;
 
-namespace NetExtender.AspNetCore.Windows.Services.Services
+namespace NetExtender.AspNetCore.Windows.Services
 {
     public sealed class WindowsServicePauseStateService : IWindowsServicePauseStateService
     {

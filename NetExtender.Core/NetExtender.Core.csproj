@@ -102,6 +102,11 @@
       <Compile Update="Utilities\Types\Enumerable\KeyValuePairEnumerableUtilities.cs">
         <DependentUpon>EnumerableUtilities.cs</DependentUpon>
       </Compile>
+      <Compile Update="Utilities\Types\GenericBinaryReaderUtilities.cs">
+        <AutoGen>True</AutoGen>
+        <DesignTime>True</DesignTime>
+        <DependentUpon>GenericBinaryReaderUtilities.tt</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -116,6 +121,10 @@
       <None Update="Utilities\Numerics\GenericBitUtilities.tt">
         <Generator>TextTemplatingFileGenerator</Generator>
         <LastGenOutput>GenericBitUtilities.cs</LastGenOutput>
+      </None>
+      <None Update="Utilities\Types\GenericBinaryReaderUtilities.tt">
+        <Generator>TextTemplatingFileGenerator</Generator>
+        <LastGenOutput>GenericBinaryReaderUtilities.cs</LastGenOutput>
       </None>
     </ItemGroup>
 

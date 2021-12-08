@@ -5,7 +5,7 @@ using System;
 using System.Net;
 using System.Runtime.Serialization;
 
-namespace NetExtender.AspNet.Core.Exceptions
+namespace NetExtender.AspNetCore.Types.Exceptions
 {
     [Serializable]
     public class ServiceException : Exception

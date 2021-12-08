@@ -4,7 +4,7 @@
 using System;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using NetExtender.AspNet.Core.Exceptions;
+using NetExtender.AspNetCore.Types.Exceptions;
 
 namespace NetExtender.Utilities.AspNetCore.Types
 {

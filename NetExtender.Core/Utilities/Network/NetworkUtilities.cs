@@ -59,6 +59,26 @@ namespace NetExtender.Utilities.Network
 
             return address.GetAddressBytes().InnerReverse();
         }
+        
+        public static IPEndPoint ToIPEndPoint(this IPAddress address, UInt16 port)
+        {
+            if (address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
+            return new IPEndPoint(address, port);
+        }
+
+        public static IPEndPoint ToIPEndPoint(this IPAddress address, Int32 port)
+        {
+            if (address is null)
+            {
+                throw new ArgumentNullException(nameof(address));
+            }
+
+            return new IPEndPoint(address, port);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSuccessful(this PingReply? reply)

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Hosting;
 
-namespace NetExtender.AspNet.Core.Types.Wrappers
+namespace NetExtender.AspNetCore.Types.Wrappers
 {
     public sealed class HostWrapper : IHost, IWebHost
     {

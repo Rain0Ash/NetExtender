@@ -6,7 +6,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace NetExtender.AspNet.Core.Middlewares
+namespace NetExtender.AspNetCore.Types.Middlewares
 {
     public class AccessRestrictionMiddleware
     {

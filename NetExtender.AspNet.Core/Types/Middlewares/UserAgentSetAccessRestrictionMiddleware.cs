@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using Microsoft.AspNetCore.Http;
 
-namespace NetExtender.AspNet.Core.Middlewares
+namespace NetExtender.AspNetCore.Types.Middlewares
 {
     public class UserAgentSetAccessRestrictionMiddleware : UserAgentAccessRestrictionMiddleware, ICollection<String?>
     {

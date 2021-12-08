@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <OutputType>Library</OutputType>
+        <LangVersion>9</LangVersion>
+        <Authors>Rain0Ash</Authors>
+        <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
+        <Version>0.8.2</Version>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="protobuf-net" Version="3.0.101" />
+      <PackageReference Include="protobuf-net.Core" Version="3.0.101" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Utilities" />
+    </ItemGroup>
+
+</Project>

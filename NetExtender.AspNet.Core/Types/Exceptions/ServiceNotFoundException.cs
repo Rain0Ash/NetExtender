@@ -4,7 +4,7 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace NetExtender.AspNet.Core.Exceptions
+namespace NetExtender.AspNetCore.Types.Exceptions
 {
     public class ServiceNotFoundException : ServiceException
     {
