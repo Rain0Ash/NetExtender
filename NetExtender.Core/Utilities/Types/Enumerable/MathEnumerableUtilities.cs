@@ -491,7 +491,7 @@ namespace NetExtender.Utilities.Types
             return source.Where(value => value.InRange(minimum, maximum, comparison));
         }
 
-        public static Double AverageOr(this IEnumerable<Int32> source, Double seed)
+        public static Double AverageOrDefault(this IEnumerable<Int32> source, Double seed)
         {
             if (source is null)
             {
@@ -545,7 +545,7 @@ namespace NetExtender.Utilities.Types
             return (Double) sum / count;
         }
 
-        public static Double AverageOr(this IEnumerable<Int64> source, Double seed)
+        public static Double AverageOrDefault(this IEnumerable<Int64> source, Double seed)
         {
             if (source is null)
             {
@@ -599,7 +599,7 @@ namespace NetExtender.Utilities.Types
             return (Double) sum / count;
         }
 
-        public static Single AverageOr(this IEnumerable<Single> source, Single seed)
+        public static Single AverageOrDefault(this IEnumerable<Single> source, Single seed)
         {
             if (source is null)
             {
@@ -647,7 +647,7 @@ namespace NetExtender.Utilities.Types
             return (Single) (sum / count);
         }
 
-        public static Double AverageOr(this IEnumerable<Double> source, Double seed)
+        public static Double AverageOrDefault(this IEnumerable<Double> source, Double seed)
         {
             if (source is null)
             {
@@ -701,7 +701,7 @@ namespace NetExtender.Utilities.Types
             return sum / count;
         }
 
-        public static Decimal AverageOr(this IEnumerable<Decimal> source, Decimal seed)
+        public static Decimal AverageOrDefault(this IEnumerable<Decimal> source, Decimal seed)
         {
             if (source is null)
             {
@@ -749,7 +749,7 @@ namespace NetExtender.Utilities.Types
             return sum / count;
         }
 
-        public static Double AverageOr<TSource>(this IEnumerable<TSource> source, Func<TSource, Int32> selector, Double seed)
+        public static Double AverageOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, Int32> selector, Double seed)
         {
             if (source is null)
             {
@@ -813,7 +813,7 @@ namespace NetExtender.Utilities.Types
             return (Double) sum / count;
         }
 
-        public static Double AverageOr<TSource>(this IEnumerable<TSource> source, Func<TSource, Int64> selector, Double seed)
+        public static Double AverageOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, Int64> selector, Double seed)
         {
             if (source is null)
             {
@@ -877,7 +877,7 @@ namespace NetExtender.Utilities.Types
             return (Double) sum / count;
         }
 
-        public static Single AverageOr<TSource>(this IEnumerable<TSource> source, Func<TSource, Single> selector, Single seed)
+        public static Single AverageOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, Single> selector, Single seed)
         {
             if (source is null)
             {
@@ -935,7 +935,7 @@ namespace NetExtender.Utilities.Types
             return (Single) (sum / count);
         }
 
-        public static Double AverageOr<TSource>(this IEnumerable<TSource> source, Func<TSource, Double> selector, Double seed)
+        public static Double AverageOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, Double> selector, Double seed)
         {
             if (source is null)
             {
@@ -999,7 +999,7 @@ namespace NetExtender.Utilities.Types
             return sum / count;
         }
 
-        public static Decimal AverageOr<TSource>(this IEnumerable<TSource> source, Func<TSource, Decimal> selector, Decimal seed)
+        public static Decimal AverageOrDefault<TSource>(this IEnumerable<TSource> source, Func<TSource, Decimal> selector, Decimal seed)
         {
             if (source is null)
             {

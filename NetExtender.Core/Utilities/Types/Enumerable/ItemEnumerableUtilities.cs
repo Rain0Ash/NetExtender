@@ -147,7 +147,7 @@ namespace NetExtender.Utilities.Types
             return -1;
         }
         
-        public static T ElementAtOr<T>(this IEnumerable<T> source, Int32 index, T alternate)
+        public static T ElementAtOrDefault<T>(this IEnumerable<T> source, Int32 index, T alternate)
         {
             if (source is null)
             {
@@ -177,7 +177,7 @@ namespace NetExtender.Utilities.Types
             return alternate;
         }
         
-        public static T ElementAtOr<T>(this IEnumerable<T> source, Int32 index, Func<T> alternate)
+        public static T ElementAtOrDefault<T>(this IEnumerable<T> source, Int32 index, Func<T> alternate)
         {
             if (source is null)
             {
@@ -364,7 +364,7 @@ namespace NetExtender.Utilities.Types
             };
         }
         
-        public static T GetRandomOr<T>(this IEnumerable<T> source, T alternate)
+        public static T GetRandomOrDefault<T>(this IEnumerable<T> source, T alternate)
         {
             if (source is null)
             {
@@ -373,15 +373,15 @@ namespace NetExtender.Utilities.Types
 
             return source switch
             {
-                IList<T> list => list.GetRandomOr(alternate),
+                IList<T> list => list.GetRandomOrDefault(alternate),
                 IReadOnlyList<T> list => list.Count > 0 ? list[RandomUtilities.NextNonNegative(list.Count - 1)] : alternate,
                 ICollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : alternate,
                 IReadOnlyCollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : alternate,
-                _ => source.ToList().GetRandomOr(alternate)
+                _ => source.ToList().GetRandomOrDefault(alternate)
             };
         }
         
-        public static T GetRandomOr<T>(this IEnumerable<T> source, Func<T> alternate)
+        public static T GetRandomOrDefault<T>(this IEnumerable<T> source, Func<T> alternate)
         {
             if (source is null)
             {
@@ -395,11 +395,11 @@ namespace NetExtender.Utilities.Types
 
             return source switch
             {
-                IList<T> list => list.GetRandomOr(alternate),
+                IList<T> list => list.GetRandomOrDefault(alternate),
                 IReadOnlyList<T> list => list.Count > 0 ? list[RandomUtilities.NextNonNegative(list.Count - 1)] : alternate(),
                 ICollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : alternate(),
                 IReadOnlyCollection<T> collection => collection.Count > 0 ? collection.ElementAt(RandomUtilities.NextNonNegative(collection.Count - 1)) : alternate(),
-                _ => source.ToList().GetRandomOr(alternate)
+                _ => source.ToList().GetRandomOrDefault(alternate)
             };
         }
 
@@ -419,8 +419,167 @@ namespace NetExtender.Utilities.Types
                 _ => source.ToList().GetRandomOrDefault()
             };
         }
+
+#if !NET6_0_OR_GREATER
+        public static T SingleOrDefault<T>(this IEnumerable<T> source, T alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                return alternate;
+            }
+
+            T item = enumerator.Current;
+
+            if (enumerator.MoveNext())
+            {
+                throw new InvalidOperationException();
+            }
+
+            return item;
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public static T SingleOrDefault<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, T alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                return alternate;
+            }
+
+            do
+            {
+                T item = enumerator.Current;
+
+                if (!predicate(item))
+                {
+                    continue;
+                }
+
+                while (enumerator.MoveNext())
+                {
+                    if (predicate(enumerator.Current))
+                    {
+                        throw new InvalidOperationException();
+                    }
+                }
+
+                return item;
+
+            } while (enumerator.MoveNext());
+            
+            return alternate;
+        }
+#endif
         
-        public static T FirstOr<T>(this IEnumerable<T> source, T alternate)
+        public static T SingleOrDefault<T>(this IEnumerable<T> source, Func<T> alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                return alternate.Invoke();
+            }
+
+            T item = enumerator.Current;
+
+            if (enumerator.MoveNext())
+            {
+                throw new InvalidOperationException();
+            }
+
+            return item;
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public static T SingleOrDefault<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, Func<T> alternate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                return alternate.Invoke();
+            }
+
+            do
+            {
+                T item = enumerator.Current;
+
+                if (!predicate(item))
+                {
+                    continue;
+                }
+
+                while (enumerator.MoveNext())
+                {
+                    if (predicate(enumerator.Current))
+                    {
+                        throw new InvalidOperationException();
+                    }
+                }
+
+                return item;
+
+            } while (enumerator.MoveNext());
+            
+            return alternate.Invoke();
+        }
+        
+#if !NET6_0_OR_GREATER
+        public static T FirstOrDefault<T>(this IEnumerable<T> source, T alternate)
         {
             if (source is null)
             {
@@ -435,7 +594,7 @@ namespace NetExtender.Utilities.Types
             return alternate;
         }
 
-        public static T FirstOr<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, T alternate)
+        public static T FirstOrDefault<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, T alternate)
         {
             if (source is null)
             {
@@ -454,8 +613,9 @@ namespace NetExtender.Utilities.Types
 
             return alternate;
         }
+#endif
 
-        public static T FirstOr<T>(this IEnumerable<T> source, Func<T> alternate)
+        public static T FirstOrDefault<T>(this IEnumerable<T> source, Func<T> alternate)
         {
             if (source is null)
             {
@@ -475,7 +635,7 @@ namespace NetExtender.Utilities.Types
             return alternate.Invoke();
         }
 
-        public static T FirstOr<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, Func<T> alternate)
+        public static T FirstOrDefault<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, Func<T> alternate)
         {
             if (source is null)
             {
@@ -500,17 +660,18 @@ namespace NetExtender.Utilities.Types
             return alternate.Invoke();
         }
 
-        public static T LastOr<T>(this IEnumerable<T> source, T alternate)
+#if !NET6_0_OR_GREATER
+        public static T LastOrDefault<T>(this IEnumerable<T> source, T alternate)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return FirstOr(source.Reverse(), alternate);
+            return source.Reverse().FirstOrDefault(alternate);
         }
 
-        public static T LastOr<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, T alternate)
+        public static T LastOrDefault<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, T alternate)
         {
             if (source is null)
             {
@@ -522,10 +683,11 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return FirstOr(source.Reverse(), predicate, alternate);
+            return source.Reverse().FirstOrDefault(predicate, alternate);
         }
+#endif
 
-        public static T LastOr<T>(this IEnumerable<T> source, Func<T> alternate)
+        public static T LastOrDefault<T>(this IEnumerable<T> source, Func<T> alternate)
         {
             if (source is null)
             {
@@ -537,10 +699,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return FirstOr(source.Reverse(), alternate);
+            return FirstOrDefault(source.Reverse(), alternate);
         }
 
-        public static T LastOr<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, Func<T> alternate)
+        public static T LastOrDefault<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, Func<T> alternate)
         {
             if (source is null)
             {
@@ -557,7 +719,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return FirstOr(source.Reverse(), predicate, alternate);
+            return FirstOrDefault(source.Reverse(), predicate, alternate);
         }
 
         public static Boolean TryGetFirst<T>(this IEnumerable<T> source, [MaybeNullWhen(false)] out T result)
@@ -676,27 +838,27 @@ namespace NetExtender.Utilities.Types
             return source.OrderByDescending(comparer).Take(count);
         }
 
-        public static T MaxOr<T>(this IEnumerable<T> source, T alternate)
+        public static T MaxOrDefault<T>(this IEnumerable<T> source, T alternate)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
             
-            return source.OrderByDescending().FirstOr(alternate);
+            return source.OrderByDescending().FirstOrDefault(alternate);
         }
 
-        public static T MaxOr<T>(this IEnumerable<T> source, T alternate, IComparer<T>? comparer)
+        public static T MaxOrDefault<T>(this IEnumerable<T> source, T alternate, IComparer<T>? comparer)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
             
-            return source.OrderByDescending(comparer).FirstOr(alternate);
+            return source.OrderByDescending(comparer).FirstOrDefault(alternate);
         }
         
-        public static T MaxOr<T>(this IEnumerable<T> source, Func<T> alternate)
+        public static T MaxOrDefault<T>(this IEnumerable<T> source, Func<T> alternate)
         {
             if (source is null)
             {
@@ -708,10 +870,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return source.OrderByDescending().FirstOr(alternate);
+            return source.OrderByDescending().FirstOrDefault(alternate);
         }
         
-        public static T MaxOr<T>(this IEnumerable<T> source, Func<T> alternate, IComparer<T>? comparer)
+        public static T MaxOrDefault<T>(this IEnumerable<T> source, Func<T> alternate, IComparer<T>? comparer)
         {
             if (source is null)
             {
@@ -723,7 +885,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return source.OrderByDescending(comparer).FirstOr(alternate);
+            return source.OrderByDescending(comparer).FirstOrDefault(alternate);
         }
         
         public static T? MaxOrDefault<T>(this IEnumerable<T> source)
@@ -746,6 +908,7 @@ namespace NetExtender.Utilities.Types
             return source.OrderByDescending(comparer).FirstOrDefault();
         }
         
+#if !NET6_0_OR_GREATER
         public static T MaxBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
         {
             if (source is null)
@@ -775,8 +938,9 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending(selector, comparer).First();
         }
+#endif
         
-        public static T MaxByOr<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, T alternate)
+        public static T MaxByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, T alternate)
         {
             if (source is null)
             {
@@ -788,10 +952,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.OrderByDescending(selector).FirstOr(alternate);
+            return source.OrderByDescending(selector).FirstOrDefault(alternate);
         }
 
-        public static T MaxByOr<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, T alternate, IComparer<TKey>? comparer)
+        public static T MaxByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, T alternate, IComparer<TKey>? comparer)
         {
             if (source is null)
             {
@@ -803,10 +967,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.OrderByDescending(selector, comparer).FirstOr(alternate);
+            return source.OrderByDescending(selector, comparer).FirstOrDefault(alternate);
         }
         
-        public static T MaxByOr<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<T> alternate)
+        public static T MaxByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<T> alternate)
         {
             if (source is null)
             {
@@ -823,10 +987,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return source.OrderByDescending(selector).FirstOr(alternate);
+            return source.OrderByDescending(selector).FirstOrDefault(alternate);
         }
 
-        public static T MaxByOr<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<T> alternate, IComparer<TKey>? comparer)
+        public static T MaxByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<T> alternate, IComparer<TKey>? comparer)
         {
             if (source is null)
             {
@@ -843,7 +1007,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return source.OrderByDescending(selector, comparer).FirstOr(alternate);
+            return source.OrderByDescending(selector, comparer).FirstOrDefault(alternate);
         }
         
         public static T? MaxByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
@@ -936,27 +1100,27 @@ namespace NetExtender.Utilities.Types
             return source.OrderBy(comparer).Take(count);
         }
         
-        public static T MinOr<T>(this IEnumerable<T> source, T alternate)
+        public static T MinOrDefault<T>(this IEnumerable<T> source, T alternate)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.OrderBy().FirstOr(alternate);
+            return source.OrderBy().FirstOrDefault(alternate);
         }
         
-        public static T MinOr<T>(this IEnumerable<T> source, T alternate, IComparer<T>? comparer)
+        public static T MinOrDefault<T>(this IEnumerable<T> source, T alternate, IComparer<T>? comparer)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.OrderBy(comparer).FirstOr(alternate);
+            return source.OrderBy(comparer).FirstOrDefault(alternate);
         }
 
-        public static T MinOr<T>(this IEnumerable<T> source, Func<T> alternate)
+        public static T MinOrDefault<T>(this IEnumerable<T> source, Func<T> alternate)
         {
             if (source is null)
             {
@@ -968,10 +1132,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return source.OrderBy().FirstOr(alternate);
+            return source.OrderBy().FirstOrDefault(alternate);
         }
 
-        public static T MinOr<T>(this IEnumerable<T> source, Func<T> alternate, IComparer<T>? comparer)
+        public static T MinOrDefault<T>(this IEnumerable<T> source, Func<T> alternate, IComparer<T>? comparer)
         {
             if (source is null)
             {
@@ -983,7 +1147,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return source.OrderBy(comparer).FirstOr(alternate);
+            return source.OrderBy(comparer).FirstOrDefault(alternate);
         }
         
         public static T? MinOrDefault<T>(this IEnumerable<T> source)
@@ -1006,6 +1170,7 @@ namespace NetExtender.Utilities.Types
             return source.OrderBy(comparer).FirstOrDefault();
         }
 
+#if !NET6_0_OR_GREATER
         public static T MinBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
         {
             if (source is null)
@@ -1035,8 +1200,9 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy(selector, comparer).First();
         }
+#endif
 
-        public static T MinByOr<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, T alternate)
+        public static T MinByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, T alternate)
         {
             if (source is null)
             {
@@ -1048,10 +1214,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.OrderBy(selector).FirstOr(alternate);
+            return source.OrderBy(selector).FirstOrDefault(alternate);
         }
 
-        public static T MinByOr<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, T alternate, IComparer<TKey>? comparer)
+        public static T MinByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, T alternate, IComparer<TKey>? comparer)
         {
             if (source is null)
             {
@@ -1063,10 +1229,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.OrderBy(selector, comparer).FirstOr(alternate);
+            return source.OrderBy(selector, comparer).FirstOrDefault(alternate);
         }
 
-        public static T MinByOr<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<T> alternate)
+        public static T MinByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<T> alternate)
         {
             if (source is null)
             {
@@ -1083,10 +1249,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return source.OrderBy(selector).FirstOr(alternate);
+            return source.OrderBy(selector).FirstOrDefault(alternate);
         }
 
-        public static T MinByOr<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<T> alternate, IComparer<TKey>? comparer)
+        public static T MinByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<T> alternate, IComparer<TKey>? comparer)
         {
             if (source is null)
             {
@@ -1103,7 +1269,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return source.OrderBy(selector, comparer).FirstOr(alternate);
+            return source.OrderBy(selector, comparer).FirstOrDefault(alternate);
         }
 
         public static T? MinByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
@@ -1210,12 +1376,12 @@ namespace NetExtender.Utilities.Types
             return (min, max);
         }
 
-        public static (T Min, T Max) MinMaxOr<T>(this IEnumerable<T> source, T alternate)
+        public static (T Min, T Max) MinMaxOrDefault<T>(this IEnumerable<T> source, T alternate)
         {
-            return MinMaxOr(source, alternate, null);
+            return MinMaxOrDefault(source, alternate, null);
         }
 
-        public static (T Min, T Max) MinMaxOr<T>(this IEnumerable<T> source, T alternate, IComparer<T>? comparer)
+        public static (T Min, T Max) MinMaxOrDefault<T>(this IEnumerable<T> source, T alternate, IComparer<T>? comparer)
         {
             if (source is null)
             {
@@ -1254,12 +1420,12 @@ namespace NetExtender.Utilities.Types
             return (min, max);
         }
 
-        public static (T Min, T Max) MinMaxOr<T>(this IEnumerable<T> source, Func<T> alternate)
+        public static (T Min, T Max) MinMaxOrDefault<T>(this IEnumerable<T> source, Func<T> alternate)
         {
-            return MinMaxOr(source, alternate, null);
+            return MinMaxOrDefault(source, alternate, null);
         }
 
-        public static (T Min, T Max) MinMaxOr<T>(this IEnumerable<T> source, Func<T> alternate, IComparer<T>? comparer)
+        public static (T Min, T Max) MinMaxOrDefault<T>(this IEnumerable<T> source, Func<T> alternate, IComparer<T>? comparer)
         {
             if (source is null)
             {
@@ -1308,7 +1474,7 @@ namespace NetExtender.Utilities.Types
 
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this IEnumerable<T> source)
         {
-            return MinMaxOrDefault(source, null);
+            return MinMaxOrDefault(source, (IComparer<T>?) null);
         }
 
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this IEnumerable<T> source, IComparer<T>? comparer)
@@ -2488,6 +2654,8 @@ namespace NetExtender.Utilities.Types
             
             Int32 count = 0;
             Int32 counter = 0;
+            
+            //TODO: check algorithm
 
             do
             {
@@ -2595,6 +2763,7 @@ namespace NetExtender.Utilities.Types
             Int64 count = 0;
             Int64 counter = 0;
 
+            //TODO: check algorithm
             do
             {
                 T item = enumerator.Current;
@@ -2609,6 +2778,7 @@ namespace NetExtender.Utilities.Types
                 if (!enumerator.MoveNext())
                 {
                     count += counter;
+                    // ReSharper disable once ConditionIsAlwaysTrueOrFalse
                     if (count % size > 0)
                     {
                         callback.Invoke(count);

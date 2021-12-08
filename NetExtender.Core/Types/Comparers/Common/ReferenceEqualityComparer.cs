@@ -1,7 +1,7 @@
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-#if !NET5_0
+#if !NET5_0_OR_GREATER
 namespace NetExtender.Comparers.Common
 {
     /// <summary>

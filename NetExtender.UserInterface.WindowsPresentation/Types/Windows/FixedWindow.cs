@@ -101,7 +101,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             SizeChangeToggle?.Invoke(this, args);
         }
 
-        private void OnClosing(Object sender, CancelEventArgs args)
+        private void OnClosing(Object? sender, CancelEventArgs args)
         {
             if (args.Cancel)
             {

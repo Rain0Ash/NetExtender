@@ -305,7 +305,9 @@ namespace NetExtender.Utilities.Windows.IO
 
                 using Process? process = Process.Start("notepad.exe", info.FullName);
 
-                if (process is null!)
+                //TODO: CS8598
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                if (process is null)
                 {
                     return null;
                 }

@@ -196,9 +196,9 @@ namespace NetExtender.Types.Network.UserAgents
 
         public virtual IUserAgentBuilder AddCultures(CultureInfo culture)
         {
-            if (culture is null!)
+            if (culture is null)
             {
-                return this;
+                throw new ArgumentNullException(nameof(culture));
             }
 
             Cultures.Add(culture);

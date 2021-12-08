@@ -972,7 +972,8 @@ namespace NetExtender.Utilities.Types
                 yield return item;
             }
         }
-
+        
+#if !NET6_0_OR_GREATER
         /// <summary>
         /// Returns distinct elements from a sequence using the provided value selector for equality comparison.
         /// </summary>
@@ -1015,6 +1016,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
+#endif
 
         public static IEnumerable<T> DistinctCount<T>(this IEnumerable<T> source, Int32 count)
         {

@@ -16,11 +16,11 @@ namespace NetExtender.Types.Timers
         [return: NotNullIfNotNull("wrapper")]
         public static explicit operator Timer?(TimerThreadingWrapper? wrapper)
         {
-            return wrapper?._timer;
+            return wrapper?.Timer;
         }
-        
-        private readonly Timer _timer;
-        
+
+        private Timer Timer { get; }
+
         public Boolean IsStarted { get; private set; }
         
         public event TickHandler Tick = null!;
@@ -45,7 +45,7 @@ namespace NetExtender.Types.Timers
 
         public TimerThreadingWrapper()
         {
-            _timer = new Timer(OnTick);
+            Timer = new Timer(OnTick);
         }
 
         public TimerThreadingWrapper(Int32 interval)
@@ -62,7 +62,7 @@ namespace NetExtender.Types.Timers
         {
             interval = TimerUtilities.CheckInterval(interval);
             
-            _timer = new Timer(OnTick);
+            Timer = new Timer(OnTick);
             Interval = interval;
         }
 
@@ -73,30 +73,30 @@ namespace NetExtender.Types.Timers
                 return;
             }
             
-            Tick?.Invoke(_timer, new TimeEventArgs());
-            _timer.Change(TimeSpan.Zero, Interval);
+            Tick?.Invoke(Timer, new TimeEventArgs());
+            Timer.Change(TimeSpan.Zero, Interval);
         }
         
         public void Start()
         {
-            _timer.Change(TimeSpan.Zero, Interval);
+            Timer.Change(TimeSpan.Zero, Interval);
             IsStarted = true;
         }
 
         public void Stop()
         {
-            _timer.Stop();
+            Timer.Stop();
             IsStarted = false;
         }
 
         public void Dispose()
         {
-            _timer.Dispose();
+            Timer.Dispose();
         }
         
         public ValueTask DisposeAsync()
         {
-            return _timer.DisposeAsync();
+            return Timer.DisposeAsync();
         }
     }
 }

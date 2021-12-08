@@ -1167,7 +1167,7 @@ namespace NetExtender.Utilities.Types
         /// <param name="source">source</param>
         /// <param name="alternate">returned item</param>
         /// <typeparam name="T"></typeparam>
-        public static IEnumerable<T> WhereOr<T>(this IEnumerable<T> source, T alternate)
+        public static IEnumerable<T> WhereOrDefault<T>(this IEnumerable<T> source, T alternate)
         {
             if (source is null)
             {
@@ -1196,7 +1196,7 @@ namespace NetExtender.Utilities.Types
         /// <param name="predicate">predicate</param>
         /// <param name="alternate">returned item</param>
         /// <typeparam name="T"></typeparam>
-        public static IEnumerable<T> WhereOr<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, T alternate)
+        public static IEnumerable<T> WhereOrDefault<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, T alternate)
         {
             if (source is null)
             {
@@ -1208,7 +1208,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(predicate));
             }
 
-            return source.Where(predicate).WhereOr(alternate);
+            return source.Where(predicate).WhereOrDefault(alternate);
         }
 
         /// <summary>
@@ -1236,17 +1236,17 @@ namespace NetExtender.Utilities.Types
             }
         }
         
-        public static IEnumerable<T> NotEmptyOr<T>(this IEnumerable<T>? source, params T[] alternate)
+        public static IEnumerable<T> NotEmptyOrDefault<T>(this IEnumerable<T>? source, params T[] alternate)
         {
             if (alternate is null)
             {
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return alternate.Length > 0 ? NotEmptyOr(source, (IEnumerable<T>) alternate) : source ?? Array.Empty<T>();
+            return alternate.Length > 0 ? NotEmptyOrDefault(source, (IEnumerable<T>) alternate) : source ?? Array.Empty<T>();
         }
 
-        public static IEnumerable<T> NotEmptyOr<T>(this IEnumerable<T>? source, IEnumerable<T> alternate)
+        public static IEnumerable<T> NotEmptyOrDefault<T>(this IEnumerable<T>? source, IEnumerable<T> alternate)
         {
             if (alternate is null)
             {
@@ -1443,7 +1443,8 @@ namespace NetExtender.Utilities.Types
 
             return accumulate;
         }
-
+        
+#if !NET6_0_OR_GREATER
         /// <summary>
         /// Combines two Enumerable objects into a sequence of Tuples containing each element
         /// of the source Enumerable in the first position with the element that has the same
@@ -1482,6 +1483,7 @@ namespace NetExtender.Utilities.Types
                 yield return (enumerator1.Current, enumerator2.Current, enumerator3.Current);
             }
         }
+#endif
 
         /// <summary>
         /// Combines two Enumerable objects into a sequence of Tuples containing each element
@@ -1623,6 +1625,7 @@ namespace NetExtender.Utilities.Types
             }
         }
         
+#if !NET6_0_OR_GREATER
         /// <summary>
         /// Splits the given sequence into chunks of the given size.
         /// If the sequence length isn't evenly divisible by the chunk size,
@@ -1685,5 +1688,6 @@ namespace NetExtender.Utilities.Types
 
             yield return result;
         }
+#endif
     }
 }

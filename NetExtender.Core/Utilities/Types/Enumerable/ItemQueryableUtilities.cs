@@ -10,7 +10,7 @@ namespace NetExtender.Utilities.Types
 {
     public static partial class QueryableUtilities
     {
-        public static T FirstOr<T>(this IQueryable<T> source, T alternate)
+        public static T FirstOrDefault<T>(this IQueryable<T> source, T alternate)
         {
             if (source is null)
             {
@@ -25,7 +25,7 @@ namespace NetExtender.Utilities.Types
             return alternate;
         }
 
-        public static T FirstOr<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, T alternate)
+        public static T FirstOrDefault<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, T alternate)
         {
             if (source is null)
             {
@@ -45,7 +45,7 @@ namespace NetExtender.Utilities.Types
             return alternate;
         }
 
-        public static T FirstOr<T>(this IQueryable<T> source, Func<T> alternate)
+        public static T FirstOrDefault<T>(this IQueryable<T> source, Func<T> alternate)
         {
             if (source is null)
             {
@@ -65,7 +65,7 @@ namespace NetExtender.Utilities.Types
             return alternate.Invoke();
         }
 
-        public static T FirstOr<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, Func<T> alternate)
+        public static T FirstOrDefault<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, Func<T> alternate)
         {
             if (source is null)
             {
@@ -90,7 +90,7 @@ namespace NetExtender.Utilities.Types
             return alternate.Invoke();
         }
 
-        public static T LastOr<T>(this IQueryable<T> source, T alternate)
+        public static T LastOrDefault<T>(this IQueryable<T> source, T alternate)
         {
             if (source is null)
             {
@@ -105,7 +105,7 @@ namespace NetExtender.Utilities.Types
             return alternate;
         }
 
-        public static T LastOr<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, T alternate)
+        public static T LastOrDefault<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, T alternate)
         {
             if (source is null)
             {
@@ -125,7 +125,7 @@ namespace NetExtender.Utilities.Types
             return alternate;
         }
 
-        public static T LastOr<T>(this IQueryable<T> source, Func<T> alternate)
+        public static T LastOrDefault<T>(this IQueryable<T> source, Func<T> alternate)
         {
             if (source is null)
             {
@@ -145,7 +145,7 @@ namespace NetExtender.Utilities.Types
             return alternate.Invoke();
         }
 
-        public static T LastOr<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, Func<T> alternate)
+        public static T LastOrDefault<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, Func<T> alternate)
         {
             if (source is null)
             {
@@ -199,27 +199,27 @@ namespace NetExtender.Utilities.Types
             return source.OrderByDescending(comparer).Take(count);
         }
 
-        public static T MaxOr<T>(this IQueryable<T> source, T alternate)
+        public static T MaxOrDefault<T>(this IQueryable<T> source, T alternate)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
             
-            return source.OrderByDescending().FirstOr(alternate);
+            return source.OrderByDescending().FirstOrDefault(alternate);
         }
 
-        public static T MaxOr<T>(this IQueryable<T> source, T alternate, IComparer<T>? comparer)
+        public static T MaxOrDefault<T>(this IQueryable<T> source, T alternate, IComparer<T>? comparer)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
             
-            return source.OrderByDescending(comparer).FirstOr(alternate);
+            return source.OrderByDescending(comparer).FirstOrDefault(alternate);
         }
         
-        public static T MaxOr<T>(this IQueryable<T> source, Func<T> alternate)
+        public static T MaxOrDefault<T>(this IQueryable<T> source, Func<T> alternate)
         {
             if (source is null)
             {
@@ -231,10 +231,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return source.OrderByDescending().FirstOr(alternate);
+            return source.OrderByDescending().FirstOrDefault(alternate);
         }
         
-        public static T MaxOr<T>(this IQueryable<T> source, Func<T> alternate, IComparer<T>? comparer)
+        public static T MaxOrDefault<T>(this IQueryable<T> source, Func<T> alternate, IComparer<T>? comparer)
         {
             if (source is null)
             {
@@ -246,7 +246,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return source.OrderByDescending(comparer).FirstOr(alternate);
+            return source.OrderByDescending(comparer).FirstOrDefault(alternate);
         }
         
         public static T? MaxOrDefault<T>(this IQueryable<T> source)
@@ -299,7 +299,7 @@ namespace NetExtender.Utilities.Types
             return source.OrderByDescending(selector, comparer).First();
         }
         
-        public static T MaxByOr<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector, T alternate)
+        public static T MaxByOrDefault<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector, T alternate)
         {
             if (source is null)
             {
@@ -311,10 +311,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.OrderByDescending(selector).FirstOr(alternate);
+            return source.OrderByDescending(selector).FirstOrDefault(alternate);
         }
 
-        public static T MaxByOr<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector, T alternate, IComparer<TKey>? comparer)
+        public static T MaxByOrDefault<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector, T alternate, IComparer<TKey>? comparer)
         {
             if (source is null)
             {
@@ -326,10 +326,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.OrderByDescending(selector, comparer).FirstOr(alternate);
+            return source.OrderByDescending(selector, comparer).FirstOrDefault(alternate);
         }
         
-        public static T MaxByOr<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector, Func<T> alternate)
+        public static T MaxByOrDefault<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector, Func<T> alternate)
         {
             if (source is null)
             {
@@ -346,10 +346,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return source.OrderByDescending(selector).FirstOr(alternate);
+            return source.OrderByDescending(selector).FirstOrDefault(alternate);
         }
 
-        public static T MaxByOr<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector, Func<T> alternate, IComparer<TKey>? comparer)
+        public static T MaxByOrDefault<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector, Func<T> alternate, IComparer<TKey>? comparer)
         {
             if (source is null)
             {
@@ -366,7 +366,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return source.OrderByDescending(selector, comparer).FirstOr(alternate);
+            return source.OrderByDescending(selector, comparer).FirstOrDefault(alternate);
         }
         
         public static T? MaxByOrDefault<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector)
@@ -459,27 +459,27 @@ namespace NetExtender.Utilities.Types
             return source.OrderBy(comparer).Take(count);
         }
         
-        public static T MinOr<T>(this IQueryable<T> source, T alternate)
+        public static T MinOrDefault<T>(this IQueryable<T> source, T alternate)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.OrderBy().FirstOr(alternate);
+            return source.OrderBy().FirstOrDefault(alternate);
         }
         
-        public static T MinOr<T>(this IQueryable<T> source, T alternate, IComparer<T>? comparer)
+        public static T MinOrDefault<T>(this IQueryable<T> source, T alternate, IComparer<T>? comparer)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.OrderBy(comparer).FirstOr(alternate);
+            return source.OrderBy(comparer).FirstOrDefault(alternate);
         }
 
-        public static T MinOr<T>(this IQueryable<T> source, Func<T> alternate)
+        public static T MinOrDefault<T>(this IQueryable<T> source, Func<T> alternate)
         {
             if (source is null)
             {
@@ -491,10 +491,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return source.OrderBy().FirstOr(alternate);
+            return source.OrderBy().FirstOrDefault(alternate);
         }
 
-        public static T MinOr<T>(this IQueryable<T> source, Func<T> alternate, IComparer<T>? comparer)
+        public static T MinOrDefault<T>(this IQueryable<T> source, Func<T> alternate, IComparer<T>? comparer)
         {
             if (source is null)
             {
@@ -506,7 +506,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return source.OrderBy(comparer).FirstOr(alternate);
+            return source.OrderBy(comparer).FirstOrDefault(alternate);
         }
         
         public static T? MinOrDefault<T>(this IQueryable<T> source)
@@ -559,7 +559,7 @@ namespace NetExtender.Utilities.Types
             return source.OrderBy(selector, comparer).First();
         }
 
-        public static T MinByOr<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector, T alternate)
+        public static T MinByOrDefault<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector, T alternate)
         {
             if (source is null)
             {
@@ -571,10 +571,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.OrderBy(selector).FirstOr(alternate);
+            return source.OrderBy(selector).FirstOrDefault(alternate);
         }
 
-        public static T MinByOr<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector, T alternate, IComparer<TKey>? comparer)
+        public static T MinByOrDefault<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector, T alternate, IComparer<TKey>? comparer)
         {
             if (source is null)
             {
@@ -586,10 +586,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return source.OrderBy(selector, comparer).FirstOr(alternate);
+            return source.OrderBy(selector, comparer).FirstOrDefault(alternate);
         }
 
-        public static T MinByOr<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector, Func<T> alternate)
+        public static T MinByOrDefault<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector, Func<T> alternate)
         {
             if (source is null)
             {
@@ -606,10 +606,10 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return source.OrderBy(selector).FirstOr(alternate);
+            return source.OrderBy(selector).FirstOrDefault(alternate);
         }
 
-        public static T MinByOr<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector, Func<T> alternate, IComparer<TKey>? comparer)
+        public static T MinByOrDefault<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector, Func<T> alternate, IComparer<TKey>? comparer)
         {
             if (source is null)
             {
@@ -626,7 +626,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(alternate));
             }
 
-            return source.OrderBy(selector, comparer).FirstOr(alternate);
+            return source.OrderBy(selector, comparer).FirstOrDefault(alternate);
         }
 
         public static T? MinByOrDefault<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector)

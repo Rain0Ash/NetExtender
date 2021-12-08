@@ -138,7 +138,8 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
             
-            return TryGetValue(key, out ImmutableHashSet<TValue>? result) && result is not null! && result.Contains(value);
+            //TODO: CS8598
+            return TryGetValue(key, out ImmutableHashSet<TValue>? result) && /*result is not null! && */result.Contains(value);
         }
 
         public void Add(TKey key, TValue value)
@@ -158,7 +159,8 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
 
-            if (!TryGetValue(key, out ImmutableHashSet<TValue>? result) || result is null!)
+            //TODO: CS8598
+            if (!TryGetValue(key, out ImmutableHashSet<TValue>? result)/* || result is null!*/)
             {
                 this[key] = ImmutableHashSet<TValue>.Empty.Add(value);
                 return true;
@@ -197,7 +199,8 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
 
-            if (!TryGetValue(key, out ImmutableHashSet<TValue>? result) || result is null! || !result.Contains(value))
+            //TODO: CS8598
+            if (!TryGetValue(key, out ImmutableHashSet<TValue>? result) || /*result is null! || */!result.Contains(value))
             {
                 return false;
             }
@@ -255,7 +258,8 @@ namespace NetExtender.Types.Dictionaries
         {
             foreach ((TKey key, ImmutableHashSet<TValue> value) in this)
             {
-                if (value is null! || value.IsEmpty)
+                //TODO: CS8598
+                if (/*value is null! || */value.IsEmpty)
                 {
                     continue;
                 }

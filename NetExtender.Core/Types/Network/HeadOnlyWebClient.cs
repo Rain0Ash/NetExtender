@@ -10,8 +10,11 @@ namespace NetExtender.Types.Network
 {
     public class HeadOnlyWebClient : WebClient
     {
-        public Boolean HeadOnly { get; set; }
+        public Boolean HeadOnly { get; set; } = true;
         
+#if NET6_0_OR_GREATER
+        [Obsolete]
+#endif
         public HeadOnlyWebClient()
         {
             Encoding = Encoding.UTF8;

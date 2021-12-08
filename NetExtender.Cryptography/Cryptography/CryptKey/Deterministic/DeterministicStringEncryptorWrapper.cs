@@ -108,7 +108,9 @@ namespace NetExtender.Crypto.CryptKey.Deterministic
                 return Encryptor.Encrypt(value);
             }
 
-            return value is not null! ? Dictionary.GetOrAdd(value, Encryptor.Encrypt) : EncryptNullInternal();
+            //TODO: CS8598
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            return value is not null ? Dictionary.GetOrAdd(value, Encryptor.Encrypt) : EncryptNullInternal();
         }
 
         public String? EncryptString(String value)
@@ -118,14 +120,21 @@ namespace NetExtender.Crypto.CryptKey.Deterministic
                 return Encryptor.Encrypt(value);
             }
             
-            return value is not null! ? Dictionary.GetOrAdd(value, Encryptor.EncryptString) : EncryptNullStringInternal();
+            //TODO: CS8598
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+            return value is not null ? Dictionary.GetOrAdd(value, Encryptor.EncryptString) : EncryptNullStringInternal();
         }
 
         public IEnumerable<String?> Encrypt(IEnumerable<String> source)
         {
-            if (source is null! || Dictionary is null ||  Encryptor.IsDeterministic)
+            if (source is null)
             {
-                return Encryptor.Encrypt(source!);
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (Dictionary is null ||  Encryptor.IsDeterministic)
+            {
+                return Encryptor.Encrypt(source);
             }
 
             return source.Select(Encrypt).ToArray();
@@ -133,9 +142,14 @@ namespace NetExtender.Crypto.CryptKey.Deterministic
 
         public IEnumerable<String?> EncryptString(IEnumerable<String> source)
         {
-            if (source is null! || Dictionary is null || Encryptor.IsDeterministic)
+            if (source is null)
             {
-                return Encryptor.Encrypt(source!);
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (Dictionary is null || Encryptor.IsDeterministic)
+            {
+                return Encryptor.Encrypt(source);
             }
 
             return source.Select(EncryptString).ToArray();

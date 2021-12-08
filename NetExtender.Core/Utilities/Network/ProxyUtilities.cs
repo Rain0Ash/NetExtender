@@ -24,6 +24,7 @@ namespace NetExtender.Utilities.Network
 
             const String address = "https://google.com";
 
+#pragma warning disable CS0618
             HttpWebRequest request = (HttpWebRequest) WebRequest.Create(address);
             request.Proxy = proxy;
             request.UserAgent = UserAgentUtilities.CurrentSessionUserAgent;
@@ -45,6 +46,8 @@ namespace NetExtender.Utilities.Network
             {
                 // ignored
             }
+            
+#pragma warning restore CS0618
 
             return HttpStatusCode.ServiceUnavailable;
         }

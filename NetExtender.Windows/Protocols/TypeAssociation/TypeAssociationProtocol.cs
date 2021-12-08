@@ -414,8 +414,8 @@ namespace NetExtender.Windows.Protocols
                 Byte[] infobytes = Encoding.Unicode.GetBytes(info);
                 Array.Resize(ref infobytes, infobytes.Length + 2);
 
-                MD5CryptoServiceProvider md5provider = new MD5CryptoServiceProvider();
-                Byte[] md5bytes = md5provider.ComputeHash(infobytes);
+                MD5 provider = MD5.Create();
+                Byte[] md5bytes = provider.ComputeHash(infobytes);
 
                 Int32 infolength = info.Length * 2 + 2;
                 Int64 length = ((infolength & 4) <= 1 ? 1 : 0) + GetShiftRight(infolength, 2) - 1;

@@ -20,7 +20,7 @@ namespace NetExtender.Utilities.Types
             return collection.Count > 0 ? collection[RandomUtilities.NextNonNegative(collection.Count - 1)] : throw new InvalidOperationException();
         }
         
-        public static T GetRandomOr<T>(this IList<T> collection, T alternate)
+        public static T GetRandomOrDefault<T>(this IList<T> collection, T alternate)
         {
             if (collection is null)
             {

@@ -245,7 +245,7 @@ namespace NetExtender.NAudio.Types.Playlist
             }
             set
             {
-                if (value is null!)
+                if (value is null)
                 {
                     throw new ArgumentNullException(nameof(value));
                 }

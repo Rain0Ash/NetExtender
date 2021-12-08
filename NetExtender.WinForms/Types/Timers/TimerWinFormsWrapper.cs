@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using NetExtender.Times.Timers.Interfaces;
@@ -12,27 +13,29 @@ namespace NetExtender.Types.Timers
 {
     public sealed class TimerWinFormsWrapper : ITimer
     {
-        public static implicit operator TimerWinFormsWrapper(Timer timer)
+        [return: NotNullIfNotNull("timer")]
+        public static implicit operator TimerWinFormsWrapper?(Timer? timer)
         {
-            return new TimerWinFormsWrapper(timer);
+            return timer is not null ? new TimerWinFormsWrapper(timer) : null;
         }
         
-        public static implicit operator Timer(TimerWinFormsWrapper wrapper)
+        [return: NotNullIfNotNull("wrapper")]
+        public static implicit operator Timer?(TimerWinFormsWrapper? wrapper)
         {
-            return wrapper._timer;
+            return wrapper?.Timer;
         }
-        
-        private readonly Timer _timer;
-        
+
+        private Timer Timer { get; }
+
         public Boolean IsStarted
         {
             get
             {
-                return _timer.Enabled;
+                return Timer.Enabled;
             }
             set
             {
-                _timer.Enabled = value;
+                Timer.Enabled = value;
             }
         }
 
@@ -40,11 +43,11 @@ namespace NetExtender.Types.Timers
         {
             get
             {
-                return TimeSpan.FromMilliseconds(_timer.Interval);
+                return TimeSpan.FromMilliseconds(Timer.Interval);
             }
             set
             {
-                _timer.Interval = TimerUtilities.ToInterval(value);
+                Timer.Interval = TimerUtilities.ToInterval(value);
             }
         }
 
@@ -67,8 +70,8 @@ namespace NetExtender.Types.Timers
 
         public TimerWinFormsWrapper(Timer timer)
         {
-            _timer = timer ?? throw new ArgumentNullException(nameof(timer));
-            _timer.Tick += OnTick;
+            Timer = timer ?? throw new ArgumentNullException(nameof(timer));
+            Timer.Tick += OnTick;
         }
 
         private void OnTick(Object? sender, EventArgs _)
@@ -78,18 +81,18 @@ namespace NetExtender.Types.Timers
 
         public void Start()
         {
-            _timer.Start();
+            Timer.Start();
         }
 
         public void Stop()
         {
-            _timer.Stop();
+            Timer.Stop();
         }
 
         public void Dispose()
         {
-            _timer.Tick -= OnTick;
-            _timer.Dispose();
+            Timer.Tick -= OnTick;
+            Timer.Dispose();
         }
         
         public ValueTask DisposeAsync()
@@ -100,17 +103,17 @@ namespace NetExtender.Types.Timers
 
         public override Boolean Equals(Object? obj)
         {
-            return ReferenceEquals(this, obj) || _timer.Equals(obj);
+            return ReferenceEquals(this, obj) || Timer.Equals(obj);
         }
 
         public override Int32 GetHashCode()
         {
-            return _timer.GetHashCode();
+            return Timer.GetHashCode();
         }
 
         public override String ToString()
         {
-            return _timer.ToString();
+            return Timer.ToString();
         }
     }
 }

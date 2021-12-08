@@ -149,7 +149,9 @@ namespace NetExtender.Windows.Protocols
             {
                 using RegistryKey? registry = Microsoft.Win32.Registry.ClassesRoot.CreateSubKey(Name);
 
-                if (registry is null!)
+                //TODO: CS8598
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                if (registry is null)
                 {
                     return false;
                 }
@@ -160,7 +162,9 @@ namespace NetExtender.Windows.Protocols
 
                 using RegistryKey? icon = registry.CreateSubKey(DefaultIcon);
 
-                if (icon is null!)
+                //TODO: CS8598
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                if (icon is null)
                 {
                     return false;
                 }
@@ -169,7 +173,9 @@ namespace NetExtender.Windows.Protocols
 
                 using RegistryKey? shell = registry.CreateSubKey(ShellSubKey);
                 
-                if (shell is null!)
+                //TODO: CS8598
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                if (shell is null)
                 {
                     return false;
                 }

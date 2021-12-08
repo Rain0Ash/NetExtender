@@ -38,6 +38,18 @@ namespace NetExtender.Utilities.Application
 
         public static DateTime? BuildDateTime { get; }
 
+        public static Int32 ProcessId
+        {
+            get
+            {
+#if NET6_0_OR_GREATER
+                return Environment.ProcessId;
+#else
+                return Process.GetCurrentProcess().Id;
+#endif
+            }
+        }
+
         private static String? GetFriendlyNameInternal()
         {
             try
@@ -97,10 +109,19 @@ namespace NetExtender.Utilities.Application
             return GetPathInternal(FriendlyName ?? GetFriendlyNameInternal(), Directory ?? GetDirectoryInternal());
         }
 
+        // ReSharper disable once UnusedParameter.Local
         private static String? GetPathInternal(String? name, String? directory)
         {
             try
             {
+#if NET6_0_OR_GREATER
+                String? process = Environment.ProcessPath;
+
+                if (process is not null)
+                {
+                    return process;
+                }
+#endif
                 if (name is null)
                 {
                     return null;
@@ -111,9 +132,16 @@ namespace NetExtender.Utilities.Application
                     return name;
                 }
 
-                String file = System.IO.Path.Combine(directory, name + ".exe");
+                String path = System.IO.Path.Combine(directory, name + ".exe");
 
-                return PathUtilities.IsExistAsFile(file) ? file : name;
+                if (PathUtilities.IsExistAsFile(path))
+                {
+                    return path;
+                }
+
+                path = System.IO.Path.Combine(directory, name);
+
+                return PathUtilities.IsExistAsFile(path) ? path : name;
             }
             catch (Exception)
             {

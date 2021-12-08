@@ -3,6 +3,7 @@
 
 using System;
 using System.Threading;
+using System.Threading.Tasks;
 using NetExtender.Times.Timers.Interfaces;
 using NetExtender.Types.Events;
 using NetExtender.Types.Timers;
@@ -49,6 +50,44 @@ namespace NetExtender.Utilities.Types
         public static Int32 ToInterval(TimeSpan interval)
         {
             return ToInterval(interval.TotalMilliseconds);
+        }
+
+        public static ValueTask<Boolean> WaitForNextTickAsync(this ITimer timer)
+        {
+            return WaitForNextTickAsync(timer, CancellationToken.None);
+        }
+
+        public static ValueTask<Boolean> WaitForNextTickAsync(this ITimer timer, CancellationToken token)
+        {
+            if (timer is null)
+            {
+                throw new ArgumentNullException(nameof(timer));
+            }
+
+            if (token.IsCancellationRequested)
+            {
+                return new ValueTask<Boolean>(false);
+            }
+            
+            TaskCompletionSource<Boolean> source = new TaskCompletionSource<Boolean>();
+
+            token.Register(Cancel);
+                
+            void Cancel()
+            {
+                timer.Tick -= Tick;
+                source.SetResult(false);
+            }
+            
+            void Tick(Object? sender, TimeEventArgs args)
+            {
+                timer.Tick -= Tick;
+                source.SetResult(true);
+            }
+
+            timer.Tick += Tick;
+
+            return new ValueTask<Boolean>(source.Task);
         }
 
         public static Boolean Stop(this Timer timer)

@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net5.0-windows</TargetFramework>
+        <TargetFramework>net6.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
 		<OutputType>Library</OutputType>
         <UseWindowsForms>true</UseWindowsForms>
-		<LangVersion>9</LangVersion>
+		<LangVersion>10</LangVersion>
 		<Authors>Rain0Ash</Authors>
         <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
         <Version>0.8.2</Version>

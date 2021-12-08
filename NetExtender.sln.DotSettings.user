@@ -5,6 +5,9 @@
   &lt;Assembly Path="C:\Users\Rain0Ash\.nuget\packages\microsoft.aspnetcore.hosting.windowsservices\5.0.7\lib\net5.0\Microsoft.AspNetCore.Hosting.WindowsServices.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\Rain0Ash\.nuget\packages\system.reactive\5.0.0\lib\net5.0\System.Reactive.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
+	<s:String x:Key="/Default/Environment/Hierarchy/Build/BuildTool/CustomBuildToolPath/@EntryValue">C:\Program Files\dotnet\sdk\6.0.100\MSBuild.dll</s:String>
+	<s:Int64 x:Key="/Default/Environment/Hierarchy/Build/BuildTool/MsbuildVersion/@EntryValue">1114112</s:Int64>
+	<s:Int64 x:Key="/Default/Environment/Hierarchy/Build/SolutionBuilderNext/ParallelProcessesCount2/@EntryValue">12</s:Int64>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=NetExtender_002ELocalization_002EFlags_002FFlags_002FFlagsImages/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/Initialized/@EntryValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=17e27756_002D46a4_002D4fb3_002Dab01_002D94424343c565_0023NetExtender_002EConfiguration_002EProperty/@EntryIndexedValue">True</s:Boolean>

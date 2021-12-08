@@ -28,6 +28,9 @@ namespace NetExtender.Crypto.Random
             Generator = RandomNumberGenerator.Create(generator) ?? throw new InvalidOperationException("Invalid random generator name.");
         }
 
+#if NET6_0_OR_GREATER
+        [Obsolete]
+#endif
         public CryptoRandom(CspParameters? parameters)
         {
             Generator = new RNGCryptoServiceProvider(parameters);

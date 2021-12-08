@@ -330,10 +330,11 @@ namespace NetExtender.Types.Dictionaries
         void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
         {
             (TKey key, TValue value) = item;
-            if (key is null!)
+            //TODO: CS8598
+            /*if (key is null!)
             {
                 return;
-            }
+            }*/
 
             Add(key, value);
         }

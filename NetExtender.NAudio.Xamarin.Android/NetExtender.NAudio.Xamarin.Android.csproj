@@ -9,7 +9,7 @@
         <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
         <Nullable>enable</Nullable>
         <OutputType>Library</OutputType>
-        <LangVersion>9</LangVersion>
+        <LangVersion>10</LangVersion>
 		<Authors>Rain0Ash</Authors>
         <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
         <Version>0.8.2</Version>

@@ -137,7 +137,7 @@ namespace NetExtender.Crypto
 
             public static Byte[] Sha1(Byte[] value)
             {
-                using SHA1 sha1 = new SHA1Managed();
+                using SHA1 sha1 = SHA1.Create();
                 return sha1.ComputeHash(value);
             }
 
@@ -148,7 +148,7 @@ namespace NetExtender.Crypto
 
             public static Boolean Sha1(ReadOnlySpan<Byte> value, Span<Byte> destination, out Int32 written)
             {
-                using SHA1 sha1 = new SHA1Managed();
+                using SHA1 sha1 = SHA1.Create();
                 return sha1.TryComputeHash(value, destination, out written);
             }
 
@@ -169,7 +169,7 @@ namespace NetExtender.Crypto
 
             public static Byte[] Sha224(Byte[] value)
             {
-                using SHA224 sha224 = new SHA224Managed();
+                using SHA224 sha224 = SHA224.Create();
                 return sha224.ComputeHash(value);
             }
 
@@ -180,7 +180,7 @@ namespace NetExtender.Crypto
 
             public static Boolean Sha224(ReadOnlySpan<Byte> value, Span<Byte> destination, out Int32 written)
             {
-                using SHA224 sha224 = new SHA224Managed();
+                using SHA224 sha224 = SHA224.Create();
                 return sha224.TryComputeHash(value, destination, out written);
             }
 
@@ -201,7 +201,7 @@ namespace NetExtender.Crypto
 
             public static Byte[] Sha256(Byte[] value)
             {
-                using SHA256 sha256 = new SHA256Managed();
+                using SHA256 sha256 = SHA256.Create();
                 return sha256.ComputeHash(value);
             }
 
@@ -212,7 +212,7 @@ namespace NetExtender.Crypto
 
             public static Boolean Sha256(ReadOnlySpan<Byte> value, Span<Byte> destination, out Int32 written)
             {
-                using SHA256 sha256 = new SHA256Managed();
+                using SHA256 sha256 = SHA256.Create();
                 return sha256.TryComputeHash(value, destination, out written);
             }
 
@@ -233,7 +233,7 @@ namespace NetExtender.Crypto
 
             public static Byte[] Sha384(Byte[] value)
             {
-                using SHA384 sha384 = new SHA384Managed();
+                using SHA384 sha384 = SHA384.Create();
                 return sha384.ComputeHash(value);
             }
 
@@ -244,7 +244,7 @@ namespace NetExtender.Crypto
 
             public static Boolean Sha384(ReadOnlySpan<Byte> value, Span<Byte> destination, out Int32 written)
             {
-                using SHA384 sha384 = new SHA384Managed();
+                using SHA384 sha384 = SHA384.Create();
                 return sha384.TryComputeHash(value, destination, out written);
             }
 
@@ -265,7 +265,7 @@ namespace NetExtender.Crypto
 
             public static Byte[] Sha512(Byte[] value)
             {
-                using SHA512 sha512 = new SHA512Managed();
+                using SHA512 sha512 = SHA512.Create();
                 return sha512.ComputeHash(value);
             }
 
@@ -276,7 +276,7 @@ namespace NetExtender.Crypto
 
             public static Boolean Sha512(ReadOnlySpan<Byte> value, Span<Byte> destination, out Int32 written)
             {
-                using SHA512 sha512 = new SHA512Managed();
+                using SHA512 sha512 = SHA512.Create();
                 return sha512.TryComputeHash(value, destination, out written);
             }
 

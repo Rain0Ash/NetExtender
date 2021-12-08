@@ -361,7 +361,8 @@ namespace NetExtender.Types.Trees
 
             foreach ((TKey dictionarykey, IDictionaryTreeNode<TKey, TValue> dictionary) in node)
             {
-                if (dictionary is null! || dictionary.Count <= 0 && dictionary.Value.IsDefault())
+                //TODO: CS8598
+                if (/*dictionary is null! || */dictionary.Count <= 0 && dictionary.Value.IsDefault())
                 {
                     node.Tree.Remove(dictionarykey);
                 }

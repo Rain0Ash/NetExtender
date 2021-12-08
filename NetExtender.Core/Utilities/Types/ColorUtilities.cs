@@ -207,10 +207,22 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Parse(String value)
         {
-            return value is not null ? (Color) ColorConverter.ConvertFromInvariantString(value) : throw new ArgumentNullException(nameof(value));
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            Object? convert = ColorConverter.ConvertFromInvariantString(value);
+            
+            if (convert is not Color result)
+            {
+                throw new NotSupportedException();
+            }
+
+            return result;
         }
         
-        public static Boolean TryParse(String value, out Color color)
+        public static Boolean TryParse(String value, out Color result)
         {
             if (value is null)
             {
@@ -219,12 +231,20 @@ namespace NetExtender.Utilities.Types
 
             try
             {
-                color = Parse(value);
+                Object? convert = ColorConverter.ConvertFromInvariantString(value);
+
+                if (convert is not Color color)
+                {
+                    result = default;
+                    return false;
+                }
+                
+                result = color;
                 return true;
             }
             catch (Exception)
             {
-                color = default;
+                result = default;
                 return false;
             }
         }

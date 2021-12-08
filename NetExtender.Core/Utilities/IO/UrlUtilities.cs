@@ -20,10 +20,9 @@ namespace NetExtender.Utilities.IO
                 return false;
             }
 
-            using HeadOnlyWebClient client = new HeadOnlyWebClient
-            {
-                HeadOnly = true
-            };
+#pragma warning disable CS0612
+            using HeadOnlyWebClient client = new HeadOnlyWebClient();
+#pragma warning restore CS0612
 
             return !String.IsNullOrEmpty(client.DownloadString(path));
         }

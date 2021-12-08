@@ -18,23 +18,23 @@ namespace NetExtender.Types.Timers
             return timer is not null ? new TimerWrapper(timer) : null;
         }
         
-        [return: NotNullIfNotNull("timer")]
+        [return: NotNullIfNotNull("wrapper")]
         public static implicit operator Timer?(TimerWrapper? wrapper)
         {
-            return wrapper?._timer;
+            return wrapper?.Timer;
         }
-        
-        private readonly Timer _timer;
-        
+
+        private Timer Timer { get; }
+
         public Boolean IsStarted
         {
             get
             {
-                return _timer.Enabled;
+                return Timer.Enabled;
             }
             set
             {
-                _timer.Enabled = value;
+                Timer.Enabled = value;
             }
         }
 
@@ -42,11 +42,11 @@ namespace NetExtender.Types.Timers
         {
             get
             {
-                return TimeSpan.FromMilliseconds(_timer.Interval);
+                return TimeSpan.FromMilliseconds(Timer.Interval);
             }
             set
             {
-                _timer.Interval = TimerUtilities.CheckInterval(value.TotalMilliseconds);
+                Timer.Interval = TimerUtilities.CheckInterval(value.TotalMilliseconds);
             }
         }
 
@@ -69,29 +69,29 @@ namespace NetExtender.Types.Timers
         
         public TimerWrapper(Timer timer)
         {
-            _timer = timer ?? throw new ArgumentNullException(nameof(timer));
-            _timer.Elapsed += OnTick;
+            Timer = timer ?? throw new ArgumentNullException(nameof(timer));
+            Timer.Elapsed += OnTick;
         }
 
-        private void OnTick(Object sender, ElapsedEventArgs args)
+        private void OnTick(Object? sender, ElapsedEventArgs args)
         {
             Tick?.Invoke(sender, args);
         }
 
         public void Start()
         {
-            _timer.Start();
+            Timer.Start();
         }
 
         public void Stop()
         {
-            _timer.Stop();
+            Timer.Stop();
         }
 
         public void Dispose()
         {
-            _timer.Elapsed -= OnTick;
-            _timer.Dispose();
+            Timer.Elapsed -= OnTick;
+            Timer.Dispose();
         }
 
         public ValueTask DisposeAsync()
@@ -102,17 +102,17 @@ namespace NetExtender.Types.Timers
 
         public override Boolean Equals(Object? obj)
         {
-            return ReferenceEquals(this, obj) || _timer.Equals(obj);
+            return ReferenceEquals(this, obj) || Timer.Equals(obj);
         }
 
         public override Int32 GetHashCode()
         {
-            return _timer.GetHashCode();
+            return Timer.GetHashCode();
         }
 
         public override String ToString()
         {
-            return _timer.ToString();
+            return Timer.ToString();
         }
     }
 }
