@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <OutputType>Library</OutputType>
+        <LangVersion>10</LangVersion>
+        <Authors>Rain0Ash</Authors>
+        <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
+        <Version>0.8.5</Version>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NetExtender.AspNetCore\NetExtender.AspNetCore.csproj" />
+    </ItemGroup>
+
+</Project>

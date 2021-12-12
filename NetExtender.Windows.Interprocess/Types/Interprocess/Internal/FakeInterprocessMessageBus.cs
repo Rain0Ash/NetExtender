@@ -13,7 +13,7 @@ namespace NetExtender.Types.Interprocess
     {
         public static FakeInterprocessMessageBus Instance { get; } = new FakeInterprocessMessageBus();
         
-        public event EventHandler<TypeHandledEventArgs<Byte[]>> MessageReceived
+        public event EventHandler<HandledEventArgs<Byte[]>> MessageReceived
         {
             add
             {

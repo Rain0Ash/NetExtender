@@ -1032,6 +1032,51 @@ namespace NetExtender.Utilities.Types
             return IsAsciiCharacters(value.ToString());
         }
 
+        public static String RemoveNumbers(this String value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return value.Length switch
+            {
+                0 => String.Empty,
+                1 => !Char.IsDigit(value[0]) ? value : String.Empty,
+                _ => new StringBuilder(value.Length, value.Length).AppendRange(value.WhereNotChar(Char.IsDigit)).ToString()
+            };
+        }
+
+        public static String RemoveLetters(this String value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return value.Length switch
+            {
+                0 => String.Empty,
+                1 => !Char.IsLetter(value[0]) ? value : String.Empty,
+                _ => new StringBuilder(value.Length, value.Length).AppendRange(value.WhereNotChar(Char.IsLetter)).ToString()
+            };
+        }
+
+        public static String RemoveSpecialCharacters(this String value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return value.Length switch
+            {
+                0 => String.Empty,
+                1 => Char.IsLetterOrDigit(value[0]) ? value : String.Empty,
+                _ => new StringBuilder(value.Length, value.Length).AppendRange(value.WhereChar(Char.IsLetterOrDigit)).ToString()
+            };
+        }
+
         public static String[] SplitByChars(String value)
         {
             if (value is null)
@@ -1052,12 +1097,22 @@ namespace NetExtender.Utilities.Types
             return SplitByChars(value.ToString());
         }
 
-        public static String[] SplitByNewLine(String value, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLine(String value)
+        {
+            return SplitByNewLine(value, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static String[] SplitByNewLine(String value, StringSplitOptions options)
         {
             return SplitByNewLine(value, Int32.MaxValue, options);
         }
 
-        public static String[] SplitByNewLine(String value, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLine(String value, Int32 count)
+        {
+            return SplitByNewLine(value, count, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static String[] SplitByNewLine(String value, Int32 count, StringSplitOptions options)
         {
             if (value is null)
             {
@@ -1067,7 +1122,12 @@ namespace NetExtender.Utilities.Types
             return value.Split(NewLine, count, options);
         }
 
-        public static String[] SplitByNewLine(IString value, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLine(IString value)
+        {
+            return SplitByNewLine(value, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static String[] SplitByNewLine(IString value, StringSplitOptions options)
         {
             if (value is null)
             {
@@ -1077,7 +1137,12 @@ namespace NetExtender.Utilities.Types
             return SplitByNewLine(value.ToString(), options);
         }
 
-        public static String[] SplitByNewLine(IString value, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLine(IString value, Int32 count)
+        {
+            return SplitByNewLine(value, count, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static String[] SplitByNewLine(IString value, Int32 count, StringSplitOptions options)
         {
             if (value is null)
             {
@@ -1087,12 +1152,22 @@ namespace NetExtender.Utilities.Types
             return SplitByNewLine(value.ToString(), count, options);
         }
 
-        public static String[] SplitBySpace(String value, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitBySpace(String value)
+        {
+            return SplitBySpace(value, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static String[] SplitBySpace(String value, StringSplitOptions options)
         {
             return SplitBySpace(value, Int32.MaxValue, options);
         }
 
-        public static String[] SplitBySpace(String value, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitBySpace(String value, Int32 count)
+        {
+            return SplitBySpace(value, count, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static String[] SplitBySpace(String value, Int32 count, StringSplitOptions options)
         {
             if (value is null)
             {
@@ -1102,7 +1177,12 @@ namespace NetExtender.Utilities.Types
             return value.Split(' ', count, options);
         }
 
-        public static String[] SplitBySpace(IString value, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitBySpace(IString value)
+        {
+            return SplitBySpace(value, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static String[] SplitBySpace(IString value, StringSplitOptions options)
         {
             if (value is null)
             {
@@ -1112,7 +1192,12 @@ namespace NetExtender.Utilities.Types
             return SplitBySpace(value.ToString(), options);
         }
 
-        public static String[] SplitBySpace(IString value, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitBySpace(IString value, Int32 count)
+        {
+            return SplitBySpace(value, count, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static String[] SplitBySpace(IString value, Int32 count, StringSplitOptions options)
         {
             if (value is null)
             {
@@ -1124,12 +1209,22 @@ namespace NetExtender.Utilities.Types
 
         private static readonly Char[] NewLineAndSpaceChars = {'\n', ' '};
 
-        public static String[] SplitByNewLineAndSpace(String value, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLineAndSpace(String value)
+        {
+            return SplitByNewLineAndSpace(value, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static String[] SplitByNewLineAndSpace(String value, StringSplitOptions options)
         {
             return SplitByNewLineAndSpace(value, Int32.MaxValue, options);
         }
 
-        public static String[] SplitByNewLineAndSpace(String value, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLineAndSpace(String value, Int32 count)
+        {
+            return SplitByNewLineAndSpace(value, count, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static String[] SplitByNewLineAndSpace(String value, Int32 count, StringSplitOptions options)
         {
             if (value is null)
             {
@@ -1139,7 +1234,12 @@ namespace NetExtender.Utilities.Types
             return value.Split(NewLineAndSpaceChars, count, options);
         }
 
-        public static String[] SplitByNewLineAndSpace(IString value, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLineAndSpace(IString value)
+        {
+            return SplitByNewLineAndSpace(value, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static String[] SplitByNewLineAndSpace(IString value, StringSplitOptions options)
         {
             if (value is null)
             {
@@ -1149,7 +1249,12 @@ namespace NetExtender.Utilities.Types
             return SplitByNewLineAndSpace(value.ToString(), options);
         }
 
-        public static String[] SplitByNewLineAndSpace(IString value, Int32 count, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByNewLineAndSpace(IString value, Int32 count)
+        {
+            return SplitByNewLineAndSpace(value, count, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static String[] SplitByNewLineAndSpace(IString value, Int32 count, StringSplitOptions options)
         {
             if (value is null)
             {
@@ -1159,12 +1264,22 @@ namespace NetExtender.Utilities.Types
             return SplitByNewLineAndSpace(value.ToString(), count, options);
         }
 
-        public static String[] SplitByUpperCase(String value, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByUpperCase(String value)
+        {
+            return SplitByUpperCase(value, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static String[] SplitByUpperCase(String value, StringSplitOptions options)
         {
             return SplitByUpperCaseInternal(value, options).ToArray();
         }
 
-        public static String[] SplitByUpperCase(IString value, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitByUpperCase(IString value)
+        {
+            return SplitByUpperCase(value, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static String[] SplitByUpperCase(IString value, StringSplitOptions options)
         {
             if (value is null)
             {
@@ -1237,7 +1352,12 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        private static String[] SplitByUpperCase(IEnumerable<String> split, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        private static String[] SplitByUpperCase(IEnumerable<String> split)
+        {
+            return SplitByUpperCase(split, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        private static String[] SplitByUpperCase(IEnumerable<String> split, StringSplitOptions options)
         {
             if (split is null)
             {
@@ -1247,7 +1367,22 @@ namespace NetExtender.Utilities.Types
             return split.SelectManyWhereNotNull(str => SplitByUpperCase(str, options)).ToArray();
         }
 
-        public static String[] SplitBy(this String value, SplitType split = SplitType.NewLine, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitBy(this String value)
+        {
+            return SplitBy(value, SplitType.NewLine);
+        }
+
+        public static String[] SplitBy(this String value, SplitType split)
+        {
+            return SplitBy(value, split, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static String[] SplitBy(this String value, StringSplitOptions options)
+        {
+            return SplitBy(value, SplitType.NewLine, options);
+        }
+
+        public static String[] SplitBy(this String value, SplitType split, StringSplitOptions options)
         {
             if (value is null)
             {
@@ -1267,8 +1402,23 @@ namespace NetExtender.Utilities.Types
                 _ => throw new NotSupportedException()
             };
         }
+        
+        public static String[] SplitBy(this IString value)
+        {
+            return SplitBy(value, SplitType.NewLine);
+        }
 
-        public static String[] SplitBy(this IString value, SplitType split = SplitType.NewLine, StringSplitOptions options = StringSplitOptions.RemoveEmptyEntries)
+        public static String[] SplitBy(this IString value, SplitType split)
+        {
+            return SplitBy(value, split, StringSplitOptions.RemoveEmptyEntries);
+        }
+
+        public static String[] SplitBy(this IString value, StringSplitOptions options)
+        {
+            return SplitBy(value, SplitType.NewLine, options);
+        }
+
+        public static String[] SplitBy(this IString value, SplitType split, StringSplitOptions options)
         {
             if (value is null)
             {

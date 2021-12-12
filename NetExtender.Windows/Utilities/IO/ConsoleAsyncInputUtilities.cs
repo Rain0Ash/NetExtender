@@ -18,23 +18,23 @@ namespace NetExtender.Utilities.IO
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern Boolean CancelIoEx(IntPtr handle, IntPtr lpOverlapped);
 
-        public static event TypeHandler<TypeHandledEventArgs<String?>> ConsoleLineInput = null!;
-        public static event TypeHandler<TypeHandledEventArgs<ConsoleKeyInfo>> ConsoleKeyInfoInput = null!;
-        public static event TypeHandler<TypeHandledEventArgs<Int32>> ConsoleKeyCodeInput = null!;
+        public static event TypeHandler<HandledEventArgs<String?>> ConsoleLineInput = null!;
+        public static event TypeHandler<HandledEventArgs<ConsoleKeyInfo>> ConsoleKeyInfoInput = null!;
+        public static event TypeHandler<HandledEventArgs<Int32>> ConsoleKeyCodeInput = null!;
 
         private static void OnConsoleLineInput(String? line)
         {
-            ConsoleLineInput?.Invoke(new TypeHandledEventArgs<String?>(line));
+            ConsoleLineInput?.Invoke(new HandledEventArgs<String?>(line));
         }
 
         private static void OnConsoleKeyInfoInput(ConsoleKeyInfo info)
         {
-            ConsoleKeyInfoInput?.Invoke(new TypeHandledEventArgs<ConsoleKeyInfo>(info));
+            ConsoleKeyInfoInput?.Invoke(new HandledEventArgs<ConsoleKeyInfo>(info));
         }
 
         private static void OnConsoleKeyCodeInput(Int32 code)
         {
-            ConsoleKeyCodeInput?.Invoke(new TypeHandledEventArgs<Int32>(code));
+            ConsoleKeyCodeInput?.Invoke(new HandledEventArgs<Int32>(code));
         }
 
         public static ConsoleInputType AsyncInputType

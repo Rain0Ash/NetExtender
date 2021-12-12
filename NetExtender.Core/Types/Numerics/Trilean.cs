@@ -31,7 +31,7 @@ namespace NetExtender.Types.Numerics
 
         public static implicit operator Boolean?(Trilean value)
         {
-            return value._trilean switch
+            return value.Value switch
             {
                 VTrue => true,
                 VFalse => false,
@@ -52,12 +52,12 @@ namespace NetExtender.Types.Numerics
 
         public static Boolean operator ==(Trilean first, Trilean second)
         {
-            return first._trilean == second._trilean;
+            return first.Value == second.Value;
         }
 
         public static Boolean operator !=(Trilean first, Trilean second)
         {
-            return first._trilean != second._trilean;
+            return first.Value != second.Value;
         }
 
         public static Boolean operator ==(Trilean first, Boolean second)
@@ -112,7 +112,7 @@ namespace NetExtender.Types.Numerics
 
         public static Trilean operator !(Trilean value)
         {
-            return value._trilean switch
+            return value.Value switch
             {
                 VTrue => False,
                 VTrit => Trit,
@@ -123,16 +123,16 @@ namespace NetExtender.Types.Numerics
 
         public static Trilean operator &(Trilean first, Trilean second)
         {
-            return first._trilean switch
+            return first.Value switch
             {
-                VTrue => second._trilean switch
+                VTrue => second.Value switch
                 {
                     VTrue => True,
                     VTrit => Trit,
                     VFalse => False,
                     _ => throw new ArgumentOutOfRangeException(nameof(second))
                 },
-                VTrit => second._trilean switch
+                VTrit => second.Value switch
                 {
                     VTrue => Trit,
                     VTrit => Trit,
@@ -146,7 +146,7 @@ namespace NetExtender.Types.Numerics
 
         public static Trilean operator &(Trilean first, Boolean second)
         {
-            return first._trilean switch
+            return first.Value switch
             {
                 VTrue => second ? True : False,
                 VTrit => second ? Trit : False,
@@ -157,7 +157,7 @@ namespace NetExtender.Types.Numerics
 
         public static Trilean operator &(Trilean first, Boolean? second)
         {
-            return first._trilean switch
+            return first.Value switch
             {
                 VTrue => second switch
                 {
@@ -188,17 +188,17 @@ namespace NetExtender.Types.Numerics
 
         public static Trilean operator |(Trilean first, Trilean second)
         {
-            return first._trilean switch
+            return first.Value switch
             {
                 VTrue => True,
-                VTrit => second._trilean switch
+                VTrit => second.Value switch
                 {
                     VTrue => True,
                     VTrit => Trit,
                     VFalse => Trit,
                     _ => throw new ArgumentOutOfRangeException(nameof(second))
                 },
-                VFalse => second._trilean switch
+                VFalse => second.Value switch
                 {
                     VTrue => True,
                     VTrit => Trit,
@@ -211,7 +211,7 @@ namespace NetExtender.Types.Numerics
 
         public static Trilean operator |(Trilean first, Boolean second)
         {
-            return first._trilean switch
+            return first.Value switch
             {
                 VTrue => True,
                 VTrit => second ? True : Trit,
@@ -222,7 +222,7 @@ namespace NetExtender.Types.Numerics
 
         public static Trilean operator |(Trilean first, Boolean? second)
         {
-            return first._trilean switch
+            return first.Value switch
             {
                 VTrue => True,
                 VTrit => second switch
@@ -253,9 +253,9 @@ namespace NetExtender.Types.Numerics
 
         public static Trilean operator ^(Trilean first, Trilean second)
         {
-            return first._trilean switch
+            return first.Value switch
             {
-                VTrue => second._trilean switch
+                VTrue => second.Value switch
                 {
                     VTrue => False,
                     VTrit => Trit,
@@ -263,7 +263,7 @@ namespace NetExtender.Types.Numerics
                     _ => throw new ArgumentOutOfRangeException(nameof(second))
                 },
                 VTrit => Trit,
-                VFalse => second._trilean switch
+                VFalse => second.Value switch
                 {
                     VTrue => True,
                     VTrit => Trit,
@@ -276,7 +276,7 @@ namespace NetExtender.Types.Numerics
 
         public static Trilean operator ^(Trilean first, Boolean second)
         {
-            return first._trilean switch
+            return first.Value switch
             {
                 VTrue => second ? False : True,
                 VTrit => Trit,
@@ -287,7 +287,7 @@ namespace NetExtender.Types.Numerics
 
         public static Trilean operator ^(Trilean first, Boolean? second)
         {
-            return first._trilean switch
+            return first.Value switch
             {
                 VTrue => second switch
                 {
@@ -316,13 +316,13 @@ namespace NetExtender.Types.Numerics
             return second ^ first;
         }
 
-        private readonly Byte _trilean;
+        private Byte Value { get; }
 
         public Boolean IsTrue
         {
             get
             {
-                return _trilean == VTrue;
+                return Value == VTrue;
             }
         }
 
@@ -330,7 +330,7 @@ namespace NetExtender.Types.Numerics
         {
             get
             {
-                return _trilean == VTrit;
+                return Value == VTrit;
             }
         }
 
@@ -338,7 +338,7 @@ namespace NetExtender.Types.Numerics
         {
             get
             {
-                return _trilean == VFalse;
+                return Value == VFalse;
             }
         }
 
@@ -349,7 +349,7 @@ namespace NetExtender.Types.Numerics
                 throw new ArgumentOutOfRangeException(nameof(value));
             }
 
-            _trilean = value;
+            Value = value;
         }
 
         public TypeCode GetTypeCode()
@@ -364,12 +364,12 @@ namespace NetExtender.Types.Numerics
 
         public Byte ToByte(IFormatProvider? provider)
         {
-            return _trilean;
+            return Value;
         }
 
         public Char ToChar(IFormatProvider? provider)
         {
-            return _trilean switch
+            return Value switch
             {
                 VTrit => '2',
                 VTrue => '1',
@@ -384,37 +384,37 @@ namespace NetExtender.Types.Numerics
 
         public Decimal ToDecimal(IFormatProvider? provider)
         {
-            return _trilean;
+            return Value;
         }
 
         public Double ToDouble(IFormatProvider? provider)
         {
-            return _trilean;
+            return Value;
         }
 
         public Int16 ToInt16(IFormatProvider? provider)
         {
-            return _trilean;
+            return Value;
         }
 
         public Int32 ToInt32(IFormatProvider? provider)
         {
-            return _trilean;
+            return Value;
         }
 
         public Int64 ToInt64(IFormatProvider? provider)
         {
-            return _trilean;
+            return Value;
         }
 
         public SByte ToSByte(IFormatProvider? provider)
         {
-            return (SByte) _trilean;
+            return (SByte) Value;
         }
 
         public Single ToSingle(IFormatProvider? provider)
         {
-            return _trilean;
+            return Value;
         }
 
         public String ToString(IFormatProvider? provider)
@@ -424,32 +424,32 @@ namespace NetExtender.Types.Numerics
 
         public Object ToType(Type conversionType, IFormatProvider? provider)
         {
-            return ((IConvertible) _trilean).ToType(conversionType, provider);
+            return ((IConvertible) Value).ToType(conversionType, provider);
         }
 
         public UInt16 ToUInt16(IFormatProvider? provider)
         {
-            return _trilean;
+            return Value;
         }
 
         public UInt32 ToUInt32(IFormatProvider? provider)
         {
-            return _trilean;
+            return Value;
         }
 
         public UInt64 ToUInt64(IFormatProvider? provider)
         {
-            return _trilean;
+            return Value;
         }
 
         public Int32 CompareTo(Trilean other)
         {
-            return _trilean.CompareTo(other._trilean);
+            return Value.CompareTo(other.Value);
         }
 
         public override Int32 GetHashCode()
         {
-            return _trilean;
+            return Value;
         }
 
         public override Boolean Equals(Object? obj)
@@ -464,7 +464,7 @@ namespace NetExtender.Types.Numerics
 
         public Boolean Equals(Trilean other)
         {
-            return _trilean == other._trilean;
+            return Value == other.Value;
         }
 
         public Boolean Equals(Boolean other)
@@ -479,7 +479,7 @@ namespace NetExtender.Types.Numerics
 
         public override String ToString()
         {
-            return _trilean switch
+            return Value switch
             {
                 VTrit => nameof(Trit),
                 VTrue => nameof(True),

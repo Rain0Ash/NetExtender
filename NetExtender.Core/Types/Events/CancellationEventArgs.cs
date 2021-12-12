@@ -7,6 +7,40 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace NetExtender.Types.Events
 {
+    public class CancellationEventArgs<T> : CancellationEventArgs
+    {
+        [return: NotNullIfNotNull("args")]
+        public static implicit operator CancellationEventArgs<T>?(CancelEventArgs<T>? args)
+        {
+            return args is not null ? new CancellationEventArgs<T>(args.Value, args.Cancel) : null;
+        }
+        
+        [return: NotNullIfNotNull("args")]
+        public static implicit operator CancellationEventArgs<T>?(HandledEventArgs<T>? args)
+        {
+            return args is not null ? new CancellationEventArgs<T>(args.Value, args.Handled) : null;
+        }
+        
+        public T Value { get; }
+        
+        public CancellationEventArgs(T value)
+        {
+            Value = value;
+        }
+
+        public CancellationEventArgs(Boolean cancel)
+            : base(cancel)
+        {
+            Value = default!;
+        }
+
+        public CancellationEventArgs(T value, Boolean cancel)
+            : base(cancel)
+        {
+            Value = value;
+        }
+    }
+    
     public class CancellationEventArgs : EventArgs
     {
         [return: NotNullIfNotNull("args")]

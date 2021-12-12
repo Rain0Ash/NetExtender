@@ -12,6 +12,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Attributes;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Core
@@ -31,6 +32,23 @@ namespace NetExtender.Utilities.Core
     
     public static class ReflectionUtilities
     {
+        public static Boolean AssemblyLoadCallStaticContructor { get; set; }
+
+        static ReflectionUtilities()
+        {
+            AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoad;
+        }
+
+        private static void OnAssemblyLoad(Object? sender, AssemblyLoadEventArgs args)
+        {
+            CallStaticInitializerAttributeInternal<StaticInitializerRequiredAttribute>(args.LoadedAssembly);
+            
+            if (AssemblyLoadCallStaticContructor)
+            {
+                CallStaticInitializerAttribute(args.LoadedAssembly);
+            }
+        }
+
         public static Boolean IsAssignableFrom<T>(this Type type)
         {
             if (type is null)
@@ -227,25 +245,101 @@ namespace NetExtender.Utilities.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T? GetCustomAttribute<T>(this MemberInfo element) where T : Attribute
+        public static Boolean HasAttribute<T>(this MemberInfo info) where T : Attribute
         {
-            if (element is null)
+            if (info is null)
             {
-                throw new ArgumentNullException(nameof(element));
+                throw new ArgumentNullException(nameof(info));
             }
 
-            return element.GetCustomAttribute(typeof(T)) as T;
+            return info.GetCustomAttribute<T>() is not null;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean HasAttribute<T>(this MemberInfo info, Boolean inherit) where T : Attribute
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            return info.GetCustomAttribute<T>(inherit) is not null;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean HasAttribute(this MemberInfo info, Type attribute)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+
+            return info.GetCustomAttribute(attribute) is not null;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean HasAttribute(this MemberInfo info, Type attribute, Boolean inherit)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            if (attribute is null)
+            {
+                throw new ArgumentNullException(nameof(attribute));
+            }
+
+            return info.GetCustomAttribute(attribute, inherit) is not null;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T? GetCustomAttribute<T>(this MemberInfo element, Boolean inherit) where T : Attribute
+        public static T? GetCustomAttribute<T>(this MemberInfo info) where T : Attribute
         {
-            if (element is null)
+            if (info is null)
             {
-                throw new ArgumentNullException(nameof(element));
+                throw new ArgumentNullException(nameof(info));
             }
 
-            return element.GetCustomAttribute(typeof(T), inherit) as T;
+            return info.GetCustomAttribute(typeof(T)) as T;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? GetCustomAttribute<T>(this MemberInfo info, Boolean inherit) where T : Attribute
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            return info.GetCustomAttribute(typeof(T), inherit) as T;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> GetCustomAttributes<T>(this MemberInfo info) where T : Attribute
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            return info.GetCustomAttributes(typeof(T)).OfType<T>();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<T> GetCustomAttributes<T>(this MemberInfo info, Boolean inherit) where T : Attribute
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            return info.GetCustomAttributes(typeof(T), inherit).OfType<T>();
         }
         
         public static FileInfo GetAssemblyFile(this Assembly assembly)
@@ -359,6 +453,22 @@ namespace NetExtender.Utilities.Core
             return true;
         }
 
+        public static Boolean IsSystemAssembly(this Assembly assembly)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            String? name = assembly.FullName;
+            if (name is null)
+            {
+                return false;
+            }
+
+            return name.StartsWith("System.") || name.StartsWith("Microsoft.") || name.StartsWith("netstandard");
+        }
+
         /// <inheritdoc cref="GetStackInfo(Int32)"/>
         public static String GetStackInfo()
         {
@@ -391,18 +501,152 @@ namespace NetExtender.Utilities.Core
             return $"{Path.GetFileName(frame.GetFileName())}::{method.DeclaringType?.FullName ?? String.Empty}.{method.Name} - Line {frame.GetFileLineNumber()}";
         }
 
+        public static IEnumerable<Assembly> DomainCustomAssemblies
+        {
+            get
+            {
+                Assembly calling = Assembly.GetCallingAssembly();
+                Assembly? entry = Assembly.GetEntryAssembly();
+                return AppDomain.CurrentDomain.GetAssemblies().WhereNot(IsSystemAssembly).Append(entry).Append(calling).WhereNotNull().Distinct()
+                    .OrderByDescending(assembly => assembly == Assembly.GetExecutingAssembly())
+                    .ThenByDescending(assembly => assembly.GetName().FullName.StartsWith(nameof(NetExtender)))
+                    .ThenByDescending(assembly => assembly == calling)
+                    .ThenByDescending(assembly => assembly == entry)
+                    .ThenBy(assembly => assembly.GetName().FullName);
+            }
+        }
+        
         /// <summary>
         /// Calls the static constructor of this type.
         /// </summary>
         /// <param name="type">The type of which to call the static constructor.</param>
-        public static void CallStaticConstructor(this Type type)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Type CallStaticConstructor(this Type type)
         {
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
 
-            RuntimeHelpers.RunClassConstructor(type.TypeHandle);
+            CallStaticConstructor(type.TypeHandle);
+            return type;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RuntimeTypeHandle CallStaticConstructor(this RuntimeTypeHandle handle)
+        {
+            RuntimeHelpers.RunClassConstructor(handle);
+            return handle;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Type> CallStaticConstructor(this IEnumerable<Type> source)
+        {
+            return CallStaticConstructor(source, false);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Type> CallStaticConstructor(this IEnumerable<Type> source, Boolean lazy)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            static void Call(Type type)
+            {
+                CallStaticConstructor(type);
+            }
+
+            return source.ForEach(Call).MaterializeIfNot(lazy);
+        }
+        
+        private static Assembly CallStaticInitializerAttributeInternal<TAttribute>(this Assembly assembly) where TAttribute : StaticInitializerAttribute, new()
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+            
+            static IEnumerable<TAttribute> Handler(Type type)
+            {
+                if (type is null)
+                {
+                    throw new ArgumentNullException(nameof(type));
+                }
+
+                IEnumerable<TAttribute> attributes = GetCustomAttributes<TAttribute>(type);
+
+                foreach (TAttribute attribute in attributes)
+                {
+                    if (attribute.Type is null)
+                    {
+                        yield return new TAttribute { Type = type, Priority = attribute.Priority };
+                        continue;
+                    }
+
+                    yield return attribute;
+                }
+            }
+
+            IEnumerable<Type> types = assembly.GetTypes()
+                .SelectMany(Handler)
+                .OrderByDescending(item => item.Priority)
+                .ThenBy(item => item.Type?.FullName)
+                .Select(item => item.Type)
+                .WhereNotNull()
+                .Distinct();
+
+            foreach (Type type in types)
+            {
+                type.CallStaticConstructor();
+            }
+
+            return assembly;
+        }
+
+        /// <summary>
+        /// Calls the static constructor of types with <see cref="StaticInitializerAttribute"/> in assembly.
+        /// </summary>
+        /// <param name="assembly">The assembly of which to call the static constructor.</param>
+        public static Assembly CallStaticInitializerAttribute(this Assembly assembly)
+        {
+            return CallStaticInitializerAttributeInternal<StaticInitializerAttribute>(assembly);
+        }
+
+        public static IEnumerable<Assembly> CallStaticInitializerAttribute(this IEnumerable<Assembly> assemblies)
+        {
+            return CallStaticInitializerAttribute(assemblies, false);
+        }
+
+        public static IEnumerable<Assembly> CallStaticInitializerAttribute(this IEnumerable<Assembly> assemblies, Boolean lazy)
+        {
+            if (assemblies is null)
+            {
+                throw new ArgumentNullException(nameof(assemblies));
+            }
+
+            static void Call(Assembly assembly)
+            {
+                CallStaticInitializerAttribute(assembly);
+            }
+
+            return assemblies.ForEach(Call).MaterializeIfNot(lazy);
+        }
+
+        public static IEnumerable<Assembly> CallStaticInitializerAttribute()
+        {
+            return CallStaticInitializerAttribute(DomainCustomAssemblies);
+        }
+        
+        internal static IEnumerable<Assembly> CallStaticInitializerRequiredAttribute()
+        {
+            static void Call(Assembly assembly)
+            {
+                CallStaticInitializerAttributeInternal<StaticInitializerRequiredAttribute>(assembly);
+            }
+
+            return DomainCustomAssemblies.ForEach(Call).Materialize();
         }
 
         /// <summary>

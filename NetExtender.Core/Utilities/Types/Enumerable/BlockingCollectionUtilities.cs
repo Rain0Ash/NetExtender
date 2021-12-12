@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
-using NetExtender.Core.Types.Observers;
 using NetExtender.Types.Collections;
+using NetExtender.Types.Observers;
 
 namespace NetExtender.Utilities.Types
 {

@@ -3,53 +3,64 @@
 
 using System;
 using System.Net;
+using System.Net.Http;
+using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Network
 {
     public static class ProxyUtilities
     {
-        public static async Task<HttpStatusCode> GetProxyStatusAsync(this WebProxy proxy)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<HttpStatusCode> GetProxyStatusAsync(this WebProxy proxy)
+        {
+            return GetProxyStatusAsync(proxy, CancellationToken.None);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<HttpStatusCode> GetProxyStatusAsync(this WebProxy proxy, CancellationToken token)
+        {
+            return GetProxyStatusAsync(proxy, Time.Second.Three, token);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<HttpStatusCode> GetProxyStatusAsync(this WebProxy proxy, TimeSpan timeout)
+        {
+            return GetProxyStatusAsync(proxy, timeout, CancellationToken.None);
+        }
+
+        public static async Task<HttpStatusCode> GetProxyStatusAsync(this WebProxy proxy, TimeSpan timeout, CancellationToken token)
         {
             if (proxy?.Address is null)
             {
                 throw new ArgumentNullException(nameof(proxy));
             }
 
-            Boolean ping = await NetworkUtilities.CheckPingAsync(proxy.Address.Host).ConfigureAwait(false);
-            if (!ping)
-            {
-                return HttpStatusCode.ServiceUnavailable;
-            }
-
             const String address = "https://google.com";
 
-#pragma warning disable CS0618
-            HttpWebRequest request = (HttpWebRequest) WebRequest.Create(address);
-            request.Proxy = proxy;
-            request.UserAgent = UserAgentUtilities.CurrentSessionUserAgent;
-            request.Timeout = 1000;
-
+            using HttpClient client = new HttpClient(new HttpClientHandler { Proxy = proxy }) { Timeout = timeout };
+            client.AddUserAgentHeader(UserAgentUtilities.CurrentSessionUserAgent);
+            
             try
             {
-                WebResponse response = await request.GetResponseAsync().ConfigureAwait(false);
-                return response is HttpWebResponse http ? http.StatusCode : HttpStatusCode.OK;
+                using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Head, address);
+                using HttpResponseMessage message = await client.SendAsync(request, HttpCompletionOption.ResponseHeadersRead, token).ConfigureAwait(false);
+                return message.StatusCode;
             }
-            catch (WebException exception)
+            catch (TaskCanceledException)
             {
-                if (exception.Response is HttpWebResponse response)
-                {
-                    return response.StatusCode;
-                }
+                return HttpStatusCode.RequestTimeout;
+            }
+            catch (HttpRequestException exception)
+            {
+                return exception.StatusCode ?? HttpStatusCode.ServiceUnavailable;
             }
             catch (Exception)
             {
-                // ignored
+                return HttpStatusCode.ServiceUnavailable;
             }
-            
-#pragma warning restore CS0618
-
-            return HttpStatusCode.ServiceUnavailable;
         }
     }
 }

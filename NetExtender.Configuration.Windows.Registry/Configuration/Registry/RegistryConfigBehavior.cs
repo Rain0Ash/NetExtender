@@ -11,6 +11,7 @@ using NetExtender.Registry.Interfaces;
 using NetExtender.Utilities.Application;
 using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Registry;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Windows.Registry
 {
@@ -79,13 +80,40 @@ namespace NetExtender.Configuration.Windows.Registry
 
         public override Boolean Set(String? key, String? value, IEnumerable<String>? sections)
         {
-            Registry.SetValue(key, value, sections);
+            if (IsReadOnly || Registry.IsReadOnly)
+            {
+                return false;
+            }
+            
+            if (IsIgnoreEvent && !IsLazyWrite)
+            {
+                return Registry.SetValue(key, value, sections);
+            }
+            
+            sections = ToSection(sections).AsIImmutableList();
+
+            if (IsLazyWrite && Get(key, sections) == value)
+            {
+                return true;
+            }
+            
+            if (!Registry.SetValue(key, value, sections))
+            {
+                return false;
+            }
+
+            OnChanged(new ConfigurationValueEntry(key, value, sections));
             return true;
         }
 
         public override ConfigurationEntry[]? GetExists()
         {
             return Registry.Dump()?.Select(item => new ConfigurationEntry(item.Name, item.Sections)).ToArray();
+        }
+        
+        public override ConfigurationValueEntry[]? GetExistsValues()
+        {
+            return Registry.Dump()?.Select(item => new ConfigurationValueEntry(item.Name, Get(item.Name, item.Sections), item.Sections)).ToArray();
         }
 
         public override Boolean Reload()

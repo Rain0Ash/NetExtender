@@ -2,7 +2,9 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Behavior.Interfaces;
@@ -59,7 +61,7 @@ namespace NetExtender.Configuration
             }
         }
 
-        public Config(IConfigBehavior behavior)
+        protected internal Config(IConfigBehavior behavior)
         {
             Behavior = behavior ?? throw new ArgumentNullException(nameof(behavior));
         }
@@ -69,7 +71,7 @@ namespace NetExtender.Configuration
             return GetValue(key, (IEnumerable<String>?) sections);
         }
 
-        public String? GetValue(String? key, IEnumerable<String>? sections)
+        public virtual String? GetValue(String? key, IEnumerable<String>? sections)
         {
             return Behavior.Get(key, sections);
         }
@@ -99,7 +101,7 @@ namespace NetExtender.Configuration
             return GetValueAsync(key, sections, token);
         }
         
-        public Task<String?> GetValueAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
+        public virtual Task<String?> GetValueAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
             return Behavior.GetAsync(key, sections, token);
         }
@@ -129,7 +131,7 @@ namespace NetExtender.Configuration
             return SetValue(key, value, (IEnumerable<String>?) sections);
         }
 
-        public Boolean SetValue(String? key, String? value, IEnumerable<String>? sections)
+        public virtual Boolean SetValue(String? key, String? value, IEnumerable<String>? sections)
         {
             return Behavior.Set(key, value, sections);
         }
@@ -149,7 +151,7 @@ namespace NetExtender.Configuration
             return SetValueAsync(key, value, sections, token);
         }
         
-        public Task<Boolean> SetValueAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
+        public virtual Task<Boolean> SetValueAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
         {
             return Behavior.SetAsync(key, value, sections, token);
         }
@@ -159,7 +161,7 @@ namespace NetExtender.Configuration
             return GetOrSetValue(key, value, (IEnumerable<String>?) sections);
         }
 
-        public String? GetOrSetValue(String? key, String? value, IEnumerable<String>? sections)
+        public virtual String? GetOrSetValue(String? key, String? value, IEnumerable<String>? sections)
         {
             return Behavior.GetOrSet(key, value, sections);
         }
@@ -179,7 +181,7 @@ namespace NetExtender.Configuration
             return GetOrSetValueAsync(key, value, sections, token);
         }
         
-        public Task<String?> GetOrSetValueAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
+        public virtual Task<String?> GetOrSetValueAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
         {
             return Behavior.GetOrSetAsync(key, value, sections, token);
         }
@@ -219,7 +221,7 @@ namespace NetExtender.Configuration
             return KeyExist(key, (IEnumerable<String>?) sections);
         }
 
-        public Boolean KeyExist(String? key, IEnumerable<String>? sections)
+        public virtual Boolean KeyExist(String? key, IEnumerable<String>? sections)
         {
             return Behavior.Contains(key, sections);
         }
@@ -239,12 +241,12 @@ namespace NetExtender.Configuration
             return KeyExistAsync(key, sections, token);
         }
         
-        public Task<Boolean> KeyExistAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
+        public virtual Task<Boolean> KeyExistAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
             return Behavior.ContainsAsync(key, sections, token);
         }
 
-        public ConfigurationEntry[]? GetExists()
+        public virtual ConfigurationEntry[]? GetExists()
         {
             return Behavior.GetExists();
         }
@@ -254,12 +256,27 @@ namespace NetExtender.Configuration
             return GetExistsAsync(CancellationToken.None);
         }
 
-        public Task<ConfigurationEntry[]?> GetExistsAsync(CancellationToken token)
+        public virtual Task<ConfigurationEntry[]?> GetExistsAsync(CancellationToken token)
         {
             return Behavior.GetExistsAsync(token);
         }
+        
+        public virtual ConfigurationValueEntry[]? GetExistsValues()
+        {
+            return Behavior.GetExistsValues();
+        }
 
-        public Boolean Reload()
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync()
+        {
+            return GetExistsValuesAsync(CancellationToken.None);
+        }
+
+        public virtual Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(CancellationToken token)
+        {
+            return Behavior.GetExistsValuesAsync(token);
+        }
+
+        public virtual Boolean Reload()
         {
             return Behavior.Reload();
         }
@@ -269,9 +286,84 @@ namespace NetExtender.Configuration
             return ReloadAsync(CancellationToken.None);
         }
 
-        public Task<Boolean> ReloadAsync(CancellationToken token)
+        public virtual Task<Boolean> ReloadAsync(CancellationToken token)
         {
             return Behavior.ReloadAsync(token);
+        }
+
+        public virtual void CopyTo(IConfig config)
+        {
+            if (config is null)
+            {
+                throw new ArgumentNullException(nameof(config));
+            }
+
+            foreach ((String? key, ImmutableArray<String> sections) in this)
+            {
+                config.SetValue(key, this[key, sections], sections);
+            }
+        }
+        
+        public Task CopyToAsync(IConfig config)
+        {
+            return CopyToAsync(config, CancellationToken.None);
+        }
+        
+        public virtual async Task CopyToAsync(IConfig config, CancellationToken token)
+        {
+            if (config is null)
+            {
+                throw new ArgumentNullException(nameof(config));
+            }
+            
+            foreach ((String? key, ImmutableArray<String> sections) in this)
+            {
+                await config.SetValueAsync(key, this[key, sections], sections, token);
+            }
+        }
+
+        public String? this[String? key, params String[]? sections]
+        {
+            get
+            {
+                return this[key, (IEnumerable<String>?) sections];
+            }
+            set
+            {
+                this[key, (IEnumerable<String>?) sections] = value;
+            }
+        }
+
+        public virtual String? this[String? key, IEnumerable<String>? sections]
+        {
+            get
+            {
+                return GetValue(key, sections);
+            }
+            set
+            {
+                SetValue(key, value, sections);
+            }
+        }
+
+        public virtual IEnumerator<ConfigurationEntry> GetEnumerator()
+        {
+            ConfigurationEntry[]? exists = GetExists();
+
+            if (exists is null)
+            {
+                yield break;
+            }
+
+            foreach (ConfigurationEntry entry in exists)
+            {
+                yield return entry;
+            }
+        }
+        
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         public override String ToString()

@@ -22,31 +22,41 @@ namespace NetExtender.Types.Numerics
         DownRight = 15
     }
 
-    public readonly struct Point<T> where T : unmanaged, IConvertible
+    public readonly struct Point2<T> : IEquatable<Point2<T>> where T : unmanaged, IEquatable<T>, IComparable<T>, IConvertible
     {
-        public static Point<T> operator +(Point<T> first, Point<T> second)
+        public static Boolean operator ==(Point2<T> fisrt, Point2<T> second)
         {
-            return new Point<T>(MathUnsafe.Add(first.X, second.X), MathUnsafe.Add(first.Y, second.Y));
+            return fisrt.Equals(second);
         }
 
-        public static Point<T> operator -(Point<T> first, Point<T> second)
+        public static Boolean operator !=(Point2<T> first, Point2<T> second)
         {
-            return new Point<T>(MathUnsafe.Substract(first.X, second.X), MathUnsafe.Substract(first.Y, second.Y));
+            return !(first == second);
+        }
+        
+        public static Point2<T> operator +(Point2<T> first, Point2<T> second)
+        {
+            return new Point2<T>(MathUnsafe.Add(first.X, second.X), MathUnsafe.Add(first.Y, second.Y));
         }
 
-        public static Point<T> operator *(Point<T> first, Point<T> second)
+        public static Point2<T> operator -(Point2<T> first, Point2<T> second)
         {
-            return new Point<T>(MathUnsafe.Multiply(first.X, second.X), MathUnsafe.Multiply(first.Y, second.Y));
+            return new Point2<T>(MathUnsafe.Substract(first.X, second.X), MathUnsafe.Substract(first.Y, second.Y));
         }
 
-        public static Point<T> operator /(Point<T> first, Point<T> second)
+        public static Point2<T> operator *(Point2<T> first, Point2<T> second)
         {
-            return new Point<T>(MathUnsafe.Divide(first.X, second.X), MathUnsafe.Divide(first.Y, second.Y));
+            return new Point2<T>(MathUnsafe.Multiply(first.X, second.X), MathUnsafe.Multiply(first.Y, second.Y));
         }
 
-        public static Point<T> operator %(Point<T> first, Point<T> second)
+        public static Point2<T> operator /(Point2<T> first, Point2<T> second)
         {
-            return new Point<T>(MathUnsafe.Modulo(first.X, second.X), MathUnsafe.Modulo(first.Y, second.Y));
+            return new Point2<T>(MathUnsafe.Divide(first.X, second.X), MathUnsafe.Divide(first.Y, second.Y));
+        }
+
+        public static Point2<T> operator %(Point2<T> first, Point2<T> second)
+        {
+            return new Point2<T>(MathUnsafe.Modulo(first.X, second.X), MathUnsafe.Modulo(first.Y, second.Y));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -58,76 +68,76 @@ namespace NetExtender.Types.Numerics
         public T X { get; }
         public T Y { get; }
 
-        public static Point<T> Zero { get; } = new Point<T>(0, 0);
-        public static Point<T> One { get; } = new Point<T>(1, 1);
+        public static Point2<T> Zero { get; } = new Point2<T>(0, 0);
+        public static Point2<T> One { get; } = new Point2<T>(1, 1);
 
-        public Point(T x, T y)
+        public Point2(T x, T y)
         {
             X = x;
             Y = y;
         }
 
-        public Point(T x, Int32 y)
+        public Point2(T x, Int32 y)
             : this(x, ToGeneric(y))
         {
         }
 
-        public Point(Int32 x, T y)
+        public Point2(Int32 x, T y)
             : this(ToGeneric(x), y)
         {
         }
 
-        public Point(Int32 x, Int32 y)
+        public Point2(Int32 x, Int32 y)
             : this(ToGeneric(x), ToGeneric(y))
         {
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point<T> Offset(Point<T> point)
+        public Point2<T> Offset(Point2<T> point)
         {
             return this + point;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point<T> Offset(T x, T y)
+        public Point2<T> Offset(T x, T y)
         {
-            return this + new Point<T>(x, y);
+            return this + new Point2<T>(x, y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point<T> Offset(PointOffset offset)
+        public Point2<T> Offset(PointOffset offset)
         {
             return Offset(offset, (T) Convert.ChangeType(1, typeof(T)));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point<T> Offset(PointOffset offset, T count)
+        public Point2<T> Offset(PointOffset offset, T count)
         {
             return offset switch
             {
                 PointOffset.None => this,
-                PointOffset.Up => this - new Point<T>(0, count),
-                PointOffset.Down => this + new Point<T>(0, count),
-                PointOffset.Left => this - new Point<T>(count, 0),
-                PointOffset.Right => this + new Point<T>(count, 0),
-                PointOffset.UpLeft => this - new Point<T>(count, count),
-                PointOffset.DownLeft => this + new Point<T>(MathUnsafe.Negative(count), count),
-                PointOffset.UpRight => this - new Point<T>(MathUnsafe.Negative(count), count),
-                PointOffset.DownRight => this + new Point<T>(count, count),
+                PointOffset.Up => this - new Point2<T>(0, count),
+                PointOffset.Down => this + new Point2<T>(0, count),
+                PointOffset.Left => this - new Point2<T>(count, 0),
+                PointOffset.Right => this + new Point2<T>(count, 0),
+                PointOffset.UpLeft => this - new Point2<T>(count, count),
+                PointOffset.DownLeft => this + new Point2<T>(MathUnsafe.Negative(count), count),
+                PointOffset.UpRight => this - new Point2<T>(MathUnsafe.Negative(count), count),
+                PointOffset.DownRight => this + new Point2<T>(count, count),
                 _ => throw new ArgumentOutOfRangeException(nameof(offset), offset, null)
             };
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point<T> Delta(Point<T> point)
+        public Point2<T> Delta(Point2<T> point)
         {
             return this - point;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Point<T> Delta(T x, T y)
+        public Point2<T> Delta(T x, T y)
         {
-            return this - new Point<T>(x, y);
+            return this - new Point2<T>(x, y);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -135,10 +145,150 @@ namespace NetExtender.Types.Numerics
         {
             return MathUnsafe.GreaterEqual(X, default) && MathUnsafe.GreaterEqual(Y, default);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Boolean IsNegative()
+        {
+            return MathUnsafe.LessEqual(X, default) && MathUnsafe.LessEqual(Y, default);
+        }
+        
+        public override Int32 GetHashCode()
+        {
+            return HashCode.Combine(X, Y);
+        }
+
+        public override Boolean Equals(Object? obj)
+        {
+            return obj is Point2<T> point && Equals(point);
+        }
+
+        public Boolean Equals(Point2<T> other)
+        {
+            return MathUnsafe.Equal(X, other.X) && MathUnsafe.Equal(Y, other.Y);
+        }
 
         public override String ToString()
         {
             return $"X:{X}, Y:{Y}";
+        }
+    }
+    
+    public readonly struct Point3<T> : IEquatable<Point3<T>> where T : unmanaged, IEquatable<T>, IComparable<T>, IConvertible
+    {
+        public static Boolean operator ==(Point3<T> fisrt, Point3<T> second)
+        {
+            return fisrt.Equals(second);
+        }
+
+        public static Boolean operator !=(Point3<T> first, Point3<T> second)
+        {
+            return !(first == second);
+        }
+        
+        public static Point3<T> operator +(Point3<T> first, Point3<T> second)
+        {
+            return new Point3<T>(MathUnsafe.Add(first.X, second.X), MathUnsafe.Add(first.Y, second.Y), MathUnsafe.Add(first.Z, second.Z));
+        }
+
+        public static Point3<T> operator -(Point3<T> first, Point3<T> second)
+        {
+            return new Point3<T>(MathUnsafe.Substract(first.X, second.X), MathUnsafe.Substract(first.Y, second.Y), MathUnsafe.Substract(first.Z, second.Z));
+        }
+
+        public static Point3<T> operator *(Point3<T> first, Point3<T> second)
+        {
+            return new Point3<T>(MathUnsafe.Multiply(first.X, second.X), MathUnsafe.Multiply(first.Y, second.Y), MathUnsafe.Multiply(first.Z, second.Z));
+        }
+
+        public static Point3<T> operator /(Point3<T> first, Point3<T> second)
+        {
+            return new Point3<T>(MathUnsafe.Divide(first.X, second.X), MathUnsafe.Divide(first.Y, second.Y), MathUnsafe.Divide(first.Z, second.Z));
+        }
+
+        public static Point3<T> operator %(Point3<T> first, Point3<T> second)
+        {
+            return new Point3<T>(MathUnsafe.Modulo(first.X, second.X), MathUnsafe.Modulo(first.Y, second.Y), MathUnsafe.Modulo(first.Z, second.Z));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static T ToGeneric(Int32 value)
+        {
+            return (T) Convert.ChangeType(value, typeof(T));
+        }
+
+        public T X { get; }
+        public T Y { get; }
+        public T Z { get; }
+
+        public static Point3<T> Zero { get; } = new Point3<T>(0, 0, 0);
+        public static Point3<T> One { get; } = new Point3<T>(1, 1, 1);
+
+        public Point3(T x, T y, T z)
+        {
+            X = x;
+            Y = y;
+            Z = z;
+        }
+        
+        public Point3(Int32 x, Int32 y, Int32 z)
+            : this(ToGeneric(x), ToGeneric(y), ToGeneric(z))
+        {
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point3<T> Offset(Point3<T> point)
+        {
+            return this + point;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point3<T> Offset(T x, T y, T z)
+        {
+            return this + new Point3<T>(x, y, z);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point3<T> Delta(Point3<T> point)
+        {
+            return this - point;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Point3<T> Delta(T x, T y, T z)
+        {
+            return this - new Point3<T>(x, y, z);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Boolean IsPositive()
+        {
+            return MathUnsafe.GreaterEqual(X, default) && MathUnsafe.GreaterEqual(Y, default) && MathUnsafe.GreaterEqual(Z, default);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Boolean IsNegative()
+        {
+            return MathUnsafe.LessEqual(X, default) && MathUnsafe.LessEqual(Y, default) && MathUnsafe.LessEqual(Z, default);
+        }
+        
+        public override Int32 GetHashCode()
+        {
+            return HashCode.Combine(X, Y);
+        }
+
+        public override Boolean Equals(Object? obj)
+        {
+            return obj is Point3<T> point && Equals(point);
+        }
+
+        public Boolean Equals(Point3<T> other)
+        {
+            return MathUnsafe.Equal(X, other.X) && MathUnsafe.Equal(Y, other.Y) && MathUnsafe.Equal(Z, other.Z);
+        }
+        
+        public override String ToString()
+        {
+            return $"X:{X}, Y:{Y}, Z:{Z}";
         }
     }
 }

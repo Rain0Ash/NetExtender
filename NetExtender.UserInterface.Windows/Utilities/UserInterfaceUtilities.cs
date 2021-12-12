@@ -18,6 +18,11 @@ namespace NetExtender.Utilities.UserInterface
 {
     public static class UserInterfaceUtilities
     {
+        public static UserInterfaceActionType Additional(this UserInterfaceActionType action, Byte additional)
+        {
+            return action | (UserInterfaceActionType) ((UInt64) UserInterfaceActionType.Additional << additional);
+        }
+        
         public const Int32 Distance = 5;
 
         [DllImport("user32.dll", SetLastError = true)]

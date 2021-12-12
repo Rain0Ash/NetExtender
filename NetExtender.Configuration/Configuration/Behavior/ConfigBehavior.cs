@@ -46,6 +46,14 @@ namespace NetExtender.Configuration.Behavior
             }
         }
 
+        public Boolean IsIgnoreEvent
+        {
+            get
+            {
+                return Options.HasFlag(ConfigOptions.IgnoreEvent);
+            }
+        }
+
         public Boolean IsLazyWrite
         {
             get
@@ -128,6 +136,13 @@ namespace NetExtender.Configuration.Behavior
         {
             return GetExists().ToTask();
         }
+        
+        public abstract ConfigurationValueEntry[]? GetExistsValues();
+
+        public virtual Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(CancellationToken token)
+        {
+            return GetExistsValues().ToTask();
+        }
 
         public abstract Boolean Reload();
 
@@ -136,7 +151,7 @@ namespace NetExtender.Configuration.Behavior
             return Reload().ToTask();
         }
 
-        protected void InvokeChanged(ConfigurationEntry entry)
+        protected void OnChanged(ConfigurationValueEntry entry)
         {
             Changed?.Invoke(this, new ConfigurationChangedEventArgs(entry));
         }

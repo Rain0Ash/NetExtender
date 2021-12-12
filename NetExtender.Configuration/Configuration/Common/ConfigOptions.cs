@@ -10,6 +10,7 @@ namespace NetExtender.Configuration.Common
     {
         None = 0,
         ReadOnly = 1,
-        LazyWrite = 2
+        IgnoreEvent = 2,
+        LazyWrite = 4
     }
 }

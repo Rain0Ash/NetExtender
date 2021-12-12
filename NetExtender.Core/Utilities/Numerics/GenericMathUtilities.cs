@@ -20,9 +20,27 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Min(ref Char max, ref Char min)
+		{
+			if (max > min)
+			{
+				(max, min) = (min, max);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static SByte Min(this SByte value, SByte compare)
 		{
 			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Min(ref SByte max, ref SByte min)
+		{
+			if (max > min)
+			{
+				(max, min) = (min, max);
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -32,9 +50,27 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Min(ref Byte max, ref Byte min)
+		{
+			if (max > min)
+			{
+				(max, min) = (min, max);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int16 Min(this Int16 value, Int16 compare)
 		{
 			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Min(ref Int16 max, ref Int16 min)
+		{
+			if (max > min)
+			{
+				(max, min) = (min, max);
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -44,9 +80,27 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Min(ref UInt16 max, ref UInt16 min)
+		{
+			if (max > min)
+			{
+				(max, min) = (min, max);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int32 Min(this Int32 value, Int32 compare)
 		{
 			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Min(ref Int32 max, ref Int32 min)
+		{
+			if (max > min)
+			{
+				(max, min) = (min, max);
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -56,9 +110,27 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Min(ref UInt32 max, ref UInt32 min)
+		{
+			if (max > min)
+			{
+				(max, min) = (min, max);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Int64 Min(this Int64 value, Int64 compare)
 		{
 			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Min(ref Int64 max, ref Int64 min)
+		{
+			if (max > min)
+			{
+				(max, min) = (min, max);
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -68,9 +140,27 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Min(ref UInt64 max, ref UInt64 min)
+		{
+			if (max > min)
+			{
+				(max, min) = (min, max);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Single Min(this Single value, Single compare)
 		{
 			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Min(ref Single max, ref Single min)
+		{
+			if (max > min)
+			{
+				(max, min) = (min, max);
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -80,9 +170,27 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Min(ref Double max, ref Double min)
+		{
+			if (max > min)
+			{
+				(max, min) = (min, max);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Decimal Min(this Decimal value, Decimal compare)
 		{
 			return value <= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Min(ref Decimal max, ref Decimal min)
+		{
+			if (max > min)
+			{
+				(max, min) = (min, max);
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -92,9 +200,27 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Min(ref BigInteger max, ref BigInteger min)
+		{
+			if (max > min)
+			{
+				(max, min) = (min, max);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Char Max(this Char value, Char compare)
 		{
 			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Max(ref Char max, ref Char min)
+		{
+			if (max < min)
+			{
+				(max, min) = (min, max);
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -104,9 +230,27 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Max(ref SByte max, ref SByte min)
+		{
+			if (max < min)
+			{
+				(max, min) = (min, max);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Byte Max(this Byte value, Byte compare)
 		{
 			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Max(ref Byte max, ref Byte min)
+		{
+			if (max < min)
+			{
+				(max, min) = (min, max);
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -116,9 +260,27 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Max(ref Int16 max, ref Int16 min)
+		{
+			if (max < min)
+			{
+				(max, min) = (min, max);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static UInt16 Max(this UInt16 value, UInt16 compare)
 		{
 			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Max(ref UInt16 max, ref UInt16 min)
+		{
+			if (max < min)
+			{
+				(max, min) = (min, max);
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -128,9 +290,27 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Max(ref Int32 max, ref Int32 min)
+		{
+			if (max < min)
+			{
+				(max, min) = (min, max);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static UInt32 Max(this UInt32 value, UInt32 compare)
 		{
 			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Max(ref UInt32 max, ref UInt32 min)
+		{
+			if (max < min)
+			{
+				(max, min) = (min, max);
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -140,9 +320,27 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Max(ref Int64 max, ref Int64 min)
+		{
+			if (max < min)
+			{
+				(max, min) = (min, max);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static UInt64 Max(this UInt64 value, UInt64 compare)
 		{
 			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Max(ref UInt64 max, ref UInt64 min)
+		{
+			if (max < min)
+			{
+				(max, min) = (min, max);
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -152,9 +350,27 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Max(ref Single max, ref Single min)
+		{
+			if (max < min)
+			{
+				(max, min) = (min, max);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Max(this Double value, Double compare)
 		{
 			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Max(ref Double max, ref Double min)
+		{
+			if (max < min)
+			{
+				(max, min) = (min, max);
+			}
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -164,9 +380,27 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Max(ref Decimal max, ref Decimal min)
+		{
+			if (max < min)
+			{
+				(max, min) = (min, max);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static BigInteger Max(this BigInteger value, BigInteger compare)
 		{
 			return value >= compare ? value : compare;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static void Max(ref BigInteger max, ref BigInteger min)
+		{
+			if (max < min)
+			{
+				(max, min) = (min, max);
+			}
 		}
 
 		public static BigInteger Factorial(this SByte value)
@@ -3758,6 +3992,78 @@ namespace NetExtender.Utilities.Numerics
 			return ret;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte RoundUpToPowerOf2(this SByte value)
+		{
+			unchecked
+			{
+				return (Byte) BitOperations.RoundUpToPowerOf2((Byte) value);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte RoundUpToPowerOf2(this Byte value)
+		{
+			unchecked
+			{
+				return (Byte) BitOperations.RoundUpToPowerOf2(value);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 RoundUpToPowerOf2(this Int16 value)
+		{
+			unchecked
+			{
+				return (UInt16) BitOperations.RoundUpToPowerOf2((UInt16) value);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 RoundUpToPowerOf2(this UInt16 value)
+		{
+			unchecked
+			{
+				return (UInt16) BitOperations.RoundUpToPowerOf2(value);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 RoundUpToPowerOf2(this Int32 value)
+		{
+			unchecked
+			{
+				return BitOperations.RoundUpToPowerOf2((UInt32) value);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 RoundUpToPowerOf2(this UInt32 value)
+		{
+			unchecked
+			{
+				return BitOperations.RoundUpToPowerOf2(value);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 RoundUpToPowerOf2(this Int64 value)
+		{
+			unchecked
+			{
+				return BitOperations.RoundUpToPowerOf2((UInt64) value);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 RoundUpToPowerOf2(this UInt64 value)
+		{
+			unchecked
+			{
+				return BitOperations.RoundUpToPowerOf2(value);
+			}
+		}
+
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Sqrt(this SByte value)
@@ -3851,6 +4157,16 @@ namespace NetExtender.Utilities.Numerics
 
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 Log2N(this SByte value)
+		{
+			unchecked
+			{
+				return BitOperations.Log2((Byte) value);
+			}
+		}
+
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log10(this SByte value)
 		{
 			return Math.Log10(value);
@@ -3875,6 +4191,13 @@ namespace NetExtender.Utilities.Numerics
 		public static Double Log2(this Byte value)
 		{
 			return Math.Log2(value);
+		}
+
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 Log2N(this Byte value)
+		{
+			return BitOperations.Log2(value);
 		}
 
 		/// <inheritdoc cref="Math.Sqrt"/>
@@ -3907,6 +4230,16 @@ namespace NetExtender.Utilities.Numerics
 
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 Log2N(this Int16 value)
+		{
+			unchecked
+			{
+				return BitOperations.Log2((UInt16) value);
+			}
+		}
+
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log10(this Int16 value)
 		{
 			return Math.Log10(value);
@@ -3931,6 +4264,13 @@ namespace NetExtender.Utilities.Numerics
 		public static Double Log2(this UInt16 value)
 		{
 			return Math.Log2(value);
+		}
+
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 Log2N(this UInt16 value)
+		{
+			return BitOperations.Log2(value);
 		}
 
 		/// <inheritdoc cref="Math.Sqrt"/>
@@ -3963,6 +4303,16 @@ namespace NetExtender.Utilities.Numerics
 
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 Log2N(this Int32 value)
+		{
+			unchecked
+			{
+				return BitOperations.Log2((UInt32) value);
+			}
+		}
+
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log10(this Int32 value)
 		{
 			return Math.Log10(value);
@@ -3987,6 +4337,13 @@ namespace NetExtender.Utilities.Numerics
 		public static Double Log2(this UInt32 value)
 		{
 			return Math.Log2(value);
+		}
+
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 Log2N(this UInt32 value)
+		{
+			return BitOperations.Log2(value);
 		}
 
 		/// <inheritdoc cref="Math.Sqrt"/>
@@ -4019,6 +4376,16 @@ namespace NetExtender.Utilities.Numerics
 
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 Log2N(this Int64 value)
+		{
+			unchecked
+			{
+				return BitOperations.Log2((UInt64) value);
+			}
+		}
+
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Log10(this Int64 value)
 		{
 			return Math.Log10(value);
@@ -4043,6 +4410,13 @@ namespace NetExtender.Utilities.Numerics
 		public static Double Log2(this UInt64 value)
 		{
 			return Math.Log2(value);
+		}
+
+		/// <inheritdoc cref="Math.Sqrt"/>
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 Log2N(this UInt64 value)
+		{
+			return BitOperations.Log2(value);
 		}
 
 		/// <inheritdoc cref="Math.Sqrt"/>

@@ -7,6 +7,6 @@ namespace NetExtender.Interfaces
 {
     public interface IValidable<T> : IReadOnlyValidable<T?>
     {
-        public new Func<T?, Boolean> Validate { get; set; }
+        public new Func<T, Boolean> Validate { get; set; }
     }
 }

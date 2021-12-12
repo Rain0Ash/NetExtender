@@ -4,8 +4,8 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using NetExtender.Core.Types.Observers;
 using NetExtender.Types.Collections;
+using NetExtender.Types.Observers;
 
 namespace NetExtender.Utilities.Types
 {

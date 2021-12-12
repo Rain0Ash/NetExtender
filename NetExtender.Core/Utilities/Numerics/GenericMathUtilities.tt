@@ -271,6 +271,17 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t{");
         WriteLine("\t\t\treturn value <= compare ? value : compare;");
         WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static void {nameof(Min)}(ref {type} max, ref {type} min)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tif (max > min)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\t(max, min) = (min, max);");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
     }
     
     void Min()
@@ -284,6 +295,17 @@ namespace NetExtender.Utilities.Numerics
         WriteLine($"\t\tpublic static {type} {nameof(Max)}(this {type} value, {type} compare)");
         WriteLine("\t\t{");
         WriteLine("\t\t\treturn value >= compare ? value : compare;");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static void {nameof(Max)}(ref {type} max, ref {type} min)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tif (max < min)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\t(max, min) = (min, max);");
+        WriteLine("\t\t\t}");
         WriteLine("\t\t}");
     }
     
@@ -911,6 +933,11 @@ namespace NetExtender.Utilities.Numerics
         WriteLine(!IsUnsignedType(type) ? "\t\t\treturn Math.Abs(value);" : "\t\t\treturn value;");
         WriteLine("\t\t}");
     }
+    
+    void Abs()
+    {
+        ForEach(types, AbsImplementation);
+    }
 
     void MathematicalModulo()
     {
@@ -934,11 +961,6 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {(IsSmallType(type) ? $"({type}) ((Math.Abs(value * modulo) + value) % modulo)" : "(Math.Abs(value * modulo) + value) % modulo")};");
         WriteLine("\t\t}");
-    }
-
-    void Abs()
-    {
-        ForEach(types, AbsImplementation);
     }
 
     void PowImplementation(String type)
@@ -969,6 +991,23 @@ namespace NetExtender.Utilities.Numerics
     void Pow()
     {
         ForEach(types.Where(type => IsIntType(type) && !IsSmallType(type)).Append(biginteger), PowImplementation);
+    }
+
+    void RoundUpToPowerOf2Implementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {ToUnsignedType(type)} {nameof(RoundUpToPowerOf2)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tunchecked");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\treturn {(IsSmallType(type) ? $"({ToUnsignedType(type)}) " : String.Empty)}BitOperations.{nameof(RoundUpToPowerOf2)}({(!IsUnsignedType(type) ? $"({ToUnsignedType(type)}) " : String.Empty)}value);");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+    }
+    
+    void RoundUpToPowerOf2()
+    {
+        ForEach(types.Where(NotChar).Where(IsIntType), RoundUpToPowerOf2Implementation);
     }
 
     void SqrtImplementation(String type)
@@ -1026,6 +1065,29 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t}");
         
         WriteLine(String.Empty);
+
+        if (IsIntType(type))
+        {
+            WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {nameof(Int32)} {nameof(Log)}2N(this {type} value)");
+            WriteLine("\t\t{");
+            if (IsUnsignedType(type))
+            {
+                WriteLine($"\t\t\treturn BitOperations.Log2(value);");
+            }
+            else
+            {
+                WriteLine("\t\t\tunchecked");
+                WriteLine("\t\t\t{");
+                WriteLine($"\t\t\t\treturn BitOperations.Log2(({ToUnsignedType(type)}) value);");
+                WriteLine("\t\t\t}");
+            }
+            
+            WriteLine("\t\t}");
+        
+            WriteLine(String.Empty);
+        }
         
         WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -1037,7 +1099,7 @@ namespace NetExtender.Utilities.Numerics
     
     void Log()
     {
-        ForEach(types.Where(type => IsIntType(type) && type != nameof(Char)), LogImplementation);
+        ForEach(types.Where(NotChar).Where(IsIntType), LogImplementation);
     }
 
     void ClampImplementation(String type)
@@ -1673,6 +1735,8 @@ namespace NetExtender.Utilities.Numerics
     MathematicalModulo();
     WriteLine(String.Empty);
     Pow();
+    WriteLine(String.Empty);
+    RoundUpToPowerOf2();
     WriteLine(String.Empty);
     Sqrt();
     WriteLine(String.Empty);

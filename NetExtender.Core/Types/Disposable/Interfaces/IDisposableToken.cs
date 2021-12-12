@@ -3,7 +3,7 @@
 
 using System;
 
-namespace NetExtender.Core.Types.Disposable.Interfaces
+namespace NetExtender.Types.Disposable.Interfaces
 {
     public interface IDisposableToken : IDisposable
     {

@@ -2366,6 +2366,68 @@ namespace NetExtender.Utilities.Types
         }
 
         /// <summary>
+        /// Waits for all of the provided <see cref="Task"/> objects to complete execution.
+        /// </summary>
+        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
+        /// <returns>
+        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        public static void WaitAll(this IEnumerable<Task> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            Task.WaitAll(source.AsArray());
+        }
+        
+        /// <summary>
+        /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
+        /// milliseconds or until the wait is cancelled.
+        /// </summary>
+        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="token">
+        /// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        public static void WaitAll(this IEnumerable<Task> source, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            Task.WaitAll(source.AsArray(), token);
+        }
+        
+        /// <summary>
+        /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
+        /// milliseconds or until the wait is cancelled.
+        /// </summary>
+        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="timeout">
+        /// The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        public static Boolean WaitAll(this IEnumerable<Task> source, Int32 timeout)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Task.WaitAll(source.AsArray(), timeout);
+        }
+        
+        /// <summary>
         /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
         /// milliseconds or until the wait is cancelled.
         /// </summary>
@@ -2398,6 +2460,28 @@ namespace NetExtender.Utilities.Types
         /// <param name="timeout">
         /// A <see cref="TimeSpan"/> to wait, or <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
         /// </param>
+        /// <returns>
+        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
+        /// <c>false</c>.
+        /// </returns>
+        public static Boolean WaitAll(this IEnumerable<Task> source, TimeSpan timeout)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return Task.WaitAll(source.AsArray(), timeout);
+        }
+        
+        /// <summary>
+        /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified
+        /// <see cref="TimeSpan"/> or until the wait is cancelled.
+        /// </summary>
+        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
+        /// <param name="timeout">
+        /// A <see cref="TimeSpan"/> to wait, or <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
+        /// </param>
         /// <param name="token">
         /// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
         /// </param>
@@ -2413,90 +2497,6 @@ namespace NetExtender.Utilities.Types
             }
 
             return Task.WaitAll(source.AsArray(), (Int32) timeout.TotalMilliseconds, token);
-        }
-
-        /// <summary>
-        /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
-        /// milliseconds or until the wait is cancelled.
-        /// </summary>
-        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
-        /// <param name="token">
-        /// A <see cref="CancellationToken"/> to observe while waiting for the tasks to complete.
-        /// </param>
-        /// <returns>
-        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
-        /// <c>false</c>.
-        /// </returns>
-        public static void WaitAll(this IEnumerable<Task> source, CancellationToken token)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            Task.WaitAll(source.AsArray(), token);
-        }
-
-        /// <summary>
-        /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
-        /// milliseconds or until the wait is cancelled.
-        /// </summary>
-        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
-        /// <param name="timeout">
-        /// The number of milliseconds to wait, or <see cref="Timeout.Infinite"/> (-1) to wait indefinitely.
-        /// </param>
-        /// <returns>
-        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
-        /// <c>false</c>.
-        /// </returns>
-        public static Boolean WaitAll(this IEnumerable<Task> source, Int32 timeout)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return Task.WaitAll(source.AsArray(), timeout);
-        }
-
-        /// <summary>
-        /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified
-        /// <see cref="TimeSpan"/> or until the wait is cancelled.
-        /// </summary>
-        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
-        /// <param name="timeout">
-        /// A <see cref="TimeSpan"/> to wait, or <see cref="TimeSpan"/> that represents -1 milliseconds to wait indefinitely.
-        /// </param>
-        /// <returns>
-        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
-        /// <c>false</c>.
-        /// </returns>
-        public static Boolean WaitAll(this IEnumerable<Task> source, TimeSpan timeout)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            return Task.WaitAll(source.AsArray(), timeout);
-        }
-
-        /// <summary>
-        /// Waits for all of the provided <see cref="Task"/> objects to complete execution.
-        /// </summary>
-        /// <param name="source"><see cref="Task"/> instances on which to wait.</param>
-        /// <returns>
-        /// <c>true</c> if all of the <see cref="Task"/> instances completed execution within the allotted time; otherwise,
-        /// <c>false</c>.
-        /// </returns>
-        public static void WaitAll(this IEnumerable<Task> source)
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            Task.WaitAll(source.AsArray());
         }
 
         /// <summary>

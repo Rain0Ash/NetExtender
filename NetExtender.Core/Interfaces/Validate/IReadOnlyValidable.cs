@@ -7,14 +7,6 @@ namespace NetExtender.Interfaces
 {
     public interface IReadOnlyValidable<in T> : IBaseValidable
     {
-        public Func<T?, Boolean> Validate { get; }
-        
-        public new Boolean IsValid
-        {
-            get
-            {
-                return Validate?.Invoke(default) != false;
-            }
-        }
+        public Func<T, Boolean>? Validate { get; }
     }
 }

@@ -44,7 +44,7 @@ namespace NetExtender.Types.Interprocess
 
         private IReadOnlyList<Task> HandlerTasks { get; set; } = new List<Task>();
 
-        public event EventHandler<TypeHandledEventArgs<Byte[]>> MessageReceived = null!;
+        public event EventHandler<HandledEventArgs<Byte[]>> MessageReceived = null!;
 
         public Int64 SendedMessages
         {
@@ -247,7 +247,7 @@ namespace NetExtender.Types.Interprocess
 
                         while (ReceivedMessagesQueue.TryDequeue(out InterprocessLogEntry? entry))
                         {
-                            MessageReceived?.Invoke(this, new TypeHandledEventArgs<Byte[]>(entry.Message));
+                            MessageReceived?.Invoke(this, new HandledEventArgs<Byte[]>(entry.Message));
                         }
                     }
                 }

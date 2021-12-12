@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NetExtender.Core.Types.Parallel
+namespace NetExtender.Types.Parallel
 {
     public sealed class ParallelLinqOptions : ParallelOptions
     {

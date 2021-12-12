@@ -8,8 +8,6 @@ namespace NetExtender.Crypto.CryptKey.Interfaces
 {
     public interface ICryptKey : ICloneable<ICryptKey>, IStringCryptor, IByteCryptor, IDisposable
     {
-        public CryptAction Crypt { get; }
-
         public ICryptKey Clone(CryptAction crypt);
     }
 }

@@ -10,6 +10,14 @@ namespace NetExtender.Crypto.CryptKey.Deterministic
     public class DeterministicStringCryptorWrapper : DeterministicStringEncryptorWrapper, IStringCryptor
     {
         private IStringCryptor Cryptor { get; }
+        
+        public CryptAction Crypt
+        {
+            get
+            {
+                return Cryptor.Crypt;
+            }
+        }
 
         public Boolean IsDecrypt
         {

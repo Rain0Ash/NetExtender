@@ -48,7 +48,19 @@ namespace NetExtender.Utilities.Numerics
             };
         }
 
-        public static IRandom Generator { get; private set; } = new MersenneTwister(DateTime.UtcNow.Millisecond);
+        [ThreadStatic]
+        private static IRandom? generator;
+        public static IRandom Generator
+        {
+            get
+            {
+                return generator ??= new MersenneTwister();
+            }
+            private set
+            {
+                generator = value;
+            }
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 Next()

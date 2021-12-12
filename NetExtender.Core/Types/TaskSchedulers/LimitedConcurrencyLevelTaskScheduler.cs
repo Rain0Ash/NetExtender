@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Core.Types.TaskSchedulers
+namespace NetExtender.Types.TaskSchedulers
 {
     public class LimitedConcurrencyLevelTaskScheduler : TaskScheduler
     {

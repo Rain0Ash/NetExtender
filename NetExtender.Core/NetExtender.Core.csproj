@@ -2,130 +2,131 @@
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
-		<Nullable>enable</Nullable>
-		<OutputType>Library</OutputType>
+        <Nullable>enable</Nullable>
+        <OutputType>Library</OutputType>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <LangVersion>10</LangVersion>
-		<Authors>Rain0Ash</Authors>
+        <RootNamespace>NetExtender</RootNamespace>
+        <Authors>Rain0Ash</Authors>
         <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
-        <Version>0.8.4</Version>
+        <Version>0.8.5</Version>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.0" />
-      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-      <PackageReference Include="System.Reactive" Version="5.0.0" />
-      <PackageReference Include="System.Reactive.Core" Version="5.0.0" />
-      <PackageReference Include="System.Reactive.Interfaces" Version="5.0.0" />
-      <PackageReference Include="System.Reactive.Linq" Version="5.0.0" />
-      <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
+        <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="System.Reactive" Version="5.0.0" />
+        <PackageReference Include="System.Reactive.Core" Version="5.0.0" />
+        <PackageReference Include="System.Reactive.Interfaces" Version="5.0.0" />
+        <PackageReference Include="System.Reactive.Linq" Version="5.0.0" />
+        <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.4" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Interfaces" />
-      <Folder Include="IO\Shortcut" />
-      <Folder Include="Types\TextReaders" />
+        <Folder Include="Interfaces" />
+        <Folder Include="IO\Shortcut" />
+        <Folder Include="Types\TextReaders" />
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Utilities\Types\HLSColor.cs">
-        <DependentUpon>ColorUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Numerics\TrileanLogicUtilities.cs">
-        <DependentUpon>LogicUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Types\Enums\UnderlyingEnumOperation.cs">
-        <DependentUpon>UnderlyingOperation.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Numerics\GenericMathUtilities.cs">
-        <DependentUpon>GenericMathUtilities.tt</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Numerics\GenericRandomUtilities.cs">
-        <DependentUpon>GenericRandomUtilities.tt</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Numerics\GenericBitUtilities.cs">
-        <AutoGen>True</AutoGen>
-        <DesignTime>True</DesignTime>
-        <DependentUpon>GenericBitUtilities.tt</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\Enumerable\PredicateEnumerableUtilities.cs">
-        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\Enumerable\SelectorEnumerableUtilities.cs">
-        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\Enumerable\CollectionEnumerableUtilities.cs">
-        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\Enumerable\ConvertEnumerableUtilities.cs">
-        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\Enumerable\ItemEnumerableUtilities.cs">
-        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\Enumerable\MathEnumerableUtilities.cs">
-        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\Enumerable\FactoryEnumerableUtilities.cs">
-        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\Enumerable\ConcatEnumerableUtilities.cs">
-        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\Enumerable\MathArrayUtilities.cs">
-        <DependentUpon>ArrayUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\Enumerable\PredicateQueryableUtilities.cs">
-        <DependentUpon>QueryableUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\Enumerable\OrderEnumerableUtilities.cs">
-        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\Enumerable\GroupEnumerableUtilities.cs">
-        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\Enumerable\ItemQueryableUtilities.cs">
-        <DependentUpon>QueryableUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\Enumerable\MathQueryableUtilities.cs">
-        <DependentUpon>QueryableUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\Enumerable\OrderQueryableUtilities.cs">
-        <DependentUpon>QueryableUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\Enumerable\SelectorQueryableUtilities.cs">
-        <DependentUpon>QueryableUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\Enumerable\GroupQueryableUtilities.cs">
-        <DependentUpon>QueryableUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\Enumerable\KeyValuePairEnumerableUtilities.cs">
-        <DependentUpon>EnumerableUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Types\GenericBinaryReaderUtilities.cs">
-        <AutoGen>True</AutoGen>
-        <DesignTime>True</DesignTime>
-        <DependentUpon>GenericBinaryReaderUtilities.tt</DependentUpon>
-      </Compile>
+        <Compile Update="Utilities\Types\HLSColor.cs">
+            <DependentUpon>ColorUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Numerics\TrileanLogicUtilities.cs">
+            <DependentUpon>LogicUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Enums\UnderlyingEnumOperation.cs">
+            <DependentUpon>UnderlyingOperation.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Numerics\GenericMathUtilities.cs">
+            <DependentUpon>GenericMathUtilities.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Numerics\GenericRandomUtilities.cs">
+            <DependentUpon>GenericRandomUtilities.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Numerics\GenericBitUtilities.cs">
+            <AutoGen>True</AutoGen>
+            <DesignTime>True</DesignTime>
+            <DependentUpon>GenericBitUtilities.tt</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\PredicateEnumerableUtilities.cs">
+            <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\SelectorEnumerableUtilities.cs">
+            <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\CollectionEnumerableUtilities.cs">
+            <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\ConvertEnumerableUtilities.cs">
+            <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\ItemEnumerableUtilities.cs">
+            <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\MathEnumerableUtilities.cs">
+            <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\FactoryEnumerableUtilities.cs">
+            <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\ConcatEnumerableUtilities.cs">
+            <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\MathArrayUtilities.cs">
+            <DependentUpon>ArrayUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\PredicateQueryableUtilities.cs">
+            <DependentUpon>QueryableUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\OrderEnumerableUtilities.cs">
+            <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\GroupEnumerableUtilities.cs">
+            <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\ItemQueryableUtilities.cs">
+            <DependentUpon>QueryableUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\MathQueryableUtilities.cs">
+            <DependentUpon>QueryableUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\OrderQueryableUtilities.cs">
+            <DependentUpon>QueryableUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\SelectorQueryableUtilities.cs">
+            <DependentUpon>QueryableUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\GroupQueryableUtilities.cs">
+            <DependentUpon>QueryableUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\Enumerable\KeyValuePairEnumerableUtilities.cs">
+            <DependentUpon>EnumerableUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\GenericBinaryReaderUtilities.cs">
+            <AutoGen>True</AutoGen>
+            <DesignTime>True</DesignTime>
+            <DependentUpon>GenericBinaryReaderUtilities.tt</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Utilities\Numerics\GenericMathUtilities.tt">
-        <Generator>TextTemplatingFileGenerator</Generator>
-        <LastGenOutput>GenericMathUtilities.cs</LastGenOutput>
-      </None>
-      <None Update="Utilities\Numerics\GenericRandomUtilities.tt">
-        <Generator>TextTemplatingFileGenerator</Generator>
-        <LastGenOutput>GenericRandomUtilities.cs</LastGenOutput>
-      </None>
-      <None Update="Utilities\Numerics\GenericBitUtilities.tt">
-        <Generator>TextTemplatingFileGenerator</Generator>
-        <LastGenOutput>GenericBitUtilities.cs</LastGenOutput>
-      </None>
-      <None Update="Utilities\Types\GenericBinaryReaderUtilities.tt">
-        <Generator>TextTemplatingFileGenerator</Generator>
-        <LastGenOutput>GenericBinaryReaderUtilities.cs</LastGenOutput>
-      </None>
+        <None Update="Utilities\Numerics\GenericMathUtilities.tt">
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>GenericMathUtilities.cs</LastGenOutput>
+        </None>
+        <None Update="Utilities\Numerics\GenericRandomUtilities.tt">
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>GenericRandomUtilities.cs</LastGenOutput>
+        </None>
+        <None Update="Utilities\Numerics\GenericBitUtilities.tt">
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>GenericBitUtilities.cs</LastGenOutput>
+        </None>
+        <None Update="Utilities\Types\GenericBinaryReaderUtilities.tt">
+            <Generator>TextTemplatingFileGenerator</Generator>
+            <LastGenOutput>GenericBinaryReaderUtilities.cs</LastGenOutput>
+        </None>
     </ItemGroup>
 
 </Project>

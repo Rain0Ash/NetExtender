@@ -18,7 +18,7 @@ namespace NetExtender.Utilities.IO
             return TryCreateDirectory(path, out _);
         }
         
-        public static Boolean TryCreateDirectory(String path, [NotNullWhen(true)] out DirectoryInfo? result)
+        public static Boolean TryCreateDirectory(String path, [MaybeNullWhen(false)] out DirectoryInfo result)
         {
             if (path is null)
             {

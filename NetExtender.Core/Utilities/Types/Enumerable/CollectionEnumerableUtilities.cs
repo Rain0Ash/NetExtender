@@ -29,6 +29,9 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
+#if NET6_0_OR_GREATER
+            return source.TryGetNonEnumeratedCount(out Int32 count) ? count : source is IReadOnlyCollection<T> collection ? collection.Count : null;
+#else
             return source switch
             {
                 ICollection<T> collection => collection.Count,
@@ -36,6 +39,7 @@ namespace NetExtender.Utilities.Types
                 ICollection collection => collection.Count,
                 _ => null
             };
+#endif
         }
 
         [Pure]
@@ -72,7 +76,57 @@ namespace NetExtender.Utilities.Types
                 _ => source.ToArray()
             };
         }
+
+        public static IEnumerable<T> MaterializeIf<T>(this IEnumerable<T> source, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return condition ? Materialize(source) : source;
+        }
         
+        public static IEnumerable<T> MaterializeIf<T>(this IEnumerable<T> source, Func<Boolean> condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return MaterializeIf(source, condition());
+        }
+        
+        public static IEnumerable<T> MaterializeIfNot<T>(this IEnumerable<T> source, Boolean condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return !condition ? Materialize(source) : source;
+        }
+        
+        public static IEnumerable<T> MaterializeIfNot<T>(this IEnumerable<T> source, Func<Boolean> condition)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return MaterializeIfNot(source, condition());
+        }
+
         [Pure]
         public static Int32? CountIfMaterializedByReflection(this IEnumerable source)
         {

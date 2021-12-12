@@ -370,6 +370,38 @@ namespace NetExtender.Types.Trees
 
             return HasTree && Tree.Remove(key);
         }
+        
+        public Boolean Remove(TKey key, out TValue? value)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            if (HasTree && Tree.Remove(key, out value))
+            {
+                return true;
+            }
+
+            value = default;
+            return false;
+        }
+
+        public Boolean Remove(TKey key, [MaybeNullWhen(false)] out IDictionaryTreeNode<TKey, TValue> value)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+            
+            if (HasTree && Tree.Remove(key, out value))
+            {
+                return true;
+            }
+            
+            value = default;
+            return false;
+        }
 
         public Boolean Remove(KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>> item)
         {

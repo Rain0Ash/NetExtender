@@ -8,7 +8,7 @@ namespace NetExtender.Domains
         Master,
         Stable,
         Unstable,
-        Develop,
+        Development,
         Prototype,
         Nightly,
         NewArchitecture

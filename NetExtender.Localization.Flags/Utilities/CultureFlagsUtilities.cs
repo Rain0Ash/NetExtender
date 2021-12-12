@@ -4,15 +4,16 @@
 using System;
 using System.Drawing;
 using System.Globalization;
-using System.Runtime.CompilerServices;
 using NetExtender.Images.Flags;
+using NetExtender.Types.Stores;
+using NetExtender.Types.Stores.Interfaces;
 
 namespace NetExtender.Utilities.Types
 {
     public static class CultureFlagsUtilities
     {
-        private static ConditionalWeakTable<CultureInfo, Image> Images { get; } = new ConditionalWeakTable<CultureInfo, Image>();
-
+        private static IStore<CultureInfo, Image> Images { get; } = new WeakStore<CultureInfo, Image>();
+        
         private static Image? ReadFlagImage(CultureInfo info)
         {
             if (info is null)

@@ -291,6 +291,23 @@ namespace NetExtender.Types.Trees
         {
             return GetValue(key, (IEnumerable<TKey>?) sections);
         }
+
+        public Boolean Remove(TKey key, out TValue? value)
+        {
+            if (!Remove(key, out IDictionaryTreeNode<TKey, TValue>? node))
+            {
+                value = default;
+                return false;
+            }
+
+            value = node.Value;
+            return true;
+        }
+        
+        public new Boolean Remove(TKey key, [MaybeNullWhen(false)] out IDictionaryTreeNode<TKey, TValue> value)
+        {
+            return base.Remove(key, out value);
+        }
         
         public Boolean Remove(TKey key, IEnumerable<TKey>? sections)
         {

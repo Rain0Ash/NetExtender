@@ -135,7 +135,12 @@ namespace NetExtender.Serialization.Ini
         {
             return ToString(true, false);
         }
-        
+
+        public String ToString(String? format, IFormatProvider? provider)
+        {
+            return ToString();
+        }
+
         public String ToString(Boolean whitespace)
         {
             return ToString(true, whitespace);

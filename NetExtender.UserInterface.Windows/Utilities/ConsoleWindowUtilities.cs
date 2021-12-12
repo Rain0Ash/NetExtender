@@ -131,7 +131,7 @@ namespace NetExtender.Utilities.UserInterface
         [DllImport("kernel32.dll")]
         private static extern UInt32 GetLastError();
 
-        public static event TypeHandler<TypeCancelEventArgs<ConsoleCtrlType>> ConsoleExit = null!;
+        public static event TypeHandler<CancelEventArgs<ConsoleCtrlType>> ConsoleExit = null!;
 
         /*
         public delegate void ConsoleMouseEvent(MOUSE_EVENT_RECORD r);
@@ -889,7 +889,7 @@ namespace NetExtender.Utilities.UserInterface
 
         private static Boolean OnConsoleExit(ConsoleCtrlType type)
         {
-            TypeCancelEventArgs<ConsoleCtrlType> handler = new TypeCancelEventArgs<ConsoleCtrlType>(type);
+            CancelEventArgs<ConsoleCtrlType> handler = new CancelEventArgs<ConsoleCtrlType>(type);
             ConsoleExit?.Invoke(handler);
             return handler.Cancel;
         }

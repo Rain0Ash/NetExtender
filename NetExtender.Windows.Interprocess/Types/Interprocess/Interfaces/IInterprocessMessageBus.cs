@@ -10,7 +10,7 @@ namespace NetExtender.Types.Interprocess.Interfaces
         /// <summary>
         /// Called whenever a new message is received
         /// </summary>
-        public event EventHandler<TypeHandledEventArgs<Byte[]>> MessageReceived;
+        public event EventHandler<HandledEventArgs<Byte[]>> MessageReceived;
 
         /// <summary>
         /// Number of messages that have been published by this message bus

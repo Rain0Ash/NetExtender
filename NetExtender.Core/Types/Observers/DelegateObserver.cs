@@ -3,7 +3,7 @@
 
 using System;
 
-namespace NetExtender.Core.Types.Observers
+namespace NetExtender.Types.Observers
 {
     public sealed class DelegateObserver<T> : IObserver<T>
     {

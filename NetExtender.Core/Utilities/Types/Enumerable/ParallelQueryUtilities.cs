@@ -6,7 +6,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using NetExtender.Core.Types.Parallel;
+using NetExtender.Types.Parallel;
 
 namespace NetExtender.Utilities.Types
 {
@@ -72,6 +72,11 @@ namespace NetExtender.Utilities.Types
             }
 
             source.ForAll(item => collection.TryAdd(item));
+        }
+
+        public static ParallelQuery<T> WhereNotNull<T>(this ParallelQuery<T?> query)
+        {
+            return query.Where(item => item is not null)!;
         }
     }
 }

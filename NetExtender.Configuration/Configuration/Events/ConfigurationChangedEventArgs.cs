@@ -8,15 +8,29 @@ using NetExtender.Types.Events;
 namespace NetExtender.Configuration
 {
     public delegate void ConfigurationChangedEventHandler(Object? sender, ConfigurationChangedEventArgs args);
+    public delegate void ConfigurationChangedEventHandler<T>(Object? sender, ConfigurationChangedEventArgs<T> args);
     
-    public class ConfigurationChangedEventArgs : TypeHandledEventArgs<ConfigurationEntry>
+    public class ConfigurationChangedEventArgs : HandledEventArgs<ConfigurationValueEntry>
     {
-        public ConfigurationChangedEventArgs(ConfigurationEntry value)
+        public ConfigurationChangedEventArgs(ConfigurationValueEntry value)
             : base(value)
         {
         }
 
-        public ConfigurationChangedEventArgs(ConfigurationEntry value, Boolean handled)
+        public ConfigurationChangedEventArgs(ConfigurationValueEntry value, Boolean handled)
+            : base(value, handled)
+        {
+        }
+    }
+    
+    public class ConfigurationChangedEventArgs<T> : HandledEventArgs<ConfigurationValueEntry<T>>
+    {
+        public ConfigurationChangedEventArgs(ConfigurationValueEntry<T> value)
+            : base(value)
+        {
+        }
+
+        public ConfigurationChangedEventArgs(ConfigurationValueEntry<T> value, Boolean handled)
             : base(value, handled)
         {
         }

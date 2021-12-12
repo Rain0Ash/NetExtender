@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NetExtender.Core.Types.TaskSchedulers
+namespace NetExtender.Types.TaskSchedulers
 {
     public class CurrentThreadTaskScheduler : TaskScheduler
     {

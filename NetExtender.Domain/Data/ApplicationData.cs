@@ -33,9 +33,9 @@ namespace NetExtender.Domains
         private static readonly IDictionary<ApplicationBranch, String> BranchDictionary = new Dictionary<ApplicationBranch, String>
         {
             [ApplicationBranch.Master] = String.Empty,
-            [ApplicationBranch.Stable] = "ST",
-            [ApplicationBranch.Unstable] = "UNST",
-            [ApplicationBranch.Develop] = "DEV",
+            [ApplicationBranch.Stable] = "S",
+            [ApplicationBranch.Unstable] = "U",
+            [ApplicationBranch.Development] = "DEV",
             [ApplicationBranch.Prototype] = "P",
             [ApplicationBranch.Nightly] = "N",
             [ApplicationBranch.NewArchitecture] = "NA"

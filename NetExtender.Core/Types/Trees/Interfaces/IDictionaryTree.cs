@@ -15,6 +15,7 @@ namespace NetExtender.Types.Trees.Interfaces
         public Boolean HasValue { get; }
         public Boolean HasTree { get; }
         public Boolean TreeIsEmpty { get; }
+        public new Boolean ContainsKey(TKey key);
         public Boolean ContainsKey(TKey key, IEnumerable<TKey>? sections);
         public Boolean ContainsKey(TKey key, params TKey[]? sections);
         public TValue? GetValue(TKey key);
@@ -31,6 +32,9 @@ namespace NetExtender.Types.Trees.Interfaces
         public Boolean TryAdd(TKey key, TValue value);
         public Boolean TryAdd(TKey key, IEnumerable<TKey>? sections, TValue value);
         public Boolean TryAdd(TKey key, TValue value, params TKey[]? sections);
+        public new Boolean Remove(TKey key);
+        public Boolean Remove(TKey key, out TValue? value);
+        public Boolean Remove(TKey key, [MaybeNullWhen(false)] out IDictionaryTreeNode<TKey, TValue> value);
         public Boolean Remove(TKey key, IEnumerable<TKey>? sections);
         public Boolean Remove(TKey key, params TKey[]? sections);
         public Boolean Remove(TKey key, IEnumerable<TKey> sections, [MaybeNullWhen(false)] out IDictionaryTreeNode<TKey, TValue> value);

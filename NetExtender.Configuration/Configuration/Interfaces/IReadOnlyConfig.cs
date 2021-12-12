@@ -9,13 +9,9 @@ using NetExtender.Configuration.Common;
 
 namespace NetExtender.Configuration.Interfaces
 {
-    public interface IReadOnlyConfig
+    public interface IReadOnlyConfig : IConfigInfo, IEnumerable<ConfigurationEntry>
     {
         public event ConfigurationChangedEventHandler Changed;
-        public String Path { get; }
-        public ConfigOptions Options { get; }
-        public Boolean IsReadOnly { get; }
-        public Boolean IsLazyWrite { get; }
         
         public String? GetValue(String? key, params String[]? sections);
         public String? GetValue(String? key, IEnumerable<String>? sections);
@@ -35,8 +31,10 @@ namespace NetExtender.Configuration.Interfaces
         public Task<Boolean> KeyExistAsync(String? key, IEnumerable<String>? sections);
         public Task<Boolean> KeyExistAsync(String? key, CancellationToken token, params String[]? sections);
         public Task<Boolean> KeyExistAsync(String? key, IEnumerable<String>? sections, CancellationToken token);
-        public ConfigurationEntry[]? GetExists();
-        public Task<ConfigurationEntry[]?> GetExistsAsync();
-        public Task<ConfigurationEntry[]?> GetExistsAsync(CancellationToken token);
+        public void CopyTo(IConfig config);
+        public Task CopyToAsync(IConfig config);
+        public Task CopyToAsync(IConfig config, CancellationToken token);
+        public String? this[String? key, params String[]? sections] { get; }
+        public String? this[String? key, IEnumerable<String>? sections] { get; }
     }
 }

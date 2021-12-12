@@ -7,11 +7,23 @@
 		<LangVersion>10</LangVersion>
 		<Authors>Rain0Ash</Authors>
         <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
-        <Version>0.8.4</Version>
+        <Version>0.8.5</Version>
     </PropertyGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="NetExtender.Configuration.Property.Cryptography\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="NetExtender.Configuration.Property.Cryptography\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="NetExtender.Configuration.Property.Cryptography\**" />
     </ItemGroup>
 
 </Project>

@@ -92,19 +92,24 @@ namespace NetExtender.Utilities.Types
     void TryReadImplementation(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveOptimization)]");
-        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(TryRead)}(this {nameof(BinaryReader)} value, {(type == nameof(String) ? "[MaybeNullWhen(false)] " : String.Empty)}out {type} result)");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(TryRead)}(this {nameof(BinaryReader)} reader, {(type == nameof(String) ? "[MaybeNullWhen(false)] " : String.Empty)}out {type} result)");
         WriteLine("\t\t{");
-        WriteLine($"\t\t\treturn {nameof(TryRead)}{type}(value, out result);");
+        WriteLine($"\t\t\treturn {nameof(TryRead)}{type}(reader, out result);");
         WriteLine("\t\t}");
         
         WriteLine(String.Empty);
         
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveOptimization)]");
-        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(TryRead)}{type}(this {nameof(BinaryReader)} value, {(type == nameof(String) ? "[MaybeNullWhen(false)] " : String.Empty)}out {type} result)");
+        WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(TryRead)}{type}(this {nameof(BinaryReader)} reader, {(type == nameof(String) ? "[MaybeNullWhen(false)] " : String.Empty)}out {type} result)");
         WriteLine("\t\t{");
+        WriteLine("\t\t\tif (reader is null)");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\tthrow new {nameof(ArgumentNullException)}(nameof(reader));");
+        WriteLine("\t\t\t}");
+        WriteLine(String.Empty);
         WriteLine("\t\t\ttry");
         WriteLine("\t\t\t{");
-        WriteLine($"\t\t\t\tresult = value.Read{type}();");
+        WriteLine($"\t\t\t\tresult = reader.Read{type}();");
         WriteLine("\t\t\t\treturn true;");
         WriteLine("\t\t\t}");
         WriteLine("\t\t\tcatch (Exception)");

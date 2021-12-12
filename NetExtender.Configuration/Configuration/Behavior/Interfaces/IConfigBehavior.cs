@@ -15,6 +15,7 @@ namespace NetExtender.Configuration.Behavior.Interfaces
         public String Path { get; }
         public ConfigOptions Options { get; }
         public Boolean IsReadOnly { get; }
+        public Boolean IsIgnoreEvent { get; }
         public Boolean IsLazyWrite { get; }
         public String Joiner { get; }
         public Boolean Contains(String? key, IEnumerable<String>? sections);
@@ -27,6 +28,8 @@ namespace NetExtender.Configuration.Behavior.Interfaces
         public Task<String?> GetOrSetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token);
         public ConfigurationEntry[]? GetExists();
         public Task<ConfigurationEntry[]?> GetExistsAsync(CancellationToken token);
+        public ConfigurationValueEntry[]? GetExistsValues();
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(CancellationToken token);
         public Boolean Reload();
         public Task<Boolean> ReloadAsync(CancellationToken token);
     }

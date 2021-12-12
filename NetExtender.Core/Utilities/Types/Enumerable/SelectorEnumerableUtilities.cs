@@ -878,14 +878,14 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerable<T> SelectMany<T>(this IEnumerable<IEnumerable<T>> source)
+        public static IEnumerable<T> SelectMany<T>(this IEnumerable<IEnumerable<T>?> source)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.SelectMany(item => item);
+            return source.WhereNotNull().SelectMany(item => item);
         }
 
         public static IEnumerable<TResult> SelectManyWhere<T, TResult>(this IEnumerable<T> source, Func<T, Boolean> where, Func<T, IEnumerable<TResult>> selector)
@@ -927,7 +927,17 @@ namespace NetExtender.Utilities.Types
 
             return source.WhereNot(where).SelectMany(selector);
         }
-        
+
+        public static IEnumerable<T> SelectManyWhereNotNull<T>(this IEnumerable<IEnumerable<T?>?> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.SelectMany().WhereNotNull();
+        }
+
         public static IEnumerable<TResult> SelectManyWhereNotNull<T, TResult>(this IEnumerable<T> source, Func<T, IEnumerable<TResult>> selector)
         {
             if (source is null)

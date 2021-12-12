@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Domains.Applications.Interfaces;
@@ -12,6 +13,7 @@ using NetExtender.Domains.Interfaces;
 using NetExtender.Domains.View.Interfaces;
 using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Application;
+using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Domains
@@ -68,7 +70,7 @@ namespace NetExtender.Domains
                 return CurrentDomain.Current;
             }
         }
-        
+
         public static async Task<IDomain> Initialize(this Task<IDomain> source, IApplication application)
         {
             if (source is null)
@@ -485,6 +487,22 @@ namespace NetExtender.Domains
             get
             {
                 return Current.Information;
+            }
+        }
+
+        public static Boolean AssemblyLoadCallStaticContructor
+        {
+            get
+            {
+                return ReflectionUtilities.AssemblyLoadCallStaticContructor;
+            }
+        }
+
+        public static Assembly[] Assemblies
+        {
+            get
+            {
+                return AppDomain.CurrentDomain.GetAssemblies();
             }
         }
 

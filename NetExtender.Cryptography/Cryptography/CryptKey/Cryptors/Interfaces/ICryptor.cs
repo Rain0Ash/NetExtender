@@ -7,6 +7,7 @@ namespace NetExtender.Crypto.CryptKey.Interfaces
 {
     public interface ICryptor : IEncryptor, IDecryptor
     {
+        public CryptAction Crypt { get; }
         public new Int32 KeySize { get; }
     }
 }

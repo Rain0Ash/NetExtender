@@ -14,6 +14,7 @@ namespace NetExtender.Types.Trees.Interfaces
         public Boolean HasValue { get; }
         public Boolean HasTree { get; }
         public Boolean TreeIsEmpty { get; }
+        public new Boolean ContainsKey(TKey key);
         public Boolean ContainsKey(TKey key, IEnumerable<TKey>? sections);
         public Boolean ContainsKey(TKey key, params TKey[]? sections);
         public TValue? GetValue(TKey key);

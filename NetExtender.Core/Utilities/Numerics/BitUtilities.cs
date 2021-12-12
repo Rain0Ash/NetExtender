@@ -13,6 +13,7 @@ namespace NetExtender.Utilities.Numerics
     {
         public const Int32 BitInByte = 8;
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Int16 ToInt16(SByte high, SByte low)
         {
             unchecked
@@ -21,6 +22,7 @@ namespace NetExtender.Utilities.Numerics
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Int16 ToInt16(SByte high, Byte low)
         {
             unchecked
@@ -29,11 +31,13 @@ namespace NetExtender.Utilities.Numerics
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static UInt16 ToUInt16(Byte high, Byte low)
         {
             return (UInt16) ((high << (sizeof(Byte) * BitInByte)) | low);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Int32 ToInt32(Int16 high, Int16 low)
         {
             unchecked
@@ -42,16 +46,19 @@ namespace NetExtender.Utilities.Numerics
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Int32 ToInt32(Int16 high, UInt16 low)
         {
             return high << (sizeof(Int16) * BitInByte) | low;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static UInt32 ToUInt32(UInt16 high, UInt16 low)
         {
             return ((UInt32) high << (sizeof(UInt16) * BitInByte)) | low;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Int64 ToInt64(Int32 high, Int32 low)
         {
             unchecked
@@ -60,16 +67,20 @@ namespace NetExtender.Utilities.Numerics
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Int64 ToInt64(Int32 high, UInt32 low)
         {
             return (Int64) high << (sizeof(Int32) * BitInByte) | low;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static UInt64 ToUInt64(UInt32 high, UInt32 low)
         {
             return ((UInt64) high << (sizeof(UInt32) * BitInByte)) | low;
         }
 
+        //TODO: BitUtilities Trailing/leading zeros for void*
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe Int32 BitwisePopCount(this Single value)
         {

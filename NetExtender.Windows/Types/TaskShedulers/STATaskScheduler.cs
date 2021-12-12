@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using NetExtender.Utilities.Threading;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Core.Types.TaskSchedulers
+namespace NetExtender.Types.TaskSchedulers
 {
     public class STATaskScheduler : TaskScheduler, IDisposable
     {

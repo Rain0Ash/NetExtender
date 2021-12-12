@@ -10,7 +10,7 @@ namespace NetExtender.Domains.Applications.Interfaces
 {
     public interface IApplication
     {
-        public Boolean? Elevate { get; init; }
+        public Boolean? Elevate { get; }
         public Boolean? IsElevate { get; }
         public IDispatcher? Dispatcher { get; }
         public ApplicationShutdownMode ShutdownMode { get; set; }

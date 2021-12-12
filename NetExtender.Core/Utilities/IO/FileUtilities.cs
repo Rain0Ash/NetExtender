@@ -101,7 +101,7 @@ namespace NetExtender.Utilities.IO
             return TryCopyTo(info, destination, out _);
         }
         
-        public static Boolean TryCopyTo(this FileInfo info, String destination, [NotNullWhen(true)] out FileInfo? result)
+        public static Boolean TryCopyTo(this FileInfo info, String destination, [MaybeNullWhen(false)] out FileInfo result)
         {
             if (info is null)
             {
@@ -130,7 +130,7 @@ namespace NetExtender.Utilities.IO
             return TryCopyTo(info, destination, overwrite, out _);
         }
         
-        public static Boolean TryCopyTo(this FileInfo info, String destination, Boolean overwrite, [NotNullWhen(true)] out FileInfo? result)
+        public static Boolean TryCopyTo(this FileInfo info, String destination, Boolean overwrite, [MaybeNullWhen(false)] out FileInfo result)
         {
             if (info is null)
             {

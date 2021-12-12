@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Utilities.Threading;
 
-namespace NetExtender.Core.Types.TaskSchedulers
+namespace NetExtender.Types.TaskSchedulers
 {
     public class ThreadPerTaskScheduler : TaskScheduler
     {

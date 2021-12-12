@@ -3,8 +3,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
 using NetExtender.Crypto.CryptKey.Deterministic;
 using NetExtender.Crypto.CryptKey.Interfaces;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Crypto
 {
@@ -78,6 +81,130 @@ namespace NetExtender.Utilities.Crypto
             }
 
             return DeterministicStringEncryptorWrapper.Register(encryptor);
+        }
+        
+        public static Boolean TryEncrypt(this IStringEncryptor encryptor, String? value, out String? result)
+        {
+            if (encryptor is null)
+            {
+                throw new ArgumentNullException(nameof(encryptor));
+            }
+
+            if (value is null)
+            {
+                result = value;
+                return true;
+            }
+
+            try
+            {
+                if (!encryptor.IsEncrypt)
+                {
+                    result = default;
+                    return false;
+                }
+
+                result = encryptor.Encrypt(value);
+                return result is not null;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        public static Boolean TryDecrypt(this IStringDecryptor decryptor, String? value, out String? result)
+        {
+            if (decryptor is null)
+            {
+                throw new ArgumentNullException(nameof(decryptor));
+            }
+
+            if (value is null)
+            {
+                result = value;
+                return true;
+            }
+            
+            try
+            {
+                if (!decryptor.IsDecrypt)
+                {
+                    result = default;
+                    return false;
+                }
+                        
+                result = decryptor.Decrypt(value);
+                return result is not null;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        public static Boolean TryEncrypt(this IStringEncryptor encryptor, IEnumerable<String>? source, out IEnumerable<String>? result)
+        {
+            if (encryptor is null)
+            {
+                throw new ArgumentNullException(nameof(encryptor));
+            }
+
+            if (source is null)
+            {
+                result = source;
+                return true;
+            }
+
+            try
+            {
+                if (!encryptor.IsEncrypt)
+                {
+                    result = default;
+                    return false;
+                }
+                        
+                result = encryptor.Encrypt(source).ThrowIfNull<String, CryptographicException>().ToArray();
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+
+        public static Boolean TryDecrypt(this IStringDecryptor decryptor, IEnumerable<String>? source, out IEnumerable<String>? result)
+        {
+            if (decryptor is null)
+            {
+                throw new ArgumentNullException(nameof(decryptor));
+            }
+
+            if (source is null)
+            {
+                result = source;
+                return true;
+            }
+
+            try
+            {
+                if (!decryptor.IsDecrypt)
+                {
+                    result = default;
+                    return false;
+                }
+                        
+                result = decryptor.Decrypt(source).ThrowIfNull<String, CryptographicException>().ToArray();
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
         }
     }
 }

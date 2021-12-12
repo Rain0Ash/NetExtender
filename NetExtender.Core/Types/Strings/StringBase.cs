@@ -56,6 +56,11 @@ namespace NetExtender.Types.Strings
 
         public virtual String ToString(IFormatProvider? provider)
         {
+            return ToString(null, provider);
+        }
+        
+        public virtual String ToString(String? format, IFormatProvider? provider)
+        {
             return ToString();
         }
     }

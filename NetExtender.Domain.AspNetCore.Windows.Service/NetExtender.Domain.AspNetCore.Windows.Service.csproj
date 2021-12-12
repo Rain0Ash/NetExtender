@@ -7,11 +7,11 @@
 		<LangVersion>10</LangVersion>
 		<Authors>Rain0Ash</Authors>
         <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
-        <Version>0.8.4</Version>
+        <Version>0.8.5</Version>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.AspNet.Core\NetExtender.AspNet.Core.csproj" />
+      <ProjectReference Include="..\NetExtender.AspNetCore\NetExtender.AspNetCore.csproj" />
       <ProjectReference Include="..\NetExtender.AspNetCore.Windows.Services\NetExtender.AspNetCore.Windows.Services.csproj" />
       <ProjectReference Include="..\NetExtender.Domain.AspNetCore\NetExtender.Domain.AspNetCore.csproj" />
       <ProjectReference Include="..\NetExtender.Domain.Windows.Service\NetExtender.Domain.Windows.Service.csproj" />

@@ -1,18 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework>net6.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
 		<OutputType>Library</OutputType>
 		<LangVersion>10</LangVersion>
 		<Authors>Rain0Ash</Authors>
         <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
-        <Version>0.8.4</Version>
+        <Version>0.8.5</Version>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
       <PackageReference Include="System.Resources.Extensions" Version="6.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
     </ItemGroup>
 
 </Project>

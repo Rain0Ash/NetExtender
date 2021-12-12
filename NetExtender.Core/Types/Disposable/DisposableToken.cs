@@ -2,9 +2,9 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using NetExtender.Core.Types.Disposable.Interfaces;
+using NetExtender.Types.Disposable.Interfaces;
 
-namespace NetExtender.Core.Types.Disposable
+namespace NetExtender.Types.Disposable
 {
     public abstract class DisposableToken : IDisposableToken
     {

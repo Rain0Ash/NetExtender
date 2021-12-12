@@ -12,7 +12,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Strings.Interfaces
 {
-    public interface IString : IComparable, IConvertible, IEnumerable<Char>, IComparable<String?>, IEquatable<String?>, IComparable<IString?>, IEquatable<IString?>, ICloneable
+    public interface IString : IComparable, IConvertible, IFormattable, IEnumerable<Char>, IComparable<String?>, IEquatable<String?>, IComparable<IString?>, IEquatable<IString?>, ICloneable
     {
         /// <summary>
         /// Is immutable (ex. String) or mutable (ex. StringBuilder)

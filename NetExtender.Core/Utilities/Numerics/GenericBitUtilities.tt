@@ -7,6 +7,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 
@@ -385,6 +386,55 @@ namespace NetExtender.Utilities.Numerics
         ForEach(types.Where(NotChar).Where(IsIntType).Where(type => type != nameof(SByte) && type != nameof(Byte)), LowImplementation);
     }
     
+    void HighestBitImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {ToUnsignedType(type)} {nameof(HighestBit)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tunchecked");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\t{(IsSmallType(type) ? nameof(UInt32) : ToUnsignedType(type))} result = 1U << BitOperations.Log2({(!IsUnsignedType(type) ? $"({ToUnsignedType(type)}) " : String.Empty)}value);");
+        WriteLine($"\t\t\t\treturn {(IsSmallType(type) ? $"({ToUnsignedType(type)}) (value & result)" : $"{(!IsUnsignedType(type) ? $"({ToUnsignedType(type)}) " : String.Empty)}value & result")};");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Int32)} {nameof(HighestBit)}Number(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn value == 0 ? 0 : BitOperations.Log2({(!IsUnsignedType(type) ? $"({ToUnsignedType(type)}) " : String.Empty)}value) + 1;");
+        WriteLine("\t\t}");
+    }
+
+    void HighestBit()
+    {
+        ForEach(types.Where(NotChar).Where(IsIntType), HighestBitImplementation);
+    }
+    
+    void LowestBitImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {ToUnsignedType(type)} {nameof(LowestBit)}(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tunchecked");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\treturn {(IsSmallType(type) || !IsUnsignedType(type) ? $"({ToUnsignedType(type)}) (value & ~value + 1)" : "value & ~value + 1")};");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {nameof(Int32)} {nameof(LowestBit)}Number(this {type} value)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn value == 0 ? 0 : BitOperations.Log2({nameof(LowestBit)}(value)) + 1;");
+        WriteLine("\t\t}");
+    }
+
+    void LowestBit()
+    {
+        ForEach(types.Where(NotChar).Where(IsIntType), LowestBitImplementation);
+    }
+    
 #>
     [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
     public static partial class BitUtilities
@@ -401,6 +451,10 @@ namespace NetExtender.Utilities.Numerics
     High();
     WriteLine(String.Empty);
     Low();
+    WriteLine(String.Empty);
+    HighestBit();
+    WriteLine(String.Empty);
+    LowestBit();
 #>
     }
 }

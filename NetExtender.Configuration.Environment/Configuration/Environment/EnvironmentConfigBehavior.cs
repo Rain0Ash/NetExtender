@@ -13,6 +13,8 @@ namespace NetExtender.Configuration.Environment
 {
     public class EnvironmentConfigBehavior : ConfigBehavior
     {
+        public EnvironmentVariableTarget Target { get; init; }
+        
         public EnvironmentConfigBehavior()
             : this(ConfigOptions.None)
         {
@@ -49,7 +51,7 @@ namespace NetExtender.Configuration.Environment
             try
             {
                 key = Join(key, sections);
-                return key is not null ? System.Environment.GetEnvironmentVariable(key) : null;
+                return key is not null ? System.Environment.GetEnvironmentVariable(key, Target) : null;
             }
             catch (Exception)
             {
@@ -57,18 +59,50 @@ namespace NetExtender.Configuration.Environment
             }
         }
 
+        // ReSharper disable once CognitiveComplexity
         public override Boolean Set(String? key, String? value, IEnumerable<String>? sections)
         {
+            if (IsReadOnly)
+            {
+                return false;
+            }
+            
             try
             {
+                if (IsIgnoreEvent && !IsLazyWrite)
+                {
+                    key = Join(key, sections);
+                    
+                    if (key is null)
+                    {
+                        return false;
+                    }
+                    
+                    System.Environment.SetEnvironmentVariable(key, value);
+                    return true;
+                }
+                
+                sections = ToSection(sections).AsIImmutableList();
+                
+                if (IsLazyWrite && Get(key, sections) == value)
+                {
+                    return true;
+                }
+                
                 key = Join(key, sections);
-
+                    
                 if (key is null)
                 {
                     return false;
                 }
                 
                 System.Environment.SetEnvironmentVariable(key, value);
+
+                if (!IsIgnoreEvent)
+                {
+                    OnChanged(new ConfigurationValueEntry(key, value, sections));
+                }
+                
                 return true;
             }
             catch (Exception)
@@ -82,6 +116,18 @@ namespace NetExtender.Configuration.Environment
             try
             {
                 return System.Environment.GetEnvironmentVariables().Keys.OfType<String>().Select(key => new ConfigurationEntry(key)).ToArray();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        
+        public override ConfigurationValueEntry[]? GetExistsValues()
+        {
+            try
+            {
+                return System.Environment.GetEnvironmentVariables().Keys.OfType<String>().Select(key => new ConfigurationValueEntry(key, Get(key, null))).ToArray();
             }
             catch (Exception)
             {

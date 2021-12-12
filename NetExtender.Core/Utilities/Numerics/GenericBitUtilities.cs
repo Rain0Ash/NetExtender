@@ -1234,5 +1234,245 @@ namespace NetExtender.Utilities.Numerics
 				return (UInt32) (value & UInt32.MaxValue);
 			}
 		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte HighestBit(this SByte value)
+		{
+			unchecked
+			{
+				UInt32 result = 1U << BitOperations.Log2((Byte) value);
+				return (Byte) (value & result);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 HighestBitNumber(this SByte value)
+		{
+			return value == 0 ? 0 : BitOperations.Log2((Byte) value) + 1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte HighestBit(this Byte value)
+		{
+			unchecked
+			{
+				UInt32 result = 1U << BitOperations.Log2(value);
+				return (Byte) (value & result);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 HighestBitNumber(this Byte value)
+		{
+			return value == 0 ? 0 : BitOperations.Log2(value) + 1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 HighestBit(this Int16 value)
+		{
+			unchecked
+			{
+				UInt32 result = 1U << BitOperations.Log2((UInt16) value);
+				return (UInt16) (value & result);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 HighestBitNumber(this Int16 value)
+		{
+			return value == 0 ? 0 : BitOperations.Log2((UInt16) value) + 1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 HighestBit(this UInt16 value)
+		{
+			unchecked
+			{
+				UInt32 result = 1U << BitOperations.Log2(value);
+				return (UInt16) (value & result);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 HighestBitNumber(this UInt16 value)
+		{
+			return value == 0 ? 0 : BitOperations.Log2(value) + 1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 HighestBit(this Int32 value)
+		{
+			unchecked
+			{
+				UInt32 result = 1U << BitOperations.Log2((UInt32) value);
+				return (UInt32) value & result;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 HighestBitNumber(this Int32 value)
+		{
+			return value == 0 ? 0 : BitOperations.Log2((UInt32) value) + 1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 HighestBit(this UInt32 value)
+		{
+			unchecked
+			{
+				UInt32 result = 1U << BitOperations.Log2(value);
+				return value & result;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 HighestBitNumber(this UInt32 value)
+		{
+			return value == 0 ? 0 : BitOperations.Log2(value) + 1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 HighestBit(this Int64 value)
+		{
+			unchecked
+			{
+				UInt64 result = 1U << BitOperations.Log2((UInt64) value);
+				return (UInt64) value & result;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 HighestBitNumber(this Int64 value)
+		{
+			return value == 0 ? 0 : BitOperations.Log2((UInt64) value) + 1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 HighestBit(this UInt64 value)
+		{
+			unchecked
+			{
+				UInt64 result = 1U << BitOperations.Log2(value);
+				return value & result;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 HighestBitNumber(this UInt64 value)
+		{
+			return value == 0 ? 0 : BitOperations.Log2(value) + 1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte LowestBit(this SByte value)
+		{
+			unchecked
+			{
+				return (Byte) (value & ~value + 1);
+			}
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 LowestBitNumber(this SByte value)
+		{
+			return value == 0 ? 0 : BitOperations.Log2(LowestBit(value)) + 1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Byte LowestBit(this Byte value)
+		{
+			unchecked
+			{
+				return (Byte) (value & ~value + 1);
+			}
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 LowestBitNumber(this Byte value)
+		{
+			return value == 0 ? 0 : BitOperations.Log2(LowestBit(value)) + 1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 LowestBit(this Int16 value)
+		{
+			unchecked
+			{
+				return (UInt16) (value & ~value + 1);
+			}
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 LowestBitNumber(this Int16 value)
+		{
+			return value == 0 ? 0 : BitOperations.Log2(LowestBit(value)) + 1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt16 LowestBit(this UInt16 value)
+		{
+			unchecked
+			{
+				return (UInt16) (value & ~value + 1);
+			}
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 LowestBitNumber(this UInt16 value)
+		{
+			return value == 0 ? 0 : BitOperations.Log2(LowestBit(value)) + 1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 LowestBit(this Int32 value)
+		{
+			unchecked
+			{
+				return (UInt32) (value & ~value + 1);
+			}
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 LowestBitNumber(this Int32 value)
+		{
+			return value == 0 ? 0 : BitOperations.Log2(LowestBit(value)) + 1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt32 LowestBit(this UInt32 value)
+		{
+			unchecked
+			{
+				return value & ~value + 1;
+			}
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 LowestBitNumber(this UInt32 value)
+		{
+			return value == 0 ? 0 : BitOperations.Log2(LowestBit(value)) + 1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 LowestBit(this Int64 value)
+		{
+			unchecked
+			{
+				return (UInt64) (value & ~value + 1);
+			}
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 LowestBitNumber(this Int64 value)
+		{
+			return value == 0 ? 0 : BitOperations.Log2(LowestBit(value)) + 1;
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static UInt64 LowestBit(this UInt64 value)
+		{
+			unchecked
+			{
+				return value & ~value + 1;
+			}
+		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Int32 LowestBitNumber(this UInt64 value)
+		{
+			return value == 0 ? 0 : BitOperations.Log2(LowestBit(value)) + 1;
+		}
     }
 }

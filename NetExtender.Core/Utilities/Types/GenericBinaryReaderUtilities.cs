@@ -11,17 +11,22 @@ namespace NetExtender.Utilities.Types
     public static partial class BinaryReaderUtilities
     {
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryRead(this BinaryReader value, out Boolean result)
+		public static Boolean TryRead(this BinaryReader reader, out Boolean result)
 		{
-			return TryReadBoolean(value, out result);
+			return TryReadBoolean(reader, out result);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryReadBoolean(this BinaryReader value, out Boolean result)
+		public static Boolean TryReadBoolean(this BinaryReader reader, out Boolean result)
 		{
+			if (reader is null)
+			{
+				throw new ArgumentNullException(nameof(reader));
+			}
+
 			try
 			{
-				result = value.ReadBoolean();
+				result = reader.ReadBoolean();
 				return true;
 			}
 			catch (Exception)
@@ -32,17 +37,22 @@ namespace NetExtender.Utilities.Types
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryRead(this BinaryReader value, out SByte result)
+		public static Boolean TryRead(this BinaryReader reader, out SByte result)
 		{
-			return TryReadSByte(value, out result);
+			return TryReadSByte(reader, out result);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryReadSByte(this BinaryReader value, out SByte result)
+		public static Boolean TryReadSByte(this BinaryReader reader, out SByte result)
 		{
+			if (reader is null)
+			{
+				throw new ArgumentNullException(nameof(reader));
+			}
+
 			try
 			{
-				result = value.ReadSByte();
+				result = reader.ReadSByte();
 				return true;
 			}
 			catch (Exception)
@@ -53,17 +63,22 @@ namespace NetExtender.Utilities.Types
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryRead(this BinaryReader value, out Byte result)
+		public static Boolean TryRead(this BinaryReader reader, out Byte result)
 		{
-			return TryReadByte(value, out result);
+			return TryReadByte(reader, out result);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryReadByte(this BinaryReader value, out Byte result)
+		public static Boolean TryReadByte(this BinaryReader reader, out Byte result)
 		{
+			if (reader is null)
+			{
+				throw new ArgumentNullException(nameof(reader));
+			}
+
 			try
 			{
-				result = value.ReadByte();
+				result = reader.ReadByte();
 				return true;
 			}
 			catch (Exception)
@@ -74,17 +89,22 @@ namespace NetExtender.Utilities.Types
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryRead(this BinaryReader value, out Int16 result)
+		public static Boolean TryRead(this BinaryReader reader, out Int16 result)
 		{
-			return TryReadInt16(value, out result);
+			return TryReadInt16(reader, out result);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryReadInt16(this BinaryReader value, out Int16 result)
+		public static Boolean TryReadInt16(this BinaryReader reader, out Int16 result)
 		{
+			if (reader is null)
+			{
+				throw new ArgumentNullException(nameof(reader));
+			}
+
 			try
 			{
-				result = value.ReadInt16();
+				result = reader.ReadInt16();
 				return true;
 			}
 			catch (Exception)
@@ -95,17 +115,22 @@ namespace NetExtender.Utilities.Types
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryRead(this BinaryReader value, out UInt16 result)
+		public static Boolean TryRead(this BinaryReader reader, out UInt16 result)
 		{
-			return TryReadUInt16(value, out result);
+			return TryReadUInt16(reader, out result);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryReadUInt16(this BinaryReader value, out UInt16 result)
+		public static Boolean TryReadUInt16(this BinaryReader reader, out UInt16 result)
 		{
+			if (reader is null)
+			{
+				throw new ArgumentNullException(nameof(reader));
+			}
+
 			try
 			{
-				result = value.ReadUInt16();
+				result = reader.ReadUInt16();
 				return true;
 			}
 			catch (Exception)
@@ -116,17 +141,22 @@ namespace NetExtender.Utilities.Types
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryRead(this BinaryReader value, out Int32 result)
+		public static Boolean TryRead(this BinaryReader reader, out Int32 result)
 		{
-			return TryReadInt32(value, out result);
+			return TryReadInt32(reader, out result);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryReadInt32(this BinaryReader value, out Int32 result)
+		public static Boolean TryReadInt32(this BinaryReader reader, out Int32 result)
 		{
+			if (reader is null)
+			{
+				throw new ArgumentNullException(nameof(reader));
+			}
+
 			try
 			{
-				result = value.ReadInt32();
+				result = reader.ReadInt32();
 				return true;
 			}
 			catch (Exception)
@@ -137,17 +167,22 @@ namespace NetExtender.Utilities.Types
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryRead(this BinaryReader value, out UInt32 result)
+		public static Boolean TryRead(this BinaryReader reader, out UInt32 result)
 		{
-			return TryReadUInt32(value, out result);
+			return TryReadUInt32(reader, out result);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryReadUInt32(this BinaryReader value, out UInt32 result)
+		public static Boolean TryReadUInt32(this BinaryReader reader, out UInt32 result)
 		{
+			if (reader is null)
+			{
+				throw new ArgumentNullException(nameof(reader));
+			}
+
 			try
 			{
-				result = value.ReadUInt32();
+				result = reader.ReadUInt32();
 				return true;
 			}
 			catch (Exception)
@@ -158,17 +193,22 @@ namespace NetExtender.Utilities.Types
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryRead(this BinaryReader value, out Int64 result)
+		public static Boolean TryRead(this BinaryReader reader, out Int64 result)
 		{
-			return TryReadInt64(value, out result);
+			return TryReadInt64(reader, out result);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryReadInt64(this BinaryReader value, out Int64 result)
+		public static Boolean TryReadInt64(this BinaryReader reader, out Int64 result)
 		{
+			if (reader is null)
+			{
+				throw new ArgumentNullException(nameof(reader));
+			}
+
 			try
 			{
-				result = value.ReadInt64();
+				result = reader.ReadInt64();
 				return true;
 			}
 			catch (Exception)
@@ -179,17 +219,22 @@ namespace NetExtender.Utilities.Types
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryRead(this BinaryReader value, out UInt64 result)
+		public static Boolean TryRead(this BinaryReader reader, out UInt64 result)
 		{
-			return TryReadUInt64(value, out result);
+			return TryReadUInt64(reader, out result);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryReadUInt64(this BinaryReader value, out UInt64 result)
+		public static Boolean TryReadUInt64(this BinaryReader reader, out UInt64 result)
 		{
+			if (reader is null)
+			{
+				throw new ArgumentNullException(nameof(reader));
+			}
+
 			try
 			{
-				result = value.ReadUInt64();
+				result = reader.ReadUInt64();
 				return true;
 			}
 			catch (Exception)
@@ -200,17 +245,22 @@ namespace NetExtender.Utilities.Types
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryRead(this BinaryReader value, out Single result)
+		public static Boolean TryRead(this BinaryReader reader, out Single result)
 		{
-			return TryReadSingle(value, out result);
+			return TryReadSingle(reader, out result);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryReadSingle(this BinaryReader value, out Single result)
+		public static Boolean TryReadSingle(this BinaryReader reader, out Single result)
 		{
+			if (reader is null)
+			{
+				throw new ArgumentNullException(nameof(reader));
+			}
+
 			try
 			{
-				result = value.ReadSingle();
+				result = reader.ReadSingle();
 				return true;
 			}
 			catch (Exception)
@@ -221,17 +271,22 @@ namespace NetExtender.Utilities.Types
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryRead(this BinaryReader value, out Double result)
+		public static Boolean TryRead(this BinaryReader reader, out Double result)
 		{
-			return TryReadDouble(value, out result);
+			return TryReadDouble(reader, out result);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryReadDouble(this BinaryReader value, out Double result)
+		public static Boolean TryReadDouble(this BinaryReader reader, out Double result)
 		{
+			if (reader is null)
+			{
+				throw new ArgumentNullException(nameof(reader));
+			}
+
 			try
 			{
-				result = value.ReadDouble();
+				result = reader.ReadDouble();
 				return true;
 			}
 			catch (Exception)
@@ -242,17 +297,22 @@ namespace NetExtender.Utilities.Types
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryRead(this BinaryReader value, out Decimal result)
+		public static Boolean TryRead(this BinaryReader reader, out Decimal result)
 		{
-			return TryReadDecimal(value, out result);
+			return TryReadDecimal(reader, out result);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryReadDecimal(this BinaryReader value, out Decimal result)
+		public static Boolean TryReadDecimal(this BinaryReader reader, out Decimal result)
 		{
+			if (reader is null)
+			{
+				throw new ArgumentNullException(nameof(reader));
+			}
+
 			try
 			{
-				result = value.ReadDecimal();
+				result = reader.ReadDecimal();
 				return true;
 			}
 			catch (Exception)
@@ -263,17 +323,22 @@ namespace NetExtender.Utilities.Types
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryRead(this BinaryReader value, [MaybeNullWhen(false)] out String result)
+		public static Boolean TryRead(this BinaryReader reader, [MaybeNullWhen(false)] out String result)
 		{
-			return TryReadString(value, out result);
+			return TryReadString(reader, out result);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveOptimization)]
-		public static Boolean TryReadString(this BinaryReader value, [MaybeNullWhen(false)] out String result)
+		public static Boolean TryReadString(this BinaryReader reader, [MaybeNullWhen(false)] out String result)
 		{
+			if (reader is null)
+			{
+				throw new ArgumentNullException(nameof(reader));
+			}
+
 			try
-            {
-				result = value.ReadString();
+			{
+				result = reader.ReadString();
 				return true;
 			}
 			catch (Exception)

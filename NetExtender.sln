@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Core", "NetExtender.Core\NetExtender.Core.csproj", "{19E3C7A6-6110-4CA1-9F8E-049BB5191C28}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.AspNet.Core", "NetExtender.AspNet.Core\NetExtender.AspNet.Core.csproj", "{9E3F450B-F1ED-4BC7-93C1-251835DCC98E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.AspNetCore", "NetExtender.AspNetCore\NetExtender.AspNetCore.csproj", "{9E3F450B-F1ED-4BC7-93C1-251835DCC98E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.EntityFramework.Core", "NetExtender.EntityFramework.Core\NetExtender.EntityFramework.Core.csproj", "{1566851A-7963-45CA-A2B6-6ACEDF041ACA}"
 EndProject
@@ -107,12 +107,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Microsoft", "NetExtender.Configuration.Microsoft\NetExtender.Configuration.Microsoft.csproj", "{E98DAA63-7BFD-4FC2-9650-7440067EB0E6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Memory", "NetExtender.Configuration.Memory\NetExtender.Configuration.Memory.csproj", "{74994485-013C-4A41-AC48-E15FF0769EC0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Convert", "NetExtender.Configuration.Convert\NetExtender.Configuration.Convert.csproj", "{4B1D7887-B76B-49A9-94EC-7FEF1ECC3BD2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Cryptography.Convert", "NetExtender.Configuration.Cryptography.Convert\NetExtender.Configuration.Cryptography.Convert.csproj", "{7818E998-4F00-4B82-AE9D-CF2DFA9A719D}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Localization", "NetExtender.Localization", "{F7A961F4-F974-4820-8FE6-E608A2FF4B24}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Windows", "NetExtender.Windows", "{A7BE8994-15D1-4F4B-BD86-C308973371B6}"
@@ -134,6 +128,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.AspNetCore.SinglePageApplication", "NetExtender.AspNetCore.SinglePageApplication\NetExtender.AspNetCore.SinglePageApplication.csproj", "{9D288315-D1B8-491F-82A3-DB387EDE34D3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Caching", "NetExtender.Caching\NetExtender.Caching.csproj", "{47692AB7-5D73-4577-B4E6-BFE37AA19954}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.AspNetCore.SignalR", "NetExtender.AspNetCore.SignalR\NetExtender.AspNetCore.SignalR.csproj", "{26D2659A-7EDE-4CFE-9CD5-D90E1206037F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Property.Cryptography", "NetExtender.Configuration.Property.Cryptography\NetExtender.Configuration.Property.Cryptography.csproj", "{C1243F14-F351-4B89-9F50-C38A46BA1E11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -313,18 +311,6 @@ Global
 		{E98DAA63-7BFD-4FC2-9650-7440067EB0E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E98DAA63-7BFD-4FC2-9650-7440067EB0E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E98DAA63-7BFD-4FC2-9650-7440067EB0E6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{74994485-013C-4A41-AC48-E15FF0769EC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{74994485-013C-4A41-AC48-E15FF0769EC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{74994485-013C-4A41-AC48-E15FF0769EC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{74994485-013C-4A41-AC48-E15FF0769EC0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4B1D7887-B76B-49A9-94EC-7FEF1ECC3BD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4B1D7887-B76B-49A9-94EC-7FEF1ECC3BD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4B1D7887-B76B-49A9-94EC-7FEF1ECC3BD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4B1D7887-B76B-49A9-94EC-7FEF1ECC3BD2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7818E998-4F00-4B82-AE9D-CF2DFA9A719D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7818E998-4F00-4B82-AE9D-CF2DFA9A719D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7818E998-4F00-4B82-AE9D-CF2DFA9A719D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7818E998-4F00-4B82-AE9D-CF2DFA9A719D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{517CF6A6-39F4-4D76-ADD3-B4954A36B93A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{517CF6A6-39F4-4D76-ADD3-B4954A36B93A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{517CF6A6-39F4-4D76-ADD3-B4954A36B93A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -353,6 +339,14 @@ Global
 		{47692AB7-5D73-4577-B4E6-BFE37AA19954}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{47692AB7-5D73-4577-B4E6-BFE37AA19954}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{47692AB7-5D73-4577-B4E6-BFE37AA19954}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26D2659A-7EDE-4CFE-9CD5-D90E1206037F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26D2659A-7EDE-4CFE-9CD5-D90E1206037F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26D2659A-7EDE-4CFE-9CD5-D90E1206037F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26D2659A-7EDE-4CFE-9CD5-D90E1206037F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1243F14-F351-4B89-9F50-C38A46BA1E11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1243F14-F351-4B89-9F50-C38A46BA1E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1243F14-F351-4B89-9F50-C38A46BA1E11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1243F14-F351-4B89-9F50-C38A46BA1E11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -398,9 +392,6 @@ Global
 		{84D843F2-404B-4BFC-AE26-B4BA2AB9EA7F} = {57669121-7D0F-4429-96C8-563563F6F3D1}
 		{E98DAA63-7BFD-4FC2-9650-7440067EB0E6} = {57669121-7D0F-4429-96C8-563563F6F3D1}
 		{7E15DFE1-B6DA-4509-9C76-833B2230DF6E} = {F22DBBFE-420B-4A95-BC9E-9E406DE5ACC5}
-		{74994485-013C-4A41-AC48-E15FF0769EC0} = {57669121-7D0F-4429-96C8-563563F6F3D1}
-		{4B1D7887-B76B-49A9-94EC-7FEF1ECC3BD2} = {57669121-7D0F-4429-96C8-563563F6F3D1}
-		{7818E998-4F00-4B82-AE9D-CF2DFA9A719D} = {57669121-7D0F-4429-96C8-563563F6F3D1}
 		{96A15B1D-FFE0-49D8-A8B9-5386C11FCAF5} = {F7A961F4-F974-4820-8FE6-E608A2FF4B24}
 		{C78BDA6F-B9C6-4245-9462-9EBD6FE2DC13} = {A7BE8994-15D1-4F4B-BD86-C308973371B6}
 		{40412617-CA47-4C9D-A9A3-C34365D6895B} = {A7BE8994-15D1-4F4B-BD86-C308973371B6}
@@ -418,5 +409,7 @@ Global
 		{D79137E7-361B-430F-A718-0CB1A3868E24} = {A7BE8994-15D1-4F4B-BD86-C308973371B6}
 		{9D288315-D1B8-491F-82A3-DB387EDE34D3} = {CDC97F3D-8B7E-41EF-9C34-BF94FD2B08C2}
 		{47692AB7-5D73-4577-B4E6-BFE37AA19954} = {0831D84F-7D4F-4E1A-87BA-8E00A2BFB199}
+		{26D2659A-7EDE-4CFE-9CD5-D90E1206037F} = {CDC97F3D-8B7E-41EF-9C34-BF94FD2B08C2}
+		{C1243F14-F351-4B89-9F50-C38A46BA1E11} = {57669121-7D0F-4429-96C8-563563F6F3D1}
 	EndGlobalSection
 EndGlobal

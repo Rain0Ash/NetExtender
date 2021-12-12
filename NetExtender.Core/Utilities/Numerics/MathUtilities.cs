@@ -526,7 +526,7 @@ namespace NetExtender.Utilities.Numerics
                 return result;
             }
 
-            return result * PowerN(DecimalConstants.E, count);
+            return result * Pow(DecimalConstants.E, count);
         }
 
         private static Boolean IsInteger(Decimal value)
@@ -551,6 +551,48 @@ namespace NetExtender.Utilities.Numerics
         public static Double Pow(this Double value, Double pow)
         {
             return Math.Pow(value, pow);
+        }
+        
+        /// <summary>
+        /// Power to the integer value
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="power"></param>
+        /// <returns></returns>
+        public static Decimal Pow(this Decimal value, Int32 power)
+        {
+            while (true)
+            {
+                if (power == Decimal.Zero)
+                {
+                    return Decimal.One;
+                }
+
+                if (power < Decimal.Zero)
+                {
+                    value = Decimal.One / value;
+                    power = -power;
+                    continue;
+                }
+
+                Int32 q = power;
+                Decimal prod = Decimal.One;
+                Decimal current = value;
+                while (q > 0)
+                {
+                    if (q % 2 == 1)
+                    {
+                        // detects the 1s in the binary expression of power
+                        prod = current * prod; // picks up the relevant power
+                        q--;
+                    }
+
+                    current *= current; // value^i -> value^(2*i)
+                    q >>= 1;
+                }
+
+                return prod;
+            }
         }
 
         /// <summary>
@@ -593,7 +635,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (power && value > Decimal.Zero)
             {
-                return PowerN(value, (Int32) pow);
+                return Pow(value, (Int32) pow);
             }
 
             if (!power || value >= Decimal.Zero)
@@ -608,48 +650,6 @@ namespace NetExtender.Utilities.Numerics
             }
 
             return -Exp(pow * Log(-value));
-        }
-
-        /// <summary>
-        /// Power to the integer value
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="power"></param>
-        /// <returns></returns>
-        public static Decimal PowerN(this Decimal value, Int32 power)
-        {
-            while (true)
-            {
-                if (power == Decimal.Zero)
-                {
-                    return Decimal.One;
-                }
-
-                if (power < Decimal.Zero)
-                {
-                    value = Decimal.One / value;
-                    power = -power;
-                    continue;
-                }
-
-                Int32 q = power;
-                Decimal prod = Decimal.One;
-                Decimal current = value;
-                while (q > 0)
-                {
-                    if (q % 2 == 1)
-                    {
-                        // detects the 1s in the binary expression of power
-                        prod = current * prod; // picks up the relevant power
-                        q--;
-                    }
-
-                    current *= current; // value^i -> value^(2*i)
-                    q >>= 1;
-                }
-
-                return prod;
-            }
         }
 
         /// <inheritdoc cref="MathF.Log(Single)"/>
@@ -1920,7 +1920,7 @@ namespace NetExtender.Utilities.Numerics
                 return 1;
             }
 
-            return (Decimal) abs * Pow(10M, digits);
+            return (Decimal) abs * Pow(10M, (Decimal) digits);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1945,7 +1945,7 @@ namespace NetExtender.Utilities.Numerics
                 return 1;
             }
 
-            return (Decimal) abs * Pow(10M, digits);
+            return (Decimal) abs * Pow(10M, (Decimal) digits);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1970,7 +1970,7 @@ namespace NetExtender.Utilities.Numerics
                 return 1;
             }
 
-            return abs * Pow(10M, digits);
+            return abs * Pow(10M, (Decimal) digits);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

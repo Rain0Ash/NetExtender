@@ -16,6 +16,8 @@ namespace NetExtender.Configuration.Cryptography.Common
         CryptSections = 16,
         CryptConfig = 32,
         CryptAll = CryptKey | CryptValue | CryptSections | CryptConfig,
-        All = CryptDefault | CryptAll
+        TryCryptAll = Try | CryptAll,
+        All = CryptDefault | CryptAll,
+        TryAll = Try | All
     }
 }

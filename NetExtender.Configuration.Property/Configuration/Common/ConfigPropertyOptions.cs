@@ -11,7 +11,8 @@ namespace NetExtender.Configuration.Common
         None = 0,
         Caching = 1,
         ReadOnly = 2,
-        AlwaysDefault = 4,
-        DisableSave = 8,
+        IgnoreEvent = 4,
+        DisableSave = 16,
+        AlwaysDefault = Caching | ReadOnly | IgnoreEvent | DisableSave
     }
 }
