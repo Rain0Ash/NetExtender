@@ -10,7 +10,7 @@ namespace NetExtender.Configuration.Cryptography.Utilities
 {
     public static class ConfigurationCryptorUtilities
     {
-        public static IConfigurationCryptor Configuration(this IStringCryptor cryptor)
+        public static IConfigurationCryptor Cryptor(this IStringCryptor cryptor)
         {
             if (cryptor is null)
             {
@@ -20,7 +20,7 @@ namespace NetExtender.Configuration.Cryptography.Utilities
             return new ConfigurationCryptor(cryptor);
         }
         
-        public static IConfigurationCryptor Configuration(this IStringCryptor cryptor, CryptographyConfigOptions options)
+        public static IConfigurationCryptor Cryptor(this IStringCryptor cryptor, CryptographyConfigOptions options)
         {
             if (cryptor is null)
             {
@@ -28,6 +28,26 @@ namespace NetExtender.Configuration.Cryptography.Utilities
             }
 
             return new ConfigurationCryptor(cryptor, options);
+        }
+        
+        public static IConfigurationCryptor AsCryptor(this IStringCryptor cryptor)
+        {
+            if (cryptor is null)
+            {
+                throw new ArgumentNullException(nameof(cryptor));
+            }
+
+            return cryptor is IConfigurationCryptor configuration ? configuration : cryptor.Cryptor();
+        }
+        
+        public static IConfigurationCryptor AsCryptor(this IStringCryptor cryptor, CryptographyConfigOptions options)
+        {
+            if (cryptor is null)
+            {
+                throw new ArgumentNullException(nameof(cryptor));
+            }
+
+            return cryptor is IConfigurationCryptor configuration ? configuration : cryptor.Cryptor(options);
         }
     }
 }

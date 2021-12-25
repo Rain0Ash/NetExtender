@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Configuration.Cryptography.Common.Interfaces;
 using NetExtender.Configuration.Cryptography.Interfaces;
+using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Cryptography.Convert.Utilities
@@ -71,42 +71,42 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             return converter(value, out T? result) ? result : alternate;
         }
         
-        public static T? GetValue<T>(this IReadOnlyCryptographyConfig config, String? key, IConfigurationCryptor? cryptor, params String[]? sections)
+        public static T? GetValue<T>(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor? cryptor, params String[]? sections)
         {
             return GetValue<T>(config, key, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static T? GetValue<T>(this IReadOnlyCryptographyConfig config, String? key, IConfigurationCryptor? cryptor, IEnumerable<String>? sections)
+        public static T? GetValue<T>(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             return GetValue<T>(config, key, cryptor, null, sections);
         }
 
-        public static T? GetValue<T>(this IReadOnlyCryptographyConfig config, String? key, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, params String[]? sections)
+        public static T? GetValue<T>(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor? cryptor, TryConverter<String, T>? converter, params String[]? sections)
         {
             return GetValue(config, key, cryptor, converter, (IEnumerable<String>?) sections);
         }
 
-        public static T? GetValue<T>(this IReadOnlyCryptographyConfig config, String? key, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections)
+        public static T? GetValue<T>(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections)
         {
             return GetValue(config, key, default, cryptor, converter!, sections);
         }
         
-        public static T GetValue<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, params String[]? sections)
+        public static T GetValue<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, params String[]? sections)
         {
             return GetValue(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static T GetValue<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, IEnumerable<String>? sections)
+        public static T GetValue<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             return GetValue(config, key, alternate, cryptor, null, sections);
         }
 
-        public static T GetValue<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, params String[]? sections)
+        public static T GetValue<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, TryConverter<String, T>? converter, params String[]? sections)
         {
             return GetValue(config, key, alternate, cryptor, converter, (IEnumerable<String>?) sections);
         }
 
-        public static T GetValue<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections)
+        public static T GetValue<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections)
         {
             if (config is null)
             {
@@ -285,62 +285,62 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             return converter(value, out T? result) ? result : alternate;
         }
 
-        public static Task<T?> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, IConfigurationCryptor? cryptor, params String[]? sections)
+        public static Task<T?> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor? cryptor, params String[]? sections)
         {
             return GetValueAsync<T>(config, key, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static Task<T?> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, IConfigurationCryptor? cryptor, IEnumerable<String>? sections)
+        public static Task<T?> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             return GetValueAsync<T>(config, key, cryptor, sections, CancellationToken.None);
         }
 
-        public static Task<T?> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, IConfigurationCryptor? cryptor, CancellationToken token, params String[]? sections)
+        public static Task<T?> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor? cryptor, CancellationToken token, params String[]? sections)
         {
             return GetValueAsync<T>(config, key, cryptor, sections, token);
         }
 
-        public static Task<T?> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, IConfigurationCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
+        public static Task<T?> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
         {
             return GetValueAsync<T?>(config, key, default, cryptor, sections, token);
         }
 
-        public static Task<T> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, params String[]? sections)
+        public static Task<T> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, params String[]? sections)
         {
             return GetValueAsync(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static Task<T> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, IEnumerable<String>? sections)
+        public static Task<T> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             return GetValueAsync(config, key, alternate, cryptor, sections, CancellationToken.None);
         }
 
-        public static Task<T> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, CancellationToken token, params String[]? sections)
+        public static Task<T> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, CancellationToken token, params String[]? sections)
         {
             return GetValueAsync(config, key, alternate, cryptor, sections, token);
         }
 
-        public static Task<T> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
+        public static Task<T> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
         {
             return GetValueAsync(config, key, alternate, cryptor, null, sections, token);
         }
 
-        public static Task<T> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, params String[]? sections)
+        public static Task<T> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, TryConverter<String, T>? converter, params String[]? sections)
         {
             return GetValueAsync(config, key, alternate, cryptor, converter, (IEnumerable<String>?) sections);
         }
 
-        public static Task<T> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections)
+        public static Task<T> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections)
         {
             return GetValueAsync(config, key, alternate, cryptor, converter, sections, CancellationToken.None);
         }
 
-        public static Task<T> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, CancellationToken token, params String[]? sections)
+        public static Task<T> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, TryConverter<String, T>? converter, CancellationToken token, params String[]? sections)
         {
             return GetValueAsync(config, key, alternate, cryptor, converter, sections, token);
         }
 
-        public static async Task<T> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections, CancellationToken token)
+        public static async Task<T> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections, CancellationToken token)
         {
             if (config is null)
             {
@@ -519,42 +519,42 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             return converter(value, out T? result) ? result : alternate;
         }
         
-        public static T? GetValue<T>(this ICryptographyConfig config, String? key, IConfigurationCryptor? cryptor, params String[]? sections)
+        public static T? GetValue<T>(this ICryptographyConfig config, String? key, IStringCryptor? cryptor, params String[]? sections)
         {
             return GetValue<T>(config, key, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static T? GetValue<T>(this ICryptographyConfig config, String? key, IConfigurationCryptor? cryptor, IEnumerable<String>? sections)
+        public static T? GetValue<T>(this ICryptographyConfig config, String? key, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             return GetValue<T>(config, key, cryptor, null, sections);
         }
 
-        public static T? GetValue<T>(this ICryptographyConfig config, String? key, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, params String[]? sections)
+        public static T? GetValue<T>(this ICryptographyConfig config, String? key, IStringCryptor? cryptor, TryConverter<String, T>? converter, params String[]? sections)
         {
             return GetValue(config, key, cryptor, converter, (IEnumerable<String>?) sections);
         }
 
-        public static T? GetValue<T>(this ICryptographyConfig config, String? key, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections)
+        public static T? GetValue<T>(this ICryptographyConfig config, String? key, IStringCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections)
         {
             return GetValue(config, key, default, cryptor, converter!, sections);
         }
         
-        public static T GetValue<T>(this ICryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, params String[]? sections)
+        public static T GetValue<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, params String[]? sections)
         {
             return GetValue(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static T GetValue<T>(this ICryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, IEnumerable<String>? sections)
+        public static T GetValue<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             return GetValue(config, key, alternate, cryptor, null, sections);
         }
 
-        public static T GetValue<T>(this ICryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, params String[]? sections)
+        public static T GetValue<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, TryConverter<String, T>? converter, params String[]? sections)
         {
             return GetValue(config, key, alternate, cryptor, converter, (IEnumerable<String>?) sections);
         }
 
-        public static T GetValue<T>(this ICryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections)
+        public static T GetValue<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections)
         {
             if (config is null)
             {
@@ -733,62 +733,62 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             return converter(value, out T? result) ? result : alternate;
         }
 
-        public static Task<T?> GetValueAsync<T>(this ICryptographyConfig config, String? key, IConfigurationCryptor? cryptor, params String[]? sections)
+        public static Task<T?> GetValueAsync<T>(this ICryptographyConfig config, String? key, IStringCryptor? cryptor, params String[]? sections)
         {
             return GetValueAsync<T>(config, key, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static Task<T?> GetValueAsync<T>(this ICryptographyConfig config, String? key, IConfigurationCryptor? cryptor, IEnumerable<String>? sections)
+        public static Task<T?> GetValueAsync<T>(this ICryptographyConfig config, String? key, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             return GetValueAsync<T>(config, key, cryptor, sections, CancellationToken.None);
         }
 
-        public static Task<T?> GetValueAsync<T>(this ICryptographyConfig config, String? key, IConfigurationCryptor? cryptor, CancellationToken token, params String[]? sections)
+        public static Task<T?> GetValueAsync<T>(this ICryptographyConfig config, String? key, IStringCryptor? cryptor, CancellationToken token, params String[]? sections)
         {
             return GetValueAsync<T>(config, key, cryptor, sections, token);
         }
 
-        public static Task<T?> GetValueAsync<T>(this ICryptographyConfig config, String? key, IConfigurationCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
+        public static Task<T?> GetValueAsync<T>(this ICryptographyConfig config, String? key, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
         {
             return GetValueAsync<T?>(config, key, default, cryptor, sections, token);
         }
 
-        public static Task<T> GetValueAsync<T>(this ICryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, params String[]? sections)
+        public static Task<T> GetValueAsync<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, params String[]? sections)
         {
             return GetValueAsync(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static Task<T> GetValueAsync<T>(this ICryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, IEnumerable<String>? sections)
+        public static Task<T> GetValueAsync<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             return GetValueAsync(config, key, alternate, cryptor, sections, CancellationToken.None);
         }
 
-        public static Task<T> GetValueAsync<T>(this ICryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, CancellationToken token, params String[]? sections)
+        public static Task<T> GetValueAsync<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, CancellationToken token, params String[]? sections)
         {
             return GetValueAsync(config, key, alternate, cryptor, sections, token);
         }
 
-        public static Task<T> GetValueAsync<T>(this ICryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
+        public static Task<T> GetValueAsync<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
         {
             return GetValueAsync(config, key, alternate, cryptor, null, sections, token);
         }
 
-        public static Task<T> GetValueAsync<T>(this ICryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, params String[]? sections)
+        public static Task<T> GetValueAsync<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, TryConverter<String, T>? converter, params String[]? sections)
         {
             return GetValueAsync(config, key, alternate, cryptor, converter, (IEnumerable<String>?) sections);
         }
 
-        public static Task<T> GetValueAsync<T>(this ICryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections)
+        public static Task<T> GetValueAsync<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections)
         {
             return GetValueAsync(config, key, alternate, cryptor, converter, sections, CancellationToken.None);
         }
 
-        public static Task<T> GetValueAsync<T>(this ICryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, CancellationToken token, params String[]? sections)
+        public static Task<T> GetValueAsync<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, TryConverter<String, T>? converter, CancellationToken token, params String[]? sections)
         {
             return GetValueAsync(config, key, alternate, cryptor, converter, sections, token);
         }
 
-        public static async Task<T> GetValueAsync<T>(this ICryptographyConfig config, String? key, T alternate, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections, CancellationToken token)
+        public static async Task<T> GetValueAsync<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections, CancellationToken token)
         {
             if (config is null)
             {
@@ -935,12 +935,12 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             return convert is not null && config.SetValue(key, convert, sections);
         }
         
-        public static Boolean SetValue<T>(this ICryptographyConfig config, String? key, T value, IConfigurationCryptor? cryptor, params String[]? sections)
+        public static Boolean SetValue<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, params String[]? sections)
         {
             return SetValue(config, key, value, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static Boolean SetValue<T>(this ICryptographyConfig config, String? key, T value, IConfigurationCryptor? cryptor, IEnumerable<String>? sections)
+        public static Boolean SetValue<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             if (config is null)
             {
@@ -1023,22 +1023,22 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             return convert is not null && await config.SetValueAsync(key, convert, sections, token);
         }
 
-        public static Task<Boolean> SetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IConfigurationCryptor? cryptor, params String[]? sections)
+        public static Task<Boolean> SetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, params String[]? sections)
         {
             return SetValueAsync(config, key, value, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static Task<Boolean> SetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IConfigurationCryptor? cryptor, IEnumerable<String>? sections)
+        public static Task<Boolean> SetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             return SetValueAsync(config, key, value, cryptor, sections, CancellationToken.None);
         }
 
-        public static Task<Boolean> SetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IConfigurationCryptor? cryptor, CancellationToken token, params String[]? sections)
+        public static Task<Boolean> SetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, CancellationToken token, params String[]? sections)
         {
             return SetValueAsync(config, key, value, cryptor, sections, CancellationToken.None);
         }
 
-        public static async Task<Boolean> SetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IConfigurationCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
+        public static async Task<Boolean> SetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
         {
             if (config is null)
             {
@@ -1134,22 +1134,22 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             return converter(get, out T? result) ? result : default;
         }
         
-        public static T? GetOrSetValue<T>(this ICryptographyConfig config, String? key, T value, IConfigurationCryptor? cryptor, params String[]? sections)
+        public static T? GetOrSetValue<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, params String[]? sections)
         {
             return GetOrSetValue(config, key, value, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static T? GetOrSetValue<T>(this ICryptographyConfig config, String? key, T value, IConfigurationCryptor? cryptor, IEnumerable<String>? sections)
+        public static T? GetOrSetValue<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             return GetOrSetValue(config, key, value, cryptor, null, sections);
         }
 
-        public static T? GetOrSetValue<T>(this ICryptographyConfig config, String? key, T value, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, params String[]? sections)
+        public static T? GetOrSetValue<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, TryConverter<String, T>? converter, params String[]? sections)
         {
             return GetOrSetValue(config, key, value, cryptor, converter, (IEnumerable<String>?) sections);
         }
 
-        public static T? GetOrSetValue<T>(this ICryptographyConfig config, String? key, T value, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections)
+        public static T? GetOrSetValue<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections)
         {
             if (config is null)
             {
@@ -1271,42 +1271,42 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             return converter(get, out T? result) ? result : default;
         }
 
-        public static Task<T?> GetOrSetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IConfigurationCryptor? cryptor, params String[]? sections)
+        public static Task<T?> GetOrSetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, params String[]? sections)
         {
             return GetOrSetValueAsync(config, key, value, cryptor, (IEnumerable<String>?) sections);
         }
 
-        public static Task<T?> GetOrSetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IConfigurationCryptor? cryptor, IEnumerable<String>? sections)
+        public static Task<T?> GetOrSetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             return GetOrSetValueAsync(config, key, value, cryptor, sections, CancellationToken.None);
         }
 
-        public static Task<T?> GetOrSetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IConfigurationCryptor? cryptor, CancellationToken token, params String[]? sections)
+        public static Task<T?> GetOrSetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, CancellationToken token, params String[]? sections)
         {
             return GetOrSetValueAsync(config, key, value, cryptor, sections, token);
         }
 
-        public static Task<T?> GetOrSetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IConfigurationCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
+        public static Task<T?> GetOrSetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
         {
             return GetOrSetValueAsync(config, key, value, cryptor, null, sections, token);
         }
 
-        public static Task<T?> GetOrSetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, params String[]? sections)
+        public static Task<T?> GetOrSetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, TryConverter<String, T>? converter, params String[]? sections)
         {
             return GetOrSetValueAsync(config, key, value, cryptor, converter, (IEnumerable<String>?) sections);
         }
 
-        public static Task<T?> GetOrSetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections)
+        public static Task<T?> GetOrSetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections)
         {
             return GetOrSetValueAsync(config, key, value, cryptor, converter, sections, CancellationToken.None);
         }
 
-        public static Task<T?> GetOrSetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, CancellationToken token, params String[]? sections)
+        public static Task<T?> GetOrSetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, TryConverter<String, T>? converter, CancellationToken token, params String[]? sections)
         {
             return GetOrSetValueAsync(config, key, value, cryptor, converter, sections, token);
         }
 
-        public static async Task<T?> GetOrSetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IConfigurationCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections, CancellationToken token)
+        public static async Task<T?> GetOrSetValueAsync<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, TryConverter<String, T>? converter, IEnumerable<String>? sections, CancellationToken token)
         {
             if (config is null)
             {
