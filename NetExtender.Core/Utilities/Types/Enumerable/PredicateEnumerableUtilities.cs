@@ -48,6 +48,166 @@ namespace NetExtender.Utilities.Types
             }
         }
 
+        public static IEnumerable<T> WhereBy<T, TResult>(this IEnumerable<T> source, Func<T, TResult> selector, Func<TResult, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.Where(item => predicate(selector(item)));
+        }
+        
+        public static IEnumerable<T> WhereBy<T, TResult>(this IEnumerable<T> source, Func<T, Int32, TResult> selector, Func<TResult, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+            
+            return source.Where((item, index) => predicate(selector(item, index)));
+        }
+        
+        public static IEnumerable<T> WhereBy<T, TResult>(this IEnumerable<T> source, Func<T, TResult> selector, Func<TResult, Int32, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+            
+            return source.Where((item, index) => predicate(selector(item), index));
+        }
+        
+        public static IEnumerable<T> WhereBy<T, TResult>(this IEnumerable<T> source, Func<T, Int32, TResult> selector, Func<TResult, Int32, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+            
+            return source.Where((item, index) => predicate(selector(item, index), index));
+        }
+        
+        public static IEnumerable<T> WhereNotBy<T, TResult>(this IEnumerable<T> source, Func<T, TResult> selector, Func<TResult, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.Where(item => !predicate(selector(item)));
+        }
+        
+        public static IEnumerable<T> WhereNotBy<T, TResult>(this IEnumerable<T> source, Func<T, Int32, TResult> selector, Func<TResult, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+            
+            return source.Where((item, index) => !predicate(selector(item, index)));
+        }
+        
+        public static IEnumerable<T> WhereNotBy<T, TResult>(this IEnumerable<T> source, Func<T, TResult> selector, Func<TResult, Int32, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+            
+            return source.Where((item, index) => !predicate(selector(item), index));
+        }
+        
+        public static IEnumerable<T> WhereNotBy<T, TResult>(this IEnumerable<T> source, Func<T, Int32, TResult> selector, Func<TResult, Int32, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+            
+            return source.Where((item, index) => !predicate(selector(item, index), index));
+        }
+
         public static IEnumerable<T> WhereNot<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate)
         {
             if (source is null)

@@ -453,6 +453,16 @@ namespace NetExtender.Utilities.Core
             return true;
         }
 
+        private static Boolean IsSystemAssembly(String? assembly)
+        {
+            if (assembly is null)
+            {
+                return false;
+            }
+            
+            return assembly.StartsWith("System.") || assembly.StartsWith("Microsoft.") || assembly.StartsWith("netstandard");
+        }
+
         public static Boolean IsSystemAssembly(this Assembly assembly)
         {
             if (assembly is null)
@@ -460,13 +470,17 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(assembly));
             }
 
-            String? name = assembly.FullName;
-            if (name is null)
+            return IsSystemAssembly(assembly.FullName);
+        }
+        
+        public static Boolean IsSystemAssembly(this AssemblyName assembly)
+        {
+            if (assembly is null)
             {
-                return false;
+                throw new ArgumentNullException(nameof(assembly));
             }
 
-            return name.StartsWith("System.") || name.StartsWith("Microsoft.") || name.StartsWith("netstandard");
+            return IsSystemAssembly(assembly.FullName);
         }
 
         /// <inheritdoc cref="GetStackInfo(Int32)"/>
@@ -515,7 +529,7 @@ namespace NetExtender.Utilities.Core
                     .ThenBy(assembly => assembly.GetName().FullName);
             }
         }
-        
+
         /// <summary>
         /// Calls the static constructor of this type.
         /// </summary>
@@ -579,9 +593,14 @@ namespace NetExtender.Utilities.Core
 
                 foreach (TAttribute attribute in attributes)
                 {
+                    if (!attribute.Active || !attribute.Platform.IsOSPlatform())
+                    {
+                        continue;
+                    }
+                    
                     if (attribute.Type is null)
                     {
-                        yield return new TAttribute { Type = type, Priority = attribute.Priority };
+                        yield return new TAttribute { Type = type, Priority = attribute.Priority, Active = attribute.Active, Platform = attribute.Platform };
                         continue;
                     }
 

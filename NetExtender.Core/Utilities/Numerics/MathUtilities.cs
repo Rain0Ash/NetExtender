@@ -1783,18 +1783,25 @@ namespace NetExtender.Utilities.Numerics
             return multiplier - remainder + value;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Boolean IsPowerOf2(UInt64 value)
         {
             return value > 0 && (value & (value - 1)) == 0;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Boolean IsZeroOrPowerOf2(UInt64 value)
+        {
+            return value <= 0 || IsPowerOf2(value);
+        }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Boolean IsPowerOf(UInt64 value, UInt64 pow)
         {
             switch (value)
             {
                 case 0:
                     return false;
-                // The only power of 1 is 1 itself 
                 case 1:
                     return pow == 1;
             }
@@ -1804,14 +1811,12 @@ namespace NetExtender.Utilities.Numerics
                 return IsPowerOf2(value);
             }
 
-            // Repeatedly compute power of x 
             UInt64 result = 1;
             while (result < pow)
             {
                 result *= value;
             }
 
-            // Check if power of x becomes y 
             return result == pow;
         }
 

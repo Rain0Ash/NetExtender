@@ -129,4 +129,8 @@
         </None>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\NetExtender.Initializer\NetExtender.Initializer.csproj" />
+    </ItemGroup>
+
 </Project>

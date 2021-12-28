@@ -53,7 +53,7 @@ namespace NetExtender.Utilities.Threading
                 return;
             }
 
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD))
             {
                 using Process process = Process.Start("xdg-open", url);
                 return;

@@ -133,6 +133,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.AspNetCore.Sign
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Property.Cryptography", "NetExtender.Configuration.Property.Cryptography\NetExtender.Configuration.Property.Cryptography.csproj", "{C1243F14-F351-4B89-9F50-C38A46BA1E11}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Initializer", "NetExtender.Initializer\NetExtender.Initializer.csproj", "{A21B4E21-0794-4384-9A6B-40823247B32B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -347,6 +349,10 @@ Global
 		{C1243F14-F351-4B89-9F50-C38A46BA1E11}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1243F14-F351-4B89-9F50-C38A46BA1E11}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1243F14-F351-4B89-9F50-C38A46BA1E11}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A21B4E21-0794-4384-9A6B-40823247B32B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A21B4E21-0794-4384-9A6B-40823247B32B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A21B4E21-0794-4384-9A6B-40823247B32B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A21B4E21-0794-4384-9A6B-40823247B32B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
