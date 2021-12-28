@@ -9,6 +9,8 @@
         <Authors>Rain0Ash</Authors>
         <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
         <Version>0.8.5</Version>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>../SignTool/Private/NetExtender.snk</AssemblyOriginatorKeyFile>
     </PropertyGroup>
 
     <ItemGroup>

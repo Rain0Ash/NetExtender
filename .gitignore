@@ -6,3 +6,4 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 **/*.api
+/SignTool/Private
