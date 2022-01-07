@@ -17,7 +17,7 @@ namespace NetExtender.Types.Sets
         {
             get
             {
-                return NodeDictionary.Count;
+                return Node.Count;
             }
         }
 
@@ -41,12 +41,12 @@ namespace NetExtender.Types.Sets
         {
             get
             {
-                return NodeDictionary.IsReadOnly;
+                return Node.IsReadOnly;
             }
         }
         
-        private IDictionary<T, LinkedListNode<T>> NodeDictionary { get; }
-        private LinkedList<T> LinkedList { get; }
+        private IDictionary<T, LinkedListNode<T>> Node { get; }
+        private LinkedList<T> Linked { get; }
 
         public OrderedSet()
             : this((IEqualityComparer<T>?) null)
@@ -55,8 +55,8 @@ namespace NetExtender.Types.Sets
 
         public OrderedSet(IEqualityComparer<T>? comparer)
         {
-            NodeDictionary = new Dictionary<T, LinkedListNode<T>>(comparer);
-            LinkedList = new LinkedList<T>();
+            Node = new Dictionary<T, LinkedListNode<T>>(comparer);
+            Linked = new LinkedList<T>();
         }
         
         public OrderedSet(IEnumerable<T> collection)
@@ -71,8 +71,8 @@ namespace NetExtender.Types.Sets
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            NodeDictionary = new Dictionary<T, LinkedListNode<T>>(comparer);
-            LinkedList = new LinkedList<T>();
+            Node = new Dictionary<T, LinkedListNode<T>>(comparer);
+            Linked = new LinkedList<T>();
             
             foreach (T item in collection)
             {
@@ -87,13 +87,13 @@ namespace NetExtender.Types.Sets
                 return false;
             }
             
-            if (NodeDictionary.ContainsKey(item))
+            if (Node.ContainsKey(item))
             {
                 return false;
             }
 
-            LinkedListNode<T> node = LinkedList.AddLast(item);
-            NodeDictionary.Add(item, node);
+            LinkedListNode<T> node = Linked.AddLast(item);
+            Node.Add(item, node);
             
             return true;
         }
@@ -115,13 +115,13 @@ namespace NetExtender.Types.Sets
                 return false;
             }
 
-            if (NodeDictionary.ContainsKey(item))
+            if (Node.ContainsKey(item))
             {
                 return false;
             }
 
-            LinkedListNode<T> node = LinkedList.Insert(index, item);
-            NodeDictionary.Add(item, node);
+            LinkedListNode<T> node = Linked.Insert(index, item);
+            Node.Add(item, node);
             return true;
         }
 
@@ -322,8 +322,8 @@ namespace NetExtender.Types.Sets
 
         public void Clear()
         {
-            LinkedList.Clear();
-            NodeDictionary.Clear();
+            Linked.Clear();
+            Node.Clear();
         }
 
         public Boolean Remove(T? item)
@@ -333,7 +333,7 @@ namespace NetExtender.Types.Sets
                 return false;
             }
             
-            Boolean found = NodeDictionary.TryGetValue(item, out LinkedListNode<T>? node);
+            Boolean found = Node.TryGetValue(item, out LinkedListNode<T>? node);
             if (!found)
             {
                 return false;
@@ -344,15 +344,15 @@ namespace NetExtender.Types.Sets
                 return false;
             }
 
-            NodeDictionary.Remove(item);
-            LinkedList.Remove(node);
+            Node.Remove(item);
+            Linked.Remove(node);
 
             return true;
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            return LinkedList.GetEnumerator();
+            return Linked.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -362,12 +362,12 @@ namespace NetExtender.Types.Sets
 
         public Boolean Contains(T? item)
         {
-            return item is not null && NodeDictionary.ContainsKey(item);
+            return item is not null && Node.ContainsKey(item);
         }
 
         public void CopyTo(T[] array, Int32 arrayIndex)
         {
-            LinkedList.CopyTo(array!, arrayIndex);
+            Linked.CopyTo(array!, arrayIndex);
         }
         
         void ICollection.CopyTo(Array array, Int32 index)

@@ -78,7 +78,13 @@ namespace NetExtender.Configuration.Memory
             {
                 if (value is null)
                 {
-                    return Config.Remove(key, sections);
+                    if (Config.Remove(key, sections))
+                    {
+                        Config.ClearEmpty(key, sections);
+                        return true;
+                    }
+
+                    return false;
                 }
                 
                 Config[key, sections].Value = value;
@@ -118,19 +124,35 @@ namespace NetExtender.Configuration.Memory
             return true;
         }
 
-        public override ConfigurationEntry[]? GetExists()
+        protected virtual ConfigurationEntry EntriesConvert(DictionaryTreeEntry<String, String> entry)
         {
-            return Config.Dump()?.Select(entry => new ConfigurationEntry(entry.Key, entry.Sections)).ToArray();
+            return new ConfigurationEntry(entry.Key, entry.Sections);
         }
         
-        public override ConfigurationValueEntry[]? GetExistsValues()
+        protected virtual ConfigurationValueEntry ValueEntriesConvert(DictionaryTreeEntry<String, String> entry)
         {
-            return Config.Dump()?.Select(entry => new ConfigurationValueEntry(entry.Key, entry.Value, entry.Sections)).ToArray();
+            return new ConfigurationValueEntry(entry.Key, entry.Value, entry.Sections);
+        }
+
+        public override ConfigurationEntry[]? GetExists(IEnumerable<String>? sections)
+        {
+            return Config.Dump(sections)?.Select(EntriesConvert).ToArray();
+        }
+
+        public override ConfigurationValueEntry[]? GetExistsValues(IEnumerable<String>? sections)
+        {
+            return Config.Dump(sections)?.Select(ValueEntriesConvert).ToArray();
         }
 
         public override Boolean Reload()
         {
             return false;
+        }
+
+        public override Boolean Reset()
+        {
+            Config.Clear();
+            return true;
         }
     }
 }

@@ -9,7 +9,7 @@ using NetExtender.Configuration.Common;
 
 namespace NetExtender.Configuration.Behavior.Interfaces
 {
-    public interface IConfigBehavior : IDisposable
+    public interface IConfigBehavior : IDisposable, IAsyncDisposable
     {
         public event ConfigurationChangedEventHandler Changed;
         public String Path { get; }
@@ -26,11 +26,13 @@ namespace NetExtender.Configuration.Behavior.Interfaces
         public Task<Boolean> SetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token);
         public String? GetOrSet(String? key, String? value, IEnumerable<String>? sections);
         public Task<String?> GetOrSetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token);
-        public ConfigurationEntry[]? GetExists();
-        public Task<ConfigurationEntry[]?> GetExistsAsync(CancellationToken token);
-        public ConfigurationValueEntry[]? GetExistsValues();
-        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(CancellationToken token);
+        public ConfigurationEntry[]? GetExists(IEnumerable<String>? sections);
+        public Task<ConfigurationEntry[]?> GetExistsAsync(IEnumerable<String>? sections, CancellationToken token);
+        public ConfigurationValueEntry[]? GetExistsValues(IEnumerable<String>? sections);
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IEnumerable<String>? sections, CancellationToken token);
         public Boolean Reload();
         public Task<Boolean> ReloadAsync(CancellationToken token);
+        public Boolean Reset();
+        public Task<Boolean> ResetAsync(CancellationToken token);
     }
 }

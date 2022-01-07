@@ -27,6 +27,8 @@ namespace NetExtender.Initializer
 
         public static Boolean? Successful { get; internal set; }
 
+        internal const String InitializerMethod = nameof(Initialize) + nameof(NetExtender);
+
         public static Boolean IsInitialize
         {
             get
@@ -63,14 +65,40 @@ namespace NetExtender.Initializer
             }
         }
 
-        public static AssemblyHashInitialization AssemblyHashInitialization
+        public static AssemblySignInitialization AssemblySignInitialization
         {
             get
             {
-                return Initializer.AssemblyHashInitialization;
+                return Initializer.AssemblySignInitialization;
+            }
+        }
+
+        public static IDictionary<String, AssemblyVerifyInfo?> Assemblies
+        {
+            get
+            {
+                return Initializer.Assemblies;
+            }
+        }
+
+        public static IDictionary<String, AssemblyVerifyInfo?> Include
+        {
+            get
+            {
+                return Initializer.Include;
             }
         }
         
+        public static ISet<String> Exclude
+        {
+            get
+            {
+                return Initializer.Exclude;
+            }
+        }
+
+        internal static Boolean IsReady { get; private set; }
+
         internal static Boolean IsFramework(String? name)
         {
             if (String.IsNullOrEmpty(name))
@@ -108,11 +136,16 @@ namespace NetExtender.Initializer
 
             List<Exception> exceptions = new List<Exception>();
 
-            foreach (String assembly in Directory.GetFiles(directory, "*", SearchOption.AllDirectories).Where(IsFramework))
+            foreach ((String? key, AssemblyVerifyInfo? value) in Include)
+            {
+                Assemblies.TryAdd(key, value);
+            }
+
+            foreach (String assembly in Directory.GetFiles(directory, "*", SearchOption.AllDirectories).Where(IsFramework).Concat(Include.Keys).Except(Exclude).Distinct(StringComparer.OrdinalIgnoreCase))
             {
                 try
                 {
-                    LoadAssembly(assembly, AssemblyHashInitialization);
+                    LoadAssembly(assembly, AssemblySignInitialization);
                 }
                 catch (Exception inner)
                 {
@@ -140,7 +173,7 @@ namespace NetExtender.Initializer
             }
 
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-            MethodInfo? entry = type.GetMethod(nameof(Initialize) + nameof(NetExtender), binding, new[] { typeof(INetExtenderFrameworkInitializer) });
+            MethodInfo? entry = type.GetMethod(InitializerMethod, binding, new[] { typeof(INetExtenderFrameworkInitializer) });
 
             if (entry is null || entry.IsAbstract || entry.IsGenericMethod)
             {
@@ -168,6 +201,7 @@ namespace NetExtender.Initializer
             try
             {
                 InvokeNetExtenderInitializerMethod();
+                IsReady = true;
             }
             catch (Exception)
             {

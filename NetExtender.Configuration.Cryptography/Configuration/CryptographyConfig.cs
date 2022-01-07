@@ -456,25 +456,65 @@ namespace NetExtender.Configuration.Cryptography
         {
             return Behavior.ContainsAsync(key, cryptor, sections, token);
         }
-        
-        public virtual ConfigurationEntry[]? GetExists(IStringCryptor? cryptor)
+
+        public ConfigurationEntry[]? GetExists(IStringCryptor? cryptor)
         {
-            return Behavior.GetExists(cryptor);
+            return GetExists(cryptor, null);
         }
 
-        public virtual ConfigurationEntry[]? GetExistsRaw()
+        public virtual ConfigurationEntry[]? GetExists(IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
-            return Behavior.GetExistsRaw();
-        }
-        
-        public virtual ConfigurationValueEntry[]? GetExistsValues(IStringCryptor? cryptor)
-        {
-            return Behavior.GetExistsValues(cryptor);
+            return Behavior.GetExists(cryptor, sections);
         }
 
-        public virtual ConfigurationValueEntry[]? GetExistsValuesRaw()
+        public ConfigurationEntry[]? GetExistsRaw()
         {
-            return Behavior.GetExistsValuesRaw();
+            return GetExistsRaw(null);
+        }
+
+        public virtual ConfigurationEntry[]? GetExistsRaw(IEnumerable<String>? sections)
+        {
+            return Behavior.GetExistsRaw(sections);
+        }
+        
+        public ConfigurationValueEntry[]? GetExistsValues(IStringCryptor? cryptor)
+        {
+            return GetExistsValues(cryptor, null);
+        }
+        
+        public virtual ConfigurationValueEntry[]? GetExistsValues(IStringCryptor? cryptor, IEnumerable<String>? sections)
+        {
+            return Behavior.GetExistsValues(cryptor, sections);
+        }
+        
+        public ConfigurationValueEntry[]? GetExistsValuesRaw()
+        {
+            return GetExistsValuesRaw(null);
+        }
+
+        public virtual ConfigurationValueEntry[]? GetExistsValuesRaw(IEnumerable<String>? sections)
+        {
+            return Behavior.GetExistsValuesRaw(sections);
+        }
+        
+        public Task<ConfigurationEntry[]?> GetExistsAsync(IStringCryptor? cryptor)
+        {
+            return GetExistsAsync(cryptor, CancellationToken.None);
+        }
+        
+        public Task<ConfigurationEntry[]?> GetExistsAsync(IStringCryptor? cryptor, CancellationToken token)
+        {
+            return GetExistsAsync(cryptor, null, token);
+        }
+        
+        public Task<ConfigurationEntry[]?> GetExistsAsync(IStringCryptor? cryptor, IEnumerable<String>? sections)
+        {
+            return GetExistsAsync(cryptor, sections, CancellationToken.None);
+        }
+
+        public virtual Task<ConfigurationEntry[]?> GetExistsAsync(IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
+        {
+            return Behavior.GetExistsAsync(cryptor, sections, token);
         }
 
         public Task<ConfigurationEntry[]?> GetExistsRawAsync()
@@ -482,39 +522,59 @@ namespace NetExtender.Configuration.Cryptography
             return GetExistsRawAsync(CancellationToken.None);
         }
 
-        public virtual Task<ConfigurationEntry[]?> GetExistsRawAsync(CancellationToken token)
+        public Task<ConfigurationEntry[]?> GetExistsRawAsync(CancellationToken token)
         {
-            return Behavior.GetExistsRawAsync(token);
-        }
-
-        public Task<ConfigurationEntry[]?> GetExistsAsync(IStringCryptor? cryptor)
-        {
-            return GetExistsAsync(cryptor, CancellationToken.None);
-        }
-
-        public virtual Task<ConfigurationEntry[]?> GetExistsAsync(IStringCryptor? cryptor, CancellationToken token)
-        {
-            return Behavior.GetExistsAsync(cryptor, token);
+            return GetExistsRawAsync(null, token);
         }
         
-        public Task<ConfigurationValueEntry[]?> GetExistsValuesRawAsync()
+        public Task<ConfigurationEntry[]?> GetExistsRawAsync(IEnumerable<String>? sections)
         {
-            return GetExistsValuesRawAsync(CancellationToken.None);
+            return GetExistsRawAsync(sections, CancellationToken.None);
         }
 
-        public virtual Task<ConfigurationValueEntry[]?> GetExistsValuesRawAsync(CancellationToken token)
+        public virtual Task<ConfigurationEntry[]?> GetExistsRawAsync(IEnumerable<String>? sections, CancellationToken token)
         {
-            return Behavior.GetExistsValuesRawAsync(token);
+            return Behavior.GetExistsRawAsync(sections, token);
         }
-
+        
         public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IStringCryptor? cryptor)
         {
             return GetExistsValuesAsync(cryptor, CancellationToken.None);
         }
 
-        public virtual Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IStringCryptor? cryptor, CancellationToken token)
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IStringCryptor? cryptor, CancellationToken token)
         {
-            return Behavior.GetExistsValuesAsync(cryptor, token);
+            return GetExistsValuesAsync(cryptor, null, token);
+        }
+        
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IStringCryptor? cryptor, IEnumerable<String>? sections)
+        {
+            return GetExistsValuesAsync(cryptor, sections, CancellationToken.None);
+        }
+
+        public virtual Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
+        {
+            return Behavior.GetExistsValuesAsync(cryptor, sections, token);
+        }
+
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesRawAsync()
+        {
+            return GetExistsValuesRawAsync(CancellationToken.None);
+        }
+
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesRawAsync(CancellationToken token)
+        {
+            return GetExistsValuesRawAsync(null, token);
+        }
+
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesRawAsync(IEnumerable<String>? sections)
+        {
+            return GetExistsValuesRawAsync(sections, CancellationToken.None);
+        }
+
+        public virtual Task<ConfigurationValueEntry[]?> GetExistsValuesRawAsync(IEnumerable<String>? sections, CancellationToken token)
+        {
+            return Behavior.GetExistsValuesRawAsync(sections, token);
         }
     }
 }

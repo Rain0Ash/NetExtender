@@ -65,7 +65,327 @@ namespace NetExtender.Utilities.Types
             return EqualityComparer<T?>.Default.Equals(first, second);
         }
 
-        private static readonly MethodInfo MemberwiseCloneMethod = typeof(Object).GetMethod("MemberwiseClone", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        public static T If<T>(this T value, Func<T, T> selector, Boolean condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return condition ? selector(value) : value;
+        }
+        
+        public static T If<T>(this T value, Func<T, T> selector, Func<Boolean> condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return condition() ? selector(value) : value;
+        }
+        
+        public static T If<T>(this T value, Func<T, T> selector, Func<T, Boolean> condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return condition(value) ? selector(value) : value;
+        }
+        
+        public static T If<T, TArgument>(this T value, Func<T, TArgument, T> selector, TArgument argument, Boolean condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return condition ? selector(value, argument) : value;
+        }
+        
+        public static T If<T, TArgument>(this T value, Func<T, TArgument, T> selector, TArgument argument, Func<Boolean> condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return condition() ? selector(value, argument) : value;
+        }
+        
+        public static T If<T, TArgument>(this T value, Func<T, TArgument, T> selector, TArgument argument, Func<T, Boolean> condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return condition(value) ? selector(value, argument) : value;
+        }
+        
+        public static T If<T, TArgument1, TArgument2>(this T value, Func<T, TArgument1, TArgument2, T> selector, TArgument1 first, TArgument2 second, Boolean condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return condition ? selector(value, first, second) : value;
+        }
+        
+        public static T If<T, TArgument1, TArgument2>(this T value, Func<T, TArgument1, TArgument2, T> selector, TArgument1 first, TArgument2 second, Func<Boolean> condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return condition() ? selector(value, first, second) : value;
+        }
+        
+        public static T If<T, TArgument1, TArgument2>(this T value, Func<T, TArgument1, TArgument2, T> selector, TArgument1 first, TArgument2 second, Func<T, Boolean> condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return condition(value) ? selector(value, first, second) : value;
+        }
+        
+        public static T If<T, TArgument1, TArgument2, TArgument3>(this T value, Func<T, TArgument1, TArgument2, TArgument3, T> selector, TArgument1 first, TArgument2 second, TArgument3 third, Boolean condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return condition ? selector(value, first, second, third) : value;
+        }
+        
+        public static T If<T, TArgument1, TArgument2, TArgument3>(this T value, Func<T, TArgument1, TArgument2, TArgument3, T> selector, TArgument1 first, TArgument2 second, TArgument3 third, Func<Boolean> condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return condition() ? selector(value, first, second, third) : value;
+        }
+        
+        public static T If<T, TArgument1, TArgument2, TArgument3>(this T value, Func<T, TArgument1, TArgument2, TArgument3, T> selector, TArgument1 first, TArgument2 second, TArgument3 third, Func<T, Boolean> condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return condition(value) ? selector(value, first, second, third) : value;
+        }
+
+        public static T IfNot<T>(this T value, Func<T, T> selector, Boolean condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return !condition ? selector(value) : value;
+        }
+        
+        public static T IfNot<T>(this T value, Func<T, T> selector, Func<Boolean> condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return !condition() ? selector(value) : value;
+        }
+        
+        public static T IfNot<T>(this T value, Func<T, T> selector, Func<T, Boolean> condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return !condition(value) ? selector(value) : value;
+        }
+        
+        public static T IfNot<T, TArgument>(this T value, Func<T, TArgument, T> selector, TArgument argument, Boolean condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return !condition ? selector(value, argument) : value;
+        }
+        
+        public static T IfNot<T, TArgument>(this T value, Func<T, TArgument, T> selector, TArgument argument, Func<Boolean> condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return !condition() ? selector(value, argument) : value;
+        }
+        
+        public static T IfNot<T, TArgument>(this T value, Func<T, TArgument, T> selector, TArgument argument, Func<T, Boolean> condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return !condition(value) ? selector(value, argument) : value;
+        }
+        
+        public static T IfNot<T, TArgument1, TArgument2>(this T value, Func<T, TArgument1, TArgument2, T> selector, TArgument1 first, TArgument2 second, Boolean condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return !condition ? selector(value, first, second) : value;
+        }
+        
+        public static T IfNot<T, TArgument1, TArgument2>(this T value, Func<T, TArgument1, TArgument2, T> selector, TArgument1 first, TArgument2 second, Func<Boolean> condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return !condition() ? selector(value, first, second) : value;
+        }
+        
+        public static T IfNot<T, TArgument1, TArgument2>(this T value, Func<T, TArgument1, TArgument2, T> selector, TArgument1 first, TArgument2 second, Func<T, Boolean> condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return !condition(value) ? selector(value, first, second) : value;
+        }
+        
+        public static T IfNot<T, TArgument1, TArgument2, TArgument3>(this T value, Func<T, TArgument1, TArgument2, TArgument3, T> selector, TArgument1 first, TArgument2 second, TArgument3 third, Boolean condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return !condition ? selector(value, first, second, third) : value;
+        }
+        
+        public static T IfNot<T, TArgument1, TArgument2, TArgument3>(this T value, Func<T, TArgument1, TArgument2, TArgument3, T> selector, TArgument1 first, TArgument2 second, TArgument3 third, Func<Boolean> condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return !condition() ? selector(value, first, second, third) : value;
+        }
+        
+        public static T IfNot<T, TArgument1, TArgument2, TArgument3>(this T value, Func<T, TArgument1, TArgument2, TArgument3, T> selector, TArgument1 first, TArgument2 second, TArgument3 third, Func<T, Boolean> condition)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return !condition(value) ? selector(value, first, second, third) : value;
+        }
+
+        private static MethodInfo MemberwiseCloneMethod { get; } = typeof(Object).GetMethod("MemberwiseClone", BindingFlags.NonPublic | BindingFlags.Instance)!;
 
         /// <summary>
         /// Creates a deep copy (new instance with new instances of properties).
@@ -131,12 +451,9 @@ namespace NetExtender.Utilities.Types
 
             if (type.IsArray)
             {
-                Type? array = type.GetElementType();
-
-                if (array is not null && !array.IsPrimitive())
+                if (type.GetElementType()?.IsPrimitive() == false)
                 {
                     Array cloned = (Array) clone;
-
                     cloned.ForEach((arr, indices) => arr.SetValue(DeepCopyInternal(cloned?.GetValue(indices), visited), indices));
                 }
             }

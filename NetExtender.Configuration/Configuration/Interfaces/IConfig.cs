@@ -9,7 +9,7 @@ using NetExtender.Configuration.Common;
 
 namespace NetExtender.Configuration.Interfaces
 {
-    public interface IConfig : IConfigInfo, IEnumerable<ConfigurationEntry>, IDisposable
+    public interface IConfig : IConfigInfo, IEnumerable<ConfigurationEntry>, IDisposable, IAsyncDisposable
     {
         public event ConfigurationChangedEventHandler Changed;
 
@@ -52,6 +52,9 @@ namespace NetExtender.Configuration.Interfaces
         public Boolean Reload();
         public Task<Boolean> ReloadAsync();
         public Task<Boolean> ReloadAsync(CancellationToken token);
+        public Boolean Reset();
+        public Task<Boolean> ResetAsync();
+        public Task<Boolean> ResetAsync(CancellationToken token);
         public void CopyTo(IConfig config);
         public Task CopyToAsync(IConfig config);
         public Task CopyToAsync(IConfig config, CancellationToken token);

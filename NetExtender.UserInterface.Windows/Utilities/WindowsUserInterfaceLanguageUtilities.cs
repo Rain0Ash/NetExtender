@@ -11,36 +11,36 @@ namespace NetExtender.Utilities.UserInterface
     public static class WindowsUserInterfaceLanguageUtilities
     {
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
-        private static extern UInt16 SetThreadUILanguage(UInt16 lcid);
+        private static extern UInt16 SetThreadUILanguage(UInt16 identifier);
 
-        public static Boolean SetUILanguage(UInt16 lcid)
+        public static Boolean SetUILanguage(UInt16 identifier)
         {
-            if (lcid <= 0)
+            if (identifier <= 0)
             {
                 return false;
             }
 
-            return SetThreadUILanguage(lcid) == lcid;
+            return SetThreadUILanguage(identifier) == identifier;
         }
 
-        public static Boolean SetUILanguage(Int32 lcid)
+        public static Boolean SetUILanguage(Int32 identifier)
         {
-            if (lcid <= 0 || lcid > UInt16.MaxValue)
+            if (identifier <= 0 || identifier > UInt16.MaxValue)
             {
                 return false;
             }
 
-            return SetUILanguage((UInt16) lcid);
+            return SetUILanguage((UInt16) identifier);
         }
 
-        public static Boolean SetUILanguage(this LCID lcid)
+        public static Boolean SetUILanguage(this LocalizationIdentifier identifier)
         {
-            return SetUILanguage(lcid.Code);
+            return SetUILanguage(identifier.Code);
         }
 
-        public static Boolean SetUILanguage(this CultureLCID lcid)
+        public static Boolean SetUILanguage(this CultureIdentifier identifier)
         {
-            return SetUILanguage((UInt16) lcid);
+            return SetUILanguage((UInt16) identifier);
         }
 
         public static Boolean SetUILanguage(this CultureInfo info)

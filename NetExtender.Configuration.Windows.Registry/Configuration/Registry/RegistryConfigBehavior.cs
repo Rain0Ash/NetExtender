@@ -105,15 +105,25 @@ namespace NetExtender.Configuration.Windows.Registry
             OnChanged(new ConfigurationValueEntry(key, value, sections));
             return true;
         }
-
-        public override ConfigurationEntry[]? GetExists()
+        
+        protected virtual ConfigurationEntry EntriesConvert(RegistryEntry entry)
         {
-            return Registry.Dump()?.Select(item => new ConfigurationEntry(item.Name, item.Sections)).ToArray();
+            return new ConfigurationEntry(entry.Name, entry.Sections);
         }
         
-        public override ConfigurationValueEntry[]? GetExistsValues()
+        protected virtual ConfigurationValueEntry ValueEntriesConvert(RegistryEntry entry)
         {
-            return Registry.Dump()?.Select(item => new ConfigurationValueEntry(item.Name, Get(item.Name, item.Sections), item.Sections)).ToArray();
+            return new ConfigurationValueEntry(entry.Name, Get(entry.Name, entry.Sections), entry.Sections);
+        }
+
+        public override ConfigurationEntry[]? GetExists(IEnumerable<String>? sections)
+        {
+            return Registry.Dump(sections)?.Select(EntriesConvert).ToArray();
+        }
+
+        public override ConfigurationValueEntry[]? GetExistsValues(IEnumerable<String>? sections)
+        {
+            return Registry.Dump(sections)?.Select(ValueEntriesConvert).ToArray();
         }
 
         public override Boolean Reload()

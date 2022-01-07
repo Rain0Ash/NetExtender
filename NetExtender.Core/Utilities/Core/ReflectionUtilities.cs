@@ -6,12 +6,14 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using NetExtender.Types.Attributes;
 using NetExtender.Utilities.Types;
 
@@ -374,6 +376,414 @@ namespace NetExtender.Utilities.Core
             }
 
             return new FileInfo(uri.LocalPath);
+        }
+
+        public static Assembly LoadAssembly(this AssemblyName assembly)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            return Assembly.Load(assembly);
+        }
+        
+        public static Assembly LoadAssembly(String assembly)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            return Assembly.Load(assembly);
+        }
+        
+        public static Boolean TryLoadAssembly(this AssemblyName assembly, [MaybeNullWhen(false)] out Assembly result)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            try
+            {
+                result = LoadAssembly(assembly);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        public static Boolean TryLoadAssembly(String assembly, [MaybeNullWhen(false)] out Assembly result)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            try
+            {
+                result = LoadAssembly(assembly);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        public static Assembly LoadAssemblyFile(String assembly)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            return Assembly.LoadFile(assembly);
+        }
+        
+        public static Boolean TryLoadAssemblyFile(String assembly, [MaybeNullWhen(false)] out Assembly result)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            try
+            {
+                result = LoadAssemblyFile(assembly);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        public static Assembly LoadAssemblyFrom(String assembly)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            return Assembly.LoadFrom(assembly);
+        }
+        
+        public static Assembly LoadAssemblyFrom(String assembly, Byte[]? hash, AssemblyHashAlgorithm algorithm)
+        {
+            return LoadAssemblyFrom(assembly, hash, algorithm switch
+            {
+                AssemblyHashAlgorithm.None => System.Configuration.Assemblies.AssemblyHashAlgorithm.None,
+                AssemblyHashAlgorithm.MD5 => System.Configuration.Assemblies.AssemblyHashAlgorithm.MD5,
+                AssemblyHashAlgorithm.Sha1 => System.Configuration.Assemblies.AssemblyHashAlgorithm.SHA1,
+                AssemblyHashAlgorithm.Sha256 => System.Configuration.Assemblies.AssemblyHashAlgorithm.SHA256,
+                AssemblyHashAlgorithm.Sha384 => System.Configuration.Assemblies.AssemblyHashAlgorithm.SHA384,
+                AssemblyHashAlgorithm.Sha512 => System.Configuration.Assemblies.AssemblyHashAlgorithm.SHA512,
+                _ => throw new NotSupportedException()
+            });
+        }
+        
+        public static Assembly LoadAssemblyFrom(String assembly, Byte[]? hash, System.Configuration.Assemblies.AssemblyHashAlgorithm algorithm)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            return Assembly.LoadFrom(assembly, hash, algorithm);
+        }
+        
+        public static Assembly LoadAssemblyFrom(String assembly, Byte[]? token)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            if (token is null)
+            {
+                return LoadAssemblyFrom(assembly);
+            }
+
+            AssemblyName name = AssemblyName.GetAssemblyName(assembly);
+            
+            if (token.SequenceEqual(name.GetPublicKeyToken() ?? throw new CryptographicException()) ||
+                token.SequenceEqual(name.GetPublicKey() ?? throw new CryptographicException()))
+            {
+                return LoadAssemblyFrom(assembly);
+            }
+
+            throw new CryptographicException();
+        }
+
+        public static Assembly LoadAssemblyWithPublicKeyFrom(String assembly, Byte[]? token)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            if (token is null)
+            {
+                return LoadAssemblyFrom(assembly);
+            }
+
+            AssemblyName name = AssemblyName.GetAssemblyName(assembly);
+            return token.SequenceEqual(name.GetPublicKey() ?? throw new CryptographicException()) ? LoadAssemblyFrom(assembly) : throw new CryptographicException();
+        }
+
+        public static Assembly LoadAssemblyWithPublicKeyTokenFrom(String assembly, Byte[]? token)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            if (token is null)
+            {
+                return LoadAssemblyFrom(assembly);
+            }
+
+            AssemblyName name = AssemblyName.GetAssemblyName(assembly);
+            return token.SequenceEqual(name.GetPublicKeyToken() ?? throw new CryptographicException()) ? LoadAssemblyFrom(assembly) : throw new CryptographicException();
+        }
+
+        public static Assembly LoadAssemblyFrom(String assembly, String? token)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            if (String.IsNullOrEmpty(token))
+            {
+                return LoadAssemblyFrom(assembly);
+            }
+
+            AssemblyName name = AssemblyName.GetAssemblyName(assembly);
+            
+            String hextoken = name.GetPublicKeyToken()?.ToHexString() ?? throw new CryptographicException();
+            if (String.Equals(hextoken, token, StringComparison.OrdinalIgnoreCase))
+            {
+                return LoadAssemblyFrom(assembly);
+            }
+            
+            hextoken = name.GetPublicKey()?.ToHexString() ?? throw new CryptographicException();
+            if (String.Equals(hextoken, token, StringComparison.OrdinalIgnoreCase))
+            {
+                return LoadAssemblyFrom(assembly);
+            }
+
+            throw new CryptographicException();
+        }
+
+        public static Assembly LoadAssemblyWithPublicKeyFrom(String assembly, String? token)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            if (String.IsNullOrEmpty(token))
+            {
+                return LoadAssemblyFrom(assembly);
+            }
+
+            String hextoken = AssemblyName.GetAssemblyName(assembly).GetPublicKey()?.ToHexString() ?? throw new CryptographicException();
+            return String.Equals(hextoken, token, StringComparison.OrdinalIgnoreCase) ? LoadAssemblyFrom(assembly) : throw new CryptographicException();
+        }
+        
+        public static Assembly LoadAssemblyWithPublicKeyTokenFrom(String assembly, String? token)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            if (String.IsNullOrEmpty(token))
+            {
+                return LoadAssemblyFrom(assembly);
+            }
+
+            String hextoken = AssemblyName.GetAssemblyName(assembly).GetPublicKeyToken()?.ToHexString() ?? throw new CryptographicException();
+            return String.Equals(hextoken, token, StringComparison.OrdinalIgnoreCase) ? LoadAssemblyFrom(assembly) : throw new CryptographicException();
+        }
+
+        public static Boolean TryLoadAssemblyFrom(String assembly, [MaybeNullWhen(false)] out Assembly result)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            try
+            {
+                result = LoadAssemblyFrom(assembly);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        public static Boolean TryLoadAssemblyFrom(String assembly, Byte[]? hash, AssemblyHashAlgorithm algorithm, [MaybeNullWhen(false)] out Assembly result)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            try
+            {
+                result = LoadAssemblyFrom(assembly, hash, algorithm);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        public static Boolean TryLoadAssemblyFrom(String assembly, Byte[]? hash, System.Configuration.Assemblies.AssemblyHashAlgorithm algorithm, [MaybeNullWhen(false)] out Assembly result)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            try
+            {
+                result = LoadAssemblyFrom(assembly, hash, algorithm);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        public static Boolean TryLoadAssemblyFrom(String assembly, [MaybeNullWhen(false)] out Assembly result, Byte[]? token)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            try
+            {
+                result = LoadAssemblyFrom(assembly, token);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        public static Boolean TryLoadAssemblyWithPublicKeyFrom(String assembly, [MaybeNullWhen(false)] out Assembly result, Byte[]? token)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            try
+            {
+                result = LoadAssemblyWithPublicKeyFrom(assembly, token);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        public static Boolean TryLoadAssemblyWithPublicKeyTokenFrom(String assembly, [MaybeNullWhen(false)] out Assembly result, Byte[]? token)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            try
+            {
+                result = LoadAssemblyWithPublicKeyTokenFrom(assembly, token);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+
+        public static Boolean TryLoadAssemblyFrom(String assembly, [MaybeNullWhen(false)] out Assembly result, String? token)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            try
+            {
+                result = LoadAssemblyFrom(assembly, token);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+
+        public static Boolean TryLoadAssemblyWithPublicKeyFrom(String assembly, [MaybeNullWhen(false)] out Assembly result, String? token)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            try
+            {
+                result = LoadAssemblyWithPublicKeyFrom(assembly, token);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+
+        public static Boolean TryLoadAssemblyWithPublicKeyTokenFrom(String assembly, [MaybeNullWhen(false)] out Assembly result, String? token)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            try
+            {
+                result = LoadAssemblyWithPublicKeyTokenFrom(assembly, token);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
         }
         
         public static String? GetManifestResourceString(this Assembly assembly, String resource)

@@ -4,6 +4,7 @@
 using System;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Core;
 
 namespace NetExtender.Initializer
@@ -14,9 +15,16 @@ namespace NetExtender.Initializer
         [ModuleInitializer]
         public static void Initialize()
         {
+            Assembly netextender = Assembly.GetExecutingAssembly();
+            
+            if (!NetExtenderFrameworkInitializer.IsReady)
+            {
+                throw new ModuleNotInitializedException(netextender.ManifestModule, $"You can't use {nameof(NetExtender)} in {NetExtenderFrameworkInitializer.InitializerMethod} method!");
+            }
+            
             if (NetExtenderFrameworkInitializer.IsInitialize)
             {
-                if (!NetExtenderFrameworkInitializer.LoadFramework(Assembly.GetExecutingAssembly(), out Exception? exception))
+                if (!NetExtenderFrameworkInitializer.LoadFramework(netextender, out Exception? exception))
                 {
                     NetExtenderFrameworkInitializer.Successful = false;
                 }

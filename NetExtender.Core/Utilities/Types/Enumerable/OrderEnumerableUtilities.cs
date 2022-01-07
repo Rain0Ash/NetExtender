@@ -16,7 +16,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return OrderBy(source, Comparer<T>.Default);
+            return OrderBy(source, (IComparer<T>?) null);
         }
 
         public static IOrderedEnumerable<T> OrderBy<T>(this IEnumerable<T> source, IComparer<T>? comparer)
@@ -28,6 +28,41 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy(item => item, comparer);
         }
+        
+        public static IOrderedEnumerable<T> OrderBy<T>(this IEnumerable<T> source, Comparison<T> comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            return source.OrderBy(item => item, comparison.ToComparer());
+        }
+        
+        public static IOrderedEnumerable<T> OrderBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Comparison<TKey> comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            return source.OrderBy(selector, comparison.ToComparer());
+        }
 
         public static IOrderedEnumerable<T> OrderByDescending<T>(this IEnumerable<T> source)
         {
@@ -36,7 +71,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return OrderByDescending(source, Comparer<T>.Default);
+            return OrderByDescending(source, (IComparer<T>?) null);
         }
 
         public static IOrderedEnumerable<T> OrderByDescending<T>(this IEnumerable<T> source, IComparer<T>? comparer)
@@ -49,6 +84,41 @@ namespace NetExtender.Utilities.Types
             return source.OrderByDescending(item => item, comparer);
         }
         
+        public static IOrderedEnumerable<T> OrderByDescending<T>(this IEnumerable<T> source, Comparison<T> comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            return source.OrderByDescending(item => item, comparison.ToComparer());
+        }
+        
+        public static IOrderedEnumerable<T> OrderByDescending<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Comparison<TKey> comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            return source.OrderByDescending(selector, comparison.ToComparer());
+        }
+        
         public static IOrderedEnumerable<T> ThenBy<T>(this IOrderedEnumerable<T> source, IComparer<T>? comparer)
         {
             if (source is null)
@@ -57,6 +127,21 @@ namespace NetExtender.Utilities.Types
             }
 
             return source.ThenBy(item => item, comparer);
+        }
+        
+        public static IOrderedEnumerable<T> ThenBy<T>(this IOrderedEnumerable<T> source, Comparison<T> comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            return source.ThenBy(item => item, comparison.ToComparer());
         }
 
         public static IOrderedEnumerable<T> ThenByDescending<T>(this IOrderedEnumerable<T> source, IComparer<T>? comparer)
@@ -69,6 +154,21 @@ namespace NetExtender.Utilities.Types
             return source.ThenByDescending(item => item, comparer);
         }
 
+        public static IOrderedEnumerable<T> ThenByDescending<T>(this IOrderedEnumerable<T> source, Comparison<T> comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            return source.ThenByDescending(item => item, comparison.ToComparer());
+        }
+
         public static IOrderedEnumerable<T> Sort<T>(this IEnumerable<T> source)
         {
             if (source is null)
@@ -76,7 +176,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return Sort(source, Comparer<T>.Default);
+            return Sort(source, (IComparer<T>?) null);
         }
 
         public static IOrderedEnumerable<T> Sort<T>(this IEnumerable<T> source, IComparer<T>? comparer)
@@ -87,6 +187,21 @@ namespace NetExtender.Utilities.Types
             }
 
             return OrderBy(source, comparer);
+        }
+
+        public static IOrderedEnumerable<T> Sort<T>(this IEnumerable<T> source, Comparison<T> comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            return OrderBy(source, comparison);
         }
 
         public static IOrderedEnumerable<T> SortBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
@@ -118,6 +233,26 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy(selector, comparer);
         }
+        
+        public static IOrderedEnumerable<T> SortBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Comparison<TKey> comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            return source.OrderBy(selector, comparison.ToComparer());
+        }
 
         public static IOrderedEnumerable<T> SortDescending<T>(this IEnumerable<T> source)
         {
@@ -126,7 +261,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return SortDescending(source, Comparer<T>.Default);
+            return SortDescending(source, (IComparer<T>?) null);
         }
 
         public static IOrderedEnumerable<T> SortDescending<T>(this IEnumerable<T> source, IComparer<T>? comparer)
@@ -137,6 +272,21 @@ namespace NetExtender.Utilities.Types
             }
 
             return OrderByDescending(source, comparer);
+        }
+
+        public static IOrderedEnumerable<T> SortDescending<T>(this IEnumerable<T> source, Comparison<T> comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            return OrderByDescending(source, comparison);
         }
 
         public static IOrderedEnumerable<T> SortByDescending<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
@@ -167,6 +317,26 @@ namespace NetExtender.Utilities.Types
             }
 
             return source.OrderByDescending(selector, comparer);
+        }
+
+        public static IOrderedEnumerable<T> SortByDescending<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Comparison<TKey> comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            return source.OrderByDescending(selector, comparison.ToComparer());
         }
     }
 }

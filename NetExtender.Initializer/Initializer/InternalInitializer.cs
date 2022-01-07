@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
 namespace NetExtender.Initializer
@@ -14,7 +15,10 @@ namespace NetExtender.Initializer
             public Boolean IsInitialize { get; set; }
             public Boolean IsFullInitializeRequired { get; set; }
             public Boolean IsInitializeRequireAttribute { get; set; } = true;
-            public AssemblyHashInitialization AssemblyHashInitialization { get; set; }
+            public AssemblySignInitialization AssemblySignInitialization { get; set; } = AssemblySignInitialization.Sign;
+            public IDictionary<String, AssemblyVerifyInfo?> Assemblies { get; } = new Dictionary<String, AssemblyVerifyInfo?>();
+            public IDictionary<String, AssemblyVerifyInfo?> Include { get; } = new Dictionary<String, AssemblyVerifyInfo?>();
+            public ISet<String> Exclude { get; } = new HashSet<String>();
         }
     }
 }

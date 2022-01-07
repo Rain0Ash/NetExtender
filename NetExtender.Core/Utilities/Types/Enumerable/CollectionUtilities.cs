@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using NetExtender.Combinatorics;
 
 namespace NetExtender.Utilities.Types
@@ -84,6 +85,7 @@ namespace NetExtender.Utilities.Types
             return combo.ToList();
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsReadOnly<T>(this ICollection<T> collection)
         {
             if (collection is null)

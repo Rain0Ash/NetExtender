@@ -152,7 +152,12 @@ namespace NetExtender.Configuration.File
                 return false;
             }
 
-            Config = config;
+            if (!Reset())
+            {
+                return false;
+            }
+            
+            Config.AddRange(config);
             return true;
         }
     }

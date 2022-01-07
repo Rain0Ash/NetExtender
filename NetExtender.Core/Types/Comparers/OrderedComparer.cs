@@ -5,22 +5,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NetExtender.Initializer.Types.Indexers.Interfaces;
 using NetExtender.Types.Comparers.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Comparers
 {
-    public class OrderedComparer<T> : IOrderedComparer<T>
+    public class OrderedComparer<T> : IOrderedComparer<T>, IReadOnlyOrderedComparer<T>
     {
-        protected static IComparer<T> Inner
-        {
-            get
-            {
-                return Comparer<T>.Default;
-            }
-        }
-
         protected IList<T> Order { get; }
+        protected IIndexer<T>? Indexer { get; set; }
 
         public Int32 Count
         {
@@ -38,22 +32,10 @@ namespace NetExtender.Types.Comparers
             }
         }
 
-        private readonly IComparer<T> _comparer = Inner;
-
-        public IComparer<T> Comparer
-        {
-            get
-            {
-                return _comparer;
-            }
-            init
-            {
-                _comparer = value ?? Inner;
-            }
-        }
+        public IComparer<T> Comparer { get; }
 
         public OrderedComparer()
-            : this(null, null)
+            : this((IEnumerable<T>?) null, null)
         {
         }
 
@@ -61,21 +43,33 @@ namespace NetExtender.Types.Comparers
             : this(null, comparer)
         {
         }
+        
+        public OrderedComparer(params T[]? order)
+            : this((IEnumerable<T>?) order)
+        {
+        }
 
         public OrderedComparer(IEnumerable<T>? order)
             : this(order, null)
+        {
+        }
+        
+        public OrderedComparer(IComparer<T>? comparer, params T[]? order)
+            : this(order, comparer)
         {
         }
 
         public OrderedComparer(IEnumerable<T>? order, IComparer<T>? comparer)
         {
             Order = order?.ToList() ?? new List<T>();
-            Comparer = comparer ?? Inner;
+            Indexer = Order.Count > 8 ? Order.ToIndexer() : null;
+            Comparer = comparer ?? Comparer<T>.Default;
         }
 
         public void Add(T item)
         {
-            Order.Add(item!);
+            Order.Add(item);
+            Indexer = Order.Count > 8 ? Order.ToIndexer() : null;
         }
 
         public void AddRange(IEnumerable<T> source)
@@ -86,11 +80,13 @@ namespace NetExtender.Types.Comparers
             }
 
             Order.AddRange(source);
+            Indexer = Order.Count > 8 ? Order.ToIndexer() : null;
         }
         
         public void Insert(Int32 index, T item)
         {
-            Order.Insert(index, item!);
+            Order.Insert(index, item);
+            Indexer = Order.Count > 8 ? Order.ToIndexer() : null;
         }
 
         public void InsertRange(Int32 index, IEnumerable<T> source)
@@ -101,31 +97,39 @@ namespace NetExtender.Types.Comparers
             }
 
             Order.InsertRange(index, source);
+            Indexer = Order.Count > 8 ? Order.ToIndexer() : null;
         }
 
         public Boolean Contains(T item)
         {
-            return Order.Contains(item);
+            return Indexer?.Contains(item) ?? Order.Contains(item);
         }
 
         public Int32 GetOrder(T item)
         {
-            return Order.IndexOf(item);
+            return Indexer?.IndexOf(item) ?? Order.IndexOf(item);
         }
         
         public Boolean GetOrder(T item, out Int32 order)
         {
-            return Order.IndexOf(item!, out order);
+            return Indexer?.IndexOf(item, out order) ?? Order.IndexOf(item, out order);
         }
         
         public Boolean Remove(T item)
         {
-            return Order.Remove(item);
+            if (!Order.Remove(item))
+            {
+                return false;
+            }
+            
+            Indexer = Order.Count > 8 ? Order.ToIndexer() : null;
+            return true;
         }
         
         public void Clear()
         {
             Order.Clear();
+            Indexer = null;
         }
         
         public void CopyTo(T[] array, Int32 index)

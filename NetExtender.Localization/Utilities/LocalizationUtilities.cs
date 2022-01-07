@@ -7,13 +7,17 @@ using NetExtender.Localization.Behavior;
 using NetExtender.Localization.Behavior.Interfaces;
 using NetExtender.Localization.Common;
 using NetExtender.Localization.Interfaces;
-using NetExtender.Types.Culture;
 
 namespace NetExtender.Localization.Utilities
 {
     public static class LocalizationUtilities
     {
-        public static ILocalizationBehavior ToLocalization(this IConfigBehavior behavior, LocalizationOptions options)
+        public static ILocalizationBehavior Localization(this IConfigBehavior behavior)
+        {
+            return Localization(behavior, LocalizationOptions.None);
+        }
+        
+        public static ILocalizationBehavior Localization(this IConfigBehavior behavior, LocalizationOptions options)
         {
             if (behavior is null)
             {

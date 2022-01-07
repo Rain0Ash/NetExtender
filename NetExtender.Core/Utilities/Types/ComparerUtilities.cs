@@ -23,44 +23,84 @@ namespace NetExtender.Utilities.Types
             };
         }
 
-        public static IEqualityComparer<T> ToEqualityComparer<T>(this Func<T?, T?, Boolean> comparison)
+        public static IComparer<T> ToComparer<T>(this Comparison<T> comparison)
         {
             if (comparison is null)
             {
                 throw new ArgumentNullException(nameof(comparison));
             }
 
-            return CustomEqualityComparer.Create<T>(comparison);
+            return new ComparisonComparer<T>(comparison);
+        }
+
+        public static IComparer<T1, T2> ToComparer<T1, T2>(this Comparison<T1, T2> comparison)
+        {
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            return new ComparisonComparer<T1, T2>(comparison);
         }
         
-        public static IEqualityComparer<T1, T2> ToEqualityComparer<T1, T2>(this Func<T1?, T2?, Boolean> comparison)
+        public static Comparison<T> ToComparison<T>(this Func<T, T, Int32> comparison)
         {
             if (comparison is null)
             {
                 throw new ArgumentNullException(nameof(comparison));
             }
 
-            return CustomEqualityComparer.Create(comparison);
+            return comparison.Invoke;
         }
         
-        public static IComparer<T> ToComparer<T>(this Func<T?, T?, Int32> comparison)
+        public static Comparison<T1, T2> ToComparison<T1, T2>(this Func<T1, T2, Int32> comparison)
         {
             if (comparison is null)
             {
                 throw new ArgumentNullException(nameof(comparison));
             }
 
-            return CustomComparer.Create<T>(comparison);
+            return comparison.Invoke;
         }
         
-        public static IComparer<T1, T2> ToComparer<T1, T2>(this Func<T1?, T2?, Int32> comparison)
+        public static IEqualityComparer<T> ToEqualityComparer<T>(this EqualityComparison<T> comparison)
         {
             if (comparison is null)
             {
                 throw new ArgumentNullException(nameof(comparison));
             }
 
-            return CustomComparer.Create(comparison);
+            return new EqualityComparisonComparer<T>(comparison);
+        }
+        
+        public static IEqualityComparer<T1, T2> ToEqualityComparer<T1, T2>(this EqualityComparison<T1, T2> comparison)
+        {
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            return new EqualityComparisonComparer<T1, T2>(comparison);
+        }
+        
+        public static EqualityComparison<T> ToEqualityComparison<T>(this Func<T, T, Boolean> comparison)
+        {
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            return comparison.Invoke;
+        }
+        
+        public static EqualityComparison<T1, T2> ToEqualityComparerison<T1, T2>(this Func<T1, T2, Boolean> comparison)
+        {
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            return comparison.Invoke;
         }
         
         public static Boolean TryCompareToNull<T>(T? first, T? second, out Int32 result) where T : class

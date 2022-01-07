@@ -214,9 +214,46 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type GetUnderlyingType<T>() where T : unmanaged, Enum
         {
             return CacheType<T>.UnderlyingType;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean ContainsValue<T>(Int64 value) where T : unmanaged, Enum
+        {
+            return ContainsValue<T>(Unsafe.As<Int64, UInt64>(ref value));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean ContainsValue<T>(UInt64 value) where T : unmanaged, Enum
+        {
+            return CacheValues<T>.Set.Contains(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean ContainsValue<T>(T value) where T : unmanaged, Enum
+        {
+            return CacheValues<T>.Contains(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean ContainsValueWithoutDefault<T>(Int64 value) where T : unmanaged, Enum
+        {
+            return ContainsValueWithoutDefault<T>(Unsafe.As<Int64, UInt64>(ref value));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean ContainsValueWithoutDefault<T>(UInt64 value) where T : unmanaged, Enum
+        {
+            return CacheValuesWithoutDefault<T>.Set.Contains(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean ContainsValueWithoutDefault<T>(T value) where T : unmanaged, Enum
+        {
+            return CacheValuesWithoutDefault<T>.Contains(value);
         }
 
         /// <summary>
@@ -224,6 +261,7 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyCollection<T> GetValues<T>() where T : unmanaged, Enum
         {
             return CacheValues<T>.Values;
@@ -234,6 +272,7 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlyList<T> GetValues<T>(Boolean alternate) where T : unmanaged, Enum
         {
             return alternate ? GetValues<T>() : GetValuesWithoutDefault<T>();
@@ -244,9 +283,16 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyCollection<T> GetValuesWithoutDefault<T>() where T : unmanaged, Enum
         {
             return CacheValuesWithoutDefault<T>.Values;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean ContainsName<T>(String name) where T : unmanaged, Enum
+        {
+            return CacheNames<T>.Contains(name);
         }
 
         /// <summary>
@@ -254,6 +300,7 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyCollection<String> GetNames<T>() where T : unmanaged, Enum
         {
             return CacheNames<T>.Names;
@@ -275,6 +322,7 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyCollection<EnumMember<T>> GetMembers<T>() where T : unmanaged, Enum
         {
             return CacheMembers<T>.Members;
@@ -318,6 +366,7 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsEmpty<T>() where T : unmanaged, Enum
         {
             return CacheValues<T>.IsEmpty;
@@ -328,6 +377,7 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsContinuous<T>() where T : unmanaged, Enum
         {
             return CacheUnderlyingOperation<T>.UnderlyingOperation.IsContinuous;
@@ -338,6 +388,7 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsFlags<T>() where T : unmanaged, Enum
         {
             return CacheIsFlags<T>.IsFlags;
@@ -361,6 +412,7 @@ namespace NetExtender.Utilities.Types
         /// <param name="name"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsDefined<T>(String name) where T : unmanaged, Enum
         {
             return TryParseName<T>(name, false, out _);
@@ -373,6 +425,7 @@ namespace NetExtender.Utilities.Types
         /// <param name="value"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Parse<T>(String value) where T : unmanaged, Enum
         {
             return TryParse(value, false, out T result) ? result : throw new ArgumentException(nameof(value));
@@ -387,6 +440,7 @@ namespace NetExtender.Utilities.Types
         /// <param name="ignoreCase"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Parse<T>(String value, Boolean ignoreCase) where T : unmanaged, Enum
         {
             return TryParse(value, ignoreCase, out T result) ? result : throw new ArgumentException(nameof(value));
@@ -401,6 +455,7 @@ namespace NetExtender.Utilities.Types
         /// <param name="result"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse<T>(String value, out T result) where T : unmanaged, Enum
         {
             return TryParse(value, false, out result);
@@ -417,6 +472,7 @@ namespace NetExtender.Utilities.Types
         /// <param name="result"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns>true if the value parameter was converted successfully; otherwise, false.</returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse<T>(String value, Boolean ignoreCase, out T result) where T : unmanaged, Enum
         {
             if (!String.IsNullOrEmpty(value))
@@ -439,6 +495,11 @@ namespace NetExtender.Utilities.Types
             return Char.IsDigit(c) || c == '-' || c == '+';
         }
 
+        public static Boolean TryParseName<T>(String name, out T result) where T : unmanaged, Enum
+        {
+            return TryParseName(name, false, out result);
+        }
+
         /// <summary>
         ///     Converts the string representation of the name of one or more enumerated constants to an equivalent enumerated
         ///     object.
@@ -446,27 +507,28 @@ namespace NetExtender.Utilities.Types
         ///     The return value indicates whether the conversion succeeded.
         /// </summary>
         /// <param name="name"></param>
-        /// <param name="ignoreCase"></param>
+        /// <param name="insensitive"></param>
         /// <param name="result"></param>
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
-        public static Boolean TryParseName<T>(String name, Boolean ignoreCase, out T result) where T : unmanaged, Enum
+        public static Boolean TryParseName<T>(String name, Boolean insensitive, out T result) where T : unmanaged, Enum
         {
-            if (ignoreCase)
-            {
-                foreach (EnumMember<T> member in CacheMembers<T>.Members.Where(member => name.Equals(member.Name, StringComparison.OrdinalIgnoreCase)))
-                {
-                    result = member.Value;
-                    return true;
-                }
-            }
-            else
+            if (!insensitive)
             {
                 if (CacheMembersByName<T>.MemberByName.TryGetValue(name, out EnumMember<T>? member))
                 {
                     result = member.Value;
                     return true;
                 }
+                
+                result = default;
+                return false;
+            }
+
+            foreach (EnumMember<T> member in CacheMembers<T>.Members.Where(member => name.Equals(member.Name, StringComparison.OrdinalIgnoreCase)))
+            {
+                result = member.Value;
+                return true;
             }
 
             result = default;
@@ -876,20 +938,34 @@ namespace NetExtender.Utilities.Types
         private static class CacheValues<T> where T : unmanaged, Enum
         {
             public static ReadOnlyCollection<T> Values { get; }
-            public static Boolean IsEmpty { get; }
+            public static ImmutableHashSet<UInt64> Set { get; }
+
+            public static Boolean IsEmpty
+            {
+                get
+                {
+                    return Values.Count <= 0;
+                }
+            }
 
             static CacheValues()
             {
                 Type type = CacheType<T>.Type;
                 T[] values = Enum.GetValues(type) as T[] ?? throw new ArgumentException(nameof(T));
                 Values = values.ToReadOnlyArray();
-                IsEmpty = values.Length <= 0;
+                Set = Values.Select(item => Unsafe.As<T, UInt64>(ref item)).ToImmutableHashSet();
+            }
+            
+            public static Boolean Contains(T value)
+            {
+                return Set.Contains(Unsafe.As<T, UInt64>(ref value));
             }
         }
         
         private static class CacheValuesWithoutDefault<T> where T : unmanaged, Enum
         {
             public static ReadOnlyCollection<T> Values { get; }
+            public static ImmutableHashSet<UInt64> Set { get; }
 
             public static Boolean IsEmpty
             {
@@ -902,17 +978,30 @@ namespace NetExtender.Utilities.Types
             static CacheValuesWithoutDefault()
             {
                 Values = CacheValues<T>.Values.Where(GenericUtilities.IsNotDefault).ToReadOnlyArray();
+                Set = Values.Select(item => Unsafe.As<T, UInt64>(ref item)).ToImmutableHashSet();
+            }
+
+            public static Boolean Contains(T value)
+            {
+                return Set.Contains(Unsafe.As<T, UInt64>(ref value));
             }
         }
 
         private static class CacheNames<T> where T : unmanaged, Enum
         {
             public static ReadOnlyCollection<String> Names { get; }
+            public static ImmutableHashSet<String> Set { get; }
 
             static CacheNames()
             {
                 Type type = CacheType<T>.Type;
                 Names = Enum.GetNames(type).ToReadOnlyArray();
+                Set = Names.ToImmutableHashSet();
+            }
+
+            public static Boolean Contains(String name)
+            {
+                return Set.Contains(name);
             }
         }
 
@@ -969,10 +1058,17 @@ namespace NetExtender.Utilities.Types
         private static class CacheMembersByName<T> where T : unmanaged, Enum
         {
             public static IImmutableDictionary<String, EnumMember<T>> MemberByName { get; }
+            public static IImmutableDictionary<String, EnumMember<T>> MemberByNameInsensitive { get; }
 
             static CacheMembersByName()
             {
-                MemberByName = CacheMembers<T>.Members.ToImmutableDictionary(x => x.Name);
+                static String Selector(EnumMember<T> member)
+                {
+                    return member.Name;
+                }
+                
+                MemberByName = CacheMembers<T>.Members.ToImmutableDictionary(Selector);
+                MemberByNameInsensitive = CacheMembers<T>.Members.DistinctBy(Selector, StringComparer.OrdinalIgnoreCase).ToImmutableDictionary(Selector, StringComparer.OrdinalIgnoreCase);
             }
         }
 
@@ -986,7 +1082,7 @@ namespace NetExtender.Utilities.Types
                 Type type = CacheType<T>.Type;
                 T min = CacheMinMaxValues<T>.MinValue;
                 T max = CacheMinMaxValues<T>.MaxValue;
-                EnumMember<T>[] distincted = CacheMembers<T>.Members.OrderBy(x => x.Value).Distinct(new EnumMember<T>.ValueComparer()).ToArray();
+                EnumMember<T>[] distincted = CacheMembers<T>.Members.OrderBy(member => member.Value).Distinct(new EnumMember<T>.ValueComparer()).ToArray();
                 UnderlyingType = CacheType<T>.UnderlyingType;
                 
                 // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault

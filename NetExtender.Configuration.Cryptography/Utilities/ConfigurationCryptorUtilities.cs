@@ -8,6 +8,7 @@ using NetExtender.Crypto.CryptKey.Interfaces;
 
 namespace NetExtender.Configuration.Cryptography.Utilities
 {
+    //TODO: remove
     public static class ConfigurationCryptorUtilities
     {
         public static IConfigurationCryptor Cryptor(this IStringCryptor cryptor)

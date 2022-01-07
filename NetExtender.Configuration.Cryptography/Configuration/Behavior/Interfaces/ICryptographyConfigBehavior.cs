@@ -31,13 +31,13 @@ namespace NetExtender.Configuration.Cryptography.Behavior.Interfaces
         public Task<String?> GetOrSetAsync(String? key, String? value, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token);
         public String? GetOrSetRaw(String? key, String? value, IEnumerable<String>? sections);
         public Task<String?> GetOrSetRawAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token);
-        public ConfigurationEntry[]? GetExists(IStringCryptor? cryptor);
-        public ConfigurationEntry[]? GetExistsRaw();
-        public ConfigurationValueEntry[]? GetExistsValues(IStringCryptor? cryptor);
-        public ConfigurationValueEntry[]? GetExistsValuesRaw();
-        public Task<ConfigurationEntry[]?> GetExistsAsync(IStringCryptor? cryptor, CancellationToken token);
-        public Task<ConfigurationEntry[]?> GetExistsRawAsync(CancellationToken token);
-        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IStringCryptor? cryptor, CancellationToken token);
-        public Task<ConfigurationValueEntry[]?> GetExistsValuesRawAsync(CancellationToken token);
+        public ConfigurationEntry[]? GetExists(IStringCryptor? cryptor, IEnumerable<String>? sections);
+        public ConfigurationEntry[]? GetExistsRaw(IEnumerable<String>? sections);
+        public ConfigurationValueEntry[]? GetExistsValues(IStringCryptor? cryptor, IEnumerable<String>? sections);
+        public ConfigurationValueEntry[]? GetExistsValuesRaw(IEnumerable<String>? sections);
+        public Task<ConfigurationEntry[]?> GetExistsAsync(IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token);
+        public Task<ConfigurationEntry[]?> GetExistsRawAsync(IEnumerable<String>? sections, CancellationToken token);
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token);
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesRawAsync(IEnumerable<String>? sections, CancellationToken token);
     }
 }

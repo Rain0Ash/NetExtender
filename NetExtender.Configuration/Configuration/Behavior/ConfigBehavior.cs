@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Behavior.Interfaces;
@@ -130,18 +131,18 @@ namespace NetExtender.Configuration.Behavior
             return GetOrSet(key, value, sections).ToTask();
         }
 
-        public abstract ConfigurationEntry[]? GetExists();
+        public abstract ConfigurationEntry[]? GetExists(IEnumerable<String>? sections);
 
-        public virtual Task<ConfigurationEntry[]?> GetExistsAsync(CancellationToken token)
+        public virtual Task<ConfigurationEntry[]?> GetExistsAsync(IEnumerable<String>? sections, CancellationToken token)
         {
-            return GetExists().ToTask();
+            return GetExists(sections).ToTask();
         }
-        
-        public abstract ConfigurationValueEntry[]? GetExistsValues();
 
-        public virtual Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(CancellationToken token)
+        public abstract ConfigurationValueEntry[]? GetExistsValues(IEnumerable<String>? sections);
+
+        public virtual Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IEnumerable<String>? sections, CancellationToken token)
         {
-            return GetExistsValues().ToTask();
+            return GetExistsValues(sections).ToTask();
         }
 
         public abstract Boolean Reload();
@@ -149,6 +150,16 @@ namespace NetExtender.Configuration.Behavior
         public virtual Task<Boolean> ReloadAsync(CancellationToken token)
         {
             return Reload().ToTask();
+        }
+
+        public virtual Boolean Reset()
+        {
+            return false;
+        }
+
+        public virtual Task<Boolean> ResetAsync(CancellationToken token)
+        {
+            return Reset().ToTask();
         }
 
         protected void OnChanged(ConfigurationValueEntry entry)
@@ -164,6 +175,13 @@ namespace NetExtender.Configuration.Behavior
 
         protected virtual void Dispose(Boolean disposing)
         {
+        }
+
+        public virtual ValueTask DisposeAsync()
+        {
+            Dispose();
+            GC.SuppressFinalize(this);
+            return ValueTask.CompletedTask;
         }
     }
 }

@@ -5,7 +5,7 @@ using System;
 
 namespace NetExtender.Types.Culture
 {
-    public enum CultureLCID : UInt16
+    public enum CultureIdentifier : UInt16
     {
         Invariant = 0x7F,
         Ar = 0x401,

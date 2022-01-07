@@ -248,7 +248,7 @@ namespace NetExtender.Configuration
 
         public virtual ConfigurationEntry[]? GetExists()
         {
-            return Behavior.GetExists();
+            return GetExists(null);
         }
 
         public Task<ConfigurationEntry[]?> GetExistsAsync()
@@ -258,12 +258,42 @@ namespace NetExtender.Configuration
 
         public virtual Task<ConfigurationEntry[]?> GetExistsAsync(CancellationToken token)
         {
-            return Behavior.GetExistsAsync(token);
+            return GetExistsAsync(null, token);
         }
-        
+
+        public ConfigurationEntry[]? GetExists(params String[]? sections)
+        {
+            return GetExists((IEnumerable<String>?) sections);
+        }
+
+        public ConfigurationEntry[]? GetExists(IEnumerable<String>? sections)
+        {
+            return Behavior.GetExists(sections);
+        }
+
+        public Task<ConfigurationEntry[]?> GetExistsAsync(params String[]? sections)
+        {
+            return GetExistsAsync((IEnumerable<String>?) sections);
+        }
+
+        public Task<ConfigurationEntry[]?> GetExistsAsync(IEnumerable<String>? sections)
+        {
+            return GetExistsAsync(sections, CancellationToken.None);
+        }
+
+        public Task<ConfigurationEntry[]?> GetExistsAsync(CancellationToken token, params String[]? sections)
+        {
+            return GetExistsAsync(sections, token);
+        }
+
+        public Task<ConfigurationEntry[]?> GetExistsAsync(IEnumerable<String>? sections, CancellationToken token)
+        {
+            return Behavior.GetExistsAsync(sections, token);
+        }
+
         public virtual ConfigurationValueEntry[]? GetExistsValues()
         {
-            return Behavior.GetExistsValues();
+            return GetExistsValues(null);
         }
 
         public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync()
@@ -273,7 +303,37 @@ namespace NetExtender.Configuration
 
         public virtual Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(CancellationToken token)
         {
-            return Behavior.GetExistsValuesAsync(token);
+            return GetExistsValuesAsync(null, token);
+        }
+
+        public ConfigurationValueEntry[]? GetExistsValues(params String[]? sections)
+        {
+            return GetExistsValues((IEnumerable<String>?) sections);
+        }
+
+        public ConfigurationValueEntry[]? GetExistsValues(IEnumerable<String>? sections)
+        {
+            return Behavior.GetExistsValues(sections);
+        }
+
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(params String[]? sections)
+        {
+            return GetExistsValuesAsync((IEnumerable<String>?) sections);
+        }
+
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IEnumerable<String>? sections)
+        {
+            return GetExistsValuesAsync(sections, CancellationToken.None);
+        }
+
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(CancellationToken token, params String[]? sections)
+        {
+            return GetExistsValuesAsync(sections, token);
+        }
+
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IEnumerable<String>? sections, CancellationToken token)
+        {
+            return Behavior.GetExistsValuesAsync(sections, token);
         }
 
         public virtual Boolean Reload()
@@ -289,6 +349,21 @@ namespace NetExtender.Configuration
         public virtual Task<Boolean> ReloadAsync(CancellationToken token)
         {
             return Behavior.ReloadAsync(token);
+        }
+
+        public Boolean Reset()
+        {
+            return Behavior.Reset();
+        }
+
+        public Task<Boolean> ResetAsync()
+        {
+            return ResetAsync(CancellationToken.None);
+        }
+
+        public Task<Boolean> ResetAsync(CancellationToken token)
+        {
+            return Behavior.ResetAsync(token);
         }
 
         public virtual void CopyTo(IConfig config)
@@ -371,32 +446,25 @@ namespace NetExtender.Configuration
             return Path;
         }
 
-        private Boolean _disposed;
         public void Dispose()
         {
-            DisposeInternal(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(Boolean disposing)
         {
-        }
-
-        private void DisposeInternal(Boolean disposing)
-        {
-            if (_disposed)
-            {
-                return;
-            }
-
             if (disposing)
             {
                 Behavior.Dispose();
             }
-            
-            Dispose(disposing);
-
-            _disposed = true;
+        }
+        
+        public ValueTask DisposeAsync()
+        {
+            Dispose();
+            GC.SuppressFinalize(this);
+            return ValueTask.CompletedTask;
         }
 
         ~Config()

@@ -55,17 +55,6 @@ namespace NetExtender.Utilities.Types
 
             return collection.Count > 0 ? collection[RandomUtilities.NextNonNegative(collection.Count - 1)] : default;
         }
-        
-        public static Boolean IndexOf<T>(this IList<T> collection, T item, out Int32 index)
-        {
-            if (collection is null)
-            {
-                throw new ArgumentNullException(nameof(collection));
-            }
-
-            index = collection.IndexOf(item);
-            return index >= 0;
-        }
 
         public static void Insert<T>(this IList<T> collection, Index index, T item)
         {
@@ -267,9 +256,15 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             comparer ??= Comparer<TKey>.Default;
-            collection.Sort(index, count, new CustomComparer<T>((first, second) => comparer.Compare(selector(first!), selector(second!))));
+            
+            Int32 Comparison(T? first, T? second)
+            {
+                return comparer.Compare(selector(first!), selector(second!));
+            }
+            
+            collection.Sort(index, count, new ComparisonComparer<T>(Comparison));
         }
         
         public static void Sort<T, TKey>(this List<T> collection, Func<T, TKey> selector, Int32 index, Int32 count, Comparison<TKey> comparison)
@@ -288,8 +283,13 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(comparison));
             }
-            
-            collection.Sort(index, count, new CustomComparer<T>((first, second) => comparison(selector(first!), selector(second!))));
+
+            Int32 Comparison(T? first, T? second)
+            {
+                return comparison(selector(first!), selector(second!));
+            }
+
+            collection.Sort(index, count, new ComparisonComparer<T>(Comparison));
         }
     }
 }

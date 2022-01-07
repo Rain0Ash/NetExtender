@@ -8,6 +8,14 @@ namespace NetExtender
 {
     public delegate void EmptyHandler();
 
+    public delegate Int32 Comparison<in T1, in T2>(T1 x, T2 y);
+    
+    public delegate Boolean EqualityComparison<in T>(T x, T y);
+    
+    public delegate Boolean EqualityComparison<in T1, in T2>(T1 x, T2 y);
+
+    public delegate Int32 HashHandler<in T>(T value);
+
     public delegate void FuncHandler<out T, in TOutput>(Func<T, TOutput> function);
 
     public delegate TOutput ParseHandler<in T, out TOutput>(T value);

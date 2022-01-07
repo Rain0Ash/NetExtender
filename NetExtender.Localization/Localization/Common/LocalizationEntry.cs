@@ -21,29 +21,29 @@ namespace NetExtender.Localization.Common
         }
         
         public String? Key { get; }
-        public LCID Lcid { get; }
+        public LocalizationIdentifier Identifier { get; }
         
-        public LocalizationEntry(String? key, LCID lcid)
+        public LocalizationEntry(String? key, LocalizationIdentifier identifier)
         {
             Key = key;
-            Lcid = lcid;
+            Identifier = identifier;
         }
 
-        public void Deconstruct(out String? key, out LCID lcid)
+        public void Deconstruct(out String? key, out LocalizationIdentifier identifier)
         {
             key = Key;
-            lcid = Lcid;
+            identifier = Identifier;
         }
         
         public Int32 CompareTo(LocalizationEntry other)
         {
-            Int32 compare = Lcid.Code.CompareTo(other.Lcid.Code);
+            Int32 compare = Identifier.Code.CompareTo(other.Identifier.Code);
             return compare != 0 ? compare : StringComparer.Ordinal.Compare(Key, other.Key);
         }
 
         public Boolean Equals(LocalizationEntry other)
         {
-            return Lcid == other.Lcid && Key == other.Key;
+            return Identifier == other.Identifier && Key == other.Key;
         }
         
         public override Boolean Equals(Object? obj)
@@ -53,7 +53,7 @@ namespace NetExtender.Localization.Common
 
         public override Int32 GetHashCode()
         {
-            return HashCode.Combine(Key, Lcid);
+            return HashCode.Combine(Key, Identifier);
         }
 
         public override String ToString()

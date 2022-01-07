@@ -802,6 +802,46 @@ namespace NetExtender.Utilities.Types
             return source.OrderByDescending(item => item.Key, comparer);
         }
         
+        public static IEnumerable<TValue> OrderValuesByKeys<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return OrderValuesByKeys(source, Comparer<TKey>.Default);
+        }
+
+        public static IEnumerable<TValue> OrderValuesByKeys<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TKey>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.OrderBy(item => item.Key, comparer).Select(item => item.Value);
+        }
+
+        public static IEnumerable<TValue> OrderValuesByKeysDescending<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return OrderValuesByKeysDescending(source, Comparer<TKey>.Default);
+        }
+
+        public static IEnumerable<TValue> OrderValuesByKeysDescending<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TKey>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.OrderByDescending(item => item.Key, comparer).Select(item => item.Value);
+        }
+        
         public static IOrderedEnumerable<KeyValuePair<TKey, TValue>> OrderByValues<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             if (source is null)
@@ -840,6 +880,46 @@ namespace NetExtender.Utilities.Types
             }
 
             return source.OrderByDescending(item => item.Value, comparer);
+        }
+        
+        public static IEnumerable<TKey> OrderKeysByValues<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return OrderKeysByValues(source, Comparer<TValue>.Default);
+        }
+
+        public static IEnumerable<TKey> OrderKeysByValues<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TValue>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.OrderBy(item => item.Value, comparer).Select(item => item.Key);
+        }
+
+        public static IEnumerable<TKey> OrderKeysByValuesDescending<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return OrderKeysByValuesDescending(source, Comparer<TValue>.Default);
+        }
+
+        public static IEnumerable<TKey> OrderKeysByValuesDescending<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TValue>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.OrderByDescending(item => item.Value, comparer).Select(item => item.Key);
         }
 
         public static IEnumerable<KeyValuePair<TKey, TValue>> DistinctByKey<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)

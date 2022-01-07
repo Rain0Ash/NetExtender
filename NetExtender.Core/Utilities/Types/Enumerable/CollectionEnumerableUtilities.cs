@@ -76,6 +76,46 @@ namespace NetExtender.Utilities.Types
                 _ => source.ToArray()
             };
         }
+        
+        public static IReadOnlyCollection<T> Materialize<T>(this IEnumerable<T>? source, out Int32 count)
+        {
+            switch (source)
+            {
+                case null:
+                    count = 0;
+                    return Array.Empty<T>();
+                case IReadOnlyCollection<T> collection:
+                    count = collection.Count;
+                    return collection;
+                case ICollection<T> collection:
+                    count = collection.Count;
+                    return new CollectionReadOnlyWrapper<T>(collection);
+                default:
+                    T[] result = source.ToArray();
+                    count = result.Length;
+                    return result;
+            }
+        }
+        
+        public static IReadOnlyCollection<T> Materialize<T>(this IEnumerable<T>? source, out Int64 count)
+        {
+            switch (source)
+            {
+                case null:
+                    count = 0;
+                    return Array.Empty<T>();
+                case IReadOnlyCollection<T> collection:
+                    count = collection.Count;
+                    return collection;
+                case ICollection<T> collection:
+                    count = collection.Count;
+                    return new CollectionReadOnlyWrapper<T>(collection);
+                default:
+                    T[] result = source.ToArray();
+                    count = result.LongLength;
+                    return result;
+            }
+        }
 
         public static IEnumerable<T> MaterializeIf<T>(this IEnumerable<T> source, Boolean condition)
         {
@@ -85,6 +125,42 @@ namespace NetExtender.Utilities.Types
             }
 
             return condition ? Materialize(source) : source;
+        }
+
+        public static IEnumerable<T> MaterializeIf<T>(this IEnumerable<T> source, Boolean condition, out Int32? count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (!condition)
+            {
+                count = default;
+                return source;
+            }
+            
+            source = Materialize(source, out Int32 result);
+            count = result;
+            return source;
+        }
+        
+        public static IEnumerable<T> MaterializeIf<T>(this IEnumerable<T> source, Boolean condition, out Int64? count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (!condition)
+            {
+                count = default;
+                return source;
+            }
+            
+            source = Materialize(source, out Int64 result);
+            count = result;
+            return source;
         }
         
         public static IEnumerable<T> MaterializeIf<T>(this IEnumerable<T> source, Func<Boolean> condition)
@@ -102,6 +178,36 @@ namespace NetExtender.Utilities.Types
             return MaterializeIf(source, condition());
         }
         
+        public static IEnumerable<T> MaterializeIf<T>(this IEnumerable<T> source, Func<Boolean> condition, out Int32? count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return MaterializeIf(source, condition(), out count);
+        }
+        
+        public static IEnumerable<T> MaterializeIf<T>(this IEnumerable<T> source, Func<Boolean> condition, out Int64? count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return MaterializeIf(source, condition(), out count);
+        }
+        
         public static IEnumerable<T> MaterializeIfNot<T>(this IEnumerable<T> source, Boolean condition)
         {
             if (source is null)
@@ -110,6 +216,42 @@ namespace NetExtender.Utilities.Types
             }
 
             return !condition ? Materialize(source) : source;
+        }
+
+        public static IEnumerable<T> MaterializeIfNot<T>(this IEnumerable<T> source, Boolean condition, out Int32? count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (condition)
+            {
+                count = default;
+                return source;
+            }
+            
+            source = Materialize(source, out Int32 result);
+            count = result;
+            return source;
+        }
+        
+        public static IEnumerable<T> MaterializeIfNot<T>(this IEnumerable<T> source, Boolean condition, out Int64? count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (condition)
+            {
+                count = default;
+                return source;
+            }
+            
+            source = Materialize(source, out Int64 result);
+            count = result;
+            return source;
         }
         
         public static IEnumerable<T> MaterializeIfNot<T>(this IEnumerable<T> source, Func<Boolean> condition)
@@ -125,6 +267,36 @@ namespace NetExtender.Utilities.Types
             }
 
             return MaterializeIfNot(source, condition());
+        }
+        
+        public static IEnumerable<T> MaterializeIfNot<T>(this IEnumerable<T> source, Func<Boolean> condition, out Int32? count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return MaterializeIfNot(source, condition(), out count);
+        }
+        
+        public static IEnumerable<T> MaterializeIfNot<T>(this IEnumerable<T> source, Func<Boolean> condition, out Int64? count)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return MaterializeIfNot(source, condition(), out count);
         }
 
         [Pure]

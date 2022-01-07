@@ -53,10 +53,24 @@ namespace NetExtender.Configuration.Cryptography.Interfaces
         public Task<Boolean> KeyExistRawAsync(String? key, CancellationToken token, params String[]? sections);
         public Task<Boolean> KeyExistRawAsync(String? key, IEnumerable<String>? sections, CancellationToken token);
         public ConfigurationEntry[]? GetExists(IStringCryptor? cryptor);
+        public ConfigurationEntry[]? GetExists(IStringCryptor? cryptor, IEnumerable<String>? sections);
         public ConfigurationEntry[]? GetExistsRaw();
+        public ConfigurationEntry[]? GetExistsRaw(IEnumerable<String>? sections);
         public Task<ConfigurationEntry[]?> GetExistsAsync(IStringCryptor? cryptor);
         public Task<ConfigurationEntry[]?> GetExistsAsync(IStringCryptor? cryptor, CancellationToken token);
+        public Task<ConfigurationEntry[]?> GetExistsAsync(IStringCryptor? cryptor, IEnumerable<String>? sections);
+        public Task<ConfigurationEntry[]?> GetExistsAsync(IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token);
         public Task<ConfigurationEntry[]?> GetExistsRawAsync();
         public Task<ConfigurationEntry[]?> GetExistsRawAsync(CancellationToken token);
+        public Task<ConfigurationEntry[]?> GetExistsRawAsync(IEnumerable<String>? sections);
+        public Task<ConfigurationEntry[]?> GetExistsRawAsync(IEnumerable<String>? sections, CancellationToken token);
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IStringCryptor? cryptor);
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IStringCryptor? cryptor, CancellationToken token);
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IStringCryptor? cryptor, IEnumerable<String>? sections);
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token);
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesRawAsync();
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesRawAsync(CancellationToken token);
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesRawAsync(IEnumerable<String>? sections);
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesRawAsync(IEnumerable<String>? sections, CancellationToken token);
     }
 }

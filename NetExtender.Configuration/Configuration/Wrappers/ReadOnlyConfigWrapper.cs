@@ -169,6 +169,36 @@ namespace NetExtender.Configuration.Wrappers
             return Config.GetExistsAsync(token);
         }
 
+        public ConfigurationEntry[]? GetExists(params String[]? sections)
+        {
+            return Config.GetExists(sections);
+        }
+
+        public ConfigurationEntry[]? GetExists(IEnumerable<String>? sections)
+        {
+            return Config.GetExists(sections);
+        }
+
+        public Task<ConfigurationEntry[]?> GetExistsAsync(params String[]? sections)
+        {
+            return Config.GetExistsAsync(sections);
+        }
+
+        public Task<ConfigurationEntry[]?> GetExistsAsync(IEnumerable<String>? sections)
+        {
+            return Config.GetExistsAsync(sections);
+        }
+
+        public Task<ConfigurationEntry[]?> GetExistsAsync(CancellationToken token, params String[]? sections)
+        {
+            return Config.GetExistsAsync(token, sections);
+        }
+
+        public Task<ConfigurationEntry[]?> GetExistsAsync(IEnumerable<String>? sections, CancellationToken token)
+        {
+            return Config.GetExistsAsync(sections, token);
+        }
+
         public ConfigurationValueEntry[]? GetExistsValues()
         {
             return Config.GetExistsValues();
@@ -182,6 +212,36 @@ namespace NetExtender.Configuration.Wrappers
         public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(CancellationToken token)
         {
             return Config.GetExistsValuesAsync(token);
+        }
+
+        public ConfigurationValueEntry[]? GetExistsValues(params String[]? sections)
+        {
+            return Config.GetExistsValues(sections);
+        }
+
+        public ConfigurationValueEntry[]? GetExistsValues(IEnumerable<String>? sections)
+        {
+            return Config.GetExistsValues(sections);
+        }
+
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(params String[]? sections)
+        {
+            return Config.GetExistsValuesAsync(sections);
+        }
+
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IEnumerable<String>? sections)
+        {
+            return Config.GetExistsValuesAsync(sections);
+        }
+
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(CancellationToken token, params String[]? sections)
+        {
+            return Config.GetExistsValuesAsync(token, sections);
+        }
+
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IEnumerable<String>? sections, CancellationToken token)
+        {
+            return Config.GetExistsValuesAsync(sections, token);
         }
 
         public void CopyTo(IConfig config)

@@ -5,7 +5,7 @@ namespace NetExtender.Initializer
 {
     public abstract class Initializer
     {
-        protected virtual void InitializeNetExtender(INetExtenderFrameworkInitializer initializer)
+        protected internal virtual void InitializeNetExtender(INetExtenderFrameworkInitializer initializer)
         {
         }
     }

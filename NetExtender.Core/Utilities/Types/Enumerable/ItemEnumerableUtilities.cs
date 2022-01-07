@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using NetExtender.Initializer.Types.Indexers.Interfaces;
+using NetExtender.Types.Comparers.Common;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
@@ -93,6 +95,82 @@ namespace NetExtender.Utilities.Types
             }
 
             return source.Reverse().LongCountWhile(predicate);
+        }
+
+        public static Int32 IndexOf<T>(this IEnumerable<T> source, T item)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source switch
+            {
+                IList<T> list => list.IndexOf(item),
+                IIndexer<T> list => list.IndexOf(item),
+                _ => Find(source, item)
+            };
+
+            static Int32 Find(IEnumerable<T> source, T value)
+            {
+                IEqualityComparer<T> comparer = EqualityComparer<T>.Default;
+                
+                Int32 index = 0;
+                foreach (T item in source)
+                {
+                    if (comparer.Equals(item, value))
+                    {
+                        return index;
+                    }
+
+                    index++;
+                }
+                return -1;
+            }
+        }
+
+        public static Int32 IndexOf<T>(this IEnumerable<T> source, T value, IEqualityComparer<T>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            comparer ??= EqualityComparisonComparer<T>.Default;
+            
+            Int32 index = 0;
+            foreach (T item in source)
+            {
+                if (comparer.Equals(item, value))
+                {
+                    return index;
+                }
+
+                index++;
+            }
+            return -1;
+        }
+        
+        public static Boolean IndexOf<T>(this IEnumerable<T> collection, T item, out Int32 index)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            index = collection.IndexOf(item);
+            return index >= 0;
+        }
+        
+        public static Boolean IndexOf<T>(this IEnumerable<T> collection, T item, IEqualityComparer<T>? comparer, out Int32 index)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            index = collection.IndexOf(item, comparer);
+            return index >= 0;
         }
         
         public static Int32 FindIndex<T>(this IEnumerable<T> source, Func<T, Boolean> predicate)
@@ -2575,6 +2653,48 @@ namespace NetExtender.Utilities.Types
             }
 
             return HashCodeUtilities.Combine(source, comparer);
+        }
+
+        public static Boolean SequencePartialEqual<T>(this IEnumerable<T> source, IEnumerable<T> sequence)
+        {
+            return SequencePartialEqual(source, sequence, null);
+        }
+
+        public static Boolean SequencePartialEqual<T>(this IEnumerable<T> source, IEnumerable<T> sequence, IEqualityComparer<T>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (sequence is null)
+            {
+                throw new ArgumentNullException(nameof(sequence));
+            }
+            
+            comparer ??= EqualityComparer<T>.Default;
+
+            using IEnumerator<T> enumerator1 = source.GetEnumerator();
+            using IEnumerator<T> enumerator2 = sequence.GetEnumerator();
+
+            do
+            {
+                if (!enumerator1.MoveNext())
+                {
+                    return !enumerator2.MoveNext();
+                }
+
+                if (!enumerator2.MoveNext())
+                {
+                    return true;
+                }
+
+                if (!comparer.Equals(enumerator1.Current, enumerator2.Current))
+                {
+                    return false;
+                }
+
+            } while (true);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
