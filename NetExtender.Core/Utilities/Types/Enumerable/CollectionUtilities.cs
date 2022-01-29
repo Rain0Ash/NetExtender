@@ -351,6 +351,11 @@ namespace NetExtender.Utilities.Types
             return collection;
         }
 
+        public static void CopyTo<T>(this IEnumerable<T> source, T[] array)
+        {
+            CopyTo(source, array, 0);
+        }
+
         public static void CopyTo<T>(this IEnumerable<T> source, T[] array, Int32 index)
         {
             if (source is null)
@@ -371,6 +376,7 @@ namespace NetExtender.Utilities.Types
             if (source is ICollection<T> collection)
             {
                 collection.CopyTo(array, index);
+                return;
             }
 
             if (source is IReadOnlyCollection<T> count && count.Count + index > array.Length)

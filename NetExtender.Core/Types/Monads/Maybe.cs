@@ -2,11 +2,12 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 
 namespace NetExtender.Types.Monads
 {
     [Serializable]
-    public readonly struct Maybe<T>
+    public readonly struct Maybe<T> : IEquatable<T>, IEquatable<Maybe<T>>, IEquatable<NullMaybe<T>>
     {
         public static implicit operator Maybe<T>(T value)
         {
@@ -18,47 +19,50 @@ namespace NetExtender.Types.Monads
             return value.Value;
         }
         
-        public static Boolean operator ==(Maybe<T> left, Maybe<T> right)
+        public static Boolean operator ==(Maybe<T> first, Maybe<T> second)
         {
-            return left.Equals(right);
+            return first.Equals(second);
         }
 
-        public static Boolean operator !=(Maybe<T> left, Maybe<T> right)
+        public static Boolean operator !=(Maybe<T> first, Maybe<T> second)
         {
-            return !(left == right);
+            return !(first == second);
         }
         
-        private readonly T _value;
+        public Boolean HasValue { get; }
+        
+        private T Internal { get; }
 
         public T Value
         {
             get
             {
-                return HasValue ? _value : throw new InvalidOperationException();
+                return HasValue ? Internal : throw new InvalidOperationException();
             }
         }
 
-        public Boolean HasValue { get; }
-
         public Maybe(T value)
         {
-            _value = value;
             HasValue = true;
+            Internal = value;
         }
 
-        public void Deconstruct(out Boolean has, out T value)
+        public void Deconstruct(out Boolean notnull, out T value)
         {
-            has = HasValue;
-            value = _value;
+            notnull = HasValue;
+            value = Internal;
         }
 
         public override Boolean Equals(Object? other)
         {
-            if (other is Maybe<T> maybe)
+            switch (other)
             {
-                return Equals(maybe);
+                case T item:
+                    return Equals(item);
+                case Maybe<T> maybe:
+                    return Equals(maybe);
             }
-            
+
             if (!HasValue)
             {
                 return other is null;
@@ -67,9 +71,19 @@ namespace NetExtender.Types.Monads
             return other is not null && Equals(Value, other);
         }
         
+        public Boolean Equals(T? other)
+        {
+            return HasValue && EqualityComparer<T>.Default.Equals(Value, other);
+        }
+        
         public Boolean Equals(Maybe<T> other)
         {
-            return !HasValue && !other.HasValue || HasValue && other.HasValue && Equals(Value, other.Value);
+            return !HasValue && !other.HasValue || HasValue && other.HasValue && EqualityComparer<T>.Default.Equals(Value, other.Value);
+        }
+        
+        public Boolean Equals(NullMaybe<T> other)
+        {
+            return HasValue && EqualityComparer<T>.Default.Equals(Value, other.Value);
         }
         
         public override Int32 GetHashCode()

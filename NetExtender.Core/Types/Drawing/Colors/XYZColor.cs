@@ -24,14 +24,14 @@ namespace NetExtender.Types.Drawing.Colors
             return new XYZColor(h, s, v);
         }
         
-        public static Boolean operator ==(XYZColor left, XYZColor right)
+        public static Boolean operator ==(XYZColor first, XYZColor second)
         {
-            return left.Equals(right);
+            return first.Equals(second);
         }
 
-        public static Boolean operator !=(XYZColor left, XYZColor right)
+        public static Boolean operator !=(XYZColor first, XYZColor second)
         {
-            return !(left == right);
+            return !(first == second);
         }
 
         public ColorType Type

@@ -8,6 +8,7 @@ namespace NetExtender.Initializer.Types.Indexers.Interfaces
 {
     public interface IIndexer<T> : IReadOnlyCollection<T>
     {
+        public IEqualityComparer<T> Comparer { get; }
         public Boolean Contains(T item);
         public Int32 IndexOf(T item);
         public void Clear();

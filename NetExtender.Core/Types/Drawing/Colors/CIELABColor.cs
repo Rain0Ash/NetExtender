@@ -24,14 +24,14 @@ namespace NetExtender.Types.Drawing.Colors
             return new CIELABColor(h, s, v);
         }
         
-        public static Boolean operator ==(CIELABColor left, CIELABColor right)
+        public static Boolean operator ==(CIELABColor first, CIELABColor second)
         {
-            return left.Equals(right);
+            return first.Equals(second);
         }
 
-        public static Boolean operator !=(CIELABColor left, CIELABColor right)
+        public static Boolean operator !=(CIELABColor first, CIELABColor second)
         {
-            return !(left == right);
+            return !(first == second);
         }
 
         public ColorType Type

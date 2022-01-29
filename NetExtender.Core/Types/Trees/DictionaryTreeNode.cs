@@ -94,7 +94,7 @@ namespace NetExtender.Types.Trees
         {
             get
             {
-                if (_tree is null || Tree.Count <= 0)
+                if (!HasTree || Tree.Count <= 0)
                 {
                     return 0;
                 }
@@ -189,22 +189,7 @@ namespace NetExtender.Types.Trees
         {
             return new DictionaryTreeNode<TKey, TValue>(Comparer);
         }
-
-        public void Add(KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>> item)
-        {
-            Tree.Add(item);
-        }
-
-        public void Add(TKey key, IDictionaryTreeNode<TKey, TValue> value)
-        {
-            if (key is null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
-            Tree.Add(key, value);
-        }
-
+        
         public Boolean Contains(KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>> item)
         {
             return HasTree && Tree.Contains(item);
@@ -283,6 +268,21 @@ namespace NetExtender.Types.Trees
         public IDictionaryTreeNode<TKey, TValue>? GetChildSection(params TKey[]? sections)
         {
             return GetChildSection((IEnumerable<TKey>?) sections);
+        }
+        
+        public void Add(KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>> item)
+        {
+            Tree.Add(item);
+        }
+
+        public void Add(TKey key, IDictionaryTreeNode<TKey, TValue> value)
+        {
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            Tree.Add(key, value);
         }
 
         public void Add(TKey key, TValue value)
@@ -459,32 +459,34 @@ namespace NetExtender.Types.Trees
             Tree.CopyTo(array, index);
         }
 
-        public void ClearEmpty()
+        public Boolean Purge()
         {
-            if (_tree is null || Tree.Count <= 0)
+            if (!HasTree || Tree.Count <= 0)
             {
-                return;
+                return false;
             }
 
+            Boolean successful = false;
             foreach ((TKey key, IDictionaryTreeNode<TKey, TValue> value) in Tree)
             {
                 if (value.IsEmpty)
                 {
-                    Tree.Remove(key);
+                    successful |= Tree.Remove(key);
+                    continue;
                 }
-                else
-                {
-                    value.ClearEmpty();
-                }
+
+                successful |= value.Purge();
             }
+
+            return successful;
         }
 
-        public void ClearEmpty(TKey key)
+        public Boolean Purge(TKey key)
         {
-            ClearEmpty(key, Array.Empty<TKey>());
+            return Purge(key, Array.Empty<TKey>());
         }
 
-        public void ClearEmpty(TKey key, IEnumerable<TKey> sections)
+        public Boolean Purge(TKey key, IEnumerable<TKey> sections)
         {
             if (key is null)
             {
@@ -495,15 +497,15 @@ namespace NetExtender.Types.Trees
 
             if (node is null || node.Count <= 0)
             {
-                return;
+                return false;
             }
 
-            node.ClearEmpty(key);
+            return node.Purge(key);
         }
 
-        public void ClearEmpty(TKey key, params TKey[] sections)
+        public Boolean Purge(TKey key, params TKey[] sections)
         {
-            ClearEmpty(key, (IEnumerable<TKey>) sections);
+            return Purge(key, (IEnumerable<TKey>) sections);
         }
         
         public DictionaryTreeEntry<TKey, TValue>[]? Dump()

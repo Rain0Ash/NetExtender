@@ -23,14 +23,14 @@ namespace NetExtender.Types.Drawing.Colors
             return new RGBColor(color.R, color.G, color.B);
         }
         
-        public static Boolean operator ==(RGBColor left, RGBColor right)
+        public static Boolean operator ==(RGBColor first, RGBColor second)
         {
-            return left.Equals(right);
+            return first.Equals(second);
         }
 
-        public static Boolean operator !=(RGBColor left, RGBColor right)
+        public static Boolean operator !=(RGBColor first, RGBColor second)
         {
-            return !(left == right);
+            return !(first == second);
         }
 
         public ColorType Type

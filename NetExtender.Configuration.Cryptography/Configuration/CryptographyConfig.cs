@@ -576,5 +576,95 @@ namespace NetExtender.Configuration.Cryptography
         {
             return Behavior.GetExistsValuesRawAsync(sections, token);
         }
+
+        public virtual Boolean Merge(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Behavior.Merge(cryptor, entries);
+        }
+
+        public Task<Boolean> MergeAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return MergeAsync(cryptor, entries, CancellationToken.None);
+        }
+
+        public virtual Task<Boolean> MergeAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Behavior.MergeAsync(cryptor, entries, token);
+        }
+
+        public virtual Boolean MergeRaw(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Behavior.MergeRaw(entries);
+        }
+
+        public Task<Boolean> MergeRawAsync(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return MergeRawAsync(entries, CancellationToken.None);
+        }
+
+        public virtual Task<Boolean> MergeRawAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Behavior.MergeRawAsync(entries, token);
+        }
+
+        public virtual Boolean Replace(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Behavior.Replace(cryptor, entries);
+        }
+
+        public Task<Boolean> ReplaceAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return ReplaceAsync(cryptor, entries, CancellationToken.None);
+        }
+
+        public virtual Task<Boolean> ReplaceAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Behavior.ReplaceAsync(cryptor, entries, token);
+        }
+
+        public virtual Boolean ReplaceRaw(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Behavior.ReplaceRaw(entries);
+        }
+
+        public Task<Boolean> ReplaceRawAsync(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return ReplaceRawAsync(entries, CancellationToken.None);
+        }
+
+        public virtual Task<Boolean> ReplaceRawAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Behavior.ReplaceRawAsync(entries, token);
+        }
+
+        public virtual ConfigurationValueEntry[]? Difference(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Behavior.Difference(cryptor, entries);
+        }
+
+        public Task<ConfigurationValueEntry[]?> DifferenceAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return DifferenceAsync(cryptor, entries, CancellationToken.None);
+        }
+
+        public virtual Task<ConfigurationValueEntry[]?> DifferenceAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Behavior.DifferenceAsync(cryptor, entries, token);
+        }
+
+        public virtual ConfigurationValueEntry[]? DifferenceRaw(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Behavior.DifferenceRaw(entries);
+        }
+
+        public Task<ConfigurationValueEntry[]?> DifferenceRawAsync(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return DifferenceRawAsync(entries, CancellationToken.None);
+        }
+
+        public virtual Task<ConfigurationValueEntry[]?> DifferenceRawAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Behavior.DifferenceRawAsync(entries, token);
+        }
     }
 }

@@ -12,6 +12,9 @@ namespace NetExtender.Types.Maps.Interfaces
     {
         public ICollection<TKey> Keys { get; }
         public ICollection<TValue> Values { get; }
+        public IEqualityComparer<TKey> Comparer { get; }
+        public IEqualityComparer<TKey> KeyComparer { get; }
+        public IEqualityComparer<TValue> ValueComparer { get; }
         public Boolean ContainsKey(TKey key);
         public Boolean ContainsValue(TValue key);
         public Boolean ContainsByValue(TValue key, TKey value);
@@ -24,6 +27,8 @@ namespace NetExtender.Types.Maps.Interfaces
         public void Add(TKey key, TValue value);
         public void AddByValue(TValue key, TKey value);
         public void AddByValue(KeyValuePair<TValue, TKey> item);
+        public Boolean TryAdd(TKey key, TValue value);
+        public Boolean TryAdd(KeyValuePair<TKey, TValue> item);
         public Boolean TryAddByValue(TValue key, TKey value);
         public Boolean TryAddByValue(KeyValuePair<TValue, TKey> item);
         public Boolean Remove(TKey key);
@@ -32,7 +37,7 @@ namespace NetExtender.Types.Maps.Interfaces
         public Boolean RemoveByValue(TValue key, TKey value);
         public Boolean RemoveByValue(TValue key, [MaybeNullWhen(false)] out TKey value);
         public Boolean RemoveByValue(KeyValuePair<TValue, TKey> item);
-        public void CopyTo(KeyValuePair<TValue, TKey>[] array, Int32 index);
+        public void CopyTo(KeyValuePair<TValue, TKey>[] array, Int32 arrayIndex);
         public TValue this[TKey key] { get; set; }
         public TKey this[TValue key] { get; set; }
     }

@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using NetExtender.Types.Queues;
 using NetExtender.Utilities.Numerics;
 
@@ -1076,7 +1077,97 @@ namespace NetExtender.Utilities.Types
                 yield return item.Value;
             }
         }
+
+        public static IEnumerable<T> DistinctLast<T>(this IEnumerable<T> source)
+        {
+            return DistinctLast(source, null);
+        }
         
+        public static IEnumerable<T> DistinctLast<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            SetQueue<T> set = new SetQueue<T>(comparer);
+
+            foreach (T item in source)
+            {
+                set.RotateEnqueue(item);
+            }
+
+            foreach (T item in set)
+            {
+                yield return item;
+            }
+        }
+
+        private readonly struct DistinctLastByEntry<T, TKey> : IEquatable<DistinctLastByEntry<T, TKey>>
+        {
+            public static implicit operator DistinctLastByEntry<T, TKey>(TKey key)
+            {
+                return new DistinctLastByEntry<T, TKey>(key, default!);
+            }
+
+            public TKey Key { get; }
+            public T Value { get; }
+
+            public DistinctLastByEntry(TKey key, T value)
+            {
+                Key = key;
+                Value = value;
+            }
+
+            public override Boolean Equals(Object? obj)
+            {
+                return obj is TKey key && Equals(key) || obj is DistinctLastByEntry<T, TKey> entry && Equals(entry);
+            }
+
+            public Boolean Equals(DistinctLastByEntry<T, TKey> other)
+            {
+                return EqualityComparer<TKey>.Default.Equals(Key, other.Key);
+            }
+
+            public override Int32 GetHashCode()
+            {
+                return HashCode.Combine(Key);
+            }
+        }
+        
+        public static IEnumerable<T> DistinctLastBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
+        {
+            return DistinctLastBy(source, selector, null);
+        }
+
+        public static IEnumerable<T> DistinctLastBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IEqualityComparer<TKey>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+            
+            comparer ??= EqualityComparer<TKey>.Default;
+            
+            EqualityComparison<DistinctLastByEntry<T, TKey>> comparison = (x, y) => comparer.Equals(x.Key, y.Key);
+            SetQueue<DistinctLastByEntry<T, TKey>> set = new SetQueue<DistinctLastByEntry<T, TKey>>(comparison.ToEqualityComparer());
+
+            foreach (T item in source)
+            {
+                set.RotateEnqueue(new DistinctLastByEntry<T, TKey>(selector(item), item));
+            }
+
+            foreach (DistinctLastByEntry<T, TKey> item in set)
+            {
+                yield return item.Value;
+            }
+        }
+
         public static IEnumerable<T> DistinctThrow<T>(this IEnumerable<T> source)
         {
             return DistinctThrow(source, null);
@@ -1258,6 +1349,16 @@ namespace NetExtender.Utilities.Types
                     yield return item;
                 }
             }
+        }
+
+        public static IEnumerable<T> Cancellation<T>(this IEnumerable<T> source, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.TakeWhile(_ => !token.IsCancellationRequested);
         }
     }
 }

@@ -6,12 +6,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Sets.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Sets
 {
-    public class OrderedSet<T> : ISet, ISet<T> where T : notnull
+    public class OrderedSet<T> : ISet, ISet<T>
     {
         public Int32 Count
         {
@@ -21,7 +22,7 @@ namespace NetExtender.Types.Sets
             }
         }
 
-        public Boolean IsSynchronized
+        Boolean ICollection.IsSynchronized
         {
             get
             {
@@ -29,7 +30,7 @@ namespace NetExtender.Types.Sets
             }
         }
 
-        public Object SyncRoot
+        Object ICollection.SyncRoot
         {
             get
             {
@@ -37,15 +38,15 @@ namespace NetExtender.Types.Sets
             }
         }
 
-        public Boolean IsReadOnly
+        Boolean ICollection<T>.IsReadOnly
         {
             get
             {
-                return Node.IsReadOnly;
+                return ((IDictionary<T, LinkedListNode<T>>) Node).IsReadOnly;
             }
         }
         
-        private IDictionary<T, LinkedListNode<T>> Node { get; }
+        private NullableDictionary<T, LinkedListNode<T>> Node { get; }
         private LinkedList<T> Linked { get; }
 
         public OrderedSet()
@@ -55,7 +56,7 @@ namespace NetExtender.Types.Sets
 
         public OrderedSet(IEqualityComparer<T>? comparer)
         {
-            Node = new Dictionary<T, LinkedListNode<T>>(comparer);
+            Node = new NullableDictionary<T, LinkedListNode<T>>(comparer?.ToNullMaybeEqualityComparer());
             Linked = new LinkedList<T>();
         }
         
@@ -71,7 +72,7 @@ namespace NetExtender.Types.Sets
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            Node = new Dictionary<T, LinkedListNode<T>>(comparer);
+            Node = new NullableDictionary<T, LinkedListNode<T>>(comparer?.ToNullMaybeEqualityComparer());
             Linked = new LinkedList<T>();
             
             foreach (T item in collection)
@@ -80,13 +81,13 @@ namespace NetExtender.Types.Sets
             }
         }
         
-        public Boolean Add(T? item)
+        public Boolean Contains(T item)
         {
-            if (item is null)
-            {
-                return false;
-            }
-            
+            return Node.ContainsKey(item);
+        }
+        
+        public Boolean Add(T item)
+        {
             if (Node.ContainsKey(item))
             {
                 return false;
@@ -98,21 +99,21 @@ namespace NetExtender.Types.Sets
             return true;
         }
         
+        void ICollection<T>.Add(T item)
+        {
+            Add(item);
+        }
+        
         public Boolean Insert(T item)
         {
             return Insert(0, item);
         }
         
-        public Boolean Insert(Int32 index, T? item)
+        public Boolean Insert(Int32 index, T item)
         {
             if (index < 0 || index >= Count)
             {
                 throw new ArgumentNullException(nameof(index));
-            }
-            
-            if (item is null)
-            {
-                return false;
             }
 
             if (Node.ContainsKey(item))
@@ -123,6 +124,49 @@ namespace NetExtender.Types.Sets
             LinkedListNode<T> node = Linked.Insert(index, item);
             Node.Add(item, node);
             return true;
+        }
+        
+        /// <inheritdoc cref="SortedSet{T}.UnionWith"/>
+        public void UnionWith(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                return;
+            }
+
+            foreach (T item in other)
+            {
+                Add(item);
+            }
+        }
+        
+        /// <inheritdoc cref="SortedSet{T}.IntersectWith"/>
+        public void IntersectWith(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            if (Count <= 0 || ReferenceEquals(this, other))
+            {
+                return;
+            }
+
+            foreach (T item in other)
+            {
+                if (Contains(item))
+                {
+                    continue;
+                }
+                
+                Remove(item);
+            }
         }
 
         /// <inheritdoc cref="SortedSet{T}.ExceptWith"/>
@@ -150,30 +194,6 @@ namespace NetExtender.Types.Sets
             }
         }
 
-        /// <inheritdoc cref="SortedSet{T}.IntersectWith"/>
-        public void IntersectWith(IEnumerable<T> other)
-        {
-            if (other is null)
-            {
-                throw new ArgumentNullException(nameof(other));
-            }
-
-            if (Count <= 0 || ReferenceEquals(this, other))
-            {
-                return;
-            }
-
-            foreach (T item in other)
-            {
-                if (Contains(item))
-                {
-                    continue;
-                }
-                
-                Remove(item);
-            }
-        }
-        
         /// <inheritdoc cref="SortedSet{T}.SymmetricExceptWith"/>
         public void SymmetricExceptWith(IEnumerable<T> other)
         {
@@ -202,25 +222,6 @@ namespace NetExtender.Types.Sets
                     continue;
                 }
 
-                Add(item);
-            }
-        }
-
-        /// <inheritdoc cref="SortedSet{T}.UnionWith"/>
-        public void UnionWith(IEnumerable<T> other)
-        {
-            if (other is null)
-            {
-                throw new ArgumentNullException(nameof(other));
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return;
-            }
-
-            foreach (T item in other)
-            {
                 Add(item);
             }
         }
@@ -315,59 +316,28 @@ namespace NetExtender.Types.Sets
             return ReferenceEquals(this, other) || other.All(Contains);
         }
 
-        void ICollection<T>.Add(T item)
+        public Boolean Remove(T item)
         {
-            Add(item);
-        }
+            if (!Node.TryGetValue(item, out LinkedListNode<T>? node))
+            {
+                return false;
+            }
+            
+            Node.Remove(item);
+            Linked.Remove(node);
 
+            return true;
+        }
+        
         public void Clear()
         {
             Linked.Clear();
             Node.Clear();
         }
 
-        public Boolean Remove(T? item)
-        {
-            if (item is null)
-            {
-                return false;
-            }
-            
-            Boolean found = Node.TryGetValue(item, out LinkedListNode<T>? node);
-            if (!found)
-            {
-                return false;
-            }
-            
-            if (node is null)
-            {
-                return false;
-            }
-
-            Node.Remove(item);
-            Linked.Remove(node);
-
-            return true;
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            return Linked.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        public Boolean Contains(T? item)
-        {
-            return item is not null && Node.ContainsKey(item);
-        }
-
         public void CopyTo(T[] array, Int32 arrayIndex)
         {
-            Linked.CopyTo(array!, arrayIndex);
+            Linked.CopyTo(array, arrayIndex);
         }
         
         void ICollection.CopyTo(Array array, Int32 index)
@@ -378,6 +348,16 @@ namespace NetExtender.Types.Sets
             }
             
             CopyTo(generic, index);
+        }
+        
+        public IEnumerator<T> GetEnumerator()
+        {
+            return Linked.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

@@ -7,6 +7,7 @@ using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Comparers.Common;
 using NetExtender.Types.Comparers.Interfaces;
+using NetExtender.Types.Monads;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
@@ -103,6 +104,126 @@ namespace NetExtender.Utilities.Types
             return comparison.Invoke;
         }
         
+        public static IComparer<T> ToComparer<T>(this IComparer<NullMaybe<T>> comparer)
+        {
+            if (comparer is null)
+            {
+                throw new ArgumentNullException(nameof(comparer));
+            }
+
+            Int32 Convert(T first, T second)
+            {
+                return comparer.Compare(first, second);
+            }
+
+            return new ComparisonComparer<T>(Convert);
+        }
+        
+        public static IComparer<NullMaybe<T>> ToNullMaybeComparer<T>(this IComparer<T> comparer)
+        {
+            if (comparer is null)
+            {
+                throw new ArgumentNullException(nameof(comparer));
+            }
+
+            Int32 Convert(NullMaybe<T> first, NullMaybe<T> second)
+            {
+                return comparer.Compare(first, second);
+            }
+
+            return new ComparisonComparer<NullMaybe<T>>(Convert);
+        }
+
+        public static IEqualityComparer<T> ToEqualityComparer<T>(this IEqualityComparer<NullMaybe<T>> comparer)
+        {
+            if (comparer is null)
+            {
+                throw new ArgumentNullException(nameof(comparer));
+            }
+
+            Boolean Convert(T first, T second)
+            {
+                return comparer.Equals(first, second);
+            }
+
+            return new EqualityComparisonComparer<T>(Convert);
+        }
+
+        public static IEqualityComparer<NullMaybe<T>> ToNullMaybeEqualityComparer<T>(this IEqualityComparer<T> comparer)
+        {
+            if (comparer is null)
+            {
+                throw new ArgumentNullException(nameof(comparer));
+            }
+
+            Boolean Convert(NullMaybe<T> first, NullMaybe<T> second)
+            {
+                return comparer.Equals(first, second);
+            }
+
+            return new EqualityComparisonComparer<NullMaybe<T>>(Convert);
+        }
+        
+        public static Comparison<T> ToComparison<T>(this Comparison<NullMaybe<T>> comparison)
+        {
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            Int32 Convert(T first, T second)
+            {
+                return comparison(first, second);
+            }
+
+            return Convert;
+        }
+
+        public static Comparison<NullMaybe<T>> ToNullMaybeComparison<T>(this Comparison<T> comparison)
+        {
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            Int32 Convert(NullMaybe<T> first, NullMaybe<T> second)
+            {
+                return comparison(first, second);
+            }
+
+            return Convert;
+        }
+        
+        public static EqualityComparison<T> ToEqualityComparison<T>(this EqualityComparison<NullMaybe<T>> comparison)
+        {
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            Boolean Convert(T first, T second)
+            {
+                return comparison(first, second);
+            }
+
+            return Convert;
+        }
+
+        public static EqualityComparison<NullMaybe<T>> ToNullMaybeEqualityComparison<T>(this EqualityComparison<T> comparison)
+        {
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            Boolean Convert(NullMaybe<T> first, NullMaybe<T> second)
+            {
+                return comparison(first, second);
+            }
+
+            return Convert;
+        }
+
         public static Boolean TryCompareToNull<T>(T? first, T? second, out Int32 result) where T : class
         {
             if (first is null)

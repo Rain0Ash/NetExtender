@@ -66,5 +66,25 @@ namespace NetExtender.Utilities.Configuration
 
             return temporary;
         }
+
+        public static IConfigBehavior Concurrent(this IConfigBehavior behavior)
+        {
+            return Concurrent(behavior, false);
+        }
+
+        public static IConfigBehavior Concurrent(this IConfigBehavior behavior, Boolean duplicate)
+        {
+            if (behavior is null)
+            {
+                throw new ArgumentNullException(nameof(behavior));
+            }
+
+            if (behavior.IsThreadSafe && !duplicate)
+            {
+                return behavior;
+            }
+
+            return new ConcurrentConfigBehavior(behavior);
+        }
     }
 }

@@ -5,11 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using NetExtender.Configuration.Behavior.Transactions.Interfaces;
 using NetExtender.Configuration.Common;
 
 namespace NetExtender.Configuration.Behavior.Interfaces
 {
-    public interface IConfigBehavior : IDisposable, IAsyncDisposable
+    public interface IConfigBehavior : IEnumerable<ConfigurationValueEntry>, IDisposable, IAsyncDisposable
     {
         public event ConfigurationChangedEventHandler Changed;
         public String Path { get; }
@@ -17,6 +18,7 @@ namespace NetExtender.Configuration.Behavior.Interfaces
         public Boolean IsReadOnly { get; }
         public Boolean IsIgnoreEvent { get; }
         public Boolean IsLazyWrite { get; }
+        public Boolean IsThreadSafe { get; }
         public String Joiner { get; }
         public Boolean Contains(String? key, IEnumerable<String>? sections);
         public Task<Boolean> ContainsAsync(String? key, IEnumerable<String>? sections, CancellationToken token);
@@ -34,5 +36,13 @@ namespace NetExtender.Configuration.Behavior.Interfaces
         public Task<Boolean> ReloadAsync(CancellationToken token);
         public Boolean Reset();
         public Task<Boolean> ResetAsync(CancellationToken token);
+        public Boolean Merge(IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<Boolean> MergeAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token);
+        public Boolean Replace(IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<Boolean> ReplaceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token);
+        public ConfigurationValueEntry[]? Difference(IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<ConfigurationValueEntry[]?> DifferenceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token);
+        public IConfigBehaviorTransaction? Transaction();
+        public Task<IConfigBehaviorTransaction?> TransactionAsync(CancellationToken token);
     }
 }

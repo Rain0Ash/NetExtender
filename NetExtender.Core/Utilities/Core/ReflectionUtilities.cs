@@ -170,6 +170,16 @@ namespace NetExtender.Utilities.Core
 
             return type.GetGenericTypeDefinition() == other;
         }
+
+        public static Int32 GetGenericArgumentsCount(this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return type.IsGenericType ? type.GetGenericArguments().Length : 0;
+        }
         
         public static Boolean HasInterface<T>(this Type type) where T : class
         {

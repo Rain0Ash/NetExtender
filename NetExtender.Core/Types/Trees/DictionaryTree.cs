@@ -342,16 +342,19 @@ namespace NetExtender.Types.Trees
             return Remove(key, sections, out value);
         }
 
-        public void ClearEmpty()
+        public Boolean Purge()
         {
+            Boolean successful = false;
             foreach (TKey key in Keys)
             {
-                ClearEmpty(key);
+                successful |= Purge(key);
             }
+
+            return successful;
         }
         
         // ReSharper disable once CognitiveComplexity
-        public void ClearEmpty(TKey key)
+        public Boolean Purge(TKey key)
         {
             if (key is null)
             {
@@ -362,35 +365,38 @@ namespace NetExtender.Types.Trees
             
             if (node is null)
             {
-                return;
+                return false;
             }
 
-            if (node.FullCount <= 0 && node.Value.IsDefault())
+            if (node.TreeIsEmpty)
             {
+                if (!node.Value.IsDefault())
+                {
+                    return false;
+                }
+
                 Remove(key);
-                return;
+                return true;
             }
 
-            if (node.FullCount <= 0)
-            {
-                return;
-            }
-
+            Boolean successful = false;
             foreach ((TKey dictionarykey, IDictionaryTreeNode<TKey, TValue> dictionary) in node)
             {
                 //TODO: CS8598
                 if (/*dictionary is null! || */dictionary.Count <= 0 && dictionary.Value.IsDefault())
                 {
-                    node.Tree.Remove(dictionarykey);
+                    successful |= node.Tree.Remove(dictionarykey);
                 }
                 else if (dictionary.Count > 0)
                 {
-                    dictionary.ClearEmpty();
+                    successful |= dictionary.Purge();
                 }
             }
+
+            return successful;
         }
 
-        public void ClearEmpty(TKey key, IEnumerable<TKey> sections)
+        public Boolean Purge(TKey key, IEnumerable<TKey> sections)
         {
             if (key is null)
             {
@@ -401,15 +407,15 @@ namespace NetExtender.Types.Trees
             
             if (node is null || node.Count <= 0)
             {
-                return;
+                return false;
             }
 
-            node.ClearEmpty(key);
+            return node.Purge(key);
         }
 
-        public void ClearEmpty(TKey key, params TKey[] sections)
+        public Boolean Purge(TKey key, params TKey[] sections)
         {
-            ClearEmpty(key, (IEnumerable<TKey>) sections);
+            return Purge(key, (IEnumerable<TKey>) sections);
         }
 
         private IEnumerable<DictionaryTreeEntry<TKey, TValue>> DumpInternal(IEnumerable<TKey>? sections)

@@ -2,17 +2,25 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Behavior.Interfaces;
+using NetExtender.Configuration.Behavior.Transactions.Interfaces;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Cryptography.Behavior.Interfaces;
+using NetExtender.Configuration.Cryptography.Behavior.Transactions;
+using NetExtender.Configuration.Cryptography.Behavior.Transactions.Interfaces;
 using NetExtender.Configuration.Cryptography.Common;
 using NetExtender.Configuration.Cryptography.Common.Interfaces;
 using NetExtender.Configuration.Cryptography.Utilities;
+using NetExtender.Configuration.Memory;
 using NetExtender.Crypto;
 using NetExtender.Crypto.CryptKey.Interfaces;
 using NetExtender.Utilities.Crypto;
@@ -20,7 +28,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Cryptography.Behavior
 {
-    public class CryptographyBehavior : ICryptographyConfigBehavior
+    public class CryptographyConfigBehavior : ICryptographyConfigBehavior
     {
         private IConfigBehavior Behavior { get; }
         
@@ -65,6 +73,14 @@ namespace NetExtender.Configuration.Cryptography.Behavior
             get
             {
                 return Behavior.IsLazyWrite;
+            }
+        }
+
+        public Boolean IsThreadSafe
+        {
+            get
+            {
+                return Behavior.IsThreadSafe;
             }
         }
 
@@ -140,7 +156,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
             }
         }
 
-        public CryptographyBehavior(IConfigBehavior behavior, IStringCryptor cryptor)
+        public CryptographyConfigBehavior(IConfigBehavior behavior, IStringCryptor cryptor)
         {
             Behavior = behavior ?? throw new ArgumentNullException(nameof(behavior));
             Cryptor = cryptor?.AsCryptor() ?? throw new ArgumentNullException(nameof(cryptor));
@@ -216,6 +232,88 @@ namespace NetExtender.Configuration.Cryptography.Behavior
 
             decryptor ??= Cryptor;
             return decryptor.TryDecrypt(sections, out result);
+        }
+
+        [return: NotNullIfNotNull("entries")]
+        // ReSharper disable once CognitiveComplexity
+        protected virtual IEnumerable<ConfigurationValueEntry>? Encrypt(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            if (entries is null)
+            {
+                return null;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            IEnumerable<ConfigurationValueEntry> Internal()
+            {
+                IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
+                
+                foreach (ConfigurationValueEntry entry in entries)
+                {
+                    (String? key, String? value, ImmutableArray<String> array) = entry;
+                    IEnumerable<String>? sections = array;
+                    
+                    if ((configuration?.IsCryptKey ?? IsCryptKey) && !TryEncryptKey(key, configuration, out key))
+                    {
+                        throw new CryptographicException();
+                    }
+                
+                    if ((configuration?.IsCryptValue ?? IsCryptValue) && !TryEncryptValue(value, configuration, out value))
+                    {
+                        throw new CryptographicException();
+                    }
+
+                    if ((configuration?.IsCryptSections ?? IsCryptSections) && !TryEncryptSections(sections, configuration, out sections))
+                    {
+                        throw new CryptographicException();
+                    }
+
+                    yield return new ConfigurationValueEntry(key, value, sections);
+                }
+            }
+
+            return Internal();
+        }
+        
+        [return: NotNullIfNotNull("entries")]
+        // ReSharper disable once CognitiveComplexity
+        protected virtual IEnumerable<ConfigurationValueEntry>? Decrypt(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            if (entries is null)
+            {
+                return null;
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            IEnumerable<ConfigurationValueEntry> Internal()
+            {
+                IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
+                
+                foreach (ConfigurationValueEntry entry in entries)
+                {
+                    (String? key, String? value, ImmutableArray<String> array) = entry;
+                    IEnumerable<String>? sections = array;
+                    
+                    if ((configuration?.IsCryptKey ?? IsCryptKey) && !TryDecryptKey(key, configuration, out key))
+                    {
+                        throw new CryptographicException();
+                    }
+                
+                    if ((configuration?.IsCryptValue ?? IsCryptValue) && !TryDecryptValue(value, configuration, out value))
+                    {
+                        throw new CryptographicException();
+                    }
+
+                    if ((configuration?.IsCryptSections ?? IsCryptSections) && !TryDecryptSections(sections, configuration, out sections))
+                    {
+                        throw new CryptographicException();
+                    }
+
+                    yield return new ConfigurationValueEntry(key, value, sections);
+                }
+            }
+
+            return Internal();
         }
 
         public Boolean Contains(String? key, IEnumerable<String>? sections)
@@ -715,10 +813,160 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         {
             return Behavior.ResetAsync(token);
         }
+
+        public Boolean Merge(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Merge(null, entries);
+        }
         
+        public Boolean Merge(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Behavior.Merge(Encrypt(cryptor, entries));
+        }
+        
+        public Boolean MergeRaw(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Behavior.Merge(entries);
+        }
+
+        public Task<Boolean> MergeAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return MergeAsync(null, entries, token);
+        }
+        
+        public Task<Boolean> MergeAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Behavior.MergeAsync(Encrypt(cryptor, entries), token);
+        }
+        
+        public Task<Boolean> MergeRawAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Behavior.MergeAsync(entries, token);
+        }
+
+        public Boolean Replace(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Replace(null, entries);
+        }
+
+        public Boolean Replace(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Behavior.Replace(Encrypt(cryptor, entries));
+        }
+
+        public Boolean ReplaceRaw(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Behavior.Replace(entries);
+        }
+        
+        public Task<Boolean> ReplaceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return ReplaceAsync(null, entries, token);
+        }
+        
+        public Task<Boolean> ReplaceAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Behavior.ReplaceAsync(Encrypt(cryptor, entries), token);
+        }
+        
+        public Task<Boolean> ReplaceRawAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Behavior.ReplaceAsync(entries, token);
+        }
+        
+        public ConfigurationValueEntry[]? Difference(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Difference(null, entries);
+        }
+        
+        public ConfigurationValueEntry[]? Difference(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Decrypt(cryptor, Behavior.Difference(Encrypt(cryptor, entries)))?.ToArray();
+        }
+        
+        public ConfigurationValueEntry[]? DifferenceRaw(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Behavior.Difference(entries);
+        }
+        
+        public Task<ConfigurationValueEntry[]?> DifferenceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return DifferenceAsync(null, entries, token);
+        }
+        
+        public async Task<ConfigurationValueEntry[]?> DifferenceAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Decrypt(cryptor, await Behavior.DifferenceAsync(Encrypt(cryptor, entries), token))?.ToArray();
+        }
+        
+        public Task<ConfigurationValueEntry[]?> DifferenceRawAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Behavior.DifferenceAsync(entries, token);
+        }
+        
+        IConfigBehaviorTransaction? IConfigBehavior.Transaction()
+        {
+            return Transaction();
+        }
+
+        async Task<IConfigBehaviorTransaction?> IConfigBehavior.TransactionAsync(CancellationToken token)
+        {
+            return await TransactionAsync(token);
+        }
+
+        public ICryptographyConfigBehaviorTransaction? Transaction()
+        {
+            return Transaction(null);
+        }
+
+        public ICryptographyConfigBehaviorTransaction? Transaction(IStringCryptor? cryptor)
+        {
+            if (IsReadOnly)
+            {
+                return null;
+            }
+            
+            ConfigurationValueEntry[]? entries = GetExistsValues(null);
+            
+            ICryptographyConfigBehavior transaction = new MemoryConfigBehavior(ConfigOptions.IgnoreEvent).Cryptography(cryptor ?? Cryptor);
+
+            transaction.Merge(entries);
+            return new CryptographyConfigBehaviorTransaction(this, transaction);
+        }
+
+        public Task<ICryptographyConfigBehaviorTransaction?> TransactionAsync(CancellationToken token)
+        {
+            return TransactionAsync(null, token);
+        }
+
+        public async Task<ICryptographyConfigBehaviorTransaction?> TransactionAsync(IStringCryptor? cryptor, CancellationToken token)
+        {
+            if (IsReadOnly)
+            {
+                return null;
+            }
+            
+            ConfigurationValueEntry[]? entries = await GetExistsValuesAsync(null, token);
+            
+            ICryptographyConfigBehavior transaction = new MemoryConfigBehavior(ConfigOptions.IgnoreEvent).Cryptography(cryptor ?? Cryptor);
+
+            await transaction.MergeAsync(entries, token);
+            return new CryptographyConfigBehaviorTransaction(this, transaction);
+        }
+
         protected void InvokeChanged(ConfigurationValueEntry entry)
         {
             Changed?.Invoke(this, new ConfigurationChangedEventArgs(entry));
+        }
+        
+        public IEnumerator<ConfigurationValueEntry> GetEnumerator()
+        {
+            return Decrypt(null, Behavior).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
         
         public void Dispose()

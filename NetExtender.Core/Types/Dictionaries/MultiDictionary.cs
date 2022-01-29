@@ -12,6 +12,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Dictionaries
 {
+    //TODO: without inherit
     [Serializable]
     public class MultiDictionary<TKey, TValue> : Dictionary<TKey, ImmutableHashSet<TValue>>, IMultiDictionary<TKey, TValue>, IReadOnlyMultiDictionary<TKey, TValue> where TKey : notnull
     {
@@ -138,8 +139,7 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
             
-            //TODO: CS8598
-            return TryGetValue(key, out ImmutableHashSet<TValue>? result) && /*result is not null! && */result.Contains(value);
+            return TryGetValue(key, out ImmutableHashSet<TValue>? result) && result.Contains(value);
         }
 
         public void Add(TKey key, TValue value)
@@ -159,8 +159,7 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
 
-            //TODO: CS8598
-            if (!TryGetValue(key, out ImmutableHashSet<TValue>? result)/* || result is null!*/)
+            if (!TryGetValue(key, out ImmutableHashSet<TValue>? result))
             {
                 this[key] = ImmutableHashSet<TValue>.Empty.Add(value);
                 return true;
@@ -199,8 +198,7 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
 
-            //TODO: CS8598
-            if (!TryGetValue(key, out ImmutableHashSet<TValue>? result) || /*result is null! || */!result.Contains(value))
+            if (!TryGetValue(key, out ImmutableHashSet<TValue>? result) || !result.Contains(value))
             {
                 return false;
             }
@@ -209,19 +207,16 @@ namespace NetExtender.Types.Dictionaries
             return true;
         }
 
-        // ReSharper disable once UseDeconstructionOnParameter
         public void Add(KeyValuePair<TKey, TValue> item)
         {
             Add(item.Key, item.Value);
         }
 
-        // ReSharper disable once UseDeconstructionOnParameter
         public Boolean Contains(KeyValuePair<TKey, TValue> item)
         {
             return Contains(item.Key, item.Value);
         }
         
-        // ReSharper disable once UseDeconstructionOnParameter
         public Boolean Remove(KeyValuePair<TKey, TValue> item)
         {
             return Remove(item.Key, item.Value);
@@ -258,8 +253,7 @@ namespace NetExtender.Types.Dictionaries
         {
             foreach ((TKey key, ImmutableHashSet<TValue> value) in this)
             {
-                //TODO: CS8598
-                if (/*value is null! || */value.IsEmpty)
+                if (value.IsEmpty)
                 {
                     continue;
                 }
@@ -284,7 +278,7 @@ namespace NetExtender.Types.Dictionaries
             }
             set
             {
-                base[key] = value;
+                base[key] = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
 

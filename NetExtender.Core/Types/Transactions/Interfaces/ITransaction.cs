@@ -1,11 +1,13 @@
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-using System.Collections.Generic;
+using System;
 
-namespace NetExtender.Initializer.Types.Lists.Interfaces
+namespace NetExtender.Initializer.Types.Transactions.Interfaces
 {
-    public interface IIndexerList<T> : IList<T>
+    public interface ITransaction : IDisposable
     {
+        void Commit();
+        void Rollback();
     }
 }

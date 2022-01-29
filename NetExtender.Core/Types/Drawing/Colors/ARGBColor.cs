@@ -23,14 +23,14 @@ namespace NetExtender.Types.Drawing.Colors
             return new ARGBColor(color.A, color.R, color.G, color.B);
         }
         
-        public static Boolean operator ==(ARGBColor left, ARGBColor right)
+        public static Boolean operator ==(ARGBColor first, ARGBColor second)
         {
-            return left.Equals(right);
+            return first.Equals(second);
         }
 
-        public static Boolean operator !=(ARGBColor left, ARGBColor right)
+        public static Boolean operator !=(ARGBColor first, ARGBColor second)
         {
-            return !(left == right);
+            return !(first == second);
         }
 
         public ColorType Type

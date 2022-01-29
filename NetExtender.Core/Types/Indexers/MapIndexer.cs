@@ -14,8 +14,8 @@ namespace NetExtender.Initializer.Types.Indexers
 #pragma warning disable CS8714
     public class MapIndexer<T> : IMapIndexer<T>, IReadOnlyMapIndexer<T>
     {
-        private Int32 Null { get; set; } = -1;
-        private Map<T, Int32> Index { get; }
+        protected Int32 Null { get; set; } = -1;
+        protected Map<T, Int32> Index { get; }
 
         public Int32 Count
         {
@@ -24,7 +24,15 @@ namespace NetExtender.Initializer.Types.Indexers
                 return Null >= 0 ? Index.Count + 1 : Index.Count;
             }
         }
-        
+
+        public IEqualityComparer<T> Comparer
+        {
+            get
+            {
+                return Index.Comparer;
+            }
+        }
+
         public MapIndexer()
             : this((IEqualityComparer<T>?) null)
         {
@@ -52,7 +60,7 @@ namespace NetExtender.Initializer.Types.Indexers
             AddRange(source);
         }
 
-        private void AddRange(IEnumerable<T> source)
+        protected void AddRange(IEnumerable<T> source)
         {
             foreach ((Int32 counter, T item) in source.Enumerate())
             {

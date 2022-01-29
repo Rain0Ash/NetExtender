@@ -3,11 +3,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using NetExtender.Configuration.Behavior;
 using NetExtender.Configuration.Common;
 using NetExtender.Registry;
 using NetExtender.Registry.Interfaces;
+using NetExtender.Types.Dictionaries;
 using NetExtender.Utilities.Application;
 using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Registry;
@@ -129,6 +131,187 @@ namespace NetExtender.Configuration.Windows.Registry
         public override Boolean Reload()
         {
             return false;
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public override Boolean Merge(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            if (IsReadOnly || Registry.IsReadOnly)
+            {
+                return false;
+            }
+            
+            if (entries is null)
+            {
+                return false;
+            }
+
+            ConfigurationValueEntry[]? values = GetExistsValues(null);
+
+            if (values is null || values.Length <= 0)
+            {
+                return entries.DistinctLastBy(item => (ConfigurationEntry) item).Aggregate(false, (current, entry) => current | Set(entry.Key, entry.Value, entry.Sections));
+            }
+
+            IndexDictionary<ConfigurationEntry, ConfigurationValueEntry> dictionary = values.ToIndexDictionary(item => (ConfigurationEntry) item, item => item);
+            List<ConfigurationValueEntry>? changes = !IsIgnoreEvent ? new List<ConfigurationValueEntry>(dictionary.Count) : null;
+
+            foreach (ConfigurationValueEntry entry in entries.DistinctLastBy(item => (ConfigurationEntry) item))
+            {
+                if (entry.Key is null)
+                {
+                    continue;
+                }
+
+                if (!dictionary.TryGetValue(entry, out ConfigurationValueEntry result))
+                {
+                    if (entry.Value is null)
+                    {
+                        continue;
+                    }
+
+                    if (!Registry.SetValue(entry.Key, entry.Value, entry.Sections))
+                    {
+                        continue;
+                    }
+                    
+                    changes?.Add(entry);
+                    continue;
+                }
+
+                if (entry.Value == result.Value)
+                {
+                    continue;
+                }
+                
+                if (entry.Value is null)
+                {
+                    if (!Registry.RemoveKey(entry.Key, entry.Sections))
+                    {
+                        continue;
+                    }
+                    
+                    changes?.Add(entry);
+                    continue;
+                }
+
+                if (!Registry.SetValue(entry.Key, entry.Value, entry.Sections))
+                {
+                    continue;
+                }
+                
+                changes?.Add(entry);
+            }
+
+            if (changes is null)
+            {
+                return true;
+            }
+
+            foreach (ConfigurationValueEntry change in changes)
+            {
+                OnChanged(change);
+            }
+
+            return true;
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public override Boolean Replace(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            if (IsReadOnly || Registry.IsReadOnly)
+            {
+                return false;
+            }
+            
+            if (entries is null)
+            {
+                return false;
+            }
+
+            ConfigurationValueEntry[]? values = GetExistsValues(null);
+
+            if (values is null || values.Length <= 0)
+            {
+                return Merge(entries);
+            }
+            
+            IndexDictionary<ConfigurationEntry, ConfigurationValueEntry> dictionary = values.ToIndexDictionary(item => (ConfigurationEntry) item, item => item);
+            List<ConfigurationValueEntry>? changes = !IsIgnoreEvent ? new List<ConfigurationValueEntry>(dictionary.Count) : null;
+
+            foreach (ConfigurationValueEntry entry in entries.DistinctLastBy(item => (ConfigurationEntry) item))
+            {
+                if (entry.Key is null)
+                {
+                    continue;
+                }
+                
+                if (!dictionary.Remove(entry, out ConfigurationValueEntry result))
+                {
+                    if (entry.Value is null)
+                    {
+                        continue;
+                    }
+
+                    if (!Registry.SetValue(entry.Key, entry.Value, entry.Sections))
+                    {
+                        continue;
+                    }
+                    
+                    changes?.Add(entry);
+                    continue;
+                }
+
+                if (entry.Value == result.Value)
+                {
+                    continue;
+                }
+                
+                if (entry.Value is null)
+                {
+                    if (!Registry.RemoveKey(entry.Key, entry.Sections))
+                    {
+                        continue;
+                    }
+                    
+                    changes?.Add(entry);
+                    continue;
+                }
+
+                if (!Registry.SetValue(entry.Key, entry.Value, entry.Sections))
+                {
+                    continue;
+                }
+                
+                changes?.Add(entry);
+            }
+
+            foreach ((String? key, ImmutableArray<String> sections) in dictionary.Values())
+            {
+                if (key is null)
+                {
+                    continue;
+                }
+                
+                if (!Registry.RemoveKey(key, sections))
+                {
+                    continue;
+                }
+                
+                changes?.Add(new ConfigurationValueEntry(key, null, sections));
+            }
+
+            if (changes is null)
+            {
+                return true;
+            }
+
+            foreach (ConfigurationValueEntry change in changes)
+            {
+                OnChanged(change);
+            }
+
+            return true;
         }
     }
 }

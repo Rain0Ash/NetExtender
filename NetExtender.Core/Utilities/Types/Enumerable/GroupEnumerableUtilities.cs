@@ -9,6 +9,54 @@ namespace NetExtender.Utilities.Types
 {
     public static partial class EnumerableUtilities
     {
+        public static Range[] LongestSubsequence<T>(this IEnumerable<T> source, T predicate)
+        {
+            return LongestSubsequence(source, item => EqualityComparer<T>.Default.Equals(item, predicate));
+        }
+
+        public static Range[] LongestSubsequence<T>(this IEnumerable<T> source, Predicate<T> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            List<Range> values = new List<Range>();
+
+            Int32 index = 0;
+            Int32 count = 0;
+            foreach (T item in source)
+            {
+                ++index;
+                if (predicate(item))
+                {
+                    ++count;
+                    continue;
+                }
+
+                if (count <= 0)
+                {
+                    continue;
+                }
+
+                values.Add((index - count - 1)..(index - 1));
+                count = 0;
+            }
+            
+            if (count > 0)
+            {
+                values.Add((index - count - 1)..(index - 1));
+            }
+
+            values.Sort(RangeUtilities.CompareTo);
+            return values.ToArray();
+        }
+        
         public static IEnumerable<IGrouping<T, Int32>> CountGroup<T>(this IEnumerable<T> source) where T : notnull
         {
             return CountGroup(source, null);

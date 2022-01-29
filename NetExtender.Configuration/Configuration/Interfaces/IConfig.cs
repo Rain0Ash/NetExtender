@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Common;
+using NetExtender.Configuration.Transactions.Interfaces;
 
 namespace NetExtender.Configuration.Interfaces
 {
@@ -55,6 +56,18 @@ namespace NetExtender.Configuration.Interfaces
         public Boolean Reset();
         public Task<Boolean> ResetAsync();
         public Task<Boolean> ResetAsync(CancellationToken token);
+        public Boolean Merge(IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<Boolean> MergeAsync(IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<Boolean> MergeAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token);
+        public Boolean Replace(IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<Boolean> ReplaceAsync(IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<Boolean> ReplaceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token);
+        public ConfigurationValueEntry[]? Difference(IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<ConfigurationValueEntry[]?> DifferenceAsync(IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<ConfigurationValueEntry[]?> DifferenceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token);
+        public IConfigTransaction? Transaction();
+        public Task<IConfigTransaction?> TransactionAsync();
+        public Task<IConfigTransaction?> TransactionAsync(CancellationToken token);
         public void CopyTo(IConfig config);
         public Task CopyToAsync(IConfig config);
         public Task CopyToAsync(IConfig config, CancellationToken token);

@@ -48,9 +48,14 @@ namespace NetExtender.Types.Queues
         }
 
         public SetQueue()
+            : this((IEqualityComparer<T>?) null)
+        {
+        }
+
+        public SetQueue(IEqualityComparer<T>? comparer)
         {
             Queue = new LinkedList<T>();
-            Set = new HashSet<T>();
+            Set = new HashSet<T>(comparer);
         }
         
         public SetQueue(Int32 capacity)
@@ -95,22 +100,6 @@ namespace NetExtender.Types.Queues
         {
             Set.TrimExcess();
         }
-        
-        private void RemoveExcessFromQueue()
-        {
-            LinkedListNode<T>? node = Queue.First;
-
-            while (node is not null)
-            {
-                LinkedListNode<T>? next = node.Next;
-                if (!Set.Contains(node.Value))
-                {
-                    Queue.Remove(node);
-                }
-
-                node = next;
-            }
-        }
 
         public Boolean Contains(T item)
         {
@@ -137,7 +126,30 @@ namespace NetExtender.Types.Queues
             Queue.Enqueue(item);
             return true;
         }
-        
+
+        public Boolean Rotate(T item)
+        {
+            if (!Set.Contains(item))
+            {
+                return false;
+            }
+            
+            Queue.Remove(item);
+            Queue.AddLast(item);
+            return true;
+        }
+
+        public Boolean RotateEnqueue(T item)
+        {
+            if (!Set.Add(item))
+            {
+                Queue.Remove(item);
+            }
+            
+            Queue.AddLast(item);
+            return true;
+        }
+
         public T Dequeue()
         {
             T item = Queue.Dequeue();

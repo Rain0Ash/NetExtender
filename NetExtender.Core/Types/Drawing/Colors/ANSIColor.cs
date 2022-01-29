@@ -31,14 +31,14 @@ namespace NetExtender.Types.Drawing.Colors
             return new ANSIColor(color.R, color.G, color.B);
         }
 
-        public static Boolean operator ==(ANSIColor left, ANSIColor right)
+        public static Boolean operator ==(ANSIColor first, ANSIColor second)
         {
-            return left.Equals(right);
+            return first.Equals(second);
         }
 
-        public static Boolean operator !=(ANSIColor left, ANSIColor right)
+        public static Boolean operator !=(ANSIColor first, ANSIColor second)
         {
-            return !(left == right);
+            return !(first == second);
         }
 
         public ColorType Type

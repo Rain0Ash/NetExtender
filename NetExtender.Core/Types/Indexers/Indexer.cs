@@ -24,6 +24,14 @@ namespace NetExtender.Initializer.Types.Indexers
             }
         }
 
+        public IEqualityComparer<T> Comparer
+        {
+            get
+            {
+                return Index.Comparer;
+            }
+        }
+
         public Indexer()
             : this((IEqualityComparer<T>?) null)
         {
@@ -51,7 +59,7 @@ namespace NetExtender.Initializer.Types.Indexers
             AddRange(source);
         }
 
-        private void AddRange(IEnumerable<T> source)
+        protected void AddRange(IEnumerable<T> source)
         {
             foreach ((Int32 counter, T item) in source.Enumerate())
             {

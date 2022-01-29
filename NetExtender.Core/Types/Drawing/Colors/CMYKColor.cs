@@ -24,14 +24,14 @@ namespace NetExtender.Types.Drawing.Colors
             return new CMYKColor(c, m, y, k);
         }
 
-        public static Boolean operator ==(CMYKColor left, CMYKColor right)
+        public static Boolean operator ==(CMYKColor first, CMYKColor second)
         {
-            return left.Equals(right);
+            return first.Equals(second);
         }
 
-        public static Boolean operator !=(CMYKColor left, CMYKColor right)
+        public static Boolean operator !=(CMYKColor first, CMYKColor second)
         {
-            return !(left == right);
+            return !(first == second);
         }
 
         public ColorType Type

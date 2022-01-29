@@ -2639,7 +2639,589 @@ namespace NetExtender.Utilities.Types
             Int32 counter = first ? 0 : 1;
             return source.ForEachWhere(_ => counter++ % every == 0, action);
         }
+        
+        public static void Invoke<T>(this IEnumerable<T> source, Action<T> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
 
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            foreach (T item in source)
+            {
+                action(item);
+            }
+        }
+
+        public static void InvokeWhere<T>(this IEnumerable<T> source, Func<T, Boolean> where, Action<T> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            foreach (T item in source)
+            {
+                if (where(item))
+                {
+                    action(item);
+                }
+            }
+        }
+        
+        public static void InvokeWhere<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Action<T> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            Int32 index = 0;
+            foreach (T item in source)
+            {
+                if (where(item, index))
+                {
+                    action(item);
+                }
+
+                ++index;
+            }
+        }
+        
+        public static void InvokeWhereNot<T>(this IEnumerable<T> source, Func<T, Boolean> where, Action<T> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            InvokeWhere(source, item => !where(item), action);
+        }
+        
+        public static void InvokeWhereNot<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Action<T> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            InvokeWhere(source, (item, index) => !where(item, index), action);
+        }
+
+        public static void Invoke<T>(this IEnumerable<T> source, Action<T, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            Int32 index = 0;
+            foreach (T item in source)
+            {
+                action(item, index);
+                ++index;
+            }
+        }
+
+        public static void InvokeWhere<T>(this IEnumerable<T> source, Func<T, Boolean> where, Action<T, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            Int32 index = 0;
+            foreach (T item in source)
+            {
+                if (where(item))
+                {
+                    action(item, index);
+                }
+
+                ++index;
+            }
+        }
+        
+        public static void InvokeWhere<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Action<T, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            Int32 index = 0;
+            foreach (T item in source)
+            {
+                if (where(item, index))
+                {
+                    action(item, index);
+                }
+
+                ++index;
+            }
+        }
+
+        public static void InvokeWhereNot<T>(this IEnumerable<T> source, Func<T, Boolean> where, Action<T, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            InvokeWhere(source, item => !where(item), action);
+        }
+        
+        public static void InvokeWhereNot<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Action<T, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            InvokeWhere(source, (item, index) => !where(item, index), action);
+        }
+        
+        public static void InvokeBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Action<TKey> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            foreach (T item in source)
+            {
+                action(selector(item));
+            }
+        }
+
+        public static void InvokeByWhere<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Boolean> where, Action<TKey> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            foreach (T item in source)
+            {
+                TKey select = selector(item);
+                if (where(select))
+                {
+                    action(select);
+                }
+            }
+        }
+        
+        public static void InvokeByWhere<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            Int32 index = 0;
+            foreach (T item in source)
+            {
+                TKey select = selector(item);
+                if (where(select, index))
+                {
+                    action(select);
+                }
+
+                ++index;
+            }
+        }
+        
+        public static void InvokeByWhereNot<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Boolean> where, Action<TKey> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            InvokeByWhere(source, selector, item => !where(item), action);
+        }
+        
+        public static void InvokeByWhereNot<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            InvokeByWhere(source, selector, (item, index) => !where(item, index), action);
+        }
+
+        public static void InvokeBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Action<TKey, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            Int32 index = 0;
+            foreach (T item in source)
+            {
+                action(selector(item), index);
+                ++index;
+            }
+        }
+
+        public static void InvokeByWhere<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Boolean> where, Action<TKey, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            Int32 index = 0;
+            foreach (T item in source)
+            {
+                TKey select = selector(item);
+                if (where(select))
+                {
+                    action(select, index);
+                }
+
+                ++index;
+            }
+        }
+        
+        public static void InvokeByWhere<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            Int32 index = 0;
+            foreach (T item in source)
+            {
+                TKey select = selector(item);
+                if (where(select, index))
+                {
+                    action(select, index);
+                }
+
+                ++index;
+            }
+        }
+
+        public static void InvokeByWhereNot<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Boolean> where, Action<TKey, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            InvokeByWhere(source, selector, item => !where(item), action);
+        }
+        
+        public static void InvokeByWhereNot<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey, Int32> action)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (where is null)
+            {
+                throw new ArgumentNullException(nameof(where));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            InvokeByWhere(source, selector, (item, index) => !where(item, index), action);
+        }
+
+        public static void InvokeEvery<T>(this IEnumerable<T> source, Action<T> action, Int32 every)
+        {
+            InvokeEvery(source, action, every, false);
+        }
+
+        public static void InvokeEvery<T>(this IEnumerable<T> source, Action<T> action, Int32 every, Boolean first)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (every <= 1)
+            {
+                Invoke(source, action);
+                return;
+            }
+            
+            Int32 counter = first ? 0 : 1;
+            source.InvokeWhere(_ => counter++ % every == 0, action);
+        }
+
+        public static void Evaluate(this IEnumerable source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (source is ICollection)
+            {
+                return;
+            }
+
+            IEnumerator enumerator = source.GetEnumerator();
+
+            while (enumerator.MoveNext())
+            {
+            }
+        }
+
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        public static void Evaluate<T>(this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (source.IsMaterialized())
+            {
+                return;
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            while (enumerator.MoveNext())
+            {
+            }
+        }
+        
         public static Int32 SequenceHashCode<T>(this IEnumerable<T> source)
         {
             return SequenceHashCode(source, null);

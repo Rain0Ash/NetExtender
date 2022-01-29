@@ -8,7 +8,7 @@ namespace NetExtender.Types.Disposable
 {
     public abstract class DisposableToken : IDisposableToken
     {
-        public static IDisposableToken Null { get; } = new NullDisposableToken();
+        public static IDisposableToken Empty { get; } = new NullDisposableToken();
 
         private sealed class NullDisposableToken : IDisposableToken
         {

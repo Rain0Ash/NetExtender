@@ -2,13 +2,18 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Behavior.Interfaces;
+using NetExtender.Configuration.Behavior.Transactions;
+using NetExtender.Configuration.Behavior.Transactions.Interfaces;
 using NetExtender.Configuration.Common;
+using NetExtender.Configuration.Memory;
+using NetExtender.Types.Dictionaries;
 using NetExtender.Utilities.Application;
 using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Types;
@@ -60,6 +65,14 @@ namespace NetExtender.Configuration.Behavior
             get
             {
                 return Options.HasFlag(ConfigOptions.LazyWrite);
+            }
+        }
+
+        public Boolean IsThreadSafe
+        {
+            get
+            {
+                return false;
             }
         }
 
@@ -162,9 +175,120 @@ namespace NetExtender.Configuration.Behavior
             return Reset().ToTask();
         }
 
+        public abstract Boolean Merge(IEnumerable<ConfigurationValueEntry>? entries);
+
+        public virtual Task<Boolean> MergeAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Merge(entries).ToTask();
+        }
+
+        public abstract Boolean Replace(IEnumerable<ConfigurationValueEntry>? entries);
+
+        public virtual Task<Boolean> ReplaceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Replace(entries).ToTask();
+        }
+
+        public virtual ConfigurationValueEntry[]? Difference(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            ConfigurationValueEntry[]? values = GetExistsValues(null);
+            
+            if (entries is null)
+            {
+                return values;
+            }
+
+            if (values is null)
+            {
+                return entries.ToArray();
+            }
+
+            IDictionary<ConfigurationEntry, ConfigurationValueEntry> equality = new IndexDictionary<ConfigurationEntry, ConfigurationValueEntry>(values.Length);
+
+            foreach (ConfigurationValueEntry entry in entries)
+            {
+                equality.TryAdd(entry, entry);
+            }
+            
+            List<ConfigurationValueEntry> difference = new List<ConfigurationValueEntry>(equality.Count);
+            
+            foreach (ConfigurationValueEntry value in values)
+            {
+                if (!equality.TryGetValue(value, out ConfigurationValueEntry result))
+                {
+                    difference.Add(result);
+                    continue;
+                }
+
+                if (value.Value == result.Value)
+                {
+                    continue;
+                }
+                
+                difference.Add(result);
+            }
+
+            return difference.ToArray();
+        }
+
+        public virtual Task<ConfigurationValueEntry[]?> DifferenceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Difference(entries).ToTask();
+        }
+
+        public virtual IConfigBehaviorTransaction? Transaction()
+        {
+            if (IsReadOnly)
+            {
+                return null;
+            }
+            
+            ConfigurationValueEntry[]? entries = GetExistsValues(null);
+            
+            IConfigBehavior transaction = new MemoryConfigBehavior(ConfigOptions.IgnoreEvent);
+
+            transaction.Merge(entries);
+            return new ConfigBehaviorTransaction(this, transaction);
+        }
+        
+        public virtual async Task<IConfigBehaviorTransaction?> TransactionAsync(CancellationToken token)
+        {
+            if (IsReadOnly)
+            {
+                return null;
+            }
+            
+            ConfigurationValueEntry[]? entries = await GetExistsValuesAsync(null, token);
+            
+            IConfigBehavior transaction = new MemoryConfigBehavior(ConfigOptions.IgnoreEvent);
+
+            await transaction.MergeAsync(entries, token);
+            return new ConfigBehaviorTransaction(this, transaction);
+        }
+
         protected void OnChanged(ConfigurationValueEntry entry)
         {
             Changed?.Invoke(this, new ConfigurationChangedEventArgs(entry));
+        }
+        
+        public virtual IEnumerator<ConfigurationValueEntry> GetEnumerator()
+        {
+            ConfigurationValueEntry[]? values = GetExistsValues(null);
+
+            if (values is null)
+            {
+                yield break;
+            }
+
+            foreach (ConfigurationValueEntry item in values)
+            {
+                yield return item;
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         public void Dispose()

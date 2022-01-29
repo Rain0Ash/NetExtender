@@ -8,8 +8,11 @@ using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Behavior.Interfaces;
+using NetExtender.Configuration.Behavior.Transactions.Interfaces;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Interfaces;
+using NetExtender.Configuration.Transactions;
+using NetExtender.Configuration.Transactions.Interfaces;
 
 namespace NetExtender.Configuration
 {
@@ -58,6 +61,14 @@ namespace NetExtender.Configuration
             get
             {
                 return Behavior.IsLazyWrite;
+            }
+        }
+
+        public Boolean IsThreadSafe
+        {
+            get
+            {
+                return Behavior.IsThreadSafe;
             }
         }
 
@@ -246,7 +257,7 @@ namespace NetExtender.Configuration
             return Behavior.ContainsAsync(key, sections, token);
         }
 
-        public virtual ConfigurationEntry[]? GetExists()
+        public ConfigurationEntry[]? GetExists()
         {
             return GetExists(null);
         }
@@ -256,7 +267,7 @@ namespace NetExtender.Configuration
             return GetExistsAsync(CancellationToken.None);
         }
 
-        public virtual Task<ConfigurationEntry[]?> GetExistsAsync(CancellationToken token)
+        public Task<ConfigurationEntry[]?> GetExistsAsync(CancellationToken token)
         {
             return GetExistsAsync(null, token);
         }
@@ -266,7 +277,7 @@ namespace NetExtender.Configuration
             return GetExists((IEnumerable<String>?) sections);
         }
 
-        public ConfigurationEntry[]? GetExists(IEnumerable<String>? sections)
+        public virtual ConfigurationEntry[]? GetExists(IEnumerable<String>? sections)
         {
             return Behavior.GetExists(sections);
         }
@@ -286,12 +297,12 @@ namespace NetExtender.Configuration
             return GetExistsAsync(sections, token);
         }
 
-        public Task<ConfigurationEntry[]?> GetExistsAsync(IEnumerable<String>? sections, CancellationToken token)
+        public virtual Task<ConfigurationEntry[]?> GetExistsAsync(IEnumerable<String>? sections, CancellationToken token)
         {
             return Behavior.GetExistsAsync(sections, token);
         }
 
-        public virtual ConfigurationValueEntry[]? GetExistsValues()
+        public ConfigurationValueEntry[]? GetExistsValues()
         {
             return GetExistsValues(null);
         }
@@ -301,7 +312,7 @@ namespace NetExtender.Configuration
             return GetExistsValuesAsync(CancellationToken.None);
         }
 
-        public virtual Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(CancellationToken token)
+        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(CancellationToken token)
         {
             return GetExistsValuesAsync(null, token);
         }
@@ -311,7 +322,7 @@ namespace NetExtender.Configuration
             return GetExistsValues((IEnumerable<String>?) sections);
         }
 
-        public ConfigurationValueEntry[]? GetExistsValues(IEnumerable<String>? sections)
+        public virtual ConfigurationValueEntry[]? GetExistsValues(IEnumerable<String>? sections)
         {
             return Behavior.GetExistsValues(sections);
         }
@@ -331,7 +342,7 @@ namespace NetExtender.Configuration
             return GetExistsValuesAsync(sections, token);
         }
 
-        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IEnumerable<String>? sections, CancellationToken token)
+        public virtual Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IEnumerable<String>? sections, CancellationToken token)
         {
             return Behavior.GetExistsValuesAsync(sections, token);
         }
@@ -351,7 +362,7 @@ namespace NetExtender.Configuration
             return Behavior.ReloadAsync(token);
         }
 
-        public Boolean Reset()
+        public virtual Boolean Reset()
         {
             return Behavior.Reset();
         }
@@ -361,9 +372,71 @@ namespace NetExtender.Configuration
             return ResetAsync(CancellationToken.None);
         }
 
-        public Task<Boolean> ResetAsync(CancellationToken token)
+        public virtual Task<Boolean> ResetAsync(CancellationToken token)
         {
             return Behavior.ResetAsync(token);
+        }
+
+        public virtual Boolean Merge(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Behavior.Merge(entries);
+        }
+
+        public Task<Boolean> MergeAsync(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return MergeAsync(entries, CancellationToken.None);
+        }
+
+        public virtual Task<Boolean> MergeAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Behavior.MergeAsync(entries, token);
+        }
+
+        public virtual Boolean Replace(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Behavior.Replace(entries);
+        }
+
+        public Task<Boolean> ReplaceAsync(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return ReplaceAsync(entries, CancellationToken.None);
+        }
+
+        public virtual Task<Boolean> ReplaceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Behavior.ReplaceAsync(entries, token);
+        }
+
+        public virtual ConfigurationValueEntry[]? Difference(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Behavior.Difference(entries);
+        }
+
+        public Task<ConfigurationValueEntry[]?> DifferenceAsync(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return DifferenceAsync(entries, CancellationToken.None);
+        }
+
+        public virtual Task<ConfigurationValueEntry[]?> DifferenceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Behavior.DifferenceAsync(entries, token);
+        }
+
+        public virtual IConfigTransaction? Transaction()
+        {
+            IConfigBehaviorTransaction? transaction = Behavior.Transaction();
+            return transaction is not null ? new ConfigTransaction(this, transaction) : null;
+        }
+
+        public Task<IConfigTransaction?> TransactionAsync()
+        {
+            return TransactionAsync(CancellationToken.None);
+        }
+
+        public virtual async Task<IConfigTransaction?> TransactionAsync(CancellationToken token)
+        {
+            IConfigBehaviorTransaction? transaction = await Behavior.TransactionAsync(token);
+            return transaction is not null ? new ConfigTransaction(this, transaction) : null;
         }
 
         public virtual void CopyTo(IConfig config)

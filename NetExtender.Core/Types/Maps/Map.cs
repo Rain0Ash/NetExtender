@@ -14,6 +14,17 @@ namespace NetExtender.Types.Maps
     [SuppressMessage("ReSharper", "UseDeconstructionOnParameter")]
     public class Map<TKey, TValue> : IMap<TKey, TValue>, IReadOnlyMap<TKey, TValue> where TKey : notnull where TValue : notnull
     {
+        protected Dictionary<TKey, TValue> Base { get; }
+        protected Dictionary<TValue, TKey> Reversed { get; }
+
+        public Int32 Count
+        {
+            get
+            {
+                return Base.Count;
+            }
+        }
+        
         public ICollection<TKey> Keys
         {
             get
@@ -45,15 +56,28 @@ namespace NetExtender.Types.Maps
                 return Values;
             }
         }
-        
-        protected Dictionary<TKey, TValue> Base { get; }
-        protected Dictionary<TValue, TKey> Reversed { get; }
 
-        public Int32 Count
+        public IEqualityComparer<TKey> Comparer
         {
             get
             {
-                return Base.Count;
+                return KeyComparer;
+            }
+        }
+
+        public IEqualityComparer<TKey> KeyComparer
+        {
+            get
+            {
+                return Base.Comparer;
+            }
+        }
+
+        public IEqualityComparer<TValue> ValueComparer
+        {
+            get
+            {
+                return Reversed.Comparer;
             }
         }
 
@@ -78,8 +102,9 @@ namespace NetExtender.Types.Maps
                 throw new ArgumentNullException(nameof(dictionary));
             }
 
-            Base = new Dictionary<TKey, TValue>(dictionary);
-            Reversed = new Dictionary<TValue, TKey>(dictionary.Reverse());
+            Base = new Dictionary<TKey, TValue>();
+            Reversed = new Dictionary<TValue, TKey>();
+            AddRangeConstructor(dictionary);
         }
 
         public Map(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? comparer)
@@ -94,8 +119,9 @@ namespace NetExtender.Types.Maps
                 throw new ArgumentNullException(nameof(dictionary));
             }
 
-            Base = new Dictionary<TKey, TValue>(dictionary, keyComparer);
-            Reversed = new Dictionary<TValue, TKey>(dictionary.Reverse(), valueComparer);
+            Base = new Dictionary<TKey, TValue>(keyComparer);
+            Reversed = new Dictionary<TValue, TKey>(valueComparer);
+            AddRangeConstructor(dictionary);
         }
 
         public Map(IEqualityComparer<TKey>? comparer)
@@ -116,10 +142,9 @@ namespace NetExtender.Types.Maps
                 throw new ArgumentNullException(nameof(source));
             }
 
-            source = source.Materialize();
-            
-            Base = new Dictionary<TKey, TValue>(source);
-            Reversed = new Dictionary<TValue, TKey>(source.ReversePairs());
+            Base = new Dictionary<TKey, TValue>();
+            Reversed = new Dictionary<TValue, TKey>();
+            AddRangeConstructor(source);
         }
 
         public Map(IEnumerable<KeyValuePair<TValue, TKey>> source)
@@ -129,10 +154,9 @@ namespace NetExtender.Types.Maps
                 throw new ArgumentNullException(nameof(source));
             }
 
-            source = source.Materialize();
-
-            Base = new Dictionary<TKey, TValue>(source.ReversePairs());
-            Reversed = new Dictionary<TValue, TKey>(source);
+            Base = new Dictionary<TKey, TValue>();
+            Reversed = new Dictionary<TValue, TKey>();
+            AddRangeConstructor(source);
         }
 
         public Map(IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? comparer)
@@ -147,10 +171,14 @@ namespace NetExtender.Types.Maps
                 throw new ArgumentNullException(nameof(source));
             }
 
-            source = source.Materialize();
-
-            Base = new Dictionary<TKey, TValue>(source, keyComparer);
-            Reversed = new Dictionary<TValue, TKey>(source.ReversePairs(), valueComparer);
+            Base = new Dictionary<TKey, TValue>(keyComparer);
+            Reversed = new Dictionary<TValue, TKey>(valueComparer);
+            AddRangeConstructor(source);
+        }
+        
+        public Map(IEnumerable<KeyValuePair<TValue, TKey>> source, IEqualityComparer<TKey>? comparer)
+            : this(source, comparer, null)
+        {
         }
 
         public Map(IEnumerable<KeyValuePair<TValue, TKey>> source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
@@ -160,10 +188,9 @@ namespace NetExtender.Types.Maps
                 throw new ArgumentNullException(nameof(source));
             }
 
-            source = source.Materialize();
-
-            Base = new Dictionary<TKey, TValue>(source.ReversePairs(), keyComparer);
-            Reversed = new Dictionary<TValue, TKey>(source, valueComparer);
+            Base = new Dictionary<TKey, TValue>(keyComparer);
+            Reversed = new Dictionary<TValue, TKey>(valueComparer);
+            AddRangeConstructor(source);
         }
 
         public Map(Int32 capacity)
@@ -176,6 +203,48 @@ namespace NetExtender.Types.Maps
         {
             Base = new Dictionary<TKey, TValue>(capacity, keyComparer);
             Reversed = new Dictionary<TValue, TKey>(capacity, valueComparer);
+        }
+
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        private void AddRangeConstructor(IEnumerable<KeyValuePair<TKey, TValue>> source)
+        {
+            Int32? capacity = source is IDictionary<TKey, TValue> dictionary ? dictionary.Count : source.CountIfMaterialized();
+
+            if (capacity.HasValue)
+            {
+                Int32 ensure = Base.EnsureCapacity(capacity.Value);
+                if (ensure != Reversed.EnsureCapacity(capacity.Value))
+                {
+                    throw new CollectionSynchronizationException();
+                }
+            }
+            
+            foreach ((TKey key, TValue value) in source)
+            {
+                Base.Add(key, value);
+                Reversed.Add(value, key);
+            }
+        }
+        
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
+        private void AddRangeConstructor(IEnumerable<KeyValuePair<TValue, TKey>> source)
+        {
+            Int32? capacity = source is IDictionary<TValue, TKey> dictionary ? dictionary.Count : source.CountIfMaterialized();
+
+            if (capacity.HasValue)
+            {
+                Int32 ensure = Base.EnsureCapacity(capacity.Value);
+                if (ensure != Reversed.EnsureCapacity(capacity.Value))
+                {
+                    throw new CollectionSynchronizationException();
+                }
+            }
+            
+            foreach ((TValue key, TKey value) in source)
+            {
+                Base.Add(value, key);
+                Reversed.Add(key, value);
+            }
         }
         
         public virtual Int32 EnsureCapacity(Int32 capacity)

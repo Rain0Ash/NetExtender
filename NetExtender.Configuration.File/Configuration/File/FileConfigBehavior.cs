@@ -110,7 +110,7 @@ namespace NetExtender.Configuration.File
         
         protected virtual Task<String?> SerializeConfigAsync(CancellationToken token)
         {
-            return !token.IsCancellationRequested ? Task.FromResult(SerializeConfig()) : StringUtilities.Null;
+            return !token.IsCancellationRequested ? SerializeConfig().ToTask() : StringUtilities.Null;
         }
 
         protected Boolean WriteConfig()
@@ -143,6 +143,26 @@ namespace NetExtender.Configuration.File
         public override async Task<Boolean> SetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
         {
             return await base.SetAsync(key, value, sections, token) && await WriteConfigAsync(token);
+        }
+
+        public override Boolean Merge(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return base.Merge(entries) && WriteConfig();
+        }
+
+        public override async Task<Boolean> MergeAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return await base.MergeAsync(entries, token) && await WriteConfigAsync(token);
+        }
+        
+        public override Boolean Replace(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return base.Replace(entries) && WriteConfig();
+        }
+
+        public override async Task<Boolean> ReplaceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return await base.ReplaceAsync(entries, token) && await WriteConfigAsync(token);
         }
 
         public override Boolean Reload()

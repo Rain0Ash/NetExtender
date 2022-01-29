@@ -160,6 +160,12 @@ namespace NetExtender.Localization.Behavior
 
             return sections;
         }
+        
+        protected virtual String Convert(String? key, LocalizationIdentifier identifier, ref IEnumerable<String>? sections)
+        {
+            sections = Convert(key, sections);
+            return identifier.TryGetCultureInfo(out CultureInfo info) ? info.TwoLetterISOLanguageName : identifier.ToString();
+        }
 
         protected Int32 IdentifierComparison(String? first, String? second)
         {
@@ -189,12 +195,6 @@ namespace NetExtender.Localization.Behavior
             }
 
             return Comparer.Compare(x, y);
-        }
-
-        protected virtual String Convert(String? key, LocalizationIdentifier identifier, ref IEnumerable<String>? sections)
-        {
-            sections = Convert(key, sections);
-            return identifier.TryGetCultureInfo(out CultureInfo info) ? info.TwoLetterISOLanguageName : identifier.ToString();
         }
 
         protected virtual IEnumerable<KeyValuePair<LocalizationIdentifier, String>> Extract(IEnumerable<ConfigurationValueEntry> entries)
@@ -294,12 +294,14 @@ namespace NetExtender.Localization.Behavior
                 }
             }
 
-            if (value is null)
+            return true;
+
+            /*if (value is null)
             {
                 return true;
             }
 
-            if (value.Values.Count <= 0)
+            if (value.Count <= 0)
             {
                 return true;
             }
@@ -311,7 +313,7 @@ namespace NetExtender.Localization.Behavior
                 successful |= Behavior.Set(Convert(null, item.Key, ref temp), item.Value, temp);
             }
 
-            return successful;
+            return successful;*/
         }
 
         public async Task<Boolean> SetAsync(String? key, ILocalizationString? value, IEnumerable<String>? sections, CancellationToken token)
@@ -332,7 +334,7 @@ namespace NetExtender.Localization.Behavior
                 return true;
             }
 
-            if (value.Values.Count <= 0)
+            if (value.Count <= 0)
             {
                 return true;
             }

@@ -11,6 +11,8 @@ using System.Runtime.CompilerServices;
 using NetExtender.Types.Collections;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Dictionaries.Interfaces;
+using NetExtender.Types.Immutable.Dictionaries.Interfaces;
+using NetExtender.Types.Immutable.Maps.Interfaces;
 using NetExtender.Types.Maps;
 using NetExtender.Types.Maps.Interfaces;
 using NetExtender.Types.Sets.Interfaces;
@@ -431,6 +433,8 @@ namespace NetExtender.Utilities.Types
                 CollectionType.GenericSet => TypeCache.IsGenericSet(type),
                 CollectionType.Dictionary => TypeCache.IsDictionary(type),
                 CollectionType.GenericDictionary => TypeCache.IsGenericDictionary(type),
+                CollectionType.Map => TypeCache.IsMap(type),
+                CollectionType.GenericMap => TypeCache.IsGenericMap(type),
                 CollectionType.Stack => TypeCache.IsStack(type),
                 CollectionType.GenericStack => TypeCache.IsGenericStack(type),
                 CollectionType.Queue => TypeCache.IsQueue(type),
@@ -500,6 +504,15 @@ namespace NetExtender.Utilities.Types
             else if (TypeCache.IsDictionary(type))
             {
                 collection |= CollectionType.Dictionary;
+            }
+            
+            if (TypeCache.IsGenericMap(type))
+            {
+                collection |= CollectionType.GenericMap;
+            }
+            else if (TypeCache.IsMap(type))
+            {
+                collection |= CollectionType.Map;
             }
             
             if (TypeCache.IsGenericStack(type))
@@ -572,6 +585,7 @@ namespace NetExtender.Utilities.Types
             private static ConcurrentDictionary<Type, Status> ListCache { get; } = new ConcurrentDictionary<Type, Status>();
             private static ConcurrentDictionary<Type, Status> SetCache { get; } = new ConcurrentDictionary<Type, Status>();
             private static ConcurrentDictionary<Type, Status> DictionaryCache { get; } = new ConcurrentDictionary<Type, Status>();
+            private static ConcurrentDictionary<Type, Status> MapCache { get; } = new ConcurrentDictionary<Type, Status>();
             private static ConcurrentDictionary<Type, Status> StackCache { get; } = new ConcurrentDictionary<Type, Status>();
             private static ConcurrentDictionary<Type, Status> QueueCache { get; } = new ConcurrentDictionary<Type, Status>();
             
@@ -584,7 +598,9 @@ namespace NetExtender.Utilities.Types
             public static IImmutableSet<Type> SetTypes { get; } = new HashSet<Type>{typeof(ISet)}.ToImmutableHashSet();
             public static IImmutableSet<Type> GenericSetTypes { get; } = new HashSet<Type>{typeof(ISet<>), typeof(IReadOnlySet<>), typeof(IImmutableSet<>)}.ToImmutableHashSet();
             public static IImmutableSet<Type> DictionaryTypes { get; } = new HashSet<Type>{typeof(IDictionary)}.ToImmutableHashSet();
-            public static IImmutableSet<Type> GenericDictionaryTypes { get; } = new HashSet<Type>{typeof(IDictionary<,>), typeof(IReadOnlyDictionary<,>), typeof(IImmutableDictionary<,>)}.ToImmutableHashSet();
+            public static IImmutableSet<Type> GenericDictionaryTypes { get; } = new HashSet<Type>{typeof(IDictionary<,>), typeof(IReadOnlyDictionary<,>), typeof(IIndexDictionary<,>), typeof(IReadOnlyIndexDictionary<,>), typeof(IImmutableDictionary<,>), typeof(IImmutableIndexDictionary<,>)}.ToImmutableHashSet();
+            public static IImmutableSet<Type> MapTypes { get; } = new HashSet<Type>().ToImmutableHashSet();
+            public static IImmutableSet<Type> GenericMapTypes { get; } = new HashSet<Type>{typeof(IMap<,>), typeof(IReadOnlyMap<,>), typeof(IIndexMap<,>), typeof(IReadOnlyIndexMap<,>), typeof(IImmutableMap<,>), typeof(IImmutableIndexMap<,>)}.ToImmutableHashSet();
             public static IImmutableSet<Type> StackTypes { get; } = new HashSet<Type>{typeof(Stack)}.ToImmutableHashSet();
             public static IImmutableSet<Type> GenericStackTypes { get; } = new HashSet<Type>{typeof(Stack<>), typeof(ConcurrentStack<>), typeof(IImmutableStack<>)}.ToImmutableHashSet();
             public static IImmutableSet<Type> QueueTypes { get; } = new HashSet<Type>{typeof(Queue)}.ToImmutableHashSet();
@@ -631,6 +647,11 @@ namespace NetExtender.Utilities.Types
             private static Status CreateDictionary(Type type)
             {
                 return Create(type, DictionaryTypes, GenericDictionaryTypes);
+            }
+
+            private static Status CreateMap(Type type)
+            {
+                return Create(type, MapTypes, GenericMapTypes);
             }
             
             private static Status CreateStack(Type type)
@@ -776,6 +797,21 @@ namespace NetExtender.Utilities.Types
             public static Boolean IsGenericDictionary(Type? type)
             {
                 return type is not null && IsGeneric(type, DictionaryCache, CreateDictionary);
+            }
+            
+            public static Boolean IsMap(Type? type)
+            {
+                return type is not null && Is(type, MapCache, CreateMap);
+            }
+            
+            public static Boolean IsNonGenericMap(Type? type)
+            {
+                return type is not null && IsNonGeneric(type, MapCache, CreateMap);
+            }
+            
+            public static Boolean IsGenericMap(Type? type)
+            {
+                return type is not null && IsGeneric(type, MapCache, CreateMap);
             }
             
             public static Boolean IsStack(Type? type)

@@ -20,7 +20,7 @@ namespace NetExtender.Configuration.Cryptography.Utilities
                 throw new ArgumentNullException(nameof(behavior));
             }
 
-            return new CryptographyBehavior(behavior, AESCryptKey.Default.Cryptor());
+            return new CryptographyConfigBehavior(behavior, AESCryptKey.Default.Cryptor());
         }
         
         public static ICryptographyConfigBehavior Cryptography(this IConfigBehavior behavior, IStringCryptor cryptor)
@@ -35,7 +35,7 @@ namespace NetExtender.Configuration.Cryptography.Utilities
                 throw new ArgumentNullException(nameof(cryptor));
             }
 
-            return new CryptographyBehavior(behavior, cryptor.Cryptor());
+            return new CryptographyConfigBehavior(behavior, cryptor.Cryptor());
         }
         
         public static ICryptographyConfig Create(this ICryptographyConfigBehavior behavior)

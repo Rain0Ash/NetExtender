@@ -12,13 +12,13 @@ using NetExtender.Initializer.Types.Lists.Interfaces;
 
 namespace NetExtender.Initializer.Types.Lists
 {
-    public class IndexerList<T> : IIndexerList<T>, IReadOnlyIndexerList<T>
+    public class IndexList<T> : IIndexList<T>, IReadOnlyIndexList<T>
     {
         protected const Int32 MinimalIndexer = 4;
         
         protected List<T> Internal { get; }
         protected Indexer<T> Indexer { get; }
-        
+
         protected Boolean Rebuild
         {
             get
@@ -54,6 +54,14 @@ namespace NetExtender.Initializer.Types.Lists
             }
         }
 
+        public IEqualityComparer<T> Comparer
+        {
+            get
+            {
+                return Indexer.Comparer;
+            }
+        }
+
         Boolean ICollection<T>.IsReadOnly
         {
             get
@@ -62,19 +70,36 @@ namespace NetExtender.Initializer.Types.Lists
             }
         }
         
-        public IndexerList()
+        public IndexList()
         {
             Internal = new List<T>();
             Indexer = new Indexer<T>();
         }
         
-        public IndexerList(Int32 capacity)
+        public IndexList(IEqualityComparer<T>? comparer)
+        {
+            Internal = new List<T>();
+            Indexer = new Indexer<T>(comparer);
+        }
+        
+        public IndexList(Int32 capacity)
         {
             Internal = new List<T>(capacity);
             Indexer = new Indexer<T>();
         }
-        
-        public IndexerList(IEnumerable<T> collection)
+
+        public IndexList(Int32 capacity, IEqualityComparer<T>? comparer)
+        {
+            Internal = new List<T>(capacity);
+            Indexer = new Indexer<T>(comparer);
+        }
+
+        public IndexList(IEnumerable<T> collection)
+            : this(collection, null)
+        {
+        }
+
+        public IndexList(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
         {
             if (collection is null)
             {
@@ -82,13 +107,13 @@ namespace NetExtender.Initializer.Types.Lists
             }
 
             Internal = new List<T>(collection);
-            Indexer = new Indexer<T>();
+            Indexer = new Indexer<T>(comparer);
         }
 
-        protected IndexerList(List<T> collection)
+        protected IndexList(List<T> collection, IEqualityComparer<T>? comparer)
         {
             Internal = collection ?? throw new ArgumentNullException(nameof(collection));
-            Indexer = new Indexer<T>();
+            Indexer = new Indexer<T>(comparer);
         }
 
         public Int32 EnsureCapacity(Int32 capacity)
@@ -219,14 +244,14 @@ namespace NetExtender.Initializer.Types.Lists
             return Internal.Find(match);
         }
         
-        public IndexerList<T> FindAll(Predicate<T> match)
+        public IndexList<T> FindAll(Predicate<T> match)
         {
             if (match is null)
             {
                 throw new ArgumentNullException(nameof(match));
             }
 
-            return new IndexerList<T>(Internal.FindAll(match));
+            return new IndexList<T>(Internal.FindAll(match));
         }
         
         public Int32 FindIndex(Predicate<T> match)
@@ -414,19 +439,19 @@ namespace NetExtender.Initializer.Types.Lists
             Rebuild = true;
         }
 
-        public IndexerList<T> GetRange(Int32 index, Int32 count)
+        public IndexList<T> GetRange(Int32 index, Int32 count)
         {
-            return new IndexerList<T>(Internal.GetRange(index, count));
+            return new IndexList<T>(Internal.GetRange(index, count));
         }
 
-        public IndexerList<TOutput> ConvertAll<TOutput>(Converter<T, TOutput> converter)
+        public IndexList<TOutput> ConvertAll<TOutput>(Converter<T, TOutput> converter)
         {
             if (converter is null)
             {
                 throw new ArgumentNullException(nameof(converter));
             }
 
-            return new IndexerList<TOutput>(Internal.ConvertAll(converter));
+            return new IndexList<TOutput>(Internal.ConvertAll(converter));
         }
 
         public void ForEach(Action<T> action)

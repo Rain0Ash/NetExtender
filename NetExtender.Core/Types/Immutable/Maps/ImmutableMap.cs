@@ -58,6 +58,14 @@ namespace NetExtender.Types.Immutable.Maps
             }
         }
 
+        public IEqualityComparer<TKey> Comparer
+        {
+            get
+            {
+                return KeyComparer;
+            }
+        }
+
         public IEqualityComparer<TKey> KeyComparer
         {
             get

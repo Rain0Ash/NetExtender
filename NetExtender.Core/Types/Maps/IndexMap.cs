@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NetExtender.Initializer.Types.Lists;
 using NetExtender.Types.Maps.Interfaces;
 using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
@@ -12,72 +13,71 @@ namespace NetExtender.Types.Maps
 {
     public class IndexMap<TKey, TValue> : Map<TKey, TValue>, IIndexMap<TKey, TValue>, IReadOnlyIndexMap<TKey, TValue> where TKey : notnull where TValue : notnull
     {
-        private List<TKey> Order { get; }
+        private IndexList<TKey> Order { get; }
 
         public IndexMap()
         {
-            Order = new List<TKey>();
+            Order = new IndexList<TKey>(Comparer);
         }
 
         public IndexMap(IDictionary<TKey, TValue> dictionary)
-            : base(dictionary ?? throw new ArgumentNullException(nameof(dictionary)))
+            : base(dictionary)
         {
-            Order = new List<TKey>(dictionary.Keys);
+            Order = new IndexList<TKey>(Base.Keys, Comparer);
         }
 
         public IndexMap(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? comparer)
             : base(dictionary, comparer)
         {
-            Order = new List<TKey>(dictionary.Keys);
+            Order = new IndexList<TKey>(Base.Keys, Comparer);
         }
 
-        public IndexMap(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? keyComparer,
-            IEqualityComparer<TValue>? valueComparer)
-            : base(dictionary ?? throw new ArgumentNullException(nameof(dictionary)), keyComparer, valueComparer)
+        public IndexMap(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
+            : base(dictionary, keyComparer, valueComparer)
         {
-            Order = new List<TKey>(dictionary.Keys);
+            Order = new IndexList<TKey>(Base.Keys, Comparer);
         }
         
         public IndexMap(IEqualityComparer<TKey>? comparer)
             : base(comparer)
         {
-            Order = new List<TKey>();
+            Order = new IndexList<TKey>(Comparer);
         }
 
         public IndexMap(IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
             : base(keyComparer, valueComparer)
         {
-            Order = new List<TKey>();
+            Order = new IndexList<TKey>(Comparer);
         }
 
-        public IndexMap(IEnumerable<KeyValuePair<TKey, TValue>> collection)
-            : base(collection = collection?.Materialize() ?? throw new ArgumentNullException(nameof(collection)))
+        public IndexMap(IEnumerable<KeyValuePair<TKey, TValue>> source)
+            : base(source)
         {
-            Order = new List<TKey>(collection.Select(pair => pair.Key));
+            Order = new IndexList<TKey>(Base.Keys, Comparer);
         }
 
-        public IndexMap(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? comparer)
-            : base(collection = collection?.Materialize() ?? throw new ArgumentNullException(nameof(collection)), comparer)
+        public IndexMap(IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? comparer)
+            : base(source, comparer)
         {
-            Order = new List<TKey>(collection.Select(pair => pair.Key));
+            Order = new IndexList<TKey>(Base.Keys, Comparer);
         }
 
-        public IndexMap(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
-            : base(collection = collection?.Materialize() ?? throw new ArgumentNullException(nameof(collection)), keyComparer, valueComparer)
+        public IndexMap(IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
+            : base(source, keyComparer, valueComparer)
         {
-            Order = new List<TKey>(collection.Select(pair => pair.Key));
+            Order = new IndexList<TKey>(Base.Keys, Comparer);
         }
 
         public IndexMap(Int32 capacity)
             : base(capacity)
         {
-            Order = new List<TKey>(capacity);
+            Order = new IndexList<TKey>(capacity, Comparer);
         }
 
         public IndexMap(Int32 capacity, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
             : base(capacity, keyComparer, valueComparer)
         {
-            Order = new List<TKey>(capacity);
+            Order = new IndexList<TKey>(capacity, Comparer);
         }
         
         public override Int32 EnsureCapacity(Int32 capacity)
@@ -275,6 +275,16 @@ namespace NetExtender.Types.Maps
             base.Add(key, value);
             Order.Add(key);
         }
+        
+        public void Insert(KeyValuePair<TKey, TValue> item)
+        {
+            Insert(0, item);
+        }
+
+        public void Insert(Int32 index, KeyValuePair<TKey, TValue> item)
+        {
+            Insert(index, item.Key, item.Value);
+        }
 
         public void Insert(TKey key, TValue value)
         {
@@ -311,6 +321,16 @@ namespace NetExtender.Types.Maps
             base.Add(key, value);
             Order.Insert(index, key);
         }
+        
+        public void InsertByValue(KeyValuePair<TValue, TKey> item)
+        {
+            InsertByValue(0, item);
+        }
+
+        public void InsertByValue(Int32 index, KeyValuePair<TValue, TKey> item)
+        {
+            InsertByValue(index, item.Key, item.Value);
+        }
 
         public void InsertByValue(TValue key, TKey value)
         {
@@ -320,6 +340,16 @@ namespace NetExtender.Types.Maps
         public void InsertByValue(Int32 index, TValue key, TKey value)
         {
             Insert(index, value, key);
+        }
+        
+        public Boolean TryInsert(KeyValuePair<TKey, TValue> item)
+        {
+            return TryInsert(0, item);
+        }
+
+        public Boolean TryInsert(Int32 index, KeyValuePair<TKey, TValue> item)
+        {
+            return TryInsert(index, item.Key, item.Value);
         }
 
         public Boolean TryInsert(TKey key, TValue value)
@@ -351,6 +381,16 @@ namespace NetExtender.Types.Maps
 
             Insert(index, key, value);
             return true;
+        }
+        
+        public Boolean TryInsertByValue(KeyValuePair<TValue, TKey> item)
+        {
+            return TryInsertByValue(0, item);
+        }
+
+        public Boolean TryInsertByValue(Int32 index, KeyValuePair<TValue, TKey> item)
+        {
+            return TryInsertByValue(index, item.Key, item.Value);
         }
 
         public Boolean TryInsertByValue(TValue key, TKey value)

@@ -8,57 +8,79 @@ using System.Threading;
 
 namespace NetExtender.Types.Collections
 {
-    public class ThreadSafeEnumerator<T> : IEnumerator<T>
+    public class ThreadSafeEnumerator : IEnumerator, IDisposable
     {
-        private readonly IEnumerator<T> _inner;
-        private readonly Object? _sync;
-
-        public ThreadSafeEnumerator(IEnumerable<T> source)
+        private IEnumerator Enumerator { get; }
+        private Object? Synchronization { get; }
+        
+        Object? IEnumerator.Current
         {
-            _inner = source?.GetEnumerator() ?? throw new ArgumentNullException(nameof(source));
-
-            Monitor.Enter(_inner);
-        }
-
-        public ThreadSafeEnumerator(IEnumerable<T> source, Object sync)
-            : this(source?.GetEnumerator() ?? throw new ArgumentNullException(nameof(source)), sync)
-        {
-        }
-
-        public ThreadSafeEnumerator(IEnumerator<T> inner, Object sync)
-        {
-            _inner = inner ?? throw new ArgumentNullException(nameof(inner));
-            _sync = sync ?? throw new ArgumentNullException(nameof(sync));
-
-            Monitor.Enter(_sync);
-        }
-
-        public void Dispose()
-        {
-            if (_sync is null)
+            get
             {
-                Monitor.Exit(_inner);
-                return;
+                return Enumerator.Current;
             }
-            
-            Monitor.Exit(_sync);
         }
 
+        public ThreadSafeEnumerator(IEnumerable source)
+        {
+            Enumerator = source?.GetEnumerator() ?? throw new ArgumentNullException(nameof(source));
+            Monitor.Enter(Enumerator);
+        }
+
+        public ThreadSafeEnumerator(IEnumerable source, Object synchronization)
+            : this(source?.GetEnumerator() ?? throw new ArgumentNullException(nameof(source)), synchronization)
+        {
+        }
+
+        public ThreadSafeEnumerator(IEnumerator source, Object synchronization)
+        {
+            Enumerator = source ?? throw new ArgumentNullException(nameof(source));
+            Synchronization = synchronization ?? throw new ArgumentNullException(nameof(synchronization));
+            Monitor.Enter(Synchronization);
+        }
+        
         public Boolean MoveNext()
         {
-            return _inner.MoveNext();
+            return Enumerator.MoveNext();
         }
 
         public void Reset()
         {
-            _inner.Reset();
+            Enumerator.Reset();
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected void Dispose(Boolean disposing)
+        {
+            Monitor.Exit(Synchronization ?? Enumerator);
+
+            if (disposing)
+            {
+                (Enumerator as IDisposable)?.Dispose();
+            }
+        }
+
+        ~ThreadSafeEnumerator()
+        {
+            Dispose(false);
+        }
+    }
+    
+    public class ThreadSafeEnumerator<T> : IEnumerator<T>
+    {
+        private IEnumerator<T> Enumerator { get; }
+        private Object? Synchronization { get; }
+        
         public T Current
         {
             get
             {
-                return _inner.Current;
+                return Enumerator.Current;
             }
         }
 
@@ -68,6 +90,56 @@ namespace NetExtender.Types.Collections
             {
                 return Current;
             }
+        }
+
+        public ThreadSafeEnumerator(IEnumerable<T> source)
+        {
+            Enumerator = source?.GetEnumerator() ?? throw new ArgumentNullException(nameof(source));
+            Monitor.Enter(Enumerator);
+        }
+
+        public ThreadSafeEnumerator(IEnumerable<T> source, Object synchronization)
+            : this(source?.GetEnumerator() ?? throw new ArgumentNullException(nameof(source)), synchronization)
+        {
+        }
+
+        public ThreadSafeEnumerator(IEnumerator<T> inner, Object synchronization)
+        {
+            Enumerator = inner ?? throw new ArgumentNullException(nameof(inner));
+            Synchronization = synchronization ?? throw new ArgumentNullException(nameof(synchronization));
+
+            Monitor.Enter(Synchronization);
+        }
+        
+        public Boolean MoveNext()
+        {
+            return Enumerator.MoveNext();
+        }
+
+        public void Reset()
+        {
+            Enumerator.Reset();
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected void Dispose(Boolean disposing)
+        {
+            Monitor.Exit(Synchronization ?? Enumerator);
+
+            if (disposing)
+            {
+                Enumerator?.Dispose();
+            }
+        }
+
+        ~ThreadSafeEnumerator()
+        {
+            Dispose(false);
         }
     }
 }

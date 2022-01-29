@@ -3,10 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NetExtender.Configuration.Behavior;
 using NetExtender.Configuration.Common;
+using NetExtender.Initializer.Types.Environments;
+using NetExtender.Types.Dictionaries;
+using NetExtender.Utilities.Application;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Environment
@@ -78,7 +82,7 @@ namespace NetExtender.Configuration.Environment
             try
             {
                 key = Join(key, sections);
-                return key is not null ? System.Environment.GetEnvironmentVariable(key, Target) : null;
+                return key is not null ? EnvironmentUtilities.TryGetEnvironmentVariable(key, Target) : null;
             }
             catch (Exception)
             {
@@ -104,8 +108,7 @@ namespace NetExtender.Configuration.Environment
                         return false;
                     }
                     
-                    System.Environment.SetEnvironmentVariable(key, value, Target);
-                    return true;
+                    return EnvironmentUtilities.TrySetEnvironmentVariable(key, value, Target);
                 }
                 
                 sections = ToSection(sections).AsIImmutableList();
@@ -122,7 +125,7 @@ namespace NetExtender.Configuration.Environment
                     return false;
                 }
                 
-                System.Environment.SetEnvironmentVariable(key, value, Target);
+                EnvironmentUtilities.TrySetEnvironmentVariable(key, value, Target);
 
                 if (!IsIgnoreEvent)
                 {
@@ -142,9 +145,9 @@ namespace NetExtender.Configuration.Environment
             return new ConfigurationEntry(entry);
         }
         
-        protected virtual ConfigurationValueEntry ValueEntriesConvert(String entry)
+        protected virtual ConfigurationValueEntry ValueEntriesConvert(EnvironmentValueEntry entry)
         {
-            return new ConfigurationValueEntry(entry, Get(entry, null));
+            return new ConfigurationValueEntry(entry.Key, entry.Value);
         }
 
         public override ConfigurationEntry[]? GetExists(IEnumerable<String>? sections)
@@ -153,7 +156,7 @@ namespace NetExtender.Configuration.Environment
             {
                 if (sections is null)
                 {
-                    return System.Environment.GetEnvironmentVariables(Target).Keys.OfType<String>().Select(EntriesConvert).ToArray();
+                    return EnvironmentUtilities.TryGetExistsEnvironmentVariables(Target)?.Select(EntriesConvert).ToArray();
                 }
 
                 sections = sections.Materialize(out Int32 count);
@@ -163,7 +166,7 @@ namespace NetExtender.Configuration.Environment
                     return Deconstruct(entry, out _, out IEnumerable<String>? sequence) && (sequence?.SequencePartialEqual(sections) ?? count <= 0);
                 }
 
-                return System.Environment.GetEnvironmentVariables(Target).Keys.OfType<String>().Where(IsEqualSections).Select(EntriesConvert).ToArray();
+                return EnvironmentUtilities.TryGetExistsEnvironmentVariables(Target)?.Where(IsEqualSections).Select(EntriesConvert).ToArray();
             }
             catch (Exception)
             {
@@ -177,17 +180,17 @@ namespace NetExtender.Configuration.Environment
             {
                 if (sections is null)
                 {
-                    return System.Environment.GetEnvironmentVariables(Target).Keys.OfType<String>().Select(ValueEntriesConvert).ToArray();
+                    return EnvironmentUtilities.TryGetExistsValuesEnvironmentVariables(Target)?.Select(ValueEntriesConvert).ToArray();
                 }
 
                 sections = sections.Materialize(out Int32 count);
                 
-                Boolean IsEqualSections(String entry)
+                Boolean IsEqualSections(EnvironmentValueEntry entry)
                 {
-                    return Deconstruct(entry, out _, out IEnumerable<String>? sequence) && (sequence?.SequencePartialEqual(sections) ?? count <= 0);
+                    return Deconstruct(entry.Key, out _, out IEnumerable<String>? sequence) && (sequence?.SequencePartialEqual(sections) ?? count <= 0);
                 }
 
-                return System.Environment.GetEnvironmentVariables(Target).Keys.OfType<String>().Where(IsEqualSections).Select(ValueEntriesConvert).ToArray();
+                return EnvironmentUtilities.TryGetExistsValuesEnvironmentVariables(Target)?.Where(IsEqualSections).Select(ValueEntriesConvert).ToArray();
             }
             catch (Exception)
             {
@@ -198,6 +201,187 @@ namespace NetExtender.Configuration.Environment
         public override Boolean Reload()
         {
             return false;
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public override Boolean Merge(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            if (IsReadOnly)
+            {
+                return false;
+            }
+            
+            if (entries is null)
+            {
+                return false;
+            }
+
+            ConfigurationValueEntry[]? values = GetExistsValues(null);
+
+            if (values is null || values.Length <= 0)
+            {
+                return entries.DistinctLastBy(item => (ConfigurationEntry) item).Aggregate(false, (current, entry) => current | Set(entry.Key, entry.Value, entry.Sections));
+            }
+
+            IndexDictionary<ConfigurationEntry, ConfigurationValueEntry> dictionary = values.ToIndexDictionary(item => (ConfigurationEntry) item, item => item);
+            List<ConfigurationValueEntry>? changes = !IsIgnoreEvent ? new List<ConfigurationValueEntry>(dictionary.Count) : null;
+
+            foreach (ConfigurationValueEntry entry in entries.DistinctLastBy(item => (ConfigurationEntry) item))
+            {
+                if (entry.Key is null)
+                {
+                    continue;
+                }
+
+                if (!dictionary.TryGetValue(entry, out ConfigurationValueEntry result))
+                {
+                    if (entry.Value is null)
+                    {
+                        continue;
+                    }
+
+                    if (!EnvironmentUtilities.TrySetEnvironmentVariable(Join(entry.Key, entry.Sections), entry.Value, Target))
+                    {
+                        continue;
+                    }
+                    
+                    changes?.Add(entry);
+                    continue;
+                }
+
+                if (entry.Value == result.Value)
+                {
+                    continue;
+                }
+                
+                if (entry.Value is null)
+                {
+                    if (!EnvironmentUtilities.TryRemoveEnvironmentVariable(Join(entry.Key, entry.Sections), Target))
+                    {
+                        continue;
+                    }
+                    
+                    changes?.Add(entry);
+                    continue;
+                }
+
+                if (!EnvironmentUtilities.TrySetEnvironmentVariable(Join(entry.Key, entry.Sections), entry.Value, Target))
+                {
+                    continue;
+                }
+                
+                changes?.Add(entry);
+            }
+
+            if (changes is null)
+            {
+                return true;
+            }
+
+            foreach (ConfigurationValueEntry change in changes)
+            {
+                OnChanged(change);
+            }
+
+            return true;
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public override Boolean Replace(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            if (IsReadOnly)
+            {
+                return false;
+            }
+            
+            if (entries is null)
+            {
+                return false;
+            }
+
+            ConfigurationValueEntry[]? values = GetExistsValues(null);
+
+            if (values is null || values.Length <= 0)
+            {
+                return Merge(entries);
+            }
+            
+            IndexDictionary<ConfigurationEntry, ConfigurationValueEntry> dictionary = values.ToIndexDictionary(item => (ConfigurationEntry) item, item => item);
+            List<ConfigurationValueEntry>? changes = !IsIgnoreEvent ? new List<ConfigurationValueEntry>(dictionary.Count) : null;
+
+            foreach (ConfigurationValueEntry entry in entries.DistinctLastBy(item => (ConfigurationEntry) item))
+            {
+                if (entry.Key is null)
+                {
+                    continue;
+                }
+                
+                if (!dictionary.Remove(entry, out ConfigurationValueEntry result))
+                {
+                    if (entry.Value is null)
+                    {
+                        continue;
+                    }
+
+                    if (!EnvironmentUtilities.TrySetEnvironmentVariable(Join(entry.Key, entry.Sections), entry.Value, Target))
+                    {
+                        continue;
+                    }
+                    
+                    changes?.Add(entry);
+                    continue;
+                }
+
+                if (entry.Value == result.Value)
+                {
+                    continue;
+                }
+                
+                if (entry.Value is null)
+                {
+                    if (!EnvironmentUtilities.TryRemoveEnvironmentVariable(Join(entry.Key, entry.Sections), Target))
+                    {
+                        continue;
+                    }
+                    
+                    changes?.Add(entry);
+                    continue;
+                }
+
+                if (!EnvironmentUtilities.TrySetEnvironmentVariable(Join(entry.Key, entry.Sections), entry.Value, Target))
+                {
+                    continue;
+                }
+                
+                changes?.Add(entry);
+            }
+
+            foreach ((String? key, ImmutableArray<String> sections) in dictionary.Values())
+            {
+                if (key is null)
+                {
+                    continue;
+                }
+                
+                if (!EnvironmentUtilities.TryRemoveEnvironmentVariable(Join(key, sections), Target))
+                {
+                    continue;
+                }
+                
+                changes?.Add(new ConfigurationValueEntry(key, null, sections));
+            }
+
+            if (changes is null)
+            {
+                return true;
+            }
+
+            foreach (ConfigurationValueEntry change in changes)
+            {
+                OnChanged(change);
+            }
+
+            return true;
         }
     }
 }

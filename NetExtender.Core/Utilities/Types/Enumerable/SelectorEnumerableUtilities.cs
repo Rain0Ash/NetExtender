@@ -1699,5 +1699,300 @@ namespace NetExtender.Utilities.Types
             yield return result;
         }
 #endif
+
+        public static IEnumerable<Int32> Chunk<T>(this IEnumerable<T> source, T[] chunk)
+        {
+            return Chunk(source, chunk, 0);
+        }
+
+        public static IEnumerable<Int32> Chunk<T>(this IEnumerable<T> source, T[] chunk, Int32 length)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (chunk is null)
+            {
+                throw new ArgumentNullException(nameof(chunk));
+            }
+
+            if (length > chunk.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length));
+            }
+            
+            if (chunk.Length <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(chunk));
+            }
+
+            length = length <= 0 ? chunk.Length : length;
+            
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                chunk[0] = enumerator.Current;
+
+                Int32 i;
+                for (i = 1; i < length && enumerator.MoveNext(); i++)
+                {
+                    chunk[i] = enumerator.Current;
+                }
+
+                if (i >= chunk.Length)
+                {
+                    yield return i;
+                    continue;
+                }
+
+                yield return i;
+                yield break;
+            }
+        }
+
+        public static IEnumerable<Int32> ZipChunk<T1, T2>(this IEnumerable<T1> first, IEnumerable<T2> second, T1[] chunk1, T2[] chunk2)
+        {
+            return ZipChunk(first, second, chunk1, chunk2, 0);
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public static IEnumerable<Int32> ZipChunk<T1, T2>(this IEnumerable<T1> first, IEnumerable<T2> second, T1[] chunk1, T2[] chunk2, Int32 length)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+
+            if (chunk1 is null)
+            {
+                throw new ArgumentNullException(nameof(chunk1));
+            }
+
+            if (chunk2 is null)
+            {
+                throw new ArgumentNullException(nameof(chunk2));
+            }
+
+            Int32 chunklength = Math.Min(chunk1.Length, chunk2.Length);
+            
+            if (length > chunklength)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length));
+            }
+            
+            if (chunklength <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(chunklength));
+            }
+
+            length = length <= 0 ? chunklength : length;
+            
+            using IEnumerator<T1> enumerator1 = first.GetEnumerator();
+            using IEnumerator<T2> enumerator2 = second.GetEnumerator();
+
+            while (enumerator1.MoveNext() && enumerator2.MoveNext())
+            {
+                chunk1[0] = enumerator1.Current;
+                chunk2[0] = enumerator2.Current;
+
+                Int32 i;
+                for (i = 1; i < length && enumerator1.MoveNext() && enumerator2.MoveNext(); i++)
+                {
+                    chunk1[i] = enumerator1.Current;
+                    chunk2[i] = enumerator2.Current;
+                }
+
+                if (i >= length)
+                {
+                    yield return i;
+                    continue;
+                }
+
+                yield return i;
+                yield break;
+            }
+        }
+
+        public static IEnumerable<Int32> ZipChunk<T1, T2, T3>(this IEnumerable<T1> first, IEnumerable<T2> second, IEnumerable<T3> third, T1[] chunk1, T2[] chunk2, T3[] chunk3)
+        {
+            return ZipChunk(first, second, third, chunk1, chunk2, chunk3, 0);
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public static IEnumerable<Int32> ZipChunk<T1, T2, T3>(this IEnumerable<T1> first, IEnumerable<T2> second, IEnumerable<T3> third, T1[] chunk1, T2[] chunk2, T3[] chunk3, Int32 length)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+
+            if (third is null)
+            {
+                throw new ArgumentNullException(nameof(third));
+            }
+
+            if (chunk1 is null)
+            {
+                throw new ArgumentNullException(nameof(chunk1));
+            }
+
+            if (chunk2 is null)
+            {
+                throw new ArgumentNullException(nameof(chunk2));
+            }
+
+            if (chunk3 is null)
+            {
+                throw new ArgumentNullException(nameof(chunk3));
+            }
+
+            Int32 chunklength = Math.Min(chunk1.Length, Math.Min(chunk2.Length, chunk3.Length));
+            
+            if (length > chunklength)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length));
+            }
+            
+            if (chunklength <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(chunklength));
+            }
+
+            length = length <= 0 ? chunklength : length;
+            
+            using IEnumerator<T1> enumerator1 = first.GetEnumerator();
+            using IEnumerator<T2> enumerator2 = second.GetEnumerator();
+            using IEnumerator<T3> enumerator3 = third.GetEnumerator();
+
+            while (enumerator1.MoveNext() && enumerator2.MoveNext() && enumerator3.MoveNext())
+            {
+                chunk1[0] = enumerator1.Current;
+                chunk2[0] = enumerator2.Current;
+                chunk3[0] = enumerator3.Current;
+
+                Int32 i;
+                for (i = 1; i < length && enumerator1.MoveNext() && enumerator2.MoveNext() && enumerator3.MoveNext(); i++)
+                {
+                    chunk1[i] = enumerator1.Current;
+                    chunk2[i] = enumerator2.Current;
+                    chunk3[i] = enumerator3.Current;
+                }
+
+                if (i >= length)
+                {
+                    yield return i;
+                    continue;
+                }
+
+                yield return i;
+                yield break;
+            }
+        }
+
+        public static IEnumerable<Int32> ZipChunk<T1, T2, T3, T4>(this IEnumerable<T1> first, IEnumerable<T2> second, IEnumerable<T3> third, IEnumerable<T4> fourth,
+            T1[] chunk1, T2[] chunk2, T3[] chunk3, T4[] chunk4)
+        {
+            return ZipChunk(first, second, third, fourth, chunk1, chunk2, chunk3, chunk4, 0);
+        }
+        
+        // ReSharper disable once CognitiveComplexity
+        public static IEnumerable<Int32> ZipChunk<T1, T2, T3, T4>(this IEnumerable<T1> first, IEnumerable<T2> second, IEnumerable<T3> third, IEnumerable<T4> fourth, T1[] chunk1, T2[] chunk2, T3[] chunk3, T4[] chunk4, Int32 length)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+
+            if (third is null)
+            {
+                throw new ArgumentNullException(nameof(third));
+            }
+
+            if (fourth is null)
+            {
+                throw new ArgumentNullException(nameof(fourth));
+            }
+
+            if (chunk1 is null)
+            {
+                throw new ArgumentNullException(nameof(chunk1));
+            }
+
+            if (chunk2 is null)
+            {
+                throw new ArgumentNullException(nameof(chunk2));
+            }
+
+            if (chunk3 is null)
+            {
+                throw new ArgumentNullException(nameof(chunk3));
+            }
+
+            if (chunk4 is null)
+            {
+                throw new ArgumentNullException(nameof(chunk4));
+            }
+
+            Int32 chunklength = Math.Min(Math.Min(chunk1.Length, chunk2.Length), Math.Min(chunk3.Length, chunk4.Length));
+            
+            if (length > chunklength)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length));
+            }
+            
+            if (chunklength <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(chunklength));
+            }
+
+            length = length <= 0 ? chunklength : length;
+            
+            using IEnumerator<T1> enumerator1 = first.GetEnumerator();
+            using IEnumerator<T2> enumerator2 = second.GetEnumerator();
+            using IEnumerator<T3> enumerator3 = third.GetEnumerator();
+            using IEnumerator<T4> enumerator4 = fourth.GetEnumerator();
+
+            while (enumerator1.MoveNext() && enumerator2.MoveNext() && enumerator3.MoveNext() && enumerator4.MoveNext())
+            {
+                chunk1[0] = enumerator1.Current;
+                chunk2[0] = enumerator2.Current;
+                chunk2[0] = enumerator2.Current;
+                chunk4[0] = enumerator4.Current;
+
+                Int32 i;
+                for (i = 1; i < length && enumerator1.MoveNext() && enumerator2.MoveNext() && enumerator3.MoveNext() && enumerator4.MoveNext(); i++)
+                {
+                    chunk1[i] = enumerator1.Current;
+                    chunk2[i] = enumerator2.Current;
+                    chunk3[i] = enumerator3.Current;
+                    chunk4[i] = enumerator4.Current;
+                }
+
+                if (i >= length)
+                {
+                    yield return i;
+                    continue;
+                }
+
+                yield return i;
+                yield break;
+            }
+        }
     }
 }

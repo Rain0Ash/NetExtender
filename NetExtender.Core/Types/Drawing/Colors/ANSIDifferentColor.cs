@@ -23,14 +23,14 @@ namespace NetExtender.Types.Drawing.Colors
             return new ANSIDifferentColor(color.R, color.G, color.B, color.R, color.G, color.B);
         }
 
-        public static Boolean operator ==(ANSIDifferentColor left, ANSIDifferentColor right)
+        public static Boolean operator ==(ANSIDifferentColor first, ANSIDifferentColor second)
         {
-            return left.Equals(right);
+            return first.Equals(second);
         }
 
-        public static Boolean operator !=(ANSIDifferentColor left, ANSIDifferentColor right)
+        public static Boolean operator !=(ANSIDifferentColor first, ANSIDifferentColor second)
         {
-            return !(left == right);
+            return !(first == second);
         }
 
         public ColorType Type

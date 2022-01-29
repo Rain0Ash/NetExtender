@@ -31,6 +31,9 @@ namespace NetExtender.Configuration.Interfaces
         public Task<Boolean> KeyExistAsync(String? key, IEnumerable<String>? sections);
         public Task<Boolean> KeyExistAsync(String? key, CancellationToken token, params String[]? sections);
         public Task<Boolean> KeyExistAsync(String? key, IEnumerable<String>? sections, CancellationToken token);
+        public ConfigurationValueEntry[]? Difference(IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<ConfigurationValueEntry[]?> DifferenceAsync(IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<ConfigurationValueEntry[]?> DifferenceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token);
         public void CopyTo(IConfig config);
         public Task CopyToAsync(IConfig config);
         public Task CopyToAsync(IConfig config, CancellationToken token);

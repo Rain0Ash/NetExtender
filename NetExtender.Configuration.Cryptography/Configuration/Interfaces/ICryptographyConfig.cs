@@ -108,5 +108,23 @@ namespace NetExtender.Configuration.Cryptography.Interfaces
         public Task<ConfigurationValueEntry[]?> GetExistsValuesRawAsync(CancellationToken token);
         public Task<ConfigurationValueEntry[]?> GetExistsValuesRawAsync(IEnumerable<String>? sections);
         public Task<ConfigurationValueEntry[]?> GetExistsValuesRawAsync(IEnumerable<String>? sections, CancellationToken token);
+        public Boolean Merge(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<Boolean> MergeAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<Boolean> MergeAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token);
+        public Boolean MergeRaw(IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<Boolean> MergeRawAsync(IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<Boolean> MergeRawAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token);
+        public Boolean Replace(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<Boolean> ReplaceAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<Boolean> ReplaceAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token);
+        public Boolean ReplaceRaw(IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<Boolean> ReplaceRawAsync(IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<Boolean> ReplaceRawAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token);
+        public ConfigurationValueEntry[]? Difference(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<ConfigurationValueEntry[]?> DifferenceAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<ConfigurationValueEntry[]?> DifferenceAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token);
+        public ConfigurationValueEntry[]? DifferenceRaw(IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<ConfigurationValueEntry[]?> DifferenceRawAsync(IEnumerable<ConfigurationValueEntry>? entries);
+        public Task<ConfigurationValueEntry[]?> DifferenceRawAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token);
     }
 }

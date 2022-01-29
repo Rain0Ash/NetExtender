@@ -33,6 +33,166 @@ namespace NetExtender.Utilities.Types
     {
         public const EscapeType DefaultEscapeType = EscapeType.Null;
 
+        [return: NotNullIfNotNull("value")]
+        public static Object? ChangeType(Object? value, Type type)
+        {
+            return System.Convert.ChangeType(value, type);
+        }
+
+        [return: NotNullIfNotNull("value")]
+        public static Object? ChangeType(Object? value, Type type, IFormatProvider? provider)
+        {
+            return System.Convert.ChangeType(value, type, provider);
+        }
+
+        [return: NotNullIfNotNull("value")]
+        public static Object? ChangeType(Object? value, TypeCode type)
+        {
+            return System.Convert.ChangeType(value, type);
+        }
+
+        [return: NotNullIfNotNull("value")]
+        public static Object? ChangeType(Object? value, TypeCode type, IFormatProvider? provider)
+        {
+            return System.Convert.ChangeType(value, type, provider);
+        }
+
+        [return: NotNullIfNotNull("value")]
+        public static T? ChangeType<T>(Object? value)
+        {
+            return (T?) System.Convert.ChangeType(value, typeof(T));
+        }
+        
+        [return: NotNullIfNotNull("value")]
+        public static T? ChangeType<T>(Object? value, IFormatProvider? provider)
+        {
+            return (T?) System.Convert.ChangeType(value, typeof(T), provider);
+        }
+        
+        // ReSharper disable once RedundantNullableFlowAttribute
+        public static Boolean TryChangeType(Object? value, Type type, [MaybeNullWhen(false)] [NotNullIfNotNull("value")] out Object? result)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            try
+            {
+                result = System.Convert.ChangeType(value, type);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        // ReSharper disable once RedundantNullableFlowAttribute
+        public static Boolean TryChangeType(Object? value, Type type, IFormatProvider? provider, [MaybeNullWhen(false)] [NotNullIfNotNull("value")] out Object? result)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            try
+            {
+                result = System.Convert.ChangeType(value, type, provider);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        // ReSharper disable once RedundantNullableFlowAttribute
+        public static Boolean TryChangeType(Object? value, TypeCode type, [MaybeNullWhen(false)] [NotNullIfNotNull("value")] out Object? result)
+        {
+            try
+            {
+                result = System.Convert.ChangeType(value, type);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        // ReSharper disable once RedundantNullableFlowAttribute
+        public static Boolean TryChangeType(Object? value, TypeCode type, IFormatProvider? provider, [MaybeNullWhen(false)] [NotNullIfNotNull("value")] out Object? result)
+        {
+            try
+            {
+                result = System.Convert.ChangeType(value, type, provider);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        public static Boolean TryChangeType<T>(Object? value, [NotNullIfNotNull("value")] out T? result)
+        {
+            if (TryChangeType(value, typeof(T), out Object? convert))
+            {
+                result = convert is T cast ? cast : default;
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
+        
+        public static Boolean TryChangeType<T>(Object? value, IFormatProvider? provider, [NotNullIfNotNull("value")] out T? result)
+        {
+            if (TryChangeType(value, typeof(T), provider, out Object? convert))
+            {
+                result = convert is T cast ? cast : default;
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
+
+        public static Boolean IsChangeType(Object? value, Type type)
+        {
+            return TryChangeType(value, type, out _);
+        }
+        
+        public static Boolean IsChangeType(Object? value, Type type, IFormatProvider? provider)
+        {
+            return TryChangeType(value, type, provider, out _);
+        }
+        
+        public static Boolean IsChangeType(Object? value, TypeCode type)
+        {
+            return TryChangeType(value, type, out _);
+        }
+        
+        public static Boolean IsChangeType(Object? value, TypeCode type, IFormatProvider? provider)
+        {
+            return TryChangeType(value, type, provider, out _);
+        }
+        
+        public static Boolean IsChangeType<T>(Object? value)
+        {
+            return TryChangeType<T>(value, out _);
+        }
+        
+        public static Boolean IsChangeType<T>(Object? value, IFormatProvider? provider)
+        {
+            return TryChangeType<T>(value, provider, out _);
+        }
+
         public static T CastConvert<T>(this Object? value)
         {
             if (!TryConvert(value, out T? result))
@@ -484,7 +644,8 @@ namespace NetExtender.Utilities.Types
             return GetStringUnknownInternal(value, escape, provider, out String? result) ? result : value?.ToString();
         }
         
-        private static Boolean GetStringUnknownInternal(Object? value, EscapeType escape, IFormatProvider? provider, [MaybeNullWhen(false)] out String result)
+        // ReSharper disable once CognitiveComplexity
+        private static Boolean GetStringUnknownInternal(Object? value, EscapeType escape, IFormatProvider? provider, out String? result)
         {
             if (value is null)
             {
@@ -492,16 +653,73 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
             
-            if (value.GetType().TryGetGenericTypeDefinition() == KeyValuePairType)
-            {
-                dynamic item = value;
-                result = $"{{{((Object) item.Key).GetString(escape, provider)} : {((Object) item.Value).GetString(escape, provider)}}}";
-                return true;
-            }
-
             if (value is DictionaryEntry entry)
             {
                 result = $"{{{entry.Key.GetString(escape, provider)} : {entry.Value.GetString(escape, provider)}}}";
+                return true;
+            }
+
+            Type type = value.GetType();
+            Type generic = type.TryGetGenericTypeDefinition();
+            dynamic item = value;
+
+            if (generic == GenericTypeUtilities.KeyValuePairType)
+            {
+                result = $"{{{GetString((Object) item.Key, escape, provider)} : {GetString((Object) item.Value, escape, provider)}}}";
+                return true;
+            }
+
+            if (generic == GenericTypeUtilities.MaybeType)
+            {
+                result = GetString(item.HasValue ? (Object) item.Value : null, escape, provider);
+            }
+            
+            if (generic == GenericTypeUtilities.NullMaybeType)
+            {
+                result = GetString((Object) item.Value, escape, provider);
+                return true;
+            }
+            
+            if (GenericTypeUtilities.IsTuple(type, out Int32 count))
+            {
+                String? Selector(Int32 index)
+                {
+                    dynamic tuple = item;
+                    
+                    while (true)
+                    {
+                        switch (index)
+                        {
+                            case 0:
+                                return GetString((Object) tuple.Item1, escape, provider);
+                            case 1:
+                                return GetString((Object) tuple.Item2, escape, provider);
+                            case 2:
+                                return GetString((Object) tuple.Item3, escape, provider);
+                            case 3:
+                                return GetString((Object) tuple.Item4, escape, provider);
+                            case 4:
+                                return GetString((Object) tuple.Item5, escape, provider);
+                            case 5:
+                                return GetString((Object) tuple.Item6, escape, provider);
+                            case 6:
+                                return GetString((Object) tuple.Item7, escape, provider);
+                            case 7:
+                                if (!GenericTypeUtilities.IsTuple((Type) tuple.Rest.GetType()))
+                                {
+                                    return GetString((Object) tuple.Rest, escape, provider);
+                                }
+                                
+                                goto default;
+                            default:
+                                tuple = tuple.Rest;
+                                index -= 7;
+                                continue;
+                        }
+                    }
+                }
+
+                result = $"({String.Join(", ", MathUtilities.Range(0, count).Select(Selector).Select(GetString))})";
                 return true;
             }
 
@@ -519,7 +737,8 @@ namespace NetExtender.Utilities.Types
             return GetStringUnknownInternal(value, escape, format, provider, out String? result) ? result : value?.ToString();
         }
         
-        private static Boolean GetStringUnknownInternal(Object? value, EscapeType escape, String? format, IFormatProvider? provider, [MaybeNullWhen(false)] out String result)
+        // ReSharper disable once CognitiveComplexity
+        private static Boolean GetStringUnknownInternal(Object? value, EscapeType escape, String? format, IFormatProvider? provider, out String? result)
         {
             if (value is null)
             {
@@ -527,16 +746,73 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
             
-            if (value.GetType().TryGetGenericTypeDefinition() == KeyValuePairType)
-            {
-                dynamic item = value;
-                result = $"{{{((Object) item.Key).GetString(escape, format, provider)} : {((Object) item.Value).GetString(escape, format, provider)}}}";
-                return true;
-            }
-
             if (value is DictionaryEntry entry)
             {
                 result = $"{{{entry.Key.GetString(escape, format, provider)} : {entry.Value.GetString(escape, format, provider)}}}";
+                return true;
+            }
+
+            Type type = value.GetType();
+            Type generic = type.TryGetGenericTypeDefinition();
+            dynamic item = value;
+
+            if (generic == GenericTypeUtilities.KeyValuePairType)
+            {
+                result = $"{{{GetString((Object) item.Key, escape, format, provider)} : {GetString((Object) item.Value, escape, format, provider)}}}";
+                return true;
+            }
+
+            if (generic == GenericTypeUtilities.MaybeType)
+            {
+                result = GetString(item.HasValue ? (Object) item.Value : null, escape, format, provider);
+            }
+            
+            if (generic == GenericTypeUtilities.NullMaybeType)
+            {
+                result = GetString((Object) item.Value, escape, format, provider);
+                return true;
+            }
+
+            if (GenericTypeUtilities.IsTuple(type, out Int32 count))
+            {
+                String? Selector(Int32 index)
+                {
+                    dynamic tuple = item;
+                    
+                    while (true)
+                    {
+                        switch (index)
+                        {
+                            case 0:
+                                return GetString((Object) tuple.Item1, escape, format, provider);
+                            case 1:
+                                return GetString((Object) tuple.Item2, escape, format, provider);
+                            case 2:
+                                return GetString((Object) tuple.Item3, escape, format, provider);
+                            case 3:
+                                return GetString((Object) tuple.Item4, escape, format, provider);
+                            case 4:
+                                return GetString((Object) tuple.Item5, escape, format, provider);
+                            case 5:
+                                return GetString((Object) tuple.Item6, escape, format, provider);
+                            case 6:
+                                return GetString((Object) tuple.Item7, escape, format, provider);
+                            case 7:
+                                if (!GenericTypeUtilities.IsTuple((Type) tuple.Rest.GetType()))
+                                {
+                                    return GetString((Object) tuple.Rest, escape, format, provider);
+                                }
+                                
+                                goto default;
+                            default:
+                                tuple = tuple.Rest;
+                                index -= 7;
+                                continue;
+                        }
+                    }
+                }
+
+                result = $"({String.Join(", ", MathUtilities.Range(0, count).Select(Selector).Select(GetString))})";
                 return true;
             }
 
@@ -970,6 +1246,8 @@ namespace NetExtender.Utilities.Types
                             return source.SetGetString(escape, provider);
                         case CollectionType.Dictionary:
                         case CollectionType.GenericDictionary:
+                        case CollectionType.Map:
+                        case CollectionType.GenericMap:
                             return source.DictionaryGetString(escape, provider);
                         default:
                             if (source is IEnumerable<IEnumerable> jagged)
@@ -1011,6 +1289,8 @@ namespace NetExtender.Utilities.Types
                             return source.SetGetString(escape, format, provider);
                         case CollectionType.Dictionary:
                         case CollectionType.GenericDictionary:
+                        case CollectionType.Map:
+                        case CollectionType.GenericMap:
                             return source.DictionaryGetString(escape, format, provider);
                         default:
                             if (source is IEnumerable<IEnumerable> jagged)
@@ -1022,8 +1302,6 @@ namespace NetExtender.Utilities.Types
                     }
             }
         }
-
-        private static Type KeyValuePairType { get; } = typeof(KeyValuePair<,>);
 
         private static IEnumerable<String?> PairGetString(this IEnumerable dictionary, EscapeType escape, IFormatProvider? provider)
         {

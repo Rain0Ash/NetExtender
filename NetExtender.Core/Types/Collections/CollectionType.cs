@@ -22,9 +22,11 @@ namespace NetExtender.Types.Collections
         GenericSet = Set | Generic,
         Dictionary = 64 | Collection,
         GenericDictionary = Dictionary | Generic,
-        Stack = 128 | Collection,
+        Map = 128 | Collection,
+        GenericMap = Map | Generic,
+        Stack = 256 | Collection,
         GenericStack = Stack | Generic,
-        Queue = 256 | Collection,
+        Queue = 512 | Collection,
         GenericQueue = Queue | Generic,
     }
 }

@@ -23,14 +23,14 @@ namespace NetExtender.Types.Drawing.Colors
             return new HEXColor(color);
         }
         
-        public static Boolean operator ==(HEXColor left, HEXColor right)
+        public static Boolean operator ==(HEXColor first, HEXColor second)
         {
-            return left.Equals(right);
+            return first.Equals(second);
         }
 
-        public static Boolean operator !=(HEXColor left, HEXColor right)
+        public static Boolean operator !=(HEXColor first, HEXColor second)
         {
-            return !(left == right);
+            return !(first == second);
         }
 
         public ColorType Type

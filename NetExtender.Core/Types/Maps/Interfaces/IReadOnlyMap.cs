@@ -11,6 +11,9 @@ namespace NetExtender.Types.Maps.Interfaces
     {
         public IEnumerable<TKey> Keys { get; }
         public IEnumerable<TValue> Values { get; }
+        public IEqualityComparer<TKey> Comparer { get; }
+        public IEqualityComparer<TKey> KeyComparer { get; }
+        public IEqualityComparer<TValue> ValueComparer { get; }
         public Boolean ContainsKey(TKey key);
         public Boolean ContainsValue(TValue key);
         public Boolean ContainsByValue(TValue key, TKey value);

@@ -6,16 +6,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using NetExtender.Initializer.Types.Lists;
 using NetExtender.Types.Dictionaries.Interfaces;
 using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Dictionaries
 {
+    [Serializable]
     public class IndexDictionary<TKey, TValue> : IIndexDictionary<TKey, TValue>, IReadOnlyIndexDictionary<TKey, TValue> where TKey : notnull
     {
         private Dictionary<TKey, TValue> Dictionary { get; }
-        private List<TKey> Order { get; }
+        private IndexList<TKey> Order { get; }
 
         public Int32 Count
         {
@@ -92,7 +94,7 @@ namespace NetExtender.Types.Dictionaries
         public IndexDictionary()
         {
             Dictionary = new Dictionary<TKey, TValue>();
-            Order = new List<TKey>();
+            Order = new IndexList<TKey>(Comparer);
         }
 
         public IndexDictionary(IDictionary<TKey, TValue> dictionary)
@@ -103,7 +105,7 @@ namespace NetExtender.Types.Dictionaries
             }
 
             Dictionary = new Dictionary<TKey, TValue>(dictionary);
-            Order = new List<TKey>(dictionary.Keys);
+            Order = new IndexList<TKey>(Dictionary.Keys, Comparer);
         }
 
         public IndexDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? comparer)
@@ -114,7 +116,7 @@ namespace NetExtender.Types.Dictionaries
             }
 
             Dictionary = new Dictionary<TKey, TValue>(dictionary, comparer);
-            Order = new List<TKey>(dictionary.Keys);
+            Order = new IndexList<TKey>(Dictionary.Keys, Comparer);
         }
 
         public IndexDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection)
@@ -124,10 +126,8 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(collection));
             }
             
-            collection = collection.Materialize();
-
             Dictionary = new Dictionary<TKey, TValue>(collection);
-            Order = new List<TKey>(collection.Select(pair => pair.Key));
+            Order = new IndexList<TKey>(Dictionary.Keys, Comparer);
         }
 
         public IndexDictionary(IEnumerable<KeyValuePair<TKey, TValue>> collection, IEqualityComparer<TKey>? comparer)
@@ -137,28 +137,26 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(collection));
             }
 
-            collection = collection.Materialize();
-
             Dictionary = new Dictionary<TKey, TValue>(collection, comparer);
-            Order = new List<TKey>(collection.Select(pair => pair.Key));
+            Order = new IndexList<TKey>(Dictionary.Keys, Comparer);
         }
 
         public IndexDictionary(IEqualityComparer<TKey>? comparer)
         {
             Dictionary = new Dictionary<TKey, TValue>(comparer);
-            Order = new List<TKey>();
+            Order = new IndexList<TKey>(Comparer);
         }
 
         public IndexDictionary(Int32 capacity)
         {
             Dictionary = new Dictionary<TKey, TValue>(capacity);
-            Order = new List<TKey>(capacity);
+            Order = new IndexList<TKey>(capacity, Comparer);
         }
 
         public IndexDictionary(Int32 capacity, IEqualityComparer<TKey>? comparer)
         {
             Dictionary = new Dictionary<TKey, TValue>(capacity, comparer);
-            Order = new List<TKey>(capacity);
+            Order = new IndexList<TKey>(capacity, Comparer);
         }
 
         public Int32 EnsureCapacity(Int32 capacity)
@@ -329,14 +327,7 @@ namespace NetExtender.Types.Dictionaries
         
         void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
         {
-            (TKey key, TValue value) = item;
-            //TODO: CS8598
-            /*if (key is null!)
-            {
-                return;
-            }*/
-
-            Add(key, value);
+            Add(item.Key, item.Value);
         }
 
         public Boolean TryAdd(TKey key, TValue value)

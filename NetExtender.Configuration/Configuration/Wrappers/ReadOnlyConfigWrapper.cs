@@ -59,6 +59,14 @@ namespace NetExtender.Configuration.Wrappers
             }
         }
 
+        public Boolean IsThreadSafe
+        {
+            get
+            {
+                return Config.IsThreadSafe;
+            }
+        }
+
         internal ReadOnlyConfigWrapper(IConfig config)
         {
             Config = config ?? throw new ArgumentNullException(nameof(config));
@@ -152,6 +160,21 @@ namespace NetExtender.Configuration.Wrappers
         public Task<Boolean> KeyExistAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
             return Config.KeyExistAsync(key, sections, token);
+        }
+
+        public ConfigurationValueEntry[]? Difference(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Config.Difference(entries);
+        }
+        
+        public Task<ConfigurationValueEntry[]?> DifferenceAsync(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Config.DifferenceAsync(entries);
+        }
+
+        public Task<ConfigurationValueEntry[]?> DifferenceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Config.DifferenceAsync(entries, token);
         }
 
         public ConfigurationEntry[]? GetExists()

@@ -39,10 +39,10 @@ namespace NetExtender.Types.Trees.Interfaces
         public Boolean Remove(TKey key, params TKey[]? sections);
         public Boolean Remove(TKey key, IEnumerable<TKey> sections, [MaybeNullWhen(false)] out IDictionaryTreeNode<TKey, TValue> value);
         public Boolean Remove(TKey key, [MaybeNullWhen(false)] out IDictionaryTreeNode<TKey, TValue> value, params TKey[] sections);
-        public void ClearEmpty();
-        public void ClearEmpty(TKey key);
-        public void ClearEmpty(TKey key, IEnumerable<TKey> sections);
-        public void ClearEmpty(TKey key, params TKey[] sections);
+        public Boolean Purge();
+        public Boolean Purge(TKey key);
+        public Boolean Purge(TKey key, IEnumerable<TKey> sections);
+        public Boolean Purge(TKey key, params TKey[] sections);
         public DictionaryTreeEntry<TKey, TValue>[]? Dump();
         public DictionaryTreeEntry<TKey, TValue>[]? Dump(params TKey[]? sections);
         public DictionaryTreeEntry<TKey, TValue>[]? Dump(IEnumerable<TKey>? sections);

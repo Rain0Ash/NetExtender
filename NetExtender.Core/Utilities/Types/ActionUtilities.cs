@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
@@ -90,6 +91,19 @@ namespace NetExtender.Utilities.Types
             }
 
             return Action;
+        }
+
+        public static void Invoke(this IEnumerable<Action?> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            foreach (Action? action in source)
+            {
+                action?.Invoke();
+            }
         }
     }
 }

@@ -2,27 +2,29 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Behavior.Interfaces;
+using NetExtender.Configuration.Behavior.Transactions.Interfaces;
 using NetExtender.Configuration.Common;
 
 namespace NetExtender.Configuration.Wrappers
 {
     internal sealed class TemporaryConfigurationBehaviorWrapper : IConfigBehavior
     {
-        private IConfigBehavior Behavior { get; }
+        private IConfigBehavior Internal { get; }
 
         public event ConfigurationChangedEventHandler? Changed
         {
             add
             {
-                Behavior.Changed += value;
+                Internal.Changed += value;
             }
             remove
             {
-                Behavior.Changed -= value;
+                Internal.Changed -= value;
             }
         }
 
@@ -30,7 +32,7 @@ namespace NetExtender.Configuration.Wrappers
         {
             get
             {
-                return Behavior.Path;
+                return Internal.Path;
             }
         }
 
@@ -38,7 +40,7 @@ namespace NetExtender.Configuration.Wrappers
         {
             get
             {
-                return Behavior.Options;
+                return Internal.Options;
             }
         }
 
@@ -46,7 +48,7 @@ namespace NetExtender.Configuration.Wrappers
         {
             get
             {
-                return Behavior.IsReadOnly;
+                return Internal.IsReadOnly;
             }
         }
 
@@ -54,7 +56,7 @@ namespace NetExtender.Configuration.Wrappers
         {
             get
             {
-                return Behavior.IsIgnoreEvent;
+                return Internal.IsIgnoreEvent;
             }
         }
 
@@ -62,7 +64,15 @@ namespace NetExtender.Configuration.Wrappers
         {
             get
             {
-                return Behavior.IsLazyWrite;
+                return Internal.IsLazyWrite;
+            }
+        }
+
+        public Boolean IsThreadSafe
+        {
+            get
+            {
+                return Internal.IsThreadSafe;
             }
         }
 
@@ -70,53 +80,53 @@ namespace NetExtender.Configuration.Wrappers
         {
             get
             {
-                return Behavior.Joiner;
+                return Internal.Joiner;
             }
         }
 
         public TemporaryConfigurationBehaviorWrapper(IConfigBehavior behavior)
         {
-            Behavior = behavior ?? throw new ArgumentNullException(nameof(behavior));
+            Internal = behavior ?? throw new ArgumentNullException(nameof(behavior));
         }
 
         public Boolean Contains(String? key, IEnumerable<String>? sections)
         {
-            return Behavior.Contains(key, sections);
+            return Internal.Contains(key, sections);
         }
 
         public Task<Boolean> ContainsAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
-            return Behavior.ContainsAsync(key, sections, token);
+            return Internal.ContainsAsync(key, sections, token);
         }
 
         public String? Get(String? key, IEnumerable<String>? sections)
         {
-            return Behavior.Get(key, sections);
+            return Internal.Get(key, sections);
         }
 
         public Task<String?> GetAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
-            return Behavior.GetAsync(key, sections, token);
+            return Internal.GetAsync(key, sections, token);
         }
 
         public Boolean Set(String? key, String? value, IEnumerable<String>? sections)
         {
-            return Behavior.Set(key, value, sections);
+            return Internal.Set(key, value, sections);
         }
 
         public Task<Boolean> SetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
         {
-            return Behavior.SetAsync(key, value, sections, token);
+            return Internal.SetAsync(key, value, sections, token);
         }
 
         public String? GetOrSet(String? key, String? value, IEnumerable<String>? sections)
         {
-            return Behavior.GetOrSet(key, value, sections);
+            return Internal.GetOrSet(key, value, sections);
         }
 
         public Task<String?> GetOrSetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
         {
-            return Behavior.GetOrSetAsync(key, value, sections, token);
+            return Internal.GetOrSetAsync(key, value, sections, token);
         }
 
         public ConfigurationEntry[]? GetExists()
@@ -131,12 +141,12 @@ namespace NetExtender.Configuration.Wrappers
 
         public ConfigurationEntry[]? GetExists(IEnumerable<String>? sections)
         {
-            return Behavior.GetExists(sections);
+            return Internal.GetExists(sections);
         }
 
         public Task<ConfigurationEntry[]?> GetExistsAsync(IEnumerable<String>? sections, CancellationToken token)
         {
-            return Behavior.GetExistsAsync(sections, token);
+            return Internal.GetExistsAsync(sections, token);
         }
 
         public ConfigurationValueEntry[]? GetExistsValues()
@@ -151,42 +161,92 @@ namespace NetExtender.Configuration.Wrappers
 
         public ConfigurationValueEntry[]? GetExistsValues(IEnumerable<String>? sections)
         {
-            return Behavior.GetExistsValues(sections);
+            return Internal.GetExistsValues(sections);
         }
 
         public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IEnumerable<String>? sections, CancellationToken token)
         {
-            return Behavior.GetExistsValuesAsync(sections, token);
+            return Internal.GetExistsValuesAsync(sections, token);
         }
 
         public Boolean Reload()
         {
-            return Behavior.Reload();
+            return Internal.Reload();
         }
 
         public Task<Boolean> ReloadAsync(CancellationToken token)
         {
-            return Behavior.ReloadAsync(token);
+            return Internal.ReloadAsync(token);
         }
 
         public Boolean Reset()
         {
-            return Behavior.Reset();
+            return Internal.Reset();
         }
 
         public Task<Boolean> ResetAsync(CancellationToken token)
         {
-            return Behavior.ResetAsync(token);
+            return Internal.ResetAsync(token);
+        }
+
+        public Boolean Merge(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Internal.Merge(entries);
+        }
+
+        public Task<Boolean> MergeAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Internal.MergeAsync(entries, token);
+        }
+
+        public Boolean Replace(IEnumerable<ConfigurationValueEntry>?entries)
+        {
+            return Internal.Replace(entries);
+        }
+
+        public Task<Boolean> ReplaceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Internal.ReplaceAsync(entries, token);
+        }
+
+        public ConfigurationValueEntry[]? Difference(IEnumerable<ConfigurationValueEntry>? entries)
+        {
+            return Internal.Difference(entries);
+        }
+
+        public Task<ConfigurationValueEntry[]?> DifferenceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
+        {
+            return Internal.DifferenceAsync(entries, token);
+        }
+
+        public IConfigBehaviorTransaction? Transaction()
+        {
+            return Internal.Transaction();
+        }
+
+        public Task<IConfigBehaviorTransaction?> TransactionAsync(CancellationToken token)
+        {
+            return Internal.TransactionAsync(token);
         }
 
         public void Dispose()
         {
-            Behavior.Reset();
+            Internal.Reset();
         }
 
         public async ValueTask DisposeAsync()
         {
-            await Behavior.ResetAsync(CancellationToken.None);
+            await Internal.ResetAsync(CancellationToken.None);
+        }
+
+        public IEnumerator<ConfigurationValueEntry> GetEnumerator()
+        {
+            return Internal.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IEnumerable) Internal).GetEnumerator();
         }
     }
 }

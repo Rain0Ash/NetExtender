@@ -79,6 +79,73 @@ namespace NetExtender.Utilities.Types
                 yield return enumerator.Current;
             }
         }
+
+        public static void Evaluate(this IEnumerator enumerator)
+        {
+            if (enumerator is null)
+            {
+                throw new ArgumentNullException(nameof(enumerator));
+            }
+
+            while (enumerator.MoveNext())
+            {
+            }
+        }
+        
+        public static void Evaluate<T>(this IEnumerator<T> enumerator)
+        {
+            if (enumerator is null)
+            {
+                throw new ArgumentNullException(nameof(enumerator));
+            }
+            
+            while (enumerator.MoveNext())
+            {
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerator GetThreadSafeEnumerator(this IEnumerable enumerable)
+        {
+            if (enumerable is null)
+            {
+                throw new ArgumentNullException(nameof(enumerable));
+            }
+
+            return new ThreadSafeEnumerator(enumerable);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerator GetThreadSafeEnumerator(this IEnumerable enumerable, Object synchronization)
+        {
+            if (enumerable is null)
+            {
+                throw new ArgumentNullException(nameof(enumerable));
+            }
+
+            if (synchronization is null)
+            {
+                throw new ArgumentNullException(nameof(synchronization));
+            }
+
+            return new ThreadSafeEnumerator(enumerable, synchronization);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerator GetThreadSafeEnumerator(this IEnumerator enumerator, Object synchronization)
+        {
+            if (enumerator is null)
+            {
+                throw new ArgumentNullException(nameof(enumerator));
+            }
+
+            if (synchronization is null)
+            {
+                throw new ArgumentNullException(nameof(synchronization));
+            }
+
+            return new ThreadSafeEnumerator(enumerator, synchronization);
+        }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerator<T> GetThreadSafeEnumerator<T>(this IEnumerable<T> enumerable)
@@ -92,35 +159,35 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerator<T> GetThreadSafeEnumerator<T>(this IEnumerable<T> enumerable, Object sync)
+        public static IEnumerator<T> GetThreadSafeEnumerator<T>(this IEnumerable<T> enumerable, Object synchronization)
         {
             if (enumerable is null)
             {
                 throw new ArgumentNullException(nameof(enumerable));
             }
 
-            if (sync is null)
+            if (synchronization is null)
             {
-                throw new ArgumentNullException(nameof(sync));
+                throw new ArgumentNullException(nameof(synchronization));
             }
 
-            return new ThreadSafeEnumerator<T>(enumerable, sync);
+            return new ThreadSafeEnumerator<T>(enumerable, synchronization);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IEnumerator<T> GetThreadSafeEnumerator<T>(this IEnumerator<T> enumerator, Object sync)
+        public static IEnumerator<T> GetThreadSafeEnumerator<T>(this IEnumerator<T> enumerator, Object synchronization)
         {
             if (enumerator is null)
             {
                 throw new ArgumentNullException(nameof(enumerator));
             }
 
-            if (sync is null)
+            if (synchronization is null)
             {
-                throw new ArgumentNullException(nameof(sync));
+                throw new ArgumentNullException(nameof(synchronization));
             }
 
-            return new ThreadSafeEnumerator<T>(enumerator, sync);
+            return new ThreadSafeEnumerator<T>(enumerator, synchronization);
         }
     }
 }
