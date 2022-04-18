@@ -141,49 +141,49 @@ namespace NetExtender.Types.Numerics
         /// <summary>
         /// Subtracts a angle from a angle.  
         /// </summary>
-        /// <param name="left">Source angle.</param>
-        /// <param name="right">Source angle.</param>
+        /// <param name="first">Source angle.</param>
+        /// <param name="second">Source angle.</param>
         /// <returns>Result of the subtraction.</returns>
         [Pure]
-        public static AngleRadian operator -(AngleRadian left, AngleRadian right)
+        public static AngleRadian operator -(AngleRadian first, AngleRadian second)
         {
-            return new AngleRadian(left.Radian - right.Radian);
+            return new AngleRadian(first.Radian - second.Radian);
         }
 
         /// <summary>
         /// Adds two vectors. 
         /// </summary>
-        /// <param name="left">Source angle.</param>
-        /// <param name="right">Source angle.</param>
+        /// <param name="first">Source angle.</param>
+        /// <param name="second">Source angle.</param>
         /// <returns>Result of the addition.</returns>
         [Pure]
-        public static AngleRadian operator +(AngleRadian left, AngleRadian right)
+        public static AngleRadian operator +(AngleRadian first, AngleRadian second)
         {
-            return new AngleRadian(left.Radian + right.Radian);
+            return new AngleRadian(first.Radian + second.Radian);
         }
 
         /// <summary>
         /// Multiplies a scalar by an angle value. 
         /// </summary>
-        /// <param name="left">Scalar value.</param>
-        /// <param name="right">Source angle.</param>
+        /// <param name="first">Scalar value.</param>
+        /// <param name="second">Source angle.</param>
         /// <returns>Result of the multiplication.</returns>
         [Pure]
-        public static AngleRadian operator *(Double left, AngleRadian right)
+        public static AngleRadian operator *(Double first, AngleRadian second)
         {
-            return new AngleRadian(left * right.Radian);
+            return new AngleRadian(first * second.Radian);
         }
 
         /// <summary>
         /// Divides a angle by a scalar value. 
         /// </summary>
-        /// <param name="left">Source angle.</param>
-        /// <param name="right">Scalar value.</param>
+        /// <param name="first">Source angle.</param>
+        /// <param name="second">Scalar value.</param>
         /// <returns>Result of the division.</returns>
         [Pure]
-        public static AngleRadian operator /(AngleRadian left, Double right)
+        public static AngleRadian operator /(AngleRadian first, Double second)
         {
-            return new AngleRadian(left.Radian / right);
+            return new AngleRadian(first.Radian / second);
         }
         
         /// <summary>

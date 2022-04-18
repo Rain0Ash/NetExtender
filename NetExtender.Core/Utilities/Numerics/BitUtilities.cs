@@ -12,6 +12,60 @@ namespace NetExtender.Utilities.Numerics
     public static partial class BitUtilities
     {
         public const Int32 BitInByte = 8;
+        
+        public static void Deconstruct(this Int16 value, out Byte high, out Byte low)
+        {
+            unchecked
+            {
+                high = (Byte) (value >> (sizeof(Byte) * BitInByte));
+                low = (Byte) (value & Byte.MaxValue);
+            }
+        }
+        
+        public static void Deconstruct(this UInt16 value, out Byte high, out Byte low)
+        {
+            unchecked
+            {
+                high = (Byte) (value >> (sizeof(Byte) * BitInByte));
+                low = (Byte) (value & Byte.MaxValue);
+            }
+        }
+        
+        public static void Deconstruct(this Int32 value, out UInt16 high, out UInt16 low)
+        {
+            unchecked
+            {
+                high = (UInt16) (value >> (sizeof(UInt16) * BitInByte));
+                low = (UInt16) (value & UInt16.MaxValue);
+            }
+        }
+        
+        public static void Deconstruct(this UInt32 value, out UInt16 high, out UInt16 low)
+        {
+            unchecked
+            {
+                high = (UInt16) (value >> (sizeof(UInt16) * BitInByte));
+                low = (UInt16) (value & UInt16.MaxValue);
+            }
+        }
+        
+        public static void Deconstruct(this Int64 value, out UInt32 high, out UInt32 low)
+        {
+            unchecked
+            {
+                high = (UInt32) (value >> (sizeof(UInt32) * BitInByte));
+                low = (UInt32) (value & UInt32.MaxValue);
+            }
+        }
+        
+        public static void Deconstruct(this UInt64 value, out UInt32 high, out UInt32 low)
+        {
+            unchecked
+            {
+                high = (UInt32) (value >> (sizeof(UInt32) * BitInByte));
+                low = (UInt32) (value & UInt32.MaxValue);
+            }
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Int16 ToInt16(SByte high, SByte low)

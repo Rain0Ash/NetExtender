@@ -18,9 +18,23 @@ namespace NetExtender.Utilities.Types
         
         /// <inheritdoc cref="Char.IsAscii(Char)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsAscii(this Char32 character)
+        {
+            return character.ToChar(out Char value) && Char.IsAscii(value);
+        }
+        
+        /// <inheritdoc cref="Char.IsAscii(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotAscii(this Char character)
         {
-            return !Char.IsAscii(character);
+            return !IsAscii(character);
+        }
+        
+        /// <inheritdoc cref="Char.IsAscii(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotAscii(this Char32 character)
+        {
+            return !IsAscii(character);
         }
         
         /// <inheritdoc cref="Char.IsDigit(Char)"/>
@@ -32,9 +46,23 @@ namespace NetExtender.Utilities.Types
         
         /// <inheritdoc cref="Char.IsDigit(Char)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsDigit(this Char32 character)
+        {
+            return character.ToChar(out Char value) && Char.IsDigit(value);
+        }
+        
+        /// <inheritdoc cref="Char.IsDigit(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotDigit(this Char character)
         {
-            return !Char.IsDigit(character);
+            return !IsDigit(character);
+        }
+        
+        /// <inheritdoc cref="Char.IsDigit(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotDigit(this Char32 character)
+        {
+            return !IsDigit(character);
         }
         
         /// <inheritdoc cref="Char.IsLetter(Char)"/>
@@ -46,9 +74,23 @@ namespace NetExtender.Utilities.Types
         
         /// <inheritdoc cref="Char.IsLetter(Char)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsLetter(this Char32 character)
+        {
+            return character.ToChar(out Char value) && Char.IsLetter(value);
+        }
+        
+        /// <inheritdoc cref="Char.IsLetter(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotLetter(this Char character)
         {
-            return !Char.IsLetter(character);
+            return !IsLetter(character);
+        }
+        
+        /// <inheritdoc cref="Char.IsLetter(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotLetter(this Char32 character)
+        {
+            return !IsLetter(character);
         }
         
         /// <inheritdoc cref="Char.IsLetterOrDigit(Char)"/>
@@ -60,9 +102,23 @@ namespace NetExtender.Utilities.Types
         
         /// <inheritdoc cref="Char.IsLetterOrDigit(Char)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsLetterOrDigit(this Char32 character)
+        {
+            return character.ToChar(out Char value) && Char.IsLetterOrDigit(value);
+        }
+        
+        /// <inheritdoc cref="Char.IsLetterOrDigit(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotLetterOrDigit(this Char character)
         {
-            return !Char.IsLetterOrDigit(character);
+            return !IsLetterOrDigit(character);
+        }
+        
+        /// <inheritdoc cref="Char.IsLetterOrDigit(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotLetterOrDigit(this Char32 character)
+        {
+            return !IsLetterOrDigit(character);
         }
         
         /// <inheritdoc cref="Char.IsNumber(Char)"/>
@@ -74,9 +130,23 @@ namespace NetExtender.Utilities.Types
         
         /// <inheritdoc cref="Char.IsNumber(Char)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNumber(this Char32 character)
+        {
+            return character.ToChar(out Char value) && Char.IsNumber(value);
+        }
+        
+        /// <inheritdoc cref="Char.IsNumber(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotNumber(this Char character)
         {
-            return !Char.IsNumber(character);
+            return !IsNumber(character);
+        }
+        
+        /// <inheritdoc cref="Char.IsNumber(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotNumber(this Char32 character)
+        {
+            return !IsNumber(character);
         }
         
         /// <inheritdoc cref="Char.IsLower(Char)"/>
@@ -88,9 +158,23 @@ namespace NetExtender.Utilities.Types
         
         /// <inheritdoc cref="Char.IsLower(Char)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsLower(this Char32 character)
+        {
+            return character.ToChar(out Char value) && Char.IsLower(value);
+        }
+        
+        /// <inheritdoc cref="Char.IsLower(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotLower(this Char character)
         {
-            return !Char.IsLower(character);
+            return !IsLower(character);
+        }
+        
+        /// <inheritdoc cref="Char.IsLower(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotLower(this Char32 character)
+        {
+            return !IsLower(character);
         }
         
         /// <inheritdoc cref="Char.IsUpper(Char)"/>
@@ -102,9 +186,23 @@ namespace NetExtender.Utilities.Types
         
         /// <inheritdoc cref="Char.IsUpper(Char)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsUpper(this Char32 character)
+        {
+            return character.ToChar(out Char value) && Char.IsUpper(value);
+        }
+        
+        /// <inheritdoc cref="Char.IsUpper(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotUpper(this Char character)
         {
-            return !Char.IsUpper(character);
+            return !IsUpper(character);
+        }
+        
+        /// <inheritdoc cref="Char.IsUpper(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotUpper(this Char32 character)
+        {
+            return !IsUpper(character);
         }
         
         /// <inheritdoc cref="Char.IsSymbol(Char)"/>
@@ -116,9 +214,23 @@ namespace NetExtender.Utilities.Types
         
         /// <inheritdoc cref="Char.IsSymbol(Char)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsSymbol(this Char32 character)
+        {
+            return character.ToChar(out Char value) && Char.IsSymbol(value);
+        }
+        
+        /// <inheritdoc cref="Char.IsSymbol(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotSymbol(this Char character)
         {
-            return !Char.IsSymbol(character);
+            return !IsSymbol(character);
+        }
+        
+        /// <inheritdoc cref="Char.IsSymbol(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotSymbol(this Char32 character)
+        {
+            return !IsSymbol(character);
         }
         
         /// <inheritdoc cref="Char.IsPunctuation(Char)"/>
@@ -130,9 +242,23 @@ namespace NetExtender.Utilities.Types
         
         /// <inheritdoc cref="Char.IsPunctuation(Char)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsPunctuation(this Char32 character)
+        {
+            return character.ToChar(out Char value) && Char.IsPunctuation(value);
+        }
+        
+        /// <inheritdoc cref="Char.IsPunctuation(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotPunctuation(this Char character)
         {
-            return !Char.IsPunctuation(character);
+            return !IsPunctuation(character);
+        }
+        
+        /// <inheritdoc cref="Char.IsPunctuation(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotPunctuation(this Char32 character)
+        {
+            return !IsPunctuation(character);
         }
         
         /// <inheritdoc cref="Char.IsSeparator(Char)"/>
@@ -144,9 +270,23 @@ namespace NetExtender.Utilities.Types
         
         /// <inheritdoc cref="Char.IsSeparator(Char)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsSeparator(this Char32 character)
+        {
+            return character.ToChar(out Char value) && Char.IsSeparator(value);
+        }
+        
+        /// <inheritdoc cref="Char.IsSeparator(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotSeparator(this Char character)
         {
-            return !Char.IsSeparator(character);
+            return !IsSeparator(character);
+        }
+        
+        /// <inheritdoc cref="Char.IsSeparator(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotSeparator(this Char32 character)
+        {
+            return !IsSeparator(character);
         }
         
         /// <inheritdoc cref="Char.IsWhiteSpace(Char)"/>
@@ -158,9 +298,23 @@ namespace NetExtender.Utilities.Types
         
         /// <inheritdoc cref="Char.IsWhiteSpace(Char)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsWhiteSpace(this Char32 character)
+        {
+            return character.ToChar(out Char value) && Char.IsWhiteSpace(value);
+        }
+        
+        /// <inheritdoc cref="Char.IsWhiteSpace(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotWhiteSpace(this Char character)
         {
-            return !Char.IsWhiteSpace(character);
+            return !IsWhiteSpace(character);
+        }
+        
+        /// <inheritdoc cref="Char.IsWhiteSpace(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotWhiteSpace(this Char32 character)
+        {
+            return !IsWhiteSpace(character);
         }
 
         /// <inheritdoc cref="Char.IsControl(Char)"/>
@@ -169,12 +323,26 @@ namespace NetExtender.Utilities.Types
         {
             return Char.IsControl(character);
         }
+
+        /// <inheritdoc cref="Char.IsControl(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsControl(this Char32 character)
+        {
+            return character.ToChar(out Char value) && Char.IsControl(value);
+        }
         
         /// <inheritdoc cref="Char.IsControl(Char)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotControl(this Char character)
         {
-            return !Char.IsControl(character);
+            return !IsControl(character);
+        }
+        
+        /// <inheritdoc cref="Char.IsControl(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotControl(this Char32 character)
+        {
+            return !IsControl(character);
         }
 
         /// <inheritdoc cref="Char.IsSurrogate(Char)"/>
@@ -183,12 +351,54 @@ namespace NetExtender.Utilities.Types
         {
             return Char.IsSurrogate(character);
         }
+
+        /// <inheritdoc cref="Char.IsSurrogate(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsSurrogate(this Char32 character)
+        {
+            return character.ToChar(out Char value) && Char.IsSurrogate(value);
+        }
         
         /// <inheritdoc cref="Char.IsSurrogate(Char)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotSurrogate(this Char character)
         {
-            return !Char.IsSurrogate(character);
+            return !IsSurrogate(character);
+        }
+        
+        /// <inheritdoc cref="Char.IsSurrogate(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotSurrogate(this Char32 character)
+        {
+            return !IsSurrogate(character);
+        }
+        
+        /// <inheritdoc cref="Char.IsHighSurrogate(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsHighSurrogate(this Char character)
+        {
+            return Char.IsHighSurrogate(character);
+        }
+
+        /// <inheritdoc cref="Char.IsHighSurrogate(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsHighSurrogate(this Char32 character)
+        {
+            return character.ToChar(out Char value) && Char.IsHighSurrogate(value);
+        }
+        
+        /// <inheritdoc cref="Char.IsHighSurrogate(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotHighSurrogate(this Char character)
+        {
+            return !IsHighSurrogate(character);
+        }
+        
+        /// <inheritdoc cref="Char.IsHighSurrogate(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotHighSurrogate(this Char32 character)
+        {
+            return !IsHighSurrogate(character);
         }
         
         /// <inheritdoc cref="Char.IsLowSurrogate(Char)"/>
@@ -200,23 +410,23 @@ namespace NetExtender.Utilities.Types
         
         /// <inheritdoc cref="Char.IsLowSurrogate(Char)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNotLowSurrogate(this Char character)
+        public static Boolean IsLowSurrogate(this Char32 character)
         {
-            return !Char.IsLowSurrogate(character);
-        }
-
-        /// <inheritdoc cref="Char.IsHighSurrogate(Char)"/>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsHighSurrogate(this Char character)
-        {
-            return Char.IsHighSurrogate(character);
+            return character.ToChar(out Char value) && Char.IsLowSurrogate(value);
         }
         
-        /// <inheritdoc cref="Char.IsHighSurrogate(Char)"/>
+        /// <inheritdoc cref="Char.IsLowSurrogate(Char)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsNotHighSurrogate(this Char character)
+        public static Boolean IsNotLowSurrogate(this Char character)
         {
-            return !Char.IsHighSurrogate(character);
+            return !IsLowSurrogate(character);
+        }
+        
+        /// <inheritdoc cref="Char.IsLowSurrogate(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsNotLowSurrogate(this Char32 character)
+        {
+            return !IsLowSurrogate(character);
         }
 
         /// <inheritdoc cref="Char.IsSurrogatePair(Char,Char)"/>
@@ -236,7 +446,13 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Repeat(this Char character, Int32 count)
         {
-            return count < 1 ? String.Empty : new String(character, count);
+            return count <= 0 ? String.Empty : new String(character, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Repeat(this Char32 character, Int32 count)
+        {
+            return count > 0 ? character > Char.MaxValue ? character.ToString().Repeat(count) : new String((Char) character, count) : String.Empty;
         }
         
         /// <inheritdoc cref="Char.ToLower(Char)"/>

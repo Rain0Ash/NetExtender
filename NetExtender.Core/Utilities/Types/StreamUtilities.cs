@@ -146,13 +146,13 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            while (stream.TryReadChar(encoding) is Char symbol)
+            while (stream.TryReadChar(encoding) is { } symbol)
             {
                 yield return symbol;
             }
         }
 
-        public static Int32 ReadUtfChar(this Stream stream)
+        public static Char32 ReadChar32(this Stream stream)
         {
             if (stream is null)
             {
@@ -193,7 +193,7 @@ namespace NetExtender.Utilities.Types
             return BitConverter.ToInt32(buffer);
         }
 
-        public static Int32? TryReadUtfChar(this Stream stream)
+        public static Char32? TryReadChar32(this Stream stream)
         {
             if (stream is null)
             {
@@ -234,14 +234,14 @@ namespace NetExtender.Utilities.Types
             return BitConverter.ToInt32(buffer);
         }
 
-        public static IEnumerable<Int32> ReadUtfCharSequence(this Stream stream)
+        public static IEnumerable<Char32> ReadChar32Sequence(this Stream stream)
         {
             if (stream is null)
             {
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            while (stream.TryReadUtfChar() is Int32 symbol)
+            while (stream.TryReadChar32() is { } symbol)
             {
                 yield return symbol;
             }
