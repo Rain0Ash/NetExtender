@@ -373,7 +373,7 @@ namespace System
                 return;
             }
 
-            high = (Char) (Value >> 16);
+            high = (Char) (Value >> sizeof(UInt16) * BitUtilities.BitInByte);
             low = unchecked((Char) Value);
         }
 

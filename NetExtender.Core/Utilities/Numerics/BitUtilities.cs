@@ -13,6 +13,15 @@ namespace NetExtender.Utilities.Numerics
     {
         public const Int32 BitInByte = 8;
         
+        public static void Deconstruct(this Char value, out Byte high, out Byte low)
+        {
+            unchecked
+            {
+                high = (Byte) (value >> (sizeof(Byte) * BitInByte));
+                low = (Byte) (value & Byte.MaxValue);
+            }
+        }
+        
         public static void Deconstruct(this Int16 value, out Byte high, out Byte low)
         {
             unchecked

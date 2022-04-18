@@ -20,7 +20,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsAscii(this Char32 character)
         {
-            return character.ToChar(out Char value) && Char.IsAscii(value);
+            return character.ToChar(out Char value) && IsAscii(value);
         }
         
         /// <inheritdoc cref="Char.IsAscii(Char)"/>
@@ -48,7 +48,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsDigit(this Char32 character)
         {
-            return character.ToChar(out Char value) && Char.IsDigit(value);
+            return character.ToChar(out Char value) && IsDigit(value);
         }
         
         /// <inheritdoc cref="Char.IsDigit(Char)"/>
@@ -76,7 +76,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsLetter(this Char32 character)
         {
-            return character.ToChar(out Char value) && Char.IsLetter(value);
+            return character.ToChar(out Char value) && IsLetter(value);
         }
         
         /// <inheritdoc cref="Char.IsLetter(Char)"/>
@@ -104,7 +104,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsLetterOrDigit(this Char32 character)
         {
-            return character.ToChar(out Char value) && Char.IsLetterOrDigit(value);
+            return character.ToChar(out Char value) && IsLetterOrDigit(value);
         }
         
         /// <inheritdoc cref="Char.IsLetterOrDigit(Char)"/>
@@ -132,7 +132,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNumber(this Char32 character)
         {
-            return character.ToChar(out Char value) && Char.IsNumber(value);
+            return character.ToChar(out Char value) && IsNumber(value);
         }
         
         /// <inheritdoc cref="Char.IsNumber(Char)"/>
@@ -160,7 +160,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsLower(this Char32 character)
         {
-            return character.ToChar(out Char value) && Char.IsLower(value);
+            return character.ToChar(out Char value) && IsLower(value);
         }
         
         /// <inheritdoc cref="Char.IsLower(Char)"/>
@@ -188,7 +188,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsUpper(this Char32 character)
         {
-            return character.ToChar(out Char value) && Char.IsUpper(value);
+            return character.ToChar(out Char value) && IsUpper(value);
         }
         
         /// <inheritdoc cref="Char.IsUpper(Char)"/>
@@ -216,7 +216,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSymbol(this Char32 character)
         {
-            return character.ToChar(out Char value) && Char.IsSymbol(value);
+            return character.ToChar(out Char value) && IsSymbol(value);
         }
         
         /// <inheritdoc cref="Char.IsSymbol(Char)"/>
@@ -244,7 +244,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsPunctuation(this Char32 character)
         {
-            return character.ToChar(out Char value) && Char.IsPunctuation(value);
+            return character.ToChar(out Char value) && IsPunctuation(value);
         }
         
         /// <inheritdoc cref="Char.IsPunctuation(Char)"/>
@@ -272,7 +272,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSeparator(this Char32 character)
         {
-            return character.ToChar(out Char value) && Char.IsSeparator(value);
+            return character.ToChar(out Char value) && IsSeparator(value);
         }
         
         /// <inheritdoc cref="Char.IsSeparator(Char)"/>
@@ -300,7 +300,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsWhiteSpace(this Char32 character)
         {
-            return character.ToChar(out Char value) && Char.IsWhiteSpace(value);
+            return character.ToChar(out Char value) && IsWhiteSpace(value);
         }
         
         /// <inheritdoc cref="Char.IsWhiteSpace(Char)"/>
@@ -328,7 +328,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsControl(this Char32 character)
         {
-            return character.ToChar(out Char value) && Char.IsControl(value);
+            return character.ToChar(out Char value) && IsControl(value);
         }
         
         /// <inheritdoc cref="Char.IsControl(Char)"/>
@@ -356,7 +356,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSurrogate(this Char32 character)
         {
-            return character.ToChar(out Char value) && Char.IsSurrogate(value);
+            return character.ToChar(out Char value) && IsSurrogate(value);
         }
         
         /// <inheritdoc cref="Char.IsSurrogate(Char)"/>
@@ -384,7 +384,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsHighSurrogate(this Char32 character)
         {
-            return character.ToChar(out Char value) && Char.IsHighSurrogate(value);
+            return character.ToChar(out Char value) && IsHighSurrogate(value);
         }
         
         /// <inheritdoc cref="Char.IsHighSurrogate(Char)"/>
@@ -412,7 +412,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsLowSurrogate(this Char32 character)
         {
-            return character.ToChar(out Char value) && Char.IsLowSurrogate(value);
+            return character.ToChar(out Char value) && IsLowSurrogate(value);
         }
         
         /// <inheritdoc cref="Char.IsLowSurrogate(Char)"/>
@@ -440,7 +440,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotSurrogatePair(this Char character, Char pair)
         {
-            return !Char.IsSurrogatePair(character, pair);
+            return !IsSurrogatePair(character, pair);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -461,12 +461,26 @@ namespace NetExtender.Utilities.Types
         {
             return Char.ToLower(character);
         }
+        
+        /// <inheritdoc cref="Char.ToLower(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Char32 ToLower(this Char32 character)
+        {
+            return character.ToChar(out Char value) ? ToLower(value) : character;
+        }
 
         /// <inheritdoc cref="Char.ToLower(Char,CultureInfo)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Char ToLower(this Char character, CultureInfo? info)
         {
             return info is null ? ToLower(character) : Char.ToLower(character, info);
+        }
+
+        /// <inheritdoc cref="Char.ToLower(Char,CultureInfo)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Char32 ToLower(this Char32 character, CultureInfo? info)
+        {
+            return character.ToChar(out Char value) ? info is null ? ToLower(value) : ToLower(value, info) : character;
         }
 
         /// <inheritdoc cref="Char.ToLowerInvariant"/>
@@ -476,11 +490,25 @@ namespace NetExtender.Utilities.Types
             return Char.ToLowerInvariant(character);
         }
 
+        /// <inheritdoc cref="Char.ToLowerInvariant"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Char32 ToLowerInvariant(this Char32 character)
+        {
+            return character.ToChar(out Char value) ? ToLowerInvariant(value) : character;
+        }
+
         /// <inheritdoc cref="Char.ToUpper(Char)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Char ToUpper(this Char character)
         {
             return Char.ToUpper(character);
+        }
+
+        /// <inheritdoc cref="Char.ToUpper(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Char32 ToUpper(this Char32 character)
+        {
+            return character.ToChar(out Char value) ? ToUpper(value) : character;
         }
 
         /// <inheritdoc cref="Char.ToUpper(Char,CultureInfo)"/>
@@ -490,11 +518,25 @@ namespace NetExtender.Utilities.Types
             return info is null ? ToUpper(character) : Char.ToUpper(character, info);
         }
 
+        /// <inheritdoc cref="Char.ToUpper(Char,CultureInfo)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Char32 ToUpper(this Char32 character, CultureInfo? info)
+        {
+            return character.ToChar(out Char value) ? info is null ? ToUpper(value) : ToUpper(value, info) : character;
+        }
+
         /// <inheritdoc cref="Char.ToUpperInvariant"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Char ToUpperInvariant(this Char character)
         {
             return Char.ToUpperInvariant(character);
+        }
+
+        /// <inheritdoc cref="Char.ToUpperInvariant"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Char32 ToUpperInvariant(this Char32 character)
+        {
+            return character.ToChar(out Char value) ? ToUpperInvariant(value) : character;
         }
         
         /// <inheritdoc cref="Char.GetUnicodeCategory(Char)"/>
@@ -502,6 +544,13 @@ namespace NetExtender.Utilities.Types
         public static UnicodeCategory GetUnicodeCategory(this Char character)
         {
             return Char.GetUnicodeCategory(character);
+        }
+        
+        /// <inheritdoc cref="Char.GetUnicodeCategory(Char)"/>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static UnicodeCategory GetUnicodeCategory(this Char32 character)
+        {
+            return character.ToChar(out Char value) ? GetUnicodeCategory(value) : UnicodeCategory.OtherNotAssigned;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
