@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -27,6 +28,9 @@ namespace NetExtender.Utilities.Types
         Full = 2,
         FullWithNull = Null | Full
     }
+    
+    public delegate String? StringConverter(Object? value, EscapeType escape, IFormatProvider? provider);
+    public delegate String? StringFormatConverter(Object? value, EscapeType escape, String? format, IFormatProvider? provider);
     
     [SuppressMessage("ReSharper", "UnusedParameter.Global")]
     public static class ConvertUtilities
@@ -477,6 +481,62 @@ namespace NetExtender.Utilities.Types
 
         #region ToString
 
+        private readonly struct StringConverterInfo
+        {
+            private StringConverter Handler { get; }
+            private StringFormatConverter Format { get; }
+            
+            public StringConverterInfo(StringConverter handler, StringFormatConverter format)
+            {
+                Handler = handler ?? throw new ArgumentNullException(nameof(handler));
+                Format = format ?? throw new ArgumentNullException(nameof(format));
+            }
+            
+            public String? Convert(Object? value, EscapeType escape, IFormatProvider? provider)
+            {
+                return Handler(value, escape, provider);
+            }
+            
+            public String? Convert(Object? value, EscapeType escape, String? format, IFormatProvider? provider)
+            {
+                return Format(value, escape, format, provider);
+            }
+        }
+
+        private static ConcurrentDictionary<Type, StringConverterInfo> StringConverters { get; } = new ConcurrentDictionary<Type, StringConverterInfo>();
+
+        public static Boolean RegisterStringHandler<T>(StringConverter handler)
+        {
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            String? Format(Object? value, EscapeType escape, String? _, IFormatProvider? provider)
+            {
+                return handler.Invoke(value, escape, provider);
+            }
+
+            return RegisterStringHandler<T>(handler, Format);
+        }
+
+        public static Boolean RegisterStringHandler<T>(StringConverter handler, StringFormatConverter format)
+        {
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
+            StringConverterInfo info = new StringConverterInfo(handler, format);
+            StringConverters.AddOrUpdate(typeof(T), info, (_, _) => info);
+            return true;
+        }
+
         public static IEnumerable<String?> ToStringEnumerable<T>(this IEnumerable<T> source)
         {
             if (source is null)
@@ -659,7 +719,7 @@ namespace NetExtender.Utilities.Types
                 return true;
             }
 
-            Type type = value.GetType();
+            Type? type = value.GetType();
             Type generic = type.TryGetGenericTypeDefinition();
             dynamic item = value;
 
@@ -723,6 +783,18 @@ namespace NetExtender.Utilities.Types
                 return true;
             }
 
+            type = value.GetType();
+            while (type is not null)
+            {
+                if (StringConverters.TryGetValue(type, out StringConverterInfo converter))
+                {
+                    result = converter.Convert(value, escape, provider);
+                    return true;
+                }
+
+                type = type.BaseType;
+            }
+            
             result = default;
             return false;
         }
@@ -752,7 +824,7 @@ namespace NetExtender.Utilities.Types
                 return true;
             }
 
-            Type type = value.GetType();
+            Type? type = value.GetType();
             Type generic = type.TryGetGenericTypeDefinition();
             dynamic item = value;
 
@@ -814,6 +886,18 @@ namespace NetExtender.Utilities.Types
 
                 result = $"({String.Join(", ", MathUtilities.Range(0, count).Select(Selector).Select(GetString))})";
                 return true;
+            }
+            
+            type = value.GetType();
+            while (type is not null)
+            {
+                if (StringConverters.TryGetValue(type, out StringConverterInfo converter))
+                {
+                    result = converter.Convert(value, escape, provider);
+                    return true;
+                }
+
+                type = type.BaseType;
             }
 
             result = default;

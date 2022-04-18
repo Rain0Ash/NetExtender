@@ -13,6 +13,7 @@ namespace NetExtender.Initializer.Types.Indexers.Interfaces
         public Int32 IndexOf(T item);
         public void Clear();
         public Boolean Rebuild(IEnumerable<T> source);
+        public void CopyTo(T[] array);
         public void CopyTo(T[] array, Int32 index);
         public Int32 this[T item] { get; }
     }

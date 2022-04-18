@@ -2,7 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 #if !NET5_0_OR_GREATER
-namespace NetExtender.Comparers.Common
+namespace NetExtender.Types.Comparers
 {
     /// <summary>
     /// Equality comparer that uses the <see cref="object.ReferenceEquals(object, object)"/> to compare values.

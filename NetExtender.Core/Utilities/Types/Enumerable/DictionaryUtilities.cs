@@ -407,6 +407,16 @@ namespace NetExtender.Utilities.Types
 
             return new IndexDictionary<TKey, TElement>(source.Select(item => new KeyValuePair<TKey, TElement>(keySelector(item), elementSelector(item))), comparer);
         }
+        
+        public static ImmutableMultiDictionary<TKey, TValue> ToImmutableMultiDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, ImmutableHashSet<TValue>>> source) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            return ImmutableMultiDictionary<TKey, TValue>.Empty.AddRange(source);
+        }
 
         public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
         {
@@ -1025,6 +1035,584 @@ namespace NetExtender.Utilities.Types
             return (left, right);
         }
 
+        public static void RemoveRange<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<TKey> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            foreach (TKey key in other.WhereNotNull())
+            {
+                source.Remove(key);
+            }
+        }
+        
+        public static void RemoveRange<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            foreach (KeyValuePair<TKey, TValue> pair in other.WhereKeyNotNull())
+            {
+                source.Remove(pair);
+            }
+        }
+        
+        public static void Union<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            switch (source)
+            {
+                case Dictionary<TKey, TValue> dictionary:
+                    Union(dictionary, other);
+                    return;
+                case SortedDictionary<TKey, TValue> dictionary:
+                    Union(dictionary, other);
+                    return;
+                default:
+                    source.AddRange(other.WhereNotNull(pair => !source.ContainsKey(pair.Key)));
+                    break;
+            }
+        }
+        
+        public static void Union<TKey, TValue>(this Dictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            source.AddRange(other.WhereNotNull(pair => !source.ContainsKey(pair.Key)));
+        }
+        
+        public static void Union<TKey, TValue>(this SortedDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            source.AddRange(other.WhereNotNull(pair => !source.ContainsKey(pair.Key)));
+        }
+        
+        public static IImmutableDictionary<TKey, TValue> Union<TKey, TValue>(this IImmutableDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return source switch
+            {
+                ImmutableDictionary<TKey, TValue> dictionary => Union(dictionary, other),
+                ImmutableSortedDictionary<TKey, TValue> dictionary => Union(dictionary, other),
+                _ => source.AddRange(other.WhereNotNull(pair => !source.ContainsKey(pair.Key)))
+            };
+        }
+        
+        public static ImmutableDictionary<TKey, TValue> Union<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return source.AddRange(other.WhereNotNull(pair => !source.ContainsKey(pair.Key)));
+        }
+        
+        public static ImmutableSortedDictionary<TKey, TValue> Union<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return source.AddRange(other.WhereNotNull(pair => !source.ContainsKey(pair.Key)));
+        }
+
+        public static void Intersect<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<TKey> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            switch (source)
+            {
+                case Dictionary<TKey, TValue> dictionary:
+                    Intersect(dictionary, other);
+                    return;
+                case SortedDictionary<TKey, TValue> dictionary:
+                    Intersect(dictionary, other);
+                    return;
+            }
+
+            Dictionary<TKey, TValue> intersect = new Dictionary<TKey, TValue>(source.Count);
+
+            foreach (TKey key in other.WhereNotNull())
+            {
+                if (source.TryGetValue(key, out TValue? value))
+                {
+                    intersect.Add(key, value);
+                }
+            }
+            
+            source.Clear();
+
+            foreach ((TKey key, TValue value) in intersect)
+            {
+                source.TryAdd(key, value);
+            }
+        }
+        
+        public static void Intersect<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            Intersect(source, other.Select(item => item.Key));
+        }
+
+        public static void Intersect<TKey, TValue>(this Dictionary<TKey, TValue> source, IEnumerable<TKey> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            Dictionary<TKey, TValue> intersect = new Dictionary<TKey, TValue>(source.Count, source.Comparer);
+
+            foreach (TKey key in other.WhereNotNull())
+            {
+                if (source.TryGetValue(key, out TValue? value))
+                {
+                    intersect.Add(key, value);
+                }
+            }
+            
+            source.Clear();
+            source.EnsureCapacity(intersect.Count);
+
+            foreach ((TKey key, TValue value) in intersect)
+            {
+                source.TryAdd(key, value);
+            }
+        }
+        
+        public static void Intersect<TKey, TValue>(this Dictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            Intersect(source, other.Select(item => item.Key));
+        }
+
+        public static void Intersect<TKey, TValue>(this SortedDictionary<TKey, TValue> source, IEnumerable<TKey> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            SortedDictionary<TKey, TValue> intersect = new SortedDictionary<TKey, TValue>(source.Comparer);
+
+            foreach (TKey key in other.WhereNotNull())
+            {
+                if (source.TryGetValue(key, out TValue? value))
+                {
+                    intersect.TryAdd(key, value);
+                }
+            }
+            
+            source.Clear();
+
+            foreach ((TKey key, TValue value) in intersect)
+            {
+                source.Add(key, value);
+            }
+        }
+        
+        public static void Intersect<TKey, TValue>(this SortedDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            Intersect(source, other.Select(item => item.Key));
+        }
+
+        public static IImmutableDictionary<TKey, TValue> Intersect<TKey, TValue>(this IImmutableDictionary<TKey, TValue> source, IEnumerable<TKey> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            switch (source)
+            {
+                case ImmutableDictionary<TKey, TValue> dictionary:
+                    return Intersect(dictionary, other);
+                case ImmutableSortedDictionary<TKey, TValue> dictionary:
+                    return Intersect(dictionary, other);
+            }
+
+            Dictionary<TKey, TValue> intersect = new Dictionary<TKey, TValue>(source.Count);
+
+            foreach (TKey key in other.WhereNotNull())
+            {
+                if (source.TryGetValue(key, out TValue? value))
+                {
+                    intersect.TryAdd(key, value);
+                }
+            }
+
+            return intersect.ToImmutableDictionary();
+        }
+        
+        public static IImmutableDictionary<TKey, TValue> Intersect<TKey, TValue>(this IImmutableDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return Intersect(source, other.Select(item => item.Key));
+        }
+
+        public static ImmutableDictionary<TKey, TValue> Intersect<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, IEnumerable<TKey> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            Dictionary<TKey, TValue> intersect = new Dictionary<TKey, TValue>(source.Count, source.KeyComparer);
+
+            foreach (TKey key in other.WhereNotNull())
+            {
+                if (source.TryGetValue(key, out TValue? value))
+                {
+                    intersect.TryAdd(key, value);
+                }
+            }
+
+            return intersect.ToImmutableDictionary(source.KeyComparer, source.ValueComparer);
+        }
+        
+        public static ImmutableDictionary<TKey, TValue> Intersect<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return Intersect(source, other.Select(item => item.Key));
+        }
+
+        public static ImmutableSortedDictionary<TKey, TValue> Intersect<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, IEnumerable<TKey> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            SortedDictionary<TKey, TValue> intersect = new SortedDictionary<TKey, TValue>(source.KeyComparer);
+
+            foreach (TKey key in other.WhereNotNull())
+            {
+                if (source.TryGetValue(key, out TValue? value))
+                {
+                    intersect.TryAdd(key, value);
+                }
+            }
+
+            return intersect.ToImmutableSortedDictionary(source.KeyComparer, source.ValueComparer);
+        }
+        
+        public static ImmutableSortedDictionary<TKey, TValue> Intersect<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return Intersect(source, other.Select(item => item.Key));
+        }
+
+        public static void Except<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<TKey> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            switch (source)
+            {
+                case Dictionary<TKey, TValue> dictionary:
+                    Except(dictionary, other);
+                    return;
+                case SortedDictionary<TKey, TValue> dictionary:
+                    Except(dictionary, other);
+                    return;
+                default:
+                    source.RemoveRange(other);
+                    return;
+            }
+        }
+        
+        public static void Except<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            switch (source)
+            {
+                case Dictionary<TKey, TValue> dictionary:
+                    Except(dictionary, other);
+                    return;
+                case SortedDictionary<TKey, TValue> dictionary:
+                    Except(dictionary, other);
+                    return;
+                default:
+                    source.RemoveRange(other);
+                    return;
+            }
+        }
+        
+        public static void Except<TKey, TValue>(this Dictionary<TKey, TValue> source, IEnumerable<TKey> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            source.RemoveRange(other);
+        }
+        
+        public static void Except<TKey, TValue>(this Dictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            source.RemoveRange(other);
+        }
+        
+        public static void Except<TKey, TValue>(this SortedDictionary<TKey, TValue> source, IEnumerable<TKey> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            source.RemoveRange(other);
+        }
+        
+        public static void Except<TKey, TValue>(this SortedDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            source.RemoveRange(other);
+        }
+
+        public static IImmutableDictionary<TKey, TValue> Except<TKey, TValue>(this IImmutableDictionary<TKey, TValue> source, IEnumerable<TKey> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return source switch
+            {
+                ImmutableDictionary<TKey, TValue> dictionary => Except(dictionary, other),
+                ImmutableSortedDictionary<TKey, TValue> dictionary => Except(dictionary, other),
+                _ => source.RemoveRange(other.WhereNotNull())
+            };
+        }
+
+        public static ImmutableDictionary<TKey, TValue> Except<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, IEnumerable<TKey> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return source.RemoveRange(other.WhereNotNull());
+        }
+        
+        public static ImmutableSortedDictionary<TKey, TValue> Except<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, IEnumerable<TKey> other) where TKey : notnull
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return source.RemoveRange(other.WhereNotNull());
+        }
+
         public static Dictionary<TKey, TValue> Clone<TKey, TValue>(this Dictionary<TKey, TValue> source) where TKey : notnull where TValue : ICloneable
         {
             if (source is null)
@@ -1041,15 +1629,22 @@ namespace NetExtender.Utilities.Types
 
             return dictionary;
         }
-
-        public static ImmutableMultiDictionary<TKey, TValue> ToImmutableMultiDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, ImmutableHashSet<TValue>>> source) where TKey : notnull
+        
+        public static SortedDictionary<TKey, TValue> Clone<TKey, TValue>(this SortedDictionary<TKey, TValue> source) where TKey : notnull where TValue : ICloneable
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
-            return ImmutableMultiDictionary<TKey, TValue>.Empty.AddRange(source);
+
+            SortedDictionary<TKey, TValue> dictionary = new SortedDictionary<TKey, TValue>(source.Comparer);
+
+            foreach ((TKey key, TValue value) in source)
+            {
+                dictionary.Add(key, (TValue) value.Clone());
+            }
+
+            return dictionary;
         }
     }
 }

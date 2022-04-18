@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using NetExtender.Types.Comparers.Common;
+using NetExtender.Types.Comparers;
 
 namespace NetExtender.Utilities.Types
 {

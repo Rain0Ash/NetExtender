@@ -16,16 +16,4 @@
       <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Remove="NetExtender.Configuration.Property.Cryptography\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Remove="NetExtender.Configuration.Property.Cryptography\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="NetExtender.Configuration.Property.Cryptography\**" />
-    </ItemGroup>
-
 </Project>

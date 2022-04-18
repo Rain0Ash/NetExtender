@@ -4,7 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NetExtender.Types.Comparers.Common;
+using NetExtender.Types.Comparers;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types

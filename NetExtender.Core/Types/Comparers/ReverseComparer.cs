@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using NetExtender.Types.Comparers.Interfaces;
 
-namespace NetExtender.Types.Comparers.Common
+namespace NetExtender.Types.Comparers
 {
     public class ReverseComparer<T> : IReverseComparer<T>
     {

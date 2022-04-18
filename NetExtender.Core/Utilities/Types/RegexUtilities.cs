@@ -288,6 +288,21 @@ namespace NetExtender.Utilities.Types
 
             return MatchNamedCaptures(matches, groups, nogroup);
         }
+        
+        public static IDictionary<String, IList<String>> MatchNamedCaptures(this MatchCollection matches, params String?[] groups)
+        {
+            return MatchNamedCaptures(matches, (IEnumerable<String?>) groups);
+        }
+
+        public static IDictionary<String, IList<String>> MatchNamedCaptures(this MatchCollection matches, IEnumerable<String?> groups)
+        {
+            return MatchNamedCaptures(matches, groups, true);
+        }
+        
+        public static IDictionary<String, IList<String>> MatchNamedCaptures(this MatchCollection matches, Boolean nogroup, params String?[] groups)
+        {
+            return MatchNamedCaptures(matches, groups, nogroup);
+        }
 
         public static IDictionary<String, IList<String>> MatchNamedCaptures(this MatchCollection matches, IEnumerable<String?> groups, Boolean nogroup)
         {
@@ -296,19 +311,20 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(matches));
             }
 
-            Dictionary<String, IList<String>> captures = new Dictionary<String, IList<String>>(8);
-            foreach (String? group in groups.WhereNotNull().WhereIfNot(MathUtilities.IsInt32, nogroup))
+            Dictionary<String, IList<String>> captures = new Dictionary<String, IList<String>>(matches.Count);
+            foreach (String? groupname in groups.WhereNotNull().WhereIfNot(MathUtilities.IsInt32, nogroup))
             {
                 foreach (Match match in matches)
                 {
                     GroupCollection collection = match.Groups;
+                    Group group = collection[groupname];
 
-                    if (collection[group].Captures.Count <= 0)
+                    if (group.Captures.Count <= 0)
                     {
                         continue;
                     }
 
-                    captures.GetOrAdd(group, () => new List<String>(8)).Add(collection[group].Value);
+                    captures.GetOrAdd(groupname, () => new List<String>(8)).Add(group.Value);
                 }
             }
 
@@ -326,6 +342,12 @@ namespace NetExtender.Utilities.Types
         public static Task<IDictionary<String, IList<String>>> MatchNamedCapturesAsync(this Regex regex, String input, Boolean nogroup)
         {
             return MatchNamedCapturesAsync(regex, input, nogroup, CancellationToken.None);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<IDictionary<String, IList<String>>> MatchNamedCapturesAsync(this Regex regex, String input, CancellationToken token)
+        {
+            return MatchNamedCapturesAsync(regex, input, true, token);
         }
 
         public static async Task<IDictionary<String, IList<String>>> MatchNamedCapturesAsync(this Regex regex, String input, Boolean nogroup, CancellationToken token)
@@ -366,15 +388,15 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Match> MatchAsync(String input, String pattern, RegexOptions options, TimeSpan matchTimeout)
+        public static Task<Match> MatchAsync(String input, String pattern, RegexOptions options, TimeSpan timeout)
         {
-            return MatchAsync(input, pattern, options, matchTimeout, CancellationToken.None);
+            return MatchAsync(input, pattern, options, timeout, CancellationToken.None);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Match> MatchAsync(String input, String pattern, RegexOptions options, TimeSpan matchTimeout, CancellationToken token)
+        public static Task<Match> MatchAsync(String input, String pattern, RegexOptions options, TimeSpan timeout, CancellationToken token)
         {
-            return Task.Run(() => Regex.Match(input, pattern, options, matchTimeout), token);
+            return Task.Run(() => Regex.Match(input, pattern, options, timeout), token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -453,15 +475,15 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<MatchCollection> MatchesAsync(String input, String pattern, RegexOptions options, TimeSpan matchTimeout)
+        public static Task<MatchCollection> MatchesAsync(String input, String pattern, RegexOptions options, TimeSpan timeout)
         {
-            return MatchesAsync(input, pattern, options, matchTimeout, CancellationToken.None);
+            return MatchesAsync(input, pattern, options, timeout, CancellationToken.None);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<MatchCollection> MatchesAsync(String input, String pattern, RegexOptions options, TimeSpan matchTimeout, CancellationToken token)
+        public static Task<MatchCollection> MatchesAsync(String input, String pattern, RegexOptions options, TimeSpan timeout, CancellationToken token)
         {
-            return Task.Run(() => Regex.Matches(input, pattern, options, matchTimeout), token);
+            return Task.Run(() => Regex.Matches(input, pattern, options, timeout), token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -523,15 +545,15 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<String> ReplaceAsync(String input, String pattern, MatchEvaluator evaluator, RegexOptions options, TimeSpan matchTimeout)
+        public static Task<String> ReplaceAsync(String input, String pattern, MatchEvaluator evaluator, RegexOptions options, TimeSpan timeout)
         {
-            return ReplaceAsync(input, pattern, evaluator, options, matchTimeout, CancellationToken.None);
+            return ReplaceAsync(input, pattern, evaluator, options, timeout, CancellationToken.None);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<String> ReplaceAsync(String input, String pattern, MatchEvaluator evaluator, RegexOptions options, TimeSpan matchTimeout, CancellationToken token)
+        public static Task<String> ReplaceAsync(String input, String pattern, MatchEvaluator evaluator, RegexOptions options, TimeSpan timeout, CancellationToken token)
         {
-            return Task.Run(() => Regex.Replace(input, pattern, evaluator, options, matchTimeout), token);
+            return Task.Run(() => Regex.Replace(input, pattern, evaluator, options, timeout), token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -559,15 +581,15 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<String> ReplaceAsync(String input, String pattern, String replacement, RegexOptions options, TimeSpan matchTimeout)
+        public static Task<String> ReplaceAsync(String input, String pattern, String replacement, RegexOptions options, TimeSpan timeout)
         {
-            return ReplaceAsync(input, pattern, replacement, options, matchTimeout, CancellationToken.None);
+            return ReplaceAsync(input, pattern, replacement, options, timeout, CancellationToken.None);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<String> ReplaceAsync(String input, String pattern, String replacement, RegexOptions options, TimeSpan matchTimeout, CancellationToken token)
+        public static Task<String> ReplaceAsync(String input, String pattern, String replacement, RegexOptions options, TimeSpan timeout, CancellationToken token)
         {
-            return Task.Run(() => Regex.Replace(input, pattern, replacement, options, matchTimeout), token);
+            return Task.Run(() => Regex.Replace(input, pattern, replacement, options, timeout), token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -697,15 +719,15 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<String[]> SplitAsync(String input, String pattern, RegexOptions options, TimeSpan matchTimeout)
+        public static Task<String[]> SplitAsync(String input, String pattern, RegexOptions options, TimeSpan timeout)
         {
-            return SplitAsync(input, pattern, options, matchTimeout, CancellationToken.None);
+            return SplitAsync(input, pattern, options, timeout, CancellationToken.None);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<String[]> SplitAsync(String input, String pattern, RegexOptions options, TimeSpan matchTimeout, CancellationToken token)
+        public static Task<String[]> SplitAsync(String input, String pattern, RegexOptions options, TimeSpan timeout, CancellationToken token)
         {
-            return Task.Run(() => Regex.Split(input, pattern, options, matchTimeout), token);
+            return Task.Run(() => Regex.Split(input, pattern, options, timeout), token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -784,15 +806,15 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> IsMatchAsync(String input, String pattern, RegexOptions options, TimeSpan matchTimeout)
+        public static Task<Boolean> IsMatchAsync(String input, String pattern, RegexOptions options, TimeSpan timeout)
         {
-            return IsMatchAsync(input, pattern, options, matchTimeout, CancellationToken.None);
+            return IsMatchAsync(input, pattern, options, timeout, CancellationToken.None);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<Boolean> IsMatchAsync(String input, String pattern, RegexOptions options, TimeSpan matchTimeout, CancellationToken token)
+        public static Task<Boolean> IsMatchAsync(String input, String pattern, RegexOptions options, TimeSpan timeout, CancellationToken token)
         {
-            return Task.Run(() => Regex.IsMatch(input, pattern, options, matchTimeout), token);
+            return Task.Run(() => Regex.IsMatch(input, pattern, options, timeout), token);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

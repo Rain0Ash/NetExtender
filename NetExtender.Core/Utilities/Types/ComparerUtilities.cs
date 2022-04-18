@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
-using NetExtender.Types.Comparers.Common;
+using NetExtender.Types.Comparers;
 using NetExtender.Types.Comparers.Interfaces;
 using NetExtender.Types.Monads;
 using NetExtender.Utilities.Numerics;
@@ -63,7 +63,17 @@ namespace NetExtender.Utilities.Types
 
             return comparison.Invoke;
         }
-        
+
+        public static IEqualityComparer<T> ToEqualityComparer<T>(this IComparer<T> comparer)
+        {
+            if (comparer is null)
+            {
+                throw new ArgumentNullException(nameof(comparer));
+            }
+
+            return new ComparerEqualityWrapper<T>(comparer);
+        }
+
         public static IEqualityComparer<T> ToEqualityComparer<T>(this EqualityComparison<T> comparison)
         {
             if (comparison is null)

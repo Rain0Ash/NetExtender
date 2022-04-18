@@ -10,7 +10,6 @@ using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
-    //TODO: array segment overload
     public static partial class ArrayUtilities
     {
         /// <summary>
@@ -294,21 +293,21 @@ namespace NetExtender.Utilities.Types
             (source[x1, y1], source[x2, y2]) = (source[x2, y2], source[x1, y1]);
         }
 
-        /// <inheritdoc cref="Array.Clear"/>
+        /// <inheritdoc cref="Array.Clear(System.Array)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Clear(this Array array)
         {
             Array.Clear(array, 0, array.Length);
         }
 
-        /// <inheritdoc cref="Array.Clear"/>
+        /// <inheritdoc cref="Array.Clear(System.Array,Int32,Int32)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Clear(this Array array, Int32 index)
         {
             Array.Clear(array, index, array.Length - index);
         }
 
-        /// <inheritdoc cref="Array.Clear"/>
+        /// <inheritdoc cref="Array.Clear(System.Array,Int32,Int32)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Clear(this Array array, Int32 index, Int32 length)
         {
@@ -489,78 +488,188 @@ namespace NetExtender.Utilities.Types
 
         /// <inheritdoc cref="Array.Exists{T}"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Exists<T>(this T[] array, Predicate<T> match)
+        public static Boolean Exists<T>(this T[] array, Func<T, Boolean> match)
         {
-            return Array.Exists(array, match);
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            if (match is null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            return Array.Exists(array, match.Invoke);
         }
 
         /// <inheritdoc cref="Array.Find{T}(T[],Predicate{T})"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T? Find<T>(this T[] array, Predicate<T> match)
+        public static T? Find<T>(this T[] array, Func<T, Boolean> match)
         {
-            return Array.Find(array, match);
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            if (match is null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            return Array.Find(array, match.Invoke);
         }
 
         /// <inheritdoc cref="Array.FindAll{T}"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T[] FindAll<T>(this T[] array, Predicate<T> match)
+        public static T[] FindAll<T>(this T[] array, Func<T, Boolean> match)
         {
-            return Array.FindAll(array, match);
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            if (match is null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            return Array.FindAll(array, match.Invoke);
         }
 
         /// <inheritdoc cref="Array.FindIndex{T}(T[],Predicate{T})"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 FindIndex<T>(this T[] array, Predicate<T> match)
+        public static Int32 FindIndex<T>(this T[] array, Func<T, Boolean> match)
         {
-            return Array.FindIndex(array, match);
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            if (match is null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            return Array.FindIndex(array, match.Invoke);
         }
 
         /// <inheritdoc cref="Array.FindIndex{T}(T[],Int32,Predicate{T})"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 FindIndex<T>(this T[] array, Int32 start, Predicate<T> match)
+        public static Int32 FindIndex<T>(this T[] array, Int32 start, Func<T, Boolean> match)
         {
-            return Array.FindIndex(array, start, match);
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            if (match is null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            return Array.FindIndex(array, start, match.Invoke);
         }
 
         /// <inheritdoc cref="Array.FindIndex{T}(T[],Int32,Int32,Predicate{T})"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 FindIndex<T>(this T[] array, Int32 start, Int32 count, Predicate<T> match)
+        public static Int32 FindIndex<T>(this T[] array, Int32 start, Int32 count, Func<T, Boolean> match)
         {
-            return Array.FindIndex(array, start, count, match);
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            if (match is null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            return Array.FindIndex(array, start, count, match.Invoke);
         }
 
         /// <inheritdoc cref="Array.FindLast{T}(T[],Predicate{T})"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T? FindLast<T>(this T[] array, Predicate<T> match)
+        public static T? FindLast<T>(this T[] array, Func<T, Boolean> match)
         {
-            return Array.FindLast(array, match);
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            if (match is null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            return Array.FindLast(array, match.Invoke);
         }
 
         /// <inheritdoc cref="Array.FindLastIndex{T}(T[],Predicate{T})"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 FindLastIndex<T>(this T[] array, Predicate<T> match)
+        public static Int32 FindLastIndex<T>(this T[] array, Func<T, Boolean> match)
         {
-            return Array.FindLastIndex(array, match);
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            if (match is null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            return Array.FindLastIndex(array, match.Invoke);
         }
 
         /// <inheritdoc cref="Array.FindLastIndex{T}(T[],Int32,Predicate{T})"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 FindLastIndex<T>(this T[] array, Int32 start, Predicate<T> match)
+        public static Int32 FindLastIndex<T>(this T[] array, Int32 start, Func<T, Boolean> match)
         {
-            return Array.FindLastIndex(array, start, match);
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            if (match is null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            return Array.FindLastIndex(array, start, match.Invoke);
         }
 
         /// <inheritdoc cref="Array.FindLastIndex{T}(T[],Int32,Int32,Predicate{T})"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 FindLastIndex<T>(this T[] array, Int32 start, Int32 count, Predicate<T> match)
+        public static Int32 FindLastIndex<T>(this T[] array, Int32 start, Int32 count, Func<T, Boolean> match)
         {
-            return Array.FindLastIndex(array, start, count, match);
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            if (match is null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            return Array.FindLastIndex(array, start, count, match.Invoke);
         }
 
         /// <inheritdoc cref="Array.ForEach{T}"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T[] ForEach<T>(this T[] array, Action<T> action)
         {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
             Array.ForEach(array, action);
             return array;
         }
@@ -574,16 +683,16 @@ namespace NetExtender.Utilities.Types
 
         /// <inheritdoc cref="Array.IndexOf{T}(T[],T,Int32)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 IndexOf<T>(this T[] array, T value, Int32 startIndex)
+        public static Int32 IndexOf<T>(this T[] array, T value, Int32 start)
         {
-            return Array.IndexOf(array, value, startIndex);
+            return Array.IndexOf(array, value, start);
         }
 
         /// <inheritdoc cref="Array.IndexOf{T}(T[],T,Int32,Int32)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 IndexOf<T>(this T[] array, T value, Int32 startIndex, Int32 count)
+        public static Int32 IndexOf<T>(this T[] array, T value, Int32 start, Int32 count)
         {
-            return Array.IndexOf(array, value, startIndex, count);
+            return Array.IndexOf(array, value, start, count);
         }
 
         /// <inheritdoc cref="Array.LastIndexOf{T}(T[],T)"/>
@@ -595,16 +704,16 @@ namespace NetExtender.Utilities.Types
 
         /// <inheritdoc cref="Array.LastIndexOf{T}(T[],T,Int32)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 LastIndexOf<T>(this T[] array, T value, Int32 startIndex)
+        public static Int32 LastIndexOf<T>(this T[] array, T value, Int32 start)
         {
-            return Array.LastIndexOf(array, value, startIndex);
+            return Array.LastIndexOf(array, value, start);
         }
 
         /// <inheritdoc cref="Array.LastIndexOf{T}(T[],T,Int32,Int32)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 LastIndexOf<T>(this T[] array, T value, Int32 startIndex, Int32 count)
+        public static Int32 LastIndexOf<T>(this T[] array, T value, Int32 start, Int32 count)
         {
-            return Array.LastIndexOf(array, value, startIndex, count);
+            return Array.LastIndexOf(array, value, start, count);
         }
 
         /// <inheritdoc cref="Array.Reverse{T}(T[])"/>
@@ -637,6 +746,11 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T[] SortArray<T>(this T[] array)
         {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
             Array.Sort(array);
             return array;
         }
@@ -645,6 +759,11 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T[] SortArray<T>(this T[] array, IComparer<T>? comparer)
         {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
             Array.Sort(array, comparer);
             return array;
         }
@@ -653,6 +772,16 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T[] SortArray<T>(this T[] array, Comparison<T> comparison)
         {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
             Array.Sort(array, comparison);
             return array;
         }
@@ -661,6 +790,11 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T[] SortArray<T>(this T[] array, Int32 index, Int32 length)
         {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
             Array.Sort(array, index, length);
             return array;
         }
@@ -669,15 +803,30 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T[] SortArray<T>(this T[] array, Int32 index, Int32 length, IComparer<T>? comparer)
         {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
             Array.Sort(array, index, length, comparer);
             return array;
         }
 
         /// <inheritdoc cref="Array.TrueForAll{T}"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean TrueForAll<T>(this T[] array, Predicate<T> match)
+        public static Boolean TrueForAll<T>(this T[] array, Func<T, Boolean> match)
         {
-            return Array.TrueForAll(array, match);
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            if (match is null)
+            {
+                throw new ArgumentNullException(nameof(match));
+            }
+
+            return Array.TrueForAll(array, match.Invoke);
         }
 
         /// <summary>

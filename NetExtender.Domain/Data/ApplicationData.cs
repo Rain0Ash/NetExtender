@@ -125,7 +125,7 @@ namespace NetExtender.Domains
         {
             get
             {
-                return MutexUtilities.CaptureMutex(ApplicationName);
+                return MutexUtilities.Capture(ApplicationName);
             }
         }
 

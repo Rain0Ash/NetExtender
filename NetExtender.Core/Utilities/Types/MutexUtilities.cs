@@ -10,13 +10,13 @@ namespace NetExtender.Utilities.Types
 {
     public static class MutexUtilities
     {
-        public static Boolean CaptureMutex(this Mutex mutex)
+        public static Boolean Capture(this Mutex mutex)
         {
             if (mutex is null)
             {
                 throw new ArgumentNullException(nameof(mutex));
             }
-            
+
             try
             {
                 return mutex.WaitOne(0);
@@ -24,10 +24,14 @@ namespace NetExtender.Utilities.Types
             catch (AbandonedMutexException)
             {
                 return true;
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
             }
         }
         
-        public static Boolean CaptureMutex(this SemaphoreMutex mutex)
+        public static Boolean Capture(this SemaphoreMutex mutex)
         {
             if (mutex is null)
             {
@@ -41,6 +45,10 @@ namespace NetExtender.Utilities.Types
             catch (AbandonedMutexException)
             {
                 return true;
+            }
+            catch (InvalidOperationException)
+            {
+                return false;
             }
         }
         
@@ -66,14 +74,14 @@ namespace NetExtender.Utilities.Types
             return Mutexes.TryGetValue(name, out SemaphoreMutex? mutex) ? mutex.LongCount : 0;
         }
         
-        public static Boolean CaptureMutex(String name)
+        public static Boolean Capture(String name)
         {
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
 
-            return Mutexes.TryGetValue(name, out SemaphoreMutex? mutex) ? mutex.CaptureMutex() : CaptureRegisterMutex(name);
+            return Mutexes.TryGetValue(name, out SemaphoreMutex? mutex) ? mutex.Capture() : CaptureRegisterMutex(name);
         }
         
         public static Boolean RegisterMutex(String name)
@@ -85,7 +93,7 @@ namespace NetExtender.Utilities.Types
             
             if (Mutexes.TryGetValue(name, out SemaphoreMutex? mutex))
             {
-                mutex.Capture();
+                mutex.Take();
                 return true;
             }
             
@@ -116,12 +124,12 @@ namespace NetExtender.Utilities.Types
 
             if (Mutexes.TryGetValue(name, out SemaphoreMutex? mutex))
             {
-                if (!mutex.CaptureMutex())
+                if (!mutex.Capture())
                 {
                     return false;
                 }
 
-                mutex.Capture();
+                mutex.Take();
                 return true;
             }
 
@@ -129,7 +137,7 @@ namespace NetExtender.Utilities.Types
             {
                 mutex = new SemaphoreMutex(true, name);
 
-                if (mutex.CaptureMutex() && Mutexes.TryAdd(name, mutex))
+                if (mutex.Capture() && Mutexes.TryAdd(name, mutex))
                 {
                     return true;
                 }
@@ -141,6 +149,11 @@ namespace NetExtender.Utilities.Types
             {
                 return false;
             }
+        }
+
+        public static Boolean UnregisterMutex(String name, Boolean force)
+        {
+            return force ? ForceUnregisterMutex(name) : UnregisterMutex(name);
         }
 
         public static Boolean UnregisterMutex(String name)
@@ -164,7 +177,7 @@ namespace NetExtender.Utilities.Types
             
             return true;
         }
-        
+
         public static Boolean ForceUnregisterMutex(String name)
         {
             if (name is null)

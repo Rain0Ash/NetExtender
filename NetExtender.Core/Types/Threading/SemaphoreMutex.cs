@@ -72,7 +72,7 @@ namespace NetExtender.Types.Threading
             Mutex = mutex ?? throw new ArgumentNullException(nameof(mutex));
         }
 
-        public UInt64 Capture()
+        public UInt64 Take()
         {
             if (Mutex is null)
             {

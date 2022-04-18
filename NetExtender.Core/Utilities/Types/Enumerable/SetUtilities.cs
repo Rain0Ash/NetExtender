@@ -460,23 +460,5 @@ namespace NetExtender.Utilities.Types
 
             return (left, right);
         }
-
-        //TODO:
-        /*
-        public static Decimal Interpolate(this SortedSet<Decimal> set)
-        {
-            if (set is null)
-            {
-                throw new ArgumentNullException(nameof(set));
-            }
-
-            return set.Count switch
-            {
-                0 => 0,
-                1 => set.First(),
-                
-            };
-        }
-        */
     }
 }

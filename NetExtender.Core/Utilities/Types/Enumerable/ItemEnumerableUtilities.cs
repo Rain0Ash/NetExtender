@@ -8,7 +8,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Initializer.Types.Indexers.Interfaces;
-using NetExtender.Types.Comparers.Common;
+using NetExtender.Types.Comparers;
+using NetExtender.Types.Dictionaries;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
@@ -2639,7 +2640,54 @@ namespace NetExtender.Utilities.Types
             Int32 counter = first ? 0 : 1;
             return source.ForEachWhere(_ => counter++ % every == 0, action);
         }
-        
+
+        public static Double Difference<T>(this IEnumerable<T> source, IEnumerable<T> other)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            NullableDictionary<T, Int32> dictionary = new NullableDictionary<T, Int32>();
+
+            Int32 count = 0;
+            foreach (T item in source)
+            {
+                count++;
+                if (dictionary.ContainsKey(item))
+                {
+                    dictionary[item]++;
+                    continue;
+                }
+
+                dictionary.Add(item, 1);
+            }
+            
+            foreach (T item in other)
+            {
+                count++;
+                if (dictionary.ContainsKey(item))
+                {
+                    dictionary[item]--;
+                    continue;
+                }
+
+                dictionary.Add(item, -1);
+            }
+
+            if (count <= 0)
+            {
+                return 0;
+            }
+            
+            return dictionary.Values.Sum(Math.Abs) / (Double) count;
+        }
+
         public static void Invoke<T>(this IEnumerable<T> source, Action<T> action)
         {
             if (source is null)

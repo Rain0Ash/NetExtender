@@ -134,6 +134,11 @@ namespace NetExtender.Initializer.Types.Indexers
             Index.Clear();
         }
 
+        public void CopyTo(T[] array)
+        {
+            CopyTo(array, 0);
+        }
+
         public void CopyTo(T[] array, Int32 index)
         {
             if (array is null)

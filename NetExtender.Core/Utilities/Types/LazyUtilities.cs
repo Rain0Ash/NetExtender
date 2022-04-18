@@ -73,7 +73,7 @@ namespace NetExtender.Utilities.Types
             return source;
         }
 
-        public static T ValueOr<T>(this Lazy<T> source, T alternate)
+        public static T ValueOrDefault<T>(this Lazy<T> source, T alternate)
         {
             if (source is null)
             {
@@ -83,7 +83,7 @@ namespace NetExtender.Utilities.Types
             return source.IsValueCreated ? source.Value : alternate;
         }
 
-        public static T ValueOr<T>(this ILazy<T> source, T alternate)
+        public static T ValueOrDefault<T>(this ILazy<T> source, T alternate)
         {
             if (source is null)
             {
@@ -93,7 +93,7 @@ namespace NetExtender.Utilities.Types
             return source.IsValueCreated ? source.Value : alternate;
         }
         
-        public static T ValueOr<T>(this Lazy<T> source, Func<T> alternate)
+        public static T ValueOrDefault<T>(this Lazy<T> source, Func<T> alternate)
         {
             if (source is null)
             {
@@ -108,7 +108,7 @@ namespace NetExtender.Utilities.Types
             return source.IsValueCreated ? source.Value : alternate.Invoke();
         }
         
-        public static T ValueOr<T>(this ILazy<T> source, Func<T> alternate)
+        public static T ValueOrDefault<T>(this ILazy<T> source, Func<T> alternate)
         {
             if (source is null)
             {
