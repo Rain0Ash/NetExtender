@@ -2929,6 +2929,21 @@ namespace NetExtender.Utilities.Types
             }
         }
 
+#if NETCOREAPP3_1_OR_GREATER
+        public static IEnumerable<Char32> EnumerateUnicode(this String value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            foreach (Char32 character in value.EnumerateRunes())
+            {
+                yield return character;
+            }
+        }
+#endif
+
         /// <summary>
         /// Converts the specified string to a stream by using UTF-8 encoding that can be read from.
         /// <para>Don't forget to dispose the stream.</para>

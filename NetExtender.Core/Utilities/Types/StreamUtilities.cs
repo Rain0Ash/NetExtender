@@ -231,7 +231,7 @@ namespace NetExtender.Utilities.Types
                 return null;
             }
 
-            return BitConverter.ToInt32(buffer);
+            return BitConverter.ToUInt32(buffer);
         }
 
         public static IEnumerable<Char32> ReadChar32Sequence(this Stream stream)

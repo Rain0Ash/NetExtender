@@ -1,12 +1,18 @@
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
+using System.Text;
 using NetExtender.Utilities.Numerics;
 
 namespace System
 {
     [Serializable]
-    public readonly struct Char32 : IComparable, IComparable<Char>, IEquatable<Char>, IComparable<Char32>, IEquatable<Char32>, IConvertible, ISpanFormattable
+    public readonly struct Char32 : 
+#if NETCOREAPP3_1_OR_GREATER
+        IComparable, IComparable<Char>, IEquatable<Char>, IComparable<Rune>, IEquatable<Rune>, IComparable<Char32>, IEquatable<Char32>, IConvertible, ISpanFormattable
+#else
+        IComparable, IComparable<Char>, IEquatable<Char>, IComparable<Char32>, IEquatable<Char32>, IConvertible, ISpanFormattable
+#endif
     {
         public static explicit operator Char(Char32 value)
         {
@@ -22,12 +28,24 @@ namespace System
         {
             return value.Value;
         }
-        
+
+#if NETCOREAPP3_1_OR_GREATER
+        public static implicit operator Rune(Char32 value)
+        {
+            return new Rune(value.Value);
+        }
+
+        public static implicit operator Char32(Rune value)
+        {
+            return new Char32(value.Value);
+        }
+#endif
+
         public static implicit operator Char32(Char value)
         {
             return new Char32(value);
         }
-        
+
         public static implicit operator Char32(SByte value)
         {
             return new Char32(value);
@@ -37,7 +55,7 @@ namespace System
         {
             return new Char32(value);
         }
-        
+
         public static implicit operator Char32(Int16 value)
         {
             return new Char32(value);
@@ -57,212 +75,284 @@ namespace System
         {
             return new Char32(value);
         }
-        
+
         public static Boolean operator ==(Char32 first, Int32 second)
         {
             return first.Value == second;
         }
-        
+
         public static Boolean operator ==(Int32 first, Char32 second)
         {
             return first == second.Value;
         }
-        
+
         public static Boolean operator ==(Char32 first, UInt32 second)
         {
             return first.Value == second;
         }
-        
+
         public static Boolean operator ==(UInt32 first, Char32 second)
         {
             return first == second.Value;
         }
-        
+
         public static Boolean operator ==(Char32 first, Char second)
         {
             return first.Value == second;
         }
-        
+
         public static Boolean operator ==(Char first, Char32 second)
         {
             return first == second.Value;
         }
         
+#if NETCOREAPP3_1_OR_GREATER
+        public static Boolean operator ==(Char32 first, Rune second)
+        {
+            return first.Value == unchecked((UInt32) second.Value);
+        }
+
+        public static Boolean operator ==(Rune first, Char32 second)
+        {
+            return unchecked((UInt32) first.Value) == second.Value;
+        }
+#endif
+
         public static Boolean operator ==(Char32 first, Char32 second)
         {
             return first.Value == second.Value;
         }
-        
+
         public static Boolean operator !=(Char32 first, Int32 second)
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator !=(Int32 first, Char32 second)
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator !=(Char32 first, UInt32 second)
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator !=(UInt32 first, Char32 second)
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator !=(Char32 first, Char second)
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator !=(Char first, Char32 second)
         {
             return !(first == second);
         }
+        
+#if NETCOREAPP3_1_OR_GREATER
+        public static Boolean operator !=(Char32 first, Rune second)
+        {
+            return !(first == second);
+        }
+
+        public static Boolean operator !=(Rune first, Char32 second)
+        {
+            return !(first == second);
+        }
+#endif
 
         public static Boolean operator !=(Char32 first, Char32 second)
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator >(Char32 first, Int32 second)
         {
             return first.Value > second;
         }
-        
+
         public static Boolean operator >(Int32 first, Char32 second)
         {
             return first > second.Value;
         }
-        
+
         public static Boolean operator >(Char32 first, UInt32 second)
         {
             return first.Value > second;
         }
-        
+
         public static Boolean operator >(UInt32 first, Char32 second)
         {
             return first > second.Value;
         }
-        
+
         public static Boolean operator >(Char32 first, Char second)
         {
             return first.Value > second;
         }
-        
+
         public static Boolean operator >(Char first, Char32 second)
         {
             return first > second.Value;
         }
         
+#if NETCOREAPP3_1_OR_GREATER
+        public static Boolean operator >(Char32 first, Rune second)
+        {
+            return first.Value > unchecked((UInt32) second.Value);
+        }
+
+        public static Boolean operator >(Rune first, Char32 second)
+        {
+            return unchecked((UInt32) first.Value) > second.Value;
+        }
+#endif
+
         public static Boolean operator >(Char32 first, Char32 second)
         {
             return first.Value > second.Value;
         }
-        
+
         public static Boolean operator >=(Char32 first, Int32 second)
         {
             return first.Value >= second;
         }
-        
+
         public static Boolean operator >=(Int32 first, Char32 second)
         {
             return first >= second.Value;
         }
-        
+
         public static Boolean operator >=(Char32 first, UInt32 second)
         {
             return first.Value >= second;
         }
-        
+
         public static Boolean operator >=(UInt32 first, Char32 second)
         {
             return first >= second.Value;
         }
-        
+
         public static Boolean operator >=(Char32 first, Char second)
         {
             return first.Value >= second;
         }
-        
+
         public static Boolean operator >=(Char first, Char32 second)
         {
             return first >= second.Value;
         }
         
+#if NETCOREAPP3_1_OR_GREATER
+        public static Boolean operator >=(Char32 first, Rune second)
+        {
+            return first.Value >= unchecked((UInt32) second.Value);
+        }
+
+        public static Boolean operator >=(Rune first, Char32 second)
+        {
+            return unchecked((UInt32) first.Value) >= second.Value;
+        }
+#endif
+
         public static Boolean operator >=(Char32 first, Char32 second)
         {
             return first.Value >= second.Value;
         }
-        
+
         public static Boolean operator <(Char32 first, Int32 second)
         {
             return first.Value < second;
         }
-        
+
         public static Boolean operator <(Int32 first, Char32 second)
         {
             return first < second.Value;
         }
-        
+
         public static Boolean operator <(Char32 first, UInt32 second)
         {
             return first.Value < second;
         }
-        
+
         public static Boolean operator <(UInt32 first, Char32 second)
         {
             return first < second.Value;
         }
-        
+
         public static Boolean operator <(Char32 first, Char second)
         {
             return first.Value < second;
         }
-        
+
         public static Boolean operator <(Char first, Char32 second)
         {
             return first < second.Value;
         }
         
+#if NETCOREAPP3_1_OR_GREATER
+        public static Boolean operator <(Char32 first, Rune second)
+        {
+            return first.Value < unchecked((UInt32) second.Value);
+        }
+
+        public static Boolean operator <(Rune first, Char32 second)
+        {
+            return unchecked((UInt32) first.Value) < second.Value;
+        }
+#endif
+
         public static Boolean operator <(Char32 first, Char32 second)
         {
             return first.Value < second.Value;
         }
-        
+
         public static Boolean operator <=(Char32 first, Int32 second)
         {
             return first.Value <= second;
         }
-        
+
         public static Boolean operator <=(Int32 first, Char32 second)
         {
             return first <= second.Value;
         }
-        
+
         public static Boolean operator <=(Char32 first, UInt32 second)
         {
             return first.Value <= second;
         }
-        
+
         public static Boolean operator <=(UInt32 first, Char32 second)
         {
             return first <= second.Value;
         }
-        
+
         public static Boolean operator <=(Char32 first, Char second)
         {
             return first.Value <= second;
         }
-        
+
         public static Boolean operator <=(Char first, Char32 second)
         {
             return first <= second.Value;
         }
         
+#if NETCOREAPP3_1_OR_GREATER
+        public static Boolean operator <=(Char32 first, Rune second)
+        {
+            return first.Value <= unchecked((UInt32) second.Value);
+        }
+
+        public static Boolean operator <=(Rune first, Char32 second)
+        {
+            return unchecked((UInt32) first.Value) <= second.Value;
+        }
+#endif
+
         public static Boolean operator <=(Char32 first, Char32 second)
         {
             return first.Value <= second.Value;
@@ -299,6 +389,18 @@ namespace System
         {
             return new Char32(first + second.Value);
         }
+        
+#if NETCOREAPP3_1_OR_GREATER
+        public static Char32 operator +(Char32 first, Rune second)
+        {
+            return new Char32(first.Value + unchecked((UInt32) second.Value));
+        }
+
+        public static Char32 operator +(Rune first, Char32 second)
+        {
+            return new Char32(unchecked((UInt32) first.Value) + second.Value);
+        }
+#endif
 
         public static Char32 operator +(Char32 first, Char32 second)
         {
@@ -336,6 +438,18 @@ namespace System
         {
             return new Char32(first - second.Value);
         }
+        
+#if NETCOREAPP3_1_OR_GREATER
+        public static Char32 operator -(Char32 first, Rune second)
+        {
+            return new Char32(first.Value - unchecked((UInt32) second.Value));
+        }
+
+        public static Char32 operator -(Rune first, Char32 second)
+        {
+            return new Char32(unchecked((UInt32) first.Value) - second.Value);
+        }
+#endif
 
         public static Char32 operator -(Char32 first, Char32 second)
         {
@@ -343,6 +457,16 @@ namespace System
         }
 
         private UInt32 Value { get; }
+        
+#if NETCOREAPP3_1_OR_GREATER
+        public Rune Rune
+        {
+            get
+            {
+                return this;
+            }
+        }
+#endif
 
         private Char32(Char value)
         {
@@ -363,7 +487,7 @@ namespace System
         {
             Value = unchecked((UInt32) Char.ConvertToUtf32(high, low));
         }
-        
+
         public void Deconstruct(out Char high, out Char low)
         {
             if (Value <= Char.MaxValue)
@@ -408,12 +532,26 @@ namespace System
         {
             return Value.CompareTo(other.Value);
         }
+        
+#if NETCOREAPP3_1_OR_GREATER
+        public Int32 CompareTo(Rune other)
+        {
+            return Value.CompareTo(unchecked((UInt32) other.Value));
+        }
+#endif
 
         public Boolean Equals(Char other)
         {
             return Value == other;
         }
 
+#if NETCOREAPP3_1_OR_GREATER
+        public Boolean Equals(Rune other)
+        {
+            return Value == unchecked((UInt32) other.Value);
+        }
+#endif
+        
         public Boolean Equals(Char32 other)
         {
             return Value == other.Value;
@@ -458,13 +596,13 @@ namespace System
                 written = 1;
                 return true;
             }
-            
+
             if (destination.Length < 2)
             {
                 written = 0;
                 return false;
             }
-            
+
             destination[0] = (Char) Value.High();
             destination[1] = (Char) Value.Low();
             written = 2;
