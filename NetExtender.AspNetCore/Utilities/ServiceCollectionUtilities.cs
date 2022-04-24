@@ -6,7 +6,9 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetExtender.AspNetCore.Types.DependencyInjection.Interfaces;
@@ -317,6 +319,27 @@ namespace NetExtender.Utilities.AspNetCore.Types
             }
 
             return collection.AddScoped<DefaultIdentityUser<TUser, TKey>>();
+        }
+
+        public static void AddApiVersioning<T>(this IServiceCollection services) where T : IApiVersionReader
+        {
+            AddApiVersioning<T>(services, null);
+        }
+
+        public static void AddApiVersioning<T>(this IServiceCollection services, String? version) where T : IApiVersionReader
+        {
+            if (services is null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+
+            services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = ApiVersion.TryParse(version, out ApiVersion? api) && api is not null ? api : ApiVersion.Default;
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ReportApiVersions = true;
+                options.ApiVersionReader = Activator.CreateInstance<T>();
+            });
         }
     }
 }

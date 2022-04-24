@@ -8,6 +8,37 @@ using NetExtender.Types.Comparers;
 
 namespace NetExtender.Utilities.Types
 {
+    public struct RangeEnumerator
+    {
+        public Int32 Current { get; private set; }
+        private Int32 To { get; }
+        private Int32 Step { get; }
+
+        public RangeEnumerator(Int32 from, Int32 to)
+            : this(from, to, 1)
+        {
+        }
+
+        public RangeEnumerator(Int32 from, Int32 to, Int32 step)
+        {
+            if (step == 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(step));
+            }
+
+            Step = step;
+            To = to + step;
+            Current = from - step;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public Boolean MoveNext()
+        {
+            Current += Step;
+            return Current < To;
+        }
+    }
+    
     public static class RangeUtilities
     {
         public static IComparer<Range> Comparer { get; } = new ComparisonComparer<Range>(CompareTo);
@@ -57,38 +88,7 @@ namespace NetExtender.Utilities.Types
         {
             return GetLength(first, length).CompareTo(GetLength(second, length));
         }
-        
-        public struct RangeEnumerator
-        {
-            public Int32 Current { get; private set; }
-            private Int32 To { get; }
-            private Int32 Step { get; }
 
-            public RangeEnumerator(Int32 from, Int32 to)
-                : this(from, to, 1)
-            {
-            }
-
-            public RangeEnumerator(Int32 from, Int32 to, Int32 step)
-            {
-                if (step == 0)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(step));
-                }
-
-                Step = step;
-                To = to + step;
-                Current = from - step;
-            }
-
-            [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-            public Boolean MoveNext()
-            {
-                Current += Step;
-                return Current < To;
-            }
-        }
-        
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static RangeEnumerator GetEnumerator(this Range range)
         {

@@ -1453,6 +1453,21 @@ namespace NetExtender.Utilities.Types
 
             return accumulate;
         }
+
+        public static IEnumerable<KeyValuePair<T, TResult>> AggregateValues<T, TElement, TResult>(this IEnumerable<IGrouping<T, TElement>> source, Func<IEnumerable<TElement>, TResult> aggregator)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (aggregator is null)
+            {
+                throw new ArgumentNullException(nameof(aggregator));
+            }
+
+            return source.Select(grouping => new KeyValuePair<T, TResult>(grouping.Key, aggregator(grouping)));
+        }
         
 #if !NET6_0_OR_GREATER
         /// <summary>
@@ -1496,7 +1511,7 @@ namespace NetExtender.Utilities.Types
 #endif
 
         /// <summary>
-        /// Combines two Enumerable objects into a sequence of Tuples containing each element
+        /// Combines four Enumerable objects into a sequence of Tuples containing each element
         /// of the source Enumerable in the first position with the element that has the same
         /// index in the second Enumerable in the second position.
         /// </summary>
@@ -1542,6 +1557,116 @@ namespace NetExtender.Utilities.Types
             }
         }
         
+        /// <summary>
+        /// Combines five Enumerable objects into a sequence of Tuples containing each element
+        /// of the source Enumerable in the first position with the element that has the same
+        /// index in the second Enumerable in the second position.
+        /// </summary>
+        /// <typeparam name="T1">The type of the elements of <paramref name="first"/>.</typeparam>
+        /// <typeparam name="T2">The type of the elements of <paramref name="second"/>.</typeparam>
+        /// <typeparam name="T3">The type of the elements of <paramref name="third"/>.</typeparam>
+        /// <typeparam name="T4">The type of the elements of <paramref name="fourth"/>.</typeparam>
+        /// <typeparam name="T5">The type of the elements of <paramref name="fifth"/>.</typeparam>
+        /// <param name="first">The first sequence.</param>
+        /// <param name="second">The second sequence.</param>
+        /// <param name="third">The third sequence.</param>
+        /// <param name="fourth">The fourth sequence.</param>
+        /// <param name="fifth">The fifth sequence.</param>
+        /// <returns>The output sequence will be as long as the shortest input sequence.</returns>
+        public static IEnumerable<(T1 First, T2 Second, T3 Third, T4 Fourth, T5 Fifth)> Zip<T1, T2, T3, T4, T5>(this IEnumerable<T1> first, IEnumerable<T2> second, IEnumerable<T3> third, IEnumerable<T4> fourth, IEnumerable<T5> fifth)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+
+            if (third is null)
+            {
+                throw new ArgumentNullException(nameof(third));
+            }
+
+            if (fourth is null)
+            {
+                throw new ArgumentNullException(nameof(fourth));
+            }
+
+            using IEnumerator<T1> enumerator1 = first.GetEnumerator();
+            using IEnumerator<T2> enumerator2 = second.GetEnumerator();
+            using IEnumerator<T3> enumerator3 = third.GetEnumerator();
+            using IEnumerator<T4> enumerator4 = fourth.GetEnumerator();
+            using IEnumerator<T5> enumerator5 = fifth.GetEnumerator();
+
+            while (enumerator1.MoveNext() && enumerator2.MoveNext() && enumerator3.MoveNext() && enumerator4.MoveNext() && enumerator5.MoveNext())
+            {
+                yield return (enumerator1.Current, enumerator2.Current, enumerator3.Current, enumerator4.Current, enumerator5.Current);
+            }
+        }
+
+        public static IEnumerable<(T1 First, T2 Second, T3 Third)> ThenZip<T1, T2, T3>(this IEnumerable<(T1, T2)> source, IEnumerable<T3> other)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return source.Zip(other, TupleUtilities.Append);
+        }
+
+        public static IEnumerable<(T1 First, T2 Second, T3 Third, T4 Fourth)> ThenZip<T1, T2, T3, T4>(this IEnumerable<(T1, T2, T3)> source, IEnumerable<T4> other)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return source.Zip(other, TupleUtilities.Append);
+        }
+        
+        public static IEnumerable<(T1 First, T2 Second, T3 Third, T4 Fourth, T5 Fifth)> ThenZip<T1, T2, T3, T4, T5>(this IEnumerable<(T1, T2, T3, T4)> source, IEnumerable<T5> other)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return source.Zip(other, TupleUtilities.Append);
+        }
+        
+        public static IEnumerable<(T1 First, T2 Second, T3 Third, T4 Fourth, T5 Fifth, T6 Sixth)> ThenZip<T1, T2, T3, T4, T5, T6>(this IEnumerable<(T1, T2, T3, T4, T5)> source, IEnumerable<T6> other)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return source.Zip(other, TupleUtilities.Append);
+        }
+
         /// <summary>
         /// Returns a flattened OfType() sequence that contains the concatenation of all the nested sequences' elements.
         /// </summary>

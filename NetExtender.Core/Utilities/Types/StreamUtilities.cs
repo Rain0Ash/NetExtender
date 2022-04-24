@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +16,52 @@ namespace NetExtender.Utilities.Types
 {
     public static class StreamUtilities
     {
+        private static Type SynchronizedStreamType { get; } = Stream.Synchronized(Stream.Null).GetType();
+
+        public static Boolean IsSynchronized(this Stream stream)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            return stream.GetType() == SynchronizedStreamType;
+        }
+
+        public static Boolean Read<T>(this Stream stream, out T value) where T : struct
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            Int32 size = Unsafe.SizeOf<T>();
+            Span<Byte> buffer = stackalloc Byte[size];
+            Int32 length = stream.Read(buffer);
+
+            if (length < size)
+            {
+                value = default;
+                return false;
+            }
+
+            value = MemoryMarshal.Read<T>(buffer);
+            return true;
+        }
+
+        public static void Write<T>(this Stream stream, T value) where T : struct
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            Int32 size = Unsafe.SizeOf<T>();
+            Span<Byte> buffer = stackalloc Byte[size];
+            MemoryMarshal.Write(buffer, ref value);
+            stream.Write(buffer);
+        }
+        
         public static Char ReadChar(this Stream stream)
         {
             return ReadChar(stream, Encoding.UTF8);
@@ -246,6 +294,26 @@ namespace NetExtender.Utilities.Types
                 yield return symbol;
             }
         }
+        
+#if NETCOREAPP3_1_OR_GREATER
+        public static Rune? TryReadRune(this Stream stream)
+        {
+            return TryReadChar32(stream);
+        }
+        
+        public static IEnumerable<Rune> ReadRuneSequence(this Stream stream)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            while (stream.TryReadRune() is { } symbol)
+            {
+                yield return symbol;
+            }
+        }
+#endif
 
         public static void CopyStream(this Stream input, Stream output)
         {
@@ -592,6 +660,31 @@ namespace NetExtender.Utilities.Types
             StreamReader reader = new StreamReader(stream, encoding ?? Encoding.UTF8);
             return reader.ReadToEndAsync();
         }
+        
+        public static Boolean TryPosition(this Stream stream, out Int64 position)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            try
+            {
+                if (!stream.CanSeek)
+                {
+                    position = 0;
+                    return false;
+                }
+                
+                position = stream.Position;
+                return true;
+            }
+            catch (Exception)
+            {
+                position = 0;
+                return false;
+            }
+        }
 
         public static T SetPosition<T>(this T stream) where T : Stream
         {
@@ -872,6 +965,11 @@ namespace NetExtender.Utilities.Types
             }
 
             return new BinaryWriter(stream, encoding ?? Encoding.UTF8, leaveOpen);
+        }
+
+        public static ProgressStream Progress(this Stream stream, IProgress<ProgressStreamInfo> progress)
+        {
+            return new ProgressStream(stream, progress);
         }
 
         /// <summary>

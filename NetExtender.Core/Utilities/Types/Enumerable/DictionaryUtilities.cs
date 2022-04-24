@@ -2,8 +2,10 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -15,6 +17,32 @@ namespace NetExtender.Utilities.Types
 {
     public static class DictionaryUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlyDictionary<TKey, TValue> AsReadOnly<TKey, TValue>(this Dictionary<TKey, TValue> dictionary) where TKey : notnull
+        {
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(nameof(dictionary));
+            }
+
+            return new ReadOnlyDictionary<TKey, TValue>(dictionary);
+        }
+
+        public static ConcurrentDictionary<TKey, TValue> ToConcurrent<TKey, TValue>(this IDictionary<TKey, TValue> dictionary) where TKey : notnull
+        {
+            return ToConcurrent(dictionary, null);
+        }
+
+        public static ConcurrentDictionary<TKey, TValue> ToConcurrent<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? comparer) where TKey : notnull
+        {
+            if (dictionary is null)
+            {
+                throw new ArgumentNullException(nameof(dictionary));
+            }
+
+            return new ConcurrentDictionary<TKey, TValue>(dictionary, comparer);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source) where TKey : notnull
         {

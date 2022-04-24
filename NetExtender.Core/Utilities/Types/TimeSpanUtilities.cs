@@ -110,7 +110,52 @@ namespace NetExtender.Utilities.Types
 
             return source.Aggregate(TimeSpan.Zero, (current, next) => current + selector(next));
         }
+
+        public static TimeSpan Multiply(this TimeSpan value, Int32 factor)
+        {
+            return new TimeSpan(value.Ticks * factor);
+        }
         
+        public static TimeSpan Multiply(this TimeSpan value, UInt32 factor)
+        {
+            return new TimeSpan(value.Ticks * factor);
+        }
+        
+        public static TimeSpan Multiply(this TimeSpan value, Int64 factor)
+        {
+            return new TimeSpan(value.Ticks * factor);
+        }
+
+        public static TimeSpan Multiply(this TimeSpan value, Double factor)
+        {
+            return new TimeSpan((Int64) (value.Ticks * factor));
+        }
+        
+        public static TimeSpan Divide(this TimeSpan value, Int32 factor)
+        {
+            return new TimeSpan(value.Ticks / factor);
+        }
+        
+        public static TimeSpan Divide(this TimeSpan value, UInt32 factor)
+        {
+            return new TimeSpan(value.Ticks / factor);
+        }
+        
+        public static TimeSpan Divide(this TimeSpan value, Int64 factor)
+        {
+            return new TimeSpan(value.Ticks / factor);
+        }
+
+        public static TimeSpan Divide(this TimeSpan value, Double factor)
+        {
+            return new TimeSpan((Int64) (value.Ticks / factor));
+        }
+
+        public static Double Divide(this TimeSpan value, TimeSpan other)
+        {
+            return (Double) value.Ticks / other.Ticks;
+        }
+
         public static IEnumerable<TimeSpan> Range(TimeSpan stop)
         {
             return Range(TimeSpan.Zero, stop);

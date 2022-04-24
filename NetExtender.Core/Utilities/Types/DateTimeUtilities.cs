@@ -128,12 +128,29 @@ namespace NetExtender.Utilities.Types
         {
             return DateTime.UtcNow - value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime DateTimeFrom(this Month month, Int32 year, Int32 day, Int32 hour = 0, Int32 minute = 0, Int32 second = 0, Int32 millisecond = 0,
-            DateTimeKind kind = DateTimeKind.Unspecified)
+        public static DateTime DateTimeFrom(this Month month, Int32 year, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 millisecond)
+        {
+            return DateTimeFrom(month, year, day, hour, minute, second, millisecond, DateTimeKind.Unspecified);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime DateTimeFrom(this Month month, Int32 year, Int32 day, Int32 hour, Int32 minute, Int32 second, Int32 millisecond, DateTimeKind kind)
         {
             return new DateTime(year, (Int32) month, day, hour, minute, second, millisecond, kind);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime DateTimeFrom(this Month month, Int32 year, Int32 day, Int32 hour = 0, Int32 minute = 0, Int32 second = 0)
+        {
+            return DateTimeFrom(month, year, day, hour, minute, second, DateTimeKind.Unspecified);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DateTime DateTimeFrom(this Month month, Int32 year, Int32 day, Int32 hour, Int32 minute, Int32 second, DateTimeKind kind)
+        {
+            return new DateTime(year, (Int32) month, day, hour, minute, second, kind);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -711,6 +728,22 @@ namespace NetExtender.Utilities.Types
         }
 
         /// <summary>
+        /// Determines whether the provided text represents a valid <see cref="DateTime"/>.
+        /// </summary>
+        /// <param name="text">A string, possibly representing a valid date and time.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsDateTime(String text)
+        {
+            return DateTime.TryParse(text, out _);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean IsWeekend(this DateTime date)
+        {
+            return date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday;
+        }
+
+        /// <summary>
         /// Determines whether this date is in the current month.
         /// <para>
         /// Ignores the year. 2000-01-01 and 2001-01-01 will return true.
@@ -720,16 +753,6 @@ namespace NetExtender.Utilities.Types
         public static Boolean IsCurrentMonth(this DateTime date)
         {
             return DateTime.Today.Month == date.Month;
-        }
-
-        /// <summary>
-        /// Determines whether the provided text represents a valid <see cref="DateTime"/>.
-        /// </summary>
-        /// <param name="text">A string, possibly representing a valid date and time.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean IsDateTime(String text)
-        {
-            return DateTime.TryParse(text, out _);
         }
 
         /// <summary>
@@ -918,7 +941,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime GetLastDayOfQuarter(Int32 year, Int32 quarter)
+        public static DateTime LastDayOfQuarter(Int32 year, Int32 quarter)
         {
             if (quarter < 1 || quarter > 4)
             {
@@ -929,7 +952,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime GetLastDayOfQuarter(Int32 year, Quarter quarter)
+        public static DateTime LastDayOfQuarter(Int32 year, Quarter quarter)
         {
             return new DateTime(year, 1, 1).AddQuarters((Int32) quarter).AddDays(-1);
         }
@@ -941,7 +964,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean AreDatesInSameYearAndQuarter(this DateTime first, DateTime second)
+        public static Boolean SameYearAndQuarter(this DateTime first, DateTime second)
         {
             return FirstDayOfQuarter(first) == FirstDayOfQuarter(second);
         }

@@ -16,12 +16,12 @@ namespace NetExtender.Random
         }
         
         [return: NotNullIfNotNull("random")]
-        public static implicit operator System.Random?(RandomAdapter? random)
+        public static explicit operator System.Random?(RandomAdapter? random)
         {
-            return random?._random;
+            return random?.Random;
         }
-        
-        private readonly System.Random _random;
+
+        private System.Random Random { get; }
 
         public RandomAdapter()
             : this(new System.Random())
@@ -35,52 +35,52 @@ namespace NetExtender.Random
 
         public RandomAdapter(System.Random random)
         {
-            _random = random ?? throw new ArgumentNullException(nameof(random));
+            Random = random ?? throw new ArgumentNullException(nameof(random));
         }
 
         public Int32 Next()
         {
-            return _random.Next();
+            return Random.Next();
         }
 
         public Int32 Next(Int32 max)
         {
-            return _random.Next(max);
+            return Random.Next(max);
         }
 
         public Int32 Next(Int32 min, Int32 max)
         {
-            return _random.Next(min, max);
+            return Random.Next(min, max);
         }
 
         public void NextBytes(Byte[] buffer)
         {
-            _random.NextBytes(buffer);
+            Random.NextBytes(buffer);
         }
 
         public void NextBytes(Span<Byte> buffer)
         {
-            _random.NextBytes(buffer);
+            Random.NextBytes(buffer);
         }
 
         public Double NextDouble()
         {
-            return _random.NextDouble();
+            return Random.NextDouble();
         }
 
         public override Boolean Equals(Object? obj)
         {
-            return ReferenceEquals(this, obj) || _random.Equals(obj);
+            return ReferenceEquals(this, obj) || Random.Equals(obj);
         }
 
         public override Int32 GetHashCode()
         {
-            return _random.GetHashCode();
+            return Random.GetHashCode();
         }
 
         public override String? ToString()
         {
-            return _random.ToString();
+            return Random.ToString();
         }
 
         void IDisposable.Dispose()

@@ -66,6 +66,32 @@ namespace NetExtender.Workstation
             }
         }
         
+        [Flags]
+        private enum ScreenSaverExecutionState : UInt32
+        {
+            SystemRequired = 0x00000001,
+            DisplayRequired = 0x00000002,
+            AwayModeRequired = 0x00000040,
+            Continuous = 0x80000000
+        }
+        
+        [DllImportAttribute("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern ScreenSaverExecutionState SetThreadExecutionState(ScreenSaverExecutionState state);
+
+        public static Boolean ScreenSaverEnabled
+        {
+            set
+            {
+                if (value)
+                {
+                    SetThreadExecutionState(ScreenSaverExecutionState.DisplayRequired | ScreenSaverExecutionState.Continuous);
+                    return;
+                }
+                
+                SetThreadExecutionState(ScreenSaverExecutionState.Continuous);
+            }
+        }
+
         /// <summary>
         /// Use WMI to get the DateTime the current user logged on.
         /// <para>NOTE: Depending on Windows permissions settings, this may only work when the app is run as an administrator (i.e. the app has elevated privileges).</para>

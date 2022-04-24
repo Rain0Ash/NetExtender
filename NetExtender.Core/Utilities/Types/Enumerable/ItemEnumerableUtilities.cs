@@ -16,6 +16,38 @@ namespace NetExtender.Utilities.Types
 {
     public static partial class EnumerableUtilities
     {
+        public static Boolean Any<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            Int32 i = 0;
+            return source.Any(item => predicate(item, i++));
+        }
+        
+        public static Boolean All<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            Int32 i = 0;
+            return source.All(item => predicate(item, i++));
+        }
+        
         public static Int32 CountWhile<T>(this IEnumerable<T> source, Func<T, Boolean> predicate)
         {
             if (source is null)

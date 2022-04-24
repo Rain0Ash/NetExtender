@@ -902,5 +902,58 @@ namespace NetExtender.Utilities.Types
         {
             return value ? '1' : '0';
         }
+        
+#if NETCOREAPP3_1_OR_GREATER
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Char32 GetChar32At(this String value, Int32 index)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return Rune.GetRuneAt(value, index);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetChar32At(this String value, Int32 index, out Char32 result)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (Rune.TryGetRuneAt(value, index, out Rune rune))
+            {
+                result = rune;
+                return true;
+            }
+            
+            result = default;
+            return false;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Rune GetRuneAt(this String value, Int32 index)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return Rune.GetRuneAt(value, index);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetRuneAt(this String value, Int32 index, out Rune result)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return Rune.TryGetRuneAt(value, index, out result);
+        }
+#endif
     }
 }

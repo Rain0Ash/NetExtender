@@ -24,6 +24,18 @@ namespace NetExtender.Utilities.Types
     {
         private const String IsDefinedTypeMismatchMessage = "The underlying type of the enum and the value must be the same type.";
 
+        public static T Next<T>(this T value) where T : unmanaged, Enum
+        {
+            Int32 index = CacheValues<T>.Values.IndexOf(value);
+            
+            if (index == -1)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, "The value is not defined in the enum.");
+            }
+            
+            return CacheValues<T>.Values[(index + 1) % CacheValues<T>.Values.Count];
+        }
+        
         public static Boolean In<T>(this T value) where T : unmanaged, Enum
         {
             return CacheValues<T>.Values.Contains(value);

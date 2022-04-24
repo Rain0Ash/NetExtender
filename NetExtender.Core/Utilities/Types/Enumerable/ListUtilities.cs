@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using NetExtender.Types.Comparers;
 using NetExtender.Utilities.Numerics;
 
@@ -11,6 +12,16 @@ namespace NetExtender.Utilities.Types
 {
     public static class ListUtilities
     {
+        public static ReadOnlyCollection<T> AsReadOnly<T>(this IList<T> collection)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            return new ReadOnlyCollection<T>(collection);
+        }
+        
         public static T GetRandom<T>(this IList<T> collection)
         {
             if (collection is null)

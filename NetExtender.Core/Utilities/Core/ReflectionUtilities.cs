@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -31,24 +32,80 @@ namespace NetExtender.Utilities.Core
         DateTimeOffset = 32,
         All = String | Decimal | Complex | TimeSpan | DateTime | DateTimeOffset
     }
-    
+
+    [Flags]
+    public enum AssemblyNameType
+    {
+        Default = 0,
+        Version = 1,
+        Culture = 2,
+        PublicKeyToken = 4,
+        All = Version | Culture | PublicKeyToken
+    }
+
     public static class ReflectionUtilities
     {
+        private static HashSet<Type> VarArgTypes { get; }
+
+        private static Predicate<Type> IsByRefLikePredicate { get; }
+
         public static Boolean AssemblyLoadCallStaticContructor { get; set; }
 
         static ReflectionUtilities()
         {
             AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoad;
+            VarArgTypes = new[] { Type.GetType("System.ArgIterator"), Type.GetType("System.RuntimeArgumentHandle"), Type.GetType("System.TypedReference") }.OfType<Type>().ToHashSet();
+            IsByRefLikePredicate = typeof(Type).GetProperty("IsByRefLike")?.GetMethod?.CreateDelegate(typeof(Predicate<Type>)) as Predicate<Type> ?? (_ => false);
         }
 
         private static void OnAssemblyLoad(Object? sender, AssemblyLoadEventArgs args)
         {
             CallStaticInitializerAttributeInternal<StaticInitializerRequiredAttribute>(args.LoadedAssembly);
-            
+
             if (AssemblyLoadCallStaticContructor)
             {
                 CallStaticInitializerAttribute(args.LoadedAssembly);
             }
+        }
+        
+        public static Boolean IsVarArgType(this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return VarArgTypes.Contains(type);
+        }
+        
+        public static Boolean IsStackOnly(this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return type.IsByRef || type.IsVarArgType() || IsByRefLikePredicate.Invoke(type);
+        }
+
+        public static Boolean IsBoxable(this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return !type.IsPointer && !type.IsStackOnly();
+        }
+
+        public static Boolean IsILBoxable(this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return type.IsBoxable() || type.IsByRef || type.IsPointer;
         }
 
         public static Boolean IsAssignableFrom<T>(this Type type)
@@ -60,7 +117,7 @@ namespace NetExtender.Utilities.Core
 
             return type.IsAssignableFrom(typeof(T));
         }
-        
+
         public static Boolean IsAssignableFrom<T>(this TypeInfo type)
         {
             if (type is null)
@@ -70,7 +127,7 @@ namespace NetExtender.Utilities.Core
 
             return type.IsAssignableFrom(typeof(T).GetTypeInfo());
         }
-        
+
         public static Boolean IsAssignableTo<T>(this Type type)
         {
             if (type is null)
@@ -80,7 +137,7 @@ namespace NetExtender.Utilities.Core
 
             return type.IsAssignableTo(typeof(T));
         }
-        
+
         public static Boolean IsAssignableTo<T>(this TypeInfo type)
         {
             if (type is null)
@@ -90,7 +147,7 @@ namespace NetExtender.Utilities.Core
 
             return type.IsAssignableTo(typeof(T).GetTypeInfo());
         }
-        
+
         public static Boolean IsSameAsOrSubclassOf(this Type type, Type other)
         {
             if (type is null)
@@ -105,7 +162,7 @@ namespace NetExtender.Utilities.Core
 
             return type == other || type.IsSubclassOf(other);
         }
-        
+
         public static Boolean IsSameAsOrSubclassOf(this TypeInfo type, Type other)
         {
             if (type is null)
@@ -120,7 +177,7 @@ namespace NetExtender.Utilities.Core
 
             return type.AsType() == other || type.IsSubclassOf(other);
         }
-	
+
         public static Boolean IsSameAsOrSubclassOf<T>(this Type type)
         {
             if (type is null)
@@ -130,7 +187,7 @@ namespace NetExtender.Utilities.Core
 
             return type.IsSameAsOrSubclassOf(typeof(T));
         }
-	
+
         public static Boolean IsSameAsOrSubclassOf<T>(this TypeInfo type)
         {
             if (type is null)
@@ -140,7 +197,7 @@ namespace NetExtender.Utilities.Core
 
             return type.IsSameAsOrSubclassOf(typeof(T));
         }
-	
+
         public static Boolean IsGenericTypeDefinedAs(this Type type, Type? other)
         {
             if (type is null)
@@ -155,7 +212,7 @@ namespace NetExtender.Utilities.Core
 
             return type.GetGenericTypeDefinition() == other;
         }
-	
+
         public static Boolean IsGenericTypeDefinedAs(this TypeInfo type, Type? other)
         {
             if (type is null)
@@ -180,7 +237,7 @@ namespace NetExtender.Utilities.Core
 
             return type.IsGenericType ? type.GetGenericArguments().Length : 0;
         }
-        
+
         public static Boolean HasInterface<T>(this Type type) where T : class
         {
             if (type is null)
@@ -190,7 +247,7 @@ namespace NetExtender.Utilities.Core
 
             return type.HasInterface(typeof(T));
         }
-        
+
         public static Boolean HasInterface<T>(this TypeInfo type) where T : class
         {
             if (type is null)
@@ -200,7 +257,7 @@ namespace NetExtender.Utilities.Core
 
             return type.HasInterface(typeof(T));
         }
-        
+
         public static Boolean HasInterface(this Type type, Type @interface)
         {
             if (type is null)
@@ -215,7 +272,7 @@ namespace NetExtender.Utilities.Core
 
             return type.GetInterfaces().Contains(@interface);
         }
-        
+
         public static Boolean HasInterface(this TypeInfo type, Type @interface)
         {
             if (type is null)
@@ -230,7 +287,7 @@ namespace NetExtender.Utilities.Core
 
             return type.ImplementedInterfaces.Contains(@interface);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type TryGetGenericTypeDefinition(this Type type)
         {
@@ -241,9 +298,9 @@ namespace NetExtender.Utilities.Core
 
             return type.IsGenericType ? type.GetGenericTypeDefinition() : type;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Type[] GetGenericTypeDefinitionInterfaces(this Type type)
+        public static Type[] TryGetGenericTypeDefinitionInterfaces(this Type type)
         {
             if (type is null)
             {
@@ -254,6 +311,66 @@ namespace NetExtender.Utilities.Core
             interfaces.InnerChange(TryGetGenericTypeDefinition);
 
             return interfaces;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MethodInfo TryGetGenericMethodDefinition(this MethodInfo method)
+        {
+            if (method is null)
+            {
+                throw new ArgumentNullException(nameof(method));
+            }
+
+            return method.IsGenericMethod ? method.GetGenericMethodDefinition() : method;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Type[]? TryGetGenericArguments(this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return type.IsGenericType ? type.GetGenericArguments() : null;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Type[]? TryGetGenericArguments(this MethodBase method)
+        {
+            if (method is null)
+            {
+                throw new ArgumentNullException(nameof(method));
+            }
+
+            return method.IsGenericMethod ? method.GetGenericArguments() : null;
+        }
+        
+        public static Boolean IsInheritable(this MethodBase method)
+        {
+            if (method is null)
+            {
+                throw new ArgumentNullException(nameof(method));
+            }
+
+            Type? declaring = method.DeclaringType;
+
+            if (declaring is null)
+            {
+                throw new TypeAccessException();
+            }
+
+            return declaring.IsVisible && !declaring.IsSealed && !method.IsStatic && (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly);
+        }
+        
+        public static Boolean IsOverridable(this MethodInfo method)
+        {
+            if (method is null)
+            {
+                throw new ArgumentNullException(nameof(method));
+            }
+
+            return method.IsInheritable() && method.IsVirtual && !method.IsFinal;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -266,7 +383,7 @@ namespace NetExtender.Utilities.Core
 
             return info.GetCustomAttribute<T>() is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasAttribute<T>(this MemberInfo info, Boolean inherit) where T : Attribute
         {
@@ -277,7 +394,7 @@ namespace NetExtender.Utilities.Core
 
             return info.GetCustomAttribute<T>(inherit) is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasAttribute(this MemberInfo info, Type attribute)
         {
@@ -293,7 +410,7 @@ namespace NetExtender.Utilities.Core
 
             return info.GetCustomAttribute(attribute) is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean HasAttribute(this MemberInfo info, Type attribute, Boolean inherit)
         {
@@ -331,7 +448,7 @@ namespace NetExtender.Utilities.Core
 
             return info.GetCustomAttribute(typeof(T), inherit) as T;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> GetCustomAttributes<T>(this MemberInfo info) where T : Attribute
         {
@@ -353,7 +470,7 @@ namespace NetExtender.Utilities.Core
 
             return info.GetCustomAttributes(typeof(T), inherit).OfType<T>();
         }
-        
+
         public static FileInfo GetAssemblyFile(this Assembly assembly)
         {
             if (assembly is null)
@@ -363,7 +480,7 @@ namespace NetExtender.Utilities.Core
 
             return new FileInfo(assembly.Location);
         }
-        
+
         [Obsolete]
         public static FileInfo GetAssemblyFileFromCodeBase(this Assembly assembly)
         {
@@ -379,7 +496,7 @@ namespace NetExtender.Utilities.Core
             }
 
             Uri uri = new Uri(code);
-            
+
             if (!uri.IsFile)
             {
                 throw new InvalidOperationException();
@@ -397,7 +514,7 @@ namespace NetExtender.Utilities.Core
 
             return Assembly.Load(assembly);
         }
-        
+
         public static Assembly LoadAssembly(String assembly)
         {
             if (assembly is null)
@@ -407,7 +524,7 @@ namespace NetExtender.Utilities.Core
 
             return Assembly.Load(assembly);
         }
-        
+
         public static Boolean TryLoadAssembly(this AssemblyName assembly, [MaybeNullWhen(false)] out Assembly result)
         {
             if (assembly is null)
@@ -426,7 +543,7 @@ namespace NetExtender.Utilities.Core
                 return false;
             }
         }
-        
+
         public static Boolean TryLoadAssembly(String assembly, [MaybeNullWhen(false)] out Assembly result)
         {
             if (assembly is null)
@@ -445,7 +562,7 @@ namespace NetExtender.Utilities.Core
                 return false;
             }
         }
-        
+
         public static Assembly LoadAssemblyFile(String assembly)
         {
             if (assembly is null)
@@ -455,7 +572,7 @@ namespace NetExtender.Utilities.Core
 
             return Assembly.LoadFile(assembly);
         }
-        
+
         public static Boolean TryLoadAssemblyFile(String assembly, [MaybeNullWhen(false)] out Assembly result)
         {
             if (assembly is null)
@@ -474,7 +591,7 @@ namespace NetExtender.Utilities.Core
                 return false;
             }
         }
-        
+
         public static Assembly LoadAssemblyFrom(String assembly)
         {
             if (assembly is null)
@@ -484,7 +601,7 @@ namespace NetExtender.Utilities.Core
 
             return Assembly.LoadFrom(assembly);
         }
-        
+
         public static Assembly LoadAssemblyFrom(String assembly, Byte[]? hash, AssemblyHashAlgorithm algorithm)
         {
             return LoadAssemblyFrom(assembly, hash, algorithm switch
@@ -498,7 +615,7 @@ namespace NetExtender.Utilities.Core
                 _ => throw new NotSupportedException()
             });
         }
-        
+
         public static Assembly LoadAssemblyFrom(String assembly, Byte[]? hash, System.Configuration.Assemblies.AssemblyHashAlgorithm algorithm)
         {
             if (assembly is null)
@@ -508,7 +625,7 @@ namespace NetExtender.Utilities.Core
 
             return Assembly.LoadFrom(assembly, hash, algorithm);
         }
-        
+
         public static Assembly LoadAssemblyFrom(String assembly, Byte[]? token)
         {
             if (assembly is null)
@@ -522,7 +639,7 @@ namespace NetExtender.Utilities.Core
             }
 
             AssemblyName name = AssemblyName.GetAssemblyName(assembly);
-            
+
             if (token.SequenceEqual(name.GetPublicKeyToken() ?? throw new CryptographicException()) ||
                 token.SequenceEqual(name.GetPublicKey() ?? throw new CryptographicException()))
             {
@@ -577,13 +694,13 @@ namespace NetExtender.Utilities.Core
             }
 
             AssemblyName name = AssemblyName.GetAssemblyName(assembly);
-            
+
             String hextoken = name.GetPublicKeyToken()?.ToHexString() ?? throw new CryptographicException();
             if (String.Equals(hextoken, token, StringComparison.OrdinalIgnoreCase))
             {
                 return LoadAssemblyFrom(assembly);
             }
-            
+
             hextoken = name.GetPublicKey()?.ToHexString() ?? throw new CryptographicException();
             if (String.Equals(hextoken, token, StringComparison.OrdinalIgnoreCase))
             {
@@ -608,7 +725,7 @@ namespace NetExtender.Utilities.Core
             String hextoken = AssemblyName.GetAssemblyName(assembly).GetPublicKey()?.ToHexString() ?? throw new CryptographicException();
             return String.Equals(hextoken, token, StringComparison.OrdinalIgnoreCase) ? LoadAssemblyFrom(assembly) : throw new CryptographicException();
         }
-        
+
         public static Assembly LoadAssemblyWithPublicKeyTokenFrom(String assembly, String? token)
         {
             if (assembly is null)
@@ -643,7 +760,7 @@ namespace NetExtender.Utilities.Core
                 return false;
             }
         }
-        
+
         public static Boolean TryLoadAssemblyFrom(String assembly, Byte[]? hash, AssemblyHashAlgorithm algorithm, [MaybeNullWhen(false)] out Assembly result)
         {
             if (assembly is null)
@@ -662,8 +779,9 @@ namespace NetExtender.Utilities.Core
                 return false;
             }
         }
-        
-        public static Boolean TryLoadAssemblyFrom(String assembly, Byte[]? hash, System.Configuration.Assemblies.AssemblyHashAlgorithm algorithm, [MaybeNullWhen(false)] out Assembly result)
+
+        public static Boolean TryLoadAssemblyFrom(String assembly, Byte[]? hash, System.Configuration.Assemblies.AssemblyHashAlgorithm algorithm,
+            [MaybeNullWhen(false)] out Assembly result)
         {
             if (assembly is null)
             {
@@ -681,7 +799,7 @@ namespace NetExtender.Utilities.Core
                 return false;
             }
         }
-        
+
         public static Boolean TryLoadAssemblyFrom(String assembly, [MaybeNullWhen(false)] out Assembly result, Byte[]? token)
         {
             if (assembly is null)
@@ -700,7 +818,7 @@ namespace NetExtender.Utilities.Core
                 return false;
             }
         }
-        
+
         public static Boolean TryLoadAssemblyWithPublicKeyFrom(String assembly, [MaybeNullWhen(false)] out Assembly result, Byte[]? token)
         {
             if (assembly is null)
@@ -719,7 +837,7 @@ namespace NetExtender.Utilities.Core
                 return false;
             }
         }
-        
+
         public static Boolean TryLoadAssemblyWithPublicKeyTokenFrom(String assembly, [MaybeNullWhen(false)] out Assembly result, Byte[]? token)
         {
             if (assembly is null)
@@ -795,7 +913,7 @@ namespace NetExtender.Utilities.Core
                 return false;
             }
         }
-        
+
         public static String? GetManifestResourceString(this Assembly assembly, String resource)
         {
             if (assembly is null)
@@ -811,12 +929,12 @@ namespace NetExtender.Utilities.Core
             try
             {
                 using Stream? stream = assembly.GetManifestResourceStream(resource);
-                
+
                 if (stream is null)
                 {
                     return null;
                 }
-                
+
                 using StreamReader reader = new StreamReader(stream);
                 return reader.ReadToEnd();
             }
@@ -854,7 +972,7 @@ namespace NetExtender.Utilities.Core
 
             return assembly.GetTypes().Where(type => String.Equals(type.Namespace, @namespace, StringComparison.Ordinal)).ToArray();
         }
-        
+
         public static Boolean IsJITOptimized(this Assembly assembly)
         {
             if (assembly is null)
@@ -879,7 +997,7 @@ namespace NetExtender.Utilities.Core
             {
                 return false;
             }
-            
+
             return assembly.StartsWith("System.") || assembly.StartsWith("Microsoft.") || assembly.StartsWith("netstandard");
         }
 
@@ -892,7 +1010,7 @@ namespace NetExtender.Utilities.Core
 
             return IsSystemAssembly(assembly.FullName);
         }
-        
+
         public static Boolean IsSystemAssembly(this AssemblyName assembly)
         {
             if (assembly is null)
@@ -965,20 +1083,20 @@ namespace NetExtender.Utilities.Core
             CallStaticConstructor(type.TypeHandle);
             return type;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static RuntimeTypeHandle CallStaticConstructor(this RuntimeTypeHandle handle)
         {
             RuntimeHelpers.RunClassConstructor(handle);
             return handle;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Type> CallStaticConstructor(this IEnumerable<Type> source)
         {
             return CallStaticConstructor(source, false);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Type> CallStaticConstructor(this IEnumerable<Type> source, Boolean lazy)
         {
@@ -986,7 +1104,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             static void Call(Type type)
             {
                 CallStaticConstructor(type);
@@ -994,14 +1112,14 @@ namespace NetExtender.Utilities.Core
 
             return source.ForEach(Call).MaterializeIfNot(lazy);
         }
-        
+
         private static Assembly CallStaticInitializerAttributeInternal<TAttribute>(this Assembly assembly) where TAttribute : StaticInitializerAttribute, new()
         {
             if (assembly is null)
             {
                 throw new ArgumentNullException(nameof(assembly));
             }
-            
+
             static IEnumerable<TAttribute> Handler(Type type)
             {
                 if (type is null)
@@ -1017,7 +1135,7 @@ namespace NetExtender.Utilities.Core
                     {
                         continue;
                     }
-                    
+
                     if (attribute.Type is null)
                     {
                         yield return new TAttribute { Type = type, Priority = attribute.Priority, Active = attribute.Active, Platform = attribute.Platform };
@@ -1077,7 +1195,7 @@ namespace NetExtender.Utilities.Core
         {
             return CallStaticInitializerAttribute(DomainCustomAssemblies);
         }
-        
+
         internal static IEnumerable<Assembly> CallStaticInitializerRequiredAttribute()
         {
             static void Call(Assembly assembly)
@@ -1163,7 +1281,7 @@ namespace NetExtender.Utilities.Core
             {
                 return result;
             }
-            
+
             throw new Exception($"'{name}' is neither a property or a field of type '{result}'.");
         }
 
@@ -1285,7 +1403,7 @@ namespace NetExtender.Utilities.Core
                     result = resval;
                     return true;
                 }
-                
+
                 try
                 {
                     return value.TryConvert(out result);
@@ -1324,7 +1442,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(converter));
             }
-            
+
             if (GetPropertyValue(obj, name, out Object? value) && converter(value, out result))
             {
                 return true;
@@ -1354,7 +1472,7 @@ namespace NetExtender.Utilities.Core
             // get the generic type of nullable, not THE nullable
             if (property.IsGenericType && property.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
-                property = GetGenericFirst(property);
+                property = FirstGenericArgument(property);
             }
 
             return property;
@@ -1381,12 +1499,12 @@ namespace NetExtender.Utilities.Core
             // get the generic type of nullable, not THE nullable
             if (property.IsGenericType && property.GetGenericTypeDefinition() == typeof(Nullable<>))
             {
-                property = GetGenericFirst(property);
+                property = FirstGenericArgument(property);
             }
 
             return property;
         }
-        
+
         /// <summary>
         /// Gets the type of the specified property in the type.
         /// </summary>
@@ -1419,7 +1537,7 @@ namespace NetExtender.Utilities.Core
             PropertyInfo property = GetPropertyInfo(type, name, binding);
             return property.PropertyType;
         }
-        
+
         /// <summary>
         /// Gets the property information by name for the type of the object.
         /// </summary>
@@ -1450,7 +1568,7 @@ namespace NetExtender.Utilities.Core
 
             return GetPropertyInfo(obj.GetType(), name, binding);
         }
-        
+
         /// <summary>
         /// Gets the property information by name for the type.
         /// </summary>
@@ -1518,7 +1636,7 @@ namespace NetExtender.Utilities.Core
                 result = default;
                 return false;
             }
-            
+
             try
             {
                 result = info.CreateDelegate<T>();
@@ -1571,14 +1689,21 @@ namespace NetExtender.Utilities.Core
         /// Returns the first definition of generic type of this generic type.
         /// </summary>
         /// <param name="type">The type from which to get the generic type.</param>
-        public static Type GetGenericFirst(this Type type)
+        public static Type FirstGenericArgument(this Type type)
         {
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
+            
+            Type[] arguments = type.GetGenericArguments();
 
-            return type.GetGenericArguments()[0];
+            if (arguments.Length <= 0)
+            {
+                throw new ArgumentException($"The provided type ({type}) is not a generic type.", nameof(type));
+            }
+
+            return arguments[0];
         }
 
         /// <summary>
@@ -1606,6 +1731,57 @@ namespace NetExtender.Utilities.Core
             return type.GetFields(binding).Where(field => field.IsLiteral && !field.IsInitOnly);
         }
         
+        public static IEnumerable<EventInfo> GetAccessibleEvents(this Type type)
+        {
+            return GetAccessibleMembers(type, RuntimeReflectionExtensions.GetRuntimeEvents);
+        }
+
+        public static IEnumerable<FieldInfo> GetAccessibleFields(this Type type)
+        {
+            return GetAccessibleMembers(type, RuntimeReflectionExtensions.GetRuntimeFields);
+        }
+
+        public static IEnumerable<MethodInfo> GetAccessibleMethods(this Type type)
+        {
+            return GetAccessibleMembers(type, RuntimeReflectionExtensions.GetRuntimeMethods);
+        }
+
+        public static IEnumerable<PropertyInfo> GetAccessibleProperties(this Type type)
+        {
+            return GetAccessibleMembers(type, RuntimeReflectionExtensions.GetRuntimeProperties);
+        }
+
+        private static IEnumerable<T> GetAccessibleMembers<T>(this Type type, Func<Type, IEnumerable<T>> finder) where T : MemberInfo
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+            
+            if (finder is null)
+            {
+                throw new ArgumentNullException(nameof(finder));
+            }
+
+            List<T> result = new List<T>(finder(type));
+
+            if (!type.IsInterface)
+            {
+                return result.ToArray();
+            }
+
+            foreach (Type @interface in type.GetInterfaces())
+            {
+                if (@interface.IsVisible)
+                {
+                    result.AddRange(finder.Invoke(@interface));
+                }
+            }
+            
+            result.AddRange(finder.Invoke(typeof(Object)));
+            return result.ToArray();
+        }
+
         /// <summary>
         /// Sets the value of the property or field with the specified name in this object or type.
         /// </summary>
@@ -1646,7 +1822,7 @@ namespace NetExtender.Utilities.Core
             field.SetValue(obj, value);
             return obj;
         }
-        
+
         /// <summary>
         /// Sets the specified field to the provided value in the object.
         /// </summary>
@@ -1664,7 +1840,7 @@ namespace NetExtender.Utilities.Core
             field.SetValue(obj, value);
             return obj;
         }
-        
+
         /// <summary>
         /// Sets the specified property to the provided value in the object.
         /// </summary>
@@ -1836,7 +2012,7 @@ namespace NetExtender.Utilities.Core
         {
             return type is not null && (type == typeof(MulticastDelegate) || type.IsSubclassOf(typeof(MulticastDelegate)));
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public static FieldInfo? GetEventField(this Type type, String eventname)
         {
@@ -1851,18 +2027,18 @@ namespace NetExtender.Utilities.Core
             }
 
             FieldInfo? field = null;
-            
+
             while (type is not null)
             {
                 field = type.GetField(eventname, BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic);
-                
+
                 if (field is not null && field.FieldType.IsMulticastDelegateFieldType())
                 {
                     break;
                 }
 
                 field = type.GetField("EVENT_" + eventname.ToUpper(), BindingFlags.Static | BindingFlags.Instance | BindingFlags.NonPublic);
-                
+
                 if (field is not null)
                 {
                     break;
@@ -1872,10 +2048,10 @@ namespace NetExtender.Utilities.Core
                 {
                     break;
                 }
-                
+
                 type = type.BaseType;
             }
-            
+
             return field;
         }
 
@@ -1909,24 +2085,153 @@ namespace NetExtender.Utilities.Core
             }
         }
 
-        /// <summary>
-        /// Determines whether this type implements the specified parent type. Returns false if both types are the same.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="parent">The type to check if it is implemented.</param>
-        public static Boolean Implements(this Type type, Type parent)
+        public static Boolean Implements<TValue>(Object? value)
+        {
+            return Implements(value, typeof(TValue));
+        }
+
+        public static Boolean Implements(Object? value, Type type)
         {
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
             }
 
-            if (parent is null)
+            return value is not null && Implements(value.GetType(), type);
+        }
+
+        public static Boolean Implements<TValue>(this Type type)
+        {
+            if (type is null)
             {
-                throw new ArgumentNullException(nameof(parent));
+                throw new ArgumentNullException(nameof(type));
             }
 
-            return type != parent && parent.IsAssignableFrom(type);
+            return Implements(type, typeof(TValue));
+        }
+
+        public static Boolean Implements(this Type type, Type? other)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (other is null)
+            {
+                return false;
+            }
+
+            return type.IsGenericTypeDefinition ? type.ImplementsGeneric(type) : type.IsAssignableFrom(type);
+        }
+
+        public static Boolean ImplementsGeneric(this Type type, Type @interface)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            if (@interface is null)
+            {
+                throw new ArgumentNullException(nameof(@interface));
+            }
+
+            return type.ImplementsGeneric(@interface, out _);
+        }
+
+        public static Boolean ImplementsGeneric(this Type type, Type @interface, out Type? result)
+        {
+            result = null;
+
+            if (@interface.IsInterface)
+            {
+                result = type.GetInterfaces().FirstOrDefault(x => x.IsGenericType && x.GetGenericTypeDefinition() == @interface);
+
+                if (result is not null)
+                {
+                    return true;
+                }
+            }
+
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == @interface)
+            {
+                result = type;
+                return true;
+            }
+
+            Type? baseType = type.BaseType;
+            return baseType is not null && baseType.ImplementsGeneric(@interface, out result);
+        }
+
+        public static String? StripQualifier(this Type type)
+        {
+            return StripQualifier(type, AssemblyNameType.Default);
+        }
+
+        public static String? StripQualifier(this Type type, AssemblyNameType assemblyname)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            String? name = type.AssemblyQualifiedName;
+            return name is not null ? StripQualifier(name, assemblyname) : null;
+        }
+
+        public static String StripQualifier(String type)
+        {
+            return StripQualifier(type, AssemblyNameType.Default);
+        }
+
+        public static String StripQualifier(String type, AssemblyNameType assemblyname)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            const String version = ", Version=";
+            const String culture = ", Culture=";
+            const String publickey = ", PublicKeyToken=";
+
+            NameValueCollection tokens = new NameValueCollection();
+
+            type = $"[{type.Trim('[', ']')}]";
+
+            foreach (String token in new[] { version, culture, publickey })
+            {
+                Int32 index = type.IndexOf(token, StringComparison.InvariantCulture);
+
+                while (index > 0)
+                {
+                    Int32 lastindex = type.IndexOfAny(new[] { ']', ',' }, index + 2);
+                    String value = type.Substring(index, lastindex - index);
+                    tokens[token] = value;
+                    type = type.Replace(value, String.Empty);
+                    index = type.IndexOf(token, StringComparison.InvariantCulture);
+                }
+            }
+
+            type = type.TrimStart('[').TrimEnd(']');
+
+            if (assemblyname.HasFlag(AssemblyNameType.Version))
+            {
+                type += tokens[version];
+            }
+
+            if (assemblyname.HasFlag(AssemblyNameType.Culture))
+            {
+                type += tokens[culture];
+            }
+
+            if (assemblyname.HasFlag(AssemblyNameType.PublicKeyToken))
+            {
+                type += tokens[publickey];
+            }
+
+            return type;
         }
 
         /// <summary>
@@ -1997,7 +2302,7 @@ namespace NetExtender.Utilities.Core
         private static class SizeCache
         {
             private static ConcurrentDictionary<Type, Int32> Cache { get; } = new ConcurrentDictionary<Type, Int32>();
-            
+
             public static Int32 GetTypeSize(Type type)
             {
                 if (Cache.TryGetValue(type, out Int32 size))
@@ -2014,7 +2319,7 @@ namespace NetExtender.Utilities.Core
                 ILGenerator il = method.GetILGenerator();
                 il.Emit(OpCodes.Sizeof, type);
                 il.Emit(OpCodes.Ret);
-                
+
                 Object? value = method.Invoke(null, null);
 
                 if (value is null)
@@ -2027,14 +2332,13 @@ namespace NetExtender.Utilities.Core
                 return size;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        // ReSharper disable once UnusedParameter.Global
         public static Int32 GetSize<T>(this T _) where T : struct
         {
             return GetSize<T>();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetSize<T>(this T[] array) where T : struct
         {
@@ -2045,7 +2349,7 @@ namespace NetExtender.Utilities.Core
 
             return SizeCache<T>.Size * array.Length;
         }
-        
+
         public static Boolean GetSize<T>(this T[] array, out Int64 size) where T : struct
         {
             if (array is null)
@@ -2064,7 +2368,7 @@ namespace NetExtender.Utilities.Core
                 return false;
             }
         }
-        
+
         public static Boolean GetSize<T>(this T[] array, out BigInteger size) where T : struct
         {
             if (array is null)

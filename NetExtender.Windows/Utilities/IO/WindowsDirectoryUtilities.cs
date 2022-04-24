@@ -6,8 +6,10 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
+using System.Text;
 using System.Text.RegularExpressions;
 using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Numerics;
@@ -17,16 +19,19 @@ namespace NetExtender.Utilities.Windows.IO
 {
     public static class WindowsDirectoryUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryCreateDirectory(String path)
         {
             return TryCreateDirectory(path, out _);
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryCreateDirectory(String path, PathAction remove)
         {
             return TryCreateDirectory(path, remove, out _);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryCreateDirectory(String path, out DirectoryInfo? info)
         {
             return TryCreateDirectory(path, PathAction.Standard, out info);
@@ -78,14 +83,14 @@ namespace NetExtender.Utilities.Windows.IO
                 }
             }
         }
-        
+
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         [SuppressMessage("ReSharper", "InconsistentNaming")]
         [SuppressMessage("ReSharper", "FieldCanBeMadeReadOnly.Local")]
         [SuppressMessage("ReSharper", "MemberCanBePrivate.Local")]
-        private struct WIN32_FIND_DATA
+        private struct FindData
         {
-            public static implicit operator FileData(WIN32_FIND_DATA data)
+            public static implicit operator FileData(FindData data)
             {
                 return new FileData
                 {
@@ -96,7 +101,7 @@ namespace NetExtender.Utilities.Windows.IO
                     FileSize = BitUtilities.ToUInt64(data.nFileSizeHigh, data.nFileSizeLow)
                 };
             }
-            
+
             public UInt32 dwFileAttributes;
             public FILETIME ftCreationTime;
             public FILETIME ftLastAccessTime;
@@ -124,51 +129,107 @@ namespace NetExtender.Utilities.Windows.IO
                     return (dwFileAttributes & directory) == directory;
                 }
             }
+
+            public readonly Boolean IsCurrentOrParentDirectory
+            {
+                get
+                {
+                    return cFileName == "." || cFileName == "..";
+                }
+            }
         }
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         private static extern Boolean FindClose(IntPtr hFindFile);
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        private static extern IntPtr FindFirstFileW(String lpFileName, out WIN32_FIND_DATA lpFindFileData);
+        private static extern IntPtr FindFirstFileW(String lpFileName, out FindData lpFindFileData);
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        private static extern Boolean FindNextFileW(IntPtr hFindFile, out WIN32_FIND_DATA lpFindFileData);
-        
+        private static extern Boolean FindNextFileW(IntPtr hFindFile, out FindData lpFindFileData);
+
         public const String AnySearchPattern = ".*";
 
-        public static IEnumerable<String> GetDirectories(String path, Boolean recursive = false)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetDirectories(String path)
+        {
+            return GetDirectories(path, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetDirectories(String path, Boolean recursive)
         {
             return GetEntries(path, recursive, PathType.Folder);
         }
 
-        public static IEnumerable<String> GetDirectories(String path, String pattern, Boolean recursive = false)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetDirectories(String path, String pattern)
+        {
+            return GetDirectories(path, pattern, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetDirectories(String path, String pattern, Boolean recursive)
         {
             return GetEntries(path, pattern, recursive, PathType.Folder);
         }
 
-        public static IEnumerable<String> GetDirectories(String path, Regex regex, Boolean recursive = false)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetDirectories(String path, Regex regex)
+        {
+            return GetDirectories(path, regex, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetDirectories(String path, Regex regex, Boolean recursive)
         {
             return GetEntries(path, regex, recursive, PathType.Folder);
         }
 
-        public static IEnumerable<String> GetFiles(String path, Boolean recursive = false)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetFiles(String path)
+        {
+            return GetFiles(path, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetFiles(String path, Boolean recursive)
         {
             return GetEntries(path, recursive, PathType.File);
         }
 
-        public static IEnumerable<String> GetFiles(String path, String pattern, Boolean recursive = false)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetFiles(String path, String pattern)
+        {
+            return GetFiles(path, pattern, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetFiles(String path, String pattern, Boolean recursive)
         {
             return GetEntries(path, pattern, recursive, PathType.File);
         }
 
-        public static IEnumerable<String> GetFiles(String path, Regex regex, Boolean recursive = false)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetFiles(String path, Regex regex)
+        {
+            return GetFiles(path, regex, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetFiles(String path, Regex regex, Boolean recursive)
         {
             return GetEntries(path, regex, recursive, PathType.File);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static IEnumerable<KeyValuePair<String, FindData>> GetFilesWindowsData(String path)
+        {
+            return GetFilesWindowsData(path, false);
+        }
+
         [SuppressMessage("ReSharper", "CognitiveComplexity")]
-        private static IEnumerable<KeyValuePair<String, WIN32_FIND_DATA>> GetFilesWindowsData(String path, Boolean recursive = false)
+        private static IEnumerable<KeyValuePair<String, FindData>> GetFilesWindowsData(String path, Boolean recursive)
         {
             if (String.IsNullOrEmpty(path))
             {
@@ -182,18 +243,18 @@ namespace NetExtender.Utilities.Windows.IO
                 yield break;
             }
 
-            IntPtr handle = FindFirstFileW(path + "*", out WIN32_FIND_DATA data);
+            IntPtr handle = FindFirstFileW(path + "*", out FindData data);
 
             if (handle.IsNullOrInvalid())
             {
                 yield break;
             }
-            
+
             try
             {
                 do
                 {
-                    if (data.cFileName == "." || data.cFileName == "..")
+                    if (data.IsCurrentOrParentDirectory)
                     {
                         continue;
                     }
@@ -207,15 +268,15 @@ namespace NetExtender.Utilities.Windows.IO
                             continue;
                         }
 
-                        foreach (KeyValuePair<String, WIN32_FIND_DATA> entry in GetFilesWindowsData(entryname, true))
+                        foreach (KeyValuePair<String, FindData> entry in GetFilesWindowsData(entryname, true))
                         {
                             yield return entry;
                         }
+
+                        continue;
                     }
-                    else
-                    {
-                        yield return new KeyValuePair<String, WIN32_FIND_DATA>(entryname, data);
-                    }
+
+                    yield return new KeyValuePair<String, FindData>(entryname, data);
                 } while (FindNextFileW(handle, out data));
             }
             finally
@@ -224,22 +285,62 @@ namespace NetExtender.Utilities.Windows.IO
             }
         }
 
-        public static IEnumerable<KeyValuePair<String, FileData>> GetFilesData(String path, Boolean recursive = false)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<KeyValuePair<String, FileData>> GetFilesData(String path)
+        {
+            return GetFilesData(path, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<KeyValuePair<String, FileData>> GetFilesData(String path, Boolean recursive)
         {
             return GetFilesWindowsData(path, recursive).Select(pair => new KeyValuePair<String, FileData>(pair.Key, pair.Value));
         }
-        
-        public static IEnumerable<KeyValuePair<String, UInt64>> GetFilesSize(String path, Boolean recursive = false)
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<KeyValuePair<String, UInt64>> GetFilesSize(String path)
         {
-            return GetFilesWindowsData(path, recursive).Select(pair => new KeyValuePair<String, UInt64>(pair.Key, BitUtilities.ToUInt64(pair.Value.nFileSizeHigh, pair.Value.nFileSizeLow)));
+            return GetFilesSize(path, false);
         }
 
-        public static IEnumerable<FileInfo> GetFilesInfo(String path, Boolean recursive = false)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<KeyValuePair<String, UInt64>> GetFilesSize(String path, Boolean recursive)
+        {
+            return GetFilesWindowsData(path, recursive)
+                .Select(pair => new KeyValuePair<String, UInt64>(pair.Key, BitUtilities.ToUInt64(pair.Value.nFileSizeHigh, pair.Value.nFileSizeLow)));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<FileInfo> GetFilesInfo(String path)
+        {
+            return GetFilesInfo(path, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<FileInfo> GetFilesInfo(String path, Boolean recursive)
         {
             return GetFiles(path, recursive).Select(entry => new FileInfo(entry));
         }
 
-        public static IEnumerable<String> GetEntries(String path, String pattern, Boolean recursive = false, PathType type = PathType.All)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetEntries(String path, String pattern)
+        {
+            return GetEntries(path, pattern, PathType.All);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetEntries(String path, String pattern, PathType type)
+        {
+            return GetEntries(path, pattern, false, type);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetEntries(String path, String pattern, Boolean recursive)
+        {
+            return GetEntries(path, pattern, recursive, PathType.All);
+        }
+
+        public static IEnumerable<String> GetEntries(String path, String pattern, Boolean recursive, PathType type)
         {
             if (String.IsNullOrEmpty(pattern) || pattern == AnySearchPattern)
             {
@@ -249,8 +350,26 @@ namespace NetExtender.Utilities.Windows.IO
             return GetEntries(path, new Regex(pattern), recursive, type);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetEntries(String path)
+        {
+            return GetEntries(path, PathType.All);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetEntries(String path, PathType type)
+        {
+            return GetEntries(path, false, type);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetEntries(String path, Boolean recursive)
+        {
+            return GetEntries(path, recursive, PathType.All);
+        }
+
         [SuppressMessage("ReSharper", "CognitiveComplexity")]
-        public static IEnumerable<String> GetEntries(String path, Boolean recursive = false, PathType type = PathType.All)
+        public static IEnumerable<String> GetEntries(String path, Boolean recursive, PathType type)
         {
             if (String.IsNullOrEmpty(path))
             {
@@ -269,7 +388,7 @@ namespace NetExtender.Utilities.Windows.IO
                 yield break;
             }
 
-            IntPtr handle = FindFirstFileW(path + "*", out WIN32_FIND_DATA data);
+            IntPtr handle = FindFirstFileW(path + "*", out FindData data);
 
             if (handle.IsNullOrInvalid())
             {
@@ -278,12 +397,12 @@ namespace NetExtender.Utilities.Windows.IO
 
             Boolean folder = type.HasFlag(PathType.Folder);
             Boolean file = type.HasFlag(PathType.File);
-            
+
             try
             {
                 do
                 {
-                    if (data.cFileName == "." || data.cFileName == "..")
+                    if (data.IsCurrentOrParentDirectory)
                     {
                         continue;
                     }
@@ -320,7 +439,26 @@ namespace NetExtender.Utilities.Windows.IO
             }
         }
 
-        public static IEnumerable<String> GetEntries(String path, Regex regex, Boolean recursive = false, PathType type = PathType.All)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetEntries(String path, Regex regex)
+        {
+            return GetEntries(path, regex, PathType.All);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetEntries(String path, Regex regex, PathType type)
+        {
+            return GetEntries(path, regex, false, type);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetEntries(String path, Regex regex, Boolean recursive)
+        {
+            return GetEntries(path, regex, recursive, PathType.All);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<String> GetEntries(String path, Regex regex, Boolean recursive, PathType type)
         {
             if (regex is null)
             {
@@ -328,6 +466,106 @@ namespace NetExtender.Utilities.Windows.IO
             }
 
             return GetEntries(path, recursive, type).Where(file => regex.IsMatch(file));
+        }
+
+        [DllImport("shell32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern void SHChangeNotify(Int32 wEventId, Int32 uFlags, IntPtr dwItem1, IntPtr dwItem2);
+
+        public static void SetDirectoryIcon(String directory, String icon)
+        {
+            SetDirectoryIcon(directory, icon, 0);
+        }
+
+        public static void SetDirectoryIcon(String directory, String icon, Int32 index)
+        {
+            if (String.IsNullOrEmpty(directory))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(directory));
+            }
+
+            if (String.IsNullOrEmpty(icon))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(icon));
+            }
+            
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), index, "Value must be greater than or equal to 0.");
+            }
+
+            String filename = Path.GetFileName(icon);
+            String desktop = Path.Combine(directory, "desktop.ini");
+
+            using (StreamWriter writer = new StreamWriter(desktop, false, Encoding.Unicode))
+            {
+                writer.WriteLine("[.ShellClassInfo]");
+                writer.WriteLine($"IconFile={filename}");
+                writer.WriteLine($"IconIndex={index}");
+                writer.WriteLine("ConfirmFileOp=0");
+                writer.WriteLine($"IconResource={filename},{index}");
+
+                writer.Flush();
+                writer.Close();
+            }
+
+            File.SetAttributes(desktop, File.GetAttributes(desktop) | FileAttributes.Hidden | FileAttributes.Archive | FileAttributes.System);
+            File.SetAttributes(directory, File.GetAttributes(directory) | FileAttributes.System);
+
+            String directoryicon = Path.Combine(directory, filename);
+            if (String.IsNullOrWhiteSpace(Path.GetDirectoryName(icon)))
+            {
+                icon = directoryicon;
+            }
+
+            if (!String.Equals(directory.TrimEnd(Path.DirectorySeparatorChar), Path.GetDirectoryName(icon)?.TrimEnd(Path.DirectorySeparatorChar), StringComparison.InvariantCultureIgnoreCase))
+            {
+                File.Copy(icon, directoryicon);
+            }
+
+            SHChangeNotify(0x08000000, 0x0000, (IntPtr) null, (IntPtr) null);
+        }
+        
+        public static Boolean TrySetDirectoryIcon(String directory, String icon)
+        {
+            return TrySetDirectoryIcon(directory, icon, 0);
+        }
+
+        public static Boolean TrySetDirectoryIcon(String directory, String icon, Int32 index)
+        {
+            if (directory is null)
+            {
+                throw new ArgumentNullException(nameof(directory));
+            }
+
+            if (icon is null)
+            {
+                throw new ArgumentNullException(nameof(icon));
+            }
+            
+            if (directory == String.Empty)
+            {
+                return false;
+            }
+            
+            if (icon == String.Empty)
+            {
+                return false;
+            }
+            
+            if (index < 0)
+            {
+                return false;
+            }
+
+            try
+            {
+                SetDirectoryIcon(directory, icon, index);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
     }
 }

@@ -13,6 +13,29 @@ namespace NetExtender.Utilities.Core
     public static class UnsafeUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe ref IntPtr RefTypeHandle(this Object instance)
+        {
+            if (instance is null)
+            {
+                throw new ArgumentNullException(nameof(instance));
+            }
+
+            return ref **(IntPtr**)Unsafe.AsPointer(ref instance);
+        }
+        
+        public static T UncheckedCast<T>(this Object instance)
+        {
+            if (instance is null)
+            {
+                throw new ArgumentNullException(nameof(instance));
+            }
+
+            Object casting = instance.MemberwiseClone();
+            casting.RefTypeHandle() = typeof(T).TypeHandle.Value;
+            return Unsafe.As<Object, T>(ref casting);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe T Read<T>(void* source)
         {
             return Unsafe.Read<T>(source);

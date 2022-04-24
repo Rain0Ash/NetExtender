@@ -337,6 +337,56 @@ namespace NetExtender.Utilities.Types
                 collection.Remove(item);
             }
         }
+        
+        public static Int32 RemoveAll<T>(this ICollection<T> collection, T item)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+            
+            if (collection.IsReadOnly)
+            {
+                throw new NotSupportedException();
+            }
+
+            Int32 result = 0;
+            while (collection.Remove(item))
+            {
+                result++;
+            }
+
+            return result;
+        }
+
+        public static Int32 RemoveAll<T>(this ICollection<T> collection, IEnumerable<T> source)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (collection.IsReadOnly)
+            {
+                throw new NotSupportedException();
+            }
+            
+            Int32 count = 0;
+            foreach (T item in source)
+            {
+                while (collection.Remove(item))
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
 
         public static StringCollection ToStringCollection(this IEnumerable<String?> source)
         {

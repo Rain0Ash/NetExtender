@@ -628,6 +628,10 @@ namespace NetExtender.Utilities.Types
             {
                 null => escape.HasFlag(EscapeType.Null) ? StringUtilities.NullString : null,
                 Char character => escape.HasFlag(EscapeType.Full) ? $"\'{character.GetString(provider)}\'" : character.GetString(provider),
+                Char32 character => escape.HasFlag(EscapeType.Full) ? $"\'{character.GetString(provider)}\'" : character.GetString(provider),
+#if NETCOREAPP3_1_OR_GREATER
+                Rune character => escape.HasFlag(EscapeType.Full) ? $"\'{character.GetString(provider)}\'" : character.GetString(provider),
+#endif
                 String str => escape.HasFlag(EscapeType.Full) ? $"\"{str.GetString(provider)}\"" : str.GetString(provider),
                 Boolean number => number.GetString(provider),
                 SByte number => number.GetString(provider),
@@ -669,6 +673,10 @@ namespace NetExtender.Utilities.Types
             {
                 null => escape.HasFlag(EscapeType.Null) ? StringUtilities.NullString : null,
                 Char character => escape.HasFlag(EscapeType.Full) ? $"\'{character.GetString(format, provider)}\'" : character.GetString(format, provider),
+                Char32 character => escape.HasFlag(EscapeType.Full) ? $"\'{character.GetString(format, provider)}\'" : character.GetString(format, provider),
+#if NETCOREAPP3_1_OR_GREATER
+                Rune character => escape.HasFlag(EscapeType.Full) ? $"\'{character.GetString(format, provider)}\'" : character.GetString(format, provider),
+#endif
                 String str => escape.HasFlag(EscapeType.Full) ? $"\"{str.GetString(format, provider)}\"" : str.GetString(format, provider),
                 Boolean number => number.GetString(format, provider),
                 SByte number => number.GetString(format, provider),
@@ -938,6 +946,24 @@ namespace NetExtender.Utilities.Types
         public static String GetString(this Char value, String? format, IFormatProvider? provider)
         {
             return Char.ToString(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this Char32 value)
+        {
+            return value.ToString();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this Char32 value, IFormatProvider? provider)
+        {
+            return value.ToString(provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this Char32 value, String? format, IFormatProvider? provider)
+        {
+            return value.ToString(format, provider);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1227,6 +1253,26 @@ namespace NetExtender.Utilities.Types
         {
             return GetString(value, escape);
         }
+        
+#if NETCOREAPP3_1_OR_GREATER
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this Rune value)
+        {
+            return value.ToString();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this Rune value, IFormatProvider? provider)
+        {
+            return GetString(value, null, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString(this Rune value, String? format, IFormatProvider? provider)
+        {
+            return ((IFormattable) value).ToString(format, provider);
+        }
+#endif
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("value")]
@@ -1737,6 +1783,7 @@ namespace NetExtender.Utilities.Types
             {
                 "TRUE" => true,
                 "YES" => true,
+                "ON" => true,
                 "T" => true,
                 "Y" => true,
                 "+" => true,

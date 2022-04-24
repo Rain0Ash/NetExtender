@@ -56,10 +56,12 @@ namespace NetExtender.Utilities.Types
         public const String NullString = "null";
 
         public const String DefaultSeparator = " ";
-
-        public const String NewLine = "\n";
-
+        
         public const String FormatVariableRegexPattern = @"\{([^\{\}]+)\}";
+
+        private static String[] NewLine { get; } = { "\r\n", "\r", "\n" };
+        private static Char[] WhiteSpace { get; } = Enumerable.Range(0, Char.MaxValue + 1).Select(Convert.ToChar).Where(Char.IsWhiteSpace).ToArray();
+        private static String[] NewLineWhiteSpace { get; } = NewLine.Append(WhiteSpace.Select(Char.ToString)).Distinct().ToArray();
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? ToString<T>(T value)
@@ -95,7 +97,7 @@ namespace NetExtender.Utilities.Types
             {
                 0 => 0,
                 1 => values[0]?.Length ?? 0,
-                _ => values.WhereNotNull().Sum(str => str.Length)
+                _ => values.WhereNotNull().Sum(item => item.Length)
             };
         }
 
@@ -106,7 +108,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(values));
             }
 
-            return values.WhereNotNull().Sum(str => str.Length);
+            return values.WhereNotNull().Sum(item => item.Length);
         }
 
         public static Int32 CharLength(this IString?[] values)
@@ -120,7 +122,7 @@ namespace NetExtender.Utilities.Types
             {
                 0 => 0,
                 1 => values[0]?.Length ?? 0,
-                _ => values.WhereNotNull().Sum(str => str.Length)
+                _ => values.WhereNotNull().Sum(item => item.Length)
             };
         }
 
@@ -145,7 +147,7 @@ namespace NetExtender.Utilities.Types
             {
                 0 => 0,
                 1 => values[0]?.Length ?? 0,
-                _ => values.WhereNotNull().Aggregate<String, Int64>(0, (current, str) => current + str.Length)
+                _ => values.WhereNotNull().Aggregate<String, Int64>(0, (current, item) => current + item.Length)
             };
         }
 
@@ -156,7 +158,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(values));
             }
 
-            return values.WhereNotNull().Aggregate<String, Int64>(0, (current, str) => current + str.Length);
+            return values.WhereNotNull().Aggregate<String, Int64>(0, (current, item) => current + item.Length);
         }
 
         public static Int64 CharLongLength(this IString?[] values)
@@ -170,7 +172,7 @@ namespace NetExtender.Utilities.Types
             {
                 0 => 0,
                 1 => values[0]?.Length ?? 0,
-                _ => values.WhereNotNull().Aggregate<IString, Int64>(0, (current, str) => current + str.Length)
+                _ => values.WhereNotNull().Aggregate<IString, Int64>(0, (current, item) => current + item.Length)
             };
         }
 
@@ -181,7 +183,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(values));
             }
 
-            return values.WhereNotNull().Aggregate<IString, Int64>(0, (current, str) => current + str.Length);
+            return values.WhereNotNull().Aggregate<IString, Int64>(0, (current, item) => current + item.Length);
         }
         
         public static Boolean IsNumeric(this String value)
@@ -475,6 +477,37 @@ namespace NetExtender.Utilities.Types
 
             return new String(buffer);
         }
+        
+#if NETCOREAPP3_1_OR_GREATER
+        public static String ReverseRune(this String value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (value.Length <= 1)
+            {
+                return value;
+            }
+
+            Span<Rune> buffer = value.Length <= 10000 ? stackalloc Rune[value.Length] : new Rune[value.Length];
+
+            Int32 i = buffer.Length;
+            foreach (Rune rune in value.EnumerateRunes())
+            {
+                buffer[--i] = rune;
+            }
+
+            buffer = buffer.Slice(i, buffer.Length - i);
+            return new String(buffer.As<Rune, Char>().Compress());
+        }
+
+        public static String ReverseUnicode(this String value)
+        {
+            return ReverseRune(value);
+        }
+#endif
 
         public static String Format(this String format, Object? arg0)
         {
@@ -1174,7 +1207,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(value));
             }
 
-            return value.Split(' ', count, options);
+            return value.Split(WhiteSpace, count, options);
         }
 
         public static String[] SplitBySpace(IString value)
@@ -1207,8 +1240,6 @@ namespace NetExtender.Utilities.Types
             return SplitBySpace(value.ToString(), count, options);
         }
 
-        private static readonly Char[] NewLineAndSpaceChars = {'\n', ' '};
-
         public static String[] SplitByNewLineAndSpace(String value)
         {
             return SplitByNewLineAndSpace(value, StringSplitOptions.RemoveEmptyEntries);
@@ -1231,7 +1262,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(value));
             }
 
-            return value.Split(NewLineAndSpaceChars, count, options);
+            return value.Split(NewLineWhiteSpace, count, options);
         }
 
         public static String[] SplitByNewLineAndSpace(IString value)
@@ -1563,7 +1594,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return Join(source, NewLine);
+            return Join(source, Environment.NewLine);
         }
         
         public static String JoinNewLine<T>(this IEnumerable<T> source, String? end)
@@ -1573,7 +1604,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return Join(source, NewLine, end);
+            return Join(source, Environment.NewLine, end);
         }
         
         public static String JoinNewLine<T>(this IEnumerable<T> source, String? start, String? end)
@@ -1583,7 +1614,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return Join(source, NewLine, start, end);
+            return Join(source, Environment.NewLine, start, end);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1631,17 +1662,17 @@ namespace NetExtender.Utilities.Types
         
         public static String JoinNewLine<T>(this IEnumerable<T> source, JoinType type)
         {
-            return Join(source, NewLine, type);
+            return Join(source, Environment.NewLine, type);
         }
         
         public static String JoinNewLine<T>(this IEnumerable<T> source, JoinType type, String? end)
         {
-            return Join(source, NewLine, type, end);
+            return Join(source, Environment.NewLine, type, end);
         }
         
         public static String JoinNewLine<T>(this IEnumerable<T> source, JoinType type, String? start, String? end)
         {
-            return Join(source, NewLine, type, start, end);
+            return Join(source, Environment.NewLine, type, start, end);
         }
         
         public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector)
@@ -1716,7 +1747,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return Join(source.Select(selector), NewLine);
+            return Join(source.Select(selector), Environment.NewLine);
         }
         
         public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, String? start)
@@ -1731,7 +1762,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return Join(source.Select(selector), NewLine, start);
+            return Join(source.Select(selector), Environment.NewLine, start);
         }
         
         public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, String? start, String? end)
@@ -1746,7 +1777,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(selector));
             }
 
-            return Join(source.Select(selector), NewLine, start, end);
+            return Join(source.Select(selector), Environment.NewLine, start, end);
         }
         
         public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, JoinType type)
@@ -2930,6 +2961,7 @@ namespace NetExtender.Utilities.Types
         }
 
 #if NETCOREAPP3_1_OR_GREATER
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Char32> EnumerateUnicode(this String value)
         {
             if (value is null)
@@ -2937,10 +2969,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(value));
             }
 
-            foreach (Char32 character in value.EnumerateRunes())
-            {
-                yield return character;
-            }
+            return value.EnumerateRunes().Select(item => (Char32) item);
         }
 #endif
 
@@ -2974,12 +3003,12 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String MutateString(this String value, Char character)
+        public static String Mutate(this String value, Char character)
         {
-            return MutateString(value, character, 0);
+            return Mutate(value, character, 0);
         }
 
-        public static unsafe String MutateString(this String value, Char character, Int32 position)
+        public static unsafe String Mutate(this String value, Char character, Int32 position)
         {
             if (value is null)
             {
@@ -3005,13 +3034,13 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String MutateString(this String value, String mutate)
+        public static String Mutate(this String value, String mutate)
         {
-            return MutateString(value, mutate, 0);
+            return Mutate(value, mutate, 0);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String MutateString(this String value, String mutate, Int32 position)
+        public static String Mutate(this String value, String mutate, Int32 position)
         {
             if (value is null)
             {
@@ -3023,16 +3052,16 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(mutate));
             }
 
-            return MutateString(value, mutate.AsSpan(), position);
+            return Mutate(value, mutate.AsSpan(), position);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String MutateString(this String value, ReadOnlySpan<Char> span)
+        public static String Mutate(this String value, ReadOnlySpan<Char> span)
         {
-            return MutateString(value, span, 0);
+            return Mutate(value, span, 0);
         }
 
-        public static unsafe String MutateString(this String value, ReadOnlySpan<Char> span, Int32 position)
+        public static unsafe String Mutate(this String value, ReadOnlySpan<Char> span, Int32 position)
         {
             if (value is null)
             {

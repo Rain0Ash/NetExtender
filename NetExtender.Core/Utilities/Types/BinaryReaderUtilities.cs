@@ -3,6 +3,8 @@
 
 using System;
 using System.IO;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,6 +25,25 @@ namespace NetExtender.Utilities.Types
             }
 
             return Task.Factory.StartNew(() => reader.ReadBytes(count), token);
+        }
+
+        public static T Read<T>(this BinaryReader reader) where T : struct
+        {
+            if (reader is null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            Int32 size = Unsafe.SizeOf<T>();
+            Span<Byte> buffer = stackalloc Byte[size];
+            Int32 length = reader.Read(buffer);
+
+            if (length < size)
+            {
+                throw new EndOfStreamException();
+            }
+
+            return MemoryMarshal.Read<T>(buffer);
         }
     }
 }

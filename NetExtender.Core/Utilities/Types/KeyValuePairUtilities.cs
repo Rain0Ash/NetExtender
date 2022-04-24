@@ -11,6 +11,12 @@ namespace NetExtender.Utilities.Types
 {
     public static class KeyValuePairUtilities
     {
+        public static void Deconstruct(this DictionaryEntry entry, out Object key, out Object? value)
+        {
+            key = entry.Key;
+            value = entry.Value;
+        }
+        
         // ReSharper disable once UseDeconstructionOnParameter
         public static KeyValuePair<TValue, TKey> Reverse<TKey, TValue>(this KeyValuePair<TKey, TValue> pair)
         {

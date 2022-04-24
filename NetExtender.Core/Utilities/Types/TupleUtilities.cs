@@ -483,9 +483,244 @@ namespace NetExtender.Utilities.Types
             return AsTuple(source, true);
         }
 
-        public static KeyValuePair<TKey, TValue> ToPair<TKey, TValue>(this (TKey, TValue) value)
+        public static KeyValuePair<TKey, TValue> ToPair<TKey, TValue>(this ValueTuple<TKey, TValue> value)
         {
             return new KeyValuePair<TKey, TValue>(value.Item1, value.Item2);
+        }
+
+        public static KeyValuePair<TKey, TValue> ToPair<TKey, TValue>(this Tuple<TKey, TValue> value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return new KeyValuePair<TKey, TValue>(value.Item1, value.Item2);
+        }
+
+        public static ValueTuple<T1, T2, T3> Append<T1, T2, T3>(this ValueTuple<T1, T2> value, T3 item)
+        {
+            return new ValueTuple<T1, T2, T3>(value.Item1, value.Item2, item);
+        }
+        
+        public static ValueTuple<T1, T2, T3, T4> Append<T1, T2, T3, T4>(this ValueTuple<T1, T2> value, T3 item1, T4 item2)
+        {
+            return new ValueTuple<T1, T2, T3, T4>(value.Item1, value.Item2, item1, item2);
+        }
+        
+        public static ValueTuple<T1, T2, T3, T4, T5> Append<T1, T2, T3, T4, T5>(this ValueTuple<T1, T2> value, T3 item1, T4 item2, T5 item3)
+        {
+            return new ValueTuple<T1, T2, T3, T4, T5>(value.Item1, value.Item2, item1, item2, item3);
+        }
+        
+        public static ValueTuple<T1, T2, T3, T4> Append<T1, T2, T3, T4>(this ValueTuple<T1, T2, T3> value, T4 item)
+        {
+            return new ValueTuple<T1, T2, T3, T4>(value.Item1, value.Item2, value.Item3, item);
+        }
+        
+        public static ValueTuple<T1, T2, T3, T4, T5> Append<T1, T2, T3, T4, T5>(this ValueTuple<T1, T2, T3> value, T4 item1, T5 item2)
+        {
+            return new ValueTuple<T1, T2, T3, T4, T5>(value.Item1, value.Item2, value.Item3, item1, item2);
+        }
+        
+        public static ValueTuple<T1, T2, T3, T4, T5, T6> Append<T1, T2, T3, T4, T5, T6>(this ValueTuple<T1, T2, T3> value, T4 item1, T5 item2, T6 item3)
+        {
+            return new ValueTuple<T1, T2, T3, T4, T5, T6>(value.Item1, value.Item2, value.Item3, item1, item2, item3);
+        }
+        
+        public static ValueTuple<T1, T2, T3, T4, T5> Append<T1, T2, T3, T4, T5>(this ValueTuple<T1, T2, T3, T4> value, T5 item)
+        {
+            return new ValueTuple<T1, T2, T3, T4, T5>(value.Item1, value.Item2, value.Item3, value.Item4, item);
+        }
+        
+        public static ValueTuple<T1, T2, T3, T4, T5, T6> Append<T1, T2, T3, T4, T5, T6>(this ValueTuple<T1, T2, T3, T4> value, T5 item1, T6 item2)
+        {
+            return new ValueTuple<T1, T2, T3, T4, T5, T6>(value.Item1, value.Item2, value.Item3, value.Item4, item1, item2);
+        }
+        
+        public static ValueTuple<T1, T2, T3, T4, T5, T6, T7> Append<T1, T2, T3, T4, T5, T6, T7>(this ValueTuple<T1, T2, T3, T4> value, T5 item1, T6 item2, T7 item3)
+        {
+            return new ValueTuple<T1, T2, T3, T4, T5, T6, T7>(value.Item1, value.Item2, value.Item3, value.Item4, item1, item2, item3);
+        }
+        
+        public static ValueTuple<T1, T2, T3, T4, T5, T6> Append<T1, T2, T3, T4, T5, T6>(this ValueTuple<T1, T2, T3, T4, T5> value, T6 item)
+        {
+            return new ValueTuple<T1, T2, T3, T4, T5, T6>(value.Item1, value.Item2, value.Item3, value.Item4, value.Item5, item);
+        }
+        
+        public static ValueTuple<T1, T2, T3, T4, T5, T6, T7> Append<T1, T2, T3, T4, T5, T6, T7>(this ValueTuple<T1, T2, T3, T4, T5> value, T6 item1, T7 item2)
+        {
+            return new ValueTuple<T1, T2, T3, T4, T5, T6, T7>(value.Item1, value.Item2, value.Item3, value.Item4, value.Item5, item1, item2);
+        }
+        
+        public static ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> Append<T1, T2, T3, T4, T5, T6, T7, TRest>(this ValueTuple<T1, T2, T3, T4, T5> value, T6 item1, T7 item2, TRest rest) where TRest : struct
+        {
+            return new ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>(value.Item1, value.Item2, value.Item3, value.Item4, value.Item5, item1, item2, rest);
+        }
+        
+        public static ValueTuple<T1, T2, T3, T4, T5, T6, T7> Append<T1, T2, T3, T4, T5, T6, T7>(this ValueTuple<T1, T2, T3, T4, T5, T6> value, T7 item)
+        {
+            return new ValueTuple<T1, T2, T3, T4, T5, T6, T7>(value.Item1, value.Item2, value.Item3, value.Item4, value.Item5, value.Item6, item);
+        }
+        
+        public static ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> Append<T1, T2, T3, T4, T5, T6, T7, TRest>(this ValueTuple<T1, T2, T3, T4, T5, T6> value, T7 item, TRest rest) where TRest : struct
+        {
+            return new ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>(value.Item1, value.Item2, value.Item3, value.Item4, value.Item5, value.Item6, item, rest);
+        }
+        
+        public static ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest> Append<T1, T2, T3, T4, T5, T6, T7, TRest>(this ValueTuple<T1, T2, T3, T4, T5, T6, T7> value, TRest rest) where TRest : struct
+        {
+            return new ValueTuple<T1, T2, T3, T4, T5, T6, T7, TRest>(value.Item1, value.Item2, value.Item3, value.Item4, value.Item5, value.Item6, value.Item7, rest);
+        }
+        
+        public static Tuple<T1, T2, T3> Append<T1, T2, T3>(this Tuple<T1, T2> value, T3 item)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return new Tuple<T1, T2, T3>(value.Item1, value.Item2, item);
+        }
+        
+        public static Tuple<T1, T2, T3, T4> Append<T1, T2, T3, T4>(this Tuple<T1, T2> value, T3 item1, T4 item2)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return new Tuple<T1, T2, T3, T4>(value.Item1, value.Item2, item1, item2);
+        }
+        
+        public static Tuple<T1, T2, T3, T4, T5> Append<T1, T2, T3, T4, T5>(this Tuple<T1, T2> value, T3 item1, T4 item2, T5 item3)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return new Tuple<T1, T2, T3, T4, T5>(value.Item1, value.Item2, item1, item2, item3);
+        }
+        
+        public static Tuple<T1, T2, T3, T4> Append<T1, T2, T3, T4>(this Tuple<T1, T2, T3> value, T4 item)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return new Tuple<T1, T2, T3, T4>(value.Item1, value.Item2, value.Item3, item);
+        }
+        
+        public static Tuple<T1, T2, T3, T4, T5> Append<T1, T2, T3, T4, T5>(this Tuple<T1, T2, T3> value, T4 item1, T5 item2)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return new Tuple<T1, T2, T3, T4, T5>(value.Item1, value.Item2, value.Item3, item1, item2);
+        }
+        
+        public static Tuple<T1, T2, T3, T4, T5, T6> Append<T1, T2, T3, T4, T5, T6>(this Tuple<T1, T2, T3> value, T4 item1, T5 item2, T6 item3)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return new Tuple<T1, T2, T3, T4, T5, T6>(value.Item1, value.Item2, value.Item3, item1, item2, item3);
+        }
+        
+        public static Tuple<T1, T2, T3, T4, T5> Append<T1, T2, T3, T4, T5>(this Tuple<T1, T2, T3, T4> value, T5 item)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return new Tuple<T1, T2, T3, T4, T5>(value.Item1, value.Item2, value.Item3, value.Item4, item);
+        }
+        
+        public static Tuple<T1, T2, T3, T4, T5, T6> Append<T1, T2, T3, T4, T5, T6>(this Tuple<T1, T2, T3, T4> value, T5 item1, T6 item2)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return new Tuple<T1, T2, T3, T4, T5, T6>(value.Item1, value.Item2, value.Item3, value.Item4, item1, item2);
+        }
+        
+        public static Tuple<T1, T2, T3, T4, T5, T6, T7> Append<T1, T2, T3, T4, T5, T6, T7>(this Tuple<T1, T2, T3, T4> value, T5 item1, T6 item2, T7 item3)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return new Tuple<T1, T2, T3, T4, T5, T6, T7>(value.Item1, value.Item2, value.Item3, value.Item4, item1, item2, item3);
+        }
+        
+        public static Tuple<T1, T2, T3, T4, T5, T6> Append<T1, T2, T3, T4, T5, T6>(this Tuple<T1, T2, T3, T4, T5> value, T6 item)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return new Tuple<T1, T2, T3, T4, T5, T6>(value.Item1, value.Item2, value.Item3, value.Item4, value.Item5, item);
+        }
+        
+        public static Tuple<T1, T2, T3, T4, T5, T6, T7> Append<T1, T2, T3, T4, T5, T6, T7>(this Tuple<T1, T2, T3, T4, T5> value, T6 item1, T7 item2)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return new Tuple<T1, T2, T3, T4, T5, T6, T7>(value.Item1, value.Item2, value.Item3, value.Item4, value.Item5, item1, item2);
+        }
+        
+        public static Tuple<T1, T2, T3, T4, T5, T6, T7, TRest> Append<T1, T2, T3, T4, T5, T6, T7, TRest>(this Tuple<T1, T2, T3, T4, T5> value, T6 item1, T7 item2, TRest rest) where TRest : struct
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return new Tuple<T1, T2, T3, T4, T5, T6, T7, TRest>(value.Item1, value.Item2, value.Item3, value.Item4, value.Item5, item1, item2, rest);
+        }
+        
+        public static Tuple<T1, T2, T3, T4, T5, T6, T7> Append<T1, T2, T3, T4, T5, T6, T7>(this Tuple<T1, T2, T3, T4, T5, T6> value, T7 item)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return new Tuple<T1, T2, T3, T4, T5, T6, T7>(value.Item1, value.Item2, value.Item3, value.Item4, value.Item5, value.Item6, item);
+        }
+        
+        public static Tuple<T1, T2, T3, T4, T5, T6, T7, TRest> Append<T1, T2, T3, T4, T5, T6, T7, TRest>(this Tuple<T1, T2, T3, T4, T5, T6> value, T7 item, TRest rest) where TRest : struct
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return new Tuple<T1, T2, T3, T4, T5, T6, T7, TRest>(value.Item1, value.Item2, value.Item3, value.Item4, value.Item5, value.Item6, item, rest);
+        }
+        
+        public static Tuple<T1, T2, T3, T4, T5, T6, T7, TRest> Append<T1, T2, T3, T4, T5, T6, T7, TRest>(this Tuple<T1, T2, T3, T4, T5, T6, T7> value, TRest rest) where TRest : struct
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return new Tuple<T1, T2, T3, T4, T5, T6, T7, TRest>(value.Item1, value.Item2, value.Item3, value.Item4, value.Item5, value.Item6, value.Item7, rest);
         }
     }
 }

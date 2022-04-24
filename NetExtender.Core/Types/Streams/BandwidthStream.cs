@@ -27,7 +27,12 @@ namespace NetExtender.Types.Streams
         {
         }
 
-        public BandwidthStream(Stream stream, UInt64 speed = UInt64.MaxValue)
+        public BandwidthStream(Stream stream)
+            : this(stream, UInt64.MaxValue)
+        {
+        }
+
+        public BandwidthStream(Stream stream, UInt64 speed)
             : base(stream, speed)
         {
         }
@@ -50,12 +55,12 @@ namespace NetExtender.Types.Streams
         
         public T BaseStream { get; }
 
-        private IScheduler Scheduler { get; }
-        private IStopwatch Stopwatch { get; }
+        protected IScheduler Scheduler { get; }
+        protected IStopwatch Stopwatch { get; }
         public UInt64 MaximumSpeed { get; set; }
-        private UInt64 Processed { get; set; }
-        
-        private AutoResetEvent Wait { get; }
+        protected UInt64 Processed { get; set; }
+
+        protected AutoResetEvent Wait { get; }
         
         public override Boolean CanRead
         {
@@ -124,7 +129,12 @@ namespace NetExtender.Types.Streams
         {
         }
 
-        public BandwidthStream(T stream, UInt64 speed = UInt64.MaxValue)
+        public BandwidthStream(T stream)
+            : this(stream, UInt64.MaxValue)
+        {
+        }
+
+        public BandwidthStream(T stream, UInt64 speed)
             : this(stream, speed, DefaultScheduler)
         {
         }

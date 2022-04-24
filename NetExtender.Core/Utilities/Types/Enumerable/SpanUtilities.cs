@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using NetExtender.Random.Interfaces;
 using NetExtender.Utilities.Numerics;
 
@@ -12,6 +13,138 @@ namespace NetExtender.Utilities.Types
     //TODO: add enumerable and list analog utilities
     public static class SpanUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ref T GetReference<T>(this Memory<T> memory)
+        {
+            return ref GetReference(memory.Span);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ref T GetReference<T>(this Span<T> span)
+        {
+            return ref MemoryMarshal.GetReference(span);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ref T GetReference<T>(this ReadOnlyMemory<T> memory)
+        {
+            return ref GetReference(memory.Span);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ref T GetReference<T>(this ReadOnlySpan<T> span)
+        {
+            return ref MemoryMarshal.GetReference(span);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Read<T>(this Memory<Byte> memory) where T : struct
+        {
+            return Read<T>(memory.Span);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Read<T>(this Span<Byte> span) where T : struct
+        {
+            return MemoryMarshal.Read<T>(span);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Read<T>(this ReadOnlyMemory<Byte> memory) where T : struct
+        {
+            return Read<T>(memory.Span);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Read<T>(this ReadOnlySpan<Byte> span) where T : struct
+        {
+            return MemoryMarshal.Read<T>(span);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<TTo> As<TFrom, TTo>(this Memory<TFrom> memory) where TFrom : struct where TTo : struct
+        {
+            return As<TFrom, TTo>(memory.Span);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<TTo> As<TFrom, TTo>(this Span<TFrom> span) where TFrom : struct where TTo : struct
+        {
+            return MemoryMarshal.Cast<TFrom, TTo>(span);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<TTo> As<TFrom, TTo>(this ReadOnlyMemory<TFrom> memory) where TFrom : struct where TTo : struct
+        {
+            return As<TFrom, TTo>(memory.Span);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<TTo> As<TFrom, TTo>(this ReadOnlySpan<TFrom> span) where TFrom : struct where TTo : struct
+        {
+            return MemoryMarshal.Cast<TFrom, TTo>(span);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<Byte> AsBytes<T>(this Memory<T> memory) where T : struct
+        {
+            return AsBytes(memory.Span);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<Byte> AsBytes<T>(this Span<T> span) where T : struct
+        {
+            return MemoryMarshal.AsBytes(span);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<Byte> AsBytes<T>(this ReadOnlyMemory<T> memory) where T : struct
+        {
+            return AsBytes(memory.Span);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReadOnlySpan<Byte> AsBytes<T>(this ReadOnlySpan<T> span) where T : struct
+        {
+            return MemoryMarshal.AsBytes(span);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<T> Compress<T>(this Memory<T> memory)
+        {
+            return Compress(memory, out _);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<T> Compress<T>(this Memory<T> memory, out Int32 count)
+        {
+            Compress(memory.Span, out count);
+            return memory.Slice(0, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<T> Compress<T>(this Span<T> span)
+        {
+            return Compress(span, out _);
+        }
+
+        public static Span<T> Compress<T>(this Span<T> span, out Int32 count)
+        {
+            count = 0;
+            for (Int32 i = 0; i < span.Length; i++)
+            {
+                if (EqualityComparer<T>.Default.Equals(span[i], default))
+                {
+                    continue;
+                }
+                
+                (span[count], span[i]) = (span[i], span[count]);
+                count++;
+            }
+
+            return span.Slice(0, count);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<T> Change<T>(this Memory<T> source, Func<T, T> selector)
         {
@@ -802,13 +935,13 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Span<T> Unsafe<T>(this ReadOnlyMemory<T> source) where T : unmanaged
+        public static Span<T> Mutate<T>(this ReadOnlyMemory<T> source) where T : unmanaged
         {
-            return source.Span.Unsafe();
+            return source.Span.Mutate();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe Span<T> Unsafe<T>(this ReadOnlySpan<T> source) where T : unmanaged
+        public static unsafe Span<T> Mutate<T>(this ReadOnlySpan<T> source) where T : unmanaged
         {
             fixed (T* pointer = source)
             {

@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using NetExtender.Utilities.Core;
 
 namespace NetExtender.Utilities.Types
@@ -386,6 +388,14 @@ namespace NetExtender.Utilities.Types
         }
 
         private static MethodInfo MemberwiseCloneMethod { get; } = typeof(Object).GetMethod("MemberwiseClone", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        private static Converter<Object, Object> MemberwiseCloneDelegate { get; } = (Converter<Object, Object>) MemberwiseCloneMethod.CreateDelegate(typeof(Converter<Object, Object>));
+        
+        [return: NotNullIfNotNull("value")]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MemberwiseClone<T>(this T? value)
+        {
+            return value is not null ? (T) MemberwiseCloneDelegate.Invoke(value) : default;
+        }
 
         /// <summary>
         /// Creates a deep copy (new instance with new instances of properties).

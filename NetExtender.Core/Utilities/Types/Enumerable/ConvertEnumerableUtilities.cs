@@ -615,7 +615,7 @@ namespace NetExtender.Utilities.Types
 
                 type = type.TryGetGenericTypeDefinition();
 
-                Type[] interfaces = type.GetGenericTypeDefinitionInterfaces();
+                Type[] interfaces = type.TryGetGenericTypeDefinitionInterfaces();
                 Boolean isnongeneric = types.Contains(type) || types.Overlaps(interfaces);
                 Boolean isgeneric = generics.Contains(type) || generics.Overlaps(interfaces);
 
