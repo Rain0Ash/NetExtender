@@ -86,6 +86,23 @@ namespace NetExtender.Utilities.Types
             return value?.ToString();
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 CompareTo(this String value, String? other)
+        {
+            return String.Compare(value, other, StringComparison.Ordinal);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 CompareTo(this String value, String? other, StringComparison comparison)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return String.Compare(value, other, comparison);
+        }
+        
         public static Int32 CharLength(this String?[] values)
         {
             if (values is null)
@@ -440,6 +457,240 @@ namespace NetExtender.Utilities.Types
             return matches.Select(match => match.Value).Distinct().Count();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Trim(this String value, StringSplitOptions options)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return options.HasFlag(StringSplitOptions.TrimEntries) ? value.Trim() : value;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Trim(this String value, Char trim, StringSplitOptions options)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return options.HasFlag(StringSplitOptions.TrimEntries) ? value.Trim(trim) : value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Trim(this String value, Char[]? trim, StringSplitOptions options)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return options.HasFlag(StringSplitOptions.TrimEntries) ? value.Trim(trim) : value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Trim(this String value, StringSplitOptions options, params Char[]? trim)
+        {
+            return Trim(value, trim, options);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IString Trim(this IString value, StringSplitOptions options)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return options.HasFlag(StringSplitOptions.TrimEntries) ? value.Trim() : value;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IString Trim(this IString value, Char trim, StringSplitOptions options)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return options.HasFlag(StringSplitOptions.TrimEntries) ? value.Trim(trim) : value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IString Trim(this IString value, Char[]? trim, StringSplitOptions options)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return options.HasFlag(StringSplitOptions.TrimEntries) ? value.Trim(trim) : value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IString Trim(this IString value, StringSplitOptions options, params Char[]? trim)
+        {
+            return Trim(value, trim, options);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String TrimStart(this String value, StringSplitOptions options)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return options.HasFlag(StringSplitOptions.TrimEntries) ? value.TrimStart() : value;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String TrimStart(this String value, Char trim, StringSplitOptions options)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return options.HasFlag(StringSplitOptions.TrimEntries) ? value.TrimStart(trim) : value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String TrimStart(this String value, Char[]? trim, StringSplitOptions options)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return options.HasFlag(StringSplitOptions.TrimEntries) ? value.TrimStart(trim) : value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String TrimStart(this String value, StringSplitOptions options, params Char[]? trim)
+        {
+            return TrimStart(value, trim, options);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IString TrimStart(this IString value, StringSplitOptions options)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return options.HasFlag(StringSplitOptions.TrimEntries) ? value.TrimStart() : value;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IString TrimStart(this IString value, Char trim, StringSplitOptions options)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return options.HasFlag(StringSplitOptions.TrimEntries) ? value.TrimStart(trim) : value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IString TrimStart(this IString value, Char[]? trim, StringSplitOptions options)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return options.HasFlag(StringSplitOptions.TrimEntries) ? value.TrimStart(trim) : value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IString TrimStart(this IString value, StringSplitOptions options, params Char[]? trim)
+        {
+            return TrimStart(value, trim, options);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String TrimEnd(this String value, StringSplitOptions options)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return options.HasFlag(StringSplitOptions.TrimEntries) ? value.TrimEnd() : value;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String TrimEnd(this String value, Char trim, StringSplitOptions options)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return options.HasFlag(StringSplitOptions.TrimEntries) ? value.TrimEnd(trim) : value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String TrimEnd(this String value, Char[]? trim, StringSplitOptions options)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return options.HasFlag(StringSplitOptions.TrimEntries) ? value.TrimEnd(trim) : value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String TrimEnd(this String value, StringSplitOptions options, params Char[]? trim)
+        {
+            return TrimEnd(value, trim, options);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IString TrimEnd(this IString value, StringSplitOptions options)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return options.HasFlag(StringSplitOptions.TrimEntries) ? value.TrimEnd() : value;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IString TrimEnd(this IString value, Char trim, StringSplitOptions options)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return options.HasFlag(StringSplitOptions.TrimEntries) ? value.TrimEnd(trim) : value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IString TrimEnd(this IString value, Char[]? trim, StringSplitOptions options)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return options.HasFlag(StringSplitOptions.TrimEntries) ? value.TrimEnd(trim) : value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IString TrimEnd(this IString value, StringSplitOptions options, params Char[]? trim)
+        {
+            return TrimEnd(value, trim, options);
+        }
+
         /// <summary>
         /// Trim string after format variables
         /// </summary>
@@ -752,6 +1003,81 @@ namespace NetExtender.Utilities.Types
 
             return FormatSafe(source.ToString(), provider, args);
         }
+        
+        public static Boolean StartsWith(this String value, IEnumerable<Char> chars)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (chars is null)
+            {
+                throw new ArgumentNullException(nameof(chars));
+            }
+
+            return chars.Any(value.StartsWith);
+        }
+
+        public static Boolean StartsWith(this IString value, IEnumerable<Char> chars)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return StartsWith(value.ToString(), chars);
+        }
+
+        public static Boolean StartsWith(this String value, IEnumerable<String?> substrings)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (substrings is null)
+            {
+                throw new ArgumentNullException(nameof(substrings));
+            }
+
+            return substrings.WhereNotNull().Any(value.StartsWith);
+        }
+
+        public static Boolean StartsWith(this String value, IEnumerable<String?> substrings, StringComparison comparison)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (substrings is null)
+            {
+                throw new ArgumentNullException(nameof(substrings));
+            }
+
+            return substrings.WhereNotNull().Any(item => value.StartsWith(item, comparison));
+        }
+
+        public static Boolean StartsWith(this IString value, IEnumerable<String?> substrings)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return StartsWith(value.ToString(), substrings);
+        }
+
+        public static Boolean StartsWith(this IString value, IEnumerable<String?> substrings, StringComparison comparison)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return StartsWith(value.ToString(), substrings, comparison);
+        }
 
         public static Boolean EndsWith(this String value, IEnumerable<Char> chars)
         {
@@ -778,7 +1104,7 @@ namespace NetExtender.Utilities.Types
             return EndsWith(value.ToString(), chars);
         }
 
-        public static Boolean EndsWith(this String value, IEnumerable<String> substrings)
+        public static Boolean EndsWith(this String value, IEnumerable<String?> substrings)
         {
             if (value is null)
             {
@@ -790,10 +1116,25 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(substrings));
             }
 
-            return substrings.Any(value.EndsWith);
+            return substrings.WhereNotNull().Any(value.EndsWith);
+        }
+        
+        public static Boolean EndsWith(this String value, IEnumerable<String?> substrings, StringComparison comparison)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (substrings is null)
+            {
+                throw new ArgumentNullException(nameof(substrings));
+            }
+
+            return substrings.WhereNotNull().Any(item => value.EndsWith(item, comparison));
         }
 
-        public static Boolean EndsWith(this IString value, IEnumerable<String> substrings)
+        public static Boolean EndsWith(this IString value, IEnumerable<String?> substrings)
         {
             if (value is null)
             {
@@ -801,6 +1142,16 @@ namespace NetExtender.Utilities.Types
             }
 
             return EndsWith(value.ToString(), substrings);
+        }
+        
+        public static Boolean EndsWith(this IString value, IEnumerable<String?> substrings, StringComparison comparison)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return EndsWith(value.ToString(), substrings, comparison);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1333,14 +1684,15 @@ namespace NetExtender.Utilities.Types
                 yield break;
             }
 
-            Boolean allentries = options == StringSplitOptions.None;
+            Boolean allentries = !options.HasFlag(StringSplitOptions.RemoveEmptyEntries);
+            Boolean trim = options.HasFlag(StringSplitOptions.TrimEntries);
 
             Int32 index = 0;
             UnicodeCategory ctype = value.GetUnicodeCategory(index);
             String result;
-            for (Int32 pos = 1; pos < value.Length; pos++)
+            for (Int32 position = 1; position < value.Length; position++)
             {
-                Char current = value[pos];
+                Char current = value[position];
                 UnicodeCategory type = current.GetUnicodeCategory();
 
                 if (ctype == type)
@@ -1348,36 +1700,55 @@ namespace NetExtender.Utilities.Types
                     continue;
                 }
 
-                if (ctype == UnicodeCategory.UppercaseLetter && type == UnicodeCategory.LowercaseLetter)
+                if (ctype != UnicodeCategory.UppercaseLetter || type != UnicodeCategory.LowercaseLetter)
                 {
-                    Int32 token = pos - 1;
-                    if (token != index)
-                    {
-                        result = value.Substring(index, token - index);
-                        if (allentries || !String.IsNullOrWhiteSpace(result))
-                        {
-                            yield return result;
-                        }
+                    result = value.Substring(index, position - index);
 
-                        index = token;
+                    if (trim)
+                    {
+                        result = result.Trim();
                     }
-                }
-                else
-                {
-                    result = value.Substring(index, pos - index);
-                    if (allentries || !String.IsNullOrWhiteSpace(result))
+
+                    if (allentries || !String.IsNullOrEmpty(result))
                     {
                         yield return result;
                     }
 
-                    index = pos;
+                    index = position;
+                    ctype = type;
+                    continue;
                 }
 
-                ctype = type;
+                Int32 token = position - 1;
+                if (token == index)
+                {
+                    ctype = type;
+                    continue;
+                }
+
+                result = value.Substring(index, token - index);
+
+                if (trim)
+                {
+                    result = result.Trim();
+                }
+
+                if (allentries || !String.IsNullOrEmpty(result))
+                {
+                    yield return result;
+                }
+
+                index = token;
             }
 
             result = value.Substring(index, value.Length - index);
-            if (allentries || !String.IsNullOrWhiteSpace(result))
+            
+            if (trim)
+            {
+                result = result.Trim();
+            }
+            
+            if (allentries || !String.IsNullOrEmpty(result))
             {
                 yield return result;
             }
@@ -2068,7 +2439,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
 
-            return value.Length > 1 ? value.Substring(0, index) + value.Substring(index).Shuffle() : value;
+            return value.Length > 1 ? String.Concat(value.AsSpan(0, index), value.Substring(index).Shuffle()) : value;
         }
 
         public static String Shuffle(this String value, Int32 index, Int32 length)
@@ -2093,7 +2464,7 @@ namespace NetExtender.Utilities.Types
                 return value;
             }
 
-            return value.Length > 1 ? value.Substring(0, index) + value.Substring(index, length).Shuffle() + value.Substring(index + length) : value;
+            return value.Length > 1 ? String.Concat(value.AsSpan(0, index), value.Substring(index, length).Shuffle(), value.AsSpan(index + length)) : value;
         }
 
         public static Boolean IsMatrix(this IEnumerable<String> value)
@@ -2567,67 +2938,73 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        /// <summary>
-        /// Returns a new string from the provided text with the specified maximum length. If the original text is longer than the specified maximum length, 3 dots (...) are added.
-        /// </summary>
-        /// <param name="value">The text.</param>
-        /// <param name="length">The maximum length of the returned string (excluding the 3 dots).</param>
-        public static String ShortenWith3Dots(this String value, Int32 length)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String ShortWithDots(this String value, Int32 length)
+        {
+            return ShortWithDots(value, length, true);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String ShortWithDots(this String value, Int32 length, Boolean include)
+        {
+            return ShortWithDots(value, length, 3, include);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String ShortWithDots(this String value, Int32 length, Int32 dots)
+        {
+            return ShortWithDots(value, length, dots, true);
+        }
+
+        public static String ShortWithDots(this String value, Int32 length, Int32 dots, Boolean include)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
 
-            if (length < 1)
+            if (length <= dots)
             {
-                throw new ArgumentOutOfRangeException(nameof(length), @"The maximum length must not be less than 1.");
+                throw new ArgumentOutOfRangeException(nameof(length), length, "Length must be greater than dots.");
+            }
+            
+            if (include)
+            {
+                length -= dots;
             }
 
-            if (value.Length <= length)
-            {
-                return value;
-            }
-
-            return value.Substring(0, length) + "...";
+            return value.Length <= length ? value : String.Concat(value.AsSpan(0, length), "...");
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IString ShortWithDots(this IString value, Int32 length)
+        {
+            return ShortWithDots(value, length, true);
         }
 
-        /// <summary>
-        /// Returns a new string from the provided text with the specified maximum length. If the original text is longer than the specified maximum length, 3 dots (...) are added.
-        /// </summary>
-        /// <param name="value">The text.</param>
-        /// <param name="length">The maximum length of the returned string (including the 3 dots).</param>
-        public static String ShortenWith3DotsIncluded(this String value, Int32 length)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IString ShortWithDots(this IString value, Int32 length, Boolean include)
+        {
+            return ShortWithDots(value, length, 3, include);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IString ShortWithDots(this IString value, Int32 length, Int32 dots)
+        {
+            return ShortWithDots(value, length, dots, true);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IString ShortWithDots(this IString value, Int32 length, Int32 dots, Boolean include)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
 
-            if (length < 4)
-            {
-                throw new ArgumentOutOfRangeException(nameof(length), @"The maximum length must not be less than 4.");
-            }
-
-            if (value.Length <= length - 3)
-            {
-                return value;
-            }
-
-            return value.Substring(0, length - 3) + "...";
+            return new StringAdapter(ShortWithDots(value.ToString(), length, dots, include));
         }
-        
-        /// <summary>
-        /// Returns a new string from the provided text with the specified maximum length. If the original text is longer than the specified maximum length, 3 dots (...) are added.
-        /// </summary>
-        /// <param name="value">The text.</param>
-        /// <param name="length">The maximum length of the returned string.</param>
-        /// <param name="included">Included or excluded 3 dots</param>
-        public static String ShortenWith3Dots(this String value, Int32 length, Boolean included)
-        {
-            return included ? ShortenWith3DotsIncluded(value, length) : ShortenWith3Dots(value, length);
-        }
-        
+
         [return: NotNullIfNotNull("value")]
         public static String? HtmlEncode(this String? value)
         {

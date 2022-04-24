@@ -11,6 +11,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
     /// <summary>
     /// Static factory methods and extensions for <see cref="ImmutableLinkedList{T}"/>
     /// </summary>
+    //TODO: Change exception messages, review all methods
     public static class ImmutableLinkedList
     {
         /// <summary>
