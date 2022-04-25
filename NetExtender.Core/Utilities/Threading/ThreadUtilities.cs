@@ -362,15 +362,16 @@ namespace NetExtender.Utilities.Threading
             MTA(() => action.Invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9));
         }
         
-        private static T? Create<T>(Func<T> function, ApartmentState state)
+        private static T Create<T>(Func<T> function, ApartmentState state)
         {
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
             }
 
+            T result = default!;
             Exception? exception = null;
-            T? result = default;
+            
             Thread thread = new Thread(() => exception = SafeInvoke(() => result = function.Invoke()));
             thread.TrySetApartmentState(state);
             thread.Start();
@@ -385,7 +386,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? STA<TResult>(Func<TResult> function)
+        public static TResult STA<TResult>(Func<TResult> function)
         {
             if (function is null)
             {
@@ -396,7 +397,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? STA<T, TResult>(Func<T, TResult> function, T arg)
+        public static TResult STA<T, TResult>(Func<T, TResult> function, T arg)
         {
             if (function is null)
             {
@@ -407,7 +408,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? STA<T1, T2, TResult>(Func<T1, T2, TResult> function, T1 arg1, T2 arg2)
+        public static TResult STA<T1, T2, TResult>(Func<T1, T2, TResult> function, T1 arg1, T2 arg2)
         {
             if (function is null)
             {
@@ -418,7 +419,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? STA<T1, T2, T3, TResult>(Func<T1, T2, T3, TResult> function, T1 arg1, T2 arg2, T3 arg3)
+        public static TResult STA<T1, T2, T3, TResult>(Func<T1, T2, T3, TResult> function, T1 arg1, T2 arg2, T3 arg3)
         {
             if (function is null)
             {
@@ -429,7 +430,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? STA<T1, T2, T3, T4, TResult>(Func<T1, T2, T3, T4, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static TResult STA<T1, T2, T3, T4, TResult>(Func<T1, T2, T3, T4, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
             if (function is null)
             {
@@ -440,7 +441,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? STA<T1, T2, T3, T4, T5, TResult>(Func<T1, T2, T3, T4, T5, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static TResult STA<T1, T2, T3, T4, T5, TResult>(Func<T1, T2, T3, T4, T5, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
             if (function is null)
             {
@@ -451,7 +452,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? STA<T1, T2, T3, T4, T5, T6, TResult>(Func<T1, T2, T3, T4, T5, T6, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+        public static TResult STA<T1, T2, T3, T4, T5, T6, TResult>(Func<T1, T2, T3, T4, T5, T6, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
         {
             if (function is null)
             {
@@ -462,7 +463,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? STA<T1, T2, T3, T4, T5, T6, T7, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
+        public static TResult STA<T1, T2, T3, T4, T5, T6, T7, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
         {
             if (function is null)
             {
@@ -473,7 +474,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? STA<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
+        public static TResult STA<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
         {
             if (function is null)
             {
@@ -484,7 +485,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? STA<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
+        public static TResult STA<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
         {
             if (function is null)
             {
@@ -495,7 +496,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? MTA<TResult>(Func<TResult> function)
+        public static TResult MTA<TResult>(Func<TResult> function)
         {
             if (function is null)
             {
@@ -506,7 +507,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? MTA<T, TResult>(Func<T, TResult> function, T arg)
+        public static TResult MTA<T, TResult>(Func<T, TResult> function, T arg)
         {
             if (function is null)
             {
@@ -517,7 +518,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? MTA<T1, T2, TResult>(Func<T1, T2, TResult> function, T1 arg1, T2 arg2)
+        public static TResult MTA<T1, T2, TResult>(Func<T1, T2, TResult> function, T1 arg1, T2 arg2)
         {
             if (function is null)
             {
@@ -528,7 +529,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? MTA<T1, T2, T3, TResult>(Func<T1, T2, T3, TResult> function, T1 arg1, T2 arg2, T3 arg3)
+        public static TResult MTA<T1, T2, T3, TResult>(Func<T1, T2, T3, TResult> function, T1 arg1, T2 arg2, T3 arg3)
         {
             if (function is null)
             {
@@ -539,7 +540,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? MTA<T1, T2, T3, T4, TResult>(Func<T1, T2, T3, T4, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        public static TResult MTA<T1, T2, T3, T4, TResult>(Func<T1, T2, T3, T4, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
             if (function is null)
             {
@@ -550,7 +551,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? MTA<T1, T2, T3, T4, T5, TResult>(Func<T1, T2, T3, T4, T5, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
+        public static TResult MTA<T1, T2, T3, T4, T5, TResult>(Func<T1, T2, T3, T4, T5, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
             if (function is null)
             {
@@ -561,7 +562,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? MTA<T1, T2, T3, T4, T5, T6, TResult>(Func<T1, T2, T3, T4, T5, T6, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
+        public static TResult MTA<T1, T2, T3, T4, T5, T6, TResult>(Func<T1, T2, T3, T4, T5, T6, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
         {
             if (function is null)
             {
@@ -572,7 +573,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? MTA<T1, T2, T3, T4, T5, T6, T7, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
+        public static TResult MTA<T1, T2, T3, T4, T5, T6, T7, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
         {
             if (function is null)
             {
@@ -583,7 +584,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? MTA<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
+        public static TResult MTA<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
         {
             if (function is null)
             {
@@ -594,7 +595,7 @@ namespace NetExtender.Utilities.Threading
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TResult? MTA<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
+        public static TResult MTA<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
         {
             if (function is null)
             {

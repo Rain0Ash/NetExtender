@@ -404,62 +404,15 @@ namespace NetExtender.Registry
             return GetValue<T>(key);
         }
         
-        [SuppressMessage("ReSharper", "CognitiveComplexity")]
         public Boolean GetValue<T>(String? key, out T? result)
         {
-            try
-            {
-                Object? value = Read?.GetValue(key);
-
-                if (value is null)
-                {
-                    result = default;
-                    return false;
-                }
-
-                if (typeof(T) == typeof(Object))
-                {
-                    result = (T) value;
-                    return true;
-                }
-
-                if (typeof(T) == typeof(String))
-                {
-                    result = (T?) (Object?) value.GetString();
-                    return true;
-                }
-                
-                if (value is IConvertible convertible)
-                {
-                    result = (T?) Convert.ChangeType(convertible, typeof(T));
-                    return true;
-                }
-
-                if (typeof(T) == typeof(Byte[]))
-                {
-                    if (value is Byte[])
-                    {
-                        result = (T) value;
-                        return true;
-                    }
-                }
-                else if (typeof(T) == typeof(String[]))
-                {
-                    if (value is String[])
-                    {
-                        result = (T) value;
-                        return true;
-                    }
-                }
-                    
-                result = (T) value;
-                return true;
-            }
-            catch (Exception)
+            if (Read is null)
             {
                 result = default;
                 return false;
             }
+            
+            return Read.GetValue(key, out result);
         }
         
         public Boolean GetValue<T>(String? key, out T? result, params String[]? sections)

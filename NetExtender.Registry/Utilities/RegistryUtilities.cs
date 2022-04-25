@@ -9,6 +9,7 @@ using Microsoft.Win32;
 using NetExtender.Registry;
 using NetExtender.Registry.Interfaces;
 using NetExtender.Utilities.IO;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Registry
 {
@@ -58,6 +59,51 @@ namespace NetExtender.Utilities.Registry
             {
                 Permission = access == FileAccess.Read ? RegistryKeyPermissionCheck.ReadSubTree : RegistryKeyPermissionCheck.ReadWriteSubTree
             };
+        }
+        
+        public static Boolean GetValue<T>(this RegistryKey registry, String? key, out T? result)
+        {
+            if (registry is null)
+            {
+                throw new ArgumentNullException(nameof(registry));
+            }
+
+            try
+            {
+                Object? value = registry.GetValue(key);
+
+                if (value is null)
+                {
+                    result = default;
+                    return false;
+                }
+
+                if (typeof(T) == typeof(Object))
+                {
+                    result = (T) value;
+                    return true;
+                }
+
+                if (typeof(T) == typeof(String))
+                {
+                    result = (T?) (Object?) value.GetString();
+                    return true;
+                }
+                
+                if (value is IConvertible convertible)
+                {
+                    result = (T) Convert.ChangeType(convertible, typeof(T));
+                    return true;
+                }
+
+                result = (T) value;
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
         }
     }
 }
