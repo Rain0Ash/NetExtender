@@ -593,6 +593,7 @@ namespace NetExtender.Windows.Utilities.IO
                     case TrustedZoneIdentifier.Restricted:
                         builder[index] = '4';
                         break;
+                    // ReSharper disable once UnreachableSwitchCaseDueToIntegerAnalysis
                     default:
                         return false;
                 }

@@ -3,6 +3,7 @@
 
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NetExtender.Utilities.Threading;
 using NetExtender.Windows.Types.IO;
@@ -11,6 +12,8 @@ namespace NetExtender.Windows.Utilities.IO
 {
     public static class KeyboardLayoutUtilities
     {
+        private const UInt32 SetKeyboardLayoutToProcess = 0x100;
+        
         [DllImport("user32.dll")]
         private static extern IntPtr GetKeyboardLayout(UInt32 thread);
         
@@ -19,6 +22,11 @@ namespace NetExtender.Windows.Utilities.IO
 
         [DllImport("user32.dll")]
         private static extern IntPtr ActivateKeyboardLayout(IntPtr handle, UInt32 flags);
+        
+        private static IntPtr ActivateKeyboardLayout(IntPtr handle, Boolean process)
+        {
+            return ActivateKeyboardLayout(handle, process ? SetKeyboardLayoutToProcess : 0);
+        }
         
         [DllImport("user32.dll")]
         private static extern unsafe Boolean SystemParametersInfoW(UInt32 action, UInt32 uiParam, void* pvParam, UInt32 fWinIni);
@@ -72,20 +80,31 @@ namespace NetExtender.Windows.Utilities.IO
             }
             set
             {
-                IntPtr handle = (IntPtr) value;
-                if (handle == IntPtr.Zero)
-                {
-                    handle = (IntPtr) DefaultKeyboardLayout;
-                }
-
-                if (ThreadUtilities.STA<IntPtr, UInt32, IntPtr>(ActivateKeyboardLayout, handle, 0) == IntPtr.Zero)
+                if (!SetKeyboardLayoutInternal(value, false))
                 {
                     throw new ArgumentException("Keyboard layout is invalid", nameof(value));
                 }
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Boolean SetKeyboardLayoutInternal(KeyboardLayout layout, Boolean process)
+        {
+            IntPtr handle = (IntPtr) layout;
+            if (handle == IntPtr.Zero)
+            {
+                handle = (IntPtr) DefaultKeyboardLayout;
+            }
+
+            return ThreadUtilities.STA(ActivateKeyboardLayout, handle, process) != IntPtr.Zero;
+        }
+
         public static Boolean SetKeyboardLayout(KeyboardLayout layout)
+        {
+            return SetKeyboardLayout(layout, false);
+        }
+
+        public static Boolean SetKeyboardLayout(KeyboardLayout layout, Boolean process)
         {
             try
             {
@@ -95,9 +114,8 @@ namespace NetExtender.Windows.Utilities.IO
                 {
                     return true;
                 }
-                
-                KeyboardLayout = layout;
-                return KeyboardLayout == layout;
+
+                return SetKeyboardLayoutInternal(layout, process) && KeyboardLayout == layout;
             }
             catch (Exception)
             {
@@ -107,10 +125,20 @@ namespace NetExtender.Windows.Utilities.IO
 
         public static Boolean Next()
         {
-            return Next(1);
+            return Next(false);
+        }
+        
+        public static Boolean Next(Boolean process)
+        {
+            return Next(1, process);
         }
 
         public static Boolean Next(Int32 count)
+        {
+            return Next(count, false);
+        }
+        
+        public static Boolean Next(Int32 count, Boolean process)
         {
             if (count == 0)
             {
@@ -141,7 +169,7 @@ namespace NetExtender.Windows.Utilities.IO
                 }
 
                 KeyboardLayout next = layouts[unchecked(index + count) % layouts.Length];
-                KeyboardLayout = next;
+                SetKeyboardLayoutInternal(next, process);
                 
                 return KeyboardLayout == next;
             }

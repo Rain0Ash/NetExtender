@@ -1,6 +1,6 @@
 ### .Net Extender
 
-A biggest general purpose library that contains many different methods and data structures to speed up development with the .Net framework.
+A biggest general purpose library that contains many different extension methods, data structures and utilities to speed up development with the .Net 6.0 Framework.
 
 **Contains:**
 - **Extension methods for**:
@@ -12,15 +12,16 @@ A biggest general purpose library that contains many different methods and data 
     - Combinatorics
     - Tertiary logic
     - Different rounding
-    - others
+    - Other
 - File system methods
 - Data structs
     - Recursive dictionary
     - Counter dictionary
     - Dictionary with index ordering
+    - Two side dictionary (Map)
     - Deque
     - Ordered set
-    - others
+    - Other
 - Crypthography
     - xxHash algorithm
     - Base 16/32/58/64/85 alrorithms
@@ -31,10 +32,9 @@ A biggest general purpose library that contains many different methods and data 
     - URL scheme
     - Application assotiation protocol
     - Hardware/sorfware info and methods
+    - Other
 - Inter-process communication
 - **Configuration**
-- Localization
-- Logging
 - Others
 
 # **Work in progress. Library may be unstable!**
