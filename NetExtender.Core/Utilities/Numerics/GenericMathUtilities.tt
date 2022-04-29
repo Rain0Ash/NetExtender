@@ -2,6 +2,7 @@
 <#@ output extension=".cs" encoding="utf-8"#>
 <#@ assembly name="System.Core"#>
 <#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
@@ -69,6 +70,7 @@ namespace NetExtender.Utilities.Numerics
     };
 
     const String biginteger = "BigInteger";
+    const String complex = "Complex";
 
     static Boolean NotChar(String type)
     {
@@ -1449,17 +1451,15 @@ namespace NetExtender.Utilities.Numerics
 
     void SumImplementation(String type)
     {
-        if (IsSmallType(type) || IsUnsignedType(type) || type == biginteger)
+        if (IsSmallType(type) || IsUnsignedType(type) || type == biginteger || type == complex)
         {
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
             WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this IEnumerable<{type}> source)");
             WriteLine("\t\t{");
-
             WriteLine("\t\t\tchecked");
             WriteLine("\t\t\t{");
             WriteLine($"\t\t\t\treturn source.Aggregate{(type != nameof(Int32) ? $"<{type}, {type}>" : String.Empty)}(0, (current, value) => {(IsSmallType(type) ? $"({type}) (current + value)" : "current + value")});");
             WriteLine("\t\t\t}");
-            
             WriteLine("\t\t}");
         
             WriteLine(String.Empty);
@@ -1481,7 +1481,7 @@ namespace NetExtender.Utilities.Numerics
     
     void Sum()
     {
-        ForEach(types.Where(NotChar).Append(biginteger), SumImplementation);
+        ForEach(types.Where(NotChar).Append(biginteger).Append(complex), SumImplementation);
     }
 
     void MultiplyImplementation(String type)
@@ -1545,10 +1545,10 @@ namespace NetExtender.Utilities.Numerics
         ForEach(types.Where(NotChar), MultiplyImplementation);
     }
     
-    
     void AverageImplementation(String type)
     {
         WriteLine("\t\t[SuppressMessage(\"ReSharper\", \"SuspiciousTypeConversion.Global\")]");
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(Average)}(this IEnumerable<{type}> source)");
         WriteLine("\t\t{");
         WriteLine("\t\t\tif (source is null)");
@@ -1603,6 +1603,7 @@ namespace NetExtender.Utilities.Numerics
     
     void StandardDeviationImplementation(String type)
     {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(StandardDeviation)}(this IEnumerable<{type}> source)");
         WriteLine("\t\t{");
         WriteLine("\t\t\tif (source is null)");

@@ -113,6 +113,11 @@
         <Compile Update="Utilities\Types\Enumerable\AsyncEnumerableUtilities.cs">
           <DependentUpon>EnumerableUtilities.cs</DependentUpon>
         </Compile>
+        <Compile Update="Utilities\Types\Enumerable\GenericSpanUtilities.cs">
+          <AutoGen>True</AutoGen>
+          <DesignTime>True</DesignTime>
+          <DependentUpon>GenericSpanUtilities.tt</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -131,6 +136,10 @@
         <None Update="Utilities\Types\GenericBinaryReaderUtilities.tt">
             <Generator>TextTemplatingFileGenerator</Generator>
             <LastGenOutput>GenericBinaryReaderUtilities.cs</LastGenOutput>
+        </None>
+        <None Update="Utilities\Types\Enumerable\GenericSpanUtilities.tt">
+          <Generator>TextTemplatingFileGenerator</Generator>
+          <LastGenOutput>GenericSpanUtilities.cs</LastGenOutput>
         </None>
     </ItemGroup>
 

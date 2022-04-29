@@ -42,7 +42,7 @@ namespace NetExtender.Utilities.Types
             return collection.Count > 0 ? collection[RandomUtilities.NextNonNegative(collection.Count - 1)] : alternate;
         }
         
-        public static T GetRandom<T>(this IList<T> collection, Func<T> alternate)
+        public static T GetRandomOrDefault<T>(this IList<T> collection, Func<T> alternate)
         {
             if (collection is null)
             {

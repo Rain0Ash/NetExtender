@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NetExtender.Utilities.Threading;
+using NetExtender.Utilities.Types;
 using NetExtender.Windows.Types.IO;
 
 namespace NetExtender.Windows.Utilities.IO
@@ -161,7 +162,7 @@ namespace NetExtender.Windows.Utilities.IO
                 
                 KeyboardLayout current = KeyboardLayout;
                 
-                Int32 index = Array.IndexOf(layouts, current);
+                Int32 index = layouts.IndexOf(current);
                 
                 if (index == -1)
                 {

@@ -1,0 +1,481 @@
+<#@ template language="C#v3.5" #>
+<#@ output extension=".cs" encoding="utf-8"#>
+<#@ assembly name="System.Core"#>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
+using System;
+using System.Numerics;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
+using NetExtender.Utilities.Numerics;
+
+namespace NetExtender.Utilities.Types
+{
+<#
+    List<String> types = new List<String>
+    {
+        nameof(Char),
+        nameof(SByte),
+        nameof(Byte),
+        nameof(Int16),
+        nameof(UInt16),
+        nameof(Int32),
+        nameof(UInt32),
+        nameof(Int64),
+        nameof(UInt64),
+        nameof(Single),
+        nameof(Double),
+        nameof(Decimal)
+    };
+    
+    const String biginteger = "BigInteger";
+    const String complex = "Complex";
+
+    static Boolean NotChar(String type)
+    {
+        return type != nameof(Char);
+    }
+    
+    static Boolean IsSmallType(String type)
+    {
+        return type == nameof(Char) || type == nameof(Byte) || type == nameof(SByte) || type == nameof(Int16) || type == nameof(UInt16);
+    }
+
+    static Boolean IsUnsignedType(String type)
+    {
+        return type == nameof(Char) || type == nameof(Byte) || type == nameof(UInt16) || type == nameof(UInt32) || type == nameof(UInt64);
+    }
+    
+    Boolean IsIntType(String type)
+    {
+        return type == nameof(Char) || type == nameof(SByte) || type == nameof(Byte) || type == nameof(Int16) || type == nameof(UInt16) || type == nameof(Int32) || type == nameof(UInt32) || type == nameof(Int64) || type == nameof(UInt64) || type == biginteger;
+    }
+    
+    static String ToUnsignedType(String type)
+    {
+        return type switch
+        {
+            nameof(SByte) => nameof(Byte),
+            nameof(Int16) => nameof(UInt16),
+            nameof(Int32) => nameof(UInt32),
+            nameof(Int64) => nameof(UInt64),
+            _ => type
+            };
+    }
+
+    void ForEach(IEnumerable<String> types, Action<String> action, Boolean line = true)
+    {
+        String[] type = types.ToArray();
+
+        for (Int32 i = 0; i < type.Length; i++)
+        {
+            action(type[i]);
+
+            if (line && i <= type.Length - 2)
+            {
+                WriteLine(String.Empty);
+            }
+        }
+    }
+    
+    void SumImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this Memory<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Sum)}(source.Span);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this Span<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Sum)}((ReadOnlySpan<{type}>) source);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this ReadOnlyMemory<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Sum)}(source.Span);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this ReadOnlySpan<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tchecked");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\treturn source.Aggregate<{type}, {type}>(0, (current, value) => {(IsSmallType(type) ? $"({type}) (current + value)" : "current + value")});");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this Memory<{type}> source, {type} overflow)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Sum)}(source.Span, overflow);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this Span<{type}> source, {type} overflow)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Sum)}((ReadOnlySpan<{type}>) source, overflow);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this ReadOnlyMemory<{type}> source, {type} overflow)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Sum)}(source.Span, overflow);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this ReadOnlySpan<{type}> source, {type} overflow)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\ttry");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\treturn source.{nameof(Sum)}();");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t\tcatch (OverflowException)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn overflow;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+
+        if (!IsSmallType(type))
+        {
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {type} {nameof(Sum)}<T>(this Memory<T> source, Func<T, {type}> selector)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\treturn {nameof(Sum)}(source.Span, selector);");
+            WriteLine("\t\t}");
+        
+            WriteLine(String.Empty);
+        
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {type} {nameof(Sum)}<T>(this Span<T> source, Func<T, {type}> selector)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\treturn {nameof(Sum)}((ReadOnlySpan<T>) source, selector);");
+            WriteLine("\t\t}");
+        
+            WriteLine(String.Empty);
+        
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {type} {nameof(Sum)}<T>(this ReadOnlyMemory<T> source, Func<T, {type}> selector)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\treturn {nameof(Sum)}(source.Span, selector);");
+            WriteLine("\t\t}");
+        
+            WriteLine(String.Empty);
+            
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {type} {nameof(Sum)}<T>(this ReadOnlySpan<T> source, Func<T, {type}> selector)");
+            WriteLine("\t\t{");
+            WriteLine("\t\t\tchecked");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\treturn source.Aggregate{(type != nameof(Int32) ? $"<T, {type}>" : String.Empty)}(0, (current, item) => current + selector(item));");
+            WriteLine("\t\t\t}");
+            WriteLine("\t\t}");
+            
+            WriteLine(String.Empty);
+            
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {type} {nameof(Sum)}<T>(this Memory<T> source, Func<T, {type}> selector, {type} overflow)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\treturn {nameof(Sum)}(source.Span, selector, overflow);");
+            WriteLine("\t\t}");
+        
+            WriteLine(String.Empty);
+        
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {type} {nameof(Sum)}<T>(this Span<T> source, Func<T, {type}> selector, {type} overflow)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\treturn {nameof(Sum)}((ReadOnlySpan<T>) source, selector, overflow);");
+            WriteLine("\t\t}");
+        
+            WriteLine(String.Empty);
+        
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {type} {nameof(Sum)}<T>(this ReadOnlyMemory<T> source, Func<T, {type}> selector, {type} overflow)");
+            WriteLine("\t\t{");
+            WriteLine($"\t\t\treturn {nameof(Sum)}(source.Span, selector, overflow);");
+            WriteLine("\t\t}");
+        
+            WriteLine(String.Empty);
+            
+            WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+            WriteLine($"\t\tpublic static {type} {nameof(Sum)}<T>(this ReadOnlySpan<T> source, Func<T, {type}> selector, {type} overflow)");
+            WriteLine("\t\t{");
+            WriteLine("\t\t\ttry");
+            WriteLine("\t\t\t{");
+            WriteLine($"\t\t\t\treturn source.{nameof(Sum)}(selector);");
+            WriteLine("\t\t\t}");
+            WriteLine("\t\t\tcatch (OverflowException)");
+            WriteLine("\t\t\t{");
+            WriteLine("\t\t\t\treturn overflow;");
+            WriteLine("\t\t\t}");
+            WriteLine("\t\t}");
+        }
+    }
+    
+    void Sum()
+    {
+        ForEach(types.Where(NotChar).Append(biginteger).Append(complex), SumImplementation);
+    }
+
+    void MultiplyImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this Memory<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Multiply)}(source.Span);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this Span<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Multiply)}((ReadOnlySpan<{type}>) source);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this ReadOnlyMemory<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Multiply)}(source.Span);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this ReadOnlySpan<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tchecked");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\tReadOnlySpan<{type}>.Enumerator enumerator = source.GetEnumerator();");
+        WriteLine(String.Empty);
+        WriteLine($"\t\t\t\tif (!enumerator.MoveNext() || enumerator.Current == {(type == biginteger ? "BigInteger.Zero" : type == complex ? "Complex.Zero" : "0" )})");
+        WriteLine("\t\t\t\t{");
+        WriteLine($"\t\t\t\t\treturn {(type == biginteger ? "BigInteger.Zero" : type == complex ? "Complex.Zero" : "0" )};");
+        WriteLine("\t\t\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\t\t\t{type} result = enumerator.Current;");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\t\twhile (enumerator.MoveNext())");
+        WriteLine("\t\t\t\t{");
+        WriteLine("\t\t\t\t\tswitch (enumerator.Current)");
+        WriteLine("\t\t\t\t\t{");
+        WriteLine($"\t\t\t\t\t\tcase {(type == biginteger ? "BigInteger.Zero" : type == complex ? "Complex.Zero" : "0")}:");
+        WriteLine($"\t\t\t\t\t\t\treturn {(type == biginteger ? "BigInteger.Zero" : type == complex ? "Complex.Zero" : "0" )};");
+        WriteLine($"\t\t\t\t\t\tcase {(type == biginteger ? "BigInteger.One" : type == complex ? "Complex.One" : "1")}:");
+        WriteLine("\t\t\t\t\t\t\tcontinue;");
+        WriteLine("\t\t\t\t\t\tdefault:");
+        WriteLine("\t\t\t\t\t\t\tresult *= enumerator.Current;");
+        WriteLine("\t\t\t\t\t\t\tbreak;");
+        WriteLine("\t\t\t\t\t}");
+        WriteLine("\t\t\t\t}");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\t\treturn result;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+
+        if (type == biginteger)
+        {
+            return;
+        }
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this Memory<{type}> source, {type} overflow)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Multiply)}(source.Span, overflow);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this Span<{type}> source, {type} overflow)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Multiply)}((ReadOnlySpan<{type}>) source, overflow);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this ReadOnlyMemory<{type}> source, {type} overflow)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Multiply)}(source.Span, overflow);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this ReadOnlySpan<{type}> source, {type} overflow)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\ttry");
+        WriteLine("\t\t\t{");
+        WriteLine($"\t\t\t\treturn source.{nameof(Multiply)}();");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t\tcatch (OverflowException)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn overflow;");
+        WriteLine("\t\t\t}");
+        WriteLine("\t\t}");
+    }
+
+    void Multiply()
+    {
+        ForEach(types.Where(NotChar), MultiplyImplementation);
+    }
+
+    void AverageImplementation(String type)
+    {
+        WriteLine("\t\t[SuppressMessage(\"ReSharper\", \"SuspiciousTypeConversion.Global\")]");
+        WriteLine($"\t\tpublic static {(type == nameof(Decimal) || type == complex ? type : nameof(Double))} {nameof(Average)}(this ReadOnlySpan<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\tReadOnlySpan<{type}>.Enumerator enumerator = source.GetEnumerator();");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\tif (!enumerator.MoveNext())");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tthrow new InvalidOperationException();");
+        WriteLine("\t\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\t\t{(type == nameof(Decimal) || type == complex ? type : nameof(Double))} result = enumerator.Current;");
+        WriteLine($"\t\t\t{nameof(Int64)} count = 1;");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\twhile (enumerator.MoveNext())");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\tresult += enumerator.Current;");
+        WriteLine("\t\t\t\tcount++;");
+        WriteLine("\t\t\t}");
+        WriteLine(String.Empty);
+        WriteLine("\t\t\treturn result / count;");
+        WriteLine("\t\t}");
+    }
+    
+    void Average()
+    {
+        ForEach(types.Where(NotChar).Append(complex), AverageImplementation);
+    }
+
+    void VarianceImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(Variance)}(this Memory<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Variance)}(source.Span);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(Variance)}(this Span<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Variance)}((ReadOnlySpan<{type}>) source);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(Variance)}(this ReadOnlyMemory<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(Variance)}(source.Span);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(Variance)}(this ReadOnlySpan<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\tif (source.Length <= 0)");
+        WriteLine("\t\t\t{");
+        WriteLine("\t\t\t\treturn 0;");
+        WriteLine("\t\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine($"\t\t\t{(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} mean = source.Average();");
+        WriteLine($"\t\t\t{(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} sum = source.Sum(x => (x - mean).Pow(2));");
+        WriteLine("\t\t\treturn sum / source.Length;");
+        
+        WriteLine("\t\t}");
+    }
+    
+    void Variance()
+    {
+        ForEach(types.Where(NotChar), VarianceImplementation);
+    }
+    
+    void StandardDeviationImplementation(String type)
+    {
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(StandardDeviation)}(this Memory<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(StandardDeviation)}(source.Span);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(StandardDeviation)}(this Span<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(StandardDeviation)}((ReadOnlySpan<{type}>) source);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(StandardDeviation)}(this ReadOnlyMemory<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(StandardDeviation)}(source.Span);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
+        WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(StandardDeviation)}(this ReadOnlySpan<{type}> source)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t\treturn source.Variance().Sqrt();");
+        WriteLine("\t\t}");
+    }
+    
+    void StandardDeviation()
+    {
+        ForEach(types.Where(NotChar), StandardDeviationImplementation, false);
+    }
+#>
+    [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
+    public static partial class SpanUtilities
+    {
+<#
+    Sum();
+    WriteLine(String.Empty);
+    Multiply();
+    WriteLine(String.Empty);
+    Average();
+    WriteLine(String.Empty);
+    Variance();
+    WriteLine(String.Empty);
+    StandardDeviation();
+#>
+    }
+}
+

@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Windows
 {
@@ -64,7 +65,7 @@ namespace NetExtender.Utilities.Windows
 
         public static Monitor GetMonitor(Screen screen)
         {
-            return GetMonitor(screen, Array.IndexOf(Screen.AllScreens, screen));
+            return GetMonitor(screen, Screen.AllScreens.IndexOf(screen));
         }
 
         public static Monitor GetMonitor(Screen screen, Int32 customID)

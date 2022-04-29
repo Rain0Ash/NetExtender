@@ -322,7 +322,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(array));
             }
 
-            return array.AsSpan().Slice(start);
+            return array.AsSpan(start);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -333,7 +333,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(array));
             }
 
-            return array.AsSpan().Slice(start, length);
+            return array.AsSpan(start, length);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

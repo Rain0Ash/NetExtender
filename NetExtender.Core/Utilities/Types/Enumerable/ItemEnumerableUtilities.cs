@@ -8,7 +8,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Initializer.Types.Indexers.Interfaces;
-using NetExtender.Types.Comparers;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Utilities.Numerics;
 
@@ -47,7 +46,7 @@ namespace NetExtender.Utilities.Types
             Int32 i = 0;
             return source.All(item => predicate(item, i++));
         }
-        
+
         public static Int32 CountWhile<T>(this IEnumerable<T> source, Func<T, Boolean> predicate)
         {
             if (source is null)
@@ -64,6 +63,33 @@ namespace NetExtender.Utilities.Types
             foreach (T item in source)
             {
                 if (!predicate(item))
+                {
+                    return count;
+                }
+
+                count++;
+            }
+
+            return count;
+        }
+        
+        public static Int32 CountWhile<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            Int32 i = 0;
+            Int32 count = 0;
+            foreach (T item in source)
+            {
+                if (!predicate(item, i++))
                 {
                     return count;
                 }
@@ -100,7 +126,49 @@ namespace NetExtender.Utilities.Types
             return count;
         }
 
+        public static Int64 LongCountWhile<T>(this IEnumerable<T> source, Func<T, Int64, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            Int64 i = 0;
+            Int64 count = 0;
+            foreach (T item in source)
+            {
+                if (!predicate(item, i++))
+                {
+                    return count;
+                }
+
+                count++;
+            }
+
+            return count;
+        }
+
         public static Int32 ReverseCountWhile<T>(this IEnumerable<T> source, Func<T, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.Reverse().CountWhile(predicate);
+        }
+
+        public static Int32 ReverseCountWhile<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate)
         {
             if (source is null)
             {
@@ -130,7 +198,22 @@ namespace NetExtender.Utilities.Types
             return source.Reverse().LongCountWhile(predicate);
         }
 
-        public static Int32 IndexOf<T>(this IEnumerable<T> source, T item)
+        public static Int64 ReverseLongCountWhile<T>(this IEnumerable<T> source, Func<T, Int64, Boolean> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.Reverse().LongCountWhile(predicate);
+        }
+
+        public static Int32 IndexOf<T>(this IEnumerable<T> source, T value)
         {
             if (source is null)
             {
@@ -139,27 +222,10 @@ namespace NetExtender.Utilities.Types
 
             return source switch
             {
-                IList<T> list => list.IndexOf(item),
-                IIndexer<T> list => list.IndexOf(item),
-                _ => Find(source, item)
+                IList<T> list => list.IndexOf(value),
+                IIndexer<T> list => list.IndexOf(value),
+                _ => IndexOf(source, value, null)
             };
-
-            static Int32 Find(IEnumerable<T> source, T value)
-            {
-                IEqualityComparer<T> comparer = EqualityComparer<T>.Default;
-                
-                Int32 index = 0;
-                foreach (T item in source)
-                {
-                    if (comparer.Equals(item, value))
-                    {
-                        return index;
-                    }
-
-                    index++;
-                }
-                return -1;
-            }
         }
 
         public static Int32 IndexOf<T>(this IEnumerable<T> source, T value, IEqualityComparer<T>? comparer)
@@ -169,7 +235,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            comparer ??= EqualityComparisonComparer<T>.Default;
+            comparer ??= EqualityComparer<T>.Default;
             
             Int32 index = 0;
             foreach (T item in source)
@@ -181,28 +247,29 @@ namespace NetExtender.Utilities.Types
 
                 index++;
             }
+            
             return -1;
         }
         
-        public static Boolean IndexOf<T>(this IEnumerable<T> collection, T item, out Int32 index)
+        public static Boolean IndexOf<T>(this IEnumerable<T> source, T value, out Int32 index)
         {
-            if (collection is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            index = collection.IndexOf(item);
+            index = IndexOf(source, value);
             return index >= 0;
         }
         
-        public static Boolean IndexOf<T>(this IEnumerable<T> collection, T item, IEqualityComparer<T>? comparer, out Int32 index)
+        public static Boolean IndexOf<T>(this IEnumerable<T> source, T value, IEqualityComparer<T>? comparer, out Int32 index)
         {
-            if (collection is null)
+            if (source is null)
             {
-                throw new ArgumentNullException(nameof(collection));
+                throw new ArgumentNullException(nameof(source));
             }
 
-            index = collection.IndexOf(item, comparer);
+            index = IndexOf(source, value, comparer);
             return index >= 0;
         }
         
@@ -232,6 +299,12 @@ namespace NetExtender.Utilities.Types
             return -1;
         }
 
+        public static Boolean FindIndex<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, out Int32 index)
+        {
+            index = FindIndex(source, predicate);
+            return index >= 0;
+        }
+
         public static Int64 LongFindIndex<T>(this IEnumerable<T> source, Func<T, Boolean> predicate)
         {
             if (source is null)
@@ -256,6 +329,12 @@ namespace NetExtender.Utilities.Types
             }
 
             return -1;
+        }
+        
+        public static Boolean LongFindIndex<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, out Int64 index)
+        {
+            index = LongFindIndex(source, predicate);
+            return index >= 0;
         }
         
         public static T ElementAtOrDefault<T>(this IEnumerable<T> source, Int32 index, T alternate)
@@ -530,6 +609,29 @@ namespace NetExtender.Utilities.Types
                 _ => source.ToList().GetRandomOrDefault()
             };
         }
+        
+        public static T Aggregate<T>(this IEnumerable<T> source, T seed, Func<T, T, T> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+            
+            T result = seed;
+            while (enumerator.MoveNext())
+            {
+                result = selector(result, enumerator.Current);
+            }
+            
+            return result;
+        }
 
 #if !NET6_0_OR_GREATER
         public static T SingleOrDefault<T>(this IEnumerable<T> source, T alternate)
@@ -537,11 +639,6 @@ namespace NetExtender.Utilities.Types
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
-            }
-
-            if (alternate is null)
-            {
-                throw new ArgumentNullException(nameof(alternate));
             }
 
             using IEnumerator<T> enumerator = source.GetEnumerator();
@@ -555,7 +652,7 @@ namespace NetExtender.Utilities.Types
 
             if (enumerator.MoveNext())
             {
-                throw new InvalidOperationException();
+                return alternate;
             }
 
             return item;
@@ -572,11 +669,6 @@ namespace NetExtender.Utilities.Types
             if (predicate is null)
             {
                 throw new ArgumentNullException(nameof(predicate));
-            }
-
-            if (alternate is null)
-            {
-                throw new ArgumentNullException(nameof(alternate));
             }
 
             using IEnumerator<T> enumerator = source.GetEnumerator();
@@ -599,7 +691,7 @@ namespace NetExtender.Utilities.Types
                 {
                     if (predicate(enumerator.Current))
                     {
-                        throw new InvalidOperationException();
+                        return alternate;
                     }
                 }
 
@@ -632,12 +724,7 @@ namespace NetExtender.Utilities.Types
 
             T item = enumerator.Current;
 
-            if (enumerator.MoveNext())
-            {
-                throw new InvalidOperationException();
-            }
-
-            return item;
+            return enumerator.MoveNext() ? alternate() : item;
         }
 
         // ReSharper disable once CognitiveComplexity
@@ -678,7 +765,7 @@ namespace NetExtender.Utilities.Types
                 {
                     if (predicate(enumerator.Current))
                     {
-                        throw new InvalidOperationException();
+                        return alternate();
                     }
                 }
 
@@ -687,6 +774,83 @@ namespace NetExtender.Utilities.Types
             } while (enumerator.MoveNext());
             
             return alternate.Invoke();
+        }
+        
+        public static Boolean TryGetSingle<T>(this IEnumerable<T> source, [MaybeNullWhen(false)] out T result)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                result = default;
+                return false;
+            }
+
+            T item = enumerator.Current;
+
+            if (enumerator.MoveNext())
+            {
+                result = default;
+                return false;
+            }
+
+            result = item;
+            return true;
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public static Boolean TryGetSingle<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, [MaybeNullWhen(false)] out T result)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                result = default;
+                return false;
+            }
+
+            do
+            {
+                T item = enumerator.Current;
+
+                if (!predicate(item))
+                {
+                    continue;
+                }
+
+                while (enumerator.MoveNext())
+                {
+                    if (!predicate(enumerator.Current))
+                    {
+                        continue;
+                    }
+
+                    result = default;
+                    return false;
+                }
+
+                result = item;
+                return true;
+
+            } while (enumerator.MoveNext());
+            
+            result = default;
+            return false;
         }
         
 #if !NET6_0_OR_GREATER
@@ -1830,6 +1994,22 @@ namespace NetExtender.Utilities.Types
             }
 
             return source.Select(selector).AllSame(comparer);
+        }
+        
+        public static Boolean IsDistinct<T>(this IEnumerable<T> source)
+        {
+            return IsDistinct(source, null);
+        }
+
+        public static Boolean IsDistinct<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            HashSet<T> set = new HashSet<T>(comparer);
+            return source.All(item => set.Add(item));
         }
         
         /// <summary>

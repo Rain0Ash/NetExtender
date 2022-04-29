@@ -2158,6 +2158,44 @@ namespace NetExtender.Utilities.Numerics
         {
             return value / DecimalConstants.MaxPlaces;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Double Sum<T>(this IEnumerable<T> source, Func<T, Double> selector)
+        {
+            return Enumerable.Sum(source, selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger Sum<T>(this IEnumerable<T> source, Func<T, BigInteger> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Aggregate(BigInteger.Zero, (current, item) => current + selector(item));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Complex Sum<T>(this IEnumerable<T> source, Func<T, Complex> selector)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return source.Aggregate(Complex.Zero, (current, item) => current + selector(item));
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
@@ -2174,10 +2212,10 @@ namespace NetExtender.Utilities.Numerics
 
                 if (!enumerator.MoveNext())
                 {
-                    return 0;
+                    return BigInteger.Zero;
                 }
 
-                BigInteger result = 1;
+                BigInteger result = BigInteger.One;
 
                 while (enumerator.MoveNext())
                 {
@@ -2185,10 +2223,51 @@ namespace NetExtender.Utilities.Numerics
 
                     if (current == BigInteger.Zero)
                     {
-                        return 0;
+                        return BigInteger.Zero;
                     }
 
                     if (current == BigInteger.One)
+                    {
+                        continue;
+                    }
+
+                    result *= enumerator.Current;
+                }
+
+                return result;
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
+        public static Complex Multiply(this IEnumerable<Complex> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            checked
+            {
+                using IEnumerator<Complex> enumerator = source.GetEnumerator();
+
+                if (!enumerator.MoveNext())
+                {
+                    return Complex.Zero;
+                }
+
+                Complex result = Complex.One;
+
+                while (enumerator.MoveNext())
+                {
+                    Complex current = enumerator.Current;
+
+                    if (current == Complex.Zero)
+                    {
+                        return Complex.Zero;
+                    }
+
+                    if (current == Complex.One)
                     {
                         continue;
                     }

@@ -2,10 +2,10 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Numerics;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utilities.Numerics
@@ -6589,6 +6589,28 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Complex Sum(this IEnumerable<Complex> source)
+		{
+			checked
+			{
+				return source.Aggregate<Complex, Complex>(0, (current, value) => current + value);
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
+		public static Complex Sum(this IEnumerable<Complex> source, Complex overflow)
+		{
+			try
+			{
+				return source.Sum();
+			}
+			catch (OverflowException)
+			{
+				return overflow;
+			}
+		}
+
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static SByte Multiply(this IEnumerable<SByte> source)
 		{
 			if (source is null)
@@ -7139,6 +7161,7 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Average(this IEnumerable<SByte> source)
 		{
 			if (source is null)
@@ -7150,6 +7173,7 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Average(this IEnumerable<Byte> source)
 		{
 			if (source is null)
@@ -7161,6 +7185,7 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Average(this IEnumerable<Int16> source)
 		{
 			if (source is null)
@@ -7172,6 +7197,7 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Average(this IEnumerable<UInt16> source)
 		{
 			if (source is null)
@@ -7183,6 +7209,7 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Average(this IEnumerable<UInt32> source)
 		{
 			if (source is null)
@@ -7194,6 +7221,7 @@ namespace NetExtender.Utilities.Numerics
 		}
 
 		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double Average(this IEnumerable<UInt64> source)
 		{
 			if (source is null)
@@ -7333,7 +7361,7 @@ namespace NetExtender.Utilities.Numerics
 			}
 
 			Double mean = values.Average();
-			Double sum = values.Sum(x => (x - mean).Pow(2));
+            Double sum = values.Sum(x => (x - mean).Pow(2));
 			return sum / values.Count;
 		}
 
@@ -7413,6 +7441,7 @@ namespace NetExtender.Utilities.Numerics
 			return sum / values.Count;
 		}
 
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double StandardDeviation(this IEnumerable<SByte> source)
 		{
 			if (source is null)
@@ -7422,6 +7451,7 @@ namespace NetExtender.Utilities.Numerics
 
 			return source.Variance().Sqrt();
 		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double StandardDeviation(this IEnumerable<Byte> source)
 		{
 			if (source is null)
@@ -7431,6 +7461,7 @@ namespace NetExtender.Utilities.Numerics
 
 			return source.Variance().Sqrt();
 		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double StandardDeviation(this IEnumerable<Int16> source)
 		{
 			if (source is null)
@@ -7440,6 +7471,7 @@ namespace NetExtender.Utilities.Numerics
 
 			return source.Variance().Sqrt();
 		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double StandardDeviation(this IEnumerable<UInt16> source)
 		{
 			if (source is null)
@@ -7449,6 +7481,7 @@ namespace NetExtender.Utilities.Numerics
 
 			return source.Variance().Sqrt();
 		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double StandardDeviation(this IEnumerable<Int32> source)
 		{
 			if (source is null)
@@ -7458,6 +7491,7 @@ namespace NetExtender.Utilities.Numerics
 
 			return source.Variance().Sqrt();
 		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double StandardDeviation(this IEnumerable<UInt32> source)
 		{
 			if (source is null)
@@ -7467,6 +7501,7 @@ namespace NetExtender.Utilities.Numerics
 
 			return source.Variance().Sqrt();
 		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double StandardDeviation(this IEnumerable<Int64> source)
 		{
 			if (source is null)
@@ -7476,6 +7511,7 @@ namespace NetExtender.Utilities.Numerics
 
 			return source.Variance().Sqrt();
 		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double StandardDeviation(this IEnumerable<UInt64> source)
 		{
 			if (source is null)
@@ -7485,6 +7521,7 @@ namespace NetExtender.Utilities.Numerics
 
 			return source.Variance().Sqrt();
 		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double StandardDeviation(this IEnumerable<Single> source)
 		{
 			if (source is null)
@@ -7494,6 +7531,7 @@ namespace NetExtender.Utilities.Numerics
 
 			return source.Variance().Sqrt();
 		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Double StandardDeviation(this IEnumerable<Double> source)
 		{
 			if (source is null)
@@ -7503,6 +7541,7 @@ namespace NetExtender.Utilities.Numerics
 
 			return source.Variance().Sqrt();
 		}
+		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static Decimal StandardDeviation(this IEnumerable<Decimal> source)
 		{
 			if (source is null)
