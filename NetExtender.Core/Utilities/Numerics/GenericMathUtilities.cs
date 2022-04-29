@@ -7169,7 +7169,7 @@ namespace NetExtender.Utilities.Numerics
 				throw new ArgumentNullException(nameof(source));
 			}
 
-			return source.Cast<Double>().Average();
+			return source.Select(item => (Double) item).Average();
 		}
 
 		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
@@ -7181,7 +7181,7 @@ namespace NetExtender.Utilities.Numerics
 				throw new ArgumentNullException(nameof(source));
 			}
 
-			return source.Cast<Double>().Average();
+			return source.Select(item => (Double) item).Average();
 		}
 
 		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
@@ -7193,7 +7193,7 @@ namespace NetExtender.Utilities.Numerics
 				throw new ArgumentNullException(nameof(source));
 			}
 
-			return source.Cast<Double>().Average();
+			return source.Select(item => (Double) item).Average();
 		}
 
 		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
@@ -7205,7 +7205,7 @@ namespace NetExtender.Utilities.Numerics
 				throw new ArgumentNullException(nameof(source));
 			}
 
-			return source.Cast<Double>().Average();
+			return source.Select(item => (Double) item).Average();
 		}
 
 		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
@@ -7217,7 +7217,7 @@ namespace NetExtender.Utilities.Numerics
 				throw new ArgumentNullException(nameof(source));
 			}
 
-			return source.Cast<Double>().Average();
+			return source.Select(item => (Double) item).Average();
 		}
 
 		[SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
@@ -7229,7 +7229,7 @@ namespace NetExtender.Utilities.Numerics
 				throw new ArgumentNullException(nameof(source));
 			}
 
-			return source.Cast<Double>().Average();
+			return source.Select(item => (Double) item).Average();
 		}
 
 		public static Double Variance(this IEnumerable<SByte> source)
@@ -7361,7 +7361,7 @@ namespace NetExtender.Utilities.Numerics
 			}
 
 			Double mean = values.Average();
-            Double sum = values.Sum(x => (x - mean).Pow(2));
+			Double sum = values.Sum(x => (x - mean).Pow(2));
 			return sum / values.Count;
 		}
 

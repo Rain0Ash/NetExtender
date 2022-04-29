@@ -1103,6 +1103,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending().Take(count);
         }
+        
         public static IEnumerable<T> Max<T>(this IEnumerable<T> source, IComparer<T>? comparer, Int32 count)
         {
             if (source is null)

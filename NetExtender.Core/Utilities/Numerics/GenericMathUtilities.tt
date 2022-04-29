@@ -1558,7 +1558,7 @@ namespace NetExtender.Utilities.Numerics
         
         WriteLine(String.Empty);
         
-        WriteLine($"\t\t\treturn source.Cast<{nameof(Double)}>().Average();");
+        WriteLine($"\t\t\treturn source.Select(item => ({nameof(Double)}) item).Average();");
         WriteLine("\t\t}");
     }
     

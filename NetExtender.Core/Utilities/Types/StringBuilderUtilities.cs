@@ -1639,17 +1639,17 @@ namespace NetExtender.Utilities.Types
             return builder.ToString().LastIndexOf(value, start, count, comparison);
         }
 
-        public static Int32 IndexOfAny(this StringBuilder builder, Char[] values)
+        public static Int32 IndexOfAny(this StringBuilder builder, Char[]? values)
         {
             return IndexOfAny(builder, values, 0);
         }
 
-        public static Int32 IndexOfAny(this StringBuilder builder, Char[] values, Int32 start)
+        public static Int32 IndexOfAny(this StringBuilder builder, Char[]? values, Int32 start)
         {
             return IndexOfAny(builder, values, start, builder.Length - start);
         }
 
-        public static Int32 IndexOfAny(this StringBuilder builder, Char[] values, Int32 start, Int32 count)
+        public static Int32 IndexOfAny(this StringBuilder builder, Char[]? values, Int32 start, Int32 count)
         {
             if (builder is null)
             {
@@ -1671,7 +1671,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
             
-            if (!(values?.Length > 0))
+            if (values is null || values.Length <= 0)
             {
                 return -1;
             }
@@ -1687,12 +1687,12 @@ namespace NetExtender.Utilities.Types
             return -1;
         }
         
-        public static Int32 LastIndexOfAny(this StringBuilder builder, Char[] values)
+        public static Int32 LastIndexOfAny(this StringBuilder builder, Char[]? values)
         {
             return LastIndexOfAny(builder, values, 0);
         }
 
-        public static Int32 LastIndexOfAny(this StringBuilder builder, Char[] values, Int32 start)
+        public static Int32 LastIndexOfAny(this StringBuilder builder, Char[]? values, Int32 start)
         {
             if (builder is null)
             {
@@ -1702,7 +1702,7 @@ namespace NetExtender.Utilities.Types
             return LastIndexOfAny(builder, values, start, builder.Length - start);
         }
 
-        public static Int32 LastIndexOfAny(this StringBuilder builder, Char[] values, Int32 start, Int32 count)
+        public static Int32 LastIndexOfAny(this StringBuilder builder, Char[]? values, Int32 start, Int32 count)
         {
             if (builder is null)
             {
@@ -1724,7 +1724,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
             
-            if (!(values?.Length > 0))
+            if (values is null || values.Length <= 0)
             {
                 return -1;
             }

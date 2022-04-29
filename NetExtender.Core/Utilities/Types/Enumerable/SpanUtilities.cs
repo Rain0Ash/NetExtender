@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -14,7 +13,6 @@ using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
-    //TODO: add enumerable and list analog utilities
     public static partial class SpanUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3178,9 +3176,7 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
-        //TODO: replace to throw; add Default methods overloads; Add ElementAt methods; Sum method, Multiply method
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static BigInteger Multiply(this Memory<BigInteger> source)
 		{
