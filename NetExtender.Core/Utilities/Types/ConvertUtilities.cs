@@ -790,6 +790,12 @@ namespace NetExtender.Utilities.Types
                 result = $"({String.Join(", ", MathUtilities.Range(0, count).Select(Selector).Select(GetString))})";
                 return true;
             }
+            
+            if (GenericTypeUtilities.IsMemorySpan(generic))
+            {
+                result = GetString(item, escape, provider);
+                return true;
+            }
 
             type = value.GetType();
             while (type is not null)
@@ -895,13 +901,19 @@ namespace NetExtender.Utilities.Types
                 result = $"({String.Join(", ", MathUtilities.Range(0, count).Select(Selector).Select(GetString))})";
                 return true;
             }
+
+            if (GenericTypeUtilities.IsMemorySpan(generic))
+            {
+                result = GetString(item, escape, format, provider);
+                return true;
+            }
             
             type = value.GetType();
             while (type is not null)
             {
                 if (StringConverters.TryGetValue(type, out StringConverterInfo converter))
                 {
-                    result = converter.Convert(value, escape, provider);
+                    result = converter.Convert(value, escape, format, provider);
                     return true;
                 }
 
@@ -1273,6 +1285,198 @@ namespace NetExtender.Utilities.Types
             return ((IFormattable) value).ToString(format, provider);
         }
 #endif
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this Memory<T> source)
+        {
+            return GetString(source.Span, EscapeType.None);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this Memory<T> source, IFormatProvider? provider)
+        {
+            return GetString(source.Span, EscapeType.None, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this Memory<T> source, EscapeType escape)
+        {
+            return GetString(source.Span, escape);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this Memory<T> source, EscapeType escape, IFormatProvider? provider)
+        {
+            return GetString(source.Span, escape, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this Memory<T> source, String? format, IFormatProvider? provider)
+        {
+            return GetString(source.Span, EscapeType.None, format, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this Memory<T> source, EscapeType escape, String? format, IFormatProvider? provider)
+        {
+            return GetString(source.Span, escape, format, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this Span<T> source)
+        {
+            return GetString(source, EscapeType.None);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this Span<T> source, IFormatProvider? provider)
+        {
+            return GetString(source, EscapeType.None, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this Span<T> source, EscapeType escape)
+        {
+            return GetString((ReadOnlySpan<T>) source, escape);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this Span<T> source, EscapeType escape, IFormatProvider? provider)
+        {
+            return GetString((ReadOnlySpan<T>) source, escape, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this Span<T> source, String? format, IFormatProvider? provider)
+        {
+            return GetString(source, EscapeType.None, format, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this Span<T> source, EscapeType escape, String? format, IFormatProvider? provider)
+        {
+            return GetString((ReadOnlySpan<T>) source, escape, format, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this ReadOnlyMemory<T> source)
+        {
+            return GetString(source.Span, EscapeType.None);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this ReadOnlyMemory<T> source, IFormatProvider? provider)
+        {
+            return GetString(source.Span, EscapeType.None, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this ReadOnlyMemory<T> source, EscapeType escape)
+        {
+            return GetString(source.Span, escape);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this ReadOnlyMemory<T> source, EscapeType escape, IFormatProvider? provider)
+        {
+            return GetString(source.Span, escape, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this ReadOnlyMemory<T> source, String? format, IFormatProvider? provider)
+        {
+            return GetString(source.Span, EscapeType.None, format, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this ReadOnlyMemory<T> source, EscapeType escape, String? format, IFormatProvider? provider)
+        {
+            return GetString(source.Span, escape, format, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this ReadOnlySpan<T> source)
+        {
+            return GetString(source, EscapeType.None);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this ReadOnlySpan<T> source, IFormatProvider? provider)
+        {
+            return GetString(source, EscapeType.None, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this ReadOnlySpan<T> source, EscapeType escape)
+        {
+            return GetString(source, escape, CultureInfo.InvariantCulture);
+        }
+        
+        public static String GetString<T>(this ReadOnlySpan<T> source, EscapeType escape, IFormatProvider? provider)
+        {
+            switch (source.Length)
+            {
+                case 0:
+                    return "[]";
+                case 1:
+                    return $"[{GetString(source[0], escape, provider)}]";
+                default:
+                    StringBuilder builder = new StringBuilder();
+                    builder.Append('[');
+                    
+                    ReadOnlySpan<T>.Enumerator enumerator = source.GetEnumerator();
+                    
+                    if (enumerator.MoveNext())
+                    {
+                        builder.Append(GetString(enumerator.Current, escape, provider));
+                        
+                        while (enumerator.MoveNext())
+                        {
+                            builder.Append(", ");
+                            builder.Append(GetString(enumerator.Current, escape, provider));
+                        }
+                    }
+                    
+                    builder.Append(']');
+                    return builder.ToString();
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetString<T>(this ReadOnlySpan<T> source, String? format, IFormatProvider? provider)
+        {
+            return GetString(source, EscapeType.None, format, provider);
+        }
+        
+        public static String GetString<T>(this ReadOnlySpan<T> source, EscapeType escape, String? format, IFormatProvider? provider)
+        {
+            switch (source.Length)
+            {
+                case 0:
+                    return "[]";
+                case 1:
+                    return $"[{GetString(source[0], escape, format, provider)}]";
+                default:
+                    StringBuilder builder = new StringBuilder();
+                    builder.Append('[');
+                    
+                    ReadOnlySpan<T>.Enumerator enumerator = source.GetEnumerator();
+                    
+                    if (enumerator.MoveNext())
+                    {
+                        builder.Append(GetString(enumerator.Current, escape, format, provider));
+                        
+                        while (enumerator.MoveNext())
+                        {
+                            builder.Append(", ");
+                            builder.Append(GetString(enumerator.Current, escape, format, provider));
+                        }
+                    }
+                    
+                    builder.Append(']');
+                    return builder.ToString();
+            }
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("value")]

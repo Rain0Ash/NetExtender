@@ -9,9 +9,15 @@ namespace NetExtender.Utilities.Numerics
 {
     public static class ComplexUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Complex AsDouble(this Double value)
+        {
+            return value;
+        }
+
         /// <inheritdoc cref="Complex.Abs"/>>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Complex Abs(this Complex value)
+        public static Double Abs(this Complex value)
         {
             return Complex.Abs(value);
         }

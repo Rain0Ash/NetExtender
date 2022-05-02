@@ -28,6 +28,11 @@ namespace NetExtender.Utilities.Types
             typeof(ValueTuple<>), typeof(ValueTuple<,>), typeof(ValueTuple<,,>), typeof(ValueTuple<,,,>),
             typeof(ValueTuple<,,,,>), typeof(ValueTuple<,,,,,>), typeof(ValueTuple<,,,,,,>), typeof(ValueTuple<,,,,,,,>)
         }.ToImmutableDictionary(type => type, ReflectionUtilities.GetGenericArgumentsCount);
+        
+        public static IImmutableSet<Type> MemorySpanType { get; } = new HashSet<Type>
+        {
+            typeof(Memory<>), typeof(ReadOnlyMemory<>), typeof(Span<>), typeof(ReadOnlySpan<>)
+        }.ToImmutableHashSet();
 
         public static Type CreateTupleType(params Type[] arguments)
         {
@@ -117,6 +122,17 @@ namespace NetExtender.Utilities.Types
             
             count += inner - 1;
             return true;
+        }
+
+        public static Boolean IsMemorySpan(Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            Type generic = type.TryGetGenericTypeDefinition();
+            return MemorySpanType.Contains(generic);
         }
     }
 }
