@@ -89,295 +89,307 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlyList<T> AsIReadOnlyList<T>(this IEnumerable<T>? source)
         {
-            return source is not null ? source is IReadOnlyList<T> list ? list : source.ToList() : new List<T>();
+            return source is not null ? source as IReadOnlyList<T> ?? source.ToList() : new List<T>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IList<T> AsIList<T>(this IEnumerable<T>? source)
         {
-            return source is not null ? source is IList<T> list ? list : source.ToList() : new List<T>();
+            return source is not null ? source as IList<T> ?? source.ToList() : new List<T>();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T[] AsArray<T>(this IEnumerable<T>? source)
         {
-            return source is not null ? source is T[] array ? array : source.ToArray() : Array.Empty<T>();
+            return source is not null ? source as T[] ?? source.ToArray() : Array.Empty<T>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static List<T> AsList<T>(this IEnumerable<T>? source)
         {
-            return source is not null ? source is List<T> list ? list : source.ToList() : new List<T>();
+            return source is not null ? source as List<T> ?? source.ToList() : new List<T>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SortedList<TKey, TValue> AsSortedList<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull
+        {
+            return source is not null ? source as SortedList<TKey, TValue> ?? source.ToSortedList() : new SortedList<TKey, TValue>();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SortedList<TKey, TValue> AsSortedList<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IComparer<TKey>? comparer) where TKey : notnull
+        {
+            return source is not null ? source as SortedList<TKey, TValue> ?? source.ToSortedList(comparer) : new SortedList<TKey, TValue>(comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static LinkedList<T> AsLinkedList<T>(this IEnumerable<T>? source)
         {
-            return source is not null ? source is LinkedList<T> linked ? linked : source.ToLinkedList() : new LinkedList<T>();
+            return source is not null ? source as LinkedList<T> ?? source.ToLinkedList() : new LinkedList<T>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Stack<T> AsStack<T>(this IEnumerable<T>? source)
         {
-            return source is not null ? source is Stack<T> stack ? stack : source.ToStack() : new Stack<T>();
+            return source is not null ? source as Stack<T> ?? source.ToStack() : new Stack<T>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Queue<T> AsQueue<T>(this IEnumerable<T>? source)
         {
-            return source is not null ? source is Queue<T> queue ? queue : source.ToQueue() : new Queue<T>();
+            return source is not null ? source as Queue<T> ?? source.ToQueue() : new Queue<T>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlySet<T> AsIReadOnlySet<T>(this IEnumerable<T>? source)
         {
-            return source is not null ? source is IReadOnlySet<T> set ? set : source.ToHashSet() : new HashSet<T>();
+            return source is not null ? source as IReadOnlySet<T> ?? source.ToHashSet() : new HashSet<T>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlySet<T> AsIReadOnlySet<T>(this IEnumerable<T>? source, IEqualityComparer<T>? comparer)
         {
-            return source is not null ? source is IReadOnlySet<T> set ? set : source.ToHashSet(comparer) : new HashSet<T>(comparer);
+            return source is not null ? source as IReadOnlySet<T> ?? source.ToHashSet(comparer) : new HashSet<T>(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ISet<T> AsISet<T>(this IEnumerable<T>? source)
         {
-            return source is not null ? source is ISet<T> set ? set : source.ToHashSet() : new HashSet<T>();
+            return source is not null ? source as ISet<T> ?? source.ToHashSet() : new HashSet<T>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ISet<T> AsISet<T>(this IEnumerable<T>? source, IEqualityComparer<T>? comparer)
         {
-            return source is not null ? source is ISet<T> set ? set : source.ToHashSet(comparer) : new HashSet<T>(comparer);
+            return source is not null ? source as ISet<T> ?? source.ToHashSet(comparer) : new HashSet<T>(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static HashSet<T> AsHashSet<T>(this IEnumerable<T>? source)
         {
-            return source is not null ? source is HashSet<T> set ? set : source.ToHashSet() : new HashSet<T>();
+            return source is not null ? source as HashSet<T> ?? source.ToHashSet() : new HashSet<T>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static HashSet<T> AsHashSet<T>(this IEnumerable<T>? source, IEqualityComparer<T>? comparer)
         {
-            return source is not null ? source is HashSet<T> set ? set : source.ToHashSet(comparer) : new HashSet<T>(comparer);
+            return source is not null ? source as HashSet<T> ?? source.ToHashSet(comparer) : new HashSet<T>(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedSet<T> AsSortedSet<T>(this IEnumerable<T>? source)
         {
-            return source is not null ? source is SortedSet<T> set ? set : source.ToSortedSet() : new SortedSet<T>();
+            return source is not null ? source as SortedSet<T> ?? source.ToSortedSet() : new SortedSet<T>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedSet<T> AsHashSet<T>(this IEnumerable<T>? source, IComparer<T>? comparer)
         {
-            return source is not null ? source is SortedSet<T> set ? set : source.ToSortedSet(comparer) : new SortedSet<T>(comparer);
+            return source is not null ? source as SortedSet<T> ?? source.ToSortedSet(comparer) : new SortedSet<T>(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlyDictionary<TKey, TValue> AsIReadOnlyDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull
         {
-            return source is not null ? source is IReadOnlyDictionary<TKey, TValue> dictionary ? dictionary : source.ToDictionary() : new Dictionary<TKey, TValue>();
+            return source is not null ? source as IReadOnlyDictionary<TKey, TValue> ?? source.ToDictionary() : new Dictionary<TKey, TValue>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlyDictionary<TKey, TValue> AsIReadOnlyDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer) where TKey : notnull
         {
-            return source is not null ? source is IReadOnlyDictionary<TKey, TValue> dictionary ? dictionary : source.ToDictionary(comparer) : new Dictionary<TKey, TValue>(comparer);
+            return source is not null ? source as IReadOnlyDictionary<TKey, TValue> ?? source.ToDictionary(comparer) : new Dictionary<TKey, TValue>(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IDictionary<TKey, TValue> AsIDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull
         {
-            return source is not null ? source is IDictionary<TKey, TValue> dictionary ? dictionary : source.ToDictionary() : new Dictionary<TKey, TValue>();
+            return source is not null ? source as IDictionary<TKey, TValue> ?? source.ToDictionary() : new Dictionary<TKey, TValue>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IDictionary<TKey, TValue> AsIDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer) where TKey : notnull
         {
-            return source is not null ? source is IDictionary<TKey, TValue> dictionary ? dictionary : source.ToDictionary(comparer) : new Dictionary<TKey, TValue>(comparer);
+            return source is not null ? source as IDictionary<TKey, TValue> ?? source.ToDictionary(comparer) : new Dictionary<TKey, TValue>(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Dictionary<TKey, TValue> AsDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull
         {
-            return source is not null ? source is Dictionary<TKey, TValue> dictionary ? dictionary : source.ToDictionary() : new Dictionary<TKey, TValue>();
+            return source is not null ? source as Dictionary<TKey, TValue> ?? source.ToDictionary() : new Dictionary<TKey, TValue>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Dictionary<TKey, TValue> AsDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer) where TKey : notnull
         {
-            return source is not null ? source is Dictionary<TKey, TValue> dictionary ? dictionary : source.ToDictionary(comparer) : new Dictionary<TKey, TValue>(comparer);
+            return source is not null ? source as Dictionary<TKey, TValue> ?? source.ToDictionary(comparer) : new Dictionary<TKey, TValue>(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlyIndexDictionary<TKey, TValue> AsIReadOnlyIndexDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull
         {
-            return source is not null ? source is IReadOnlyIndexDictionary<TKey, TValue> dictionary ? dictionary : source.ToIndexDictionary() : new IndexDictionary<TKey, TValue>();
+            return source is not null ? source as IReadOnlyIndexDictionary<TKey, TValue> ?? source.ToIndexDictionary() : new IndexDictionary<TKey, TValue>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlyIndexDictionary<TKey, TValue> AsIReadOnlyIndexDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer) where TKey : notnull
         {
-            return source is not null ? source is IReadOnlyIndexDictionary<TKey, TValue> dictionary ? dictionary : source.ToIndexDictionary(comparer) : new IndexDictionary<TKey, TValue>(comparer);
+            return source is not null ? source as IReadOnlyIndexDictionary<TKey, TValue> ?? source.ToIndexDictionary(comparer) : new IndexDictionary<TKey, TValue>(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IIndexDictionary<TKey, TValue> AsIIndexDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull
         {
-            return source is not null ? source is IIndexDictionary<TKey, TValue> dictionary ? dictionary : source.ToIndexDictionary() : new IndexDictionary<TKey, TValue>();
+            return source is not null ? source as IIndexDictionary<TKey, TValue> ?? source.ToIndexDictionary() : new IndexDictionary<TKey, TValue>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IIndexDictionary<TKey, TValue> AsIIndexDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer) where TKey : notnull
         {
-            return source is not null ? source is IIndexDictionary<TKey, TValue> dictionary ? dictionary : source.ToIndexDictionary(comparer) : new IndexDictionary<TKey, TValue>(comparer);
+            return source is not null ? source as IIndexDictionary<TKey, TValue> ?? source.ToIndexDictionary(comparer) : new IndexDictionary<TKey, TValue>(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IndexDictionary<TKey, TValue> AsIndexDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull
         {
-            return source is not null ? source is IndexDictionary<TKey, TValue> dictionary ? dictionary : source.ToIndexDictionary() : new IndexDictionary<TKey, TValue>();
+            return source is not null ? source as IndexDictionary<TKey, TValue> ?? source.ToIndexDictionary() : new IndexDictionary<TKey, TValue>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IndexDictionary<TKey, TValue> AsIndexDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer) where TKey : notnull
         {
-            return source is not null ? source is IndexDictionary<TKey, TValue> dictionary ? dictionary : source.ToIndexDictionary(comparer) : new IndexDictionary<TKey, TValue>(comparer);
+            return source is not null ? source as IndexDictionary<TKey, TValue> ?? source.ToIndexDictionary(comparer) : new IndexDictionary<TKey, TValue>(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedDictionary<TKey, TValue> AsSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull
         {
-            return source is not null ? source is SortedDictionary<TKey, TValue> dictionary ? dictionary : source.ToSortedDictionary() : new SortedDictionary<TKey, TValue>();
+            return source is not null ? source as SortedDictionary<TKey, TValue> ?? source.ToSortedDictionary() : new SortedDictionary<TKey, TValue>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedDictionary<TKey, TValue> AsSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? equality) where TKey : notnull
         {
-            return source is not null ? source is SortedDictionary<TKey, TValue> dictionary ? dictionary : source.ToSortedDictionary(equality) : new SortedDictionary<TKey, TValue>();
+            return source is not null ? source as SortedDictionary<TKey, TValue> ?? source.ToSortedDictionary(equality) : new SortedDictionary<TKey, TValue>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedDictionary<TKey, TValue> AsSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IComparer<TKey>? comparer) where TKey : notnull
         {
-            return source is not null ? source is SortedDictionary<TKey, TValue> dictionary ? dictionary : source.ToSortedDictionary(comparer) : new SortedDictionary<TKey, TValue>(comparer);
+            return source is not null ? source as SortedDictionary<TKey, TValue> ?? source.ToSortedDictionary(comparer) : new SortedDictionary<TKey, TValue>(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedDictionary<TKey, TValue> AsSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? equality, IComparer<TKey>? comparer) where TKey : notnull
         {
-            return source is not null ? source is SortedDictionary<TKey, TValue> dictionary ? dictionary : source.ToSortedDictionary(equality, comparer) : new SortedDictionary<TKey, TValue>(comparer);
+            return source is not null ? source as SortedDictionary<TKey, TValue> ?? source.ToSortedDictionary(equality, comparer) : new SortedDictionary<TKey, TValue>(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlyMap<TKey, TValue> AsIReadOnlyMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull where TValue : notnull
         {
-            return source is not null ? source is IReadOnlyMap<TKey, TValue> map ? map : source.ToMap() : new Map<TKey, TValue>();
+            return source is not null ? source as IReadOnlyMap<TKey, TValue> ?? source.ToMap() : new Map<TKey, TValue>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlyMap<TKey, TValue> AsIReadOnlyMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer) where TKey : notnull where TValue : notnull
         {
-            return source is not null ? source is IReadOnlyMap<TKey, TValue> map ? map : source.ToMap(comparer) : new Map<TKey, TValue>(comparer);
+            return source is not null ? source as IReadOnlyMap<TKey, TValue> ?? source.ToMap(comparer) : new Map<TKey, TValue>(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlyMap<TKey, TValue> AsIReadOnlyMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer) where TKey : notnull where TValue : notnull
         {
-            return source is not null ? source is IReadOnlyMap<TKey, TValue> map ? map : source.ToMap(keyComparer, valueComparer) : new Map<TKey, TValue>(keyComparer, valueComparer);
+            return source is not null ? source as IReadOnlyMap<TKey, TValue> ?? source.ToMap(keyComparer, valueComparer) : new Map<TKey, TValue>(keyComparer, valueComparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IMap<TKey, TValue> AsIMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull where TValue : notnull
         {
-            return source is not null ? source is IMap<TKey, TValue> map ? map : source.ToMap() : new Map<TKey, TValue>();
+            return source is not null ? source as IMap<TKey, TValue> ?? source.ToMap() : new Map<TKey, TValue>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IMap<TKey, TValue> AsIMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer) where TKey : notnull where TValue : notnull
         {
-            return source is not null ? source is IMap<TKey, TValue> map ? map : source.ToMap(comparer) : new Map<TKey, TValue>(comparer);
+            return source is not null ? source as IMap<TKey, TValue> ?? source.ToMap(comparer) : new Map<TKey, TValue>(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IMap<TKey, TValue> AsIMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer) where TKey : notnull where TValue : notnull
         {
-            return source is not null ? source is IMap<TKey, TValue> map ? map : source.ToMap(keyComparer, valueComparer) : new Map<TKey, TValue>(keyComparer, valueComparer);
+            return source is not null ? source as IMap<TKey, TValue> ?? source.ToMap(keyComparer, valueComparer) : new Map<TKey, TValue>(keyComparer, valueComparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Map<TKey, TValue> AsMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull where TValue : notnull
         {
-            return source is not null ? source is Map<TKey, TValue> map ? map : source.ToMap() : new Map<TKey, TValue>();
+            return source is not null ? source as Map<TKey, TValue> ?? source.ToMap() : new Map<TKey, TValue>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Map<TKey, TValue> AsMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer) where TKey : notnull where TValue : notnull
         {
-            return source is not null ? source is Map<TKey, TValue> map ? map : source.ToMap(comparer) : new Map<TKey, TValue>(comparer);
+            return source is not null ? source as Map<TKey, TValue> ?? source.ToMap(comparer) : new Map<TKey, TValue>(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Map<TKey, TValue> AsMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer) where TKey : notnull where TValue : notnull
         {
-            return source is not null ? source is Map<TKey, TValue> map ? map : source.ToMap(keyComparer, valueComparer) : new Map<TKey, TValue>(keyComparer, valueComparer);
+            return source is not null ? source as Map<TKey, TValue> ?? source.ToMap(keyComparer, valueComparer) : new Map<TKey, TValue>(keyComparer, valueComparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlyIndexMap<TKey, TValue> AsIReadOnlyIndexMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull where TValue : notnull
         {
-            return source is not null ? source is IReadOnlyIndexMap<TKey, TValue> map ? map : source.ToIndexMap() : new IndexMap<TKey, TValue>();
+            return source is not null ? source as IReadOnlyIndexMap<TKey, TValue> ?? source.ToIndexMap() : new IndexMap<TKey, TValue>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlyMap<TKey, TValue> AsIReadOnlyIndexMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer) where TKey : notnull where TValue : notnull
         {
-            return source is not null ? source is IReadOnlyIndexMap<TKey, TValue> map ? map : source.ToIndexMap(comparer) : new IndexMap<TKey, TValue>(comparer);
+            return source is not null ? source as IReadOnlyIndexMap<TKey, TValue> ?? source.ToIndexMap(comparer) : new IndexMap<TKey, TValue>(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IReadOnlyIndexMap<TKey, TValue> AsIReadOnlyIndexMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer) where TKey : notnull where TValue : notnull
         {
-            return source is not null ? source is IReadOnlyIndexMap<TKey, TValue> map ? map : source.ToIndexMap(keyComparer, valueComparer) : new IndexMap<TKey, TValue>(keyComparer, valueComparer);
+            return source is not null ? source as IReadOnlyIndexMap<TKey, TValue> ?? source.ToIndexMap(keyComparer, valueComparer) : new IndexMap<TKey, TValue>(keyComparer, valueComparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IIndexMap<TKey, TValue> AsIIndexMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull where TValue : notnull
         {
-            return source is not null ? source is IIndexMap<TKey, TValue> map ? map : source.ToIndexMap() : new IndexMap<TKey, TValue>();
+            return source is not null ? source as IIndexMap<TKey, TValue> ?? source.ToIndexMap() : new IndexMap<TKey, TValue>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IIndexMap<TKey, TValue> AsIIndexMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer) where TKey : notnull where TValue : notnull
         {
-            return source is not null ? source is IIndexMap<TKey, TValue> map ? map : source.ToIndexMap(comparer) : new IndexMap<TKey, TValue>(comparer);
+            return source is not null ? source as IIndexMap<TKey, TValue> ?? source.ToIndexMap(comparer) : new IndexMap<TKey, TValue>(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IIndexMap<TKey, TValue> AsIIndexMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer) where TKey : notnull where TValue : notnull
         {
-            return source is not null ? source is IIndexMap<TKey, TValue> map ? map : source.ToIndexMap(keyComparer, valueComparer) : new IndexMap<TKey, TValue>(keyComparer, valueComparer);
+            return source is not null ? source as IIndexMap<TKey, TValue> ?? source.ToIndexMap(keyComparer, valueComparer) : new IndexMap<TKey, TValue>(keyComparer, valueComparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IndexMap<TKey, TValue> AsIndexMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull where TValue : notnull
         {
-            return source is not null ? source is IndexMap<TKey, TValue> map ? map : source.ToIndexMap() : new IndexMap<TKey, TValue>();
+            return source is not null ? source as IndexMap<TKey, TValue> ?? source.ToIndexMap() : new IndexMap<TKey, TValue>();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IndexMap<TKey, TValue> AsIndexMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer) where TKey : notnull where TValue : notnull
         {
-            return source is not null ? source is IndexMap<TKey, TValue> map ? map : source.ToIndexMap(comparer) : new IndexMap<TKey, TValue>(comparer);
+            return source is not null ? source as IndexMap<TKey, TValue> ?? source.ToIndexMap(comparer) : new IndexMap<TKey, TValue>(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IndexMap<TKey, TValue> AsIndexMap<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer) where TKey : notnull where TValue : notnull
         {
-            return source is not null ? source is IndexMap<TKey, TValue> map ? map : source.ToIndexMap(keyComparer, valueComparer) : new IndexMap<TKey, TValue>(keyComparer, valueComparer);
+            return source is not null ? source as IndexMap<TKey, TValue> ?? source.ToIndexMap(keyComparer, valueComparer) : new IndexMap<TKey, TValue>(keyComparer, valueComparer);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -393,13 +405,13 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Is(this IEnumerable enumerable, CollectionType type)
+        public static Boolean Is(this IEnumerable? enumerable, CollectionType type)
         {
             return Is(enumerable?.GetType(), type);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean Is(this IEnumerable enumerable, CollectionType type, Boolean strict)
+        public static Boolean Is(this IEnumerable? enumerable, CollectionType type, Boolean strict)
         {
             return Is(enumerable?.GetType(), type, strict);
         }
@@ -455,7 +467,7 @@ namespace NetExtender.Utilities.Types
             return GetCollectionType(typeof(T));
         }
 
-        public static CollectionType GetCollectionType(this IEnumerable enumerable)
+        public static CollectionType GetCollectionType(this IEnumerable? enumerable)
         {
             return GetCollectionType(enumerable?.GetType());
         }
