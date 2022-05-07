@@ -9,7 +9,6 @@ using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utilities.Types
 {
-    
     [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
     public static class SortedListUtilities
     {

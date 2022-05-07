@@ -28,6 +28,16 @@ namespace NetExtender.Utilities.Types
             return stream.GetType() == SynchronizedStreamType;
         }
 
+        public static Stream Synchronize(this Stream stream)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+            
+            return stream.IsSynchronized() ? stream : Stream.Synchronized(stream);
+        }
+
         public static Boolean Read<T>(this Stream stream, out T value) where T : struct
         {
             if (stream is null)

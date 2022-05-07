@@ -4,11 +4,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NetExtender.Initializer.Types.Enumerables;
 
 namespace NetExtender.Utilities.Types
 {
     public static partial class EnumerableUtilities
     {
+        public static IOrderedEnumerable<T> AsOrderedEnumerable<T>(this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return new OrderedEnumerableWrapper<T>(source);
+        }
+
         public static IOrderedEnumerable<T> OrderBy<T>(this IEnumerable<T> source)
         {
             if (source is null)
