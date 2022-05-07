@@ -194,7 +194,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            while (stream.TryReadChar(encoding) is { } symbol)
+            while (stream.TryReadChar(encoding) is Char symbol)
             {
                 yield return symbol;
             }
@@ -289,7 +289,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            while (stream.TryReadChar32() is { } symbol)
+            while (stream.TryReadChar32() is Char32 symbol)
             {
                 yield return symbol;
             }
@@ -308,7 +308,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(stream));
             }
 
-            while (stream.TryReadRune() is { } symbol)
+            while (stream.TryReadRune() is Rune symbol)
             {
                 yield return symbol;
             }
