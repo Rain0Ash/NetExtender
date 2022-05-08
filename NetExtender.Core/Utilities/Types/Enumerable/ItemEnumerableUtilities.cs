@@ -1607,7 +1607,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy(selector, comparer).Take(count);
         }
-
+        
         public static (T Min, T Max) MinMax<T>(this IEnumerable<T> source)
         {
             return MinMax(source, null);
@@ -1650,6 +1650,16 @@ namespace NetExtender.Utilities.Types
             }
 
             return (min, max);
+        }
+        
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this IEnumerable<T> source)
+        {
+            return MinMaxOrDefault(source, (IComparer<T>?) null);
+        }
+
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this IEnumerable<T> source, IComparer<T>? comparer)
+        {
+            return MinMaxOrDefault(source, default(T), comparer!);
         }
 
         public static (T Min, T Max) MinMaxOrDefault<T>(this IEnumerable<T> source, T alternate)
@@ -1747,51 +1757,190 @@ namespace NetExtender.Utilities.Types
 
             return (min, max);
         }
-
-        public static (T? Min, T? Max) MinMaxOrDefault<T>(this IEnumerable<T> source)
+        
+        public static (T Min, T Max) MinMaxBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
         {
-            return MinMaxOrDefault(source, (IComparer<T>?) null);
+            return MinMaxBy(source, selector, null);
         }
 
-        public static (T? Min, T? Max) MinMaxOrDefault<T>(this IEnumerable<T> source, IComparer<T>? comparer)
+        public static (T Min, T Max) MinMaxBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
             using IEnumerator<T> enumerator = source.GetEnumerator();
 
             if (!enumerator.MoveNext())
             {
-                return (default, default);
+                throw new InvalidOperationException();
             }
             
-            comparer ??= Comparer<T>.Default;
+            comparer ??= Comparer<TKey>.Default;
 
             T current = enumerator.Current;
 
             T min = current;
             T max = current;
+            TKey key = selector(current);
+            TKey minkey = key;
+            TKey maxkey = key;
 
             while (enumerator.MoveNext())
             {
                 current = enumerator.Current;
+                key = selector(current);
 
-                if (comparer.Compare(current, min) < 0)
+                if (comparer.Compare(key, minkey) < 0)
                 {
                     min = current;
+                    minkey = selector(min);
                 }
 
-                if (comparer.Compare(current, max) > 0)
+                if (comparer.Compare(key, maxkey) > 0)
                 {
                     max = current;
+                    maxkey = selector(max);
                 }
             }
 
             return (min, max);
         }
         
+        public static (T? Min, T? Max) MinMaxByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
+        {
+            return MinMaxByOrDefault(source, selector, (IComparer<TKey>?) null);
+        }
+
+        public static (T? Min, T? Max) MinMaxByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MinMaxByOrDefault(source, selector!, default(T), comparer!);
+        }
+
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, T alternate)
+        {
+            return MinMaxByOrDefault(source, selector, alternate, null);
+        }
+
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, T alternate, IComparer<TKey>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                return (alternate, alternate);
+            }
+            
+            comparer ??= Comparer<TKey>.Default;
+
+            T current = enumerator.Current;
+
+            T min = current;
+            T max = current;
+            TKey key = selector(current);
+            TKey minkey = key;
+            TKey maxkey = key;
+
+            while (enumerator.MoveNext())
+            {
+                current = enumerator.Current;
+                key = selector(current);
+
+                if (comparer.Compare(key, minkey) < 0)
+                {
+                    min = current;
+                    minkey = selector(min);
+                }
+
+                if (comparer.Compare(key, maxkey) > 0)
+                {
+                    max = current;
+                    maxkey = selector(max);
+                }
+            }
+
+            return (min, max);
+        }
+
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<T> alternate)
+        {
+            return MinMaxByOrDefault(source, selector, alternate, null);
+        }
+
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<T> alternate, IComparer<TKey>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+
+            T current;
+            
+            if (!enumerator.MoveNext())
+            {
+                current = alternate();
+                return (current, current);
+            }
+            
+            comparer ??= Comparer<TKey>.Default;
+
+            current = enumerator.Current;
+
+            T min = current;
+            T max = current;
+            TKey key = selector(current);
+            TKey minkey = key;
+            TKey maxkey = key;
+
+            while (enumerator.MoveNext())
+            {
+                current = enumerator.Current;
+                key = selector(current);
+
+                if (comparer.Compare(key, minkey) < 0)
+                {
+                    min = current;
+                    minkey = selector(min);
+                }
+
+                if (comparer.Compare(key, maxkey) > 0)
+                {
+                    max = current;
+                    maxkey = selector(max);
+                }
+            }
+
+            return (min, max);
+        }
+
         public static T? Median<T>(this IEnumerable<T> source)
         {
             if (source is null)

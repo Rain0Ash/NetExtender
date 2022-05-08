@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace NetExtender.Initializer.Types.Enumerables
 {
-    internal class OrderedEnumerableWrapper<T> : IOrderedEnumerable<T>
+    internal sealed class OrderedEnumerableWrapper<T> : IOrderedEnumerable<T>
     {
         private IEnumerable<T> Source { get; }
             

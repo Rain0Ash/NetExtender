@@ -3312,66 +3312,79 @@ namespace NetExtender.Utilities.Types
 			}
 		}
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Max<T>(this Memory<T> source)
         {
             return Max(source.Span);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Max<T>(this Memory<T> source, IComparer<T>? comparer)
         {
             return Max(source.Span, comparer);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Min<T>(this Memory<T> source)
         {
             return Min(source.Span);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Min<T>(this Memory<T> source, IComparer<T>? comparer)
         {
             return Min(source.Span, comparer);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Max<T>(this Span<T> source)
         {
             return Max((ReadOnlySpan<T>) source);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Max<T>(this Span<T> source, IComparer<T>? comparer)
         {
             return Max((ReadOnlySpan<T>) source, comparer);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Min<T>(this Span<T> source)
         {
             return Min((ReadOnlySpan<T>) source);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Min<T>(this Span<T> source, IComparer<T>? comparer)
         {
             return Min((ReadOnlySpan<T>) source, comparer);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Max<T>(this ReadOnlyMemory<T> source)
         {
             return Max(source.Span);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Max<T>(this ReadOnlyMemory<T> source, IComparer<T>? comparer)
         {
             return Max(source.Span, comparer);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Min<T>(this ReadOnlyMemory<T> source)
         {
             return Min(source.Span);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Min<T>(this ReadOnlyMemory<T> source, IComparer<T>? comparer)
         {
             return Min(source.Span, comparer);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Max<T>(this ReadOnlySpan<T> source)
         {
             return Max(source, null);
@@ -3405,6 +3418,7 @@ namespace NetExtender.Utilities.Types
             return max;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Min<T>(this ReadOnlySpan<T> source)
         {
             return Min(source, null);
@@ -3438,66 +3452,465 @@ namespace NetExtender.Utilities.Types
             return min;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MaxOrDefault<T>(this Memory<T> source)
+        {
+            return MaxOrDefault(source.Span);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MaxOrDefault<T>(this Memory<T> source, IComparer<T>? comparer)
+        {
+            return MaxOrDefault(source.Span, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MinOrDefault<T>(this Memory<T> source)
+        {
+            return MinOrDefault(source.Span);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MinOrDefault<T>(this Memory<T> source, IComparer<T>? comparer)
+        {
+            return MinOrDefault(source.Span, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MaxOrDefault<T>(this Span<T> source)
+        {
+            return MaxOrDefault((ReadOnlySpan<T>) source);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MaxOrDefault<T>(this Span<T> source, IComparer<T>? comparer)
+        {
+            return MaxOrDefault((ReadOnlySpan<T>) source, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MinOrDefault<T>(this Span<T> source)
+        {
+            return MinOrDefault((ReadOnlySpan<T>) source);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MinOrDefault<T>(this Span<T> source, IComparer<T>? comparer)
+        {
+            return MinOrDefault((ReadOnlySpan<T>) source, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MaxOrDefault<T>(this ReadOnlyMemory<T> source)
+        {
+            return MaxOrDefault(source.Span);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MaxOrDefault<T>(this ReadOnlyMemory<T> source, IComparer<T>? comparer)
+        {
+            return MaxOrDefault(source.Span, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MinOrDefault<T>(this ReadOnlyMemory<T> source)
+        {
+            return MinOrDefault(source.Span);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MinOrDefault<T>(this ReadOnlyMemory<T> source, IComparer<T>? comparer)
+        {
+            return MinOrDefault(source.Span, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MaxOrDefault<T>(this ReadOnlySpan<T> source)
+        {
+            return MaxOrDefault(source, (IComparer<T>?) null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MaxOrDefault<T>(this ReadOnlySpan<T> source, IComparer<T>? comparer)
+        {
+            return MaxOrDefault(source!, default(T), comparer!);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MinOrDefault<T>(this ReadOnlySpan<T> source)
+        {
+            return MinOrDefault(source, (IComparer<T>?) null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MinOrDefault<T>(this ReadOnlySpan<T> source, IComparer<T>? comparer)
+        {
+            return MinOrDefault(source!, default(T), comparer!);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxOrDefault<T>(this Memory<T> source, T alternate)
+        {
+            return MaxOrDefault(source.Span, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxOrDefault<T>(this Memory<T> source, T alternate, IComparer<T>? comparer)
+        {
+            return MaxOrDefault(source.Span, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinOrDefault<T>(this Memory<T> source, T alternate)
+        {
+            return MinOrDefault(source.Span, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinOrDefault<T>(this Memory<T> source, T alternate, IComparer<T>? comparer)
+        {
+            return MinOrDefault(source.Span, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxOrDefault<T>(this Span<T> source, T alternate)
+        {
+            return MaxOrDefault((ReadOnlySpan<T>) source, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxOrDefault<T>(this Span<T> source, T alternate, IComparer<T>? comparer)
+        {
+            return MaxOrDefault((ReadOnlySpan<T>) source, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinOrDefault<T>(this Span<T> source, T alternate)
+        {
+            return MinOrDefault((ReadOnlySpan<T>) source, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinOrDefault<T>(this Span<T> source, T alternate, IComparer<T>? comparer)
+        {
+            return MinOrDefault((ReadOnlySpan<T>) source, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxOrDefault<T>(this ReadOnlyMemory<T> source, T alternate)
+        {
+            return MaxOrDefault(source.Span, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxOrDefault<T>(this ReadOnlyMemory<T> source, T alternate, IComparer<T>? comparer)
+        {
+            return MaxOrDefault(source.Span, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinOrDefault<T>(this ReadOnlyMemory<T> source, T alternate)
+        {
+            return MinOrDefault(source.Span, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinOrDefault<T>(this ReadOnlyMemory<T> source, T alternate, IComparer<T>? comparer)
+        {
+            return MinOrDefault(source.Span, alternate, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxOrDefault<T>(this ReadOnlySpan<T> source, T alternate)
+        {
+            return MaxOrDefault(source, alternate, null);
+        }
+
+        public static T MaxOrDefault<T>(this ReadOnlySpan<T> source, T alternate, IComparer<T>? comparer)
+        {
+            switch (source.Length)
+            {
+                case <= 0:
+                    return alternate;
+                case 1:
+                    return source[0];
+            }
+
+            comparer ??= Comparer<T>.Default;
+            
+            T max = source[0];
+                    
+            for (Int32 i = 1; i < source.Length; i++)
+            {
+                T item = source[i];
+                if (comparer.Compare(max, item) >= 0)
+                {
+                    continue;
+                }
+
+                max = item;
+            }
+
+            return max;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinOrDefault<T>(this ReadOnlySpan<T> source, T alternate)
+        {
+            return MinOrDefault(source, alternate, null);
+        }
+
+        public static T MinOrDefault<T>(this ReadOnlySpan<T> source, T alternate, IComparer<T>? comparer)
+        {
+            switch (source.Length)
+            {
+                case <= 0:
+                    return alternate;
+                case 1:
+                    return source[0];
+            }
+
+            comparer ??= Comparer<T>.Default;
+            
+            T min = source[0];
+                    
+            for (Int32 i = 1; i < source.Length; i++)
+            {
+                T item = source[i];
+                if (comparer.Compare(min, item) <= 0)
+                {
+                    continue;
+                }
+
+                min = item;
+            }
+
+            return min;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxOrDefault<T>(this Memory<T> source, Func<T> alternate)
+        {
+            return MaxOrDefault(source.Span, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxOrDefault<T>(this Memory<T> source, Func<T> alternate, IComparer<T>? comparer)
+        {
+            return MaxOrDefault(source.Span, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinOrDefault<T>(this Memory<T> source, Func<T> alternate)
+        {
+            return MinOrDefault(source.Span, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinOrDefault<T>(this Memory<T> source, Func<T> alternate, IComparer<T>? comparer)
+        {
+            return MinOrDefault(source.Span, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxOrDefault<T>(this Span<T> source, Func<T> alternate)
+        {
+            return MaxOrDefault((ReadOnlySpan<T>) source, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxOrDefault<T>(this Span<T> source, Func<T> alternate, IComparer<T>? comparer)
+        {
+            return MaxOrDefault((ReadOnlySpan<T>) source, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinOrDefault<T>(this Span<T> source, Func<T> alternate)
+        {
+            return MinOrDefault((ReadOnlySpan<T>) source, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinOrDefault<T>(this Span<T> source, Func<T> alternate, IComparer<T>? comparer)
+        {
+            return MinOrDefault((ReadOnlySpan<T>) source, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxOrDefault<T>(this ReadOnlyMemory<T> source, Func<T> alternate)
+        {
+            return MaxOrDefault(source.Span, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxOrDefault<T>(this ReadOnlyMemory<T> source, Func<T> alternate, IComparer<T>? comparer)
+        {
+            return MaxOrDefault(source.Span, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinOrDefault<T>(this ReadOnlyMemory<T> source, Func<T> alternate)
+        {
+            return MinOrDefault(source.Span, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinOrDefault<T>(this ReadOnlyMemory<T> source, Func<T> alternate, IComparer<T>? comparer)
+        {
+            return MinOrDefault(source.Span, alternate, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxOrDefault<T>(this ReadOnlySpan<T> source, Func<T> alternate)
+        {
+            return MaxOrDefault(source, alternate, null);
+        }
+
+        public static T MaxOrDefault<T>(this ReadOnlySpan<T> source, Func<T> alternate, IComparer<T>? comparer)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            switch (source.Length)
+            {
+                case <= 0:
+                    return alternate();
+                case 1:
+                    return source[0];
+            }
+
+            comparer ??= Comparer<T>.Default;
+            
+            T max = source[0];
+                    
+            for (Int32 i = 1; i < source.Length; i++)
+            {
+                T item = source[i];
+                if (comparer.Compare(max, item) >= 0)
+                {
+                    continue;
+                }
+
+                max = item;
+            }
+
+            return max;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinOrDefault<T>(this ReadOnlySpan<T> source, Func<T> alternate)
+        {
+            return MinOrDefault(source, alternate, null);
+        }
+
+        public static T MinOrDefault<T>(this ReadOnlySpan<T> source, Func<T> alternate, IComparer<T>? comparer)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            switch (source.Length)
+            {
+                case <= 0:
+                    return alternate();
+                case 1:
+                    return source[0];
+            }
+
+            comparer ??= Comparer<T>.Default;
+            
+            T min = source[0];
+                    
+            for (Int32 i = 1; i < source.Length; i++)
+            {
+                T item = source[i];
+                if (comparer.Compare(min, item) <= 0)
+                {
+                    continue;
+                }
+
+                min = item;
+            }
+
+            return min;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxBy<T, TKey>(this Memory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
             return MaxBy(source.Span, selector);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxBy<T, TKey>(this Memory<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
         {
             return MaxBy(source.Span, selector, comparer);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinBy<T, TKey>(this Memory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
             return MinBy(source.Span, selector);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinBy<T, TKey>(this Memory<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
         {
             return MinBy(source.Span, selector, comparer);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxBy<T, TKey>(this Span<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
             return MaxBy((ReadOnlySpan<T>) source, selector);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxBy<T, TKey>(this Span<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
         {
             return MaxBy((ReadOnlySpan<T>) source, selector, comparer);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinBy<T, TKey>(this Span<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
             return MinBy((ReadOnlySpan<T>) source, selector);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinBy<T, TKey>(this Span<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
         {
             return MinBy((ReadOnlySpan<T>) source, selector, comparer);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxBy<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
             return MaxBy(source.Span, selector);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxBy<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
         {
             return MaxBy(source.Span, selector, comparer);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinBy<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
             return MinBy(source.Span, selector);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinBy<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
         {
             return MinBy(source.Span, selector, comparer);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxBy<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
             return MaxBy(source, selector, null);
@@ -3539,6 +3952,7 @@ namespace NetExtender.Utilities.Types
             return max;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinBy<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
             return MinBy(source, selector, null);
@@ -3578,6 +3992,1025 @@ namespace NetExtender.Utilities.Types
             }
 
             return min;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
+        {
+            return MaxByOrDefault(source.Span, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MaxByOrDefault(source.Span, selector, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MinByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
+        {
+            return MinByOrDefault(source.Span, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MinByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MinByOrDefault(source.Span, selector, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MaxByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
+        {
+            return MaxByOrDefault((ReadOnlySpan<T>) source, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MaxByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MaxByOrDefault((ReadOnlySpan<T>) source, selector, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MinByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
+        {
+            return MinByOrDefault((ReadOnlySpan<T>) source, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MinByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MinByOrDefault((ReadOnlySpan<T>) source, selector, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MaxByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
+        {
+            return MaxByOrDefault(source.Span, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MaxByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MaxByOrDefault(source.Span, selector, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MinByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
+        {
+            return MinByOrDefault(source.Span, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MinByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MinByOrDefault(source.Span, selector, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MaxByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
+        {
+            return MaxByOrDefault(source, selector, (IComparer<TKey>?) null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MaxByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MaxByOrDefault(source!, selector!, default(T), comparer!);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MinByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
+        {
+            return MinByOrDefault(source, selector, (IComparer<TKey>?) null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? MinByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MinByOrDefault(source!, selector!, default(T), comparer!);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, T alternate) where TKey : IComparable<TKey>
+        {
+            return MaxByOrDefault(source.Span, selector, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, T alternate, IComparer<TKey>? comparer)
+        {
+            return MaxByOrDefault(source.Span, selector, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, T alternate) where TKey : IComparable<TKey>
+        {
+            return MinByOrDefault(source.Span, selector, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, T alternate, IComparer<TKey>? comparer)
+        {
+            return MinByOrDefault(source.Span, selector, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, T alternate) where TKey : IComparable<TKey>
+        {
+            return MaxByOrDefault((ReadOnlySpan<T>) source, selector, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, T alternate, IComparer<TKey>? comparer)
+        {
+            return MaxByOrDefault((ReadOnlySpan<T>) source, selector, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, T alternate) where TKey : IComparable<TKey>
+        {
+            return MinByOrDefault((ReadOnlySpan<T>) source, selector, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, T alternate, IComparer<TKey>? comparer)
+        {
+            return MinByOrDefault((ReadOnlySpan<T>) source, selector, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, T alternate) where TKey : IComparable<TKey>
+        {
+            return MaxByOrDefault(source.Span, selector, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, T alternate, IComparer<TKey>? comparer)
+        {
+            return MaxByOrDefault(source.Span, selector, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, T alternate) where TKey : IComparable<TKey>
+        {
+            return MinByOrDefault(source.Span, selector, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, T alternate, IComparer<TKey>? comparer)
+        {
+            return MinByOrDefault(source.Span, selector, alternate, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, T alternate) where TKey : IComparable<TKey>
+        {
+            return MaxByOrDefault(source, selector, alternate, null);
+        }
+
+        public static T MaxByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, T alternate, IComparer<TKey>? comparer)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            switch (source.Length)
+            {
+                case <= 0:
+                    return alternate;
+                case 1:
+                    return source[0];
+            }
+
+            comparer ??= Comparer<TKey>.Default;
+            
+            T max = source[0];
+            TKey maxby = selector(max);
+                    
+            for (Int32 i = 1; i < source.Length; i++)
+            {
+                T item = source[i];
+                TKey itemby = selector(item);
+                if (comparer.Compare(maxby, itemby) >= 0)
+                {
+                    continue;
+                }
+
+                max = item;
+                maxby = itemby;
+            }
+
+            return max;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, T alternate) where TKey : IComparable<TKey>
+        {
+            return MinByOrDefault(source, selector, alternate, null);
+        }
+
+        public static T MinByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, T alternate, IComparer<TKey>? comparer)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            switch (source.Length)
+            {
+                case <= 0:
+                    return alternate;
+                case 1:
+                    return source[0];
+            }
+
+            comparer ??= Comparer<TKey>.Default;
+            
+            T min = source[0];
+            TKey minby = selector(min);
+                    
+            for (Int32 i = 1; i < source.Length; i++)
+            {
+                T item = source[i];
+                TKey itemby = selector(item);
+                if (comparer.Compare(minby, itemby) <= 0)
+                {
+                    continue;
+                }
+
+                min = item;
+                minby = itemby;
+            }
+
+            return min;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Func<T> alternate) where TKey : IComparable<TKey>
+        {
+            return MaxByOrDefault(source.Span, selector, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Func<T> alternate, IComparer<TKey>? comparer)
+        {
+            return MaxByOrDefault(source.Span, selector, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Func<T> alternate) where TKey : IComparable<TKey>
+        {
+            return MinByOrDefault(source.Span, selector, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Func<T> alternate, IComparer<TKey>? comparer)
+        {
+            return MinByOrDefault(source.Span, selector, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, Func<T>alternate) where TKey : IComparable<TKey>
+        {
+            return MaxByOrDefault((ReadOnlySpan<T>) source, selector, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, Func<T> alternate, IComparer<TKey>? comparer)
+        {
+            return MaxByOrDefault((ReadOnlySpan<T>) source, selector, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, Func<T> alternate) where TKey : IComparable<TKey>
+        {
+            return MinByOrDefault((ReadOnlySpan<T>) source, selector, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, Func<T> alternate, IComparer<TKey>? comparer)
+        {
+            return MinByOrDefault((ReadOnlySpan<T>) source, selector, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, Func<T> alternate) where TKey : IComparable<TKey>
+        {
+            return MaxByOrDefault(source.Span, selector, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, Func<T> alternate, IComparer<TKey>? comparer)
+        {
+            return MaxByOrDefault(source.Span, selector, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, Func<T> alternate) where TKey : IComparable<TKey>
+        {
+            return MinByOrDefault(source.Span, selector, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, Func<T> alternate, IComparer<TKey>? comparer)
+        {
+            return MinByOrDefault(source.Span, selector, alternate, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaxByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, Func<T> alternate) where TKey : IComparable<TKey>
+        {
+            return MaxByOrDefault(source, selector, alternate, null);
+        }
+
+        public static T MaxByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, Func<T> alternate, IComparer<TKey>? comparer)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            switch (source.Length)
+            {
+                case <= 0:
+                    return alternate();
+                case 1:
+                    return source[0];
+            }
+
+            comparer ??= Comparer<TKey>.Default;
+            
+            T max = source[0];
+            TKey maxby = selector(max);
+                    
+            for (Int32 i = 1; i < source.Length; i++)
+            {
+                T item = source[i];
+                TKey itemby = selector(item);
+                if (comparer.Compare(maxby, itemby) >= 0)
+                {
+                    continue;
+                }
+
+                max = item;
+                maxby = itemby;
+            }
+
+            return max;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, Func<T> alternate) where TKey : IComparable<TKey>
+        {
+            return MinByOrDefault(source, selector, alternate, null);
+        }
+
+        public static T MinByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, Func<T> alternate, IComparer<TKey>? comparer)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            switch (source.Length)
+            {
+                case <= 0:
+                    return alternate();
+                case 1:
+                    return source[0];
+            }
+
+            comparer ??= Comparer<TKey>.Default;
+
+            T min = source[0];
+            TKey minby = selector(min);
+
+            for (Int32 i = 1; i < source.Length; i++)
+            {
+                T item = source[i];
+                TKey itemby = selector(item);
+                if (comparer.Compare(minby, itemby) <= 0)
+                {
+                    continue;
+                }
+
+                min = item;
+                minby = itemby;
+            }
+
+            return min;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMax<T>(this Memory<T> source)
+        {
+            return MinMax(source.Span);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMax<T>(this Span<T> source)
+        {
+            return MinMax((ReadOnlySpan<T>) source);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMax<T>(this ReadOnlyMemory<T> source)
+        {
+            return MinMax(source.Span);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMax<T>(this ReadOnlySpan<T> source)
+        {
+            return MinMax(source, null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMax<T>(this Memory<T> source, IComparer<T>? comparer)
+        {
+            return MinMax(source.Span, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMax<T>(this Span<T> source, IComparer<T>? comparer)
+        {
+            return MinMax((ReadOnlySpan<T>) source, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMax<T>(this ReadOnlyMemory<T> source, IComparer<T>? comparer)
+        {
+            return MinMax(source.Span, comparer);
+        }
+
+        public static (T Min, T Max) MinMax<T>(this ReadOnlySpan<T> source, IComparer<T>? comparer)
+        {
+            ReadOnlySpan<T>.Enumerator enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                throw new InvalidOperationException();
+            }
+            
+            comparer ??= Comparer<T>.Default;
+
+            T current = enumerator.Current;
+
+            T min = current;
+            T max = current;
+
+            while (enumerator.MoveNext())
+            {
+                current = enumerator.Current;
+
+                if (comparer.Compare(current, min) < 0)
+                {
+                    min = current;
+                }
+
+                if (comparer.Compare(current, max) > 0)
+                {
+                    max = current;
+                }
+            }
+
+            return (min, max);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this Memory<T> source)
+        {
+            return MinMaxOrDefault(source.Span);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this Span<T> source)
+        {
+            return MinMaxOrDefault((ReadOnlySpan<T>) source);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this ReadOnlyMemory<T> source)
+        {
+            return MinMaxOrDefault(source.Span);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this ReadOnlySpan<T> source)
+        {
+            return MinMaxOrDefault(source, (IComparer<T>?) null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this Memory<T> source, IComparer<T>? comparer)
+        {
+            return MinMaxOrDefault(source.Span, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this Span<T> source, IComparer<T>? comparer)
+        {
+            return MinMaxOrDefault((ReadOnlySpan<T>) source, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this ReadOnlyMemory<T> source, IComparer<T>? comparer)
+        {
+            return MinMaxOrDefault(source.Span, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this ReadOnlySpan<T> source, IComparer<T>? comparer)
+        {
+            return MinMaxOrDefault(source!, default(T), comparer!);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this Memory<T> source, T alternate)
+        {
+            return MinMaxOrDefault(source.Span, alternate);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this Span<T> source, T alternate)
+        {
+            return MinMaxOrDefault((ReadOnlySpan<T>) source, alternate);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this ReadOnlyMemory<T> source, T alternate)
+        {
+            return MinMaxOrDefault(source.Span, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxOrDefault<T>(this ReadOnlySpan<T> source, T alternate)
+        {
+            return MinMaxOrDefault(source, alternate, null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this Memory<T> source, T alternate, IComparer<T>? comparer)
+        {
+            return MinMaxOrDefault(source.Span, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this Span<T> source, T alternate, IComparer<T>? comparer)
+        {
+            return MinMaxOrDefault((ReadOnlySpan<T>) source, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this ReadOnlyMemory<T> source, T alternate, IComparer<T>? comparer)
+        {
+            return MinMaxOrDefault(source.Span, alternate, comparer);
+        }
+
+        public static (T Min, T Max) MinMaxOrDefault<T>(this ReadOnlySpan<T> source, T alternate, IComparer<T>? comparer)
+        {
+            ReadOnlySpan<T>.Enumerator enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                return (alternate, alternate);
+            }
+            
+            comparer ??= Comparer<T>.Default;
+
+            T current = enumerator.Current;
+
+            T min = current;
+            T max = current;
+
+            while (enumerator.MoveNext())
+            {
+                current = enumerator.Current;
+
+                if (comparer.Compare(current, min) < 0)
+                {
+                    min = current;
+                }
+
+                if (comparer.Compare(current, max) > 0)
+                {
+                    max = current;
+                }
+            }
+
+            return (min, max);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this Memory<T> source, Func<T> alternate)
+        {
+            return MinMaxOrDefault(source.Span, alternate);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this Span<T> source, Func<T> alternate)
+        {
+            return MinMaxOrDefault((ReadOnlySpan<T>) source, alternate);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this ReadOnlyMemory<T> source, Func<T> alternate)
+        {
+            return MinMaxOrDefault(source.Span, alternate);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxOrDefault<T>(this ReadOnlySpan<T> source, Func<T> alternate)
+        {
+            return MinMaxOrDefault(source, alternate, null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this Memory<T> source, Func<T> alternate, IComparer<T>? comparer)
+        {
+            return MinMaxOrDefault(source.Span, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this Span<T> source, Func<T> alternate, IComparer<T>? comparer)
+        {
+            return MinMaxOrDefault((ReadOnlySpan<T>) source, alternate, comparer);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxOrDefault<T>(this ReadOnlyMemory<T> source, Func<T> alternate, IComparer<T>? comparer)
+        {
+            return MinMaxOrDefault(source.Span, alternate, comparer);
+        }
+
+        public static (T Min, T Max) MinMaxOrDefault<T>(this ReadOnlySpan<T> source, Func<T> alternate, IComparer<T>? comparer)
+        {
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            ReadOnlySpan<T>.Enumerator enumerator = source.GetEnumerator();
+
+            T current;
+            
+            if (!enumerator.MoveNext())
+            {
+                current = alternate();
+                return (current, current);
+            }
+            
+            comparer ??= Comparer<T>.Default;
+
+            current = enumerator.Current;
+
+            T min = current;
+            T max = current;
+
+            while (enumerator.MoveNext())
+            {
+                current = enumerator.Current;
+
+                if (comparer.Compare(current, min) < 0)
+                {
+                    min = current;
+                }
+
+                if (comparer.Compare(current, max) > 0)
+                {
+                    max = current;
+                }
+            }
+
+            return (min, max);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxBy<T, TKey>(this Memory<T> source, Func<T, TKey> selector)
+        {
+            return MinMaxBy(source.Span, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxBy<T, TKey>(this Span<T> source, Func<T, TKey> selector)
+        {
+            return MinMaxBy((ReadOnlySpan<T>) source, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxBy<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector)
+        {
+            return MinMaxBy(source.Span, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxBy<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector)
+        {
+            return MinMaxBy(source, selector, null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxBy<T, TKey>(this Memory<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MinMaxBy(source.Span, selector, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxBy<T, TKey>(this Span<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MinMaxBy((ReadOnlySpan<T>) source, selector, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxBy<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MinMaxBy(source.Span, selector, comparer);
+        }
+
+        public static (T Min, T Max) MinMaxBy<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            ReadOnlySpan<T>.Enumerator enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                throw new InvalidOperationException();
+            }
+            
+            comparer ??= Comparer<TKey>.Default;
+
+            T current = enumerator.Current;
+
+            T min = current;
+            T max = current;
+            TKey key = selector(current);
+            TKey minkey = key;
+            TKey maxkey = key;
+
+            while (enumerator.MoveNext())
+            {
+                current = enumerator.Current;
+                key = selector(current);
+
+                if (comparer.Compare(key, minkey) < 0)
+                {
+                    min = current;
+                    minkey = selector(min);
+                }
+
+                if (comparer.Compare(key, maxkey) > 0)
+                {
+                    max = current;
+                    maxkey = selector(max);
+                }
+            }
+
+            return (min, max);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector)
+        {
+            return MinMaxByOrDefault(source.Span, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector)
+        {
+            return MinMaxByOrDefault((ReadOnlySpan<T>) source, selector);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector)
+        {
+            return MinMaxByOrDefault(source.Span, selector);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector)
+        {
+            return MinMaxByOrDefault(source, selector, (IComparer<TKey>?) null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MinMaxByOrDefault(source.Span, selector, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MinMaxByOrDefault((ReadOnlySpan<T>) source, selector, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MinMaxByOrDefault(source.Span, selector, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T? Min, T? Max) MinMaxByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            return MinMaxByOrDefault(source!, selector!, default(T), comparer!);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, T alternate)
+        {
+            return MinMaxByOrDefault(source.Span, selector, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, T alternate)
+        {
+            return MinMaxByOrDefault((ReadOnlySpan<T>) source, selector, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, T alternate)
+        {
+            return MinMaxByOrDefault(source.Span, selector, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, T alternate)
+        {
+            return MinMaxByOrDefault(source, selector, alternate, null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, T alternate, IComparer<TKey>? comparer)
+        {
+            return MinMaxByOrDefault(source.Span, selector, alternate, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, T alternate, IComparer<TKey>? comparer)
+        {
+            return MinMaxByOrDefault((ReadOnlySpan<T>) source, selector, alternate, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, T alternate, IComparer<TKey>? comparer)
+        {
+            return MinMaxByOrDefault(source.Span, selector, alternate, comparer);
+        }
+
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, T alternate, IComparer<TKey>? comparer)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            ReadOnlySpan<T>.Enumerator enumerator = source.GetEnumerator();
+
+            if (!enumerator.MoveNext())
+            {
+                return (alternate, alternate);
+            }
+            
+            comparer ??= Comparer<TKey>.Default;
+
+            T current = enumerator.Current;
+
+            T min = current;
+            T max = current;
+            TKey key = selector(current);
+            TKey minkey = key;
+            TKey maxkey = key;
+
+            while (enumerator.MoveNext())
+            {
+                current = enumerator.Current;
+                key = selector(current);
+
+                if (comparer.Compare(key, minkey) < 0)
+                {
+                    min = current;
+                    minkey = selector(min);
+                }
+
+                if (comparer.Compare(key, maxkey) > 0)
+                {
+                    max = current;
+                    maxkey = selector(max);
+                }
+            }
+
+            return (min, max);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Func<T> alternate)
+        {
+            return MinMaxByOrDefault(source.Span, selector, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, Func<T> alternate)
+        {
+            return MinMaxByOrDefault((ReadOnlySpan<T>) source, selector, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, Func<T> alternate)
+        {
+            return MinMaxByOrDefault(source.Span, selector, alternate);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, Func<T> alternate)
+        {
+            return MinMaxByOrDefault(source, selector, alternate, null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Func<T> alternate, IComparer<TKey>? comparer)
+        {
+            return MinMaxByOrDefault(source.Span, selector, alternate, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, Func<T> alternate, IComparer<TKey>? comparer)
+        {
+            return MinMaxByOrDefault((ReadOnlySpan<T>) source, selector, alternate, comparer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, Func<T> alternate, IComparer<TKey>? comparer)
+        {
+            return MinMaxByOrDefault(source.Span, selector, alternate, comparer);
+        }
+
+        public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, Func<T> alternate, IComparer<TKey>? comparer)
+        {
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            if (alternate is null)
+            {
+                throw new ArgumentNullException(nameof(alternate));
+            }
+
+            ReadOnlySpan<T>.Enumerator enumerator = source.GetEnumerator();
+
+            T current;
+            
+            if (!enumerator.MoveNext())
+            {
+                current = alternate();
+                return (current, current);
+            }
+            
+            comparer ??= Comparer<TKey>.Default;
+
+            current = enumerator.Current;
+
+            T min = current;
+            T max = current;
+            TKey key = selector(current);
+            TKey minkey = key;
+            TKey maxkey = key;
+
+            while (enumerator.MoveNext())
+            {
+                current = enumerator.Current;
+                key = selector(current);
+
+                if (comparer.Compare(key, minkey) < 0)
+                {
+                    min = current;
+                    minkey = selector(min);
+                }
+
+                if (comparer.Compare(key, maxkey) > 0)
+                {
+                    max = current;
+                    maxkey = selector(max);
+                }
+            }
+
+            return (min, max);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

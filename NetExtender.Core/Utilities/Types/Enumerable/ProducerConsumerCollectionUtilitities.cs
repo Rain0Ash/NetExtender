@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using NetExtender.Types.Collections;
 using NetExtender.Types.Observers;
 
@@ -24,7 +25,7 @@ namespace NetExtender.Utilities.Types
             }
         }
         
-        public static void TryAdd<T>(this IProducerConsumerCollection<T> collection, IEnumerable<T> source)
+        public static Boolean TryAdd<T>(this IProducerConsumerCollection<T> collection, IEnumerable<T> source)
         {
             if (collection is null)
             {
@@ -36,10 +37,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(source));
             }
 
-            foreach (T item in source)
-            {
-                collection.TryAdd(item);
-            }
+            return source.Aggregate(false, (current, item) => current | collection.TryAdd(item));
         }
         
         public static IDisposable Subscribe<T>(this IProducerConsumerCollection<T> collection, IObservable<T> observable)
