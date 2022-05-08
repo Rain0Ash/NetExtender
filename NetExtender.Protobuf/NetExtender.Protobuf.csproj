@@ -10,11 +10,19 @@
         <Version>0.8.7</Version>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>../SignTool/Private/NetExtender.snk</AssemblyOriginatorKeyFile>
+        <Title>NetExtender.Protobuf</Title>
+        <Description>Protobuf compability module of NetExtender Framework</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/Rain0Ash/NetExtender</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>Extension</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IsPackable>true</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="protobuf-net" Version="3.0.101" />
-      <PackageReference Include="protobuf-net.Core" Version="3.0.101" />
+      <PackageReference Include="protobuf-net" Version="3.1.0" />
+      <PackageReference Include="protobuf-net.Core" Version="3.1.0" />
     </ItemGroup>
 
     <ItemGroup>

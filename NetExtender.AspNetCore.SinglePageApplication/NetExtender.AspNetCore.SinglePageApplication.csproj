@@ -10,6 +10,14 @@
         <Version>0.8.7</Version>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>../SignTool/Private/NetExtender.snk</AssemblyOriginatorKeyFile>
+        <Title>NetExtender.AspNetCore.SinglePageApplication</Title>
+        <Description>ASP.NET Core Single Page Application module of NetExtender Framework</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/Rain0Ash/NetExtender</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>Extension</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IsPackable>true</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
@@ -17,7 +25,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.0" />
+      <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="6.0.4" />
     </ItemGroup>
 
 </Project>

@@ -10,6 +10,14 @@
         <Version>0.8.7</Version>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>../SignTool/Private/NetExtender.snk</AssemblyOriginatorKeyFile>
+        <Title>NetExtender.NAudio.Windows</Title>
+        <Description>NAudio Windows module of NetExtender Framework</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/Rain0Ash/NetExtender</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>Extension</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IsPackable>true</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>

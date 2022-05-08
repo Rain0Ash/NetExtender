@@ -10,18 +10,26 @@
         <Version>0.8.7</Version>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>../SignTool/Private/NetExtender.snk</AssemblyOriginatorKeyFile>
+        <Title>NetExtender.EntityFramework.Core</Title>
+        <Description>EntityFramework Core module of NetExtender Framework</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/Rain0Ash/NetExtender</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>Extension</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IsPackable>true</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="6.0.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.0">
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="6.0.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Analyzers" Version="6.0.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.4">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.0" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.4" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.4">
         <PrivateAssets>all</PrivateAssets>
         <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       </PackageReference>

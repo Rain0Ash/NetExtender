@@ -10,10 +10,18 @@
         <Version>0.8.7</Version>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>../SignTool/Private/NetExtender.snk</AssemblyOriginatorKeyFile>
+        <Title>NetExtender.JavaScript</Title>
+        <Description>JavaScript compability module of NetExtender Framework</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/Rain0Ash/NetExtender</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>Extension</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IsPackable>true</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Microsoft.JSInterop" Version="6.0.0" />
+      <PackageReference Include="Microsoft.JSInterop" Version="6.0.4" />
     </ItemGroup>
 
 </Project>
