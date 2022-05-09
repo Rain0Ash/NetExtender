@@ -51,7 +51,7 @@ namespace NetExtender.Domains.Applications
         {
             RegisterShutdownToken(token);
             InitializeComponent();
-            Application.Run();
+            Application.Dispatcher.Invoke(() => Application.Run());
             return Task.FromResult<IApplication>(this);
         }
 
@@ -63,7 +63,7 @@ namespace NetExtender.Domains.Applications
             }
 
             RegisterShutdownToken(token);
-            Application.Run(window);
+            Application.Dispatcher.Invoke(() => Application.Run(window));
             return Task.FromResult<IApplication>(this);
         }
 

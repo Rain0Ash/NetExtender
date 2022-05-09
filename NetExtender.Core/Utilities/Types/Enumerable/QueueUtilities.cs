@@ -47,25 +47,25 @@ namespace NetExtender.Utilities.Types
             return item;
         }
 
-        public static T Rotate<T>(this Queue<T> queue, Int32 count)
+        public static T Rotate<T>(this Queue<T> queue, Int32 offset)
         {
             if (queue is null)
             {
                 throw new ArgumentNullException(nameof(queue));
             }
             
-            if (count < 0)
+            if (offset < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(offset));
             }
 
-            if (queue.Count <= 1 || (count %= queue.Count) == 0)
+            if (queue.Count <= 1 || (offset %= queue.Count) == 0)
             {
                 return queue.Peek();
             }
 
             T item = default!;
-            for (Int32 i = 0; i < count % queue.Count; i++)
+            for (Int32 i = 0; i < offset % queue.Count; i++)
             {
                 item = queue.Dequeue();
                 queue.Enqueue(item);
@@ -95,7 +95,7 @@ namespace NetExtender.Utilities.Types
             return true;
         }
         
-        public static Boolean TryRotate<T>(this Queue<T> queue, Int32 count, [MaybeNullWhen(false)] out T result)
+        public static Boolean TryRotate<T>(this Queue<T> queue, Int32 offset, [MaybeNullWhen(false)] out T result)
         {
             if (queue is null)
             {
@@ -108,19 +108,19 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
             
-            if (count < 0)
+            if (offset < 0)
             {
                 result = default;
                 return false;
             }
             
-            if (queue.Count <= 1 || (count %= queue.Count) == 0)
+            if (queue.Count <= 1 || (offset %= queue.Count) == 0)
             {
                 return queue.TryPeek(out result);
             }
 
             result = default!;
-            for (Int32 i = 0; i < count; i++)
+            for (Int32 i = 0; i < offset; i++)
             {
                 if (!queue.TryDequeue(out result))
                 {
@@ -145,25 +145,25 @@ namespace NetExtender.Utilities.Types
             return item;
         }
         
-        public static T Rotate<T>(this SetQueue<T> queue, Int32 count)
+        public static T Rotate<T>(this SetQueue<T> queue, Int32 offset)
         {
             if (queue is null)
             {
                 throw new ArgumentNullException(nameof(queue));
             }
             
-            if (count < 0)
+            if (offset < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(offset));
             }
 
-            if (queue.Count <= 1 || (count %= queue.Count) == 0)
+            if (queue.Count <= 1 || (offset %= queue.Count) == 0)
             {
                 return queue.Peek();
             }
 
             T item = default!;
-            for (Int32 i = 0; i < count; i++)
+            for (Int32 i = 0; i < offset; i++)
             {
                 item = queue.Dequeue();
                 queue.Enqueue(item);
@@ -188,7 +188,7 @@ namespace NetExtender.Utilities.Types
             return true;
         }
         
-        public static Boolean TryRotate<T>(this SetQueue<T> queue, Int32 count, [MaybeNullWhen(false)] out T result)
+        public static Boolean TryRotate<T>(this SetQueue<T> queue, Int32 offset, [MaybeNullWhen(false)] out T result)
         {
             if (queue is null)
             {
@@ -201,19 +201,19 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
             
-            if (count < 0)
+            if (offset < 0)
             {
                 result = default;
                 return false;
             }
 
-            if (queue.Count <= 1 || (count %= queue.Count) == 0)
+            if (queue.Count <= 1 || (offset %= queue.Count) == 0)
             {
                 return queue.TryPeek(out result);
             }
 
             result = default!;
-            for (Int32 i = 0; i < count; i++)
+            for (Int32 i = 0; i < offset; i++)
             {
                 if (!queue.TryDequeue(out result))
                 {

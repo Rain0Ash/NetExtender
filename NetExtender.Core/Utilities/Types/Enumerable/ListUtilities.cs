@@ -5,6 +5,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
+using NetExtender.Random.Interfaces;
 using NetExtender.Types.Comparers;
 using NetExtender.Utilities.Numerics;
 
@@ -142,6 +144,11 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
+            
+            if (collection.IsReadOnly)
+            {
+                throw new NotSupportedException();
+            }
 
             if (first < 0 || first >= collection.Count)
             {
@@ -162,6 +169,11 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
+            
+            if (collection.IsReadOnly)
+            {
+                throw new NotSupportedException();
+            }
 
             if (first < 0 || first >= collection.Count)
             {
@@ -175,6 +187,207 @@ namespace NetExtender.Utilities.Types
 
             (collection[first], collection[second]) = (collection[second], collection[first]);
             return true;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Shuffle<T>(this IList<T> collection)
+        {
+            Shuffle(collection, RandomUtilities.Generator);
+        }
+
+        public static void Shuffle<T>(this IList<T> collection, System.Random random)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            for (Int32 i = 0; i < collection.Count; i++)
+            {
+                Int32 j = random.Next(i, collection.Count);
+                (collection[i], collection[j]) = (collection[j], collection[i]);
+            }
+        }
+        
+        public static void Shuffle<T>(this IList<T> collection, IRandom random)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            for (Int32 i = 0; i < collection.Count; i++)
+            {
+                Int32 j = random.Next(i, collection.Count);
+                (collection[i], collection[j]) = (collection[j], collection[i]);
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Shuffle(this IList collection)
+        {
+            Shuffle(collection, RandomUtilities.Generator);
+        }
+
+        public static void Shuffle(this IList collection, System.Random random)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            if (collection.IsReadOnly)
+            {
+                throw new NotSupportedException();
+            }
+
+            for (Int32 i = 0; i < collection.Count; i++)
+            {
+                Int32 j = random.Next(i, collection.Count);
+                (collection[i], collection[j]) = (collection[j], collection[i]);
+            }
+        }
+        
+        public static void Shuffle(this IList collection, IRandom random)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            if (collection.IsReadOnly)
+            {
+                throw new NotSupportedException();
+            }
+            
+            for (Int32 i = 0; i < collection.Count; i++)
+            {
+                Int32 j = random.Next(i, collection.Count);
+                (collection[i], collection[j]) = (collection[j], collection[i]);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Rotate<T>(this IList<T> collection)
+        {
+            Rotate(collection, 1);
+        }
+
+        public static void Rotate<T>(this IList<T> collection, Int32 offset)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (collection.Count <= 1)
+            {
+                return;
+            }
+
+            offset %= collection.Count;
+            switch (offset)
+            {
+                case 0:
+                    return;
+                case <= 0:
+                {
+                    offset = -offset;
+                    for (Int32 i = 0; i < offset; i++)
+                    {
+                        T temp = collection[^1];
+                        collection.RemoveAt(collection.Count - 1);
+                        collection.Insert(0, temp);
+                    }
+
+                    break;
+                }
+                default:
+                {
+                    for (Int32 i = 0; i < offset; i++)
+                    {
+                        T temp = collection[0];
+                        collection.RemoveAt(0);
+                        collection.Add(temp);
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Rotate(this IList collection)
+        {
+            Rotate(collection, 1);
+        }
+
+        public static void Rotate(this IList collection, Int32 offset)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (collection.IsReadOnly)
+            {
+                throw new NotSupportedException();
+            }
+
+            if (collection.Count <= 1)
+            {
+                return;
+            }
+
+            offset %= collection.Count;
+            switch (offset)
+            {
+                case 0:
+                    return;
+                case <= 0:
+                {
+                    offset = -offset;
+                    for (Int32 i = 0; i < offset; i++)
+                    {
+                        Object? temp = collection[^1];
+                        collection.RemoveAt(collection.Count - 1);
+                        collection.Insert(0, temp);
+                    }
+
+                    break;
+                }
+                default:
+                {
+                    for (Int32 i = 0; i < offset; i++)
+                    {
+                        Object? temp = collection[0];
+                        collection.RemoveAt(0);
+                        collection.Add(temp);
+                    }
+
+                    break;
+                }
+            }
         }
 
         public static Int32 BinarySearch<T>(this IList<T> collection, T value)

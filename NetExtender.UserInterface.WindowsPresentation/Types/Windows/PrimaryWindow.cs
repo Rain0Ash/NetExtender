@@ -3,7 +3,7 @@
 
 using System;
 using System.Windows;
-using NetExtender.Utilities.UserInterface;
+using NetExtender.WindowsPresentation.Utilities;
 
 namespace NetExtender.UserInterface.WindowsPresentation.Windows
 {

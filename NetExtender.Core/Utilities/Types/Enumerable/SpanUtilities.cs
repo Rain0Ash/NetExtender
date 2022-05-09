@@ -3176,6 +3176,51 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<T> Rotate<T>(this Memory<T> source)
+        {
+            return Rotate(source, 1);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Memory<T> Rotate<T>(this Memory<T> source, Int32 offset)
+        {
+            Rotate(source.Span, offset);
+            return source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Span<T> Rotate<T>(this Span<T> source)
+        {
+            return Rotate(source, 1);
+        }
+
+        public static Span<T> Rotate<T>(this Span<T> source, Int32 offset)
+        {
+            if (source.Length <= 1)
+            {
+                return source;
+            }
+
+            offset %= source.Length;
+
+            switch (offset)
+            {
+                case 0:
+                    return source;
+                case < 0:
+                    offset += source.Length;
+                    break;
+            }
+
+            Span<T> buffer = new T[offset];
+            source.Slice(source.Length - offset).CopyTo(buffer);
+            source.Slice(0, source.Length - offset).CopyTo(source.Slice(offset));
+            buffer.CopyTo(source.Slice(0, offset));
+            
+            return source;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static BigInteger Multiply(this Memory<BigInteger> source)

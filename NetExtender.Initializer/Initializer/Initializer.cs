@@ -15,6 +15,25 @@ namespace NetExtender.Initializer
                 return Task.Delay(TimeSpan.FromMilliseconds(100));
             }
         }
+        
+        protected Initializer()
+        {
+            AppDomain.CurrentDomain.ProcessExit += Shutdown;
+            AppDomain.CurrentDomain.UnhandledException += UnhandledException;
+        }
+        
+        private void UnhandledException(Object sender, UnhandledExceptionEventArgs args)
+        {
+            UnhandledException(sender, args.ExceptionObject as Exception, args.IsTerminating);
+        }
+        
+        protected virtual void UnhandledException(Object? sender, Exception? exception, Boolean terminating)
+        {
+        }
+
+        protected virtual void Shutdown(Object? sender, EventArgs args)
+        {
+        }
 
         protected internal virtual void InitializeNetExtender(INetExtenderFrameworkInitializer initializer)
         {

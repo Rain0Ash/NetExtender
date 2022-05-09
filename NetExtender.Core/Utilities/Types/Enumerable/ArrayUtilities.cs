@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using NetExtender.Random.Interfaces;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
@@ -367,6 +368,66 @@ namespace NetExtender.Utilities.Types
             }
 
             array.AsSpan().Slice(start, length).Fill(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Shuffle<T>(this T[] source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            source.AsSpan().Shuffle();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Shuffle<T>(this T[] source, System.Random random)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            source.AsSpan().Shuffle(random);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Shuffle<T>(this T[] source, IRandom random)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            source.AsSpan().Shuffle(random);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Rotate<T>(this T[] source)
+        {
+            Rotate(source, 1);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Rotate<T>(this T[] source, Int32 offset)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            source.AsSpan().Rotate(offset);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

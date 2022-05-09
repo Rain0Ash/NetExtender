@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using NetExtender.Random.Interfaces;
 
 namespace NetExtender.Utilities.Types
 {
@@ -172,6 +173,50 @@ namespace NetExtender.Utilities.Types
             return segment;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ArraySegment<T> Shuffle<T>(this ArraySegment<T> source)
+        {
+            source.AsSpan().Shuffle();
+            return source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ArraySegment<T> Shuffle<T>(this ArraySegment<T> source, System.Random random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            source.AsSpan().Shuffle(random);
+            return source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ArraySegment<T> Shuffle<T>(this ArraySegment<T> source, IRandom random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            source.AsSpan().Shuffle(random);
+            return source;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ArraySegment<T> Rotate<T>(this ArraySegment<T> source)
+        {
+            return Rotate(source, 1);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ArraySegment<T> Rotate<T>(this ArraySegment<T> source, Int32 offset)
+        {
+            source.AsSpan().Rotate(offset);
+            return source;
+        }
+
         /// <inheritdoc cref="Array.Exists{T}"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Exists<T>(this ArraySegment<T> segment, Func<T, Boolean> match)

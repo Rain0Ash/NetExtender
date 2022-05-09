@@ -50,24 +50,9 @@ namespace NetExtender.Domains
 
             public IApplicationData Data { get; }
 
-            public Boolean? Elevate
-            {
-                get
-                {
-                    return Current.Elevate;
-                }
-                init
-                {
-                }
-            }
+            public Boolean? Elevate { get; init; }
 
-            public Boolean? IsElevate
-            {
-                get
-                {
-                    return Current.IsElevate;
-                }
-            }
+            public Boolean? IsElevate { get; init; }
 
             public IDispatcher? Dispatcher
             {
@@ -195,12 +180,22 @@ namespace NetExtender.Domains
                 Culture = CultureInfo.InvariantCulture;
             }
             
+            public IDomain Initialize<T>() where T : IApplication, new()
+            {
+                return Initialize(new T());
+            }
+            
             public IDomain Initialize(IApplication application)
             {
                 Application = application ?? throw new ArgumentNullException(nameof(application));
                 return this;
             }
-            
+
+            public IDomain View<T>() where T : IApplicationView, new()
+            {
+                return View(new T());
+            }
+
             public IDomain View(IApplicationView view)
             {
                 if (view is null)
@@ -210,6 +205,11 @@ namespace NetExtender.Domains
 
                 view.Start();
                 return this;
+            }
+            
+            public IDomain View<T>(IEnumerable<String>? args) where T : IApplicationView, new()
+            {
+                return View(new T(), args);
             }
             
             public IDomain View(IApplicationView view, IEnumerable<String>? args)
@@ -222,7 +222,12 @@ namespace NetExtender.Domains
                 view.Start(args);
                 return this;
             }
-            
+
+            public IDomain View<T>(params String[]? args) where T : IApplicationView, new()
+            {
+                return View(new T(), args);
+            }
+
             public IDomain View(IApplicationView view, params String[]? args)
             {
                 if (view is null)
@@ -232,6 +237,11 @@ namespace NetExtender.Domains
 
                 view.Start(args);
                 return this;
+            }
+
+            public Task<IDomain> ViewAsync<T>() where T : IApplicationView, new()
+            {
+                return ViewAsync(new T());
             }
 
             public async Task<IDomain> ViewAsync(IApplicationView view)
@@ -245,6 +255,11 @@ namespace NetExtender.Domains
                 return this;
             }
 
+            public Task<IDomain> ViewAsync<T>(CancellationToken token) where T : IApplicationView, new()
+            {
+                return ViewAsync(new T(), token);
+            }
+
             public async Task<IDomain> ViewAsync(IApplicationView view, CancellationToken token)
             {
                 if (view is null)
@@ -256,6 +271,11 @@ namespace NetExtender.Domains
                 return this;
             }
 
+            public Task<IDomain> ViewAsync<T>(IEnumerable<String>? args) where T : IApplicationView, new()
+            {
+                return ViewAsync(new T(), args);
+            }
+
             public async Task<IDomain> ViewAsync(IApplicationView view, IEnumerable<String>? args)
             {
                 if (view is null)
@@ -265,6 +285,11 @@ namespace NetExtender.Domains
 
                 await view.StartAsync(args);
                 return this;
+            }
+
+            public Task<IDomain> ViewAsync<T>(params String[]? args) where T : IApplicationView, new()
+            {
+                return ViewAsync(new T(), args);
             }
             
             public async Task<IDomain> ViewAsync(IApplicationView view, params String[]? args)
@@ -278,6 +303,11 @@ namespace NetExtender.Domains
                 return this;
             }
 
+            public Task<IDomain> ViewAsync<T>(IEnumerable<String>? args, CancellationToken token) where T : IApplicationView, new()
+            {
+                return ViewAsync(new T(), args, token);
+            }
+
             public async Task<IDomain> ViewAsync(IApplicationView view, IEnumerable<String>? args, CancellationToken token)
             {
                 if (view is null)
@@ -287,6 +317,11 @@ namespace NetExtender.Domains
 
                 await view.StartAsync(args, token);
                 return this;
+            }
+
+            public Task<IDomain> ViewAsync<T>(CancellationToken token, params String[] args) where T : IApplicationView, new()
+            {
+                return ViewAsync(new T(), token, args);
             }
 
             public async Task<IDomain> ViewAsync(IApplicationView view, CancellationToken token, params String[]? args)

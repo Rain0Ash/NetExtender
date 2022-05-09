@@ -63,11 +63,16 @@ namespace NetExtender.ImageSharp.Utilities
 
             for (Int32 y = 0; y < Height; y++)
             {
-                Span<Rgba32> row = image.GetPixelRowSpan(y);
-                for (Int32 x = 0; x < Width; x++)
+                void ProcessPixels(PixelAccessor<Rgba32> accessor)
                 {
-                    average += row[x].R;
+                    Span<Rgba32> row = accessor.GetRowSpan(y);
+                    for (Int32 x = 0; x < Width; x++)
+                    {
+                        average += row[x].R;
+                    }
                 }
+
+                image.ProcessPixelRows(ProcessPixels);
             }
 
             average /= Size;
@@ -77,17 +82,22 @@ namespace NetExtender.ImageSharp.Utilities
 
             for (Int32 y = 0; y < Height; y++)
             {
-                Span<Rgba32> row = image.GetPixelRowSpan(y);
-                
-                for (Int32 x = 0; x < Width; x++)
+                void ProcessPixels(PixelAccessor<Rgba32> accessor)
                 {
-                    if (row[x].R >= average)
-                    {
-                        hash |= mask;
-                    }
+                    Span<Rgba32> row = accessor.GetRowSpan(y);
 
-                    mask >>= 1;
+                    for (Int32 x = 0; x < Width; x++)
+                    {
+                        if (row[x].R >= average)
+                        {
+                            hash |= mask;
+                        }
+
+                        mask >>= 1;
+                    }
                 }
+
+                image.ProcessPixelRows(ProcessPixels);
             }
 
             return hash;
@@ -110,21 +120,26 @@ namespace NetExtender.ImageSharp.Utilities
 
             for (Int32 y = 0; y < Height; y++)
             {
-                Span<Rgba32> row = image.GetPixelRowSpan(y);
-                Rgba32 left = row[0];
-
-                for (Int32 x = 1; x < Width; x++)
+                void ProcessPixels(PixelAccessor<Rgba32> accessor)
                 {
-                    Rgba32 right = row[x];
-                    
-                    if (left.R < right.R)
-                    {
-                        hash |= mask;
-                    }
+                    Span<Rgba32> row = accessor.GetRowSpan(y);
+                    Rgba32 left = row[0];
 
-                    left = right;
-                    mask >>= 1;
+                    for (Int32 x = 1; x < Width; x++)
+                    {
+                        Rgba32 right = row[x];
+
+                        if (left.R < right.R)
+                        {
+                            hash |= mask;
+                        }
+
+                        left = right;
+                        mask >>= 1;
+                    }
                 }
+
+                image.ProcessPixelRows(ProcessPixels);
             }
 
             return hash;

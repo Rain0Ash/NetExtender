@@ -51,7 +51,7 @@ namespace NetExtender.Utilities.Types
 
             if (collection.IsReadOnly)
             {
-                throw new ArgumentException("Collection is read-only.", nameof(source));
+                throw new NotSupportedException();
             }
             
             await foreach (T record in source.WithCancellation(token).ConfigureAwait(false))

@@ -44,17 +44,28 @@ namespace NetExtender.Domains.Interfaces
         public new IDomain Run();
         public new Task<IDomain> RunAsync();
         public new Task<IDomain> RunAsync(CancellationToken token);
-        
+
+        public IDomain Initialize<T>() where T : IApplication, new();
         public IDomain Initialize(IApplication application);
-        
+
+        public IDomain View<T>() where T : IApplicationView, new();
         public IDomain View(IApplicationView view);
+        public IDomain View<T>(IEnumerable<String>? args) where T : IApplicationView, new();
         public IDomain View(IApplicationView view, IEnumerable<String>? args);
+        
+        public IDomain View<T>(params String[]? args) where T : IApplicationView, new();
         public IDomain View(IApplicationView view, params String[]? args);
+        public Task<IDomain> ViewAsync<T>() where T : IApplicationView, new();
         public Task<IDomain> ViewAsync(IApplicationView view);
+        public Task<IDomain> ViewAsync<T>(CancellationToken token) where T : IApplicationView, new();
         public Task<IDomain> ViewAsync(IApplicationView view, CancellationToken token);
+        public Task<IDomain> ViewAsync<T>(IEnumerable<String>? args) where T : IApplicationView, new();
         public Task<IDomain> ViewAsync(IApplicationView view, IEnumerable<String>? args);
+        public Task<IDomain> ViewAsync<T>(params String[]? args) where T : IApplicationView, new();
         public Task<IDomain> ViewAsync(IApplicationView view, params String[]? args);
+        public Task<IDomain> ViewAsync<T>(IEnumerable<String>? args, CancellationToken token) where T : IApplicationView, new();
         public Task<IDomain> ViewAsync(IApplicationView view, IEnumerable<String>? args, CancellationToken token);
+        public Task<IDomain> ViewAsync<T>(CancellationToken token, params String[] args) where T : IApplicationView, new();
         public Task<IDomain> ViewAsync(IApplicationView view, CancellationToken token, params String[] args);
     }
 }

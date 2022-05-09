@@ -262,40 +262,41 @@ namespace NetExtender.Types.Deques
             return this.Any(entry => comparer.Equals(item, entry));
         }
 
-        /// <summary>
-        /// Rotate the deque n steps.
-        /// </summary>
-        /// <param name="count">Count of rotate to the right. If n is negative, rotate to the left</param>
-        public void Rotate(Int32 count = 1)
+        public void Rotate()
+        {
+            Rotate(1);
+        }
+
+        public void Rotate(Int32 offset)
         {
             if (Count <= 1)
             {
                 return;
             }
 
-            count %= Count;
+            offset %= Count;
 
-            if (count == 0)
+            if (offset == 0)
             {
                 return;
             }
 
             Int32 halflen = Count / 2;
 
-            if (count > halflen || count < -halflen)
+            if (offset > halflen || offset < -halflen)
             {
             }
 
-            if (count >= 0)
+            if (offset >= 0)
             {
-                for (Int32 i = 0; i < count; i++)
+                for (Int32 i = 0; i < offset; i++)
                 {
                     AddToBack(RemoveFromFront());
                 }
             }
             else
             {
-                for (Int32 i = 0; i < count.Abs(); i++)
+                for (Int32 i = 0; i < offset.Abs(); i++)
                 {
                     AddToFront(RemoveFromBack());
                 }

@@ -29,7 +29,7 @@ namespace NetExtender.Utilities.Types
         /// <inheritdoc cref="ArrayPool{T}.Rent"/>
         public static T[] Rent<T>(Int32 length)
         {
-            return GetShared<T>().Rent(length);
+            return ArrayPool<T>.Shared.Rent(length);
         }
     }
 }

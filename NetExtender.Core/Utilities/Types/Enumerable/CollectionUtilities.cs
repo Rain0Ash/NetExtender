@@ -359,6 +359,11 @@ namespace NetExtender.Utilities.Types
             return result;
         }
 
+        public static Int32 RemoveAll<T>(this ICollection<T> collection, params T[] source)
+        {
+            return RemoveAll(collection, (IEnumerable<T>) source);
+        }
+
         public static Int32 RemoveAll<T>(this ICollection<T> collection, IEnumerable<T> source)
         {
             if (collection is null)
