@@ -13,10 +13,11 @@ namespace NetExtender.Types.Collections
 {
     internal interface ISuppressObservableCollectionHandler
     {
+        public Boolean IsAllowSuppress { get; }
         public Boolean IsSuppressed { get; }
         public Int32 SuppressDepth { get; }
         
-        public IDisposable Suppress();
+        public IDisposable? Suppress();
         public Boolean Unsuppress();
     }
 
@@ -25,11 +26,13 @@ namespace NetExtender.Types.Collections
         private ObservableCollectionSuppressionHandler Suppression { get; }
         protected Boolean IsChanged { get; set; }
 
+        public Boolean IsAllowSuppress { get; set; } = true;
+        
         public Boolean IsSuppressed
         {
             get
             {
-                return Suppression.IsSuppressed;
+                return IsAllowSuppress && Suppression.IsSuppressed;
             }
         }
 
@@ -58,9 +61,9 @@ namespace NetExtender.Types.Collections
             Suppression = new ObservableCollectionSuppressionHandler(this);
         }
 
-        public virtual IDisposable Suppress()
+        public virtual IDisposable? Suppress()
         {
-            return Suppression.Suppress();
+            return IsAllowSuppress ? Suppression.Suppress() : null;
         }
 
         Boolean ISuppressObservableCollectionHandler.Unsuppress()
@@ -70,6 +73,11 @@ namespace NetExtender.Types.Collections
         
         protected virtual Boolean Unsuppress()
         {
+            if (!IsAllowSuppress)
+            {
+                return false;
+            }
+            
             if (IsSuppressed || !IsChanged)
             {
                 return !IsSuppressed;
@@ -124,12 +132,14 @@ namespace NetExtender.Types.Collections
 
         private ObservableCollectionSuppressionHandler Suppression { get; }
         private Boolean IsChanged { get; set; }
+
+        public Boolean IsAllowSuppress { get; set; } = true;
         
         public Boolean IsSuppressed
         {
             get
             {
-                return Suppression.IsSuppressed;
+                return IsAllowSuppress && Suppression.IsSuppressed;
             }
         }
 
@@ -185,9 +195,9 @@ namespace NetExtender.Types.Collections
             PropertyChanged?.Invoke(this, args);
         }
 
-        public IDisposable Suppress()
+        public IDisposable? Suppress()
         {
-            return Suppression.Suppress();
+            return IsAllowSuppress ? Suppression.Suppress() : null;
         }
         
         Boolean ISuppressObservableCollectionHandler.Unsuppress()
@@ -197,6 +207,11 @@ namespace NetExtender.Types.Collections
 
         private Boolean Unsuppress()
         {
+            if (!IsAllowSuppress)
+            {
+                return false;
+            }
+            
             if (IsSuppressed || !IsChanged)
             {
                 return !IsSuppressed;

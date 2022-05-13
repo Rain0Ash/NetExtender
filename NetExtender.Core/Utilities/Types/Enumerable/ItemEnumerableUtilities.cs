@@ -366,7 +366,41 @@ namespace NetExtender.Utilities.Types
 
             return alternate;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 BinarySearch<T>(this IEnumerable<T> source, T value)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source switch
+            {
+                T[] array => Array.BinarySearch(array, value),
+                IList<T> collection => ListUtilities.BinarySearch(collection, value),
+                IReadOnlyList<T> collection => ListUtilities.BinarySearch(collection, value),
+                _ => Array.BinarySearch(source.ToArray(), value)
+            };
+        }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 BinarySearch<T>(this IEnumerable<T> source, T value, IComparer<T>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            return source switch
+            {
+                T[] array => Array.BinarySearch(array, value, comparer),
+                IList<T> collection => ListUtilities.BinarySearch(collection, value, comparer),
+                IReadOnlyList<T> collection => ListUtilities.BinarySearch(collection, value, comparer),
+                _ => Array.BinarySearch(source.ToArray(), value, comparer)
+            };
+        }
+
         public static T ElementAtOrDefault<T>(this IEnumerable<T> source, Int32 index, Func<T> alternate)
         {
             if (source is null)

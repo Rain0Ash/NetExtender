@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Random.Interfaces;
 using NetExtender.Types.Collections;
@@ -13,6 +14,40 @@ namespace NetExtender.Utilities.Types
 {
     public static class ObservableCollectionUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SuppressObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> collection)
+        {
+            return ToObservableCollection(collection, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SuppressObservableCollection<T> ToObservableCollection<T>(this IEnumerable<T> collection, Boolean suppress)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            return new SuppressObservableCollection<T>(collection) { IsAllowSuppress = suppress };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ItemObservableCollection<T> ToItemObservableCollection<T>(this IEnumerable<T> collection)
+        {
+            return ToItemObservableCollection(collection, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ItemObservableCollection<T> ToItemObservableCollection<T>(this IEnumerable<T> collection, Boolean suppress)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+            
+            return new ItemObservableCollection<T>(collection) { IsAllowSuppress = suppress };
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IDisposable? Suppress<T>(this ObservableCollection<T> collection)
         {
@@ -82,6 +117,23 @@ namespace NetExtender.Utilities.Types
             using IDisposable? suppress = collection.Suppress();
             CollectionUtilities.AddRange(collection, source);
         }
+
+        public static void Replace<T>(this ObservableCollection<T> collection, IEnumerable<T> source)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            using IDisposable? suppress = collection.Suppress();
+            collection.Clear();
+            collection.AddRange(source);
+        }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void RemoveRange<T>(this ObservableCollection<T> collection, params T[] source)
@@ -144,6 +196,71 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Sort<T>(this ObservableCollection<T> collection)
+        {
+            Sort(collection, (IComparer<T>?) null);
+        }
+        
+        public static void Sort<T>(this ObservableCollection<T> collection, IComparer<T>? comparer)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (comparer is null)
+            {
+                throw new ArgumentNullException(nameof(comparer));
+            }
+
+            using IDisposable? suppress = collection.Suppress();
+            List<T> sorted = collection.OrderBy(comparer).ToList();
+            collection.Clear();
+            collection.AddRange(sorted);
+        }
+        
+        public static void Sort<T>(this ObservableCollection<T> collection, Comparison<T> comparison)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (comparison is null)
+            {
+                throw new ArgumentNullException(nameof(comparison));
+            }
+
+            using IDisposable? suppress = collection.Suppress();
+            List<T> sorted = collection.OrderBy(comparison).ToList();
+            collection.Clear();
+            collection.AddRange(sorted);
+        }
+
+        public static void Sort<T, TKey>(this ObservableCollection<T> collection, Func<T, TKey> selector)
+        {
+            Sort(collection, selector, null);
+        }
+
+        public static void Sort<T, TKey>(this ObservableCollection<T> collection, Func<T, TKey> selector, IComparer<TKey>? comparer)
+        {
+            if (collection is null)
+            {
+                throw new ArgumentNullException(nameof(collection));
+            }
+
+            if (selector is null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            using IDisposable? suppress = collection.Suppress();
+            List<T> sorted = collection.OrderBy(selector, comparer).ToList();
+            collection.Clear();
+            collection.AddRange(sorted);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Shuffle<T>(this ObservableCollection<T> collection)
         {
             if (collection is null)
@@ -152,7 +269,7 @@ namespace NetExtender.Utilities.Types
             }
 
             using IDisposable? suppress = collection.Suppress();
-            ListUtilities.Shuffle<T>(collection);
+            ListUtilities.Shuffle(collection);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -169,7 +286,7 @@ namespace NetExtender.Utilities.Types
             }
 
             using IDisposable? suppress = collection.Suppress();
-            ListUtilities.Shuffle<T>(collection, random);
+            ListUtilities.Shuffle(collection, random);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -186,7 +303,7 @@ namespace NetExtender.Utilities.Types
             }
 
             using IDisposable? suppress = collection.Suppress();
-            ListUtilities.Shuffle<T>(collection, random);
+            ListUtilities.Shuffle(collection, random);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -198,7 +315,7 @@ namespace NetExtender.Utilities.Types
             }
             
             using IDisposable? suppress = collection.Suppress();
-            ListUtilities.Rotate<T>(collection);
+            ListUtilities.Rotate(collection);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -210,7 +327,7 @@ namespace NetExtender.Utilities.Types
             }
             
             using IDisposable? suppress = collection.Suppress();
-            ListUtilities.Rotate<T>(collection, offset);
+            ListUtilities.Rotate(collection, offset);
         }
     }
 }

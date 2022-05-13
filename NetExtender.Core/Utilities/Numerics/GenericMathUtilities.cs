@@ -4157,7 +4157,7 @@ namespace NetExtender.Utilities.Numerics
 
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Int32 Log2N(this SByte value)
+		public static Int32 ILogB(this SByte value)
 		{
 			unchecked
 			{
@@ -4195,7 +4195,7 @@ namespace NetExtender.Utilities.Numerics
 
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Int32 Log2N(this Byte value)
+		public static Int32 ILogB(this Byte value)
 		{
 			return BitOperations.Log2(value);
 		}
@@ -4230,7 +4230,7 @@ namespace NetExtender.Utilities.Numerics
 
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Int32 Log2N(this Int16 value)
+		public static Int32 ILogB(this Int16 value)
 		{
 			unchecked
 			{
@@ -4268,7 +4268,7 @@ namespace NetExtender.Utilities.Numerics
 
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Int32 Log2N(this UInt16 value)
+		public static Int32 ILogB(this UInt16 value)
 		{
 			return BitOperations.Log2(value);
 		}
@@ -4303,7 +4303,7 @@ namespace NetExtender.Utilities.Numerics
 
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Int32 Log2N(this Int32 value)
+		public static Int32 ILogB(this Int32 value)
 		{
 			unchecked
 			{
@@ -4341,7 +4341,7 @@ namespace NetExtender.Utilities.Numerics
 
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Int32 Log2N(this UInt32 value)
+		public static Int32 ILogB(this UInt32 value)
 		{
 			return BitOperations.Log2(value);
 		}
@@ -4376,7 +4376,7 @@ namespace NetExtender.Utilities.Numerics
 
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Int32 Log2N(this Int64 value)
+		public static Int32 ILogB(this Int64 value)
 		{
 			unchecked
 			{
@@ -4414,7 +4414,7 @@ namespace NetExtender.Utilities.Numerics
 
 		/// <inheritdoc cref="Math.Sqrt"/>
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Int32 Log2N(this UInt64 value)
+		public static Int32 ILogB(this UInt64 value)
 		{
 			return BitOperations.Log2(value);
 		}

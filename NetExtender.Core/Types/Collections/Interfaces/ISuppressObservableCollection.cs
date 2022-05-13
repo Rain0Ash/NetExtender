@@ -10,10 +10,11 @@ namespace NetExtender.Types.Collections.Interfaces
 {
     public interface ISuppressObservableCollection<T> : IList<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
+        public Boolean IsAllowSuppress { get; }
         public Boolean IsSuppressed { get; }
         public Int32 SuppressDepth { get; }
         
-        public IDisposable Suppress();
+        public IDisposable? Suppress();
         public void Move(Int32 oldIndex, Int32 newIndex);
     }
 }

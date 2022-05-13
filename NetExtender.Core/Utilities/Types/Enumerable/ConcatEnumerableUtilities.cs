@@ -27,7 +27,7 @@ namespace NetExtender.Utilities.Types
 
         public static IEnumerable<T> AppendOr<T>(this IEnumerable<T>? source, T value)
         {
-            return source?.Append(value) ?? GetEnumerableFrom(value);
+            return source?.Append(value) ?? Factory(value);
         }
         
         [return: NotNullIfNotNull("source")]
@@ -533,7 +533,7 @@ namespace NetExtender.Utilities.Types
         
         public static IEnumerable<T> PrependOr<T>(this IEnumerable<T>? source, T value)
         {
-            return source?.Prepend(value) ?? GetEnumerableFrom(value);
+            return source?.Prepend(value) ?? Factory(value);
         }
         
         [return: NotNullIfNotNull("source")]

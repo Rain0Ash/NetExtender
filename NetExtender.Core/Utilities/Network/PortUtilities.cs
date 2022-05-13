@@ -244,7 +244,7 @@ namespace NetExtender.Utilities.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt16? RandomAvailablePort(this PortType type)
         {
-            return EnumerableUtilities.GetEnumerableFrom(() => RandomPort(type)).Except(BusyPort).FirstOrDefault();
+            return EnumerableUtilities.Factory(() => RandomPort(type)).Except(BusyPort).FirstOrDefault();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -256,7 +256,7 @@ namespace NetExtender.Utilities.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt16? RandomAvailableTcpPort(this PortType type)
         {
-            return EnumerableUtilities.GetEnumerableFrom(() => RandomPort(type)).Except(BusyTcpPort).FirstOrDefault();
+            return EnumerableUtilities.Factory(() => RandomPort(type)).Except(BusyTcpPort).FirstOrDefault();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -268,7 +268,7 @@ namespace NetExtender.Utilities.Network
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt16? RandomAvailableUdpPort(this PortType type)
         {
-            return EnumerableUtilities.GetEnumerableFrom(() => RandomPort(type)).Except(BusyUdpPort).FirstOrDefault();
+            return EnumerableUtilities.Factory(() => RandomPort(type)).Except(BusyUdpPort).FirstOrDefault();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -276,7 +276,7 @@ namespace NetExtender.Utilities.Network
         {
             return type switch
             {
-                PortType.Invalid => EnumerableUtilities.GetEnumerableFrom(InvalidPort).Except(except),
+                PortType.Invalid => EnumerableUtilities.Factory(InvalidPort).Except(except),
                 PortType.System => Enumerable.Except(MathUtilities.RangeInclude(SystemPortMinimum, SystemPortMaximum), except),
                 PortType.Register => Enumerable.Except(MathUtilities.RangeInclude(RegisterPortMinimum, RegisterPortMaximum), except),
                 PortType.Dynamic => Enumerable.Except(MathUtilities.RangeInclude(DynamicPortMinimum, DynamicPortMaximum), except),

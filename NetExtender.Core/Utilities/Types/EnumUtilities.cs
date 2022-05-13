@@ -36,14 +36,22 @@ namespace NetExtender.Utilities.Types
             return CacheValues<T>.Values[(index + 1) % CacheValues<T>.Values.Count];
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean In<T>(this T value) where T : unmanaged, Enum
         {
-            return CacheValues<T>.Values.Contains(value);
+            return CacheValues<T>.Contains(value);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean NotIn<T>(this T value) where T : unmanaged, Enum
         {
             return !In(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Count<T>() where T : unmanaged, Enum
+        {
+            return CacheValues<T>.Values.Count;
         }
 
         public static Boolean NameConvert<T, TResult>(this T value, out TResult result) where T : unmanaged, Enum where TResult : unmanaged, Enum
@@ -63,6 +71,7 @@ namespace NetExtender.Utilities.Types
             return false;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Random<T>() where T : unmanaged, Enum
         {
             return CacheValues<T>.Values.GetRandom();
@@ -235,13 +244,13 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ContainsValue<T>(Int64 value) where T : unmanaged, Enum
         {
-            return ContainsValue<T>(Unsafe.As<Int64, UInt64>(ref value));
+            return CacheValues<T>.Contains(Unsafe.As<Int64, T>(ref value));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ContainsValue<T>(UInt64 value) where T : unmanaged, Enum
         {
-            return CacheValues<T>.Set.Contains(value);
+            return CacheValues<T>.Contains(Unsafe.As<UInt64, T>(ref value));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -253,13 +262,13 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ContainsValueWithoutDefault<T>(Int64 value) where T : unmanaged, Enum
         {
-            return ContainsValueWithoutDefault<T>(Unsafe.As<Int64, UInt64>(ref value));
+            return CacheValuesWithoutDefault<T>.Contains(Unsafe.As<Int64, T>(ref value));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ContainsValueWithoutDefault<T>(UInt64 value) where T : unmanaged, Enum
         {
-            return CacheValuesWithoutDefault<T>.Set.Contains(value);
+            return CacheValuesWithoutDefault<T>.Contains(Unsafe.As<UInt64, T>(ref value));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -285,9 +294,9 @@ namespace NetExtender.Utilities.Types
         /// <typeparam name="T">Enum type</typeparam>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static IReadOnlyList<T> GetValues<T>(Boolean alternate) where T : unmanaged, Enum
+        public static ReadOnlyCollection<T> GetValues<T>(Boolean without) where T : unmanaged, Enum
         {
-            return alternate ? GetValues<T>() : GetValuesWithoutDefault<T>();
+            return without ? GetValuesWithoutDefault<T>() : GetValues<T>();
         }
 
         /// <summary>
@@ -499,12 +508,12 @@ namespace NetExtender.Utilities.Types
         /// <summary>
         ///     Checks whether specified charactor is number.
         /// </summary>
-        /// <param name="c"></param>
+        /// <param name="character"></param>
         /// <returns></returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Boolean IsNumeric(Char c)
+        private static Boolean IsNumeric(Char character)
         {
-            return Char.IsDigit(c) || c == '-' || c == '+';
+            return Char.IsDigit(character) || character == '-' || character == '+';
         }
 
         public static Boolean TryParseName<T>(String name, out T result) where T : unmanaged, Enum
@@ -950,7 +959,7 @@ namespace NetExtender.Utilities.Types
         private static class CacheValues<T> where T : unmanaged, Enum
         {
             public static ReadOnlyCollection<T> Values { get; }
-            public static ImmutableHashSet<UInt64> Set { get; }
+            public static ImmutableSortedSet<T> Set { get; }
 
             public static Boolean IsEmpty
             {
@@ -965,19 +974,19 @@ namespace NetExtender.Utilities.Types
                 Type type = CacheType<T>.Type;
                 T[] values = Enum.GetValues(type) as T[] ?? throw new ArgumentException(nameof(T));
                 Values = values.ToReadOnlyArray();
-                Set = Values.Select(item => Unsafe.As<T, UInt64>(ref item)).ToImmutableHashSet();
+                Set = Values.ToImmutableSortedSet();
             }
             
             public static Boolean Contains(T value)
             {
-                return Set.Contains(Unsafe.As<T, UInt64>(ref value));
+                return Set.Contains(value);
             }
         }
         
         private static class CacheValuesWithoutDefault<T> where T : unmanaged, Enum
         {
             public static ReadOnlyCollection<T> Values { get; }
-            public static ImmutableHashSet<UInt64> Set { get; }
+            public static ImmutableSortedSet<T> Set { get; }
 
             public static Boolean IsEmpty
             {
@@ -990,12 +999,12 @@ namespace NetExtender.Utilities.Types
             static CacheValuesWithoutDefault()
             {
                 Values = CacheValues<T>.Values.Where(GenericUtilities.IsNotDefault).ToReadOnlyArray();
-                Set = Values.Select(item => Unsafe.As<T, UInt64>(ref item)).ToImmutableHashSet();
+                Set = Values.ToImmutableSortedSet();
             }
 
             public static Boolean Contains(T value)
             {
-                return Set.Contains(Unsafe.As<T, UInt64>(ref value));
+                return Set.Contains(value);
             }
         }
 

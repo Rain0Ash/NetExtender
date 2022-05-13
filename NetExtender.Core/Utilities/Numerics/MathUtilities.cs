@@ -652,6 +652,676 @@ namespace NetExtender.Utilities.Numerics
             return -Exp(pow * Log(-value));
         }
 
+#region PowSwitch
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Int32 Pow8(Int32 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 8,
+                2 => 64,
+                3 => 512,
+                4 => 4096,
+                5 => 32768,
+                6 => 262144,
+                7 => 2097152,
+                8 => 16777216,
+                9 => 134217728,
+                10 => 1073741824,
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static UInt32 Pow8U(Int32 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 8,
+                2 => 64,
+                3 => 512,
+                4 => 4096,
+                5 => 32768,
+                6 => 262144,
+                7 => 2097152,
+                8 => 16777216,
+                9 => 134217728,
+                10 => 1073741824,
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+            };
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static UInt32 Pow8(UInt32 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 8,
+                2 => 64,
+                3 => 512,
+                4 => 4096,
+                5 => 32768,
+                6 => 262144,
+                7 => 2097152,
+                8 => 16777216,
+                9 => 134217728,
+                10 => 1073741824,
+                _ => throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Int64 Pow8L(Int32 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 8,
+                2 => 64,
+                3 => 512,
+                4 => 4096,
+                5 => 32768,
+                6 => 262144,
+                7 => 2097152,
+                8 => 16777216,
+                9 => 134217728,
+                10 => 1073741824,
+                11 => 8589934592,
+                12 => 68719476736,
+                13 => 549755813888,
+                14 => 4398046511104,
+                15 => 34359738367488,
+                16 => 281474976710656,
+                17 => 2251799813685248,
+                18 => 18014398509481984,
+                19 => 144115188075855872,
+                20 => 1152921504606846976,
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static UInt64 Pow8UL(Int32 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 8,
+                2 => 64,
+                3 => 512,
+                4 => 4096,
+                5 => 32768,
+                6 => 262144,
+                7 => 2097152,
+                8 => 16777216,
+                9 => 134217728,
+                10 => 1073741824,
+                11 => 8589934592,
+                12 => 68719476736,
+                13 => 549755813888,
+                14 => 4398046511104,
+                15 => 34359738367488,
+                16 => 281474976710656,
+                17 => 2251799813685248,
+                18 => 18014398509481984,
+                19 => 144115188075855872,
+                20 => 1152921504606846976,
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static UInt64 Pow8L(UInt32 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 8,
+                2 => 64,
+                3 => 512,
+                4 => 4096,
+                5 => 32768,
+                6 => 262144,
+                7 => 2097152,
+                8 => 16777216,
+                9 => 134217728,
+                10 => 1073741824,
+                11 => 8589934592,
+                12 => 68719476736,
+                13 => 549755813888,
+                14 => 4398046511104,
+                15 => 34359738367488,
+                16 => 281474976710656,
+                17 => 2251799813685248,
+                18 => 18014398509481984,
+                19 => 144115188075855872,
+                20 => 1152921504606846976,
+                _ => throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Int64 Pow8(Int64 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 8,
+                2 => 64,
+                3 => 512,
+                4 => 4096,
+                5 => 32768,
+                6 => 262144,
+                7 => 2097152,
+                8 => 16777216,
+                9 => 134217728,
+                10 => 1073741824,
+                11 => 8589934592,
+                12 => 68719476736,
+                13 => 549755813888,
+                14 => 4398046511104,
+                15 => 34359738367488,
+                16 => 281474976710656,
+                17 => 2251799813685248,
+                18 => 18014398509481984,
+                19 => 144115188075855872,
+                20 => 1152921504606846976,
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static UInt64 Pow8U(Int64 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 8,
+                2 => 64,
+                3 => 512,
+                4 => 4096,
+                5 => 32768,
+                6 => 262144,
+                7 => 2097152,
+                8 => 16777216,
+                9 => 134217728,
+                10 => 1073741824,
+                11 => 8589934592,
+                12 => 68719476736,
+                13 => 549755813888,
+                14 => 4398046511104,
+                15 => 34359738367488,
+                16 => 281474976710656,
+                17 => 2251799813685248,
+                18 => 18014398509481984,
+                19 => 144115188075855872,
+                20 => 1152921504606846976,
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+            };
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static UInt64 Pow8(UInt64 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 8,
+                2 => 64,
+                3 => 512,
+                4 => 4096,
+                5 => 32768,
+                6 => 262144,
+                7 => 2097152,
+                8 => 16777216,
+                9 => 134217728,
+                10 => 1073741824,
+                11 => 8589934592,
+                12 => 68719476736,
+                13 => 549755813888,
+                14 => 4398046511104,
+                15 => 34359738367488,
+                16 => 281474976710656,
+                17 => 2251799813685248,
+                18 => 18014398509481984,
+                19 => 144115188075855872,
+                20 => 1152921504606846976,
+                _ => throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Int32 Pow10(Int32 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 10,
+                2 => 100,
+                3 => 1000,
+                4 => 10000,
+                5 => 100000,
+                6 => 1000000,
+                7 => 10000000,
+                8 => 100000000,
+                9 => 1000000000,
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static UInt32 Pow10U(Int32 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 10,
+                2 => 100,
+                3 => 1000,
+                4 => 10000,
+                5 => 100000,
+                6 => 1000000,
+                7 => 10000000,
+                8 => 100000000,
+                9 => 1000000000,
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+            };
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static UInt32 Pow10(UInt32 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 10,
+                2 => 100,
+                3 => 1000,
+                4 => 10000,
+                5 => 100000,
+                6 => 1000000,
+                7 => 10000000,
+                8 => 100000000,
+                9 => 1000000000,
+                _ => throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Int64 Pow10L(Int32 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 10,
+                2 => 100,
+                3 => 1000,
+                4 => 10000,
+                5 => 100000,
+                6 => 1000000,
+                7 => 10000000,
+                8 => 100000000,
+                9 => 1000000000,
+                10 => 10000000000,
+                11 => 100000000000,
+                12 => 1000000000000,
+                13 => 10000000000000,
+                14 => 100000000000000,
+                15 => 1000000000000000,
+                16 => 10000000000000000,
+                17 => 100000000000000000,
+                18 => 1000000000000000000,
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static UInt64 Pow10UL(Int32 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 10,
+                2 => 100,
+                3 => 1000,
+                4 => 10000,
+                5 => 100000,
+                6 => 1000000,
+                7 => 10000000,
+                8 => 100000000,
+                9 => 1000000000,
+                10 => 10000000000,
+                11 => 100000000000,
+                12 => 1000000000000,
+                13 => 10000000000000,
+                14 => 100000000000000,
+                15 => 1000000000000000,
+                16 => 10000000000000000,
+                17 => 100000000000000000,
+                18 => 1000000000000000000,
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static UInt64 Pow10L(UInt32 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 10,
+                2 => 100,
+                3 => 1000,
+                4 => 10000,
+                5 => 100000,
+                6 => 1000000,
+                7 => 10000000,
+                8 => 100000000,
+                9 => 1000000000,
+                10 => 10000000000,
+                11 => 100000000000,
+                12 => 1000000000000,
+                13 => 10000000000000,
+                14 => 100000000000000,
+                15 => 1000000000000000,
+                16 => 10000000000000000,
+                17 => 100000000000000000,
+                18 => 1000000000000000000,
+                _ => throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Int64 Pow10(Int64 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 10,
+                2 => 100,
+                3 => 1000,
+                4 => 10000,
+                5 => 100000,
+                6 => 1000000,
+                7 => 10000000,
+                8 => 100000000,
+                9 => 1000000000,
+                10 => 10000000000,
+                11 => 100000000000,
+                12 => 1000000000000,
+                13 => 10000000000000,
+                14 => 100000000000000,
+                15 => 1000000000000000,
+                16 => 10000000000000000,
+                17 => 100000000000000000,
+                18 => 1000000000000000000,
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static UInt64 Pow10U(Int64 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 10,
+                2 => 100,
+                3 => 1000,
+                4 => 10000,
+                5 => 100000,
+                6 => 1000000,
+                7 => 10000000,
+                8 => 100000000,
+                9 => 1000000000,
+                10 => 10000000000,
+                11 => 100000000000,
+                12 => 1000000000000,
+                13 => 10000000000000,
+                14 => 100000000000000,
+                15 => 1000000000000000,
+                16 => 10000000000000000,
+                17 => 100000000000000000,
+                18 => 1000000000000000000,
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+            };
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static UInt64 Pow10(UInt64 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 10,
+                2 => 100,
+                3 => 1000,
+                4 => 10000,
+                5 => 100000,
+                6 => 1000000,
+                7 => 10000000,
+                8 => 100000000,
+                9 => 1000000000,
+                10 => 10000000000,
+                11 => 100000000000,
+                12 => 1000000000000,
+                13 => 10000000000000,
+                14 => 100000000000000,
+                15 => 1000000000000000,
+                16 => 10000000000000000,
+                17 => 100000000000000000,
+                18 => 1000000000000000000,
+                _ => throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Int32 Pow16(Int32 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 16,
+                2 => 256,
+                3 => 4096,
+                4 => 65536,
+                5 => 1048576,
+                6 => 16777216,
+                7 => 268435456,
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static UInt32 Pow16U(Int32 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 16,
+                2 => 256,
+                3 => 4096,
+                4 => 65536,
+                5 => 1048576,
+                6 => 16777216,
+                7 => 268435456,
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+            };
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static UInt32 Pow16(UInt32 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 16,
+                2 => 256,
+                3 => 4096,
+                4 => 65536,
+                5 => 1048576,
+                6 => 16777216,
+                7 => 268435456,
+                _ => throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Int64 Pow16L(Int32 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 16,
+                2 => 256,
+                3 => 4096,
+                4 => 65536,
+                5 => 1048576,
+                6 => 16777216,
+                7 => 268435456,
+                8 => 4294967296,
+                9 => 68719476736,
+                10 => 1099511627776,
+                11 => 17592186044416,
+                12 => 281474976710656,
+                13 => 4503599627370496,
+                14 => 72057594037927936,
+                15 => 1152921504606846976,
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static UInt64 Pow16UL(Int32 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 16,
+                2 => 256,
+                3 => 4096,
+                4 => 65536,
+                5 => 1048576,
+                6 => 16777216,
+                7 => 268435456,
+                8 => 4294967296,
+                9 => 68719476736,
+                10 => 1099511627776,
+                11 => 17592186044416,
+                12 => 281474976710656,
+                13 => 4503599627370496,
+                14 => 72057594037927936,
+                15 => 1152921504606846976,
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static UInt64 Pow16L(UInt32 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 16,
+                2 => 256,
+                3 => 4096,
+                4 => 65536,
+                5 => 1048576,
+                6 => 16777216,
+                7 => 268435456,
+                8 => 4294967296,
+                9 => 68719476736,
+                10 => 1099511627776,
+                11 => 17592186044416,
+                12 => 281474976710656,
+                13 => 4503599627370496,
+                14 => 72057594037927936,
+                15 => 1152921504606846976,
+                _ => throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Int64 Pow16(Int64 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 16,
+                2 => 256,
+                3 => 4096,
+                4 => 65536,
+                5 => 1048576,
+                6 => 16777216,
+                7 => 268435456,
+                8 => 4294967296,
+                9 => 68719476736,
+                10 => 1099511627776,
+                11 => 17592186044416,
+                12 => 281474976710656,
+                13 => 4503599627370496,
+                14 => 72057594037927936,
+                15 => 1152921504606846976,
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static UInt64 Pow16U(Int64 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 16,
+                2 => 256,
+                3 => 4096,
+                4 => 65536,
+                5 => 1048576,
+                6 => 16777216,
+                7 => 268435456,
+                8 => 4294967296,
+                9 => 68719476736,
+                10 => 1099511627776,
+                11 => 17592186044416,
+                12 => 281474976710656,
+                13 => 4503599627370496,
+                14 => 72057594037927936,
+                15 => 1152921504606846976,
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+            };
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static UInt64 Pow16(UInt64 value)
+        {
+            return value switch
+            {
+                0 => 1,
+                1 => 16,
+                2 => 256,
+                3 => 4096,
+                4 => 65536,
+                5 => 1048576,
+                6 => 16777216,
+                7 => 268435456,
+                8 => 4294967296,
+                9 => 68719476736,
+                10 => 1099511627776,
+                11 => 17592186044416,
+                12 => 281474976710656,
+                13 => 4503599627370496,
+                14 => 72057594037927936,
+                15 => 1152921504606846976,
+                _ => throw new OverflowException()
+            };
+        }
+        
+#endregion
+
         /// <inheritdoc cref="MathF.Log(Single)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single Log(this Single value)
@@ -788,21 +1458,310 @@ namespace NetExtender.Utilities.Numerics
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal Log10(this Decimal value)
         {
             return Log(value) * DecimalConstants.InvertedLog10;
         }
 
+#region DigitsCount
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        private static Int32 BinaryDigitsCount(UInt32 value)
+        {
+            return value > 0 ? sizeof(UInt32) * BitUtilities.BitInByte - BitOperations.LeadingZeroCount(value) : 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        private static Int32 BinaryDigitsCount(UInt64 value)
+        {
+            return value > 0 ? sizeof(UInt64) * BitUtilities.BitInByte - BitOperations.LeadingZeroCount(value) : 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        private static Int32 DigitsIndexCount(UInt32 value)
+        {
+            return BinaryDigitsCount(value) switch
+            {
+                0 => 0,
+                1 => 0,
+                2 => 0,
+                3 => 0,
+                4 => 1,
+                5 => 1,
+                6 => 1,
+                7 => 2,
+                8 => 2,
+                9 => 2,
+                10 => 3,
+                11 => 3,
+                12 => 3,
+                13 => 3,
+                14 => 4,
+                15 => 4,
+                16 => 4,
+                17 => 5,
+                18 => 5,
+                19 => 5,
+                20 => 6,
+                21 => 6,
+                22 => 6,
+                23 => 6,
+                24 => 7,
+                25 => 7,
+                26 => 7,
+                27 => 8,
+                28 => 8,
+                29 => 8,
+                30 => 9,
+                31 => 9,
+                32 => 9,
+                _ => throw new OverflowException()
+            };
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        private static Int32 DigitsIndexCount(UInt64 value)
+        {
+            return BinaryDigitsCount(value) switch
+            {
+                0 => 0,
+                1 => 0,
+                2 => 0,
+                3 => 0,
+                4 => 1,
+                5 => 1,
+                6 => 1,
+                7 => 2,
+                8 => 2,
+                9 => 2,
+                10 => 3,
+                11 => 3,
+                12 => 3,
+                13 => 3,
+                14 => 4,
+                15 => 4,
+                16 => 4,
+                17 => 5,
+                18 => 5,
+                19 => 5,
+                20 => 6,
+                21 => 6,
+                22 => 6,
+                23 => 6,
+                24 => 7,
+                25 => 7,
+                26 => 7,
+                27 => 8,
+                28 => 8,
+                29 => 8,
+                30 => 9,
+                31 => 9,
+                32 => 9,
+                33 => 9,
+                34 => 10,
+                35 => 10,
+                36 => 10,
+                37 => 11,
+                38 => 11,
+                39 => 11,
+                40 => 12,
+                41 => 12,
+                42 => 12,
+                43 => 12,
+                44 => 13,
+                45 => 13,
+                46 => 13,
+                47 => 14,
+                48 => 14,
+                49 => 14,
+                50 => 15,
+                51 => 15,
+                52 => 15,
+                53 => 15,
+                54 => 16,
+                55 => 16,
+                56 => 16,
+                57 => 17,
+                58 => 17,
+                59 => 17,
+                60 => 18,
+                61 => 18,
+                62 => 18,
+                63 => 18,
+                64 => 19,
+                _ => throw new OverflowException()
+            };
+        }
+
+        #endregion
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Int32 ILog10(this SByte value)
+        {
+            if (value == 0)
+            {
+                return Int32.MinValue;
+            }
+            
+            UInt32 cast = value > 0 ? (UInt32) value : value > SByte.MinValue ? (UInt32) (-value) : (UInt32) SByte.MaxValue;
+            Int32 digits = DigitsIndexCount(cast);
+            return cast >= Pow10U(digits) ? digits : digits - 1;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Int32 ILog10(this Byte value)
+        {
+            if (value == 0)
+            {
+                return Int32.MinValue;
+            }
+            
+            UInt32 cast = value;
+            Int32 digits = DigitsIndexCount(cast);
+            return cast >= Pow10U(digits) ? digits : digits - 1;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Int32 ILog10(this Int16 value)
+        {
+            if (value == 0)
+            {
+                return Int32.MinValue;
+            }
+            
+            UInt32 cast = value > 0 ? (UInt32) value : value > Int16.MinValue ? (UInt32) (-value) : (UInt32) Int16.MaxValue;
+            Int32 digits = DigitsIndexCount(cast);
+            return cast >= Pow10U(digits) ? digits : digits - 1;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Int32 ILog10(this UInt16 value)
+        {
+            if (value == 0)
+            {
+                return Int32.MinValue;
+            }
+            
+            UInt32 cast = value;
+            Int32 digits = DigitsIndexCount(cast);
+            return cast >= Pow10U(digits) ? digits : digits - 1;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Int32 ILog10(this Int32 value)
+        {
+            if (value == 0)
+            {
+                return Int32.MinValue;
+            }
+            
+            UInt32 cast = value > 0 ? (UInt32) value : value > Int32.MinValue ? (UInt32) (-value) : Int32.MaxValue;
+            Int32 digits = DigitsIndexCount(cast);
+            return cast >= Pow10U(digits) ? digits : digits - 1;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Int32 ILog10(this UInt32 value)
+        {
+            if (value == 0)
+            {
+                return Int32.MinValue;
+            }
+            
+            Int32 digits = DigitsIndexCount(value);
+            return value >= Pow10U(digits) ? digits : digits - 1;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Int32 ILog10(this Int64 value)
+        {
+            if (value == 0)
+            {
+                return Int32.MinValue;
+            }
+            
+            UInt64 cast = value > 0 ? (UInt64) value : value > Int64.MinValue ? (UInt64) (-value) : Int64.MaxValue;
+            Int32 digits = DigitsIndexCount(cast);
+            return cast >= Pow10UL(digits) ? digits : digits - 1;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static Int32 ILog10(this UInt64 value)
+        {
+            if (value == 0)
+            {
+                return Int32.MinValue;
+            }
+            
+            Int32 digits = DigitsIndexCount(value);
+            return value >= Pow10UL(digits) ? digits : digits - 1;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 ILog10(this Single value)
+        {
+            if (value == 0)
+            {
+                return Int32.MinValue;
+            }
+
+            if (!Single.IsFinite(value))
+            {
+                return Int32.MaxValue;
+            }
+
+            return (Int32) MathF.Log10(Math.Abs(value));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 ILog10(this Double value)
+        {
+            if (value == 0)
+            {
+                return Int32.MinValue;
+            }
+
+            if (!Double.IsFinite(value))
+            {
+                return Int32.MaxValue;
+            }
+
+            return (Int32) Math.Log10(Math.Abs(value));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 ILogB(this Decimal value)
+        {
+            if (value == 0)
+            {
+                return Int32.MinValue;
+            }
+
+            return (Int32) Log2(Math.Abs(value));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 ILog10(this Decimal value)
+        {
+            if (value == 0)
+            {
+                return Int32.MinValue;
+            }
+
+            return (Int32) Log10(Math.Abs(value));
+        }
+
         /// <inheritdoc cref="MathF.ILogB"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Single LogInteger(this Single value)
+        public static Int32 ILogB(this Single value)
         {
             return MathF.ILogB(value);
         }
 
         /// <inheritdoc cref="Math.ILogB"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Double LogInteger(this Double value)
+        public static Int32 ILogB(this Double value)
         {
             return Math.ILogB(value);
         }
@@ -830,6 +1789,636 @@ namespace NetExtender.Utilities.Numerics
         {
             return BigInteger.Log10(value);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Digit(this SByte value, Int32 index)
+        {
+            return Digit((Int32) value, index);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Digit(this SByte value, Index index)
+        {
+            return Digit((Int32) value, index);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Digit(this Byte value, Int32 index)
+        {
+            return Digit((UInt32) value, index);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Digit(this Byte value, Index index)
+        {
+            return Digit((UInt32) value, index);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Digit(this Int16 value, Int32 index)
+        {
+            return Digit((Int32) value, index);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Digit(this Int16 value, Index index)
+        {
+            return Digit((Int32) value, index);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Digit(this UInt16 value, Int32 index)
+        {
+            return Digit((UInt32) value, index);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Digit(this UInt16 value, Index index)
+        {
+            return Digit((UInt32) value, index);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 Digit(this Int32 value, Int32 index)
+        {
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+            
+            return value != 0 && ILog10(value) >= index ? value / Pow10(index) % 10 : 0;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 Digit(this Int32 value, Index index)
+        {
+            if (!index.IsFromEnd)
+            {
+                return Digit(value, index.Value);
+            }
+            
+            if (index.Value == 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (value == 0)
+            {
+                return 0;
+            }
+            
+            Int32 count = ILog10(value) - index.Value + 1;
+            return count >= 0 ? value / Pow10(count) % 10 : throw new ArgumentOutOfRangeException(nameof(index));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 Digit(this UInt32 value, Int32 index)
+        {
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+            
+            return value != 0 && ILog10(value) >= index ? (Int32) (value / Pow10U(index) % 10U) : 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 Digit(this UInt32 value, Index index)
+        {
+            if (!index.IsFromEnd)
+            {
+                return Digit(value, index.Value);
+            }
+            
+            if (index.Value == 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+            
+            if (value == 0)
+            {
+                return 0;
+            }
+            
+            Int32 count = ILog10(value) - index.Value + 1;
+            return count >= 0 ? (Int32) (value / Pow10U(count) % 10U) : throw new ArgumentOutOfRangeException(nameof(index));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 Digit(this Int64 value, Int32 index)
+        {
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+            
+            return value != 0 && ILog10(value) >= index ? (Int32) (value / Pow10L(index) % 10L) : 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 Digit(this Int64 value, Index index)
+        {
+            if (!index.IsFromEnd)
+            {
+                return Digit(value, index.Value);
+            }
+            
+            if (index.Value == 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+            
+            if (value == 0)
+            {
+                return 0;
+            }
+            
+            Int32 count = ILog10(value) - index.Value + 1;
+            return count >= 0 ? (Int32) (value / Pow10L(count) % 10L) : throw new ArgumentOutOfRangeException(nameof(index));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 Digit(this UInt64 value, Int32 index)
+        {
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            return value != 0 && ILog10(value) >= index ? (Int32) (value / Pow10UL(index) % 10UL) : 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 Digit(this UInt64 value, Index index)
+        {
+            if (!index.IsFromEnd)
+            {
+                return Digit(value, index.Value);
+            }
+
+            if (index.Value == 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+            
+            if (value == 0)
+            {
+                return 0;
+            }
+            
+            Int32 count = ILog10(value) - index.Value + 1;
+            return count >= 0 ? (Int32) (value / Pow10UL(count) % 10UL) : throw new ArgumentOutOfRangeException(nameof(index));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static SByte SetDigit(this SByte value, Int32 index, Int32 digit)
+        {
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (digit < 0 || digit > 9)
+            {
+                throw new ArgumentOutOfRangeException(nameof(digit));
+            }
+
+            if (value == 0)
+            {
+                return (SByte) digit;
+            }
+
+            Int32 current = Digit(value, index);
+
+            if (digit > current)
+            {
+                return unchecked((SByte) (value + Pow10(index) * (digit - current)));
+            }
+            
+            if (digit < current)
+            {
+                return unchecked((SByte) (value - Pow10(index) * (current - digit)));
+            }
+            
+            return value;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Byte SetDigit(this Byte value, Int32 index, Int32 digit)
+        {
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (digit < 0 || digit > 9)
+            {
+                throw new ArgumentOutOfRangeException(nameof(digit));
+            }
+
+            if (value == 0)
+            {
+                return (Byte) digit;
+            }
+
+            Int32 current = Digit(value, index);
+
+            if (digit > current)
+            {
+                return unchecked((Byte) (value + Pow10U(index) * (digit - current)));
+            }
+            
+            if (digit < current)
+            {
+                return unchecked((Byte) (value - Pow10U(index) * (current - digit)));
+            }
+            
+            return value;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int16 SetDigit(this Int16 value, Int32 index, Int32 digit)
+        {
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (digit < 0 || digit > 9)
+            {
+                throw new ArgumentOutOfRangeException(nameof(digit));
+            }
+
+            if (value == 0)
+            {
+                return (Int16) digit;
+            }
+
+            Int32 current = Digit(value, index);
+
+            if (digit > current)
+            {
+                return unchecked((Int16) (value + Pow10(index) * (digit - current)));
+            }
+            
+            if (digit < current)
+            {
+                return unchecked((Int16) (value - Pow10(index) * (current - digit)));
+            }
+            
+            return value;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static UInt16 SetDigit(this UInt16 value, Int32 index, Int32 digit)
+        {
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (digit < 0 || digit > 9)
+            {
+                throw new ArgumentOutOfRangeException(nameof(digit));
+            }
+
+            if (value == 0)
+            {
+                return (UInt16) digit;
+            }
+
+            Int32 current = Digit(value, index);
+
+            if (digit > current)
+            {
+                return unchecked((UInt16) (value + Pow10U(index) * (digit - current)));
+            }
+            
+            if (digit < current)
+            {
+                return unchecked((UInt16) (value - Pow10U(index) * (current - digit)));
+            }
+            
+            return value;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 SetDigit(this Int32 value, Int32 index, Int32 digit)
+        {
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (digit < 0 || digit > 9)
+            {
+                throw new ArgumentOutOfRangeException(nameof(digit));
+            }
+
+            if (value == 0)
+            {
+                return digit;
+            }
+
+            Int32 current = Digit(value, index);
+
+            if (digit > current)
+            {
+                return value + Pow10(index) * (digit - current);
+            }
+            
+            if (digit < current)
+            {
+                return value - Pow10(index) * (current - digit);
+            }
+            
+            return value;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static UInt32 SetDigit(this UInt32 value, Int32 index, Int32 digit)
+        {
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (digit < 0 || digit > 9)
+            {
+                throw new ArgumentOutOfRangeException(nameof(digit));
+            }
+
+            if (value == 0)
+            {
+                return (UInt32) digit;
+            }
+
+            Int32 current = Digit(value, index);
+
+            if (digit > current)
+            {
+                return value + Pow10U(index) * (UInt32) (digit - current);
+            }
+            
+            if (digit < current)
+            {
+                return value - Pow10U(index) * (UInt32) (current - digit);
+            }
+            
+            return value;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int64 SetDigit(this Int64 value, Int32 index, Int32 digit)
+        {
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (digit < 0 || digit > 9)
+            {
+                throw new ArgumentOutOfRangeException(nameof(digit));
+            }
+
+            if (value == 0)
+            {
+                return digit;
+            }
+
+            Int32 current = Digit(value, index);
+
+            if (digit > current)
+            {
+                return value + Pow10L(index) * (digit - current);
+            }
+            
+            if (digit < current)
+            {
+                return value - Pow10L(index) * (current - digit);
+            }
+            
+            return value;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static UInt64 SetDigit(this UInt64 value, Int32 index, Int32 digit)
+        {
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            if (digit < 0 || digit > 9)
+            {
+                throw new ArgumentOutOfRangeException(nameof(digit));
+            }
+
+            if (value == 0)
+            {
+                return (UInt64) digit;
+            }
+
+            Int32 current = Digit(value, index);
+
+            if (digit > current)
+            {
+                return value + Pow10UL(index) * (UInt64) (digit - current);
+            }
+            
+            if (digit < current)
+            {
+                return value - Pow10UL(index) * (UInt64) (current - digit);
+            }
+            
+            return value;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 SumDigits(this SByte value)
+        {
+            Int32 sum = 0;
+            while (value != 0)
+            {
+                sum += value % 10;
+                value /= 10;
+            }
+            
+            return Math.Abs(sum);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 SumDigits(this Byte value)
+        {
+            Int32 sum = 0;
+            while (value != 0)
+            {
+                sum += value % 10;
+                value /= 10;
+            }
+            
+            return sum;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 SumDigits(this Int16 value)
+        {
+            Int32 sum = 0;
+            while (value != 0)
+            {
+                sum += value % 10;
+                value /= 10;
+            }
+            
+            return Math.Abs(sum);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 SumDigits(this UInt16 value)
+        {
+            Int32 sum = 0;
+            while (value != 0)
+            {
+                sum += value % 10;
+                value /= 10;
+            }
+            
+            return sum;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 SumDigits(this Int32 value)
+        {
+            Int32 sum = 0;
+            while (value != 0)
+            {
+                sum += value % 10;
+                value /= 10;
+            }
+            
+            return Math.Abs(sum);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 SumDigits(this UInt32 value)
+        {
+            UInt32 sum = 0;
+            while (value != 0)
+            {
+                sum += value % 10;
+                value /= 10;
+            }
+            
+            return (Int32) sum;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 SumDigits(this Int64 value)
+        {
+            Int64 sum = 0;
+            while (value != 0)
+            {
+                sum += value % 10;
+                value /= 10;
+            }
+            
+            return (Int32) Math.Abs(sum);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 SumDigits(this UInt64 value)
+        {
+            UInt64 sum = 0;
+            while (value != 0)
+            {
+                sum += value % 10;
+                value /= 10;
+            }
+            
+            return (Int32) sum;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static IEnumerable<Int32> EnumerateDigits(this SByte value)
+        {
+            while (value != 0)
+            {
+                yield return Math.Abs(value % 10);
+                value /= 10;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static IEnumerable<Int32> EnumerateDigits(this Byte value)
+        {
+            while (value != 0)
+            {
+                yield return value % 10;
+                value /= 10;
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static IEnumerable<Int32> EnumerateDigits(this Int16 value)
+        {
+            while (value != 0)
+            {
+                yield return Math.Abs(value % 10);
+                value /= 10;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static IEnumerable<Int32> EnumerateDigits(this UInt16 value)
+        {
+            while (value != 0)
+            {
+                yield return value % 10;
+                value /= 10;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static IEnumerable<Int32> EnumerateDigits(this Int32 value)
+        {
+            while (value != 0)
+            {
+                yield return Math.Abs(value % 10);
+                value /= 10;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static IEnumerable<Int32> EnumerateDigits(this UInt32 value)
+        {
+            while (value != 0)
+            {
+                yield return (Int32) (value % 10);
+                value /= 10;
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static IEnumerable<Int32> EnumerateDigits(this Int64 value)
+        {
+            while (value != 0)
+            {
+                yield return (Int32) Math.Abs(value % 10);
+                value /= 10;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static IEnumerable<UInt32> EnumerateDigits(this UInt64 value)
+        {
+            while (value != 0)
+            {
+                yield return (UInt32) (value % 10);
+                value /= 10;
+            }
+        }
+
+        //TODO: ILog10 and Digit for Float Double and Decimal
 
         /// <summary>
         /// Analogy of Math.Sqrt

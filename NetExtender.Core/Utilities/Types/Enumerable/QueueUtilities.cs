@@ -4,12 +4,14 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.CompilerServices;
 using NetExtender.Types.Queues;
 
 namespace NetExtender.Utilities.Types
 {
     public static class QueueUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Queue<T> ToQueue<T>(this IEnumerable<T> source)
         {
             if (source is null)
@@ -20,6 +22,7 @@ namespace NetExtender.Utilities.Types
             return new Queue<T>(source);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Add<T>(this Queue<T> queue, T item)
         {
             if (queue is null)
@@ -28,6 +31,30 @@ namespace NetExtender.Utilities.Types
             }
 
             queue.Enqueue(item);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void AddRange<T>(this Queue<T> queue, params T[] items)
+        {
+            EnqueueRange(queue, items);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void AddRange<T>(this Queue<T> queue, IEnumerable<T> items)
+        {
+            EnqueueRange(queue, items);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void AddRange<T>(this SetQueue<T> queue, params T[] items)
+        {
+            EnqueueRange(queue, items);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void AddRange<T>(this SetQueue<T> queue, IEnumerable<T> items)
+        {
+            EnqueueRange(queue, items);
         }
 
         public static T Rotate<T>(this Queue<T> queue)
@@ -225,7 +252,56 @@ namespace NetExtender.Utilities.Types
 
             return true;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void EnqueueRange<T>(this Queue<T> queue, params T[] items)
+        {
+            EnqueueRange(queue, (IEnumerable<T>) items);
+        }
 
+        public static void EnqueueRange<T>(this Queue<T> queue, IEnumerable<T> items)
+        {
+            if (queue is null)
+            {
+                throw new ArgumentNullException(nameof(queue));
+            }
+
+            if (items is null)
+            {
+                throw new ArgumentNullException(nameof(items));
+            }
+            
+            foreach (T item in items)
+            {
+                queue.Enqueue(item);
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void EnqueueRange<T>(this SetQueue<T> queue, params T[] items)
+        {
+            EnqueueRange(queue, (IEnumerable<T>) items);
+        }
+
+        public static void EnqueueRange<T>(this SetQueue<T> queue, IEnumerable<T> items)
+        {
+            if (queue is null)
+            {
+                throw new ArgumentNullException(nameof(queue));
+            }
+
+            if (items is null)
+            {
+                throw new ArgumentNullException(nameof(items));
+            }
+            
+            foreach (T item in items)
+            {
+                queue.Enqueue(item);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> DequeueMultiple<T>(this Queue<T> queue)
         {
             if (queue is null)
@@ -239,6 +315,7 @@ namespace NetExtender.Utilities.Types
             }
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> DequeueMultiple<T>(this SetQueue<T> queue)
         {
             if (queue is null)

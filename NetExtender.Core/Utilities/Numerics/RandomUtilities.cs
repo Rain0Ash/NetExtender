@@ -930,6 +930,41 @@ namespace NetExtender.Utilities.Numerics
             return min.Add(span);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Action(Action action)
+        {
+            Action(action, 0.5);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Action(Action action, Double chance)
+        {
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (NextBoolean(chance))
+            {
+                action.Invoke();
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Swap<T>(ref T first, ref T second)
+        {
+            Swap(ref first, ref second, 0.5);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Swap<T>(ref T first, ref T second, Double chance)
+        {
+            if (NextBoolean(chance))
+            {
+                (first, second) = (second, first);
+            }
+        }
+
         public static void Reset()
         {
             Generator = new MersenneTwister();

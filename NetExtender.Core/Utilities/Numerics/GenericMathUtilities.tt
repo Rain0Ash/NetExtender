@@ -1071,7 +1071,7 @@ namespace NetExtender.Utilities.Numerics
         {
             WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
-            WriteLine($"\t\tpublic static {nameof(Int32)} {nameof(Log)}2N(this {type} value)");
+            WriteLine($"\t\tpublic static {nameof(Int32)} I{nameof(Log)}B(this {type} value)");
             WriteLine("\t\t{");
             if (IsUnsignedType(type))
             {

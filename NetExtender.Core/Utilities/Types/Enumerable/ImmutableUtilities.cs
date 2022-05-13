@@ -15,73 +15,73 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<T> ImmutableArrayFrom<T>(T value)
         {
-            return EnumerableUtilities.GetEnumerableFrom(value).ToImmutableArray();
+            return EnumerableUtilities.Factory(value).ToImmutableArray();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<T> ImmutableArrayFrom<T>(T value, params T[] values)
         {
-            return EnumerableUtilities.GetEnumerableFrom(value, values).ToImmutableArray();
+            return EnumerableUtilities.Factory(value, values).ToImmutableArray();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<T> ImmutableArrayFrom<T>(T first, T second)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second).ToImmutableArray();
+            return EnumerableUtilities.Factory(first, second).ToImmutableArray();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<T> ImmutableArrayFrom<T>(T first, T second, params T[] values)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second, values).ToImmutableArray();
+            return EnumerableUtilities.Factory(first, second, values).ToImmutableArray();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<T> ImmutableArrayFrom<T>(T first, T second, T third)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second, third).ToImmutableArray();
+            return EnumerableUtilities.Factory(first, second, third).ToImmutableArray();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<T> ImmutableArrayFrom<T>(T first, T second, T third, params T[] values)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second, third, values).ToImmutableArray();
+            return EnumerableUtilities.Factory(first, second, third, values).ToImmutableArray();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableList<T> ImmutableListFrom<T>(T value)
         {
-            return EnumerableUtilities.GetEnumerableFrom(value).ToImmutableList();
+            return EnumerableUtilities.Factory(value).ToImmutableList();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableList<T> ImmutableListFrom<T>(T value, params T[] values)
         {
-            return EnumerableUtilities.GetEnumerableFrom(value, values).ToImmutableList();
+            return EnumerableUtilities.Factory(value, values).ToImmutableList();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableList<T> ImmutableListFrom<T>(T first, T second)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second).ToImmutableList();
+            return EnumerableUtilities.Factory(first, second).ToImmutableList();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableList<T> ImmutableListFrom<T>(T first, T second, params T[] values)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second, values).ToImmutableList();
+            return EnumerableUtilities.Factory(first, second, values).ToImmutableList();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableList<T> ImmutableListFrom<T>(T first, T second, T third)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second, third).ToImmutableList();
+            return EnumerableUtilities.Factory(first, second, third).ToImmutableList();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableList<T> ImmutableListFrom<T>(T first, T second, T third, params T[] values)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second, third, values).ToImmutableList();
+            return EnumerableUtilities.Factory(first, second, third, values).ToImmutableList();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -93,7 +93,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableStack<T> ImmutableStackFrom<T>(T value, params T[] values)
         {
-            return ImmutableStack.CreateRange(EnumerableUtilities.GetEnumerableFrom(value, values));
+            return ImmutableStack.CreateRange(EnumerableUtilities.Factory(value, values));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -105,7 +105,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableStack<T> ImmutableStackFrom<T>(T first, T second, params T[] values)
         {
-            return ImmutableStack.CreateRange(EnumerableUtilities.GetEnumerableFrom(first, second, values));
+            return ImmutableStack.CreateRange(EnumerableUtilities.Factory(first, second, values));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -117,7 +117,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableStack<T> ImmutableStackFrom<T>(T first, T second, T third, params T[] values)
         {
-            return ImmutableStack.CreateRange(EnumerableUtilities.GetEnumerableFrom(first, second, third, values));
+            return ImmutableStack.CreateRange(EnumerableUtilities.Factory(first, second, third, values));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -129,7 +129,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableQueue<T> ImmutableQueueFrom<T>(T value, params T[] values)
         {
-            return ImmutableQueue.CreateRange(EnumerableUtilities.GetEnumerableFrom(value, values));
+            return ImmutableQueue.CreateRange(EnumerableUtilities.Factory(value, values));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -141,7 +141,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableQueue<T> ImmutableQueueFrom<T>(T first, T second, params T[] values)
         {
-            return ImmutableQueue.CreateRange(EnumerableUtilities.GetEnumerableFrom(first, second, values));
+            return ImmutableQueue.CreateRange(EnumerableUtilities.Factory(first, second, values));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -153,151 +153,151 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableQueue<T> ImmutableQueueFrom<T>(T first, T second, T third, params T[] values)
         {
-            return ImmutableQueue.CreateRange(EnumerableUtilities.GetEnumerableFrom(first, second, third, values));
+            return ImmutableQueue.CreateRange(EnumerableUtilities.Factory(first, second, third, values));
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableHashSet<T> ImmutableHashSetFrom<T>(T value)
         {
-            return EnumerableUtilities.GetEnumerableFrom(value).ToImmutableHashSet();
+            return EnumerableUtilities.Factory(value).ToImmutableHashSet();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableHashSet<T> ImmutableHashSetFrom<T>(T value, IEqualityComparer<T> comparer)
         {
-            return EnumerableUtilities.GetEnumerableFrom(value).ToImmutableHashSet(comparer);
+            return EnumerableUtilities.Factory(value).ToImmutableHashSet(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableHashSet<T> ImmutableHashSetFrom<T>(T value, params T[] values)
         {
-            return EnumerableUtilities.GetEnumerableFrom(value, values).ToImmutableHashSet();
+            return EnumerableUtilities.Factory(value, values).ToImmutableHashSet();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableHashSet<T> ImmutableHashSetFrom<T>(T value, IEqualityComparer<T> comparer, params T[] values)
         {
-            return EnumerableUtilities.GetEnumerableFrom(value, values).ToImmutableHashSet(comparer);
+            return EnumerableUtilities.Factory(value, values).ToImmutableHashSet(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableHashSet<T> ImmutableHashSetFrom<T>(T first, T second)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second).ToImmutableHashSet();
+            return EnumerableUtilities.Factory(first, second).ToImmutableHashSet();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableHashSet<T> ImmutableHashSetFrom<T>(T first, T second, IEqualityComparer<T> comparer)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second).ToImmutableHashSet(comparer);
+            return EnumerableUtilities.Factory(first, second).ToImmutableHashSet(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableHashSet<T> ImmutableHashSetFrom<T>(T first, T second, params T[] values)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second, values).ToImmutableHashSet();
+            return EnumerableUtilities.Factory(first, second, values).ToImmutableHashSet();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableHashSet<T> ImmutableHashSetFrom<T>(T first, T second, IEqualityComparer<T> comparer, params T[] values)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second, values).ToImmutableHashSet(comparer);
+            return EnumerableUtilities.Factory(first, second, values).ToImmutableHashSet(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableHashSet<T> ImmutableHashSetFrom<T>(T first, T second, T third)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second, third).ToImmutableHashSet();
+            return EnumerableUtilities.Factory(first, second, third).ToImmutableHashSet();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableHashSet<T> ImmutableHashSetFrom<T>(T first, T second, T third, IEqualityComparer<T> comparer)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second, third).ToImmutableHashSet(comparer);
+            return EnumerableUtilities.Factory(first, second, third).ToImmutableHashSet(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableHashSet<T> ImmutableHashSetFrom<T>(T first, T second, T third, params T[] values)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second, third, values).ToImmutableHashSet();
+            return EnumerableUtilities.Factory(first, second, third, values).ToImmutableHashSet();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableHashSet<T> ImmutableHashSetFrom<T>(T first, T second, T third, IEqualityComparer<T> comparer, params T[] values)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second, third, values).ToImmutableHashSet(comparer);
+            return EnumerableUtilities.Factory(first, second, third, values).ToImmutableHashSet(comparer);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<T> ImmutableSortedSetFrom<T>(T value)
         {
-            return EnumerableUtilities.GetEnumerableFrom(value).ToImmutableSortedSet();
+            return EnumerableUtilities.Factory(value).ToImmutableSortedSet();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<T> ImmutableSortedSetFrom<T>(T value, IComparer<T> comparer)
         {
-            return EnumerableUtilities.GetEnumerableFrom(value).ToImmutableSortedSet(comparer);
+            return EnumerableUtilities.Factory(value).ToImmutableSortedSet(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<T> ImmutableSortedSetFrom<T>(T value, params T[] values)
         {
-            return EnumerableUtilities.GetEnumerableFrom(value, values).ToImmutableSortedSet();
+            return EnumerableUtilities.Factory(value, values).ToImmutableSortedSet();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<T> ImmutableSortedSetFrom<T>(T value, IComparer<T> comparer, params T[] values)
         {
-            return EnumerableUtilities.GetEnumerableFrom(value, values).ToImmutableSortedSet(comparer);
+            return EnumerableUtilities.Factory(value, values).ToImmutableSortedSet(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<T> ImmutableSortedSetFrom<T>(T first, T second)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second).ToImmutableSortedSet();
+            return EnumerableUtilities.Factory(first, second).ToImmutableSortedSet();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<T> ImmutableSortedSetFrom<T>(T first, T second, IComparer<T> comparer)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second).ToImmutableSortedSet(comparer);
+            return EnumerableUtilities.Factory(first, second).ToImmutableSortedSet(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<T> ImmutableSortedSetFrom<T>(T first, T second, params T[] values)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second, values).ToImmutableSortedSet();
+            return EnumerableUtilities.Factory(first, second, values).ToImmutableSortedSet();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<T> ImmutableSortedSetFrom<T>(T first, T second, IComparer<T> comparer, params T[] values)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second, values).ToImmutableSortedSet(comparer);
+            return EnumerableUtilities.Factory(first, second, values).ToImmutableSortedSet(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<T> ImmutableSortedSetFrom<T>(T first, T second, T third)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second, third).ToImmutableSortedSet();
+            return EnumerableUtilities.Factory(first, second, third).ToImmutableSortedSet();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<T> ImmutableSortedSetFrom<T>(T first, T second, T third, IComparer<T> comparer)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second, third).ToImmutableSortedSet(comparer);
+            return EnumerableUtilities.Factory(first, second, third).ToImmutableSortedSet(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<T> ImmutableSortedSetFrom<T>(T first, T second, T third, params T[] values)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second, third, values).ToImmutableSortedSet();
+            return EnumerableUtilities.Factory(first, second, third, values).ToImmutableSortedSet();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<T> ImmutableSortedSetFrom<T>(T first, T second, T third, IComparer<T> comparer, params T[] values)
         {
-            return EnumerableUtilities.GetEnumerableFrom(first, second, third, values).ToImmutableSortedSet(comparer);
+            return EnumerableUtilities.Factory(first, second, third, values).ToImmutableSortedSet(comparer);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

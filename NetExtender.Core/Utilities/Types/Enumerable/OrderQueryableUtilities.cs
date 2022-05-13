@@ -138,19 +138,15 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(property));
             }
 
-            ParameterExpression parameter = Expression.Parameter(typeof(T), "p");
+            ParameterExpression parameter = Expression.Parameter(typeof(T));
             Expression member = property.Contains('.')
                 ? property.Split('.').Aggregate((Expression) parameter, Expression.PropertyOrField)
                 : Expression.PropertyOrField(parameter, property);
 
             LambdaExpression expression = Expression.Lambda(member, parameter);
 
-            return (IOrderedQueryable<T>) source.Provider.CreateQuery<T>(
-                Expression.Call(
-                    typeof(Queryable),
-                    method,
-                    new[] {typeof(T), ((MemberExpression) member).Member.DeclaringType}!,
-                    source.Expression,
+            return (IOrderedQueryable<T>) source.Provider.CreateQuery<T>(Expression.Call(typeof(Queryable), method,
+                    new[] {typeof(T), ((MemberExpression) member).Member.DeclaringType}!, source.Expression,
                     Expression.Quote(expression)));
         }
 

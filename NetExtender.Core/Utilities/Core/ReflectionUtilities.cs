@@ -2409,31 +2409,43 @@ namespace NetExtender.Utilities.Core
             return SizeCache.GetTypeSize(type);
         }
 
+        private static class DefaultCache
+        {
+            private static ConcurrentDictionary<Type, ValueType> Values { get; } = new ConcurrentDictionary<Type, ValueType>();
+            
+            // ReSharper disable once MemberHidesStaticFromOuterClass
+            [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+            public static Object? Default(Type type)
+            {
+                if (type is null)
+                {
+                    throw new ArgumentNullException(nameof(type));
+                }
+
+                static ValueType Create(Type type)
+                {
+                    return (ValueType) Activator.CreateInstance(type)!;
+                }
+
+                return !type.IsValueType ? null : Values.GetOrAdd(type, Create);
+            }
+        }
+
         /// <summary>
         /// Gets the default value of this type.
         /// </summary>
         /// <param name="type">The type for which to get the default value.</param>
-        public static Object? GetDefault(this Type type)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Object? Default(this Type type)
         {
-            if (type is null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
-            if (!type.IsValueType)
-            {
-                return null;
-            }
-
-            Func<Object?> factory = GetDefaultGeneric<Object?>;
-            return factory.Method.GetGenericMethodDefinition().MakeGenericMethod(type).Invoke(null, null);
+            return DefaultCache.Default(type);
         }
 
         /// <summary>
         /// Gets the default value of the specified type.
         /// </summary>
         /// <typeparam name="T">The type for which to get the default value.</typeparam>
-        public static T? GetDefaultGeneric<T>()
+        public static T? Default<T>()
         {
             return default;
         }

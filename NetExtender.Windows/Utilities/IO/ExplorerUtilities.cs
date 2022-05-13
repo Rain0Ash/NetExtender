@@ -152,7 +152,7 @@ namespace NetExtender.Utilities.Windows.IO
 
         public static Boolean OpenExplorerWithSelection(String directory, String? filename, StringComparison comparison)
         {
-            return OpenExplorerWithSelection(directory, EnumerableUtilities.GetEnumerableFrom(filename), comparison);
+            return OpenExplorerWithSelection(directory, EnumerableUtilities.Factory(filename), comparison);
         }
 
         public static Boolean OpenExplorerWithSelection(this DirectoryInfo info, IEnumerable<String?>? files)

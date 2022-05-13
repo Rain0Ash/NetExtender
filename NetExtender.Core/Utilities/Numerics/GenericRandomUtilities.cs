@@ -6523,7 +6523,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -6544,7 +6544,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -6574,12 +6574,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<SByte>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextSByte(random, min, max));
+					return EnumerableUtilities.Factory(NextSByte(random, min, max));
 			}
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -6606,12 +6606,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<SByte>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextSByte(random, min, max));
+					return EnumerableUtilities.Factory(NextSByte(random, min, max));
 			}
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -6727,7 +6727,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -6748,7 +6748,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -6778,12 +6778,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<Byte>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextByte(random, min, max));
+					return EnumerableUtilities.Factory(NextByte(random, min, max));
 			}
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -6810,12 +6810,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<Byte>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextByte(random, min, max));
+					return EnumerableUtilities.Factory(NextByte(random, min, max));
 			}
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -6931,7 +6931,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -6954,7 +6954,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -6986,12 +6986,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<Int16>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextInt16(random, min, max));
+					return EnumerableUtilities.Factory(NextInt16(random, min, max));
 			}
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7018,12 +7018,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<Int16>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextInt16(random, min, max));
+					return EnumerableUtilities.Factory(NextInt16(random, min, max));
 			}
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7139,7 +7139,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7162,7 +7162,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7194,12 +7194,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<UInt16>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextUInt16(random, min, max));
+					return EnumerableUtilities.Factory(NextUInt16(random, min, max));
 			}
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7226,12 +7226,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<UInt16>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextUInt16(random, min, max));
+					return EnumerableUtilities.Factory(NextUInt16(random, min, max));
 			}
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7347,7 +7347,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7370,7 +7370,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7402,12 +7402,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<Int32>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextInt32(random, min, max));
+					return EnumerableUtilities.Factory(NextInt32(random, min, max));
 			}
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7434,12 +7434,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<Int32>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextInt32(random, min, max));
+					return EnumerableUtilities.Factory(NextInt32(random, min, max));
 			}
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7555,7 +7555,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7578,7 +7578,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7610,12 +7610,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<UInt32>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextUInt32(random, min, max));
+					return EnumerableUtilities.Factory(NextUInt32(random, min, max));
 			}
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7642,12 +7642,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<UInt32>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextUInt32(random, min, max));
+					return EnumerableUtilities.Factory(NextUInt32(random, min, max));
 			}
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7763,7 +7763,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7786,7 +7786,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7818,12 +7818,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<Int64>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextInt64(random, min, max));
+					return EnumerableUtilities.Factory(NextInt64(random, min, max));
 			}
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7850,12 +7850,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<Int64>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextInt64(random, min, max));
+					return EnumerableUtilities.Factory(NextInt64(random, min, max));
 			}
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7971,7 +7971,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -7994,7 +7994,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -8026,12 +8026,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<UInt64>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextUInt64(random, min, max));
+					return EnumerableUtilities.Factory(NextUInt64(random, min, max));
 			}
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -8058,12 +8058,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<UInt64>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextUInt64(random, min, max));
+					return EnumerableUtilities.Factory(NextUInt64(random, min, max));
 			}
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -8179,7 +8179,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (Math.Abs(max - min) < Single.Epsilon)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -8214,7 +8214,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (Math.Abs(max - min) < Single.Epsilon)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -8270,12 +8270,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<Single>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextSingle(random, min, max));
+					return EnumerableUtilities.Factory(NextSingle(random, min, max));
 			}
 
 			if (Math.Abs(max - min) < Single.Epsilon)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -8312,12 +8312,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<Single>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextSingle(random, min, max));
+					return EnumerableUtilities.Factory(NextSingle(random, min, max));
 			}
 
 			if (Math.Abs(max - min) < Single.Epsilon)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -8431,7 +8431,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (Math.Abs(max - min) < Double.Epsilon)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -8466,7 +8466,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (Math.Abs(max - min) < Double.Epsilon)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -8522,12 +8522,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<Double>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextDouble(random, min, max));
+					return EnumerableUtilities.Factory(NextDouble(random, min, max));
 			}
 
 			if (Math.Abs(max - min) < Double.Epsilon)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -8564,12 +8564,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<Double>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextDouble(random, min, max));
+					return EnumerableUtilities.Factory(NextDouble(random, min, max));
 			}
 
 			if (Math.Abs(max - min) < Double.Epsilon)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -8683,7 +8683,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -8718,7 +8718,7 @@ namespace NetExtender.Utilities.Numerics
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -8774,12 +8774,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<Decimal>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextDecimal(random, min, max));
+					return EnumerableUtilities.Factory(NextDecimal(random, min, max));
 			}
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)
@@ -8816,12 +8816,12 @@ namespace NetExtender.Utilities.Numerics
 				case <= 0:
 					return Enumerable.Empty<Decimal>();
 				case 1:
-					return EnumerableUtilities.GetEnumerableFrom(NextDecimal(random, min, max));
+					return EnumerableUtilities.Factory(NextDecimal(random, min, max));
 			}
 
 			if (max == min)
 			{
-				return EnumerableUtilities.GetEnumerableFrom(min);
+				return EnumerableUtilities.Factory(min);
 			}
 
 			if (max < min)

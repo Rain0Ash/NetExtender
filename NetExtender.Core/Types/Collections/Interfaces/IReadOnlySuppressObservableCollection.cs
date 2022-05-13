@@ -10,9 +10,10 @@ namespace NetExtender.Types.Collections.Interfaces
 {
     public interface IReadOnlySuppressObservableCollection<out T> : IReadOnlyList<T>, INotifyCollectionChanged, INotifyPropertyChanged
     {
+        public Boolean IsAllowSuppress { get; }
         public Boolean IsSuppressed { get; }
         public Int32 SuppressDepth { get; }
         
-        public IDisposable Suppress();
+        public IDisposable? Suppress();
     }
 }

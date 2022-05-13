@@ -10,12 +10,12 @@ namespace NetExtender.Utilities.Types
 {
     public static partial class EnumerableUtilities
     {
-        public static IEnumerable<T> GetEnumerableFrom<T>(T value)
+        public static IEnumerable<T> Factory<T>(T value)
         {
             yield return value;
         }
 
-        public static IEnumerable<T> GetEnumerableFrom<T>(T value, params T[]? other)
+        public static IEnumerable<T> Factory<T>(T value, params T[]? other)
         {
             yield return value;
 
@@ -30,13 +30,13 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static IEnumerable<T> GetEnumerableFrom<T>(T first, T second)
+        public static IEnumerable<T> Factory<T>(T first, T second)
         {
             yield return first;
             yield return second;
         }
 
-        public static IEnumerable<T> GetEnumerableFrom<T>(T first, T second, params T[]? other)
+        public static IEnumerable<T> Factory<T>(T first, T second, params T[]? other)
         {
             yield return first;
             yield return second;
@@ -52,14 +52,14 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static IEnumerable<T> GetEnumerableFrom<T>(T first, T second, T third)
+        public static IEnumerable<T> Factory<T>(T first, T second, T third)
         {
             yield return first;
             yield return second;
             yield return third;
         }
 
-        public static IEnumerable<T> GetEnumerableFrom<T>(T first, T second, T third, params T[]? other)
+        public static IEnumerable<T> Factory<T>(T first, T second, T third, params T[]? other)
         {
             yield return first;
             yield return second;
@@ -76,7 +76,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static IEnumerable<T> GetEnumerableFrom<T>(Func<T> generator)
+        public static IEnumerable<T> Factory<T>(Func<T> generator)
         {
             if (generator is null)
             {
@@ -89,7 +89,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static IEnumerable<T> GetEnumerableFrom<T>(Func<Int32, T> generator)
+        public static IEnumerable<T> Factory<T>(Func<Int32, T> generator)
         {
             if (generator is null)
             {
@@ -103,7 +103,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static IEnumerable<T> GetEnumerableFrom<T>(Func<Int64, T> generator)
+        public static IEnumerable<T> Factory<T>(Func<Int64, T> generator)
         {
             if (generator is null)
             {
