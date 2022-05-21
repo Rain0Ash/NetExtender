@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
@@ -103,29 +104,84 @@ namespace NetExtender.Domains
             return Create(new InternalDomain(data));
         }
         
-        public static IDomain? AutoStart()
+        public static IDomain AutoStart()
         {
-            return ReflectionUtilities.TryGetEntryTypeNamespace(true, out String? result) ? AutoStart(result) : null;
+            return AutoStart((IEnumerable<String>?) null);
+        }
+
+        public static IDomain AutoStart(IEnumerable<String>? args)
+        {
+            if (!ReflectionUtilities.TryGetEntryTypeNamespace(true, out String? result))
+            {
+                throw new EntryPointNotFoundException("Entry point type namespace not found.");
+            }
+
+            return AutoStart(result, args);
         }
         
-        public static IDomain? AutoStart(String name)
+        public static IDomain AutoStart(params String[]? args)
         {
-            return AutoStart(new ApplicationData(name, ApplicationVersion.Default));
+            if (!ReflectionUtilities.TryGetEntryTypeNamespace(true, out String? result))
+            {
+                throw new EntryPointNotFoundException("Entry point type namespace not found.");
+            }
+
+            return AutoStart(result, args);
+        }
+
+        public static IDomain AutoStart(String name)
+        {
+            return AutoStart(name, (IEnumerable<String>?) null);
         }
         
-        public static IDomain? AutoStart(String name, String identifier)
+        public static IDomain AutoStart(String name, IEnumerable<String>? args)
         {
-            return AutoStart(new ApplicationData(name, identifier, ApplicationVersion.Default));
+            return AutoStart(new ApplicationData(name, ApplicationVersion.Default), args);
+        }
+
+        public static IDomain AutoStart(String name, params String[]? args)
+        {
+            return AutoStart(new ApplicationData(name, ApplicationVersion.Default), args);
         }
         
-        public static IDomain? AutoStart(IApplicationData data)
+        public static IDomain AutoStart(String name, String identifier)
+        {
+           return AutoStart(name, identifier, (IEnumerable<String>?) null);
+        }
+        
+        public static IDomain AutoStart(String name, String identifier, IEnumerable<String>? args)
+        {
+            return AutoStart(new ApplicationData(name, identifier, ApplicationVersion.Default), args);
+        }
+
+        public static IDomain AutoStart(String name, String identifier, params String[]? args)
+        {
+            return AutoStart(new ApplicationData(name, identifier, ApplicationVersion.Default), args);
+        }
+
+        public static IDomain AutoStart(IApplicationData data)
+        {
+            return AutoStart(data, (IEnumerable<String>?) null);
+        }
+
+        public static IDomain AutoStart(IApplicationData data, IEnumerable<String>? args)
         {
             if (data is null)
             {
                 throw new ArgumentNullException(nameof(data));
             }
 
-            return Create(data).AutoInitialize().AutoView();
+            return Create(data).AutoInitialize().AutoView(args);
+        }
+        
+        public static IDomain AutoStart(IApplicationData data, params String[]? args)
+        {
+            if (data is null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
+            return Create(data).AutoInitialize().AutoView(args);
         }
         
         public static IDomain Create(String name, IApplication application)
@@ -198,44 +254,124 @@ namespace NetExtender.Domains
             return Task.FromResult(Create(data));
         }
 
-        public static Task<IDomain?> AutoStartAsync()
+        public static Task<IDomain> AutoStartAsync()
         {
             return Task.FromResult(AutoStart());
         }
         
-        public static Task<IDomain?> AutoStartAsync(CancellationToken token)
+        public static Task<IDomain> AutoStartAsync(IEnumerable<String>? args)
+        {
+            return Task.FromResult(AutoStart(args));
+        }
+        
+        public static Task<IDomain> AutoStartAsync(params String[]? args)
+        {
+            return Task.FromResult(AutoStart(args));
+        }
+        
+        public static Task<IDomain> AutoStartAsync(CancellationToken token)
         {
             return Task.FromResult(AutoStart());
         }
+        
+        public static Task<IDomain> AutoStartAsync(IEnumerable<String>? args, CancellationToken token)
+        {
+            return Task.FromResult(AutoStart(args));
+        }
+        
+        public static Task<IDomain> AutoStartAsync(CancellationToken token, params String[]? args)
+        {
+            return Task.FromResult(AutoStart(args));
+        }
 
-        public static Task<IDomain?> AutoStartAsync(String name)
+        public static Task<IDomain> AutoStartAsync(String name)
         {
             return Task.FromResult(AutoStart(name));
         }
         
-        public static Task<IDomain?> AutoStartAsync(String name, CancellationToken token)
+        public static Task<IDomain> AutoStartAsync(String name, IEnumerable<String>? args)
+        {
+            return Task.FromResult(AutoStart(name, args));
+        }
+        
+        public static Task<IDomain> AutoStartAsync(String name, params String[]? args)
+        {
+            return Task.FromResult(AutoStart(name, args));
+        }
+        
+        public static Task<IDomain> AutoStartAsync(String name, CancellationToken token)
         {
             return Task.FromResult(AutoStart(name));
         }
         
-        public static Task<IDomain?> AutoStartAsync(String name, String identifier)
+        public static Task<IDomain> AutoStartAsync(String name, IEnumerable<String>? args, CancellationToken token)
+        {
+            return Task.FromResult(AutoStart(name, args));
+        }
+        
+        public static Task<IDomain> AutoStartAsync(String name, CancellationToken token, params String[]? args)
+        {
+            return Task.FromResult(AutoStart(name, args));
+        }
+        
+        public static Task<IDomain> AutoStartAsync(String name, String identifier)
         {
             return Task.FromResult(AutoStart(name, identifier));
         }
         
-        public static Task<IDomain?> AutoStartAsync(String name, String identifier, CancellationToken token)
+        public static Task<IDomain> AutoStartAsync(String name, String identifier, IEnumerable<String>? args)
+        {
+            return Task.FromResult(AutoStart(name, identifier, args));
+        }
+        
+        public static Task<IDomain> AutoStartAsync(String name, String identifier, params String[]? args)
+        {
+            return Task.FromResult(AutoStart(name, identifier, args));
+        }
+        
+        public static Task<IDomain> AutoStartAsync(String name, String identifier, CancellationToken token)
         {
             return Task.FromResult(AutoStart(name, identifier));
         }
+        
+        public static Task<IDomain> AutoStartAsync(String name, String identifier, IEnumerable<String>? args, CancellationToken token)
+        {
+            return Task.FromResult(AutoStart(name, identifier, args));
+        }
+        
+        public static Task<IDomain> AutoStartAsync(String name, String identifier, CancellationToken token, params String[]? args)
+        {
+            return Task.FromResult(AutoStart(name, identifier, args));
+        }
 
-        public static Task<IDomain?> AutoStartAsync(IApplicationData data)
+        public static Task<IDomain> AutoStartAsync(IApplicationData data)
         {
             return Task.FromResult(AutoStart(data));
         }
+        
+        public static Task<IDomain> AutoStartAsync(IApplicationData data, IEnumerable<String>? args)
+        {
+            return Task.FromResult(AutoStart(data, args));
+        }
+        
+        public static Task<IDomain> AutoStartAsync(IApplicationData data, params String[]? args)
+        {
+            return Task.FromResult(AutoStart(data, args));
+        }
 
-        public static Task<IDomain?> AutoStartAsync(IApplicationData data, CancellationToken token)
+        public static Task<IDomain> AutoStartAsync(IApplicationData data, CancellationToken token)
         {
             return Task.FromResult(AutoStart(data));
+        }
+        
+        public static Task<IDomain> AutoStartAsync(IApplicationData data, IEnumerable<String>? args, CancellationToken token)
+        {
+            return Task.FromResult(AutoStart(data, args));
+        }
+        
+        public static Task<IDomain> AutoStartAsync(IApplicationData data, CancellationToken token, params String[]? args)
+        {
+            return Task.FromResult(AutoStart(data, args));
         }
         
         public static Task<IDomain> CreateAsync(String name, IApplication application)

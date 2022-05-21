@@ -25,13 +25,13 @@ namespace NetExtender.Domain.Utilities
             
             if (!ReflectionUtilities.TryGetEntryPointType(out Type? type))
             {
-                throw new InvalidOperationException("Entry point type not found.");
+                throw new EntryPointNotFoundException("Entry point type not found.");
             }
             
             Assembly assembly = type.Assembly;
             if (!assembly.TryGetEntryTypeNamespace(out String? @namespace))
             {
-                throw new InvalidOperationException($"Entry point type namespace not found at '{assembly.FullName}'.");
+                throw new EntryPointNotFoundException($"Entry point type namespace not found at '{assembly.FullName}'.");
             }
             
             Type? applicationtype = assembly.GetTypeWithoutNamespace($"{source.ApplicationName}Application") ?? assembly.GetTypeWithoutNamespace($"{@namespace}Application");
@@ -107,13 +107,13 @@ namespace NetExtender.Domain.Utilities
             
             if (!ReflectionUtilities.TryGetEntryPointType(out Type? type))
             {
-                throw new InvalidOperationException("Entry point type not found.");
+                throw new EntryPointNotFoundException("Entry point type not found.");
             }
             
             Assembly assembly = type.Assembly;
             if (!assembly.TryGetEntryTypeNamespace(out String? @namespace))
             {
-                throw new InvalidOperationException($"Entry point type namespace not found at '{assembly.FullName}'.");
+                throw new EntryPointNotFoundException($"Entry point type namespace not found at '{assembly.FullName}'.");
             }
             
             Type? viewtype = assembly.GetTypeWithoutNamespace($"{source.ApplicationName}View") ?? assembly.GetTypeWithoutNamespace($"{@namespace}View");
