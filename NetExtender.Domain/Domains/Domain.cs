@@ -2,12 +2,12 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using NetExtender.Domain.Utilities;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.Interfaces;
 using NetExtender.Domains.View.Interfaces;
@@ -83,6 +83,11 @@ namespace NetExtender.Domains
             return Current;
         }
         
+        public static IDomain? Create()
+        {
+            return ReflectionUtilities.TryGetEntryTypeNamespace(true, out String? result) ? Create(result) : null;
+        }
+        
         public static IDomain Create(String name)
         {
             return Create(new ApplicationData(name, ApplicationVersion.Default));
@@ -96,6 +101,31 @@ namespace NetExtender.Domains
         public static IDomain Create(IApplicationData data)
         {
             return Create(new InternalDomain(data));
+        }
+        
+        public static IDomain? AutoStart()
+        {
+            return ReflectionUtilities.TryGetEntryTypeNamespace(true, out String? result) ? AutoStart(result) : null;
+        }
+        
+        public static IDomain? AutoStart(String name)
+        {
+            return AutoStart(new ApplicationData(name, ApplicationVersion.Default));
+        }
+        
+        public static IDomain? AutoStart(String name, String identifier)
+        {
+            return AutoStart(new ApplicationData(name, identifier, ApplicationVersion.Default));
+        }
+        
+        public static IDomain? AutoStart(IApplicationData data)
+        {
+            if (data is null)
+            {
+                throw new ArgumentNullException(nameof(data));
+            }
+
+            return Create(data).AutoInitialize().AutoView();
         }
         
         public static IDomain Create(String name, IApplication application)
@@ -128,34 +158,84 @@ namespace NetExtender.Domains
             return Create(data, application).View(view);
         }
         
+        public static Task<IDomain?> CreateAsync()
+        {
+            return Task.FromResult(Create());
+        }
+        
+        public static Task<IDomain?> CreateAsync(CancellationToken token)
+        {
+            return Task.FromResult(Create());
+        }
+        
         public static Task<IDomain> CreateAsync(String name)
         {
-            return Task.FromResult(Create(new ApplicationData(name, ApplicationVersion.Default)));
+            return Task.FromResult(Create(name));
         }
         
         public static Task<IDomain> CreateAsync(String name, CancellationToken token)
         {
-            return Task.FromResult(Create(new ApplicationData(name, ApplicationVersion.Default)));
+            return Task.FromResult(Create(name));
         }
         
         public static Task<IDomain> CreateAsync(String name, String identifier)
         {
-            return Task.FromResult(Create(new ApplicationData(name, identifier, ApplicationVersion.Default)));
+            return Task.FromResult(Create(name, identifier));
         }
         
         public static Task<IDomain> CreateAsync(String name, String identifier, CancellationToken token)
         {
-            return Task.FromResult(Create(new ApplicationData(name, identifier, ApplicationVersion.Default)));
+            return Task.FromResult(Create(name, identifier));
         }
 
         public static Task<IDomain> CreateAsync(IApplicationData data)
         {
-            return Task.FromResult(Create(new InternalDomain(data)));
+            return Task.FromResult(Create(data));
         }
 
         public static Task<IDomain> CreateAsync(IApplicationData data, CancellationToken token)
         {
-            return Task.FromResult(Create(new InternalDomain(data)));
+            return Task.FromResult(Create(data));
+        }
+
+        public static Task<IDomain?> AutoStartAsync()
+        {
+            return Task.FromResult(AutoStart());
+        }
+        
+        public static Task<IDomain?> AutoStartAsync(CancellationToken token)
+        {
+            return Task.FromResult(AutoStart());
+        }
+
+        public static Task<IDomain?> AutoStartAsync(String name)
+        {
+            return Task.FromResult(AutoStart(name));
+        }
+        
+        public static Task<IDomain?> AutoStartAsync(String name, CancellationToken token)
+        {
+            return Task.FromResult(AutoStart(name));
+        }
+        
+        public static Task<IDomain?> AutoStartAsync(String name, String identifier)
+        {
+            return Task.FromResult(AutoStart(name, identifier));
+        }
+        
+        public static Task<IDomain?> AutoStartAsync(String name, String identifier, CancellationToken token)
+        {
+            return Task.FromResult(AutoStart(name, identifier));
+        }
+
+        public static Task<IDomain?> AutoStartAsync(IApplicationData data)
+        {
+            return Task.FromResult(AutoStart(data));
+        }
+
+        public static Task<IDomain?> AutoStartAsync(IApplicationData data, CancellationToken token)
+        {
+            return Task.FromResult(AutoStart(data));
         }
         
         public static Task<IDomain> CreateAsync(String name, IApplication application)

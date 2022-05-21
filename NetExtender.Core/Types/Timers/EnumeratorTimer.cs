@@ -13,9 +13,9 @@ namespace NetExtender.Types.Timers
 {
     public class EnumeratorTimer<T> : IEnumeratorTimer<T>
     {
+        private IEnumerator<T> Source { get; }
         private ITimer Timer { get; }
-        private IEnumerator<T> Enumerator { get; }
-        
+
         public event TickHandler Tick
         {
             add
@@ -28,16 +28,16 @@ namespace NetExtender.Types.Timers
             }
         }
 
-        public event EventHandler Finished = null!;
-        public event ItemTickHandler<T> ItemTick = null!;
+        public event EventHandler? Finished;
+        public event ItemTickHandler<T>? ItemTick;
 
         public T Current
         {
             get
             {
-                lock (Enumerator)
+                lock (Source)
                 {
-                    return Enumerator.Current;
+                    return Source.Current;
                 }
             }
         }
@@ -87,9 +87,14 @@ namespace NetExtender.Types.Timers
         {
         }
         
-        private EnumeratorTimer(IEnumerable<T> enumerable, ITimer timer)
+        private EnumeratorTimer(IEnumerable<T> source, ITimer timer)
         {
-            Enumerator = enumerable?.GetThreadSafeEnumerator() ?? throw new ArgumentNullException(nameof(enumerable));
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            Source = source.GetThreadSafeEnumerator();
             Timer = timer ?? throw new ArgumentNullException(nameof(timer));
             Tick += OnTick;
         }
@@ -101,17 +106,19 @@ namespace NetExtender.Types.Timers
 
         protected virtual void OnTick(Object? sender, TimeEventArgs args)
         {
-            if (Enumerator.MoveNext())
+            if (Source.MoveNext())
             {
-                OnItemTick(this, args, Enumerator.Current);
+                OnItemTick(this, args, Source.Current);
                 return;
             }
 
-            if (!IsReset || !Reset())
+            if (IsReset && Reset())
             {
-                Finished?.Invoke(null, EventArgs.Empty);
-                Dispose();
+                return;
             }
+
+            Finished?.Invoke(this, EventArgs.Empty);
+            Dispose();
         }
         
         public void Start()
@@ -126,36 +133,38 @@ namespace NetExtender.Types.Timers
 
         public Boolean MoveNext()
         {
-            lock (Enumerator)
+            lock (Source)
             {
-                return Enumerator.MoveNext();
+                return Source.MoveNext();
             }
         }
 
         void IEnumerator.Reset()
         {
-            Enumerator.Reset();
+            Source.Reset();
         }
 
         public Boolean Reset()
         {
-            return Enumerator.TryReset();
+            return Source.TryReset();
         }
 
         public void Dispose()
         {
-            Finished = null!;
-            ItemTick = null!;
+            Finished = null;
+            ItemTick = null;
             Timer.Dispose();
-            Enumerator.Dispose();
+            Source.Dispose();
+            GC.SuppressFinalize(this);
         }
 
         public async ValueTask DisposeAsync()
         {
-            Finished = null!;
-            ItemTick = null!;
-            await Enumerator.DisposeAsync().ConfigureAwait(false);
+            Finished = null;
+            ItemTick = null;
+            await Source.DisposeAsync().ConfigureAwait(false);
             await Timer.DisposeAsync().ConfigureAwait(false);
+            GC.SuppressFinalize(this);
         }
     }
 }

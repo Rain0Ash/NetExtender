@@ -7,6 +7,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,19 +35,24 @@ namespace NetExtender.Utilities.Types
     {
         public static ImageType GetImageFormatType(String path)
         {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
             try
             {
                 return GetImageFormatType(Image.FromFile(path));
             }
-            catch
+            catch (Exception)
             {
                 return ImageType.None;
             }
         }
 
-        public static ImageType GetImageFormatType(Image image)
+        public static ImageType GetImageFormatType(Image? image)
         {
-            return image?.RawFormat?.ToString() switch
+            return image?.RawFormat.ToString() switch
             {
                 null => ImageType.None,
                 "MemoryBMP" => ImageType.MemoryBmp,
@@ -65,6 +71,16 @@ namespace NetExtender.Utilities.Types
 
         public static MemoryStream ToStream(this Image image, ImageFormat format)
         {
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            if (format is null)
+            {
+                throw new ArgumentNullException(nameof(format));
+            }
+
             MemoryStream stream = new MemoryStream();
             image.Save(stream, format);
             stream.Position = 0;
@@ -73,16 +89,26 @@ namespace NetExtender.Utilities.Types
 
         public static Image FromStream(Stream stream)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             return Image.FromStream(stream, true, true);
         }
-        
+
         public static Task<Image> FromStreamAsync(Stream stream)
         {
             return FromStreamAsync(stream, CancellationToken.None);
         }
-        
+
         public static Task<Image> FromStreamAsync(Stream stream, CancellationToken token)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             try
             {
                 return Task.Run(() => FromStream(stream), token);
@@ -95,22 +121,33 @@ namespace NetExtender.Utilities.Types
 
         public static Bitmap GetResizedImage(String path, Size bounds)
         {
+            if (path is null)
+            {
+                throw new ArgumentNullException(nameof(path));
+            }
+
             using Bitmap bitmap = new Bitmap(path);
             return GetResizedImage(bitmap, bounds);
         }
 
         public static Bitmap GetResizedImage(Bitmap image, Size bounds)
         {
-            Size boundSize = new Size(image.Width, image.Height).AspectRatioBoundsSize(bounds);
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
 
-            Bitmap thumbnail = new Bitmap(boundSize.Width, boundSize.Height, image.PixelFormat);
+            Size size = new Size(image.Width, image.Height).AspectRatioBoundsSize(bounds);
+
+            Bitmap thumbnail = new Bitmap(size.Width, size.Height, image.PixelFormat);
             using Graphics gfx = Graphics.FromImage(thumbnail);
             gfx.CompositingQuality = CompositingQuality.HighQuality;
             gfx.SmoothingMode = SmoothingMode.HighQuality;
             gfx.InterpolationMode = InterpolationMode.HighQualityBicubic;
 
-            Rectangle rectangle = new Rectangle(0, 0, boundSize.Width, boundSize.Height);
+            Rectangle rectangle = new Rectangle(0, 0, size.Width, size.Height);
             gfx.DrawImage(image, rectangle);
+
             return thumbnail;
         }
 
@@ -119,27 +156,24 @@ namespace NetExtender.Utilities.Types
             return GetTextImage(message, Color.White, Color.Black);
         }
 
-        public static Bitmap GetTextImage(String message, Font font)
+        public static Bitmap GetTextImage(String message, Font? font)
         {
             return GetTextImage(message, font, Color.White, Color.Black);
         }
 
         public static Bitmap GetTextImage(String message, Color background, Color foreground)
         {
-            return GetTextImage(message, new Font("Arial", 12), background, foreground);
+            return GetTextImage(message, null, background, foreground);
         }
 
-        public static Bitmap GetTextImage(String message, Font font, Color background, Color foreground)
+        public static Bitmap GetTextImage(String message, Font? font, Color background, Color foreground)
         {
             if (message is null)
             {
                 throw new ArgumentNullException(nameof(message));
             }
 
-            if (font is null)
-            {
-                throw new ArgumentNullException(nameof(font));
-            }
+            font ??= new Font("Arial", 12);
 
             Rectangle rectangle = GetRectangleForText(message, font);
             Bitmap bitmap = new Bitmap(rectangle.Width, rectangle.Height);
@@ -154,18 +188,33 @@ namespace NetExtender.Utilities.Types
             return bitmap;
         }
 
-        public static Rectangle GetRectangleForText(String text, String fontName, Single fontSize)
+        public static Rectangle GetRectangleForText(String text, String font, Single size)
         {
-            return GetRectangleForText(text, new Font(fontName, fontSize));
+            if (text is null)
+            {
+                throw new ArgumentNullException(nameof(text));
+            }
+
+            return GetRectangleForText(text, new Font(font, size));
         }
 
         public static Rectangle GetRectangleForText(String text, Font font)
         {
+            if (text is null)
+            {
+                throw new ArgumentNullException(nameof(text));
+            }
+
+            if (font is null)
+            {
+                throw new ArgumentNullException(nameof(font));
+            }
+
             using Bitmap bmp = new Bitmap(1, 1, PixelFormat.Format32bppArgb);
             using Graphics gfx = Graphics.FromImage(bmp);
             SizeF stringSize = gfx.MeasureString(text, font);
 
-            return new Rectangle {Width = (Int32) stringSize.Width + 20, Height = (Int32) stringSize.Height + 10};
+            return new Rectangle { Width = (Int32) stringSize.Width + 20, Height = (Int32) stringSize.Height + 10 };
         }
 
         public static Double GetAspectRatio(this Image image)
@@ -187,12 +236,12 @@ namespace NetExtender.Utilities.Types
 
             MemoryStream stream = new MemoryStream();
             BinaryWriter writer = new BinaryWriter(stream);
-            
+
             // Header
             writer.Write((Int16) 0); // 0 : reserved
             writer.Write((Int16) 1); // 2 : 1=ico, 2=cur
             writer.Write((Int16) 1); // 4 : number of images
-            
+
             // Image directory
             Int32 width = image.Width;
             if (width >= 256)
@@ -201,7 +250,7 @@ namespace NetExtender.Utilities.Types
             }
 
             writer.Write((Byte) width); // 0 : width of image
-            
+
             Int32 h = image.Height;
             if (h > 255)
             {
@@ -217,7 +266,7 @@ namespace NetExtender.Utilities.Types
             writer.Write(0); // 8 : image size
             Int32 start = (Int32) stream.Position + 4;
             writer.Write(start); // 12: offset of image data
-            
+
             // Image data
             image.Save(stream, ImageFormat.Png);
             Int32 size = (Int32) stream.Position - start;
@@ -254,6 +303,96 @@ namespace NetExtender.Utilities.Types
 
             using MemoryStream stream = new MemoryStream(image);
             return Image.FromStream(stream);
+        }
+        
+        public static Boolean TrySave(this Image image, Stream stream, ImageFormat format)
+        {
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            try
+            {
+                image.Save(stream, format);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static Boolean TrySave(this Image image, Stream stream, ImageCodecInfo encoder, EncoderParameters? parameters)
+        {
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            try
+            {
+                image.Save(stream, encoder, parameters);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static Boolean TrySave(this Image image, String filename)
+        {
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            try
+            {
+                image.Save(filename);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        
+        public static Boolean TrySave(this Image image, String filename, ImageFormat format)
+        {
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            try
+            {
+                image.Save(filename, format);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        public static Boolean TrySave(this Image image, String filename, ImageCodecInfo encoder, EncoderParameters? parameters)
+        {
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            try
+            {
+                image.Save(filename, encoder, parameters);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public static T RotateImage<T>(this T image, RotateFlipType rotate) where T : Image
@@ -315,16 +454,16 @@ namespace NetExtender.Utilities.Types
             Int32 width = Convert.ToInt32(b2 + a1);
             Int32 height = Convert.ToInt32(b1 + a2);
 
-            Bitmap rotated = new Bitmap(width, height);
+            Bitmap bitmap = new Bitmap(width, height);
 
-            using Graphics graphics = Graphics.FromImage(rotated);
+            using Graphics graphics = Graphics.FromImage(bitmap);
 
-            graphics.TranslateTransform(rotated.Width / 2f, rotated.Height / 2f);
+            graphics.TranslateTransform(bitmap.Width / 2f, bitmap.Height / 2f);
             graphics.RotateTransform(angle);
-            graphics.TranslateTransform(-rotated.Width / 2f, -rotated.Height / 2f);
+            graphics.TranslateTransform(-bitmap.Width / 2f, -bitmap.Height / 2f);
             graphics.DrawImage(image, new Point((width - image.Width) / 2, (height - image.Height) / 2));
 
-            return rotated;
+            return bitmap;
         }
 
         /// <summary>
@@ -351,14 +490,14 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(image));
             }
-            
+
             Rectangle destRect = new Rectangle(0, 0, width, height);
             Bitmap destination = new Bitmap(width, height);
 
             destination.SetResolution(image.HorizontalResolution, image.VerticalResolution);
 
             using Graphics graphics = Graphics.FromImage(destination);
-            
+
             graphics.CompositingMode = CompositingMode.SourceCopy;
             graphics.CompositingQuality = CompositingQuality.HighQuality;
             graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -366,21 +505,180 @@ namespace NetExtender.Utilities.Types
             graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
 
             using ImageAttributes attributes = new ImageAttributes();
-            
+
             attributes.SetWrapMode(WrapMode.TileFlipXY);
-            graphics.DrawImage(image, destRect, 0, 0, image.Width,image.Height, GraphicsUnit.Pixel, attributes);
+            graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, attributes);
 
             return destination;
         }
 
-        public static Byte[] GetHash(this Image image)
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Bitmap SetOpacity(this Image image, Double opacity)
         {
-            return image.ToBytes().Hashing();
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            if (image.PixelFormat.HasFlag(PixelFormat.Indexed))
+            {
+                throw new ArgumentException("Cannot change the opacity of an indexed image.");
+            }
+
+            Bitmap bitmap = (Bitmap) image.Clone();
+
+            Rectangle rectangle = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+            BitmapData data = bitmap.LockBits(rectangle, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+
+            try
+            {
+                const Int32 BytePerPixel = 4;
+                Byte[] pixels = new Byte[bitmap.Width * bitmap.Height * BytePerPixel];
+
+                IntPtr pointer = data.Scan0;
+                Marshal.Copy(pointer, pixels, 0, pixels.Length);
+
+                opacity = Math.Clamp(opacity, 0, 1);
+                for (Int32 counter = 0; counter < pixels.Length; counter += BytePerPixel)
+                {
+                    Int32 position = counter + BytePerPixel - 1;
+
+                    if (pixels[position] == 0)
+                    {
+                        continue;
+                    }
+
+                    pixels[position] = unchecked((Byte) (pixels[position] * opacity));
+                }
+
+                Marshal.Copy(pixels, 0, pointer, pixels.Length);
+                return bitmap;
+            }
+            finally
+            {
+                bitmap.UnlockBits(data);
+            }
         }
 
-        public static Byte[] GetHash(this Image image, HashType type)
+        private static class ColorMatrixCache
         {
-            return image.ToBytes().Hashing(type);
+            private static Single[][] Matrix { get; } =
+            {
+                new[] { 1.0F, 0.0F, 0.0F, 0.0F, 0.0F },
+                new[] { 0.0F, 1.0F, 0.0F, 0.0F, 0.0F },
+                new[] { 0.0F, 0.0F, 1.0F, 0.0F, 0.0F },
+                new[] { 0.0F, 0.0F, 0.0F, 1.0F, 0.0F },
+                new[] { 0.0F, 0.0F, 0.0F, 0.0F, 1.0F }
+            };
+
+            public static ColorMatrix CreateAlphaBlending(Single opacity)
+            {
+                return new ColorMatrix(Matrix)
+                {
+                    [3, 3] = Math.Clamp(opacity, 0, 1)
+                };
+            }
+
+            public static ColorMatrix CreateAlphaBlending(Double opacity)
+            {
+                return CreateAlphaBlending((Single) opacity);
+            }
+        }
+
+        public static Bitmap AlphaBlending(this Image first, Image second, Double opacity)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+            
+            Bitmap bitmap = new Bitmap(Math.Max(first.Width, second.Width), Math.Max(first.Height, second.Height));
+
+            using ImageAttributes attributes = new ImageAttributes();
+            attributes.SetColorMatrix(ColorMatrixCache.CreateAlphaBlending(opacity), ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+
+            using Graphics graphics = Graphics.FromImage(bitmap);
+            graphics.DrawImage(first, 0, 0, first.Width, first.Height);
+            graphics.DrawImage(second, new Rectangle(0, 0, second.Width, second.Height), 0, 0, second.Width, second.Height, GraphicsUnit.Pixel, attributes);
+            
+            return bitmap;
+        }
+
+        public static Byte[] Hashing(this Image image)
+        {
+            return Hashing(image, Cryptography.DefaultHashType);
+        }
+
+        public static Byte[] Hashing(this Image image, HashType type)
+        {
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            Byte[] destination = new Byte[type.Size()];
+            if (!Hashing(image, destination, type))
+            {
+                throw new InvalidOperationException("Failed to hash image.");
+            }
+
+            return destination;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this Image image, Span<Byte> destination)
+        {
+            return Hashing(image, destination, Cryptography.DefaultHashType);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this Image image, Span<Byte> destination, HashType type)
+        {
+            return Hashing(image, destination, type, out _);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this Image image, Span<Byte> destination, out Int32 written)
+        {
+            return Hashing(image, destination, Cryptography.DefaultHashType, out written);
+        }
+
+        public static unsafe Boolean Hashing(this Image image, Span<Byte> destination, HashType type, out Int32 written)
+        {
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            if (destination.Length < type.Size())
+            {
+                throw new ArgumentException("The destination buffer is too small.", nameof(destination));
+            }
+
+            if (image is not Bitmap bitmap)
+            {
+                return image.ToBytes().Hashing(destination, type, out written);
+            }
+
+            BitmapData data = bitmap.LockBits(new Rectangle(new Point(0, 0), bitmap.Size), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+
+            try
+            {
+                IntPtr firstscan = data.Scan0;
+                Int32 stride = data.Stride;
+
+                ReadOnlySpan<Byte> info = new ReadOnlySpan<Byte>(firstscan.ToPointer(), stride * bitmap.Height);
+                return info.Hashing(destination, type, out written);
+            }
+            finally
+            {
+                bitmap.UnlockBits(data);
+            }
         }
 
         [DllImport("msvcrt.dll")]
@@ -388,14 +686,9 @@ namespace NetExtender.Utilities.Types
 
         public static Boolean CompareBitmap(Bitmap? first, Bitmap? second)
         {
-            if (first == second)
-            {
-                return true;
-            }
-
             if (first is null || second is null)
             {
-                return false;
+                return first == second;
             }
 
             if (first.Size != second.Size)
@@ -403,23 +696,22 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
 
-            BitmapData bd1 = first.LockBits(new Rectangle(new Point(0, 0), first.Size), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-            BitmapData bd2 = second.LockBits(new Rectangle(new Point(0, 0), second.Size), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            BitmapData firstdata = first.LockBits(new Rectangle(new Point(0, 0), first.Size), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            BitmapData seconddata = second.LockBits(new Rectangle(new Point(0, 0), second.Size), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
             try
             {
-                IntPtr bd1Scan0 = bd1.Scan0;
-                IntPtr bd2Scan0 = bd2.Scan0;
+                IntPtr firstscan = firstdata.Scan0;
+                IntPtr secondscan = seconddata.Scan0;
 
-                Int32 stride = bd1.Stride;
-                Int32 len = stride * first.Height;
+                Int32 stride = firstdata.Stride;
 
-                return memcmp(bd1Scan0, bd2Scan0, len) == 0;
+                return memcmp(firstscan, secondscan, stride * first.Height) == 0;
             }
             finally
             {
-                first.UnlockBits(bd1);
-                second.UnlockBits(bd2);
+                first.UnlockBits(firstdata);
+                second.UnlockBits(seconddata);
             }
         }
     }

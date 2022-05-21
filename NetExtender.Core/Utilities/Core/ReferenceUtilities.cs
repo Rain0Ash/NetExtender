@@ -3,7 +3,6 @@
 
 using System;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utilities.Core
 {

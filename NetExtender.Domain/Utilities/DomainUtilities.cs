@@ -3,16 +3,74 @@
 
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.Interfaces;
 using NetExtender.Domains.View.Interfaces;
+using NetExtender.Utilities.Core;
 
 namespace NetExtender.Domain.Utilities
 {
     public static class DomainUtilities
     {
+        private static IApplication AutoInitializeInternal(IDomain source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (!ReflectionUtilities.TryGetEntryPointType(out Type? type))
+            {
+                throw new InvalidOperationException("Entry point type not found.");
+            }
+            
+            Assembly assembly = type.Assembly;
+            if (!assembly.TryGetEntryTypeNamespace(out String? @namespace))
+            {
+                throw new InvalidOperationException($"Entry point type namespace not found at '{assembly.FullName}'.");
+            }
+            
+            Type? applicationtype = assembly.GetTypeWithoutNamespace($"{source.ApplicationName}Application") ?? assembly.GetTypeWithoutNamespace($"{@namespace}Application");
+            
+            if (applicationtype is null)
+            {
+                throw new InvalidOperationException($"Application type not found at '{assembly.FullName}' with name {source.ApplicationName}Application or {@namespace}Application.");
+            }
+
+            if (Activator.CreateInstance(applicationtype) is not IApplication application)
+            {
+                throw new InvalidOperationException("Application instance can't be instantiated.");
+            }
+
+            return application;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDomain AutoInitialize(this IDomain source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Initialize(AutoInitializeInternal(source));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async Task<IDomain> AutoInitialize(this Task<IDomain> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return AutoInitialize(await source.ConfigureAwait(false));
+        }
+
         public static async Task<IDomain> Initialize<T>(this Task<IDomain> source) where T : IApplication, new()
         {
             if (source is null)
@@ -39,7 +97,125 @@ namespace NetExtender.Domain.Utilities
             IDomain domain = await source.ConfigureAwait(false);
             return domain.Initialize(application);
         }
+
+        private static IApplicationView AutoViewInternal(IDomain source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (!ReflectionUtilities.TryGetEntryPointType(out Type? type))
+            {
+                throw new InvalidOperationException("Entry point type not found.");
+            }
+            
+            Assembly assembly = type.Assembly;
+            if (!assembly.TryGetEntryTypeNamespace(out String? @namespace))
+            {
+                throw new InvalidOperationException($"Entry point type namespace not found at '{assembly.FullName}'.");
+            }
+            
+            Type? viewtype = assembly.GetTypeWithoutNamespace($"{source.ApplicationName}View") ?? assembly.GetTypeWithoutNamespace($"{@namespace}View");
+            
+            if (viewtype is null)
+            {
+                throw new InvalidOperationException($"View type not found at '{assembly.FullName}' with name {source.ApplicationName}View or {@namespace}View.");
+            }
+
+            if (Activator.CreateInstance(viewtype) is not IApplicationView view)
+            {
+                throw new InvalidOperationException("View instance can't be instantiated.");
+            }
+            
+            return view;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDomain AutoView(this IDomain source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.View(AutoViewInternal(source));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDomain AutoView(this IDomain source, IEnumerable<String>? args)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.View(AutoViewInternal(source), args);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDomain AutoView(this IDomain source, params String[]? args)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.View(AutoViewInternal(source), args);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<IDomain?> AutoViewAsync(this Task<IDomain> source)
+        {
+            return AutoViewAsync(source, CancellationToken.None);
+        }
+
+        public static async Task<IDomain?> AutoViewAsync(this Task<IDomain> source, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            IDomain domain = await source.ConfigureAwait(false);
+            return await domain.ViewAsync(AutoViewInternal(await source.ConfigureAwait(false)), token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<IDomain?> AutoViewAsync(this Task<IDomain> source, IEnumerable<String>? args)
+        {
+            return AutoViewAsync(source, args, CancellationToken.None);
+        }
+
+        public static async Task<IDomain?> AutoViewAsync(this Task<IDomain> source, IEnumerable<String>? args, CancellationToken token)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            IDomain domain = await source.ConfigureAwait(false);
+            return await domain.ViewAsync(AutoViewInternal(await source.ConfigureAwait(false)), args, token);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Task<IDomain?> AutoViewAsync(this Task<IDomain> source, params String[]? args)
+        {
+            return AutoViewAsync(source, CancellationToken.None, args);
+        }
+
+        public static async Task<IDomain?> AutoViewAsync(this Task<IDomain> source, CancellationToken token, params String[]? args)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            IDomain domain = await source.ConfigureAwait(false);
+            return await domain.ViewAsync(AutoViewInternal(await source.ConfigureAwait(false)), args, token);
+        }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IDomain View<T>(this Task<IDomain> source) where T : IApplicationView, new()
         {
             if (source is null)
@@ -66,6 +242,7 @@ namespace NetExtender.Domain.Utilities
             return domain.View(view);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IDomain View<T>(this Task<IDomain> source, IEnumerable<String>? args) where T : IApplicationView, new()
         {
             if (source is null)
@@ -92,6 +269,7 @@ namespace NetExtender.Domain.Utilities
             return domain.View(view, args);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IDomain View<T>(this Task<IDomain> source, params String[]? args) where T : IApplicationView, new()
         {
             if (source is null)
@@ -118,6 +296,7 @@ namespace NetExtender.Domain.Utilities
             return domain.View(view, args);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IDomain> ViewAsync<T>(this Task<IDomain> source) where T : IApplicationView, new()
         {
             if (source is null)
@@ -144,6 +323,7 @@ namespace NetExtender.Domain.Utilities
             return await domain.ViewAsync(view).ConfigureAwait(false);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IDomain> ViewAsync<T>(this Task<IDomain> source, CancellationToken token) where T : IApplicationView, new()
         {
             if (source is null)
@@ -170,6 +350,7 @@ namespace NetExtender.Domain.Utilities
             return await domain.ViewAsync(view, token).ConfigureAwait(false);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IDomain> ViewAsync<T>(this Task<IDomain> source, IEnumerable<String>? args) where T : IApplicationView, new()
         {
             if (source is null)
@@ -196,6 +377,7 @@ namespace NetExtender.Domain.Utilities
             return await domain.ViewAsync(view, args).ConfigureAwait(false);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IDomain> ViewAsync<T>(this Task<IDomain> source, params String[]? args) where T : IApplicationView, new()
         {
             if (source is null)
@@ -222,6 +404,7 @@ namespace NetExtender.Domain.Utilities
             return await domain.ViewAsync(view, args).ConfigureAwait(false);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IDomain> ViewAsync<T>(this Task<IDomain> source, IEnumerable<String>? args, CancellationToken token) where T : IApplicationView, new()
         {
             if (source is null)
@@ -248,6 +431,7 @@ namespace NetExtender.Domain.Utilities
             return await domain.ViewAsync(view, args, token).ConfigureAwait(false);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IDomain> ViewAsync<T>(this Task<IDomain> source, CancellationToken token, params String[] args) where T : IApplicationView, new()
         {
             if (source is null)

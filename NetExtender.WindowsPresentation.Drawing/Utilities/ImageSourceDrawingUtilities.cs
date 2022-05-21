@@ -14,7 +14,7 @@ using DrawingPixelFormat = System.Drawing.Imaging.PixelFormat;
 
 namespace NetExtender.Utilities.Types
 {
-    public static class ImageSourceUtilities
+    public static class ImageSourceDrawingUtilities
     {
         [DllImport("gdi32.dll", SetLastError = true)]
         private static extern Boolean DeleteObject(IntPtr handle);
@@ -49,7 +49,12 @@ namespace NetExtender.Utilities.Types
             }
 
             IntPtr handle = image.GetHbitmap();
-
+            
+            if (handle == IntPtr.Zero)
+            {
+                throw new InvalidOperationException("Could not get the handle of the image.");
+            }
+            
             try
             {
                 BitmapSource source = Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, Options);
@@ -90,6 +95,53 @@ namespace NetExtender.Utilities.Types
             bitmap.UnlockBits(bits);
 	
             return bitmap;
+        }
+        
+        public static BitmapSource SetOpacity(this BitmapSource source, Double opacity)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            using Bitmap bitmap = source.ToBitmap();
+            using Bitmap opacitybitmap = bitmap.SetOpacity(opacity);
+            return opacitybitmap.ToBitmapSource();
+        }
+
+        public static BitmapSource AlphaBlending(this BitmapSource first, Bitmap second, Double opacity)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+            
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+            
+            using Bitmap firstbitmap = first.ToBitmap();
+            using Bitmap blending = firstbitmap.AlphaBlending(second, opacity);
+            return blending.ToBitmapSource();
+        }
+
+        public static BitmapSource AlphaBlending(this BitmapSource first, BitmapSource second, Double opacity)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+            
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+            
+            using Bitmap firstbitmap = first.ToBitmap();
+            using Bitmap secondbitmap = second.ToBitmap();
+            using Bitmap blending = firstbitmap.AlphaBlending(secondbitmap, opacity);
+            return blending.ToBitmapSource();
         }
     }
 }

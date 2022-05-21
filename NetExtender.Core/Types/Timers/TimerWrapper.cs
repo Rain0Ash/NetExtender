@@ -50,7 +50,7 @@ namespace NetExtender.Types.Timers
             }
         }
 
-        public event TickHandler Tick = null!;
+        public event TickHandler? Tick;
 
         public TimerWrapper(Int32 interval)
             : this((Double) interval)

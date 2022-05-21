@@ -51,7 +51,7 @@ namespace NetExtender.Types.Timers
             }
         }
 
-        public event TickHandler Tick = null!;
+        public event TickHandler? Tick;
 
         public TimerWinFormsWrapper(Int32 interval)
             : this(new Timer { Interval = interval })

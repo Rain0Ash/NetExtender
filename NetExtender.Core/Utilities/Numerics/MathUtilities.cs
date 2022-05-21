@@ -1701,7 +1701,8 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int32 ILog10(this Single value)
         {
-            if (value == 0)
+            value = Math.Abs(value);
+            if (value < Single.Epsilon)
             {
                 return Int32.MinValue;
             }
@@ -1711,13 +1712,14 @@ namespace NetExtender.Utilities.Numerics
                 return Int32.MaxValue;
             }
 
-            return (Int32) MathF.Log10(Math.Abs(value));
+            return (Int32) MathF.Log10(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int32 ILog10(this Double value)
         {
-            if (value == 0)
+            value = Math.Abs(value);
+            if (value < Double.Epsilon)
             {
                 return Int32.MinValue;
             }
@@ -1727,7 +1729,7 @@ namespace NetExtender.Utilities.Numerics
                 return Int32.MaxValue;
             }
 
-            return (Int32) Math.Log10(Math.Abs(value));
+            return (Int32) Math.Log10(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -2417,8 +2419,6 @@ namespace NetExtender.Utilities.Numerics
                 value /= 10;
             }
         }
-
-        //TODO: ILog10 and Digit for Float Double and Decimal
 
         /// <summary>
         /// Analogy of Math.Sqrt

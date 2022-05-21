@@ -557,94 +557,6 @@ namespace NetExtender.Utilities.Types
         }
 
         /// <summary>
-        ///     Converts to the 8-bit signed integer.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static SByte ToSByte<T>(this T value) where T : unmanaged, Enum
-        {
-            return GetUnderlyingType<T>() == typeof(SByte) ? Unsafe.As<T, SByte>(ref value) : throw new ArgumentException(nameof(value));
-        }
-
-        /// <summary>
-        ///     Converts to the 8-bit unsigned integer.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static Byte ToByte<T>(this T value) where T : unmanaged, Enum
-        {
-            return GetUnderlyingType<T>() == typeof(Byte) ? Unsafe.As<T, Byte>(ref value) : throw new ArgumentException(nameof(value));
-        }
-
-        /// <summary>
-        ///     Converts to the 16-bit signed integer.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static Int16 ToInt16<T>(this T value) where T : unmanaged, Enum
-        {
-            return GetUnderlyingType<T>() == typeof(Int16) ? Unsafe.As<T, Int16>(ref value) : throw new ArgumentException(nameof(value));
-        }
-
-        /// <summary>
-        ///     Converts to the 16-bit unsigned integer.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static UInt16 ToUInt16<T>(this T value) where T : unmanaged, Enum
-        {
-            return GetUnderlyingType<T>() == typeof(UInt16) ? Unsafe.As<T, UInt16>(ref value) : throw new ArgumentException(nameof(value));
-        }
-
-        /// <summary>
-        ///     Converts to the 32-bit signed integer.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static Int32 ToInt32<T>(this T value) where T : unmanaged, Enum
-        {
-            return GetUnderlyingType<T>() == typeof(Int32) ? Unsafe.As<T, Int32>(ref value) : throw new ArgumentException(nameof(value));
-        }
-
-        /// <summary>
-        ///     Converts to the 32-bit unsigned integer.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static UInt32 ToUInt32<T>(this T value) where T : unmanaged, Enum
-        {
-            return GetUnderlyingType<T>() == typeof(UInt32) ? Unsafe.As<T, UInt32>(ref value) : throw new ArgumentException(nameof(value));
-        }
-
-        /// <summary>
-        ///     Converts to the 64-bit signed integer.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static Int64 ToInt64<T>(this T value) where T : unmanaged, Enum
-        {
-            return GetUnderlyingType<T>() == typeof(Int64) ? Unsafe.As<T, Int64>(ref value) : throw new ArgumentException(nameof(value));
-        }
-
-        /// <summary>
-        ///     Converts to the 64-bit unsigned integer.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="value"></param>
-        /// <returns></returns>
-        public static UInt64 ToUInt64<T>(this T value) where T : unmanaged, Enum
-        {
-            return GetUnderlyingType<T>() == typeof(UInt64) ? Unsafe.As<T, UInt64>(ref value) : throw new ArgumentException(nameof(value));
-        }
-
-        /// <summary>
         ///     Converts to the member information of the constant in the specified enumeration value.
         /// </summary>
         /// <typeparam name="T"></typeparam>
@@ -959,7 +871,7 @@ namespace NetExtender.Utilities.Types
         private static class CacheValues<T> where T : unmanaged, Enum
         {
             public static ReadOnlyCollection<T> Values { get; }
-            public static ImmutableSortedSet<T> Set { get; }
+            public static ImmutableHashSet<T> Set { get; }
 
             public static Boolean IsEmpty
             {
@@ -974,7 +886,7 @@ namespace NetExtender.Utilities.Types
                 Type type = CacheType<T>.Type;
                 T[] values = Enum.GetValues(type) as T[] ?? throw new ArgumentException(nameof(T));
                 Values = values.ToReadOnlyArray();
-                Set = Values.ToImmutableSortedSet();
+                Set = Values.ToImmutableHashSet();
             }
             
             public static Boolean Contains(T value)
@@ -986,7 +898,7 @@ namespace NetExtender.Utilities.Types
         private static class CacheValuesWithoutDefault<T> where T : unmanaged, Enum
         {
             public static ReadOnlyCollection<T> Values { get; }
-            public static ImmutableSortedSet<T> Set { get; }
+            public static ImmutableHashSet<T> Set { get; }
 
             public static Boolean IsEmpty
             {
@@ -999,7 +911,7 @@ namespace NetExtender.Utilities.Types
             static CacheValuesWithoutDefault()
             {
                 Values = CacheValues<T>.Values.Where(GenericUtilities.IsNotDefault).ToReadOnlyArray();
-                Set = Values.ToImmutableSortedSet();
+                Set = Values.ToImmutableHashSet();
             }
 
             public static Boolean Contains(T value)

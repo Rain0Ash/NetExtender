@@ -18,8 +18,8 @@ namespace NetExtender.Types.Monads
         
         private Lazy<T> Internal { get; }
 
-        private event Action<T> Init = null!;
-        public event Action<T> Initialized
+        private event Action<T>? Init;
+        public event Action<T>? Initialized
         {
             add
             {
@@ -101,7 +101,7 @@ namespace NetExtender.Types.Monads
             {
                 T value = valueFactory.Invoke();
                 Init?.Invoke(value);
-                Init = null!;
+                Init = null;
                 return value;
             }
 

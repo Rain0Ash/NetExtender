@@ -11,51 +11,69 @@ namespace NetExtender.Utilities.Types
     {
         /// <summary>Invokes the dispose for each item in the <paramref name="source"/>.</summary>
         /// <param name="source">The multiple <see cref="IDisposable"/> instances.</param>
-        public static void DisposeAll(this IEnumerable<IDisposable?> source)
+        public static void DisposeAll<T>(this IEnumerable<T?> source) where T : IDisposable
         {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            foreach (IDisposable? item in source)
-            {
-                try
-                {
-                    item?.Dispose();
-                }
-                catch (Exception)
-                {
-                    // ignore
-                }
-            }
+            DisposeAll(source, null);
         }
 
         /// <summary>Invokes the dispose for each item in the <paramref name="source"/>.</summary>
         /// <param name="source">The multiple <see cref="IDisposable"/> instances.</param>
         /// <param name="handler">The exception handler.</param>
-        public static void DisposeAll(this IEnumerable<IDisposable?> source, Func<Exception, Boolean>? handler)
+        public static void DisposeAll<T>(this IEnumerable<T?> source, Func<Exception, Boolean>? handler) where T : IDisposable
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (handler is null)
+            foreach (T? item in source)
             {
-                DisposeAll(source);
-                return;
-            }
-
-            foreach (IDisposable? item in source)
-            {
+                if (item is null)
+                {
+                    continue;
+                }
+                
                 try
                 {
-                    item?.Dispose();
+                    item.Dispose();
                 }
                 catch (Exception exception)
                 {
-                    handler.Invoke(exception);
+                    handler?.Invoke(exception);
+                }
+            }
+        }
+        /// <summary>Invokes the dispose for each item in the <paramref name="source"/>.</summary>
+        /// <param name="source">The multiple <see cref="IDisposable"/> instances.</param>
+        public static ValueTask DisposeAllAsync<T>(this IEnumerable<T?> source) where T : IAsyncDisposable
+        {
+            return DisposeAllAsync(source, null);
+        }
+
+        /// <summary>Invokes the dispose for each item in the <paramref name="source"/>.</summary>
+        /// <param name="source">The multiple <see cref="IDisposable"/> instances.</param>
+        /// <param name="handler">The exception handler.</param>
+        public static async ValueTask DisposeAllAsync<T>(this IEnumerable<T?> source, Func<Exception, Boolean>? handler) where T : IAsyncDisposable
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            foreach (T? item in source)
+            {
+                if (item is null)
+                {
+                    continue;
+                }
+                
+                try
+                {
+                    await item.DisposeAsync();
+                }
+                catch (Exception exception)
+                {
+                    handler?.Invoke(exception);
                 }
             }
         }

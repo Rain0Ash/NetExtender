@@ -23,7 +23,7 @@ namespace NetExtender.Initializer
     /// </remarks>
     public static partial class NetExtenderFrameworkInitializer
     {
-        private static INetExtenderFrameworkInitializer Initializer { get; } = new InternalInitializer();
+        private static INetExtenderFrameworkInitializer Initializer { get; } = new NetExtenderFrameworkInitializerInfo();
 
         public static Boolean? Successful { get; internal set; }
 

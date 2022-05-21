@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,7 +19,7 @@ namespace NetExtender.Configuration.Properties
 {
     public class ConfigProperty<T> : IConfigProperty<T>, IFormattable
     {
-        public event ConfigurationChangedEventHandler<T> Changed = null!;
+        public event ConfigurationChangedEventHandler<T>? Changed;
         protected IConfigProperty Property { get; }
         protected DynamicLazy<T> Internal { get; }
 
@@ -123,7 +124,9 @@ namespace NetExtender.Configuration.Properties
         }
 
         public TryConverter<String?, T> Converter { get; }
-        
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+
         protected internal ConfigProperty(IConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : this(new ConfigProperty(config, key, null, options, sections), alternate, validate, converter)
         {
@@ -133,6 +136,7 @@ namespace NetExtender.Configuration.Properties
         {
             Property = property ?? throw new ArgumentNullException(nameof(property));
             Property.Changed += OnChanged;
+            Property.PropertyChanged += OnChanged;
             Internal = new DynamicLazy<T>(Initialize);
             Alternate = alternate;
             Validate = validate;
@@ -142,6 +146,11 @@ namespace NetExtender.Configuration.Properties
         protected virtual void OnChanged(ConfigurationChangedEventArgs<T> args)
         {
             Changed?.Invoke(this, args);
+        }
+        
+        protected virtual void OnChanged(Object? sender, PropertyChangedEventArgs args)
+        {
+            PropertyChanged?.Invoke(this, args);
         }
 
         protected virtual void OnChanged(T value)
@@ -342,8 +351,10 @@ namespace NetExtender.Configuration.Properties
         
         protected virtual void Dispose(Boolean disposing)
         {
-            Changed = null!;
+            Changed = null;
+            PropertyChanged = null;
             Property.Changed -= OnChanged;
+            Property.PropertyChanged -= OnChanged;
 
             if (disposing)
             {
@@ -361,7 +372,7 @@ namespace NetExtender.Configuration.Properties
     {
         protected IConfig Config { get; }
         
-        public event ConfigurationChangedEventHandler Changed = null!;
+        public event ConfigurationChangedEventHandler? Changed;
 
         public override String Path
         {
@@ -379,6 +390,8 @@ namespace NetExtender.Configuration.Properties
             }
         }
 
+        public override event PropertyChangedEventHandler? PropertyChanged;
+
         protected internal ConfigProperty(IConfig config, String? key, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : base(key, alternate, options, sections)
         {
@@ -389,6 +402,7 @@ namespace NetExtender.Configuration.Properties
         protected virtual void OnChanged(ConfigurationChangedEventArgs args)
         {
             Changed?.Invoke(this, args);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
         }
         
         protected virtual void OnChanged(String? value)
@@ -674,7 +688,8 @@ namespace NetExtender.Configuration.Properties
         protected override void Dispose(Boolean disposing)
         {
             Config.Changed -= OnChanged;
-            Changed = null!;
+            Changed = null;
+            PropertyChanged = null;
             base.Dispose();
         }
     }

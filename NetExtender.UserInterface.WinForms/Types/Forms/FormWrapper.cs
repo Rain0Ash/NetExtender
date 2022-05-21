@@ -23,7 +23,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
             return wrapper.Form;
         }
 
-        public event InterfaceClosingEventHandler WindowClosing = null!;
+        public event InterfaceClosingEventHandler? WindowClosing;
 
         public IntPtr Handle
         {

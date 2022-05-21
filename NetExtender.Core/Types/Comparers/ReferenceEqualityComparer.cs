@@ -1,58 +1,20 @@
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-#if !NET5_0_OR_GREATER
+using System;
+using System.Collections.Generic;
+
 namespace NetExtender.Types.Comparers
 {
     /// <summary>
     /// Equality comparer that uses the <see cref="object.ReferenceEquals(object, object)"/> to compare values.
     /// </summary>
-    public class ReferenceEqualityComparer : ReferenceEqualityComparer<Object>
-    {
-        private static Lazy<ReferenceEqualityComparer> Lazy { get; } = new Lazy<ReferenceEqualityComparer>();
-
-        public new static ReferenceEqualityComparer Default
-        {
-            get
-            {
-                return Lazy.Value;
-            }
-        }
-
-        public new static ReferenceEqualityComparer Instance
-        {
-            get
-            {
-                return Default;
-            }
-        }
-    }
-
-    /// <summary>
-    /// Equality comparer that uses the <see cref="object.ReferenceEquals(object, object)"/> to compare values.
-    /// </summary>
     /// <typeparam name="T">The type of objects to compare.</typeparam>
-    public class ReferenceEqualityComparer<T> : EqualityComparer<T> where T : class
+    public sealed class ReferenceEqualityComparer<T> : EqualityComparer<T>
     {
-        private static Lazy<ReferenceEqualityComparer<T>> Lazy { get; } = new Lazy<ReferenceEqualityComparer<T>>();
+        public new static ReferenceEqualityComparer<T> Default { get; } = new ReferenceEqualityComparer<T>();
 
-        public new static ReferenceEqualityComparer<T> Default
-        {
-            get
-            {
-                return Lazy.Value;
-            }
-        }
-
-        public static ReferenceEqualityComparer<T> Instance
-        {
-            get
-            {
-                return Default;
-            }
-        }
-
-        protected ReferenceEqualityComparer()
+        private ReferenceEqualityComparer()
         {
         }
 
@@ -61,7 +23,7 @@ namespace NetExtender.Types.Comparers
         /// </summary>
         /// <param name="x">First object.</param>
         /// <param name="y">Second object.</param>
-        public override Boolean Equals(T x, T y)
+        public override Boolean Equals(T? x, T? y)
         {
             return ReferenceEquals(x, y);
         }
@@ -72,8 +34,7 @@ namespace NetExtender.Types.Comparers
         /// <param name="obj">The object.</param>
         public override Int32 GetHashCode(T obj)
         {
-            return obj.GetHashCode();
+            return obj?.GetHashCode() ?? 0;
         }
     }
 }
-#endif

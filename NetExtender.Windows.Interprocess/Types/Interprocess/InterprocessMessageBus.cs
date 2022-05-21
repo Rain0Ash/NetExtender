@@ -44,7 +44,7 @@ namespace NetExtender.Types.Interprocess
 
         private IReadOnlyList<Task> HandlerTasks { get; set; } = new List<Task>();
 
-        public event EventHandler<HandledEventArgs<Byte[]>> MessageReceived = null!;
+        public event EventHandler<HandledEventArgs<Byte[]>>? MessageReceived;
 
         public Int64 SendedMessages
         {

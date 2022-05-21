@@ -131,7 +131,7 @@ namespace NetExtender.Utilities.UserInterface
         [DllImport("kernel32.dll")]
         private static extern UInt32 GetLastError();
 
-        public static event TypeHandler<CancelEventArgs<ConsoleCtrlType>> ConsoleExit = null!;
+        public static event TypeHandler<CancelEventArgs<ConsoleCtrlType>>? ConsoleExit;
 
         /*
         public delegate void ConsoleMouseEvent(MOUSE_EVENT_RECORD r);

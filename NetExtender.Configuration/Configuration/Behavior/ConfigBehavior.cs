@@ -40,7 +40,7 @@ namespace NetExtender.Configuration.Behavior
             return !String.IsNullOrWhiteSpace(path) && PathUtilities.IsValidFilePath(path) ? path : GetDefaultPath(extension);
         }
 
-        public event ConfigurationChangedEventHandler Changed = null!;
+        public event ConfigurationChangedEventHandler? Changed;
         public String Path { get; }
         public ConfigOptions Options { get; }
 

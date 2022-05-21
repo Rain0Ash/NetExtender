@@ -119,7 +119,7 @@ namespace NetExtender.Utilities.UserInterface.Winforms.ListView
                 return key;
             }
 
-            key = image.GetHash().GetStringFromBytes();
+            key = image.Hashing().GetStringFromBytes();
             Int32 index = images.IndexOfImage(image);
 
             if (index >= 0)

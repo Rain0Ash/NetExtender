@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Properties.Interfaces;
 using NetExtender.Types.Monads;
@@ -85,6 +86,8 @@ namespace NetExtender.Configuration.Properties
                 return Options.HasFlag(ConfigPropertyOptions.AlwaysDefault);
             }
         }
+        
+        public abstract event PropertyChangedEventHandler? PropertyChanged;
 
         protected ConfigPropertyAbstraction(String? key, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {

@@ -10,26 +10,54 @@ using Md5 = System.Security.Cryptography.MD5;
 
 namespace NetExtender.Crypto
 {
-    public enum HashType : UInt16
+    public enum HashType : Byte
     {
-        CRC8 = 1,
-        CRC16 = 2,
-        CRC32 = 4,
-        CRC64 = 8,
-        MD5 = 16,
-        SHA1 = 20,
-        SHA224 = 28,
-        SHA256 = 32,
-        SHA384 = 48,
-        SHA512 = 64
+        Default,
+        CRC8,
+        CRC16,
+        CRC32,
+        CRC64,
+        MD5,
+        SHA1,
+        SHA224,
+        SHA256,
+        SHA384,
+        SHA512
     }
 
     public static partial class Cryptography
     {
+        public const HashType DefaultHashType = HashType.SHA256;
+
+        public static Int32 Size(this HashType type)
+        {
+            return type switch
+            {
+                HashType.Default => Size(DefaultHashType),
+                HashType.CRC8 => 1,
+                HashType.CRC16 => 2,
+                HashType.CRC32 => 4,
+                HashType.CRC64 => 8,
+                HashType.MD5 => 16,
+                HashType.SHA1 => 20,
+                HashType.SHA224 => 28,
+                HashType.SHA256 => 32,
+                HashType.SHA384 => 48,
+                HashType.SHA512 => 64,
+                _ => (Int32) type
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 BitSize(this HashType type)
+        {
+            return Size(type) * BitUtilities.BitInByte;
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte[] Hashing(this String value)
         {
-            return Hashing(value, HashType.SHA256);
+            return Hashing(value, DefaultHashType);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -46,7 +74,7 @@ namespace NetExtender.Crypto
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte[] Hashing(this Byte[] value)
         {
-            return Hashing(value, HashType.SHA256);
+            return Hashing(value, DefaultHashType);
         }
 
         public static Byte[] Hashing(this Byte[] value, HashType type)
@@ -58,6 +86,8 @@ namespace NetExtender.Crypto
 
             switch (type)
             {
+                case HashType.Default:
+                    goto case DefaultHashType;
                 case HashType.CRC8:
                     return new[] { Hash.Crc8(value) };
                 case HashType.CRC16:
@@ -93,27 +123,144 @@ namespace NetExtender.Crypto
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this Byte[] value, Span<Byte> destination)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return Hashing((ReadOnlySpan<Byte>) value, destination);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this Memory<Byte> value, Span<Byte> destination)
+        {
+            return Hashing(value.Span, destination);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this Span<Byte> value, Span<Byte> destination)
+        {
+            return Hashing((ReadOnlySpan<Byte>) value, destination);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this ReadOnlyMemory<Byte> value, Span<Byte> destination)
+        {
+            return Hashing(value.Span, destination);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Hashing(this ReadOnlySpan<Byte> value, Span<Byte> destination)
         {
-            return Hashing(value, destination, HashType.SHA256);
+            return Hashing(value, destination, DefaultHashType);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this Byte[] value, Span<Byte> destination, HashType type)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return Hashing((ReadOnlySpan<Byte>) value, destination, type);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this Memory<Byte> value, Span<Byte> destination, HashType type)
+        {
+            return Hashing(value.Span, destination, type);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this Span<Byte> value, Span<Byte> destination, HashType type)
+        {
+            return Hashing((ReadOnlySpan<Byte>) value, destination, type);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this ReadOnlyMemory<Byte> value, Span<Byte> destination, HashType type)
+        {
+            return Hashing(value.Span, destination, type);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Hashing(this ReadOnlySpan<Byte> value, Span<Byte> destination, HashType type)
         {
-            return Hashing(value, destination, out _, type);
+            return Hashing(value, destination, type, out _);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this Byte[] value, Span<Byte> destination, out Int32 written)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return Hashing((ReadOnlySpan<Byte>) value, destination, out written);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this Memory<Byte> value, Span<Byte> destination, out Int32 written)
+        {
+            return Hashing(value.Span, destination, out written);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this Span<Byte> value, Span<Byte> destination, out Int32 written)
+        {
+            return Hashing((ReadOnlySpan<Byte>) value, destination, out written);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this ReadOnlyMemory<Byte> value, Span<Byte> destination, out Int32 written)
+        {
+            return Hashing(value.Span, destination, out written);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Hashing(this ReadOnlySpan<Byte> value, Span<Byte> destination, out Int32 written)
         {
-            return Hashing(value, destination, out written, HashType.SHA256);
+            return Hashing(value, destination, DefaultHashType, out written);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this Byte[] value, Span<Byte> destination, HashType type, out Int32 written)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return Hashing((ReadOnlySpan<Byte>) value, destination, type, out written);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this Memory<Byte> value, Span<Byte> destination, HashType type, out Int32 written)
+        {
+            return Hashing(value.Span, destination, type, out written);
         }
 
-        public static Boolean Hashing(this ReadOnlySpan<Byte> value, Span<Byte> destination, out Int32 written, HashType type)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this Span<Byte> value, Span<Byte> destination, HashType type, out Int32 written)
+        {
+            return Hashing((ReadOnlySpan<Byte>) value, destination, type, out written);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Hashing(this ReadOnlyMemory<Byte> value, Span<Byte> destination, HashType type, out Int32 written)
+        {
+            return Hashing(value.Span, destination, type, out written);
+        }
+
+        public static Boolean Hashing(this ReadOnlySpan<Byte> value, Span<Byte> destination, HashType type, out Int32 written)
         {
             return type switch
             {
+                HashType.Default => Hashing(value, destination, DefaultHashType, out written),
                 HashType.CRC8 => Hash.Crc8(value, destination, out written),
                 HashType.CRC16 => Hash.Crc16(value, destination, out written),
                 HashType.CRC32 => Hash.Crc32(value, destination, out written),
@@ -346,16 +493,16 @@ namespace NetExtender.Crypto
 
             public static Boolean Crc8(ReadOnlySpan<Byte> value, Span<Byte> destination, out Int32 written)
             {
-                if (destination.Length >= sizeof(Byte))
+                if (destination.Length < sizeof(Byte))
                 {
-                    Byte checksum = Crc8(value);
-                    destination[0] = checksum;
-                    written = sizeof(Byte);
-                    return true;
+                    written = 0;
+                    return false;
                 }
 
-                written = 0;
-                return false;
+                Byte checksum = Crc8(value);
+                destination[0] = checksum;
+                written = sizeof(Byte);
+                return true;
             }
 
             public static UInt16 Crc16(String value)
@@ -382,17 +529,17 @@ namespace NetExtender.Crypto
 
             public static Boolean Crc16(ReadOnlySpan<Byte> value, Span<Byte> destination, out Int32 written)
             {
-                if (destination.Length >= sizeof(UInt16))
+                if (destination.Length < sizeof(UInt16))
                 {
-                    UInt16 checksum = Crc16(value);
-                    destination[0] = (Byte) checksum;
-                    destination[1] = (Byte) (checksum >> BitUtilities.BitInByte);
-                    written = sizeof(UInt16);
-                    return true;
+                    written = 0;
+                    return false;
                 }
 
-                written = 0;
-                return false;
+                UInt16 checksum = Crc16(value);
+                destination[0] = (Byte) checksum;
+                destination[1] = (Byte) (checksum >> BitUtilities.BitInByte);
+                written = sizeof(UInt16);
+                return true;
             }
 
             public static UInt32 Crc32(String value)
@@ -419,21 +566,21 @@ namespace NetExtender.Crypto
 
             public static Boolean Crc32(ReadOnlySpan<Byte> value, Span<Byte> destination, out Int32 written)
             {
-                if (destination.Length >= sizeof(UInt32))
+                if (destination.Length < sizeof(UInt32))
                 {
-                    UInt32 checksum = Crc32(value);
-                    
-                    for (written = 0; written < sizeof(UInt32); written++)
-                    {
-                        destination[written] = (Byte) checksum;
-                        checksum >>= BitUtilities.BitInByte;
-                    }
-                    
-                    return true;
+                    written = 0;
+                    return false;
                 }
 
-                written = 0;
-                return false;
+                UInt32 checksum = Crc32(value);
+                    
+                for (written = 0; written < sizeof(UInt32); written++)
+                {
+                    destination[written] = (Byte) checksum;
+                    checksum >>= BitUtilities.BitInByte;
+                }
+                    
+                return true;
             }
 
             public static UInt64 Crc64(String value)
@@ -460,21 +607,21 @@ namespace NetExtender.Crypto
 
             public static Boolean Crc64(ReadOnlySpan<Byte> value, Span<Byte> destination, out Int32 written)
             {
-                if (destination.Length >= sizeof(UInt64))
+                if (destination.Length < sizeof(UInt64))
                 {
-                    UInt64 checksum = Crc64(value);
-                    
-                    for (written = 0; written < sizeof(UInt64); written++)
-                    {
-                        destination[written] = (Byte) checksum;
-                        checksum >>= BitUtilities.BitInByte;
-                    }
-
-                    return true;
+                    written = 0;
+                    return false;
                 }
 
-                written = 0;
-                return false;
+                UInt64 checksum = Crc64(value);
+                    
+                for (written = 0; written < sizeof(UInt64); written++)
+                {
+                    destination[written] = (Byte) checksum;
+                    checksum >>= BitUtilities.BitInByte;
+                }
+
+                return true;
             }
 
             private static class Crc8Table

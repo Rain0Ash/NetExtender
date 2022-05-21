@@ -471,6 +471,55 @@ namespace NetExtender.Utilities.Core
             return info.GetCustomAttributes(typeof(T), inherit).OfType<T>();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Type GetEntryPointType()
+        {
+            return TryGetEntryPointType(out Type? type) ? type : throw new InvalidOperationException();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Type GetEntryPointType(this Assembly assembly)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            return TryGetEntryPointType(assembly, out Type? type) ? type : throw new InvalidOperationException();
+        }
+
+        public static Boolean TryGetEntryPointType([MaybeNullWhen(false)] out Type result)
+        {
+            Assembly? assembly = Assembly.GetEntryAssembly();
+
+            if (assembly is not null)
+            {
+                return TryGetEntryPointType(assembly, out result);
+            }
+
+            result = default;
+            return false;
+        }
+
+        public static Boolean TryGetEntryPointType(this Assembly assembly, [MaybeNullWhen(false)] out Type result)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            Type? type = assembly.EntryPoint?.DeclaringType;
+
+            if (type is null)
+            {
+                result = default;
+                return false;
+            }
+            
+            result = type;
+            return true;
+        }
+
         public static FileInfo GetAssemblyFile(this Assembly assembly)
         {
             if (assembly is null)
@@ -944,6 +993,204 @@ namespace NetExtender.Utilities.Core
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetEntryTypeNamespace()
+        {
+            return GetEntryTypeNamespace(false);
+        }
+
+        public static String GetEntryTypeNamespace(Boolean root)
+        {
+            String? @namespace = GetEntryPointType().Namespace;
+
+            if (@namespace is null)
+            {
+                throw new InvalidOperationException();
+            }
+            
+            return root ? @namespace.Split('.')[0] : @namespace;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetEntryTypeNamespace(this Assembly assembly)
+        {
+            return GetEntryTypeNamespace(assembly, false);
+        }
+
+        public static String GetEntryTypeNamespace(this Assembly assembly, Boolean root)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+            
+            String? @namespace = GetEntryPointType(assembly).Namespace;
+
+            if (@namespace is null)
+            {
+                throw new InvalidOperationException();
+            }
+
+            return root ? @namespace.Split('.')[0] : @namespace;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetEntryTypeNamespace([MaybeNullWhen(false)] out String result)
+        {
+            return TryGetEntryTypeNamespace(false, out result);
+        }
+
+        public static Boolean TryGetEntryTypeNamespace(Boolean root, [MaybeNullWhen(false)] out String result)
+        {
+            if (!TryGetEntryPointType(out Type? type))
+            {
+                result = null;
+                return false;
+            }
+            
+            result = root ? type.Namespace?.Split('.')[0] : type.Namespace;
+            return result is not null;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetEntryTypeNamespace(this Assembly assembly, [MaybeNullWhen(false)] out String result)
+        {
+            return TryGetEntryTypeNamespace(assembly, false, out result);
+        }
+
+        public static Boolean TryGetEntryTypeNamespace(this Assembly assembly, Boolean root, [MaybeNullWhen(false)] out String result)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            if (!TryGetEntryPointType(assembly, out Type? type))
+            {
+                result = null;
+                return false;
+            }
+            
+            result = root ? type.Namespace?.Split('.')[0] : type.Namespace;
+            return result is not null;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Type[] GetTypesWithoutNamespace(String name)
+        {
+            return GetTypesWithoutNamespace(name, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Type[] GetTypesWithoutNamespace(String name, Boolean insensitive)
+        {
+            return GetTypesWithoutNamespace(Assembly.GetEntryAssembly() ?? throw new InvalidOperationException(), name, insensitive);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Type[] GetTypesWithoutNamespace(this Assembly assembly, String name)
+        {
+            return GetTypesWithoutNamespace(assembly, name, false);
+        }
+
+        public static Type[] GetTypesWithoutNamespace(this Assembly assembly, String name, Boolean insensitive)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            StringComparison comparison = insensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+            return assembly.GetTypes().Where(type => String.Equals(type.Name, name, comparison)).ToArray();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Type? GetTypeWithoutNamespace(String name)
+        {
+            return GetTypeWithoutNamespace(name, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Type? GetTypeWithoutNamespace(String name, Boolean insensitive)
+        {
+            return GetTypeWithoutNamespace(Assembly.GetEntryAssembly() ?? throw new InvalidOperationException(), name, insensitive);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Type? GetTypeWithoutNamespace(this Assembly assembly, String name)
+        {
+            return GetTypeWithoutNamespace(assembly, name, false);
+        }
+        
+        public static Type? GetTypeWithoutNamespace(this Assembly assembly, String name, Boolean insensitive)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            Type[] type = GetTypesWithoutNamespace(assembly, name, insensitive);
+
+            return type.Length switch
+            {
+                0 => null,
+                1 => type[0],
+                _ => throw new AmbiguousMatchException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetTypeWithoutNamespace(String name, [MaybeNullWhen(false)] out Type result)
+        {
+            return TryGetTypeWithoutNamespace(name, false, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetTypeWithoutNamespace(String name, Boolean insensitive, [MaybeNullWhen(false)] out Type result)
+        {
+            return TryGetTypeWithoutNamespace(Assembly.GetEntryAssembly() ?? throw new InvalidOperationException(), name, insensitive, out result);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetTypeWithoutNamespace(this Assembly assembly, String name, [MaybeNullWhen(false)] out Type result)
+        {
+            return TryGetTypeWithoutNamespace(assembly, name, false, out result);
+        }
+
+        public static Boolean TryGetTypeWithoutNamespace(this Assembly assembly, String name, Boolean insensitive, [MaybeNullWhen(false)] out Type result)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+            
+            Type[] type = GetTypesWithoutNamespace(assembly, name, insensitive);
+
+            if (type.Length == 1)
+            {
+                result = type[0];
+                return true;
+            }
+
+            result = null;
+            return false;
+        }
+
         /// <summary>
         /// Gets all the namespaces in this assembly.
         /// </summary>
@@ -958,19 +1205,33 @@ namespace NetExtender.Utilities.Core
             return assembly.GetTypes().Select(type => type.Namespace);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Type> GetTypesInNamespace(String @namespace)
         {
-            return GetTypesInNamespace(Assembly.GetEntryAssembly() ?? throw new InvalidOperationException(), @namespace);
+            return GetTypesInNamespace(@namespace, false);
         }
 
-        public static IEnumerable<Type> GetTypesInNamespace(this Assembly assembly, String @namespace)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Type> GetTypesInNamespace(String @namespace, Boolean insensitive)
+        {
+            return GetTypesInNamespace(Assembly.GetEntryAssembly() ?? throw new InvalidOperationException(), @namespace, insensitive);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Type> GetTypesInNamespace(this Assembly assembly, String? @namespace)
+        {
+            return GetTypesInNamespace(assembly, @namespace, false);
+        }
+
+        public static IEnumerable<Type> GetTypesInNamespace(this Assembly assembly, String? @namespace, Boolean insensitive)
         {
             if (assembly is null)
             {
                 throw new ArgumentNullException(nameof(assembly));
             }
 
-            return assembly.GetTypes().Where(type => String.Equals(type.Namespace, @namespace, StringComparison.Ordinal)).ToArray();
+            StringComparison comparison = insensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+            return assembly.GetTypes().Where(type => String.Equals(type.Namespace, @namespace, comparison)).ToArray();
         }
 
         public static Boolean IsJITOptimized(this Assembly assembly)

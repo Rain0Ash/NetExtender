@@ -50,7 +50,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         }
 
         public event InterfaceClosingEventHandler WindowClosing;
-        public event SizeChangeToggleHandler SizeChangeToggle = null!;
+        public event SizeChangeToggleHandler? SizeChangeToggle;
 
         protected FixedWindow()
         {

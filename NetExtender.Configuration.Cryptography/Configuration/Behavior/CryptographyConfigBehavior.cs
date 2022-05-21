@@ -34,7 +34,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         
         public IConfigurationCryptor Cryptor { get; }
 
-        public event ConfigurationChangedEventHandler Changed = null!;
+        public event ConfigurationChangedEventHandler? Changed;
 
         public String Path
         {

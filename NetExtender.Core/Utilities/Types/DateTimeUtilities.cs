@@ -9,7 +9,7 @@ using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
 {
-    public enum Month
+    public enum Month : Byte
     {
         January,
         February,
@@ -25,7 +25,7 @@ namespace NetExtender.Utilities.Types
         December
     }
 
-    public enum Quarter
+    public enum Quarter : Byte
     {
         First = 1,
         Second = 2,
@@ -33,71 +33,23 @@ namespace NetExtender.Utilities.Types
         Fourth = 4
     }
 
-    /// <summary>
-    /// Date comparison type
-    /// </summary>
     [Flags]
-    public enum DateCompare
+    public enum DateCompare : Byte
     {
-        /// <summary>
-        /// The none
-        /// </summary>
         None = 0,
-
-        /// <summary>
-        /// In the future
-        /// </summary>
         InFuture = 1,
-
-        /// <summary>
-        /// In the past
-        /// </summary>
         InPast = 2,
-
-        /// <summary>
-        /// Today
-        /// </summary>
         Today = 4,
-
-        /// <summary>
-        /// Weekday
-        /// </summary>
         WeekDay = 8,
-
-        /// <summary>
-        /// Weekend
-        /// </summary>
         WeekEnd = 16
     }
 
-    /// <summary>
-    /// Time frame
-    /// </summary>
-    public enum TimeFrame
+    public enum TimeFrame : Byte
     {
-        /// <summary>
-        /// Day
-        /// </summary>
         Day,
-
-        /// <summary>
-        /// Week
-        /// </summary>
         Week,
-
-        /// <summary>
-        /// Month
-        /// </summary>
         Month,
-
-        /// <summary>
-        /// Quarter
-        /// </summary>
         Quarter,
-
-        /// <summary>
-        /// Year
-        /// </summary>
         Year
     }
 
@@ -597,7 +549,7 @@ namespace NetExtender.Utilities.Types
         /// <param name="zone">Time zone to convert to</param>
         /// <returns>The converted DateTime</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static DateTime To(this DateTime date, TimeZoneInfo zone)
+        public static DateTime To(this DateTime date, TimeZoneInfo? zone)
         {
             zone ??= TimeZoneInfo.Utc;
             return TimeZoneInfo.ConvertTime(date, zone);

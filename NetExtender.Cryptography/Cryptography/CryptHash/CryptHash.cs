@@ -154,7 +154,7 @@ namespace NetExtender.Crypto.CryptHash
 
             while (--iterations > 0)
             {
-                Cryptography.Hashing(buffer, buffer, HashType);
+                buffer.Hashing(buffer, HashType);
             }
 
             return buffer;
@@ -251,11 +251,11 @@ namespace NetExtender.Crypto.CryptHash
             
             Span<Byte> current = stackalloc Byte[(UInt16) HashType];
             
-            Boolean successfull = Cryptography.Hashing(buffer, current, out written, HashType);
+            Boolean successfull = buffer.Hashing(current, HashType, out written);
             
             while (--iterations > 0 && successfull)
             {
-                successfull = Cryptography.Hashing(current, current, out written, HashType);
+                successfull = current.Hashing(current, HashType, out written);
             }
 
             if (successfull)

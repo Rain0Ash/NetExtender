@@ -3,11 +3,12 @@
 
 using System;
 using System.Collections.Immutable;
+using System.ComponentModel;
 using NetExtender.Configuration.Common;
 
 namespace NetExtender.Configuration.Properties.Interfaces
 {
-    public interface IConfigPropertyInfo : IDisposable
+    public interface IConfigPropertyInfo : INotifyPropertyChanged, IDisposable
     {
         public String Path { get; }
         public String? Key { get; }

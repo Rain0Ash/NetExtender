@@ -8,7 +8,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 {
     public abstract class StartedWindow : HandleWindow
     {
-        public event RoutedEventHandler Started = null!;
+        public event RoutedEventHandler? Started;
 
         private Boolean IsStarted { get; set; }
 

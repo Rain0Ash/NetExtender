@@ -10,7 +10,7 @@ namespace NetExtender.Initializer
     public static partial class NetExtenderFrameworkInitializer
     {
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
-        private class InternalInitializer : INetExtenderFrameworkInitializer
+        private class NetExtenderFrameworkInitializerInfo : INetExtenderFrameworkInitializer
         {
             public Boolean IsInitialize { get; set; }
             public Boolean IsFullInitializeRequired { get; set; }

@@ -23,7 +23,7 @@ namespace NetExtender.Types.Timers
 
         public Boolean IsStarted { get; private set; }
         
-        public event TickHandler Tick = null!;
+        public event TickHandler? Tick;
 
         private TimeSpan _interval = Time.Second.One;
         public TimeSpan Interval
