@@ -459,7 +459,7 @@ namespace NetExtender.Types.Dictionaries
             return Dictionary.Remove(key) | Order.Remove(key);
         }
 
-        public Boolean Remove(TKey key, out TValue? value)
+        public Boolean Remove(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
             if (key is null)
             {

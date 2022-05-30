@@ -4,12 +4,13 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using NetExtender.Types.Trees;
 using NetExtender.Types.Trees.Interfaces;
 using Newtonsoft.Json;
 
-namespace NetExtender.Types.Trees.Json
+namespace NetExtender.NewtonSoft.Types.Trees
 {
-    public class DictionaryTreeTypeJsonConverter : JsonConverter
+    public sealed class DictionaryTreeTypeJsonConverter : JsonConverter
     {
         private static Type DictionaryTypeDifinition { get; } = typeof(Dictionary<,>);
         private static Type DictionaryTreeTypeDifinition { get; } = typeof(DictionaryTree<,>);
@@ -31,7 +32,7 @@ namespace NetExtender.Types.Trees.Json
             return false;
         }
 
-        protected virtual Type MakeGenericType(Type objectType)
+        private static Type MakeGenericType(Type objectType)
         {
             try
             {
@@ -47,14 +48,14 @@ namespace NetExtender.Types.Trees.Json
                     return EqualityComparerTypeDifinition.MakeGenericType(objectType.GetGenericArguments());
                 }
 
-                if (definition == DictionaryTreeTypeDifinition || definition == IDictionaryTreeTypeDifinition)
+                if (definition != DictionaryTreeTypeDifinition && definition != IDictionaryTreeTypeDifinition)
                 {
-                    Type[] generic = objectType.GetGenericArguments();
-
-                    return DictionaryTypeDifinition.MakeGenericType(generic[0], DictionaryTreeNodeTypeDifinition.MakeGenericType(generic[0], generic[1]));
+                    return objectType;
                 }
 
-                return objectType;
+                Type[] generic = objectType.GetGenericArguments();
+                return DictionaryTypeDifinition.MakeGenericType(generic[0], DictionaryTreeNodeTypeDifinition.MakeGenericType(generic[0], generic[1]));
+
             }
             catch (Exception exception)
             {

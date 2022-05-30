@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using NetExtender.NewtonSoft.Types.Trees;
 using NetExtender.Types.Trees.Interfaces;
-using NetExtender.Types.Trees.Json;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 

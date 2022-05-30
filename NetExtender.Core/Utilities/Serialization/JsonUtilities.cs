@@ -125,7 +125,7 @@ namespace NetExtender.Utilities.Serialization
             return JsonConvert.SerializeXmlNode(document, Newtonsoft.Json.Formatting.Indented, true);
         }
 
-        private static PropertyContractResolver InitializeResolver(JsonSerializerSettings settings)
+        private static PropertyContractResolver InitializePropertyResolver(JsonSerializerSettings settings)
         {
             if (settings is null)
             {
@@ -144,39 +144,138 @@ namespace NetExtender.Utilities.Serialization
                 {
                     return resolver;
                 }
+                case SingletonCompositeContractResolver composite:
+                {
+                    return composite.GetOrAdd<PropertyContractResolver>();
+                }
                 case DefaultContractResolver other:
                 {
-                    PropertyContractResolver resolver = new PropertyContractResolver(other);
-                    settings.ContractResolver = resolver;
-                    return resolver;
+                    SingletonCompositeContractResolver singleton = new SingletonCompositeContractResolver
+                    {
+                        other,
+                        new PropertyContractResolver(other)
+                    };
+
+                    settings.ContractResolver = singleton;
+                    return singleton.GetOrAdd<PropertyContractResolver>();
                 }
                 default:
-                    throw new NotSupportedException(
-                        $"Invalid {nameof(settings.ContractResolver)}. Expected {nameof(DefaultContractResolver)}, received {settings.ContractResolver.GetType().FullName}.");
+                {
+                    SingletonCompositeContractResolver singleton = new SingletonCompositeContractResolver
+                    {
+                        settings.ContractResolver,
+                        new PropertyContractResolver()
+                    };
+
+                    settings.ContractResolver = singleton;
+                    return singleton.GetOrAdd<PropertyContractResolver>();
+                }
             }
         }
 
-        public static JsonSerializerSettings RenameProperty(this JsonSerializerSettings settings, Type type, String property, String name)
+        public static TSettings RenameProperty<TSettings>(this TSettings settings, Type type, String property, String name) where TSettings : JsonSerializerSettings
         {
-            InitializeResolver(settings).RenameProperty(type, property, name);
+            InitializePropertyResolver(settings).RenameProperty(type, property, name);
             return settings;
         }
 
-        public static JsonSerializerSettings IgnoreProperty(this JsonSerializerSettings settings, Type type, String property)
+        public static TSettings IgnoreProperty<TSettings>(this TSettings settings, Type type, String property) where TSettings : JsonSerializerSettings
         {
-            InitializeResolver(settings).IgnoreProperty(type, property);
+            InitializePropertyResolver(settings).IgnoreProperty(type, property);
             return settings;
         }
 
-        public static JsonSerializerSettings IgnoreProperty(this JsonSerializerSettings settings, Type type, params String[] properties)
+        public static TSettings IgnoreProperty<TSettings>(this TSettings settings, Type type, params String[] properties) where TSettings : JsonSerializerSettings
         {
-            InitializeResolver(settings).IgnoreProperty(type, properties);
+            InitializePropertyResolver(settings).IgnoreProperty(type, properties);
             return settings;
         }
 
-        public static JsonSerializerSettings OrderProperty(this JsonSerializerSettings settings, Type type, String property, Int32 order)
+        public static TSettings OrderProperty<TSettings>(this TSettings settings, Type type, String property, Int32 order) where TSettings : JsonSerializerSettings
         {
-            InitializeResolver(settings).OrderProperty(type, property, order);
+            InitializePropertyResolver(settings).OrderProperty(type, property, order);
+            return settings;
+        }
+        
+        public static OverrideConvertContractResolver InitializeOverrideContractResolver(JsonSerializerSettings settings)
+        {
+            if (settings is null)
+            {
+                throw new ArgumentNullException(nameof(settings));
+            }
+
+            switch (settings.ContractResolver)
+            {
+                case null:
+                {
+                    OverrideConvertContractResolver resolver = new OverrideConvertContractResolver();
+                    settings.ContractResolver = resolver;
+                    return resolver;
+                }
+                case OverrideConvertContractResolver resolver:
+                {
+                    return resolver;
+                }
+                case SingletonCompositeContractResolver composite:
+                {
+                    return composite.GetOrAdd<OverrideConvertContractResolver>();
+                }
+                case DefaultContractResolver other:
+                {
+                    SingletonCompositeContractResolver singleton = new SingletonCompositeContractResolver
+                    {
+                        other,
+                        new OverrideConvertContractResolver()
+                    };
+
+                    settings.ContractResolver = singleton;
+                    return singleton.GetOrAdd<OverrideConvertContractResolver>();
+                }
+                default:
+                {
+                    SingletonCompositeContractResolver singleton = new SingletonCompositeContractResolver
+                    {
+                        settings.ContractResolver,
+                        new OverrideConvertContractResolver()
+                    };
+
+                    settings.ContractResolver = singleton;
+                    return singleton.GetOrAdd<OverrideConvertContractResolver>();
+                }
+            }
+        }
+        
+        public static TSettings OverrideConverter<TSettings>(this TSettings settings, Type type, JsonConverter? converter) where TSettings : JsonSerializerSettings
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            InitializeOverrideContractResolver(settings).Add(type, converter);
+            return settings;
+        }
+        
+        public static TSettings OverrideConverter<T, TSettings>(this TSettings settings, JsonConverter? converter) where TSettings : JsonSerializerSettings
+        {
+            InitializeOverrideContractResolver(settings).Add<T>(converter);
+            return settings;
+        }
+        
+        public static TSettings WithoutConverter<TSettings>(this TSettings settings, Type type) where TSettings : JsonSerializerSettings
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            InitializeOverrideContractResolver(settings).Without(type);
+            return settings;
+        }
+        
+        public static TSettings WithoutConverter<T, TSettings>(this TSettings settings) where TSettings : JsonSerializerSettings
+        {
+            InitializeOverrideContractResolver(settings).Without<T>();
             return settings;
         }
 
@@ -225,6 +324,22 @@ namespace NetExtender.Utilities.Serialization
 
             result = new JsonTokenEntry(reader.TokenType, reader.ValueType, reader.Value, reader.Depth);
             return result.Token != JsonToken.None;
+        }
+
+        public static Boolean ReadFirstToken(this JsonReader reader, out JsonTokenEntry result)
+        {
+            if (reader is null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+
+            if (reader.GetToken(out result))
+            {
+                return true;
+            }
+
+            reader.Read();
+            return reader.GetToken(out result);
         }
 
         public static Boolean ReadToken(this JsonReader reader, out JsonTokenEntry result)

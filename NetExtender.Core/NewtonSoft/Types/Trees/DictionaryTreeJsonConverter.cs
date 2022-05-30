@@ -5,13 +5,14 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using NetExtender.Types.Trees;
 using NetExtender.Types.Trees.Interfaces;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 
-namespace NetExtender.Types.Trees.Json
+namespace NetExtender.NewtonSoft.Types.Trees
 {
     public sealed class DictionaryTreeJsonConverter<TKey, TValue> : DictionaryTreeJsonConverter where TKey : notnull
     {

@@ -3,10 +3,14 @@
 
 using System;
 using System.Globalization;
+using NetExtender.NewtonSoft.Types.Culture;
 using NetExtender.Utilities.Types;
+using Newtonsoft.Json;
 
 namespace NetExtender.Types.Culture
 {
+    [Serializable]
+    [JsonConverter(typeof(LocalizationIdentifierJsonConverter))]
     public readonly struct LocalizationIdentifier : IEquatable<LocalizationIdentifier>, IEquatable<Int32>, IEquatable<UInt16>, IEquatable<CultureIdentifier>,
         IComparable<LocalizationIdentifier>, IComparable<Int32>, IComparable<UInt16>, IComparable<CultureIdentifier>
     {

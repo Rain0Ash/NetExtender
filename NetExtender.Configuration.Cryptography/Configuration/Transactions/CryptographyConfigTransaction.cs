@@ -12,7 +12,6 @@ namespace NetExtender.Configuration.Cryptography.Transactions
 {
     public class CryptographyConfigTransaction : ConfigTransaction, ICryptographyConfigTransaction
     {
-        protected new ICryptographyConfigBehaviorTransaction? Internal { get; }
         public new ICryptographyConfig Original { get; }
         public new ICryptographyConfig Transaction { get; }
 
@@ -20,8 +19,7 @@ namespace NetExtender.Configuration.Cryptography.Transactions
             : base(original, transaction)
         {
             Original = original ?? throw new ArgumentNullException(nameof(original));
-            Internal = transaction ?? throw new ArgumentNullException(nameof(transaction));
-            Transaction = transaction.Transaction.Create();
+            Transaction = transaction is not null ? transaction.Transaction.Create() : throw new ArgumentNullException(nameof(transaction));
         }
         
         public CryptographyConfigTransaction(ICryptographyConfig original, ICryptographyConfig transaction)
