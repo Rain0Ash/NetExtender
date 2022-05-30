@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Collections;
@@ -52,6 +53,23 @@ namespace NetExtender.Utilities.Types
             {
                 return false;
             }
+        }
+
+        public static Boolean MoveNext<T>(this IEnumerator<T> enumerator, [MaybeNullWhen(false)] out T result)
+        {
+            if (enumerator is null)
+            {
+                throw new ArgumentNullException(nameof(enumerator));
+            }
+
+            if (!enumerator.MoveNext())
+            {
+                result = default;
+                return false;
+            }
+
+            result = enumerator.Current;
+            return true;
         }
         
         public static IEnumerable<Object?> AsEnumerable(this IEnumerator enumerator)

@@ -7,7 +7,8 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Culture
 {
-    public readonly struct LocalizationIdentifier : IEquatable<LocalizationIdentifier>, IEquatable<Int32>, IEquatable<UInt16>, IEquatable<CultureIdentifier>
+    public readonly struct LocalizationIdentifier : IEquatable<LocalizationIdentifier>, IEquatable<Int32>, IEquatable<UInt16>, IEquatable<CultureIdentifier>,
+        IComparable<LocalizationIdentifier>, IComparable<Int32>, IComparable<UInt16>, IComparable<CultureIdentifier>
     {
         public static Boolean operator ==(LocalizationIdentifier first, LocalizationIdentifier second)
         {
@@ -129,6 +130,22 @@ namespace NetExtender.Types.Culture
             }
         }
 
+        public String? TwoLetterISOLanguageName
+        {
+            get
+            {
+                return CultureUtilities.TryGetCultureInfo(Code, out CultureInfo info) ? info.TwoLetterISOLanguageName : null;
+            }
+        }
+        
+        public String? ThreeLetterISOLanguageName
+        {
+            get
+            {
+                return CultureUtilities.TryGetCultureInfo(Code, out CultureInfo info) ? info.ThreeLetterISOLanguageName : null;
+            }
+        }
+
         public Boolean IsDefault
         {
             get
@@ -150,6 +167,11 @@ namespace NetExtender.Types.Culture
         public LocalizationIdentifier(Int32 identifier)
         {
             Code = identifier > 0 ? identifier : CultureUtilities.Default;
+        }
+        
+        public override Int32 GetHashCode()
+        {
+            return Code;
         }
 
         public Boolean Equals(LocalizationIdentifier other)
@@ -184,22 +206,30 @@ namespace NetExtender.Types.Culture
                 _ => false
             };
         }
-
-        public override Int32 GetHashCode()
+        
+        public Int32 CompareTo(LocalizationIdentifier other)
         {
-            return Code;
+            return Code.CompareTo(other.Code);
+        }
+
+        public Int32 CompareTo(Int32 other)
+        {
+            return Code.CompareTo(other);
+        }
+
+        public Int32 CompareTo(UInt16 other)
+        {
+            return Code.CompareTo(other);
+        }
+
+        public Int32 CompareTo(CultureIdentifier other)
+        {
+            return Code.CompareTo((Int32) other);
         }
 
         public override String ToString()
         {
-            try
-            {
-                return CultureInfo.GetCultureInfo(Code).GetNativeLanguageName();
-            }
-            catch (Exception)
-            {
-                return Code.ToString();
-            }
+            return CultureUtilities.TryGetCultureInfo(Code, out CultureInfo info) ? info.GetNativeLanguageName() : Code.ToString();
         }
     }
 }

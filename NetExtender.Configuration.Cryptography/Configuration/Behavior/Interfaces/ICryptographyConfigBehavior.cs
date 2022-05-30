@@ -40,6 +40,10 @@ namespace NetExtender.Configuration.Cryptography.Behavior.Interfaces
         public Task<ConfigurationEntry[]?> GetExistsRawAsync(IEnumerable<String>? sections, CancellationToken token);
         public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token);
         public Task<ConfigurationValueEntry[]?> GetExistsValuesRawAsync(IEnumerable<String>? sections, CancellationToken token);
+        public Boolean Clear(IStringCryptor? cryptor, IEnumerable<String>? sections);
+        public Boolean ClearRaw(IEnumerable<String>? sections);
+        public Task<Boolean> ClearAsync(IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token);
+        public Task<Boolean> ClearRawAsync(IEnumerable<String>? sections, CancellationToken token);
         public Boolean Merge(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries);
         public Boolean MergeRaw(IEnumerable<ConfigurationValueEntry>? entries);
         public Task<Boolean> MergeAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token);

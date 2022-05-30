@@ -7,39 +7,65 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration;
 using NetExtender.Configuration.Behavior.Interfaces;
-using NetExtender.Configuration.Common;
+using NetExtender.Localization.Behavior.Transactions.Interfaces;
+using NetExtender.Localization.Common;
 using NetExtender.Localization.Common.Interfaces;
 using NetExtender.Localization.Events;
+using NetExtender.Types.Comparers;
 using NetExtender.Types.Culture;
 
 namespace NetExtender.Localization.Behavior.Interfaces
 {
-    public interface ILocalizationBehavior : IConfigBehavior
+    public interface ILocalizationBehavior : IConfigBehavior, IEnumerable<LocalizationMultiValueEntry>
     {
         public new event LocalizationChangedEventHandler Changed;
         public event ConfigurationChangedEventHandler ValueChanged;
+        public LocalizationOptions LocalizationOptions { get; }
+        public Boolean ThreeLetterName { get; }
         public LocalizationIdentifier Default { get; }
         public LocalizationIdentifier System { get; }
-        public LocalizationIdentifier Localization { get; }
-        public IComparer<LocalizationIdentifier> Comparer { get; }
+        public LocalizationIdentifier Localization { get; set; }
+        public LocalizationIdentifierBehaviorComparer Comparer { get; }
         public Boolean Contains(String? key, LocalizationIdentifier identifier, IEnumerable<String>? sections);
         public Task<Boolean> ContainsAsync(String? key, LocalizationIdentifier identifier, IEnumerable<String>? sections, CancellationToken token);
         public new ILocalizationString? Get(String? key, IEnumerable<String>? sections);
         public new Task<ILocalizationString?> GetAsync(String? key, IEnumerable<String>? sections, CancellationToken token);
         public String? Get(String? key, LocalizationIdentifier identifier, IEnumerable<String>? sections);
         public Task<String?> GetAsync(String? key, LocalizationIdentifier identifier, IEnumerable<String>? sections, CancellationToken token);
-        public Boolean Set(String? key, String? value, LocalizationIdentifier identifier, IEnumerable<String>? sections);
-        public Task<Boolean> SetAsync(String? key, String? value, LocalizationIdentifier identifier, IEnumerable<String>? sections, CancellationToken token);
         public Boolean Set(String? key, ILocalizationString? value, IEnumerable<String>? sections);
         public Task<Boolean> SetAsync(String? key, ILocalizationString? value, IEnumerable<String>? sections, CancellationToken token);
+        public Boolean Set(String? key, LocalizationIdentifier identifier, String? value, IEnumerable<String>? sections);
+        public Task<Boolean> SetAsync(String? key, LocalizationIdentifier identifier, String? value, IEnumerable<String>? sections, CancellationToken token);
         public ILocalizationString? GetOrSet(String? key, ILocalizationString? value, IEnumerable<String>? sections);
         public Task<ILocalizationString?> GetOrSetAsync(String? key, ILocalizationString? value, IEnumerable<String>? sections, CancellationToken token);
-        public String? GetOrSet(String? key, String? value, LocalizationIdentifier identifier, IEnumerable<String>? sections);
-        public Task<String?> GetOrSetAsync(String? key, String? value, LocalizationIdentifier identifier, IEnumerable<String>? sections, CancellationToken token);
-        public ConfigurationEntry[]? GetExists(LocalizationIdentifier identifier, IEnumerable<String>? sections);
-        public Task<ConfigurationEntry[]?> GetExistsAsync(LocalizationIdentifier identifier, IEnumerable<String>? sections, CancellationToken token);
-        public ConfigurationValueEntry[]? GetExistsValues(LocalizationIdentifier identifier, IEnumerable<String>? sections);
-        public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(LocalizationIdentifier identifier, IEnumerable<String>? sections, CancellationToken token);
-        public Boolean SetLocalization(LocalizationIdentifier identifier);
+        public String? GetOrSet(String? key, LocalizationIdentifier identifier, String? value, IEnumerable<String>? sections);
+        public Task<String?> GetOrSetAsync(String? key, LocalizationIdentifier identifier, String? value, IEnumerable<String>? sections, CancellationToken token);
+        public new LocalizationMultiEntry[]? GetExists(IEnumerable<String>? sections);
+        public new Task<LocalizationMultiEntry[]?> GetExistsAsync(IEnumerable<String>? sections, CancellationToken token);
+        public LocalizationEntry[]? GetExists(LocalizationIdentifier identifier, IEnumerable<String>? sections);
+        public Task<LocalizationEntry[]?> GetExistsAsync(LocalizationIdentifier identifier, IEnumerable<String>? sections, CancellationToken token);
+        public new LocalizationValueEntry[]? GetExistsValues(IEnumerable<String>? sections);
+        public new Task<LocalizationValueEntry[]?> GetExistsValuesAsync(IEnumerable<String>? sections, CancellationToken token);
+        public LocalizationMultiValueEntry[]? GetExistsMultiValues(IEnumerable<String>? sections);
+        public Task<LocalizationMultiValueEntry[]?> GetExistsMultiValuesAsync(IEnumerable<String>? sections, CancellationToken token);
+        public LocalizationValueEntry[]? GetExistsValues(LocalizationIdentifier identifier, IEnumerable<String>? sections);
+        public Task<LocalizationValueEntry[]?> GetExistsValuesAsync(LocalizationIdentifier identifier, IEnumerable<String>? sections, CancellationToken token);
+        public Boolean Clear(String? key, IEnumerable<String>? sections);
+        public Task<Boolean> ClearAsync(String? key, IEnumerable<String>? sections, CancellationToken token);
+        public Boolean Merge(IEnumerable<LocalizationValueEntry>? entries);
+        public Task<Boolean> MergeAsync(IEnumerable<LocalizationValueEntry>? entries, CancellationToken token);
+        public Boolean Merge(IEnumerable<LocalizationMultiValueEntry>? entries);
+        public Task<Boolean> MergeAsync(IEnumerable<LocalizationMultiValueEntry>? entries, CancellationToken token);
+        public Boolean Replace(IEnumerable<LocalizationValueEntry>? entries);
+        public Task<Boolean> ReplaceAsync(IEnumerable<LocalizationValueEntry>? entries, CancellationToken token);
+        public Boolean Replace(IEnumerable<LocalizationMultiValueEntry>? entries);
+        public Task<Boolean> ReplaceAsync(IEnumerable<LocalizationMultiValueEntry>? entries, CancellationToken token);
+        public LocalizationValueEntry[]? Difference(IEnumerable<LocalizationValueEntry>? entries);
+        public Task<LocalizationValueEntry[]?> DifferenceAsync(IEnumerable<LocalizationValueEntry>? entries, CancellationToken token);
+        public LocalizationValueEntry[]? Difference(IEnumerable<LocalizationMultiValueEntry>? entries);
+        public Task<LocalizationValueEntry[]?> DifferenceAsync(IEnumerable<LocalizationMultiValueEntry>? entries, CancellationToken token);
+        public new ILocalizationBehaviorTransaction? Transaction();
+        public new Task<ILocalizationBehaviorTransaction?> TransactionAsync(CancellationToken token);
+        public new IEnumerator<LocalizationMultiValueEntry> GetEnumerator();
     }
 }

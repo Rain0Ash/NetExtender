@@ -169,6 +169,26 @@ namespace NetExtender.Configuration.Wrappers
             return Internal.GetExistsValuesAsync(sections, token);
         }
 
+        public Boolean Clear()
+        {
+            return Clear(null);
+        }
+
+        public Boolean Clear(IEnumerable<String>? sections)
+        {
+            return Internal.Clear(sections);
+        }
+
+        public Task<Boolean> ClearAsync(CancellationToken token)
+        {
+            return ClearAsync(null, token);
+        }
+
+        public Task<Boolean> ClearAsync(IEnumerable<String>? sections, CancellationToken token)
+        {
+            return Internal.ClearAsync(sections, token);
+        }
+
         public Boolean Reload()
         {
             return Internal.Reload();

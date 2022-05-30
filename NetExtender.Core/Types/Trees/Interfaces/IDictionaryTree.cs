@@ -9,6 +9,7 @@ namespace NetExtender.Types.Trees.Interfaces
 {
     public interface IDictionaryTree<TKey, TValue> : IDictionary<TKey, IDictionaryTreeNode<TKey, TValue>> where TKey : notnull
     {
+        public IDictionaryTreeNode<TKey, TValue> Node { get; }
         public IEqualityComparer<TKey> Comparer { get; }
         public Int64 FullCount { get; }
         public Boolean IsEmpty { get; }

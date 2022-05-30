@@ -346,6 +346,51 @@ namespace NetExtender.Configuration
         {
             return Behavior.GetExistsValuesAsync(sections, token);
         }
+        
+        public Boolean Clear()
+        {
+            return Clear(null);
+        }
+        
+        public Boolean Clear(params String[]? sections)
+        {
+            return Clear((IEnumerable<String>?) sections);
+        }
+
+        public virtual Boolean Clear(IEnumerable<String>? sections)
+        {
+            return Behavior.Clear(sections);
+        }
+
+        public Task<Boolean> ClearAsync()
+        {
+            return ClearAsync(null);
+        }
+
+        public Task<Boolean> ClearAsync(params String[]? sections)
+        {
+            return ClearAsync((IEnumerable<String>?) sections);
+        }
+
+        public Task<Boolean> ClearAsync(IEnumerable<String>? sections)
+        {
+            return ClearAsync(sections, CancellationToken.None);
+        }
+        
+        public Task<Boolean> ClearAsync(CancellationToken token)
+        {
+            return ClearAsync(null, token);
+        }
+        
+        public Task<Boolean> ClearAsync(CancellationToken token, params String[]? sections)
+        {
+            return ClearAsync(sections, token);
+        }
+
+        public virtual Task<Boolean> ClearAsync(IEnumerable<String>? sections, CancellationToken token)
+        {
+            return Behavior.ClearAsync(sections, token);
+        }
 
         public virtual Boolean Reload()
         {

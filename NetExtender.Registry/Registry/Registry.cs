@@ -200,22 +200,42 @@ namespace NetExtender.Registry
             }
         }
 
-        private Registry(Registry nested, IEnumerable<String>? sections = null)
+        private Registry(Registry? nested)
+            : this(nested, null)
+        {
+        }
+
+        private Registry(Registry? nested, IEnumerable<String>? sections)
             : this(nested, false, sections)
         {
         }
 
-        private Registry(Registry nested, Boolean inherit, IEnumerable<String>? sections = null)
-            : this(nested?.Key ?? throw new ArgumentNullException(nameof(nested)), nested, inherit, sections)
+        private Registry(Registry? nested, Boolean inherit)
+            : this(nested, inherit, null)
         {
         }
 
-        private Registry(RegistryKeys key, Registry nested, IEnumerable<String>? sections = null)
+        private Registry(Registry? nested, Boolean inherit, IEnumerable<String>? sections)
+            : this(nested?.Key ?? RegistryKeys.CurrentUser, nested, inherit, sections)
+        {
+        }
+
+        private Registry(RegistryKeys key, Registry? nested)
+            : this(key, nested, null)
+        {
+        }
+
+        private Registry(RegistryKeys key, Registry? nested, IEnumerable<String>? sections)
             : this(key, nested, false, sections)
         {
         }
 
-        private Registry(RegistryKeys key, Registry nested, Boolean inherit, IEnumerable<String>? sections = null)
+        private Registry(RegistryKeys key, Registry? nested, Boolean inherit)
+            : this(key, nested, inherit, null)
+        {
+        }
+
+        private Registry(RegistryKeys key, Registry? nested, Boolean inherit, IEnumerable<String>? sections)
         {
             Key = nested?.Key ?? key;
             Sections = nested?.Sections ?? ImmutableArray<String>.Empty;
@@ -242,7 +262,7 @@ namespace NetExtender.Registry
         }
 
         public Registry(RegistryKeys key)
-            : this(key, null)
+            : this(key, (IEnumerable<String>?) null)
         {
         }
         

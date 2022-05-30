@@ -14,14 +14,14 @@ using Newtonsoft.Json;
 
 namespace NetExtender.Types.Trees
 {
-    [JsonConverter(typeof(DictionaryTreeJsonConverter))]
+    [JsonConverter(typeof(DictionaryTreeJsonConverter<,>))]
     public class DictionaryTree<TKey, TValue> : Dictionary<TKey, IDictionaryTreeNode<TKey, TValue>>, IDictionaryTree<TKey, TValue>, IReadOnlyDictionaryTree<TKey, TValue> where TKey : notnull
     {
         [JsonIgnore]
         private IDictionaryTreeNode<TKey, TValue>? _node;
         
         [JsonIgnore]
-        private IDictionaryTreeNode<TKey, TValue> Node
+        public IDictionaryTreeNode<TKey, TValue> Node
         {
             get
             {
@@ -90,13 +90,13 @@ namespace NetExtender.Types.Trees
         }
         
         public DictionaryTree(Dictionary<TKey, DictionaryTreeNode<TKey, TValue>> dictionary)
-            : this(dictionary, dictionary?.Comparer)
+            : this(dictionary ?? throw new ArgumentNullException(nameof(dictionary)), dictionary.Comparer)
         {
         }
 
         public DictionaryTree(Dictionary<TKey, DictionaryTreeNode<TKey, TValue>> dictionary, IEqualityComparer<TKey>? comparer)
-            : this(dictionary?.Select(item => new KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>>(item.Key, item.Value))
-                ?? throw new ArgumentNullException(nameof(dictionary)), comparer)
+            : this(dictionary is not null ? dictionary.Select(item => new KeyValuePair<TKey, IDictionaryTreeNode<TKey, TValue>>(item.Key, item.Value))
+                : throw new ArgumentNullException(nameof(dictionary)), comparer)
         {
         }
 

@@ -762,34 +762,34 @@ namespace NetExtender.Utilities.Types
             return source.ForEachByWhereNot(item => item.Value, where, action);
         }
         
-        public static IEnumerable<KeyValuePair<TKey, TValue>> WhereKeyNotNull<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        public static IEnumerable<KeyValuePair<TKey, TValue>> WhereKeyNotNull<TKey, TValue>(this IEnumerable<KeyValuePair<TKey?, TValue>> source)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.Where(item => item.Key is not null);
+            return source.Where(item => item.Key is not null)!;
         }
         
-        public static IEnumerable<KeyValuePair<TKey, TValue>> WhereValueNotNull<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        public static IEnumerable<KeyValuePair<TKey, TValue>> WhereValueNotNull<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue?>> source)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.Where(item => item.Value is not null);
+            return source.Where(item => item.Value is not null)!;
         }
         
-        public static IEnumerable<KeyValuePair<TKey, TValue>> WhereKeyValueNotNull<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)
+        public static IEnumerable<KeyValuePair<TKey, TValue>> WhereKeyValueNotNull<TKey, TValue>(this IEnumerable<KeyValuePair<TKey?, TValue?>> source)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return source.Where(item => item.Key is not null && item.Value is not null);
+            return source.Where(item => item.Key is not null && item.Value is not null)!;
         }
 
         public static IOrderedEnumerable<KeyValuePair<TKey, TValue>> OrderByKeys<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source)

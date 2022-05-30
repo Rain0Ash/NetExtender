@@ -101,6 +101,26 @@ namespace NetExtender.Configuration.Behavior
 
             return sections is null ? new[] { key } : ToSection(sections.Append(key));
         }
+        
+        protected virtual String? FromSection(ref IEnumerable<String>? sections)
+        {
+            if (sections is null)
+            {
+                return null;
+            }
+            
+            List<String> collection = sections.ToList();
+
+            if (collection.Count <= 0)
+            {
+                return null;
+            }
+
+            String key = collection[^1];
+            collection.RemoveAt(collection.Count - 1);
+            sections = collection;
+            return key;
+        }
 
         public virtual Boolean Contains(String? key, IEnumerable<String>? sections)
         {
@@ -156,6 +176,13 @@ namespace NetExtender.Configuration.Behavior
         public virtual Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IEnumerable<String>? sections, CancellationToken token)
         {
             return GetExistsValues(sections).ToTask();
+        }
+
+        public abstract Boolean Clear(IEnumerable<String>? sections);
+
+        public virtual Task<Boolean> ClearAsync(IEnumerable<String>? sections, CancellationToken token)
+        {
+            return Clear(sections).ToTask();
         }
 
         public abstract Boolean Reload();

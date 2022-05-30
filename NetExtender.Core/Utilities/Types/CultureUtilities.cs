@@ -46,24 +46,48 @@ namespace NetExtender.Utilities.Types
 
         public static CultureInfo English { get; } = GetCultureInfo(CultureIdentifier.En);
 
-        public static LocalizationIdentifier GetLocalizationIdentifier(String code)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static LocalizationIdentifier GetLocalizationIdentifier(UInt16 lcid)
         {
-            if (code is null)
-            {
-                throw new ArgumentNullException(nameof(code));
-            }
-
-            return CultureInfo.GetCultureInfo(code, true).LCID;
+            return GetCultureIdentifier(lcid);
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CultureIdentifier GetCultureIdentifier(UInt16 lcid)
         {
             return TryGetCultureIdentifier(lcid, out CultureIdentifier identifier) ? identifier : CultureIdentifier.Invariant;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static LocalizationIdentifier GetLocalizationIdentifier(Int32 lcid)
+        {
+            return GetCultureIdentifier(lcid);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CultureIdentifier GetCultureIdentifier(Int32 lcid)
         {
             return TryGetCultureIdentifier(lcid, out CultureIdentifier identifier) ? identifier : CultureIdentifier.Invariant;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetIdentifier(UInt16 lcid, out LocalizationIdentifier identifier)
+        {
+            return TryGetLocalizationIdentifier(lcid, out identifier);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetIdentifier(UInt16 lcid, out CultureIdentifier identifier)
+        {
+            return TryGetCultureIdentifier(lcid, out identifier);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetLocalizationIdentifier(UInt16 lcid, out LocalizationIdentifier identifier)
+        {
+            Boolean successful = TryGetCultureIdentifier(lcid, out CultureIdentifier culture);
+            identifier = culture;
+            return successful;
         }
 
         public static Boolean TryGetCultureIdentifier(UInt16 lcid, out CultureIdentifier identifier)
@@ -83,6 +107,26 @@ namespace NetExtender.Utilities.Types
             identifier = CultureIdentifier.Invariant;
             return false;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetIdentifier(Int32 lcid, out LocalizationIdentifier identifier)
+        {
+            return TryGetLocalizationIdentifier(lcid, out identifier);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetIdentifier(Int32 lcid, out CultureIdentifier identifier)
+        {
+            return TryGetCultureIdentifier(lcid, out identifier);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetLocalizationIdentifier(Int32 lcid, out LocalizationIdentifier identifier)
+        {
+            Boolean successful = TryGetCultureIdentifier(lcid, out CultureIdentifier culture);
+            identifier = culture;
+            return successful;
+        }
         
         public static Boolean TryGetCultureIdentifier(Int32 lcid, out CultureIdentifier identifier)
         {
@@ -94,15 +138,37 @@ namespace NetExtender.Utilities.Types
             identifier = CultureIdentifier.Invariant;
             return false;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static LocalizationIdentifier GetLocalizationIdentifier(String code)
+        {
+            return GetCultureIdentifier(code);
+        }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CultureIdentifier GetCultureIdentifier(String code)
         {
-            if (code is null)
-            {
-                throw new ArgumentNullException(nameof(code));
-            }
-
             return TryGetCultureIdentifier(code, out CultureIdentifier identifier) ? identifier : CultureIdentifier.Invariant;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetIdentifier(String code, out LocalizationIdentifier identifier)
+        {
+            return TryGetLocalizationIdentifier(code, out identifier);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetIdentifier(String code, out CultureIdentifier identifier)
+        {
+            return TryGetCultureIdentifier(code, out identifier);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetLocalizationIdentifier(String code, out LocalizationIdentifier identifier)
+        {
+            Boolean successful = TryGetCultureIdentifier(code, out CultureIdentifier culture);
+            identifier = culture;
+            return successful;
         }
         
         public static Boolean TryGetCultureIdentifier(String code, out CultureIdentifier identifier)
@@ -155,25 +221,16 @@ namespace NetExtender.Utilities.Types
             return info.TextInfo.ToTitleCase(native);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static LocalizationIdentifier LCID(this CultureInfo? info)
         {
-            if (info is null)
-            {
-                return Default;
-            }
-
-            return new LocalizationIdentifier(info.LCID);
+            return info is not null ? new LocalizationIdentifier(info.LCID) : Default;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt16 LCID16(this CultureInfo? info)
         {
-            if (info is null)
-            {
-                return Default;
-            }
-
-            return (UInt16) info.LCID;
+            return info is not null ? (UInt16) info.LCID : (UInt16) Default;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -311,6 +368,7 @@ namespace NetExtender.Utilities.Types
             return TryGetCultureInfo(culture, out CultureInfo info) ? info : type.GetCultureInfo();
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsCultureEquals(this CultureIdentifier identifier, CultureInfo? info)
         {
             return IsCultureEquals(info, identifier);

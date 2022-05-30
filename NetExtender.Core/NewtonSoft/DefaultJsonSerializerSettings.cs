@@ -11,6 +11,7 @@ namespace NetExtender.NewtonSoft
         {
             Formatting = Formatting.Indented;
             NullValueHandling = NullValueHandling.Ignore;
+            ContractResolver = GenericContractResolver.Instance;
         }
     }
 }

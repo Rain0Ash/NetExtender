@@ -15,7 +15,7 @@ using Newtonsoft.Json;
 namespace NetExtender.Types.Trees
 {
     [Serializable]
-    [JsonObject(MemberSerialization.OptIn, MissingMemberHandling = MissingMemberHandling.Ignore, ItemNullValueHandling = NullValueHandling.Ignore, ItemConverterType = typeof(DictionaryTreeJsonConverter))]
+    [JsonObject(MemberSerialization.OptIn, MissingMemberHandling = MissingMemberHandling.Ignore, ItemNullValueHandling = NullValueHandling.Ignore, ItemConverterType = typeof(DictionaryTreeTypeJsonConverter))]
     public class DictionaryTreeNode<TKey, TValue> : IDictionaryTreeNode<TKey, TValue>, IReadOnlyDictionaryTreeNode<TKey, TValue> where TKey : notnull
     {
         [JsonProperty(Order = 0, DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
@@ -24,6 +24,15 @@ namespace NetExtender.Types.Trees
         [JsonProperty(PropertyName = nameof(Tree), Order = 1)]
         private IDictionaryTree<TKey, TValue>? _tree;
 
+        [JsonIgnore]
+        public IDictionaryTreeNode<TKey, TValue> Node
+        {
+            get
+            {
+                return this;
+            }
+        }
+        
         [JsonIgnore]
         public IDictionaryTree<TKey, TValue> Tree
         {
@@ -115,7 +124,7 @@ namespace NetExtender.Types.Trees
         {
             get
             {
-                return !HasValue && !TreeIsEmpty;
+                return !HasValue && TreeIsEmpty;
             }
         }
 

@@ -243,6 +243,27 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(item => item.HasValue);
         }
+        
+        public static IEnumerable<T> WhereNotNull<T, TItem>(this IEnumerable<T?> source, Func<T, TItem> predicate)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            foreach (T? item in source)
+            {
+                if (item is not null && predicate(item) is not null)
+                {
+                    yield return item;
+                }
+            }
+        }
 
         public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T> source, Func<T, Boolean> predicate)
         {

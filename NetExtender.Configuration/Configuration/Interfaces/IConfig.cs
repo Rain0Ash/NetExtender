@@ -50,6 +50,15 @@ namespace NetExtender.Configuration.Interfaces
         public Task<Boolean> KeyExistAsync(String? key, IEnumerable<String>? sections);
         public Task<Boolean> KeyExistAsync(String? key, CancellationToken token, params String[]? sections);
         public Task<Boolean> KeyExistAsync(String? key, IEnumerable<String>? sections, CancellationToken token);
+        public Boolean Clear();
+        public Boolean Clear(params String[]? sections);
+        public Boolean Clear(IEnumerable<String>? sections);
+        public Task<Boolean> ClearAsync();
+        public Task<Boolean> ClearAsync(params String[]? sections);
+        public Task<Boolean> ClearAsync(IEnumerable<String>? sections);
+        public Task<Boolean> ClearAsync(CancellationToken token);
+        public Task<Boolean> ClearAsync(CancellationToken token, params String[]? sections);
+        public Task<Boolean> ClearAsync(IEnumerable<String>? sections, CancellationToken token);
         public Boolean Reload();
         public Task<Boolean> ReloadAsync();
         public Task<Boolean> ReloadAsync(CancellationToken token);

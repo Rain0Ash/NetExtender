@@ -32,6 +32,8 @@ namespace NetExtender.Configuration.Behavior.Interfaces
         public Task<ConfigurationEntry[]?> GetExistsAsync(IEnumerable<String>? sections, CancellationToken token);
         public ConfigurationValueEntry[]? GetExistsValues(IEnumerable<String>? sections);
         public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IEnumerable<String>? sections, CancellationToken token);
+        public Boolean Clear(IEnumerable<String>? sections);
+        public Task<Boolean> ClearAsync(IEnumerable<String>? sections, CancellationToken token);
         public Boolean Reload();
         public Task<Boolean> ReloadAsync(CancellationToken token);
         public Boolean Reset();

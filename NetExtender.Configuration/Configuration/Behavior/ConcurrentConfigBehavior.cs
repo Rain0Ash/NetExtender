@@ -210,6 +210,32 @@ namespace NetExtender.Configuration.Wrappers
             }
         }
 
+        public Boolean Clear()
+        {
+            return Clear(null);
+        }
+
+        public Boolean Clear(IEnumerable<String>? sections)
+        {
+            lock (Internal)
+            {
+                return Internal.Clear(sections);
+            }
+        }
+
+        public Task<Boolean> ClearAsync(CancellationToken token)
+        {
+            return ClearAsync(null, token);
+        }
+
+        public Task<Boolean> ClearAsync(IEnumerable<String>? sections, CancellationToken token)
+        {
+            lock (Internal)
+            {
+                return Internal.ClearAsync(sections, token);
+            }
+        }
+
         public Boolean Reload()
         {
             lock (Internal)

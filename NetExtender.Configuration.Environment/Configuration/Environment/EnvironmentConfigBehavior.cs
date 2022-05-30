@@ -198,6 +198,29 @@ namespace NetExtender.Configuration.Environment
             }
         }
 
+        public override Boolean Clear(IEnumerable<String>? sections)
+        {
+            if (IsReadOnly)
+            {
+                return false;
+            }
+            
+            ConfigurationEntry[]? exists = GetExists(sections);
+            
+            if (exists is null)
+            {
+                return false;
+            }
+
+            Boolean successful = false;
+            foreach (ConfigurationEntry key in exists)
+            {
+                successful |= Set(key.Key, null, key.Sections);
+            }
+            
+            return successful;
+        }
+
         public override Boolean Reload()
         {
             return false;

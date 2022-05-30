@@ -2,102 +2,176 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Reflection;
+using System.Linq;
 using NetExtender.Types.Trees.Interfaces;
+using NetExtender.Utilities.Core;
+using NetExtender.Utilities.Serialization;
+using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 
 namespace NetExtender.Types.Trees.Json
 {
-    public class DictionaryTreeJsonConverter : JsonConverter
+    public sealed class DictionaryTreeJsonConverter<TKey, TValue> : DictionaryTreeJsonConverter where TKey : notnull
     {
-        private static Type DictionaryTypeDifinition { get; } = typeof(Dictionary<,>);
-        private static Type DictionaryTreeTypeDifinition { get; } = typeof(DictionaryTree<,>);
-        private static Type IDictionaryTreeTypeDifinition { get; } = typeof(IDictionaryTree<,>);
-        private static Type DictionaryTreeNodeTypeDifinition { get; } = typeof(DictionaryTreeNode<,>);
-        private static Type EqualityComparerTypeDifinition { get; } = typeof(EqualityComparer<>);
-        private static Type IEqualityComparerTypeDifinition { get; } = typeof(IEqualityComparer<>);
+        private enum KeyState
+        {
+            None,
+            Key,
+            Value
+        }
+
+        public override void WriteJson(JsonWriter writer, Object? value, JsonSerializer serializer)
+        {
+            if (value is null)
+            {
+                writer.WriteNull();
+                return;
+            }
+
+            if (value is not IDictionaryTree<TKey, TValue> node)
+            {
+                throw new JsonException();
+            }
+
+            WriteNode(writer, node.Node);
+        }
+
+        private static void WriteNode(JsonWriter writer, IDictionaryTreeNode<TKey, TValue> node)
+        {
+            if (node.IsEmpty)
+            {
+                writer.WriteNull();
+                return;
+            }
+
+            if (node.TreeIsEmpty && node.HasValue)
+            {
+                writer.WriteValue(node.Value);
+                return;
+            }
+
+            writer.WriteStartObject();
+
+            if (node.HasValue)
+            {
+                writer.WritePropertyName("Value");
+                writer.WriteValue(node.Value);
+            }
+
+            foreach ((TKey key, IDictionaryTreeNode<TKey, TValue>? child) in node)
+            {
+                writer.WritePropertyName(key.ToString()!, true);
+                WriteNode(writer, child);
+            }
+
+            writer.WriteEndObject();
+        }
+
+        private static KeyState ReadJsonKey(JsonTokenEntry token, out TKey key)
+        {
+            if (token.Current == "Value")
+            {
+                key = default!;
+                return KeyState.Value;
+            }
+            
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+            if (token.TryConvert(out key!) && key is not null)
+            {
+                return KeyState.Key;
+            }
+
+            return KeyState.None;
+        }
+
+        public override Object? ReadJson(JsonReader reader, Type type, Object? value, JsonSerializer serializer)
+        {
+            DictionaryTree<TKey, TValue> dictionary = new DictionaryTree<TKey, TValue>();
+            List<TKey> keys = new List<TKey>();
+
+            reader.AsEnumerable()
+                .CanBeNullable(out Boolean nullable)?
+                .MustStartWith()
+                .WithPropertyName(PropertyName)
+                .WithValue(PropertyValue)
+                .MustEndWith()
+                .Evaluate();
+
+            if (nullable)
+            {
+                return null;
+            }
+
+            void PropertyName(JsonTokenEntry token, String? name)
+            {
+                KeyState state = ReadJsonKey(token, out TKey key);
+                
+                switch (state)
+                {
+                    case KeyState.None:
+                        throw new JsonException();
+                    case KeyState.Value:
+                        return;
+                    case KeyState.Key:
+                        break;
+                    default:
+                        throw new NotSupportedException();
+                }
+
+                if (keys.Count >= token.Depth)
+                {
+                    keys.RemoveRange(token.Depth - 1, keys.Count - token.Depth + 1);
+                }
+                            
+                keys.Add(key);
+            }
+
+            void PropertyValue(JsonTokenEntry token)
+            {
+                if (!token.TryConvert(out TValue? nodevalue))
+                {
+                    throw new JsonException();
+                }
+
+                TKey key = keys[^1];
+                dictionary.Add(key, keys.SkipLast(1), nodevalue!);
+            }
+
+            return dictionary;
+        }
+    }
+
+    public abstract class DictionaryTreeJsonConverter : JsonConverter
+    {
+        private static ConcurrentDictionary<Type, Boolean> Cache { get; } = new ConcurrentDictionary<Type, Boolean>();
+
+        private static Boolean IsConvertible(Type type)
+        {
+            return type.TryGetGenericTypeDefinition() == typeof(Dictionary<,>) ||
+                   type.TryGetGenericTypeDefinitionInterfaces().Contains(typeof(IDictionaryTree<,>));
+        }
+
+        public override Boolean CanRead
+        {
+            get
+            {
+                return true;
+            }
+        }
 
         public override Boolean CanWrite
         {
             get
             {
-                return false;
+                return true;
             }
         }
 
-        public override Boolean CanConvert(Type objectType)
+        public sealed override Boolean CanConvert(Type type)
         {
-            return false;
-        }
-
-        protected virtual Type MakeGenericType(Type objectType)
-        {
-            try
-            {
-                if (!objectType.IsGenericType)
-                {
-                    return objectType;
-                }
-                
-                Type definition = objectType.GetGenericTypeDefinition();
-
-                if (definition == IEqualityComparerTypeDifinition)
-                {
-                    return EqualityComparerTypeDifinition.MakeGenericType(objectType.GetGenericArguments());
-                }
-
-                if (definition == DictionaryTreeTypeDifinition || definition == IDictionaryTreeTypeDifinition)
-                {
-                    Type[] generic = objectType.GetGenericArguments();
-
-                    return DictionaryTypeDifinition.MakeGenericType(generic[0], DictionaryTreeNodeTypeDifinition.MakeGenericType(generic[0], generic[1]));
-                }
-
-                return objectType;
-            }
-            catch (Exception exception)
-            {
-                throw new JsonSerializationException($"Unable to construct concrete type from generic {objectType}", exception);
-            }
-        }
-
-        public override Object? ReadJson(JsonReader reader, Type objectType, Object? existingValue, JsonSerializer serializer)
-        {
-            Object? obj = serializer.Deserialize(reader, MakeGenericType(objectType));
-
-            if (obj is null)
-            {
-                return null;
-            }
-            
-            Type type = obj.GetType();
-
-            if (!type.IsGenericType)
-            {
-                return obj;
-            }
-
-            if (type.GetGenericTypeDefinition() != DictionaryTypeDifinition)
-            {
-                return obj;
-            }
-
-            Type[] generic = type.GetGenericArguments()[1].GetGenericArguments();
-            Type tree = DictionaryTreeTypeDifinition.MakeGenericType(generic);
-
-            ConstructorInfo? method = tree.GetConstructor(new[]
-            {
-                DictionaryTypeDifinition.MakeGenericType(generic[0], DictionaryTreeNodeTypeDifinition.MakeGenericType(generic)),
-                IEqualityComparerTypeDifinition.MakeGenericType(generic[0])
-            });
-
-            return method?.Invoke(new[] {obj, null});
-        }
-
-        public override void WriteJson(JsonWriter writer, Object? value, JsonSerializer serializer)
-        {
-            throw new NotSupportedException();
+            return Cache.GetOrAdd(type, IsConvertible);
         }
     }
 }

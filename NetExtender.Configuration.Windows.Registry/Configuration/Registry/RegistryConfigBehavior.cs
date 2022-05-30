@@ -128,6 +128,11 @@ namespace NetExtender.Configuration.Windows.Registry
             return Registry.Dump(sections)?.Select(ValueEntriesConvert).ToArray();
         }
 
+        public override Boolean Clear(IEnumerable<String>? sections)
+        {
+            return !IsReadOnly && Registry.RemoveAllSubKeyTree(sections);
+        }
+
         public override Boolean Reload()
         {
             return false;

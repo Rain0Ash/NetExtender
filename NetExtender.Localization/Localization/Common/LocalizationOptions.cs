@@ -8,6 +8,7 @@ namespace NetExtender.Localization.Common
     [Flags]
     public enum LocalizationOptions
     {
-        None = 0
+        None = 0,
+        ThreeLetterName = 1,
     }
 }

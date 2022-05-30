@@ -47,6 +47,50 @@ namespace NetExtender.Utilities.Types
             return source.All(item => predicate(item, i++));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Contains<T>(this IEnumerable<T> source, params T[]? values)
+        {
+            return Contains(source, (IEnumerable<T>?) values);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Contains<T>(this IEnumerable<T> source, IEnumerable<T>? values)
+        {
+            return Contains(source, values, null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Contains<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer, params T[]? values)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (values is null)
+            {
+                return false;
+            }
+            
+            return values.Length > 0 && Contains(source, values, comparer);
+        }
+
+        public static Boolean Contains<T>(this IEnumerable<T> source, IEnumerable<T>? values, IEqualityComparer<T>? comparer)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (values is null)
+            {
+                return false;
+            }
+
+            HashSet<T> set = new HashSet<T>(values, comparer);
+            return source.Any(item => set.Contains(item));
+        }
+
         public static Int32 CountWhile<T>(this IEnumerable<T> source, Func<T, Boolean> predicate)
         {
             if (source is null)

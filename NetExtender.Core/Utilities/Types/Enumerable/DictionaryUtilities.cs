@@ -1075,7 +1075,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(other));
             }
 
-            foreach (TKey key in other.WhereNotNull())
+            foreach (TKey key in other)
             {
                 source.Remove(key);
             }
@@ -1093,7 +1093,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(other));
             }
 
-            foreach (KeyValuePair<TKey, TValue> pair in other.WhereKeyNotNull())
+            foreach (KeyValuePair<TKey, TValue> pair in other)
             {
                 source.Remove(pair);
             }
@@ -1120,7 +1120,7 @@ namespace NetExtender.Utilities.Types
                     Union(dictionary, other);
                     return;
                 default:
-                    source.AddRange(other.WhereNotNull(pair => !source.ContainsKey(pair.Key)));
+                    source.AddRange(other.Where(pair => !source.ContainsKey(pair.Key)));
                     break;
             }
         }
@@ -1171,7 +1171,7 @@ namespace NetExtender.Utilities.Types
             {
                 ImmutableDictionary<TKey, TValue> dictionary => Union(dictionary, other),
                 ImmutableSortedDictionary<TKey, TValue> dictionary => Union(dictionary, other),
-                _ => source.AddRange(other.WhereNotNull(pair => !source.ContainsKey(pair.Key)))
+                _ => source.AddRange(other.Where(pair => !source.ContainsKey(pair.Key)))
             };
         }
         
@@ -1229,7 +1229,7 @@ namespace NetExtender.Utilities.Types
 
             Dictionary<TKey, TValue> intersect = new Dictionary<TKey, TValue>(source.Count);
 
-            foreach (TKey key in other.WhereNotNull())
+            foreach (TKey key in other)
             {
                 if (source.TryGetValue(key, out TValue? value))
                 {
@@ -1373,7 +1373,7 @@ namespace NetExtender.Utilities.Types
 
             Dictionary<TKey, TValue> intersect = new Dictionary<TKey, TValue>(source.Count);
 
-            foreach (TKey key in other.WhereNotNull())
+            foreach (TKey key in other)
             {
                 if (source.TryGetValue(key, out TValue? value))
                 {
@@ -1607,7 +1607,7 @@ namespace NetExtender.Utilities.Types
             {
                 ImmutableDictionary<TKey, TValue> dictionary => Except(dictionary, other),
                 ImmutableSortedDictionary<TKey, TValue> dictionary => Except(dictionary, other),
-                _ => source.RemoveRange(other.WhereNotNull())
+                _ => source.RemoveRange(other)
             };
         }
 

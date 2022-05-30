@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using NetExtender.Localization.Behavior.Interfaces;
 using NetExtender.Localization.Common.Interfaces;
@@ -15,6 +16,17 @@ namespace NetExtender.Localization.Common
 {
     public class LocalizationString : StringBase, ILocalizationString
     {
+        [return: NotNullIfNotNull("value")]
+        public static ILocalizationString? Create(ILocalizationBehavior behavior, String? value)
+        {
+            if (behavior is null)
+            {
+                throw new ArgumentNullException(nameof(behavior));
+            }
+
+            return value is not null ? new FakeLocalizationString(behavior.Default, value) : null;
+        }
+
         [JsonIgnore]
         protected ILocalizationBehavior Behavior { get; }
         
@@ -107,14 +119,35 @@ namespace NetExtender.Localization.Common
         }
 
         public LocalizationString(ILocalizationBehavior behavior, IEnumerable<KeyValuePair<LocalizationIdentifier, String>> localization)
-            : this(behavior, localization, behavior?.Comparer)
+            : this(behavior, localization, null)
         {
         }
 
         public LocalizationString(ILocalizationBehavior behavior, IEnumerable<KeyValuePair<LocalizationIdentifier, String>> localization, IComparer<LocalizationIdentifier>? comparer)
         {
+            if (localization is null)
+            {
+                throw new ArgumentNullException(nameof(localization));
+            }
+
             Behavior = behavior ?? throw new ArgumentNullException(nameof(behavior));
-            Localization = localization?.ToSortedDictionary(comparer) ?? throw new ArgumentNullException(nameof(localization));
+            Localization = localization.WhereNotNull(entry => entry.Value).ToSortedDictionary(comparer ?? Behavior.Comparer);
+        }
+        
+        public LocalizationString(ILocalizationBehavior behavior, IEnumerable<LocalizationValueEntry> localization)
+            : this(behavior, localization, null)
+        {
+        }
+
+        public LocalizationString(ILocalizationBehavior behavior, IEnumerable<LocalizationValueEntry> localization, IComparer<LocalizationIdentifier>? comparer)
+        {
+            if (localization is null)
+            {
+                throw new ArgumentNullException(nameof(localization));
+            }
+
+            Behavior = behavior ?? throw new ArgumentNullException(nameof(behavior));
+            Localization = localization.WhereNotNull(entry => entry.Value).ToSortedDictionary(entry => entry.Identifier, entry => entry.Value!, comparer ?? Behavior.Comparer);
         }
 
         public virtual Boolean Contains(LocalizationIdentifier identifier)
@@ -152,6 +185,103 @@ namespace NetExtender.Localization.Common
             get
             {
                 return Localization[key];
+            }
+        }
+        
+        private sealed class FakeLocalizationString : StringBase, ILocalizationString
+        {
+            public IReadOnlyCollection<LocalizationIdentifier> Keys
+            {
+                get
+                {
+                    return ImmutableList<LocalizationIdentifier>.Empty.Add(Identifier);
+                }
+            }
+
+            IEnumerable<LocalizationIdentifier> IReadOnlyDictionary<LocalizationIdentifier, String>.Keys
+            {
+                get
+                {
+                    return Keys;
+                }
+            }
+
+            public IReadOnlyDictionary<LocalizationIdentifier, String> Values
+            {
+                get
+                {
+                    return ImmutableDictionary<LocalizationIdentifier, String>.Empty.Add(Identifier, Value);
+                }
+            }
+            
+            IEnumerable<String> IReadOnlyDictionary<LocalizationIdentifier, String>.Values
+            {
+                get
+                {
+                    return ImmutableList<String>.Empty.Add(Value);
+                }
+            }
+
+            public Int32 Count
+            {
+                get
+                {
+                    return 1;
+                }
+            }
+            
+            public LocalizationIdentifier Identifier { get; }
+            public String Value { get; }
+
+            public FakeLocalizationString(LocalizationIdentifier identifier, String value)
+            {
+                Identifier = identifier;
+                Value = value ?? throw new ArgumentNullException(nameof(value));
+            }
+            
+            public Boolean Contains(LocalizationIdentifier identifier)
+            {
+                return Identifier.Equals(identifier);
+            }
+
+            public String? Get(LocalizationIdentifier identifier)
+            {
+                return Identifier.Equals(identifier) ? Value : null;
+            }
+            
+            public Boolean Get(LocalizationIdentifier identifier, [MaybeNullWhen(false)] out String result)
+            {
+                if (identifier == Identifier)
+                {
+                    result = Value;
+                    return true;
+                }
+                
+                result = default;
+                return false;
+            }
+
+            Boolean IReadOnlyDictionary<LocalizationIdentifier, String>.ContainsKey(LocalizationIdentifier key)
+            {
+                return Contains(key);
+            }
+
+            Boolean IReadOnlyDictionary<LocalizationIdentifier, String>.TryGetValue(LocalizationIdentifier key, [MaybeNullWhen(false)] out String value)
+            {
+                return Get(key, out value);
+            }
+            
+            public IEnumerator<KeyValuePair<LocalizationIdentifier, String>> GetEnumerator()
+            {
+                yield return new KeyValuePair<LocalizationIdentifier, String>(Identifier, Value);
+            }
+
+            public String this[LocalizationIdentifier key]
+            {
+                get
+                {
+                    return Get(key) ?? throw new KeyNotFoundException();
+                }
             }
         }
     }

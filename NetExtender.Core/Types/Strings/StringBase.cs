@@ -51,6 +51,7 @@ namespace NetExtender.Types.Strings
 
         public override String ToString()
         {
+            // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
             return Text ?? String.Empty;
         }
 

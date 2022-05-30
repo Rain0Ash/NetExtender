@@ -43,17 +43,13 @@ namespace NetExtender.Configuration.Common
         }
 
         public ConfigurationValueEntry(ConfigurationEntry entry, String? value)
+            : this(entry.Key, value, entry.Sections)
         {
-            Key = entry.Key;
-            Value = value;
-            Sections = entry.Sections;
         }
 
         public ConfigurationValueEntry(String? key, String? value)
+            : this(key, value, ImmutableArray<String>.Empty)
         {
-            Key = key;
-            Value = value;
-            Sections = ImmutableArray<String>.Empty;
         }
 
         public ConfigurationValueEntry(String? key, String? value, params String[]? sections)
@@ -132,7 +128,7 @@ namespace NetExtender.Configuration.Common
 
         public override Int32 GetHashCode()
         {
-            return HashCode.Combine(Key, Sections);
+            return HashCode.Combine(Key, Value, Sections);
         }
 
         public override String ToString()
@@ -144,9 +140,9 @@ namespace NetExtender.Configuration.Common
     [Serializable]
     public readonly struct ConfigurationValueEntry<T> : IEquatable<ConfigurationValueEntry<T>>, IEquatable<ConfigurationEntry>
     {
-        public static implicit operator ConfigurationEntry(ConfigurationValueEntry<T> entry)
+        public static implicit operator ConfigurationEntry(ConfigurationValueEntry<T> value)
         {
-            return new ConfigurationEntry(entry.Key, entry.Sections);
+            return new ConfigurationEntry(value.Key, value.Sections);
         }
         
         public static Boolean operator ==(ConfigurationValueEntry<T> first, ConfigurationValueEntry<T> second)
@@ -173,17 +169,13 @@ namespace NetExtender.Configuration.Common
         }
 
         public ConfigurationValueEntry(ConfigurationEntry entry, T value)
+            : this(entry.Key, value, entry.Sections)
         {
-            Key = entry.Key;
-            Value = value;
-            Sections = entry.Sections;
         }
 
         public ConfigurationValueEntry(String? key, T value)
+            : this(key, value, ImmutableArray<String>.Empty)
         {
-            Key = key;
-            Value = value;
-            Sections = ImmutableArray<String>.Empty;
         }
 
         public ConfigurationValueEntry(String? key, T value, params String[]? sections)

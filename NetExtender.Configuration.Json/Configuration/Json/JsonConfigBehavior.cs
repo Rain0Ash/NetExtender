@@ -6,14 +6,13 @@ using NetExtender.Configuration.Common;
 using NetExtender.Configuration.File;
 using NetExtender.NewtonSoft;
 using NetExtender.Types.Trees;
-using NetExtender.Utilities.Serialization;
 using Newtonsoft.Json;
 
 namespace NetExtender.Configuration.Json
 {
     public class JsonConfigBehavior : FileConfigBehavior
     {
-        protected static JsonSerializerSettings Default { get; } = new DefaultJsonSerializerSettings().RenameProperty(typeof(DictionaryTreeNode<String, String>), "Tree", "Config");
+        protected static JsonSerializerSettings Default { get; } = new DefaultJsonSerializerSettings();
 
         public JsonSerializerSettings? Settings { get; init; } = Default;
         

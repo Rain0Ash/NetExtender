@@ -37,9 +37,8 @@ namespace NetExtender.Configuration.Common
         }
 
         public ConfigurationEntry(String? key)
+            : this(key, ImmutableArray<String>.Empty)
         {
-            Key = key;
-            Sections = ImmutableArray<String>.Empty;
         }
 
         public ConfigurationEntry(String? key, params String[]? sections)

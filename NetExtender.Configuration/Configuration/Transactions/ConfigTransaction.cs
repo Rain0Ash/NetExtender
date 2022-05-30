@@ -11,7 +11,6 @@ namespace NetExtender.Configuration.Transactions
 {
     public class ConfigTransaction : IConfigTransaction
     {
-        protected IConfigBehaviorTransaction? Internal { get; }
         public IConfig Original { get; }
         public IConfig Transaction { get; }
         protected Boolean? IsCommit { get; set; }
@@ -19,8 +18,7 @@ namespace NetExtender.Configuration.Transactions
         public ConfigTransaction(IConfig original, IConfigBehaviorTransaction transaction)
         {
             Original = original ?? throw new ArgumentNullException(nameof(original));
-            Internal = transaction ?? throw new ArgumentNullException(nameof(transaction));
-            Transaction = transaction.Transaction.Create();
+            Transaction = transaction is not null ? transaction.Transaction.Create() : throw new ArgumentNullException(nameof(transaction));
         }
         
         public ConfigTransaction(IConfig original, IConfig transaction)

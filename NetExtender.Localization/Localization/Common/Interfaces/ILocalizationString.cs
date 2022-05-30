@@ -16,5 +16,6 @@ namespace NetExtender.Localization.Common.Interfaces
         public Boolean Contains(LocalizationIdentifier identifier);
         public String? Get(LocalizationIdentifier identifier);
         public Boolean Get(LocalizationIdentifier identifier, [MaybeNullWhen(false)] out String result);
+        public new IEnumerator<KeyValuePair<LocalizationIdentifier, String>> GetEnumerator();
     }
 }

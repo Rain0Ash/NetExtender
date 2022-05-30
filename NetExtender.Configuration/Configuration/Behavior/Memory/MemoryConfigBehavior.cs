@@ -148,6 +148,23 @@ namespace NetExtender.Configuration.Memory
             return Config.Dump(sections)?.Select(ValueEntriesConvert).ToArray();
         }
 
+        public override Boolean Clear(IEnumerable<String>? sections)
+        {
+            if (IsReadOnly)
+            {
+                return false;
+            }
+            
+            if (sections is null)
+            {
+                Config.Clear();
+                return true;
+            }
+
+            String? key = FromSection(ref sections);
+            return key is not null && Config.Remove(key, sections);
+        }
+
         public override Boolean Reload()
         {
             return false;

@@ -145,6 +145,11 @@ namespace NetExtender.Configuration.File
             return await base.SetAsync(key, value, sections, token) && await WriteConfigAsync(token);
         }
 
+        public override Boolean Clear(IEnumerable<String>? sections)
+        {
+            return base.Clear(sections) && WriteConfig();
+        }
+
         public override Boolean Merge(IEnumerable<ConfigurationValueEntry>? entries)
         {
             return base.Merge(entries) && WriteConfig();
