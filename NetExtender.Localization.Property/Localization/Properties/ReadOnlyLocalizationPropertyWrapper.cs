@@ -47,7 +47,7 @@ namespace NetExtender.Localization.Properties
             }
         }
 
-        public String? Current
+        public String Current
         {
             get
             {
