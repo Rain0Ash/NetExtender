@@ -66,14 +66,6 @@ namespace NetExtender.Localization.Property.Localization.Properties
             }
         }
 
-        public override String? Current
-        {
-            get
-            {
-                return HasValue ? Internal.Value?.ToString() ?? Alternate?.ToString() : Alternate?.ToString();
-            }
-        }
-        
         public virtual Func<ILocalizationString?, Boolean>? Validate
         {
             get
@@ -101,7 +93,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
         protected override event PropertyChangedEventHandler? PropertyChanged;
         
         protected internal LocalizationProperty(ILocalizationConfig config, String? key, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
-            : this(config ?? throw new ArgumentNullException(nameof(config)), key, LocalizationString.Create(config.Default, alternate), options, sections)
+            : this(config ?? throw new ArgumentNullException(nameof(config)), key, alternate is not null ? LocalizationString.Create(config.Default, alternate) : null, options, sections)
         {
         }
 

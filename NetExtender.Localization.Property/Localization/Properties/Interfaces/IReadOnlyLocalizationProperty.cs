@@ -12,7 +12,7 @@ namespace NetExtender.Localization.Properties.Interfaces
     {
         public event EventHandler Reseted;
         public new event LocalizationValueChangedEventHandler Changed;
-        public String? Current { get; }
+        public String Current { get; }
     }
 
     public interface IReadOnlyLocalizationIdentifierProperty : ILocalizationPropertyInfo, IReadOnlyConfigProperty

@@ -62,7 +62,7 @@ namespace NetExtender.Localization.Utilities
 
         public static IReadOnlyLocalizationProperty GetLocalizationProperty(this IReadOnlyLocalizationConfig config, String? key, String? alternate, IEnumerable<String>? sections)
         {
-            return GetLocalizationProperty(config, key, alternate, ConfigPropertyOptions.None, sections);
+            return GetLocalizationProperty(config, key, alternate, ConfigPropertyOptions.Caching, sections);
         }
 
         public static IReadOnlyLocalizationProperty GetLocalizationProperty(this IReadOnlyLocalizationConfig config, String? key, String? alternate, ConfigPropertyOptions options, params String[]? sections)
@@ -82,7 +82,7 @@ namespace NetExtender.Localization.Utilities
 
         public static IReadOnlyLocalizationProperty GetLocalizationProperty(this IReadOnlyLocalizationConfig config, String? key, ILocalizationString? alternate, IEnumerable<String>? sections)
         {
-            return GetLocalizationProperty(config, key, alternate, ConfigPropertyOptions.None, sections);
+            return GetLocalizationProperty(config, key, alternate, ConfigPropertyOptions.Caching, sections);
         }
 
         public static IReadOnlyLocalizationProperty GetLocalizationProperty(this IReadOnlyLocalizationConfig config, String? key, ILocalizationString? alternate, ConfigPropertyOptions options, params String[]? sections)
@@ -122,7 +122,7 @@ namespace NetExtender.Localization.Utilities
 
         public static IReadOnlyLocalizationIdentifierProperty GetLocalizationProperty(this IReadOnlyLocalizationConfig config, String? key, LocalizationIdentifier identifier, String? alternate, IEnumerable<String>? sections)
         {
-            return GetLocalizationProperty(config, key, identifier, alternate, ConfigPropertyOptions.None, sections);
+            return GetLocalizationProperty(config, key, identifier, alternate, ConfigPropertyOptions.Caching, sections);
         }
 
         public static IReadOnlyLocalizationIdentifierProperty GetLocalizationProperty(this IReadOnlyLocalizationConfig config, String? key, LocalizationIdentifier identifier, String? alternate, ConfigPropertyOptions options, params String[]? sections)
@@ -162,7 +162,7 @@ namespace NetExtender.Localization.Utilities
 
         public static ILocalizationProperty GetLocalizationProperty(this ILocalizationConfig config, String? key, String? alternate, IEnumerable<String>? sections)
         {
-            return GetLocalizationProperty(config, key, alternate, ConfigPropertyOptions.None, sections);
+            return GetLocalizationProperty(config, key, alternate, ConfigPropertyOptions.Caching, sections);
         }
 
         public static ILocalizationProperty GetLocalizationProperty(this ILocalizationConfig config, String? key, String? alternate, ConfigPropertyOptions options, params String[]? sections)
@@ -182,7 +182,7 @@ namespace NetExtender.Localization.Utilities
 
         public static ILocalizationProperty GetLocalizationProperty(this ILocalizationConfig config, String? key, ILocalizationString? alternate, IEnumerable<String>? sections)
         {
-            return GetLocalizationProperty(config, key, alternate, ConfigPropertyOptions.None, sections);
+            return GetLocalizationProperty(config, key, alternate, ConfigPropertyOptions.Caching, sections);
         }
 
         public static ILocalizationProperty GetLocalizationProperty(this ILocalizationConfig config, String? key, ILocalizationString? alternate, ConfigPropertyOptions options, params String[]? sections)
@@ -222,7 +222,7 @@ namespace NetExtender.Localization.Utilities
 
         public static IReadOnlyLocalizationProperty GetReadOnlyLocalizationProperty(this ILocalizationConfig config, String? key, String? alternate, IEnumerable<String>? sections)
         {
-            return GetReadOnlyLocalizationProperty(config, key, alternate, ConfigPropertyOptions.None, sections);
+            return GetReadOnlyLocalizationProperty(config, key, alternate, ConfigPropertyOptions.Caching, sections);
         }
 
         public static IReadOnlyLocalizationProperty GetReadOnlyLocalizationProperty(this ILocalizationConfig config, String? key, String? alternate, ConfigPropertyOptions options, params String[]? sections)
@@ -242,7 +242,7 @@ namespace NetExtender.Localization.Utilities
 
         public static IReadOnlyLocalizationProperty GetReadOnlyLocalizationProperty(this ILocalizationConfig config, String? key, ILocalizationString? alternate, IEnumerable<String>? sections)
         {
-            return GetReadOnlyLocalizationProperty(config, key, alternate, ConfigPropertyOptions.None, sections);
+            return GetReadOnlyLocalizationProperty(config, key, alternate, ConfigPropertyOptions.Caching, sections);
         }
 
         public static IReadOnlyLocalizationProperty GetReadOnlyLocalizationProperty(this ILocalizationConfig config, String? key, ILocalizationString? alternate, ConfigPropertyOptions options, params String[]? sections)
@@ -282,7 +282,7 @@ namespace NetExtender.Localization.Utilities
 
         public static ILocalizationIdentifierProperty GetLocalizationProperty(this ILocalizationConfig config, String? key, LocalizationIdentifier identifier, String? alternate, IEnumerable<String>? sections)
         {
-            return GetLocalizationProperty(config, key, identifier, alternate, ConfigPropertyOptions.None, sections);
+            return GetLocalizationProperty(config, key, identifier, alternate, ConfigPropertyOptions.Caching, sections);
         }
 
         public static ILocalizationIdentifierProperty GetLocalizationProperty(this ILocalizationConfig config, String? key, LocalizationIdentifier identifier, String? alternate, ConfigPropertyOptions options, params String[]? sections)
@@ -322,7 +322,7 @@ namespace NetExtender.Localization.Utilities
 
         public static IReadOnlyLocalizationIdentifierProperty GetReadOnlyLocalizationProperty(this ILocalizationConfig config, String? key, LocalizationIdentifier identifier, String? alternate, IEnumerable<String>? sections)
         {
-            return GetReadOnlyLocalizationProperty(config, key, identifier, alternate, ConfigPropertyOptions.None, sections);
+            return GetReadOnlyLocalizationProperty(config, key, identifier, alternate, ConfigPropertyOptions.Caching, sections);
         }
 
         public static IReadOnlyLocalizationIdentifierProperty GetReadOnlyLocalizationProperty(this ILocalizationConfig config, String? key, LocalizationIdentifier identifier, String? alternate, ConfigPropertyOptions options, params String[]? sections)

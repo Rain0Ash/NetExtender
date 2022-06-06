@@ -3,12 +3,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
+using System.Text;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Properties;
 using NetExtender.Localization.Common.Interfaces;
 using NetExtender.Localization.Events;
 using NetExtender.Localization.Properties.Interfaces;
 using NetExtender.Types.Culture;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Localization.Property.Localization.Properties
 {
@@ -16,13 +20,47 @@ namespace NetExtender.Localization.Property.Localization.Properties
     {
         public abstract LocalizationIdentifier Identifier { get; }
         
-        public abstract String? Current { get; }
+        public virtual String Current
+        {
+            get
+            {
+                String? result = null;
+                if (HasValue)
+                {
+                    result = Internal.Value?.ToString();
+                }
+                
+                if (!String.IsNullOrEmpty(result))
+                {
+                    return result;
+                }
+                
+                result = Alternate?.ToString();
+                return !String.IsNullOrEmpty(result) ? result : AlternateKeyValueIdentifier;
+            }
+        }
+
+        private String? _alternate;
+        protected String AlternateKeyValueIdentifier
+        {
+            get
+            {
+                return _alternate ??= CreateAlternateKeyValueIdentifier();
+            }
+        }
 
         public abstract event LocalizationChangedEventHandler? LocalizationChanged;
 
         protected LocalizationPropertyInfo(String? key, ILocalizationString? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : base(key, alternate, options, sections)
         {
+        }
+
+        protected virtual String CreateAlternateKeyValueIdentifier()
+        {
+            String? key = Key;
+            ImmutableArray<String> sections = key is not null ? Sections.Add(key) : Sections;
+            return String.Join(".", sections.Select(section => section.ToUpperInvariant()));
         }
     }
     
