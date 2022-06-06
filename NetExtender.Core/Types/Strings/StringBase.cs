@@ -33,11 +33,11 @@ namespace NetExtender.Types.Strings
         {
             get
             {
-                return Text?.Length ?? 0;
+                return Text.Length;
             }
         }
 
-        public virtual String Text { get; protected set; } = String.Empty;
+        public abstract String Text { get; protected set; }
 
         public override Boolean Equals(Object? obj)
         {
@@ -51,8 +51,7 @@ namespace NetExtender.Types.Strings
 
         public override String ToString()
         {
-            // ReSharper disable once NullCoalescingConditionIsAlwaysNotNullAccordingToAPIContract
-            return Text ?? String.Empty;
+            return Text;
         }
 
         public virtual String ToString(IFormatProvider? provider)

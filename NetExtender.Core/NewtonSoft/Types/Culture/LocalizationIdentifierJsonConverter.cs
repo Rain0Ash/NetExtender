@@ -44,7 +44,8 @@ namespace NetExtender.NewtonSoft.Types.Culture
         {
             get
             {
-                return true;
+                return Convert != LocalizationIdentifierJsonConvertType.Native &&
+                       Convert != LocalizationIdentifierJsonConvertType.Language;
             }
         }
         

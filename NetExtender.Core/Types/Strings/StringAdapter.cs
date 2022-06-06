@@ -17,6 +17,8 @@ namespace NetExtender.Types.Strings
             return new StringAdapter(value);
         }
 
+        public override String Text { get; protected set; }
+
         public StringAdapter(String? value)
         {
             Text = value ?? String.Empty;

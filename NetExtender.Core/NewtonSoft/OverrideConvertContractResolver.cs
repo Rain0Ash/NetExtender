@@ -94,6 +94,32 @@ namespace NetExtender.NewtonSoft
             return Add<T>(null);
         }
 
+        public OverrideConvertContractResolver Remove(Type type)
+        {
+            return Remove(type, out _);
+        }
+
+        public OverrideConvertContractResolver Remove(Type type, out JsonConverter? converter)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            Override.Remove(type, out converter);
+            return this;
+        }
+
+        public OverrideConvertContractResolver Remove<T>()
+        {
+            return Remove<T>(out _);
+        }
+
+        public OverrideConvertContractResolver Remove<T>(out JsonConverter? converter)
+        {
+            return Remove(typeof(T), out converter);
+        }
+
         public IEnumerator<KeyValuePair<Type, JsonConverter?>> GetEnumerator()
         {
             return Override.GetEnumerator();

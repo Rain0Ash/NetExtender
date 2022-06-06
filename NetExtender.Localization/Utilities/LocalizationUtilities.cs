@@ -7,11 +7,22 @@ using NetExtender.Localization.Behavior;
 using NetExtender.Localization.Behavior.Interfaces;
 using NetExtender.Localization.Common;
 using NetExtender.Localization.Interfaces;
+using NetExtender.Localization.Wrappers;
 
 namespace NetExtender.Localization.Utilities
 {
     public static class LocalizationUtilities
     {
+        public static IReadOnlyLocalizationConfig AsReadOnly(this ILocalizationConfig config)
+        {
+            if (config is null)
+            {
+                throw new ArgumentNullException(nameof(config));
+            }
+            
+            return new ReadOnlyLocalizationConfigWrapper(config);
+        }
+
         public static ILocalizationBehavior Localization(this IConfigBehavior behavior)
         {
             return Localization(behavior, LocalizationOptions.None);

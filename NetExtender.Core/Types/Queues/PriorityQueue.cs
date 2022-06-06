@@ -253,6 +253,7 @@ namespace NetExtender.Types.Queues
             throw new InvalidOperationException("Queue is empty.");
         }
 
+        // ReSharper disable once CognitiveComplexity
         public Boolean TryDequeue([MaybeNullWhen(false)] out T result)
         {
             foreach ((Int32 priority, Queue<T> queue) in Queue)
@@ -295,6 +296,7 @@ namespace NetExtender.Types.Queues
             return false;
         }
 
+        // ReSharper disable once CognitiveComplexity
         public Boolean TryDequeue(Int32 priority, [MaybeNullWhen(false)] out T result)
         {
             if (Queue.TryGetValue(priority, out Queue<T>? queue))

@@ -8,12 +8,14 @@ using NetExtender.Interfaces;
 
 namespace NetExtender.Configuration.Properties.Interfaces
 {
-    public interface IConfigProperty<T> : IConfigPropertyInfo, IReadOnlyValidable<T>
+    public interface IConfigProperty<T> : IConfigPropertyInfo, IReadOnlyValidable<T>, IFormattable
     {
         public event ConfigurationChangedEventHandler<T> Changed;
         public T Value { get; }
         public T Alternate { get; }
         public TryConverter<String?, T> Converter { get; }
+        public T GetValue();
+        public T GetValue(Func<T, Boolean>? predicate);
         public Task<T> GetValueAsync();
         public Task<T> GetValueAsync(CancellationToken token);
         public Task<T> GetValueAsync(Func<T, Boolean>? predicate);
@@ -39,7 +41,7 @@ namespace NetExtender.Configuration.Properties.Interfaces
         public Task<Boolean> ResetAsync(CancellationToken token);
     }
     
-    public interface IConfigProperty : IConfigPropertyInfo
+    public interface IConfigProperty : IConfigPropertyInfo, IFormattable
     {
         public event ConfigurationChangedEventHandler Changed;
         public String? Value { get; }

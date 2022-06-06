@@ -48,12 +48,12 @@ namespace NetExtender.Types.Strings
 
         public override String ToString()
         {
-            return NonFormatToString() ?? String.Empty;
+            return NonFormatToString();
         }
         
         public override String ToString(IFormatProvider? provider)
         {
-            return NonFormatToString(provider) ?? String.Empty;
+            return NonFormatToString(provider);
         }
     }
 }

@@ -21,6 +21,8 @@ namespace NetExtender.Types.Strings
         public override Int32 Arguments { get; }
         protected override Object[] FormatArguments { get; }
 
+        public override String Text { get; protected set; }
+
         public ContainerFormatStringAdapter(String value)
             : this(value, null)
         {

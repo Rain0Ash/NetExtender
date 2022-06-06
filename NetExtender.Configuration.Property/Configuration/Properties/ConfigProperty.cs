@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Common;
@@ -17,7 +18,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Properties
 {
-    public class ConfigProperty<T> : IConfigProperty<T>, IFormattable
+    public class ConfigProperty<T> : IConfigProperty<T>
     {
         public event ConfigurationChangedEventHandler<T>? Changed;
         protected IConfigProperty Property { get; }
@@ -125,7 +126,18 @@ namespace NetExtender.Configuration.Properties
 
         public TryConverter<String?, T> Converter { get; }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        private event PropertyChangedEventHandler? PropertyChanged;
+        event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged
+        {
+            add
+            {
+                PropertyChanged += value;
+            }
+            remove
+            {
+                PropertyChanged -= value;
+            }
+        }
 
         protected internal ConfigProperty(IConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : this(new ConfigProperty(config, key, null, options, sections), alternate, validate, converter)
@@ -143,12 +155,12 @@ namespace NetExtender.Configuration.Properties
             Converter = converter ?? ConvertUtilities.TryConvert;
         }
 
-        protected virtual void OnChanged(ConfigurationChangedEventArgs<T> args)
+        protected void OnChanged(ConfigurationChangedEventArgs<T> args)
         {
             Changed?.Invoke(this, args);
         }
         
-        protected virtual void OnChanged(Object? sender, PropertyChangedEventArgs args)
+        protected void OnChanged(Object? sender, PropertyChangedEventArgs args)
         {
             PropertyChanged?.Invoke(this, args);
         }
@@ -366,9 +378,14 @@ namespace NetExtender.Configuration.Properties
         {
             Dispose(false);
         }
+
+        protected virtual void OnPropertyChanged([CallerMemberName] String? propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
     
-    public class ConfigProperty : ConfigPropertyInfo<String?>, IConfigProperty, IFormattable
+    public class ConfigProperty : ConfigPropertyInfo<String?>, IConfigProperty
     {
         protected IConfig Config { get; }
         
@@ -390,7 +407,7 @@ namespace NetExtender.Configuration.Properties
             }
         }
 
-        public override event PropertyChangedEventHandler? PropertyChanged;
+        protected override event PropertyChangedEventHandler? PropertyChanged;
 
         protected internal ConfigProperty(IConfig config, String? key, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : base(key, alternate, options, sections)
@@ -510,13 +527,13 @@ namespace NetExtender.Configuration.Properties
             }
 
             Internal.Reset(value);
-            OnChanged(Internal.Value);
             
             if (!IsCaching)
             {
                 Save();
             }
             
+            OnChanged(Internal.Value);
             return true;
         }
 
@@ -538,13 +555,13 @@ namespace NetExtender.Configuration.Properties
             }
 
             Internal.Reset(value);
-            OnChanged(Internal.Value);
             
             if (!IsCaching)
             {
                 await SaveAsync(token);
             }
             
+            OnChanged(Internal.Value);
             return true;
         }
 

@@ -22,7 +22,7 @@ using NetExtender.Types.Culture;
 namespace NetExtender.Localization
 {
     [SuppressMessage("ReSharper", "SuggestBaseTypeForParameterInConstructor")]
-    public class LocalizationConfig : Config, ILocalizationConfig
+    public class LocalizationConfig : Config, ILocalizationConfig, IReadOnlyLocalizationConfig
     {
         protected new ILocalizationBehavior Behavior
         {
@@ -32,7 +32,7 @@ namespace NetExtender.Localization
             }
         }
         
-        public new event LocalizationChangedEventHandler? Changed
+        public new event LocalizationChangedEventHandler Changed
         {
             add
             {
@@ -44,7 +44,7 @@ namespace NetExtender.Localization
             }
         }
         
-        public event ConfigurationChangedEventHandler? ValueChanged
+        public event LocalizationValueChangedEventHandler ValueChanged
         {
             add
             {
@@ -107,6 +107,14 @@ namespace NetExtender.Localization
                 return Behavior.Comparer;
             }
         }
+        
+        public ILocalizationConverter Converter
+        {
+            get
+            {
+                return Behavior.Converter;
+            }
+        }
 
         public LocalizationConfig(ILocalizationBehavior behavior)
             : base(behavior)
@@ -140,7 +148,7 @@ namespace NetExtender.Localization
 
         public new ILocalizationString? GetValue(String? key, String? alternate, IEnumerable<String>? sections)
         {
-            return GetValue(key, sections) ?? LocalizationString.Create(Behavior, alternate);
+            return GetValue(key, sections) ?? LocalizationString.Create(Behavior.Default, alternate);
         }
 
         public new Task<ILocalizationString?> GetValueAsync(String? key, params String[]? sections)
@@ -200,7 +208,7 @@ namespace NetExtender.Localization
 
         public new async Task<ILocalizationString?> GetValueAsync(String? key, String? alternate, IEnumerable<String>? sections, CancellationToken token)
         {
-            return await GetValueAsync(key, sections, token) ?? LocalizationString.Create(Behavior, alternate);
+            return await GetValueAsync(key, sections, token) ?? LocalizationString.Create(Behavior.Default, alternate);
         }
         
         public String? GetValue(String? key, LocalizationIdentifier identifier, params String[]? sections)

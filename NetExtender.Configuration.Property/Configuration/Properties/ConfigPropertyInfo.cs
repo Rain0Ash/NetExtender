@@ -87,7 +87,18 @@ namespace NetExtender.Configuration.Properties
             }
         }
         
-        public abstract event PropertyChangedEventHandler? PropertyChanged;
+        protected abstract event PropertyChangedEventHandler? PropertyChanged;
+        event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged
+        {
+            add
+            {
+                PropertyChanged += value;
+            }
+            remove
+            {
+                PropertyChanged -= value;
+            }
+        }
 
         protected ConfigPropertyAbstraction(String? key, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {

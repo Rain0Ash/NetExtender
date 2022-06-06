@@ -10,8 +10,8 @@
         <Version>0.8.7</Version>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>../SignTool/Private/NetExtender.snk</AssemblyOriginatorKeyFile>
-        <Title>NetExtender.Localization</Title>
-        <Description>Localization module of NetExtender Framework</Description>
+        <Title>NetExtender.Localization.Property</Title>
+        <Description>Localization Property module of NetExtender Framework</Description>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/Rain0Ash/NetExtender</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -21,8 +21,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj" />
-      <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
+        <ProjectReference Include="..\NetExtender.Configuration.Property\NetExtender.Configuration.Property.csproj" />
+        <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj" />
+        <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
+        <ProjectReference Include="..\NetExtender.Localization\NetExtender.Localization.csproj" />
     </ItemGroup>
 
 </Project>

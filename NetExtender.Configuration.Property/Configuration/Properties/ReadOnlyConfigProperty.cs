@@ -17,7 +17,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Properties
 {
-    public class ReadOnlyConfigProperty<T> : IReadOnlyConfigProperty<T>, IFormattable
+    public class ReadOnlyConfigProperty<T> : IReadOnlyConfigProperty<T>
     {
         public event ConfigurationChangedEventHandler<T>? Changed;
         protected IReadOnlyConfigProperty Property { get; }
@@ -125,7 +125,18 @@ namespace NetExtender.Configuration.Properties
 
         public TryConverter<String?, T> Converter { get; }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+        private event PropertyChangedEventHandler? PropertyChanged;
+        event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged
+        {
+            add
+            {
+                PropertyChanged += value;
+            }
+            remove
+            {
+                PropertyChanged -= value;
+            }
+        }
 
         protected internal ReadOnlyConfigProperty(IReadOnlyConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : this(new ReadOnlyConfigProperty(config, key, null, options, sections), alternate, validate, converter)
@@ -308,7 +319,7 @@ namespace NetExtender.Configuration.Properties
         }
     }
 
-    public class ReadOnlyConfigProperty : ConfigPropertyInfo<String?>, IReadOnlyConfigProperty, IFormattable
+    public class ReadOnlyConfigProperty : ConfigPropertyInfo<String?>, IReadOnlyConfigProperty
     {
         protected IReadOnlyConfig Config { get; }
         
@@ -330,7 +341,7 @@ namespace NetExtender.Configuration.Properties
             }
         }
 
-        public override event PropertyChangedEventHandler? PropertyChanged;
+        protected override event PropertyChangedEventHandler? PropertyChanged;
 
         protected internal ReadOnlyConfigProperty(IReadOnlyConfig config, String? key, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : base(key, alternate, options | ConfigPropertyOptions.ReadOnly, sections)

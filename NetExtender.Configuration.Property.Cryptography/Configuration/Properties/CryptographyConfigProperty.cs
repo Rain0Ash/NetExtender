@@ -290,7 +290,12 @@ namespace NetExtender.Configuration.Cryptography.Properties
         protected internal CryptographyConfigPropertyWrapper(IConfig config, String? key, String? alternate, IStringCryptor cryptor, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : base(config, key, alternate, options, sections)
         {
-            Cryptor = cryptor?.AsCryptor() ?? throw new ArgumentNullException(nameof(cryptor));
+            if (cryptor is null)
+            {
+                throw new ArgumentNullException(nameof(cryptor));
+            }
+
+            Cryptor = cryptor.AsCryptor();
         }
         
         protected virtual Boolean TryEncryptKey(String? key, IStringEncryptor? encryptor, out String? result)

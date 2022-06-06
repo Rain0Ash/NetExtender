@@ -8,7 +8,7 @@ using NetExtender.Interfaces;
 
 namespace NetExtender.Configuration.Properties.Interfaces
 {
-    public interface IReadOnlyConfigProperty<T> : IConfigPropertyInfo, IReadOnlyValidable<T>
+    public interface IReadOnlyConfigProperty<T> : IConfigPropertyInfo, IReadOnlyValidable<T>, IFormattable
     {
         public event ConfigurationChangedEventHandler<T> Changed;
         public T Value { get; }
@@ -29,7 +29,7 @@ namespace NetExtender.Configuration.Properties.Interfaces
         public Task<Boolean> ReadAsync(CancellationToken token);
     }
 
-    public interface IReadOnlyConfigProperty : IConfigPropertyInfo
+    public interface IReadOnlyConfigProperty : IConfigPropertyInfo, IFormattable
     {
         public event ConfigurationChangedEventHandler Changed;
         public String? Value { get; }

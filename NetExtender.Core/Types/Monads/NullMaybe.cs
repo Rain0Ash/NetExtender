@@ -75,7 +75,7 @@ namespace NetExtender.Types.Monads
         
         public override Int32 GetHashCode()
         {
-            return Value is not null ? Value?.GetHashCode() ?? 0 : 0;
+            return Value is not null ? Value.GetHashCode() : 0;
         }
 
         public override String? ToString()

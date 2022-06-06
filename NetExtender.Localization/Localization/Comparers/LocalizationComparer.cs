@@ -71,12 +71,14 @@ namespace NetExtender.Types.Comparers
 
         public Int32 Compare(LocalizationIdentifier x, LocalizationIdentifier y)
         {
-            return x == Behavior.Localization ? 4 : x == Behavior.System ? 3 : x == Behavior.Default ? 2 : Comparer.Compare(x, y);
+            Int32 compare = Comparer.Compare(x, y);
+            return compare != 0 ? x == Behavior.Localization ? 4 : x == Behavior.System ? 3 : x == Behavior.Default ? 2 : compare : 0;
         }
 
         public Int32 Compare(CultureIdentifier x, CultureIdentifier y)
         {
-            return x == Behavior.Localization ? 4 : x == Behavior.System ? 3 : x == Behavior.Default ? 2 : Comparer.Compare(x, y);
+            Int32 compare = Comparer.Compare(x, y);
+            return compare != 0 ? x == Behavior.Localization ? 4 : x == Behavior.System ? 3 : x == Behavior.Default ? 2 : compare : 0;
         }
     }
 }

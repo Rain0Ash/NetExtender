@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Types.Monads;
@@ -143,6 +144,26 @@ namespace NetExtender.Utilities.Types
             return source.IsValueCreated ? source.Value : default;
         }
         
+        public static T GetValue<T>(this Lazy<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Value;
+        }
+        
+        public static T GetValue<T>(this ILazy<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Value;
+        }
+        
         public static Task<T> GetValueAsync<T>(this Lazy<T> source)
         {
             if (source is null)
@@ -161,6 +182,40 @@ namespace NetExtender.Utilities.Types
             }
 
             return Task.Factory.StartNew(() => source.Value);
+        }
+        
+        public static Boolean TryGetValue<T>(this Lazy<T> source, [MaybeNullWhen(false)] out T result)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (!source.IsValueCreated)
+            {
+                result = default;
+                return false;
+            }
+
+            result = source.Value;
+            return true;
+        }
+        
+        public static Boolean TryGetValue<T>(this ILazy<T> source, [MaybeNullWhen(false)] out T result)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (!source.IsValueCreated)
+            {
+                result = default;
+                return false;
+            }
+
+            result = source.Value;
+            return true;
         }
     }
 }

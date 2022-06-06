@@ -15,6 +15,26 @@ namespace NetExtender.Configuration.Utilities
 {
     public static class ConfigurationPropertyUtilities
     {
+        public static IReadOnlyConfigProperty AsReadOnly(this IConfigProperty property)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            return new ReadOnlyConfigPropertyWrapper(property);
+        }
+        
+        public static IReadOnlyConfigProperty<T> AsReadOnly<T>(this IConfigProperty<T> property)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+            
+            return new ReadOnlyConfigPropertyWrapper<T>(property);
+        }
+
         public static IReadOnlyConfigProperty<T?> Converter<T>(this IReadOnlyConfigProperty property)
         {
             return Converter(property, default(T));
@@ -304,204 +324,304 @@ namespace NetExtender.Configuration.Utilities
             return convert is not null && await property.SetValueAsync(convert, token);
         }
 
-        public static IReadOnlyConfigProperty GetProperty(this IReadOnlyConfig config, String? key, params String[]? sections)
+        public static IReadOnlyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, params String[]? sections)
         {
-            return GetProperty(config, key, (IEnumerable<String>?) sections);
+            return GetConfigurationProperty(config, key, (IEnumerable<String>?) sections);
         }
         
-        public static IReadOnlyConfigProperty GetProperty(this IReadOnlyConfig config, String? key, IEnumerable<String>? sections)
+        public static IReadOnlyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, IEnumerable<String>? sections)
         {
-            return GetProperty(config, key, null, sections);
+            return GetConfigurationProperty(config, key, null, sections);
         }
         
-        public static IReadOnlyConfigProperty GetProperty(this IReadOnlyConfig config, String? key, ConfigPropertyOptions options, params String[]? sections)
+        public static IReadOnlyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetProperty(config, key, options, (IEnumerable<String>?) sections);
+            return GetConfigurationProperty(config, key, options, (IEnumerable<String>?) sections);
         }
         
-        public static IReadOnlyConfigProperty GetProperty(this IReadOnlyConfig config, String? key, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        public static IReadOnlyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetProperty(config, key, null, options, sections);
+            return GetConfigurationProperty(config, key, null, options, sections);
         }
 
-        public static IReadOnlyConfigProperty GetProperty(this IReadOnlyConfig config, String? key, String? alternate, params String[]? sections)
+        public static IReadOnlyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, String? alternate, params String[]? sections)
         {
-            return GetProperty(config, key, alternate, (IEnumerable<String>?) sections);
+            return GetConfigurationProperty(config, key, alternate, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyConfigProperty GetProperty(this IReadOnlyConfig config, String? key, String? alternate, IEnumerable<String>? sections)
+        public static IReadOnlyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, String? alternate, IEnumerable<String>? sections)
         {
-            return GetProperty(config, key, alternate, ConfigPropertyOptions.None, sections);
+            return GetConfigurationProperty(config, key, alternate, ConfigPropertyOptions.None, sections);
         }
 
-        public static IReadOnlyConfigProperty GetProperty(this IReadOnlyConfig config, String? key, String? alternate, ConfigPropertyOptions options, params String[]? sections)
+        public static IReadOnlyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, String? alternate, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
+            return GetConfigurationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
         }
         
-        public static IReadOnlyConfigProperty GetProperty(this IReadOnlyConfig config, String? key, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        public static IReadOnlyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ReadOnlyConfigProperty(config, key, alternate, options, sections);
         }
         
-        public static IConfigProperty GetProperty(this IConfig config, String? key, params String[]? sections)
+        public static IConfigProperty GetConfigurationProperty(this IConfig config, String? key, params String[]? sections)
         {
-            return GetProperty(config, key, (IEnumerable<String>?) sections);
+            return GetConfigurationProperty(config, key, (IEnumerable<String>?) sections);
         }
         
-        public static IConfigProperty GetProperty(this IConfig config, String? key, IEnumerable<String>? sections)
+        public static IConfigProperty GetConfigurationProperty(this IConfig config, String? key, IEnumerable<String>? sections)
         {
-            return GetProperty(config, key, null, sections);
+            return GetConfigurationProperty(config, key, null, sections);
         }
         
-        public static IConfigProperty GetProperty(this IConfig config, String? key, ConfigPropertyOptions options, params String[]? sections)
+        public static IConfigProperty GetConfigurationProperty(this IConfig config, String? key, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetProperty(config, key, options, (IEnumerable<String>?) sections);
+            return GetConfigurationProperty(config, key, options, (IEnumerable<String>?) sections);
         }
         
-        public static IConfigProperty GetProperty(this IConfig config, String? key, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        public static IConfigProperty GetConfigurationProperty(this IConfig config, String? key, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetProperty(config, key, null, options, sections);
+            return GetConfigurationProperty(config, key, null, options, sections);
         }
 
-        public static IConfigProperty GetProperty(this IConfig config, String? key, String? alternate, params String[]? sections)
+        public static IConfigProperty GetConfigurationProperty(this IConfig config, String? key, String? alternate, params String[]? sections)
         {
-            return GetProperty(config, key, alternate, (IEnumerable<String>?) sections);
+            return GetConfigurationProperty(config, key, alternate, (IEnumerable<String>?) sections);
         }
 
-        public static IConfigProperty GetProperty(this IConfig config, String? key, String? alternate, IEnumerable<String>? sections)
+        public static IConfigProperty GetConfigurationProperty(this IConfig config, String? key, String? alternate, IEnumerable<String>? sections)
         {
-            return GetProperty(config, key, alternate, ConfigPropertyOptions.None, sections);
+            return GetConfigurationProperty(config, key, alternate, ConfigPropertyOptions.None, sections);
         }
 
-        public static IConfigProperty GetProperty(this IConfig config, String? key, String? alternate, ConfigPropertyOptions options, params String[]? sections)
+        public static IConfigProperty GetConfigurationProperty(this IConfig config, String? key, String? alternate, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
+            return GetConfigurationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
         }
         
-        public static IConfigProperty GetProperty(this IConfig config, String? key, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        public static IConfigProperty GetConfigurationProperty(this IConfig config, String? key, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ConfigProperty(config, key, alternate, options, sections);
         }
         
-        public static IReadOnlyConfigProperty<T?> GetProperty<T>(this IReadOnlyConfig config, String? key, params String[]? sections)
+        public static IReadOnlyConfigProperty GetReadOnlyConfigurationProperty(this IConfig config, String? key, params String[]? sections)
         {
-            return GetProperty<T>(config, key, (IEnumerable<String>?) sections);
+            return GetReadOnlyConfigurationProperty(config, key, (IEnumerable<String>?) sections);
         }
         
-        public static IReadOnlyConfigProperty<T?> GetProperty<T>(this IReadOnlyConfig config, String? key, IEnumerable<String>? sections)
+        public static IReadOnlyConfigProperty GetReadOnlyConfigurationProperty(this IConfig config, String? key, IEnumerable<String>? sections)
         {
-            return GetProperty(config, key, default(T), sections);
-        }
-
-        public static IReadOnlyConfigProperty<T> GetProperty<T>(this IReadOnlyConfig config, String? key, T alternate, params String[]? sections)
-        {
-            return GetProperty(config, key, alternate, (IEnumerable<String>?) sections);
-        }
-
-        public static IReadOnlyConfigProperty<T> GetProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IEnumerable<String>? sections)
-        {
-            return GetProperty(config, key, alternate, null, sections);
-        }
-
-        public static IReadOnlyConfigProperty<T> GetProperty<T>(this IReadOnlyConfig config, String? key, T alternate, ConfigPropertyOptions options, params String[]? sections)
-        {
-            return GetProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
+            return GetReadOnlyConfigurationProperty(config, key, null, sections);
         }
         
-        public static IReadOnlyConfigProperty<T> GetProperty<T>(this IReadOnlyConfig config, String? key, T alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        public static IReadOnlyConfigProperty GetReadOnlyConfigurationProperty(this IConfig config, String? key, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetProperty(config, key, alternate, null, options, sections);
+            return GetReadOnlyConfigurationProperty(config, key, options, (IEnumerable<String>?) sections);
+        }
+        
+        public static IReadOnlyConfigProperty GetReadOnlyConfigurationProperty(this IConfig config, String? key, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return GetReadOnlyConfigurationProperty(config, key, null, options, sections);
         }
 
-        public static IReadOnlyConfigProperty<T> GetProperty<T>(this IReadOnlyConfig config, String? key, T alternate, Func<T, Boolean>? validate, params String[]? sections)
+        public static IReadOnlyConfigProperty GetReadOnlyConfigurationProperty(this IConfig config, String? key, String? alternate, params String[]? sections)
         {
-            return GetProperty(config, key, alternate, validate, (IEnumerable<String>?) sections);
+            return GetReadOnlyConfigurationProperty(config, key, alternate, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyConfigProperty<T> GetProperty<T>(this IReadOnlyConfig config, String? key, T alternate, Func<T, Boolean>? validate, IEnumerable<String>? sections)
+        public static IReadOnlyConfigProperty GetReadOnlyConfigurationProperty(this IConfig config, String? key, String? alternate, IEnumerable<String>? sections)
         {
-            return GetProperty(config, key, alternate, validate, ConfigPropertyOptions.None, sections);
+            return GetReadOnlyConfigurationProperty(config, key, alternate, ConfigPropertyOptions.None, sections);
         }
 
-        public static IReadOnlyConfigProperty<T> GetProperty<T>(this IReadOnlyConfig config, String? key, T alternate, Func<T, Boolean>? validate, ConfigPropertyOptions options, params String[]? sections)
+        public static IReadOnlyConfigProperty GetReadOnlyConfigurationProperty(this IConfig config, String? key, String? alternate, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetProperty(config, key, alternate, validate, options, (IEnumerable<String>?) sections);
+            return GetReadOnlyConfigurationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
+        }
+        
+        public static IReadOnlyConfigProperty GetReadOnlyConfigurationProperty(this IConfig config, String? key, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return new ReadOnlyConfigPropertyWrapper(config, key, alternate, options, sections);
+        }
+        
+        public static IReadOnlyConfigProperty<T?> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, params String[]? sections)
+        {
+            return GetConfigurationProperty<T>(config, key, (IEnumerable<String>?) sections);
+        }
+        
+        public static IReadOnlyConfigProperty<T?> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, IEnumerable<String>? sections)
+        {
+            return GetConfigurationProperty(config, key, default(T), sections);
         }
 
-        public static IReadOnlyConfigProperty<T> GetProperty<T>(this IReadOnlyConfig config, String? key, T alternate, Func<T, Boolean>? validate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        public static IReadOnlyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, params String[]? sections)
         {
-            return GetProperty(config, key, alternate, validate, null, options, sections);
+            return GetConfigurationProperty(config, key, alternate, (IEnumerable<String>?) sections);
         }
 
-        public static IReadOnlyConfigProperty<T> GetProperty<T>(this IReadOnlyConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
+        public static IReadOnlyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, IEnumerable<String>? sections)
         {
-            return GetProperty(config, key, alternate, validate, converter, options, (IEnumerable<String>?) sections);
+            return GetConfigurationProperty(config, key, alternate, null, sections);
         }
 
-        public static IReadOnlyConfigProperty<T> GetProperty<T>(this IReadOnlyConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        public static IReadOnlyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetConfigurationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
+        }
+        
+        public static IReadOnlyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return GetConfigurationProperty(config, key, alternate, null, options, sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, Func<T, Boolean>? validate, params String[]? sections)
+        {
+            return GetConfigurationProperty(config, key, alternate, validate, (IEnumerable<String>?) sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, Func<T, Boolean>? validate, IEnumerable<String>? sections)
+        {
+            return GetConfigurationProperty(config, key, alternate, validate, ConfigPropertyOptions.None, sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, Func<T, Boolean>? validate, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetConfigurationProperty(config, key, alternate, validate, options, (IEnumerable<String>?) sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, Func<T, Boolean>? validate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return GetConfigurationProperty(config, key, alternate, validate, null, options, sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetConfigurationProperty(config, key, alternate, validate, converter, options, (IEnumerable<String>?) sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ReadOnlyConfigProperty<T>(config, key, alternate, validate, converter, options, sections);
         }
         
-        public static IConfigProperty<T?> GetProperty<T>(this IConfig config, String? key, params String[]? sections)
+        public static IConfigProperty<T?> GetConfigurationProperty<T>(this IConfig config, String? key, params String[]? sections)
         {
-            return GetProperty<T>(config, key, (IEnumerable<String>?) sections);
+            return GetConfigurationProperty<T>(config, key, (IEnumerable<String>?) sections);
         }
         
-        public static IConfigProperty<T?> GetProperty<T>(this IConfig config, String? key, IEnumerable<String>? sections)
+        public static IConfigProperty<T?> GetConfigurationProperty<T>(this IConfig config, String? key, IEnumerable<String>? sections)
         {
-            return GetProperty(config, key, default(T), sections);
+            return GetConfigurationProperty(config, key, default(T), sections);
         }
 
-        public static IConfigProperty<T> GetProperty<T>(this IConfig config, String? key, T alternate, params String[]? sections)
+        public static IConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, params String[]? sections)
         {
-            return GetProperty(config, key, alternate, (IEnumerable<String>?) sections);
+            return GetConfigurationProperty(config, key, alternate, (IEnumerable<String>?) sections);
         }
 
-        public static IConfigProperty<T> GetProperty<T>(this IConfig config, String? key, T alternate, IEnumerable<String>? sections)
+        public static IConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, IEnumerable<String>? sections)
         {
-            return GetProperty(config, key, alternate, null, sections);
+            return GetConfigurationProperty(config, key, alternate, null, sections);
         }
 
-        public static IConfigProperty<T> GetProperty<T>(this IConfig config, String? key, T alternate, ConfigPropertyOptions options, params String[]? sections)
+        public static IConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
+            return GetConfigurationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
         }
         
-        public static IConfigProperty<T> GetProperty<T>(this IConfig config, String? key, T alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        public static IConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetProperty(config, key, alternate, null, options, sections);
+            return GetConfigurationProperty(config, key, alternate, null, options, sections);
         }
 
-        public static IConfigProperty<T> GetProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, params String[]? sections)
+        public static IConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, params String[]? sections)
         {
-            return GetProperty(config, key, alternate, validate, (IEnumerable<String>?) sections);
+            return GetConfigurationProperty(config, key, alternate, validate, (IEnumerable<String>?) sections);
         }
 
-        public static IConfigProperty<T> GetProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, IEnumerable<String>? sections)
+        public static IConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, IEnumerable<String>? sections)
         {
-            return GetProperty(config, key, alternate, validate, ConfigPropertyOptions.None, sections);
+            return GetConfigurationProperty(config, key, alternate, validate, ConfigPropertyOptions.None, sections);
         }
 
-        public static IConfigProperty<T> GetProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, ConfigPropertyOptions options, params String[]? sections)
+        public static IConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetProperty(config, key, alternate, validate, options, (IEnumerable<String>?) sections);
+            return GetConfigurationProperty(config, key, alternate, validate, options, (IEnumerable<String>?) sections);
         }
 
-        public static IConfigProperty<T> GetProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        public static IConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
-            return GetProperty(config, key, alternate, validate, null, options, sections);
+            return GetConfigurationProperty(config, key, alternate, validate, null, options, sections);
         }
 
-        public static IConfigProperty<T> GetProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
+        public static IConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
         {
-            return GetProperty(config, key, alternate, validate, converter, options, (IEnumerable<String>?) sections);
+            return GetConfigurationProperty(config, key, alternate, validate, converter, options, (IEnumerable<String>?) sections);
         }
 
-        public static IConfigProperty<T> GetProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        public static IConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ConfigProperty<T>(config, key, alternate, validate, converter, options, sections);
+        }
+        
+        public static IReadOnlyConfigProperty<T?> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, params String[]? sections)
+        {
+            return GetReadOnlyConfigurationProperty<T>(config, key, (IEnumerable<String>?) sections);
+        }
+        
+        public static IReadOnlyConfigProperty<T?> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, IEnumerable<String>? sections)
+        {
+            return GetReadOnlyConfigurationProperty(config, key, default(T), sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, T alternate, params String[]? sections)
+        {
+            return GetReadOnlyConfigurationProperty(config, key, alternate, (IEnumerable<String>?) sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, T alternate, IEnumerable<String>? sections)
+        {
+            return GetReadOnlyConfigurationProperty(config, key, alternate, null, sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, T alternate, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetReadOnlyConfigurationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
+        }
+        
+        public static IReadOnlyConfigProperty<T> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, T alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return GetReadOnlyConfigurationProperty(config, key, alternate, null, options, sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, params String[]? sections)
+        {
+            return GetReadOnlyConfigurationProperty(config, key, alternate, validate, (IEnumerable<String>?) sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, IEnumerable<String>? sections)
+        {
+            return GetReadOnlyConfigurationProperty(config, key, alternate, validate, ConfigPropertyOptions.None, sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetReadOnlyConfigurationProperty(config, key, alternate, validate, options, (IEnumerable<String>?) sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return GetReadOnlyConfigurationProperty(config, key, alternate, validate, null, options, sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetReadOnlyConfigurationProperty(config, key, alternate, validate, converter, options, (IEnumerable<String>?) sections);
+        }
+
+        public static IReadOnlyConfigProperty<T> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return new ReadOnlyConfigPropertyWrapper<T>(config, key, alternate, validate, converter, options, sections);
         }
     }
 }

@@ -45,7 +45,12 @@ namespace NetExtender.Utilities.Windows.IO
         /// </exception>
         public static IDictionary<String, AlternateDataStreamInfo> GetAlternateDataStreams(this FileSystemInfo file)
         {
-            return GetAlternateDataStreams(file?.FullName ?? throw new ArgumentNullException(nameof(file)));
+            if (file is null)
+            {
+                throw new ArgumentNullException(nameof(file));
+            }
+
+            return GetAlternateDataStreams(file.FullName);
         }
 
         /// <summary>
@@ -112,7 +117,12 @@ namespace NetExtender.Utilities.Windows.IO
         /// </exception>
         public static Boolean IsAlternateDataStreamExists(this FileSystemInfo file, String name)
         {
-            return IsAlternateDataStreamExists(file?.FullName ?? throw new ArgumentNullException(nameof(file)), name);
+            if (file is null)
+            {
+                throw new ArgumentNullException(nameof(file));
+            }
+
+            return IsAlternateDataStreamExists(file.FullName, name);
         }
 
         /// <summary>
@@ -153,7 +163,12 @@ namespace NetExtender.Utilities.Windows.IO
         
         public static AlternateDataStreamInfo OpenAlternateDataStream(this FileSystemInfo file, String name)
         {
-            return OpenAlternateDataStream(file?.FullName ?? throw new ArgumentNullException(nameof(file)), name, FileMode.OpenOrCreate);
+            if (file is null)
+            {
+                throw new ArgumentNullException(nameof(file));
+            }
+
+            return OpenAlternateDataStream(file.FullName, name, FileMode.OpenOrCreate);
         }
 
         /// <summary>
@@ -197,7 +212,12 @@ namespace NetExtender.Utilities.Windows.IO
         /// </exception>
         public static AlternateDataStreamInfo OpenAlternateDataStream(this FileSystemInfo file, String name, FileMode mode)
         {
-            return OpenAlternateDataStream(file?.FullName ?? throw new ArgumentNullException(nameof(file)), name, mode);
+            if (file is null)
+            {
+                throw new ArgumentNullException(nameof(file));
+            }
+
+            return OpenAlternateDataStream(file.FullName, name, mode);
         }
 
         public static AlternateDataStreamInfo OpenAlternateDataStream(String path, String name)
@@ -353,7 +373,12 @@ namespace NetExtender.Utilities.Windows.IO
         /// </exception>
         public static Boolean DeleteAlternateDataStream(this FileSystemInfo file, String name)
         {
-            return DeleteAlternateDataStream(file?.FullName ?? throw new ArgumentNullException(nameof(file)), name);
+            if (file is null)
+            {
+                throw new ArgumentNullException(nameof(file));
+            }
+
+            return DeleteAlternateDataStream(file.FullName, name);
         }
 
         /// <summary>

@@ -245,37 +245,49 @@ namespace NetExtender.Utilities.Serialization
             }
         }
         
-        public static TSettings OverrideConverter<TSettings>(this TSettings settings, Type type, JsonConverter? converter) where TSettings : JsonSerializerSettings
+        public static TSettings ConverterOverride<TSettings>(this TSettings settings, Type type, JsonConverter? converter) where TSettings : JsonSerializerSettings
         {
-            if (type is null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
             InitializeOverrideContractResolver(settings).Add(type, converter);
             return settings;
         }
         
-        public static TSettings OverrideConverter<T, TSettings>(this TSettings settings, JsonConverter? converter) where TSettings : JsonSerializerSettings
+        public static TSettings ConverterOverride<T, TSettings>(this TSettings settings, JsonConverter? converter) where TSettings : JsonSerializerSettings
         {
             InitializeOverrideContractResolver(settings).Add<T>(converter);
             return settings;
         }
         
-        public static TSettings WithoutConverter<TSettings>(this TSettings settings, Type type) where TSettings : JsonSerializerSettings
+        public static TSettings ConverterOverrideWithout<TSettings>(this TSettings settings, Type type) where TSettings : JsonSerializerSettings
         {
-            if (type is null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
-
             InitializeOverrideContractResolver(settings).Without(type);
             return settings;
         }
         
-        public static TSettings WithoutConverter<T, TSettings>(this TSettings settings) where TSettings : JsonSerializerSettings
+        public static TSettings ConverterOverrideWithout<T, TSettings>(this TSettings settings) where TSettings : JsonSerializerSettings
         {
             InitializeOverrideContractResolver(settings).Without<T>();
+            return settings;
+        }
+
+        public static TSettings ConverterOverrideRemove<TSettings>(this TSettings settings, Type type) where TSettings : JsonSerializerSettings
+        {
+            return ConverterOverrideRemove(settings, type, out _);
+        }
+
+        public static TSettings ConverterOverrideRemove<TSettings>(this TSettings settings, Type type, out JsonConverter? converter) where TSettings : JsonSerializerSettings
+        {
+            InitializeOverrideContractResolver(settings).Remove(type, out converter);
+            return settings;
+        }
+
+        public static TSettings ConverterOverrideRemove<T, TSettings>(this TSettings settings) where TSettings : JsonSerializerSettings
+        {
+            return ConverterOverrideRemove<T, TSettings>(settings, out _);
+        }
+
+        public static TSettings ConverterOverrideRemove<T, TSettings>(this TSettings settings, out JsonConverter? converter) where TSettings : JsonSerializerSettings
+        {
+            InitializeOverrideContractResolver(settings).Remove<T>(out converter);
             return settings;
         }
 

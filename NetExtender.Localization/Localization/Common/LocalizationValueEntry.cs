@@ -101,14 +101,15 @@ namespace NetExtender.Localization.Common
             Sections = sections;
         }
 
-        public void Deconstruct(out String? key, out ImmutableArray<String> sections)
+        public void Deconstruct(out String? key, out LocalizationIdentifier identifier, out ImmutableArray<String> sections)
         {
-            Deconstruct(out key, out _, out sections);
+            Deconstruct(out key, out identifier, out _, out sections);
         }
 
-        public void Deconstruct(out String? key, out String? value, out ImmutableArray<String> sections)
+        public void Deconstruct(out String? key, out LocalizationIdentifier identifier, out String? value, out ImmutableArray<String> sections)
         {
             key = Key;
+            identifier = Identifier;
             value = Value;
             sections = Sections;
         }
