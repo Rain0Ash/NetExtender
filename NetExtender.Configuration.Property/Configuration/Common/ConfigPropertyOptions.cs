@@ -10,8 +10,9 @@ namespace NetExtender.Configuration.Common
     {
         None = 0,
         Caching = 1,
-        ReadOnly = 2,
-        IgnoreEvent = 4,
+        ThrowWhenValueSetInvalid = 2,
+        ReadOnly = 4,
+        IgnoreEvent = 8,
         DisableSave = 16,
         AlwaysDefault = Caching | ReadOnly | IgnoreEvent | DisableSave
     }

@@ -72,6 +72,14 @@ namespace NetExtender.Configuration.Properties
             }
         }
 
+        public Boolean IsThrowWhenValueSetInvalid
+        {
+            get
+            {
+                return Property.IsThrowWhenValueSetInvalid;
+            }
+        }
+
         public Boolean IsReadOnly
         {
             get
@@ -109,6 +117,13 @@ namespace NetExtender.Configuration.Properties
             get
             {
                 return GetValue();
+            }
+            set
+            {
+                if (!SetValue(value) && IsThrowWhenValueSetInvalid)
+                {
+                    throw new InvalidOperationException($"Can't set value '{value}' to {Path}");
+                }
             }
         }
 
@@ -399,11 +414,18 @@ namespace NetExtender.Configuration.Properties
             }
         }
 
-        public override String? Value
+        public virtual String? Value
         {
             get
             {
                 return GetValue();
+            }
+            set
+            {
+                if (!SetValue(value) && IsThrowWhenValueSetInvalid)
+                {
+                    throw new InvalidOperationException($"Can't set value '{value}' to {Path}");
+                }
             }
         }
 

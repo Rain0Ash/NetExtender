@@ -58,11 +58,18 @@ namespace NetExtender.Localization.Property.Localization.Properties
             }
         }
 
-        public override ILocalizationString? Value
+        public virtual ILocalizationString? Value
         {
             get
             {
                 return GetValue();
+            }
+            set
+            {
+                if (!SetValue(value) && IsThrowWhenValueSetInvalid)
+                {
+                    throw new InvalidOperationException($"Can't set value '{value}' to {Path}");
+                }
             }
         }
 
@@ -108,6 +115,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
         protected virtual void OnLocalizationChanged(Object? sender, LocalizationChangedEventArgs args)
         {
             LocalizationChanged?.Invoke(this, args);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Identifier)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Current)));
         }
 
@@ -477,11 +485,18 @@ namespace NetExtender.Localization.Property.Localization.Properties
             }
         }
 
-        public override String? Value
+        public virtual String? Value
         {
             get
             {
                 return GetValue();
+            }
+            set
+            {
+                if (!SetValue(value) && IsThrowWhenValueSetInvalid)
+                {
+                    throw new InvalidOperationException($"Can't set value '{value}' to {Path}");
+                }
             }
         }
 

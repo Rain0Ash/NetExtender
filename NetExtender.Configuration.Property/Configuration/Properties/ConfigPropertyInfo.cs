@@ -15,7 +15,6 @@ namespace NetExtender.Configuration.Properties
     public abstract class ConfigPropertyInfo<T> : ConfigPropertyAbstraction
     {
         protected DynamicLazy<T> Internal { get; }
-        public abstract T Value { get; }
         public T Alternate { get; }
 
         public override Boolean HasValue
@@ -60,6 +59,14 @@ namespace NetExtender.Configuration.Properties
             get
             {
                 return Options.HasFlag(ConfigPropertyOptions.ReadOnly);
+            }
+        }
+
+        public Boolean IsThrowWhenValueSetInvalid
+        {
+            get
+            {
+                return Options.HasFlag(ConfigPropertyOptions.ThrowWhenValueSetInvalid);
             }
         }
         

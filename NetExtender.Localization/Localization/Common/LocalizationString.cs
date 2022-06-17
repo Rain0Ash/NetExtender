@@ -17,6 +17,12 @@ namespace NetExtender.Localization.Common
     public class LocalizationString : StringBase, ILocalizationString
     {
         [return: NotNullIfNotNull("value")]
+        public static ILocalizationString? Create(String? value)
+        {
+            return value is not null ? new FakeLocalizationString(value) : null;
+        }
+        
+        [return: NotNullIfNotNull("value")]
         public static ILocalizationString? Create(LocalizationIdentifier identifier, String? value)
         {
             return value is not null ? new FakeLocalizationString(identifier, value) : null;
@@ -252,6 +258,11 @@ namespace NetExtender.Localization.Common
             public LocalizationIdentifier Identifier { get; }
             public override String Text { get; protected set; }
 
+            public FakeLocalizationString(String value)
+                : this(default, value)
+            {
+            }
+            
             public FakeLocalizationString(LocalizationIdentifier identifier, String value)
             {
                 Identifier = identifier;
@@ -260,17 +271,17 @@ namespace NetExtender.Localization.Common
 
             public Boolean Contains(LocalizationIdentifier identifier)
             {
-                return Identifier.Equals(identifier);
+                return Identifier == default(LocalizationIdentifier) || Identifier.Equals(identifier);
             }
 
             public String? Get(LocalizationIdentifier identifier)
             {
-                return Identifier.Equals(identifier) ? Text : null;
+                return Identifier == default(LocalizationIdentifier) || Identifier.Equals(identifier) ? Text : null;
             }
 
             public Boolean Get(LocalizationIdentifier identifier, [MaybeNullWhen(false)] out String result)
             {
-                if (identifier == Identifier)
+                if (Identifier == default(LocalizationIdentifier) || Identifier == identifier)
                 {
                     result = Text;
                     return true;

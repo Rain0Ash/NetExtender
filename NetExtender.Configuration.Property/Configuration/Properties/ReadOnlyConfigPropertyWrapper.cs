@@ -89,6 +89,14 @@ namespace NetExtender.Configuration.Properties
             }
         }
 
+        public Boolean IsThrowWhenValueSetInvalid
+        {
+            get
+            {
+                return Internal.IsThrowWhenValueSetInvalid;
+            }
+        }
+
         public Boolean IsReadOnly
         {
             get
@@ -336,6 +344,14 @@ namespace NetExtender.Configuration.Properties
             get
             {
                 return Internal.IsCaching;
+            }
+        }
+
+        public Boolean IsThrowWhenValueSetInvalid
+        {
+            get
+            {
+                return Internal.IsThrowWhenValueSetInvalid;
             }
         }
 

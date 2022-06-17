@@ -16,6 +16,7 @@ namespace NetExtender.Configuration.Properties.Interfaces
         public ConfigPropertyOptions Options { get; }
         public Boolean HasValue { get; }
         public Boolean IsCaching { get; }
+        public Boolean IsThrowWhenValueSetInvalid { get; }
         public Boolean IsReadOnly { get; }
         public Boolean IsIgnoreEvent { get; }
         public Boolean IsDisableSave { get; }

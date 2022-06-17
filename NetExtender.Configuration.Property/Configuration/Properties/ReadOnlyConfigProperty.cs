@@ -71,6 +71,14 @@ namespace NetExtender.Configuration.Properties
             }
         }
 
+        public Boolean IsThrowWhenValueSetInvalid
+        {
+            get
+            {
+                return Property.IsThrowWhenValueSetInvalid;
+            }
+        }
+
         public Boolean IsReadOnly
         {
             get
@@ -333,7 +341,7 @@ namespace NetExtender.Configuration.Properties
             }
         }
 
-        public override String? Value
+        public virtual String? Value
         {
             get
             {

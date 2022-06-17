@@ -11,7 +11,7 @@ namespace NetExtender.Configuration.Properties.Interfaces
     public interface IConfigProperty<T> : IConfigPropertyInfo, IReadOnlyValidable<T>, IFormattable
     {
         public event ConfigurationChangedEventHandler<T> Changed;
-        public T Value { get; }
+        public T Value { get; set; }
         public T Alternate { get; }
         public TryConverter<String?, T> Converter { get; }
         public T GetValue();
@@ -44,7 +44,7 @@ namespace NetExtender.Configuration.Properties.Interfaces
     public interface IConfigProperty : IConfigPropertyInfo, IFormattable
     {
         public event ConfigurationChangedEventHandler Changed;
-        public String? Value { get; }
+        public String? Value { get; set; }
         public String? Alternate { get; }
         public String? GetValue();
         public Task<String?> GetValueAsync();

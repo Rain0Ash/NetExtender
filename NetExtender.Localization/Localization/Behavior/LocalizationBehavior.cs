@@ -139,8 +139,18 @@ namespace NetExtender.Localization.Behavior
         
         public ILocalizationConverter Converter { get; }
 
+        public LocalizationBehavior(IConfigBehavior behavior)
+            : this(behavior, LocalizationOptions.None)
+        {
+        }
+
         public LocalizationBehavior(IConfigBehavior behavior, LocalizationOptions options)
             : this(behavior, (ILocalizationConverter?) null, options)
+        {
+        }
+        
+        public LocalizationBehavior(IConfigBehavior behavior, ILocalizationConverter? converter)
+            : this(behavior, converter, LocalizationOptions.None)
         {
         }
 
@@ -148,9 +158,19 @@ namespace NetExtender.Localization.Behavior
             : this(behavior, default, converter, options)
         {
         }
+        
+        public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization)
+            : this(behavior, localization, LocalizationOptions.None)
+        {
+        }
 
         public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization, LocalizationOptions options)
             : this(behavior, localization, (ILocalizationConverter?) null, options)
+        {
+        }
+        
+        public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization, ILocalizationConverter? converter)
+            : this(behavior, localization, converter, LocalizationOptions.None)
         {
         }
 
@@ -158,9 +178,19 @@ namespace NetExtender.Localization.Behavior
             : this(behavior, localization, default, converter, options)
         {
         }
+        
+        public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization, LocalizationIdentifier system)
+            : this(behavior, localization, system, LocalizationOptions.None)
+        {
+        }
 
         public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization, LocalizationIdentifier system, LocalizationOptions options)
             : this(behavior, localization, system, null, options)
+        {
+        }
+        
+        public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization, LocalizationIdentifier system, ILocalizationConverter? converter)
+            : this(behavior, localization, system, converter, LocalizationOptions.None)
         {
         }
 
@@ -168,9 +198,19 @@ namespace NetExtender.Localization.Behavior
             : this(behavior, localization, system, converter, options, null)
         {
         }
+        
+        public LocalizationBehavior(IConfigBehavior behavior, IComparer<LocalizationIdentifier>? comparer)
+            : this(behavior, comparer, LocalizationOptions.None)
+        {
+        }
 
         public LocalizationBehavior(IConfigBehavior behavior, IComparer<LocalizationIdentifier>? comparer, LocalizationOptions options)
             : this(behavior, null, comparer, options)
+        {
+        }
+        
+        public LocalizationBehavior(IConfigBehavior behavior, ILocalizationConverter? converter, IComparer<LocalizationIdentifier>? comparer)
+            : this(behavior, converter, comparer, LocalizationOptions.None)
         {
         }
 
@@ -178,9 +218,19 @@ namespace NetExtender.Localization.Behavior
             : this(behavior, default, converter, options, comparer)
         {
         }
+        
+        public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization, IComparer<LocalizationIdentifier>? comparer)
+            : this(behavior, localization, LocalizationOptions.None, comparer)
+        {
+        }
 
         public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization, LocalizationOptions options, IComparer<LocalizationIdentifier>? comparer)
             : this(behavior, localization, (ILocalizationConverter?) null, options, comparer)
+        {
+        }
+        
+        public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization, ILocalizationConverter? converter, IComparer<LocalizationIdentifier>? comparer)
+            : this(behavior, localization, converter, LocalizationOptions.None, comparer)
         {
         }
 
@@ -188,9 +238,19 @@ namespace NetExtender.Localization.Behavior
             : this(behavior, localization, default, converter, options, comparer)
         {
         }
+        
+        public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization, LocalizationIdentifier system, IComparer<LocalizationIdentifier>? comparer)
+            : this(behavior, localization, system, LocalizationOptions.None, comparer)
+        {
+        }
 
         public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization, LocalizationIdentifier system, LocalizationOptions options, IComparer<LocalizationIdentifier>? comparer)
             : this(behavior, localization, system, null, options, comparer)
+        {
+        }
+
+        public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization, LocalizationIdentifier system, ILocalizationConverter? converter, IComparer<LocalizationIdentifier>? comparer)
+            : this(behavior, localization, system, converter, LocalizationOptions.None, comparer)
         {
         }
 

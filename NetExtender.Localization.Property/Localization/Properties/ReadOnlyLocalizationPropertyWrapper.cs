@@ -127,6 +127,14 @@ namespace NetExtender.Localization.Properties
             }
         }
 
+        public Boolean IsThrowWhenValueSetInvalid
+        {
+            get
+            {
+                return Internal.IsThrowWhenValueSetInvalid;
+            }
+        }
+
         public Boolean IsReadOnly
         {
             get
@@ -419,6 +427,14 @@ namespace NetExtender.Localization.Properties
             get
             {
                 return Internal.IsCaching;
+            }
+        }
+
+        public Boolean IsThrowWhenValueSetInvalid
+        {
+            get
+            {
+                return Internal.IsThrowWhenValueSetInvalid;
             }
         }
 
