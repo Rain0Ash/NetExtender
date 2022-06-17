@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using NetExtender.Localization.Behavior.Interfaces;
+using System.Linq;
 using NetExtender.Localization.Common.Interfaces;
 using NetExtender.Types.Culture;
 using NetExtender.Types.Strings;
@@ -14,7 +14,7 @@ using Newtonsoft.Json;
 
 namespace NetExtender.Localization.Common
 {
-    public class LocalizationString : StringBase, ILocalizationString
+    public class LocalizationString : FormatStringBase, ILocalizationString
     {
         [return: NotNullIfNotNull("value")]
         public static ILocalizationString? Create(String? value)
@@ -29,10 +29,13 @@ namespace NetExtender.Localization.Common
         }
 
         [JsonIgnore]
-        protected ILocalizationBehavior Behavior { get; }
+        protected ILocalizationInfo Info { get; }
 
         [JsonProperty(PropertyName = null)]
         protected SortedDictionary<LocalizationIdentifier, String> Localization { get; }
+        
+        [JsonIgnore]
+        protected Dictionary<String, Int32> LocalizationArguments { get; }
 
         [JsonIgnore]
         public Int32 Count
@@ -53,7 +56,7 @@ namespace NetExtender.Localization.Common
         }
 
         [JsonIgnore]
-        public IReadOnlyCollection<LocalizationIdentifier> Keys
+        public IEnumerable<LocalizationIdentifier> Keys
         {
             get
             {
@@ -95,22 +98,30 @@ namespace NetExtender.Localization.Common
             }
         }
 
+        public override Int32 Arguments
+        {
+            get
+            {
+                return LocalizationArguments.TryGetValue(Text, out Int32 count) ? count : 0;
+            }
+        }
+
         [JsonIgnore]
         public override String Text
         {
             get
             {
-                if (Localization.TryGetValue(Behavior.Localization, out String? result))
+                if (Localization.TryGetValue(Info.Localization, out String? result))
                 {
                     return result;
                 }
 
-                if (Localization.TryGetValue(Behavior.System, out result))
+                if (!Info.WithoutSystem && Localization.TryGetValue(Info.System, out result))
                 {
                     return result;
                 }
 
-                if (Localization.TryGetValue(Behavior.Default, out result))
+                if (Localization.TryGetValue(Info.Default, out result))
                 {
                     return result;
                 }
@@ -123,46 +134,48 @@ namespace NetExtender.Localization.Common
             }
         }
 
-        protected LocalizationString(ILocalizationBehavior behavior)
-            : this(behavior, (IComparer<LocalizationIdentifier>?) null)
+        protected LocalizationString(ILocalizationInfo info)
+            : this(info, (IComparer<LocalizationIdentifier>?) null)
         {
         }
 
-        protected LocalizationString(ILocalizationBehavior behavior, IComparer<LocalizationIdentifier>? comparer)
-            : this(behavior, Array.Empty<KeyValuePair<LocalizationIdentifier, String>>(), comparer)
+        protected LocalizationString(ILocalizationInfo info, IComparer<LocalizationIdentifier>? comparer)
+            : this(info, Array.Empty<KeyValuePair<LocalizationIdentifier, String>>(), comparer)
         {
         }
 
-        public LocalizationString(ILocalizationBehavior behavior, IEnumerable<KeyValuePair<LocalizationIdentifier, String>> localization)
-            : this(behavior, localization, null)
+        public LocalizationString(ILocalizationInfo info, IEnumerable<KeyValuePair<LocalizationIdentifier, String>> localization)
+            : this(info, localization, null)
         {
         }
 
-        public LocalizationString(ILocalizationBehavior behavior, IEnumerable<KeyValuePair<LocalizationIdentifier, String>> localization, IComparer<LocalizationIdentifier>? comparer)
+        public LocalizationString(ILocalizationInfo info, IEnumerable<KeyValuePair<LocalizationIdentifier, String>> localization, IComparer<LocalizationIdentifier>? comparer)
         {
             if (localization is null)
             {
                 throw new ArgumentNullException(nameof(localization));
             }
 
-            Behavior = behavior ?? throw new ArgumentNullException(nameof(behavior));
-            Localization = localization.WhereNotNull(entry => entry.Value).ToSortedDictionary(comparer ?? Behavior.Comparer);
+            Info = info ?? throw new ArgumentNullException(nameof(info));
+            Localization = localization.WhereNotNull(entry => entry.Value).ToSortedDictionary(comparer ?? Info.Comparer.Comparer);
+            LocalizationArguments = Localization.Values.Distinct().ToDictionary(value => value, value => value.CountExpectedFormatArguments());
         }
 
-        public LocalizationString(ILocalizationBehavior behavior, IEnumerable<LocalizationValueEntry> localization)
-            : this(behavior, localization, null)
+        public LocalizationString(ILocalizationInfo info, IEnumerable<LocalizationValueEntry> localization)
+            : this(info, localization, null)
         {
         }
 
-        public LocalizationString(ILocalizationBehavior behavior, IEnumerable<LocalizationValueEntry> localization, IComparer<LocalizationIdentifier>? comparer)
+        public LocalizationString(ILocalizationInfo info, IEnumerable<LocalizationValueEntry> localization, IComparer<LocalizationIdentifier>? comparer)
         {
             if (localization is null)
             {
                 throw new ArgumentNullException(nameof(localization));
             }
 
-            Behavior = behavior ?? throw new ArgumentNullException(nameof(behavior));
-            Localization = localization.WhereNotNull(entry => entry.Value).ToSortedDictionary(entry => entry.Identifier, entry => entry.Value!, comparer ?? Behavior.Comparer);
+            Info = info ?? throw new ArgumentNullException(nameof(info));
+            Localization = localization.WhereNotNull(entry => entry.Value).ToSortedDictionary(entry => entry.Identifier, entry => entry.Value!, comparer ?? Info.Comparer.Comparer);
+            LocalizationArguments = Localization.Values.Distinct().ToDictionary(value => value, value => value.CountExpectedFormatArguments());
         }
 
         public virtual Boolean Contains(LocalizationIdentifier identifier)
@@ -197,12 +210,12 @@ namespace NetExtender.Localization.Common
 
         public virtual ILocalizationString Clone()
         {
-            return new LocalizationString(Behavior, Localization, Comparer);
+            return new LocalizationString(Info, Localization, Comparer);
         }
 
         public virtual IMutableLocalizationString ToMutable()
         {
-            return new MutableLocalizationString(Behavior, Localization, Comparer);
+            return new MutableLocalizationString(Info, Localization, Comparer);
         }
 
         public String this[LocalizationIdentifier key]
@@ -213,9 +226,9 @@ namespace NetExtender.Localization.Common
             }
         }
 
-        private sealed class FakeLocalizationString : StringBase, ILocalizationString
+        private sealed class FakeLocalizationString : FormatStringBase, ILocalizationString
         {
-            public IReadOnlyCollection<LocalizationIdentifier> Keys
+            public IEnumerable<LocalizationIdentifier> Keys
             {
                 get
                 {
@@ -256,6 +269,7 @@ namespace NetExtender.Localization.Common
             }
 
             public LocalizationIdentifier Identifier { get; }
+            public override Int32 Arguments { get; }
             public override String Text { get; protected set; }
 
             public FakeLocalizationString(String value)
@@ -267,6 +281,7 @@ namespace NetExtender.Localization.Common
             {
                 Identifier = identifier;
                 Text = value ?? throw new ArgumentNullException(nameof(value));
+                Arguments = value.CountExpectedFormatArguments();
             }
 
             public Boolean Contains(LocalizationIdentifier identifier)
@@ -323,82 +338,6 @@ namespace NetExtender.Localization.Common
                     return Get(key) ?? throw new KeyNotFoundException($"Key '{key}' not found.");
                 }
             }
-        }
-    }
-
-    public class MutableLocalizationString : LocalizationString, IMutableLocalizationString
-    {
-        public MutableLocalizationString(ILocalizationBehavior behavior)
-            : base(behavior)
-        {
-        }
-
-        public MutableLocalizationString(ILocalizationBehavior behavior, IComparer<LocalizationIdentifier>? comparer)
-            : base(behavior, comparer)
-        {
-        }
-        
-        public MutableLocalizationString(ILocalizationBehavior behavior, IEnumerable<KeyValuePair<LocalizationIdentifier, String>> localization)
-            : base(behavior, localization)
-        {
-        }
-
-        public MutableLocalizationString(ILocalizationBehavior behavior, IEnumerable<KeyValuePair<LocalizationIdentifier, String>> localization, IComparer<LocalizationIdentifier>? comparer)
-            : base(behavior, localization, comparer)
-        {
-        }
-
-        public MutableLocalizationString(ILocalizationBehavior behavior, IEnumerable<LocalizationValueEntry> localization)
-            : base(behavior, localization)
-        {
-        }
-
-        public MutableLocalizationString(ILocalizationBehavior behavior, IEnumerable<LocalizationValueEntry> localization, IComparer<LocalizationIdentifier>? comparer)
-            : base(behavior, localization, comparer)
-        {
-        }
-
-        public void Add(LocalizationIdentifier identifier, String value)
-        {
-            if (value is null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
-            
-            Localization.Add(identifier, value);
-        }
-
-        public Boolean Set(LocalizationIdentifier identifier, String? value)
-        {
-            if (value is null)
-            {
-                return Localization.Remove(identifier);
-            }
-
-            Localization[identifier] = value;
-            return true;
-        }
-
-        public new String this[LocalizationIdentifier identifier]
-        {
-            get
-            {
-                return base[identifier];
-            }
-            set
-            {
-                Localization[identifier] = value ?? throw new ArgumentNullException(nameof(value));
-            }
-        }
-
-        public override IMutableLocalizationString Clone()
-        {
-            return new MutableLocalizationString(Behavior, Localization, Comparer);
-        }
-
-        public sealed override IMutableLocalizationString ToMutable()
-        {
-            return Clone();
         }
     }
 }

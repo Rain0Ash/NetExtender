@@ -729,7 +729,6 @@ namespace NetExtender.Configuration.Properties
             Config.Changed -= OnChanged;
             Changed = null;
             PropertyChanged = null;
-            base.Dispose();
         }
     }
 }

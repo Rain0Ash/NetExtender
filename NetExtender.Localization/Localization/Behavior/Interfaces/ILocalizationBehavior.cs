@@ -10,21 +10,14 @@ using NetExtender.Localization.Behavior.Transactions.Interfaces;
 using NetExtender.Localization.Common;
 using NetExtender.Localization.Common.Interfaces;
 using NetExtender.Localization.Events;
-using NetExtender.Types.Comparers;
 using NetExtender.Types.Culture;
 
 namespace NetExtender.Localization.Behavior.Interfaces
 {
-    public interface ILocalizationBehavior : IConfigBehavior, IEnumerable<LocalizationMultiValueEntry>
+    public interface ILocalizationBehavior : IConfigBehavior, ILocalizationInfo, IEnumerable<LocalizationMultiValueEntry>
     {
         public new event LocalizationChangedEventHandler Changed;
         public event LocalizationValueChangedEventHandler ValueChanged;
-        public LocalizationOptions LocalizationOptions { get; }
-        public Boolean ThreeLetterName { get; }
-        public LocalizationIdentifier Default { get; }
-        public LocalizationIdentifier System { get; }
-        public LocalizationIdentifier Localization { get; set; }
-        public LocalizationIdentifierBehaviorComparer Comparer { get; }
         public ILocalizationConverter Converter { get; }
         public Boolean Contains(String? key, LocalizationIdentifier identifier, IEnumerable<String>? sections);
         public Task<Boolean> ContainsAsync(String? key, LocalizationIdentifier identifier, IEnumerable<String>? sections, CancellationToken token);

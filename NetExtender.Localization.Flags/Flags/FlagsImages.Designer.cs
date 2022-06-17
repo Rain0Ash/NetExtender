@@ -40,7 +40,7 @@ namespace NetExtender.Images.Flags
                     return Manager;
                 }
 
-                ResourceManager temp = new ResourceManager("NetExtender.Images.flags.FlagsImages", typeof(FlagsImages).Assembly);
+                ResourceManager temp = new ResourceManager("NetExtender.Images.Flags.FlagsImages", typeof(FlagsImages).Assembly);
                 Manager = temp;
 
                 return Manager;

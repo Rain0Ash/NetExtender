@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using NetExtender.Configuration.Common;
+using NetExtender.Localization.Common;
 using NetExtender.Localization.Common.Interfaces;
 using NetExtender.Localization.Interfaces;
 using NetExtender.Localization.Properties;
@@ -91,6 +92,46 @@ namespace NetExtender.Localization.Utilities
         }
         
         public static IReadOnlyLocalizationProperty GetLocalizationProperty(this IReadOnlyLocalizationConfig config, String? key, ILocalizationString? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return new ReadOnlyLocalizationProperty(config, key, alternate, options, sections);
+        }
+
+        public static IReadOnlyLocalizationProperty GetLocalizationProperty(this IReadOnlyLocalizationConfig config, String? key, IEnumerable<KeyValuePair<LocalizationIdentifier, String>>? alternate, params String[]? sections)
+        {
+            return GetLocalizationProperty(config, key, alternate, (IEnumerable<String>?) sections);
+        }
+
+        public static IReadOnlyLocalizationProperty GetLocalizationProperty(this IReadOnlyLocalizationConfig config, String? key, IEnumerable<KeyValuePair<LocalizationIdentifier, String>>? alternate, IEnumerable<String>? sections)
+        {
+            return GetLocalizationProperty(config, key, alternate, ConfigPropertyOptions.Caching, sections);
+        }
+
+        public static IReadOnlyLocalizationProperty GetLocalizationProperty(this IReadOnlyLocalizationConfig config, String? key, IEnumerable<KeyValuePair<LocalizationIdentifier, String>>? alternate, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetLocalizationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
+        }
+        
+        public static IReadOnlyLocalizationProperty GetLocalizationProperty(this IReadOnlyLocalizationConfig config, String? key, IEnumerable<KeyValuePair<LocalizationIdentifier, String>>? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return new ReadOnlyLocalizationProperty(config, key, alternate, options, sections);
+        }
+
+        public static IReadOnlyLocalizationProperty GetLocalizationProperty(this IReadOnlyLocalizationConfig config, String? key, IEnumerable<LocalizationValueEntry>? alternate, params String[]? sections)
+        {
+            return GetLocalizationProperty(config, key, alternate, (IEnumerable<String>?) sections);
+        }
+
+        public static IReadOnlyLocalizationProperty GetLocalizationProperty(this IReadOnlyLocalizationConfig config, String? key, IEnumerable<LocalizationValueEntry>? alternate, IEnumerable<String>? sections)
+        {
+            return GetLocalizationProperty(config, key, alternate, ConfigPropertyOptions.Caching, sections);
+        }
+
+        public static IReadOnlyLocalizationProperty GetLocalizationProperty(this IReadOnlyLocalizationConfig config, String? key, IEnumerable<LocalizationValueEntry>? alternate, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetLocalizationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
+        }
+        
+        public static IReadOnlyLocalizationProperty GetLocalizationProperty(this IReadOnlyLocalizationConfig config, String? key, IEnumerable<LocalizationValueEntry>? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ReadOnlyLocalizationProperty(config, key, alternate, options, sections);
         }
@@ -194,6 +235,46 @@ namespace NetExtender.Localization.Utilities
         {
             return new LocalizationProperty(config, key, alternate, options, sections);
         }
+
+        public static ILocalizationProperty GetLocalizationProperty(this ILocalizationConfig config, String? key, IEnumerable<KeyValuePair<LocalizationIdentifier, String>>? alternate, params String[]? sections)
+        {
+            return GetLocalizationProperty(config, key, alternate, (IEnumerable<String>?) sections);
+        }
+
+        public static ILocalizationProperty GetLocalizationProperty(this ILocalizationConfig config, String? key, IEnumerable<KeyValuePair<LocalizationIdentifier, String>>? alternate, IEnumerable<String>? sections)
+        {
+            return GetLocalizationProperty(config, key, alternate, ConfigPropertyOptions.Caching, sections);
+        }
+
+        public static ILocalizationProperty GetLocalizationProperty(this ILocalizationConfig config, String? key, IEnumerable<KeyValuePair<LocalizationIdentifier, String>>? alternate, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetLocalizationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
+        }
+        
+        public static ILocalizationProperty GetLocalizationProperty(this ILocalizationConfig config, String? key, IEnumerable<KeyValuePair<LocalizationIdentifier, String>>? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return new LocalizationProperty(config, key, alternate, options, sections);
+        }
+
+        public static ILocalizationProperty GetLocalizationProperty(this ILocalizationConfig config, String? key, IEnumerable<LocalizationValueEntry>? alternate, params String[]? sections)
+        {
+            return GetLocalizationProperty(config, key, alternate, (IEnumerable<String>?) sections);
+        }
+
+        public static ILocalizationProperty GetLocalizationProperty(this ILocalizationConfig config, String? key, IEnumerable<LocalizationValueEntry>? alternate, IEnumerable<String>? sections)
+        {
+            return GetLocalizationProperty(config, key, alternate, ConfigPropertyOptions.Caching, sections);
+        }
+
+        public static ILocalizationProperty GetLocalizationProperty(this ILocalizationConfig config, String? key, IEnumerable<LocalizationValueEntry>? alternate, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetLocalizationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
+        }
+        
+        public static ILocalizationProperty GetLocalizationProperty(this ILocalizationConfig config, String? key, IEnumerable<LocalizationValueEntry>? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return new LocalizationProperty(config, key, alternate, options, sections);
+        }
         
         public static IReadOnlyLocalizationProperty GetReadOnlyLocalizationProperty(this ILocalizationConfig config, String? key, params String[]? sections)
         {
@@ -251,6 +332,46 @@ namespace NetExtender.Localization.Utilities
         }
         
         public static IReadOnlyLocalizationProperty GetReadOnlyLocalizationProperty(this ILocalizationConfig config, String? key, ILocalizationString? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return new ReadOnlyLocalizationPropertyWrapper(config, key, alternate, options, sections);
+        }
+
+        public static IReadOnlyLocalizationProperty GetReadOnlyLocalizationProperty(this ILocalizationConfig config, String? key, IEnumerable<KeyValuePair<LocalizationIdentifier, String>>? alternate, params String[]? sections)
+        {
+            return GetReadOnlyLocalizationProperty(config, key, alternate, (IEnumerable<String>?) sections);
+        }
+
+        public static IReadOnlyLocalizationProperty GetReadOnlyLocalizationProperty(this ILocalizationConfig config, String? key, IEnumerable<KeyValuePair<LocalizationIdentifier, String>>? alternate, IEnumerable<String>? sections)
+        {
+            return GetReadOnlyLocalizationProperty(config, key, alternate, ConfigPropertyOptions.Caching, sections);
+        }
+
+        public static IReadOnlyLocalizationProperty GetReadOnlyLocalizationProperty(this ILocalizationConfig config, String? key, IEnumerable<KeyValuePair<LocalizationIdentifier, String>>? alternate, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetReadOnlyLocalizationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
+        }
+        
+        public static IReadOnlyLocalizationProperty GetReadOnlyLocalizationProperty(this ILocalizationConfig config, String? key, IEnumerable<KeyValuePair<LocalizationIdentifier, String>>? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        {
+            return new ReadOnlyLocalizationPropertyWrapper(config, key, alternate, options, sections);
+        }
+
+        public static IReadOnlyLocalizationProperty GetReadOnlyLocalizationProperty(this ILocalizationConfig config, String? key, IEnumerable<LocalizationValueEntry>? alternate, params String[]? sections)
+        {
+            return GetReadOnlyLocalizationProperty(config, key, alternate, (IEnumerable<String>?) sections);
+        }
+
+        public static IReadOnlyLocalizationProperty GetReadOnlyLocalizationProperty(this ILocalizationConfig config, String? key, IEnumerable<LocalizationValueEntry>? alternate, IEnumerable<String>? sections)
+        {
+            return GetReadOnlyLocalizationProperty(config, key, alternate, ConfigPropertyOptions.Caching, sections);
+        }
+
+        public static IReadOnlyLocalizationProperty GetReadOnlyLocalizationProperty(this ILocalizationConfig config, String? key, IEnumerable<LocalizationValueEntry>? alternate, ConfigPropertyOptions options, params String[]? sections)
+        {
+            return GetReadOnlyLocalizationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
+        }
+        
+        public static IReadOnlyLocalizationProperty GetReadOnlyLocalizationProperty(this ILocalizationConfig config, String? key, IEnumerable<LocalizationValueEntry>? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ReadOnlyLocalizationPropertyWrapper(config, key, alternate, options, sections);
         }

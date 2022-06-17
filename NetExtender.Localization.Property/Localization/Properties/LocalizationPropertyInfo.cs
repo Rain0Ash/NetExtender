@@ -5,14 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Text;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Properties;
 using NetExtender.Localization.Common.Interfaces;
 using NetExtender.Localization.Events;
 using NetExtender.Localization.Properties.Interfaces;
 using NetExtender.Types.Culture;
-using NetExtender.Utilities.Types;
 
 namespace NetExtender.Localization.Property.Localization.Properties
 {

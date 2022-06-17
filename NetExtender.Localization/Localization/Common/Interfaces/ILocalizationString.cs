@@ -10,9 +10,9 @@ using NetExtender.Types.Strings.Interfaces;
 
 namespace NetExtender.Localization.Common.Interfaces
 {
-    public interface ILocalizationString : IString, IReadOnlyDictionary<LocalizationIdentifier, String>, ICloneable<ILocalizationString>
+    public interface ILocalizationString : IFormatString, IReadOnlyDictionary<LocalizationIdentifier, String>, ICloneable<ILocalizationString>
     {
-        public new IReadOnlyCollection<LocalizationIdentifier> Keys { get; }
+        public new IEnumerable<LocalizationIdentifier> Keys { get; }
         public new IReadOnlyDictionary<LocalizationIdentifier, String> Values { get; }
         public Boolean Contains(LocalizationIdentifier identifier);
         public String? Get(LocalizationIdentifier identifier);

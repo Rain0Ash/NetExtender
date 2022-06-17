@@ -31,7 +31,7 @@ namespace NetExtender.Types.Strings
         public ContainerFormatStringAdapter(String value, params Object[]? format)
         {
             Text = value ?? throw new ArgumentNullException(nameof(value));
-            Arguments = value.CountExpectedFormatArgs();
+            Arguments = value.CountExpectedFormatArguments();
             FormatArguments = format ?? Array.Empty<Object>();
         }
     }

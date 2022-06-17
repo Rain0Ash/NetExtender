@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using NetExtender.Configuration;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Properties.Interfaces;
+using NetExtender.Localization.Common;
 using NetExtender.Localization.Common.Interfaces;
 using NetExtender.Localization.Events;
 using NetExtender.Localization.Interfaces;
@@ -236,6 +237,18 @@ namespace NetExtender.Localization.Properties
         
         
         internal ReadOnlyLocalizationPropertyWrapper(ILocalizationConfig config, String? key, ILocalizationString? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+            : this(new LocalizationProperty(config, key, alternate, options, sections), true)
+        {
+        }
+        
+        
+        internal ReadOnlyLocalizationPropertyWrapper(ILocalizationConfig config, String? key, IEnumerable<KeyValuePair<LocalizationIdentifier, String>>? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+            : this(new LocalizationProperty(config, key, alternate, options, sections), true)
+        {
+        }
+        
+        
+        internal ReadOnlyLocalizationPropertyWrapper(ILocalizationConfig config, String? key, IEnumerable<LocalizationValueEntry>? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : this(new LocalizationProperty(config, key, alternate, options, sections), true)
         {
         }

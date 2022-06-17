@@ -9,7 +9,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Comparers
 {
-    public class LocalizationComparer : OrderedComparer<LocalizationIdentifier>
+    public class LocalizationComparer : OrderedComparer<LocalizationIdentifier>, IComparer<CultureIdentifier>
     {
         public static LocalizationComparer Default { get; } = new LocalizationComparer(CultureIdentifier.En, CultureIdentifier.Ru, CultureIdentifier.Zh, CultureIdentifier.De, CultureIdentifier.Fr);
         
@@ -40,6 +40,11 @@ namespace NetExtender.Types.Comparers
         public LocalizationComparer(IEnumerable<LocalizationIdentifier>? order, IComparer<LocalizationIdentifier>? comparer)
             : base(order, comparer)
         {
+        }
+
+        public Int32 Compare(CultureIdentifier x, CultureIdentifier y)
+        {
+            return base.Compare(x, y);
         }
     }
 

@@ -19,13 +19,12 @@ namespace NetExtender.Types.Strings
         }
         
         public override Int32 Arguments { get; }
-
         public override String Text { get; protected set; }
 
         public FormatStringAdapter(String value)
         {
             Text = value ?? throw new ArgumentNullException(nameof(value));
-            Arguments = value.CountExpectedFormatArgs();
+            Arguments = value.CountExpectedFormatArguments();
         }
     }
 }

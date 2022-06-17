@@ -10,5 +10,6 @@ namespace NetExtender.Localization.Common
     {
         None = 0,
         ThreeLetterName = 1,
+        WithoutSystem = 2
     }
 }

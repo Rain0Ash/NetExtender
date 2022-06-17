@@ -9,7 +9,13 @@
 	<s:Int64 x:Key="/Default/Environment/Hierarchy/Build/BuildTool/MsbuildVersion/@EntryValue">1114112</s:Int64>
 	
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/CheckedGroups/=NetExtender_002ELocalization_002EFlags_002FFlags_002FFlagsImages/@EntryIndexedValue">True</s:Boolean>
+	
+	
+	
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/Initialized/@EntryValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/OrderByFullPath/@EntryValue">False</s:Boolean>
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/ShowComments/@EntryValue">False</s:Boolean>
+	<s:Boolean x:Key="/Default/ResxEditorPersonal/ShowOnlyErrors/@EntryValue">False</s:Boolean>
 	
 	
 	
@@ -24,6 +30,7 @@
 	
 	
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=7e15dfe1_002Db6da_002D4509_002D9c76_002D833b2230df6e_0023NetExtender_002ENAudio_002EXamarin_002EAndroid/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=96a15b1d_002Dffe0_002D49d8_002Da8b9_002D5386c11fcaf5_0023NetExtender_002ELocalization_002EFlags/@EntryIndexedValue">True</s:Boolean>
 	
 	
 	

@@ -114,6 +114,14 @@ namespace NetExtender.Localization.Wrappers
             }
         }
 
+        public Boolean WithoutSystem
+        {
+            get
+            {
+                return Config.WithoutSystem;
+            }
+        }
+
         public LocalizationIdentifier Default
         {
             get

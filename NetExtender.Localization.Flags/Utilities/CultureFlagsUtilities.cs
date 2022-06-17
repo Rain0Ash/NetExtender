@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.Globalization;
 using NetExtender.Images.Flags;
+using NetExtender.Types.Culture;
 using NetExtender.Types.Stores;
 using NetExtender.Types.Stores.Interfaces;
 
@@ -57,6 +58,17 @@ namespace NetExtender.Utilities.Types
             }
         }
 
+        public static Image? GetFlagImage(this CultureIdentifier identifier)
+        {
+            return GetFlagImage((LocalizationIdentifier) identifier);
+        }
+
+        public static Image? GetFlagImage(this LocalizationIdentifier identifier)
+        {
+            CultureInfo? info = identifier.Info;
+            return info is not null ? GetFlagImage(info) : null;
+        }
+
         public static CultureInfo SetFlagImage(this CultureInfo info, Image? image)
         {
             if (info is null)
@@ -76,6 +88,17 @@ namespace NetExtender.Utilities.Types
             }
 
             return info;
+        }
+        
+        public static CultureInfo? SetFlagImage(this CultureIdentifier identifier, Image? image)
+        {
+            return SetFlagImage((LocalizationIdentifier) identifier, image);
+        }
+        
+        public static CultureInfo? SetFlagImage(this LocalizationIdentifier identifier, Image? image)
+        {
+            CultureInfo? info = identifier.Info;
+            return info is not null ? SetFlagImage(info, image) : null;
         }
     }
 }

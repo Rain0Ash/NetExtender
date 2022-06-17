@@ -105,7 +105,23 @@ namespace NetExtender.Localization.Property.Localization.Properties
         }
 
         protected internal LocalizationProperty(ILocalizationConfig config, String? key, ILocalizationString? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
-            : base(key, alternate, options | ConfigPropertyOptions.ReadOnly, sections)
+            : base(key, alternate, options, sections)
+        {
+            Config = config ?? throw new ArgumentNullException(nameof(config));
+            Config.Changed += OnLocalizationChanged;
+            Config.ValueChanged += OnChanged;
+        }
+
+        protected internal LocalizationProperty(ILocalizationConfig config, String? key, IEnumerable<KeyValuePair<LocalizationIdentifier, String>>? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+            : base(key, alternate is not null ? new LocalizationString(config ?? throw new ArgumentNullException(nameof(config)), alternate) : null, options, sections)
+        {
+            Config = config ?? throw new ArgumentNullException(nameof(config));
+            Config.Changed += OnLocalizationChanged;
+            Config.ValueChanged += OnChanged;
+        }
+
+        protected internal LocalizationProperty(ILocalizationConfig config, String? key, IEnumerable<LocalizationValueEntry>? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+            : base(key, alternate is not null ? new LocalizationString(config ?? throw new ArgumentNullException(nameof(config)), alternate) : null, options, sections)
         {
             Config = config ?? throw new ArgumentNullException(nameof(config));
             Config.Changed += OnLocalizationChanged;
@@ -453,7 +469,6 @@ namespace NetExtender.Localization.Property.Localization.Properties
             PropertyChanged = null;
             Config.Changed -= OnLocalizationChanged;
             Config.ValueChanged -= OnChanged;
-            base.Dispose();
         }
     }
     
@@ -810,7 +825,6 @@ namespace NetExtender.Localization.Property.Localization.Properties
             PropertyChanged = null;
             Config.Changed -= OnLocalizationChanged;
             Config.ValueChanged -= OnChanged;
-            base.Dispose();
         }
     }
 }

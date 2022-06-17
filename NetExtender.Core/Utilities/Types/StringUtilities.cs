@@ -439,7 +439,7 @@ namespace NetExtender.Utilities.Types
             return String.Format(builder.ToString(), arguments);
         }
 
-        public static Int32 CountExpectedFormatArgs(this String value)
+        public static Int32 CountExpectedFormatArguments(this String value)
         {
             if (value is null)
             {
@@ -984,7 +984,7 @@ namespace NetExtender.Utilities.Types
                 return source;
             }
 
-            Int32 expected = CountExpectedFormatArgs(source);
+            Int32 expected = CountExpectedFormatArguments(source);
 
             return expected > 0 ? String.Format(provider, source, FormatSafeGetArguments(args, expected)) : source;
         }

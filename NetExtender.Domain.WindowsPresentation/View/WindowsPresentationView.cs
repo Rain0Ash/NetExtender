@@ -89,7 +89,7 @@ namespace NetExtender.Domains.View
                 Context.Closed -= OnFormClosed;
             }
 
-            base.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

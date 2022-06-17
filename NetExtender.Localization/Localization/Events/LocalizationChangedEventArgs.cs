@@ -3,7 +3,6 @@
 
 using System;
 using NetExtender.Localization.Common;
-using NetExtender.Localization.Common.Interfaces;
 using NetExtender.Types.Culture;
 using NetExtender.Types.Events;
 

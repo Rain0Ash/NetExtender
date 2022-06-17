@@ -143,6 +143,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.WindowsPresenta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Localization.Property", "NetExtender.Localization.Property\NetExtender.Localization.Property.csproj", "{CC214BD7-44F8-4CCD-806A-E10BF506DF64}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.WindowsPresentation.ActiveBinding", "NetExtender.WindowsPresentation.ActiveBinding\NetExtender.WindowsPresentation.ActiveBinding.csproj", "{EC020E52-AFFE-48F6-A415-64F1E6B75F24}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -377,6 +379,10 @@ Global
 		{CC214BD7-44F8-4CCD-806A-E10BF506DF64}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CC214BD7-44F8-4CCD-806A-E10BF506DF64}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CC214BD7-44F8-4CCD-806A-E10BF506DF64}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC020E52-AFFE-48F6-A415-64F1E6B75F24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC020E52-AFFE-48F6-A415-64F1E6B75F24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC020E52-AFFE-48F6-A415-64F1E6B75F24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC020E52-AFFE-48F6-A415-64F1E6B75F24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -445,5 +451,6 @@ Global
 		{C1E6EAFC-EC4F-4952-B23B-B85544770173} = {0D61BFC7-C568-4F5F-983E-ADA30B66AD97}
 		{F16C5DB5-8479-4D37-880F-BC94DD2614CD} = {A7BE8994-15D1-4F4B-BD86-C308973371B6}
 		{CC214BD7-44F8-4CCD-806A-E10BF506DF64} = {F7A961F4-F974-4820-8FE6-E608A2FF4B24}
+		{EC020E52-AFFE-48F6-A415-64F1E6B75F24} = {A7BE8994-15D1-4F4B-BD86-C308973371B6}
 	EndGlobalSection
 EndGlobal

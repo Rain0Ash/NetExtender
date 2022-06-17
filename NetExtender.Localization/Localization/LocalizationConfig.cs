@@ -72,6 +72,14 @@ namespace NetExtender.Localization
             }
         }
 
+        public Boolean WithoutSystem
+        {
+            get
+            {
+                return Behavior.WithoutSystem;
+            }
+        }
+
         public LocalizationIdentifier Default
         {
             get

@@ -124,6 +124,46 @@ namespace NetExtender.Types.Culture
             return info?.LCID ?? default;
         }
 
+        public static LocalizationIdentifier Default
+        {
+            get
+            {
+                return CultureUtilities.Default;
+            }
+        }
+
+        public static LocalizationIdentifier Invariant
+        {
+            get
+            {
+                return CultureUtilities.Invariant;
+            }
+        }
+
+        public static LocalizationIdentifier System
+        {
+            get
+            {
+                return CultureUtilities.System;
+            }
+        }
+
+        public static LocalizationIdentifier Current
+        {
+            get
+            {
+                return CultureUtilities.Current;
+            }
+        }
+
+        public static LocalizationIdentifier English
+        {
+            get
+            {
+                return CultureUtilities.English;
+            }
+        }
+
         public Int32 Code { get; }
 
         public UInt16 Code16
@@ -134,11 +174,59 @@ namespace NetExtender.Types.Culture
             }
         }
 
+        public CultureInfo? Info
+        {
+            get
+            {
+                return CultureUtilities.TryGetCultureInfo(Code, out CultureInfo info) ? info : null;
+            }
+        }
+
+        public String? LanguageName
+        {
+            get
+            {
+                return Info?.GetNativeLanguageName();
+            }
+        }
+        
+        public String? CultureLanguageName
+        {
+            get
+            {
+                return Info?.Name;
+            }
+        }
+        
+        public String? EnglishLanguageName
+        {
+            get
+            {
+                return Info?.EnglishName;
+            }
+        }
+        
+        public String? DisplayLanguageName
+        {
+            get
+            {
+                return Info?.DisplayName;
+            }
+        }
+
+        public String? NativeLanguageName
+        {
+            get
+            {
+                return Info?.NativeName;
+            }
+        }
+
         public String? TwoLetterISOLanguageName
         {
             get
             {
-                return CultureUtilities.TryGetCultureInfo(Code, out CultureInfo info) ? info.TwoLetterISOLanguageName : null;
+                return Info?.TwoLetterISOLanguageName;
             }
         }
         
@@ -146,7 +234,7 @@ namespace NetExtender.Types.Culture
         {
             get
             {
-                return CultureUtilities.TryGetCultureInfo(Code, out CultureInfo info) ? info.ThreeLetterISOLanguageName : null;
+                return Info?.ThreeLetterISOLanguageName;
             }
         }
 
@@ -233,7 +321,7 @@ namespace NetExtender.Types.Culture
 
         public override String ToString()
         {
-            return CultureUtilities.TryGetCultureInfo(Code, out CultureInfo info) ? info.GetNativeLanguageName() : Code.ToString();
+            return Info?.GetNativeLanguageName() ?? Code.ToString();
         }
     }
 }

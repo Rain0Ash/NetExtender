@@ -104,6 +104,22 @@ namespace NetExtender.Localization.Property.Localization.Properties
             Config.Changed += OnLocalizationChanged;
             Config.ValueChanged += OnChanged;
         }
+        
+        protected internal ReadOnlyLocalizationProperty(IReadOnlyLocalizationConfig config, String? key, IEnumerable<KeyValuePair<LocalizationIdentifier, String>>? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+            : base(key, alternate is not null ? new LocalizationString(config ?? throw new ArgumentNullException(nameof(config)), alternate) : null, options | ConfigPropertyOptions.ReadOnly, sections)
+        {
+            Config = config ?? throw new ArgumentNullException(nameof(config));
+            Config.Changed += OnLocalizationChanged;
+            Config.ValueChanged += OnChanged;
+        }
+        
+        protected internal ReadOnlyLocalizationProperty(IReadOnlyLocalizationConfig config, String? key, IEnumerable<LocalizationValueEntry>? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+            : base(key, alternate is not null ? new LocalizationString(config ?? throw new ArgumentNullException(nameof(config)), alternate) : null, options | ConfigPropertyOptions.ReadOnly, sections)
+        {
+            Config = config ?? throw new ArgumentNullException(nameof(config));
+            Config.Changed += OnLocalizationChanged;
+            Config.ValueChanged += OnChanged;
+        }
 
         protected virtual void OnLocalizationChanged(Object? sender, LocalizationChangedEventArgs args)
         {
@@ -316,7 +332,6 @@ namespace NetExtender.Localization.Property.Localization.Properties
             PropertyChanged = null;
             Config.Changed -= OnLocalizationChanged;
             Config.ValueChanged -= OnChanged;
-            base.Dispose();
         }
     }
     
@@ -536,7 +551,6 @@ namespace NetExtender.Localization.Property.Localization.Properties
             PropertyChanged = null;
             Config.Changed -= OnLocalizationChanged;
             Config.ValueChanged -= OnChanged;
-            base.Dispose();
         }
     }
 }

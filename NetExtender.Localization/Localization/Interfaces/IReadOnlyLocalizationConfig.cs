@@ -9,22 +9,15 @@ using NetExtender.Configuration.Interfaces;
 using NetExtender.Localization.Common;
 using NetExtender.Localization.Common.Interfaces;
 using NetExtender.Localization.Events;
-using NetExtender.Types.Comparers;
 using NetExtender.Types.Culture;
 
 namespace NetExtender.Localization.Interfaces
 {
-    public interface IReadOnlyLocalizationConfig : IReadOnlyConfig
+    public interface IReadOnlyLocalizationConfig : IReadOnlyConfig, ILocalizationInfo
     {
         public new event LocalizationChangedEventHandler Changed;
         public event LocalizationValueChangedEventHandler ValueChanged;
         
-        public LocalizationOptions LocalizationOptions { get; }
-        public Boolean ThreeLetterName { get; }
-        public LocalizationIdentifier Default { get; }
-        public LocalizationIdentifier System { get; }
-        public LocalizationIdentifier Localization { get; set; }
-        public LocalizationIdentifierBehaviorComparer Comparer { get; }
         public ILocalizationConverter Converter { get; }
         public new ILocalizationString? GetValue(String? key, params String[]? sections);
         public new ILocalizationString? GetValue(String? key, IEnumerable<String>? sections);

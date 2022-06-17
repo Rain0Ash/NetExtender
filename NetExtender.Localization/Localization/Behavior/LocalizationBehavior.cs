@@ -49,7 +49,7 @@ namespace NetExtender.Localization.Behavior
         {
             get
             {
-                return CultureIdentifier.En;
+                return LocalizationIdentifier.English;
             }
         }
 
@@ -134,6 +134,14 @@ namespace NetExtender.Localization.Behavior
             get
             {
                 return LocalizationOptions.HasFlag(LocalizationOptions.ThreeLetterName);
+            }
+        }
+        
+        public Boolean WithoutSystem
+        {
+            get
+            {
+                return LocalizationOptions.HasFlag(LocalizationOptions.WithoutSystem);
             }
         }
         
