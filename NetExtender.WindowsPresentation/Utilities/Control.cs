@@ -8,9 +8,17 @@ namespace NetExtender.Utilities.Windows.IO
 {
     public static partial class KeyboardUtilities
     {
-        public static class Ctrl
+        public static class Control
         {
-            public static Boolean IsCtrl
+            public static Boolean IsControl
+            {
+                get
+                {
+                    return Keyboard.Modifiers == ModifierKeys.Control;
+                }
+            }
+            
+            public static Boolean HasControl
             {
                 get
                 {
@@ -18,7 +26,7 @@ namespace NetExtender.Utilities.Windows.IO
                 }
             }
             
-            public static Boolean IsCtrlDown
+            public static Boolean IsControlDown
             {
                 get
                 {
@@ -26,7 +34,7 @@ namespace NetExtender.Utilities.Windows.IO
                 }
             }
             
-            public static Boolean IsCtrlToggled
+            public static Boolean IsControlToggled
             {
                 get
                 {
@@ -34,7 +42,7 @@ namespace NetExtender.Utilities.Windows.IO
                 }
             }
             
-            public static Boolean IsCtrlUp
+            public static Boolean IsControlUp
             {
                 get
                 {

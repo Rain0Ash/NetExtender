@@ -8,9 +8,17 @@ namespace NetExtender.Utilities.Windows.IO
 {
     public static partial class KeyboardUtilities
     {
-        public static class Win
+        public static class Windows
         {
-            public static Boolean IsWin
+            public static Boolean IsWindows
+            {
+                get
+                {
+                    return Keyboard.Modifiers == ModifierKeys.Windows;
+                }
+            }
+            
+            public static Boolean HasWindows
             {
                 get
                 {
@@ -18,7 +26,7 @@ namespace NetExtender.Utilities.Windows.IO
                 }
             }
             
-            public static Boolean IsWinDown
+            public static Boolean IsWindowsDown
             {
                 get
                 {
@@ -26,7 +34,7 @@ namespace NetExtender.Utilities.Windows.IO
                 }
             }
             
-            public static Boolean IsWinToggled
+            public static Boolean IsWindowsToggled
             {
                 get
                 {
@@ -34,7 +42,7 @@ namespace NetExtender.Utilities.Windows.IO
                 }
             }
             
-            public static Boolean IsWinUp
+            public static Boolean IsWindowsUp
             {
                 get
                 {

@@ -11,6 +11,15 @@ namespace NetExtender.Utilities.Windows.IO
 {
     public static partial class KeyboardUtilities
     {
+        public static ModifierKeys Modifiers
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return Keyboard.Modifiers;
+            }
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Boolean IsKeyActive(this Key value, Func<Key, Boolean> handler)
         {

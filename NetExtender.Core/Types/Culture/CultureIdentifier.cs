@@ -17,6 +17,7 @@ namespace NetExtender.Types.Culture
         De = 0x407,
         El = 0x408,
         En = 0x409,
+        Es = 0x40A,
         Fi = 0x40B,
         Fr = 0x40C,
         He = 0x40D,

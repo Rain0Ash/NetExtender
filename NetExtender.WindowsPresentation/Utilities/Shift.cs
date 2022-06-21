@@ -14,6 +14,14 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 get
                 {
+                    return Keyboard.Modifiers == ModifierKeys.Shift;
+                }
+            }
+            
+            public static Boolean HasShift
+            {
+                get
+                {
                     return Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
                 }
             }

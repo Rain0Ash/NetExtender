@@ -99,5 +99,73 @@ namespace NetExtender.Utilities.Types
 
             return timer.Change(Timeout.Infinite, Timeout.Infinite);
         }
+
+        public static Boolean TryChange(this Timer timer, TimeSpan dueTime, TimeSpan period)
+        {
+            if (timer is null)
+            {
+                throw new ArgumentNullException(nameof(timer));
+            }
+
+            try
+            {
+                return timer.Change(dueTime, period);
+            }
+            catch (ObjectDisposedException)
+            {
+                return false;
+            }
+        }
+        
+        public static Boolean TryChange(this Timer timer, Int32 dueTime, Int32 period)
+        {
+            if (timer is null)
+            {
+                throw new ArgumentNullException(nameof(timer));
+            }
+
+            try
+            {
+                return timer.Change(dueTime, period);
+            }
+            catch (ObjectDisposedException)
+            {
+                return false;
+            }
+        }
+        
+        public static Boolean TryChange(this Timer timer, UInt32 dueTime, UInt32 period)
+        {
+            if (timer is null)
+            {
+                throw new ArgumentNullException(nameof(timer));
+            }
+
+            try
+            {
+                return timer.Change(dueTime, period);
+            }
+            catch (ObjectDisposedException)
+            {
+                return false;
+            }
+        }
+        
+        public static Boolean TryChange(this Timer timer, Int64 dueTime, Int64 period)
+        {
+            if (timer is null)
+            {
+                throw new ArgumentNullException(nameof(timer));
+            }
+
+            try
+            {
+                return timer.Change(dueTime, period);
+            }
+            catch (ObjectDisposedException)
+            {
+                return false;
+            }
+        }
     }
 }

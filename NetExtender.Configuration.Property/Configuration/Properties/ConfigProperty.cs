@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Common;
@@ -393,11 +392,6 @@ namespace NetExtender.Configuration.Properties
         {
             Dispose(false);
         }
-
-        protected virtual void OnPropertyChanged([CallerMemberName] String? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
     
     public class ConfigProperty : ConfigPropertyInfo<String?>, IConfigProperty
@@ -687,14 +681,7 @@ namespace NetExtender.Configuration.Properties
 
         public virtual Boolean Reset()
         {
-            if (IsReadOnly)
-            {
-                return false;
-            }
-            
-            Internal.Reset(null);
-            Save();
-            return true;
+            return SetValue(Alternate);
         }
 
         public Task<Boolean> ResetAsync()
@@ -702,16 +689,9 @@ namespace NetExtender.Configuration.Properties
             return ReadAsync(CancellationToken.None);
         }
 
-        public virtual async Task<Boolean> ResetAsync(CancellationToken token)
+        public virtual Task<Boolean> ResetAsync(CancellationToken token)
         {
-            if (IsReadOnly)
-            {
-                return false;
-            }
-            
-            Internal.Reset(null);
-            await SaveAsync(CancellationToken.None);
-            return true;
+            return SetValueAsync(Alternate, token);
         }
 
         public override String? ToString()

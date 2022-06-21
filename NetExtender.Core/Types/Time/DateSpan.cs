@@ -100,7 +100,7 @@ namespace NetExtender.Types.Times
         /// <summary>
         /// Milliseconds between the two dates
         /// </summary>
-        public Int32 MilliSeconds { get; }
+        public Int32 Milliseconds { get; }
 
         /// <summary>
         /// Constructor
@@ -119,15 +119,15 @@ namespace NetExtender.Types.Times
             Start = start;
             End = end;
             
-            TimeSpan diff = End - Start;
+            TimeSpan difference = End - Start;
 
-            Years = diff.Years();
-            Months = diff.Months();
-            Days = diff.DaysRemainder();
-            Hours = diff.Hours;
-            Minutes = diff.Minutes;
-            Seconds = diff.Seconds;
-            MilliSeconds = diff.Milliseconds;
+            Years = difference.Years();
+            Months = difference.Months();
+            Days = difference.DaysRemainder();
+            Hours = difference.Hours;
+            Minutes = difference.Minutes;
+            Seconds = difference.Seconds;
+            Milliseconds = difference.Milliseconds;
         }
 
         /// <summary>

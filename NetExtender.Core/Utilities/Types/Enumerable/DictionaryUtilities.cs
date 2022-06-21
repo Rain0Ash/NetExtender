@@ -453,11 +453,6 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(dictionary));
             }
 
-            if (key is null)
-            {
-                throw new ArgumentNullException(nameof(key));
-            }
-
             if (dictionary.TryGetValue(key, out TValue? result))
             {
                 return result;
@@ -472,11 +467,6 @@ namespace NetExtender.Utilities.Types
             if (dictionary is null)
             {
                 throw new ArgumentNullException(nameof(dictionary));
-            }
-
-            if (key is null)
-            {
-                throw new ArgumentNullException(nameof(key));
             }
 
             if (factory is null)
@@ -499,11 +489,6 @@ namespace NetExtender.Utilities.Types
             if (dictionary is null)
             {
                 throw new ArgumentNullException(nameof(dictionary));
-            }
-
-            if (key is null)
-            {
-                throw new ArgumentNullException(nameof(key));
             }
 
             if (factory is null)

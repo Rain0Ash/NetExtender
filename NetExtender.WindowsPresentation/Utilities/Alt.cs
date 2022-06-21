@@ -14,6 +14,14 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 get
                 {
+                    return Keyboard.Modifiers == ModifierKeys.Alt;
+                }
+            }
+            
+            public static Boolean HasAlt
+            {
+                get
+                {
                     return Keyboard.Modifiers.HasFlag(ModifierKeys.Alt);
                 }
             }

@@ -49,7 +49,9 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             }
         }
 
-        public event InterfaceClosingEventHandler WindowClosing;
+        public virtual Boolean IsAltF4Enabled { get; set; } = true;
+
+        public event InterfaceClosingEventHandler? WindowClosing;
         public event SizeChangeToggleHandler? SizeChangeToggle;
 
         protected FixedWindow()
@@ -105,6 +107,17 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         {
             if (args.Cancel)
             {
+                return;
+            }
+
+            if (KeyboardUtilities.Alt.IsAlt && Keyboard.IsKeyDown(Key.F4))
+            {
+                if (IsAltF4Enabled)
+                {
+                    return;
+                }
+
+                args.Cancel = true;
                 return;
             }
 

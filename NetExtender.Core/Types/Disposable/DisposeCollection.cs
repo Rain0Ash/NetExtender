@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using NetExtender.Types.Comparers;
 using NetExtender.Utilities.Types;
@@ -20,7 +22,7 @@ namespace NetExtender.Types.Disposable
 
     public class DisposeCollection<T> : ICollection<T>, IReadOnlyCollection<T>, IDisposable where T : IDisposable
     {
-        private HashSet<T> Internal { get; }
+        private ConcurrentDictionary<T, Boolean> Internal { get; }
         
         public Boolean Active { get; set; }
         
@@ -42,7 +44,7 @@ namespace NetExtender.Types.Disposable
 
         public DisposeCollection()
         {
-            Internal = new HashSet<T>(ReferenceEqualityComparer<T>.Default);
+            Internal = new ConcurrentDictionary<T, Boolean>(ReferenceEqualityComparer<T>.Default);
         }
         
         public DisposeCollection(IEnumerable<T> source)
@@ -52,22 +54,22 @@ namespace NetExtender.Types.Disposable
                 throw new ArgumentNullException(nameof(source));
             }
 
-            Internal = new HashSet<T>(source, ReferenceEqualityComparer<T>.Default);
+            Internal = new ConcurrentDictionary<T, Boolean>(source.Select(item => new KeyValuePair<T, Boolean>(item, false)), ReferenceEqualityComparer<T>.Default);
         }
 
         public Boolean Contains(T item)
         {
-            return Internal.Contains(item);
+            return Internal.ContainsKey(item);
         }
 
         public void Add(T item)
         {
-            Internal.Add(item);
+            Internal.TryAdd(item, false);
         }
 
         public Boolean Remove(T item)
         {
-           Boolean successful = Internal.Remove(item);
+           Boolean successful = Internal.TryRemove(item, out _);
 
            // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
            if (Active && successful && item is not null)
@@ -91,17 +93,17 @@ namespace NetExtender.Types.Disposable
 
         public void CopyTo(T[] array, Int32 arrayIndex)
         {
-            Internal.CopyTo(array, arrayIndex);
+            Internal.Keys.CopyTo(array, arrayIndex);
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            return Internal.GetEnumerator();
+            return Internal.Keys.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable) Internal).GetEnumerator();
+            return GetEnumerator();
         }
 
         public void Dispose()
@@ -114,7 +116,7 @@ namespace NetExtender.Types.Disposable
     
     public class AsyncDisposeCollection<T> : ICollection<T>, IReadOnlyCollection<T>, IAsyncDisposable where T : IAsyncDisposable
     {
-        private HashSet<T> Internal { get; }
+        private ConcurrentDictionary<T, Boolean> Internal { get; }
         
         public Int32 Count
         {
@@ -134,7 +136,7 @@ namespace NetExtender.Types.Disposable
 
         public AsyncDisposeCollection()
         {
-            Internal = new HashSet<T>(ReferenceEqualityComparer<T>.Default);
+            Internal = new ConcurrentDictionary<T, Boolean>(ReferenceEqualityComparer<T>.Default);
         }
         
         public AsyncDisposeCollection(IEnumerable<T> source)
@@ -144,22 +146,22 @@ namespace NetExtender.Types.Disposable
                 throw new ArgumentNullException(nameof(source));
             }
 
-            Internal = new HashSet<T>(source, ReferenceEqualityComparer<T>.Default);
+            Internal = new ConcurrentDictionary<T, Boolean>(source.Select(item => new KeyValuePair<T, Boolean>(item, false)), ReferenceEqualityComparer<T>.Default);
         }
 
         public Boolean Contains(T item)
         {
-            return Internal.Contains(item);
+            return Internal.ContainsKey(item);
         }
 
         public void Add(T item)
         {
-            Internal.Add(item);
+            Internal.TryAdd(item, false);
         }
 
         public Boolean Remove(T item)
         {
-            return Internal.Remove(item);
+            return Internal.TryRemove(item, out _);
         }
 
         public void Clear()
@@ -169,17 +171,17 @@ namespace NetExtender.Types.Disposable
 
         public void CopyTo(T[] array, Int32 arrayIndex)
         {
-            Internal.CopyTo(array, arrayIndex);
+            Internal.Keys.CopyTo(array, arrayIndex);
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            return Internal.GetEnumerator();
+            return Internal.Keys.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable) Internal).GetEnumerator();
+            return GetEnumerator();
         }
         
         public async ValueTask DisposeAsync()

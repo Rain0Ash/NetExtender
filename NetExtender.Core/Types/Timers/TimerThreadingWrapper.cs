@@ -19,7 +19,7 @@ namespace NetExtender.Types.Timers
             return wrapper?.Timer;
         }
 
-        private Timer Timer { get; }
+        private Timer? Timer { get; set; }
 
         public Boolean IsStarted { get; private set; }
         
@@ -72,31 +72,40 @@ namespace NetExtender.Types.Timers
             {
                 return;
             }
+
+            Timer? timer = Timer;
             
-            Tick?.Invoke(Timer, new TimeEventArgs());
-            Timer.Change(TimeSpan.Zero, Interval);
+            if (timer is null)
+            {
+                return;
+            }
+            
+            Tick?.Invoke(timer, new TimeEventArgs());
+            timer?.TryChange(TimeSpan.Zero, Interval);
         }
         
         public void Start()
         {
-            Timer.Change(TimeSpan.Zero, Interval);
+            Timer timer = Timer ?? throw new ObjectDisposedException(nameof(TimerThreadingWrapper));
+            timer?.Change(TimeSpan.Zero, Interval);
             IsStarted = true;
         }
 
         public void Stop()
         {
-            Timer.Stop();
+            Timer timer = Timer ?? throw new ObjectDisposedException(nameof(TimerThreadingWrapper));
+            timer.Stop();
             IsStarted = false;
         }
 
         public void Dispose()
         {
-            Timer.Dispose();
+            Timer?.Dispose();
         }
         
         public ValueTask DisposeAsync()
         {
-            return Timer.DisposeAsync();
+            return Timer?.DisposeAsync() ?? ValueTask.CompletedTask;
         }
     }
 }

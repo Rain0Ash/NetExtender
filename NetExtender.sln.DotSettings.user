@@ -16,6 +16,7 @@
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/OrderByFullPath/@EntryValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/ShowComments/@EntryValue">False</s:Boolean>
 	<s:Boolean x:Key="/Default/ResxEditorPersonal/ShowOnlyErrors/@EntryValue">False</s:Boolean>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=7b222c7b_002Dc415_002D43e4_002Dbd16_002D2763139105ee_0023NetExtender_002EWindowsPresentation_002EConfiguration_002EProperty/@EntryIndexedValue">True</s:Boolean>
 	
 	
 	
@@ -30,6 +31,7 @@
 	
 	
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=7e15dfe1_002Db6da_002D4509_002D9c76_002D833b2230df6e_0023NetExtender_002ENAudio_002EXamarin_002EAndroid/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=83447d1f_002D291a_002D444a_002D9496_002Dbe772e412fd6_0023NetExtender_002EWindowsPresentation_002ELocalization_002EProperty/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UnloadedProject/UnloadedProjects/=96a15b1d_002Dffe0_002D49d8_002Da8b9_002D5386c11fcaf5_0023NetExtender_002ELocalization_002EFlags/@EntryIndexedValue">True</s:Boolean>
 	
 	

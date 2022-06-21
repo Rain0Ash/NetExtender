@@ -3,16 +3,16 @@
     <PropertyGroup>
         <TargetFramework>net6.0-windows</TargetFramework>
         <Nullable>enable</Nullable>
-		<OutputType>Library</OutputType>
+        <OutputType>Library</OutputType>
         <UseWpf>true</UseWpf>
-		<LangVersion>10</LangVersion>
-		<Authors>Rain0Ash</Authors>
+        <LangVersion>10</LangVersion>
+        <Authors>Rain0Ash</Authors>
         <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
         <Version>0.8.7</Version>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>../SignTool/Private/NetExtender.snk</AssemblyOriginatorKeyFile>
-        <Title>NetExtender.WindowsPresentation</Title>
-        <Description>Windows Presentation Foundation module of NetExtender Framework</Description>
+        <Title>NetExtender.WindowsPresentation.Configuration.Property</Title>
+        <Description>Windows Presentation Foundation Configuration Property module of NetExtender Framework</Description>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/Rain0Ash/NetExtender</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -22,22 +22,14 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\NetExtender.Configuration.Property\NetExtender.Configuration.Property.csproj" />
+      <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj" />
       <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
+      <ProjectReference Include="..\NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Utilities\Alt.cs">
-        <DependentUpon>KeyboardUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Control.cs">
-        <DependentUpon>KeyboardUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Shift.cs">
-        <DependentUpon>KeyboardUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Windows.cs">
-        <DependentUpon>KeyboardUtilities.cs</DependentUpon>
-      </Compile>
+      <Folder Include="Types\Converters" />
     </ItemGroup>
 
 </Project>

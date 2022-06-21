@@ -422,14 +422,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
 
         public virtual Boolean Reset()
         {
-            if (IsReadOnly)
-            {
-                return false;
-            }
-            
-            Internal.Reset(null);
-            Save();
-            return true;
+            return SetValue(Alternate);
         }
 
         public Task<Boolean> ResetAsync()
@@ -437,16 +430,9 @@ namespace NetExtender.Localization.Property.Localization.Properties
             return ResetAsync(CancellationToken.None);
         }
 
-        public virtual async Task<Boolean> ResetAsync(CancellationToken token)
+        public virtual Task<Boolean> ResetAsync(CancellationToken token)
         {
-            if (IsReadOnly)
-            {
-                return false;
-            }
-            
-            Internal.Reset(null);
-            await SaveAsync(CancellationToken.None);
-            return true;
+            return SetValueAsync(Alternate, token);
         }
 
         public override String? ToString()
@@ -780,14 +766,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
 
         public virtual Boolean Reset()
         {
-            if (IsReadOnly)
-            {
-                return false;
-            }
-            
-            Internal.Reset(null);
-            Save();
-            return true;
+            return SetValue(Alternate);
         }
 
         public Task<Boolean> ResetAsync()
@@ -795,16 +774,9 @@ namespace NetExtender.Localization.Property.Localization.Properties
             return ReadAsync(CancellationToken.None);
         }
 
-        public virtual async Task<Boolean> ResetAsync(CancellationToken token)
+        public virtual Task<Boolean> ResetAsync(CancellationToken token)
         {
-            if (IsReadOnly)
-            {
-                return false;
-            }
-            
-            Internal.Reset(null);
-            await SaveAsync(CancellationToken.None);
-            return true;
+            return SetValueAsync(Alternate, token);
         }
 
         public override String? ToString()

@@ -485,9 +485,17 @@ namespace NetExtender.Utilities.IO
             return LockFileAsync(path, timeout, CancellationToken.None);
         }
 
-        public static Task LockFileAsync(String path, TimeSpan timeout, CancellationToken token)
+        public static async Task LockFileAsync(String path, TimeSpan timeout, CancellationToken token)
         {
-            return LockFileAsync(path, timeout.Milliseconds, token);
+            try
+            {
+                await using IAsyncDisposable disposable = LockFile(path);
+                await Task.Delay(timeout, token).ConfigureAwait(false);
+            }
+            catch (TaskCanceledException)
+            {
+                //ignored
+            }
         }
 
         public static async Task LockFileAsync(String path, Int32 timeout, CancellationToken token)
