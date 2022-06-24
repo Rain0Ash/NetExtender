@@ -110,7 +110,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                 return;
             }
 
-            if (KeyboardUtilities.Alt.IsAlt && Keyboard.IsKeyDown(Key.F4))
+            if (KeyboardUtilities.Alt.HasAlt && Keyboard.IsKeyDown(Key.F4))
             {
                 if (IsAltF4Enabled)
                 {
@@ -137,7 +137,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                 return;
             }
 
-            if (KeyboardUtilities.Alt.IsAlt && Keyboard.IsKeyDown(Key.F4))
+            if (KeyboardUtilities.Alt.HasAlt && Keyboard.IsKeyDown(Key.F4))
             {
                 return;
             }

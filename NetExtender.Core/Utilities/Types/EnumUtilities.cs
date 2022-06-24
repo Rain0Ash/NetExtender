@@ -103,6 +103,20 @@ namespace NetExtender.Utilities.Types
             return negative ? AsUInt64<T>() : AsDecimal<T>().Where(MathUtilities.IsPositive).Select(ConvertUtilities.ToUInt64);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static unsafe UInt64 AsUInt64<T>(this T value) where T : unmanaged, Enum
+        {
+            return sizeof(T) switch
+            {
+                0 => 0,
+                1 => Unsafe.As<T, Byte>(ref value),
+                2 => Unsafe.As<T, UInt16>(ref value),
+                4 => Unsafe.As<T, UInt32>(ref value),
+                8 => Unsafe.As<T, UInt64>(ref value),
+                _ => throw new ArgumentOutOfRangeException(nameof(value), sizeof(T), null)
+            };
+        }
+
         public static Int32 GetCountOfFlags<T>() where T : unmanaged, Enum
         {
             if (!IsFlags<T>())

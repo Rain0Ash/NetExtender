@@ -7,8 +7,9 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace NetExtender.Types.Dictionaries.Interfaces
 {
-    public interface IWeakDictionary<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> where TKey : class where TValue : class?
+    public interface IWeakDictionary<TKey, TValue> : IEnumerable<KeyValuePair<TKey, TValue>> where TKey : class
     {
+        public Boolean Contains(TKey key);
         public Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value);
         public void Add(TKey key, TValue value);
         public void AddOrUpdate(TKey key, TValue value);

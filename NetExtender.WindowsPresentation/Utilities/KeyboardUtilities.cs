@@ -2,10 +2,14 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Buffers;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using NetExtender.Utilities.Types;
+using NetExtender.WindowsPresentation.Types.Input;
 
 namespace NetExtender.Utilities.Windows.IO
 {
@@ -19,7 +23,15 @@ namespace NetExtender.Utilities.Windows.IO
                 return Keyboard.Modifiers;
             }
         }
-        
+
+        public static Keys Keys
+        {
+            get
+            {
+                return Keyboard.PrimaryDevice.DownKeys();
+            }
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Boolean IsKeyActive(this Key value, Func<Key, Boolean> handler)
         {
@@ -85,6 +97,60 @@ namespace NetExtender.Utilities.Windows.IO
             }
 
             return keys.Any(handler);
+        }
+
+        private static Keys GetKeys(Func<Key, Boolean> handler)
+        {
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            ReadOnlyCollection<Key> keys = EnumUtilities.GetValuesWithoutDefault<Key>();
+            Key[] rent = ArrayPool<Key>.Shared.Rent(keys.Count);
+
+            Int32 counter = 0;
+            foreach (Key key in keys)
+            {
+                if (handler(key))
+                {
+                    rent[counter++] = key;
+                }
+            }
+            
+            Keys result = new Keys(rent);
+            ArrayPool<Key>.Shared.Return(rent);
+            return result;
+        }
+
+        public static Keys DownKeys(this KeyboardDevice device)
+        {
+            if (device is null)
+            {
+                throw new ArgumentNullException(nameof(device));
+            }
+
+            return GetKeys(device.IsKeyDown);
+        }
+        
+        public static Keys ToggleKeys(this KeyboardDevice device)
+        {
+            if (device is null)
+            {
+                throw new ArgumentNullException(nameof(device));
+            }
+
+            return GetKeys(device.IsKeyToggled);
+        }
+        
+        public static Keys UpKeys(this KeyboardDevice device)
+        {
+            if (device is null)
+            {
+                throw new ArgumentNullException(nameof(device));
+            }
+
+            return GetKeys(device.IsKeyUp);
         }
     }
 }

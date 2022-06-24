@@ -23,6 +23,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             return false;
         }
         
+        // ReSharper disable once RedundantAssignment
         private IntPtr WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, ref Boolean handled)
         {
             WinMessage message = new WinMessage(hwnd, msg, wParam, lParam);

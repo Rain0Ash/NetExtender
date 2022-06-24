@@ -5,7 +5,7 @@ using NetExtender.Types.Dictionaries.Interfaces;
 
 namespace NetExtender.Types.Stores.Interfaces
 {
-    public interface IStore<TKey, TValue> : IWeakDictionary<TKey, TValue> where TKey : class where TValue : class?
+    public interface IStore<TKey, TValue> : IWeakDictionary<TKey, TValue> where TKey : class
     {
     }
 }

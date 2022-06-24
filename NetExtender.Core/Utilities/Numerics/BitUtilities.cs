@@ -2,6 +2,9 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
+using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -141,6 +144,93 @@ namespace NetExtender.Utilities.Numerics
         {
             return ((UInt64) high << (sizeof(UInt32) * BitInByte)) | low;
         }
+        
+        private static ImmutableArray<ImmutableArray<Int32>> SetBitTable { get; } =
+            MathUtilities.Range(256)
+                .Select(i => MathUtilities.Range(8)
+                    .Where(bit => (i & (1 << bit)) != 0)
+                    .ToImmutableArray())
+                .ToImmutableArray();
+        
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean TryGetSetBits(Byte value, Span<Int32> destination, out Int32 written)
+        {
+            written = 0;
+            ImmutableArray<Int32> position = SetBitTable[value];
+            
+            if (destination.Length < position.Length)
+            {
+                return false;
+            }
+
+            for (Int32 i = 0; i < position.Length; i++)
+            {
+                destination[i] = position[i];
+                written++;
+            }
+
+            return true;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe Boolean TryGetSetBits<T>(this T value, Span<Int32> destination, out Int32 written) where T : unmanaged
+        {
+            return TryGetSetBits(&value, sizeof(T), destination, out written);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe Boolean TryGetSetBits<T>(in T value, Span<Int32> destination, out Int32 written) where T : unmanaged
+        {
+            fixed (T* pointer = &value)
+            {
+                return TryGetSetBits(pointer, sizeof(T), destination, out written);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe Boolean TryGetSetBits(void* pointer, Int32 length, Span<Int32> destination, out Int32 written)
+        {
+            if (length > 0)
+            {
+                return TryGetSetBits(pointer, (UInt32) length, destination, out written);
+            }
+
+            written = 0;
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static unsafe Boolean TryGetSetBits(void* pointer, UInt32 length, Span<Int32> destination, out Int32 written)
+        {
+            written = 0;
+            if (length <= 0)
+            {
+                return true;
+            }
+
+            Span<Int32> position = stackalloc Int32[BitInByte];
+            for (Int32 i = 0; i < length; i++)
+            {
+                Byte value = ((Byte*) pointer)[i];
+                if (!TryGetSetBits(value, position, out Int32 count))
+                {
+                    return false;
+                }
+                
+                if (destination.Length < written + count)
+                {
+                    return false;
+                }
+                
+                for (Int32 j = 0; j < count; j++)
+                {
+                    destination[written++] = position[j] + BitInByte * i;
+                }
+            }
+            
+            return true;
+        }
 
         //TODO: BitUtilities Trailing/leading zeros for void*
         
@@ -266,7 +356,13 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe Boolean BitwiseEquals<T>(this Span<T> first, ReadOnlySpan<T> second) where T : unmanaged
+        public static Boolean BitwiseEquals<T>(this Span<T> first, ReadOnlySpan<T> second) where T : unmanaged
+        {
+            return BitwiseEquals((ReadOnlySpan<T>) first, second);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe Boolean BitwiseEquals<T>(this ReadOnlySpan<T> first, ReadOnlySpan<T> second) where T : unmanaged
         {
             fixed (void* pf = first, ps = second)
             {

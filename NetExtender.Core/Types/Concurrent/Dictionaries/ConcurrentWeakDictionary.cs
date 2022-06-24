@@ -19,6 +19,14 @@ namespace NetExtender.Types.Concurrent.Dictionaries
             Internal = new ConditionalWeakTableWrapper<TKey, TValue>();
         }
 
+        public Boolean Contains(TKey key)
+        {
+            lock (Internal)
+            {
+                return Internal.Contains(key);
+            }
+        }
+
         public Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
             lock (Internal)

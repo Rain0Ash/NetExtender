@@ -20,6 +20,11 @@ namespace NetExtender.Types.Stores
             Internal = new ConcurrentWeakDictionary<TKey, TValue>();
         }
 
+        public Boolean Contains(TKey key)
+        {
+            return Internal.Contains(key);
+        }
+
         public Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
             return Internal.TryGetValue(key, out value);

@@ -15,6 +15,11 @@ namespace NetExtender.Types.Dictionaries
     {
         private ConditionalWeakTable<TKey, TValue> Internal { get; } = new ConditionalWeakTable<TKey, TValue>();
 
+        public Boolean Contains(TKey key)
+        {
+            return Internal.Contains(key);
+        }
+
         public Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
             return Internal.TryGetValue(key, out value);

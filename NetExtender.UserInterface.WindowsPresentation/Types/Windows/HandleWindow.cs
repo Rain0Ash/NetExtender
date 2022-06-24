@@ -2,13 +2,12 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Windows;
 using NetExtender.UserInterface.Interfaces;
 using NetExtender.Utilities.UserInterface;
 
 namespace NetExtender.UserInterface.WindowsPresentation.Windows
 {
-    public class HandleWindow : Window, IUserInterfaceHandle
+    public class HandleWindow : RegisterWindow, IUserInterfaceHandle
     {
         public IntPtr Handle
         {
