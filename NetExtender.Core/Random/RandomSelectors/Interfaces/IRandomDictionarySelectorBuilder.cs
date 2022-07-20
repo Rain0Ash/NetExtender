@@ -10,6 +10,7 @@ namespace NetExtender.Random
     /// Interface for Random Selector Builders.
     /// </summary>
     /// <typeparam name="T">Type of items that gets randomly returned</typeparam>
+    // ReSharper disable once PossibleInterfaceMemberAmbiguity
     public interface IRandomDictionarySelectorBuilder<T> : IRandomSelectorBuilder<T>, IIndexDictionary<T, Double> where T : notnull
     {
     }

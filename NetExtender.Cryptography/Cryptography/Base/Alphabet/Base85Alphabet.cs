@@ -8,7 +8,7 @@
 
 using System;
 
-namespace NetExtender.Crypto.Base.Alphabet
+namespace NetExtender.Cryptography.Base.Alphabet
 {
     /// <summary>
     /// Base85 Alphabet.

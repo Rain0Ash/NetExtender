@@ -24,19 +24,7 @@ namespace NetExtender.Localization.Properties
     {
         private ILocalizationProperty Internal { get; }
         
-        public event EventHandler? Reseted
-        {
-            add
-            {
-                Internal.Reseted += value;
-            }
-            remove
-            {
-                Internal.Reseted -= value;
-            }
-        }
-
-        event LocalizationValueChangedEventHandler? IReadOnlyLocalizationProperty.Changed
+        public event LocalizationValueChangedEventHandler? Changed
         {
             add
             {
@@ -48,6 +36,30 @@ namespace NetExtender.Localization.Properties
             }
         }
 
+        event LocalizationValueChangedEventHandler? ILocalizationPropertyMultiInfo.Changed
+        {
+            add
+            {
+                Internal.Changed += value;
+            }
+            remove
+            {
+                Internal.Changed -= value;
+            }
+        }
+        
+        public event EventHandler? StringChanged
+        {
+            add
+            {
+                Internal.StringChanged += value;
+            }
+            remove
+            {
+                Internal.StringChanged -= value;
+            }
+        }
+
         public String Current
         {
             get
@@ -56,7 +68,7 @@ namespace NetExtender.Localization.Properties
             }
         }
 
-        event ConfigurationChangedEventHandler<ILocalizationString?>? IReadOnlyConfigProperty<ILocalizationString?>.Changed
+        event ConfigurationChangedEventHandler<ILocalizationString?>? IConfigPropertyValueInfo<ILocalizationString?>.Changed
         {
             add
             {
@@ -359,7 +371,7 @@ namespace NetExtender.Localization.Properties
             }
         }
         
-        event ConfigurationChangedEventHandler? IReadOnlyConfigProperty.Changed
+        event ConfigurationChangedEventHandler? IConfigPropertyValueInfo.Changed
         {
             add
             {

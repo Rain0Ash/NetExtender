@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Cryptography.Interfaces;
-using NetExtender.Crypto.CryptKey.Interfaces;
+using NetExtender.Cryptography.Keys.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Cryptography.Convert.Utilities

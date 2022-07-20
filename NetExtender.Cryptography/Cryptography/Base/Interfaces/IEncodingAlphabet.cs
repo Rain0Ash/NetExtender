@@ -8,7 +8,7 @@
 
 using System;
 
-namespace NetExtender.Crypto.Base.Interfaces
+namespace NetExtender.Cryptography.Base.Interfaces
 {
     /// <summary>
     /// Defines basic encoding alphabet.

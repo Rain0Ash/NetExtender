@@ -11,6 +11,11 @@ using System.Threading.Tasks;
 
 namespace NetExtender.Utilities.Types
 {
+    public static class TaskUtilities<T>
+    {
+        public static Task<T?> Default { get; } = Task.FromResult(default(T));
+    }
+    
     [SuppressMessage("ReSharper", "AsyncConverter.AsyncMethodNamingHighlighting")]
     public static class TaskUtilities
     {
@@ -23,6 +28,11 @@ namespace NetExtender.Utilities.Types
         /// Cached false task
         /// </summary>
         public static Task<Boolean> False { get; } = Task.FromResult(false);
+        
+        /// <summary>
+        /// Cached zero task
+        /// </summary>
+        public static Task<Int32> Zero { get; } = Task.FromResult(0);
 
         private static class TaskCache<T>
         {
@@ -3069,13 +3079,5 @@ namespace NetExtender.Utilities.Types
         {
             return value > TimeSpan.Zero || value == Timeout.InfiniteTimeSpan ? Task.Delay(value).GetAwaiter() : Task.CompletedTask.GetAwaiter();
         }
-        
-#if AWAIT_AS_IN_JAVASCRIPT
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ValueTaskAwaiter<T> GetAwaiter<T>(this T value)
-        {
-            return ValueTask.FromResult(value).GetAwaiter();
-        }
-#endif
     }
 }

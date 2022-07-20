@@ -14,7 +14,7 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 get
                 {
-                    return Keyboard.Modifiers == ModifierKeys.Shift;
+                    return Modifiers == ModifierKeys.Shift;
                 }
             }
             
@@ -22,7 +22,7 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 get
                 {
-                    return Keyboard.Modifiers.HasFlag(ModifierKeys.Shift);
+                    return Modifiers.HasFlag(ModifierKeys.Shift);
                 }
             }
 

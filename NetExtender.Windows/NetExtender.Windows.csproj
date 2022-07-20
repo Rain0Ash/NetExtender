@@ -37,10 +37,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Workstation\OperationSystemInfo.cs">
+      <Compile Update="Workstation\OperatingSystemInfo.cs">
         <DependentUpon>Software.cs</DependentUpon>
       </Compile>
-      <Compile Update="Workstation\InfoWinStruct.cs">
+      <Compile Update="Workstation\WindowsInformationStruct.cs">
         <DependentUpon>Hardware.cs</DependentUpon>
       </Compile>
       <Compile Remove="Utilities\WindowsReflectionHookUtilities.cs" />

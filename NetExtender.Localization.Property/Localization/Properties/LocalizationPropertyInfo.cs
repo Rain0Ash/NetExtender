@@ -64,9 +64,9 @@ namespace NetExtender.Localization.Property.Localization.Properties
     
     public abstract class LocalizationIdentifierPropertyInfo : ConfigPropertyInfo<String?>, ILocalizationIdentifierPropertyInfo
     {
-        public LocalizationIdentifier Identifier { get; }
-        
+        public abstract event LocalizationValueChangedEventHandler? Changed;
         public abstract event LocalizationChangedEventHandler? LocalizationChanged;
+        public LocalizationIdentifier Identifier { get; }
 
         protected LocalizationIdentifierPropertyInfo(String? key, LocalizationIdentifier identifier, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : base(key, alternate, options, sections)

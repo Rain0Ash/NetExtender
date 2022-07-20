@@ -31,8 +31,4 @@
       <ProjectReference Include="..\NetExtender.DynamicData\NetExtender.DynamicData.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Types" />
-    </ItemGroup>
-
 </Project>

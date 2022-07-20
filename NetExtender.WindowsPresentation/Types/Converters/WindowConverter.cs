@@ -39,7 +39,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
 
         protected WindowConverter()
         {
-            Window = ConcurrentWindowRegisterUtilities.Window as TWindow ?? throw new InvalidOperationException($"Concurrent window is not of type {typeof(TWindow)}");
+            Window = WindowStoreUtilities.Window as TWindow ?? throw new InvalidOperationException($"Concurrent window is not of type {typeof(TWindow)}");
         }
 
         public abstract Object? Convert(Object? value, Type? targetType, Object? parameter, CultureInfo? culture);

@@ -4,11 +4,21 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using NetExtender.Types.Dictionaries;
 
 namespace NetExtender.Random
 {
     public abstract class RandomSelector<T> : IRandomSelector<T>
     {
+        public static IRandomSelector<T> Default
+        {
+            get
+            {
+                return DefaultRandomSelector<T>.Instance;
+            }
+        }
+
         /// <summary>
         /// Breaking point between using Linear vs. Binary search for arrays (StaticSelector). 
         /// Was calculated empirically.
@@ -21,21 +31,32 @@ namespace NetExtender.Random
         /// </summary>
         protected const Int32 ListBreakpoint = 26;
         
+        public abstract IReadOnlyCollection<T> Collection { get; }
+
+        public abstract Int32 Count { get; }
+
         public abstract T GetRandom();
         public abstract T GetRandom(Double value);
-        
-        public virtual IEnumerator<T> GetEnumerator()
-        {
-            while (true)
-            {
-                yield return GetRandom();
-            }
-        }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        public T? GetRandomOrDefault()
         {
-            return GetEnumerator();
+            return GetRandomOrDefault(default(T));
         }
+        
+        [return: NotNullIfNotNull("alternate")]
+        public abstract T? GetRandomOrDefault(T? alternate);
+
+        public T? GetRandomOrDefault(Double value)
+        {
+            return GetRandomOrDefault(value, default);
+        }
+        
+        [return: NotNullIfNotNull("alternate")]
+        public abstract T? GetRandomOrDefault(Double value, T? alternate);
+
+        public abstract T[] ToItemArray();
+        public abstract List<T> ToItemList();
+        public abstract NullableDictionary<T, Double> ToItemDictionary();
 
         /// <summary>
         /// Builds cummulative distribution out of non-normalized weights inplace.
@@ -83,14 +104,14 @@ namespace NetExtender.Random
                 throw new ArgumentNullException(nameof(cda));
             }
 
-            Int32 lo = 0;
-            Int32 hi = cda.Length - 1;
+            Int32 low = 0;
+            Int32 high = cda.Length - 1;
             Int32 index;
 
-            while (lo <= hi)
+            while (low <= high)
             {
                 // calculate median
-                index = lo + ((hi - lo) >> 1);
+                index = low + ((high - low) >> 1);
 
                 if (Math.Abs(cda[index] - value) < Double.Epsilon)
                 {
@@ -100,18 +121,30 @@ namespace NetExtender.Random
                 if (cda[index] < value)
                 {
                     // shrink left
-                    lo = index + 1;
+                    low = index + 1;
+                    continue;
                 }
-                else
-                {
-                    // shrink right
-                    hi = index - 1;
-                }
+
+                // shrink right
+                high = index - 1;
             }
 
-            index = lo;
+            index = low;
 
             return index;
+        }
+        
+        public virtual IEnumerator<T> GetEnumerator()
+        {
+            while (true)
+            {
+                yield return GetRandom();
+            }
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

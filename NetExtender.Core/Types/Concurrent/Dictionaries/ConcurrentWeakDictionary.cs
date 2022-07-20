@@ -10,7 +10,7 @@ using NetExtender.Types.Dictionaries.Interfaces;
 
 namespace NetExtender.Types.Concurrent.Dictionaries
 {
-    public class ConcurrentWeakDictionary<TKey, TValue> : IWeakDictionary<TKey, TValue> where TKey : class where TValue : class?
+    public class ConcurrentWeakDictionary<TKey, TValue> : IWeakDictionary<TKey, TValue>, IReadOnlyWeakDictionary<TKey, TValue> where TKey : class where TValue : class?
     {
         private IWeakDictionary<TKey, TValue> Internal { get; }
 
@@ -90,7 +90,7 @@ namespace NetExtender.Types.Concurrent.Dictionaries
                 Internal.Clear();
             }
         }
-        
+
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             return Internal.GetEnumerator();
@@ -99,6 +99,24 @@ namespace NetExtender.Types.Concurrent.Dictionaries
         IEnumerator IEnumerable.GetEnumerator()
         {
             return ((IEnumerable) Internal).GetEnumerator();
+        }
+        
+        public TValue this[TKey key]
+        {
+            get
+            {
+                lock (Internal)
+                {
+                    return Internal[key];
+                }
+            }
+            set
+            {
+                lock (Internal)
+                {
+                    Internal[key] = value;
+                }
+            }
         }
     }
 }

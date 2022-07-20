@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
-using NetExtender.Crypto.CryptKey.Deterministic;
-using NetExtender.Crypto.CryptKey.Interfaces;
+using NetExtender.Cryptography.Keys.Deterministic;
+using NetExtender.Cryptography.Keys.Interfaces;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Utilities.Crypto
+namespace NetExtender.Utilities.Cryptography
 {
     public static class StringCryptorUtilities
     {

@@ -8,7 +8,7 @@
 
 using System;
 
-namespace NetExtender.Crypto.Base.Alphabet
+namespace NetExtender.Cryptography.Base.Alphabet
 {
     internal sealed class CrockfordBase32Alphabet : Base32Alphabet
     {

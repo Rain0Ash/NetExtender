@@ -126,6 +126,9 @@
           <DesignTime>True</DesignTime>
           <DependentUpon>GenericSpanUtilities.tt</DependentUpon>
         </Compile>
+        <Compile Update="Utilities\Types\Enumerable\ReferenceWeakStore.cs">
+          <DependentUpon>StoreUtilities.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>

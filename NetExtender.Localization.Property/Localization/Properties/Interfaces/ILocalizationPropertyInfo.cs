@@ -15,5 +15,6 @@ namespace NetExtender.Localization.Properties.Interfaces
 
     public interface ILocalizationIdentifierPropertyInfo : ILocalizationPropertyInfo
     {
+        public event LocalizationValueChangedEventHandler Changed;
     }
 }

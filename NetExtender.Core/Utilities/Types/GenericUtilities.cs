@@ -6,12 +6,18 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Monads;
 using NetExtender.Utilities.Core;
 
 namespace NetExtender.Utilities.Types
 {
     public static class GenericUtilities
     {
+        public static Box<T> Box<T>(this T value)
+        {
+            return value;
+        }
+
         public static T? AsDefault<T>(this T? value, T? alternate)
         {
             return IsDefault(value) ? alternate : value;

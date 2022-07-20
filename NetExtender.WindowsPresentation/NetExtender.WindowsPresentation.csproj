@@ -39,6 +39,15 @@
       <Compile Update="Utilities\Windows.cs">
         <DependentUpon>KeyboardUtilities.cs</DependentUpon>
       </Compile>
+      <Compile Update="Utilities\Toggle.cs">
+        <DependentUpon>KeyboardUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utilities\Up.cs">
+        <DependentUpon>KeyboardUtilities.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Utilities\Down.cs">
+        <DependentUpon>KeyboardUtilities.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

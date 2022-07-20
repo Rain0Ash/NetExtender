@@ -6,14 +6,32 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using NetExtender.Initializer;
+using NetExtender.Utilities.Application;
 using NetExtender.Utilities.Threading;
 
 namespace NetExtender.Domains.Initializer
 {
     public abstract class ApplicationInitializer : NetExtender.Initializer.Initializer
     {
-        protected static ApplicationInitializer Instance { get; }
-        
+        private static ApplicationInitializer? instance;
+        protected static ApplicationInitializer Instance
+        {
+            get
+            {
+                return instance ?? throw new InvalidOperationException();
+            }
+            set
+            {
+                if (instance is not null)
+                {
+                    throw new InvalidOperationException();
+                }
+                
+                instance = value;
+            }
+        }
+
         static ApplicationInitializer()
         {
             Assembly? assembly = Assembly.GetEntryAssembly();
@@ -33,22 +51,43 @@ namespace NetExtender.Domains.Initializer
             } ?? throw new InvalidOperationException();
         }
 
+        protected ApplicationInitializer()
+            : base(instance is not null)
+        {
+        }
+
         protected virtual void Initialize()
         {
         }
 
         private Int32 Internal(String[]? args)
         {
-            Initialize();
-            Domain.AutoStart(args);
-            return 0;
+            try
+            {
+                Initialize();
+                Domain.AutoStart(args);
+                return 0;
+            }
+            catch (Exception exception)
+            {
+                UnhandledException(this, exception, InitializerUnhandledExceptionState.Terminate);
+                return exception.HResult;
+            }
         }
 
         private async Task<Int32> InternalAsync(String[]? args, CancellationToken token)
         {
-            Initialize();
-            await Domain.AutoStartAsync(token);
-            return 0;
+            try
+            {
+                Initialize();
+                await Domain.AutoStartAsync(token);
+                return 0;
+            }
+            catch (Exception exception)
+            {
+                UnhandledException(this, exception, InitializerUnhandledExceptionState.Terminate);
+                return exception.HResult;
+            }
         }
 
         public Int32 Start(String[]? args)
@@ -64,6 +103,35 @@ namespace NetExtender.Domains.Initializer
         public async Task<Int32> StartAsync(String[]? args, CancellationToken token)
         {
             return await ThreadUtilities.STA(InternalAsync, args, token);
+        }
+        
+        protected override void Shutdown(Object? sender, Boolean exit)
+        {
+            if (exit)
+            {
+                return;
+            }
+
+            if (Domain.IsInitialized)
+            {
+                Domain.Shutdown();
+                return;
+            }
+
+            ApplicationUtilities.Shutdown();
+        }
+
+        protected override void Terminate(Object? sender, Exception? exception)
+        {
+            Int32 code = exception?.HResult ?? 1;
+            
+            if (Domain.IsInitialized)
+            {
+                Domain.Shutdown(code, true);
+                return;
+            }
+            
+            ApplicationUtilities.Shutdown(code);
         }
     }
 }

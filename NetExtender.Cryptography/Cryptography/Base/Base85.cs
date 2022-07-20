@@ -10,15 +10,15 @@ using System;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using NetExtender.Crypto.Base.Alphabet;
-using NetExtender.Crypto.Base.Common;
+using NetExtender.Cryptography.Base.Alphabet;
+using NetExtender.Cryptography.Base.Common;
 
-namespace NetExtender.Crypto.Base
+namespace NetExtender.Cryptography.Base
 {
     /// <summary>
     /// Base58 encoding/decoding class.
     /// </summary>
-    public sealed class Base85 : BaseCryptStream
+    public sealed class Base85 : BaseCryptographyStream
     {
         private const Int32 BaseLength = 85;
         private const Int32 ByteBlockSize = 4;

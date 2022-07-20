@@ -49,5 +49,13 @@ namespace NetExtender.Utilities.Types
 
             return ValueTask.FromException<T>(exception);
         }
+        
+#if AWAIT_AS_IN_JAVASCRIPT
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ValueTaskAwaiter<T> GetAwaiter<T>(this T value)
+        {
+            return ValueTask.FromResult(value).GetAwaiter();
+        }
+#endif
     }
 }

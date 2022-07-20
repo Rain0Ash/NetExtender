@@ -2,17 +2,22 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Buffers;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using NetExtender.Utilities.Threading;
 using NetExtender.Utilities.Types;
 using NetExtender.WindowsPresentation.Types.Input;
 
 namespace NetExtender.Utilities.Windows.IO
 {
+    public enum KeyState
+    {
+        Up,
+        Down,
+        Toggle
+    }
+    
     public static partial class KeyboardUtilities
     {
         public static ModifierKeys Modifiers
@@ -20,20 +25,12 @@ namespace NetExtender.Utilities.Windows.IO
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                return Keyboard.Modifiers;
-            }
-        }
-
-        public static Keys Keys
-        {
-            get
-            {
-                return Keyboard.PrimaryDevice.DownKeys();
+                return ThreadUtilities.STA(() => Keyboard.Modifiers);
             }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Boolean IsKeyActive(this Key value, Func<Key, Boolean> handler)
+        private static Boolean IsKeyActive(Key value, Func<Key, Boolean> handler)
         {
             return IsKeyActive(handler, value);
         }
@@ -46,7 +43,7 @@ namespace NetExtender.Utilities.Windows.IO
                 throw new ArgumentNullException(nameof(handler));
             }
 
-            return handler(value);
+            return ThreadUtilities.STA(handler, value);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -70,87 +67,46 @@ namespace NetExtender.Utilities.Windows.IO
 
             return IsKeyActive(handler, first) || IsKeyActive(handler, second) || IsKeyActive(handler, third);
         }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Boolean IsKeyActive(Func<Key, Boolean> handler, params Key[] keys)
-        {
-            return IsKeyActive(handler, (IEnumerable<Key>) keys);
-        }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Boolean IsKeyActive(this IEnumerable<Key> keys, Func<Key, Boolean> handler)
-        {
-            return IsKeyActive(handler, keys);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private static Boolean IsKeyActive(Func<Key, Boolean> handler, IEnumerable<Key> keys)
+        private static Keys Keys(Func<Key, Boolean> handler)
         {
             if (handler is null)
             {
                 throw new ArgumentNullException(nameof(handler));
             }
 
-            if (keys is null)
-            {
-                throw new ArgumentNullException(nameof(keys));
-            }
-
-            return keys.Any(handler);
-        }
-
-        private static Keys GetKeys(Func<Key, Boolean> handler)
-        {
-            if (handler is null)
-            {
-                throw new ArgumentNullException(nameof(handler));
-            }
-
-            ReadOnlyCollection<Key> keys = EnumUtilities.GetValuesWithoutDefault<Key>();
-            Key[] rent = ArrayPool<Key>.Shared.Rent(keys.Count);
+            ReadOnlyCollection<Key> values = EnumUtilities.GetValuesWithoutDefault<Key>();
+            Span<Key> keys = stackalloc Key[values.Count];
 
             Int32 counter = 0;
-            foreach (Key key in keys)
+            foreach (Key key in values)
             {
                 if (handler(key))
                 {
-                    rent[counter++] = key;
+                    keys[counter++] = key;
                 }
             }
             
-            Keys result = new Keys(rent);
-            ArrayPool<Key>.Shared.Return(rent);
+            Keys result = new Keys(keys.Slice(0, counter));
             return result;
         }
 
-        public static Keys DownKeys(this KeyboardDevice device)
+        public static Keys GetKeys(this KeyboardDevice device, KeyState state)
         {
             if (device is null)
             {
                 throw new ArgumentNullException(nameof(device));
             }
 
-            return GetKeys(device.IsKeyDown);
-        }
-        
-        public static Keys ToggleKeys(this KeyboardDevice device)
-        {
-            if (device is null)
+            Func<Key, Boolean> handler = state switch
             {
-                throw new ArgumentNullException(nameof(device));
-            }
+                KeyState.Up => device.IsKeyUp,
+                KeyState.Down => device.IsKeyDown,
+                KeyState.Toggle => device.IsKeyToggled,
+                _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
+            };
 
-            return GetKeys(device.IsKeyToggled);
-        }
-        
-        public static Keys UpKeys(this KeyboardDevice device)
-        {
-            if (device is null)
-            {
-                throw new ArgumentNullException(nameof(device));
-            }
-
-            return GetKeys(device.IsKeyUp);
+            return ThreadUtilities.STA(Keys, handler);
         }
     }
 }

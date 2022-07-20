@@ -11,7 +11,7 @@ using NetExtender.Types.Stores.Interfaces;
 
 namespace NetExtender.Types.Stores
 {
-    public class WeakStore<TKey, TValue> : IStore<TKey, TValue> where TKey : class where TValue : class?
+    public class WeakStore<TKey, TValue> : IStore<TKey, TValue>, IReadOnlyStore<TKey, TValue> where TKey : class where TValue : class?
     {
         private IWeakDictionary<TKey, TValue> Internal { get; }
 
@@ -64,7 +64,19 @@ namespace NetExtender.Types.Stores
         {
             Internal.Clear();
         }
-        
+
+        public TValue this[TKey key]
+        {
+            get
+            {
+                return Internal[key];
+            }
+            set
+            {
+                Internal[key] = value;
+            }
+        }
+
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             return Internal.GetEnumerator();

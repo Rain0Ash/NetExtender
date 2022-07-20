@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using NetExtender.Random.Interfaces;
 using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Numerics;
@@ -47,7 +48,7 @@ namespace NetExtender.Random
         public DynamicRandomSelector(Int32 capacity, IRandom random)
             : base(capacity, random)
         {
-            capacity = capacity.Clamp(8, Int32.MaxValue);
+            capacity = capacity.Clamp(DefaultCapacity, Int32.MaxValue);
             Distribution = new List<Double>(capacity);
         }
         
@@ -129,12 +130,10 @@ namespace NetExtender.Random
             if (Distribution.Count < ListBreakpoint)
             {
                 Selector = SelectIndexLinearSearch;
-            }
-            else
-            {
-                Selector = SelectIndexBinarySearch;
+                return this;
             }
 
+            Selector = SelectIndexBinarySearch;
             return this;
         }
         
@@ -176,14 +175,14 @@ namespace NetExtender.Random
                 throw new ArgumentNullException(nameof(cdl));
             }
 
-            Int32 lo = 0;
-            Int32 hi = cdl.Count - 1;
+            Int32 low = 0;
+            Int32 high = cdl.Count - 1;
             Int32 index;
 
-            while (lo <= hi)
+            while (low <= high)
             {
                 // calculate median
-                index = lo + ((hi - lo) >> 1);
+                index = low + ((high - low) >> 1);
 
                 if (Math.Abs(cdl[index] - value) < Double.Epsilon)
                 {
@@ -193,16 +192,15 @@ namespace NetExtender.Random
                 if (cdl[index] < value)
                 {
                     // shrink left
-                    lo = index + 1;
+                    low = index + 1;
+                    continue;
                 }
-                else
-                {
-                    // shrink right
-                    hi = index - 1;
-                }
+
+                // shrink right
+                high = index - 1;
             }
 
-            index = lo;
+            index = low;
 
             return index;
         }
@@ -221,7 +219,7 @@ namespace NetExtender.Random
 
             if (Items.Count <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(Items), "Container is empty");
+                throw new InvalidOperationException("Items is empty");
             }
 
             return Items.GetKeyByIndex(Selector(Distribution, Random.NextDouble()));
@@ -242,10 +240,33 @@ namespace NetExtender.Random
             
             if (Items.Count <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(Items), "Container is empty");
+                throw new InvalidOperationException("Items is empty");
             }
 
             return Items.GetKeyByIndex(Selector(Distribution, value));
+        }
+
+        
+        [return: NotNullIfNotNull("alternate")]
+        public override T? GetRandomOrDefault(T? alternate)
+        {
+            if (Selector is null)
+            {
+                throw new NotInitializedException();
+            }
+
+            return Items.Count > 0 ? Items.GetKeyByIndex(Selector(Distribution, Random.NextDouble())) : alternate;
+        }
+
+        [return: NotNullIfNotNull("alternate")]
+        public override T? GetRandomOrDefault(Double value, T? alternate)
+        {
+            if (Selector is null)
+            {
+                throw new NotInitializedException();
+            }
+            
+            return Items.Count > 0 ? Items.GetKeyByIndex(Selector(Distribution, value)) : alternate;
         }
 
         public override void Clear()

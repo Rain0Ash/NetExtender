@@ -18,5 +18,6 @@ namespace NetExtender.Types.Dictionaries.Interfaces
         public TValue GetOrAdd(TKey key, Func<TKey, TValue> factory);
         public Boolean Remove(TKey key);
         public void Clear();
+        public TValue this[TKey key] { get; set; }
     }
 }

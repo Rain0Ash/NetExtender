@@ -4,9 +4,8 @@
 using System;
 using System.Collections.Generic;
 using NetExtender.Configuration.Cryptography.Common.Interfaces;
-using NetExtender.Crypto;
-using NetExtender.Crypto.CryptKey.Interfaces;
-using NetExtender.Utilities.Crypto;
+using NetExtender.Cryptography.Keys.Interfaces;
+using NetExtender.Utilities.Cryptography;
 
 namespace NetExtender.Configuration.Cryptography.Common
 {

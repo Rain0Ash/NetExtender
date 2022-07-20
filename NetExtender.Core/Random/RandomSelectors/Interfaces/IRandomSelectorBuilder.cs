@@ -10,11 +10,14 @@ namespace NetExtender.Random
     /// Interface for Random Selector Builders.
     /// </summary>
     /// <typeparam name="T">Type of items that gets randomly returned</typeparam>
-    public interface IRandomSelectorBuilder<T>
+    public interface IRandomSelectorBuilder<T> : IReadOnlyDictionary<T, Double>
     {
-        public void Add(IEnumerable<KeyValuePair<T, Double>> items);
+        public Boolean Contains(T item);
+        public void Add(T item, Double weight);
         public void Add(KeyValuePair<T, Double> item);
-        
+        public void Add(IEnumerable<KeyValuePair<T, Double>> items);
+        public Boolean Remove(T item);
+
         public IRandomSelector<T> Build();
         public IRandomSelector<T> Build(Int32 seed);
     }

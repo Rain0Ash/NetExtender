@@ -11,7 +11,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Dictionaries
 {
-    public class ConditionalWeakTableStructWrapper<TKey, TValue> : IWeakDictionary<TKey, TValue> where TKey : class where TValue : struct
+    public class ConditionalWeakTableStructWrapper<TKey, TValue> : IWeakDictionary<TKey, TValue>, IReadOnlyWeakDictionary<TKey, TValue> where TKey : class where TValue : struct
     {
         private ConditionalWeakTable<TKey, Box<TValue>> Internal { get; } = new ConditionalWeakTable<TKey, Box<TValue>>();
 
@@ -75,6 +75,18 @@ namespace NetExtender.Types.Dictionaries
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+        
+        public TValue this[TKey key]
+        {
+            get
+            {
+                return Internal.TryGetValue(key, out Box<TValue>? result) ? result : throw new KeyNotFoundException();
+            }
+            set
+            {
+                Internal.AddOrUpdate(key, value);
+            }
         }
 
         private class Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>

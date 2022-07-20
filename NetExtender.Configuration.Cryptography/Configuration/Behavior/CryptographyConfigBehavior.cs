@@ -21,9 +21,8 @@ using NetExtender.Configuration.Cryptography.Common;
 using NetExtender.Configuration.Cryptography.Common.Interfaces;
 using NetExtender.Configuration.Cryptography.Utilities;
 using NetExtender.Configuration.Memory;
-using NetExtender.Crypto;
-using NetExtender.Crypto.CryptKey.Interfaces;
-using NetExtender.Utilities.Crypto;
+using NetExtender.Cryptography.Keys.Interfaces;
+using NetExtender.Utilities.Cryptography;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Cryptography.Behavior

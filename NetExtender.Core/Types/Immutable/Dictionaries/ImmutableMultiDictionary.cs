@@ -102,7 +102,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
 
-            if (TryGetValue(key, out ImmutableHashSet<TValue>? result) && result?.Count > 0)
+            if (TryGetValue(key, out ImmutableHashSet<TValue>? result) && result.Count > 0)
             {
                 value = result.First();
                 return true;
@@ -229,8 +229,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
 
-            //TODO: CS8598
-            return TryGetValue(key, out ImmutableHashSet<TValue>? result) && /*result is not null! && */result.Contains(value) ?
+            return TryGetValue(key, out ImmutableHashSet<TValue>? result) && result.Contains(value) ?
                 new ImmutableMultiDictionary<TKey, TValue>(Dictionary.SetItem(key, result.Remove(value))) : this;
         }
 
@@ -281,13 +280,9 @@ namespace NetExtender.Types.Immutable.Dictionaries
 
         public ImmutableMultiDictionary<TKey, TValue> SetItem(TKey key, TValue value)
         {
-            //TODO: CS8598
-            if (TryGetValue(key, out ImmutableHashSet<TValue>? result)/* && result is not null!*/)
-            {
-                return new ImmutableMultiDictionary<TKey, TValue>(Dictionary.SetItem(key, result.Add(value)));
-            }
-
-            return new ImmutableMultiDictionary<TKey, TValue>(Dictionary.SetItem(key, ImmutableHashSet<TValue>.Empty.Add(value)));
+            return TryGetValue(key, out ImmutableHashSet<TValue>? result) ?
+                new ImmutableMultiDictionary<TKey, TValue>(Dictionary.SetItem(key, result.Add(value))) :
+                new ImmutableMultiDictionary<TKey, TValue>(Dictionary.SetItem(key, ImmutableHashSet<TValue>.Empty.Add(value)));
         }
 
         IImmutableMultiDictionary<TKey, TValue> IImmutableMultiDictionary<TKey, TValue>.SetItem(TKey key, TValue value)
@@ -306,27 +301,19 @@ namespace NetExtender.Types.Immutable.Dictionaries
             
             foreach ((TKey key, TValue value) in items)
             {
-                //TODO: CS8598
-                /*if (key is null!)
-                {
-                    continue;
-                }*/
-
                 dictionary.Add(key, value);
             }
 
             ImmutableDictionary<TKey, ImmutableHashSet<TValue>> immutable = Dictionary;
             foreach ((TKey key, ImmutableHashSet<TValue> set) in dictionary)
             {
-                //TODO: CS8598
-                if (immutable.TryGetValue(key, out ImmutableHashSet<TValue>? result) && /*result is not null! && */!result.IsEmpty)
+                if (immutable.TryGetValue(key, out ImmutableHashSet<TValue>? result) && result.IsEmpty)
                 {
                     immutable = immutable.SetItem(key, result.Intersect(set));
+                    continue;
                 }
-                else
-                {
-                    immutable = immutable.SetItem(key, set);
-                }
+
+                immutable = immutable.SetItem(key, set);
             }
 
             return new ImmutableMultiDictionary<TKey, TValue>(immutable);
@@ -447,8 +434,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
         {
             foreach ((TKey key, ImmutableHashSet<TValue> value) in this)
             {
-                //TODO: CS8598
-                if (/*value is null! || */value.IsEmpty)
+                if (value.IsEmpty)
                 {
                     continue;
                 }

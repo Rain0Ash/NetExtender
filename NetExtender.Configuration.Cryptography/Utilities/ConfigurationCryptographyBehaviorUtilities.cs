@@ -6,8 +6,8 @@ using NetExtender.Configuration.Behavior.Interfaces;
 using NetExtender.Configuration.Cryptography.Behavior;
 using NetExtender.Configuration.Cryptography.Behavior.Interfaces;
 using NetExtender.Configuration.Cryptography.Interfaces;
-using NetExtender.Crypto.CryptKey.AES;
-using NetExtender.Crypto.CryptKey.Interfaces;
+using NetExtender.Cryptography.Keys.AES;
+using NetExtender.Cryptography.Keys.Interfaces;
 
 namespace NetExtender.Configuration.Cryptography.Utilities
 {
@@ -20,7 +20,7 @@ namespace NetExtender.Configuration.Cryptography.Utilities
                 throw new ArgumentNullException(nameof(behavior));
             }
 
-            return new CryptographyConfigBehavior(behavior, AESCryptKey.Default.Cryptor());
+            return new CryptographyConfigBehavior(behavior, AesCryptographyKey.Default.Cryptor());
         }
         
         public static ICryptographyConfigBehavior Cryptography(this IConfigBehavior behavior, IStringCryptor cryptor)

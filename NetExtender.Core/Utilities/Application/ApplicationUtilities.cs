@@ -311,7 +311,6 @@ namespace NetExtender.Utilities.Application
             {
                 WindowStyle = ProcessWindowStyle.Hidden,
                 CreateNoWindow = true
-                
             }.StartProcessAsync(wait, token);
 
             if (restart is null)

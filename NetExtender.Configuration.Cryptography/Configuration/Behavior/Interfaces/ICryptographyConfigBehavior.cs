@@ -9,7 +9,7 @@ using NetExtender.Configuration.Behavior.Interfaces;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Cryptography.Behavior.Transactions.Interfaces;
 using NetExtender.Configuration.Cryptography.Common.Interfaces;
-using NetExtender.Crypto.CryptKey.Interfaces;
+using NetExtender.Cryptography.Keys.Interfaces;
 
 namespace NetExtender.Configuration.Cryptography.Behavior.Interfaces
 {

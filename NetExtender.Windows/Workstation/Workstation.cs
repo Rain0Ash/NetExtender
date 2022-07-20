@@ -15,7 +15,7 @@ namespace NetExtender.Workstation
 {
     public static class WorkStation
     {
-        public static OSData Data { get; } = Software.GetOSVersion();
+        public static OperationSystemInfo Data { get; } = Software.GetOperatingSystemInfo();
         
         public static String? CurrentUserSID { get; } = GetCurrentUserSID();
 

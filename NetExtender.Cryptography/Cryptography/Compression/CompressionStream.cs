@@ -6,8 +6,9 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
+using NetExtender.Utilities.Cryptography;
 
-namespace NetExtender.Crypto.Compression
+namespace NetExtender.Cryptography.Compression
 {
     // ReSharper disable once ClassWithVirtualMembersNeverInherited.Global
     public class CompressionStream : Stream

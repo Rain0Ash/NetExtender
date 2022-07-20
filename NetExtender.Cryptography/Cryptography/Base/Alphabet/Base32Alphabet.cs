@@ -9,7 +9,7 @@
 using System;
 using System.Linq;
 
-namespace NetExtender.Crypto.Base.Alphabet
+namespace NetExtender.Cryptography.Base.Alphabet
 {
     /// <summary>
     /// Base32 alphabet flavors.

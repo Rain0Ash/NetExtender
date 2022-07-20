@@ -14,9 +14,8 @@ using NetExtender.Configuration.Cryptography.Properties.Interfaces;
 using NetExtender.Configuration.Cryptography.Utilities;
 using NetExtender.Configuration.Interfaces;
 using NetExtender.Configuration.Properties;
-using NetExtender.Crypto;
-using NetExtender.Crypto.CryptKey.Interfaces;
-using NetExtender.Utilities.Crypto;
+using NetExtender.Cryptography.Keys.Interfaces;
+using NetExtender.Utilities.Cryptography;
 
 namespace NetExtender.Configuration.Cryptography.Properties
 {

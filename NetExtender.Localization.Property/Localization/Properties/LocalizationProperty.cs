@@ -25,9 +25,9 @@ namespace NetExtender.Localization.Property.Localization.Properties
     {
         protected ILocalizationConfig Config { get; }
 
-        public event EventHandler? Reseted;
         public event LocalizationValueChangedEventHandler? Changed;
         public override event LocalizationChangedEventHandler? LocalizationChanged;
+        public event EventHandler? StringChanged;
 
         public override String Path
         {
@@ -38,7 +38,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
         }
 
         private event ConfigurationChangedEventHandler<ILocalizationString?>? ConfigurationChanged;
-        event ConfigurationChangedEventHandler<ILocalizationString?>? IConfigProperty<ILocalizationString?>.Changed
+        event ConfigurationChangedEventHandler<ILocalizationString?>? IConfigPropertyValueInfo<ILocalizationString?>.Changed
         {
             add
             {
@@ -155,7 +155,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
 
         protected virtual void OnChanged(ILocalizationString? value)
         {
-            Reseted?.Invoke(this, EventArgs.Empty);
+            StringChanged?.Invoke(this, EventArgs.Empty);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Current)));
         }
@@ -462,7 +462,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
     {
         protected ILocalizationConfig Config { get; }
         
-        public event LocalizationValueChangedEventHandler? Changed;
+        public override event LocalizationValueChangedEventHandler? Changed;
         public override event LocalizationChangedEventHandler? LocalizationChanged;
 
         public override String Path
@@ -474,7 +474,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
         }
 
         private event ConfigurationChangedEventHandler? ConfigurationChanged;
-        event ConfigurationChangedEventHandler? IConfigProperty.Changed
+        event ConfigurationChangedEventHandler? IConfigPropertyValueInfo.Changed
         {
             add
             {

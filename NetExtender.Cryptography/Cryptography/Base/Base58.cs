@@ -7,10 +7,10 @@
 // </copyright>
 
 using System;
-using NetExtender.Crypto.Base.Alphabet;
-using NetExtender.Crypto.Base.Common;
+using NetExtender.Cryptography.Base.Alphabet;
+using NetExtender.Cryptography.Base.Common;
 
-namespace NetExtender.Crypto.Base
+namespace NetExtender.Cryptography.Base
 {
     /// <summary>
     /// Base58 Encoding/Decoding implementation.
@@ -19,7 +19,7 @@ namespace NetExtender.Crypto.Base
     /// Base58 doesn't implement a Stream-based interface because it's not feasible to use
     /// on large buffers.
     /// </remarks>
-    public sealed class Base58 : BaseCrypt
+    public sealed class Base58 : BaseCryptography
     {
         public static Base58 Bitcoin { get; } = new Base58(Base58Alphabet.Bitcoin);
         public static Base58 Ripple { get; } = new Base58(Base58Alphabet.Ripple);

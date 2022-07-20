@@ -4,7 +4,7 @@
 using System;
 using NetExtender.Configuration.Cryptography.Common;
 using NetExtender.Configuration.Cryptography.Common.Interfaces;
-using NetExtender.Crypto.CryptKey.Interfaces;
+using NetExtender.Cryptography.Keys.Interfaces;
 
 namespace NetExtender.Configuration.Cryptography.Utilities
 {

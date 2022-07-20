@@ -9,15 +9,15 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using NetExtender.Crypto.Base.Alphabet;
-using NetExtender.Crypto.Base.Common;
+using NetExtender.Cryptography.Base.Alphabet;
+using NetExtender.Cryptography.Base.Common;
 
-namespace NetExtender.Crypto.Base
+namespace NetExtender.Cryptography.Base
 {
     /// <summary>
     /// Base32 encoding/decoding functions.
     /// </summary>
-    public sealed class Base32 : BaseCryptStream
+    public sealed class Base32 : BaseCryptographyStream
     {
         private const Int32 BitsPerByte = 8;
         private const Int32 BitsPerChar = 5;

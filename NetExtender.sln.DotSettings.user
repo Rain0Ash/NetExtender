@@ -4,6 +4,7 @@
   &lt;Assembly Path="C:\Users\Rain0Ash\.nuget\packages\naudio.extras\1.0.0\lib\netstandard2.0\NAudio.Extras.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\Rain0Ash\.nuget\packages\microsoft.aspnetcore.hosting.windowsservices\5.0.7\lib\net5.0\Microsoft.AspNetCore.Hosting.WindowsServices.dll" /&gt;&#xD;
   &lt;Assembly Path="C:\Users\Rain0Ash\.nuget\packages\system.reactive\5.0.0\lib\net5.0\System.Reactive.dll" /&gt;&#xD;
+  &lt;Assembly Path="C:\Users\Rain0Ash\.nuget\packages\reactiveui\18.0.10\lib\net6.0\ReactiveUI.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
 	<s:String x:Key="/Default/Environment/Hierarchy/Build/BuildTool/CustomBuildToolPath/@EntryValue">C:\Program Files\dotnet\sdk\6.0.203\MSBuild.dll</s:String>
 	<s:Int64 x:Key="/Default/Environment/Hierarchy/Build/BuildTool/MsbuildVersion/@EntryValue">1114112</s:Int64>

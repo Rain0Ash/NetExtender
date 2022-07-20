@@ -14,7 +14,7 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 get
                 {
-                    return Keyboard.Modifiers == ModifierKeys.Alt;
+                    return Modifiers == ModifierKeys.Alt;
                 }
             }
             
@@ -22,7 +22,7 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 get
                 {
-                    return Keyboard.Modifiers.HasFlag(ModifierKeys.Alt);
+                    return Modifiers.HasFlag(ModifierKeys.Alt);
                 }
             }
             

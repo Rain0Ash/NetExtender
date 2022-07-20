@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Cryptography.Common.Interfaces;
 using NetExtender.Configuration.Interfaces;
-using NetExtender.Crypto.CryptKey.Interfaces;
+using NetExtender.Cryptography.Keys.Interfaces;
 
 namespace NetExtender.Configuration.Cryptography.Interfaces
 {

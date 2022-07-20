@@ -31,5 +31,14 @@
     <ItemGroup>
       <Folder Include="Types" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Initializer\InternalInitializer.cs">
+        <DependentUpon>NetExtenderFrameworkInitializer.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Initializer\Hashes.cs">
+        <DependentUpon>NetExtenderFrameworkInitializer.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
     
 </Project>

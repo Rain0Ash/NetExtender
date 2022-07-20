@@ -7,9 +7,9 @@
 // </copyright>
 
 using System;
-using NetExtender.Crypto.Base.Interfaces;
+using NetExtender.Cryptography.Base.Interfaces;
 
-namespace NetExtender.Crypto.Base.Alphabet
+namespace NetExtender.Cryptography.Base.Alphabet
 {
     /// <summary>
     /// A single encoding algorithm can support many different alphabets.

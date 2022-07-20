@@ -3,11 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Management;
 using System.Net.NetworkInformation;
 using System.Runtime.InteropServices;
+using System.Text;
 using NetExtender.Utilities.Types;
+using NetExtender.Windows.Utilities;
 
 namespace NetExtender.Workstation
 {
@@ -23,59 +26,45 @@ namespace NetExtender.Workstation
 
     public static partial class Hardware
     {
-        /// <summary>
-        /// Retrieving Processor Id.
-        /// </summary>
-        /// <returns></returns>
-        /// 
-        public static String? GetProcessorID()
-        {
-            String? id = String.Empty;
-            
-            ManagementClass management = new ManagementClass("win32_processor");
-            ManagementObjectCollection collection = management.GetInstances();
-            
-            foreach (ManagementBaseObject obj in collection)
-            {
-                id = obj.Properties["processorID"].Value.ToString();
-                break;
-            }
-
-            return id;
-        }
+        [DllImport("kernel32.dll")]
+        private static extern void GetSystemInfo([MarshalAs(UnmanagedType.Struct)] ref SystemInfo lpSystemInfo);
 
         [DllImport("kernel32.dll")]
-        private static extern void GetSystemInfo([MarshalAs(UnmanagedType.Struct)] ref SYSTEM_INFO lpSystemInfo);
-
-        [DllImport("kernel32.dll")]
-        private static extern void GetNativeSystemInfo([MarshalAs(UnmanagedType.Struct)] ref SYSTEM_INFO lpSystemInfo);
+        private static extern void GetNativeSystemInfo([MarshalAs(UnmanagedType.Struct)] ref SystemInfo lpSystemInfo);
 
         private static String? GetWmiPropertyValueAsString(String query, String property)
         {
-            SelectQuery selector = new SelectQuery(query);
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher(selector);
-            
-            foreach (ManagementBaseObject obj in searcher.Get())
+            if (query is null)
             {
-                if (obj is ManagementObject management)
-                {
-                    return management.Properties[property].Value.ToString();
-                }
+                throw new ArgumentNullException(nameof(query));
             }
 
-            return null;
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            SelectQuery selector = new SelectQuery(query);
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher(selector);
+            using ManagementObjectCollection collection = searcher.Get();
+
+            return collection.AsEnumerable().Select(management => management[property]).FirstOrDefault()?.ToString();
         }
         
         public static DateTime GetWmiPropertyValueAsDateTime(String query, String property)
         {
-            String? value = GetWmiPropertyValueAsString(query, property);
-
-            if (String.IsNullOrEmpty(value))
+            if (query is null)
             {
-                throw new ManagementException();
+                throw new ArgumentNullException(nameof(query));
             }
-            
-            return ManagementDateTimeConverter.ToDateTime(value);
+
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            String? value = GetWmiPropertyValueAsString(query, property);
+            return !String.IsNullOrEmpty(value) ? ManagementDateTimeConverter.ToDateTime(value) : throw new ManagementException();
         } 
         
         public static DateTime GetBootDateTime()
@@ -83,16 +72,21 @@ namespace NetExtender.Workstation
             return GetWmiPropertyValueAsDateTime("SELECT * FROM Win32_OperatingSystem WHERE Primary='true'", "LastBootUpTime");
         }
         
+        public static String? GetProcessorId()
+        {
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT processorID FROM win32_processor");
+            using ManagementObjectCollection collection = searcher.Get();
+            return collection.AsEnumerable().Select(management => management["processorID"]).FirstOrDefault()?.ToString();
+        }
+        
         public static ProcessorArchitecture GetProcessorBits()
         {
-            ProcessorArchitecture pbits = ProcessorArchitecture.Unknown;
-
             try
             {
-                SYSTEM_INFO lSystemInfo = new SYSTEM_INFO();
-                GetNativeSystemInfo(ref lSystemInfo);
+                SystemInfo info = new SystemInfo();
+                GetNativeSystemInfo(ref info);
 
-                pbits = lSystemInfo.uProcessorInfo.wProcessorArchitecture switch
+                return info.ProcessorInfo.Architecture switch
                 {
                     12 => ProcessorArchitecture.Arm64, // ARM64
                     9 => ProcessorArchitecture.Bit64, // AMD64
@@ -102,526 +96,293 @@ namespace NetExtender.Workstation
                     _ => ProcessorArchitecture.Unknown
                 };
             }
-            catch
+            catch (Exception)
             {
-                // Ignore        
+                return ProcessorArchitecture.Unknown;
             }
-
-            return pbits;
         }
 
-        /// <summary>
-        /// Retrieving HDD Serial Number.
-        /// </summary>
-        /// <returns></returns>
-        public static String GetHDDSerialNumber()
+        public static String? GetHDDSerialNumber()
         {
-            ManagementClass mangnmt = new ManagementClass("Win32_LogicalDisk");
-            ManagementObjectCollection mcol = mangnmt.GetInstances();
-            String result = String.Empty;
-            foreach (ManagementBaseObject strt in mcol)
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT VolumeSerialNumber FROM Win32_LogicalDisk");
+            using ManagementObjectCollection collection = searcher.Get();
+            
+            StringBuilder builder = new StringBuilder();
+            
+            foreach (ManagementBaseObject management in collection)
             {
-                result += Convert.ToString(strt["VolumeSerialNumber"]);
+                builder.Append(Convert.ToString(management["VolumeSerialNumber"]));
             }
 
-            return result;
+            return builder.Length > 0 ? builder.ToString() : null;
         }
 
-        /// <summary>
-        /// Retrieving System MAC Address.
-        /// </summary>
-        /// <returns></returns>
         public static String? GetMACAddress()
         {
-            ManagementObjectCollection collection = new ManagementClass("Win32_NetworkAdapterConfiguration").GetInstances();
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT IPEnabled, MacAddress FROM Win32_NetworkAdapterConfiguration");
+            using ManagementObjectCollection collection = searcher.Get();
+
+            return collection.AsEnumerable()
+                .Where(management => management["IPEnabled"] is Boolean ip && ip)
+                .Select(management => management["MacAddress"]).FirstOrDefault()?.ToString();
+        }
+
+        private static String? GetStringFromSearcher(String property, String table)
+        {
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher($"SELECT {property} FROM {table}");
+            using ManagementObjectCollection collection = searcher.Get();
             
-            String? mac = String.Empty;
-            foreach (ManagementObject management in collection.OfType<ManagementObject>())
-            {
-                if (mac.IsEmpty())
-                {
-                    if ((Boolean) management["IPEnabled"])
-                    {
-                        mac = management["MacAddress"].ToString();
-                    }
-                }
-
-                management.Dispose();
-            }
-
-            return mac;
+            return collection.AsEnumerable().TrySelect(management => management[property]).FirstOrDefault()?.ToString();
         }
 
-        /// <summary>
-        /// Retrieving Motherboard Manufacturer.
-        /// </summary>
-        /// <returns></returns>
-        public static String? GetBoardMaker()
+        public static String? GetMotherboardManufacturer()
         {
-            ManagementObjectSearcher searcher =
-                new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
-
-            foreach (ManagementBaseObject management in searcher.Get())
-            {
-                ManagementObject wmi = (ManagementObject) management;
-                
-                try
-                {
-                    return wmi.GetPropertyValue("Manufacturer").ToString();
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-            }
-
-            return null;
+            return GetStringFromSearcher("Manufacturer", "Win32_BaseBoard");
         }
 
-        /// <summary>
-        /// Retrieving Motherboard Product Id.
-        /// </summary>
-        /// <returns></returns>
-        public static String? GetBoardProductID()
+        public static String? GetMotherboardProductId()
         {
-            ManagementObjectSearcher searcher =
-                new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BaseBoard");
-
-            foreach (ManagementBaseObject wmi in searcher.Get())
-            {
-                try
-                {
-                    return wmi.GetPropertyValue("Product").ToString();
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-            }
-
-            return null;
+            return GetStringFromSearcher("Product", "Win32_BaseBoard");
         }
 
-        /// <summary>
-        /// Retrieving CD-DVD Drive Path.
-        /// </summary>
-        /// <returns></returns>
-        public static String? GetCDRomDrive()
+        public static String? GetDiskRomDrive()
         {
-            ManagementObjectSearcher searcher =
-                new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_CDROMDrive");
-
-            foreach (ManagementBaseObject wmi in searcher.Get())
-            {
-                try
-                {
-                    return wmi.GetPropertyValue("Drive").ToString();
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-            }
-
-            return null;
+            return GetStringFromSearcher("Drive", "Win32_CDROMDrive");
         }
 
-        /// <summary>
-        /// Retrieving BIOS Maker.
-        /// </summary>
-        /// <returns></returns>
-        public static String? GetBIOSMaker()
+        public static String? GetBIOSManufacturer()
         {
-            ManagementObjectSearcher searcher =
-                new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BIOS");
-
-            foreach (ManagementBaseObject wmi in searcher.Get())
-            {
-                try
-                {
-                    return wmi.GetPropertyValue("Manufacturer").ToString();
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-            }
-
-            return null;
+            return GetStringFromSearcher("Manufacturer", "Win32_BIOS");
         }
 
-        /// <summary>
-        /// Retrieving BIOS Serial Number.
-        /// </summary>
-        /// <returns></returns>
         public static String? GetBIOSSerialNumber()
         {
-            ManagementObjectSearcher searcher =
-                new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BIOS");
-
-            foreach (ManagementBaseObject wmi in searcher.Get())
-            {
-                try
-                {
-                    return wmi.GetPropertyValue("SerialNumber").ToString();
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-            }
-
-            return null;
+            return GetStringFromSearcher("SerialNumber", "Win32_BIOS");
         }
 
-        /// <summary>
-        /// Retrieving BIOS Caption.
-        /// </summary>
-        /// <returns></returns>
         public static String? GetBIOSCaption()
         {
-            ManagementObjectSearcher searcher =
-                new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BIOS");
-
-            foreach (ManagementBaseObject wmi in searcher.Get())
-            {
-                try
-                {
-                    return wmi.GetPropertyValue("Caption").ToString();
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-            }
-
-            return null;
+            return GetStringFromSearcher("Caption", "Win32_BIOS");
         }
 
-        /// <summary>
-        /// Retrieving System Account Name.
-        /// </summary>
-        /// <returns></returns>
         public static String? GetAccountName()
         {
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_UserAccount");
-
-            foreach (ManagementBaseObject wmi in searcher.Get())
-            {
-                try
-                {
-                    return wmi.GetPropertyValue("Name").ToString();
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-            }
-
-            return null;
+            return GetStringFromSearcher("Name", "Win32_UserAccount");
         }
 
-        /// <summary>
-        /// Retrieving Physical RAM Memory in bytes.
-        /// </summary>
-        /// <returns></returns>
         public static Int64 GetPhysicalMemory()
         {
-            ManagementScope scope = new ManagementScope();
-            ObjectQuery query = new ObjectQuery("SELECT Capacity FROM Win32_PhysicalMemory");
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
-            ManagementObjectCollection collection = searcher.Get();
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT Capacity FROM Win32_PhysicalMemory");
+            using ManagementObjectCollection collection = searcher.Get();
 
-            Int64 memSize = 0;
-
-            // In case more than one Memory sticks are installed
-            foreach (ManagementBaseObject obj in collection)
-            {
-                Int64 mCap = Convert.ToInt64(obj["Capacity"]);
-                memSize += mCap;
-            }
-
-            return memSize;
+            return collection.AsEnumerable().TrySelect(management => Convert.ToInt64(management["Capacity"])).Sum();
         }
 
-        /// <summary>
-        /// Retrieving Number of RAM Slot on Motherboard.
-        /// </summary>
-        /// <returns></returns>
         public static Int32 GetRAMSlots()
         {
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT MemoryDevices FROM Win32_PhysicalMemoryArray");
+            using ManagementObjectCollection collection = searcher.Get();
+            
             Int32 slots = 0;
-            
-            ManagementScope scope = new ManagementScope();
-            ObjectQuery query = new ObjectQuery("SELECT MemoryDevices FROM Win32_PhysicalMemoryArray");
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
-            ManagementObjectCollection collection = searcher.Get();
-            
-            foreach (ManagementBaseObject obj in collection)
+            foreach (ManagementBaseObject management in collection)
             {
-                slots = Convert.ToInt32(obj["MemoryDevices"]);
+                slots = Convert.ToInt32(management["MemoryDevices"]);
             }
 
             return slots;
         }
 
-        //Get CPU Temprature.
-        /// <summary>
-        /// method for retrieving the CPU Manufacturer
-        /// using the WMI class
-        /// </summary>
-        /// <returns>CPU Manufacturer</returns>
         public static String? GetCPUManufacturer()
         {
-            //create an instance of the Managemnet class with the
-            //Win32_Processor class
-            ManagementClass mgmt = new ManagementClass("Win32_Processor");
-            //create a ManagementObjectCollection to loop through
-            ManagementObjectCollection collection = mgmt.GetInstances();
-            
-            String? cpu = String.Empty;
-            //start our loop for all processors found
-            foreach (ManagementBaseObject management in collection)
-            {
-                if (cpu.IsEmpty())
-                {
-                    // only return manufacturer from first CPU
-                    cpu = management.Properties["Manufacturer"].Value.ToString();
-                }
-            }
-
-            return cpu;
+            return GetStringFromSearcher("Manufacturer", "Win32_Processor");
         }
 
-        /// <summary>
-        /// method to retrieve the CPU's current
-        /// clock speed using the WMI class
-        /// </summary>
-        /// <returns>Clock speed</returns>
-        public static Int32 GetCPUCurrentClockSpeed()
+        public static Int32? GetCPUCurrentClockSpeed()
         {
-            Int32 cpuClockSpeed = 0;
-            //create an instance of the Managemnet class with the
-            //Win32_Processor class
-            ManagementClass mgmt = new ManagementClass("Win32_Processor");
-            //create a ManagementObjectCollection to loop through
-            ManagementObjectCollection objCol = mgmt.GetInstances();
-            //start our loop for all processors found
-            foreach (ManagementBaseObject obj in objCol)
-            {
-                if (cpuClockSpeed == 0)
-                {
-                    // only return cpuStatus from first CPU
-                    cpuClockSpeed = Convert.ToInt32(obj.Properties["CurrentClockSpeed"].Value.ToString());
-                }
-            }
-
-            //return the status
-            return cpuClockSpeed;
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT CurrentClockSpeed FROM Win32_Processor");
+            using ManagementObjectCollection collection = searcher.Get();
+            
+            return collection.AsEnumerable().TrySelect(management => (Int32?) Convert.ToInt32(management["CurrentClockSpeed"])).FirstOrDefault();
         }
 
-        /// <summary>
-        /// method to retrieve the network adapters
-        /// default IP gateway using WMI
-        /// </summary>
-        /// <returns>adapters default IP gateway</returns>
         public static String? GetDefaultIPGateway()
         {
-            //create out management class object using the
-            //Win32_NetworkAdapterConfiguration class to get the attributes
-            //of the network adapter
-            ManagementClass mgmt = new ManagementClass("Win32_NetworkAdapterConfiguration");
-            //create our ManagementObjectCollection to get the attributes with
-            ManagementObjectCollection collection = mgmt.GetInstances();
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT IPEnabled, DefaultIPGateway FROM Win32_NetworkAdapterConfiguration");
+            using ManagementObjectCollection collection = searcher.Get();
             
-            String? gateway = String.Empty;
-            
-            //loop through all the objects we find
-            foreach (ManagementBaseObject management in collection)
-            {
-                if (gateway.IsEmpty()) // only return MAC Address from first card
-                {
-                    //grab the value from the first network adapter we find
-                    //you can change the string to an array and get all
-                    //network adapters found as well
-                    //check to see if the adapter's IPEnabled
-                    //equals true
-                    if ((Boolean) management["IPEnabled"])
-                    {
-                        gateway = management["DefaultIPGateway"].ToString();
-                    }
-                }
-
-                //dispose of our object
-                management.Dispose();
-            }
-
-            //return the mac address
-            return gateway?.Replace(":", String.Empty);
+            return collection.AsEnumerable()
+                .Where(management => management["IPEnabled"] is Boolean ip && ip)
+                .Select(management => management["DefaultIPGateway"]).FirstOrDefault()?.ToString();
         }
 
-        /// <summary>
-        /// Retrieve CPU Speed.
-        /// </summary>
-        /// <returns></returns>
-        public static Double? GetCPUSpeedInGHz()
+        public static UInt32? GetCPUSpeedInMHz()
         {
-            Double? gHz = null;
-            using ManagementClass mc = new ManagementClass("Win32_Processor");
-            foreach (ManagementBaseObject mo in mc.GetInstances())
-            {
-                gHz = 0.001 * (UInt32) mo.Properties["CurrentClockSpeed"].Value;
-                break;
-            }
-
-            return gHz;
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT CurrentClockSpeed FROM Win32_Processor");
+            using ManagementObjectCollection collection = searcher.Get();
+            
+            return collection.AsEnumerable().TrySelect(management => (UInt32?) Convert.ToUInt32(management["CurrentClockSpeed"])).FirstOrDefault();
         }
 
-        /// <summary>
-        /// Retrieving Current Language
-        /// </summary>
-        /// <returns></returns>
         public static String? GetCurrentLanguage()
         {
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("root\\CIMV2", "SELECT * FROM Win32_BIOS");
-
-            foreach (ManagementBaseObject wmi in searcher.Get())
-            {
-                try
-                {
-                    return wmi.GetPropertyValue("CurrentLanguage").ToString();
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-            }
-
-            return null;
+            return GetStringFromSearcher("CurrentLanguage", "Win32_BIOS");
         }
 
-        /// <summary>
-        /// Retrieving Current Language.
-        /// </summary>
-        /// <returns></returns>
-        public static String? GetOSInformation()
-        {
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_OperatingSystem");
-
-            foreach (ManagementBaseObject wmi in searcher.Get())
-            {
-                try
-                {
-                    return ((String) wmi["Caption"]).Trim() + ", " + (String) wmi["Version"] + ", " + (String) wmi["OSArchitecture"];
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Retrieving Processor Information.
-        /// </summary>
-        /// <returns></returns>
         public static String? GetProcessorInformation()
         {
-            String? info = null;
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT Name, Caption, SocketDesignation FROM Win32_Processor");
+            using ManagementObjectCollection collection = searcher.Get();
             
-            ManagementClass mc = new ManagementClass("win32_processor");
-            ManagementObjectCollection moc = mc.GetInstances();
-            
-            foreach (ManagementBaseObject obj in moc)
+            StringBuilder result = new StringBuilder();
+            foreach (ManagementBaseObject management in collection)
             {
-                String name = (String) obj["Name"];
-                name = name.Replace("(TM)", "™").Replace("(tm)", "™").Replace("(R)", "®").Replace("(r)", "®")
-                    .Replace("(C)", "©").Replace("(c)", "©").Replace("    ", " ").Replace("  ", " ");
+                String? name = management["Name"].ToString()?
+                    .Replace("(TM)", "™", StringComparison.OrdinalIgnoreCase)
+                    .Replace("(R)", "®", StringComparison.OrdinalIgnoreCase)
+                    .Replace("(C)", "©", StringComparison.OrdinalIgnoreCase)
+                    .Replace("    ", " ").Replace("  ", " ");
 
-                info = name + ", " + (String) obj["Caption"] + ", " + (String) obj["SocketDesignation"];
-                //mo.Properties["Name"].Value.ToString();
-                //break;
+                result.Append(name);
+                result.Append(", ".Join(management["Caption"], management["SocketDesignation"]));
             }
 
-            return info;
+            return result.Length > 0 ? result.ToString() : null;
         }
 
-        public static IOrderedEnumerable<HardwareDiskInfo> GetDisks()
+        internal static PhysicalDriveInfo GetPhysicalDrive(ManagementBaseObject management)
         {
-            ManagementScope scope = new ManagementScope(@"\\.\root\microsoft\windows\storage");
-            
-            using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM MSFT_PhysicalDisk");
-            
-            scope.Connect();
-            
-            searcher.Scope = scope;
+            if (management is null)
+            {
+                throw new ArgumentNullException(nameof(management));
+            }
 
-            return searcher.Get().OfType<ManagementBaseObject>()
-                .Select(disk => new HardwareDiskInfo(
-                    Convert.ToUInt16(disk["UniqueIdFormat"]), Convert.ToString(disk["DeviceId"]),
-                    Convert.ToString(disk["FriendlyName"]), Convert.ToString(disk["Description"]),
-                    Convert.ToUInt16(disk["MediaType"]), Convert.ToUInt64(disk["Size"]),
-                    Convert.ToUInt64(disk["AllocatedSize"]), Convert.ToUInt16(disk["BusType"]),
-                    Convert.ToUInt64(disk["PhysicalSectorSize"]), Convert.ToUInt64(disk["LogicalSectorSize"]),
-                    Convert.ToUInt32(disk["SpindleSpeed"])))
-                .OrderBy(disk => disk.DeviceID);
+            return new PhysicalDriveInfo
+            {
+                UniqueIdFormat = management.TryGetValue(nameof(PhysicalDriveInfo.UniqueIdFormat), out UInt16 id) ? id : null,
+                DeviceId = management.TryGetValue(nameof(PhysicalDriveInfo.DeviceId), out String? deviceid) ? deviceid : null,
+                FriendlyName = management.TryGetValue(nameof(PhysicalDriveInfo.FriendlyName), out String? friendlyname) ? friendlyname : null,
+                Description = management.TryGetValue(nameof(PhysicalDriveInfo.Description), out String? description) ? description : null,
+                MediaType = management.TryGetValue(nameof(PhysicalDriveInfo.MediaType), out HardwareDriveType mediatype) ? mediatype : null,
+                Size = management.TryGetValue(nameof(PhysicalDriveInfo.Size), out UInt64 size) ? size : null,
+                AllocatedSize = management.TryGetValue(nameof(PhysicalDriveInfo.AllocatedSize), out UInt64 allocatesize) ? allocatesize : null,
+                BusType = management.TryGetValue(nameof(PhysicalDriveInfo.BusType), out BusType bustype) ? bustype : null,
+                PhysicalSectorSize = management.TryGetValue(nameof(PhysicalDriveInfo.PhysicalSectorSize), out UInt64 physicalsectorsize) ? physicalsectorsize : null,
+                LogicalSectorSize = management.TryGetValue(nameof(PhysicalDriveInfo.LogicalSectorSize), out UInt64 logicalsectorsize) ? logicalsectorsize : null,
+                SpindleSpeed = management.TryGetValue(nameof(PhysicalDriveInfo.SpindleSpeed), out UInt32 spindlespeed) ? spindlespeed : null
+            };
         }
         
-        /// <summary>
-        /// Retrieving Computer Name.
-        /// </summary>
-        /// <returns></returns>
+        public static PhysicalDriveInfo[] GetPhysicalDrives()
+        {
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher(@"\\.\root\microsoft\windows\storage", "SELECT * FROM MSFT_PhysicalDisk");
+            using ManagementObjectCollection collection = searcher.Get();
+
+            return collection.AsEnumerable().Select(GetPhysicalDrive).ToArray();
+        }
+
+        internal static HardwareDriveInfo GetHardwareDrive(ManagementBaseObject management)
+        {
+            if (management is null)
+            {
+                throw new ArgumentNullException(nameof(management));
+            }
+
+            return new HardwareDriveInfo
+            {
+                DeviceId = management.TryGetValue(nameof(HardwareDriveInfo.DeviceId), out String? deviceid) ? deviceid : null,
+                Name = management.TryGetValue(nameof(HardwareDriveInfo.Name), out String? name) ? name : null,
+                Index = management.TryGetValue(nameof(HardwareDriveInfo.Index), out UInt32 index) ? index : null,
+                Model = management.TryGetValue(nameof(HardwareDriveInfo.Model), out String? model) ? model : null,
+                Caption = management.TryGetValue(nameof(HardwareDriveInfo.Caption), out String? caption) ? caption : null,
+                Description = management.TryGetValue(nameof(HardwareDriveInfo.Description), out String? description) ? description : null,
+                InterfaceType = management.TryGetValue(nameof(HardwareDriveInfo.InterfaceType), out BusType interfacetype) ? interfacetype : null,
+                Manufacturer = management.TryGetValue(nameof(HardwareDriveInfo.Manufacturer), out String? manufacturer) ? manufacturer : null,
+                MediaType = management.TryGetValue(nameof(HardwareDriveInfo.MediaType), out String? mediatype) ? mediatype : null,
+                SerialNumber = management.TryGetValue(nameof(HardwareDriveInfo.SerialNumber), out String? serialnumber) ? serialnumber.Trim() : null,
+                FirmwareRevision = management.TryGetValue(nameof(HardwareDriveInfo.FirmwareRevision), out String? firmwarerevision) ? firmwarerevision : null,
+                Size = management.TryGetValue(nameof(HardwareDriveInfo.Size), out UInt64 size) ? size : null,
+                Partitions = management.TryGetValue(nameof(HardwareDriveInfo.Partitions), out UInt32 partitions) ? partitions : null,
+                TotalHeads = management.TryGetValue(nameof(HardwareDriveInfo.TotalHeads), out UInt32 totalheads) ? totalheads : null,
+                TotalCylinders = management.TryGetValue(nameof(HardwareDriveInfo.TotalCylinders), out UInt32 totalcylinders) ? totalcylinders : null,
+                TotalTracks = management.TryGetValue(nameof(HardwareDriveInfo.TotalTracks), out UInt32 totaltracks) ? totaltracks : null,
+                TotalSectors = management.TryGetValue(nameof(HardwareDriveInfo.TotalSectors), out UInt32 totalsectors) ? totalsectors : null,
+                TracksPerCylinder = management.TryGetValue(nameof(HardwareDriveInfo.TracksPerCylinder), out UInt32 trackspercylinder) ? trackspercylinder : null,
+                SectorsPerTrack = management.TryGetValue(nameof(HardwareDriveInfo.SectorsPerTrack), out UInt32 sectorspertrack) ? sectorspertrack : null,
+                BytesPerSector = management.TryGetValue(nameof(HardwareDriveInfo.BytesPerSector), out UInt32 bytespersector) ? bytespersector : null,
+                InstallDate = management.TryGetValue(nameof(HardwareDriveInfo.InstallDate), out DateTime? installdate) ? installdate : null
+            };
+        }
+
+        public static HardwareDriveInfo[] GetHardwareDrives()
+        {
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive");
+            using ManagementObjectCollection collection = searcher.Get();
+
+            return collection.AsEnumerable().Select(GetHardwareDrive).ToArray();
+        }
+
+        internal static LogicalDriveInfo GetLogicalDrive(ManagementBaseObject management)
+        {
+            if (management is null)
+            {
+                throw new ArgumentNullException(nameof(management));
+            }
+
+            return new LogicalDriveInfo
+            {
+                DeviceId = management.TryGetValue(nameof(LogicalDriveInfo.DeviceId), out String? deviceid) ? deviceid : null,
+                Name = management.TryGetValue(nameof(LogicalDriveInfo.Name), out String? name) ? name : null,
+                Caption = management.TryGetValue(nameof(LogicalDriveInfo.Caption), out String? caption) ? caption : null,
+                Description = management.TryGetValue(nameof(LogicalDriveInfo.Description), out String? description) ? description : null,
+                DriveType = management.TryGetValue(nameof(LogicalDriveInfo.DriveType), out DriveType drivetype) ? drivetype : null,
+                FileSystem = management.TryGetValue(nameof(LogicalDriveInfo.FileSystem), out String? filesystem) ? filesystem : null,
+                Size = management.TryGetValue(nameof(LogicalDriveInfo.Size), out UInt64 size) ? size : null,
+                VolumeName = management.TryGetValue(nameof(LogicalDriveInfo.VolumeName), out String? volumename) ? volumename : null,
+                VolumeSerialNumber = management.TryGetValue(nameof(LogicalDriveInfo.VolumeSerialNumber), out String? volumeserialnumber) ? volumeserialnumber : null
+            };
+        }
+
+        public static LogicalDriveInfo[] GetLogicalDrives()
+        {
+            return GetLogicalDrives(null);
+        }
+
+        public static LogicalDriveInfo[] GetLogicalDrives(params Char[]? letter)
+        {
+            if (letter is not null && letter.Length <= 0)
+            {
+                return Array.Empty<LogicalDriveInfo>();
+            }
+            
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher(letter is not null ? $"SELECT * FROM Win32_LogicalDisk WHERE {letter.Select(character => $"DeviceId='{Char.ToUpperInvariant(character)}:'").Distinct().Join(" OR ")}" : "SELECT * FROM Win32_LogicalDisk");
+            using ManagementObjectCollection collection = searcher.Get();
+
+            return collection.AsEnumerable().Select(GetLogicalDrive).ToArray();
+        }
+
         public static String? GetComputerName()
         {
-            String? info = null;
-            
-            ManagementClass management = new ManagementClass("Win32_ComputerSystem");
-            ManagementObjectCollection collection = management.GetInstances();
-            
-            foreach (ManagementBaseObject obj in collection)
-            {
-                info = obj["Name"].ToString();
-            }
-
-            return info;
+            return GetStringFromSearcher("Name", "Win32_ComputerSystem");
         }
         
-        /// <summary>
-        /// Returns the MAC (Media Access Control or physical address) for the first currently active (can transmit data packets) network interface (adapter) on the local computer.
-        /// <para>If you want a <see cref="PhysicalAddress"/>, call <see cref="GetPhysicalAddress"/>.</para>
-        /// </summary>
         public static String? GetMacAddress()
         {
             return GetPhysicalAddress()?.ToString();
         }
 
-        /// <summary>
-        /// Returns the physical address (or Media Access Control (MAC)) for the first currently active (can transmit data packets) network interface (adapter) on the local computer.
-        /// <para>If you want a string, call <see cref="GetMacAddress"/>.</para>
-        /// </summary>
         public static PhysicalAddress? GetPhysicalAddress()
         {
             return GetNetworkInterface()?.GetPhysicalAddress();
         }
 
-        /// <summary>
-        /// Returns the first currently active (can transmit data packets) network interface (adapter) on the local computer.
-        /// </summary>
         public static NetworkInterface? GetNetworkInterface()
         {
             return GetNetworkInterfaces().FirstOrDefault();
         }
 
-        /// <summary>
-        /// Returns the currently active (can transmit data packets) network interfaces (adapters) on the local computer.
-        /// </summary>
         public static IEnumerable<NetworkInterface> GetNetworkInterfaces()
         {
-            return NetworkInterface.GetAllNetworkInterfaces()
-                .Where(ni => ni.OperationalStatus == OperationalStatus.Up
-                             && ni.NetworkInterfaceType != NetworkInterfaceType.Loopback);
+            return NetworkInterface.GetAllNetworkInterfaces().Where(network => network.OperationalStatus == OperationalStatus.Up && network.NetworkInterfaceType != NetworkInterfaceType.Loopback);
         }
     }
 }

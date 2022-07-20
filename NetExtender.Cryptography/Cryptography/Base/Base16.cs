@@ -9,15 +9,15 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using NetExtender.Crypto.Base.Alphabet;
-using NetExtender.Crypto.Base.Common;
+using NetExtender.Cryptography.Base.Alphabet;
+using NetExtender.Cryptography.Base.Common;
 
-namespace NetExtender.Crypto.Base
+namespace NetExtender.Cryptography.Base
 {
     /// <summary>
     /// Base16 encoding/decoding.
     /// </summary>
-    public sealed class Base16 : BaseCryptStream
+    public sealed class Base16 : BaseCryptographyStream
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Base16"/> class.

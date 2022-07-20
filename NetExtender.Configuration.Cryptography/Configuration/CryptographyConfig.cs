@@ -10,8 +10,8 @@ using NetExtender.Configuration.Cryptography.Behavior.Interfaces;
 using NetExtender.Configuration.Cryptography.Common;
 using NetExtender.Configuration.Cryptography.Common.Interfaces;
 using NetExtender.Configuration.Cryptography.Interfaces;
-using NetExtender.Crypto;
-using NetExtender.Crypto.CryptKey.Interfaces;
+using NetExtender.Cryptography.Keys.Interfaces;
+using NetExtender.Utilities.Cryptography;
 
 namespace NetExtender.Configuration.Cryptography
 {

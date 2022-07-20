@@ -11,7 +11,7 @@ using System.IO;
 using System.Threading.Tasks;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Crypto.Base.Common
+namespace NetExtender.Cryptography.Base.Common
 {
     /// <summary>
     /// Provides Stream functionality to any buffer-based encoding operation.

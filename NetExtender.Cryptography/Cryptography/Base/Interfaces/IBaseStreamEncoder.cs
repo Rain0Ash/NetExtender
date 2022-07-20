@@ -9,7 +9,7 @@
 using System.IO;
 using System.Threading.Tasks;
 
-namespace NetExtender.Crypto.Base.Interfaces
+namespace NetExtender.Cryptography.Base.Interfaces
 {
     /// <summary>
     /// Stream-based encoding functionality.

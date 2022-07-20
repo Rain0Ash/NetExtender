@@ -8,7 +8,7 @@
 
 using System;
 
-namespace NetExtender.Crypto.Base.Interfaces
+namespace NetExtender.Cryptography.Base.Interfaces
 {
     /// <summary>
     /// Efficient encoding functionality using pre-allocated memory buffers by the callers.

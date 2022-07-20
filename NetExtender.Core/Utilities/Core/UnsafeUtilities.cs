@@ -52,19 +52,37 @@ namespace NetExtender.Utilities.Core
         {
             return Unsafe.ReadUnaligned<T>(ref source);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Fill(void* destination, Int32 length)
+        {
+            Fill(destination, length >= 0 ? (UInt32) length : 0);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void Fill(void* destination, UInt32 length)
         {
             Fill(destination, Byte.MinValue, length);
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Fill(void* destination, Boolean value, Int32 length)
+        {
+            Fill(destination, value, length >= 0 ? (UInt32) length : 0);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void Fill(void* destination, Boolean value, UInt32 length)
         {
             Unsafe.InitBlock(destination, value ? Byte.MaxValue : Byte.MinValue, length);
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Fill(void* destination, Byte value, Int32 length)
+        {
+            Fill(destination, value, length >= 0 ? (UInt32) length : 0);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void Fill(void* destination, Byte value, UInt32 length)
         {
@@ -72,17 +90,35 @@ namespace NetExtender.Utilities.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Fill(ref Byte start, Int32 length)
+        {
+            Fill(ref start, length >= 0 ? (UInt32) length : 0);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Fill(ref Byte start, UInt32 length)
         {
             Fill(ref start, Byte.MinValue, length);
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Fill(ref Byte start, Boolean value, Int32 length)
+        {
+            Fill(ref start, value, length >= 0 ? (UInt32) length : 0);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Fill(ref Byte start, Boolean value, UInt32 length)
         {
             Unsafe.InitBlock(ref start, value ? Byte.MaxValue : Byte.MinValue, length);
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void Fill(ref Byte start, Byte value, Int32 length)
+        {
+            Fill(ref start, value, length >= 0 ? (UInt32) length : 0);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Fill(ref Byte start, Byte value, UInt32 length)
         {
@@ -90,17 +126,35 @@ namespace NetExtender.Utilities.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void FillUnaligned(void* destination, Int32 length)
+        {
+            FillUnaligned(destination, length >= 0 ? (UInt32) length : 0);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void FillUnaligned(void* destination, UInt32 length)
         {
             FillUnaligned(destination, Byte.MinValue, length);
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void FillUnaligned(void* destination, Boolean value, Int32 length)
+        {
+            FillUnaligned(destination, value, length >= 0 ? (UInt32) length : 0);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void FillUnaligned(void* destination, Boolean value, UInt32 length)
         {
             Unsafe.InitBlockUnaligned(destination, value ? Byte.MaxValue : Byte.MinValue, length);
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void FillUnaligned(void* destination, Byte value, Int32 length)
+        {
+            FillUnaligned(destination, value, length >= 0 ? (UInt32) length : 0);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void FillUnaligned(void* destination, Byte value, UInt32 length)
         {
@@ -108,17 +162,35 @@ namespace NetExtender.Utilities.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void FillUnaligned(ref Byte start, Int32 length)
+        {
+            FillUnaligned(ref start, length >= 0 ? (UInt32) length : 0);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void FillUnaligned(ref Byte start, UInt32 length)
         {
             FillUnaligned(ref start, Byte.MinValue, length);
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void FillUnaligned(ref Byte start, Boolean value, Int32 length)
+        {
+            FillUnaligned(ref start, value, length >= 0 ? (UInt32) length : 0);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void FillUnaligned(ref Byte start, Boolean value, UInt32 length)
         {
             Unsafe.InitBlock(ref start, value ? Byte.MaxValue : Byte.MinValue, length);
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void FillUnaligned(ref Byte start, Byte value, Int32 length)
+        {
+            FillUnaligned(ref start, value, length >= 0 ? (UInt32) length : 0);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void FillUnaligned(ref Byte start, Byte value, UInt32 length)
         {
@@ -126,9 +198,27 @@ namespace NetExtender.Utilities.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Fill<T>(void* destination, Int32 count)
+        {
+            if (count >= 0)
+            {
+                Fill<T>(destination, (UInt32) count);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void Fill<T>(void* destination, UInt32 count)
         {
             Fill<T>(destination, default, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void Fill<T>(void* destination, T? value, Int32 count)
+        {
+            if (count >= 0)
+            {
+                Fill(destination, value, (UInt32) count);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -184,9 +274,21 @@ namespace NetExtender.Utilities.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void CopyBlock(void* destination, void* source, Int32 length)
+        {
+            CopyBlock(destination, source, length >= 0 ? (UInt32) length : 0);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void CopyBlock(void* destination, void* source, UInt32 length)
         {
             Unsafe.CopyBlock(destination, source, length);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void CopyBlock(ref Byte destination, ref Byte source, Int32 length)
+        {
+            CopyBlock(ref destination, ref source, length >= 0 ? (UInt32) length : 0);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -196,9 +298,21 @@ namespace NetExtender.Utilities.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void CopyBlockUnaligned(void* destination, void* source, Int32 length)
+        {
+            CopyBlockUnaligned(destination, source, length >= 0 ? (UInt32) length : 0);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void CopyBlockUnaligned(void* destination, void* source, UInt32 length)
         {
             Unsafe.CopyBlockUnaligned(destination, source, length);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void CopyBlockUnaligned(ref Byte destination, ref Byte source, Int32 length)
+        {
+            CopyBlockUnaligned(ref destination, ref source, length >= 0 ? (UInt32) length : 0);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -208,9 +322,21 @@ namespace NetExtender.Utilities.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void InitBlock(void* destination, Byte value, Int32 length)
+        {
+            InitBlock(destination, value, length >= 0 ? (UInt32) length : 0);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void InitBlock(void* destination, Byte value, UInt32 length)
         {
             Unsafe.InitBlock(destination, value, length);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void InitBlock(ref Byte destination, Byte value, Int32 length)
+        {
+            InitBlock(ref destination, value, length >= 0 ? (UInt32) length : 0);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -220,9 +346,21 @@ namespace NetExtender.Utilities.Core
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void InitBlockUnaligned(void* destination, Byte value, Int32 length)
+        {
+            InitBlockUnaligned(destination, value, length >= 0 ? (UInt32) length : 0);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void InitBlockUnaligned(void* destination, Byte value, UInt32 length)
         {
             Unsafe.InitBlockUnaligned(destination, value, length);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void InitBlockUnaligned(ref Byte destination, Byte value, Int32 length)
+        {
+            InitBlockUnaligned(ref destination, value, length >= 0 ? (UInt32) length : 0);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -230,13 +368,25 @@ namespace NetExtender.Utilities.Core
         {
             Unsafe.InitBlockUnaligned(ref destination, value, length);
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void SwapBlock(void* destination, void* source, Int32 length)
+        {
+            SwapBlock(destination, source, length >= 0 ? (UInt32) length : 0);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void SwapBlock(void* destination, void* source, UInt32 length)
         {
             SwapBlock(destination, source, length, 0);
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void SwapBlock(void* destination, void* source, Int32 length, Int32 stackbuffer)
+        {
+            SwapBlock(destination, source, length >= 0 ? (UInt32) length : 0, stackbuffer);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static unsafe void SwapBlock(void* destination, void* source, UInt32 length, Int32 stackbuffer)
         {
@@ -253,6 +403,12 @@ namespace NetExtender.Utilities.Core
             };
             
             SwapBlock(destination, source, length, buffer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void SwapBlock(void* destination, void* source, Int32 length, Span<Byte> buffer)
+        {
+            SwapBlock(destination, source, length >= 0 ? (UInt32) length : 0, buffer);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -296,13 +452,25 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void SwapBlockUnaligned(void* destination, void* source, Int32 length)
+        {
+            SwapBlockUnaligned(destination, source, length >= 0 ? (UInt32) length : 0);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void SwapBlockUnaligned(void* destination, void* source, UInt32 length)
         {
             SwapBlockUnaligned(destination, source, length, 0);
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void SwapBlockUnaligned(void* destination, void* source, Int32 length, Int32 stackbuffer)
+        {
+            SwapBlockUnaligned(destination, source, length >= 0 ? (UInt32) length : 0, stackbuffer);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static unsafe void SwapBlockUnaligned(void* destination, void* source, UInt32 length, Int32 stackbuffer)
         {
@@ -319,6 +487,12 @@ namespace NetExtender.Utilities.Core
             };
             
             SwapBlockUnaligned(destination, source, length, buffer);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static unsafe void SwapBlockUnaligned(void* destination, void* source, Int32 length, Span<Byte> buffer)
+        {
+            SwapBlockUnaligned(destination, source, length >= 0 ? (UInt32) length : 0, buffer);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -660,7 +834,7 @@ namespace NetExtender.Utilities.Core
             [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
             private delegate void UnmanagedCallback();
 
-            private static UnmanagedCallback SegfaultDelegate { get; } = (UnmanagedCallback) Marshal.GetDelegateForFunctionPointer((IntPtr) 1, typeof(UnmanagedCallback));
+            private static UnmanagedCallback? SegfaultDelegate { get; } = (UnmanagedCallback) Marshal.GetDelegateForFunctionPointer((IntPtr) 1, typeof(UnmanagedCallback));
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public static void Crash()

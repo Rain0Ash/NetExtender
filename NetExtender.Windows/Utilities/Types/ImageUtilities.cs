@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Crypto;
+using NetExtender.Utilities.Cryptography;
 
 namespace NetExtender.Utilities.Types
 {
@@ -68,6 +68,23 @@ namespace NetExtender.Utilities.Types
                 _ => ImageType.Unknown
             };
         }
+        
+        public static Bitmap? ToBitmap(this Image? image)
+        {
+            if (image is null)
+            {
+                return null;
+            }
+            
+            try
+            {
+                return new Bitmap(image);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
 
         public static MemoryStream ToStream(this Image image, ImageFormat format)
         {
@@ -119,7 +136,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static Bitmap GetResizedImage(String path, Size bounds)
+        public static Bitmap ResizeImage(String path, Size bounds)
         {
             if (path is null)
             {
@@ -127,10 +144,10 @@ namespace NetExtender.Utilities.Types
             }
 
             using Bitmap bitmap = new Bitmap(path);
-            return GetResizedImage(bitmap, bounds);
+            return ResizeImage(bitmap, bounds);
         }
 
-        public static Bitmap GetResizedImage(Bitmap image, Size bounds)
+        public static Bitmap ResizeImage(this Bitmap image, Size bounds)
         {
             if (image is null)
             {
@@ -491,7 +508,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(image));
             }
 
-            Rectangle destRect = new Rectangle(0, 0, width, height);
+            Rectangle rectangle = new Rectangle(0, 0, width, height);
             Bitmap destination = new Bitmap(width, height);
 
             destination.SetResolution(image.HorizontalResolution, image.VerticalResolution);
@@ -507,7 +524,7 @@ namespace NetExtender.Utilities.Types
             using ImageAttributes attributes = new ImageAttributes();
 
             attributes.SetWrapMode(WrapMode.TileFlipXY);
-            graphics.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, attributes);
+            graphics.DrawImage(image, rectangle, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, attributes);
 
             return destination;
         }
@@ -611,7 +628,7 @@ namespace NetExtender.Utilities.Types
 
         public static Byte[] Hashing(this Image image)
         {
-            return Hashing(image, Cryptography.DefaultHashType);
+            return Hashing(image, CryptographyUtilities.DefaultHashType);
         }
 
         public static Byte[] Hashing(this Image image, HashType type)
@@ -633,7 +650,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Hashing(this Image image, Span<Byte> destination)
         {
-            return Hashing(image, destination, Cryptography.DefaultHashType);
+            return Hashing(image, destination, CryptographyUtilities.DefaultHashType);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -645,7 +662,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Hashing(this Image image, Span<Byte> destination, out Int32 written)
         {
-            return Hashing(image, destination, Cryptography.DefaultHashType, out written);
+            return Hashing(image, destination, CryptographyUtilities.DefaultHashType, out written);
         }
 
         public static unsafe Boolean Hashing(this Image image, Span<Byte> destination, HashType type, out Int32 written)

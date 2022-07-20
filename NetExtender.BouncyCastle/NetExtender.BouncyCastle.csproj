@@ -22,10 +22,11 @@
 
     <ItemGroup>
       <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
+      <ProjectReference Include="..\NetExtender.Cryptography\NetExtender.Cryptography.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="BouncyCastle.NetCore" Version="1.8.10" />
+      <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
     </ItemGroup>
 
 </Project>

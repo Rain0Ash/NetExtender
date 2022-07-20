@@ -181,7 +181,7 @@ namespace NetExtender.Types.Dictionaries
                 throw new ArgumentNullException(nameof(key));
             }
 
-            if (TryGetValue(key, out ImmutableHashSet<TValue>? result) && result?.Count > 0)
+            if (TryGetValue(key, out ImmutableHashSet<TValue>? result) && result.Count > 0)
             {
                 value = result.First();
                 return true;

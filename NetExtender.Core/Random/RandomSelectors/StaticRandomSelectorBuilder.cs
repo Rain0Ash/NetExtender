@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using NetExtender.Random.Interfaces;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Utilities.Numerics;
@@ -13,20 +14,19 @@ namespace NetExtender.Random
 {
     public class RandomSelectorBuilder<T> : RandomSelector<T>, IRandomDictionarySelectorBuilder<T> where T : notnull
     {
-        public const Int32 DefaultCapacity = 32;
-        
-        Boolean ICollection<KeyValuePair<T, Double>>.IsReadOnly
+        protected const Int32 DefaultCapacity = 4;
+        protected IRandom Random { get; set; }
+        protected IndexDictionary<T, Double> Items { get; }
+
+        public override IReadOnlyCollection<T> Collection
         {
             get
             {
-                return Items.IsReadOnly();
+                return Items.Keys;
             }
         }
-        
-        protected IRandom Random { get; set; }
-        protected IndexDictionary<T, Double> Items { get; }
-        
-        public Int32 Count
+
+        public sealed override Int32 Count
         {
             get
             {
@@ -47,6 +47,30 @@ namespace NetExtender.Random
             get
             {
                 return Items.Values;
+            }
+        }
+
+        IEnumerable<T> IReadOnlyDictionary<T, Double>.Keys
+        {
+            get
+            {
+                return Keys;
+            }
+        }
+
+        IEnumerable<Double> IReadOnlyDictionary<T, Double>.Values
+        {
+            get
+            {
+                return Values;
+            }
+        }
+
+        Boolean ICollection<KeyValuePair<T, Double>>.IsReadOnly
+        {
+            get
+            {
+                return Items.IsReadOnly();
             }
         }
 
@@ -128,6 +152,11 @@ namespace NetExtender.Random
         public void TrimExcess(Int32 capacity)
         {
             Items.TrimExcess(capacity);
+        }
+
+        public Boolean Contains(T key)
+        {
+            return ContainsKey(key);
         }
 
         public Boolean ContainsKey(T key)
@@ -375,7 +404,7 @@ namespace NetExtender.Random
         {
             if (Items.Count <= 0)
             {
-                throw new InvalidOperationException("Cannot build with no items.");
+                return Default;
             }
             
             T[] items;
@@ -411,42 +440,6 @@ namespace NetExtender.Random
             return new StaticRandomSelectorBinary<T>(items, cda, seed);
         }
 
-        protected static RandomSelectorBuilder<T> StaticBuilder { get; } = new RandomSelectorBuilder<T>();
-
-        /// <summary>
-        /// non-instance based, Double threaded only. For ease of use. 
-        /// Build from array of items/weights.
-        /// </summary>
-        /// <param name="items">Array of items</param>
-        /// <param name="weights">Array of non-zero non-normalized weights. Have to be same length as itemsArray.</param>
-        /// <returns></returns>
-        public static IRandomSelector<T> Build(T[] items, Double[] weights)
-        {
-            for (Int32 i = 0; i < items.Length; i++)
-            {
-                StaticBuilder.Add(items[i], weights[i]);
-            }
-
-            return StaticBuilder.Build();
-        }
-
-        /// <summary>
-        /// non-instance based, Double threaded only. For ease of use. 
-        /// Build from array of items/weights.
-        /// </summary>
-        /// <param name="items">List of weights</param>
-        /// <param name="weights">List of non-zero non-normalized weights. Have to be same length as itemsList.</param>
-        /// <returns></returns>
-        public static IRandomSelector<T> Build(List<T> items, List<Double> weights)
-        {
-            for (Int32 i = 0; i < items.Count; i++)
-            {
-                StaticBuilder.Add(items[i], weights[i]);
-            }
-
-            return StaticBuilder.Build();
-        }
-        
         public void CopyTo(KeyValuePair<T, Double>[] array, Int32 arrayIndex)
         {
             Items.CopyTo(array, arrayIndex);
@@ -460,6 +453,33 @@ namespace NetExtender.Random
         public override T GetRandom(Double value)
         {
             return Build().GetRandom(value);
+        }
+
+        [return: NotNullIfNotNull("alternate")]
+        public override T? GetRandomOrDefault(T? alternate)
+        {
+            return Build().GetRandomOrDefault(alternate);
+        }
+        
+        [return: NotNullIfNotNull("alternate")]
+        public override T? GetRandomOrDefault(Double value, T? alternate)
+        {
+            return Build().GetRandomOrDefault(value, alternate);
+        }
+
+        public override T[] ToItemArray()
+        {
+            return Build().ToItemArray();
+        }
+
+        public override List<T> ToItemList()
+        {
+            return Build().ToItemList();
+        }
+
+        public override NullableDictionary<T, Double> ToItemDictionary()
+        {
+            return Build().ToItemDictionary();
         }
 
         public override IEnumerator<T> GetEnumerator()

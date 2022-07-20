@@ -12,7 +12,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Workstation
 {
-    public enum OSVersion
+    public enum OperationSystemVersion
     {
         Unknown,
         Win32S,
@@ -35,7 +35,7 @@ namespace NetExtender.Workstation
         XBox
     }
 
-    public enum OSType
+    public enum OperationSystemType
     {
         Unknown,
         WindowsVeryOld,
@@ -53,23 +53,31 @@ namespace NetExtender.Workstation
         Bit64
     }
 
-    public readonly struct OSData
+    public readonly struct OperationSystemInfo
     {
-        public OSType OSType { get; }
-        public OSVersion OSVersion { get; }
+        public OperationSystemType Type { get; }
+        public OperationSystemVersion Version { get; }
         public SoftwareArchitecture Architecture { get; }
 
-        public OSData(OSType type, OSVersion version, SoftwareArchitecture architecture)
+        public OperationSystemInfo(OperationSystemType type, OperationSystemVersion version, SoftwareArchitecture architecture)
         {
-            OSType = type;
-            OSVersion = version;
+            Type = type;
+            Version = version;
             Architecture = architecture;
         }
     }
     
     public static partial class Software
     {
-        public static OSData OperatingSystem { get; } = GetOSVersion();
+        public static OperationSystemInfo Information { get; } = GetOperatingSystemInfo();
+
+        public static OperatingSystem SystemVersion
+        {
+            get
+            {
+                return Environment.OSVersion;
+            }
+        }
 
         public static SoftwareArchitecture GetSoftwareArchitecture()
         {
@@ -95,7 +103,7 @@ namespace NetExtender.Workstation
             return IsWow64Process(Process.GetCurrentProcess().Handle, out Boolean isWow64) && isWow64;
         }
 
-        public static SoftwareArchitecture GetOSArchitecture()
+        public static SoftwareArchitecture GetOperationSystemArchitecture()
         {
             SoftwareArchitecture bit = IntPtr.Size switch
             {
@@ -124,11 +132,11 @@ namespace NetExtender.Workstation
                     return 10;
                 }
 
-                String? exact = OSVersionRegistry;
+                String? exact = SystemVersionRegistry;
 
                 if (String.IsNullOrEmpty(exact))
                 {
-                    return Environment.OSVersion.Version.Major;
+                    return SystemVersion.Version.Major;
                 }
 
                 String split = exact.Split('.').TryGetValue(1, "0");
@@ -146,11 +154,11 @@ namespace NetExtender.Workstation
                     return 0;
                 }
 
-                String? exact = OSVersionRegistry;
+                String? exact = SystemVersionRegistry;
 
                 if (String.IsNullOrEmpty(exact))
                 {
-                    return Environment.OSVersion.Version.Minor;
+                    return SystemVersion.Version.Minor;
                 }
 
                 String split = exact.Split('.').TryGetValue(1, "0");
@@ -159,7 +167,7 @@ namespace NetExtender.Workstation
             }
         }
 
-        private static String? OSVersionRegistry
+        private static String? SystemVersionRegistry
         {
             get
             {
@@ -187,7 +195,7 @@ namespace NetExtender.Workstation
         {
             get
             {
-                return IsWindows10() ? 0 : Environment.OSVersion.Version.Revision;
+                return IsWindows10() ? 0 : SystemVersion.Version.Revision;
             }
         }
 
@@ -195,87 +203,87 @@ namespace NetExtender.Workstation
         {
             get
             {
-                OSVERSIONINFOEX info = new OSVERSIONINFOEX {dwOSVersionInfoSize = Marshal.SizeOf(typeof(OSVERSIONINFOEX))};
+                WindowsSystemVersionInfo info = new WindowsSystemVersionInfo {SystemVersionInfoSize = Marshal.SizeOf(typeof(WindowsSystemVersionInfo))};
 
-                return GetVersionEx(ref info) ? info.szCSDVersion : String.Empty;
+                return GetVersionEx(ref info) ? info.Version : String.Empty;
             }
         }
 
         // ReSharper disable once CognitiveComplexity
-        public static OSData GetOSVersion()
+        public static OperationSystemInfo GetOperatingSystemInfo()
         {
-            SoftwareArchitecture architecture = GetOSArchitecture();
+            SoftwareArchitecture architecture = GetOperationSystemArchitecture();
             
-            switch (Environment.OSVersion.Platform)
+            switch (SystemVersion.Platform)
             {
                 case PlatformID.Win32S:
-                    return new OSData(OSType.WindowsVeryOld, OSVersion.Win32S, architecture);
+                    return new OperationSystemInfo(OperationSystemType.WindowsVeryOld, OperationSystemVersion.Win32S, architecture);
                 case PlatformID.Win32Windows:
-                    switch (Environment.OSVersion.Version.Minor)
+                    switch (SystemVersion.Version.Minor)
                     {
                         case 0:
-                            return new OSData(OSType.WindowsVeryOld, OSVersion.Win95, architecture);
+                            return new OperationSystemInfo(OperationSystemType.WindowsVeryOld, OperationSystemVersion.Win95, architecture);
                         case 10:
-                            return new OSData(OSType.WindowsVeryOld, OSVersion.Win98, architecture);
+                            return new OperationSystemInfo(OperationSystemType.WindowsVeryOld, OperationSystemVersion.Win98, architecture);
                         case 90:
-                            return new OSData(OSType.WindowsVeryOld, OSVersion.WinME, architecture);
+                            return new OperationSystemInfo(OperationSystemType.WindowsVeryOld, OperationSystemVersion.WinME, architecture);
                     }
 
                     break;
 
                 case PlatformID.Win32NT:
-                    switch (Environment.OSVersion.Version.Major)
+                    switch (SystemVersion.Version.Major)
                     {
                         case 3:
-                            return new OSData(OSType.WindowsVeryOld, OSVersion.NT351, architecture);
+                            return new OperationSystemInfo(OperationSystemType.WindowsVeryOld, OperationSystemVersion.NT351, architecture);
                         case 4:
-                            return new OSData(OSType.WindowsVeryOld, OSVersion.NT40, architecture);
+                            return new OperationSystemInfo(OperationSystemType.WindowsVeryOld, OperationSystemVersion.NT40, architecture);
                         case 5:
-                            switch (Environment.OSVersion.Version.Minor)
+                            switch (SystemVersion.Version.Minor)
                             {
                                 case 0:
-                                    return new OSData(OSType.WindowsVeryOld, OSVersion.Win2000, architecture);
+                                    return new OperationSystemInfo(OperationSystemType.WindowsVeryOld, OperationSystemVersion.Win2000, architecture);
                                 case 1:
-                                    return new OSData(OSType.WindowsOld, OSVersion.WinXP, architecture);
+                                    return new OperationSystemInfo(OperationSystemType.WindowsOld, OperationSystemVersion.WinXP, architecture);
                                 case 2:
-                                    return new OSData(OSType.WindowsVeryOld, OSVersion.Win2003, architecture);
+                                    return new OperationSystemInfo(OperationSystemType.WindowsVeryOld, OperationSystemVersion.Win2003, architecture);
                             }
 
                             break;
 
                         case 6:
-                            switch (Environment.OSVersion.Version.Minor)
+                            switch (SystemVersion.Version.Minor)
                             {
                                 case 0:
-                                    return new OSData(OSType.WindowsOld, OSVersion.Vista, architecture);
+                                    return new OperationSystemInfo(OperationSystemType.WindowsOld, OperationSystemVersion.Vista, architecture);
                                 case 1:
-                                    return new OSData(OSType.Windows, OSVersion.Win7, architecture);
+                                    return new OperationSystemInfo(OperationSystemType.Windows, OperationSystemVersion.Win7, architecture);
                                 case 2:
-                                    return new OSData(OSType.Windows, OSVersion.Win8, architecture);
+                                    return new OperationSystemInfo(OperationSystemType.Windows, OperationSystemVersion.Win8, architecture);
                                 case 3:
-                                    return new OSData(OSType.Windows, OSVersion.Win81, architecture);
+                                    return new OperationSystemInfo(OperationSystemType.Windows, OperationSystemVersion.Win81, architecture);
                             }
 
                             break;
                         case 10: //this will only show up if the application has a manifest file allowing W10, otherwise a 6.2 version will be used
-                            return new OSData(OSType.Windows, OSVersion.Win10, architecture);
+                            return new OperationSystemInfo(OperationSystemType.Windows, OperationSystemVersion.Win10, architecture);
                     }
 
                     break;
 
                 case PlatformID.WinCE:
-                    return new OSData(OSType.Windows, OSVersion.WinCE, architecture);
+                    return new OperationSystemInfo(OperationSystemType.Windows, OperationSystemVersion.WinCE, architecture);
                 case PlatformID.Unix:
-                    return new OSData(OSType.Unix, OSVersion.Unix, architecture);
+                    return new OperationSystemInfo(OperationSystemType.Unix, OperationSystemVersion.Unix, architecture);
                 case PlatformID.Xbox:
-                    return new OSData(OSType.Xbox, OSVersion.XBox, architecture);
+                    return new OperationSystemInfo(OperationSystemType.Xbox, OperationSystemVersion.XBox, architecture);
                 case PlatformID.MacOSX:
-                    return new OSData(OSType.MacOS, OSVersion.MacOS, architecture);
+                    return new OperationSystemInfo(OperationSystemType.MacOS, OperationSystemVersion.MacOS, architecture);
                 default:
                     break;
             }
 
-            return new OSData(OSType.Unknown, OSVersion.Unknown, architecture);
+            return new OperationSystemInfo(OperationSystemType.Unknown, OperationSystemVersion.Unknown, architecture);
         }
     }
 }

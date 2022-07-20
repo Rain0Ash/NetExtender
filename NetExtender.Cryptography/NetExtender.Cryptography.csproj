@@ -22,24 +22,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Update="Cryptography\AES.cs">
-        <DependentUpon>Cryptography.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Cryptography\Base.cs">
-        <DependentUpon>Cryptography.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Cryptography\Compression.cs">
-        <DependentUpon>Cryptography.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Cryptography\Hash.cs">
-        <DependentUpon>Cryptography.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Cryptography\RSA.cs">
-        <DependentUpon>Cryptography.cs</DependentUpon>
-      </Compile>
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
     </ItemGroup>
 

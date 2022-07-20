@@ -2,7 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Numerics;
@@ -843,23 +842,28 @@ namespace NetExtender.Utilities.Numerics
             unchecked
             {
                 Byte* pointer = (Byte*) source;
+                Int32 offset = Math.DivRem(shift, BitInByte, out shift);
 
-                Int64 offset = Math.DivRem(shift, BitInByte, out shift);
-                Byte carry = (Byte) ((1 << shift) - 1);
-
-                for (Int64 i = 0; i < length; i++)
+                if (shift <= 0)
                 {
-                    Int64 position = i + offset;
-                    if (position >= length)
+                    for (Int64 i = length - 1; i >= offset; --i)
                     {
-                        pointer[i] = Byte.MinValue;
-                        continue;
+                        pointer[i] = pointer[i - offset];
                     }
-
-                    pointer[i] = position + 1 < length
-                        ? (Byte) ((Byte) (pointer[position] << shift) | (Byte) (pointer[position + 1] >> (BitInByte - shift) & carry))
-                        : (Byte) (pointer[position] << shift);
+                    
+                    UnsafeUtilities.Fill(pointer, offset);
+                    return;
                 }
+
+                Int32 suboffset = BitInByte - shift;
+
+                for (Int64 i = length - 1; i > offset; --i)
+                {
+                    pointer[i] = (Byte) ((pointer[i - offset] << shift) | (pointer[i - offset - 1] >> suboffset));
+                }
+
+                pointer[offset] = (Byte) (pointer[0] << shift);
+                UnsafeUtilities.Fill(pointer, offset);
             }
         }
 
@@ -948,23 +952,29 @@ namespace NetExtender.Utilities.Numerics
             unchecked
             {
                 Byte* pointer = (Byte*) source;
+                Int32 offset = Math.DivRem(shift, BitInByte, out shift);
+                UInt32 limit = length - (UInt32) offset - 1;
 
-                Int64 offset = Math.DivRem(shift, BitInByte, out shift);
-                Byte carry = (Byte) (0xFF << (BitInByte - shift));
-
-                for (Int64 i = length - 1; i >= 0; i--)
+                if (shift <= 0)
                 {
-                    Int64 position = i - offset;
-                    if (position < 0)
+                    for (Int64 i = 0; i <= limit; i++)
                     {
-                        pointer[i] = Byte.MinValue;
-                        continue;
+                        pointer[i] = pointer[i + offset];
                     }
-
-                    pointer[i] = position - 1 >= 0
-                        ? (Byte) ((Byte) ((0xFF & pointer[position]) >> shift) | (Byte) (pointer[position - 1] << (BitInByte - shift) & carry))
-                        : (Byte) ((0xFF & pointer[position]) >> shift);
+                    
+                    UnsafeUtilities.Fill(UnsafeUtilities.Add(pointer, limit + 1), length);
+                    return;
                 }
+
+                Int32 suboffset = BitInByte - shift;
+
+                for (Int64 i = 0; i < limit; i++)
+                {
+                    pointer[i] = (Byte) ((pointer[i + offset] >> shift) | pointer[i + offset + 1] << suboffset);
+                }
+                
+                pointer[limit] = (Byte) (pointer[length - 1] >> shift);
+                UnsafeUtilities.Fill(UnsafeUtilities.Add(pointer, limit + 1), length);
             }
         }
 
