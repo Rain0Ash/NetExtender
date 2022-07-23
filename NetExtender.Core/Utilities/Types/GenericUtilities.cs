@@ -13,21 +13,25 @@ namespace NetExtender.Utilities.Types
 {
     public static class GenericUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Box<T> Box<T>(this T value)
         {
             return value;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static T? AsDefault<T>(this T? value, T? alternate)
         {
             return IsDefault(value) ? alternate : value;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Boolean IsDefault<T>(this T? value)
         {
             return EqualityComparer<T?>.Default.Equals(value, default);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Boolean IsNotDefault<T>(this T? value)
         {
             return !IsDefault(value);
@@ -53,14 +57,14 @@ namespace NetExtender.Utilities.Types
 
         public static Boolean IsDefaultOrEquals<T>(this T? first, T? second)
         {
-            Boolean df = IsDefault(first);
+            Boolean result = IsDefault(first);
 
-            if (df != IsDefault(second))
+            if (result != IsDefault(second))
             {
                 return false;
             }
 
-            return df || EqualityComparer<T?>.Default.Equals(first, second);
+            return result || EqualityComparer<T?>.Default.Equals(first, second);
         }
 
         public static Boolean IsAnyDefaultOrEquals<T>(this T? first, T? second)
@@ -73,6 +77,7 @@ namespace NetExtender.Utilities.Types
             return EqualityComparer<T?>.Default.Equals(first, second);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static T If<T>(this T value, Func<T, T> selector, Boolean condition)
         {
             if (selector is null)
@@ -83,6 +88,7 @@ namespace NetExtender.Utilities.Types
             return condition ? selector(value) : value;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static T If<T>(this T value, Func<T, T> selector, Func<Boolean> condition)
         {
             if (selector is null)
@@ -98,6 +104,7 @@ namespace NetExtender.Utilities.Types
             return condition() ? selector(value) : value;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static T If<T>(this T value, Func<T, T> selector, Func<T, Boolean> condition)
         {
             if (selector is null)
@@ -113,6 +120,7 @@ namespace NetExtender.Utilities.Types
             return condition(value) ? selector(value) : value;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static T If<T, TArgument>(this T value, Func<T, TArgument, T> selector, TArgument argument, Boolean condition)
         {
             if (selector is null)
@@ -123,6 +131,7 @@ namespace NetExtender.Utilities.Types
             return condition ? selector(value, argument) : value;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static T If<T, TArgument>(this T value, Func<T, TArgument, T> selector, TArgument argument, Func<Boolean> condition)
         {
             if (selector is null)
@@ -138,6 +147,7 @@ namespace NetExtender.Utilities.Types
             return condition() ? selector(value, argument) : value;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static T If<T, TArgument>(this T value, Func<T, TArgument, T> selector, TArgument argument, Func<T, Boolean> condition)
         {
             if (selector is null)
@@ -153,7 +163,8 @@ namespace NetExtender.Utilities.Types
             return condition(value) ? selector(value, argument) : value;
         }
         
-        public static T If<T, TArgument1, TArgument2>(this T value, Func<T, TArgument1, TArgument2, T> selector, TArgument1 first, TArgument2 second, Boolean condition)
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static T If<T, T1, T2>(this T value, Func<T, T1, T2, T> selector, T1 first, T2 second, Boolean condition)
         {
             if (selector is null)
             {
@@ -163,7 +174,8 @@ namespace NetExtender.Utilities.Types
             return condition ? selector(value, first, second) : value;
         }
         
-        public static T If<T, TArgument1, TArgument2>(this T value, Func<T, TArgument1, TArgument2, T> selector, TArgument1 first, TArgument2 second, Func<Boolean> condition)
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static T If<T, T1, T2>(this T value, Func<T, T1, T2, T> selector, T1 first, T2 second, Func<Boolean> condition)
         {
             if (selector is null)
             {
@@ -178,7 +190,8 @@ namespace NetExtender.Utilities.Types
             return condition() ? selector(value, first, second) : value;
         }
         
-        public static T If<T, TArgument1, TArgument2>(this T value, Func<T, TArgument1, TArgument2, T> selector, TArgument1 first, TArgument2 second, Func<T, Boolean> condition)
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static T If<T, T1, T2>(this T value, Func<T, T1, T2, T> selector, T1 first, T2 second, Func<T, Boolean> condition)
         {
             if (selector is null)
             {
@@ -193,7 +206,8 @@ namespace NetExtender.Utilities.Types
             return condition(value) ? selector(value, first, second) : value;
         }
         
-        public static T If<T, TArgument1, TArgument2, TArgument3>(this T value, Func<T, TArgument1, TArgument2, TArgument3, T> selector, TArgument1 first, TArgument2 second, TArgument3 third, Boolean condition)
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static T If<T, T1, T2, T3>(this T value, Func<T, T1, T2, T3, T> selector, T1 first, T2 second, T3 third, Boolean condition)
         {
             if (selector is null)
             {
@@ -203,7 +217,8 @@ namespace NetExtender.Utilities.Types
             return condition ? selector(value, first, second, third) : value;
         }
         
-        public static T If<T, TArgument1, TArgument2, TArgument3>(this T value, Func<T, TArgument1, TArgument2, TArgument3, T> selector, TArgument1 first, TArgument2 second, TArgument3 third, Func<Boolean> condition)
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static T If<T, T1, T2, T3>(this T value, Func<T, T1, T2, T3, T> selector, T1 first, T2 second, T3 third, Func<Boolean> condition)
         {
             if (selector is null)
             {
@@ -218,7 +233,8 @@ namespace NetExtender.Utilities.Types
             return condition() ? selector(value, first, second, third) : value;
         }
         
-        public static T If<T, TArgument1, TArgument2, TArgument3>(this T value, Func<T, TArgument1, TArgument2, TArgument3, T> selector, TArgument1 first, TArgument2 second, TArgument3 third, Func<T, Boolean> condition)
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static T If<T, T1, T2, T3>(this T value, Func<T, T1, T2, T3, T> selector, T1 first, T2 second, T3 third, Func<T, Boolean> condition)
         {
             if (selector is null)
             {
@@ -233,6 +249,7 @@ namespace NetExtender.Utilities.Types
             return condition(value) ? selector(value, first, second, third) : value;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static T IfNot<T>(this T value, Func<T, T> selector, Boolean condition)
         {
             if (selector is null)
@@ -243,6 +260,7 @@ namespace NetExtender.Utilities.Types
             return !condition ? selector(value) : value;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static T IfNot<T>(this T value, Func<T, T> selector, Func<Boolean> condition)
         {
             if (selector is null)
@@ -258,6 +276,7 @@ namespace NetExtender.Utilities.Types
             return !condition() ? selector(value) : value;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static T IfNot<T>(this T value, Func<T, T> selector, Func<T, Boolean> condition)
         {
             if (selector is null)
@@ -273,6 +292,7 @@ namespace NetExtender.Utilities.Types
             return !condition(value) ? selector(value) : value;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static T IfNot<T, TArgument>(this T value, Func<T, TArgument, T> selector, TArgument argument, Boolean condition)
         {
             if (selector is null)
@@ -283,6 +303,7 @@ namespace NetExtender.Utilities.Types
             return !condition ? selector(value, argument) : value;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static T IfNot<T, TArgument>(this T value, Func<T, TArgument, T> selector, TArgument argument, Func<Boolean> condition)
         {
             if (selector is null)
@@ -298,6 +319,7 @@ namespace NetExtender.Utilities.Types
             return !condition() ? selector(value, argument) : value;
         }
         
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static T IfNot<T, TArgument>(this T value, Func<T, TArgument, T> selector, TArgument argument, Func<T, Boolean> condition)
         {
             if (selector is null)
@@ -313,7 +335,8 @@ namespace NetExtender.Utilities.Types
             return !condition(value) ? selector(value, argument) : value;
         }
         
-        public static T IfNot<T, TArgument1, TArgument2>(this T value, Func<T, TArgument1, TArgument2, T> selector, TArgument1 first, TArgument2 second, Boolean condition)
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static T IfNot<T, T1, T2>(this T value, Func<T, T1, T2, T> selector, T1 first, T2 second, Boolean condition)
         {
             if (selector is null)
             {
@@ -323,7 +346,8 @@ namespace NetExtender.Utilities.Types
             return !condition ? selector(value, first, second) : value;
         }
         
-        public static T IfNot<T, TArgument1, TArgument2>(this T value, Func<T, TArgument1, TArgument2, T> selector, TArgument1 first, TArgument2 second, Func<Boolean> condition)
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static T IfNot<T, T1, T2>(this T value, Func<T, T1, T2, T> selector, T1 first, T2 second, Func<Boolean> condition)
         {
             if (selector is null)
             {
@@ -338,7 +362,8 @@ namespace NetExtender.Utilities.Types
             return !condition() ? selector(value, first, second) : value;
         }
         
-        public static T IfNot<T, TArgument1, TArgument2>(this T value, Func<T, TArgument1, TArgument2, T> selector, TArgument1 first, TArgument2 second, Func<T, Boolean> condition)
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static T IfNot<T, T1, T2>(this T value, Func<T, T1, T2, T> selector, T1 first, T2 second, Func<T, Boolean> condition)
         {
             if (selector is null)
             {
@@ -353,7 +378,8 @@ namespace NetExtender.Utilities.Types
             return !condition(value) ? selector(value, first, second) : value;
         }
         
-        public static T IfNot<T, TArgument1, TArgument2, TArgument3>(this T value, Func<T, TArgument1, TArgument2, TArgument3, T> selector, TArgument1 first, TArgument2 second, TArgument3 third, Boolean condition)
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static T IfNot<T, T1, T2, T3>(this T value, Func<T, T1, T2, T3, T> selector, T1 first, T2 second, T3 third, Boolean condition)
         {
             if (selector is null)
             {
@@ -363,7 +389,8 @@ namespace NetExtender.Utilities.Types
             return !condition ? selector(value, first, second, third) : value;
         }
         
-        public static T IfNot<T, TArgument1, TArgument2, TArgument3>(this T value, Func<T, TArgument1, TArgument2, TArgument3, T> selector, TArgument1 first, TArgument2 second, TArgument3 third, Func<Boolean> condition)
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static T IfNot<T, T1, T2, T3>(this T value, Func<T, T1, T2, T3, T> selector, T1 first, T2 second, T3 third, Func<Boolean> condition)
         {
             if (selector is null)
             {
@@ -378,7 +405,8 @@ namespace NetExtender.Utilities.Types
             return !condition() ? selector(value, first, second, third) : value;
         }
         
-        public static T IfNot<T, TArgument1, TArgument2, TArgument3>(this T value, Func<T, TArgument1, TArgument2, TArgument3, T> selector, TArgument1 first, TArgument2 second, TArgument3 third, Func<T, Boolean> condition)
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static T IfNot<T, T1, T2, T3>(this T value, Func<T, T1, T2, T3, T> selector, T1 first, T2 second, T3 third, Func<T, Boolean> condition)
         {
             if (selector is null)
             {

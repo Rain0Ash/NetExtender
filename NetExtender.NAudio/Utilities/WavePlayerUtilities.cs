@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using NAudio.Wave;
-using NetExtender.NAudio.Types.Providers;
+using NetExtender.NAudio.Types.Sound.Interfaces;
 using NetExtender.NAudio.Types.Streams;
 using NetExtender.Types.Multithreading;
 
@@ -85,6 +85,31 @@ namespace NetExtender.Utilities.NAudio
             player.Play();
         }
         
+        public static void Play(this IWavePlayer player, ISampleProvider provider, IAudioSound sound)
+        {
+            Play(player, provider, sound, false);
+        }
+
+        public static void Play(this IWavePlayer player, ISampleProvider provider, IAudioSound sound, Boolean bit16)
+        {
+            if (player is null)
+            {
+                throw new ArgumentNullException(nameof(player));
+            }
+
+            if (provider is null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+
+            if (sound is null)
+            {
+                throw new ArgumentNullException(nameof(sound));
+            }
+            
+            Play(player, provider.Sound(sound), bit16);
+        }
+
         public static void Repeat(this IWavePlayer player, IWaveProvider provider)
         {
             if (player is null)
@@ -112,17 +137,12 @@ namespace NetExtender.Utilities.NAudio
                 throw new ArgumentNullException(nameof(player));
             }
 
-            switch (provider)
+            if (provider is null)
             {
-                case null:
-                    throw new ArgumentNullException(nameof(provider));
-                case CacheSampleProvider cache:
-                    Play(player, cache);
-                    break;
-                default:
-                    Play(player, provider.Caching());
-                    break;
+                throw new ArgumentNullException(nameof(provider));
             }
+
+            Play(player, provider.Repeat());
         }
         
         public static void Repeat(this IWavePlayer player, ISampleProvider provider, Boolean bit16)
@@ -132,17 +152,12 @@ namespace NetExtender.Utilities.NAudio
                 throw new ArgumentNullException(nameof(player));
             }
 
-            switch (provider)
+            if (provider is null)
             {
-                case null:
-                    throw new ArgumentNullException(nameof(provider));
-                case CacheSampleProvider cache:
-                    Play(player, cache, bit16);
-                    break;
-                default:
-                    Play(player, provider.Caching(), bit16);
-                    break;
+                throw new ArgumentNullException(nameof(provider));
             }
+
+            Play(player, provider.Repeat(bit16));
         }
 
         public static void Repeat(this IWavePlayer player, WaveStream stream)
@@ -239,6 +254,41 @@ namespace NetExtender.Utilities.NAudio
             Play(player, provider, bit16);
             await player.WaitAsync(token);
         }
+
+        public static Task PlayAsync(this IWavePlayer player, ISampleProvider provider, IAudioSound sound)
+        {
+            return PlayAsync(player, provider, sound, CancellationToken.None);
+        }
+
+        public static Task PlayAsync(this IWavePlayer player, ISampleProvider provider, IAudioSound sound, CancellationToken token)
+        {
+            return PlayAsync(player, provider, sound, false, token);
+        }
+
+        public static Task PlayAsync(this IWavePlayer player, ISampleProvider provider, IAudioSound sound, Boolean bit16)
+        {
+            return PlayAsync(player, provider, sound, bit16, CancellationToken.None);
+        }
+
+        public static Task PlayAsync(this IWavePlayer player, ISampleProvider provider, IAudioSound sound, Boolean bit16, CancellationToken token)
+        {
+            if (player is null)
+            {
+                throw new ArgumentNullException(nameof(player));
+            }
+
+            if (provider is null)
+            {
+                throw new ArgumentNullException(nameof(provider));
+            }
+
+            if (sound is null)
+            {
+                throw new ArgumentNullException(nameof(sound));
+            }
+            
+            return PlayAsync(player, provider.Sound(sound), bit16, token);
+        }
         
         public static Task RepeatAsync(this IWavePlayer player, IWaveProvider provider)
         {
@@ -272,12 +322,12 @@ namespace NetExtender.Utilities.NAudio
                 throw new ArgumentNullException(nameof(player));
             }
 
-            return provider switch
+            if (provider is null)
             {
-                null => throw new ArgumentNullException(nameof(provider)),
-                CacheSampleProvider cache => PlayAsync(player, cache, token),
-                _ => PlayAsync(player, provider.Caching(), token)
-            };
+                throw new ArgumentNullException(nameof(provider));
+            }
+
+            return PlayAsync(player, provider.Repeat(), token);
         }
         
         public static Task RepeatAsync(this IWavePlayer player, ISampleProvider provider, Boolean bit16)
@@ -292,12 +342,12 @@ namespace NetExtender.Utilities.NAudio
                 throw new ArgumentNullException(nameof(player));
             }
 
-            return provider switch
+            if (provider is null)
             {
-                null => throw new ArgumentNullException(nameof(provider)),
-                CacheSampleProvider cache => PlayAsync(player, cache, bit16, token),
-                _ => PlayAsync(player, provider.Caching(), bit16, token)
-            };
+                throw new ArgumentNullException(nameof(provider));
+            }
+
+            return PlayAsync(player, provider.Repeat(bit16), token);
         }
         
         public static Task RepeatAsync(this IWavePlayer player, WaveStream stream)

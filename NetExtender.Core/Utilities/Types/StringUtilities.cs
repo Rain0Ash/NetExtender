@@ -1003,7 +1003,12 @@ namespace NetExtender.Utilities.Types
 
             return FormatSafe(source.ToString(), provider, args);
         }
-        
+
+        public static Boolean StartsWith(this String value, params Char[] chars)
+        {
+            return StartsWith(value, (IEnumerable<Char>) chars);
+        }
+
         public static Boolean StartsWith(this String value, IEnumerable<Char> chars)
         {
             if (value is null)
@@ -1018,6 +1023,11 @@ namespace NetExtender.Utilities.Types
 
             return chars.Any(value.StartsWith);
         }
+        
+        public static Boolean StartsWith(this IString value, params Char[] chars)
+        {
+            return StartsWith(value, (IEnumerable<Char>) chars);
+        }
 
         public static Boolean StartsWith(this IString value, IEnumerable<Char> chars)
         {
@@ -1027,6 +1037,11 @@ namespace NetExtender.Utilities.Types
             }
 
             return StartsWith(value.ToString(), chars);
+        }
+        
+        public static Boolean StartsWith(this String value, params String[] substrings)
+        {
+            return StartsWith(value, (IEnumerable<String>) substrings);
         }
 
         public static Boolean StartsWith(this String value, IEnumerable<String?> substrings)
@@ -1043,6 +1058,11 @@ namespace NetExtender.Utilities.Types
 
             return substrings.WhereNotNull().Any(value.StartsWith);
         }
+        
+        public static Boolean StartsWith(this String value, StringComparison comparison, params String[] substrings)
+        {
+            return StartsWith(value, substrings, comparison);
+        }
 
         public static Boolean StartsWith(this String value, IEnumerable<String?> substrings, StringComparison comparison)
         {
@@ -1058,6 +1078,11 @@ namespace NetExtender.Utilities.Types
 
             return substrings.WhereNotNull().Any(item => value.StartsWith(item, comparison));
         }
+        
+        public static Boolean StartsWith(this IString value, params String[] substrings)
+        {
+            return StartsWith(value, (IEnumerable<String>) substrings);
+        }
 
         public static Boolean StartsWith(this IString value, IEnumerable<String?> substrings)
         {
@@ -1068,6 +1093,11 @@ namespace NetExtender.Utilities.Types
 
             return StartsWith(value.ToString(), substrings);
         }
+        
+        public static Boolean StartsWith(this IString value, StringComparison comparison, params String[] substrings)
+        {
+            return StartsWith(value, substrings, comparison);
+        }
 
         public static Boolean StartsWith(this IString value, IEnumerable<String?> substrings, StringComparison comparison)
         {
@@ -1077,6 +1107,11 @@ namespace NetExtender.Utilities.Types
             }
 
             return StartsWith(value.ToString(), substrings, comparison);
+        }
+        
+        public static Boolean EndsWith(this String value, params Char[] chars)
+        {
+            return EndsWith(value, (IEnumerable<Char>) chars);
         }
 
         public static Boolean EndsWith(this String value, IEnumerable<Char> chars)
@@ -1093,6 +1128,11 @@ namespace NetExtender.Utilities.Types
 
             return chars.Any(value.EndsWith);
         }
+        
+        public static Boolean EndsWith(this IString value, params Char[] chars)
+        {
+            return EndsWith(value, (IEnumerable<Char>) chars);
+        }
 
         public static Boolean EndsWith(this IString value, IEnumerable<Char> chars)
         {
@@ -1102,6 +1142,11 @@ namespace NetExtender.Utilities.Types
             }
 
             return EndsWith(value.ToString(), chars);
+        }
+        
+        public static Boolean EndsWith(this String value, params String[] substrings)
+        {
+            return EndsWith(value, (IEnumerable<String>) substrings);
         }
 
         public static Boolean EndsWith(this String value, IEnumerable<String?> substrings)
@@ -1119,6 +1164,11 @@ namespace NetExtender.Utilities.Types
             return substrings.WhereNotNull().Any(value.EndsWith);
         }
         
+        public static Boolean EndsWith(this String value, StringComparison comparison, params String[] substrings)
+        {
+            return EndsWith(value, substrings, comparison);
+        }
+        
         public static Boolean EndsWith(this String value, IEnumerable<String?> substrings, StringComparison comparison)
         {
             if (value is null)
@@ -1133,6 +1183,11 @@ namespace NetExtender.Utilities.Types
 
             return substrings.WhereNotNull().Any(item => value.EndsWith(item, comparison));
         }
+        
+        public static Boolean EndsWith(this IString value, params String[] substrings)
+        {
+            return EndsWith(value, (IEnumerable<String>) substrings);
+        }
 
         public static Boolean EndsWith(this IString value, IEnumerable<String?> substrings)
         {
@@ -1144,6 +1199,11 @@ namespace NetExtender.Utilities.Types
             return EndsWith(value.ToString(), substrings);
         }
         
+        public static Boolean EndsWith(this IString value, StringComparison comparison, params String[] substrings)
+        {
+            return EndsWith(value, substrings, comparison);
+        }
+        
         public static Boolean EndsWith(this IString value, IEnumerable<String?> substrings, StringComparison comparison)
         {
             if (value is null)
@@ -1152,6 +1212,46 @@ namespace NetExtender.Utilities.Types
             }
 
             return EndsWith(value.ToString(), substrings, comparison);
+        }
+
+        public static IEnumerable<String> WhereStartsWith(this IEnumerable<String> source, String? value)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return !String.IsNullOrEmpty(value) ? source.Where(item => item.StartsWith(value)) : source;
+        }
+        
+        public static IEnumerable<String> WhereStartsWith(this IEnumerable<String> source, String? value, StringComparison comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return !String.IsNullOrEmpty(value) ? source.Where(item => item.StartsWith(value, comparison)) : source;
+        }
+        
+        public static IEnumerable<String> WhereEndsWith(this IEnumerable<String> source, String? value)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return !String.IsNullOrEmpty(value) ? source.Where(item => item.EndsWith(value)) : source;
+        }
+        
+        public static IEnumerable<String> WhereEndsWith(this IEnumerable<String> source, String? value, StringComparison comparison)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return !String.IsNullOrEmpty(value) ? source.Where(item => item.EndsWith(value, comparison)) : source;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2467,14 +2567,14 @@ namespace NetExtender.Utilities.Types
             return value.Length > 1 ? String.Concat(value.AsSpan(0, index), value.Substring(index, length).Shuffle(), value.AsSpan(index + length)) : value;
         }
 
-        public static Boolean IsMatrix(this IEnumerable<String> value)
+        public static Boolean IsMatrix(this IEnumerable<String?> value)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
 
-            using IEnumerator<String> enumerator = value.GetEnumerator();
+            using IEnumerator<String?> enumerator = value.GetEnumerator();
 
             if (!enumerator.MoveNext())
             {
@@ -2494,14 +2594,14 @@ namespace NetExtender.Utilities.Types
             return true;
         }
 
-        public static Size GetMatrixSize(this IEnumerable<String> value)
+        public static Size GetMatrixSize(this IEnumerable<String?> value)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
 
-            using IEnumerator<String> enumerator = value.GetEnumerator();
+            using IEnumerator<String?> enumerator = value.GetEnumerator();
 
             if (!enumerator.MoveNext())
             {

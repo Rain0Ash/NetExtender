@@ -35,7 +35,6 @@ namespace NetExtender.NAudio.Types.Streams
         {
             Int32 read = Stream.Read(buffer, offset, count);
             MaxLength = Math.Max(Position + 1, MaxLength);
-
             return read;
         }
     }

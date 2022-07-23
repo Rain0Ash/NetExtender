@@ -173,6 +173,14 @@ namespace NetExtender.Types.Culture
                 return (UInt16) Code;
             }
         }
+        
+        public CultureIdentifier Identifier
+        {
+            get
+            {
+                return this;
+            }
+        }
 
         public CultureInfo? Info
         {

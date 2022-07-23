@@ -9,7 +9,7 @@ using NetExtender.UserInterface;
 using NetExtender.Utilities.UserInterface;
 using NetExtender.Workstation.Interfaces;
 
-namespace NetExtender.WindowsPresentation.Utilities
+namespace NetExtender.Utilities.UserInterface
 {
     public static class WindowsPresentationUserInterfaceUtilities
     {

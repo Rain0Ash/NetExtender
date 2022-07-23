@@ -50,6 +50,8 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         }
 
         public virtual Boolean IsAltF4Enabled { get; set; } = true;
+        
+        public Boolean IsExitOnFocusLost { get; set; }
 
         public event InterfaceClosingEventHandler? WindowClosing;
         public event SizeChangeToggleHandler? SizeChangeToggle;
@@ -58,6 +60,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         {
             WindowStartupLocation = WindowStartupLocation.CenterOwner;
             WindowStyle = WindowStyle.SingleBorderWindow;
+            Deactivated += OnDeactivated;
             Closing += OnClosing;
             WindowClosing += DisableIconClickExit;
         }
@@ -101,6 +104,16 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         protected virtual void OnSizeChangeToggle(SizeChangeToggleEventArgs args)
         {
             SizeChangeToggle?.Invoke(this, args);
+        }
+
+        private void OnDeactivated(Object? sender, EventArgs e)
+        {
+            if (!IsExitOnFocusLost)
+            {
+                return;
+            }
+            
+            CloseReason = InterfaceCloseReason.WindowClosing;
         }
 
         private void OnClosing(Object? sender, CancelEventArgs args)

@@ -3,21 +3,28 @@
 
 using System;
 using NAudio.Wave;
-using NetExtender.NAudio.Types.Common.Interfaces;
+using NAudio.Wave.SampleProviders;
+using NetExtender.NAudio.Types.Sound.Interfaces;
 using NetExtender.NAudio.Types.Providers;
+using NetExtender.NAudio.Types.Streams;
 
 namespace NetExtender.Utilities.NAudio
 {
     public static class SampleProviderUtilities
     {
-        public static CacheSampleProvider Caching(this ISampleProvider source)
+        public static RepeatWaveStream Repeat(this ISampleProvider source)
+        {
+            return Repeat(source, false);
+        }
+
+        public static RepeatWaveStream Repeat(this ISampleProvider source, Boolean bit16)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return new CacheSampleProvider(source);
+            return new RepeatWaveStream(new WaveProviderWaveStreamLazyReader(bit16 ? new SampleToWaveProvider16(source) : new SampleToWaveProvider(source)));
         }
 
         public static AudioSoundSampleProvider Sound(this ISampleProvider source, IAudioSound sound)

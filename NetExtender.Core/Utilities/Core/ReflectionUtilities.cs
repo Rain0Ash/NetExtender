@@ -2670,7 +2670,7 @@ namespace NetExtender.Utilities.Core
             return SizeCache.GetTypeSize(type);
         }
 
-        private static class DefaultCache
+        private static class GenericDefaultCache
         {
             private static ConcurrentDictionary<Type, ValueType> Values { get; } = new ConcurrentDictionary<Type, ValueType>();
             
@@ -2688,8 +2688,48 @@ namespace NetExtender.Utilities.Core
                     return (ValueType) Activator.CreateInstance(type)!;
                 }
 
-                return !type.IsValueType ? null : Values.GetOrAdd(type, Create);
+                return type.IsValueType ? Values.GetOrAdd(type, Create) : null;
             }
+        }
+
+        public static IEnumerator<StackFrame> GetEnumerator(this StackTrace stack)
+        {
+            if (stack is null)
+            {
+                throw new ArgumentNullException(nameof(stack));
+            }
+
+            Int32 i = 0;
+            while (i < stack.FrameCount && stack.GetFrame(i++) is StackFrame frame)
+            {
+                yield return frame;
+            }
+        }
+
+        public static IEnumerable<Type> GetStackTypes(this StackTrace stack)
+        {
+            if (stack is null)
+            {
+                throw new ArgumentNullException(nameof(stack));
+            }
+            
+            foreach (StackFrame frame in stack)
+            {
+                if (frame.GetMethod()?.DeclaringType is Type type)
+                {
+                    yield return type;
+                }
+            }
+        }
+        
+        public static IEnumerable<Type> GetStackTypesUnique(this StackTrace stack)
+        {
+            if (stack is null)
+            {
+                throw new ArgumentNullException(nameof(stack));
+            }
+            
+            return stack.GetStackTypes().Distinct();
         }
 
         /// <summary>
@@ -2697,9 +2737,9 @@ namespace NetExtender.Utilities.Core
         /// </summary>
         /// <param name="type">The type for which to get the default value.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Object? Default(this Type type)
+        public static Object? Default(Type type)
         {
-            return DefaultCache.Default(type);
+            return GenericDefaultCache.Default(type);
         }
 
         /// <summary>

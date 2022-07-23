@@ -3,11 +3,14 @@
 
 using System;
 using System.IO;
-using NetExtender.NAudio.Types.Common.Interfaces;
+using System.Threading;
+using System.Threading.Tasks;
+using NetExtender.NAudio.Types.Sound.Interfaces;
+using NetExtender.Utilities.Types;
 
-namespace NetExtender.NAudio.Types.Common
+namespace NetExtender.NAudio.Types.Sound
 {
-    public abstract class AudioSoundAbstraction : IAudioSound
+    public abstract class AudioSoundFileAbstraction : AudioSoundSampleProviderAbstraction, IAudioSoundFile
     {
         protected FileInfo File { get; }
         
@@ -35,7 +38,7 @@ namespace NetExtender.NAudio.Types.Common
             }
         }
         
-        public Int64 Size
+        public override Int64 Size
         {
             get
             {
@@ -43,41 +46,10 @@ namespace NetExtender.NAudio.Types.Common
             }
         }
 
-        public TimeSpan Start { get; }
-        public TimeSpan Stop { get; }
+        public override TimeSpan Start { get; }
+        public override TimeSpan Stop { get; }
 
-        public TimeSpan StartActive { get; init; }
-        public TimeSpan StopActive { get; init; }
-
-        public TimeSpan TotalStartActive
-        {
-            get
-            {
-                return Start + StartActive;
-            }
-        }
-        
-        public TimeSpan TotalStopActive
-        {
-            get
-            {
-                return Stop - StopActive;
-            }
-        }
-
-        public TimeSpan Length
-        {
-            get
-            {
-                return Stop - Start;
-            }
-        }
-        
-        public abstract TimeSpan TotalTime { get; }
-
-        public Single Volume { get; init; } = 1F;
-
-        protected AudioSoundAbstraction(FileInfo file, TimeSpan start, TimeSpan stop)
+        protected AudioSoundFileAbstraction(FileInfo file, TimeSpan start, TimeSpan stop)
         {
             File = file ?? throw new ArgumentNullException(nameof(file));
             
@@ -106,6 +78,39 @@ namespace NetExtender.NAudio.Types.Common
 
             Start = start;
             Stop = TimeSpan.FromTicks(Math.Clamp(stop == default ? total.Ticks : stop.Ticks, start.Ticks, total.Ticks));
+        }
+
+        public override Boolean TryRead(Span<Byte> destination, out Int32 written)
+        {
+            if (destination.Length == 0)
+            {
+                written = 0;
+                return false;
+            }
+
+            try
+            {
+                using FileStream stream = File.OpenRead();
+                written = stream.Read(destination);
+                return written > 0;
+            }
+            catch (Exception)
+            {
+                written = 0;
+                return false;
+            }
+        }
+
+        public override Byte[] Read()
+        {
+            using FileStream stream = File.OpenRead();
+            return stream.ReadAsByteArray();
+        }
+
+        public override async Task<Byte[]> ReadAsync(CancellationToken token)
+        {
+            await using FileStream stream = File.OpenRead();
+            return await stream.ReadAsByteArrayAsync(token);
         }
     }
 }

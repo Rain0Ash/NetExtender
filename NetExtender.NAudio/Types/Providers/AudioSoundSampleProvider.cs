@@ -4,7 +4,7 @@
 using System;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
-using NetExtender.NAudio.Types.Common.Interfaces;
+using NetExtender.NAudio.Types.Sound.Interfaces;
 
 namespace NetExtender.NAudio.Types.Providers
 {
@@ -20,7 +20,7 @@ namespace NetExtender.NAudio.Types.Providers
         {
             get
             {
-                return Provider.WaveFormat;
+                return FadeOut.WaveFormat;
             }
         }
 

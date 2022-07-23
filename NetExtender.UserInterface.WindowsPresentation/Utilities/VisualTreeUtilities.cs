@@ -7,7 +7,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 
-namespace NetExtender.UserInterface.WindowsPresentation
+namespace NetExtender.Utilities.UserInterface
 {
     public static class VisualTreeUtilities
     {

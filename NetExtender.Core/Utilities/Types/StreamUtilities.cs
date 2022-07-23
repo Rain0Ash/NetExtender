@@ -1357,10 +1357,25 @@ namespace NetExtender.Utilities.Types
             }
 
             using BinaryReader reader = stream.ToBinaryReader(null, true);
-            
             Int32 count = checked((Int32) (stream.Length - stream.Position));
-            
             return reader.ReadBytes(count);
+        }
+
+        public static Task<Byte[]> ReadAsByteArrayAsync(this Stream stream)
+        {
+            return ReadAsByteArrayAsync(stream, CancellationToken.None);
+        }
+
+        public static async Task<Byte[]> ReadAsByteArrayAsync(this Stream stream, CancellationToken token)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            using BinaryReader reader = stream.ToBinaryReader(null, true);
+            Int32 count = checked((Int32) (stream.Length - stream.Position));
+            return await reader.ReadBytesAsync(count, token);
         }
 
         public static Stream AsSeekableStream(this Stream stream)

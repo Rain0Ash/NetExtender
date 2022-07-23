@@ -2,14 +2,13 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace NetExtender.NAudio.Types.Common.Interfaces
+namespace NetExtender.NAudio.Types.Sound.Interfaces
 {
     public interface IAudioSound
     {
-        public String Path { get; }
-        public String Extension { get; }
-        public Boolean Exists { get; }
         public Int64 Size { get; }
         public TimeSpan Start { get; }
         public TimeSpan Stop { get; }
@@ -20,5 +19,9 @@ namespace NetExtender.NAudio.Types.Common.Interfaces
         public TimeSpan Length { get; }
         public TimeSpan TotalTime { get; }
         public Single Volume { get; }
+        public Boolean TryRead(Span<Byte> destination, out Int32 written);
+        public Byte[] Read();
+        public Task<Byte[]> ReadAsync();
+        public Task<Byte[]> ReadAsync(CancellationToken token);
     }
 }

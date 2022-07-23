@@ -24,7 +24,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(options));
             }
 
-            if (options.TaskScheduler != null && options.TaskScheduler != TaskScheduler.Default)
+            if (options.TaskScheduler is not null && options.TaskScheduler != TaskScheduler.Default)
             {
                 throw new ArgumentException("Parallel LINQ only supports the default TaskScheduler.");
             }

@@ -16,8 +16,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
                 throw new ArgumentNullException(nameof(value));
             }
 
-            DependencyObject? parent;
-            while ((parent = value.GetParent()) is not null)
+            while (value.GetParent() is { } parent)
             {
                 if (parent is T dependency)
                 {

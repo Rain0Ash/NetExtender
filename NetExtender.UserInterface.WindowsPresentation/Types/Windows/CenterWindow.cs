@@ -77,7 +77,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         {
             Window? parent = Owner ?? Application.Current.MainWindow;
 
-            if (parent is null || parent == this)
+            if (parent is null || parent == this || parent.WindowState == WindowState.Maximized)
             {
                 return CenterToScreen();
             }

@@ -26,28 +26,4 @@
       <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Compile Update="Utilities\Alt.cs">
-        <DependentUpon>KeyboardUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Control.cs">
-        <DependentUpon>KeyboardUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Shift.cs">
-        <DependentUpon>KeyboardUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Windows.cs">
-        <DependentUpon>KeyboardUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Toggle.cs">
-        <DependentUpon>KeyboardUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Up.cs">
-        <DependentUpon>KeyboardUtilities.cs</DependentUpon>
-      </Compile>
-      <Compile Update="Utilities\Down.cs">
-        <DependentUpon>KeyboardUtilities.cs</DependentUpon>
-      </Compile>
-    </ItemGroup>
-
 </Project>
