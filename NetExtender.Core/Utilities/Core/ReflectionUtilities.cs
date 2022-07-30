@@ -1569,14 +1569,14 @@ namespace NetExtender.Utilities.Core
                 type = obj.GetType();
             }
 
-            PropertyInfo? property = type.GetProperty(name);
+            PropertyInfo? property = type.GetProperty(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (property is not null)
             {
                 result = property.GetValue(obj);
                 return true;
             }
 
-            FieldInfo? field = type.GetField(name);
+            FieldInfo? field = type.GetField(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (field is not null)
             {
                 result = field.GetValue(obj);
@@ -1885,12 +1885,12 @@ namespace NetExtender.Utilities.Core
             return property;
         }
 
-        public static Boolean TryCreateDelegate(this MethodInfo? info, out Delegate? result)
+        public static Boolean TryCreateDelegate(this MethodInfo? info, [MaybeNullWhen(false)] out Delegate result)
         {
             return TryCreateDelegate<Delegate>(info, out result);
         }
 
-        public static Boolean TryCreateDelegate<T>(this MethodInfo? info, out T? result) where T : Delegate
+        public static Boolean TryCreateDelegate<T>(this MethodInfo? info, [MaybeNullWhen(false)] out T result) where T : Delegate
         {
             if (info is null)
             {
@@ -1922,6 +1922,11 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(obj));
             }
 
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
             return GetFieldInfo(obj.GetType(), name);
         }
 
@@ -1935,6 +1940,11 @@ namespace NetExtender.Utilities.Core
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
+            }
+
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
             }
 
             FieldInfo? field = type.GetField(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);

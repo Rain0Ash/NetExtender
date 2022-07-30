@@ -4,7 +4,6 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Windows;
-using NetExtender.WindowsPresentation.Utilities;
 using NetExtender.Workstation;
 
 namespace NetExtender.Utilities.UserInterface

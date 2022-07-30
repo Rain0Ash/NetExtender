@@ -9,18 +9,17 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Resources;
-using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Application
 {
     public static class ResourceUtilities
     {
-        private static Stream? TryGetResourceStream(Assembly assembly)
+        public static Stream? TryGetResourceStream(Assembly assembly)
         {
             return TryGetResourceStream(assembly, null);
         }
 
-        private static Stream? TryGetResourceStream(Assembly assembly, String? resource)
+        public static Stream? TryGetResourceStream(Assembly assembly, String? resource)
         {
             if (assembly is null)
             {
@@ -37,8 +36,8 @@ namespace NetExtender.Utilities.Application
                 return null;
             }
         }
-        
-        private static ResourceReader? TryGetResourceReader(Stream stream)
+
+        public static ResourceReader? TryGetResourceReader(Stream stream)
         {
             if (stream is null)
             {
@@ -54,21 +53,31 @@ namespace NetExtender.Utilities.Application
                 return null;
             }
         }
-        
+
         public static IEnumerable<KeyValuePair<String, Object?>> Enumerate()
         {
-            Assembly? assembly = Assembly.GetEntryAssembly();
-            return assembly is not null ? Enumerate(assembly) : Array.Empty<KeyValuePair<String, Object?>>();
+            return Enumerate((String?) null);
         }
-        
-        public static IEnumerable<KeyValuePair<String, Object?>> Enumerate(this Assembly assembly)
+
+        public static IEnumerable<KeyValuePair<String, Object?>> Enumerate(String? resource)
+        {
+            Assembly? assembly = Assembly.GetEntryAssembly();
+            return assembly is not null ? Enumerate(assembly, resource) : Array.Empty<KeyValuePair<String, Object?>>();
+        }
+
+        public static IEnumerable<KeyValuePair<String, Object?>> Enumerate(Assembly assembly)
+        {
+            return Enumerate(assembly, (String?) null);
+        }
+
+        public static IEnumerable<KeyValuePair<String, Object?>> Enumerate(Assembly assembly, String? resource)
         {
             if (assembly is null)
             {
                 throw new ArgumentNullException(nameof(assembly));
             }
 
-            using Stream? stream = TryGetResourceStream(assembly);
+            using Stream? stream = TryGetResourceStream(assembly, resource);
 
             if (stream is null)
             {
@@ -82,16 +91,38 @@ namespace NetExtender.Utilities.Application
                 yield break;
             }
 
-            foreach (DictionaryEntry entry in reader.OfType<DictionaryEntry>())
+            foreach (KeyValuePair<String, Object?> entry in reader.Enumerate())
             {
-                if (entry.Key is String key)
-                {
-                    yield return new KeyValuePair<String, Object?>(key, entry.Value);
-                }
+                yield return entry;
             }
         }
 
-        public static IEnumerable<KeyValuePair<String, UnmanagedMemoryStream>> ToStream(this IEnumerable<KeyValuePair<String, Object?>> entries)
+        public static IEnumerable<KeyValuePair<String, Stream>> Enumerate(Assembly assembly, Func<String, Boolean> predicate)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            foreach (String name in assembly.GetManifestResourceNames().Where(predicate))
+            {
+                Stream? stream = assembly.GetManifestResourceStream(name);
+
+                if (stream is null)
+                {
+                    continue;
+                }
+
+                yield return new KeyValuePair<String, Stream>(name, stream);
+            }
+        }
+
+        public static IEnumerable<KeyValuePair<String, Stream>> ToStream(IEnumerable<KeyValuePair<String, Object?>> entries)
         {
             if (entries is null)
             {
@@ -100,9 +131,9 @@ namespace NetExtender.Utilities.Application
 
             foreach ((String? key, Object? value) in entries)
             {
-                if (value is UnmanagedMemoryStream stream)
+                if (value is Stream stream)
                 {
-                    yield return new KeyValuePair<String, UnmanagedMemoryStream>(key, stream);
+                    yield return new KeyValuePair<String, Stream>(key, stream);
                 }
             }
         }
@@ -171,6 +202,22 @@ namespace NetExtender.Utilities.Application
                 type = default;
                 result = default;
                 return false;
+            }
+        }
+
+        public static IEnumerable<KeyValuePair<String, Object?>> Enumerate(this ResourceReader reader)
+        {
+            if (reader is null)
+            {
+                throw new ArgumentNullException(nameof(reader));
+            }
+            
+            foreach (DictionaryEntry entry in reader.OfType<DictionaryEntry>())
+            {
+                if (entry.Key is String key)
+                {
+                    yield return new KeyValuePair<String, Object?>(key, entry.Value);
+                }
             }
         }
     }

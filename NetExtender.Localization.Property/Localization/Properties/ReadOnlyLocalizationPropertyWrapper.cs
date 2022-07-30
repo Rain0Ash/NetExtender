@@ -23,7 +23,19 @@ namespace NetExtender.Localization.Properties
     public sealed class ReadOnlyLocalizationPropertyWrapper : IReadOnlyLocalizationProperty
     {
         private ILocalizationProperty Internal { get; }
-        
+
+        public event EventHandler? StringChanged
+        {
+            add
+            {
+                Internal.StringChanged += value;
+            }
+            remove
+            {
+                Internal.StringChanged -= value;
+            }
+        }
+
         public event LocalizationValueChangedEventHandler? Changed
         {
             add
@@ -47,18 +59,6 @@ namespace NetExtender.Localization.Properties
                 Internal.Changed -= value;
             }
         }
-        
-        public event EventHandler? StringChanged
-        {
-            add
-            {
-                Internal.StringChanged += value;
-            }
-            remove
-            {
-                Internal.StringChanged -= value;
-            }
-        }
 
         public String Current
         {
@@ -79,7 +79,7 @@ namespace NetExtender.Localization.Properties
                 ((IConfigProperty<ILocalizationString?>) Internal).Changed -= value;
             }
         }
-        
+
         public event PropertyChangedEventHandler? PropertyChanged
         {
             add
@@ -91,7 +91,19 @@ namespace NetExtender.Localization.Properties
                 Internal.PropertyChanged -= value;
             }
         }
-        
+
+        public event LocalizationChangedEventHandler? LocalizationChanged
+        {
+            add
+            {
+                Internal.LocalizationChanged += value;
+            }
+            remove
+            {
+                Internal.LocalizationChanged -= value;
+            }
+        }
+
         public String Path
         {
             get
@@ -180,23 +192,19 @@ namespace NetExtender.Localization.Properties
             }
         }
 
-        public event LocalizationChangedEventHandler? LocalizationChanged
-        {
-            add
-            {
-                Internal.LocalizationChanged += value;
-            }
-            remove
-            {
-                Internal.LocalizationChanged -= value;
-            }
-        }
-
         public LocalizationIdentifier Identifier
         {
             get
             {
                 return Internal.Identifier;
+            }
+        }
+        
+        public Int32 Count
+        {
+            get
+            {
+                return Internal.Count;
             }
         }
         
@@ -345,7 +353,15 @@ namespace NetExtender.Localization.Properties
         {
             return Internal.ToString(format, provider);
         }
-        
+
+        public String? this[LocalizationIdentifier identifier]
+        {
+            get
+            {
+                return Internal[identifier];
+            }
+        }
+
         public void Dispose()
         {
             if (Disposing)
@@ -502,6 +518,30 @@ namespace NetExtender.Localization.Properties
                 return Internal.Identifier;
             }
         }
+        
+        public String? Value
+        {
+            get
+            {
+                return Internal.Value;
+            }
+        }
+
+        public String Current
+        {
+            get
+            {
+                return Internal.Current;
+            }
+        }
+
+        public String? Alternate
+        {
+            get
+            {
+                return Internal.Alternate;
+            }
+        }
 
         private Boolean Disposing { get; }
 
@@ -519,22 +559,6 @@ namespace NetExtender.Localization.Properties
         {
             Internal = property ?? throw new ArgumentNullException(nameof(property));
             Disposing = disposing;
-        }
-
-        public String? Value
-        {
-            get
-            {
-                return Internal.Value;
-            }
-        }
-
-        public String? Alternate
-        {
-            get
-            {
-                return Internal.Alternate;
-            }
         }
 
         public String? GetValue()
@@ -591,7 +615,15 @@ namespace NetExtender.Localization.Properties
         {
             return Internal.ToString(format, provider);
         }
-        
+
+        public String? this[LocalizationIdentifier identifier]
+        {
+            get
+            {
+                return Internal.Identifier == identifier ? Internal.Current : null;
+            }
+        }
+
         public void Dispose()
         {
             if (Disposing)

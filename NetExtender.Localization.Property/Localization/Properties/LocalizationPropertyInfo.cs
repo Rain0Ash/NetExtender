@@ -14,8 +14,29 @@ using NetExtender.Types.Culture;
 
 namespace NetExtender.Localization.Property.Localization.Properties
 {
-    public abstract class LocalizationPropertyInfo : ConfigPropertyInfo<ILocalizationString?>, ILocalizationPropertyInfo
+    public abstract class LocalizationPropertyInfo : LocalizationPropertyInfoAbstraction<ILocalizationString?>
     {
+        protected LocalizationPropertyInfo(String? key, ILocalizationString? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+            : base(key, alternate, options, sections)
+        {
+        }
+    }
+    
+    public abstract class LocalizationIdentifierPropertyInfo : LocalizationPropertyInfoAbstraction<String?>, ILocalizationIdentifierPropertyInfo
+    {
+        public abstract event LocalizationValueChangedEventHandler? Changed;
+        public sealed override LocalizationIdentifier Identifier { get; }
+
+        protected LocalizationIdentifierPropertyInfo(String? key, LocalizationIdentifier identifier, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+            : base(key, alternate, options, sections)
+        {
+            Identifier = identifier;
+        }
+    }
+
+    public abstract class LocalizationPropertyInfoAbstraction<T> : ConfigPropertyInfo<T>, ILocalizationPropertyInfo where T : class?
+    {
+        public abstract event LocalizationChangedEventHandler? LocalizationChanged;
         public abstract LocalizationIdentifier Identifier { get; }
         
         public virtual String Current
@@ -28,16 +49,16 @@ namespace NetExtender.Localization.Property.Localization.Properties
                     result = Internal.Value?.ToString();
                 }
                 
-                if (!String.IsNullOrEmpty(result))
+                if (result is not null)
                 {
                     return result;
                 }
                 
                 result = Alternate?.ToString();
-                return !String.IsNullOrEmpty(result) ? result : AlternateKeyValueIdentifier;
+                return result ?? AlternateKeyValueIdentifier;
             }
         }
-
+        
         private String? _alternate;
         protected String AlternateKeyValueIdentifier
         {
@@ -47,31 +68,16 @@ namespace NetExtender.Localization.Property.Localization.Properties
             }
         }
 
-        public abstract event LocalizationChangedEventHandler? LocalizationChanged;
-
-        protected LocalizationPropertyInfo(String? key, ILocalizationString? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
+        protected LocalizationPropertyInfoAbstraction(String? key, T alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : base(key, alternate, options, sections)
         {
         }
-
+        
         protected virtual String CreateAlternateKeyValueIdentifier()
         {
             String? key = Key;
             ImmutableArray<String> sections = key is not null ? Sections.Add(key) : Sections;
             return String.Join(".", sections.Select(section => section.ToUpperInvariant()));
-        }
-    }
-    
-    public abstract class LocalizationIdentifierPropertyInfo : ConfigPropertyInfo<String?>, ILocalizationIdentifierPropertyInfo
-    {
-        public abstract event LocalizationValueChangedEventHandler? Changed;
-        public abstract event LocalizationChangedEventHandler? LocalizationChanged;
-        public LocalizationIdentifier Identifier { get; }
-
-        protected LocalizationIdentifierPropertyInfo(String? key, LocalizationIdentifier identifier, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
-            : base(key, alternate, options, sections)
-        {
-            Identifier = identifier;
         }
     }
 }

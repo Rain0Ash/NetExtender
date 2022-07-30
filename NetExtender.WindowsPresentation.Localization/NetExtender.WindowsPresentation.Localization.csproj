@@ -11,8 +11,8 @@
         <Version>0.8.7</Version>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>../SignTool/Private/NetExtender.snk</AssemblyOriginatorKeyFile>
-        <Title>NetExtender.WindowsPresentation.Localization.Property</Title>
-        <Description>Windows Presentation Foundation Localization Property module of NetExtender Framework</Description>
+        <Title>NetExtender.WindowsPresentation.Localization</Title>
+        <Description>Windows Presentation Foundation Localization module of NetExtender Framework</Description>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/Rain0Ash/NetExtender</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -29,9 +29,9 @@
       <ProjectReference Include="..\NetExtender.Configuration.Property\NetExtender.Configuration.Property.csproj" />
       <ProjectReference Include="..\NetExtender.Configuration\NetExtender.Configuration.csproj" />
       <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
+      <ProjectReference Include="..\NetExtender.Localization.Flags\NetExtender.Localization.Flags.csproj" />
       <ProjectReference Include="..\NetExtender.Localization.Property\NetExtender.Localization.Property.csproj" />
       <ProjectReference Include="..\NetExtender.Localization\NetExtender.Localization.csproj" />
-      <ProjectReference Include="..\NetExtender.WindowsPresentation.Configuration.Property\NetExtender.WindowsPresentation.Configuration.Property.csproj" />
       <ProjectReference Include="..\NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj" />
     </ItemGroup>
 

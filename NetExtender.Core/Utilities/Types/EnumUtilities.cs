@@ -53,6 +53,18 @@ namespace NetExtender.Utilities.Types
         {
             return CacheValues<T>.Values.Count;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 Coint<T>(Boolean without) where T : unmanaged, Enum
+        {
+            return without ? CountWithoutDefault<T>() : Count<T>();
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 CountWithoutDefault<T>() where T : unmanaged, Enum
+        {
+            return CacheValuesWithoutDefault<T>.Values.Count;
+        }
 
         public static Boolean NameConvert<T, TResult>(this T value, out TResult result) where T : unmanaged, Enum where TResult : unmanaged, Enum
         {

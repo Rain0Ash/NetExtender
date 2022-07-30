@@ -4,8 +4,8 @@
 using System;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
-using NetExtender.NAudio.Types.Sound.Interfaces;
 using NetExtender.NAudio.Types.Providers;
+using NetExtender.NAudio.Types.Sound.Interfaces;
 using NetExtender.NAudio.Types.Streams;
 
 namespace NetExtender.Utilities.NAudio

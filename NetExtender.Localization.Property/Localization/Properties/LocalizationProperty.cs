@@ -23,19 +23,11 @@ namespace NetExtender.Localization.Property.Localization.Properties
 {
     public class LocalizationProperty : LocalizationPropertyInfo, ILocalizationProperty
     {
-        protected ILocalizationConfig Config { get; }
+        protected internal ILocalizationConfig Config { get; }
 
+        public event EventHandler? StringChanged;
         public event LocalizationValueChangedEventHandler? Changed;
         public override event LocalizationChangedEventHandler? LocalizationChanged;
-        public event EventHandler? StringChanged;
-
-        public override String Path
-        {
-            get
-            {
-                return Config.Path;
-            }
-        }
 
         private event ConfigurationChangedEventHandler<ILocalizationString?>? ConfigurationChanged;
         event ConfigurationChangedEventHandler<ILocalizationString?>? IConfigPropertyValueInfo<ILocalizationString?>.Changed
@@ -49,12 +41,28 @@ namespace NetExtender.Localization.Property.Localization.Properties
                 ConfigurationChanged -= value;
             }
         }
-        
+
+        public override String Path
+        {
+            get
+            {
+                return Config.Path;
+            }
+        }
+
         public override LocalizationIdentifier Identifier
         {
             get
             {
                 return Config.Localization;
+            }
+        }
+
+        public Int32 Count
+        {
+            get
+            {
+                return Value?.Count ?? Alternate?.Count ?? 0;
             }
         }
 
@@ -98,6 +106,19 @@ namespace NetExtender.Localization.Property.Localization.Properties
         }
 
         protected override event PropertyChangedEventHandler? PropertyChanged;
+        
+        protected internal LocalizationProperty(LocalizationIdentifierProperty property, ILocalizationString? alternate)
+            : this(property, property.Config, alternate)
+        {
+        }
+        
+        protected internal LocalizationProperty(ILocalizationIdentifierProperty property, ILocalizationConfig config, ILocalizationString? alternate)
+            : base(property is not null ? property.Key : throw new ArgumentNullException(nameof(property)), alternate, property.Options, property.Sections)
+        {
+            Config = config ?? throw new ArgumentNullException(nameof(config));
+            Config.Changed += OnLocalizationChanged;
+            Config.ValueChanged += OnChanged;
+        }
         
         protected internal LocalizationProperty(ILocalizationConfig config, String? key, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : this(config ?? throw new ArgumentNullException(nameof(config)), key, alternate is not null ? LocalizationString.Create(config.Default, alternate) : null, options, sections)
@@ -447,6 +468,22 @@ namespace NetExtender.Localization.Property.Localization.Properties
             return value is not null ? new LocalizationValueEntry(Key, Identifier, value.Text, Sections).GetString(format, provider) ?? String.Empty : String.Empty;
         }
 
+        public String? this[LocalizationIdentifier identifier]
+        {
+            get
+            {
+                ILocalizationString? value = Value;
+
+                if (value is not null && value.TryGetValue(identifier, out String? result))
+                {
+                    return result;
+                }
+
+                value = Alternate;
+                return value is not null && value.TryGetValue(identifier, out result) ? result : null;
+            }
+        }
+
         protected override void Dispose(Boolean disposing)
         {
             LocalizationChanged = null;
@@ -460,7 +497,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
     
     public class LocalizationIdentifierProperty : LocalizationIdentifierPropertyInfo, ILocalizationIdentifierProperty
     {
-        protected ILocalizationConfig Config { get; }
+        protected internal ILocalizationConfig Config { get; }
         
         public override event LocalizationValueChangedEventHandler? Changed;
         public override event LocalizationChangedEventHandler? LocalizationChanged;
@@ -502,6 +539,19 @@ namespace NetExtender.Localization.Property.Localization.Properties
         }
 
         protected override event PropertyChangedEventHandler? PropertyChanged;
+        
+        protected internal LocalizationIdentifierProperty(LocalizationProperty property, LocalizationIdentifier identifier, String? alternate)
+            : this(property, property.Config, identifier, alternate)
+        {
+        }
+        
+        protected internal LocalizationIdentifierProperty(ILocalizationProperty property, ILocalizationConfig config, LocalizationIdentifier identifier, String? alternate)
+            : base(property is not null ? property.Key : throw new ArgumentNullException(nameof(property)), identifier, alternate, property.Options, property.Sections)
+        {
+            Config = config ?? throw new ArgumentNullException(nameof(config));
+            Config.Changed += OnLocalizationChanged;
+            Config.ValueChanged += OnChanged;
+        }
 
         protected internal LocalizationIdentifierProperty(ILocalizationConfig config, String? key, LocalizationIdentifier identifier, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : base(key, identifier, alternate, options, sections)
@@ -521,6 +571,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
             Changed?.Invoke(this, args);
             ConfigurationChanged?.Invoke(this, new ConfigurationChangedEventArgs(args.Value, args.Handled));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Current)));
         }
         
         protected virtual void OnChanged(String? value)

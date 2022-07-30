@@ -4,6 +4,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Interop;
@@ -142,6 +143,44 @@ namespace NetExtender.Utilities.Types
             using Bitmap secondbitmap = second.ToBitmap();
             using Bitmap blending = firstbitmap.AlphaBlending(secondbitmap, opacity);
             return blending.ToBitmapSource();
+        }
+
+        public static Byte[] ToBytes(this BitmapSource image)
+        {
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(image));
+            using MemoryStream memory = new MemoryStream();
+            encoder.Save(memory);
+                
+            return memory.ToArray();
+        }
+
+        public static BitmapSource FromBytes(Byte[] image)
+        {
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            using MemoryStream memory = new MemoryStream(image);
+            PngBitmapDecoder decoder = new PngBitmapDecoder(memory, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+            return decoder.Frames[0];
+        }
+        
+        public static BitmapSource FromBytes(Stream image)
+        {
+            if (image is null)
+            {
+                throw new ArgumentNullException(nameof(image));
+            }
+
+            PngBitmapDecoder decoder = new PngBitmapDecoder(image, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+            return decoder.Frames[0];
         }
     }
 }

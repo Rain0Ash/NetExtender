@@ -455,5 +455,97 @@ namespace NetExtender.Localization.Utilities
         {
             return new ReadOnlyLocalizationIdentifierPropertyWrapper(config, key, identifier, alternate, options, sections);
         }
+        
+        public static IReadOnlyLocalizationProperty ToLocalizationProperty(this IReadOnlyLocalizationIdentifierProperty property)
+        {
+            return ToLocalizationProperty(property, null);
+        }
+
+        public static IReadOnlyLocalizationProperty ToLocalizationProperty(this IReadOnlyLocalizationIdentifierProperty property, ILocalizationString? alternate)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            IReadOnlyLocalizationConfig config = property switch
+            {
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                ReadOnlyLocalizationProperty result => result.Config,
+                ReadOnlyLocalizationIdentifierProperty result => result.Config,
+                _ => throw new ArgumentException("The property is not a read-only property with configuration.", nameof(property))
+            };
+            
+            return new ReadOnlyLocalizationProperty(property, config, alternate);
+        }
+
+        public static ILocalizationProperty ToLocalizationProperty(this ILocalizationIdentifierProperty property)
+        {
+            return ToLocalizationProperty(property, null);
+        }
+
+        public static ILocalizationProperty ToLocalizationProperty(this ILocalizationIdentifierProperty property, ILocalizationString? alternate)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            ILocalizationConfig config = property switch
+            {
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                LocalizationProperty result => result.Config,
+                LocalizationIdentifierProperty result => result.Config,
+                _ => throw new ArgumentException("The property is not a property with configuration.", nameof(property))
+            };
+            
+            return new LocalizationProperty(property, config, alternate);
+        }
+
+        public static IReadOnlyLocalizationIdentifierProperty ToIdentifierProperty(this IReadOnlyLocalizationProperty property, LocalizationIdentifier identifier)
+        {
+            return ToIdentifierProperty(property, identifier, null);
+        }
+
+        public static IReadOnlyLocalizationIdentifierProperty ToIdentifierProperty(this IReadOnlyLocalizationProperty property, LocalizationIdentifier identifier, String? alternate)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            IReadOnlyLocalizationConfig config = property switch
+            {
+                ReadOnlyLocalizationProperty result => result.Config,
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                ReadOnlyLocalizationIdentifierProperty result => result.Config,
+                _ => throw new ArgumentException("The property is not a read-only property with configuration.", nameof(property))
+            };
+            
+            return new ReadOnlyLocalizationIdentifierProperty(property, config, identifier, alternate);
+        }
+
+        public static ILocalizationIdentifierProperty ToIdentifierProperty(this ILocalizationProperty property, LocalizationIdentifier identifier)
+        {
+            return ToIdentifierProperty(property, identifier, null);
+        }
+
+        public static ILocalizationIdentifierProperty ToIdentifierProperty(this ILocalizationProperty property, LocalizationIdentifier identifier, String? alternate)
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            ILocalizationConfig config = property switch
+            {
+                LocalizationProperty result => result.Config,
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                LocalizationIdentifierProperty result => result.Config,
+                _ => throw new ArgumentException("The property is not a property with configuration.", nameof(property))
+            };
+            
+            return new LocalizationIdentifierProperty(property, config, identifier, alternate);
+        }
     }
 }

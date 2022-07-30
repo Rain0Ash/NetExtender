@@ -1387,5 +1387,46 @@ namespace NetExtender.Utilities.Types
 
             return stream.CanSeek ? stream : new SeekableStream(stream);
         }
+
+        private sealed class StreamPositionFreeze : IDisposable
+        {
+            private Stream Stream { get; }
+            private Int64 Position { get; }
+            private Boolean Safe { get; }
+            
+            public StreamPositionFreeze(Stream stream, Int64 position, Boolean safe)
+            {
+                Stream = stream ?? throw new ArgumentNullException(nameof(stream));
+                Position = position;
+                Safe = safe;
+            }
+
+            public void Dispose()
+            {
+                if (Safe)
+                {
+                    Stream.TrySetPosition(Position);
+                }
+                else
+                {
+                    Stream.Position = Position;
+                }
+            }
+        }
+
+        public static IDisposable Freeze(this Stream stream)
+        {
+            return Freeze(stream, true);
+        }
+
+        public static IDisposable Freeze(this Stream stream, Boolean safe)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
+            return new StreamPositionFreeze(stream, stream.Position, safe);
+        }
     }
 }

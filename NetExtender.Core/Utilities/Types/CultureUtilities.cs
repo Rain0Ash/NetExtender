@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Concurrent;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Culture;
@@ -45,6 +46,16 @@ namespace NetExtender.Utilities.Types
         }
 
         public static CultureInfo English { get; } = GetCultureInfo(CultureIdentifier.En);
+        
+        private static class CultureInfoCache
+        {
+            private static ConcurrentDictionary<LocalizationIdentifier, CultureInfo> Store { get; } = new ConcurrentDictionary<LocalizationIdentifier, CultureInfo>();
+
+            public static CultureInfo GetOrAdd(LocalizationIdentifier identifier)
+            {
+                return Store.GetOrAdd(identifier, localization => CultureInfo.GetCultureInfo(localization));
+            }
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static LocalizationIdentifier GetLocalizationIdentifier(UInt16 lcid)
@@ -243,7 +254,7 @@ namespace NetExtender.Utilities.Types
         {
             try
             {
-                info = CultureInfo.GetCultureInfo(identifier == default ? Default : identifier);
+                info = CultureInfoCache.GetOrAdd(identifier == default ? Default : identifier);
                 return true;
             }
             catch (Exception)
@@ -366,6 +377,86 @@ namespace NetExtender.Utilities.Types
         public static CultureInfo GetCultureInfo(String culture, CultureType type)
         {
             return TryGetCultureInfo(culture, out CultureInfo info) ? info : type.GetCultureInfo();
+        }
+
+        private static class RegionInfoCache
+        {
+            private static ConcurrentDictionary<LocalizationIdentifier, RegionInfo> Store { get; } = new ConcurrentDictionary<LocalizationIdentifier, RegionInfo>();
+
+            public static RegionInfo GetOrAdd(LocalizationIdentifier identifier)
+            {
+                return Store.GetOrAdd(identifier, localization => new RegionInfo(localization));
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RegionInfo? ToRegionInfo(UInt16 identifier)
+        {
+            try
+            {
+                return RegionInfoCache.GetOrAdd(identifier);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RegionInfo? ToRegionInfo(Int32 identifier)
+        {
+            try
+            {
+                return RegionInfoCache.GetOrAdd(identifier);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RegionInfo? ToRegionInfo(this CultureIdentifier identifier)
+        {
+            try
+            {
+                return RegionInfoCache.GetOrAdd(identifier);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RegionInfo? ToRegionInfo(this LocalizationIdentifier identifier)
+        {
+            try
+            {
+                return RegionInfoCache.GetOrAdd(identifier);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RegionInfo? ToRegionInfo(this CultureInfo info)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            try
+            {
+                return RegionInfoCache.GetOrAdd(info);
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

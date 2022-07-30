@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using NetExtender.UserInterface;
-using NetExtender.Utilities.UserInterface;
 using NetExtender.Workstation.Interfaces;
 
 namespace NetExtender.Utilities.UserInterface

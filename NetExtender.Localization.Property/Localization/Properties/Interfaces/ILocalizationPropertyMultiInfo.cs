@@ -5,13 +5,16 @@ using System;
 using NetExtender.Configuration.Properties.Interfaces;
 using NetExtender.Localization.Common.Interfaces;
 using NetExtender.Localization.Events;
+using NetExtender.Types.Culture;
 
 namespace NetExtender.Localization.Properties.Interfaces
 {
     public interface ILocalizationPropertyMultiInfo : ILocalizationPropertyInfo, IConfigPropertyValueInfo<ILocalizationString?>
     {
-        public new event LocalizationValueChangedEventHandler Changed;
         public event EventHandler StringChanged;
-        public String Current { get; }
+        public new event LocalizationValueChangedEventHandler Changed;
+        public Int32 Count { get; }
+        
+        public String? this[LocalizationIdentifier identifier] { get; }
     }
 }

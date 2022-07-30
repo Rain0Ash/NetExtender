@@ -116,7 +116,7 @@ namespace NetExtender.Types.Culture
 
         public static implicit operator CultureInfo(LocalizationIdentifier identifier)
         {
-            return identifier.IsDefault ? CultureInfo.InvariantCulture : CultureInfo.GetCultureInfo(identifier);
+            return identifier.IsDefault ? CultureInfo.InvariantCulture : identifier.GetCultureInfo();
         }
 
         public static implicit operator LocalizationIdentifier(CultureInfo? info)
@@ -189,6 +189,14 @@ namespace NetExtender.Types.Culture
                 return CultureUtilities.TryGetCultureInfo(Code, out CultureInfo info) ? info : null;
             }
         }
+        
+        public RegionInfo? Region
+        {
+            get
+            {
+                return CultureUtilities.ToRegionInfo(Code);
+            }
+        }
 
         public String? LanguageName
         {
@@ -243,6 +251,110 @@ namespace NetExtender.Types.Culture
             get
             {
                 return Info?.ThreeLetterISOLanguageName;
+            }
+        }
+        
+        public String? RegionName
+        {
+            get
+            {
+                return Region?.Name;
+            }
+        }
+        
+        public String? EnglishRegionName
+        {
+            get
+            {
+                return Region?.EnglishName;
+            }
+        }
+
+        public String? DisplayRegionName
+        {
+            get
+            {
+                return Region?.DisplayName;
+            }
+        }
+
+        public String? NativeRegionName
+        {
+            get
+            {
+                return Region?.NativeName;
+            }
+        }
+
+        public String? TwoLetterISORegionName
+        {
+            get
+            {
+                return Region?.TwoLetterISORegionName;
+            }
+        }
+        
+        public String? ThreeLetterISORegionName
+        {
+            get
+            {
+                return Region?.ThreeLetterISORegionName;
+            }
+        }
+        
+        public String? ThreeLetterWindowsRegionName
+        {
+            get
+            {
+                return Region?.ThreeLetterWindowsRegionName;
+            }
+        }
+        
+        public String? CurrencySymbol
+        {
+            get
+            {
+                return Region?.CurrencySymbol;
+            }
+        }
+        
+        public String? ISOCurrencySymbol
+        {
+            get
+            {
+                return Region?.ISOCurrencySymbol;
+            }
+        }
+        
+        public String? CurrencyEnglishName
+        {
+            get
+            {
+                return Region?.CurrencyEnglishName;
+            }
+        }
+        
+        public String? CurrencyNativeName
+        {
+            get
+            {
+                return Region?.CurrencyNativeName;
+            }
+        }
+        
+        public Boolean IsMetric
+        {
+            get
+            {
+                return Region?.IsMetric ?? false;
+            }
+        }
+        
+        public Int32 GeoId
+        {
+            get
+            {
+                return Region?.GeoId ?? 0;
             }
         }
 
