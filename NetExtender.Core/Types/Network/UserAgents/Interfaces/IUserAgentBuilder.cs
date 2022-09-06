@@ -10,32 +10,32 @@ namespace NetExtender.Types.Network.UserAgents.Interfaces
 {
     public interface IUserAgentBuilder : IUserAgentSpecificBuilder, IEnumerable<String>
     {
-        public ISet<BrowserType> Browsers { get; }
-        public ISet<UserAgentArchitecture> Architectures { get; }
-        public ISet<CultureInfo> Cultures { get; }
+        public ISet<BrowserType> Browser { get; }
+        public ISet<UserAgentArchitecture> Architecture { get; }
+        public ISet<CultureInfo> Culture { get; }
 
-        public String Build();
-        public String Build(IUserAgentSpecificBuilder builder);
+        public String? Build();
+        public String? Build(IUserAgentSpecificBuilder builder);
 
-        public IUserAgentBuilder AddBrowsers();
-        public IUserAgentBuilder AddBrowsers(BrowserType browser);
-        public IUserAgentBuilder AddBrowsers(params BrowserType[] browsers);
-        public IUserAgentBuilder AddBrowsers(IEnumerable<BrowserType> browsers);
-        public IUserAgentBuilder RemoveBrowsers(BrowserType browser);
-        public IUserAgentBuilder RemoveBrowsers(params BrowserType[] browsers);
-        public IUserAgentBuilder RemoveBrowsers(IEnumerable<BrowserType> browsers);
-        public IUserAgentBuilder AddArchitectures();
-        public IUserAgentBuilder AddArchitectures(UserAgentArchitecture architecture);
-        public IUserAgentBuilder AddArchitectures(params UserAgentArchitecture[] architectures);
-        public IUserAgentBuilder AddArchitectures(IEnumerable<UserAgentArchitecture> architectures);
-        public IUserAgentBuilder RemoveArchitectures(UserAgentArchitecture architecture);
-        public IUserAgentBuilder RemoveArchitectures(params UserAgentArchitecture[] architectures);
-        public IUserAgentBuilder RemoveArchitectures(IEnumerable<UserAgentArchitecture> architectures);
-        public IUserAgentBuilder AddCultures(CultureInfo culture);
-        public IUserAgentBuilder AddCultures(params CultureInfo[] cultures);
-        public IUserAgentBuilder AddCultures(IEnumerable<CultureInfo> cultures);
-        public IUserAgentBuilder RemoveCultures(CultureInfo culture);
-        public IUserAgentBuilder RemoveCultures(params CultureInfo[] cultures);
-        public IUserAgentBuilder RemoveCultures(IEnumerable<CultureInfo> cultures);
+        public IUserAgentBuilder AddBrowser();
+        public IUserAgentBuilder AddBrowser(BrowserType browser);
+        public IUserAgentBuilder AddBrowser(params BrowserType[] browsers);
+        public IUserAgentBuilder AddBrowser(IEnumerable<BrowserType> browsers);
+        public IUserAgentBuilder RemoveBrowser(BrowserType browser);
+        public IUserAgentBuilder RemoveBrowser(params BrowserType[] browsers);
+        public IUserAgentBuilder RemoveBrowser(IEnumerable<BrowserType> browsers);
+        public IUserAgentBuilder AddArchitecture();
+        public IUserAgentBuilder AddArchitecture(UserAgentArchitecture architecture);
+        public IUserAgentBuilder AddArchitecture(params UserAgentArchitecture[] architectures);
+        public IUserAgentBuilder AddArchitecture(IEnumerable<UserAgentArchitecture> architectures);
+        public IUserAgentBuilder RemoveArchitecture(UserAgentArchitecture architecture);
+        public IUserAgentBuilder RemoveArchitecture(params UserAgentArchitecture[] architectures);
+        public IUserAgentBuilder RemoveArchitecture(IEnumerable<UserAgentArchitecture> architectures);
+        public IUserAgentBuilder AddCulture(CultureInfo? culture);
+        public IUserAgentBuilder AddCulture(params CultureInfo?[] cultures);
+        public IUserAgentBuilder AddCulture(IEnumerable<CultureInfo?> cultures);
+        public IUserAgentBuilder RemoveCulture(CultureInfo? culture);
+        public IUserAgentBuilder RemoveCulture(params CultureInfo?[] cultures);
+        public IUserAgentBuilder RemoveCulture(IEnumerable<CultureInfo?> cultures);
     }
 }

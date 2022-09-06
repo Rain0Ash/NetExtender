@@ -8,7 +8,7 @@ namespace NetExtender.Types.Progress
 {
     public class ConditionalProgress<T> : Progress<T>
     {
-        private Func<T, Boolean> Condition { get; }
+        protected Func<T, Boolean> Condition { get; }
 
         public ConditionalProgress(Func<T, Boolean> condition, Action<T> handler)
             : base(handler)

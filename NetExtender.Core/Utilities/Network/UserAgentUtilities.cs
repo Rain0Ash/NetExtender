@@ -5,10 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
+using NetExtender.Random;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Network.UserAgents;
 using NetExtender.Types.Network.UserAgents.Interfaces;
 using NetExtender.Types.Network.UserAgents.Specific;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Network
 {
@@ -27,6 +29,110 @@ namespace NetExtender.Utilities.Network
                 [BrowserType.Safari] = SafariUserAgentBuilder.Default,
                 [BrowserType.Other] = UserAgentSpecificBuilder.Default
             }.ToImmutableDictionary();
+        
+        private static class UserAgentBrowserDistribution
+        {
+            public static IDynamicRandomSelector<BrowserType> Selector { get; }
+
+            static UserAgentBrowserDistribution()
+            {
+                Selector = new DynamicRandomSelector<BrowserType>(BrowserUtilities.Distribution);
+            }
+        }
+
+        public static IDynamicRandomSelector<BrowserType> BrowserDistribution
+        {
+            get
+            {
+                return UserAgentBrowserDistribution.Selector;
+            }
+        }
+        
+        public static BrowserType RandomBrowser
+        {
+            get
+            {
+                return EnumUtilities.Random<BrowserType>();
+            }
+        }
+        
+        public static BrowserType RandomBrowserWithDistribution
+        {
+            get
+            {
+                return UserAgentBrowserDistribution.Selector.GetRandom();
+            }
+        }
+        
+        private static class UserAgentArchitectureDistribution
+        {
+            public static IDynamicRandomSelector<UserAgentArchitecture> Selector { get; }
+
+            static UserAgentArchitectureDistribution()
+            {
+                //TODO:
+                Selector = new DynamicRandomSelector<UserAgentArchitecture>();
+            }
+        }
+
+        public static IDynamicRandomSelector<UserAgentArchitecture> ArchitectureDistribution
+        {
+            get
+            {
+                return UserAgentArchitectureDistribution.Selector;
+            }
+        }
+        
+        public static UserAgentArchitecture RandomArchitecture
+        {
+            get
+            {
+                return EnumUtilities.Random<UserAgentArchitecture>();
+            }
+        }
+        
+        public static UserAgentArchitecture RandomArchitectureWithDistribution
+        {
+            get
+            {
+                return UserAgentArchitectureDistribution.Selector.GetRandom();
+            }
+        }
+        
+        private static class UserAgentCultureDistribution
+        {
+            public static IDynamicRandomSelector<CultureInfo> Selector { get; }
+
+            static UserAgentCultureDistribution()
+            {
+                //TODO:
+                Selector = new DynamicRandomSelector<CultureInfo>();
+            }
+        }
+
+        public static IDynamicRandomSelector<CultureInfo> CultureDistribution
+        {
+            get
+            {
+                return UserAgentCultureDistribution.Selector;
+            }
+        }
+
+        public static CultureInfo RandomCulture
+        {
+            get
+            {
+                return UserAgentCultureDistribution.Selector.Keys.GetRandomOrDefault(CultureUtilities.English);
+            }
+        }
+
+        public static CultureInfo RandomCultureWithDistribution
+        {
+            get
+            {
+                return UserAgentCultureDistribution.Selector.GetRandom();
+            }
+        }
 
         public static String RandomUserAgent
         {
@@ -105,7 +211,7 @@ namespace NetExtender.Utilities.Network
             }
 
             ThrowIfSessionUserAgentAlreadyInitialized();
-            return InitializeSessionUserAgent(builder.Build());
+            return InitializeSessionUserAgent(builder.Build() ?? OtherUserAgent);
         }
         
         public static String InitializeSessionUserAgent(BrowserType type)

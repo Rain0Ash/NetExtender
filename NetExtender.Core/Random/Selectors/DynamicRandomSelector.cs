@@ -18,7 +18,7 @@ namespace NetExtender.Random
     /// depending on count of items, making it more performant for general use case.
     /// </summary>
     /// <typeparam name="T">Type of items you wish this selector returns</typeparam>
-    public class DynamicRandomSelector<T> : RandomSelectorBuilder<T> where T : notnull
+    public class DynamicRandomSelector<T> : RandomSelectorBuilder<T>, IDynamicRandomSelector<T> where T : notnull
     {
         protected List<Double> Distribution { get; }
         protected Func<List<Double>, Double, Int32>? Selector { get; set; }

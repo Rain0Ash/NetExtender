@@ -7,12 +7,103 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using NetExtender.Utilities.Application;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.IO
 {
     public static class DirectoryUtilities
     {
+        public static String? Desktop
+        {
+            get
+            {
+                return ExpandSpecialFolder(Environment.SpecialFolder.Desktop);
+            }
+        }
+
+        public static String? Computer
+        {
+            get
+            {
+                return ExpandSpecialFolder(Environment.SpecialFolder.MyComputer);
+            }
+        }
+
+        public static String? Documents
+        {
+            get
+            {
+                return ExpandSpecialFolder(Environment.SpecialFolder.MyDocuments);
+            }
+        }
+        
+        public static String? Music
+        {
+            get
+            {
+                return ExpandSpecialFolder(Environment.SpecialFolder.MyMusic);
+            }
+        }
+        
+        public static String? Pictures
+        {
+            get
+            {
+                return ExpandSpecialFolder(Environment.SpecialFolder.MyPictures);
+            }
+        }
+        
+        public static String? Videos
+        {
+            get
+            {
+                return ExpandSpecialFolder(Environment.SpecialFolder.MyVideos);
+            }
+        }
+        
+        public static String? Temp
+        {
+            get
+            {
+                try
+                {
+                    String directory = Path.GetTempPath();
+                    return !String.IsNullOrEmpty(directory) ? directory : null;
+                }
+                catch (Exception)
+                {
+                    return null;
+                }
+            }
+        }
+        
+        public static String? Current
+        {
+            get
+            {
+                return ApplicationUtilities.Directory;
+            }
+        }
+
+        public static String? ExpandSpecialFolder(this Environment.SpecialFolder folder)
+        {
+            return ExpandSpecialFolder(folder, Environment.SpecialFolderOption.None);
+        }
+
+        public static String? ExpandSpecialFolder(this Environment.SpecialFolder folder, Environment.SpecialFolderOption option)
+        {
+            try
+            {
+                String directory = Environment.GetFolderPath(folder, option);
+                return !String.IsNullOrEmpty(directory) ? directory : null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        
         public static Boolean TryCreateDirectory(String path)
         {
             return TryCreateDirectory(path, out _);

@@ -137,85 +137,85 @@ namespace NetExtender.Utilities.Numerics
         private const Int32 DecimalMaxIteration = 100;
 
         public static BigInteger DecimalMaximumBigInteger { get; } = new BigInteger(Decimal.MaxValue);
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNaN(this Single value)
         {
             return Single.IsNaN(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNaN(this Double value)
         {
             return Double.IsNaN(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsInfinity(this Single value)
         {
             return Single.IsInfinity(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsInfinity(this Double value)
         {
             return Double.IsInfinity(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsPositiveInfinity(this Single value)
         {
             return Single.IsPositiveInfinity(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsPositiveInfinity(this Double value)
         {
             return Double.IsPositiveInfinity(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNegativeInfinity(this Single value)
         {
             return Single.IsNegativeInfinity(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNegativeInfinity(this Double value)
         {
             return Double.IsNegativeInfinity(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNormal(this Single value)
         {
             return Single.IsNormal(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNormal(this Double value)
         {
             return Double.IsNormal(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSubnormal(this Single value)
         {
             return Single.IsSubnormal(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSubnormal(this Double value)
         {
             return Double.IsSubnormal(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsFinite(this Single value)
         {
             return Single.IsFinite(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsFinite(this Double value)
         {
@@ -227,85 +227,91 @@ namespace NetExtender.Utilities.Numerics
         {
             return Single.IsNaN(value) ? value : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double AsNaN(this Double value, Double alternate)
         {
             return Double.IsNaN(value) ? value : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single AsInfinity(this Single value, Single alternate)
         {
             return Single.IsInfinity(value) ? value : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double AsInfinity(this Double value, Double alternate)
         {
             return Double.IsInfinity(value) ? value : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single AsPositiveInfinity(this Single value, Single alternate)
         {
             return Single.IsPositiveInfinity(value) ? value : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double AsPositiveInfinity(this Double value, Double alternate)
         {
             return Double.IsPositiveInfinity(value) ? value : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single AsNegativeInfinity(this Single value, Single alternate)
         {
             return Single.IsNegativeInfinity(value) ? value : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double AsNegativeInfinity(this Double value, Double alternate)
         {
             return Double.IsNegativeInfinity(value) ? value : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single AsNormal(this Single value, Single alternate)
         {
             return Single.IsNormal(value) ? value : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double AsNormal(this Double value, Double alternate)
         {
             return Double.IsNormal(value) ? value : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single AsSubnormal(this Single value, Single alternate)
         {
             return Single.IsSubnormal(value) ? value : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double AsSubnormal(this Double value, Double alternate)
         {
             return Double.IsSubnormal(value) ? value : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single AsFinite(this Single value, Single alternate)
         {
             return Single.IsFinite(value) ? value : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double AsFinite(this Double value, Double alternate)
         {
             return Double.IsFinite(value) ? value : alternate;
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Single AsSingle(this Double value)
+        {
+            return (Single) value;
+        }
+
         /// <summary>
         /// Returns the greatest common denominator between value1 and value2
         /// </summary>
@@ -552,7 +558,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return Math.Pow(value, pow);
         }
-        
+
         /// <summary>
         /// Power to the integer value
         /// </summary>
@@ -652,7 +658,7 @@ namespace NetExtender.Utilities.Numerics
             return -Exp(pow * Log(-value));
         }
 
-#region PowSwitch
+        #region PowSwitch
 
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Int32 Pow8(Int32 value)
@@ -693,7 +699,7 @@ namespace NetExtender.Utilities.Numerics
                 _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static UInt32 Pow8(UInt32 value)
         {
@@ -863,7 +869,7 @@ namespace NetExtender.Utilities.Numerics
                 _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static UInt64 Pow8(UInt64 value)
         {
@@ -931,7 +937,7 @@ namespace NetExtender.Utilities.Numerics
                 _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static UInt32 Pow10(UInt32 value)
         {
@@ -1090,7 +1096,7 @@ namespace NetExtender.Utilities.Numerics
                 _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static UInt64 Pow10(UInt64 value)
         {
@@ -1152,7 +1158,7 @@ namespace NetExtender.Utilities.Numerics
                 _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static UInt32 Pow16(UInt32 value)
         {
@@ -1294,7 +1300,7 @@ namespace NetExtender.Utilities.Numerics
                 _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static UInt64 Pow16(UInt64 value)
         {
@@ -1319,8 +1325,8 @@ namespace NetExtender.Utilities.Numerics
                 _ => throw new OverflowException()
             };
         }
-        
-#endregion
+
+        #endregion
 
         /// <inheritdoc cref="MathF.Log(Single)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1464,8 +1470,8 @@ namespace NetExtender.Utilities.Numerics
             return Log(value) * DecimalConstants.InvertedLog10;
         }
 
-#region DigitsCount
-        
+        #region DigitsCount
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         private static Int32 BinaryDigitsCount(UInt32 value)
         {
@@ -1477,7 +1483,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return value > 0 ? sizeof(UInt64) * BitUtilities.BitInByte - BitOperations.LeadingZeroCount(value) : 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         private static Int32 DigitsIndexCount(UInt32 value)
         {
@@ -1519,7 +1525,7 @@ namespace NetExtender.Utilities.Numerics
                 _ => throw new OverflowException()
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         private static Int32 DigitsIndexCount(UInt64 value)
         {
@@ -1603,12 +1609,12 @@ namespace NetExtender.Utilities.Numerics
             {
                 return Int32.MinValue;
             }
-            
+
             UInt32 cast = value > 0 ? (UInt32) value : value > SByte.MinValue ? (UInt32) (-value) : (UInt32) SByte.MaxValue;
             Int32 digits = DigitsIndexCount(cast);
             return cast >= Pow10U(digits) ? digits : digits - 1;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Int32 ILog10(this Byte value)
         {
@@ -1616,12 +1622,12 @@ namespace NetExtender.Utilities.Numerics
             {
                 return Int32.MinValue;
             }
-            
+
             UInt32 cast = value;
             Int32 digits = DigitsIndexCount(cast);
             return cast >= Pow10U(digits) ? digits : digits - 1;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Int32 ILog10(this Int16 value)
         {
@@ -1629,12 +1635,12 @@ namespace NetExtender.Utilities.Numerics
             {
                 return Int32.MinValue;
             }
-            
+
             UInt32 cast = value > 0 ? (UInt32) value : value > Int16.MinValue ? (UInt32) (-value) : (UInt32) Int16.MaxValue;
             Int32 digits = DigitsIndexCount(cast);
             return cast >= Pow10U(digits) ? digits : digits - 1;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Int32 ILog10(this UInt16 value)
         {
@@ -1642,12 +1648,12 @@ namespace NetExtender.Utilities.Numerics
             {
                 return Int32.MinValue;
             }
-            
+
             UInt32 cast = value;
             Int32 digits = DigitsIndexCount(cast);
             return cast >= Pow10U(digits) ? digits : digits - 1;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Int32 ILog10(this Int32 value)
         {
@@ -1655,12 +1661,12 @@ namespace NetExtender.Utilities.Numerics
             {
                 return Int32.MinValue;
             }
-            
+
             UInt32 cast = value > 0 ? (UInt32) value : value > Int32.MinValue ? (UInt32) (-value) : Int32.MaxValue;
             Int32 digits = DigitsIndexCount(cast);
             return cast >= Pow10U(digits) ? digits : digits - 1;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Int32 ILog10(this UInt32 value)
         {
@@ -1668,11 +1674,11 @@ namespace NetExtender.Utilities.Numerics
             {
                 return Int32.MinValue;
             }
-            
+
             Int32 digits = DigitsIndexCount(value);
             return value >= Pow10U(digits) ? digits : digits - 1;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Int32 ILog10(this Int64 value)
         {
@@ -1680,12 +1686,12 @@ namespace NetExtender.Utilities.Numerics
             {
                 return Int32.MinValue;
             }
-            
+
             UInt64 cast = value > 0 ? (UInt64) value : value > Int64.MinValue ? (UInt64) (-value) : Int64.MaxValue;
             Int32 digits = DigitsIndexCount(cast);
             return cast >= Pow10UL(digits) ? digits : digits - 1;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Int32 ILog10(this UInt64 value)
         {
@@ -1693,7 +1699,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 return Int32.MinValue;
             }
-            
+
             Int32 digits = DigitsIndexCount(value);
             return value >= Pow10UL(digits) ? digits : digits - 1;
         }
@@ -1847,7 +1853,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            
+
             return value != 0 && ILog10(value) >= index ? value / Pow10(index) % 10 : 0;
         }
 
@@ -1858,7 +1864,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 return Digit(value, index.Value);
             }
-            
+
             if (index.Value == 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
@@ -1868,11 +1874,11 @@ namespace NetExtender.Utilities.Numerics
             {
                 return 0;
             }
-            
+
             Int32 count = ILog10(value) - index.Value + 1;
             return count >= 0 ? value / Pow10(count) % 10 : throw new ArgumentOutOfRangeException(nameof(index));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int32 Digit(this UInt32 value, Int32 index)
         {
@@ -1880,10 +1886,10 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            
+
             return value != 0 && ILog10(value) >= index ? (Int32) (value / Pow10U(index) % 10U) : 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int32 Digit(this UInt32 value, Index index)
         {
@@ -1891,21 +1897,21 @@ namespace NetExtender.Utilities.Numerics
             {
                 return Digit(value, index.Value);
             }
-            
+
             if (index.Value == 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            
+
             if (value == 0)
             {
                 return 0;
             }
-            
+
             Int32 count = ILog10(value) - index.Value + 1;
             return count >= 0 ? (Int32) (value / Pow10U(count) % 10U) : throw new ArgumentOutOfRangeException(nameof(index));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int32 Digit(this Int64 value, Int32 index)
         {
@@ -1913,10 +1919,10 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            
+
             return value != 0 && ILog10(value) >= index ? (Int32) (value / Pow10L(index) % 10L) : 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int32 Digit(this Int64 value, Index index)
         {
@@ -1924,21 +1930,21 @@ namespace NetExtender.Utilities.Numerics
             {
                 return Digit(value, index.Value);
             }
-            
+
             if (index.Value == 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            
+
             if (value == 0)
             {
                 return 0;
             }
-            
+
             Int32 count = ILog10(value) - index.Value + 1;
             return count >= 0 ? (Int32) (value / Pow10L(count) % 10L) : throw new ArgumentOutOfRangeException(nameof(index));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int32 Digit(this UInt64 value, Int32 index)
         {
@@ -1949,7 +1955,7 @@ namespace NetExtender.Utilities.Numerics
 
             return value != 0 && ILog10(value) >= index ? (Int32) (value / Pow10UL(index) % 10UL) : 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int32 Digit(this UInt64 value, Index index)
         {
@@ -1962,12 +1968,12 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            
+
             if (value == 0)
             {
                 return 0;
             }
-            
+
             Int32 count = ILog10(value) - index.Value + 1;
             return count >= 0 ? (Int32) (value / Pow10UL(count) % 10UL) : throw new ArgumentOutOfRangeException(nameof(index));
         }
@@ -1996,15 +2002,15 @@ namespace NetExtender.Utilities.Numerics
             {
                 return unchecked((SByte) (value + Pow10(index) * (digit - current)));
             }
-            
+
             if (digit < current)
             {
                 return unchecked((SByte) (value - Pow10(index) * (current - digit)));
             }
-            
+
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Byte SetDigit(this Byte value, Int32 index, Int32 digit)
         {
@@ -2029,15 +2035,15 @@ namespace NetExtender.Utilities.Numerics
             {
                 return unchecked((Byte) (value + Pow10U(index) * (digit - current)));
             }
-            
+
             if (digit < current)
             {
                 return unchecked((Byte) (value - Pow10U(index) * (current - digit)));
             }
-            
+
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int16 SetDigit(this Int16 value, Int32 index, Int32 digit)
         {
@@ -2062,15 +2068,15 @@ namespace NetExtender.Utilities.Numerics
             {
                 return unchecked((Int16) (value + Pow10(index) * (digit - current)));
             }
-            
+
             if (digit < current)
             {
                 return unchecked((Int16) (value - Pow10(index) * (current - digit)));
             }
-            
+
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static UInt16 SetDigit(this UInt16 value, Int32 index, Int32 digit)
         {
@@ -2095,15 +2101,15 @@ namespace NetExtender.Utilities.Numerics
             {
                 return unchecked((UInt16) (value + Pow10U(index) * (digit - current)));
             }
-            
+
             if (digit < current)
             {
                 return unchecked((UInt16) (value - Pow10U(index) * (current - digit)));
             }
-            
+
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int32 SetDigit(this Int32 value, Int32 index, Int32 digit)
         {
@@ -2128,15 +2134,15 @@ namespace NetExtender.Utilities.Numerics
             {
                 return value + Pow10(index) * (digit - current);
             }
-            
+
             if (digit < current)
             {
                 return value - Pow10(index) * (current - digit);
             }
-            
+
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static UInt32 SetDigit(this UInt32 value, Int32 index, Int32 digit)
         {
@@ -2161,15 +2167,15 @@ namespace NetExtender.Utilities.Numerics
             {
                 return value + Pow10U(index) * (UInt32) (digit - current);
             }
-            
+
             if (digit < current)
             {
                 return value - Pow10U(index) * (UInt32) (current - digit);
             }
-            
+
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int64 SetDigit(this Int64 value, Int32 index, Int32 digit)
         {
@@ -2194,15 +2200,15 @@ namespace NetExtender.Utilities.Numerics
             {
                 return value + Pow10L(index) * (digit - current);
             }
-            
+
             if (digit < current)
             {
                 return value - Pow10L(index) * (current - digit);
             }
-            
+
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static UInt64 SetDigit(this UInt64 value, Int32 index, Int32 digit)
         {
@@ -2227,15 +2233,15 @@ namespace NetExtender.Utilities.Numerics
             {
                 return value + Pow10UL(index) * (UInt64) (digit - current);
             }
-            
+
             if (digit < current)
             {
                 return value - Pow10UL(index) * (UInt64) (current - digit);
             }
-            
+
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int32 SumDigits(this SByte value)
         {
@@ -2245,7 +2251,7 @@ namespace NetExtender.Utilities.Numerics
                 sum += value % 10;
                 value /= 10;
             }
-            
+
             return Math.Abs(sum);
         }
 
@@ -2258,10 +2264,10 @@ namespace NetExtender.Utilities.Numerics
                 sum += value % 10;
                 value /= 10;
             }
-            
+
             return sum;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int32 SumDigits(this Int16 value)
         {
@@ -2271,7 +2277,7 @@ namespace NetExtender.Utilities.Numerics
                 sum += value % 10;
                 value /= 10;
             }
-            
+
             return Math.Abs(sum);
         }
 
@@ -2284,7 +2290,7 @@ namespace NetExtender.Utilities.Numerics
                 sum += value % 10;
                 value /= 10;
             }
-            
+
             return sum;
         }
 
@@ -2297,7 +2303,7 @@ namespace NetExtender.Utilities.Numerics
                 sum += value % 10;
                 value /= 10;
             }
-            
+
             return Math.Abs(sum);
         }
 
@@ -2310,10 +2316,10 @@ namespace NetExtender.Utilities.Numerics
                 sum += value % 10;
                 value /= 10;
             }
-            
+
             return (Int32) sum;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Int32 SumDigits(this Int64 value)
         {
@@ -2323,7 +2329,7 @@ namespace NetExtender.Utilities.Numerics
                 sum += value % 10;
                 value /= 10;
             }
-            
+
             return (Int32) Math.Abs(sum);
         }
 
@@ -2336,10 +2342,10 @@ namespace NetExtender.Utilities.Numerics
                 sum += value % 10;
                 value /= 10;
             }
-            
+
             return (Int32) sum;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static IEnumerable<Int32> EnumerateDigits(this SByte value)
         {
@@ -2359,7 +2365,7 @@ namespace NetExtender.Utilities.Numerics
                 value /= 10;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static IEnumerable<Int32> EnumerateDigits(this Int16 value)
         {
@@ -2399,7 +2405,7 @@ namespace NetExtender.Utilities.Numerics
                 value /= 10;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static IEnumerable<Int32> EnumerateDigits(this Int64 value)
         {
@@ -2454,7 +2460,6 @@ namespace NetExtender.Utilities.Numerics
                 }
 
                 current = (previous + value / previous) * DecimalConstants.Half;
-
             } while (Abs(previous - current) > epsilon);
 
             return current;
@@ -3377,7 +3382,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return value > 0 && (value & (value - 1)) == 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Boolean IsZeroOrPowerOf2(UInt64 value)
         {
@@ -3481,14 +3486,14 @@ namespace NetExtender.Utilities.Numerics
         {
             return BitConverter.GetBytes(Decimal.GetBits(value)[3])[2];
         }
-        
+
         public static BigInteger Factorial(UInt32 value)
         {
             if (value <= 1)
             {
                 return 1;
             }
-            
+
             BigInteger sum = value;
             BigInteger result = value;
             for (UInt32 i = value - 2; i > 1; i -= 2)
@@ -3747,13 +3752,13 @@ namespace NetExtender.Utilities.Numerics
         {
             return value / DecimalConstants.MaxPlaces;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Double Sum<T>(this IEnumerable<T> source, Func<T, Double> selector)
         {
             return Enumerable.Sum(source, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static BigInteger Sum<T>(this IEnumerable<T> source, Func<T, BigInteger> selector)
         {
@@ -3769,7 +3774,7 @@ namespace NetExtender.Utilities.Numerics
 
             return source.Aggregate(BigInteger.Zero, (current, item) => current + selector(item));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Complex Sum<T>(this IEnumerable<T> source, Func<T, Complex> selector)
         {
@@ -3826,7 +3831,7 @@ namespace NetExtender.Utilities.Numerics
                 return result;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
         public static Complex Multiply(this IEnumerable<Complex> source)
@@ -4227,7 +4232,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return Math.BitDecrement(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Single> Range(Single stop)
         {
@@ -4257,7 +4262,7 @@ namespace NetExtender.Utilities.Numerics
                     {
                         break;
                     }
-                
+
                     yield return result;
                 }
             }
@@ -4270,12 +4275,12 @@ namespace NetExtender.Utilities.Numerics
                     {
                         break;
                     }
-                
+
                     yield return result;
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Double> Range(Double stop)
         {
@@ -4305,7 +4310,7 @@ namespace NetExtender.Utilities.Numerics
                     {
                         break;
                     }
-                
+
                     yield return result;
                 }
             }
@@ -4318,12 +4323,12 @@ namespace NetExtender.Utilities.Numerics
                     {
                         break;
                     }
-                
+
                     yield return result;
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Decimal> Range(Decimal stop)
         {
@@ -4357,12 +4362,12 @@ namespace NetExtender.Utilities.Numerics
                     {
                         break;
                     }
-                    
+
                     if (result >= stop)
                     {
                         break;
                     }
-                
+
                     yield return result;
                 }
             }
@@ -4379,12 +4384,12 @@ namespace NetExtender.Utilities.Numerics
                     {
                         break;
                     }
-                    
+
                     if (result <= stop)
                     {
                         break;
                     }
-                
+
                     yield return result;
                 }
             }
@@ -4424,7 +4429,7 @@ namespace NetExtender.Utilities.Numerics
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Single> RangeInclude(Single stop)
         {
@@ -4454,7 +4459,7 @@ namespace NetExtender.Utilities.Numerics
                     {
                         break;
                     }
-                
+
                     yield return result;
                 }
             }
@@ -4467,12 +4472,12 @@ namespace NetExtender.Utilities.Numerics
                     {
                         break;
                     }
-                
+
                     yield return result;
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Double> RangeInclude(Double stop)
         {
@@ -4502,7 +4507,7 @@ namespace NetExtender.Utilities.Numerics
                     {
                         break;
                     }
-                
+
                     yield return result;
                 }
             }
@@ -4515,12 +4520,12 @@ namespace NetExtender.Utilities.Numerics
                     {
                         break;
                     }
-                
+
                     yield return result;
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Decimal> RangeInclude(Decimal stop)
         {
@@ -4554,12 +4559,12 @@ namespace NetExtender.Utilities.Numerics
                     {
                         break;
                     }
-                    
+
                     if (result > stop)
                     {
                         break;
                     }
-                
+
                     yield return result;
                 }
             }
@@ -4576,12 +4581,12 @@ namespace NetExtender.Utilities.Numerics
                     {
                         break;
                     }
-                    
+
                     if (result < stop)
                     {
                         break;
                     }
-                
+
                     yield return result;
                 }
             }
@@ -4996,45 +5001,202 @@ namespace NetExtender.Utilities.Numerics
                     left = array[centerRight - 1];
                     right = array[centerRight];
                     q3 = (left + right) / 2;
+                    return Tuple.Create(q1, q2, q3);
                 }
-                else
-                {
-                    q1 = array[centerLeft];
-                    q3 = array[centerRight];
-                }
+
+                q1 = array[centerLeft];
+                q3 = array[centerRight];
+                return Tuple.Create(q1, q2, q3);
             }
-            else
+
+            //odd number so the median is just the midpoint in the array
+            q2 = array[center];
+
+            if ((count - 1) % 4 == 0)
             {
-                //odd number so the median is just the midpoint in the array
-                q2 = array[center];
+                //======================(4n-1) POINTS =========================
+                centerLeft = (count - 1) / 4;
+                centerRight = centerLeft * 3;
+                left = array[centerLeft - 1];
+                right = array[centerLeft];
+                q1 = left * 0.25 + right * 0.75;
+                left = array[centerRight];
+                right = array[centerRight + 1];
+                q3 = left * 0.75 + right * 0.25;
 
-                if ((count - 1) % 4 == 0)
-                {
-                    //======================(4n-1) POINTS =========================
-                    centerLeft = (count - 1) / 4;
-                    centerRight = centerLeft * 3;
-                    left = array[centerLeft - 1];
-                    right = array[centerLeft];
-                    q1 = left * 0.25 + right * 0.75;
-                    left = array[centerRight];
-                    right = array[centerRight + 1];
-                    q3 = left * 0.75 + right * 0.25;
-                }
-                else
-                {
-                    //======================(4n-3) POINTS =========================
-                    centerLeft = (count - 3) / 4;
-                    centerRight = centerLeft * 3 + 1;
-                    left = array[centerLeft];
-                    right = array[centerLeft + 1];
-                    q1 = left * 0.75 + right * 0.25;
-                    left = array[centerRight];
-                    right = array[centerRight + 1];
-                    q3 = left * 0.25 + right * 0.75;
-                }
+                return Tuple.Create(q1, q2, q3);
             }
 
+            //======================(4n-3) POINTS =========================
+            centerLeft = (count - 3) / 4;
+            centerRight = centerLeft * 3 + 1;
+            left = array[centerLeft];
+            right = array[centerLeft + 1];
+            q1 = left * 0.75 + right * 0.25;
+            left = array[centerRight];
+            right = array[centerRight + 1];
+            q3 = left * 0.25 + right * 0.75;
             return Tuple.Create(q1, q2, q3);
+        }
+    }
+
+    [SuppressMessage("ReSharper", "CognitiveComplexity")]
+    public static partial class MathUnsafe
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Increment<T>(T value) where T : unmanaged, IConvertible
+        {
+            if (typeof(T) == typeof(Char))
+            {
+                Char val = (Char) unchecked(Unsafe.As<T, Char>(ref value) + 1);
+                return Unsafe.As<Char, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(SByte))
+            {
+                SByte val = (SByte) unchecked(Unsafe.As<T, SByte>(ref value) + 1);
+                return Unsafe.As<SByte, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(Byte))
+            {
+                Byte val = (Byte) unchecked(Unsafe.As<T, Byte>(ref value) + 1);
+                return Unsafe.As<Byte, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(Int16))
+            {
+                Int16 val = (Int16) unchecked(Unsafe.As<T, Int16>(ref value) + 1);
+                return Unsafe.As<Int16, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(UInt16))
+            {
+                UInt16 val = (UInt16) unchecked(Unsafe.As<T, UInt16>(ref value) + 1);
+                return Unsafe.As<UInt16, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(Int32))
+            {
+                Int32 val = unchecked(Unsafe.As<T, Int32>(ref value) + 1);
+                return Unsafe.As<Int32, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(UInt32))
+            {
+                UInt32 val = unchecked(Unsafe.As<T, UInt32>(ref value) + 1);
+                return Unsafe.As<UInt32, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(Int64))
+            {
+                Int64 val = unchecked(Unsafe.As<T, Int64>(ref value) + 1);
+                return Unsafe.As<Int64, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(UInt64))
+            {
+                UInt64 val = unchecked(Unsafe.As<T, UInt64>(ref value) + 1);
+                return Unsafe.As<UInt64, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(Single))
+            {
+                Single val = Unsafe.As<T, Single>(ref value) + 1;
+                return Unsafe.As<Single, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(Double))
+            {
+                Double val = Unsafe.As<T, Double>(ref value) + 1;
+                return Unsafe.As<Double, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(Decimal))
+            {
+                Decimal val = Unsafe.As<T, Decimal>(ref value) + 1;
+                return Unsafe.As<Decimal, T>(ref val);
+            }
+
+            throw new NotSupportedException($"Operator + is not supported for {typeof(T)} type");
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Decrement<T>(T value) where T : unmanaged, IConvertible
+        {
+            if (typeof(T) == typeof(Char))
+            {
+                Char val = (Char) unchecked(Unsafe.As<T, Char>(ref value) - 1);
+                return Unsafe.As<Char, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(SByte))
+            {
+                SByte val = (SByte) unchecked(Unsafe.As<T, SByte>(ref value) - 1);
+                return Unsafe.As<SByte, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(Byte))
+            {
+                Byte val = (Byte) unchecked(Unsafe.As<T, Byte>(ref value) - 1);
+                return Unsafe.As<Byte, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(Int16))
+            {
+                Int16 val = (Int16) unchecked(Unsafe.As<T, Int16>(ref value) - 1);
+                return Unsafe.As<Int16, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(UInt16))
+            {
+                UInt16 val = (UInt16) unchecked(Unsafe.As<T, UInt16>(ref value) - 1);
+                return Unsafe.As<UInt16, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(Int32))
+            {
+                Int32 val = unchecked(Unsafe.As<T, Int32>(ref value) - 1);
+                return Unsafe.As<Int32, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(UInt32))
+            {
+                UInt32 val = unchecked(Unsafe.As<T, UInt32>(ref value) - 1);
+                return Unsafe.As<UInt32, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(Int64))
+            {
+                Int64 val = unchecked(Unsafe.As<T, Int64>(ref value) - 1);
+                return Unsafe.As<Int64, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(UInt64))
+            {
+                UInt64 val = unchecked(Unsafe.As<T, UInt64>(ref value) - 1);
+                return Unsafe.As<UInt64, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(Single))
+            {
+                Single val = Unsafe.As<T, Single>(ref value) - 1;
+                return Unsafe.As<Single, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(Double))
+            {
+                Double val = Unsafe.As<T, Double>(ref value) - 1;
+                return Unsafe.As<Double, T>(ref val);
+            }
+
+            if (typeof(T) == typeof(Decimal))
+            {
+                Decimal val = Unsafe.As<T, Decimal>(ref value) - 1;
+                return Unsafe.As<Decimal, T>(ref val);
+            }
+
+            throw new NotSupportedException($"Operator - is not supported for {typeof(T)} type");
         }
     }
 }

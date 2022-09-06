@@ -20,15 +20,15 @@ namespace NetExtender.Types.Network.UserAgents
             return builder?.Build();
         }
 
-        public virtual ISet<BrowserType> Browsers { get; }
-        public virtual ISet<UserAgentArchitecture> Architectures { get; }
-        public virtual ISet<CultureInfo> Cultures { get; }
+        public virtual ISet<BrowserType> Browser { get; }
+        public virtual ISet<UserAgentArchitecture> Architecture { get; }
+        public virtual ISet<CultureInfo> Culture { get; }
         
         protected virtual BrowserType RandomBrowser
         {
             get
             {
-                return Browsers.GetRandomEnumValue();
+                return Browser.GetRandomEnumValue();
             }
         }
 
@@ -36,7 +36,7 @@ namespace NetExtender.Types.Network.UserAgents
         {
             get
             {
-                return Architectures.GetRandomEnumValue();
+                return Architecture.GetRandomEnumValue();
             }
         }
 
@@ -44,33 +44,33 @@ namespace NetExtender.Types.Network.UserAgents
         {
             get
             {
-                return Cultures.GetRandomOrDefault();
+                return Culture.GetRandomOrDefault();
             }
         }
 
         public UserAgentBuilder()
         {
-            Browsers = new HashSet<BrowserType>();
-            Architectures = new HashSet<UserAgentArchitecture>();
-            Cultures = new HashSet<CultureInfo>();
+            Browser = new HashSet<BrowserType>();
+            Architecture = new HashSet<UserAgentArchitecture>();
+            Culture = new HashSet<CultureInfo>();
         }
 
-        public virtual String Build()
+        public virtual String? Build()
         {
             return Build(RandomBrowser, RandomArchitecture, RandomCulture);
         }
 
-        public virtual String Build(UserAgentArchitecture? architecture, CultureInfo? info)
+        public virtual String? Build(UserAgentArchitecture? architecture, CultureInfo? info)
         {
             return Build(RandomBrowser, architecture, info);
         }
 
-        public virtual String Build(BrowserType browser, UserAgentArchitecture? architecture, CultureInfo? culture)
+        public virtual String? Build(BrowserType browser, UserAgentArchitecture? architecture, CultureInfo? culture)
         {
-            return UserAgentUtilities.UserAgents.TryGetValue(browser)?.Build(architecture, culture) ?? throw new NotSupportedException();
+            return UserAgentUtilities.UserAgents.TryGetValue(browser)?.Build(architecture, culture);
         }
 
-        public virtual String Build(IUserAgentSpecificBuilder builder)
+        public virtual String? Build(IUserAgentSpecificBuilder builder)
         {
             if (builder is null)
             {
@@ -80,23 +80,23 @@ namespace NetExtender.Types.Network.UserAgents
             return builder.Build(RandomArchitecture, RandomCulture);
         }
 
-        public virtual IUserAgentBuilder AddBrowsers()
+        public virtual IUserAgentBuilder AddBrowser()
         {
-            return AddBrowsers(EnumUtilities.GetValues<BrowserType>());
+            return AddBrowser(EnumUtilities.GetValues<BrowserType>());
         }
 
-        public virtual IUserAgentBuilder AddBrowsers(BrowserType browser)
+        public virtual IUserAgentBuilder AddBrowser(BrowserType browser)
         {
-            Browsers.Add(browser);
+            Browser.Add(browser);
             return this;
         }
 
-        public IUserAgentBuilder AddBrowsers(params BrowserType[] browsers)
+        public IUserAgentBuilder AddBrowser(params BrowserType[] browsers)
         {
-            return AddBrowsers((IEnumerable<BrowserType>) browsers);
+            return AddBrowser((IEnumerable<BrowserType>) browsers);
         }
 
-        public virtual IUserAgentBuilder AddBrowsers(IEnumerable<BrowserType> browsers)
+        public virtual IUserAgentBuilder AddBrowser(IEnumerable<BrowserType> browsers)
         {
             if (browsers is null)
             {
@@ -105,24 +105,24 @@ namespace NetExtender.Types.Network.UserAgents
 
             foreach (BrowserType browser in browsers)
             {
-                AddBrowsers(browser);
+                AddBrowser(browser);
             }
 
             return this;
         }
 
-        public virtual IUserAgentBuilder RemoveBrowsers(BrowserType browser)
+        public virtual IUserAgentBuilder RemoveBrowser(BrowserType browser)
         {
-            Browsers.Remove(browser);
+            Browser.Remove(browser);
             return this;
         }
 
-        public IUserAgentBuilder RemoveBrowsers(params BrowserType[] browsers)
+        public IUserAgentBuilder RemoveBrowser(params BrowserType[] browsers)
         {
-            return RemoveBrowsers((IEnumerable<BrowserType>) browsers);
+            return RemoveBrowser((IEnumerable<BrowserType>) browsers);
         }
 
-        public virtual IUserAgentBuilder RemoveBrowsers(IEnumerable<BrowserType> browsers)
+        public virtual IUserAgentBuilder RemoveBrowser(IEnumerable<BrowserType> browsers)
         {
             if (browsers is null)
             {
@@ -131,29 +131,29 @@ namespace NetExtender.Types.Network.UserAgents
 
             foreach (BrowserType browser in browsers)
             {
-                RemoveBrowsers(browser);
+                RemoveBrowser(browser);
             }
 
             return this;
         }
 
-        public virtual IUserAgentBuilder AddArchitectures()
+        public virtual IUserAgentBuilder AddArchitecture()
         {
-            return AddArchitectures(EnumUtilities.Random<UserAgentArchitecture>());
+            return AddArchitecture(EnumUtilities.Random<UserAgentArchitecture>());
         }
 
-        public virtual IUserAgentBuilder AddArchitectures(UserAgentArchitecture architecture)
+        public virtual IUserAgentBuilder AddArchitecture(UserAgentArchitecture architecture)
         {
-            Architectures.Add(architecture);
+            Architecture.Add(architecture);
             return this;
         }
 
-        public IUserAgentBuilder AddArchitectures(params UserAgentArchitecture[] architectures)
+        public IUserAgentBuilder AddArchitecture(params UserAgentArchitecture[] architectures)
         {
-            return AddArchitectures((IEnumerable<UserAgentArchitecture>) architectures);
+            return AddArchitecture((IEnumerable<UserAgentArchitecture>) architectures);
         }
 
-        public virtual IUserAgentBuilder AddArchitectures(IEnumerable<UserAgentArchitecture> architectures)
+        public virtual IUserAgentBuilder AddArchitecture(IEnumerable<UserAgentArchitecture> architectures)
         {
             if (architectures is null)
             {
@@ -162,24 +162,24 @@ namespace NetExtender.Types.Network.UserAgents
 
             foreach (UserAgentArchitecture architecture in architectures)
             {
-                AddArchitectures(architecture);
+                AddArchitecture(architecture);
             }
 
             return this;
         }
 
-        public virtual IUserAgentBuilder RemoveArchitectures(UserAgentArchitecture architecture)
+        public virtual IUserAgentBuilder RemoveArchitecture(UserAgentArchitecture architecture)
         {
-            Architectures.Remove(architecture);
+            Architecture.Remove(architecture);
             return this;
         }
 
-        public IUserAgentBuilder RemoveArchitectures(params UserAgentArchitecture[] architectures)
+        public IUserAgentBuilder RemoveArchitecture(params UserAgentArchitecture[] architectures)
         {
-            return RemoveArchitectures((IEnumerable<UserAgentArchitecture>) architectures);
+            return RemoveArchitecture((IEnumerable<UserAgentArchitecture>) architectures);
         }
 
-        public virtual IUserAgentBuilder RemoveArchitectures(IEnumerable<UserAgentArchitecture> architectures)
+        public virtual IUserAgentBuilder RemoveArchitecture(IEnumerable<UserAgentArchitecture> architectures)
         {
             if (architectures is null)
             {
@@ -188,64 +188,69 @@ namespace NetExtender.Types.Network.UserAgents
             
             foreach (UserAgentArchitecture architecture in architectures)
             {
-                RemoveArchitectures(architecture);
+                RemoveArchitecture(architecture);
             }
 
             return this;
         }
 
-        public virtual IUserAgentBuilder AddCultures(CultureInfo culture)
+        public virtual IUserAgentBuilder AddCulture(CultureInfo? culture)
         {
             if (culture is null)
             {
-                throw new ArgumentNullException(nameof(culture));
+                return this;
             }
 
-            Cultures.Add(culture);
+            Culture.Add(culture);
             return this;
         }
 
-        public IUserAgentBuilder AddCultures(params CultureInfo[] cultures)
+        public IUserAgentBuilder AddCulture(params CultureInfo?[] cultures)
         {
-            return AddCultures((IEnumerable<CultureInfo>) cultures);
+            return AddCulture((IEnumerable<CultureInfo?>) cultures);
         }
 
-        public virtual IUserAgentBuilder AddCultures(IEnumerable<CultureInfo> cultures)
+        public virtual IUserAgentBuilder AddCulture(IEnumerable<CultureInfo?> cultures)
         {
             if (cultures is null)
             {
                 throw new ArgumentNullException(nameof(cultures));
             }
 
-            foreach (CultureInfo culture in cultures)
+            foreach (CultureInfo culture in cultures.WhereNotNull())
             {
-                AddCultures(culture);
+                AddCulture(culture);
             }
 
             return this;
         }
 
-        public virtual IUserAgentBuilder RemoveCultures(CultureInfo culture)
+        public virtual IUserAgentBuilder RemoveCulture(CultureInfo? culture)
         {
-            Cultures.Remove(culture);
+            if (culture is null)
+            {
+                return this;
+            }
+            
+            Culture.Remove(culture);
             return this;
         }
 
-        public IUserAgentBuilder RemoveCultures(params CultureInfo[] cultures)
+        public IUserAgentBuilder RemoveCulture(params CultureInfo?[] cultures)
         {
-            return RemoveCultures((IEnumerable<CultureInfo>) cultures);
+            return RemoveCulture((IEnumerable<CultureInfo?>) cultures);
         }
 
-        public virtual IUserAgentBuilder RemoveCultures(IEnumerable<CultureInfo> cultures)
+        public virtual IUserAgentBuilder RemoveCulture(IEnumerable<CultureInfo?> cultures)
         {
             if (cultures is null)
             {
                 throw new ArgumentNullException(nameof(cultures));
             }
 
-            foreach (CultureInfo culture in cultures)
+            foreach (CultureInfo culture in cultures.WhereNotNull())
             {
-                RemoveCultures(culture);
+                RemoveCulture(culture);
             }
 
             return this;
@@ -253,20 +258,15 @@ namespace NetExtender.Types.Network.UserAgents
 
         public IEnumerator<String> GetEnumerator()
         {
-            while (true)
+            while (Build() is { } result)
             {
-                yield return Build();
+                yield return result;
             }
         }
         
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
-        }
-
-        public override String ToString()
-        {
-            return Build();
         }
     }
 }

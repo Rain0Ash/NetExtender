@@ -7,37 +7,24 @@ using System.Globalization;
 using NetExtender.Random;
 using NetExtender.Types.Network.UserAgents.Interfaces;
 using NetExtender.Utilities.Network;
-using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Network.UserAgents
 {
     public class UserAgentDistributionBuilder : UserAgentBuilder, IUserAgentDistributionBuilder
     {
-        public Boolean BrowserDistribution { get; set; }
-        public Boolean ArchitectureDistribution { get; set; }
-        public Boolean CultureDistribution { get; set; }
-        
-        protected RandomSelectorBuilder<BrowserType> BrowserDistributionBuilder { get; }
-        protected RandomSelectorBuilder<UserAgentArchitecture> ArchitectureDistributionBuilder { get; }
-        protected RandomSelectorBuilder<CultureInfo> CultureDistributionBuilder { get; }
+        public Boolean IsBrowserDistribution { get; set; } = true;
+        public Boolean IsArchitectureDistribution { get; set; } = true;
+        public Boolean IsCultureDistribution { get; set; } = true;
+
+        protected IDynamicRandomSelector<BrowserType> BrowserDistribution { get; }
+        protected IDynamicRandomSelector<UserAgentArchitecture> ArchitectureDistribution { get; }
+        protected IDynamicRandomSelector<CultureInfo> CultureDistribution { get; }
 
         protected override BrowserType RandomBrowser
         {
             get
             {
-                try
-                {
-                    if (!BrowserDistribution)
-                    {
-                        return base.RandomBrowser;
-                    }
-
-                    return BrowserDistributionBuilder.Count > 0 ? BrowserDistributionBuilder.Build().GetRandom() : BrowserUtilities.RandomBrowserWithDistribution;
-                }
-                catch (Exception)
-                {
-                    return base.RandomBrowser;
-                }
+                return IsBrowserDistribution ? BrowserDistribution.Count > 0 ? BrowserDistribution.GetRandom() : UserAgentUtilities.RandomBrowserWithDistribution : base.RandomBrowser;
             }
         }
 
@@ -45,19 +32,7 @@ namespace NetExtender.Types.Network.UserAgents
         {
             get
             {
-                try
-                {
-                    if (!ArchitectureDistribution)
-                    {
-                        return base.RandomArchitecture;
-                    }
-                    
-                    return ArchitectureDistributionBuilder.Count > 0 ? ArchitectureDistributionBuilder.Build().GetRandom() : base.RandomArchitecture; //TODO: random distribution
-                }
-                catch (Exception)
-                {
-                    return base.RandomArchitecture;
-                }
+                return IsArchitectureDistribution && ArchitectureDistribution.Count > 0 ? ArchitectureDistribution.GetRandom() : base.RandomArchitecture;
             }
         }
 
@@ -65,183 +40,210 @@ namespace NetExtender.Types.Network.UserAgents
         {
             get
             {
-                try
-                {
-                    if (!CultureDistribution)
-                    {
-                        return base.RandomCulture;
-                    }
-                    
-                    return CultureDistributionBuilder.Count > 0 ? CultureDistributionBuilder.Build().GetRandom() : base.RandomCulture; //TODO: random distribution
-                }
-                catch (Exception)
-                {
-                    return base.RandomCulture;
-                }
+                return IsCultureDistribution && CultureDistribution.Count > 0 ? CultureDistribution.GetRandom() : base.RandomCulture;
             }
         }
 
         public UserAgentDistributionBuilder()
         {
-            BrowserDistributionBuilder = new RandomSelectorBuilder<BrowserType>();
-            ArchitectureDistributionBuilder = new RandomSelectorBuilder<UserAgentArchitecture>();
-            CultureDistributionBuilder = new RandomSelectorBuilder<CultureInfo>();
+            BrowserDistribution = new DynamicRandomSelector<BrowserType>();
+            ArchitectureDistribution = new DynamicRandomSelector<UserAgentArchitecture>();
+            CultureDistribution = new DynamicRandomSelector<CultureInfo>();
         }
         
-        public IUserAgentDistributionBuilder UseDistribution()
+        public new IUserAgentDistributionBuilder AddBrowser()
         {
-            UseBrowserDistribution();
-            UseArchitectureDistribution();
-            UseCultureDistribution();
+            base.AddBrowser();
             return this;
         }
 
-        public IUserAgentDistributionBuilder UseBrowserDistribution()
+        public sealed override IUserAgentDistributionBuilder AddBrowser(BrowserType browser)
         {
-            BrowserDistribution = true;
+            return AddBrowser(browser, UserAgentUtilities.BrowserDistribution.TryGetValue(browser, out Double weight) ? weight : 0);
+        }
+
+        public virtual IUserAgentDistributionBuilder AddBrowser(BrowserType browser, Double weight)
+        {
+            Browser.Add(browser);
+            BrowserDistribution[browser] = weight;
             return this;
         }
 
-        public IUserAgentDistributionBuilder UseArchitectureDistribution()
+        public new IUserAgentDistributionBuilder AddBrowser(params BrowserType[] browsers)
         {
-            ArchitectureDistribution = true;
+            base.AddBrowser(browsers);
             return this;
         }
 
-        public IUserAgentDistributionBuilder UseCultureDistribution()
+        public new IUserAgentDistributionBuilder AddBrowser(IEnumerable<BrowserType> browsers)
         {
-            CultureDistribution = true;
+            base.AddBrowser(browsers);
             return this;
         }
 
-        public new IUserAgentDistributionBuilder AddBrowsers()
+        public IUserAgentDistributionBuilder AddBrowser(IEnumerable<KeyValuePair<BrowserType, Double>> browsers)
         {
-            base.AddBrowsers();
+            if (browsers is null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            foreach ((BrowserType browser, Double weight) in browsers)
+            {
+                AddBrowser(browser, weight);
+            }
+
             return this;
         }
 
-        public override IUserAgentDistributionBuilder AddBrowsers(BrowserType browser)
+        public override IUserAgentDistributionBuilder RemoveBrowser(BrowserType browser)
         {
-            if (Browsers.Contains(browser))
+            Browser.Remove(browser);
+            BrowserDistribution.Remove(browser);
+            return this;
+        }
+
+        public new IUserAgentDistributionBuilder RemoveBrowser(params BrowserType[] browsers)
+        {
+            base.RemoveBrowser(browsers);
+            return this;
+        }
+
+        public new IUserAgentDistributionBuilder RemoveBrowser(IEnumerable<BrowserType> browsers)
+        {
+            base.RemoveBrowser(browsers);
+            return this;
+        }
+
+        public new IUserAgentDistributionBuilder AddArchitecture()
+        {
+            base.AddArchitecture();
+            return this;
+        }
+
+        public sealed override IUserAgentDistributionBuilder AddArchitecture(UserAgentArchitecture architecture)
+        {
+            return AddArchitecture(architecture, UserAgentUtilities.ArchitectureDistribution.TryGetValue(architecture, out Double weight) ? weight : 0);
+        }
+
+        public virtual IUserAgentDistributionBuilder AddArchitecture(UserAgentArchitecture architecture, Double weight)
+        {
+            Architecture.Add(architecture);
+            ArchitectureDistribution[architecture] = weight;
+            return this;
+        }
+
+        public new IUserAgentDistributionBuilder AddArchitecture(params UserAgentArchitecture[] architectures)
+        {
+            base.AddArchitecture(architectures);
+            return this;
+        }
+
+        public new IUserAgentDistributionBuilder AddArchitecture(IEnumerable<UserAgentArchitecture> architectures)
+        {
+            base.AddArchitecture(architectures);
+            return this;
+        }
+
+        public IUserAgentDistributionBuilder AddArchitecture(IEnumerable<KeyValuePair<UserAgentArchitecture, Double>> architectures)
+        {
+            if (architectures is null)
+            {
+                throw new ArgumentNullException(nameof(architectures));
+            }
+
+            foreach ((UserAgentArchitecture architecture, Double weight) in architectures)
+            {
+                AddArchitecture(architecture, weight);
+            }
+
+            return this;
+        }
+
+        public override IUserAgentDistributionBuilder RemoveArchitecture(UserAgentArchitecture architecture)
+        {
+            Architecture.Remove(architecture);
+            ArchitectureDistribution.Remove(architecture);
+            return this;
+        }
+
+        public new IUserAgentDistributionBuilder RemoveArchitecture(params UserAgentArchitecture[] architectures)
+        {
+            base.RemoveArchitecture(architectures);
+            return this;
+        }
+
+        public new IUserAgentDistributionBuilder RemoveArchitecture(IEnumerable<UserAgentArchitecture> architectures)
+        {
+            base.RemoveArchitecture(architectures);
+            return this;
+        }
+
+        public sealed override IUserAgentDistributionBuilder AddCulture(CultureInfo? culture)
+        {
+            return culture is not null ? AddCulture(culture, UserAgentUtilities.CultureDistribution.TryGetValue(culture, out Double weight) ? weight : 0) : this;
+        }
+
+        public virtual IUserAgentDistributionBuilder AddCulture(CultureInfo? culture, Double weight)
+        {
+            if (culture is null)
             {
                 return this;
             }
 
-            Browsers.Add(browser);
-            BrowserDistributionBuilder[browser] = BrowserUtilities.Distribution.TryGetValue(browser);
+            Culture.Add(culture);
+            CultureDistribution[culture] = weight;
             return this;
         }
 
-        public new IUserAgentDistributionBuilder AddBrowsers(params BrowserType[] browsers)
+        public new IUserAgentDistributionBuilder AddCulture(params CultureInfo?[] cultures)
         {
-            base.AddBrowsers(browsers);
+            base.AddCulture(cultures);
             return this;
         }
 
-        public new IUserAgentDistributionBuilder AddBrowsers(IEnumerable<BrowserType> browsers)
+        public new IUserAgentDistributionBuilder AddCulture(IEnumerable<CultureInfo?> cultures)
         {
-            base.AddBrowsers(browsers);
+            base.AddCulture(cultures);
             return this;
         }
 
-        public new IUserAgentDistributionBuilder RemoveBrowsers(BrowserType browser)
+        public IUserAgentDistributionBuilder AddCulture(IEnumerable<KeyValuePair<CultureInfo?, Double>> cultures)
         {
-            Browsers.Remove(browser);
-            BrowserDistributionBuilder.Remove(browser);
+            if (cultures is null)
+            {
+                throw new ArgumentNullException(nameof(cultures));
+            }
+
+            foreach ((CultureInfo? culture, Double weight) in cultures)
+            {
+                AddCulture(culture, weight);
+            }
+
             return this;
         }
 
-        public new IUserAgentDistributionBuilder RemoveBrowsers(params BrowserType[] browsers)
+        public override IUserAgentDistributionBuilder RemoveCulture(CultureInfo? culture)
         {
-            base.RemoveBrowsers(browsers);
+            if (culture is null)
+            {
+                return this;
+            }
+
+            Culture.Remove(culture);
+            CultureDistribution.Remove(culture);
             return this;
         }
 
-        public new IUserAgentDistributionBuilder RemoveBrowsers(IEnumerable<BrowserType> browsers)
+        public new IUserAgentDistributionBuilder RemoveCulture(params CultureInfo?[] cultures)
         {
-            base.RemoveBrowsers(browsers);
+            base.RemoveCulture(cultures);
             return this;
         }
 
-        public new IUserAgentDistributionBuilder AddArchitectures()
+        public new IUserAgentDistributionBuilder RemoveCulture(IEnumerable<CultureInfo?> cultures)
         {
-            base.AddArchitectures();
-            return this;
-        }
-
-        public new IUserAgentDistributionBuilder AddArchitectures(UserAgentArchitecture architecture)
-        {
-            //TODO:
-            base.AddArchitectures(architecture);
-            return this;
-        }
-
-        public new IUserAgentDistributionBuilder AddArchitectures(params UserAgentArchitecture[] architectures)
-        {
-            base.AddArchitectures(architectures);
-            return this;
-        }
-
-        public new IUserAgentDistributionBuilder AddArchitectures(IEnumerable<UserAgentArchitecture> architectures)
-        {
-            base.AddArchitectures(architectures);
-            return this;
-        }
-
-        public new IUserAgentDistributionBuilder RemoveArchitectures(UserAgentArchitecture architecture)
-        {
-            //TODO:
-            base.RemoveArchitectures(architecture);
-            return this;
-        }
-
-        public new IUserAgentDistributionBuilder RemoveArchitectures(params UserAgentArchitecture[] architectures)
-        {
-            base.RemoveArchitectures(architectures);
-            return this;
-        }
-
-        public new IUserAgentDistributionBuilder RemoveArchitectures(IEnumerable<UserAgentArchitecture> architectures)
-        {
-            base.RemoveArchitectures(architectures);
-            return this;
-        }
-
-        public new IUserAgentDistributionBuilder AddCultures(CultureInfo culture)
-        {
-            //TODO:
-            base.AddCultures(culture);
-            return this;
-        }
-
-        public new IUserAgentDistributionBuilder AddCultures(params CultureInfo[] cultures)
-        {
-            base.AddCultures(cultures);
-            return this;
-        }
-
-        public new IUserAgentDistributionBuilder AddCultures(IEnumerable<CultureInfo> cultures)
-        {
-            base.AddCultures(cultures);
-            return this;
-        }
-
-        public new IUserAgentDistributionBuilder RemoveCultures(CultureInfo culture)
-        {
-            //TODO:
-            base.RemoveCultures(culture);
-            return this;
-        }
-
-        public new IUserAgentDistributionBuilder RemoveCultures(params CultureInfo[] cultures)
-        {
-            base.RemoveCultures(cultures);
-            return this;
-        }
-
-        public new IUserAgentDistributionBuilder RemoveCultures(IEnumerable<CultureInfo> cultures)
-        {
-            base.RemoveCultures(cultures);
+            base.RemoveCulture(cultures);
             return this;
         }
     }

@@ -632,7 +632,7 @@ namespace NetExtender.Utilities.Types
 #if NETCOREAPP3_1_OR_GREATER
                 Rune character => escape.HasFlag(EscapeType.Full) ? $"\'{character.GetString(provider)}\'" : character.GetString(provider),
 #endif
-                String str => escape.HasFlag(EscapeType.Full) ? $"\"{str.GetString(provider)}\"" : str.GetString(provider),
+                String @string => escape.HasFlag(EscapeType.Full) ? $"\"{@string.GetString(provider)}\"" : @string.GetString(provider),
                 Boolean number => number.GetString(provider),
                 SByte number => number.GetString(provider),
                 Byte number => number.GetString(provider),
@@ -649,7 +649,7 @@ namespace NetExtender.Utilities.Types
                 DateTime number => number.GetString(provider),
                 TimeSpan number => number.GetString(provider),
                 Enum number => number.GetString(escape, provider),
-                IString str => escape.HasFlag(EscapeType.Full) ? $"\"{str.ToString(provider)}\"" : str.ToString(provider),
+                IString @string => escape.HasFlag(EscapeType.Full) ? $"\"{@string.ToString(provider)}\"" : @string.ToString(provider),
                 IEnumerable enumerable => enumerable.GetString(escape, provider),
                 IFormattable formattable => formattable.ToString(null, provider),
                 IConvertible convertible => convertible.ToString(provider),
@@ -677,7 +677,7 @@ namespace NetExtender.Utilities.Types
 #if NETCOREAPP3_1_OR_GREATER
                 Rune character => escape.HasFlag(EscapeType.Full) ? $"\'{character.GetString(format, provider)}\'" : character.GetString(format, provider),
 #endif
-                String str => escape.HasFlag(EscapeType.Full) ? $"\"{str.GetString(format, provider)}\"" : str.GetString(format, provider),
+                String @string => escape.HasFlag(EscapeType.Full) ? $"\"{@string.GetString(format, provider)}\"" : @string.GetString(format, provider),
                 Boolean number => number.GetString(format, provider),
                 SByte number => number.GetString(format, provider),
                 Byte number => number.GetString(format, provider),
@@ -694,7 +694,7 @@ namespace NetExtender.Utilities.Types
                 DateTime number => number.GetString(format, provider),
                 TimeSpan number => number.GetString(format, provider),
                 Enum number => number.GetString(escape, format, provider),
-                IString str => escape.HasFlag(EscapeType.Full) ? $"\"{str.ToString(format, provider)}\"" : str.ToString(format, provider),
+                IString @string => escape.HasFlag(EscapeType.Full) ? $"\"{@string.ToString(format, provider)}\"" : @string.ToString(format, provider),
                 IEnumerable enumerable => enumerable.GetString(escape, format, provider),
                 IFormattable formattable => formattable.ToString(format, provider),
                 IConvertible convertible => convertible.ToString(provider),
@@ -1965,7 +1965,7 @@ namespace NetExtender.Utilities.Types
             return value switch
             {
                 null => false,
-                String str => ToBoolean(str),
+                String @string => ToBoolean(@string),
                 ICollection collection => ToBoolean(collection),
                 _ => !value.Equals(default(T))
             };

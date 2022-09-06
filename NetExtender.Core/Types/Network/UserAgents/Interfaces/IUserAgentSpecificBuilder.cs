@@ -8,6 +8,6 @@ namespace NetExtender.Types.Network.UserAgents.Interfaces
 {
     public interface IUserAgentSpecificBuilder
     {
-        public String Build(UserAgentArchitecture? architecture, CultureInfo? info);
+        public String? Build(UserAgentArchitecture? architecture, CultureInfo? info);
     }
 }

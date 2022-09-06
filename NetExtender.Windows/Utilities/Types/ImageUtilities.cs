@@ -296,7 +296,7 @@ namespace NetExtender.Utilities.Types
 
         public static Byte[] ToBytes(this Image image)
         {
-            return ToBytes(image, image.RawFormat);
+            return ToBytes(image, null);
         }
 
         public static Byte[] ToBytes(this Image image, ImageFormat? format)
@@ -306,7 +306,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(image));
             }
 
-            using MemoryStream stream = new MemoryStream();
+            using MemoryStream stream = new MemoryStream(image.Width * image.Height * 4);
             image.Save(stream, format ?? image.RawFormat);
             return stream.ToArray();
         }

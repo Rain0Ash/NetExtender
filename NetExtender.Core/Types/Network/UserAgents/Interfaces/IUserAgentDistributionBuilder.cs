@@ -10,34 +10,35 @@ namespace NetExtender.Types.Network.UserAgents.Interfaces
 {
     public interface IUserAgentDistributionBuilder : IUserAgentBuilder
     {
-        public Boolean BrowserDistribution { get; set; }
-        public Boolean ArchitectureDistribution { get; set; }
-        public Boolean CultureDistribution { get; set; }
+        public Boolean IsBrowserDistribution { get; set; }
+        public Boolean IsArchitectureDistribution { get; set; }
+        public Boolean IsCultureDistribution { get; set; }
 
-        public IUserAgentDistributionBuilder UseDistribution();
-        public IUserAgentDistributionBuilder UseBrowserDistribution();
-        public IUserAgentDistributionBuilder UseArchitectureDistribution();
-        public IUserAgentDistributionBuilder UseCultureDistribution();
-        
-        public new IUserAgentDistributionBuilder AddBrowsers();
-        public new IUserAgentDistributionBuilder AddBrowsers(BrowserType browser);
-        public new IUserAgentDistributionBuilder AddBrowsers(params BrowserType[] browsers);
-        public new IUserAgentDistributionBuilder AddBrowsers(IEnumerable<BrowserType> browsers);
-        public new IUserAgentDistributionBuilder RemoveBrowsers(BrowserType browser);
-        public new IUserAgentDistributionBuilder RemoveBrowsers(params BrowserType[] browsers);
-        public new IUserAgentDistributionBuilder RemoveBrowsers(IEnumerable<BrowserType> browsers);
-        public new IUserAgentDistributionBuilder AddArchitectures();
-        public new IUserAgentDistributionBuilder AddArchitectures(UserAgentArchitecture architecture);
-        public new IUserAgentDistributionBuilder AddArchitectures(params UserAgentArchitecture[] architectures);
-        public new IUserAgentDistributionBuilder AddArchitectures(IEnumerable<UserAgentArchitecture> architectures);
-        public new IUserAgentDistributionBuilder RemoveArchitectures(UserAgentArchitecture architecture);
-        public new IUserAgentDistributionBuilder RemoveArchitectures(params UserAgentArchitecture[] architectures);
-        public new IUserAgentDistributionBuilder RemoveArchitectures(IEnumerable<UserAgentArchitecture> architectures);
-        public new IUserAgentDistributionBuilder AddCultures(CultureInfo culture);
-        public new IUserAgentDistributionBuilder AddCultures(params CultureInfo[] cultures);
-        public new IUserAgentDistributionBuilder AddCultures(IEnumerable<CultureInfo> cultures);
-        public new IUserAgentDistributionBuilder RemoveCultures(CultureInfo culture);
-        public new IUserAgentDistributionBuilder RemoveCultures(params CultureInfo[] cultures);
-        public new IUserAgentDistributionBuilder RemoveCultures(IEnumerable<CultureInfo> cultures);
+        public new IUserAgentDistributionBuilder AddBrowser();
+        public new IUserAgentDistributionBuilder AddBrowser(BrowserType browser);
+        public IUserAgentDistributionBuilder AddBrowser(BrowserType browser, Double weight);
+        public new IUserAgentDistributionBuilder AddBrowser(params BrowserType[] browsers);
+        public new IUserAgentDistributionBuilder AddBrowser(IEnumerable<BrowserType> browsers);
+        public IUserAgentDistributionBuilder AddBrowser(IEnumerable<KeyValuePair<BrowserType, Double>> browsers);
+        public new IUserAgentDistributionBuilder RemoveBrowser(BrowserType browser);
+        public new IUserAgentDistributionBuilder RemoveBrowser(params BrowserType[] browsers);
+        public new IUserAgentDistributionBuilder RemoveBrowser(IEnumerable<BrowserType> browsers);
+        public new IUserAgentDistributionBuilder AddArchitecture();
+        public new IUserAgentDistributionBuilder AddArchitecture(UserAgentArchitecture architecture);
+        public IUserAgentDistributionBuilder AddArchitecture(UserAgentArchitecture architecture, Double weight);
+        public new IUserAgentDistributionBuilder AddArchitecture(params UserAgentArchitecture[] architectures);
+        public new IUserAgentDistributionBuilder AddArchitecture(IEnumerable<UserAgentArchitecture> architectures);
+        public IUserAgentDistributionBuilder AddArchitecture(IEnumerable<KeyValuePair<UserAgentArchitecture, Double>> architectures);
+        public new IUserAgentDistributionBuilder RemoveArchitecture(UserAgentArchitecture architecture);
+        public new IUserAgentDistributionBuilder RemoveArchitecture(params UserAgentArchitecture[] architectures);
+        public new IUserAgentDistributionBuilder RemoveArchitecture(IEnumerable<UserAgentArchitecture> architectures);
+        public new IUserAgentDistributionBuilder AddCulture(CultureInfo? culture);
+        public IUserAgentDistributionBuilder AddCulture(CultureInfo? culture, Double weight);
+        public new IUserAgentDistributionBuilder AddCulture(params CultureInfo?[] cultures);
+        public new IUserAgentDistributionBuilder AddCulture(IEnumerable<CultureInfo?> cultures);
+        public IUserAgentDistributionBuilder AddCulture(IEnumerable<KeyValuePair<CultureInfo?, Double>> cultures);
+        public new IUserAgentDistributionBuilder RemoveCulture(CultureInfo? culture);
+        public new IUserAgentDistributionBuilder RemoveCulture(params CultureInfo?[] cultures);
+        public new IUserAgentDistributionBuilder RemoveCulture(IEnumerable<CultureInfo?> cultures);
     }
 }

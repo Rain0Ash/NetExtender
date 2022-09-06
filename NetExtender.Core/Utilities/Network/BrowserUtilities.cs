@@ -25,7 +25,7 @@ namespace NetExtender.Utilities.Network
     {
         private static class BrowserDistribution
         {
-            public static IDictionary<BrowserType, Double> Browsers { get; }
+            public static IDynamicRandomSelector<BrowserType> Selector { get; }
         
             static BrowserDistribution()
             {
@@ -40,19 +40,15 @@ namespace NetExtender.Utilities.Network
                 };
             
                 browsers.Add(BrowserType.Other, 100 - browsers.Values.Sum());
-                Browsers = browsers.ToImmutableDictionary();
-            
-                Selector = new RandomSelectorBuilder<BrowserType>(Browsers).Build();
+                Selector = new DynamicRandomSelector<BrowserType>(browsers);
             }
-        
-            public static IRandomSelector<BrowserType> Selector { get; }
         }
 
-        public static IDictionary<BrowserType, Double> Distribution
+        public static IDynamicRandomSelector<BrowserType> Distribution
         {
             get
             {
-                return BrowserDistribution.Browsers;
+                return BrowserDistribution.Selector;
             }
         }
 

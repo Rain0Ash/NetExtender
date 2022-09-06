@@ -3165,7 +3165,7 @@ namespace NetExtender.Utilities.Types
             return value is not null ? HttpUtility.JavaScriptStringEncode(value, quotes) : null;
         }
 
-        public static Int32 LevenshteinDistance(String first, String second)
+        public static Int32 LevenshteinDistance(this String first, String second)
         {
             if (first is null)
             {

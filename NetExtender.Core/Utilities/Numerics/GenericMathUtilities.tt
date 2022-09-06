@@ -1780,7 +1780,8 @@ namespace NetExtender.Utilities.Numerics
     }
 
     [SuppressMessage("ReSharper", "InvertIf")]
-    public static class MathUnsafe
+    [SuppressMessage("ReSharper", "CognitiveComplexity")]
+    public static partial class MathUnsafe
     {
 <#
     foreach (String @operator in operands.Keys)

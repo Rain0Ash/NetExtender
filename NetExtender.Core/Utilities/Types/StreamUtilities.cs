@@ -416,7 +416,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static void CopyTo(this Stream input, Stream output, Int32 bufferSize = BufferUtilities.DefaultBuffer, Int32 position = 0)
+        public static void CopyTo(this Stream input, Stream output, Int32 position, Int32 bufferSize)
         {
             if (input is null)
             {
@@ -436,17 +436,12 @@ namespace NetExtender.Utilities.Types
             input.CopyTo(output, bufferSize);
         }
 
-        public static void StartCopyTo(this Stream input, Stream output, Int32 bufferSize = BufferUtilities.DefaultBuffer)
-        {
-            CopyTo(input, output, bufferSize);
-        }
-
-        public static Task CopyToAsync(this Stream input, Stream output, Int32 bufferSize, Int32 position)
+        public static Task CopyToAsync(this Stream input, Stream output, Int32 position, Int32 bufferSize)
         {
             return CopyToAsync(input, output, bufferSize, position, CancellationToken.None);
         }
 
-        public static Task CopyToAsync(this Stream input, Stream output, Int32 bufferSize, Int32 position, CancellationToken token)
+        public static Task CopyToAsync(this Stream input, Stream output, Int32 position, Int32 bufferSize, CancellationToken token)
         {
             if (input is null)
             {
@@ -466,26 +461,16 @@ namespace NetExtender.Utilities.Types
             return input.CopyToAsync(output, bufferSize, token);
         }
 
-        public static Task StartCopyToAsync(this Stream input, Stream output)
+        public static BandwidthStream Bandwidth(this Stream stream)
         {
-            return StartCopyToAsync(input, output, CancellationToken.None);
+            return Bandwidth(stream, UInt64.MaxValue);
         }
 
-        public static Task StartCopyToAsync(this Stream input, Stream output, CancellationToken token)
+        public static BandwidthStream Bandwidth(this Stream stream, Int32 speed)
         {
-            return StartCopyToAsync(input, output, BufferUtilities.DefaultBuffer, token);
+            return Bandwidth(stream, speed, InformationSize.Byte);
         }
 
-        public static Task StartCopyToAsync(this Stream input, Stream output, Int32 bufferSize)
-        {
-            return StartCopyToAsync(input, output, bufferSize, CancellationToken.None);
-        }
-
-        public static Task StartCopyToAsync(this Stream input, Stream output, Int32 bufferSize, CancellationToken token)
-        {
-            return CopyToAsync(input, output, bufferSize, 0, token);
-        }
-        
         public static BandwidthStream Bandwidth(this Stream stream, Int32 speed, InformationSize size)
         {
             if (stream is null)
@@ -495,7 +480,32 @@ namespace NetExtender.Utilities.Types
 
             return new BandwidthStream(stream, speed, size);
         }
-        
+
+        public static BandwidthStream Bandwidth(this Stream stream, UInt64 speed)
+        {
+            return Bandwidth(stream, speed, InformationSize.Byte);
+        }
+
+        public static BandwidthStream Bandwidth(this Stream stream, UInt64 speed, InformationSize size)
+        {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+            
+            return new BandwidthStream(stream, speed, size);
+        }
+
+        public static BandwidthStream<T> Bandwidth<T>(this T stream) where T : Stream
+        {
+            return Bandwidth(stream, UInt64.MaxValue);
+        }
+
+        public static BandwidthStream<T> Bandwidth<T>(this T stream, Int32 speed) where T : Stream
+        {
+            return Bandwidth(stream, speed, InformationSize.Byte);
+        }
+
         public static BandwidthStream<T> Bandwidth<T>(this T stream, Int32 speed, InformationSize size) where T : Stream
         {
             if (stream is null)
@@ -505,18 +515,13 @@ namespace NetExtender.Utilities.Types
 
             return new BandwidthStream<T>(stream, speed, size);
         }
-        
-        public static BandwidthStream Bandwidth(this Stream stream, UInt64 speed = UInt64.MaxValue, InformationSize size = InformationSize.Byte)
+
+        public static BandwidthStream<T> Bandwidth<T>(this T stream, UInt64 speed) where T : Stream
         {
-            if (stream is null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
-            
-            return new BandwidthStream(stream, speed, size);
+            return Bandwidth(stream, speed, InformationSize.Byte);
         }
-        
-        public static BandwidthStream<T> Bandwidth<T>(this T stream, UInt64 speed = UInt64.MaxValue, InformationSize size = InformationSize.Byte) where T : Stream
+
+        public static BandwidthStream<T> Bandwidth<T>(this T stream, UInt64 speed, InformationSize size) where T : Stream
         {
             if (stream is null)
             {
@@ -526,34 +531,34 @@ namespace NetExtender.Utilities.Types
             return new BandwidthStream<T>(stream, speed, size);
         }
 
-        public static MemoryStream ToStream(this String str)
+        public static MemoryStream ToStream(this String value)
         {
-            return ToStream(str, Encoding.UTF8);
+            return ToStream(value, Encoding.UTF8);
         }
 
-        public static MemoryStream ToStream(this String str, Encoding? encoding)
+        public static MemoryStream ToStream(this String value, Encoding? encoding)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return ToStream((encoding ?? Encoding.UTF8).GetBytes(str));
+            return ToStream((encoding ?? Encoding.UTF8).GetBytes(value));
         }
 
-        public static Stream ToStream(this String str, Stream output)
+        public static Stream ToStream(this String value, Stream output)
         {
-            return ToStream(str, output, Encoding.UTF8);
+            return ToStream(value, output, Encoding.UTF8);
         }
 
-        public static Stream ToStream(this String str, Stream output, Encoding? encoding)
+        public static Stream ToStream(this String value, Stream output, Encoding? encoding)
         {
-            if (str is null)
+            if (value is null)
             {
-                throw new ArgumentNullException(nameof(str));
+                throw new ArgumentNullException(nameof(value));
             }
 
-            return ToStream((encoding ?? Encoding.UTF8).GetBytes(str), output);
+            return ToStream((encoding ?? Encoding.UTF8).GetBytes(value), output);
         }
 
         public static MemoryStream ToStream(this Byte[] bytes)

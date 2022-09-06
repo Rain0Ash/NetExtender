@@ -1008,8 +1008,8 @@ namespace NetExtender.Utilities.Types
                 return builder;
             }
 
-            String str = builder.ToString();
-            return builder.Clear().Append(str.Shuffle());
+            String value = builder.ToString();
+            return builder.Clear().Append(value.Shuffle());
         }
         
         public static StringBuilder Shuffle(this StringBuilder builder, Int32 index)
@@ -1029,8 +1029,8 @@ namespace NetExtender.Utilities.Types
                 return builder;
             }
 
-            String str = builder.ToString();
-            return builder.Clear().Append(str.Shuffle(index));
+            String value = builder.ToString();
+            return builder.Clear().Append(value.Shuffle(index));
         }
         
         public static StringBuilder Shuffle(this StringBuilder builder, Int32 index, Int32 length)
@@ -1055,8 +1055,8 @@ namespace NetExtender.Utilities.Types
                 return builder;
             }
 
-            String str = builder.ToString();
-            return builder.Clear().Append(str.Shuffle(index, length));
+            String value = builder.ToString();
+            return builder.Clear().Append(value.Shuffle(index, length));
         }
 
         public static StringBuilder ToUpper(this StringBuilder builder)

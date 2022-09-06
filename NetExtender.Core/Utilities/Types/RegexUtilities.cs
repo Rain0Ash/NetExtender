@@ -39,7 +39,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String JoinMatches(String value, String pattern, String separator, RegexOptions options = RegexOptions.None)
+        public static String JoinMatches(String value, String pattern, String? separator, RegexOptions options = RegexOptions.None)
         {
             return JoinMatches(Regex.Matches(value, pattern, options), separator);
         }
@@ -51,7 +51,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String JoinMatches(this Regex regex, String value, String separator)
+        public static String JoinMatches(this Regex regex, String value, String? separator)
         {
             if (regex is null)
             {
@@ -74,13 +74,13 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<String> JoinMatchesAsync(String value, String pattern, String separator, RegexOptions options = RegexOptions.None)
+        public static Task<String> JoinMatchesAsync(String value, String pattern, String? separator, RegexOptions options = RegexOptions.None)
         {
             return JoinMatchesAsync(value, pattern, separator, options, CancellationToken.None);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<String> JoinMatchesAsync(String value, String pattern, String separator, RegexOptions options, CancellationToken token)
+        public static async Task<String> JoinMatchesAsync(String value, String pattern, String? separator, RegexOptions options, CancellationToken token)
         {
             return JoinMatches(await MatchesAsync(value, pattern, options, token).ConfigureAwait(false), separator);
         }
@@ -103,13 +103,13 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Task<String> JoinMatchesAsync(this Regex regex, String value, String separator)
+        public static Task<String> JoinMatchesAsync(this Regex regex, String value, String? separator)
         {
             return JoinMatchesAsync(regex, value, separator, CancellationToken.None);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static async Task<String> JoinMatchesAsync(this Regex regex, String value, String separator, CancellationToken token)
+        public static async Task<String> JoinMatchesAsync(this Regex regex, String value, String? separator, CancellationToken token)
         {
             if (regex is null)
             {
@@ -126,7 +126,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static String JoinMatches(this MatchCollection matches, String separator)
+        public static String JoinMatches(this MatchCollection matches, String? separator)
         {
             if (matches is null)
             {

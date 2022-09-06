@@ -9190,7 +9190,8 @@ namespace NetExtender.Utilities.Numerics
     }
 
     [SuppressMessage("ReSharper", "InvertIf")]
-    public static class MathUnsafe
+    [SuppressMessage("ReSharper", "CognitiveComplexity")]
+    public static partial class MathUnsafe
     {
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
 		public static T Add<T>(T left, T right) where T : unmanaged, IConvertible
