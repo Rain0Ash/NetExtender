@@ -16,6 +16,14 @@ namespace NetExtender.Initializer
             }
         }
 
+        public static Task<Int32> Zero
+        {
+            get
+            {
+                return Stop.ContinueWith(_ => 0);
+            }
+        }
+
         protected Initializer(Boolean subscribe)
         {
             if (!subscribe)

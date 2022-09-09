@@ -20,6 +20,7 @@ namespace NetExtender.Types.Network.UserAgents.Interfaces
         public new IUserAgentDistributionBuilder AddBrowser(params BrowserType[] browsers);
         public new IUserAgentDistributionBuilder AddBrowser(IEnumerable<BrowserType> browsers);
         public IUserAgentDistributionBuilder AddBrowser(IEnumerable<KeyValuePair<BrowserType, Double>> browsers);
+        public new IUserAgentDistributionBuilder RemoveBrowser();
         public new IUserAgentDistributionBuilder RemoveBrowser(BrowserType browser);
         public new IUserAgentDistributionBuilder RemoveBrowser(params BrowserType[] browsers);
         public new IUserAgentDistributionBuilder RemoveBrowser(IEnumerable<BrowserType> browsers);
@@ -29,6 +30,7 @@ namespace NetExtender.Types.Network.UserAgents.Interfaces
         public new IUserAgentDistributionBuilder AddArchitecture(params UserAgentArchitecture[] architectures);
         public new IUserAgentDistributionBuilder AddArchitecture(IEnumerable<UserAgentArchitecture> architectures);
         public IUserAgentDistributionBuilder AddArchitecture(IEnumerable<KeyValuePair<UserAgentArchitecture, Double>> architectures);
+        public new IUserAgentDistributionBuilder RemoveArchitecture();
         public new IUserAgentDistributionBuilder RemoveArchitecture(UserAgentArchitecture architecture);
         public new IUserAgentDistributionBuilder RemoveArchitecture(params UserAgentArchitecture[] architectures);
         public new IUserAgentDistributionBuilder RemoveArchitecture(IEnumerable<UserAgentArchitecture> architectures);
@@ -37,8 +39,10 @@ namespace NetExtender.Types.Network.UserAgents.Interfaces
         public new IUserAgentDistributionBuilder AddCulture(params CultureInfo?[] cultures);
         public new IUserAgentDistributionBuilder AddCulture(IEnumerable<CultureInfo?> cultures);
         public IUserAgentDistributionBuilder AddCulture(IEnumerable<KeyValuePair<CultureInfo?, Double>> cultures);
+        public new IUserAgentDistributionBuilder RemoveCulture();
         public new IUserAgentDistributionBuilder RemoveCulture(CultureInfo? culture);
         public new IUserAgentDistributionBuilder RemoveCulture(params CultureInfo?[] cultures);
         public new IUserAgentDistributionBuilder RemoveCulture(IEnumerable<CultureInfo?> cultures);
+        public new IUserAgentDistributionBuilder Clear();
     }
 }

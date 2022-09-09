@@ -50,7 +50,7 @@ namespace NetExtender.Types.Network.UserAgents
             ArchitectureDistribution = new DynamicRandomSelector<UserAgentArchitecture>();
             CultureDistribution = new DynamicRandomSelector<CultureInfo>();
         }
-        
+
         public new IUserAgentDistributionBuilder AddBrowser()
         {
             base.AddBrowser();
@@ -78,6 +78,13 @@ namespace NetExtender.Types.Network.UserAgents
         public new IUserAgentDistributionBuilder AddBrowser(IEnumerable<BrowserType> browsers)
         {
             base.AddBrowser(browsers);
+            return this;
+        }
+
+        public override IUserAgentDistributionBuilder RemoveBrowser()
+        {
+            Browser.Clear();
+            BrowserDistribution.Clear();
             return this;
         }
 
@@ -145,6 +152,13 @@ namespace NetExtender.Types.Network.UserAgents
             return this;
         }
 
+        public override IUserAgentDistributionBuilder RemoveArchitecture()
+        {
+            Architecture.Clear();
+            ArchitectureDistribution.Clear();
+            return this;
+        }
+
         public IUserAgentDistributionBuilder AddArchitecture(IEnumerable<KeyValuePair<UserAgentArchitecture, Double>> architectures)
         {
             if (architectures is null)
@@ -208,6 +222,13 @@ namespace NetExtender.Types.Network.UserAgents
             return this;
         }
 
+        public override IUserAgentDistributionBuilder RemoveCulture()
+        {
+            Culture.Clear();
+            CultureDistribution.Clear();
+            return this;
+        }
+
         public IUserAgentDistributionBuilder AddCulture(IEnumerable<KeyValuePair<CultureInfo?, Double>> cultures)
         {
             if (cultures is null)
@@ -244,6 +265,12 @@ namespace NetExtender.Types.Network.UserAgents
         public new IUserAgentDistributionBuilder RemoveCulture(IEnumerable<CultureInfo?> cultures)
         {
             base.RemoveCulture(cultures);
+            return this;
+        }
+
+        public override IUserAgentDistributionBuilder Clear()
+        {
+            base.Clear();
             return this;
         }
     }

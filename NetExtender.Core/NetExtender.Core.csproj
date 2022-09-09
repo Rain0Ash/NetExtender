@@ -129,6 +129,15 @@
         <Compile Update="Utilities\Types\Enumerable\ReferenceWeakStore.cs">
           <DependentUpon>StoreUtilities.cs</DependentUpon>
         </Compile>
+        <Compile Update="Types\Region\Domain.cs">
+          <DependentUpon>CountryInfo.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Region\Currency.cs">
+          <DependentUpon>CountryInfo.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Types\Region\Calling.cs">
+          <DependentUpon>CountryInfo.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>

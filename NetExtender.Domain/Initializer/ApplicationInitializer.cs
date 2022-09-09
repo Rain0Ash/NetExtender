@@ -90,21 +90,36 @@ namespace NetExtender.Domains.Initializer
             }
         }
 
-        public Int32 Start(String[]? args)
+        protected static Int32 Synchronously(String[]? args)
+        {
+            return Instance.Start(args);
+        }
+        
+        protected static Task<Int32> Async(String[]? args)
+        {
+            return Instance.StartAsync(args);
+        }
+        
+        protected static Task<Int32> Async(String[]? args, CancellationToken token)
+        {
+            return Instance.StartAsync(args, token);
+        }
+
+        protected Int32 Start(String[]? args)
         {
             return ThreadUtilities.STA(Internal, args);
         }
 
-        public Task<Int32> StartAsync(String[]? args)
+        protected Task<Int32> StartAsync(String[]? args)
         {
             return StartAsync(args, CancellationToken.None);
         }
 
-        public async Task<Int32> StartAsync(String[]? args, CancellationToken token)
+        protected async Task<Int32> StartAsync(String[]? args, CancellationToken token)
         {
             return await ThreadUtilities.STA(InternalAsync, args, token);
         }
-        
+
         protected override void Shutdown(Object? sender, Boolean exit)
         {
             if (exit)

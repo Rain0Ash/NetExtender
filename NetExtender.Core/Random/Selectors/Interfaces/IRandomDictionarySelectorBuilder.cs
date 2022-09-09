@@ -2,7 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.Generic;
 using NetExtender.Types.Dictionaries.Interfaces;
 
 namespace NetExtender.Random

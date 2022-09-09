@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using NetExtender.Random;
+using NetExtender.Types.Culture;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Network.UserAgents;
 using NetExtender.Types.Network.UserAgents.Interfaces;
@@ -70,8 +71,39 @@ namespace NetExtender.Utilities.Network
 
             static UserAgentArchitectureDistribution()
             {
-                //TODO:
-                Selector = new DynamicRandomSelector<UserAgentArchitecture>();
+                const Double windows = 0.75;
+                const Double osx = 0.175;
+                const Double linux = 0.055;
+                const Double freebsd = 1 - windows - osx - linux;
+
+                Selector = new DynamicRandomSelector<UserAgentArchitecture>
+                {
+                    { UserAgentArchitecture.Win7X32, 0.13 * windows * 0.3 },
+                    { UserAgentArchitecture.Win7X64, 0.13 * windows * 0.35 },
+                    { UserAgentArchitecture.Wow7X64, 0.13 * windows * 0.35 },
+                    { UserAgentArchitecture.Win8X32, 0.01 * windows * 0.3 },
+                    { UserAgentArchitecture.Win8X64, 0.01 * windows * 0.35 },
+                    { UserAgentArchitecture.Wow8X64, 0.01 * windows * 0.35 },
+                    { UserAgentArchitecture.Win81X32, 0.04 * windows * 0.3 },
+                    { UserAgentArchitecture.Win81X64, 0.04 * windows * 0.35 },
+                    { UserAgentArchitecture.Wow81X64, 0.04 * windows * 0.35 },
+                    { UserAgentArchitecture.Win10X32, 0.82 * windows * 0.3 },
+                    { UserAgentArchitecture.Win10X64, 0.82 * windows * 0.35 },
+                    { UserAgentArchitecture.Wow10X64, 0.82 * windows * 0.35 },
+                    
+                    { UserAgentArchitecture.MacOSXIntel, 1 * osx * 0.95 },
+                    { UserAgentArchitecture.MacOSXPPC, 1 * osx * 0.05 },
+                    
+                    { UserAgentArchitecture.LinuxI686, 0.5 * linux * 0.2 },
+                    { UserAgentArchitecture.LinuxX64, 0.5 * linux * 0.4 },
+                    { UserAgentArchitecture.LinuxAMD64, 0.5 * linux * 0.4 },
+                    { UserAgentArchitecture.LinuxUbuntuI686, 0.5 * linux * 0.2 },
+                    { UserAgentArchitecture.LinuxUbuntuX64, 0.5 * linux * 0.4 },
+                    { UserAgentArchitecture.LinuxUbuntuAMD64, 0.5 * linux * 0.4 },
+
+                    { UserAgentArchitecture.FreeBSDX64, 1 * freebsd * 0.5 },
+                    { UserAgentArchitecture.FreeBSDAMD64, 1 * freebsd * 0.5 },
+                };
             }
         }
 
@@ -105,8 +137,25 @@ namespace NetExtender.Utilities.Network
 
             static UserAgentCultureDistribution()
             {
-                //TODO:
-                Selector = new DynamicRandomSelector<CultureInfo>();
+                //TODO: RegionIdentifier
+                Selector = new DynamicRandomSelector<CultureInfo>
+                {
+                    { CultureIdentifier.Us.ToCultureInfo(), 0.0615 },
+                    { CultureIdentifier.En.ToCultureInfo(), 0.01326 },
+                    { CultureIdentifier.Ru.ToCultureInfo(), 0.0232 },
+                    { CultureIdentifier.Uk.ToCultureInfo(), 0.0067 },
+                    { CultureIdentifier.Be.ToCultureInfo(), 0.00161 },
+                    { CultureIdentifier.Kk.ToCultureInfo(), 0.0032 },
+                    { CultureIdentifier.Pl.ToCultureInfo(), 0.0064 },
+                    { CultureIdentifier.De.ToCultureInfo(), 0.0155 },
+                    { CultureIdentifier.Fr.ToCultureInfo(), 0.0119 },
+                    { CultureIdentifier.It.ToCultureInfo(), 0.01 },
+                    { CultureIdentifier.Es.ToCultureInfo(), 0.00912 },
+                    { CultureIdentifier.Tr.ToCultureInfo(), 0.0124 },
+                    { CultureIdentifier.Lt.ToCultureInfo(), 0.00048 },
+                    { CultureIdentifier.Lv.ToCultureInfo(), 0.000345 },
+                    { CultureIdentifier.Et.ToCultureInfo(), 0.00024 }
+                };
             }
         }
 

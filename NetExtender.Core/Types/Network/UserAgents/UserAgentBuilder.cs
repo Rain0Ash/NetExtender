@@ -20,10 +20,36 @@ namespace NetExtender.Types.Network.UserAgents
             return builder?.Build();
         }
 
-        public virtual ISet<BrowserType> Browser { get; }
-        public virtual ISet<UserAgentArchitecture> Architecture { get; }
-        public virtual ISet<CultureInfo> Culture { get; }
+        protected HashSet<BrowserType> Browser { get; }
+
+        IReadOnlySet<BrowserType> IUserAgentBuilder.Browser
+        {
+            get
+            {
+                return Browser;
+            }
+        }
         
+        protected HashSet<UserAgentArchitecture> Architecture { get; }
+
+        IReadOnlySet<UserAgentArchitecture> IUserAgentBuilder.Architecture
+        {
+            get
+            {
+                return Architecture;
+            }
+        }
+
+        protected HashSet<CultureInfo> Culture { get; }
+
+        IReadOnlySet<CultureInfo> IUserAgentBuilder.Culture
+        {
+            get
+            {
+                return Culture;
+            }
+        }
+
         protected virtual BrowserType RandomBrowser
         {
             get
@@ -111,6 +137,12 @@ namespace NetExtender.Types.Network.UserAgents
             return this;
         }
 
+        public virtual IUserAgentBuilder RemoveBrowser()
+        {
+            Browser.Clear();
+            return this;
+        }
+
         public virtual IUserAgentBuilder RemoveBrowser(BrowserType browser)
         {
             Browser.Remove(browser);
@@ -165,6 +197,12 @@ namespace NetExtender.Types.Network.UserAgents
                 AddArchitecture(architecture);
             }
 
+            return this;
+        }
+
+        public virtual IUserAgentBuilder RemoveArchitecture()
+        {
+            Architecture.Clear();
             return this;
         }
 
@@ -225,6 +263,12 @@ namespace NetExtender.Types.Network.UserAgents
             return this;
         }
 
+        public virtual IUserAgentBuilder RemoveCulture()
+        {
+            Culture.Clear();
+            return this;
+        }
+
         public virtual IUserAgentBuilder RemoveCulture(CultureInfo? culture)
         {
             if (culture is null)
@@ -256,7 +300,12 @@ namespace NetExtender.Types.Network.UserAgents
             return this;
         }
 
-        public IEnumerator<String> GetEnumerator()
+        public virtual IUserAgentBuilder Clear()
+        {
+            return RemoveBrowser().RemoveArchitecture().RemoveCulture();
+        }
+
+        public virtual IEnumerator<String> GetEnumerator()
         {
             while (Build() is { } result)
             {

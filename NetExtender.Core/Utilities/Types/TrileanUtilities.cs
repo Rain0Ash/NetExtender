@@ -9,17 +9,17 @@ namespace NetExtender.Utilities.Types
     public static class TrileanUtilities
     {
         /// <summary>
-        /// Cached true task
+        /// True task
         /// </summary>
         public static Task<Trilean> True { get; } = Task.FromResult(Trilean.True);
         
         /// <summary>
-        /// Cached trit task
+        /// Trit task
         /// </summary>
         public static Task<Trilean> Trit { get; } = Task.FromResult(Trilean.Trit);
             
         /// <summary>
-        /// Cached false task
+        /// False task
         /// </summary>
         public static Task<Trilean> False { get; } = Task.FromResult(Trilean.False);
     }

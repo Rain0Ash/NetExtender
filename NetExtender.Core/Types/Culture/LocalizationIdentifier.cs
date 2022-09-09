@@ -2,7 +2,10 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Immutable;
 using System.Globalization;
+using NetExtender.Initializer.Types.Currency;
+using NetExtender.Initializer.Types.Region;
 using NetExtender.NewtonSoft.Types.Culture;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
@@ -124,6 +127,16 @@ namespace NetExtender.Types.Culture
             return info?.LCID ?? default;
         }
 
+        public static implicit operator CountryIdentifier(LocalizationIdentifier identifier)
+        {
+            return identifier.CountryIdentifier;
+        }
+
+        public static implicit operator CurrencyIdentifier(LocalizationIdentifier identifier)
+        {
+            return identifier.CurrencyIdentifier;
+        }
+
         public static LocalizationIdentifier Default
         {
             get
@@ -195,6 +208,22 @@ namespace NetExtender.Types.Culture
             get
             {
                 return CultureUtilities.ToRegionInfo(Code);
+            }
+        }
+
+        public CountryInfo? Country
+        {
+            get
+            {
+                return this;
+            }
+        }
+
+        public CurrencyInfo? Currency
+        {
+            get
+            {
+                return this;
             }
         }
 
@@ -310,7 +339,7 @@ namespace NetExtender.Types.Culture
             }
         }
         
-        public String? CurrencySymbol
+        public String? RegionCurrencySymbol
         {
             get
             {
@@ -318,7 +347,7 @@ namespace NetExtender.Types.Culture
             }
         }
         
-        public String? ISOCurrencySymbol
+        public String? RegionISOCurrencySymbol
         {
             get
             {
@@ -326,7 +355,7 @@ namespace NetExtender.Types.Culture
             }
         }
         
-        public String? CurrencyEnglishName
+        public String? RegionCurrencyEnglishName
         {
             get
             {
@@ -334,7 +363,7 @@ namespace NetExtender.Types.Culture
             }
         }
         
-        public String? CurrencyNativeName
+        public String? RegionCurrencyNativeName
         {
             get
             {
@@ -355,6 +384,166 @@ namespace NetExtender.Types.Culture
             get
             {
                 return Region?.GeoId ?? 0;
+            }
+        }
+
+        public String? CountryName
+        {
+            get
+            {
+                return Country?.Name;
+            }
+        }
+
+        public String? CountryOfficialName
+        {
+            get
+            {
+                return Country?.OfficialName;
+            }
+        }
+
+        public String? CountryNativeName
+        {
+            get
+            {
+                return Country?.NativeName;
+            }
+        }
+
+        public CountryIdentifier CountryIdentifier
+        {
+            get
+            {
+                return Country?.Identifier ?? CountryIdentifier.Default;
+            }
+        }
+
+        public Int32 CountryCode
+        {
+            get
+            {
+                return Country?.Code ?? 0;
+            }
+        }
+
+        public UInt16 CountryCode16
+        {
+            get
+            {
+                return Country?.Code16 ?? 0;
+            }
+        }
+        
+        public String? TwoLetterISOCountryName
+        {
+            get
+            {
+                return Country?.TwoLetterISOCountryName;
+            }
+        }
+
+        public RegionIdentifier CountryRegion
+        {
+            get
+            {
+                return Country?.Region ?? RegionIdentifier.None;
+            }
+        }
+
+        public SubregionIdentifier CountrySubregion
+        {
+            get
+            {
+                return Country?.Subregion ?? SubregionIdentifier.None;
+            }
+        }
+
+        public CountryInfo.CountryDomain? CountryDomain
+        {
+            get
+            {
+                return Country?.Domain;
+            }
+        }
+
+        public ImmutableHashSet<CountryIdentifier>? CountryBorder
+        {
+            get
+            {
+                return Country?.Border;
+            }
+        }
+
+        public CountryInfo.CountryCurrency? CountryCurrency
+        {
+            get
+            {
+                return Country?.Currency;
+            }
+        }
+
+        public CountryInfo.CountryCalling? CountryCalling
+        {
+            get
+            {
+                return Country?.Calling;
+            }
+        }
+
+        public String? CurrencySymbol
+        {
+            get
+            {
+                return Currency?.Symbol;
+            }
+        }
+
+        public String? CurrencyName
+        {
+            get
+            {
+                return Currency?.Name;
+            }
+        }
+
+        public String? CurrencyFullName
+        {
+            get
+            {
+                return Currency?.FullName;
+            }
+        }
+
+        public String? ThreeLetterISOCurrencyName
+        {
+            get
+            {
+                return Currency?.ThreeLetterISOCurrencyName;
+            }
+        }
+
+        public CurrencyIdentifier CurrencyIdentifier
+        {
+            get
+            {
+                return Currency?.Identifier ?? CurrencyIdentifier.Default;
+            }
+        }
+
+        public Int32 CurrencyCode
+        {
+            get
+            {
+                return Currency?.Code ?? 0;
+            }
+        }
+
+        public UInt16 CurrencyCode16
+        {
+            get
+            {
+                return Currency?.Code16 ?? 0;
             }
         }
 

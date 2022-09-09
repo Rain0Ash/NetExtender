@@ -3436,6 +3436,18 @@ namespace NetExtender.Utilities.Types
                     throw new NotSupportedException();
             }
         }
+        
+        private static Regex RightToLeftChecker { get; } = new Regex("[\u04c7-\u0591\u05D0-\u05EA\u05F0-\u05F4\u0600-\u06FF]", RegexOptions.Compiled);
+
+        public static Boolean IsRightToLeft(this String? value)
+        {
+            return !String.IsNullOrEmpty(value) && RightToLeftChecker.Match(value).Success;
+        }
+        
+        public static Boolean IsRightToLeft(this IString? value)
+        {
+            return IsRightToLeft(value?.ToString());
+        }
 
 #if NETCOREAPP3_1_OR_GREATER
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
