@@ -23,7 +23,7 @@ namespace NetExtender.Types.Network.UserAgents.Specific
             String culture = GetCultureName(info);
             String chrome = RandomChromeVersion();
 
-            return $"Mozilla/5.0 {(!String.IsNullOrEmpty(arch) || !String.IsNullOrEmpty(culture) ? $"({"; ".Join(JoinType.NotEmpty, arch, culture)})" : String.Empty)} AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{chrome} Safari/537.36";
+            return $"Mozilla/5.0{(!String.IsNullOrEmpty(arch) || !String.IsNullOrEmpty(culture) ? $" ({"; ".Join(JoinType.NotEmpty, arch, culture)})" : String.Empty)} AppleWebKit/537.36 (KHTML, like Gecko) Chrome/{chrome} Safari/537.36";
         }
     }
 }

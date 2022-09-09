@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
+using System.Linq;
 using NetExtender.Random;
 using NetExtender.Types.Culture;
 using NetExtender.Types.Exceptions;
@@ -137,7 +138,6 @@ namespace NetExtender.Utilities.Network
 
             static UserAgentCultureDistribution()
             {
-                //TODO: RegionIdentifier
                 Selector = new DynamicRandomSelector<CultureInfo>
                 {
                     { CultureIdentifier.Us.ToCultureInfo(), 0.0615 },
@@ -156,6 +156,8 @@ namespace NetExtender.Utilities.Network
                     { CultureIdentifier.Lv.ToCultureInfo(), 0.000345 },
                     { CultureIdentifier.Et.ToCultureInfo(), 0.00024 }
                 };
+                
+                Selector.Add(CultureIdentifier.Invariant.ToCultureInfo(), 1 - Selector.Values.Sum());
             }
         }
 
@@ -187,6 +189,14 @@ namespace NetExtender.Utilities.Network
         {
             get
             {
+                return BrowserUtilities.RandomBrowser.CreateUserAgent();
+            }
+        }
+
+        public static String RandomUserAgentWithDistribution
+        {
+            get
+            {
                 return BrowserUtilities.RandomBrowserWithDistribution.CreateUserAgent();
             }
         }
@@ -196,7 +206,7 @@ namespace NetExtender.Utilities.Network
         {
             get
             {
-                return session ??= RandomUserAgent;
+                return session ??= RandomUserAgentWithDistribution;
             }
             private set
             {
@@ -205,7 +215,11 @@ namespace NetExtender.Utilities.Network
                     throw new ArgumentNullException(nameof(value));
                 }
                 
-                ThrowIfSessionUserAgentAlreadyInitialized();
+                if (session is not null)
+                {
+                    throw new AlreadyInitializedException("User agent already initialized", nameof(SessionUserAgent));
+                }
+                
                 if (!ValidateUserAgent(value))
                 {
                     throw new ArgumentException(@"Is not valid user agent", nameof(value));
@@ -237,19 +251,15 @@ namespace NetExtender.Utilities.Network
                 current = value;
             }
         }
-        
-        private static void ThrowIfSessionUserAgentAlreadyInitialized()
+
+        public static String InitializeSessionUserAgent()
         {
             if (session is not null)
             {
                 throw new AlreadyInitializedException("User agent already initialized", nameof(SessionUserAgent));
             }
-        }
-
-        public static String InitializeSessionUserAgent()
-        {
-            ThrowIfSessionUserAgentAlreadyInitialized();
-            return InitializeSessionUserAgent(RandomUserAgent);
+            
+            return InitializeSessionUserAgent(RandomUserAgentWithDistribution);
         }
         
         public static String InitializeSessionUserAgent(IUserAgentBuilder builder)
@@ -259,43 +269,62 @@ namespace NetExtender.Utilities.Network
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            ThrowIfSessionUserAgentAlreadyInitialized();
+            if (session is not null)
+            {
+                throw new AlreadyInitializedException("User agent already initialized", nameof(SessionUserAgent));
+            }
+            
             return InitializeSessionUserAgent(builder.Build() ?? OtherUserAgent);
         }
         
         public static String InitializeSessionUserAgent(BrowserType type)
         {
-            ThrowIfSessionUserAgentAlreadyInitialized();
+            if (session is not null)
+            {
+                throw new AlreadyInitializedException("User agent already initialized", nameof(SessionUserAgent));
+            }
+            
             return InitializeSessionUserAgent(type.CreateUserAgent());
         }
 
         public static String InitializeSessionUserAgent(BrowserType type, UserAgentArchitecture? architecture)
         {
-            ThrowIfSessionUserAgentAlreadyInitialized();
+            if (session is not null)
+            {
+                throw new AlreadyInitializedException("User agent already initialized", nameof(SessionUserAgent));
+            }
+            
             return InitializeSessionUserAgent(type.CreateUserAgent(architecture));
         }
 
         public static String InitializeSessionUserAgent(BrowserType type, CultureInfo? info)
         {
-            ThrowIfSessionUserAgentAlreadyInitialized();
+            if (session is not null)
+            {
+                throw new AlreadyInitializedException("User agent already initialized", nameof(SessionUserAgent));
+            }
+            
             return InitializeSessionUserAgent(type.CreateUserAgent(info));
         }
         
         public static String InitializeSessionUserAgent(BrowserType type, UserAgentArchitecture? architecture, CultureInfo? info)
         {
-            ThrowIfSessionUserAgentAlreadyInitialized();
+            if (session is not null)
+            {
+                throw new AlreadyInitializedException("User agent already initialized", nameof(SessionUserAgent));
+            }
+            
             return InitializeSessionUserAgent(type.CreateUserAgent(architecture, info));
         }
         
         public static String InitializeSessionUserAgent(String agent)
         {
-            if (agent is null)
+            if (session is not null)
             {
-                throw new ArgumentNullException(nameof(agent));
+                throw new AlreadyInitializedException("User agent already initialized", nameof(SessionUserAgent));
             }
-
-            ThrowIfSessionUserAgentAlreadyInitialized();
-            SessionUserAgent = agent;
+            
+            SessionUserAgent = agent ?? throw new ArgumentNullException(nameof(agent));
             return SessionUserAgent;
         }
         

@@ -17,6 +17,7 @@ namespace NetExtender.Random
         protected const Int32 DefaultCapacity = 4;
         protected IRandom Random { get; set; }
         protected IndexDictionary<T, Double> Items { get; }
+        protected virtual Boolean Rebuild { get; set; } = true;
 
         public override IReadOnlyCollection<T> Collection
         {
@@ -246,6 +247,7 @@ namespace NetExtender.Random
                 }
             
                 Items.Add(item, weight);
+                Rebuild = true;
             }
         }
 
@@ -263,10 +265,14 @@ namespace NetExtender.Random
 
             lock (Items)
             {
+                Boolean any = false;
                 foreach ((T item, Double weight) in items)
                 {
                     Add(item, weight);
+                    any = true;
                 }
+
+                Rebuild |= any;
             }
         }
         
@@ -291,6 +297,7 @@ namespace NetExtender.Random
                 }
             
                 Items.Insert(item, weight);
+                Rebuild = true;
             }
         }
 
@@ -315,6 +322,7 @@ namespace NetExtender.Random
                 }
             
                 Items.Insert(item, weight);
+                Rebuild = true;
                 return true;
             }
         }
@@ -322,71 +330,110 @@ namespace NetExtender.Random
         public void SetValueByIndex(Int32 index, Double value)
         {
             Items.SetValueByIndex(index, value);
+            Rebuild = true;
         }
 
         public Boolean TrySetValueByIndex(Int32 index, Double value)
         {
-            return Items.TrySetValueByIndex(index, value);
+            if (!Items.TrySetValueByIndex(index, value))
+            {
+                return false;
+            }
+
+            Rebuild = true;
+            return true;
         }
 
         public Boolean Remove(T key)
         {
-            return Items.Remove(key);
+            if (!Items.Remove(key))
+            {
+                return false;
+            }
+
+            Rebuild = true;
+            return true;
         }
         
         public Boolean Remove(KeyValuePair<T, Double> item)
         {
-            return Items.Remove(item);
+            if (!Items.Remove(item))
+            {
+                return false;
+            }
+            
+            Rebuild = true;
+            return true;
         }
         
         public Boolean RemoveAt(Int32 index)
         {
-            return Items.RemoveAt(index);
+            if (!Items.RemoveAt(index))
+            {
+                return false;
+            }
+            
+            Rebuild = true;
+            return true;
         }
 
         public Boolean RemoveAt(Int32 index, out KeyValuePair<T, Double> pair)
         {
-            return Items.RemoveAt(index, out pair);
+            if (!Items.RemoveAt(index, out pair))
+            {
+                return false;
+            }
+            
+            Rebuild = true;
+            return true;
         }
         
         public void Swap(Int32 index1, Int32 index2)
         {
             Items.Swap(index1, index2);
+            Rebuild = true;
         }
 
         public void Reverse()
         {
             Items.Reverse();
+            Rebuild = true;
         }
 
         public void Reverse(Int32 index, Int32 count)
         {
             Items.Reverse(index, count);
+            Rebuild = true;
         }
 
         public void Sort()
         {
             Items.Sort();
+            Rebuild = true;
         }
 
         public void Sort(Comparison<T> comparison)
         {
             Items.Sort(comparison);
+            Rebuild = true;
         }
 
         public void Sort(IComparer<T>? comparer)
         {
             Items.Sort(comparer);
+            Rebuild = true;
         }
 
         public void Sort(Int32 index, Int32 count, IComparer<T>? comparer)
         {
             Items.Sort(index, count, comparer);
+            Rebuild = true;
         }
 
         public virtual void Clear()
         {
             Items.Clear();
+            Rebuild = true;
         }
 
         /// <inheritdoc cref="Build(int)"/>
@@ -429,6 +476,8 @@ namespace NetExtender.Random
             {
                 seed = Random.Next();
             }
+
+            Rebuild = false;
 
             // RandomMath.ArrayBreakpoint decides where to use Linear or Binary search, based on internal buffer size
             // if CDA array is smaller than breakpoint, then pick linear search random selector, else pick binary search selector
@@ -517,11 +566,12 @@ namespace NetExtender.Random
             {
                 if (Math.Abs(value) < Double.Epsilon)
                 {
-                    Items.Remove(key);
+                    Rebuild |= Items.Remove(key);
                     return;
                 }
                 
                 Items[key] = value;
+                Rebuild = true;
             }
         }
     }

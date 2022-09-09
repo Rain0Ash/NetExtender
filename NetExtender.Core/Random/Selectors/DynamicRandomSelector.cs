@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using NetExtender.Random.Interfaces;
-using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 
@@ -22,6 +21,21 @@ namespace NetExtender.Random
     {
         protected List<Double> Distribution { get; }
         protected Func<List<Double>, Double, Int32>? Selector { get; set; }
+
+        protected override Boolean Rebuild
+        {
+            get
+            {
+                return Selector is null;
+            }
+            set
+            {
+                if (value)
+                {
+                    Selector = null;
+                }
+            }
+        }
 
         public DynamicRandomSelector()
         {
@@ -112,11 +126,8 @@ namespace NetExtender.Random
             Distribution.AddRange(Items.Values);
             BuildCumulativeDistribution(Distribution);
 
-            // default behavior
-            // if seed wasn't specified (it is seed==-1), keep same seed - avoids garbage collection from making new random
             if (seed != -1)
             {
-                // input -2 if you want to randomize seed
                 if (seed == -2)
                 {
                     seed = Random.Next();
@@ -125,8 +136,8 @@ namespace NetExtender.Random
                 Random = RandomUtilities.Create(seed);
             }
 
-            // RandomMath.ListBreakpoint decides where to use Linear or Binary search, based on internal buffer size
-            // if CDL list is smaller than breakpoint, then pick linear search random selector, else pick binary search selector
+            Rebuild = false;
+
             if (Distribution.Count < ListBreakpoint)
             {
                 Selector = SelectIndexLinearSearch;
@@ -214,7 +225,7 @@ namespace NetExtender.Random
         {
             if (Selector is null)
             {
-                throw new NotInitializedException();
+                return Build().GetRandom();
             }
 
             if (Items.Count <= 0)
@@ -235,7 +246,7 @@ namespace NetExtender.Random
         {
             if (Selector is null)
             {
-                throw new NotInitializedException();
+                return Build().GetRandom(value);
             }
             
             if (Items.Count <= 0)
@@ -252,7 +263,7 @@ namespace NetExtender.Random
         {
             if (Selector is null)
             {
-                throw new NotInitializedException();
+                return Build().GetRandomOrDefault(alternate);
             }
 
             return Items.Count > 0 ? Items.GetKeyByIndex(Selector(Distribution, Random.NextDouble())) : alternate;
@@ -263,7 +274,7 @@ namespace NetExtender.Random
         {
             if (Selector is null)
             {
-                throw new NotInitializedException();
+                return Build().GetRandomOrDefault(value, alternate);
             }
             
             return Items.Count > 0 ? Items.GetKeyByIndex(Selector(Distribution, value)) : alternate;

@@ -29,7 +29,7 @@ namespace NetExtender.Types.Network.UserAgents.Specific
             String culture = GetCultureName(info);
             (String webkit, String safari, String version) = RandomSafariVersion();
 
-            return $"Mozilla/5.0 {(!String.IsNullOrEmpty(arch) || !String.IsNullOrEmpty(culture) ? $"({"; ".Join(JoinType.NotEmpty, arch, culture)})" : String.Empty)} AppleWebKit/{webkit} (KHTML, like Gecko) Version/{version} Safari/{safari}";
+            return $"Mozilla/5.0{(!String.IsNullOrEmpty(arch) || !String.IsNullOrEmpty(culture) ? $" ({"; ".Join(JoinType.NotEmpty, arch, culture)})" : String.Empty)} AppleWebKit/{webkit} (KHTML, like Gecko) Version/{version} Safari/{safari}";
         }
     }
 }
