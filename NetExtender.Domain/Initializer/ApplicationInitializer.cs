@@ -90,7 +90,7 @@ namespace NetExtender.Domains.Initializer
             }
         }
 
-        protected static Int32 Synchronously(String[]? args)
+        protected static Int32 Sync(String[]? args)
         {
             return Instance.Start(args);
         }

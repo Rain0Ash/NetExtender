@@ -11,6 +11,19 @@ using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Domains.View
 {
+    public class WindowsPresentationView<T> : WindowsPresentationView where T : Window, new()
+    {
+        public WindowsPresentationView()
+            : base(new T())
+        {
+        }
+
+        public WindowsPresentationView(T? context)
+            : base(context)
+        {
+        }
+    }
+    
     public class WindowsPresentationView : ApplicationView
     {
         protected Window? Context { get; private set; }

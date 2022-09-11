@@ -12,6 +12,19 @@ using NetExtender.Windows.Services.Types.Services.Interfaces;
 
 namespace NetExtender.Domains.Service.Views
 {
+    public class WindowsServiceView<T> : WindowsServiceView where T : IWindowsService, new()
+    {
+        public WindowsServiceView()
+            : base(new T())
+        {
+        }
+        
+        public WindowsServiceView(T service)
+            : base(service)
+        {
+        }
+    }
+    
     public class WindowsServiceView : ApplicationView
     {
         protected IWindowsService Context { get; set; }

@@ -7,6 +7,19 @@ using NetExtender.Domains.Applications.Interfaces;
 
 namespace NetExtender.Domains.Applications
 {
+    public class WindowsPresentationConsoleApplication<T> : WindowsPresentationConsoleApplication where T : System.Windows.Application, new()
+    {
+        public WindowsPresentationConsoleApplication()
+            : base(new T())
+        {
+        }
+
+        public WindowsPresentationConsoleApplication(T application)
+            : base(application)
+        {
+        }
+    }
+
     public class WindowsPresentationConsoleApplication : WindowsPresentationApplication
     {
         public WindowsPresentationConsoleApplication(System.Windows.Application application)

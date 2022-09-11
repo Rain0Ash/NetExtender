@@ -13,6 +13,19 @@ using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Domains.Windows.Service.AspNetCore.Views
 {
+    public class AspNetCoreWindowsServiceView<T> : AspNetCoreWindowsServiceView where T : IHost, new()
+    {
+        public AspNetCoreWindowsServiceView()
+            : base(new T())
+        {
+        }
+        
+        public AspNetCoreWindowsServiceView(T host)
+            : base(host)
+        {
+        }
+    }
+
     public class AspNetCoreWindowsServiceView : AspNetCoreView
     {
         protected new IHost? Context { get; set; }

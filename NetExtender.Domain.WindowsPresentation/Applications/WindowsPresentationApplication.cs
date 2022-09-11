@@ -12,6 +12,19 @@ using NetExtender.Types.Dispatchers.Interfaces;
 
 namespace NetExtender.Domains.Applications
 {
+    public class WindowsPresentationApplication<T> : WindowsPresentationApplication where T : System.Windows.Application, new()
+    {
+        public WindowsPresentationApplication()
+            : base(new T())
+        {
+        }
+
+        public WindowsPresentationApplication(T application)
+            : base(application)
+        {
+        }
+    }
+    
     public class WindowsPresentationApplication : Application
     {
         public System.Windows.Application Application { get; }

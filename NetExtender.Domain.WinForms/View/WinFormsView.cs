@@ -11,6 +11,19 @@ using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Domains.View
 {
+    public class WinFormsView<T> : WinFormsView where T : Form, new()
+    {
+        public WinFormsView()
+            : base(new T())
+        {
+        }
+        
+        public WinFormsView(T? context)
+            : base(context)
+        {
+        }
+    }
+    
     public class WinFormsView : ApplicationView
     {
         protected Form? Context { get; private set; }

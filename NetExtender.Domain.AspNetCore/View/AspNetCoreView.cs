@@ -14,6 +14,19 @@ using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Domains.AspNetCore.View
 {
+    public class AspNetCoreView<T> : AspNetCoreView where T : IHost, new()
+    {
+        public AspNetCoreView()
+            : base(new T())
+        {
+        }
+
+        public AspNetCoreView(T host)
+            : base(host)
+        {
+        }
+    }
+    
     public class AspNetCoreView : ApplicationView
     {
         protected IHost? Context { get; private set; }
