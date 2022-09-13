@@ -6,14 +6,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using NetExtender.Domain.Utilities;
 using NetExtender.Domains.AspNetCore.View;
 using NetExtender.Domains.AspNetCore.Windows.Service.Applications;
 using NetExtender.Domains.View.Interfaces;
-using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Domains.Windows.Service.AspNetCore.Views
 {
-    public class AspNetCoreWindowsServiceView<T> : AspNetCoreWindowsServiceView where T : IHost, new()
+    public class AspNetCoreWindowsServiceView<T> : AspNetCoreWindowsServiceView where T : class, IHost, new()
     {
         public AspNetCoreWindowsServiceView()
             : base(new T())
@@ -58,7 +58,7 @@ namespace NetExtender.Domains.Windows.Service.AspNetCore.Views
                 throw new ArgumentException($"{nameof(host)} not reference equals with {nameof(Context)}");
             }
             
-            AspNetCoreWindowsServiceApplication application = Domain.Current.Application as AspNetCoreWindowsServiceApplication ?? throw new InitializeException($"{nameof(Domain.Current.Application)} is not {nameof(AspNetCoreWindowsServiceApplication)}");
+            AspNetCoreWindowsServiceApplication application = Domain.Current.Application.As<AspNetCoreWindowsServiceApplication>();
             await application.RunAsync(Context, token);
             return this;
         }

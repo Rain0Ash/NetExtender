@@ -5,9 +5,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NetExtender.Domain.Utilities;
 using NetExtender.Domains.Applications;
 using NetExtender.Domains.View.Interfaces;
-using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Domains.View
 {
@@ -35,7 +35,15 @@ namespace NetExtender.Domains.View
                 return System.Windows.Forms.Application.UseVisualStyles;
             }
         }
-        
+
+        protected override ApplicationShutdownMode? ShutdownMode
+        {
+            get
+            {
+                return ApplicationShutdownMode.OnMainWindowClose;
+            }
+        }
+
         public WinFormsView()
         {
         }
@@ -48,11 +56,6 @@ namespace NetExtender.Domains.View
         protected static void EnableVisualStyles()
         {
             System.Windows.Forms.Application.EnableVisualStyles();
-        }
-        
-        protected override void InitializeInternal()
-        {
-            Domain.ShutdownMode = ApplicationShutdownMode.OnExplicitShutdown;
         }
 
         protected override Task<IApplicationView> RunAsync(CancellationToken token)
@@ -81,7 +84,7 @@ namespace NetExtender.Domains.View
             
             Context.Closed += OnFormClosed;
             
-            WinFormsApplication application = Domain.Current.Application as WinFormsApplication ?? throw new InitializeException($"{nameof(Domain.Current.Application)} is not {nameof(WinFormsApplication)}");
+            WinFormsApplication application = Domain.Current.Application.As<WinFormsApplication>();
             await application.RunAsync(Context, token);
             return this;
         }

@@ -43,6 +43,14 @@ namespace NetExtender.Domains.View
             }
         }
 
+        protected virtual ApplicationShutdownMode? ShutdownMode
+        {
+            get
+            {
+                return null;
+            }
+        }
+
         public IApplicationView Start()
         {
             return Start(null);
@@ -102,7 +110,7 @@ namespace NetExtender.Domains.View
                     await ElevateAsync(application, token).ConfigureAwait(false);
                 }
 
-                StartInitialize();
+                Initialize(ShutdownMode);
                 Current = this;
                 Started = true;
                 HandleArguments(Arguments);
@@ -123,17 +131,18 @@ namespace NetExtender.Domains.View
             return StartAsync(args, token);
         }
 
-        private void StartInitialize()
-        {
-            InitializeInternal();
-
-            Initialize();
-        }
-
-        protected abstract void InitializeInternal();
-
         protected virtual void Initialize()
         {
+        }
+
+        private void Initialize(ApplicationShutdownMode? mode)
+        {
+            if (mode is not null)
+            {
+                Domain.ShutdownMode = mode.Value;
+            }
+            
+            Initialize();
         }
 
         protected virtual void SaveArguments(IEnumerable<String>? args)

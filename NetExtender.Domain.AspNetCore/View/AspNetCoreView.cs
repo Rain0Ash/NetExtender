@@ -7,14 +7,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using NetExtender.Domain.Utilities;
 using NetExtender.Domains.AspNetCore.Applications;
 using NetExtender.Domains.View;
 using NetExtender.Domains.View.Interfaces;
-using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Domains.AspNetCore.View
 {
-    public class AspNetCoreView<T> : AspNetCoreView where T : IHost, new()
+    public class AspNetCoreView<T> : AspNetCoreView where T : class, IHost, new()
     {
         public AspNetCoreView()
             : base(new T())
@@ -32,7 +32,15 @@ namespace NetExtender.Domains.AspNetCore.View
         protected IHost? Context { get; private set; }
         protected Action<IWebHostBuilder>? Builder { get; }
         protected Boolean UseDefaultHostBuilder { get; }
-        
+
+        protected override ApplicationShutdownMode? ShutdownMode
+        {
+            get
+            {
+                return ApplicationShutdownMode.OnExplicitShutdown;
+            }
+        }
+
         public AspNetCoreView(IHost host)
         {
             Context = host ?? throw new ArgumentNullException(nameof(host));
@@ -47,11 +55,6 @@ namespace NetExtender.Domains.AspNetCore.View
         {
             Builder = builder ?? throw new ArgumentNullException(nameof(builder));
             UseDefaultHostBuilder = initialize;
-        }
-
-        protected override void InitializeInternal()
-        {
-            Domain.ShutdownMode = ApplicationShutdownMode.OnExplicitShutdown;
         }
 
         protected IHostBuilder CreateHostBuilder()
@@ -88,7 +91,7 @@ namespace NetExtender.Domains.AspNetCore.View
                 throw new ArgumentException($"{nameof(host)} not reference equals with {nameof(Context)}");
             }
             
-            AspNetCoreApplication application = Domain.Current.Application as AspNetCoreApplication ?? throw new InitializeException($"{nameof(Domain.Current.Application)} is not {nameof(AspNetCoreApplication)}");
+            AspNetCoreApplication application = Domain.Current.Application.As<AspNetCoreApplication>();
             await application.RunAsync(Context, token);
             return this;
         }

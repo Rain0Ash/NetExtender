@@ -8,8 +8,10 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Domains.Applications.Interfaces;
+using NetExtender.Domains.Initializer.Interfaces;
 using NetExtender.Domains.Interfaces;
 using NetExtender.Domains.View.Interfaces;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Core;
 
 namespace NetExtender.Domain.Utilities
@@ -69,6 +71,52 @@ namespace NetExtender.Domain.Utilities
             }
 
             return AutoInitialize(await source.ConfigureAwait(false));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDomain AutoInitializeWithView(this IDomain source, IEnumerable<String>? args)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            IApplication application = AutoInitializeInternal(source);
+            return application is IApplicationInitializer initializer ? source.Initialize(initializer).View(initializer, args) : source.Initialize(application).AutoView(args);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async Task<IDomain> AutoInitializeWithView(this Task<IDomain> source, IEnumerable<String>? args)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return AutoInitializeWithView(await source.ConfigureAwait(false), args);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IDomain AutoInitializeWithView(this IDomain source, params String[]? args)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            IApplication application = AutoInitializeInternal(source);
+            return application is IApplicationInitializer initializer ? source.Initialize(initializer).View(initializer, args) : source.Initialize(application).AutoView(args);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static async Task<IDomain> AutoInitializeWithView(this Task<IDomain> source, params String[]? args)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return AutoInitializeWithView(await source.ConfigureAwait(false), args);
         }
 
         public static async Task<IDomain> Initialize<T>(this Task<IDomain> source) where T : IApplication, new()
@@ -456,6 +504,21 @@ namespace NetExtender.Domain.Utilities
             
             IDomain domain = await source.ConfigureAwait(false);
             return await domain.ViewAsync(view, token, args).ConfigureAwait(false);
+        }
+
+        public static T As<T>(this IApplication application) where T : class, IApplication
+        {
+            if (application is null)
+            {
+                throw new ArgumentNullException(nameof(application));
+            }
+
+            while (application is IApplicationInitializer initializer)
+            {
+                application = initializer.Application;
+            }
+            
+            return application as T ?? throw new InitializeException($"{nameof(application)} is not {typeof(T).Name}");
         }
     }
 }

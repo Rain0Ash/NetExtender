@@ -5,9 +5,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using NetExtender.Domain.Utilities;
 using NetExtender.Domains.Applications;
 using NetExtender.Domains.View.Interfaces;
-using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Domains.View
 {
@@ -27,7 +27,15 @@ namespace NetExtender.Domains.View
     public class WindowsPresentationView : ApplicationView
     {
         protected Window? Context { get; private set; }
-        
+
+        protected override ApplicationShutdownMode? ShutdownMode
+        {
+            get
+            {
+                return ApplicationShutdownMode.OnMainWindowClose;
+            }
+        }
+
         public WindowsPresentationView()
         {
         }
@@ -37,11 +45,6 @@ namespace NetExtender.Domains.View
             Context = context;
         }
         
-        protected override void InitializeInternal()
-        {
-            Domain.ShutdownMode = ApplicationShutdownMode.OnExplicitShutdown;
-        }
-        
         protected override Task<IApplicationView> RunAsync(CancellationToken token)
         {
             return RunAsync(Context, token);
@@ -49,7 +52,7 @@ namespace NetExtender.Domains.View
 
         protected virtual async Task<IApplicationView> RunAsync(Window? window, CancellationToken token)
         {
-            WindowsPresentationApplication application = Domain.Current.Application as WindowsPresentationApplication ?? throw new InitializeException($"{nameof(Domain.Current.Application)} is not {nameof(WindowsPresentationApplication)}");
+            WindowsPresentationApplication application = Domain.Current.Application.As<WindowsPresentationApplication>();
             
             if (window is null)
             {

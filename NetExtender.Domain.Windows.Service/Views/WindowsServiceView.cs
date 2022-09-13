@@ -4,15 +4,15 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using NetExtender.Domain.Utilities;
 using NetExtender.Domains.Service.Applications;
 using NetExtender.Domains.View;
 using NetExtender.Domains.View.Interfaces;
-using NetExtender.Types.Exceptions;
 using NetExtender.Windows.Services.Types.Services.Interfaces;
 
 namespace NetExtender.Domains.Service.Views
 {
-    public class WindowsServiceView<T> : WindowsServiceView where T : IWindowsService, new()
+    public class WindowsServiceView<T> : WindowsServiceView where T : class, IWindowsService, new()
     {
         public WindowsServiceView()
             : base(new T())
@@ -27,16 +27,19 @@ namespace NetExtender.Domains.Service.Views
     
     public class WindowsServiceView : ApplicationView
     {
-        protected IWindowsService Context { get; set; }
+        protected IWindowsService? Context { get; set; }
+
+        protected override ApplicationShutdownMode? ShutdownMode
+        {
+            get
+            {
+                return ApplicationShutdownMode.OnExplicitShutdown;
+            }
+        }
 
         public WindowsServiceView(IWindowsService service)
         {
             Context = service ?? throw new ArgumentNullException(nameof(service));
-        }
-        
-        protected override void InitializeInternal()
-        {
-            Domain.ShutdownMode = ApplicationShutdownMode.OnExplicitShutdown;
         }
 
         protected override Task<IApplicationView> RunAsync(CancellationToken token)
@@ -57,7 +60,7 @@ namespace NetExtender.Domains.Service.Views
                 throw new ArgumentException($"{nameof(service)} not reference equals with {nameof(Context)}");
             }
             
-            WindowsServiceApplication application = Domain.Current.Application as WindowsServiceApplication ?? throw new InitializeException($"{nameof(Domain.Current.Application)} is not {nameof(WindowsServiceApplication)}");
+            WindowsServiceApplication application = Domain.Current.Application.As<WindowsServiceApplication>();
             await application.RunAsync(Context, token);
             return this;
         }

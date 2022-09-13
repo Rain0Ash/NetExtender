@@ -2,11 +2,17 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using NetExtender.Domains.Applications.Interfaces;
+using NetExtender.Domains.Initializer.Interfaces;
+using NetExtender.Domains.View.Interfaces;
 using NetExtender.Initializer;
+using NetExtender.Types.Dispatchers.Interfaces;
 using NetExtender.Utilities.Application;
 using NetExtender.Utilities.Threading;
 
@@ -147,6 +153,240 @@ namespace NetExtender.Domains.Initializer
             }
             
             ApplicationUtilities.Shutdown(code);
+        }
+    }
+    
+    [SuppressMessage("ReSharper", "MethodSupportsCancellation")]
+    public abstract class Application<TApplication, TView> : IApplicationInitializer where TApplication : class, IApplication, new() where TView : class, IApplicationView, new()
+    {
+        [return: NotNullIfNotNull("application")]
+        public static implicit operator TApplication?(Application<TApplication, TView>? application)
+        {
+            return application?.App;
+        }
+        
+        [return: NotNullIfNotNull("application")]
+        public static implicit operator TView?(Application<TApplication, TView>? application)
+        {
+            return application?.View;
+        }
+
+        protected TApplication App { get; }
+        IApplication IApplicationInitializer.Application
+        {
+            get
+            {
+                return App;
+            }
+        }
+
+        protected TView View { get; }
+        IApplicationView IApplicationInitializer.View
+        {
+            get
+            {
+                return View;
+            }
+        }
+
+        public Boolean? Elevate
+        {
+            get
+            {
+                return App.Elevate;
+            }
+        }
+
+        public Boolean? IsElevate
+        {
+            get
+            {
+                return App.IsElevate;
+            }
+        }
+
+        public IDispatcher? Dispatcher
+        {
+            get
+            {
+                return App.Dispatcher;
+            }
+        }
+
+        public ApplicationShutdownMode ShutdownMode
+        {
+            get
+            {
+                return App.ShutdownMode;
+            }
+            set
+            {
+                App.ShutdownMode = value;
+            }
+        }
+
+        public CancellationToken ShutdownToken
+        {
+            get
+            {
+                return App.ShutdownToken;
+            }
+        }
+
+        public Application()
+        {
+            App = new TApplication();
+            View = new TView();
+        }
+
+        public IApplicationView Start()
+        {
+            return View.Start();
+        }
+
+        public IApplicationView Start(IEnumerable<String>? args)
+        {
+            return View.Start(args);
+        }
+
+        public IApplicationView Start(params String[]? args)
+        {
+            return View.Start(args);
+        }
+
+        public Task<IApplicationView> StartAsync()
+        {
+            return View.StartAsync();
+        }
+
+        public Task<IApplicationView> StartAsync(CancellationToken token)
+        {
+            return View.StartAsync(token);
+        }
+
+        public Task<IApplicationView> StartAsync(IEnumerable<String>? args)
+        {
+            return View.StartAsync(args);
+        }
+
+        public Task<IApplicationView> StartAsync(params String[]? args)
+        {
+            return View.StartAsync(args);
+        }
+
+        public Task<IApplicationView> StartAsync(IEnumerable<String>? args, CancellationToken token)
+        {
+            return View.StartAsync(args, token);
+        }
+
+        public Task<IApplicationView> StartAsync(CancellationToken token, params String[]? args)
+        {
+            return View.StartAsync(token, args);
+        }
+
+        public IApplication Run()
+        {
+            return App.Run();
+        }
+
+        public Task<IApplication> RunAsync()
+        {
+            return App.RunAsync();
+        }
+
+        public Task<IApplication> RunAsync(CancellationToken token)
+        {
+            return App.RunAsync(token);
+        }
+
+        public void Restart()
+        {
+            App.Restart();
+        }
+
+        public Task<Boolean> RestartAsync()
+        {
+            return App.RestartAsync();
+        }
+
+        public Task<Boolean> RestartAsync(Int32 milli)
+        {
+            return App.RestartAsync(milli);
+        }
+
+        public Task<Boolean> RestartAsync(CancellationToken token)
+        {
+            return App.RestartAsync(token);
+        }
+
+        public Task<Boolean> RestartAsync(Int32 milli, CancellationToken token)
+        {
+            return App.RestartAsync(milli, token);
+        }
+
+        public void Shutdown()
+        {
+            App.Shutdown();
+        }
+
+        public void Shutdown(Int32 code)
+        {
+            App.Shutdown(code);
+        }
+
+        public void Shutdown(Boolean force)
+        {
+            App.Shutdown(force);
+        }
+
+        public void Shutdown(Int32 code, Boolean force)
+        {
+            App.Shutdown(code, force);
+        }
+
+        public Task<Boolean> ShutdownAsync()
+        {
+            return App.ShutdownAsync();
+        }
+
+        public Task<Boolean> ShutdownAsync(CancellationToken token)
+        {
+            return App.ShutdownAsync(token);
+        }
+
+        public Task<Boolean> ShutdownAsync(Int32 code)
+        {
+            return App.ShutdownAsync(code);
+        }
+
+        public Task<Boolean> ShutdownAsync(Int32 code, CancellationToken token)
+        {
+            return App.ShutdownAsync(code, token);
+        }
+
+        public Task<Boolean> ShutdownAsync(Int32 code, Int32 milli)
+        {
+            return App.ShutdownAsync(code, milli);
+        }
+
+        public Task<Boolean> ShutdownAsync(Int32 code, Int32 milli, CancellationToken token)
+        {
+            return App.ShutdownAsync(code, milli, token);
+        }
+
+        public Task<Boolean> ShutdownAsync(Int32 code, Int32 milli, Boolean force)
+        {
+            return App.ShutdownAsync(code, milli, force);
+        }
+
+        public Task<Boolean> ShutdownAsync(Int32 code, Int32 milli, Boolean force, CancellationToken token)
+        {
+            return App.ShutdownAsync(code, milli, force, token);
+        }
+
+        public void Dispose()
+        {
+            View.Dispose();
         }
     }
 }

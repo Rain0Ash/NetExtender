@@ -171,7 +171,7 @@ namespace NetExtender.Domains
                 throw new ArgumentNullException(nameof(data));
             }
 
-            return Create(data).AutoInitialize().AutoView(args);
+            return Create(data).AutoInitializeWithView(args);
         }
         
         public static IDomain AutoStart(IApplicationData data, params String[]? args)
@@ -180,8 +180,8 @@ namespace NetExtender.Domains
             {
                 throw new ArgumentNullException(nameof(data));
             }
-
-            return Create(data).AutoInitialize().AutoView(args);
+            
+            return Create(data).AutoInitializeWithView(args);
         }
         
         public static IDomain Create(String name, IApplication application)
