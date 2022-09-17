@@ -4,7 +4,7 @@
 using System;
 using NetExtender.Types.Dictionaries.Interfaces;
 
-namespace NetExtender.Random
+namespace NetExtender.Types.Random
 {
     /// <summary>
     /// Interface for Random Selector Builders.

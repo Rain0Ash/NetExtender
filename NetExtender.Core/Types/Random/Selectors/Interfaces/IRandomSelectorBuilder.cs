@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NetExtender.Random
+namespace NetExtender.Types.Random
 {
     /// <summary>
     /// Interface for Random Selector Builders.

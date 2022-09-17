@@ -7,7 +7,7 @@ using System.Collections.Specialized;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using NetExtender.Combinatorics;
+using NetExtender.Types.Combinatoric;
 
 namespace NetExtender.Utilities.Types
 {

@@ -5,8 +5,8 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Random;
-using NetExtender.Random.Interfaces;
+using NetExtender.Types.Random;
+using NetExtender.Types.Random.Interfaces;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Types.Streams

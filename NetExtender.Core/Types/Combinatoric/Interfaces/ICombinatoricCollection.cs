@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NetExtender.Combinatorics.Interfaces
+namespace NetExtender.Types.Combinatoric.Interfaces
 {
     /// <summary>
     /// Interface for Permutations, Combinations and any other classes that present
@@ -12,7 +12,7 @@ namespace NetExtender.Combinatorics.Interfaces
     /// this class inherits defines the mechanism for enumerating through the collections.  
     /// </summary>
     /// <typeparam name="T">The of the elements in the collection, not the type of the collection.</typeparam>
-    public interface ICombinatorialCollection<T> : IEnumerable<IList<T>>
+    public interface ICombinatoricCollection<T> : IEnumerable<IList<T>>
     {
         /// <summary>
         /// The type of the meta-collection, determining how the collections are 

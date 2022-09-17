@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using NetExtender.Types.Dictionaries.Interfaces;
 
-namespace NetExtender.Random
+namespace NetExtender.Types.Random
 {
     public interface IDynamicRandomSelector<T> : IRandomSelector<T>, IIndexDictionary<T, Double> where T : notnull
     {

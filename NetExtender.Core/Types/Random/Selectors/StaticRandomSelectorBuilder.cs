@@ -5,12 +5,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using NetExtender.Random.Interfaces;
 using NetExtender.Types.Dictionaries;
+using NetExtender.Types.Random.Interfaces;
 using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Random
+namespace NetExtender.Types.Random
 {
     public class RandomSelectorBuilder<T> : RandomSelector<T>, IRandomDictionarySelectorBuilder<T> where T : notnull
     {

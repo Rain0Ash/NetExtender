@@ -3,9 +3,9 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using NetExtender.Random.Interfaces;
+using NetExtender.Types.Random.Interfaces;
 
-namespace NetExtender.Random
+namespace NetExtender.Types.Random
 {
     public sealed class RandomAdapter : IRandom
     {

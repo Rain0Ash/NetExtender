@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
-using NetExtender.Random;
+using NetExtender.Types.Random;
 using NetExtender.Types.Culture;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Network.UserAgents;

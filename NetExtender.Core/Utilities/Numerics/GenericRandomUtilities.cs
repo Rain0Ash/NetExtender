@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using NetExtender.Random.Interfaces;
+using NetExtender.Types.Random.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Numerics

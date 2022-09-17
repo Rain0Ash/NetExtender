@@ -4,11 +4,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NetExtender.Combinatorics.Interfaces;
+using NetExtender.Types.Combinatoric.Interfaces;
 using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Combinatorics
+namespace NetExtender.Types.Combinatoric
 {
     /// <summary>
     /// Permutations defines a meta-collection, typically a list of lists, of all
@@ -33,7 +33,7 @@ namespace NetExtender.Combinatorics
     /// no comparer is required and T does not need to be IComparable.
     /// </remarks>
     /// <typeparam name="T">The type of the values within the list.</typeparam>
-    public class Permutations<T> : ICombinatorialCollection<T>
+    public class Permutations<T> : ICombinatoricCollection<T>
     {
         /// <summary>
         /// A list of T that represents the order of elements as originally provided, used for Reset.

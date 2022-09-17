@@ -3,18 +3,18 @@
 
 using System;
 using System.Collections.Generic;
-using NetExtender.Combinatorics.Interfaces;
+using NetExtender.Types.Combinatoric.Interfaces;
 
-namespace NetExtender.Combinatorics
+namespace NetExtender.Types.Combinatoric
 {
     public static class Combinatorics
     {
-        public static ICombinatorialCollection<T> Create<T>(IList<T> values, CombinatoricsType type)
+        public static ICombinatoricCollection<T> Create<T>(IList<T> values, CombinatoricsType type)
         {
             return Create(values, type, 2);
         }
 
-        public static ICombinatorialCollection<T> Create<T>(IList<T> values, CombinatoricsType type, Int32 take)
+        public static ICombinatoricCollection<T> Create<T>(IList<T> values, CombinatoricsType type, Int32 take)
         {
             return type switch
             {
@@ -28,12 +28,12 @@ namespace NetExtender.Combinatorics
             };
         }
         
-        public static ICombinatorialCollection<T> Create<T>(this CombinatoricsType type, IList<T> values)
+        public static ICombinatoricCollection<T> Create<T>(this CombinatoricsType type, IList<T> values)
         {
             return Create(values, type, 2);
         }
 
-        public static ICombinatorialCollection<T> Create<T>(this CombinatoricsType type, IList<T> values, Int32 take)
+        public static ICombinatoricCollection<T> Create<T>(this CombinatoricsType type, IList<T> values, Int32 take)
         {
             return Create(values, type, take);
         }

@@ -3,7 +3,7 @@
 
 using System;
 
-namespace NetExtender.Random.Interfaces
+namespace NetExtender.Types.Random.Interfaces
 {
     public interface IRandom : IRandomComparableGenerator<Int32>, IDisposable
     {

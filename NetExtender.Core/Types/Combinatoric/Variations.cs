@@ -5,9 +5,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NetExtender.Combinatorics.Interfaces;
+using NetExtender.Types.Combinatoric.Interfaces;
 
-namespace NetExtender.Combinatorics
+namespace NetExtender.Types.Combinatoric
 {
     /// <summary>
     /// Variations defines a meta-collection, typically a list of lists, of all possible 
@@ -28,7 +28,7 @@ namespace NetExtender.Combinatorics
     /// The equality of multiple inputs is not considered when generating variations.
     /// </remarks>
     /// <typeparam name="T">The type of the values within the list.</typeparam>
-    public class Variations<T> : ICombinatorialCollection<T>
+    public class Variations<T> : ICombinatoricCollection<T>
     {
         /// <summary>
         /// Copy of values object is intialized with, required for enumerator reset.

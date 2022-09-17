@@ -4,8 +4,8 @@
 using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
-using NetExtender.Random;
-using NetExtender.Random.Interfaces;
+using NetExtender.Types.Random;
+using NetExtender.Types.Random.Interfaces;
 
 namespace NetExtender.Utilities.Numerics
 {

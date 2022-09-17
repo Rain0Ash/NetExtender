@@ -5,9 +5,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NetExtender.Combinatorics.Interfaces;
+using NetExtender.Types.Combinatoric.Interfaces;
 
-namespace NetExtender.Combinatorics
+namespace NetExtender.Types.Combinatoric
 {
     /// <summary>
     /// Combinations defines a meta-collection, typically a list of lists, of all possible 
@@ -33,7 +33,7 @@ namespace NetExtender.Combinatorics
     /// {A A B} {A A B} {A B B} {A B B}
     /// </remarks>
     /// <typeparam name="T">The type of the values within the list.</typeparam>
-    public class Combinations<T> : ICombinatorialCollection<T>
+    public class Combinations<T> : ICombinatoricCollection<T>
     {
         /// <summary>
         /// Copy of values object is intialized with, required for enumerator reset.

@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using NetExtender.Random.Interfaces;
+using NetExtender.Types.Random.Interfaces;
 
-namespace NetExtender.Random
+namespace NetExtender.Types.Random
 {
     /// <summary>
     /// Generates pseudo-random numbers using the Mersenne Twister algorithm.

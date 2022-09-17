@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using NetExtender.Types.Dictionaries;
 
-namespace NetExtender.Random
+namespace NetExtender.Types.Random
 {
     /// <summary>
     /// Interface for Random selector

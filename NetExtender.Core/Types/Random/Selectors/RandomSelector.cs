@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using NetExtender.Types.Dictionaries;
 
-namespace NetExtender.Random
+namespace NetExtender.Types.Random
 {
     public abstract class RandomSelector<T> : IRandomSelector<T>
     {

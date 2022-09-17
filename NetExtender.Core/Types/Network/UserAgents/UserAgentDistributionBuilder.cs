@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using NetExtender.Random;
+using NetExtender.Types.Random;
 using NetExtender.Types.Network.UserAgents.Interfaces;
 using NetExtender.Utilities.Network;
 

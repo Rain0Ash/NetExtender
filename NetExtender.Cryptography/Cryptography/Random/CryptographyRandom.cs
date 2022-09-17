@@ -5,7 +5,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
-using NetExtender.Random.Interfaces;
+using NetExtender.Types.Random.Interfaces;
 
 namespace NetExtender.Cryptography.Random
 {

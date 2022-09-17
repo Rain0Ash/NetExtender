@@ -5,11 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using NetExtender.Random.Interfaces;
 using NetExtender.Types.Dictionaries;
+using NetExtender.Types.Random.Interfaces;
 using NetExtender.Utilities.Numerics;
 
-namespace NetExtender.Random
+namespace NetExtender.Types.Random
 {
     /// <summary>
     /// Uses Binary Search for picking random items
