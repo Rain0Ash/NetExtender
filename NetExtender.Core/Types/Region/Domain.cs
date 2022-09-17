@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using NetExtender.Types.Sets;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Initializer.Types.Region
+namespace NetExtender.Types.Region
 {
     public partial class CountryInfo
     {

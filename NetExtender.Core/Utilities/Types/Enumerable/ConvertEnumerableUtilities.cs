@@ -601,22 +601,22 @@ namespace NetExtender.Utilities.Types
             private static ConcurrentDictionary<Type, Status> StackCache { get; } = new ConcurrentDictionary<Type, Status>();
             private static ConcurrentDictionary<Type, Status> QueueCache { get; } = new ConcurrentDictionary<Type, Status>();
             
-            public static IImmutableSet<Type> EnumerableTypes { get; } = new HashSet<Type>{typeof(IEnumerable)}.ToImmutableHashSet();
-            public static IImmutableSet<Type> GenericEnumerableTypes { get; } = new HashSet<Type>{typeof(IEnumerable<>)}.ToImmutableHashSet();
-            public static IImmutableSet<Type> CollectionTypes { get; } = new HashSet<Type>{typeof(ICollection)}.ToImmutableHashSet();
-            public static IImmutableSet<Type> GenericCollectionTypes { get; } = new HashSet<Type>{typeof(ICollection<>), typeof(IReadOnlyCollection<>)}.ToImmutableHashSet();
-            public static IImmutableSet<Type> ListTypes { get; } = new HashSet<Type>{typeof(IList)}.ToImmutableHashSet();
-            public static IImmutableSet<Type> GenericListTypes { get; } = new HashSet<Type>{typeof(IList<>), typeof(IReadOnlyList<>), typeof(IImmutableList<>)}.ToImmutableHashSet();
-            public static IImmutableSet<Type> SetTypes { get; } = new HashSet<Type>{typeof(ISet)}.ToImmutableHashSet();
-            public static IImmutableSet<Type> GenericSetTypes { get; } = new HashSet<Type>{typeof(ISet<>), typeof(IReadOnlySet<>), typeof(IImmutableSet<>)}.ToImmutableHashSet();
-            public static IImmutableSet<Type> DictionaryTypes { get; } = new HashSet<Type>{typeof(IDictionary)}.ToImmutableHashSet();
-            public static IImmutableSet<Type> GenericDictionaryTypes { get; } = new HashSet<Type>{typeof(IDictionary<,>), typeof(IReadOnlyDictionary<,>), typeof(IIndexDictionary<,>), typeof(IReadOnlyIndexDictionary<,>), typeof(IImmutableDictionary<,>), typeof(IImmutableIndexDictionary<,>)}.ToImmutableHashSet();
-            public static IImmutableSet<Type> MapTypes { get; } = new HashSet<Type>().ToImmutableHashSet();
-            public static IImmutableSet<Type> GenericMapTypes { get; } = new HashSet<Type>{typeof(IMap<,>), typeof(IReadOnlyMap<,>), typeof(IIndexMap<,>), typeof(IReadOnlyIndexMap<,>), typeof(IImmutableMap<,>), typeof(IImmutableIndexMap<,>)}.ToImmutableHashSet();
-            public static IImmutableSet<Type> StackTypes { get; } = new HashSet<Type>{typeof(Stack)}.ToImmutableHashSet();
-            public static IImmutableSet<Type> GenericStackTypes { get; } = new HashSet<Type>{typeof(Stack<>), typeof(ConcurrentStack<>), typeof(IImmutableStack<>)}.ToImmutableHashSet();
-            public static IImmutableSet<Type> QueueTypes { get; } = new HashSet<Type>{typeof(Queue)}.ToImmutableHashSet();
-            public static IImmutableSet<Type> GenericQueueTypes { get; } = new HashSet<Type>{typeof(Queue<>), typeof(ConcurrentQueue<>), typeof(IImmutableQueue<>)}.ToImmutableHashSet();
+            public static IImmutableSet<Type> EnumerableTypes { get; } = ImmutableHashSet.Create(typeof(IEnumerable));
+            public static IImmutableSet<Type> GenericEnumerableTypes { get; } = ImmutableHashSet.Create(typeof(IEnumerable<>));
+            public static IImmutableSet<Type> CollectionTypes { get; } = ImmutableHashSet.Create(typeof(ICollection));
+            public static IImmutableSet<Type> GenericCollectionTypes { get; } = ImmutableHashSet.Create(typeof(ICollection<>), typeof(IReadOnlyCollection<>));
+            public static IImmutableSet<Type> ListTypes { get; } = ImmutableHashSet.Create(typeof(IList));
+            public static IImmutableSet<Type> GenericListTypes { get; } = ImmutableHashSet.Create(typeof(IList<>), typeof(IReadOnlyList<>), typeof(IImmutableList<>));
+            public static IImmutableSet<Type> SetTypes { get; } = ImmutableHashSet.Create(typeof(ISet));
+            public static IImmutableSet<Type> GenericSetTypes { get; } = ImmutableHashSet.Create(typeof(ISet<>), typeof(IReadOnlySet<>), typeof(IImmutableSet<>));
+            public static IImmutableSet<Type> DictionaryTypes { get; } = ImmutableHashSet.Create(typeof(IDictionary));
+            public static IImmutableSet<Type> GenericDictionaryTypes { get; } = ImmutableHashSet.Create(typeof(IDictionary<,>), typeof(IReadOnlyDictionary<,>), typeof(IIndexDictionary<,>), typeof(IReadOnlyIndexDictionary<,>), typeof(IImmutableDictionary<,>), typeof(IImmutableIndexDictionary<,>));
+            public static IImmutableSet<Type> MapTypes { get; } = ImmutableHashSet.Create<Type>();
+            public static IImmutableSet<Type> GenericMapTypes { get; } = ImmutableHashSet.Create(typeof(IMap<,>), typeof(IReadOnlyMap<,>), typeof(IIndexMap<,>), typeof(IReadOnlyIndexMap<,>), typeof(IImmutableMap<,>), typeof(IImmutableIndexMap<,>));
+            public static IImmutableSet<Type> StackTypes { get; } = ImmutableHashSet.Create(typeof(Stack));
+            public static IImmutableSet<Type> GenericStackTypes { get; } = ImmutableHashSet.Create(typeof(Stack<>), typeof(ConcurrentStack<>), typeof(IImmutableStack<>));
+            public static IImmutableSet<Type> QueueTypes { get; } = ImmutableHashSet.Create(typeof(Queue));
+            public static IImmutableSet<Type> GenericQueueTypes { get; } = ImmutableHashSet.Create(typeof(Queue<>), typeof(ConcurrentQueue<>), typeof(IImmutableQueue<>));
 
             private static Status Create(Type type, IImmutableSet<Type> types, IImmutableSet<Type> generics)
             {

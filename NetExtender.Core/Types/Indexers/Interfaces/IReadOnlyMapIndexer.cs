@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 
-namespace NetExtender.Initializer.Types.Indexers.Interfaces
+namespace NetExtender.Types.Indexers.Interfaces
 {
     public interface IReadOnlyMapIndexer<T> : IReadOnlyIndexer<T>, IReadOnlyList<T>
     {

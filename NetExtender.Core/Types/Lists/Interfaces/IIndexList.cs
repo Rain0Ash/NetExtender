@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 
-namespace NetExtender.Initializer.Types.Lists.Interfaces
+namespace NetExtender.Types.Lists.Interfaces
 {
     public interface IIndexList<T> : IList<T>
     {

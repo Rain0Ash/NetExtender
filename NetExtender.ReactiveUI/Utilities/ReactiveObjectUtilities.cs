@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
-using NetExtender.Initializer.Types.Notify;
+using NetExtender.Types.Notify;
 using NetExtender.Types.Stores;
 using NetExtender.Types.Stores.Interfaces;
 using ReactiveUI;

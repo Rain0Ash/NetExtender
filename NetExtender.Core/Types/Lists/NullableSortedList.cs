@@ -8,7 +8,7 @@ using NetExtender.Types.Collections;
 using NetExtender.Types.Monads;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Initializer.Types.Lists
+namespace NetExtender.Types.Lists
 {
     [Serializable]
     public class NullableSortedList<TKey, TValue> : SortedList<NullMaybe<TKey>, TValue>, IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>

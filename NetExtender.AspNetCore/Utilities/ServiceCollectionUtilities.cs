@@ -19,9 +19,9 @@ namespace NetExtender.Utilities.AspNetCore.Types
 {
     public static partial class ServiceCollectionUtilities
     {
-        private static TypeInfo TransientType { get; } = typeof(ITransient).GetTypeInfo();
-        private static TypeInfo ScopedType { get; } = typeof(IScoped).GetTypeInfo();
-        private static TypeInfo SingletonType { get; } = typeof(ISingleton).GetTypeInfo();
+        private static Type TransientType { get; } = typeof(ITransient);
+        private static Type ScopedType { get; } = typeof(IScoped);
+        private static Type SingletonType { get; } = typeof(ISingleton);
 
         private static Boolean GetServiceType(this Type type, out ServiceLifetime result)
         {

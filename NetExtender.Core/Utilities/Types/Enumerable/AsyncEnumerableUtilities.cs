@@ -10,6 +10,54 @@ namespace NetExtender.Utilities.Types
 {
     public static partial class EnumerableUtilities
     {
+        public static async IAsyncEnumerable<T> ToAsyncEnumerable<T>(this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            using IEnumerator<T> enumerator = source.GetEnumerator();
+            
+            while (await Task.Run(enumerator.MoveNext).ConfigureAwait(false))
+            {
+                yield return enumerator.Current;
+            }
+        }
+
+        public static async IAsyncEnumerable<T> AsAsyncEnumerable<T>(this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (source is IAsyncEnumerable<T> async)
+            {
+                await foreach (T item in async)
+                {
+                    yield return item;
+                }
+                
+                yield break;
+            }
+
+            foreach (T item in source)
+            {
+                yield return item;
+            }
+        }
+
+        public static IAsyncEnumerator<T> GetAsyncEnumerator<T>(this IEnumerable<T> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source is IAsyncEnumerable<T> async ? async.GetAsyncEnumerator() : source.AsAsyncEnumerable().GetAsyncEnumerator();
+        }
+
         public static List<T> Materialize<T>(this IAsyncEnumerable<T> source)
         {
             return Materialize<T, List<T>>(source);

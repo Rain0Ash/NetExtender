@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NetExtender.Initializer.Types.Indexers.Interfaces
+namespace NetExtender.Types.Indexers.Interfaces
 {
     public interface IReadOnlyIndexer<T> : IReadOnlyCollection<T>
     {

@@ -3,7 +3,7 @@
 
 using System;
 
-namespace NetExtender.Initializer.Types.Region
+namespace NetExtender.Types.Region
 {
     public enum CountryIdentifier : UInt16
     {

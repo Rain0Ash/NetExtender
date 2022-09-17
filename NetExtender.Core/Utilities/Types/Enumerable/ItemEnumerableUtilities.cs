@@ -7,8 +7,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using NetExtender.Initializer.Types.Indexers.Interfaces;
 using NetExtender.Types.Dictionaries;
+using NetExtender.Types.Indexers.Interfaces;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types

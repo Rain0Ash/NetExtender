@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NetExtender.Initializer.Types.Enumerables;
+using NetExtender.Types.Enumerables;
 
 namespace NetExtender.Utilities.Types
 {

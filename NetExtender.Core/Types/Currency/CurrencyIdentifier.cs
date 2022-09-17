@@ -3,7 +3,7 @@
 
 using System;
 
-namespace NetExtender.Initializer.Types.Currency
+namespace NetExtender.Types.Currency
 {
     public enum CurrencyIdentifier : UInt16
     {

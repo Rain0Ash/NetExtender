@@ -4,7 +4,7 @@
 using System;
 using NetExtender.Utilities.Serialization;
 
-namespace NetExtender.Initializer.Types.Environments
+namespace NetExtender.Types.Environments
 {
     [Serializable]
     public readonly struct EnvironmentValueEntry : IEquatable<EnvironmentValueEntry>

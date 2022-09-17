@@ -7,11 +7,11 @@ using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using NetExtender.Initializer.Types.Currency;
 using NetExtender.Types.Culture;
+using NetExtender.Types.Currency;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Initializer.Types.Region
+namespace NetExtender.Types.Region
 {
     public partial class CountryInfo : IEquatable<CountryInfo>
     {

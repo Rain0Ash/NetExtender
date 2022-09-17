@@ -6,8 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using NetExtender.Initializer.Types.Lists;
 using NetExtender.Types.Dictionaries.Interfaces;
+using NetExtender.Types.Lists;
 using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 

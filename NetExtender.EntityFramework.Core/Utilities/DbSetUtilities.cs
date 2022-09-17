@@ -16,7 +16,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                 throw new ArgumentNullException(nameof(set));
             }
 
-            FieldInfo? context = set.GetType().GetField("_context", BindingFlags.NonPublic | BindingFlags.Instance);
+            FieldInfo? context = set.GetType().GetField("_context", BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance);
             return (DbContext?) context?.GetValue(set);
         }
     }

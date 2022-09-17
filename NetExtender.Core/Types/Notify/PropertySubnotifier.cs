@@ -7,9 +7,10 @@ using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Initializer.Types.Notify
+namespace NetExtender.Types.Notify
 {
     public sealed class PropertySubnotifier<T> : PropertySubnotifier where T : class
     {

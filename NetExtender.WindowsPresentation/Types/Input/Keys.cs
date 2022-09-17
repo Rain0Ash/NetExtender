@@ -6,8 +6,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
-using NetExtender.Initializer.Types.Flags;
-using NetExtender.Initializer.Types.Flags.Interfaces;
+using NetExtender.Types.Flags;
+using NetExtender.Types.Flags.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.WindowsPresentation.Types.Input

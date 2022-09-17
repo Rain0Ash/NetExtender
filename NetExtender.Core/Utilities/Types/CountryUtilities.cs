@@ -2,8 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System.Globalization;
-using NetExtender.Initializer.Types.Region;
 using NetExtender.Types.Culture;
+using NetExtender.Types.Region;
 
 namespace NetExtender.Utilities.Types
 {

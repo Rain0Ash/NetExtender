@@ -5,11 +5,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using NetExtender.Initializer.Types.Indexers.Interfaces;
+using NetExtender.Types.Indexers.Interfaces;
 using NetExtender.Types.Maps;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Initializer.Types.Indexers
+namespace NetExtender.Types.Indexers
 {
 #pragma warning disable CS8714
     public class MapIndexer<T> : IMapIndexer<T>, IReadOnlyMapIndexer<T>

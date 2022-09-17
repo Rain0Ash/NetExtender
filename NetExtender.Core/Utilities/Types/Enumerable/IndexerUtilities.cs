@@ -3,8 +3,8 @@
 
 using System;
 using System.Collections.Generic;
-using NetExtender.Initializer.Types.Indexers;
-using NetExtender.Initializer.Types.Indexers.Interfaces;
+using NetExtender.Types.Indexers;
+using NetExtender.Types.Indexers.Interfaces;
 
 namespace NetExtender.Utilities.Types
 {

@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NetExtender.Initializer.Types.Lists;
+using NetExtender.Types.Lists;
 using NetExtender.Types.Maps.Interfaces;
 using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;

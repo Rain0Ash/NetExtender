@@ -18,18 +18,16 @@ namespace NetExtender.NewtonSoft
         
         protected override JsonConverter? ResolveContractConverter(Type type)
         {
-            TypeInfo info = type.GetTypeInfo();
-            
-            if (!info.IsGenericType || info.IsGenericTypeDefinition)
+            if (!type.IsGenericType || type.IsGenericTypeDefinition)
             {
                 return base.ResolveContractConverter(type);
             }
 
-            JsonConverterAttribute? attribute = info.GetCustomAttribute<JsonConverterAttribute>();
+            JsonConverterAttribute? attribute = type.GetCustomAttribute<JsonConverterAttribute>();
             
-            if (attribute is not null && attribute.ConverterType.GetTypeInfo().IsGenericTypeDefinition)
+            if (attribute is not null && attribute.ConverterType.IsGenericTypeDefinition)
             {
-                return (JsonConverter?) Activator.CreateInstance(attribute.ConverterType.MakeGenericType(info.GenericTypeArguments), attribute.ConverterParameters);
+                return (JsonConverter?) Activator.CreateInstance(attribute.ConverterType.MakeGenericType(type.GenericTypeArguments), attribute.ConverterParameters);
             }
             
             return base.ResolveContractConverter(type);

@@ -5,8 +5,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using NetExtender.Initializer.Types.Indexers;
-using NetExtender.Initializer.Types.Indexers.Interfaces;
+using NetExtender.Types.Indexers;
+using NetExtender.Types.Indexers.Interfaces;
 using NetExtender.Types.Sets.Interfaces;
 using NetExtender.Utilities.Types;
 

@@ -8,8 +8,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using NetExtender.Configuration.Behavior;
 using NetExtender.Configuration.Common;
-using NetExtender.Initializer.Types.Environments;
 using NetExtender.Types.Dictionaries;
+using NetExtender.Types.Environments;
 using NetExtender.Utilities.Application;
 using NetExtender.Utilities.Types;
 

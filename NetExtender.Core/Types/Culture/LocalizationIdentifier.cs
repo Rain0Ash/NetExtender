@@ -4,9 +4,9 @@
 using System;
 using System.Collections.Immutable;
 using System.Globalization;
-using NetExtender.Initializer.Types.Currency;
-using NetExtender.Initializer.Types.Region;
 using NetExtender.NewtonSoft.Types.Culture;
+using NetExtender.Types.Currency;
+using NetExtender.Types.Region;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 

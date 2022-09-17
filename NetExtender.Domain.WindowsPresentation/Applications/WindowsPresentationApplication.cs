@@ -54,7 +54,12 @@ namespace NetExtender.Domains.Applications
                 }
             }
         }
-        
+
+        public WindowsPresentationApplication()
+            : this(new System.Windows.Application())
+        {
+        }
+
         public WindowsPresentationApplication(System.Windows.Application application)
         {
             Application = application ?? throw new ArgumentNullException(nameof(application));

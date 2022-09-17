@@ -2559,6 +2559,16 @@ namespace NetExtender.Utilities.Core
                    primitive.HasFlag(PrimitiveType.DateTimeOffset) && type == typeof(DateTimeOffset);
         }
 
+        public static Boolean IsCompilerGenerated(this Type type)
+        {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            return type.IsDefined(typeof(CompilerGeneratedAttribute));
+        }
+
         private static class SizeCache<T> where T : struct
         {
             // ReSharper disable once StaticMemberInGenericType

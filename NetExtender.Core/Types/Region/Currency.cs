@@ -4,9 +4,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NetExtender.Initializer.Types.Currency;
+using NetExtender.Types.Currency;
 
-namespace NetExtender.Initializer.Types.Region
+namespace NetExtender.Types.Region
 {
     public partial class CountryInfo
     {

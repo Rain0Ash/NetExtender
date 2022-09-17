@@ -157,26 +157,26 @@ namespace NetExtender.Domains.Initializer
     }
     
     [SuppressMessage("ReSharper", "MethodSupportsCancellation")]
-    public abstract class Application<TApplication, TView> : IApplicationInitializer where TApplication : class, IApplication, new() where TView : class, IApplicationView, new()
+    public abstract class ApplicationInitializer<TApplication, TView> : IApplicationInitializer where TApplication : class, IApplication, new() where TView : class, IApplicationView, new()
     {
         [return: NotNullIfNotNull("application")]
-        public static implicit operator TApplication?(Application<TApplication, TView>? application)
+        public static implicit operator TApplication?(ApplicationInitializer<TApplication, TView>? application)
         {
-            return application?.App;
+            return application?.Application;
         }
         
         [return: NotNullIfNotNull("application")]
-        public static implicit operator TView?(Application<TApplication, TView>? application)
+        public static implicit operator TView?(ApplicationInitializer<TApplication, TView>? application)
         {
             return application?.View;
         }
 
-        protected TApplication App { get; }
+        protected TApplication Application { get; }
         IApplication IApplicationInitializer.Application
         {
             get
             {
-                return App;
+                return Application;
             }
         }
 
@@ -193,7 +193,7 @@ namespace NetExtender.Domains.Initializer
         {
             get
             {
-                return App.Elevate;
+                return Application.Elevate;
             }
         }
 
@@ -201,7 +201,7 @@ namespace NetExtender.Domains.Initializer
         {
             get
             {
-                return App.IsElevate;
+                return Application.IsElevate;
             }
         }
 
@@ -209,7 +209,7 @@ namespace NetExtender.Domains.Initializer
         {
             get
             {
-                return App.Dispatcher;
+                return Application.Dispatcher;
             }
         }
 
@@ -217,11 +217,11 @@ namespace NetExtender.Domains.Initializer
         {
             get
             {
-                return App.ShutdownMode;
+                return Application.ShutdownMode;
             }
             set
             {
-                App.ShutdownMode = value;
+                Application.ShutdownMode = value;
             }
         }
 
@@ -229,13 +229,13 @@ namespace NetExtender.Domains.Initializer
         {
             get
             {
-                return App.ShutdownToken;
+                return Application.ShutdownToken;
             }
         }
 
-        public Application()
+        public ApplicationInitializer()
         {
-            App = new TApplication();
+            Application = new TApplication();
             View = new TView();
         }
 
@@ -286,107 +286,112 @@ namespace NetExtender.Domains.Initializer
 
         public IApplication Run()
         {
-            return App.Run();
+            return Application.Run();
         }
 
         public Task<IApplication> RunAsync()
         {
-            return App.RunAsync();
+            return Application.RunAsync();
         }
 
         public Task<IApplication> RunAsync(CancellationToken token)
         {
-            return App.RunAsync(token);
+            return Application.RunAsync(token);
         }
 
         public void Restart()
         {
-            App.Restart();
+            Application.Restart();
         }
 
         public Task<Boolean> RestartAsync()
         {
-            return App.RestartAsync();
+            return Application.RestartAsync();
         }
 
         public Task<Boolean> RestartAsync(Int32 milli)
         {
-            return App.RestartAsync(milli);
+            return Application.RestartAsync(milli);
         }
 
         public Task<Boolean> RestartAsync(CancellationToken token)
         {
-            return App.RestartAsync(token);
+            return Application.RestartAsync(token);
         }
 
         public Task<Boolean> RestartAsync(Int32 milli, CancellationToken token)
         {
-            return App.RestartAsync(milli, token);
+            return Application.RestartAsync(milli, token);
         }
 
         public void Shutdown()
         {
-            App.Shutdown();
+            Application.Shutdown();
         }
 
         public void Shutdown(Int32 code)
         {
-            App.Shutdown(code);
+            Application.Shutdown(code);
         }
 
         public void Shutdown(Boolean force)
         {
-            App.Shutdown(force);
+            Application.Shutdown(force);
         }
 
         public void Shutdown(Int32 code, Boolean force)
         {
-            App.Shutdown(code, force);
+            Application.Shutdown(code, force);
         }
 
         public Task<Boolean> ShutdownAsync()
         {
-            return App.ShutdownAsync();
+            return Application.ShutdownAsync();
         }
 
         public Task<Boolean> ShutdownAsync(CancellationToken token)
         {
-            return App.ShutdownAsync(token);
+            return Application.ShutdownAsync(token);
         }
 
         public Task<Boolean> ShutdownAsync(Int32 code)
         {
-            return App.ShutdownAsync(code);
+            return Application.ShutdownAsync(code);
         }
 
         public Task<Boolean> ShutdownAsync(Int32 code, CancellationToken token)
         {
-            return App.ShutdownAsync(code, token);
+            return Application.ShutdownAsync(code, token);
         }
 
         public Task<Boolean> ShutdownAsync(Int32 code, Int32 milli)
         {
-            return App.ShutdownAsync(code, milli);
+            return Application.ShutdownAsync(code, milli);
         }
 
         public Task<Boolean> ShutdownAsync(Int32 code, Int32 milli, CancellationToken token)
         {
-            return App.ShutdownAsync(code, milli, token);
+            return Application.ShutdownAsync(code, milli, token);
         }
 
         public Task<Boolean> ShutdownAsync(Int32 code, Int32 milli, Boolean force)
         {
-            return App.ShutdownAsync(code, milli, force);
+            return Application.ShutdownAsync(code, milli, force);
         }
 
         public Task<Boolean> ShutdownAsync(Int32 code, Int32 milli, Boolean force, CancellationToken token)
         {
-            return App.ShutdownAsync(code, milli, force, token);
+            return Application.ShutdownAsync(code, milli, force, token);
         }
 
         public void Dispose()
         {
             View.Dispose();
+            GC.SuppressFinalize(this);
         }
+    }
+
+    public abstract class Application<TApplication, TView> : ApplicationInitializer<TApplication, TView> where TApplication : class, IApplication, new() where TView : class, IApplicationView, new()
+    {
     }
 }

@@ -6,11 +6,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using NetExtender.Initializer.Types.Indexers;
-using NetExtender.Initializer.Types.Indexers.Interfaces;
-using NetExtender.Initializer.Types.Lists.Interfaces;
+using NetExtender.Types.Indexers;
+using NetExtender.Types.Indexers.Interfaces;
+using NetExtender.Types.Lists.Interfaces;
 
-namespace NetExtender.Initializer.Types.Lists
+namespace NetExtender.Types.Lists
 {
     public class IndexList<T> : IIndexList<T>, IReadOnlyIndexList<T>
     {

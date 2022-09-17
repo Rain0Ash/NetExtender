@@ -6,11 +6,11 @@ using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using NetExtender.Initializer.Types.Region;
 using NetExtender.Types.Culture;
+using NetExtender.Types.Region;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Initializer.Types.Currency
+namespace NetExtender.Types.Currency
 {
     public partial class CurrencyInfo : IEquatable<CurrencyInfo>
     {

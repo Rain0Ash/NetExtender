@@ -2,7 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using NetExtender.Types.Culture;
@@ -26,8 +25,8 @@ namespace NetExtender.NewtonSoft.Types.Culture
     
     public sealed class LocalizationIdentifierJsonConverter : JsonConverter
     {
-        private static ImmutableHashSet<Type> Types { get; } = new HashSet<Type>
-        {
+        private static ImmutableHashSet<Type> Types { get; } = ImmutableHashSet.Create
+        (
             typeof(LocalizationIdentifier),
             typeof(LocalizationIdentifier?),
             typeof(CultureIdentifier),
@@ -38,7 +37,7 @@ namespace NetExtender.NewtonSoft.Types.Culture
             typeof(UInt16?),
             typeof(Int32),
             typeof(Int32?)
-        }.ToImmutableHashSet();
+        );
 
         public override Boolean CanRead
         {

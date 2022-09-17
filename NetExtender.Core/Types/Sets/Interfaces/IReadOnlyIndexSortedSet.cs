@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using NetExtender.Initializer.Types.Indexers.Interfaces;
+using NetExtender.Types.Indexers.Interfaces;
 
 namespace NetExtender.Types.Sets.Interfaces
 {

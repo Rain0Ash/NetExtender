@@ -6,11 +6,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
-using NetExtender.Initializer.Types.Flags.Interfaces;
+using NetExtender.Types.Flags.Interfaces;
 using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Initializer.Types.Flags
+namespace NetExtender.Types.Flags
 {
     [Serializable]
     [StructLayout(LayoutKind.Sequential)]

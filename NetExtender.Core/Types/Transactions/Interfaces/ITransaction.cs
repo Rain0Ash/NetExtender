@@ -3,7 +3,7 @@
 
 using System;
 
-namespace NetExtender.Initializer.Types.Transactions.Interfaces
+namespace NetExtender.Types.Transactions.Interfaces
 {
     public interface ITransaction : IDisposable
     {

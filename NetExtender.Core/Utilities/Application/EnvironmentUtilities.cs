@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using NetExtender.Initializer.Types.Environments;
+using NetExtender.Types.Environments;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Application

@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace NetExtender.Initializer.Types.Region
+namespace NetExtender.Types.Region
 {
     public partial class CountryInfo
     {

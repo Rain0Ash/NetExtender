@@ -5,8 +5,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using NetExtender.Initializer.Types.Indexers.Interfaces;
 using NetExtender.Types.Comparers.Interfaces;
+using NetExtender.Types.Indexers.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Comparers

@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace NetExtender.Initializer.Types.Enumerables
+namespace NetExtender.Types.Enumerables
 {
     internal sealed class OrderedEnumerableWrapper<T> : IOrderedEnumerable<T>
     {

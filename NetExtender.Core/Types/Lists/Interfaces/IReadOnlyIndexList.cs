@@ -2,9 +2,9 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System.Collections.Generic;
-using NetExtender.Initializer.Types.Indexers.Interfaces;
+using NetExtender.Types.Indexers.Interfaces;
 
-namespace NetExtender.Initializer.Types.Lists.Interfaces
+namespace NetExtender.Types.Lists.Interfaces
 {
     public interface IReadOnlyIndexList<T> : IReadOnlyMapIndexer<T>
     {

@@ -2,7 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
@@ -16,8 +15,8 @@ namespace NetExtender.Utilities.Numerics
     [SuppressMessage("ReSharper", "StaticMemberInGenericType")]
     public static class NumericUtilities
     {
-        private static ImmutableHashSet<Type> Numeric { get; } = new HashSet<Type>
-        {
+        private static ImmutableHashSet<Type> Numeric { get; } = ImmutableHashSet.Create
+        (
             typeof(Char),
             typeof(SByte),
             typeof(Byte),
@@ -35,10 +34,10 @@ namespace NetExtender.Utilities.Numerics
             typeof(BigInteger),
             typeof(IntPtr),
             typeof(UIntPtr)
-        }.ToImmutableHashSet();
+        );
 
-        private static ImmutableHashSet<Type> Signed { get; } = new HashSet<Type>
-        {
+        private static ImmutableHashSet<Type> Signed { get; } = ImmutableHashSet.Create
+        (
             typeof(SByte),
             typeof(Int16),
             typeof(Int32),
@@ -50,29 +49,29 @@ namespace NetExtender.Utilities.Numerics
             typeof(Complex),
             typeof(BigInteger),
             typeof(IntPtr)
-        }.ToImmutableHashSet();
+        );
 
-        private static ImmutableHashSet<Type> Unsigned { get; } = new HashSet<Type>
-        {
+        private static ImmutableHashSet<Type> Unsigned { get; } = ImmutableHashSet.Create
+        (
             typeof(Char),
             typeof(Byte),
             typeof(UInt16),
             typeof(UInt32),
             typeof(UInt64),
             typeof(UIntPtr)
-        }.ToImmutableHashSet();
+        );
 
-        private static ImmutableHashSet<Type> Floating { get; } = new HashSet<Type>
-        {
+        private static ImmutableHashSet<Type> Floating { get; } = ImmutableHashSet.Create
+        (
             typeof(Half),
             typeof(Single),
             typeof(Double),
             typeof(Decimal),
             typeof(Complex)
-        }.ToImmutableHashSet();
+        );
 
-        private static ImmutableHashSet<Type> Integer { get; } = new HashSet<Type>
-        {
+        private static ImmutableHashSet<Type> Integer { get; } = ImmutableHashSet.Create
+        (
             typeof(Char),
             typeof(SByte),
             typeof(Byte),
@@ -85,7 +84,7 @@ namespace NetExtender.Utilities.Numerics
             typeof(BigInteger),
             typeof(IntPtr),
             typeof(UIntPtr)
-        }.ToImmutableHashSet();
+        );
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNumeric<T>() where T : unmanaged

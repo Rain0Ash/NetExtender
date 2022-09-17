@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NetExtender.Initializer.Types.Flags.Interfaces
+namespace NetExtender.Types.Flags.Interfaces
 {
     public interface IFlag : IEquatable<IFlag>, IReadOnlyList<Boolean>
     {
