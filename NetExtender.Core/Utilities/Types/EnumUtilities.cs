@@ -55,7 +55,7 @@ namespace NetExtender.Utilities.Types
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Int32 Coint<T>(Boolean without) where T : unmanaged, Enum
+        public static Int32 Count<T>(Boolean without) where T : unmanaged, Enum
         {
             return without ? CountWithoutDefault<T>() : Count<T>();
         }

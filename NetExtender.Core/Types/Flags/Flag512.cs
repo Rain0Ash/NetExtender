@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NetExtender.Types.Flags.Interfaces;
 using NetExtender.Utilities.Numerics;
@@ -30,6 +31,41 @@ namespace NetExtender.Types.Flags
             return new Flag512(value.High1, value.High0, value.Low1, value.Low0);
         }
         
+        public static implicit operator Flag512(SByte value)
+        {
+            return new Flag512(Unsafe.As<SByte, Byte>(ref value));
+        }
+        
+        public static implicit operator Flag512(Byte value)
+        {
+            return new Flag512(value);
+        }
+        
+        public static implicit operator Flag512(Int16 value)
+        {
+            return new Flag512(Unsafe.As<Int16, UInt16>(ref value));
+        }
+
+        public static implicit operator Flag512(UInt16 value)
+        {
+            return new Flag512(value);
+        }
+        
+        public static implicit operator Flag512(Int32 value)
+        {
+            return new Flag512(Unsafe.As<Int32, UInt32>(ref value));
+        }
+
+        public static implicit operator Flag512(UInt32 value)
+        {
+            return new Flag512(value);
+        }
+        
+        public static implicit operator Flag512(Int64 value)
+        {
+            return new Flag512(Unsafe.As<Int64, UInt64>(ref value));
+        }
+
         public static implicit operator Flag512(UInt64 value)
         {
             return new Flag512(value);

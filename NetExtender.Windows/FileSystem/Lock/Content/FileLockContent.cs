@@ -17,7 +17,7 @@ namespace NetExtender.IO.FileSystem.Lock.Content
         /// The process ID
         /// </summary>
         [DataMember]
-        public Int64 PID { get; set; }
+        public Int64 ProcessId { get; set; }
 
         /// <summary>
         /// The timestamp (DateTime.Now.Ticks)

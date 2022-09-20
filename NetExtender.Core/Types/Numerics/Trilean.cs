@@ -7,13 +7,16 @@ namespace NetExtender.Types.Numerics
 {
     public readonly struct Trilean : IConvertible, IEquatable<Trilean>, IEquatable<Boolean>, IEquatable<Boolean?>, IComparable<Trilean>
     {
-        private const Byte VTrue = 2;
-        private const Byte VTrit = 1;
-        private const Byte VFalse = 0;
+        private enum State : Byte
+        {
+            False,
+            Trit,
+            True
+        }
 
-        public static Trilean True { get; } = new Trilean(VTrue);
-        public static Trilean Trit { get; } = new Trilean(VTrit);
-        public static Trilean False { get; } = new Trilean(VFalse);
+        public static Trilean True { get; } = new Trilean(State.True);
+        public static Trilean Trit { get; } = new Trilean(State.Trit);
+        public static Trilean False { get; } = new Trilean(State.False);
 
         public static implicit operator Boolean(Trilean value)
         {
@@ -33,10 +36,10 @@ namespace NetExtender.Types.Numerics
         {
             return value.Value switch
             {
-                VTrue => true,
-                VFalse => false,
-                VTrit => null,
-                _ => throw new ArgumentOutOfRangeException(nameof(value))
+                State.True => true,
+                State.False => false,
+                State.Trit => null,
+                _ => throw new ArgumentOutOfRangeException(nameof(value), value.Value, null)
             };
         }
 
@@ -72,52 +75,52 @@ namespace NetExtender.Types.Numerics
 
         public static Boolean operator ==(Trilean first, Boolean? second)
         {
-            return second switch
-            {
-                true => first.IsTrue,
-                false => first.IsFalse,
-                null => first.IsTrit
-            };
+            return (Boolean?) first == second;
         }
 
         public static Boolean operator !=(Trilean first, Boolean? second)
         {
-            return !(first == second);
+            return (Boolean?) first != second;
         }
 
         public static Boolean operator ==(Boolean first, Trilean second)
         {
-            return first == (Boolean) second;
+            return second == first;
         }
 
         public static Boolean operator !=(Boolean first, Trilean second)
         {
-            return first != (Boolean) second;
+            return second != first;
         }
 
         public static Boolean operator ==(Boolean? first, Trilean second)
         {
-            return first switch
-            {
-                true => second.IsTrue,
-                false => second.IsFalse,
-                null => second.IsTrit
-            };
+            return second == first;
         }
 
         public static Boolean operator !=(Boolean? first, Trilean second)
         {
-            return !(first == second);
+            return second != first;
+        }
+
+        public static Boolean operator true(Trilean value)
+        {
+            return value.IsTrue;
+        }
+
+        public static Boolean operator false(Trilean value)
+        {
+            return value.IsFalse;
         }
 
         public static Trilean operator !(Trilean value)
         {
             return value.Value switch
             {
-                VTrue => False,
-                VTrit => Trit,
-                VFalse => True,
-                _ => throw new ArgumentOutOfRangeException(nameof(value))
+                State.True => False,
+                State.Trit => Trit,
+                State.False => True,
+                _ => throw new ArgumentOutOfRangeException(nameof(value), value.Value, null)
             };
         }
 
@@ -125,22 +128,22 @@ namespace NetExtender.Types.Numerics
         {
             return first.Value switch
             {
-                VTrue => second.Value switch
+                State.True => second.Value switch
                 {
-                    VTrue => True,
-                    VTrit => Trit,
-                    VFalse => False,
-                    _ => throw new ArgumentOutOfRangeException(nameof(second))
+                    State.True => True,
+                    State.Trit => Trit,
+                    State.False => False,
+                    _ => throw new ArgumentOutOfRangeException(nameof(second), second.Value, null)
                 },
-                VTrit => second.Value switch
+                State.Trit => second.Value switch
                 {
-                    VTrue => Trit,
-                    VTrit => Trit,
-                    VFalse => False,
-                    _ => throw new ArgumentOutOfRangeException(nameof(second))
+                    State.True => Trit,
+                    State.Trit => Trit,
+                    State.False => False,
+                    _ => throw new ArgumentOutOfRangeException(nameof(second), second.Value, null)
                 },
-                VFalse => False,
-                _ => throw new ArgumentOutOfRangeException(nameof(first))
+                State.False => False,
+                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
             };
         }
 
@@ -148,10 +151,10 @@ namespace NetExtender.Types.Numerics
         {
             return first.Value switch
             {
-                VTrue => second ? True : False,
-                VTrit => second ? Trit : False,
-                VFalse => False,
-                _ => throw new ArgumentOutOfRangeException(nameof(first))
+                State.True => second ? True : False,
+                State.Trit => second ? Trit : False,
+                State.False => False,
+                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
             };
         }
 
@@ -159,20 +162,20 @@ namespace NetExtender.Types.Numerics
         {
             return first.Value switch
             {
-                VTrue => second switch
+                State.True => second switch
                 {
                     true => True,
                     false => False,
                     null => Trit
                 },
-                VTrit => second switch
+                State.Trit => second switch
                 {
                     true => Trit,
                     false => False,
                     null => Trit
                 },
-                VFalse => False,
-                _ => throw new ArgumentOutOfRangeException(nameof(first))
+                State.False => False,
+                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
             };
         }
 
@@ -190,22 +193,22 @@ namespace NetExtender.Types.Numerics
         {
             return first.Value switch
             {
-                VTrue => True,
-                VTrit => second.Value switch
+                State.True => True,
+                State.Trit => second.Value switch
                 {
-                    VTrue => True,
-                    VTrit => Trit,
-                    VFalse => Trit,
-                    _ => throw new ArgumentOutOfRangeException(nameof(second))
+                    State.True => True,
+                    State.Trit => Trit,
+                    State.False => Trit,
+                    _ => throw new ArgumentOutOfRangeException(nameof(second), second.Value, null)
                 },
-                VFalse => second.Value switch
+                State.False => second.Value switch
                 {
-                    VTrue => True,
-                    VTrit => Trit,
-                    VFalse => False,
-                    _ => throw new ArgumentOutOfRangeException(nameof(second))
+                    State.True => True,
+                    State.Trit => Trit,
+                    State.False => False,
+                    _ => throw new ArgumentOutOfRangeException(nameof(second), second.Value, null)
                 },
-                _ => throw new ArgumentOutOfRangeException(nameof(first))
+                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
             };
         }
 
@@ -213,10 +216,10 @@ namespace NetExtender.Types.Numerics
         {
             return first.Value switch
             {
-                VTrue => True,
-                VTrit => second ? True : Trit,
-                VFalse => second ? True : False,
-                _ => throw new ArgumentOutOfRangeException(nameof(first))
+                State.True => True,
+                State.Trit => second ? True : Trit,
+                State.False => second ? True : False,
+                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
             };
         }
 
@@ -224,20 +227,20 @@ namespace NetExtender.Types.Numerics
         {
             return first.Value switch
             {
-                VTrue => True,
-                VTrit => second switch
+                State.True => True,
+                State.Trit => second switch
                 {
                     true => True,
                     false => Trit,
                     null => Trit
                 },
-                VFalse => second switch
+                State.False => second switch
                 {
                     true => True,
                     false => False,
                     null => Trit
                 },
-                _ => throw new ArgumentOutOfRangeException(nameof(first))
+                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
             };
         }
 
@@ -255,22 +258,22 @@ namespace NetExtender.Types.Numerics
         {
             return first.Value switch
             {
-                VTrue => second.Value switch
+                State.True => second.Value switch
                 {
-                    VTrue => False,
-                    VTrit => Trit,
-                    VFalse => True,
-                    _ => throw new ArgumentOutOfRangeException(nameof(second))
+                    State.True => False,
+                    State.Trit => Trit,
+                    State.False => True,
+                    _ => throw new ArgumentOutOfRangeException(nameof(second), second.Value, null)
                 },
-                VTrit => Trit,
-                VFalse => second.Value switch
+                State.Trit => Trit,
+                State.False => second.Value switch
                 {
-                    VTrue => True,
-                    VTrit => Trit,
-                    VFalse => False,
-                    _ => throw new ArgumentOutOfRangeException(nameof(second))
+                    State.True => True,
+                    State.Trit => Trit,
+                    State.False => False,
+                    _ => throw new ArgumentOutOfRangeException(nameof(second), second.Value, null)
                 },
-                _ => throw new ArgumentOutOfRangeException(nameof(first))
+                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
             };
         }
 
@@ -278,10 +281,10 @@ namespace NetExtender.Types.Numerics
         {
             return first.Value switch
             {
-                VTrue => second ? False : True,
-                VTrit => Trit,
-                VFalse => second ? True : False,
-                _ => throw new ArgumentOutOfRangeException(nameof(first))
+                State.True => second ? False : True,
+                State.Trit => Trit,
+                State.False => second ? True : False,
+                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
             };
         }
 
@@ -289,20 +292,20 @@ namespace NetExtender.Types.Numerics
         {
             return first.Value switch
             {
-                VTrue => second switch
+                State.True => second switch
                 {
                     true => False,
                     false => True,
                     null => Trit
                 },
-                VTrit => Trit,
-                VFalse => second switch
+                State.Trit => Trit,
+                State.False => second switch
                 {
                     true => True,
                     false => False,
                     null => Trit
                 },
-                _ => throw new ArgumentOutOfRangeException(nameof(first))
+                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
             };
         }
 
@@ -316,13 +319,13 @@ namespace NetExtender.Types.Numerics
             return second ^ first;
         }
 
-        private Byte Value { get; }
+        private State Value { get; }
 
         public Boolean IsTrue
         {
             get
             {
-                return Value == VTrue;
+                return Value == State.True;
             }
         }
 
@@ -330,7 +333,7 @@ namespace NetExtender.Types.Numerics
         {
             get
             {
-                return Value == VTrit;
+                return Value == State.Trit;
             }
         }
 
@@ -338,17 +341,12 @@ namespace NetExtender.Types.Numerics
         {
             get
             {
-                return Value == VFalse;
+                return Value == State.False;
             }
         }
 
-        private Trilean(Byte value)
+        private Trilean(State value)
         {
-            if (value > 2)
-            {
-                throw new ArgumentOutOfRangeException(nameof(value));
-            }
-
             Value = value;
         }
 
@@ -362,19 +360,59 @@ namespace NetExtender.Types.Numerics
             return this;
         }
 
-        public Byte ToByte(IFormatProvider? provider)
+        public SByte ToSByte(IFormatProvider? provider)
         {
-            return Value;
+            return (SByte) Value;
         }
 
-        public Char ToChar(IFormatProvider? provider)
+        public Byte ToByte(IFormatProvider? provider)
         {
-            return Value switch
-            {
-                VTrit => '2',
-                VTrue => '1',
-                _ => '0'
-            };
+            return (Byte) Value;
+        }
+
+        public Int16 ToInt16(IFormatProvider? provider)
+        {
+            return (Int16) Value;
+        }
+
+        public UInt16 ToUInt16(IFormatProvider? provider)
+        {
+            return (UInt16) Value;
+        }
+
+        public Int32 ToInt32(IFormatProvider? provider)
+        {
+            return (Int32) Value;
+        }
+
+        public UInt32 ToUInt32(IFormatProvider? provider)
+        {
+            return (UInt32) Value;
+        }
+
+        public Int64 ToInt64(IFormatProvider? provider)
+        {
+            return (Int64) Value;
+        }
+
+        public UInt64 ToUInt64(IFormatProvider? provider)
+        {
+            return (UInt64) Value;
+        }
+
+        public Single ToSingle(IFormatProvider? provider)
+        {
+            return (Single) Value;
+        }
+
+        public Double ToDouble(IFormatProvider? provider)
+        {
+            return (Double) Value;
+        }
+
+        public Decimal ToDecimal(IFormatProvider? provider)
+        {
+            return (Decimal) Value;
         }
 
         public DateTime ToDateTime(IFormatProvider? provider)
@@ -382,39 +420,14 @@ namespace NetExtender.Types.Numerics
             throw new InvalidCastException();
         }
 
-        public Decimal ToDecimal(IFormatProvider? provider)
+        public Char ToChar(IFormatProvider? provider)
         {
-            return Value;
-        }
-
-        public Double ToDouble(IFormatProvider? provider)
-        {
-            return Value;
-        }
-
-        public Int16 ToInt16(IFormatProvider? provider)
-        {
-            return Value;
-        }
-
-        public Int32 ToInt32(IFormatProvider? provider)
-        {
-            return Value;
-        }
-
-        public Int64 ToInt64(IFormatProvider? provider)
-        {
-            return Value;
-        }
-
-        public SByte ToSByte(IFormatProvider? provider)
-        {
-            return (SByte) Value;
-        }
-
-        public Single ToSingle(IFormatProvider? provider)
-        {
-            return Value;
+            return Value switch
+            {
+                State.Trit => 'U',
+                State.True => 'T',
+                _ => 'F'
+            };
         }
 
         public String ToString(IFormatProvider? provider)
@@ -427,21 +440,6 @@ namespace NetExtender.Types.Numerics
             return ((IConvertible) Value).ToType(conversionType, provider);
         }
 
-        public UInt16 ToUInt16(IFormatProvider? provider)
-        {
-            return Value;
-        }
-
-        public UInt32 ToUInt32(IFormatProvider? provider)
-        {
-            return Value;
-        }
-
-        public UInt64 ToUInt64(IFormatProvider? provider)
-        {
-            return Value;
-        }
-
         public Int32 CompareTo(Trilean other)
         {
             return Value.CompareTo(other.Value);
@@ -449,17 +447,24 @@ namespace NetExtender.Types.Numerics
 
         public override Int32 GetHashCode()
         {
-            return Value;
+            return (Int32) Value;
         }
 
         public override Boolean Equals(Object? obj)
         {
             return obj switch
             {
-                Trilean trilean => this == trilean,
-                Boolean boolean => this == boolean,
+                State value => Equals(value),
+                Trilean value => Equals(value),
+                Boolean value => Equals(value),
+                null => Equals((Boolean?) null),
                 _ => false
             };
+        }
+
+        private Boolean Equals(State other)
+        {
+            return Value == other;
         }
 
         public Boolean Equals(Trilean other)
@@ -481,9 +486,10 @@ namespace NetExtender.Types.Numerics
         {
             return Value switch
             {
-                VTrit => nameof(Trit),
-                VTrue => nameof(True),
-                _ => nameof(False)
+                State.False => nameof(False),
+                State.True => nameof(True),
+                State.Trit => nameof(Trit),
+                _ => throw new ArgumentOutOfRangeException(nameof(Value), Value, null)
             };
         }
     }

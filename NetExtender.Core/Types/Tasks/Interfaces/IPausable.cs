@@ -3,7 +3,7 @@
 
 using System;
 
-namespace NetExtender.Tasks.Interfaces
+namespace NetExtender.Types.Tasks.Interfaces
 {
     public interface IEventPausable : IPausable
     {

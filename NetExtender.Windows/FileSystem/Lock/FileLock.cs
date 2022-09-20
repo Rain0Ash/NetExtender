@@ -53,7 +53,7 @@ namespace NetExtender.IO.FileSystem.Lock
             DateTime timestamp = new DateTime(content.Timestamp);
 
             //This lock belongs to this process - we can reacquire the lock
-            if (content.PID == Environment.ProcessId)
+            if (content.ProcessId == Environment.ProcessId)
             {
                 return AcquireLock();
             }
@@ -80,7 +80,7 @@ namespace NetExtender.IO.FileSystem.Lock
             
             return new FileLockContent
             {
-                PID = process.Id,
+                ProcessId = process.Id,
                 Timestamp = DateTime.Now.Ticks,
                 ProcessName = process.ProcessName
             };

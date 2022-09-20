@@ -35,6 +35,7 @@
 
     <ItemGroup>
         <Folder Include="Interfaces" />
+        <Folder Include="Interfaces\Validate" />
         <Folder Include="IO\Shortcut" />
     </ItemGroup>
 

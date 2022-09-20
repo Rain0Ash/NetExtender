@@ -3,7 +3,7 @@
 
 using System.Threading.Tasks;
 
-namespace NetExtender.Tasks.Interfaces
+namespace NetExtender.Types.Tasks.Interfaces
 {
     public interface IAsyncStartable : IStartable
     {

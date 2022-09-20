@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Times.Timers.Interfaces
+namespace NetExtender.Types.Timers.Interfaces
 {
     public interface IEnumeratorTimer<out T> : ITimer, IEnumerator<T>
     {

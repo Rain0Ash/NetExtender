@@ -5,7 +5,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NetExtender.Times.Timers.Interfaces;
+using NetExtender.Types.Timers.Interfaces;
 using NetExtender.Types.Events;
 using NetExtender.Utilities.Types;
 

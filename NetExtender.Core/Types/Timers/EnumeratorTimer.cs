@@ -5,7 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using NetExtender.Times.Timers.Interfaces;
+using NetExtender.Types.Timers.Interfaces;
 using NetExtender.Types.Events;
 using NetExtender.Utilities.Types;
 

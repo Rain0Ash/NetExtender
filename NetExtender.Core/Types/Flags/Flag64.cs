@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NetExtender.Types.Flags.Interfaces;
 using NetExtender.Utilities.Numerics;
@@ -20,6 +21,41 @@ namespace NetExtender.Types.Flags
             return value.Internal;
         }
         
+        public static implicit operator Flag64(SByte value)
+        {
+            return new Flag64(Unsafe.As<SByte, Byte>(ref value));
+        }
+        
+        public static implicit operator Flag64(Byte value)
+        {
+            return new Flag64(value);
+        }
+        
+        public static implicit operator Flag64(Int16 value)
+        {
+            return new Flag64(Unsafe.As<Int16, UInt16>(ref value));
+        }
+
+        public static implicit operator Flag64(UInt16 value)
+        {
+            return new Flag64(value);
+        }
+        
+        public static implicit operator Flag64(Int32 value)
+        {
+            return new Flag64(Unsafe.As<Int32, UInt32>(ref value));
+        }
+
+        public static implicit operator Flag64(UInt32 value)
+        {
+            return new Flag64(value);
+        }
+        
+        public static implicit operator Flag64(Int64 value)
+        {
+            return new Flag64(Unsafe.As<Int64, UInt64>(ref value));
+        }
+
         public static implicit operator Flag64(UInt64 value)
         {
             return new Flag64(value);

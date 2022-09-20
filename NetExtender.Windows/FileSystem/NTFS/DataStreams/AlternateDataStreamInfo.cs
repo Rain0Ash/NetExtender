@@ -421,8 +421,7 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
             }
 
             StringComparer comparer = StringComparer.OrdinalIgnoreCase;
-            return comparer.Equals(Path ?? String.Empty, other.Path ?? String.Empty)
-                   && comparer.Equals(Name ?? String.Empty, other.Name ?? String.Empty);
+            return comparer.Equals(Path, other.Path) && comparer.Equals(Name, other.Name);
         }
         
         /// <summary>
@@ -434,8 +433,7 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
         public override Int32 GetHashCode()
         {
             StringComparer comparer = StringComparer.OrdinalIgnoreCase;
-
-            return comparer.GetHashCode(Path ?? String.Empty) ^ comparer.GetHashCode(Name ?? String.Empty);
+            return comparer.GetHashCode(Path) ^ comparer.GetHashCode(Name);
         }
         
         /// <summary>

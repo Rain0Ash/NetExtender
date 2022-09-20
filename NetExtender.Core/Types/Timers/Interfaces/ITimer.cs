@@ -2,10 +2,10 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using NetExtender.Tasks.Interfaces;
+using NetExtender.Types.Tasks.Interfaces;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Times.Timers.Interfaces
+namespace NetExtender.Types.Timers.Interfaces
 {
     public interface ITimer : IStartable, IDisposable, IAsyncDisposable
     {

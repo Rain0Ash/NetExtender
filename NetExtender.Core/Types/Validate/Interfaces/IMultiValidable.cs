@@ -13,7 +13,7 @@ namespace NetExtender.Interfaces
     
     public interface IMultiValidable<T> : IBaseValidable
     {
-        public Func<T, Boolean> ValidateItem { get; set; }
+        public Func<T, Boolean>? ValidateItem { get; set; }
         
         public new Boolean IsValid
         {

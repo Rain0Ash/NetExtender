@@ -3,7 +3,7 @@
 
 using System;
 using System.Net;
-using NetExtender.Tasks.Interfaces;
+using NetExtender.Types.Tasks.Interfaces;
 
 namespace NetExtender.Types.Network.Tcp
 {

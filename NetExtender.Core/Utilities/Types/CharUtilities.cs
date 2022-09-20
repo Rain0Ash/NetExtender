@@ -900,7 +900,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Char ToChar(this Boolean value)
         {
-            return value ? '1' : '0';
+            return value ? 'T' : 'F';
         }
         
 #if NETCOREAPP3_1_OR_GREATER
