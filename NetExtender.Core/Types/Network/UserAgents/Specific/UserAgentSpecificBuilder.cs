@@ -3,8 +3,8 @@
 
 using System;
 using System.Globalization;
-using NetExtender.Types.Random.Interfaces;
 using NetExtender.Types.Network.UserAgents.Interfaces;
+using NetExtender.Types.Random.Interfaces;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Types.Network.UserAgents.Specific

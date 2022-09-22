@@ -181,7 +181,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static ArraySegment<T> Shuffle<T>(this ArraySegment<T> source, System.Random random)
+        public static ArraySegment<T> Shuffle<T>(this ArraySegment<T> source, Random random)
         {
             if (random is null)
             {

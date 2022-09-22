@@ -5,8 +5,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
-using NetExtender.Types.Timers.Interfaces;
 using NetExtender.Types.Events;
+using NetExtender.Types.Timers.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Timers

@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NetExtender.Types.Flags.Interfaces;
@@ -231,7 +232,7 @@ namespace NetExtender.Types.Flags
             return Internal.ToString();
         }
         
-        public IEnumerable<Int32> EnumerateSetBits()
+        public IEnumerable<Int32> Enumerate()
         {
             Byte[] values = AsSpan().ToArray();
             Int32[] destination = new Int32[BitUtilities.BitInByte];
@@ -249,6 +250,11 @@ namespace NetExtender.Types.Flags
                     yield return destination[i] + counter * BitUtilities.BitInByte;
                 }
             }
+        }
+        
+        public IEnumerable<TEnum> Enumerate<TEnum>() where TEnum : unmanaged, Enum
+        {
+            return Enumerate().Select(item => Unsafe.As<Int32, TEnum>(ref item));
         }
         
         public IEnumerator<Boolean> GetEnumerator()

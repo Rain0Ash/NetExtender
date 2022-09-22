@@ -194,14 +194,19 @@ namespace NetExtender.WindowsPresentation.Types.Input
             return String.Join(" + ", GetEnumerator().AsEnumerable());
         }
         
-        IEnumerable<Int32> IFlag.EnumerateSetBits()
+        IEnumerable<Int32> IFlag.Enumerate()
         {
-            return Internal.EnumerateSetBits();
+            return Internal.Enumerate();
+        }
+
+        IEnumerable<TEnum> IFlag.Enumerate<TEnum>()
+        {
+            return Internal.Enumerate<TEnum>();
         }
 
         public IEnumerator<Key> GetEnumerator()
         {
-            return Internal.EnumerateSetBits().Select(position => (Key) position).GetEnumerator();
+            return Internal.Enumerate().Select(position => (Key) position).GetEnumerator();
         }
 
         IEnumerator<Boolean> IEnumerable<Boolean>.GetEnumerator()

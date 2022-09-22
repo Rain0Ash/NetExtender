@@ -382,7 +382,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Shuffle<T>(this T[] source, System.Random random)
+        public static void Shuffle<T>(this T[] source, Random random)
         {
             if (source is null)
             {

@@ -5,8 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
-using NetExtender.Types.Random.Interfaces;
 using NetExtender.Types.Comparers;
+using NetExtender.Types.Random.Interfaces;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
@@ -143,7 +143,7 @@ namespace NetExtender.Utilities.Types
             Shuffle(collection, RandomUtilities.Generator);
         }
 
-        public static void Shuffle<T>(this IList<T> collection, System.Random random)
+        public static void Shuffle<T>(this IList<T> collection, Random random)
         {
             if (collection is null)
             {

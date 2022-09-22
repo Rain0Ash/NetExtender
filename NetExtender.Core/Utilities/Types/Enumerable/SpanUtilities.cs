@@ -3126,7 +3126,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Memory<T> Shuffle<T>(this Memory<T> source, System.Random random)
+        public static Memory<T> Shuffle<T>(this Memory<T> source, Random random)
         {
             Shuffle(source.Span, random);
             return source;
@@ -3145,7 +3145,7 @@ namespace NetExtender.Utilities.Types
             return Shuffle(source, RandomUtilities.Generator);
         }
 
-        public static Span<T> Shuffle<T>(this Span<T> source, System.Random random)
+        public static Span<T> Shuffle<T>(this Span<T> source, Random random)
         {
             if (random is null)
             {
