@@ -129,7 +129,23 @@ namespace NetExtender.Utilities.Types
             };
         }
 
-        public static Int32 GetCountOfFlags<T>() where T : unmanaged, Enum
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static unsafe ReadOnlySpan<Byte> AsSpan<T>(in T value) where T : unmanaged, Enum
+        {
+            fixed (void* pointer = &value)
+            {
+                return new ReadOnlySpan<Byte>(pointer, sizeof(T) / sizeof(Byte));
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        public static ReadOnlySpan<Byte> AsSpan<T>(this T value) where T : unmanaged, Enum
+        {
+            return AsSpan(in value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 CountOfFlags<T>() where T : unmanaged, Enum
         {
             if (!IsFlags<T>())
             {
@@ -138,6 +154,32 @@ namespace NetExtender.Utilities.Types
 
             UInt64[] values = AsUInt64<T>().ToArray();
             return values.Length < 2 ? values.Length : values.Count(MathUtilities.IsPowerOf2);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static T[] Flags<T>(this T value) where T : unmanaged, Enum
+        {
+            static IEnumerable<T> Enumerate(IReadOnlyList<Byte> values)
+            {
+                Int32[] destination = new Int32[BitUtilities.BitInByte];
+
+                for (Int32 counter = 0; counter < values.Count; counter++)
+                {
+                    Byte value = values[counter];
+                    if (!BitUtilities.TryGetSetBits(value, destination, out Int32 written))
+                    {
+                        throw new InvalidOperationException();
+                    }
+
+                    for (Int32 i = 0; i < written; i++)
+                    {
+                        Int32 result = destination[i] + counter * BitUtilities.BitInByte;
+                        yield return Unsafe.As<Int32, T>(ref result);
+                    }
+                }
+            }
+
+            return Enumerate(AsSpan(in value).ToArray()).ToArray();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]

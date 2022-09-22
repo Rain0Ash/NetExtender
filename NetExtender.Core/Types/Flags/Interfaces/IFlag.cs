@@ -15,6 +15,7 @@ namespace NetExtender.Types.Flags.Interfaces
         public Boolean HasFlag<T>(T value) where T : unmanaged, Enum;
         public Boolean HasIFlag<T>(T value) where T : IFlag;
         public Boolean Equals(ReadOnlySpan<Byte> value);
-        public IEnumerable<Int32> EnumerateSetBits();
+        public IEnumerable<Int32> Enumerate();
+        public IEnumerable<TEnum> Enumerate<TEnum>() where TEnum : unmanaged, Enum;
     }
 }

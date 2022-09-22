@@ -6,10 +6,10 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Runtime.CompilerServices;
-using NetExtender.Types.Random.Interfaces;
 using NetExtender.Types.Drawing.Colors;
 using NetExtender.Types.Drawing.Colors.Interfaces;
 using NetExtender.Types.Immutable.Maps.Interfaces;
+using NetExtender.Types.Random.Interfaces;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
@@ -1320,10 +1320,8 @@ namespace NetExtender.Utilities.Types
                 r = g = b = default;
                 return false;
             }
-            
-            Double red, green, blue;
 
-            (red, green, blue) = wavelength switch
+            (Double red, Double green, Double blue) = wavelength switch
             {
                 >= 380 and < 440 => (-(wavelength - 440) / (440 - 380), 0d, 1d),
                 >= 440 and < 490 => (0d, (wavelength - 440) / (490 - 440), 1d),
@@ -1358,10 +1356,8 @@ namespace NetExtender.Utilities.Types
                 r = g = b = default;
                 return false;
             }
-            
-            Decimal red, green, blue;
 
-            (red, green, blue) = wavelength switch
+            (Decimal red, Decimal green, Decimal blue) = wavelength switch
             {
                 >= 380 and < 440 => (-(wavelength - 440) / (440 - 380), 0M, 1M),
                 >= 440 and < 490 => (0M, (wavelength - 440) / (490 - 440), 1M),
@@ -1479,7 +1475,7 @@ namespace NetExtender.Utilities.Types
             return GetRandomColor(RandomUtilities.Generator);
         }
         
-        public static Color GetRandomColor(this System.Random random)
+        public static Color GetRandomColor(this Random random)
         {
             if (random is null)
             {
@@ -1489,7 +1485,7 @@ namespace NetExtender.Utilities.Types
             return Color.FromArgb(random.NextByte(), random.NextByte(), random.NextByte());
         }
         
-        public static Color GetRandomColor(this IRandom random)
+        public static Color GetRandomColor<T>(this T random) where T : IRandom
         {
             if (random is null)
             {
@@ -1504,7 +1500,7 @@ namespace NetExtender.Utilities.Types
             return GetRandomAlphaColor(RandomUtilities.Generator);
         }
         
-        public static Color GetRandomAlphaColor(this System.Random random)
+        public static Color GetRandomAlphaColor(this Random random)
         {
             if (random is null)
             {
@@ -1514,7 +1510,7 @@ namespace NetExtender.Utilities.Types
             return Color.FromArgb(random.NextByte(), random.NextByte(), random.NextByte(), random.NextByte());
         }
         
-        public static Color GetRandomAlphaColor(this IRandom random)
+        public static Color GetRandomAlphaColor<T>(this T random) where T : IRandom
         {
             if (random is null)
             {
@@ -1529,17 +1525,17 @@ namespace NetExtender.Utilities.Types
             return GetRandomColor(RandomUtilities.Generator, type);
         }
         
-        public static IColor GetRandomColor(this ColorType type, System.Random random)
+        public static IColor GetRandomColor(this ColorType type, Random random)
         {
             return GetRandomColor(random, type);
         }
         
-        public static IColor GetRandomColor(this ColorType type, IRandom random)
+        public static IColor GetRandomColor<T>(this ColorType type, T random) where T : IRandom
         {
             return GetRandomColor(random, type);
         }
         
-        public static IColor GetRandomColor(this System.Random random, ColorType type)
+        public static IColor GetRandomColor(this Random random, ColorType type)
         {
             if (random is null)
             {
@@ -1549,7 +1545,7 @@ namespace NetExtender.Utilities.Types
             return ConvertRGBToColorType(random.NextByte(), random.NextByte(), random.NextByte(), type);
         }
         
-        public static IColor GetRandomColor(this IRandom random, ColorType type)
+        public static IColor GetRandomColor<T>(this T random, ColorType type) where T : IRandom
         {
             if (random is null)
             {
@@ -1564,7 +1560,7 @@ namespace NetExtender.Utilities.Types
             return GetRandomLightColor(RandomUtilities.Generator);
         }
         
-        public static Color GetRandomLightColor(this System.Random random)
+        public static Color GetRandomLightColor(this Random random)
         {
             if (random is null)
             {
@@ -1577,7 +1573,7 @@ namespace NetExtender.Utilities.Types
                 random.NextByte(MinimumLightRGBColor, Byte.MaxValue));
         }
         
-        public static Color GetRandomLightColor(this IRandom random)
+        public static Color GetRandomLightColor<T>(this T random) where T : IRandom
         {
             if (random is null)
             {
@@ -1595,7 +1591,7 @@ namespace NetExtender.Utilities.Types
             return GetRandomLightAlphaColor(RandomUtilities.Generator);
         }
         
-        public static Color GetRandomLightAlphaColor(this System.Random random)
+        public static Color GetRandomLightAlphaColor(this Random random)
         {
             if (random is null)
             {
@@ -1609,7 +1605,7 @@ namespace NetExtender.Utilities.Types
                 random.NextByte(MinimumLightRGBColor, Byte.MaxValue));
         }
         
-        public static Color GetRandomLightAlphaColor(this IRandom random)
+        public static Color GetRandomLightAlphaColor<T>(this T random) where T : IRandom
         {
             if (random is null)
             {
@@ -1628,12 +1624,12 @@ namespace NetExtender.Utilities.Types
             return GetRandomLightColor(RandomUtilities.Generator, type);
         }
         
-        public static IColor GetRandomLightColor(this ColorType type, System.Random random)
+        public static IColor GetRandomLightColor(this ColorType type, Random random)
         {
             return GetRandomLightColor(random, type);
         }
         
-        public static IColor GetRandomLightColor(this ColorType type, IRandom random)
+        public static IColor GetRandomLightColor<T>(this ColorType type, T random) where T : IRandom
         {
             return GetRandomLightColor(random, type);
         }
@@ -1641,7 +1637,7 @@ namespace NetExtender.Utilities.Types
         public const Byte MinimumLightRGBColor = 170;
         public const Byte MaximumDarkRGBColor = 80;
 
-        public static IColor GetRandomLightColor(this System.Random random, ColorType type)
+        public static IColor GetRandomLightColor(this Random random, ColorType type)
         {
             if (random is null)
             {
@@ -1655,7 +1651,7 @@ namespace NetExtender.Utilities.Types
                 type);
         }
 
-        public static IColor GetRandomLightColor(this IRandom random, ColorType type)
+        public static IColor GetRandomLightColor<T>(this T random, ColorType type) where T : IRandom
         {
             if (random is null)
             {
@@ -1674,7 +1670,7 @@ namespace NetExtender.Utilities.Types
             return GetRandomDarkColor(RandomUtilities.Generator);
         }
         
-        public static Color GetRandomDarkColor(this System.Random random)
+        public static Color GetRandomDarkColor(this Random random)
         {
             if (random is null)
             {
@@ -1687,7 +1683,7 @@ namespace NetExtender.Utilities.Types
                 random.NextByte(Byte.MinValue, MaximumDarkRGBColor));
         }
         
-        public static Color GetRandomDarkColor(this IRandom random)
+        public static Color GetRandomDarkColor<T>(this T random) where T : IRandom
         {
             if (random is null)
             {
@@ -1705,7 +1701,7 @@ namespace NetExtender.Utilities.Types
             return GetRandomDarkAlphaColor(RandomUtilities.Generator);
         }
         
-        public static Color GetRandomDarkAlphaColor(this System.Random random)
+        public static Color GetRandomDarkAlphaColor(this Random random)
         {
             if (random is null)
             {
@@ -1719,7 +1715,7 @@ namespace NetExtender.Utilities.Types
                 random.NextByte(Byte.MinValue, MaximumDarkRGBColor));
         }
         
-        public static Color GetRandomDarkAlphaColor(this IRandom random)
+        public static Color GetRandomDarkAlphaColor<T>(this T random) where T : IRandom
         {
             if (random is null)
             {
@@ -1738,17 +1734,17 @@ namespace NetExtender.Utilities.Types
             return GetRandomDarkColor(RandomUtilities.Generator, type);
         }
         
-        public static IColor GetRandomDarkColor(this ColorType type, System.Random random)
+        public static IColor GetRandomDarkColor(this ColorType type, Random random)
         {
             return GetRandomDarkColor(random, type);
         }
         
-        public static IColor GetRandomDarkColor(this ColorType type, IRandom random)
+        public static IColor GetRandomDarkColor<T>(this ColorType type, T random) where T : IRandom
         {
             return GetRandomDarkColor(random, type);
         }
 
-        public static IColor GetRandomDarkColor(this System.Random random, ColorType type)
+        public static IColor GetRandomDarkColor(this Random random, ColorType type)
         {
             if (random is null)
             {
@@ -1762,7 +1758,7 @@ namespace NetExtender.Utilities.Types
                 type);
         }
 
-        public static IColor GetRandomDarkColor(this IRandom random, ColorType type)
+        public static IColor GetRandomDarkColor<T>(this T random, ColorType type) where T : IRandom
         {
             if (random is null)
             {

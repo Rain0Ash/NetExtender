@@ -1714,7 +1714,7 @@ namespace NetExtender.Utilities.Types
             return Shuffle(source, RandomUtilities.Generator);
         }
 
-        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, System.Random random)
+        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random random)
         {
             if (source is null)
             {

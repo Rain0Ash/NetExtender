@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using NetExtender.Types.Random.Interfaces;
 using NetExtender.Types.Collections;
 using NetExtender.Types.Collections.Interfaces;
+using NetExtender.Types.Random.Interfaces;
 
 namespace NetExtender.Utilities.Types
 {
@@ -273,7 +273,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static void Shuffle<T>(this ObservableCollection<T> collection, System.Random random)
+        public static void Shuffle<T>(this ObservableCollection<T> collection, Random random)
         {
             if (collection is null)
             {

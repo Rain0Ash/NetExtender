@@ -4,8 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using NetExtender.Types.Random;
 using NetExtender.Types.Network.UserAgents.Interfaces;
+using NetExtender.Types.Random;
 using NetExtender.Utilities.Network;
 
 namespace NetExtender.Types.Network.UserAgents
