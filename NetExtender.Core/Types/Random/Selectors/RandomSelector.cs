@@ -78,7 +78,7 @@ namespace NetExtender.Types.Random
                 sum += source[i];
             }
             
-            Double k = 1f / sum;
+            Double k = 1F / sum;
 
             sum = 0;
             for (Int32 i = 0; i < length; i++)
@@ -87,7 +87,7 @@ namespace NetExtender.Types.Random
                 source[i] = sum;
             }
 
-            source[length - 1] = 1f;
+            source[length - 1] = 1F;
         }
 
         /// <summary>

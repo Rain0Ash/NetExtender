@@ -5,7 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
@@ -23,6 +26,38 @@ namespace NetExtender.Utilities.Types
     public static class EnumUtilities
     {
         private const String IsDefinedTypeMismatchMessage = "The underlying type of the enum and the value must be the same type.";
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String TryGetDescriptionOrName<T>(this T value) where T : unmanaged, Enum
+        {
+            TryGetDescriptionOrName(value, out String result);
+            return result;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetDescriptionOrName<T>(this T value, out String result) where T : unmanaged, Enum
+        {
+            if (TryGetDescription(value, out String? description))
+            {
+                result = description;
+                return true;
+            }
+
+            result = value.ToString();
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String? TryGetDescription<T>(this T value) where T : unmanaged, Enum
+        {
+            return CacheDescription<T>.TryGetValue(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetDescription<T>(this T value, [MaybeNullWhen(false)] out String result) where T : unmanaged, Enum
+        {
+            return CacheDescription<T>.TryGetValue(value, out result);
+        }
 
         public static T Next<T>(this T value) where T : unmanaged, Enum
         {
@@ -1003,6 +1038,55 @@ namespace NetExtender.Utilities.Types
             public static Boolean Contains(String name)
             {
                 return Set.Contains(name);
+            }
+        }
+
+        private static class CacheDescription<T> where T : unmanaged, Enum
+        {
+            public static ImmutableDictionary<T, String> Values { get; }
+
+            static CacheDescription()
+            {
+                Values = CacheValues<T>.Values.Select(item => new KeyValuePair<T, String?>(item, Get(item))).WhereValueNotNull().ToImmutableDictionary();
+            }
+
+            public static Boolean Contains(T value)
+            {
+                return Values.ContainsKey(value);
+            }
+
+            public static String? TryGetValue(T value)
+            {
+                return TryGetValue(value, out String? result) ? result : null;
+            }
+
+            public static Boolean TryGetValue(T value, [MaybeNullWhen(false)] out String result)
+            {
+                return Values.TryGetValue(value, out result);
+            }
+
+            private static String? Get(T value)
+            {
+                Type type = typeof(T);
+                String? name = Enum.GetName(type, value);
+            
+                if (name is null)
+                {
+                    return null;
+                }
+
+                FieldInfo? field = type.GetField(name);
+                if (field is null)
+                {
+                    return null;
+                }
+
+                if (Attribute.GetCustomAttribute(field, typeof(DescriptionAttribute)) is DescriptionAttribute attribute)
+                {
+                    return attribute.Description;
+                }
+            
+                return null;
             }
         }
 

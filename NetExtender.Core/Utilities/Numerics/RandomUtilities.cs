@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Random;
@@ -18,6 +19,36 @@ namespace NetExtender.Utilities.Numerics
     /// <inheritdoc cref="System.Random"/>
     public static partial class RandomUtilities
     {
+        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
+        private static class GeneratorCache
+        {
+            [ThreadStatic]
+            private static IRandom? generator;
+            public static IRandom Generator
+            {
+                get
+                {
+                    return generator ??= new MersenneTwister();
+                }
+                set
+                {
+                    generator = value;
+                }
+            }
+        }
+
+        public static IRandom Generator
+        {
+            get
+            {
+                return GeneratorCache.Generator;
+            }
+            private set
+            {
+                GeneratorCache.Generator = value;
+            }
+        }
+        
         public static IRandom Create()
         {
             return Create(RandomType.Default);
@@ -46,20 +77,6 @@ namespace NetExtender.Utilities.Numerics
                 RandomType.MersenneTwister => new MersenneTwister(seed),
                 _ => throw new NotSupportedException()
             };
-        }
-
-        [ThreadStatic]
-        private static IRandom? generator;
-        public static IRandom Generator
-        {
-            get
-            {
-                return generator ??= new MersenneTwister();
-            }
-            private set
-            {
-                generator = value;
-            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -647,14 +664,14 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean NextBoolean(this Random random)
         {
-            return NextBoolean(random, 0.5d);
+            return NextBoolean(random, 0.5D);
         }
 
         /// <inheritdoc cref="NextBoolean{T}(T,Double)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean NextBoolean<T>(this T random) where T : IRandom
         {
-            return NextBoolean(random, 0.5d);
+            return NextBoolean(random, 0.5D);
         }
 
         /// <inheritdoc cref="NextBoolean{T}(T,Double)"/>
@@ -931,9 +948,199 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double[] Summary(Int32 count)
+        {
+            return Summary(UInt32.MaxValue, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double[] Summary(Int32 max, Int32 count)
+        {
+            return Summary(default(Int32), max, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double[] Summary(Int32 min, Int32 max, Int32 count)
+        {
+            if (min < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(min), min, null);
+            }
+
+            if (max < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(max), max, null);
+            }
+
+            return Summary((UInt32) min, (UInt32) max, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double[] Summary(UInt32 max, Int32 count)
+        {
+            return Summary(default(UInt32), max, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double[] Summary(UInt32 min, UInt32 max, Int32 count)
+        {
+            return Summary(Generator, min, max, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double[] Summary(this Random random, Int32 count)
+        {
+            return Summary(random, UInt32.MaxValue, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double[] Summary(this Random random, Int32 max, Int32 count)
+        {
+            return Summary(random, default, max, count);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double[] Summary(this Random random, Int32 min, Int32 max, Int32 count)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            if (min < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(min), min, null);
+            }
+
+            if (max < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(max), max, null);
+            }
+
+            return Summary(random, (UInt32) min, (UInt32) max, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double[] Summary(this Random random, UInt32 max, Int32 count)
+        {
+            return Summary(random, default, max, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Double[] Summary(this Random random, UInt32 min, UInt32 max, Int32 count)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            if (count <= 0)
+            {
+                return Array.Empty<Double>();
+            }
+
+            Double[] values = new Double[count];
+
+            UInt64 sum = 0;
+            for (Int32 i = 0; i < values.Length; i++)
+            {
+                UInt32 value = random.NextUInt32(min, max);
+                sum += value;
+                values[i] = value;
+            }
+
+            for (Int32 i = 0; i < values.Length; i++)
+            {
+                values[i] /= sum;
+            }
+            
+            Array.Sort(values, (first, second) => second.CompareTo(first));
+            return values;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double[] Summary<T>(this T random, Int32 count) where T : IRandom
+        {
+            return Summary(random, UInt32.MaxValue, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double[] Summary<T>(this T random, Int32 max, Int32 count) where T : IRandom
+        {
+            return Summary(random, default, max, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double[] Summary<T>(this T random, Int32 min, Int32 max, Int32 count) where T : IRandom
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            if (min < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(min), min, null);
+            }
+
+            if (max < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(max), max, null);
+            }
+
+            return Summary(random, (UInt32) min, (UInt32) max, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double[] Summary<T>(this T random, UInt32 max, Int32 count) where T : IRandom
+        {
+            return Summary(random, default, max, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Double[] Summary<T>(this T random, UInt32 min, UInt32 max, Int32 count) where T : IRandom
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            if (count <= 0)
+            {
+                return Array.Empty<Double>();
+            }
+            
+            Double[] values = new Double[count];
+
+            UInt64 sum = 0;
+            for (Int32 i = 0; i < values.Length; i++)
+            {
+                UInt32 value = random.NextUInt32(min, max);
+                sum += value;
+                values[i] = value;
+            }
+
+            for (Int32 i = 0; i < values.Length; i++)
+            {
+                values[i] /= sum;
+            }
+            
+            Array.Sort(values, (first, second) => second.CompareTo(first));
+            return values;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Action(Action action)
         {
-            Action(action, 0.5);
+            if (action is null)
+            {
+                throw new ArgumentNullException(nameof(action));
+            }
+
+            if (NextBoolean())
+            {
+                action.Invoke();
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -953,7 +1160,10 @@ namespace NetExtender.Utilities.Numerics
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Swap<T>(ref T first, ref T second)
         {
-            Swap(ref first, ref second, 0.5);
+            if (NextBoolean())
+            {
+                (first, second) = (second, first);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

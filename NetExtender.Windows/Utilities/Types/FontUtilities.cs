@@ -28,7 +28,7 @@ namespace NetExtender.Utilities.Types
 
             Single size = font.SizeInPoints + delta;
 
-            return Resize(font, size.Clamp(0.01f, Single.MaxValue));
+            return Resize(font, size.Clamp(0.01F, Single.MaxValue));
         }
     }
 }

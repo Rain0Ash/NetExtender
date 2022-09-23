@@ -141,12 +141,12 @@ namespace NetExtender.Utilities.Types
                     return ColorFromHLS(Hue, zeroLum - (Int32) (zeroLum * percent), Saturation);
                 }
 
-                if (percent == 0.0f)
+                if (percent == 0.0F)
                 {
                     return SystemColors.ControlDark;
                 }
 
-                if (Math.Abs(percent - 1.0f) < Single.Epsilon)
+                if (Math.Abs(percent - 1.0F) < Single.Epsilon)
                 {
                     return SystemColors.ControlDarkDark;
                 }
@@ -169,12 +169,12 @@ namespace NetExtender.Utilities.Types
                     return ColorFromHLS(Hue, zero + (Int32) ((one - zero) * percent), Saturation);
                 }
 
-                if (percent == 0.0f)
+                if (percent == 0.0F)
                 {
                     return SystemColors.ControlLight;
                 }
 
-                if (Math.Abs(percent - 1.0f) < Single.Epsilon)
+                if (Math.Abs(percent - 1.0F) < Single.Epsilon)
                 {
                     return SystemColors.ControlLightLight;
                 }

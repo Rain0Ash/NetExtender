@@ -42,6 +42,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
     /// <summary>
     /// An immutable linked list data structure
     /// </summary>
+    //TODO: refactoring
     public readonly struct ImmutableLinkedList<T> : IReadOnlyCollection<T>, IEquatable<ImmutableLinkedList<T>>, ICollection<T>
     {
         /// <summary>

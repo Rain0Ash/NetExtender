@@ -74,8 +74,8 @@ namespace NetExtender.Utilities.UserInterface
                 height = 100;
             }
 
-            window.Width = width / 100d * screen.WorkingArea.Width;
-            window.Height = height / 100d * screen.WorkingArea.Height;
+            window.Width = width / 100D * screen.WorkingArea.Width;
+            window.Height = height / 100D * screen.WorkingArea.Height;
         }
     }
 }

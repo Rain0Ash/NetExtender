@@ -122,8 +122,8 @@ namespace NetExtender.Utilities.UserInterface
                 height = 100;
             }
 
-            form.Width = (Int32) (width / 100d * screen.WorkingArea.Width);
-            form.Height = (Int32) (height / 100d * screen.WorkingArea.Height);
+            form.Width = (Int32) (width / 100D * screen.WorkingArea.Width);
+            form.Height = (Int32) (height / 100D * screen.WorkingArea.Height);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

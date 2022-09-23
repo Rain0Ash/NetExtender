@@ -2435,7 +2435,7 @@ namespace NetExtender.Utilities.Numerics
 			}
 
 			Int32 remainder = value % multiplier;
-			Double average = multiplier / 2d;
+			Double average = multiplier / 2D;
 
 			if (value > 0)
 			{
@@ -2552,7 +2552,7 @@ namespace NetExtender.Utilities.Numerics
 				return value;
 			}
 
-			return value % multiplier >= multiplier / 2d ? RoundUpToMultiplierOriginal(value, multiplier) : RoundDownToMultiplierOriginal(value, multiplier);
+			return value % multiplier >= multiplier / 2D ? RoundUpToMultiplierOriginal(value, multiplier) : RoundDownToMultiplierOriginal(value, multiplier);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2663,7 +2663,7 @@ namespace NetExtender.Utilities.Numerics
 			}
 
 			Int32 remainder = value % multiplier;
-			Double average = multiplier / 2d;
+			Double average = multiplier / 2D;
 
 			if (value > 0)
 			{
@@ -2780,7 +2780,7 @@ namespace NetExtender.Utilities.Numerics
 				return value;
 			}
 
-			return value % multiplier >= multiplier / 2d ? RoundUpToMultiplierOriginal(value, multiplier) : RoundDownToMultiplierOriginal(value, multiplier);
+			return value % multiplier >= multiplier / 2D ? RoundUpToMultiplierOriginal(value, multiplier) : RoundDownToMultiplierOriginal(value, multiplier);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2891,7 +2891,7 @@ namespace NetExtender.Utilities.Numerics
 			}
 
 			Int32 remainder = value % multiplier;
-			Double average = multiplier / 2d;
+			Double average = multiplier / 2D;
 
 			if (value > 0)
 			{
@@ -3008,7 +3008,7 @@ namespace NetExtender.Utilities.Numerics
 				return value;
 			}
 
-			return value % multiplier >= multiplier / 2d ? RoundUpToMultiplierOriginal(value, multiplier) : RoundDownToMultiplierOriginal(value, multiplier);
+			return value % multiplier >= multiplier / 2D ? RoundUpToMultiplierOriginal(value, multiplier) : RoundDownToMultiplierOriginal(value, multiplier);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3119,7 +3119,7 @@ namespace NetExtender.Utilities.Numerics
 			}
 
 			Int64 remainder = value % multiplier;
-			Double average = multiplier / 2d;
+			Double average = multiplier / 2D;
 
 			if (value > 0)
 			{
@@ -3236,7 +3236,7 @@ namespace NetExtender.Utilities.Numerics
 				return value;
 			}
 
-			return value % multiplier >= multiplier / 2d ? RoundUpToMultiplierOriginal(value, multiplier) : RoundDownToMultiplierOriginal(value, multiplier);
+			return value % multiplier >= multiplier / 2D ? RoundUpToMultiplierOriginal(value, multiplier) : RoundDownToMultiplierOriginal(value, multiplier);
 		}
 
 		[MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3347,7 +3347,7 @@ namespace NetExtender.Utilities.Numerics
 			}
 
 			Single remainder = value % multiplier;
-			Double average = multiplier / 2d;
+			Double average = multiplier / 2D;
 
 			if (value > 0)
 			{
@@ -3485,7 +3485,7 @@ namespace NetExtender.Utilities.Numerics
 			}
 
 			Double remainder = value % multiplier;
-			Double average = multiplier / 2d;
+			Double average = multiplier / 2D;
 
 			if (value > 0)
 			{
@@ -3623,7 +3623,7 @@ namespace NetExtender.Utilities.Numerics
 			}
 
 			Decimal remainder = value % multiplier;
-			Decimal average = multiplier / 2m;
+			Decimal average = multiplier / 2M;
 
 			if (value > 0)
 			{

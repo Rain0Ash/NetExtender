@@ -805,12 +805,12 @@ namespace NetExtender.Utilities.Numerics
 
         if (IsUnsignedType(type))
         {
-            WriteLine("\t\t\treturn value % multiplier >= multiplier / 2d ? RoundUpToMultiplierOriginal(value, multiplier) : RoundDownToMultiplierOriginal(value, multiplier);");
+            WriteLine("\t\t\treturn value % multiplier >= multiplier / 2D ? RoundUpToMultiplierOriginal(value, multiplier) : RoundDownToMultiplierOriginal(value, multiplier);");
         }
         else
         {
             WriteLine($"\t\t\t{(IsSmallType(type) ? nameof(Int32) : type)} remainder = value % multiplier;");
-            WriteLine($"\t\t\t{(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} average = multiplier / 2{(type == nameof(Decimal) ? "m" : "d")};");
+            WriteLine($"\t\t\t{(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} average = multiplier / 2{(type == nameof(Decimal) ? "M" : "D")};");
         
             WriteLine(String.Empty);
             

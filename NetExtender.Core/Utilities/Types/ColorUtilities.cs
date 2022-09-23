@@ -391,9 +391,9 @@ namespace NetExtender.Utilities.Types
         /// <param name="v">Value (from 0 to 1).</param>
         public static void RGBToHSV(Byte r, Byte g, Byte b, out Double h, out Double s, out Double v)
         {
-            Double rd = r / 255d;
-            Double gd = g / 255d;
-            Double bd = b / 255d;
+            Double rd = r / 255D;
+            Double gd = g / 255D;
+            Double bd = b / 255D;
 
             RGBToHSV(rd, gd, bd, out h, out s, out v);
         }
@@ -670,10 +670,10 @@ namespace NetExtender.Utilities.Types
         /// <param name="b">Blue-yellow color component.</param>
         public static void RGBToCIELAB(Byte r, Byte g, Byte cb, out Double l, out Double a, out Double b)
         {
-            Double rd = r / 255d;
-            Double gd = g / 255d;
-            Double bd = cb / 255d;
-            RGBToCIELAB(rd, gd, bd, out l, out a, out b);
+            Double red = r / 255D;
+            Double green = g / 255D;
+            Double blue = cb / 255D;
+            RGBToCIELAB(red, green, blue, out l, out a, out b);
         }
 
         /// <summary>
@@ -688,11 +688,11 @@ namespace NetExtender.Utilities.Types
         /// <param name="b">Blue.</param>
         public static void CIELABToRGB(Double l, Double a, Double cb, out Byte r, out Byte g, out Byte b)
         {
-            CIELABToRGB(l, a, cb, out Double rd, out Double gd, out Double bd);
+            CIELABToRGB(l, a, cb, out Double red, out Double green, out Double blue);
 
-            r = (Byte) (rd * 255);
-            g = (Byte) (gd * 255);
-            b = (Byte) (bd * 255);
+            r = (Byte) (red * 255);
+            g = (Byte) (green * 255);
+            b = (Byte) (blue * 255);
         }
 
         /// <summary>
@@ -763,11 +763,10 @@ namespace NetExtender.Utilities.Types
         /// <param name="z">Z.</param>
         public static void RGBToXYZ(Byte r, Byte g, Byte b, out Double x, out Double y, out Double z)
         {
-            Double rd = r / 255d;
-            Double gd = g / 255d;
-            Double bd = b / 255d;
-
-            RGBToXYZ(rd, gd, bd, out x, out y, out z);
+            Double red = r / 255D;
+            Double green = g / 255D;
+            Double blue = b / 255D;
+            RGBToXYZ(red, green, blue, out x, out y, out z);
         }
 
         /// <summary>
@@ -793,9 +792,9 @@ namespace NetExtender.Utilities.Types
         private const Double D65Y = 100;
         private const Double D65Z = 108.883;
 
-        private const Double SixteenDivHundredsixteen = 16d / 116d;
-        private const Double OneThird = 1d / 3d;
-        private const Double TwoThirds = 2d / 3d;
+        private const Double SixteenDivHundredsixteen = 16D / 116D;
+        private const Double OneThird = 1D / 3D;
+        private const Double TwoThirds = 2D / 3D;
 
         /// <summary>
         /// Converts from RGB to XYZ color space.
@@ -978,9 +977,9 @@ namespace NetExtender.Utilities.Types
         /// <param name="z">Z.</param>
         public static void CIELABToXYZ(Double l, Double a, Double b, out Double x, out Double y, out Double z)
         {
-            y = (l + 16d) / 116d;
-            x = a / 500d + y;
-            z = y - b / 200d;
+            y = (l + 16D) / 116D;
+            x = a / 500D + y;
+            z = y - b / 200D;
 
             Double tmp = Math.Pow(y, 3);
             if (tmp > 0.008856)
@@ -1186,7 +1185,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Light(this Color color)
         {
-            return Light(color, 0.25f);
+            return Light(color, 0.25F);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1199,7 +1198,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Lighter(this Color color)
         {
-            return Light(color, 0.5f);
+            return Light(color, 0.5F);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1212,7 +1211,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Lightest(this Color color)
         {
-            return Light(color, 0.75f);
+            return Light(color, 0.75F);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1225,7 +1224,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color SuperLight(this Color color)
         {
-            return Light(color, 1.00f);
+            return Light(color, 1.00F);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1264,7 +1263,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Dark(this Color color)
         {
-            return Dark(color, 0.25f);
+            return Dark(color, 0.25F);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1277,7 +1276,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Darker(this Color color)
         {
-            return Dark(color, 0.5f);
+            return Dark(color, 0.5F);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1290,7 +1289,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Darkest(this Color color)
         {
-            return Dark(color, 0.75f);
+            return Dark(color, 0.75F);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1303,7 +1302,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color SuperDark(this Color color)
         {
-            return Dark(color, 1.00f);
+            return Dark(color, 1.00F);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1323,21 +1322,21 @@ namespace NetExtender.Utilities.Types
 
             (Double red, Double green, Double blue) = wavelength switch
             {
-                >= 380 and < 440 => (-(wavelength - 440) / (440 - 380), 0d, 1d),
-                >= 440 and < 490 => (0d, (wavelength - 440) / (490 - 440), 1d),
-                >= 490 and < 510 => (0d, 1d, -(wavelength - 510) / (510 - 490)),
-                >= 510 and < 580 => ((wavelength - 510) / (580 - 510), 1d, 0d),
-                >= 580 and < 645 => (1d, -(wavelength - 645) / (645 - 580), 0d),
-                >= 645 and <= 780 => (1d, 0d, 0d),
-                _ => (0d, 0d, 0d)
+                >= 380 and < 440 => (-(wavelength - 440) / (440 - 380), 0D, 1D),
+                >= 440 and < 490 => (0D, (wavelength - 440) / (490 - 440), 1D),
+                >= 490 and < 510 => (0D, 1D, -(wavelength - 510) / (510 - 490)),
+                >= 510 and < 580 => ((wavelength - 510) / (580 - 510), 1D, 0D),
+                >= 580 and < 645 => (1D, -(wavelength - 645) / (645 - 580), 0D),
+                >= 645 and <= 780 => (1D, 0D, 0D),
+                _ => (0D, 0D, 0D)
             };
 
             Double factor = wavelength switch
             {
                 >= 380 and < 420 => 0.3 + 0.7 * (wavelength - 380) / (420 - 380),
-                >= 420 and < 701 => 1d,
+                >= 420 and < 701 => 1D,
                 >= 701 and < 781 => 0.3 + 0.7 * (780 - wavelength) / (780 - 700),
-                _ => 0d
+                _ => 0D
             };
             
             const Double Gamma = 0.80;

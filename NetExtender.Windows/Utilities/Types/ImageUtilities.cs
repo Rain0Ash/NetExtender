@@ -475,9 +475,9 @@ namespace NetExtender.Utilities.Types
 
             using Graphics graphics = Graphics.FromImage(bitmap);
 
-            graphics.TranslateTransform(bitmap.Width / 2f, bitmap.Height / 2f);
+            graphics.TranslateTransform(bitmap.Width / 2F, bitmap.Height / 2F);
             graphics.RotateTransform(angle);
-            graphics.TranslateTransform(-bitmap.Width / 2f, -bitmap.Height / 2f);
+            graphics.TranslateTransform(-bitmap.Width / 2F, -bitmap.Height / 2F);
             graphics.DrawImage(image, new Point((width - image.Width) / 2, (height - image.Height) / 2));
 
             return bitmap;

@@ -59,7 +59,7 @@ namespace NetExtender.Types.Numerics
         /// <returns>The decimal as a fraction</returns>
         public static implicit operator Fraction(Decimal fraction)
         {
-            return new Fraction(fraction, 1.0m);
+            return new Fraction(fraction, 1.0M);
         }
 
         /// <summary>
@@ -248,7 +248,7 @@ namespace NetExtender.Types.Numerics
         /// Gets the epsilon.
         /// </summary>
         /// <value>The epsilon.</value>
-        private const Double Epsilon = 0.001d;
+        private const Double Epsilon = 0.001D;
 
         /// <summary>
         /// Constructor
