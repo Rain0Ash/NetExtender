@@ -3,7 +3,7 @@
 
 using System;
 
-namespace NetExtender.Windows.Protocols.Interfaces
+namespace NetExtender.Types.Protocols.Interfaces
 {
     public interface IProtocolInfo
     {

@@ -47,10 +47,10 @@ namespace NetExtender.Types.Monads
             Internal = value;
         }
 
-        public void Deconstruct(out Boolean notnull, out T value)
+        public void Deconstruct(out T value, out Boolean notnull)
         {
-            notnull = HasValue;
             value = Internal;
+            notnull = HasValue;
         }
 
         public override Boolean Equals(Object? other)

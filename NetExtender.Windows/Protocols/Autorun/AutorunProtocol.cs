@@ -6,6 +6,7 @@ using System.IO;
 using System.Security.AccessControl;
 using Microsoft.Win32;
 using NetExtender.Types.Exceptions;
+using NetExtender.Types.Protocols;
 using NetExtender.Utilities.Application;
 using NetExtender.Utilities.IO;
 

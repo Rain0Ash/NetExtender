@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using Microsoft.Win32;
 using NetExtender.Types.Exceptions;
+using NetExtender.Types.Protocols;
 using NetExtender.Utilities.Application;
 using NetExtender.Utilities.IO;
 

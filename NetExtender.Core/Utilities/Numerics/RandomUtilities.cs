@@ -1128,6 +1128,102 @@ namespace NetExtender.Utilities.Numerics
             Array.Sort(values, (first, second) => second.CompareTo(first));
             return values;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal[] Summary(this Random random, Decimal max, Int32 count)
+        {
+            return Summary(random, default, max, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Decimal[] Summary(this Random random, Decimal min, Decimal max, Int32 count)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+            
+            if (min < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(min), min, null);
+            }
+
+            if (max < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(max), max, null);
+            }
+
+            if (count <= 0)
+            {
+                return Array.Empty<Decimal>();
+            }
+
+            Decimal[] values = new Decimal[count];
+
+            Decimal sum = 0;
+            for (Int32 i = 0; i < values.Length; i++)
+            {
+                Decimal value = random.NextDecimal(min, max);
+                sum += value;
+                values[i] = value;
+            }
+
+            for (Int32 i = 0; i < values.Length; i++)
+            {
+                values[i] /= sum;
+            }
+            
+            Array.Sort(values, (first, second) => second.CompareTo(first));
+            return values;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Decimal[] Summary<T>(this T random, Decimal max, Int32 count) where T : IRandom
+        {
+            return Summary(random, default, max, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Decimal[] Summary<T>(this T random, Decimal min, Decimal max, Int32 count) where T : IRandom
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            if (min < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(min), min, null);
+            }
+
+            if (max < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(max), max, null);
+            }
+
+            if (count <= 0)
+            {
+                return Array.Empty<Decimal>();
+            }
+            
+            Decimal[] values = new Decimal[count];
+
+            Decimal sum = 0;
+            for (Int32 i = 0; i < values.Length; i++)
+            {
+                Decimal value = random.NextDecimal(min, max);
+                sum += value;
+                values[i] = value;
+            }
+
+            for (Int32 i = 0; i < values.Length; i++)
+            {
+                values[i] /= sum;
+            }
+            
+            Array.Sort(values, (first, second) => second.CompareTo(first));
+            return values;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Action(Action action)
