@@ -6083,14 +6083,14 @@ namespace NetExtender.Utilities.Numerics
 			return sum / count;
 		}
 
-		private const Byte MinBase = 2;
-		private const Byte MaxBase = 36;
+		private const Byte MinimumBase = 2;
+		private const Byte MaximumBase = 36;
 		private const Int32 ZeroChar = '0';
-		private const Int32 AlphabetStart = '9' - MinBase;
+		private const Int32 AlphabetStart = '9' - MinimumBase;
 
 		public static String ToBase(this SByte value, Byte @base)
 		{
-			if (!@base.InRange(MinBase, MaxBase))
+			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
 				throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
 			}
@@ -6124,7 +6124,7 @@ namespace NetExtender.Utilities.Numerics
 
 		public static String ToBase(this Byte value, Byte @base)
 		{
-			if (!@base.InRange(MinBase, MaxBase))
+			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
 				throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
 			}
@@ -6152,7 +6152,7 @@ namespace NetExtender.Utilities.Numerics
 
 		public static String ToBase(this Int16 value, Byte @base)
 		{
-			if (!@base.InRange(MinBase, MaxBase))
+			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
 				throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
 			}
@@ -6186,7 +6186,7 @@ namespace NetExtender.Utilities.Numerics
 
 		public static String ToBase(this UInt16 value, Byte @base)
 		{
-			if (!@base.InRange(MinBase, MaxBase))
+			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
 				throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
 			}
@@ -6214,7 +6214,7 @@ namespace NetExtender.Utilities.Numerics
 
 		public static String ToBase(this Int32 value, Byte @base)
 		{
-			if (!@base.InRange(MinBase, MaxBase))
+			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
 				throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
 			}
@@ -6248,7 +6248,7 @@ namespace NetExtender.Utilities.Numerics
 
 		public static String ToBase(this UInt32 value, Byte @base)
 		{
-			if (!@base.InRange(MinBase, MaxBase))
+			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
 				throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
 			}
@@ -6276,7 +6276,7 @@ namespace NetExtender.Utilities.Numerics
 
 		public static String ToBase(this Int64 value, Byte @base)
 		{
-			if (!@base.InRange(MinBase, MaxBase))
+			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
 				throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
 			}
@@ -6310,7 +6310,7 @@ namespace NetExtender.Utilities.Numerics
 
 		public static String ToBase(this UInt64 value, Byte @base)
 		{
-			if (!@base.InRange(MinBase, MaxBase))
+			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
 				throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
 			}
@@ -6338,7 +6338,7 @@ namespace NetExtender.Utilities.Numerics
 
 		public static String ToBase(this BigInteger value, Byte @base)
 		{
-			if (!@base.InRange(MinBase, MaxBase))
+			if (!@base.InRange(MinimumBase, MaximumBase))
 			{
 				throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
 			}

@@ -149,14 +149,44 @@ namespace NetExtender.WindowsPresentation.Types.Input
             return Internal.HasFlag(keys.Internal);
         }
 
+        Boolean IFlag.HasFlag(Flag64 value)
+        {
+            return Internal.HasFlag(value);
+        }
+
+        Boolean IFlag.HasFlag(Flag128 value)
+        {
+            return Internal.HasFlag(value);
+        }
+
+        Boolean IFlag.HasFlag(Flag256 value)
+        {
+            return Internal.HasFlag(value);
+        }
+
+        Boolean IFlag.HasFlag(Flag512 value)
+        {
+            return Internal.HasFlag(value);
+        }
+
+        Boolean IFlag.HasFlag(Flag1024 value)
+        {
+            return Internal.HasFlag(value);
+        }
+
+        Boolean IFlag.HasFlag<T>(EnumFlag<T> value)
+        {
+            return Internal.HasFlag(value);
+        }
+
         Boolean IFlag.HasFlag<T>(T value)
         {
             return Internal.HasFlag(value);
         }
 
-        Boolean IFlag.HasIFlag<T>(T value)
+        Boolean IFlag.HasFlag(IFlag value)
         {
-            return Internal.HasIFlag(value);
+            return Internal.HasFlag(value);
         }
         
         public override Int32 GetHashCode()

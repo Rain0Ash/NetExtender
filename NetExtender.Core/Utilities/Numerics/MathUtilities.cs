@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Numerics
 {
@@ -4637,16 +4638,27 @@ namespace NetExtender.Utilities.Numerics
             return source.Select(Convert.ToDecimal);
         }
 
-        public static String ToBase(this Single value, Byte @base, UInt16 precise = 16 * sizeof(Single))
+        public static String ToBase(this Single value, Byte @base)
         {
-            return IsEpsilon(value) ? "0" : ToBase((Double) value, @base, precise);
+            return ToBase(value, @base, 16 * sizeof(Single));
         }
 
-        public static String ToBase(this Double value, Byte @base, UInt16 precise = 16 * sizeof(Double))
+        private static String ToBase(this Single value, Byte @base, UInt16 precise)
         {
-            if (!@base.InRange(MinBase, MaxBase))
+            return ToBase((Double) value, @base, precise);
+        }
+
+        public static String ToBase(this Double value, Byte @base)
+        {
+            return ToBase(value, @base, 16 * sizeof(Double));
+        }
+
+        //TODO: precise after point
+        private static String ToBase(this Double value, Byte @base, UInt16 precise)
+        {
+            if (!@base.InRange(MinimumBase, MaximumBase))
             {
-                throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
+                throw new ArgumentOutOfRangeException(nameof(@base), @base, $@"Base out of range. Minimum base: {MinimumBase}. Maximum base: {MaximumBase}");
             }
 
             if (IsEpsilon(value))
@@ -4677,7 +4689,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (IsEpsilon(remainder))
             {
-                return $"{(negative ? "-" : String.Empty)}" + new String(buffer.Slice(i, precise - i));
+                return new String(buffer.Slice(i, precise - i)).Negative(negative);
             }
 
             for (Int32 j = 0; j < precise - i; j++)
@@ -4686,6 +4698,12 @@ namespace NetExtender.Utilities.Numerics
             }
 
             i = precise - i;
+
+            if (i >= buffer.Length)
+            {
+                return new String(buffer.Slice(0, i)).Negative(negative);
+            }
+            
             buffer[i++] = '.';
 
             do
@@ -4695,18 +4713,23 @@ namespace NetExtender.Utilities.Numerics
                 buffer[i++] = (Char) (number < 10 ? ZeroChar + number : AlphabetStart + number);
 
                 remainder = nv.GetDigitsAfterPoint();
-            } while (remainder is not (< Double.Epsilon and > -Double.Epsilon) && i < precise);
+            } while (!IsEpsilon(remainder) && i < precise && i < buffer.Length);
 
-            return $"{(negative ? "-" : String.Empty)}" + new String(buffer.Slice(0, i));
+            return new String(buffer.Slice(0, i)).Negative(negative);
         }
 
-        public static String ToBase(this Decimal value, Byte @base, UInt16 precise = 16 * sizeof(Decimal))
+        public static String ToBase(this Decimal value, Byte @base)
         {
-            if (!@base.InRange(MinBase, MaxBase))
-            {
-                throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
-            }
+            return ToBase(value, @base, 16 * sizeof(Decimal));
+        }
 
+        private static String ToBase(this Decimal value, Byte @base, UInt16 precise)
+        {
+            if (!@base.InRange(MinimumBase, MaximumBase))
+            {
+                throw new ArgumentOutOfRangeException(nameof(@base), @base, $@"Base out of range. Minimum base: {MinimumBase}. Maximum base: {MaximumBase}");
+            }
+            
             if (value == 0)
             {
                 return "0";
@@ -4735,7 +4758,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (remainder == 0)
             {
-                return $"{(negative ? "-" : String.Empty)}" + new String(buffer.Slice(i, precise - i));
+                return new String(buffer.Slice(i, precise - i)).Negative(negative);
             }
 
             for (Int32 j = 0; j < precise - i; j++)
@@ -4744,6 +4767,12 @@ namespace NetExtender.Utilities.Numerics
             }
 
             i = precise - i;
+            
+            if (i >= buffer.Length)
+            {
+                return new String(buffer.Slice(0, i)).Negative(negative);
+            }
+            
             buffer[i++] = '.';
 
             do
@@ -4753,9 +4782,9 @@ namespace NetExtender.Utilities.Numerics
                 buffer[i++] = (Char) (number < 10 ? ZeroChar + number : AlphabetStart + number);
 
                 remainder = nv.GetDigitsAfterPoint();
-            } while (remainder != 0 && i < precise);
+            } while (remainder != 0 && i < precise && i < buffer.Length);
 
-            return $"{(negative ? "-" : String.Empty)}" + new String(buffer.Slice(0, i));
+            return new String(buffer.Slice(0, i)).Negative(negative);
         }
 
         public static UInt64 FromBase(this String value, Byte @base)

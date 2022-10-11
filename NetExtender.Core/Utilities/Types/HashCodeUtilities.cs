@@ -8,9 +8,14 @@ namespace NetExtender.Utilities.Types
 {
     public static class HashCodeUtilities
     {
+        public static Int32 Combine<T>(params T[] source)
+        {
+            return Combine((IEnumerable<T>) source);
+        }
+
         public static Int32 Combine<T>(IEnumerable<T> source)
         {
-            return Combine(source, null);
+            return Combine(source, (IEqualityComparer<T>?) null);
         }
 
         public static Int32 Combine<T>(IEnumerable<T> source, IEqualityComparer<T>? comparer)
@@ -22,13 +27,17 @@ namespace NetExtender.Utilities.Types
 
             HashCode code = new HashCode();
             code.AddRange(source, comparer);
-
             return code.ToHashCode();
+        }
+
+        public static void AddRange<T>(this ref HashCode hash, params T[] source)
+        {
+            AddRange(ref hash, (IEnumerable<T>) source);
         }
 
         public static void AddRange<T>(this ref HashCode hash, IEnumerable<T> source)
         {
-            AddRange(ref hash, source, null);
+            AddRange(ref hash, source, (IEqualityComparer<T>?) null);
         }
 
         public static void AddRange<T>(this ref HashCode hash, IEnumerable<T> source, IEqualityComparer<T>? comparer)

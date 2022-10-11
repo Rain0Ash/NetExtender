@@ -13,7 +13,13 @@ namespace NetExtender.Types.Flags.Interfaces
         public ReadOnlySpan<Byte> AsSpan();
         public Boolean HasFlag(ReadOnlySpan<Byte> value);
         public Boolean HasFlag<T>(T value) where T : unmanaged, Enum;
-        public Boolean HasIFlag<T>(T value) where T : IFlag;
+        public Boolean HasFlag(Flag64 value);
+        public Boolean HasFlag(Flag128 value);
+        public Boolean HasFlag(Flag256 value);
+        public Boolean HasFlag(Flag512 value);
+        public Boolean HasFlag(Flag1024 value);
+        public Boolean HasFlag<T>(EnumFlag<T> value) where T : unmanaged, Enum;
+        public Boolean HasFlag(IFlag value);
         public Boolean Equals(ReadOnlySpan<Byte> value);
         public IEnumerable<Int32> Enumerate();
         public IEnumerable<TEnum> Enumerate<TEnum>() where TEnum : unmanaged, Enum;

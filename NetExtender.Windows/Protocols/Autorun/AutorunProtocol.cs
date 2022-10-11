@@ -3,6 +3,7 @@
 
 using System;
 using System.IO;
+using System.Security;
 using System.Security.AccessControl;
 using Microsoft.Win32;
 using NetExtender.Types.Exceptions;
@@ -22,7 +23,30 @@ namespace NetExtender.Windows.Protocols
         {
             get
             {
-                return IsRegisterInternal();
+                try
+                {
+                    if (String.IsNullOrEmpty(Name))
+                    {
+                        return ProtocolStatus.Unknown;
+                    }
+
+                    using RegistryKey? registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(ShellSubKey);
+
+                    if (registry is null)
+                    {
+                        return ProtocolStatus.Unregister;
+                    }
+
+                    return registry.GetValue(Name)?.ToString() == Path ? ProtocolStatus.Register : ProtocolStatus.Unregister;
+                }
+                catch (SecurityException)
+                {
+                    return ProtocolStatus.Unknown;
+                }
+                catch (Exception)
+                {
+                    return ProtocolStatus.Error;
+                }
             }
         }
 
@@ -52,30 +76,6 @@ namespace NetExtender.Windows.Protocols
             Path = path;
         }
 
-        protected virtual ProtocolStatus IsRegisterInternal()
-        {
-            try
-            {
-                if (String.IsNullOrEmpty(Name))
-                {
-                    return ProtocolStatus.Unknown;
-                }
-
-                using RegistryKey? registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(ShellSubKey);
-
-                if (registry is null)
-                {
-                    return ProtocolStatus.Unregister;
-                }
-
-                return registry.GetValue(Name)?.ToString() == Path ? ProtocolStatus.Register : ProtocolStatus.Unregister;
-            }
-            catch (Exception)
-            {
-                return ProtocolStatus.Unknown;
-            }
-        }
-        
         public override Boolean Register()
         {
             if (IsRegister)

@@ -1049,11 +1049,14 @@ namespace NetExtender.Utilities.Numerics
                 values[i] = value;
             }
 
-            for (Int32 i = 0; i < values.Length; i++)
+            if (sum != 0)
             {
-                values[i] /= sum;
+                for (Int32 i = 0; i < values.Length; i++)
+                {
+                    values[i] /= sum;
+                }
             }
-            
+
             Array.Sort(values, (first, second) => second.CompareTo(first));
             return values;
         }
@@ -1120,11 +1123,14 @@ namespace NetExtender.Utilities.Numerics
                 values[i] = value;
             }
 
-            for (Int32 i = 0; i < values.Length; i++)
+            if (sum != 0)
             {
-                values[i] /= sum;
+                for (Int32 i = 0; i < values.Length; i++)
+                {
+                    values[i] /= sum;
+                }
             }
-            
+
             Array.Sort(values, (first, second) => second.CompareTo(first));
             return values;
         }
@@ -1168,11 +1174,14 @@ namespace NetExtender.Utilities.Numerics
                 values[i] = value;
             }
 
-            for (Int32 i = 0; i < values.Length; i++)
+            if (sum != 0)
             {
-                values[i] /= sum;
+                for (Int32 i = 0; i < values.Length; i++)
+                {
+                    values[i] /= sum;
+                }
             }
-            
+
             Array.Sort(values, (first, second) => second.CompareTo(first));
             return values;
         }
@@ -1216,11 +1225,14 @@ namespace NetExtender.Utilities.Numerics
                 values[i] = value;
             }
 
-            for (Int32 i = 0; i < values.Length; i++)
+            if (sum != 0)
             {
-                values[i] /= sum;
+                for (Int32 i = 0; i < values.Length; i++)
+                {
+                    values[i] /= sum;
+                }
             }
-            
+
             Array.Sort(values, (first, second) => second.CompareTo(first));
             return values;
         }

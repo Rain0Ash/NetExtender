@@ -197,7 +197,7 @@ namespace NetExtender.Types.Flags
             Low1 = low1;
             Low0 = low0;
         }
-        
+
         public ReadOnlySpan<Byte> AsSpan()
         {
             return this;
@@ -217,6 +217,21 @@ namespace NetExtender.Types.Flags
             return true;
         }
 
+        public Boolean HasFlag<T>(T value) where T : unmanaged, Enum
+        {
+            return HasFlag(value.AsUInt64());
+        }
+
+        public Boolean HasFlag(Flag64 value)
+        {
+            return HasFlag(value.AsSpan());
+        }
+
+        public Boolean HasFlag(Flag128 value)
+        {
+            return HasFlag(value.AsSpan());
+        }
+
         public Boolean HasFlag(Flag256 value)
         {
             return (High1 & value.High1) == value.High1 &&
@@ -225,12 +240,22 @@ namespace NetExtender.Types.Flags
                    (Low0 & value.Low0) == value.Low0;
         }
 
-        public Boolean HasFlag<T>(T value) where T : unmanaged, Enum
+        public Boolean HasFlag(Flag512 value)
         {
-            return HasFlag(value.AsUInt64());
+            return HasFlag(value.AsSpan());
         }
 
-        public Boolean HasIFlag<T>(T value) where T : IFlag
+        public Boolean HasFlag(Flag1024 value)
+        {
+            return HasFlag(value.AsSpan());
+        }
+
+        public Boolean HasFlag<T>(EnumFlag<T> value) where T : unmanaged, Enum
+        {
+            return HasFlag(value.AsSpan());
+        }
+
+        public Boolean HasFlag(IFlag value)
         {
             return HasFlag(value.AsSpan());
         }

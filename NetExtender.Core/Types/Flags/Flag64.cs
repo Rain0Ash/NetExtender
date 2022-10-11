@@ -183,18 +183,43 @@ namespace NetExtender.Types.Flags
             
             return true;
         }
-        
-        public Boolean HasFlag(Flag64 value)
-        {
-            return (Internal & value.Internal) == value.Internal;
-        }
 
         public Boolean HasFlag<T>(T value) where T : unmanaged, Enum
         {
             return HasFlag(value.AsUInt64());
         }
 
-        public Boolean HasIFlag<T>(T value) where T : IFlag
+        public Boolean HasFlag(Flag64 value)
+        {
+            return (Internal & value.Internal) == value.Internal;
+        }
+
+        public Boolean HasFlag(Flag128 value)
+        {
+            return HasFlag(value.AsSpan());
+        }
+
+        public Boolean HasFlag(Flag256 value)
+        {
+            return HasFlag(value.AsSpan());
+        }
+
+        public Boolean HasFlag(Flag512 value)
+        {
+            return HasFlag(value.AsSpan());
+        }
+
+        public Boolean HasFlag(Flag1024 value)
+        {
+            return HasFlag(value.AsSpan());
+        }
+
+        public Boolean HasFlag<T>(EnumFlag<T> value) where T : unmanaged, Enum
+        {
+            return HasFlag(value.AsSpan());
+        }
+
+        public Boolean HasFlag(IFlag value)
         {
             return HasFlag(value.AsSpan());
         }

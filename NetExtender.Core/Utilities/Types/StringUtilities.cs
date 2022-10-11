@@ -3105,6 +3105,55 @@ namespace NetExtender.Utilities.Types
             return new StringAdapter(ShortWithDots(value.ToString(), length, dots, include));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static String Negative(this String value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            if (String.IsNullOrWhiteSpace(value))
+            {
+                return value;
+            }
+
+            return value.StartsWith("-") ? value.Remove(0, 1) : "-" + value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String Negative(this String value, Boolean negative)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return negative ? Negative(value) : value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IString Negative(this IString value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return new StringAdapter(Negative(value.ToString()));
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IString Negative(this IString value, Boolean negative)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return negative ? Negative(value) : new StringAdapter(value.ToString());
+        }
+
         [return: NotNullIfNotNull("value")]
         public static String? HtmlEncode(this String? value)
         {

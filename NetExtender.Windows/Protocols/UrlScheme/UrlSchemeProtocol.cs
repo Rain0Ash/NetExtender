@@ -3,6 +3,7 @@
 
 using System;
 using System.IO;
+using System.Security;
 using Microsoft.Win32;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Protocols;
@@ -49,7 +50,59 @@ namespace NetExtender.Windows.Protocols
         {
             get
             {
-                return IsRegisterInternal();
+                try
+                {
+                    using RegistryKey? registry = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(Name);
+
+                    if (registry is null)
+                    {
+                        return ProtocolStatus.Unregister;
+                    }
+
+                    if (String.IsNullOrEmpty(registry.GetValue(null)?.ToString()))
+                    {
+                        return ProtocolStatus.Unknown;
+                    }
+
+                    if (registry.GetValue(URLProtocol)?.ToString() != String.Empty)
+                    {
+                        return ProtocolStatus.Error;
+                    }
+
+                    using RegistryKey? icon = registry.OpenSubKey(DefaultIcon);
+
+                    if (icon is null)
+                    {
+                        return ProtocolStatus.Error;
+                    }
+
+                    if (icon.GetValue(null)?.ToString() != IconPath)
+                    {
+                        return ProtocolStatus.Error;
+                    }
+
+                    using RegistryKey? shell = registry.OpenSubKey(ShellSubKey);
+
+                    if (shell is null)
+                    {
+                        return ProtocolStatus.Error;
+                    }
+
+                    if (shell.GetValue(null)?.ToString() != CommandPath)
+                    {
+                        return ProtocolStatus.Error;
+                    }
+
+                    return ProtocolStatus.Register;
+                }
+                catch (SecurityException)
+                {
+                    return ProtocolStatus.Unknown;
+                }
+                catch (Exception)
+                {
+                    return ProtocolStatus.Error;
+                }
             }
         }
 
@@ -79,65 +132,12 @@ namespace NetExtender.Windows.Protocols
             Path = path;
         }
 
-        protected virtual ProtocolStatus IsRegisterInternal()
-        {
-            try
-            {
-                using RegistryKey? registry = Microsoft.Win32.Registry.ClassesRoot.OpenSubKey(Name);
-
-                if (registry is null)
-                {
-                    return ProtocolStatus.Unregister;
-                }
-
-                if (String.IsNullOrEmpty(registry.GetValue(null)?.ToString()))
-                {
-                    return ProtocolStatus.Unknown;
-                }
-
-                if (registry.GetValue(URLProtocol)?.ToString() != String.Empty)
-                {
-                    return ProtocolStatus.Unknown;
-                }
-
-                using RegistryKey? icon = registry.OpenSubKey(DefaultIcon);
-
-                if (icon is null)
-                {
-                    return ProtocolStatus.Unknown;
-                }
-
-                if (icon.GetValue(null)?.ToString() != IconPath)
-                {
-                    return ProtocolStatus.Unknown;
-                }
-
-                using RegistryKey? shell = registry.OpenSubKey(ShellSubKey);
-
-                if (shell is null)
-                {
-                    return ProtocolStatus.Unknown;
-                }
-
-                if (shell.GetValue(null)?.ToString() != CommandPath)
-                {
-                    return ProtocolStatus.Unknown;
-                }
-
-                return ProtocolStatus.Register;
-            }
-            catch (Exception)
-            {
-                return ProtocolStatus.Unknown;
-            }
-        }
-
         public override Boolean Register()
         {
             return Register(URLApplicationName);
         }
 
-        public virtual Boolean Register(String about)
+        public virtual Boolean Register(String? about)
         {
             if (IsRegister)
             {
@@ -151,7 +151,7 @@ namespace NetExtender.Windows.Protocols
                 using RegistryKey? registry = Microsoft.Win32.Registry.ClassesRoot.CreateSubKey(Name);
 
                 //TODO: CS8598
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (registry is null)
                 {
                     return false;
@@ -164,7 +164,7 @@ namespace NetExtender.Windows.Protocols
                 using RegistryKey? icon = registry.CreateSubKey(DefaultIcon);
 
                 //TODO: CS8598
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (icon is null)
                 {
                     return false;
@@ -175,7 +175,7 @@ namespace NetExtender.Windows.Protocols
                 using RegistryKey? shell = registry.CreateSubKey(ShellSubKey);
                 
                 //TODO: CS8598
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (shell is null)
                 {
                     return false;
