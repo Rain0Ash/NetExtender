@@ -27,7 +27,6 @@ namespace NetExtender.Logging.Behavior
 
         protected virtual String Format(LoggingMessageType type, LoggingMessageOptions options, DateTimeOffset offset, IFormatProvider? provider)
         {
-            offset = offset.SetMillisecond(0);
             String? time = (options & LoggingMessageOptions.DateTime) switch
             {
                 LoggingMessageOptions.Date => offset.Date.ToString("dd-MM-yyyy", provider),

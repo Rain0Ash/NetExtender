@@ -4653,8 +4653,7 @@ namespace NetExtender.Utilities.Numerics
             return ToBase(value, @base, 16 * sizeof(Double));
         }
 
-        //TODO: precise after point
-        private static String ToBase(this Double value, Byte @base, UInt16 precise)
+        public static String ToBase(this Double value, Byte @base, UInt16 precise)
         {
             if (!@base.InRange(MinimumBase, MaximumBase))
             {
@@ -4673,6 +4672,7 @@ namespace NetExtender.Utilities.Numerics
             }
 
             Int64 whole = (Int64) value;
+            precise += (UInt16) ((precise > 0 ? 1 : 0) + (whole > 0 ? Math.Floor(Math.Log(whole, @base)) + 1 : 1));
 
             Int32 i = precise;
             Span<Char> buffer = stackalloc Char[i];
@@ -4703,19 +4703,20 @@ namespace NetExtender.Utilities.Numerics
             {
                 return new String(buffer.Slice(0, i)).Negative(negative);
             }
-            
-            buffer[i++] = '.';
 
+            Int32 position = i;
+            buffer[i++] = '.';
+            
             do
             {
                 Double nv = remainder * @base;
                 Int64 number = (Int64) nv;
                 buffer[i++] = (Char) (number < 10 ? ZeroChar + number : AlphabetStart + number);
-
+                position = number > 0 ? i : position;
                 remainder = nv.GetDigitsAfterPoint();
             } while (!IsEpsilon(remainder) && i < precise && i < buffer.Length);
 
-            return new String(buffer.Slice(0, i)).Negative(negative);
+            return new String(buffer.Slice(0, position)).Negative(negative);
         }
 
         public static String ToBase(this Decimal value, Byte @base)
@@ -4723,7 +4724,7 @@ namespace NetExtender.Utilities.Numerics
             return ToBase(value, @base, 16 * sizeof(Decimal));
         }
 
-        private static String ToBase(this Decimal value, Byte @base, UInt16 precise)
+        public static String ToBase(this Decimal value, Byte @base, UInt16 precise)
         {
             if (!@base.InRange(MinimumBase, MaximumBase))
             {
@@ -4742,7 +4743,8 @@ namespace NetExtender.Utilities.Numerics
             }
 
             Int64 whole = (Int64) value;
-
+            precise += (UInt16) ((precise > 0 ? 1 : 0) + (whole > 0 ? Math.Floor(Math.Log(whole, @base)) + 1 : 1));
+            
             Int32 i = precise;
             Span<Char> buffer = stackalloc Char[i];
 
@@ -4773,6 +4775,7 @@ namespace NetExtender.Utilities.Numerics
                 return new String(buffer.Slice(0, i)).Negative(negative);
             }
             
+            Int32 position = i;
             buffer[i++] = '.';
 
             do
@@ -4780,11 +4783,11 @@ namespace NetExtender.Utilities.Numerics
                 Decimal nv = remainder * @base;
                 Int64 number = (Int64) nv;
                 buffer[i++] = (Char) (number < 10 ? ZeroChar + number : AlphabetStart + number);
-
+                position = number > 0 ? i : position;
                 remainder = nv.GetDigitsAfterPoint();
             } while (remainder != 0 && i < precise && i < buffer.Length);
 
-            return new String(buffer.Slice(0, i)).Negative(negative);
+            return new String(buffer.Slice(0, position)).Negative(negative);
         }
 
         public static UInt64 FromBase(this String value, Byte @base)

@@ -179,18 +179,53 @@ namespace NetExtender.Utilities.IO
         }
 
         public static Boolean AnsiColorSequence { get; set; } = true;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void Write(String value)
+        {
+            Console.Write(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        private static void Write(String value, ConsoleColor? color)
+        {
+            if (color is null)
+            {
+                Write(value);
+                return;
+            }
+            
+            lock (Synchronization)
+            {
+                ConsoleColor console = Console.ForegroundColor;
+                Console.ForegroundColor = color.Value;
+                Write(value);
+                Console.ForegroundColor = console;
+            }
+        }
         
-        //TODO: Add async versions
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        private static void Write(String value, ConsoleColor? foreground, ConsoleColor? background)
+        {
+            if (background is null)
+            {
+                Write(value, foreground);
+                return;
+            }
+            
+            lock (Synchronization)
+            {
+                ConsoleColor color = Console.BackgroundColor;
+                Console.BackgroundColor = background.Value;
+                Write(value, foreground);
+                Console.BackgroundColor = color;
+            }
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Write<T>(T value)
         {
             return Write(value, (IFormatProvider?) null);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Write<T>(T value, IFormatProvider? provider)
-        {
-            return Write(value, ConvertUtilities.DefaultEscapeType, provider);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -200,9 +235,17 @@ namespace NetExtender.Utilities.IO
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Write<T>(T value, IFormatProvider? provider)
+        {
+            return Write(value, ConvertUtilities.DefaultEscapeType, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static T Write<T>(T value, EscapeType escape, IFormatProvider? provider)
         {
-            return ToConsole(value, escape, false, provider);
+            String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
+            Write(text);
+            return value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -212,21 +255,49 @@ namespace NetExtender.Utilities.IO
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Write<T>(T value, ConsoleColor? color, IFormatProvider? provider)
-        {
-            return Write(value, color, ConvertUtilities.DefaultEscapeType, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Write<T>(T value, ConsoleColor? color, EscapeType escape)
         {
             return Write(value, color, escape, null);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Write<T>(T value, ConsoleColor? color, IFormatProvider? provider)
+        {
+            return Write(value, color, ConvertUtilities.DefaultEscapeType, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static T Write<T>(T value, ConsoleColor? color, EscapeType escape, IFormatProvider? provider)
         {
-            return ToConsole(value, color, escape, false, provider);
+            String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
+            Write(text, color);
+            return value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Write<T>(T value, ConsoleColor? foreground, ConsoleColor? background)
+        {
+            return Write(value, foreground, background, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Write<T>(T value, ConsoleColor? foreground, ConsoleColor? background, EscapeType escape)
+        {
+            return Write(value, foreground, background, escape, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Write<T>(T value, ConsoleColor? foreground, ConsoleColor? background, IFormatProvider? provider)
+        {
+            return Write(value, foreground, background, ConvertUtilities.DefaultEscapeType, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static T Write<T>(T value, ConsoleColor? foreground, ConsoleColor? background, EscapeType escape, IFormatProvider? provider)
+        {
+            String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
+            Write(text, foreground, background);
+            return value;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -242,18 +313,6 @@ namespace NetExtender.Utilities.IO
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Write<T>(T value, Color color, IFormatProvider? provider)
-        {
-            return Write(value, (ANSIColor) color, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Write<T, TColor>(T value, TColor? color, IFormatProvider? provider) where TColor : IColor
-        {
-            return Write(value, color, ConvertUtilities.DefaultEscapeType, provider);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Write<T>(T value, Color color, EscapeType escape)
         {
             return Write(value, (ANSIColor) color, escape);
@@ -264,6 +323,18 @@ namespace NetExtender.Utilities.IO
         {
             return Write(value, color, escape, null);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Write<T>(T value, Color color, IFormatProvider? provider)
+        {
+            return Write(value, (ANSIColor) color, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Write<T, TColor>(T value, TColor? color, IFormatProvider? provider) where TColor : IColor
+        {
+            return Write(value, color, ConvertUtilities.DefaultEscapeType, provider);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Write<T>(T value, Color color, EscapeType escape, IFormatProvider? provider)
@@ -271,40 +342,205 @@ namespace NetExtender.Utilities.IO
             return Write(value, (ANSIColor) color, escape, provider);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static T WriteWithoutAnsi<T, TColor>(T value, TColor? color, EscapeType escape, IFormatProvider? provider) where TColor : IColor
+        {
+            if (color is null)
+            {
+                return Write(value, escape, provider);
+            }
+            
+            return color.NearestConsoleColor(out ConsoleColor console) ? Write(value, console, escape, provider) : Write(value, escape, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static T Write<T, TColor>(T value, TColor? color, EscapeType escape, IFormatProvider? provider) where TColor : IColor
         {
-            return ToConsole(value, color, escape, false, provider);
+            if (color is null)
+            {
+                return Write(value, escape, provider);
+            }
+
+            if (!AnsiColorSequence)
+            {
+                return WriteWithoutAnsi(value, color, escape, provider);
+            }
+
+            if (typeof(TColor) == typeof(ANSIDifferentColor))
+            {
+                ANSIDifferentColor different = Unsafe.As<TColor, ANSIDifferentColor>(ref color);
+                return Write(value, different.ToColor(AnsiColorSequenceMode.Foreground), different.ToColor(AnsiColorSequenceMode.Background), escape, provider);
+            }
+
+            String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
+            
+            if (typeof(TColor) == typeof(ANSIColor))
+            {
+                Write(color.ToString(text, provider), escape, provider);
+                return value;
+            }
+
+            Write(color.ToColor<TColor, ANSIColor>().ToString(text, provider), escape, provider);
+            return value;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Write<T>(T value, Color foreground, Color background)
+        {
+            return Write(value, (ANSIColor) foreground, (ANSIColor) background);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Write<T>(T value, ConsoleColor? color, ConsoleColor? background)
+        public static T Write<T, TForeground, TBackground>(T value, TForeground? foreground, TBackground? background) where TForeground : IColor where TBackground : IColor
         {
-            return Write(value, color, background, null);
+            return Write(value, foreground, background, null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Write<T>(T value, Color foreground, Color background, EscapeType escape)
+        {
+            return Write(value, (ANSIColor) foreground, (ANSIColor) background, escape);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Write<T>(T value, ConsoleColor? color, ConsoleColor? background, IFormatProvider? provider)
+        public static T Write<T, TForeground, TBackground>(T value, TForeground? foreground, TBackground? background, EscapeType escape) where TForeground : IColor where TBackground : IColor
         {
-            return Write(value, color, background, ConvertUtilities.DefaultEscapeType, provider);
+            return Write(value, foreground, background, escape, null);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Write<T>(T value, Color foreground, Color background, IFormatProvider? provider)
+        {
+            return Write(value, (ANSIColor) foreground, (ANSIColor) background, provider);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Write<T>(T value, ConsoleColor? color, ConsoleColor? background, EscapeType escape)
+        public static T Write<T, TForeground, TBackground>(T value, TForeground? foreground, TBackground? background, IFormatProvider? provider) where TForeground : IColor where TBackground : IColor
         {
-            return Write(value, color, background, escape, null);
+            return Write(value, foreground, background, ConvertUtilities.DefaultEscapeType, provider);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Write<T>(T value, ConsoleColor? color, ConsoleColor? background, EscapeType escape, IFormatProvider? provider)
+        public static T Write<T>(T value, Color foreground, Color background, EscapeType escape, IFormatProvider? provider)
         {
-            return ToConsole(value, color, background, escape, false, provider);
+            return Write(value, (ANSIColor) foreground, (ANSIColor) background, escape, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        private static T WriteWithoutAnsi<T, TForeground, TBackground>(T value, TForeground? foreground, TBackground? background, EscapeType escape, IFormatProvider? provider) where TForeground : IColor where TBackground : IColor
+        {
+            if (background is null)
+            {
+                return Write(value, foreground, escape, provider);
+            }
+            
+            Boolean backsuccessful = background.NearestConsoleColor(out ConsoleColor backcolor);
+
+            if (foreground is not null && foreground.NearestConsoleColor(out ConsoleColor forecolor))
+            {
+                return backsuccessful ? Write(value, forecolor, backcolor, escape, provider) : Write(value, forecolor, escape, provider);
+            }
+
+            if (!backsuccessful)
+            {
+                return Write(value, escape, provider);
+            }
+
+            if (typeof(TBackground) != typeof(ANSIColor))
+            {
+                return Write(value, null, backcolor, escape, provider);
+            }
+
+            ANSIColor color = Unsafe.As<TBackground, ANSIColor>(ref background);
+
+            return color.Mode switch
+            {
+                AnsiColorSequenceMode.None => Write(value, escape, provider),
+                AnsiColorSequenceMode.Foreground => Write(value, backcolor, escape, provider),
+                AnsiColorSequenceMode.Background => Write(value, null, backcolor, escape, provider),
+                AnsiColorSequenceMode.Fill => Write(value, backcolor, backcolor, escape, provider),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static T Write<T, TForeground, TBackground>(T value, TForeground? foreground, TBackground? background, EscapeType escape, IFormatProvider? provider) where TForeground : IColor where TBackground : IColor
+        {
+            if (background is null)
+            {
+                return Write(value, foreground, escape, provider);
+            }
+
+            if (!AnsiColorSequence)
+            {
+                return WriteWithoutAnsi(value, foreground, background, escape, provider);
+            }
+            
+            String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
+
+            if (foreground is null)
+            {
+                if (typeof(TBackground) == typeof(ANSIColor))
+                {
+                    Write(background.ToString(text, provider), escape, provider);
+                    return value;
+                }
+                
+                Write(background.ToColor<TBackground, ANSIColor>().Clone(AnsiColorSequenceMode.Background).ToString(text, provider), escape, provider);
+                return value;
+            }
+
+            ANSIDifferentColor different = new ANSIDifferentColor(foreground.ToColor(), background.ToColor());
+            Write(different.ToString(text, provider), escape, provider);
+            return value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static void WriteLine(String value)
+        {
+            Console.WriteLine(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        private static void WriteLine(String value, ConsoleColor? color)
+        {
+            if (color is null)
+            {
+                WriteLine(value);
+                return;
+            }
+            
+            lock (Synchronization)
+            {
+                ConsoleColor console = Console.ForegroundColor;
+                Console.ForegroundColor = color.Value;
+                WriteLine(value);
+                Console.ForegroundColor = console;
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        private static void WriteLine(String value, ConsoleColor? foreground, ConsoleColor? background)
+        {
+            if (background is null)
+            {
+                WriteLine(value, foreground);
+                return;
+            }
+            
+            lock (Synchronization)
+            {
+                ConsoleColor color = Console.BackgroundColor;
+                Console.BackgroundColor = background.Value;
+                WriteLine(value, foreground);
+                Console.BackgroundColor = color;
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void WriteLine()
         {
-            Console.WriteLine(String.Empty);
+            Console.WriteLine();
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -314,21 +550,23 @@ namespace NetExtender.Utilities.IO
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T WriteLine<T>(T value, IFormatProvider? provider)
-        {
-            return WriteLine(value, ConvertUtilities.DefaultEscapeType, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T WriteLine<T>(T value, EscapeType escape)
         {
             return WriteLine(value, escape, null);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T WriteLine<T>(T value, IFormatProvider? provider)
+        {
+            return WriteLine(value, ConvertUtilities.DefaultEscapeType, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static T WriteLine<T>(T value, EscapeType escape, IFormatProvider? provider)
         {
-            return ToConsole(value, escape, true, provider);
+            String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
+            WriteLine(text);
+            return value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -338,21 +576,49 @@ namespace NetExtender.Utilities.IO
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T WriteLine<T>(T value, ConsoleColor? color, IFormatProvider? provider)
-        {
-            return WriteLine(value, color, ConvertUtilities.DefaultEscapeType, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T WriteLine<T>(T value, ConsoleColor? color, EscapeType escape)
         {
             return WriteLine(value, color, escape, null);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T WriteLine<T>(T value, ConsoleColor? color, IFormatProvider? provider)
+        {
+            return WriteLine(value, color, ConvertUtilities.DefaultEscapeType, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static T WriteLine<T>(T value, ConsoleColor? color, EscapeType escape, IFormatProvider? provider)
         {
-            return ToConsole(value, color, escape, true, provider);
+            String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
+            WriteLine(text, color);
+            return value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T WriteLine<T>(T value, ConsoleColor? foreground, ConsoleColor? background)
+        {
+            return WriteLine(value, foreground, background, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T WriteLine<T>(T value, ConsoleColor? foreground, ConsoleColor? background, EscapeType escape)
+        {
+            return WriteLine(value, foreground, background, escape, null);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T WriteLine<T>(T value, ConsoleColor? foreground, ConsoleColor? background, IFormatProvider? provider)
+        {
+            return WriteLine(value, foreground, background, ConvertUtilities.DefaultEscapeType, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static T WriteLine<T>(T value, ConsoleColor? foreground, ConsoleColor? background, EscapeType escape, IFormatProvider? provider)
+        {
+            String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
+            WriteLine(text, foreground, background);
+            return value;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -368,18 +634,6 @@ namespace NetExtender.Utilities.IO
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T WriteLine<T>(T value, Color color, IFormatProvider? provider)
-        {
-            return WriteLine(value, (ANSIColor) color, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T WriteLine<T, TColor>(T value, TColor? color, IFormatProvider? provider) where TColor : IColor
-        {
-            return WriteLine(value, color, ConvertUtilities.DefaultEscapeType, provider);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T WriteLine<T>(T value, Color color, EscapeType escape)
         {
             return WriteLine(value, (ANSIColor) color, escape);
@@ -392,598 +646,155 @@ namespace NetExtender.Utilities.IO
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T WriteLine<T>(T value, Color color, IFormatProvider? provider)
+        {
+            return WriteLine(value, (ANSIColor) color, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T WriteLine<T, TColor>(T value, TColor? color, IFormatProvider? provider) where TColor : IColor
+        {
+            return WriteLine(value, color, ConvertUtilities.DefaultEscapeType, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T WriteLine<T>(T value, Color color, EscapeType escape, IFormatProvider? provider)
         {
             return WriteLine(value, (ANSIColor) color, escape, provider);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static T WriteLineWithoutAnsi<T, TColor>(T value, TColor? color, EscapeType escape, IFormatProvider? provider) where TColor : IColor
+        {
+            if (color is null)
+            {
+                return WriteLine(value, escape, provider);
+            }
+            
+            return color.NearestConsoleColor(out ConsoleColor console) ? WriteLine(value, console, escape, provider) : WriteLine(value, escape, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static T WriteLine<T, TColor>(T value, TColor? color, EscapeType escape, IFormatProvider? provider) where TColor : IColor
         {
-            return ToConsole(value, color, escape, true, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T WriteLine<T>(T value, ConsoleColor? foreground, ConsoleColor? background)
-        {
-            return WriteLine(value, foreground, background, null);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T WriteLine<T>(T value, ConsoleColor? foreground, ConsoleColor? background, IFormatProvider? provider)
-        {
-            return WriteLine(value, foreground, background, ConvertUtilities.DefaultEscapeType, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T WriteLine<T>(T value, ConsoleColor? foreground, ConsoleColor? background, EscapeType escape)
-        {
-            return WriteLine(value, foreground, background, escape, null);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T WriteLine<T>(T value, ConsoleColor? foreground, ConsoleColor? background, EscapeType escape, IFormatProvider? provider)
-        {
-            return ToConsole(value, foreground, background, escape, true, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-        private static void ToConsole(String value, Boolean newLine)
-        {
-            if (newLine)
-            {
-                Console.WriteLine(value);
-                return;
-            }
-            
-            Console.Write(value);
-        }
-
-        
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        private static void ToConsole(String value, Boolean newLine, ConsoleColor? color)
-        {
             if (color is null)
             {
-                ToConsole(value, newLine);
-                return;
-            }
-            
-            lock (Synchronization)
-            {
-                ConsoleColor console = Console.ForegroundColor;
-                Console.ForegroundColor = color.Value;
-
-                ToConsole(value, newLine);
-
-                Console.ForegroundColor = console;
-            }
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        private static void ToConsole(String value, Boolean newLine, ConsoleColor? foreground, ConsoleColor? background)
-        {
-            if (background is null)
-            {
-                ToConsole(value, newLine, foreground);
-                return;
-            }
-            
-            lock (Synchronization)
-            {
-                ConsoleColor color = Console.BackgroundColor;
-                Console.BackgroundColor = background.Value;
-
-                ToConsole(value, newLine, foreground);
-
-                Console.BackgroundColor = color;
-            }
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value)
-        {
-            return ToConsole(value, (IFormatProvider?) null);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, EscapeType escape)
-        {
-            return ToConsole(value, escape, null);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, IFormatProvider? provider)
-        {
-            return ToConsole(value, true, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, EscapeType escape, IFormatProvider? provider)
-        {
-            return ToConsole(value, true, escape, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Boolean newLine)
-        {
-            return ToConsole(value, newLine, null);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, EscapeType escape, Boolean newLine)
-        {
-            return ToConsole(value, newLine, escape);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Boolean newLine, EscapeType escape)
-        {
-            return ToConsole(value, newLine, escape, null);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Boolean newLine, IFormatProvider? provider)
-        {
-            return ToConsole(value, newLine, ConvertUtilities.DefaultEscapeType, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, EscapeType escape, Boolean newLine, IFormatProvider? provider)
-        {
-            return ToConsole(value, newLine, escape, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public static T ToConsole<T>(this T value, Boolean newLine, EscapeType escape, IFormatProvider? provider)
-        {
-            String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
-            ToConsole(text, newLine);
-            return value;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, ConsoleColor? color)
-        {
-            return ToConsole(value, color, (IFormatProvider?) null);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, ConsoleColor? color, EscapeType escape)
-        {
-            return ToConsole(value, color, escape, null);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, ConsoleColor? color, IFormatProvider? provider)
-        {
-            return ToConsole(value, color, true, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, ConsoleColor? color, EscapeType escape, IFormatProvider? provider)
-        {
-            return ToConsole(value, color, true, escape, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, ConsoleColor? color, Boolean newLine)
-        {
-            return ToConsole(value, color, newLine, null);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, ConsoleColor? color, EscapeType escape, Boolean newLine)
-        {
-            return ToConsole(value, color, newLine, escape);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, ConsoleColor? color, Boolean newLine, EscapeType escape)
-        {
-            return ToConsole(value, color, newLine, escape, null);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, ConsoleColor? color, Boolean newLine, IFormatProvider? provider)
-        {
-            return ToConsole(value, color, newLine, ConvertUtilities.DefaultEscapeType, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, ConsoleColor? color, EscapeType escape, Boolean newLine, IFormatProvider? provider)
-        {
-            return ToConsole(value, color, newLine, escape, provider);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public static T ToConsole<T>(this T value, ConsoleColor? color, Boolean newLine, EscapeType escape, IFormatProvider? provider)
-        {
-            String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
-            ToConsole(text, newLine, color);
-            return value;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background)
-        {
-            return ToConsole(value, foreground, background, null);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background, EscapeType escape)
-        {
-            return ToConsole(value, foreground, background, escape, null);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background, IFormatProvider? provider)
-        {
-            return ToConsole(value, foreground, background, true, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background, EscapeType escape, IFormatProvider? provider)
-        {
-            return ToConsole(value, foreground, background, true, escape, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background, Boolean newLine)
-        {
-            return ToConsole(value, foreground, background, newLine, null);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background, EscapeType escape, Boolean newLine)
-        {
-            return ToConsole(value, foreground, background, newLine, escape);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background, Boolean newLine, EscapeType escape)
-        {
-            return ToConsole(value, foreground, background, newLine, escape, null);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background, Boolean newLine, IFormatProvider? provider)
-        {
-            return ToConsole(value, foreground, background, newLine, ConvertUtilities.DefaultEscapeType, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background, EscapeType escape, Boolean newLine, IFormatProvider? provider)
-        {
-            return ToConsole(value, foreground, background, newLine, escape, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background, Boolean newLine, EscapeType escape, IFormatProvider? provider)
-        {
-            String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
-            ToConsole(text, newLine, foreground, background);
-            return value;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color color)
-        {
-            return ToConsole(value, (ANSIColor) color);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T, TColor>(this T value, TColor? color) where TColor : IColor
-        {
-            return ToConsole(value, color, null);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color color, EscapeType escape)
-        {
-            return ToConsole(value, (ANSIColor) color, escape);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T, TColor>(this T value, TColor? color, EscapeType escape) where TColor : IColor
-        {
-            return ToConsole(value, color, escape, null);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color color, IFormatProvider? provider)
-        {
-            return ToConsole(value, (ANSIColor) color, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T, TColor>(this T value, TColor? color, IFormatProvider? provider) where TColor : IColor
-        {
-            return ToConsole(value, color, true, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color color, EscapeType escape, IFormatProvider? provider)
-        {
-            return ToConsole(value, (ANSIColor) color, escape, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T, TColor>(this T value, TColor? color, EscapeType escape, IFormatProvider? provider) where TColor : IColor
-        {
-            return ToConsole(value, color, true, escape, provider);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color color, Boolean newLine)
-        {
-            return ToConsole(value, (ANSIColor) color,  newLine);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T, TColor>(this T value, TColor? color, Boolean newLine) where TColor : IColor
-        {
-            return ToConsole(value, color, newLine, null);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color color, EscapeType escape, Boolean newLine)
-        {
-            return ToConsole(value, (ANSIColor) color, escape, newLine);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T, TColor>(this T value, TColor? color, EscapeType escape, Boolean newLine) where TColor : IColor
-        {
-            return ToConsole(value, color, newLine, escape);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color color, Boolean newLine, EscapeType escape)
-        {
-            return ToConsole(value, (ANSIColor) color, newLine, escape);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T, TColor>(this T value, TColor? color, Boolean newLine, EscapeType escape) where TColor : IColor
-        {
-            return ToConsole(value, color, newLine, escape, null);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color color, Boolean newLine, IFormatProvider? provider)
-        {
-            return ToConsole(value, (ANSIColor) color, newLine, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T, TColor>(this T value, TColor? color, Boolean newLine, IFormatProvider? provider) where TColor : IColor
-        {
-            return ToConsole(value, color, newLine, ConvertUtilities.DefaultEscapeType, provider);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color color, EscapeType escape, Boolean newLine, IFormatProvider? provider)
-        {
-            return ToConsole(value, (ANSIColor) color, escape, newLine, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T, TColor>(this T value, TColor? color, EscapeType escape, Boolean newLine, IFormatProvider? provider) where TColor : IColor
-        {
-            return ToConsole(value, color, newLine, escape, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color color, Boolean newLine, EscapeType escape, IFormatProvider? provider)
-        {
-            return ToConsole(value, (ANSIColor) color, newLine, escape, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public static T ToConsoleWithoutAnsi<T, TColor>(T value, TColor? color, Boolean newLine, EscapeType escape, IFormatProvider? provider) where TColor : IColor
-        {
-            if (color is null)
-            {
-                return ToConsole(value, newLine, escape, provider);
-            }
-            
-            return color.NearestConsoleColor(out ConsoleColor console) ? ToConsole(value, console, newLine, escape, provider) : ToConsole(value, newLine, escape, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public static T ToConsole<T, TColor>(this T value, TColor? color, Boolean newLine, EscapeType escape, IFormatProvider? provider) where TColor : IColor
-        {
-            if (color is null)
-            {
-                return ToConsole(value, newLine, escape, provider);
+                return WriteLine(value, escape, provider);
             }
 
             if (!AnsiColorSequence)
             {
-                return ToConsoleWithoutAnsi(value, color, newLine, escape, provider);
+                return WriteLineWithoutAnsi(value, color, escape, provider);
             }
 
             if (typeof(TColor) == typeof(ANSIDifferentColor))
             {
                 ANSIDifferentColor different = Unsafe.As<TColor, ANSIDifferentColor>(ref color);
-                return ToConsole(value, different.ToColor(AnsiColorSequenceMode.Foreground), different.ToColor(AnsiColorSequenceMode.Background), newLine, escape, provider);
+                return WriteLine(value, different.ToColor(AnsiColorSequenceMode.Foreground), different.ToColor(AnsiColorSequenceMode.Background), escape, provider);
             }
 
             String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
             
             if (typeof(TColor) == typeof(ANSIColor))
             {
-                ToConsole(color.ToString(text, provider), newLine, escape, provider);
+                WriteLine(color.ToString(text, provider), escape, provider);
                 return value;
             }
 
-            ToConsole(color.ToColor<TColor, ANSIColor>().ToString(text, provider), newLine, escape, provider);
+            WriteLine(color.ToColor<TColor, ANSIColor>().ToString(text, provider), escape, provider);
             return value;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color foreground, Color background)
+        public static T WriteLine<T>(T value, Color foreground, Color background)
         {
-            return ToConsole(value, (ANSIColor) foreground, (ANSIColor) background);
+            return WriteLine(value, (ANSIColor) foreground, (ANSIColor) background);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T WriteLine<T, TForeground, TBackground>(T value, TForeground? foreground, TBackground? background) where TForeground : IColor where TBackground : IColor
+        {
+            return WriteLine(value, foreground, background, null);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background) where TForeground : IColor where TBackground : IColor
+        public static T WriteLine<T>(T value, Color foreground, Color background, EscapeType escape)
         {
-            return ToConsole(value, foreground, background, null);
+            return WriteLine(value, (ANSIColor) foreground, (ANSIColor) background, escape);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T WriteLine<T, TForeground, TBackground>(T value, TForeground? foreground, TBackground? background, EscapeType escape) where TForeground : IColor where TBackground : IColor
+        {
+            return WriteLine(value, foreground, background, escape, null);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color foreground, Color background, EscapeType escape)
+        public static T WriteLine<T>(T value, Color foreground, Color background, IFormatProvider? provider)
         {
-            return ToConsole(value, (ANSIColor) foreground, (ANSIColor) background, escape);
+            return WriteLine(value, (ANSIColor) foreground, (ANSIColor) background, provider);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background, EscapeType escape) where TForeground : IColor where TBackground : IColor
+        public static T WriteLine<T, TForeground, TBackground>(T value, TForeground? foreground, TBackground? background, IFormatProvider? provider) where TForeground : IColor where TBackground : IColor
         {
-            return ToConsole(value, foreground, background, escape, null);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color foreground, Color background, IFormatProvider? provider)
-        {
-            return ToConsole(value, (ANSIColor) foreground, (ANSIColor) background, provider);
+            return WriteLine(value, foreground, background, ConvertUtilities.DefaultEscapeType, provider);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background, IFormatProvider? provider) where TForeground : IColor where TBackground : IColor
+        public static T WriteLine<T>(T value, Color foreground, Color background, EscapeType escape, IFormatProvider? provider)
         {
-            return ToConsole(value, foreground, background, true, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color foreground, Color background, EscapeType escape, IFormatProvider? provider)
-        {
-            return ToConsole(value, (ANSIColor) foreground, (ANSIColor) background, escape, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background, EscapeType escape, IFormatProvider? provider) where TForeground : IColor where TBackground : IColor
-        {
-            return ToConsole(value, foreground, background, true, escape, provider);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color foreground, Color background, Boolean newLine)
-        {
-            return ToConsole(value, (ANSIColor) foreground, (ANSIColor) background,  newLine);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background, Boolean newLine) where TForeground : IColor where TBackground : IColor
-        {
-            return ToConsole(value, foreground, background, newLine, null);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color foreground, Color background, EscapeType escape, Boolean newLine)
-        {
-            return ToConsole(value, (ANSIColor) foreground, (ANSIColor) background, escape, newLine);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background, EscapeType escape, Boolean newLine) where TForeground : IColor where TBackground : IColor
-        {
-            return ToConsole(value, foreground, background, newLine, escape);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color foreground, Color background, Boolean newLine, EscapeType escape)
-        {
-            return ToConsole(value, (ANSIColor) foreground, (ANSIColor) background, newLine, escape);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background, Boolean newLine, EscapeType escape) where TForeground : IColor where TBackground : IColor
-        {
-            return ToConsole(value, foreground, background, newLine, escape, null);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color foreground, Color background, Boolean newLine, IFormatProvider? provider)
-        {
-            return ToConsole(value, (ANSIColor) foreground, (ANSIColor) background, newLine, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background, Boolean newLine, IFormatProvider? provider) where TForeground : IColor where TBackground : IColor
-        {
-            return ToConsole(value, foreground, background, newLine, ConvertUtilities.DefaultEscapeType, provider);
-        }
-        
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color foreground, Color background, EscapeType escape, Boolean newLine, IFormatProvider? provider)
-        {
-            return ToConsole(value, (ANSIColor) foreground, (ANSIColor) background, escape, newLine, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background, EscapeType escape, Boolean newLine, IFormatProvider? provider) where TForeground : IColor where TBackground : IColor
-        {
-            return ToConsole(value, foreground, background, newLine, escape, provider);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T ToConsole<T>(this T value, Color foreground, Color background, Boolean newLine, EscapeType escape, IFormatProvider? provider)
-        {
-            return ToConsole(value, (ANSIColor) foreground, (ANSIColor) background, newLine, escape, provider);
+            return WriteLine(value, (ANSIColor) foreground, (ANSIColor) background, escape, provider);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        private static T ToConsoleWithoutAnsi<T, TForeground, TBackground>(T value, TForeground? foreground, TBackground? background, Boolean newLine, EscapeType escape, IFormatProvider? provider) where TForeground : IColor where TBackground : IColor
+        private static T WriteLineWithoutAnsi<T, TForeground, TBackground>(T value, TForeground? foreground, TBackground? background, EscapeType escape, IFormatProvider? provider) where TForeground : IColor where TBackground : IColor
         {
             if (background is null)
             {
-                return ToConsole(value, foreground, newLine, escape, provider);
+                return WriteLine(value, foreground, escape, provider);
             }
             
             Boolean backsuccessful = background.NearestConsoleColor(out ConsoleColor backcolor);
 
             if (foreground is not null && foreground.NearestConsoleColor(out ConsoleColor forecolor))
             {
-                return backsuccessful ? ToConsole(value, forecolor, backcolor, newLine, escape, provider) : ToConsole(value, forecolor, newLine, escape, provider);
+                return backsuccessful ? WriteLine(value, forecolor, backcolor, escape, provider) : WriteLine(value, forecolor, escape, provider);
             }
 
             if (!backsuccessful)
             {
-                return ToConsole(value, newLine, escape, provider);
+                return WriteLine(value, escape, provider);
             }
 
             if (typeof(TBackground) != typeof(ANSIColor))
             {
-                return ToConsole(value, null, backcolor, newLine, escape, provider);
+                return WriteLine(value, null, backcolor, escape, provider);
             }
 
             ANSIColor color = Unsafe.As<TBackground, ANSIColor>(ref background);
 
             return color.Mode switch
             {
-                AnsiColorSequenceMode.None => ToConsole(value, newLine, escape, provider),
-                AnsiColorSequenceMode.Foreground => ToConsole(value, backcolor, newLine, escape, provider),
-                AnsiColorSequenceMode.Background => ToConsole(value, null, backcolor, newLine, escape, provider),
-                AnsiColorSequenceMode.Fill => ToConsole(value, backcolor, backcolor, newLine, escape, provider),
+                AnsiColorSequenceMode.None => WriteLine(value, escape, provider),
+                AnsiColorSequenceMode.Foreground => WriteLine(value, backcolor, escape, provider),
+                AnsiColorSequenceMode.Background => WriteLine(value, null, backcolor, escape, provider),
+                AnsiColorSequenceMode.Fill => WriteLine(value, backcolor, backcolor, escape, provider),
                 _ => throw new ArgumentOutOfRangeException()
             };
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background, Boolean newLine, EscapeType escape, IFormatProvider? provider) where TForeground : IColor where TBackground : IColor
+        public static T WriteLine<T, TForeground, TBackground>(T value, TForeground? foreground, TBackground? background, EscapeType escape, IFormatProvider? provider) where TForeground : IColor where TBackground : IColor
         {
             if (background is null)
             {
-                return ToConsole(value, foreground, newLine, escape, provider);
+                return WriteLine(value, foreground, escape, provider);
             }
 
             if (!AnsiColorSequence)
             {
-                return ToConsoleWithoutAnsi(value, foreground, background, newLine, escape, provider);
+                return WriteLineWithoutAnsi(value, foreground, background, escape, provider);
             }
             
             String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
@@ -992,17 +803,353 @@ namespace NetExtender.Utilities.IO
             {
                 if (typeof(TBackground) == typeof(ANSIColor))
                 {
-                    ToConsole(background.ToString(text, provider), newLine, escape, provider);
+                    WriteLine(background.ToString(text, provider), escape, provider);
                     return value;
                 }
                 
-                ToConsole(background.ToColor<TBackground, ANSIColor>().Clone(AnsiColorSequenceMode.Background).ToString(text, provider), newLine, escape, provider);
+                WriteLine(background.ToColor<TBackground, ANSIColor>().Clone(AnsiColorSequenceMode.Background).ToString(text, provider), escape, provider);
                 return value;
             }
 
             ANSIDifferentColor different = new ANSIDifferentColor(foreground.ToColor(), background.ToColor());
-            ToConsole(different.ToString(text, provider), newLine, escape, provider);
+            WriteLine(different.ToString(text, provider), escape, provider);
             return value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value)
+        {
+            return WriteLine(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, EscapeType escape)
+        {
+            return WriteLine(value, escape);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, IFormatProvider? provider)
+        {
+            return WriteLine(value, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, EscapeType escape, IFormatProvider? provider)
+        {
+            return WriteLine(value, escape, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Boolean newLine)
+        {
+            return newLine ? WriteLine(value) : Write(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Boolean newLine, EscapeType escape)
+        {
+            return newLine ? WriteLine(value, escape) : Write(value, escape);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Boolean newLine, IFormatProvider? provider)
+        {
+            return newLine ? WriteLine(value, provider) : Write(value, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Boolean newLine, EscapeType escape, IFormatProvider? provider)
+        {
+            return newLine ? WriteLine(value, escape, provider) : Write(value, escape, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, ConsoleColor? color)
+        {
+            return WriteLine(value, color);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, ConsoleColor? color, EscapeType escape)
+        {
+            return WriteLine(value, color, escape);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, ConsoleColor? color, IFormatProvider? provider)
+        {
+            return WriteLine(value, color, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, ConsoleColor? color, EscapeType escape, IFormatProvider? provider)
+        {
+            return WriteLine(value, color, escape, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, ConsoleColor? color, Boolean newLine)
+        {
+            return newLine ? WriteLine(value, color) : Write(value, color);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, ConsoleColor? color, Boolean newLine, EscapeType escape)
+        {
+            return newLine ? WriteLine(value, color, escape) : Write(value, color, escape);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, ConsoleColor? color, Boolean newLine, IFormatProvider? provider)
+        {
+            return newLine ? WriteLine(value, color, provider) : Write(value, color, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, ConsoleColor? color, Boolean newLine, EscapeType escape, IFormatProvider? provider)
+        {
+            return newLine ? WriteLine(value, color, escape, provider) : Write(value, color, escape, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background)
+        {
+            return WriteLine(value, foreground, background);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background, EscapeType escape)
+        {
+            return WriteLine(value, foreground, background, escape);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background, IFormatProvider? provider)
+        {
+            return WriteLine(value, foreground, background, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background, EscapeType escape, IFormatProvider? provider)
+        {
+            return WriteLine(value, foreground, background, escape, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background, Boolean newLine)
+        {
+            return newLine ? WriteLine(value, foreground, background) : Write(value, foreground, background);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background, Boolean newLine, EscapeType escape)
+        {
+            return newLine ? WriteLine(value, foreground, background, escape) : Write(value, foreground, background, escape);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background, Boolean newLine, IFormatProvider? provider)
+        {
+            return newLine ? WriteLine(value, foreground, background, provider) : Write(value, foreground, background, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background, Boolean newLine, EscapeType escape, IFormatProvider? provider)
+        {
+            return newLine ? WriteLine(value, foreground, background, escape, provider) : Write(value, foreground, background, escape, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Color color)
+        {
+            return WriteLine(value, color);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T, TColor>(this T value, TColor? color) where TColor : IColor
+        {
+            return WriteLine(value, color);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Color color, EscapeType escape)
+        {
+            return WriteLine(value, color, escape);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T, TColor>(this T value, TColor? color, EscapeType escape) where TColor : IColor
+        {
+            return WriteLine(value, color, escape);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Color color, IFormatProvider? provider)
+        {
+            return WriteLine(value, color, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T, TColor>(this T value, TColor? color, IFormatProvider? provider) where TColor : IColor
+        {
+            return WriteLine(value, color, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Color color, EscapeType escape, IFormatProvider? provider)
+        {
+            return WriteLine(value, color, escape, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T, TColor>(this T value, TColor? color, EscapeType escape, IFormatProvider? provider) where TColor : IColor
+        {
+            return WriteLine(value, color, escape, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Color color, Boolean newLine)
+        {
+            return newLine ? WriteLine(value, color) : Write(value, color);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T, TColor>(this T value, TColor? color, Boolean newLine) where TColor : IColor
+        {
+            return newLine ? WriteLine(value, color) : Write(value, color);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Color color, Boolean newLine, EscapeType escape)
+        {
+            return newLine ? WriteLine(value, color, escape) : Write(value, color, escape);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T, TColor>(this T value, TColor? color, Boolean newLine, EscapeType escape) where TColor : IColor
+        {
+            return newLine ? WriteLine(value, color, escape) : Write(value, color, escape);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Color color, Boolean newLine, IFormatProvider? provider)
+        {
+            return newLine ? WriteLine(value, color, provider) : Write(value, color, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T, TColor>(this T value, TColor? color, Boolean newLine, IFormatProvider? provider) where TColor : IColor
+        {
+            return newLine ? WriteLine(value, color, provider) : Write(value, color, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Color color, Boolean newLine, EscapeType escape, IFormatProvider? provider)
+        {
+            return newLine ? WriteLine(value, color, escape, provider) : Write(value, color, escape, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T, TColor>(this T value, TColor? color, Boolean newLine, EscapeType escape, IFormatProvider? provider) where TColor : IColor
+        {
+            return newLine ? WriteLine(value, color, escape, provider) : Write(value, color, escape, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Color foreground, Color background)
+        {
+            return WriteLine(value, foreground, background);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background) where TForeground : IColor where TBackground : IColor
+        {
+            return WriteLine(value, foreground, background);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Color foreground, Color background, EscapeType escape)
+        {
+            return WriteLine(value, foreground, background, escape);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background, EscapeType escape) where TForeground : IColor where TBackground : IColor
+        {
+            return WriteLine(value, foreground, background, escape);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Color foreground, Color background, IFormatProvider? provider)
+        {
+            return WriteLine(value, foreground, background, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background, IFormatProvider? provider) where TForeground : IColor where TBackground : IColor
+        {
+            return WriteLine(value, foreground, background, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Color foreground, Color background, EscapeType escape, IFormatProvider? provider)
+        {
+            return WriteLine(value, foreground, background, escape, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background, EscapeType escape, IFormatProvider? provider) where TForeground : IColor where TBackground : IColor
+        {
+            return WriteLine(value, foreground, background, escape, provider);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Color foreground, Color background, Boolean newLine)
+        {
+            return newLine ? WriteLine(value, foreground, background) : Write(value, foreground, background);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background, Boolean newLine) where TForeground : IColor where TBackground : IColor
+        {
+            return newLine ? WriteLine(value, foreground, background) : Write(value, foreground, background);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Color foreground, Color background, Boolean newLine, EscapeType escape)
+        {
+            return newLine ? WriteLine(value, foreground, background, escape) : Write(value, foreground, background, escape);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background, Boolean newLine, EscapeType escape) where TForeground : IColor where TBackground : IColor
+        {
+            return newLine ? WriteLine(value, foreground, background, escape) : Write(value, foreground, background, escape);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Color foreground, Color background, Boolean newLine, IFormatProvider? provider)
+        {
+            return newLine ? WriteLine(value, foreground, background, provider) : Write(value, foreground, background, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background, Boolean newLine, IFormatProvider? provider) where TForeground : IColor where TBackground : IColor
+        {
+            return newLine ? WriteLine(value, foreground, background, provider) : Write(value, foreground, background, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T>(this T value, Color foreground, Color background, Boolean newLine, EscapeType escape, IFormatProvider? provider)
+        {
+            return newLine ? WriteLine(value, foreground, background, escape, provider) : Write(value, foreground, background, escape, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background, Boolean newLine, EscapeType escape, IFormatProvider? provider) where TForeground : IColor where TBackground : IColor
+        {
+            return newLine ? WriteLine(value, foreground, background, escape, provider) : Write(value, foreground, background, escape, provider);
         }
     }
 }

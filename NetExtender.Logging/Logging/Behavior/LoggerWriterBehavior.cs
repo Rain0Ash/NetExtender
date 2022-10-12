@@ -3,6 +3,7 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using NetExtender.Logging.Common;
 using NetExtender.Utilities.Types;
 
@@ -21,6 +22,22 @@ namespace NetExtender.Logging.Behavior
         {
             value = Format(type, options, offset, provider) + value;
             Writer.WriteLine(value);
+        }
+        
+        protected override void Dispose(Boolean disposing)
+        {
+            if (disposing)
+            {
+                Writer.Dispose();
+            }
+        }
+
+        protected override async ValueTask DisposeAsync(Boolean disposing)
+        {
+            if (disposing)
+            {
+                await Writer.DisposeAsync();
+            }
         }
     }
 }

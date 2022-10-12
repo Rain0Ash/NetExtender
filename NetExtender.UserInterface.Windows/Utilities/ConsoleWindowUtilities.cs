@@ -328,12 +328,22 @@ namespace NetExtender.Utilities.UserInterface
             }
         }
 
-        public static void SetCurrentFont(Int16 size = 0)
+        public static void SetCurrentFont()
+        {
+            SetCurrentFont(0);
+        }
+
+        public static void SetCurrentFont(Int16 size)
         {
             SetCurrentFont(null, size);
         }
 
-        public static void SetCurrentFont(String? font, Int16 size = 0)
+        public static void SetCurrentFont(String? font)
+        {
+            SetCurrentFont(font, 0);
+        }
+
+        public static void SetCurrentFont(String? font, Int16 size)
         {
             Font = new FontInfo(font ?? Font.FontName, size > 0 ? size : Font.Size);
         }
