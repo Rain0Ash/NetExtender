@@ -570,6 +570,12 @@ namespace NetExtender.Configuration
             GC.SuppressFinalize(this);
         }
 
+        public async ValueTask DisposeAsync()
+        {
+            await DisposeAsync(true);
+            GC.SuppressFinalize(this);
+        }
+
         protected virtual void Dispose(Boolean disposing)
         {
             if (disposing)
@@ -577,12 +583,13 @@ namespace NetExtender.Configuration
                 Behavior.Dispose();
             }
         }
-        
-        public ValueTask DisposeAsync()
+
+        protected virtual async ValueTask DisposeAsync(Boolean disposing)
         {
-            Dispose();
-            GC.SuppressFinalize(this);
-            return ValueTask.CompletedTask;
+            if (disposing)
+            {
+                await Behavior.DisposeAsync();
+            }
         }
 
         ~Config()

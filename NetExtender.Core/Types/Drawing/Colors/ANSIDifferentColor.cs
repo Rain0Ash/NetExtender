@@ -73,11 +73,44 @@ namespace NetExtender.Types.Drawing.Colors
         {
             return Color.FromArgb(ForegroundR, ForegroundG, ForegroundB);
         }
+        
+        public Color ToColor(AnsiColorSequenceMode mode)
+        {
+            return mode switch
+            {
+                AnsiColorSequenceMode.None => default,
+                AnsiColorSequenceMode.Foreground => Color.FromArgb(ForegroundR, ForegroundG, ForegroundB),
+                AnsiColorSequenceMode.Background => Color.FromArgb(BackgroundR, BackgroundG, BackgroundB),
+                AnsiColorSequenceMode.Fill => default,
+                _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
+            };
+        }
 
         public Boolean ToColor(out Color color)
         {
             color = ToColor();
             return true;
+        }
+
+        public Boolean ToColor(out Color color, AnsiColorSequenceMode mode)
+        {
+            switch (mode)
+            {
+                case AnsiColorSequenceMode.None:
+                    color = default;
+                    return false;
+                case AnsiColorSequenceMode.Foreground:
+                    color = Color.FromArgb(ForegroundR, ForegroundG, ForegroundB);
+                    return true;
+                case AnsiColorSequenceMode.Background:
+                    color = Color.FromArgb(BackgroundR, BackgroundG, BackgroundB);
+                    return true;
+                case AnsiColorSequenceMode.Fill:
+                    color = default;
+                    return false;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            }
         }
 
         public override Int32 GetHashCode()

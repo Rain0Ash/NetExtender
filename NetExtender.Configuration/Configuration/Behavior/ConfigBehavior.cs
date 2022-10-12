@@ -68,7 +68,7 @@ namespace NetExtender.Configuration.Behavior
             }
         }
 
-        public Boolean IsThreadSafe
+        public virtual Boolean IsThreadSafe
         {
             get
             {
@@ -324,14 +324,18 @@ namespace NetExtender.Configuration.Behavior
             GC.SuppressFinalize(this);
         }
 
+        public async ValueTask DisposeAsync()
+        {
+            await DisposeAsync(true);
+            GC.SuppressFinalize(this);
+        }
+
         protected virtual void Dispose(Boolean disposing)
         {
         }
 
-        public virtual ValueTask DisposeAsync()
+        protected virtual ValueTask DisposeAsync(Boolean disposing)
         {
-            Dispose();
-            GC.SuppressFinalize(this);
             return ValueTask.CompletedTask;
         }
     }

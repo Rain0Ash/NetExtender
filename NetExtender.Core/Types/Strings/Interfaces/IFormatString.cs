@@ -11,5 +11,6 @@ namespace NetExtender.Types.Strings.Interfaces
         
         public String Format(params Object[] format);
         public String Format(IFormatProvider? provider, params Object[] format);
+        public IContainerFormatString ToContainer(params Object[] format);
     }
 }

@@ -197,9 +197,15 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Color FromConsoleColor(this ConsoleColor color)
+        public static Color ToColor(this ConsoleColor color)
         {
             return ColorMap.TryGetKey(color);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static TColor ToColor<TColor>(this ConsoleColor color) where TColor : IColor
+        {
+            return ToColor(color).ToColor<TColor>();
         }
 
         private static ColorConverter ColorConverter { get; } = new ColorConverter();
@@ -1072,7 +1078,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public static Boolean ToColor<TColor>(this Color color, [MaybeNullWhen(false)] out TColor result) where TColor : IColor
+        public static Boolean ToColor<TColor>(this Color color, [MaybeNullWhen(false)] out TColor result) where TColor : IColor?
         {
             if (typeof(TColor) == typeof(RGBColor))
             {
@@ -1133,13 +1139,13 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static TOutput ToColor<TColor, TOutput>(this TColor? color) where TColor : IColor where TOutput : IColor
+        public static TOutput ToColor<TColor, TOutput>(this TColor? color) where TColor : IColor? where TOutput : IColor?
         {
             return ToColor<TColor, TOutput>(color, out TOutput? result) ? result : throw new InvalidCastException();
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static Boolean ToColor<TColor, TOutput>(this TColor? color, [MaybeNullWhen(false)] out TOutput result) where TColor : IColor where TOutput : IColor
+        public static Boolean ToColor<TColor, TOutput>(this TColor? color, [MaybeNullWhen(false)] out TOutput result) where TColor : IColor? where TOutput : IColor?
         {
             if (color is null)
             {

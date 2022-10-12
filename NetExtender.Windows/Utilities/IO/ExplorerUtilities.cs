@@ -306,7 +306,7 @@ namespace NetExtender.Utilities.Windows.IO
                 using Process? process = Process.Start("notepad.exe", info.FullName);
 
                 //TODO: CS8598
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (process is null)
                 {
                     return null;

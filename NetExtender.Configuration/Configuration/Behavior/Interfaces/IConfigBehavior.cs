@@ -20,6 +20,7 @@ namespace NetExtender.Configuration.Behavior.Interfaces
         public Boolean IsLazyWrite { get; }
         public Boolean IsThreadSafe { get; }
         public String Joiner { get; }
+        
         public Boolean Contains(String? key, IEnumerable<String>? sections);
         public Task<Boolean> ContainsAsync(String? key, IEnumerable<String>? sections, CancellationToken token);
         public String? Get(String? key, IEnumerable<String>? sections);

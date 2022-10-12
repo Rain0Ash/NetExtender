@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net6.0-windows</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <OutputType>Library</OutputType>
         <LangVersion>10</LangVersion>
@@ -19,11 +19,6 @@
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <IsPackable>true</IsPackable>
     </PropertyGroup>
-
-    <ItemGroup>
-      <Folder Include="Logging" />
-      <Folder Include="Utilities" />
-    </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />

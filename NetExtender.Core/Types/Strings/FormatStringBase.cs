@@ -36,6 +36,11 @@ namespace NetExtender.Types.Strings
             return NonFormatToString(provider).Format(provider, format);
         }
 
+        public virtual IContainerFormatString ToContainer(params Object[] format)
+        {
+            return ContainerFormatStringAdapter.Create(this, format);
+        }
+
         protected String NonFormatToString()
         {
             return base.ToString();

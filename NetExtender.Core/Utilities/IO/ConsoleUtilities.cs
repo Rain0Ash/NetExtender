@@ -145,6 +145,7 @@ namespace NetExtender.Utilities.IO
             return ClearLine(Console.CursorTop);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Boolean ClearLine(Int32 line)
         {
             lock (Synchronization)
@@ -154,7 +155,6 @@ namespace NetExtender.Utilities.IO
                     Console.SetCursorPosition(0, line);
                     Console.Write(new String(' ', Console.WindowWidth));
                     Console.SetCursorPosition(0, line);
-
                     return true;
                 }
                 catch (Exception)
@@ -404,27 +404,80 @@ namespace NetExtender.Utilities.IO
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T WriteLine<T>(T value, ConsoleColor? color, ConsoleColor? background)
+        public static T WriteLine<T>(T value, ConsoleColor? foreground, ConsoleColor? background)
         {
-            return WriteLine(value, color, background, null);
+            return WriteLine(value, foreground, background, null);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T WriteLine<T>(T value, ConsoleColor? color, ConsoleColor? background, IFormatProvider? provider)
+        public static T WriteLine<T>(T value, ConsoleColor? foreground, ConsoleColor? background, IFormatProvider? provider)
         {
-            return WriteLine(value, color, background, ConvertUtilities.DefaultEscapeType, provider);
+            return WriteLine(value, foreground, background, ConvertUtilities.DefaultEscapeType, provider);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T WriteLine<T>(T value, ConsoleColor? color, ConsoleColor? background, EscapeType escape)
+        public static T WriteLine<T>(T value, ConsoleColor? foreground, ConsoleColor? background, EscapeType escape)
         {
-            return WriteLine(value, color, background, escape, null);
+            return WriteLine(value, foreground, background, escape, null);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T WriteLine<T>(T value, ConsoleColor? color, ConsoleColor? background, EscapeType escape, IFormatProvider? provider)
+        public static T WriteLine<T>(T value, ConsoleColor? foreground, ConsoleColor? background, EscapeType escape, IFormatProvider? provider)
         {
-            return ToConsole(value, color, background, escape, true, provider);
+            return ToConsole(value, foreground, background, escape, true, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+        private static void ToConsole(String value, Boolean newLine)
+        {
+            if (newLine)
+            {
+                Console.WriteLine(value);
+                return;
+            }
+            
+            Console.Write(value);
+        }
+
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        private static void ToConsole(String value, Boolean newLine, ConsoleColor? color)
+        {
+            if (color is null)
+            {
+                ToConsole(value, newLine);
+                return;
+            }
+            
+            lock (Synchronization)
+            {
+                ConsoleColor console = Console.ForegroundColor;
+                Console.ForegroundColor = color.Value;
+
+                ToConsole(value, newLine);
+
+                Console.ForegroundColor = console;
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        private static void ToConsole(String value, Boolean newLine, ConsoleColor? foreground, ConsoleColor? background)
+        {
+            if (background is null)
+            {
+                ToConsole(value, newLine, foreground);
+                return;
+            }
+            
+            lock (Synchronization)
+            {
+                ConsoleColor color = Console.BackgroundColor;
+                Console.BackgroundColor = background.Value;
+
+                ToConsole(value, newLine, foreground);
+
+                Console.BackgroundColor = color;
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -481,21 +534,12 @@ namespace NetExtender.Utilities.IO
             return ToConsole(value, newLine, escape, provider);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static T ToConsole<T>(this T value, Boolean newLine, EscapeType escape, IFormatProvider? provider)
         {
-            lock (Synchronization)
-            {
-                String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
-
-                if (newLine)
-                {
-                    Console.WriteLine(text);
-                    return value;
-                }
-
-                Console.Write(text);
-                return value;
-            }
+            String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
+            ToConsole(text, newLine);
+            return value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -551,25 +595,13 @@ namespace NetExtender.Utilities.IO
         {
             return ToConsole(value, color, newLine, escape, provider);
         }
-
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static T ToConsole<T>(this T value, ConsoleColor? color, Boolean newLine, EscapeType escape, IFormatProvider? provider)
         {
-            if (!color.HasValue)
-            {
-                return ToConsole(value, newLine, escape, provider);
-            }
-
-            lock (Synchronization)
-            {
-                ConsoleColor console = Console.ForegroundColor;
-                Console.ForegroundColor = color.Value;
-
-                ToConsole(value, newLine, escape, provider);
-
-                Console.ForegroundColor = console;
-
-                return value;
-            }
+            String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
+            ToConsole(text, newLine, color);
+            return value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -626,24 +658,12 @@ namespace NetExtender.Utilities.IO
             return ToConsole(value, foreground, background, newLine, escape, provider);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static T ToConsole<T>(this T value, ConsoleColor? foreground, ConsoleColor? background, Boolean newLine, EscapeType escape, IFormatProvider? provider)
         {
-            if (!background.HasValue)
-            {
-                return ToConsole(value, foreground, newLine, escape, provider);
-            }
-
-            lock (Synchronization)
-            {
-                ConsoleColor color = Console.BackgroundColor;
-                Console.BackgroundColor = background.Value;
-
-                ToConsole(value, foreground, newLine, escape, provider);
-
-                Console.BackgroundColor = color;
-
-                return value;
-            }
+            String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
+            ToConsole(text, newLine, foreground, background);
+            return value;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -760,6 +780,18 @@ namespace NetExtender.Utilities.IO
             return ToConsole(value, (ANSIColor) color, newLine, escape, provider);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static T ToConsoleWithoutAnsi<T, TColor>(T value, TColor? color, Boolean newLine, EscapeType escape, IFormatProvider? provider) where TColor : IColor
+        {
+            if (color is null)
+            {
+                return ToConsole(value, newLine, escape, provider);
+            }
+            
+            return color.NearestConsoleColor(out ConsoleColor console) ? ToConsole(value, console, newLine, escape, provider) : ToConsole(value, newLine, escape, provider);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static T ToConsole<T, TColor>(this T value, TColor? color, Boolean newLine, EscapeType escape, IFormatProvider? provider) where TColor : IColor
         {
             if (color is null)
@@ -767,20 +799,17 @@ namespace NetExtender.Utilities.IO
                 return ToConsole(value, newLine, escape, provider);
             }
 
+            if (!AnsiColorSequence)
+            {
+                return ToConsoleWithoutAnsi(value, color, newLine, escape, provider);
+            }
+
             if (typeof(TColor) == typeof(ANSIDifferentColor))
             {
                 ANSIDifferentColor different = Unsafe.As<TColor, ANSIDifferentColor>(ref color);
-                return ToConsole(value, new ANSIColor(different.ForegroundR, different.ForegroundG, different.ForegroundB), 
-                    new ANSIColor(different.BackgroundR, different.BackgroundG, different.BackgroundB), newLine, escape, provider);
+                return ToConsole(value, different.ToColor(AnsiColorSequenceMode.Foreground), different.ToColor(AnsiColorSequenceMode.Background), newLine, escape, provider);
             }
 
-            if (!AnsiColorSequence)
-            {
-                return color.NearestConsoleColor(out ConsoleColor console)
-                    ? ToConsole(value, console, newLine, escape, provider)
-                    : ToConsole(value, newLine, escape, provider);
-            }
-            
             String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
             
             if (typeof(TColor) == typeof(ANSIColor))
@@ -789,8 +818,7 @@ namespace NetExtender.Utilities.IO
                 return value;
             }
 
-            ANSIColor ansi = color.ToColor();
-            ToConsole(ansi.ToString(text, provider), newLine, escape, provider);
+            ToConsole(color.ToColor<TColor, ANSIColor>().ToString(text, provider), newLine, escape, provider);
             return value;
         }
         
@@ -908,7 +936,44 @@ namespace NetExtender.Utilities.IO
             return ToConsole(value, (ANSIColor) foreground, (ANSIColor) background, newLine, escape, provider);
         }
 
-        // ReSharper disable once CognitiveComplexity
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        private static T ToConsoleWithoutAnsi<T, TForeground, TBackground>(T value, TForeground? foreground, TBackground? background, Boolean newLine, EscapeType escape, IFormatProvider? provider) where TForeground : IColor where TBackground : IColor
+        {
+            if (background is null)
+            {
+                return ToConsole(value, foreground, newLine, escape, provider);
+            }
+            
+            Boolean backsuccessful = background.NearestConsoleColor(out ConsoleColor backcolor);
+
+            if (foreground is not null && foreground.NearestConsoleColor(out ConsoleColor forecolor))
+            {
+                return backsuccessful ? ToConsole(value, forecolor, backcolor, newLine, escape, provider) : ToConsole(value, forecolor, newLine, escape, provider);
+            }
+
+            if (!backsuccessful)
+            {
+                return ToConsole(value, newLine, escape, provider);
+            }
+
+            if (typeof(TBackground) != typeof(ANSIColor))
+            {
+                return ToConsole(value, null, backcolor, newLine, escape, provider);
+            }
+
+            ANSIColor color = Unsafe.As<TBackground, ANSIColor>(ref background);
+
+            return color.Mode switch
+            {
+                AnsiColorSequenceMode.None => ToConsole(value, newLine, escape, provider),
+                AnsiColorSequenceMode.Foreground => ToConsole(value, backcolor, newLine, escape, provider),
+                AnsiColorSequenceMode.Background => ToConsole(value, null, backcolor, newLine, escape, provider),
+                AnsiColorSequenceMode.Fill => ToConsole(value, backcolor, backcolor, newLine, escape, provider),
+                _ => throw new ArgumentOutOfRangeException()
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background, Boolean newLine, EscapeType escape, IFormatProvider? provider) where TForeground : IColor where TBackground : IColor
         {
             if (background is null)
@@ -918,33 +983,7 @@ namespace NetExtender.Utilities.IO
 
             if (!AnsiColorSequence)
             {
-                Boolean backsuccessful = background.NearestConsoleColor(out ConsoleColor backcolor);
-
-                if (foreground is not null && foreground.NearestConsoleColor(out ConsoleColor forecolor))
-                {
-                    return backsuccessful ? ToConsole(value, forecolor, backcolor, newLine, escape, provider) : ToConsole(value, forecolor, newLine, escape, provider);
-                }
-
-                if (!backsuccessful)
-                {
-                    return ToConsole(value, newLine, escape, provider);
-                }
-
-                if (typeof(TBackground) != typeof(ANSIColor))
-                {
-                    return ToConsole(value, null, backcolor, newLine, escape, provider);
-                }
-
-                ANSIColor color = Unsafe.As<TBackground, ANSIColor>(ref background);
-
-                return color.Mode switch
-                {
-                    AnsiColorSequenceMode.None => ToConsole(value, newLine, escape, provider),
-                    AnsiColorSequenceMode.Foreground => ToConsole(value, backcolor, newLine, escape, provider),
-                    AnsiColorSequenceMode.Background => ToConsole(value, null, backcolor, newLine, escape, provider),
-                    AnsiColorSequenceMode.Fill => ToConsole(value, backcolor, backcolor, newLine, escape, provider),
-                    _ => throw new ArgumentOutOfRangeException()
-                };
+                return ToConsoleWithoutAnsi(value, foreground, background, newLine, escape, provider);
             }
             
             String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
@@ -957,9 +996,7 @@ namespace NetExtender.Utilities.IO
                     return value;
                 }
                 
-                ANSIColor ansi = background.ToColor();
-                ansi = ansi.Clone(AnsiColorSequenceMode.Background);
-                ToConsole(ansi.ToString(text, provider), newLine, escape, provider);
+                ToConsole(background.ToColor<TBackground, ANSIColor>().Clone(AnsiColorSequenceMode.Background).ToString(text, provider), newLine, escape, provider);
                 return value;
             }
 

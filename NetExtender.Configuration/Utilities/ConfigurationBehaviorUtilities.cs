@@ -86,5 +86,25 @@ namespace NetExtender.Utilities.Configuration
 
             return new ConcurrentConfigBehavior(behavior);
         }
+
+        public static IConfigBehavior Concurrent(this IConfigBehavior behavior, Object? synchronization)
+        {
+            return Concurrent(behavior, synchronization, false);
+        }
+
+        public static IConfigBehavior Concurrent(this IConfigBehavior behavior, Object? synchronization, Boolean duplicate)
+        {
+            if (behavior is null)
+            {
+                throw new ArgumentNullException(nameof(behavior));
+            }
+
+            if (behavior.IsThreadSafe && !duplicate)
+            {
+                return behavior;
+            }
+
+            return new ConcurrentConfigBehavior(behavior, synchronization);
+        }
     }
 }

@@ -84,15 +84,8 @@ namespace NetExtender.Types.TextReaders
 
         public ValueTask DisposeAsync()
         {
-            try
-            {
-                Dispose();
-                return ValueTask.CompletedTask;
-            }
-            catch (Exception exception)
-            {
-                return ValueTask.FromException(exception);
-            }
+            Dispose();
+            return ValueTask.CompletedTask;
         }
     }
 }

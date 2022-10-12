@@ -15,20 +15,21 @@ namespace NetExtender.Configuration.Wrappers
 {
     internal sealed class ConcurrentConfigBehavior : IConfigBehavior
     {
+        private Object Synchronization { get; }
         private IConfigBehavior Internal { get; }
 
         public event ConfigurationChangedEventHandler? Changed
         {
             add
             {
-                lock (Internal)
+                lock (Synchronization)
                 {
                     Internal.Changed += value;
                 }
             }
             remove
             {
-                lock (Internal)
+                lock (Synchronization)
                 {
                     Internal.Changed -= value;
                 }
@@ -39,7 +40,7 @@ namespace NetExtender.Configuration.Wrappers
         {
             get
             {
-                lock (Internal)
+                lock (Synchronization)
                 {
                     return Internal.Path;
                 }
@@ -50,7 +51,7 @@ namespace NetExtender.Configuration.Wrappers
         {
             get
             {
-                lock (Internal)
+                lock (Synchronization)
                 {
                     return Internal.Options;
                 }
@@ -61,7 +62,7 @@ namespace NetExtender.Configuration.Wrappers
         {
             get
             {
-                lock (Internal)
+                lock (Synchronization)
                 {
                     return Internal.IsReadOnly;
                 }
@@ -72,7 +73,7 @@ namespace NetExtender.Configuration.Wrappers
         {
             get
             {
-                lock (Internal)
+                lock (Synchronization)
                 {
                     return Internal.IsIgnoreEvent;
                 }
@@ -83,7 +84,7 @@ namespace NetExtender.Configuration.Wrappers
         {
             get
             {
-                lock (Internal)
+                lock (Synchronization)
                 {
                     return Internal.IsLazyWrite;
                 }
@@ -102,21 +103,27 @@ namespace NetExtender.Configuration.Wrappers
         {
             get
             {
-                lock (Internal)
+                lock (Synchronization)
                 {
                     return Internal.Joiner;
                 }
             }
         }
-        
+
         public ConcurrentConfigBehavior(IConfigBehavior behavior)
+            : this(behavior, null)
+        {
+        }
+
+        public ConcurrentConfigBehavior(IConfigBehavior behavior, Object? synchronization)
         {
             Internal = behavior ?? throw new ArgumentNullException(nameof(behavior));
+            Synchronization = synchronization ?? behavior;
         }
 
         public Boolean Contains(String? key, IEnumerable<String>? sections)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.Contains(key, sections);
             }
@@ -124,7 +131,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Task<Boolean> ContainsAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.ContainsAsync(key, sections, token);
             }
@@ -132,7 +139,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public String? Get(String? key, IEnumerable<String>? sections)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.Get(key, sections);
             }
@@ -140,7 +147,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Task<String?> GetAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.GetAsync(key, sections, token);
             }
@@ -148,7 +155,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Boolean Set(String? key, String? value, IEnumerable<String>? sections)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.Set(key, value, sections);
             }
@@ -156,7 +163,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Task<Boolean> SetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.SetAsync(key, value, sections, token);
             }
@@ -164,7 +171,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public String? GetOrSet(String? key, String? value, IEnumerable<String>? sections)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.GetOrSet(key, value, sections);
             }
@@ -172,7 +179,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Task<String?> GetOrSetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.GetOrSetAsync(key, value, sections, token);
             }
@@ -180,7 +187,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public ConfigurationEntry[]? GetExists(IEnumerable<String>? sections)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.GetExists(sections);
             }
@@ -188,7 +195,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Task<ConfigurationEntry[]?> GetExistsAsync(IEnumerable<String>? sections, CancellationToken token)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.GetExistsAsync(sections, token);
             }
@@ -196,7 +203,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public ConfigurationValueEntry[]? GetExistsValues(IEnumerable<String>? sections)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.GetExistsValues(sections);
             }
@@ -204,7 +211,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IEnumerable<String>? sections, CancellationToken token)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.GetExistsValuesAsync(sections, token);
             }
@@ -217,7 +224,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Boolean Clear(IEnumerable<String>? sections)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.Clear(sections);
             }
@@ -230,7 +237,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Task<Boolean> ClearAsync(IEnumerable<String>? sections, CancellationToken token)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.ClearAsync(sections, token);
             }
@@ -238,7 +245,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Boolean Reload()
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.Reload();
             }
@@ -246,7 +253,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Task<Boolean> ReloadAsync(CancellationToken token)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.ReloadAsync(token);
             }
@@ -254,7 +261,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Boolean Reset()
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.Reset();
             }
@@ -262,7 +269,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Task<Boolean> ResetAsync(CancellationToken token)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.ResetAsync(token);
             }
@@ -270,7 +277,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Boolean Merge(IEnumerable<ConfigurationValueEntry>? entries)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.Merge(entries);
             }
@@ -278,7 +285,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Task<Boolean> MergeAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.MergeAsync(entries, token);
             }
@@ -286,7 +293,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Boolean Replace(IEnumerable<ConfigurationValueEntry>? entries)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.Replace(entries);
             }
@@ -294,7 +301,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Task<Boolean> ReplaceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.ReplaceAsync(entries, token);
             }
@@ -302,7 +309,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public ConfigurationValueEntry[]? Difference(IEnumerable<ConfigurationValueEntry>? entries)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.Difference(entries);
             }
@@ -310,7 +317,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Task<ConfigurationValueEntry[]?> DifferenceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.DifferenceAsync(entries, token);
             }
@@ -318,7 +325,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public IConfigBehaviorTransaction? Transaction()
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.Transaction();
             }
@@ -326,7 +333,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public Task<IConfigBehaviorTransaction?> TransactionAsync(CancellationToken token)
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.TransactionAsync(token);
             }
@@ -334,7 +341,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public void Dispose()
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 Internal.Dispose();
             }
@@ -342,7 +349,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public ValueTask DisposeAsync()
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.DisposeAsync();
             }
@@ -350,7 +357,7 @@ namespace NetExtender.Configuration.Wrappers
 
         public IEnumerator<ConfigurationValueEntry> GetEnumerator()
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return Internal.GetThreadSafeEnumerator();
             }
@@ -358,7 +365,7 @@ namespace NetExtender.Configuration.Wrappers
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            lock (Internal)
+            lock (Synchronization)
             {
                 return ((IEnumerable) Internal).GetThreadSafeEnumerator();
             }
