@@ -12,7 +12,7 @@
         <LangVersion>10</LangVersion>
 		<Authors>Rain0Ash</Authors>
         <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
-        <Version>0.8.7</Version>
+        <Version>0.8.8</Version>
         <AppDesignerFolder>Properties</AppDesignerFolder>
         <AssemblyName>NetExtender.NAudio.Xamarin.Android</AssemblyName>
         <FileAlignment>512</FileAlignment>

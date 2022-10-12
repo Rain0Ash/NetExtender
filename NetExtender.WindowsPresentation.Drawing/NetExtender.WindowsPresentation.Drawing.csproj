@@ -8,7 +8,7 @@
         <LangVersion>10</LangVersion>
         <Authors>Rain0Ash</Authors>
         <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
-        <Version>0.8.7</Version>
+        <Version>0.8.8</Version>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>../SignTool/Private/NetExtender.snk</AssemblyOriginatorKeyFile>
         <Title>NetExtender.WindowsPresentation</Title>
