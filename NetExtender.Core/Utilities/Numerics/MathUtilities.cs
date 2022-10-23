@@ -3739,6 +3739,7 @@ namespace NetExtender.Utilities.Numerics
             return !(value > Double.Epsilon) && !(value < -Double.Epsilon);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 CountOfDigits(this Double value)
         {
             if (Math.Abs(value) < Double.Epsilon)
@@ -3749,6 +3750,7 @@ namespace NetExtender.Utilities.Numerics
             return (Int32) Math.Floor(Math.Log10(Math.Abs(value)));
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal Normalize(this Decimal value)
         {
             return value / DecimalConstants.MaxPlaces;

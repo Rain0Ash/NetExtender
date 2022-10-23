@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using NetExtender.Logging.Common;
+using NetExtender.Logging.Format.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Logging.Behavior
@@ -12,7 +13,7 @@ namespace NetExtender.Logging.Behavior
     public class LoggerStreamBehavior : LoggerBehavior
     {
         protected Stream Stream { get; }
-        protected StreamWriter Writer { get; }
+        protected StreamWriter? Writer { get; private set; }
 
         public LoggerStreamBehavior(Stream stream)
         {
@@ -20,20 +21,45 @@ namespace NetExtender.Logging.Behavior
             Writer = new StreamWriter(Stream);
         }
 
-        protected override void Log(String value, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, IFormatProvider? provider)
+        public LoggerStreamBehavior(Stream stream, ILoggerFormatProvider formatter)
+            : base(formatter)
         {
-            value = Format(type, options, offset, provider) + value;
-            Writer.WriteLine(value);
+            Stream = stream ?? throw new ArgumentNullException(nameof(stream));
+            Writer = new StreamWriter(Stream);
+        }
+
+        protected override Boolean Log(String? message, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, IFormatProvider? provider)
+        {
+            if (Writer is null)
+            {
+                throw new ObjectDisposedException(nameof(StreamWriter));
+            }
+            
+            message = Formatter.Format(message, type, options, offset, provider);
+            
+            if (message is null)
+            {
+                return false;
+            }
+            
+            Writer.WriteLine(message);
+            Writer.Flush();
+            return true;
         }
 
         protected override void Dispose(Boolean disposing)
         {
-            Writer.Dispose();
+            Writer?.Dispose();
+            Writer = null;
         }
 
         protected override async ValueTask DisposeAsync(Boolean disposing)
         {
-            await Writer.DisposeAsync();
+            if (Writer is not null)
+            {
+                await Writer.DisposeAsync();
+                Writer = null;
+            }
         }
     }
 }

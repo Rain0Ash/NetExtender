@@ -21,7 +21,7 @@ using NetExtender.Utilities.Types;
 namespace NetExtender.Utilities.Core
 {
     [Flags]
-    public enum PrimitiveType
+    public enum PrimitiveType : Byte
     {
         Default = 0,
         String = 1,
@@ -34,13 +34,20 @@ namespace NetExtender.Utilities.Core
     }
 
     [Flags]
-    public enum AssemblyNameType
+    public enum AssemblyNameType : Byte
     {
         Default = 0,
         Version = 1,
         Culture = 2,
         PublicKeyToken = 4,
         All = Version | Culture | PublicKeyToken
+    }
+
+    public enum MethodVisibilityType : Byte
+    {
+        Unavailable,
+        Private,
+        Public
     }
 
     public static class ReflectionUtilities
@@ -1883,6 +1890,70 @@ namespace NetExtender.Utilities.Core
             }
 
             return property;
+        }
+
+        public static Boolean IsIndexer(this PropertyInfo info)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            return info.GetIndexParameters().Length > 0;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MethodVisibilityType IsRead(this PropertyInfo info)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            if (!info.CanRead)
+            {
+                return MethodVisibilityType.Unavailable;
+            }
+
+            return info.GetMethod?.IsPublic switch
+            {
+                null => MethodVisibilityType.Unavailable,
+                false => MethodVisibilityType.Private,
+                true => MethodVisibilityType.Public
+            };
+        }
+                
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static MethodVisibilityType IsWrite(this PropertyInfo info)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
+            if (!info.CanWrite)
+            {
+                return MethodVisibilityType.Unavailable;
+            }
+
+            return info.SetMethod?.IsPublic switch
+            {
+                null => MethodVisibilityType.Unavailable,
+                false => MethodVisibilityType.Private,
+                true => MethodVisibilityType.Public
+            };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean? ToBoolean(this MethodVisibilityType type)
+        {
+            return type switch
+            {
+                MethodVisibilityType.Unavailable => null,
+                MethodVisibilityType.Private => false,
+                MethodVisibilityType.Public => true,
+                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+            };
         }
 
         public static Boolean TryCreateDelegate(this MethodInfo? info, [MaybeNullWhen(false)] out Delegate result)

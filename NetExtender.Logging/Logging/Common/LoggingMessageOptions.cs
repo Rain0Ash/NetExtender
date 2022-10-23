@@ -17,7 +17,8 @@ namespace NetExtender.Logging.Common
         DateTime = Date | Time,
         UtcDateTime = DateTime | Utc,
         Prefix = 8,
-        Color = 16,
-        All = Color | Prefix | DateTime
+        Thread = 16,
+        Color = 32,
+        All = Color | Thread | Prefix | DateTime
     }
 }

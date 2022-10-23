@@ -11,32 +11,54 @@ namespace NetExtender.Logging.Behavior
 {
     public class LoggerWriterBehavior : LoggerBehavior
     {
-        protected TextWriter Writer { get; }
+        protected TextWriter? Writer { get; private set; }
 
         public LoggerWriterBehavior(TextWriter writer)
         {
             Writer = writer ?? throw new ArgumentNullException(nameof(writer));
         }
 
-        protected override void Log(String value, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, IFormatProvider? provider)
+        protected override Boolean Log(String? message, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, IFormatProvider? provider)
         {
-            value = Format(type, options, offset, provider) + value;
-            Writer.WriteLine(value);
+            if (Writer is null)
+            {
+                throw new ObjectDisposedException(nameof(TextWriter));
+            }
+
+            message = Formatter.Format(message, type, options, offset, provider);
+            
+            if (message is null)
+            {
+                return false;
+            }
+            
+            Writer.WriteLine(message);
+            Writer.Flush();
+            return true;
         }
         
         protected override void Dispose(Boolean disposing)
         {
-            if (disposing)
+            if (!disposing)
             {
-                Writer.Dispose();
+                return;
             }
+
+            Writer?.Dispose();
+            Writer = null;
         }
 
         protected override async ValueTask DisposeAsync(Boolean disposing)
         {
-            if (disposing)
+            if (!disposing)
+            {
+                return;
+            }
+
+            if (Writer is not null)
             {
                 await Writer.DisposeAsync();
+                Writer = null;
             }
         }
     }

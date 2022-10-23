@@ -85,7 +85,7 @@ namespace NetExtender.Cryptography.Hash.XXHash
             finally
             {
                 // Free memory
-                ArrayPool<Byte>.Shared.Return(buffer);
+                ArrayPool<Byte>.Shared.Return(buffer, true);
             }
         }
     }

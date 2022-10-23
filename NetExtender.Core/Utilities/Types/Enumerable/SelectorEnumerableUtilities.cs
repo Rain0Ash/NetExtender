@@ -1695,9 +1695,9 @@ namespace NetExtender.Utilities.Types
                 yield break;
             }
 
-            foreach (IEnumerable js in jagged)
+            foreach (IEnumerable inner in jagged)
             {
-                foreach (T item in Flatten<T>(js))
+                foreach (T item in Flatten<T>(inner))
                 {
                     yield return item;
                 }

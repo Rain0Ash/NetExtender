@@ -4,12 +4,22 @@
 using System;
 using System.Drawing;
 using NetExtender.Logging.Common;
+using NetExtender.Logging.Format.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Logging.Behavior
 {
     public abstract class ColorLoggerBehavior : LoggerBehavior
     {
+        protected ColorLoggerBehavior()
+        {
+        }
+
+        protected ColorLoggerBehavior(ILoggerFormatProvider formatter)
+            : base(formatter)
+        {
+        }
+        
         protected virtual void Color(LoggingMessageType type, out Color? foreground, out Color? background)
         {
             (foreground, background) = type switch

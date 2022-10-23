@@ -6,12 +6,16 @@ using System.Globalization;
 using System.Threading.Tasks;
 using NetExtender.Logging.Behavior.Interfaces;
 using NetExtender.Logging.Common;
+using NetExtender.Logging.Format;
+using NetExtender.Logging.Format.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Logging.Behavior
 {
     public abstract class LoggerBehavior : ILoggerBehavior
     {
+        protected ILoggerFormatProvider Formatter { get; }
+        
         public virtual Boolean IsThreadSafe
         {
             get
@@ -19,38 +23,29 @@ namespace NetExtender.Logging.Behavior
                 return false;
             }
         }
+
+        protected LoggerBehavior()
+            : this(LoggerFormatProvider.Default)
+        {
+        }
         
-        protected String Format(LoggingMessageType type, LoggingMessageOptions options, DateTimeOffset offset)
+        protected LoggerBehavior(ILoggerFormatProvider formatter)
         {
-            return Format(type, options, offset, null);
+            Formatter = formatter ?? throw new ArgumentNullException(nameof(formatter));
         }
 
-        protected virtual String Format(LoggingMessageType type, LoggingMessageOptions options, DateTimeOffset offset, IFormatProvider? provider)
-        {
-            String? time = (options & LoggingMessageOptions.DateTime) switch
-            {
-                LoggingMessageOptions.Date => offset.Date.ToString("dd-MM-yyyy", provider),
-                LoggingMessageOptions.Time => offset.ToString("T", provider),
-                LoggingMessageOptions.DateTime => offset.ToString("dd-MM-yyyy hh:mm:sszz", provider),
-                _ => null
-            };
+        protected abstract Boolean Log(String? message, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, IFormatProvider? provider);
 
-            String? prefix = options.HasFlag(LoggingMessageOptions.Prefix) ? type.ToString() : null;
-            return $"[{prefix}]({time}): ";
+        public virtual Boolean Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, IFormatProvider? provider)
+        {
+            String message = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
+            return Log(message, type, options, escape, offset, provider);
         }
 
-        protected abstract void Log(String value, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, IFormatProvider? provider);
-
-        public virtual void Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, IFormatProvider? provider)
+        public virtual Boolean Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, String? format, IFormatProvider? provider)
         {
-            String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
-            Log(text, type, options, escape, offset, provider);
-        }
-
-        public virtual void Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, String? format, IFormatProvider? provider)
-        {
-            String text = value.GetString(escape, format, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
-            Log(text, type, options, escape, offset, provider);
+            String message = value.GetString(escape, format, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
+            return Log(message, type, options, escape, offset, provider);
         }
         
         public void Dispose()

@@ -4,6 +4,7 @@
 using System;
 using System.Drawing;
 using NetExtender.Logging.Common;
+using NetExtender.Logging.Format.Interfaces;
 using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Types;
 
@@ -19,25 +20,40 @@ namespace NetExtender.Logging.Behavior
             }
         }
 
-        protected override void Log(String value, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, IFormatProvider? provider)
+        public ConsoleLoggerBehavior()
         {
-            value = Format(type, options, offset, provider) + value;
+        }
+
+        public ConsoleLoggerBehavior(ILoggerFormatProvider formatter)
+            : base(formatter)
+        {
+        }
+
+        protected override Boolean Log(String? message, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, IFormatProvider? provider)
+        {
+            message = Formatter.Format(message, type, options, offset, provider);
+
+            if (message is null)
+            {
+                return false;
+            }
             
             if (!options.HasFlag(LoggingMessageOptions.Color))
             {
-                value.ToConsole(escape, provider);
-                return;
+                message.ToConsole(escape, provider);
+                return true;
             }
 
             Color(type, out Color? foreground, out Color? background);
 
             if (background is null)
             {
-                _ = foreground is not null ? value.ToConsole(foreground.Value, escape, provider) : value.ToConsole(escape, provider);
-                return;
+                _ = foreground is not null ? message.ToConsole(foreground.Value, escape, provider) : message.ToConsole(escape, provider);
+                return true;
             }
 
-            _ = foreground is not null ? value.ToConsole(foreground.Value, background.Value, escape, provider) : value.ToConsole(default, background.Value, escape, provider);
+            _ = foreground is not null ? message.ToConsole(foreground.Value, background.Value, escape, provider) : message.ToConsole(default, background.Value, escape, provider);
+            return true;
         }
     }
 }
