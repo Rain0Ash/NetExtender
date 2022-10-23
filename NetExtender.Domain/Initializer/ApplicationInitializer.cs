@@ -233,7 +233,7 @@ namespace NetExtender.Domains.Initializer
             }
         }
 
-        public ApplicationInitializer()
+        protected ApplicationInitializer()
         {
             Application = new TApplication();
             View = new TView();

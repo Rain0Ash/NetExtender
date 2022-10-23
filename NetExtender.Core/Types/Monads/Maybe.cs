@@ -30,7 +30,6 @@ namespace NetExtender.Types.Monads
         }
         
         public Boolean HasValue { get; }
-        
         private T Internal { get; }
 
         public T Value

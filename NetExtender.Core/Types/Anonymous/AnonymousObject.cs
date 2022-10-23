@@ -6,143 +6,36 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using NetExtender.Initializer.Types.Core.Interfaces;
+using NetExtender.Types.Anonymous.Interfaces;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Stores;
 using NetExtender.Types.Stores.Interfaces;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Initializer.Types.Core
+namespace NetExtender.Types.Anonymous
 {
-    public readonly ref struct DynamicAnonymousObjectProperty
+    public abstract class AnonymousObject : IAnonymousObject
     {
-        private DynamicAnonymousObject Anonymous { get; }
-        public Int32? Index { get; }
-        public String? Property { get; }
-
-        public Type Type
+        public AnonymousObjectProperty this[Int32 index]
         {
             get
             {
-                if (Property is not null)
-                {
-                    return DynamicAnonymousObjectProperties.Type(Anonymous, Property);
-                }
-
-                return Index is Int32 index ? DynamicAnonymousObjectProperties.Type(Anonymous, index) : throw new InvalidOperationException();
+                return new AnonymousObjectProperty(this, index);
             }
         }
 
-        public Object? Value
+        public AnonymousObjectProperty this[String property]
         {
             get
             {
-                if (Property is not null)
-                {
-                    return DynamicAnonymousObjectProperties.Get(Anonymous, Property).Value;
-                }
-
-                return Index is Int32 index ? DynamicAnonymousObjectProperties.Get(Anonymous, index).Value : throw new InvalidOperationException();
-            }
-            set
-            {
-                if (Property is not null)
-                {
-                    DynamicAnonymousObjectProperties.Set(Anonymous, Property, value);
-                    return;
-                }
-
-                if (Index is Int32 index)
-                {
-                    DynamicAnonymousObjectProperties.Set(Anonymous, index, value);
-                    return;
-                }
-                
-                throw new InvalidOperationException();
-            }
-        }
-        
-        public DynamicAnonymousObjectProperty(DynamicAnonymousObject dynamic, Int32 index)
-        {
-            Anonymous = dynamic ?? throw new ArgumentNullException(nameof(dynamic));
-            Index = index;
-            Property = null;
-        }
-        
-        public DynamicAnonymousObjectProperty(DynamicAnonymousObject dynamic, String property)
-        {
-            Anonymous = dynamic ?? throw new ArgumentNullException(nameof(dynamic));
-            Property = property ?? throw new ArgumentNullException(nameof(property));
-            Index = null;
-        }
-
-        public Boolean Get<T>(out T? result)
-        {
-            try
-            {
-                result = (T?) Value;
-                return true;
-            }
-            catch (Exception)
-            {
-                result = default;
-                return false;
-            }
-        }
-
-        public Boolean Set<T>(T value)
-        {
-            try
-            {
-                Value = value;
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        public Boolean Set<T, TResult>(Func<T?, TResult> selector)
-        {
-            if (selector is null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
-
-            try
-            {
-                return Get(out T? result) && Set(selector(result));
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-    }
-
-    public abstract class DynamicAnonymousObject : IDynamicAnonymousObject
-    {
-        public DynamicAnonymousObjectProperty this[Int32 index]
-        {
-            get
-            {
-                return new DynamicAnonymousObjectProperty(this, index);
-            }
-        }
-
-        public DynamicAnonymousObjectProperty this[String property]
-        {
-            get
-            {
-                return new DynamicAnonymousObjectProperty(this, property);
+                return new AnonymousObjectProperty(this, property);
             }
         }
 
         public IEnumerator<KeyValuePair<String, MemberInfo>> GetEnumerator()
         {
-            return ((IEnumerable<KeyValuePair<String, MemberInfo>>) DynamicAnonymousObjectProperties.Enumerate(this)).GetEnumerator();
+            return ((IEnumerable<KeyValuePair<String, MemberInfo>>) AnonymousObjectProperties.Enumerate(this)).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -151,7 +44,7 @@ namespace NetExtender.Initializer.Types.Core
         }
     }
     
-    internal static class DynamicAnonymousObjectProperties
+    public static class AnonymousObjectProperties
     {
         private static IStore<Type, IndexDictionary<String, MemberInfo>> Store { get; } = new WeakStore<Type, IndexDictionary<String, MemberInfo>>();
         
@@ -179,7 +72,7 @@ namespace NetExtender.Initializer.Types.Core
             return Store.GetOrAdd(type, Internal);
         }
 
-        internal static void Register(Type type, IndexDictionary<String, MemberInfo> store)
+        public static void Register(Type type, IndexDictionary<String, MemberInfo> store)
         {
             if (type is null)
             {
@@ -194,7 +87,8 @@ namespace NetExtender.Initializer.Types.Core
             Store.AddOrUpdate(type, store);
         }
 
-        internal static KeyValuePair<String, MemberInfo>[] Enumerate(DynamicAnonymousObject value)
+        // ReSharper disable once ReturnTypeCanBeEnumerable.Global
+        public static KeyValuePair<String, MemberInfo>[] Enumerate(IAnonymousObject value)
         {
             if (value is null)
             {
@@ -210,7 +104,7 @@ namespace NetExtender.Initializer.Types.Core
             }
         }
 
-        private static MemberInfo Member(DynamicAnonymousObject value, Int32 index)
+        private static MemberInfo Member(IAnonymousObject value, Int32 index)
         {
             if (value is null)
             {
@@ -230,7 +124,7 @@ namespace NetExtender.Initializer.Types.Core
             }
         }
 
-        private static MemberInfo Member(DynamicAnonymousObject value, String name)
+        private static MemberInfo Member(IAnonymousObject value, String name)
         {
             if (value is null)
             {
@@ -247,7 +141,7 @@ namespace NetExtender.Initializer.Types.Core
             return properties.TryGetValue(name, out MemberInfo? member) ? member : throw new MissingMemberException(type.FullName, name);
         }
         
-        public static Int32 Count(DynamicAnonymousObject type)
+        public static Int32 Count(IAnonymousObject type)
         {
             if (type is null)
             {
@@ -257,7 +151,7 @@ namespace NetExtender.Initializer.Types.Core
             return Store.GetOrAdd(type.GetType(), Find).Count;
         }
         
-        public static Type Type(DynamicAnonymousObject anonymous, Int32 index)
+        public static Type Type(IAnonymousObject anonymous, Int32 index)
         {
             if (anonymous is null)
             {
@@ -272,7 +166,7 @@ namespace NetExtender.Initializer.Types.Core
             };
         }
         
-        public static Type Type(DynamicAnonymousObject anonymous, String name)
+        public static Type Type(IAnonymousObject anonymous, String name)
         {
             if (anonymous is null)
             {
@@ -292,7 +186,7 @@ namespace NetExtender.Initializer.Types.Core
             };
         }
         
-        public static (Type Type, Object? Value) Get(DynamicAnonymousObject anonymous, Int32 index)
+        public static (Type Type, Object? Value) Get(IAnonymousObject anonymous, Int32 index)
         {
             if (anonymous is null)
             {
@@ -307,7 +201,7 @@ namespace NetExtender.Initializer.Types.Core
             };
         }
         
-        public static (Type Type, Object? Value) Get(DynamicAnonymousObject anonymous, String name)
+        public static (Type Type, Object? Value) Get(IAnonymousObject anonymous, String name)
         {
             if (anonymous is null)
             {
@@ -327,7 +221,7 @@ namespace NetExtender.Initializer.Types.Core
             };
         }
 
-        public static void Set(DynamicAnonymousObject anonymous, Int32 index, Object? value)
+        public static void Set(IAnonymousObject anonymous, Int32 index, Object? value)
         {
             if (anonymous is null)
             {
@@ -347,7 +241,7 @@ namespace NetExtender.Initializer.Types.Core
             }
         }
 
-        public static void Set(DynamicAnonymousObject anonymous, String name, Object? value)
+        public static void Set(IAnonymousObject anonymous, String name, Object? value)
         {
             if (anonymous is null)
             {
