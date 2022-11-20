@@ -3074,6 +3074,107 @@ namespace NetExtender.Utilities.Types
 
             return source.ToArray();
         }
+
+        public static TaskAwaiter GetAwaiter(this SByte value)
+        {
+            if (value == Timeout.Infinite)
+            {
+                return GetAwaiter(Timeout.InfiniteTimeSpan);
+            }
+            
+            TimeSpan wait = value > 0 ? TimeSpan.FromMilliseconds(value) : TimeSpan.Zero;
+            return GetAwaiter(wait);
+        }
+
+        public static TaskAwaiter GetAwaiter(this Byte value)
+        {
+            TimeSpan wait = value > 0 ? TimeSpan.FromMilliseconds(value) : TimeSpan.Zero;
+            return GetAwaiter(wait);
+        }
+
+        public static TaskAwaiter GetAwaiter(this Int16 value)
+        {
+            if (value == Timeout.Infinite)
+            {
+                return GetAwaiter(Timeout.InfiniteTimeSpan);
+            }
+            
+            TimeSpan wait = value > 0 ? TimeSpan.FromMilliseconds(value) : TimeSpan.Zero;
+            return GetAwaiter(wait);
+        }
+
+        public static TaskAwaiter GetAwaiter(this UInt16 value)
+        {
+            TimeSpan wait = value > 0 ? TimeSpan.FromMilliseconds(value) : TimeSpan.Zero;
+            return GetAwaiter(wait);
+        }
+
+        public static TaskAwaiter GetAwaiter(this Int32 value)
+        {
+            if (value == Timeout.Infinite)
+            {
+                return GetAwaiter(Timeout.InfiniteTimeSpan);
+            }
+            
+            TimeSpan wait = value > 0 ? TimeSpan.FromMilliseconds(value) : TimeSpan.Zero;
+            return GetAwaiter(wait);
+        }
+
+        public static TaskAwaiter GetAwaiter(this UInt32 value)
+        {
+            TimeSpan wait = value > 0 ? TimeSpan.FromMilliseconds(value) : TimeSpan.Zero;
+            return GetAwaiter(wait);
+        }
+
+        public static TaskAwaiter GetAwaiter(this Int64 value)
+        {
+            if (value == Timeout.Infinite)
+            {
+                return GetAwaiter(Timeout.InfiniteTimeSpan);
+            }
+            
+            TimeSpan wait = value > 0 ? TimeSpan.FromMilliseconds(value) : TimeSpan.Zero;
+            return GetAwaiter(wait);
+        }
+
+        public static TaskAwaiter GetAwaiter(this UInt64 value)
+        {
+            TimeSpan wait = value > 0 ? TimeSpan.FromMilliseconds(value) : TimeSpan.Zero;
+            return GetAwaiter(wait);
+        }
+
+        public static TaskAwaiter GetAwaiter(this Single value)
+        {
+            if (Math.Abs(value - Timeout.Infinite) < Single.Epsilon)
+            {
+                return GetAwaiter(Timeout.InfiniteTimeSpan);
+            }
+            
+            TimeSpan wait = value > 0 ? TimeSpan.FromMilliseconds(value) : TimeSpan.Zero;
+            return GetAwaiter(wait);
+        }
+
+        public static TaskAwaiter GetAwaiter(this Double value)
+        {
+            if (Math.Abs(value - Timeout.Infinite) < Double.Epsilon)
+            {
+                return GetAwaiter(Timeout.InfiniteTimeSpan);
+            }
+            
+            TimeSpan wait = value > 0 ? TimeSpan.FromMilliseconds(value) : TimeSpan.Zero;
+            return GetAwaiter(wait);
+        }
+
+        public static TaskAwaiter GetAwaiter(this Decimal value)
+        {
+            if (value == Timeout.Infinite)
+            {
+                return GetAwaiter(Timeout.InfiniteTimeSpan);
+            }
+            
+            TimeSpan wait = value > 0 ? TimeSpan.FromMilliseconds((Double) value) : TimeSpan.Zero;
+            return GetAwaiter(wait);
+        }
         
         public static TaskAwaiter GetAwaiter(this TimeSpan value)
         {

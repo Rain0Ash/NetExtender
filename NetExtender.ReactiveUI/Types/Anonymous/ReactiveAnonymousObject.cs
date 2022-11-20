@@ -4,14 +4,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using NetExtender.ReactiveUI.Types.Anonymous.Interfaces;
 using NetExtender.Types.Anonymous;
+using NetExtender.Utilities.Types;
 using ReactiveUI;
 
 namespace NetExtender.ReactiveUI.Anonymous.Core
 {
-    public class ReactiveAnonymousObject : ReactiveObject, IReactiveAnonymousObject
+    public abstract class ReactiveAnonymousObject : ReactiveObject, IReactiveAnonymousObject
     {
         public AnonymousObjectProperty this[Int32 index]
         {
@@ -29,9 +29,9 @@ namespace NetExtender.ReactiveUI.Anonymous.Core
             }
         }
 
-        public IEnumerator<KeyValuePair<String, MemberInfo>> GetEnumerator()
+        public IEnumerator<KeyValuePair<String, Object?>> GetEnumerator()
         {
-            return ((IEnumerable<KeyValuePair<String, MemberInfo>>) AnonymousObjectProperties.Enumerate(this)).GetEnumerator();
+            return AnonymousTypeUtilities.Values(this).GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

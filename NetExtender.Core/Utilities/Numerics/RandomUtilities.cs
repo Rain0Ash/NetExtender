@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
@@ -945,6 +946,142 @@ namespace NetExtender.Utilities.Numerics
 
             TimeSpan span = NextTimeSpan(random, max - min);
             return min.Add(span);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Boolean> RangeChance()
+        {
+            return RangeChance(Generator);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Boolean> RangeChance(Int32 count)
+        {
+            return RangeChance(Generator, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Boolean> RangeChance(Double chance)
+        {
+            return RangeChance(Generator, chance);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Boolean> RangeChance(Double chance, Int32 count)
+        {
+            return RangeChance(Generator, chance, count);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Boolean> RangeChance(this Random random)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            while (true)
+            {
+                yield return random.NextBoolean();
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Boolean> RangeChance(this Random random, Int32 count)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            for (Int32 i = 0; i < count; i++)
+            {
+                yield return random.NextBoolean();
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Boolean> RangeChance(this Random random, Double chance)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            while (true)
+            {
+                yield return random.NextBoolean(chance);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Boolean> RangeChance(this Random random, Double chance, Int32 count)
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            for (Int32 i = 0; i < count; i++)
+            {
+                yield return random.NextBoolean(chance);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Boolean> RangeChance<T>(this T random) where T : IRandom
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            while (true)
+            {
+                yield return random.NextBoolean();
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Boolean> RangeChance<T>(this T random, Int32 count) where T : IRandom
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            for (Int32 i = 0; i < count; i++)
+            {
+                yield return random.NextBoolean();
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Boolean> RangeChance<T>(this T random, Double chance) where T : IRandom
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            while (true)
+            {
+                yield return random.NextBoolean(chance);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Boolean> RangeChance<T>(this T random, Double chance, Int32 count) where T : IRandom
+        {
+            if (random is null)
+            {
+                throw new ArgumentNullException(nameof(random));
+            }
+
+            for (Int32 i = 0; i < count; i++)
+            {
+                yield return random.NextBoolean(chance);
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

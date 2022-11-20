@@ -39,12 +39,12 @@ namespace NetExtender.Domains
                     _application = value;
                 }
             }
-
-            public DateTime StartedAt
+            
+            public Boolean IsReady
             {
                 get
                 {
-                    return Data.StartedAt;
+                    return _application is not null;
                 }
             }
 
@@ -103,6 +103,14 @@ namespace NetExtender.Domains
                 get
                 {
                     return Data.Information;
+                }
+            }
+            
+            public DateTime StartedAt
+            {
+                get
+                {
+                    return Data.StartedAt;
                 }
             }
 

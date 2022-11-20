@@ -126,33 +126,33 @@ namespace NetExtender.Domains.Initializer
             return await ThreadUtilities.STA(InternalAsync, args, token);
         }
 
-        protected override void Shutdown(Object? sender, Boolean exit)
+        protected override void Shutdown(Object? sender, Int32 code, Boolean exit)
         {
             if (exit)
             {
                 return;
             }
 
-            if (Domain.IsInitialized)
+            if (!Domain.IsReady)
             {
-                Domain.Shutdown();
+                ApplicationUtilities.Shutdown(code);
                 return;
             }
 
-            ApplicationUtilities.Shutdown();
+            Domain.Shutdown(code);
         }
 
         protected override void Terminate(Object? sender, Exception? exception)
         {
             Int32 code = exception?.HResult ?? 1;
-            
-            if (Domain.IsInitialized)
+
+            if (!Domain.IsReady)
             {
-                Domain.Shutdown(code, true);
+                ApplicationUtilities.Shutdown(code);
                 return;
             }
-            
-            ApplicationUtilities.Shutdown(code);
+
+            Domain.Shutdown(code, true);
         }
     }
     

@@ -15,6 +15,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using NetExtender.Initializer.Types.Reflection;
 using NetExtender.Types.Attributes;
 using NetExtender.Utilities.Types;
 
@@ -48,6 +49,98 @@ namespace NetExtender.Utilities.Core
         Unavailable,
         Private,
         Public
+    }
+
+    public enum ReflectionEqualityType : Byte
+    {
+        NotEquals,
+        NameNotEquals,
+        TypeNotEquals,
+        AttributeNotEquals,
+        SignatureNotEquals,
+        ReturnTypeNotEquals,
+        AccessorNotEquals,
+        Equals
+    }
+
+    [Flags]
+    public enum ConstructorDifferenceStrictMode : Byte
+    {
+        None = 0,
+        Name = 1,
+        Access = 2,
+        Attribute = 4 | Access,
+        CallingConvention = 8,
+        Strict = Name | Access | CallingConvention,
+        NotStrict = Name | CallingConvention,
+        All = Name | Attribute | CallingConvention
+    }
+
+    [Flags]
+    public enum FieldDifferenceStrictMode : Byte
+    {
+        None = 0,
+        Name = 1,
+        Access = 2,
+        InitOnly = 4,
+        Attribute = 8 | Access | InitOnly,
+        Strict = Name | Access | InitOnly,
+        NotStrict = Name | InitOnly,
+        All = Name | Attribute
+    }
+
+    [Flags]
+    public enum PropertyDifferenceStrictMode : Byte
+    {
+        None = 0,
+        Name = 1,
+        Access = 2,
+        Attribute = 8 | Access,
+        Strict = Name | Access,
+        NotStrict = Name,
+        All = Name | Attribute
+    }
+
+    [Flags]
+    public enum MethodDifferenceStrictMode : Byte
+    {
+        None = 0,
+        Name = 1,
+        Access = 2,
+        Attribute = 4 | Access,
+        CallingConvention = 8,
+        Strict = Name | Access | CallingConvention,
+        NotStrict = Name | CallingConvention,
+        All = Name | Attribute | CallingConvention
+    }
+
+    [Flags]
+    public enum EventDifferenceStrictMode : Byte
+    {
+        None = 0,
+        Name = 1,
+        Multicast = 2,
+        Attribute = 4 | Multicast,
+        Strict = Name | Attribute,
+        NotStrict = Name | Multicast,
+        All = Name | Attribute
+    }
+
+    [Flags]
+    public enum ParameterDifferenceStrictMode : Byte
+    {
+        None = 0,
+        Name = 1,
+        In = 2,
+        Out = 4,
+        Retval = 8,
+        Attribute = 16 | In | Out | Retval,
+        Optional = 32,
+        DefaultValue = 64,
+        DefaultValueEquals = 128 | DefaultValue,
+        Strict = Name | Attribute | DefaultValueEquals,
+        NotStrict = Name | In | Out,
+        All = Name | Attribute | Optional | DefaultValueEquals
     }
 
     public static class ReflectionUtilities
@@ -1901,6 +1994,16 @@ namespace NetExtender.Utilities.Core
 
             return info.GetIndexParameters().Length > 0;
         }
+
+        public static FieldAttributes Access(this FieldAttributes attributes)
+        {
+            return attributes & FieldAttributes.FieldAccessMask;
+        }
+
+        public static MethodAttributes Access(this MethodAttributes attributes)
+        {
+            return attributes & MethodAttributes.MemberAccessMask;
+        }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodVisibilityType IsRead(this PropertyInfo info)
@@ -2122,6 +2225,635 @@ namespace NetExtender.Utilities.Core
             
             result.AddRange(finder.Invoke(typeof(Object)));
             return result.ToArray();
+        }
+
+        private static MethodDifferenceStrictMode ToMethodDifferenceStrictMode(this PropertyDifferenceStrictMode strict)
+        {
+            MethodDifferenceStrictMode result = MethodDifferenceStrictMode.None;
+
+            if (strict.HasFlag(PropertyDifferenceStrictMode.Name))
+            {
+                result |= MethodDifferenceStrictMode.Name;
+            }
+            
+            if (strict.HasFlag(PropertyDifferenceStrictMode.Access))
+            {
+                result |= MethodDifferenceStrictMode.Access;
+            }
+            
+            if (strict.HasFlag(PropertyDifferenceStrictMode.Attribute))
+            {
+                result |= MethodDifferenceStrictMode.Access;
+            }
+
+            return result;
+        }
+
+        public static Boolean Equality(this MethodBody first, MethodBody second)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+
+            if (first == second)
+            {
+                return true;
+            }
+
+            Byte[]? il1 = first.GetILAsByteArray();
+            Byte[]? il2 = second.GetILAsByteArray();
+            
+            return il1 == il2 || il1 is not null && il2 is not null && il1.SequenceEqual(il2);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Equality(this ConstructorInfo first, ConstructorInfo second)
+        {
+            return Difference(first, second) == ReflectionEqualityType.Equals;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Equality(this ConstructorInfo first, ConstructorInfo second, Boolean strict)
+        {
+            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Equality(this ConstructorInfo first, ConstructorInfo second, ConstructorDifferenceStrictMode strict)
+        {
+            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReflectionDifferenceItem<ConstructorInfo> Difference(this ConstructorInfo first, ConstructorInfo second)
+        {
+            return Difference(first, second, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReflectionDifferenceItem<ConstructorInfo> Difference(this ConstructorInfo first, ConstructorInfo second, Boolean strict)
+        {
+            return Difference(first, second, strict ? ConstructorDifferenceStrictMode.Strict : ConstructorDifferenceStrictMode.NotStrict);
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public static ReflectionDifferenceItem<ConstructorInfo> Difference(this ConstructorInfo first, ConstructorInfo second, ConstructorDifferenceStrictMode strict)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+
+            if (first == second)
+            {
+                return new ReflectionDifferenceItem<ConstructorInfo>(first, second, ReflectionEqualityType.Equals);
+            }
+
+            if (first.DeclaringType != second.DeclaringType)
+            {
+                return new ReflectionDifferenceItem<ConstructorInfo>(first, second, ReflectionEqualityType.TypeNotEquals);
+            }
+
+            if (strict.HasFlag(ConstructorDifferenceStrictMode.Name) && first.Name != second.Name)
+            {
+                return new ReflectionDifferenceItem<ConstructorInfo>(first, second, ReflectionEqualityType.NameNotEquals);
+            }
+
+            if (strict.HasFlag(ConstructorDifferenceStrictMode.CallingConvention) && first.CallingConvention != second.CallingConvention)
+            {
+                return new ReflectionDifferenceItem<ConstructorInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+            }
+
+            if (strict.HasFlag(ConstructorDifferenceStrictMode.Attribute) && first.Attributes != second.Attributes)
+            {
+                return new ReflectionDifferenceItem<ConstructorInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+            }
+
+            if (strict.HasFlag(ConstructorDifferenceStrictMode.Access) && first.Attributes.Access() != second.Attributes.Access())
+            {
+                return new ReflectionDifferenceItem<ConstructorInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+            }
+
+            ParameterInfo[] parameters1 = first.GetParameters();
+            ParameterInfo[] parameters2 = second.GetParameters();
+
+            if (parameters1.Length != parameters2.Length)
+            {
+                return new ReflectionDifferenceItem<ConstructorInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+            }
+
+            static ReflectionDifferenceItem<ParameterInfo> Check((ParameterInfo First, ParameterInfo Second) value)
+            {
+                return Difference(value.First, value.Second);
+            }
+
+            Boolean equals = parameters1.Zip(parameters2).Select(Check).All(difference => difference.Equality == ReflectionEqualityType.Equals);
+            return new ReflectionDifferenceItem<ConstructorInfo>(first, second, equals ? ReflectionEqualityType.Equals : ReflectionEqualityType.SignatureNotEquals);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Equality(this FieldInfo first, FieldInfo second)
+        {
+            return Difference(first, second) == ReflectionEqualityType.Equals;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Equality(this FieldInfo first, FieldInfo second, Boolean strict)
+        {
+            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Equality(this FieldInfo first, FieldInfo second, FieldDifferenceStrictMode strict)
+        {
+            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReflectionDifferenceItem<FieldInfo> Difference(this FieldInfo first, FieldInfo second)
+        {
+            return Difference(first, second, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReflectionDifferenceItem<FieldInfo> Difference(this FieldInfo first, FieldInfo second, Boolean strict)
+        {
+            return Difference(first, second, strict ? FieldDifferenceStrictMode.Strict : FieldDifferenceStrictMode.NotStrict);
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public static ReflectionDifferenceItem<FieldInfo> Difference(this FieldInfo first, FieldInfo second, FieldDifferenceStrictMode strict)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+            
+            if (first == second)
+            {
+                return new ReflectionDifferenceItem<FieldInfo>(first, second, ReflectionEqualityType.Equals);
+            }
+
+            if (strict.HasFlag(FieldDifferenceStrictMode.Name) && first.Name != second.Name)
+            {
+                return new ReflectionDifferenceItem<FieldInfo>(first, second, ReflectionEqualityType.NameNotEquals);
+            }
+
+            if (first.FieldType != second.FieldType)
+            {
+                return new ReflectionDifferenceItem<FieldInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+            }
+
+            if (first.IsStatic != second.IsStatic)
+            {
+                return new ReflectionDifferenceItem<FieldInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+            }
+
+            if (strict.HasFlag(FieldDifferenceStrictMode.Attribute) && first.Attributes != second.Attributes)
+            {
+                return new ReflectionDifferenceItem<FieldInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+            }
+
+            if (strict.HasFlag(FieldDifferenceStrictMode.Access) && first.Attributes.Access() != second.Attributes.Access())
+            {
+                return new ReflectionDifferenceItem<FieldInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+            }
+
+            if (strict.HasFlag(FieldDifferenceStrictMode.InitOnly) && first.IsInitOnly != second.IsInitOnly)
+            {
+                return new ReflectionDifferenceItem<FieldInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+            }
+
+            return new ReflectionDifferenceItem<FieldInfo>(first, second, ReflectionEqualityType.Equals);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Equality(this PropertyInfo first, PropertyInfo second)
+        {
+            return Difference(first, second) == ReflectionEqualityType.Equals;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Equality(this PropertyInfo first, PropertyInfo second, Boolean strict)
+        {
+            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Equality(this PropertyInfo first, PropertyInfo second, PropertyDifferenceStrictMode strict)
+        {
+            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReflectionDifferenceItem<PropertyInfo> Difference(this PropertyInfo first, PropertyInfo second)
+        {
+            return Difference(first, second, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReflectionDifferenceItem<PropertyInfo> Difference(this PropertyInfo first, PropertyInfo second, Boolean strict)
+        {
+            return Difference(first, second, strict ? PropertyDifferenceStrictMode.Strict : PropertyDifferenceStrictMode.NotStrict);
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public static ReflectionDifferenceItem<PropertyInfo> Difference(this PropertyInfo first, PropertyInfo second, PropertyDifferenceStrictMode strict)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+            
+            if (first == second)
+            {
+                return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.Equals);
+            }
+            
+            if (strict.HasFlag(PropertyDifferenceStrictMode.Name) && first.Name != second.Name)
+            {
+                return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.NameNotEquals);
+            }
+
+            if (first.PropertyType != second.PropertyType)
+            {
+                return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+            }
+
+            if (first.CanRead != second.CanRead || first.CanWrite != second.CanWrite)
+            {
+                return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+            }
+
+            if (strict.HasFlag(PropertyDifferenceStrictMode.Attribute) && first.Attributes != second.Attributes)
+            {
+                return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+            }
+
+            if (!strict.HasFlag(PropertyDifferenceStrictMode.Access))
+            {
+                return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.Equals);
+            }
+
+            MethodInfo? get1 = first.GetMethod;
+            MethodInfo? get2 = second.GetMethod;
+            MethodDifferenceStrictMode difference = strict.ToMethodDifferenceStrictMode();
+                
+            if (get1 is not null && get2 is not null && !Equality(get1, get2, difference))
+            {
+                return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+            }
+                
+            MethodInfo? set1 = first.SetMethod;
+            MethodInfo? set2 = second.SetMethod;
+                
+            if (set1 is not null && set2 is not null && !Equality(set1, set2, difference))
+            {
+                return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+            }
+
+            return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.Equals);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Equality(this MethodInfo first, MethodInfo second)
+        {
+            return Difference(first, second) == ReflectionEqualityType.Equals;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Equality(this MethodInfo first, MethodInfo second, Boolean strict)
+        {
+            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Equality(this MethodInfo first, MethodInfo second, MethodDifferenceStrictMode strict)
+        {
+            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReflectionDifferenceItem<MethodInfo> Difference(this MethodInfo first, MethodInfo second)
+        {
+            return Difference(first, second, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReflectionDifferenceItem<MethodInfo> Difference(this MethodInfo first, MethodInfo second, Boolean strict)
+        {
+            return Difference(first, second, strict ? MethodDifferenceStrictMode.Strict : MethodDifferenceStrictMode.NotStrict);
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public static ReflectionDifferenceItem<MethodInfo> Difference(this MethodInfo first, MethodInfo second, MethodDifferenceStrictMode strict)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+            
+            if (first == second)
+            {
+                return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.Equals);
+            }
+            
+            if (strict.HasFlag(MethodDifferenceStrictMode.Name) && first.Name != second.Name)
+            {
+                return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.NameNotEquals);
+            }
+            
+            if (first.ReturnType != second.ReturnType)
+            {
+                return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+            }
+            
+            if (strict.HasFlag(MethodDifferenceStrictMode.CallingConvention) && first.CallingConvention != second.CallingConvention)
+            {
+                return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+            }
+            
+            if (strict.HasFlag(MethodDifferenceStrictMode.Attribute) && first.Attributes != second.Attributes)
+            {
+                return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+            }
+            
+            if (strict.HasFlag(MethodDifferenceStrictMode.Access) && first.Attributes.Access() != second.Attributes.Access())
+            {
+                return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+            }
+            
+            ParameterInfo[] parameters1 = first.GetParameters();
+            ParameterInfo[] parameters2 = second.GetParameters();
+
+            if (parameters1.Length != parameters2.Length)
+            {
+                return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+            }
+
+            static ReflectionDifferenceItem<ParameterInfo> Check((ParameterInfo First, ParameterInfo Second) value)
+            {
+                return Difference(value.First, value.Second);
+            }
+
+            Boolean equals = parameters1.Zip(parameters2).Select(Check).All(difference => difference.Equality == ReflectionEqualityType.Equals);
+            return new ReflectionDifferenceItem<MethodInfo>(first, second, equals ? ReflectionEqualityType.Equals : ReflectionEqualityType.SignatureNotEquals);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Equality(this EventInfo first, EventInfo second)
+        {
+            return Difference(first, second) == ReflectionEqualityType.Equals;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Equality(this EventInfo first, EventInfo second, Boolean strict)
+        {
+            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Equality(this EventInfo first, EventInfo second, EventDifferenceStrictMode strict)
+        {
+            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReflectionDifferenceItem<EventInfo> Difference(this EventInfo first, EventInfo second)
+        {
+            return Difference(first, second, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReflectionDifferenceItem<EventInfo> Difference(this EventInfo first, EventInfo second, Boolean strict)
+        {
+            return Difference(first, second, strict ? EventDifferenceStrictMode.Strict : EventDifferenceStrictMode.NotStrict);
+        }
+
+        public static ReflectionDifferenceItem<EventInfo> Difference(this EventInfo first, EventInfo second, EventDifferenceStrictMode strict)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+            
+            if (first == second)
+            {
+                return new ReflectionDifferenceItem<EventInfo>(first, second, ReflectionEqualityType.Equals);
+            }
+            
+            if (strict.HasFlag(EventDifferenceStrictMode.Name) && first.Name != second.Name)
+            {
+                return new ReflectionDifferenceItem<EventInfo>(first, second, ReflectionEqualityType.NameNotEquals);
+            }
+            
+            if (first.EventHandlerType != second.EventHandlerType)
+            {
+                return new ReflectionDifferenceItem<EventInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+            }
+            
+            if (strict.HasFlag(EventDifferenceStrictMode.Attribute) && first.Attributes != second.Attributes)
+            {
+                return new ReflectionDifferenceItem<EventInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+            }
+            
+            if (strict.HasFlag(EventDifferenceStrictMode.Multicast) && first.IsMulticast != second.IsMulticast)
+            {
+                return new ReflectionDifferenceItem<EventInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+            }
+
+            return new ReflectionDifferenceItem<EventInfo>(first, second, ReflectionEqualityType.Equals);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Equality(this ParameterInfo first, ParameterInfo second)
+        {
+            return Difference(first, second) == ReflectionEqualityType.Equals;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Equality(this ParameterInfo first, ParameterInfo second, Boolean strict)
+        {
+            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean Equality(this ParameterInfo first, ParameterInfo second, ParameterDifferenceStrictMode strict)
+        {
+            return Difference(first, second, strict) == ReflectionEqualityType.Equals;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReflectionDifferenceItem<ParameterInfo> Difference(this ParameterInfo first, ParameterInfo second)
+        {
+            return Difference(first, second, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ReflectionDifferenceItem<ParameterInfo> Difference(this ParameterInfo first, ParameterInfo second, Boolean strict)
+        {
+            return Difference(first, second, strict ? ParameterDifferenceStrictMode.Strict : ParameterDifferenceStrictMode.NotStrict);
+        }
+
+        // ReSharper disable once CognitiveComplexity
+        public static ReflectionDifferenceItem<ParameterInfo> Difference(this ParameterInfo first, ParameterInfo second, ParameterDifferenceStrictMode strict)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+            
+            if (first == second)
+            {
+                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.Equals);
+            }
+
+            if (strict.HasFlag(ParameterDifferenceStrictMode.Name) && first.Name != second.Name)
+            {
+                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.NameNotEquals);
+            }
+
+            if (first.Position != second.Position)
+            {
+                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+            }
+
+            if (first.ParameterType != second.ParameterType)
+            {
+                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+            }
+
+            if (strict.HasFlag(ParameterDifferenceStrictMode.Attribute) && first.Attributes != second.Attributes)
+            {
+                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+            }
+
+            if (strict.HasFlag(ParameterDifferenceStrictMode.In) && first.IsIn != second.IsIn)
+            {
+                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+            }
+
+            if (strict.HasFlag(ParameterDifferenceStrictMode.Out) && first.IsOut != second.IsOut)
+            {
+                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+            }
+
+            if (strict.HasFlag(ParameterDifferenceStrictMode.Retval) && first.IsRetval != second.IsRetval)
+            {
+                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
+            }
+
+            if (strict.HasFlag(ParameterDifferenceStrictMode.Optional) && first.IsOptional != second.IsOptional)
+            {
+                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+            }
+
+            if (strict.HasFlag(ParameterDifferenceStrictMode.DefaultValue) && first.HasDefaultValue != second.HasDefaultValue)
+            {
+                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+            }
+
+            if (strict.HasFlag(ParameterDifferenceStrictMode.DefaultValueEquals) && first.DefaultValue != second.DefaultValue)
+            {
+                return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
+            }
+
+            return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.Equals);
+        }
+        
+        public static Boolean Equality(this MemberInfo first, MemberInfo second)
+        {
+            return Difference(first, second) == ReflectionEqualityType.Equals;
+        }
+        
+        public static ReflectionDifferenceItem<MemberInfo> Difference(this MemberInfo first, MemberInfo second)
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+            
+            if (first == second)
+            {
+                return new ReflectionDifferenceItem<MemberInfo>(first, second, ReflectionEqualityType.Equals);
+            }
+
+            if (first.GetType() != second.GetType())
+            {
+                throw new ArgumentException($"Type of first argument '{first.GetType()}' is not equals type of second argument '{second.GetType()}'", nameof(second));
+            }
+
+            switch (first)
+            {
+                case ConstructorInfo constructor1 when second is ConstructorInfo constructor2:
+                {
+                    ReflectionDifferenceItem<ConstructorInfo> difference = Difference(constructor1, constructor2);
+                    return new ReflectionDifferenceItem<MemberInfo>(difference.Current, difference.Other, difference.Equality);
+                }
+                case FieldInfo field1 when second is FieldInfo field2:
+                {
+                    ReflectionDifferenceItem<FieldInfo> difference = Difference(field1, field2);
+                    return new ReflectionDifferenceItem<MemberInfo>(difference.Current, difference.Other, difference.Equality);
+                }
+                case PropertyInfo property1 when second is PropertyInfo property2:
+                {
+                    ReflectionDifferenceItem<PropertyInfo> difference = Difference(property1, property2);
+                    return new ReflectionDifferenceItem<MemberInfo>(difference.Current, difference.Other, difference.Equality);
+                }
+                case MethodInfo method1 when second is MethodInfo method2:
+                {
+                    ReflectionDifferenceItem<MethodInfo> difference = Difference(method1, method2);
+                    return new ReflectionDifferenceItem<MemberInfo>(difference.Current, difference.Other, difference.Equality);
+                }
+                case EventInfo event1 when second is EventInfo event2:
+                {
+                    ReflectionDifferenceItem<EventInfo> difference = Difference(event1, event2);
+                    return new ReflectionDifferenceItem<MemberInfo>(difference.Current, difference.Other, difference.Equality);
+                }
+                default:
+                    throw new NotSupportedException($"Member type '{first.GetType()}' is not supported.");
+            }
         }
 
         /// <summary>

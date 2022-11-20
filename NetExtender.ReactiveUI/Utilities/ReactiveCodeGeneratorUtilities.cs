@@ -17,7 +17,7 @@ namespace NetExtender.ReactiveUI.Utilities
         {
             RaiseAndSetIfChanged = typeof(IReactiveObjectExtensions).GetMethod(nameof(RaiseAndSetIfChanged)) ?? throw new InvalidOperationException(nameof(RaiseAndSetIfChanged));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static ILGenerator DefineReactiveSetMethod(this ILGenerator generator, FieldBuilder field, Type caller, String name, Type type)
         {

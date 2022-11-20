@@ -15,6 +15,8 @@ namespace NetExtender.Domains.Interfaces
     {
         public IApplication Application { get; }
         
+        public Boolean IsReady { get; }
+        
         public Guid Guid { get; }
         
         public ApplicationVersion Version { get; }
@@ -38,7 +40,6 @@ namespace NetExtender.Domains.Interfaces
         public String ApplicationIdentifier { get; }
         
         public CultureInfo Culture { get; set; }
-        
         public Boolean AlreadyStarted { get; }
 
         public new IDomain Run();

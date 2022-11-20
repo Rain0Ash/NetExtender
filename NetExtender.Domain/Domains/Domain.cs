@@ -64,6 +64,14 @@ namespace NetExtender.Domains
             }
         }
 
+        public static Boolean IsReady
+        {
+            get
+            {
+                return IsInitialized && Current.IsReady;
+            }
+        }
+
         public static IDomain Current
         {
             get

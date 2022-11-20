@@ -3,11 +3,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace NetExtender.Types.Anonymous.Interfaces
 {
-    public interface IAnonymousObject : IEnumerable<KeyValuePair<String, MemberInfo>>
+    public interface IAnonymousObject : IEnumerable<KeyValuePair<String, Object?>>
     {
         public AnonymousObjectProperty this[Int32 index] { get; }
         public AnonymousObjectProperty this[String property] { get; }

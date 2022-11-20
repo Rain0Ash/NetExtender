@@ -13,7 +13,6 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using System.Text;
 using NetExtender.Types.Collections;
-using NetExtender.Types.Exceptions;
 using NetExtender.Types.Strings.Interfaces;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Numerics;
@@ -2026,35 +2025,6 @@ namespace NetExtender.Utilities.Types
 
             encoding ??= Encoding.UTF8;
             return encoding.GetString(data);
-        }
-
-        public static T? Clone<T>(this T? value)
-        {
-            if (value is null)
-            {
-                return default;
-            }
-            
-            if (value.Equals(default))
-            {
-                return default;
-            }
-
-            return value switch
-            {
-                ICloneable cloneable => cloneable.Clone<T>(),
-                _ => value.DeepCopy()
-            };
-        }
-
-        public static T Clone<T>(this ICloneable cloneable)
-        {
-            if (cloneable.Clone() is T clone)
-            {
-                return clone;
-            }
-
-            throw new CloneException($"{cloneable.GetType()} is not {typeof(T)}");
         }
     }
 }

@@ -4,6 +4,7 @@
 using System;
 using NetExtender.Types.Anonymous.Interfaces;
 using NetExtender.Types.Monads;
+using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Anonymous
 {
@@ -24,10 +25,10 @@ namespace NetExtender.Types.Anonymous
             {
                 if (Property is not null)
                 {
-                    return AnonymousObjectProperties.Type(Anonymous, Property);
+                    return AnonymousTypeUtilities.Type(Anonymous, Property);
                 }
 
-                return Index is Int32 index ? AnonymousObjectProperties.Type(Anonymous, index) : throw new InvalidOperationException();
+                return Index is Int32 index ? AnonymousTypeUtilities.Type(Anonymous, index) : throw new InvalidOperationException();
             }
         }
 
@@ -37,22 +38,22 @@ namespace NetExtender.Types.Anonymous
             {
                 if (Property is not null)
                 {
-                    return AnonymousObjectProperties.Get(Anonymous, Property).Value;
+                    return AnonymousTypeUtilities.Get(Anonymous, Property).Value;
                 }
 
-                return Index is Int32 index ? AnonymousObjectProperties.Get(Anonymous, index).Value : throw new InvalidOperationException();
+                return Index is Int32 index ? AnonymousTypeUtilities.Get(Anonymous, index).Value : throw new InvalidOperationException();
             }
             set
             {
                 if (Property is not null)
                 {
-                    AnonymousObjectProperties.Set(Anonymous, Property, value);
+                    AnonymousTypeUtilities.Set(Anonymous, Property, value);
                     return;
                 }
 
                 if (Index is Int32 index)
                 {
-                    AnonymousObjectProperties.Set(Anonymous, index, value);
+                    AnonymousTypeUtilities.Set(Anonymous, index, value);
                     return;
                 }
                 
@@ -75,16 +76,16 @@ namespace NetExtender.Types.Anonymous
             }
         }
 
-        public AnonymousObjectProperty(IAnonymousObject dynamic, Int32 index)
+        public AnonymousObjectProperty(IAnonymousObject anonymous, Int32 index)
         {
-            Anonymous = dynamic ?? throw new ArgumentNullException(nameof(dynamic));
+            Anonymous = anonymous ?? throw new ArgumentNullException(nameof(anonymous));
             Index = index;
             Property = null;
         }
         
-        public AnonymousObjectProperty(IAnonymousObject dynamic, String property)
+        public AnonymousObjectProperty(IAnonymousObject anonymous, String property)
         {
-            Anonymous = dynamic ?? throw new ArgumentNullException(nameof(dynamic));
+            Anonymous = anonymous ?? throw new ArgumentNullException(nameof(anonymous));
             Property = property ?? throw new ArgumentNullException(nameof(property));
             Index = null;
         }

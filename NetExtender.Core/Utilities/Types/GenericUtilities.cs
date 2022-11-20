@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Monads;
 using NetExtender.Utilities.Core;
 
@@ -430,12 +431,49 @@ namespace NetExtender.Utilities.Types
         {
             return value is not null ? (T) MemberwiseCloneDelegate.Invoke(value) : default;
         }
+        
+        [return: NotNullIfNotNull("value")]
+        public static T? Clone<T>(this T? value)
+        {
+            if (value is null)
+            {
+                return default;
+            }
+            
+            if (Equals(value, default))
+            {
+                return default;
+            }
+
+            return value switch
+            {
+                ICloneable cloneable => cloneable.Clone<T>(),
+                _ => value.DeepCopy()
+            };
+        }
+
+        [return: NotNullIfNotNull("cloneable")]
+        public static T? Clone<T>(this ICloneable? cloneable)
+        {
+            if (cloneable is null)
+            {
+                return default;
+            }
+            
+            if (cloneable.Clone() is T clone)
+            {
+                return clone;
+            }
+
+            throw new CloneException($"{cloneable.GetType()} is not {typeof(T)}");
+        }
 
         /// <summary>
         /// Creates a deep copy (new instance with new instances of properties).
         /// </summary>
         /// <param name="original">The original object to copy.</param>
-        public static T? DeepCopy<T>(this T? original)
+        [return: NotNullIfNotNull("original")]
+        public static T? DeepCopy<T>(this T original)
         {
             if (original is null)
             {
@@ -449,11 +487,11 @@ namespace NetExtender.Utilities.Types
                     return generic;
                 }
 
-                return default;
+                throw new CloneException();
             }
-            catch (Exception)
+            catch (Exception exception)
             {
-                return default;
+                throw new CloneException(null, exception);
             }
         }
         

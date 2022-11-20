@@ -29,10 +29,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Types" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Update="Initializer\InternalInitializer.cs">
         <DependentUpon>NetExtenderFrameworkInitializer.cs</DependentUpon>
       </Compile>

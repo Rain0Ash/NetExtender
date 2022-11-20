@@ -27,7 +27,10 @@ namespace NetExtender.Utilities.Numerics
             }
             catch (Exception exception)
             {
-                return delegate { throw new InvalidOperationException(exception.Message); };
+                return delegate
+                {
+                    throw new InvalidOperationException(exception.Message);
+                };
             }
         }
 
@@ -62,7 +65,10 @@ namespace NetExtender.Utilities.Numerics
             }
             catch (Exception exception)
             {
-                return delegate { throw new InvalidOperationException(exception.Message); };
+                return delegate
+                {
+                    throw new InvalidOperationException(exception.Message);
+                };
             }
         }
 
@@ -92,13 +98,147 @@ namespace NetExtender.Utilities.Numerics
             }
             catch (Exception exception)
             {
-                return delegate { throw new InvalidOperationException(exception.Message); };
+                return delegate
+                {
+                    throw new InvalidOperationException(exception.Message);
+                };
             }
         }
 
         public static Func<T1, T2, TResult> CreateExpression<T1, T2, TResult>(this Func<Expression, Expression, BinaryExpression> function, Boolean casting)
         {
             return casting ? CreateExpression<T1, T2, TResult>(function) : CreateExpressionWithoutCasting<T1, T2, TResult>(function);
+        }
+
+        public static Expression<Func<TSource, TValue>> CreateGetExpression<TSource, TValue>(String name)
+        {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            Type type = typeof(TSource);
+            
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            MemberInfo? member = type.GetProperty(name, binding) ?? (MemberInfo?) type.GetField(name, binding);
+
+            if (member is null)
+            {
+                throw new MissingMemberException(typeof(TSource).Name, name);
+            }
+
+            return CreateGetExpression<TSource, TValue>(member);
+        }
+        
+        public static Expression<Func<TSource, TValue>> CreateGetExpression<TSource, TValue>(MemberInfo member)
+        {
+            if (member is null)
+            {
+                throw new ArgumentNullException(nameof(member));
+            }
+
+            if (member is not PropertyInfo && member is not FieldInfo)
+            {
+                throw new ArgumentException($"Member with type {member.GetType()} is not {nameof(PropertyInfo)} or {nameof(FieldInfo)}", nameof(member));
+            }
+
+            if (member is PropertyInfo { CanRead: false })
+            {
+                throw new MissingMethodException($"Member is {nameof(PropertyInfo)} without getter");
+            }
+
+            Type type = typeof(TSource);
+            ParameterExpression parameter = Expression.Parameter(type, "source");
+            
+            MemberExpression access = Expression.MakeMemberAccess(parameter, member);
+            UnaryExpression convert = Expression.Convert(access, typeof(TValue));
+            return Expression.Lambda<Func<TSource, TValue>>(convert, parameter);
+        }
+
+        public static Expression<Func<TSource, TValue>> CreateGetExpression<TSource, TValue>(this FieldInfo field)
+        {
+            return CreateGetExpression<TSource, TValue>((MemberInfo) field);
+        }
+
+        public static Expression<Func<TSource, TValue>> CreateGetExpression<TSource, TValue>(this PropertyInfo field)
+        {
+            return CreateGetExpression<TSource, TValue>((MemberInfo) field);
+        }
+
+        public static Expression<Action<TSource, TValue>> CreateSetExpression<TSource, TValue>(String name)
+        {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            Type type = typeof(TSource);
+            
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            MemberInfo? member = type.GetProperty(name, binding) ?? (MemberInfo?) type.GetField(name, binding);
+
+            if (member is null)
+            {
+                throw new MissingMemberException(typeof(TSource).Name, name);
+            }
+
+            return CreateSetExpression<TSource, TValue>(member);
+        }
+
+        public static Expression<Action<TSource, TValue>> CreateSetExpression<TSource, TValue>(MemberInfo member)
+        {
+            if (member is null)
+            {
+                throw new ArgumentNullException(nameof(member));
+            }
+            
+            if (member is not PropertyInfo && member is not FieldInfo)
+            {
+                throw new ArgumentException($"Member is not {nameof(PropertyInfo)} or {nameof(FieldInfo)}", nameof(member));
+            }
+
+            if (member is PropertyInfo { CanWrite: false })
+            {
+                throw new MissingMethodException($"Member is {nameof(PropertyInfo)} without setter");
+            }
+
+            ParameterExpression source = Expression.Parameter(typeof(TSource), nameof(source));
+            ParameterExpression value = Expression.Parameter(typeof(TValue), nameof(value));
+            
+            MemberExpression access = Expression.MakeMemberAccess(source, member);
+            BinaryExpression assign = Expression.Assign(access, value);
+            return Expression.Lambda<Action<TSource, TValue>>(assign, source, value);
+        }
+        
+        public static Expression<Action<TSource, TValue>> CreateSetExpression<TSource, TValue>(this FieldInfo field)
+        {
+            return CreateSetExpression<TSource, TValue>((MemberInfo) field);
+        }
+
+        public static Expression<Action<TSource, TValue>> CreateSetExpression<TSource, TValue>(this PropertyInfo field)
+        {
+            return CreateSetExpression<TSource, TValue>((MemberInfo) field);
+        }
+
+        public static Expression<Action<TSource, TValue>> CreateSetExpression<TSource, TValue>(this Expression<Func<TSource, TValue>> expression)
+        {
+            if (expression is null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
+            if (expression.Body is not MemberExpression selector)
+            {
+                throw new ArgumentException($"Expression is not {nameof(MemberExpression)}", nameof(expression));
+            }
+
+            MemberInfo member = selector.Member;
+            return member switch
+            {
+                PropertyInfo property => (source, value) => property.SetValue(source, value),
+                FieldInfo field => (source, value) => field.SetValue(source, value),
+                _ => throw new InvalidOperationException($"Selector with type {member.GetType()} is not {nameof(PropertyInfo)} or {nameof(FieldInfo)}")
+            };
         }
 
         public static Expression<Func<Boolean>> Not(this Expression<Func<Boolean>> expression)

@@ -31,11 +31,6 @@ namespace NetExtender.ReactiveUI.Anonymous.Core
 
             return $"<>f__ReactiveAnonymousType<{HashCodeUtilities.Combine(properties)}>";
         }
-        
-        protected override TypeBuilder DefineType(String typename)
-        {
-            return DefineType<ReactiveAnonymousObject>(typename);
-        }
 
         protected override Boolean DefineSetMethod(TypeBuilder builder, PropertyBuilder property, FieldBuilder field, AnonymousTypePropertyInfo info)
         {
@@ -62,6 +57,11 @@ namespace NetExtender.ReactiveUI.Anonymous.Core
             const MethodAttributes attributes = MethodAttributes.SpecialName | MethodAttributes.HideBySig;
             builder.DefineReactiveSetMethod(property, field, typeof(ReactiveAnonymousObject), info.Name, info.Type, attributes | (info.Write.Value ? MethodAttributes.Public : MethodAttributes.Private));
             return true;
+        }
+
+        public override Type DefineType(AnonymousTypePropertyInfo[] properties)
+        {
+            return DefineType<ReactiveAnonymousObject>(properties);
         }
     }
 }

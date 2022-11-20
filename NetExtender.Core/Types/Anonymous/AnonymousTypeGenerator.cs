@@ -3,45 +3,28 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Runtime.CompilerServices;
 using System.Text;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Anonymous
 {
-    public class AnonymousTypeGenerator
+    public class AnonymousTypeGenerator : AnonymousTypeGeneratorAbstraction
     {
-        protected AssemblyName AssemblyName { get; }
-        protected AssemblyBuilder Assembly { get; }
-        protected String ModuleName { get; }
-        protected ModuleBuilder Module { get; }
-
         public AnonymousTypeGenerator(String assembly)
+            : base(assembly)
         {
-            if (assembly is null)
-            {
-                throw new ArgumentNullException(nameof(assembly));
-            }
-            
-            AssemblyName = new AssemblyName(assembly);
-            Assembly = AssemblyBuilder.DefineDynamicAssembly(AssemblyName, AssemblyBuilderAccess.Run);
-            ModuleName = AssemblyName.Name ?? assembly;
-            Module = Assembly.GetDynamicModule(ModuleName) ?? Assembly.DefineDynamicModule(ModuleName);
         }
 
         protected AnonymousTypeGenerator(AssemblyName assemblyname, AssemblyBuilder assembly, String modulename, ModuleBuilder module)
+            : base(assemblyname, assembly, modulename, module)
         {
-            AssemblyName = assemblyname ?? throw new ArgumentNullException(nameof(assemblyname));
-            Assembly = assembly ?? throw new ArgumentNullException(nameof(assembly));
-            ModuleName = modulename ?? throw new ArgumentNullException(nameof(modulename));
-            Module = module ?? throw new ArgumentNullException(nameof(module));
         }
 
-        protected virtual String GenerateTypeName(AnonymousTypePropertyInfo[] properties)
+        protected override String GenerateTypeName(AnonymousTypePropertyInfo[] properties)
         {
             if (properties is null)
             {
@@ -51,12 +34,7 @@ namespace NetExtender.Types.Anonymous
             return $"<>f__AnonymousType<{HashCodeUtilities.Combine(properties)}>";
         }
 
-        protected virtual TypeBuilder DefineType(String typename)
-        {
-            return DefineType<AnonymousObject>(typename);
-        }
-
-        protected virtual TypeBuilder DefineType<TParent>(String typename) where TParent : class
+        protected override TypeBuilder DefineType<TParent>(String typename) where TParent : class
         {
             if (typename is null)
             {
@@ -68,27 +46,57 @@ namespace NetExtender.Types.Anonymous
             return builder;
         }
 
-        protected virtual FieldBuilder DefineField(TypeBuilder builder, AnonymousTypePropertyInfo info)
+        protected override ConstructorBuilder[] DefineConstructor(TypeBuilder builder, (PropertyBuilder? Property, FieldBuilder Field)[] fields)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
+
+            if (fields is null)
+            {
+                throw new ArgumentNullException(nameof(fields));
+            }
             
+            const MethodAttributes attributes = MethodAttributes.Public | MethodAttributes.HideBySig;
+
+            if (fields.Length <= 0)
+            {
+                return new[] { builder.DefineConstructor(attributes) };
+            }
+
+            static KeyValuePair<String, FieldBuilder> Convert((PropertyBuilder? Property, FieldBuilder Field) value)
+            {
+                (PropertyBuilder? property, FieldBuilder? field) = value;
+                
+                String name = property?.Name ?? field.Name;
+                return new KeyValuePair<String, FieldBuilder>(name, field);
+            }
+            
+            return new[] { builder.DefineConstructor(attributes), builder.DefineConstructor(fields.Select(Convert).ToArray(), attributes) };
+        }
+
+        protected override FieldBuilder DefineField(TypeBuilder builder, AnonymousTypePropertyInfo info)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
             return builder.DefineField(info.Name, info.Type, FieldAttributes.Public);
         }
 
-        protected virtual FieldBuilder DefinePropertyField(TypeBuilder builder, AnonymousTypePropertyInfo info)
+        protected override FieldBuilder DefinePropertyField(TypeBuilder builder, AnonymousTypePropertyInfo info)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
-            return builder.DefineField($"m_{info.Name.ToLowerInvariant()}", info.Type, FieldAttributes.Private | FieldAttributes.SpecialName);
+
+            return builder.DefineField($"_{info.Name.ToLowerInvariant()}", info.Type, FieldAttributes.Private | FieldAttributes.SpecialName);
         }
 
-        protected virtual Boolean DefineGetMethod(TypeBuilder builder, PropertyBuilder property, FieldBuilder field, AnonymousTypePropertyInfo info)
+        protected override Boolean DefineGetMethod(TypeBuilder builder, PropertyBuilder property, FieldBuilder field, AnonymousTypePropertyInfo info)
         {
             if (builder is null)
             {
@@ -115,7 +123,7 @@ namespace NetExtender.Types.Anonymous
             return true;
         }
 
-        protected virtual Boolean DefineSetMethod(TypeBuilder builder, PropertyBuilder property, FieldBuilder field, AnonymousTypePropertyInfo info)
+        protected override Boolean DefineSetMethod(TypeBuilder builder, PropertyBuilder property, FieldBuilder field, AnonymousTypePropertyInfo info)
         {
             if (builder is null)
             {
@@ -131,7 +139,7 @@ namespace NetExtender.Types.Anonymous
             {
                 throw new ArgumentNullException(nameof(field));
             }
-            
+
             if (info.Write is null)
             {
                 return false;
@@ -142,26 +150,20 @@ namespace NetExtender.Types.Anonymous
             return true;
         }
 
-        protected virtual void DefineAccessors(TypeBuilder builder, PropertyBuilder property, FieldBuilder field, AnonymousTypePropertyInfo info)
-        {
-            DefineGetMethod(builder, property, field, info);
-            DefineSetMethod(builder, property, field, info);
-        }
-
-        protected virtual (PropertyBuilder Property, FieldBuilder Field) DefineProperty(TypeBuilder builder, AnonymousTypePropertyInfo info)
+        protected override (PropertyBuilder Property, FieldBuilder Field) DefineProperty(TypeBuilder builder, AnonymousTypePropertyInfo info)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             FieldBuilder field = DefinePropertyField(builder, info);
             PropertyBuilder property = builder.DefineProperty(info.Name, PropertyAttributes.HasDefault, info.Type, null);
             DefineAccessors(builder, property, field, info);
             return (property, field);
         }
 
-        protected virtual (PropertyBuilder? Property, FieldBuilder Field) Define(TypeBuilder builder, AnonymousTypePropertyInfo info)
+        protected override (PropertyBuilder? Property, FieldBuilder Field) Define(TypeBuilder builder, AnonymousTypePropertyInfo info)
         {
             if (builder is null)
             {
@@ -171,14 +173,160 @@ namespace NetExtender.Types.Anonymous
             return info.Read is not null || info.Write is not null ? DefineProperty(builder, info) : (null, DefineField(builder, info));
         }
 
-        //TODO: ToString, Equals, GetHashCode
-        public virtual Type DefineType(AnonymousTypePropertyInfo[] properties)
+        //TODO:
+        /*protected override MethodBuilder DefineEquals(TypeBuilder builder, (PropertyBuilder? Property, FieldBuilder Field)[] fields)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (fields is null)
+            {
+                throw new ArgumentNullException(nameof(fields));
+            }
+
+            Type equatable = CodeGeneratorUtilities.Generator.Equatable.Interface.MakeGenericType(builder);
+            builder.AddInterfaceImplementation(equatable);
+
+            const MethodAttributes attributes = MethodAttributes.Public | MethodAttributes.Virtual;
+            MethodBuilder method = builder.DefineMethod(nameof(Equals), attributes, CallingConventions.HasThis, typeof(Boolean), new Type[] { builder });
+            method.SetCustomAttribute(CodeGeneratorUtilities.Generator.Attribute.DebuggerHiddenAttribute);
+
+            method.DefineParameter(1, ParameterAttributes.None, "value");
+
+            MethodInfo equals = TypeBuilder.GetMethod(equatable, CodeGeneratorUtilities.Generator.Equatable.EqualsMethod);
+            builder.DefineMethodOverride(method, equals);
+
+            ILGenerator generator = method.GetILGenerator();
+
+            generator.DeclareLocal(builder);
+
+            generator.Emit(OpCodes.Ldarg_1);
+            generator.Emit(OpCodes.Isinst, builder);
+            generator.Emit(OpCodes.Stloc_0);
+            generator.Emit(OpCodes.Ldloc_0);
+
+            if (fields.Length <= 0)
+            {
+                generator.Emit(OpCodes.Ldnull);
+                generator.Emit(OpCodes.Ceq);
+                generator.Emit(OpCodes.Ldc_I4_0);
+                generator.Emit(OpCodes.Ceq);
+                generator.Emit(OpCodes.Ret);
+
+                return method;
+            }
+
+            Label label = generator.DefineLabel();
+
+            foreach ((PropertyBuilder? _, FieldBuilder? field) in fields)
+            {
+                Type type = field.FieldType;
+                MethodInfo @default = CodeGeneratorUtilities.Generator.Equality.TakeDefault(type);
+                MethodInfo equalsmethod = CodeGeneratorUtilities.Generator.Equality.TakeEquals(type);
+
+                generator.Emit(OpCodes.Brfalse_S, label);
+                generator.Emit(OpCodes.Call, @default);
+                generator.Emit(OpCodes.Ldarg_0);
+                generator.Emit(OpCodes.Ldfld, field);
+                generator.Emit(OpCodes.Ldloc_0);
+                generator.Emit(OpCodes.Ldfld, field);
+                generator.Emit(OpCodes.Callvirt, equalsmethod);
+            }
+
+            generator.Emit(OpCodes.Ret);
+            generator.MarkLabel(label);
+            generator.Emit(OpCodes.Ldc_I4_0);
+
+            return method;
+        }*/
+
+        protected override MethodBuilder DefineToString(TypeBuilder builder, (PropertyBuilder? Property, FieldBuilder Field)[] fields)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (fields is null)
+            {
+                throw new ArgumentNullException(nameof(fields));
+            }
+
+            const MethodAttributes attributes = MethodAttributes.Public | MethodAttributes.Virtual | MethodAttributes.HideBySig;
+            MethodBuilder method = builder.DefineMethod(nameof(ToString), attributes, CallingConventions.HasThis, typeof(String), Type.EmptyTypes);
+            method.SetCustomAttribute(CodeGeneratorUtilities.Generator.Attribute.DebuggerHiddenAttribute);
+            ILGenerator generator = method.GetILGenerator();
+
+            if (fields.Length <= 0)
+            {
+                generator.Emit(OpCodes.Nop);
+                generator.Emit(OpCodes.Ldstr, "{ }");
+                generator.Emit(OpCodes.Stloc_0);
+                generator.Emit(OpCodes.Br_S);
+                generator.Emit(OpCodes.Ldloc_0);
+                generator.Emit(OpCodes.Ret);
+
+                return method;
+            }
+
+            generator.DeclareLocal(typeof(StringBuilder));
+
+            generator.Emit(OpCodes.Newobj, CodeGeneratorUtilities.Generator.StringBuilder.Constructor);
+            generator.Emit(OpCodes.Stloc_0);
+
+            for (Int32 i = 0; i < fields.Length; i++)
+            {
+                (PropertyBuilder? property, FieldBuilder field) = fields[i];
+                String name = property?.Name ?? field.Name;
+
+                generator.Emit(OpCodes.Ldloc_0);
+                generator.Emit(OpCodes.Ldstr, i <= 0 ? $"{{ {name} = " : $", {name} = ");
+                generator.Emit(OpCodes.Callvirt, CodeGeneratorUtilities.Generator.StringBuilder.String);
+                generator.Emit(OpCodes.Pop);
+                generator.Emit(OpCodes.Ldloc_0);
+                generator.Emit(OpCodes.Ldarg_0);
+                generator.Emit(OpCodes.Ldfld, field);
+
+                Type type = field.FieldType;
+                if (!CodeGeneratorUtilities.Generator.StringBuilder.Take(type, out MethodInfo info) && type.IsValueType)
+                {
+                    generator.Emit(OpCodes.Box, type);
+                }
+
+                generator.Emit(OpCodes.Callvirt, info);
+                generator.Emit(OpCodes.Pop);
+            }
+
+            generator.Emit(OpCodes.Ldloc_0);
+            generator.Emit(OpCodes.Ldstr, " }");
+            generator.Emit(OpCodes.Callvirt, CodeGeneratorUtilities.Generator.StringBuilder.String);
+            generator.Emit(OpCodes.Pop);
+            generator.Emit(OpCodes.Ldloc_0);
+            generator.Emit(OpCodes.Callvirt, CodeGeneratorUtilities.Generator.Object.ToStringMethod);
+            generator.Emit(OpCodes.Ret);
+
+            return method;
+        }
+
+        public override Type DefineType(AnonymousTypePropertyInfo[] properties)
+        {
+            return DefineType<AnonymousObject>(properties);
+        }
+
+        protected override Type DefineType<TParent>(AnonymousTypePropertyInfo[] properties)
         {
             if (properties is null)
             {
                 throw new ArgumentNullException(nameof(properties));
             }
-            
+
+            if (properties.Length <= 0)
+            {
+                return typeof(TParent);
+            }
+
             lock (Assembly)
             {
                 String typename = GenerateTypeName(properties);
@@ -186,97 +334,19 @@ namespace NetExtender.Types.Anonymous
                 {
                     return type;
                 }
-            
-                TypeBuilder builder = DefineType(typename);
 
-                foreach (AnonymousTypePropertyInfo info in properties)
+                TypeBuilder builder = DefineType<TParent>(typename);
+
+                (PropertyBuilder? Property, FieldBuilder Field)[] fields = new (PropertyBuilder? Property, FieldBuilder Field)[properties.Length];
+                for (Int32 i = 0; i < properties.Length; i++)
                 {
-                    Define(builder, info);
+                    AnonymousTypePropertyInfo info = properties[i];
+                    fields[i] = Define(builder, info);
                 }
 
+                DefineConstructor(builder, fields);
+                DefineMethods(builder, fields);
                 return builder.CreateType() ?? throw new InvalidOperationException($"Can't create type '{typename}'");
-            }
-        }
-        
-        protected static class Generator
-        {
-            public static class AttributeCache
-            {
-                public static CustomAttributeBuilder CompilerGeneratedAttribute { get; } = GetCompilerGeneratedAttribute();
-                public static CustomAttributeBuilder DebuggerBrowsableAttribute { get; } = GetDebuggerBrowsableAttribute();
-                public static CustomAttributeBuilder DebuggerHiddenAttribute { get; } = GetDebuggerHiddenAttribute();
-                
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                private static CustomAttributeBuilder GetCompilerGeneratedAttribute()
-                {
-                    ConstructorInfo constructor = typeof(CompilerGeneratedAttribute).GetConstructor(Type.EmptyTypes) ?? throw new InvalidOperationException(nameof(CompilerGeneratedAttribute));
-                    return new CustomAttributeBuilder(constructor, Array.Empty<Object>());
-                }
-
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                private static CustomAttributeBuilder GetDebuggerBrowsableAttribute()
-                {
-                    ConstructorInfo constructor = typeof(DebuggerBrowsableAttribute).GetConstructor(new[] { typeof(DebuggerBrowsableState) }) ?? throw new InvalidOperationException(nameof(DebuggerBrowsableAttribute));
-                    return new CustomAttributeBuilder(constructor, new Object[] { DebuggerBrowsableState.Never });
-                }
-            
-                [MethodImpl(MethodImplOptions.AggressiveInlining)]
-                private static CustomAttributeBuilder GetDebuggerHiddenAttribute()
-                {
-                    ConstructorInfo constructor = typeof(DebuggerHiddenAttribute).GetConstructor(Type.EmptyTypes) ?? throw new InvalidOperationException(nameof(DebuggerHiddenAttribute));
-                    return new CustomAttributeBuilder(constructor, Array.Empty<Object>());
-                }
-            }
-
-            public static class ObjectCache
-            {
-                public static ConstructorInfo Constructor { get; }
-                public static MethodInfo ToStringMethod { get; }
-
-                static ObjectCache()
-                {
-                    const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public;
-
-                    Constructor = typeof(Object).GetConstructor(Type.EmptyTypes) ?? throw new InvalidOperationException(nameof(Constructor));
-                    ToStringMethod = typeof(Object).GetMethod(nameof(ToString), binding, Type.EmptyTypes) ?? throw new InvalidOperationException(nameof(ToString));
-                }
-            }
-            
-            public static class EqualityCache
-            {
-                public static Type Comparer { get; }
-                public static Type GenericArgument { get; }
-                public static MethodInfo Default { get; }
-                public static MethodInfo GetHashCodeMethod { get; }
-                public static MethodInfo EqualsMethod { get; }
-
-                static EqualityCache()
-                {
-                    const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public;
-                    
-                    Comparer = typeof(EqualityComparer<>);
-                    GenericArgument = Comparer.GetGenericArguments()[0];
-                    Default = Comparer.GetMethod($"get_{Default}", binding, Type.EmptyTypes) ?? throw new InvalidOperationException(nameof(Default));
-                    GetHashCodeMethod = Comparer.GetMethod(nameof(GetHashCode), binding, new[] { GenericArgument }) ?? throw new InvalidOperationException(nameof(GetHashCode));
-                    EqualsMethod = Comparer.GetMethod(nameof(Equals), binding, new[] { GenericArgument, GenericArgument }) ?? throw new InvalidOperationException(nameof(Equals));
-                }
-            }
-
-            public static class StringBuilderCache
-            {
-                public static ConstructorInfo Constructor { get; }
-                public static MethodInfo AppendString { get; }
-                public static MethodInfo AppendObject { get; }
-
-                static StringBuilderCache()
-                {
-                    const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public;
-                    
-                    Type type = typeof(StringBuilder);
-                    Constructor = type.GetConstructor(Type.EmptyTypes) ?? throw new InvalidOperationException(nameof(Constructor));
-                    AppendString = type.GetMethod(nameof(StringBuilder.Append), binding, new[] { typeof(String) }) ?? throw new InvalidOperationException(nameof(AppendString));
-                    AppendObject = type.GetMethod(nameof(StringBuilder.Append), binding, new[] { typeof(Object) }) ?? throw new InvalidOperationException(nameof(AppendObject));
-                }
             }
         }
     }

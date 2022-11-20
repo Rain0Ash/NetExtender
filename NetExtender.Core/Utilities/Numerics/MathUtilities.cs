@@ -12,6 +12,42 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Numerics
 {
+    public enum MathPositionType
+    {
+        None,
+        Left,
+        Right,
+        Both
+    }
+    
+    public enum TrigonometryType
+    {
+        Sin,
+        Sinh,
+        Asin,
+        Asinh,
+        Cos,
+        Cosh,
+        Acos,
+        Acosh,
+        Tan,
+        Tanh,
+        Atan,
+        Atanh,
+        Cot,
+        Coth,
+        Acot,
+        Acoth,
+        Sec,
+        Sech,
+        Asec,
+        Asech,
+        Csc,
+        Csch,
+        Acsc,
+        Acsch
+    }
+
     public static partial class MathUtilities
     {
         public static class SingleConstants
@@ -2418,11 +2454,11 @@ namespace NetExtender.Utilities.Numerics
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
-        public static IEnumerable<UInt32> EnumerateDigits(this UInt64 value)
+        public static IEnumerable<Int32> EnumerateDigits(this UInt64 value)
         {
             while (value != 0)
             {
-                yield return (UInt32) (value % 10);
+                yield return (Int32) (value % 10);
                 value /= 10;
             }
         }

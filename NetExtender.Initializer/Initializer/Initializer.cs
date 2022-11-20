@@ -2,7 +2,9 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Initializer
 {
@@ -34,13 +36,6 @@ namespace NetExtender.Initializer
             AppDomain.CurrentDomain.ProcessExit += ExitShutdown;
             AppDomain.CurrentDomain.UnhandledException += UnhandledException;
         }
-        
-        private void UnhandledException(Object? sender, UnhandledExceptionEventArgs args)
-        {
-            Exception? exception = args.ExceptionObject as Exception;
-            InitializerUnhandledExceptionState state = args.IsTerminating ? InitializerUnhandledExceptionState.Terminate : InitializerUnhandledExceptionState.Exception;
-            UnhandledException(sender, exception, state);
-        }
 
         protected virtual void Action(Object? sender, Exception? exception, InitializerUnhandledExceptionState action)
         {
@@ -61,14 +56,54 @@ namespace NetExtender.Initializer
             }
         }
 
+        private static Boolean IsShutdown(Exception? exception, [MaybeNullWhen(false)] out ShutdownException result)
+        {
+            while (exception is not null)
+            {
+                if (exception is ShutdownException shutdown)
+                {
+                    result = shutdown;
+                    return true;
+                }
+                
+                exception = exception.InnerException;
+            }
+
+            result = default;
+            return false;
+        }
+
+        private void UnhandledException(Object? sender, UnhandledExceptionEventArgs args)
+        {
+            Exception? exception = args.ExceptionObject as Exception;
+            InitializerUnhandledExceptionState state = args.IsTerminating ? InitializerUnhandledExceptionState.Terminate : InitializerUnhandledExceptionState.Exception;
+            UnhandledException(sender, exception, state);
+        }
+
         protected void UnhandledException(Object? sender, Exception? exception, InitializerUnhandledExceptionState action)
         {
+            if (IsShutdown(exception, out ShutdownException? shutdown))
+            {
+                ShutdownException(sender, shutdown, ref action);
+                return;
+            }
+
             UnhandledException(sender, exception, ref action);
             Action(sender, exception, action);
         }
 
         protected virtual void UnhandledException(Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
         {
+        }
+
+        protected virtual void ShutdownException(Object? sender, ShutdownException exception, ref InitializerUnhandledExceptionState action)
+        {
+            if (exception is null)
+            {
+                throw new ArgumentNullException(nameof(exception));
+            }
+
+            Shutdown(sender, exception.Code);
         }
 
         private void ExitShutdown(Object? sender, EventArgs args)
@@ -81,9 +116,19 @@ namespace NetExtender.Initializer
             Shutdown(sender, false);
         }
 
-        protected virtual void Shutdown(Object? sender, Boolean exit)
+        protected void Shutdown(Object? sender, Boolean exit)
         {
-            Environment.Exit(Environment.ExitCode);
+            Shutdown(sender, Environment.ExitCode, exit);
+        }
+
+        protected virtual void Shutdown(Object? sender, Int32 code)
+        {
+            Shutdown(sender, code, false);
+        }
+
+        protected virtual void Shutdown(Object? sender, Int32 code, Boolean exit)
+        {
+            Environment.Exit(code);
         }
         
         protected virtual void Terminate(Object? sender, Exception? exception)
