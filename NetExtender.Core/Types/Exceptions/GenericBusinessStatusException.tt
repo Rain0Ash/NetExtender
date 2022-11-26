@@ -34,11 +34,12 @@ namespace NetExtender.Types.Exceptions
     {
         const String inherit = $"BusinessStatus{nameof(Exception)}";
         String name = $"Business{status.Key}{status.Value}{nameof(Exception)}";
+        String generic = $"{(Enum.IsDefined(typeof(HttpStatusCode), status.Value) ? $"{nameof(HttpStatusCode)}.{status.Key}" : $"({nameof(HttpStatusCode)}) {status.Value}")}";
 
         WriteLine("\t[Serializable]");
         WriteLine($"\tpublic class {name} : {inherit}");
         WriteLine("\t{");
-        WriteLine($"\t\tprivate const {nameof(HttpStatusCode)} Generic = {nameof(HttpStatusCode)}.{status.Key};");
+        WriteLine($"\t\tprivate const {nameof(HttpStatusCode)} Generic = {generic};");
         WriteLine(String.Empty);
         WriteLine($"\t\tpublic {name}()");
         WriteLine("\t\t\t: base(Generic)");
@@ -66,19 +67,19 @@ namespace NetExtender.Types.Exceptions
         WriteLine("\t[Serializable]");
         WriteLine($"\tpublic class {name}<T> : {inherit}<T>");
         WriteLine("\t{");
-        WriteLine($"\t\tprivate const {nameof(HttpStatusCode)} Generic = {nameof(HttpStatusCode)}.{status.Key};");
+        WriteLine($"\t\tprivate const {nameof(HttpStatusCode)} Generic = {generic};");
         WriteLine(String.Empty);
         WriteLine($"\t\tpublic {name}(T code)");
         WriteLine("\t\t\t: base(code, Generic)");
         WriteLine("\t\t{");
         WriteLine("\t\t}");
         WriteLine(String.Empty);
-        WriteLine($"\t\tpublic {name}(T code, {nameof(String)}? message)");
+        WriteLine($"\t\tpublic {name}({nameof(String)}? message, T code)");
         WriteLine("\t\t\t: base(message, code, Generic)");
         WriteLine("\t\t{");
         WriteLine("\t\t}");
         WriteLine(String.Empty);
-        WriteLine($"\t\tpublic {name}(T code, {nameof(String)}? message, {nameof(Exception)}? innerException)");
+        WriteLine($"\t\tpublic {name}({nameof(String)}? message, T code, {nameof(Exception)}? innerException)");
         WriteLine("\t\t\t: base(message, code, Generic, innerException)");
         WriteLine("\t\t{");
         WriteLine("\t\t}");
@@ -92,8 +93,18 @@ namespace NetExtender.Types.Exceptions
 
     void Generator()
     {
+        KeyValuePair<String, Int32> Internal(String name)
+        {
+            return new KeyValuePair<String, Int32>(name, Convert.ToInt32(Enum.Parse(typeof(HttpStatusCode), name)));
+        }
+
+        Dictionary<String, Int32> special = new Dictionary<String, Int32>
+        {
+            { "IamATeapot", 418 }
+        };
+        
         String[] names = Enum.GetNames(typeof(HttpStatusCode));
-        KeyValuePair<String, Int32>[] values = names.Select(name => new KeyValuePair<String, Int32>(name, Convert.ToInt32(Enum.Parse(typeof(HttpStatusCode), name)))).ToArray();
+        KeyValuePair<String, Int32>[] values = names.Select(Internal).Union(special).OrderBy(value => value.Value).ToArray();
         ForEach(values, GeneratorImplementation);
     }
 #>
