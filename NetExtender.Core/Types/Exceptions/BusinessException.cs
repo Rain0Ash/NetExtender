@@ -330,4 +330,52 @@ namespace NetExtender.Types.Exceptions
             }
         }
     }
+
+    [Serializable]
+    public abstract class BusinessStatusException : BusinessException
+    {
+        protected BusinessStatusException(HttpStatusCode status)
+            : base(status)
+        {
+        }
+
+        protected BusinessStatusException(String? message, HttpStatusCode status)
+            : base(message, status)
+        {
+        }
+
+        protected BusinessStatusException(String? message, HttpStatusCode status, Exception? innerException)
+            : base(message, status, innerException)
+        {
+        }
+
+        protected BusinessStatusException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+    }
+
+    [Serializable]
+    public abstract class BusinessStatusException<T> : BusinessException<T>
+    {
+        protected BusinessStatusException(T code, HttpStatusCode status)
+            : base(code, status)
+        {
+        }
+
+        protected BusinessStatusException(String? message, T code, HttpStatusCode status)
+            : base(message, code, status)
+        {
+        }
+
+        protected BusinessStatusException(String? message, T code, HttpStatusCode status, Exception? innerException)
+            : base(message, code, status, innerException)
+        {
+        }
+
+        protected BusinessStatusException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
+    }
 }

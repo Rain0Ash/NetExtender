@@ -21,7 +21,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             code = exception.Status ?? HttpStatusCode.InternalServerError;
             return true;
         }
-        
+
         public override async Task InvokeAsync(HttpContext context)
         {
             try

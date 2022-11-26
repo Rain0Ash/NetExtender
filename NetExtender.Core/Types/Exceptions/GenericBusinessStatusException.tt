@@ -1,0 +1,75 @@
+<#@ template language="C#v3.5" #>
+<#@ output extension=".cs" encoding="utf-8"#>
+<#@ assembly name="System.Core"#>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Net" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Runtime.Serialization" #>
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
+
+using System;
+using System.Net;
+using System.Runtime.Serialization;
+
+namespace NetExtender.Types.Exceptions
+{
+<#
+    void ForEach(IEnumerable<KeyValuePair<String, Int32>> values, Action<KeyValuePair<String, Int32>> action, Boolean line = true)
+    {
+        KeyValuePair<String, Int32>[] type = values.ToArray();
+
+        for (Int32 i = 0; i < type.Length; i++)
+        {
+            action(type[i]);
+
+            if (line && i <= type.Length - 2)
+            {
+                WriteLine(String.Empty);
+            }
+        }
+    }
+
+    void GeneratorImplementation(KeyValuePair<String, Int32> status)
+    {
+        const String inherit = $"BusinessStatus{nameof(Exception)}";
+        String name = $"Business{status.Key}{status.Value}{nameof(Exception)}";
+
+        WriteLine("\t[Serializable]");
+        WriteLine($"\tpublic class {name} : {inherit}");
+        WriteLine("\t{");
+        WriteLine($"\t\tprivate const {nameof(HttpStatusCode)} Generic = {nameof(HttpStatusCode)}.{status.Key};");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {name}()");
+        WriteLine("\t\t\t: base(Generic)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {name}({nameof(String)}? message)");
+        WriteLine("\t\t\t: base(message, Generic)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {name}({nameof(String)}? message, {nameof(Exception)}? innerException)");
+        WriteLine("\t\t\t: base(message, Generic, innerException)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tprotected {name}({nameof(SerializationInfo)} info, {nameof(StreamingContext)} context)");
+        WriteLine("\t\t\t: base(info, context)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t}");
+        WriteLine("\t}");
+    }
+
+    void Generator()
+    {
+        String[] names = Enum.GetNames(typeof(HttpStatusCode));
+        KeyValuePair<String, Int32>[] values = names.Select(name => new KeyValuePair<String, Int32>(name, Convert.ToInt32(Enum.Parse(typeof(HttpStatusCode), name)))).ToArray();
+        ForEach(values, GeneratorImplementation);
+    }
+#>
+<#
+    Generator();
+#>
+}
