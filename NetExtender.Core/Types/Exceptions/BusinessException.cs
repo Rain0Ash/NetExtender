@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 namespace NetExtender.Types.Exceptions
 {
     [Serializable]
-    public class BusinessException<T> : BusinessException where T : struct
+    public class BusinessException<T> : BusinessException
     {
         public T Code { get; }
 
@@ -86,7 +86,7 @@ namespace NetExtender.Types.Exceptions
             info.AddValue(nameof(Code), Code);
         }
 
-        public override Object GetBusinessCode()
+        public override Object? GetBusinessCode()
         {
             return Code;
         }
@@ -108,8 +108,9 @@ namespace NetExtender.Types.Exceptions
             [JsonProperty(NullValueHandling = NullValueHandling.Include, Order = 3)]
             public T Code { get; init; }
 
-            protected BusinessInfo()
+            protected BusinessInfo(T code)
             {
+                Code = code;
             }
 
             public BusinessInfo(T code, String? message, String? description, HttpStatusCode? status)
