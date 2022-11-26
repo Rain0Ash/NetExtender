@@ -5,36 +5,30 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.AspNetCore.Types.Middlewares
 {
-    public class ExceptionHandlerMiddleware : ExceptionHandlerMiddleware<Exception>
+    public class BusinessExceptionHandlerMiddleware : ExceptionHandlerMiddleware<BusinessException>
     {
-        public ExceptionHandlerMiddleware(RequestDelegate next, ExceptionHandlerMiddlewareHandler handler)
-            : base(next, handler)
+        private BusinessExceptionHandlerMiddleware(RequestDelegate next)
+            : base(next, Internal)
         {
         }
-    }
 
-    public class ExceptionHandlerMiddleware<T> : AsyncMiddleware where T : Exception
-    {
-        public delegate Boolean ExceptionHandlerMiddlewareHandler(T exception, out HttpStatusCode? code);
-
-        protected ExceptionHandlerMiddlewareHandler Handler { get; }
-
-        public ExceptionHandlerMiddleware(RequestDelegate next, ExceptionHandlerMiddlewareHandler handler)
-            : base(next)
+        private static Boolean Internal(BusinessException exception, out HttpStatusCode? code)
         {
-            Handler = handler ?? throw new ArgumentNullException(nameof(handler));
+            code = exception.Status ?? HttpStatusCode.InternalServerError;
+            return true;
         }
-
+        
         public override async Task InvokeAsync(HttpContext context)
         {
             try
             {
                 await Next.Invoke(context).ConfigureAwait(false);
             }
-            catch (T exception)
+            catch (BusinessException exception)
             {
                 if (!Handler(exception, out HttpStatusCode? code))
                 {
@@ -45,6 +39,8 @@ namespace NetExtender.AspNetCore.Types.Middlewares
                 {
                     context.Response.StatusCode = (Int32) code;
                 }
+
+                await context.Response.WriteAsJsonAsync(exception.Info);
             }
         }
     }

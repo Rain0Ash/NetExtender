@@ -14,6 +14,22 @@ namespace NetExtender.Utilities.Core
 {
     public static class CodeGeneratorUtilities
     {
+        public static void EmitInstance(this ILGenerator generator, Type type)
+        {
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
+            generator.Emit(OpCodes.Ldarg_0);
+            generator.EmitUnbox(type);
+        }
+        
         public static void EmitLdarg(this ILGenerator generator, Int32 position)
         {
             if (generator is null)
@@ -23,14 +39,21 @@ namespace NetExtender.Utilities.Core
 
             switch (position)
             {
-                case 0: generator.Emit(OpCodes.Ldarg_0); break;
-                case 1: generator.Emit(OpCodes.Ldarg_1); break;
-                case 2: generator.Emit(OpCodes.Ldarg_2); break;
-                case 3: generator.Emit(OpCodes.Ldarg_3); break;
+                case 0:
+                    generator.Emit(OpCodes.Ldarg_0);
+                    return;
+                case 1:
+                    generator.Emit(OpCodes.Ldarg_1);
+                    return;
+                case 2:
+                    generator.Emit(OpCodes.Ldarg_2);
+                    return;
+                case 3:
+                    generator.Emit(OpCodes.Ldarg_3);
+                    return;
                 default:
-                    generator.Emit((Byte)position == position ?
-                        OpCodes.Ldarg_S : OpCodes.Ldarg, position);
-                    break;
+                    generator.Emit((Byte) position == position ? OpCodes.Ldarg_S : OpCodes.Ldarg, position);
+                    return;
             }
         }
 
@@ -143,6 +166,16 @@ namespace NetExtender.Utilities.Core
             {
                 generator.Emit(OpCodes.Castclass, type);
             }
+        }
+        
+        public static void Return(this ILGenerator generator)
+        {
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
+            generator.Emit(OpCodes.Ret);
         }
 
         public static ConstructorBuilder DefineConstructor(this TypeBuilder builder)

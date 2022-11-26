@@ -51,13 +51,13 @@ namespace NetExtender.Windows.Services.Exceptions
         protected WindowsServiceNotFoundException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            ServiceName = info.GetString("WindowsServiceNotFound_ServiceName");
+            ServiceName = info.GetString(nameof(ServiceName));
         }
         
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
-            info.AddValue("WindowsServiceNotFound_ServiceName", ServiceName, typeof(String));
+            info.AddValue(nameof(ServiceName), ServiceName);
         }
     }
 }

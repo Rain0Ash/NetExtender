@@ -4,6 +4,7 @@
 using System;
 using System.Net;
 using System.Runtime.Serialization;
+using NetExtender.Utilities.Serialization;
 
 namespace NetExtender.AspNetCore.Types.Exceptions
 {
@@ -46,6 +47,13 @@ namespace NetExtender.AspNetCore.Types.Exceptions
         protected ServiceException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
+            StatusCode = info.GetValueOrDefault(nameof(StatusCode), HttpStatusCode.InternalServerError);
+        }
+        
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue(nameof(StatusCode), StatusCode);
         }
     }
 }

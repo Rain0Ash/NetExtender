@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
@@ -48,7 +49,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(value));
             }
             
-            static IEnumerable<KeyValuePair<String, Type>> Enumerate(ExpandoObject value)
+            static IEnumerable<KeyValuePair<String, Type>> Internal(ExpandoObject value)
             {
                 foreach ((String name, Object? item) in value)
                 {
@@ -61,7 +62,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
 
-            return DefineAnonymousType(generator, Enumerate(value));
+            return DefineAnonymousType(generator, Internal(value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -178,6 +179,38 @@ namespace NetExtender.Utilities.Types
             }
 
             return value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T CastToAnonymousObject<T>(Object value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            return (T) value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static void CastToAnonymousObject<T>(Object value, out T result)
+        {
+            result = (T) value;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryCastToAnonymousObject<T>(Object value, [MaybeNullWhen(false)] out T result)
+        {
+            try
+            {
+                result = (T) value;
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

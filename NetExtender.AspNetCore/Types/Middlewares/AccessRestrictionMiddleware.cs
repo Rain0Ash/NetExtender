@@ -8,18 +8,16 @@ using Microsoft.AspNetCore.Http;
 
 namespace NetExtender.AspNetCore.Types.Middlewares
 {
-    public class AccessRestrictionMiddleware
+    public class AccessRestrictionMiddleware : AsyncMiddleware
     {
         public const Int32 AllowStatusCode = 0;
         public const Int32 DefaultRestrictionStatusCode = (Int32) HttpStatusCode.Forbidden;
 
-        protected RequestDelegate Next { get; }
-
         protected Func<HttpContext, Int32> AccessCondition { get; }
 
         protected AccessRestrictionMiddleware(RequestDelegate next)
+            : base(next)
         {
-            Next = next ?? throw new ArgumentNullException(nameof(next));
             AccessCondition = Access;
         }
         
@@ -34,14 +32,14 @@ namespace NetExtender.AspNetCore.Types.Middlewares
         }
 
         public AccessRestrictionMiddleware(RequestDelegate next, Func<HttpContext, Boolean>? access, Int32 reject)
+            : base(next)
         {
-            Next = next ?? throw new ArgumentNullException(nameof(next));
             AccessCondition = access is null ? Access : context => access(context) ? AllowStatusCode : reject;
         }
 
         public AccessRestrictionMiddleware(RequestDelegate next, Func<HttpContext, HttpStatusCode>? access)
+            : base(next)
         {
-            Next = next ?? throw new ArgumentNullException(nameof(next));
             AccessCondition = access is null ? Access : context =>
             {
                 HttpStatusCode code = access(context);
@@ -50,8 +48,8 @@ namespace NetExtender.AspNetCore.Types.Middlewares
         }
 
         public AccessRestrictionMiddleware(RequestDelegate next, Func<HttpContext, Int32>? condition)
+            : base(next)
         {
-            Next = next ?? throw new ArgumentNullException(nameof(next));
             AccessCondition = condition ?? Access;
         }
 
@@ -60,7 +58,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             return AllowStatusCode;
         }
         
-        public async Task InvokeAsync(HttpContext context)
+        public override async Task InvokeAsync(HttpContext context)
         {
             Int32 status = AccessCondition(context);
             if (status > AllowStatusCode)

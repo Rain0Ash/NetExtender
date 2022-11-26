@@ -48,5 +48,11 @@ namespace NetExtender.Types.Exceptions
         {
             Code = info.GetInt32(nameof(Code));
         }
+        
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue(nameof(Code), Code);
+        }
     }
 }
