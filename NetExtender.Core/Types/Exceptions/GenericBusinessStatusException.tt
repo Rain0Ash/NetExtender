@@ -60,6 +60,34 @@ namespace NetExtender.Types.Exceptions
         WriteLine("\t\t{");
         WriteLine("\t\t}");
         WriteLine("\t}");
+        
+        WriteLine(String.Empty);
+        
+        WriteLine("\t[Serializable]");
+        WriteLine($"\tpublic class {name}<T> : {inherit}<T>");
+        WriteLine("\t{");
+        WriteLine($"\t\tprivate const {nameof(HttpStatusCode)} Generic = {nameof(HttpStatusCode)}.{status.Key};");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {name}(T code)");
+        WriteLine("\t\t\t: base(code, Generic)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {name}(T code, {nameof(String)}? message)");
+        WriteLine("\t\t\t: base(message, code, Generic)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tpublic {name}(T code, {nameof(String)}? message, {nameof(Exception)}? innerException)");
+        WriteLine("\t\t\t: base(message, code, Generic, innerException)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t}");
+        WriteLine(String.Empty);
+        WriteLine($"\t\tprotected {name}({nameof(SerializationInfo)} info, {nameof(StreamingContext)} context)");
+        WriteLine("\t\t\t: base(info, context)");
+        WriteLine("\t\t{");
+        WriteLine("\t\t}");
+        WriteLine("\t}");
     }
 
     void Generator()
