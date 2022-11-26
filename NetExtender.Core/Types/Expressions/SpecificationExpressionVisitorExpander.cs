@@ -50,7 +50,7 @@ namespace NetExtender.Types.Expressions
             {
                 return base.VisitMethodCall(node);
             }
-            
+
             Type[] interfaces = declaring.GetInterfaces();
             return interfaces.Any(HasSpecification) ? ExpandSpecification(node.Object, method) : base.VisitMethodCall(node);
         }

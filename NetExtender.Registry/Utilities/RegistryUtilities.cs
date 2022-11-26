@@ -25,14 +25,14 @@ namespace NetExtender.Utilities.Registry
             [RegistryKeys.PerformanceData] = "HKEY_PERFORMANCE_DATA"
 
         }.ToImmutableDictionary();
-        
+
         public const RegistryKeys DefaultKey = RegistryKeys.CurrentUser;
 
         public static String ToRegistryName(this RegistryKeys key)
         {
             return RegistryKeyName.TryGetValue(key, out String? value) ? value : throw new NotSupportedException();
         }
-        
+
         public static IRegistry Create(this RegistryKeys key, params String[]? sections)
         {
             return Create(key, sections, false);
@@ -42,17 +42,17 @@ namespace NetExtender.Utilities.Registry
         {
             return Create(key, sections, write);
         }
-        
+
         public static IRegistry Create(this RegistryKeys key, IEnumerable<String>? sections, Boolean write)
         {
             return Create(key, sections, FileUtilities.GetFileAccess(write));
         }
-        
+
         public static IRegistry Create(this RegistryKeys key, FileAccess access, params String[]? sections)
         {
             return Create(key, sections, access);
         }
-        
+
         public static IRegistry Create(this RegistryKeys key, IEnumerable<String>? sections, FileAccess access)
         {
             return new NetExtender.Registry.Registry(key, sections)
@@ -60,7 +60,7 @@ namespace NetExtender.Utilities.Registry
                 Permission = access == FileAccess.Read ? RegistryKeyPermissionCheck.ReadSubTree : RegistryKeyPermissionCheck.ReadWriteSubTree
             };
         }
-        
+
         public static Boolean GetValue<T>(this RegistryKey registry, String? key, out T? result)
         {
             if (registry is null)
@@ -89,7 +89,7 @@ namespace NetExtender.Utilities.Registry
                     result = (T?) (Object?) value.GetString();
                     return true;
                 }
-                
+
                 if (value is IConvertible convertible)
                 {
                     result = (T) Convert.ChangeType(convertible, typeof(T));

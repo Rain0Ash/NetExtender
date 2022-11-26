@@ -50,7 +50,7 @@ namespace NetExtender.Workstation
 
             return collection.AsEnumerable().Select(management => management[property]).FirstOrDefault()?.ToString();
         }
-        
+
         public static DateTime GetWmiPropertyValueAsDateTime(String query, String property)
         {
             if (query is null)
@@ -66,19 +66,19 @@ namespace NetExtender.Workstation
             String? value = GetWmiPropertyValueAsString(query, property);
             return !String.IsNullOrEmpty(value) ? ManagementDateTimeConverter.ToDateTime(value) : throw new ManagementException();
         } 
-        
+
         public static DateTime GetBootDateTime()
         {
             return GetWmiPropertyValueAsDateTime("SELECT * FROM Win32_OperatingSystem WHERE Primary='true'", "LastBootUpTime");
         }
-        
+
         public static String? GetProcessorId()
         {
             using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT processorID FROM win32_processor");
             using ManagementObjectCollection collection = searcher.Get();
             return collection.AsEnumerable().Select(management => management["processorID"]).FirstOrDefault()?.ToString();
         }
-        
+
         public static ProcessorArchitecture GetProcessorBits()
         {
             try
@@ -106,9 +106,9 @@ namespace NetExtender.Workstation
         {
             using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT VolumeSerialNumber FROM Win32_LogicalDisk");
             using ManagementObjectCollection collection = searcher.Get();
-            
+
             StringBuilder builder = new StringBuilder();
-            
+
             foreach (ManagementBaseObject management in collection)
             {
                 builder.Append(Convert.ToString(management["VolumeSerialNumber"]));
@@ -131,7 +131,7 @@ namespace NetExtender.Workstation
         {
             using ManagementObjectSearcher searcher = new ManagementObjectSearcher($"SELECT {property} FROM {table}");
             using ManagementObjectCollection collection = searcher.Get();
-            
+
             return collection.AsEnumerable().TrySelect(management => management[property]).FirstOrDefault()?.ToString();
         }
 
@@ -182,7 +182,7 @@ namespace NetExtender.Workstation
         {
             using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT MemoryDevices FROM Win32_PhysicalMemoryArray");
             using ManagementObjectCollection collection = searcher.Get();
-            
+
             Int32 slots = 0;
             foreach (ManagementBaseObject management in collection)
             {
@@ -201,7 +201,7 @@ namespace NetExtender.Workstation
         {
             using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT CurrentClockSpeed FROM Win32_Processor");
             using ManagementObjectCollection collection = searcher.Get();
-            
+
             return collection.AsEnumerable().TrySelect(management => (Int32?) Convert.ToInt32(management["CurrentClockSpeed"])).FirstOrDefault();
         }
 
@@ -209,7 +209,7 @@ namespace NetExtender.Workstation
         {
             using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT IPEnabled, DefaultIPGateway FROM Win32_NetworkAdapterConfiguration");
             using ManagementObjectCollection collection = searcher.Get();
-            
+
             return collection.AsEnumerable()
                 .Where(management => management["IPEnabled"] is Boolean ip && ip)
                 .Select(management => management["DefaultIPGateway"]).FirstOrDefault()?.ToString();
@@ -219,7 +219,7 @@ namespace NetExtender.Workstation
         {
             using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT CurrentClockSpeed FROM Win32_Processor");
             using ManagementObjectCollection collection = searcher.Get();
-            
+
             return collection.AsEnumerable().TrySelect(management => (UInt32?) Convert.ToUInt32(management["CurrentClockSpeed"])).FirstOrDefault();
         }
 
@@ -232,7 +232,7 @@ namespace NetExtender.Workstation
         {
             using ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT Name, Caption, SocketDesignation FROM Win32_Processor");
             using ManagementObjectCollection collection = searcher.Get();
-            
+
             StringBuilder result = new StringBuilder();
             foreach (ManagementBaseObject management in collection)
             {
@@ -271,7 +271,7 @@ namespace NetExtender.Workstation
                 SpindleSpeed = management.TryGetValue(nameof(PhysicalDriveInfo.SpindleSpeed), out UInt32 spindlespeed) ? spindlespeed : null
             };
         }
-        
+
         public static PhysicalDriveInfo[] GetPhysicalDrives()
         {
             using ManagementObjectSearcher searcher = new ManagementObjectSearcher(@"\\.\root\microsoft\windows\storage", "SELECT * FROM MSFT_PhysicalDisk");
@@ -353,7 +353,7 @@ namespace NetExtender.Workstation
             {
                 return Array.Empty<LogicalDriveInfo>();
             }
-            
+
             using ManagementObjectSearcher searcher = new ManagementObjectSearcher(letter is not null ? $"SELECT * FROM Win32_LogicalDisk WHERE {letter.Select(character => $"DeviceId='{Char.ToUpperInvariant(character)}:'").Distinct().Join(" OR ")}" : "SELECT * FROM Win32_LogicalDisk");
             using ManagementObjectCollection collection = searcher.Get();
 
@@ -364,7 +364,7 @@ namespace NetExtender.Workstation
         {
             return GetStringFromSearcher("Name", "Win32_ComputerSystem");
         }
-        
+
         public static String? GetMacAddress()
         {
             return GetPhysicalAddress()?.ToString();

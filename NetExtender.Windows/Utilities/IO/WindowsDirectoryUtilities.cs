@@ -487,7 +487,7 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 throw new ArgumentException("Value cannot be null or empty.", nameof(icon));
             }
-            
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, "Value must be greater than or equal to 0.");
@@ -524,7 +524,7 @@ namespace NetExtender.Utilities.Windows.IO
 
             SHChangeNotify(0x08000000, 0x0000, (IntPtr) null, (IntPtr) null);
         }
-        
+
         public static Boolean TrySetDirectoryIcon(String directory, String icon)
         {
             return TrySetDirectoryIcon(directory, icon, 0);
@@ -541,17 +541,17 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 throw new ArgumentNullException(nameof(icon));
             }
-            
+
             if (directory == String.Empty)
             {
                 return false;
             }
-            
+
             if (icon == String.Empty)
             {
                 return false;
             }
-            
+
             if (index < 0)
             {
                 return false;

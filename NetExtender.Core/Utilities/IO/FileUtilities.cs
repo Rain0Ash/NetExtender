@@ -29,15 +29,15 @@ namespace NetExtender.Utilities.IO
             }
 
             current = File.GetAttributes(path);
-            
+
             return HasAttribute(current, attributes);
         }
-        
+
         public static Boolean HasAttribute(this FileAttributes current, FileAttributes attributes)
         {
             return (current & attributes) == attributes;
         }
-        
+
         /// <summary>
         /// Add or remove the <see cref="FileAttributes"/> attributes to the file on the specified path.
         /// </summary>
@@ -65,7 +65,7 @@ namespace NetExtender.Utilities.IO
                 return false;
             }
         }
-        
+
         public static FileInfo CopyTo(this FileInfo info, FileInfo destination)
         {
             if (info is null)
@@ -80,7 +80,7 @@ namespace NetExtender.Utilities.IO
 
             return info.CopyTo(destination.FullName);
         }
-        
+
         public static FileInfo CopyTo(this FileInfo info, FileInfo destination, Boolean overwrite)
         {
             if (info is null)
@@ -95,12 +95,12 @@ namespace NetExtender.Utilities.IO
 
             return info.CopyTo(destination.FullName, overwrite);
         }
-        
+
         public static Boolean TryCopyTo(this FileInfo info, String destination)
         {
             return TryCopyTo(info, destination, out _);
         }
-        
+
         public static Boolean TryCopyTo(this FileInfo info, String destination, [MaybeNullWhen(false)] out FileInfo result)
         {
             if (info is null)
@@ -124,12 +124,12 @@ namespace NetExtender.Utilities.IO
                 return false;
             }
         }
-        
+
         public static Boolean TryCopyTo(this FileInfo info, String destination, Boolean overwrite)
         {
             return TryCopyTo(info, destination, overwrite, out _);
         }
-        
+
         public static Boolean TryCopyTo(this FileInfo info, String destination, Boolean overwrite, [MaybeNullWhen(false)] out FileInfo result)
         {
             if (info is null)
@@ -176,7 +176,7 @@ namespace NetExtender.Utilities.IO
                 return false;
             }
         }
-        
+
         public static Boolean TryCopyTo(this FileInfo info, FileInfo destination, Boolean overwrite)
         {
             if (info is null)
@@ -247,7 +247,7 @@ namespace NetExtender.Utilities.IO
                 return null;
             }
         }
-        
+
         public static Boolean TryReadFileBytes(String path, [MaybeNullWhen(false)] out Byte[] result)
         {
             try
@@ -266,7 +266,7 @@ namespace NetExtender.Utilities.IO
         {
             return File.ReadAllText(path);
         }
-        
+
         public static String ReadFileText(String path, Encoding? encoding)
         {
             return encoding is null ? ReadFileText(path) : File.ReadAllText(path, encoding);
@@ -283,7 +283,7 @@ namespace NetExtender.Utilities.IO
                 return null;
             }
         }
-        
+
         public static String? TryReadFileText(String path, Encoding encoding)
         {
             try
@@ -295,7 +295,7 @@ namespace NetExtender.Utilities.IO
                 return null;
             }
         }
-        
+
         public static Boolean TryReadFileText(String path, [MaybeNullWhen(false)] out String result)
         {
             try
@@ -309,7 +309,7 @@ namespace NetExtender.Utilities.IO
                 return false;
             }
         }
-        
+
         public static Boolean TryReadFileText(String path, Encoding encoding, [MaybeNullWhen(false)] out String result)
         {
             try
@@ -328,12 +328,12 @@ namespace NetExtender.Utilities.IO
         {
             return File.ReadAllLines(path);
         }
-        
+
         public static String[] ReadFileLines(String path, Encoding? encoding)
         {
             return encoding is null ? ReadFileLines(path) : File.ReadAllLines(path, encoding);
         }
-        
+
         public static String[]? TryReadFileLines(String path)
         {
             try
@@ -345,7 +345,7 @@ namespace NetExtender.Utilities.IO
                 return null;
             }
         }
-        
+
         public static String[]? TryReadFileLines(String path, Encoding encoding)
         {
             try
@@ -357,7 +357,7 @@ namespace NetExtender.Utilities.IO
                 return null;
             }
         }
-        
+
         public static Boolean TryReadFileLines(String path, [MaybeNullWhen(false)] out String[] result)
         {
             try
@@ -371,7 +371,7 @@ namespace NetExtender.Utilities.IO
                 return false;
             }
         }
-        
+
         public static Boolean TryReadFileLines(String path, Encoding? encoding, [MaybeNullWhen(false)] out String[] result)
         {
             try
@@ -390,7 +390,7 @@ namespace NetExtender.Utilities.IO
         {
             return encoding is null ? new StreamReader(path) : new StreamReader(path, encoding);
         }
-        
+
         public static IEnumerable<String> ReadFileSequential(String path)
         {
             StreamReader file = GetFileReader(path);
@@ -401,7 +401,7 @@ namespace NetExtender.Utilities.IO
                 yield return line;
             }
         }
-        
+
         public static IEnumerable<String> ReadFileSequential(String path, Encoding? encoding)
         {
             using StreamReader file = GetFileReader(path, encoding);
@@ -412,7 +412,7 @@ namespace NetExtender.Utilities.IO
                 yield return line;
             }
         }
-        
+
         public static IEnumerable<String>? TryReadFileSequential(String path)
         {
             try
@@ -424,7 +424,7 @@ namespace NetExtender.Utilities.IO
                 return null;
             }
         }
-        
+
         public static IEnumerable<String>? TryReadFileSequential(String path, Encoding encoding)
         {
             try
@@ -436,7 +436,7 @@ namespace NetExtender.Utilities.IO
                 return null;
             }
         }
-        
+
         public static Boolean TryReadFileSequential(String path, [MaybeNullWhen(false)] out IEnumerable<String> result)
         {
             try
@@ -450,7 +450,7 @@ namespace NetExtender.Utilities.IO
                 return false;
             }
         }
-        
+
         public static Boolean TryReadFileSequential(String path, Encoding encoding, [MaybeNullWhen(false)] out IEnumerable<String> result)
         {
             try
@@ -469,17 +469,17 @@ namespace NetExtender.Utilities.IO
         {
             return new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None, 1);
         }
-        
+
         public static Task LockFileAsync(String path, CancellationToken token)
         {
             return LockFileAsync(path, Timeout.Infinite, token);
         }
-        
+
         public static Task LockFileAsync(String path, TimeSpan timeout)
         {
             return LockFileAsync(path, timeout, CancellationToken.None);
         }
-        
+
         public static Task LockFileAsync(String path, Int32 timeout)
         {
             return LockFileAsync(path, timeout, CancellationToken.None);
@@ -516,19 +516,19 @@ namespace NetExtender.Utilities.IO
         {
             return WaitCreateFileStreamAsync(path, mode, CancellationToken.None);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(String path, FileMode mode, CancellationToken token)
         {
             return WaitCreateFileStreamAsync(path, mode, Timeout.Infinite, token);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(String path, FileMode mode, TimeSpan timeout)
         {
             return WaitCreateFileStreamAsync(path, mode, timeout, CancellationToken.None);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(String path, FileMode mode, Int32 timeout)
         {
@@ -546,25 +546,25 @@ namespace NetExtender.Utilities.IO
         {
             return WaitCreateFileStreamAsync(() => new FileStream(path, mode), timeout, token);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(String path, FileMode mode, FileAccess access)
         {
             return WaitCreateFileStreamAsync(path, mode, access, CancellationToken.None);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(String path, FileMode mode, FileAccess access, CancellationToken token)
         {
             return WaitCreateFileStreamAsync(path, mode, access, Timeout.Infinite, token);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(String path, FileMode mode, FileAccess access, TimeSpan timeout)
         {
             return WaitCreateFileStreamAsync(path, mode, access, timeout, CancellationToken.None);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(String path, FileMode mode, FileAccess access, Int32 timeout)
         {
@@ -582,25 +582,25 @@ namespace NetExtender.Utilities.IO
         {
             return WaitCreateFileStreamAsync(() => new FileStream(path, mode, access), timeout, token);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(String path, FileMode mode, FileAccess access, FileShare share)
         {
             return WaitCreateFileStreamAsync(path, mode, access, share, CancellationToken.None);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(String path, FileMode mode, FileAccess access, FileShare share, CancellationToken token)
         {
             return WaitCreateFileStreamAsync(path, mode, access, share, Timeout.Infinite, token);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(String path, FileMode mode, FileAccess access, FileShare share, TimeSpan timeout)
         {
             return WaitCreateFileStreamAsync(path, mode, access, share, timeout, CancellationToken.None);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(String path, FileMode mode, FileAccess access, FileShare share, Int32 timeout)
         {
@@ -624,7 +624,7 @@ namespace NetExtender.Utilities.IO
         {
             return WaitCreateFileStreamAsync(path, mode, access, share, bufferSize, timeout, CancellationToken.None);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, Int32 timeout)
         {
@@ -642,25 +642,25 @@ namespace NetExtender.Utilities.IO
         {
             return WaitCreateFileStreamAsync(() => new FileStream(path, mode, access, share, bufferSize), timeout, token);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options)
         {
             return WaitCreateFileStreamAsync(path, mode, access, share, bufferSize, options, CancellationToken.None);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, CancellationToken token)
         {
             return WaitCreateFileStreamAsync(path, mode, access, share, bufferSize, options, Timeout.Infinite, token);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, TimeSpan timeout)
         {
             return WaitCreateFileStreamAsync(path, mode, access, share, bufferSize, options, timeout, CancellationToken.None);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(String path, FileMode mode, FileAccess access, FileShare share, Int32 bufferSize, FileOptions options, Int32 timeout)
         {
@@ -684,19 +684,19 @@ namespace NetExtender.Utilities.IO
         {
             return WaitCreateFileStreamAsync(handle, access, CancellationToken.None);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(this SafeFileHandle handle, FileAccess access, CancellationToken token)
         {
             return WaitCreateFileStreamAsync(handle, access, Timeout.Infinite, token);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(this SafeFileHandle handle, FileAccess access, TimeSpan timeout)
         {
             return WaitCreateFileStreamAsync(handle, access, timeout, CancellationToken.None);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(this SafeFileHandle handle, FileAccess access, Int32 timeout)
         {
@@ -720,7 +720,7 @@ namespace NetExtender.Utilities.IO
         {
             return WaitCreateFileStreamAsync(handle, access, bufferSize, timeout, CancellationToken.None);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(this SafeFileHandle handle, FileAccess access, Int32 bufferSize, Int32 timeout)
         {
@@ -738,25 +738,25 @@ namespace NetExtender.Utilities.IO
         {
             return WaitCreateFileStreamAsync(() => new FileStream(handle, access, bufferSize), timeout, token);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(this SafeFileHandle handle, FileAccess access, Int32 bufferSize, Boolean isAsync)
         {
             return WaitCreateFileStreamAsync(handle, access, bufferSize, isAsync, CancellationToken.None);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(this SafeFileHandle handle, FileAccess access, Int32 bufferSize, Boolean isAsync, CancellationToken token)
         {
             return WaitCreateFileStreamAsync(handle, access, bufferSize, isAsync, Timeout.Infinite, token);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(this SafeFileHandle handle, FileAccess access, Int32 bufferSize, Boolean isAsync, TimeSpan timeout)
         {
             return WaitCreateFileStreamAsync(handle, access, bufferSize, isAsync, timeout, CancellationToken.None);
         }
-        
+
         /// <inheritdoc cref="WaitCreateFileStreamAsync(Func{FileStream},Int32,CancellationToken)"/>
         public static Task<FileStream> WaitCreateFileStreamAsync(this SafeFileHandle handle, FileAccess access, Int32 bufferSize, Boolean isAsync, Int32 timeout)
         {
@@ -803,7 +803,7 @@ namespace NetExtender.Utilities.IO
             do
             {
                 token.ThrowIfCancellationRequested();
-                
+
                 try
                 {
                     return factory.Invoke();
@@ -812,9 +812,9 @@ namespace NetExtender.Utilities.IO
                 {
                     await Task.Delay(50, token).ConfigureAwait(false);
                 }
-                
+
             } while (timeout == -1 || Environment.TickCount64 - timestamp < timeout);
-            
+
             throw new TimeoutException("File opening timed out");
         }
 
@@ -834,7 +834,7 @@ namespace NetExtender.Utilities.IO
             {
                 return stream;
             }
-            
+
             stream.SetLength(bytes);
             return stream;
         }
@@ -982,7 +982,7 @@ namespace NetExtender.Utilities.IO
 
                 String path = Path.Combine(directory, name);
                 info.MoveTo(path);
-            
+
                 return true;
             }
             catch (Exception)
@@ -1005,7 +1005,7 @@ namespace NetExtender.Utilities.IO
         {
             return RemoveSuffixInternal(info, suffix, true);
         }
-        
+
         /// <summary>
         /// Renames the specified file (removes the specified suffix from the end of the name, if present).
         /// </summary>
@@ -1060,7 +1060,7 @@ namespace NetExtender.Utilities.IO
 
                     return false;
                 }
-                
+
                 String path = Path.Combine(directory, name);
                 info.MoveTo(path);
 
@@ -1098,19 +1098,19 @@ namespace NetExtender.Utilities.IO
 
             return info.OpenWrite();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FileStream ToStream(this FileInfo info)
         {
             return ToStream(info, FileShare.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FileStream ToStream(this FileInfo info, FileShare share)
         {
             return ToStream(info, FileMode.OpenOrCreate, FileAccess.ReadWrite, share);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FileStream ToStream(this FileInfo info, FileMode mode)
         {
@@ -1121,7 +1121,7 @@ namespace NetExtender.Utilities.IO
 
             return info.Open(mode);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FileStream ToStream(this FileInfo info, FileMode mode, FileAccess access)
         {
@@ -1132,7 +1132,7 @@ namespace NetExtender.Utilities.IO
 
             return info.Open(mode, access);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FileStream ToStream(this FileInfo info, FileMode mode, FileAccess access, FileShare share)
         {
@@ -1149,14 +1149,14 @@ namespace NetExtender.Utilities.IO
         {
             return !access.HasFlag(FileAccess.Write);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static FileAccess GetFileAccess(Boolean write)
         {
             return write ? FileAccess.ReadWrite : FileAccess.Read;
         }
     }
-    
+
     public readonly struct FileData
     {
         public FileAttributes Attributes { get; init; }

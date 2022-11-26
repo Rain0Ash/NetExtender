@@ -13,7 +13,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
         protected abstract Convert? Converter { get; }
         protected abstract Convert? BackConverter { get; }
         public IValueConverter? Fallback { get; }
-        
+
         protected MethodConverterAbstraction(IValueConverter? fallback)
         {
             Fallback = fallback;
@@ -30,7 +30,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
             {
                 throw new NotSupportedException();
             }
-                
+
             return Fallback.Convert(value, targetType, parameter, culture);
 
         }
@@ -61,7 +61,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
             : this(converter, (IValueConverter?) null)
         {
         }
-        
+
         public MethodConverter(Convert? converter, IValueConverter? fallback)
             : this(converter, null, fallback)
         {

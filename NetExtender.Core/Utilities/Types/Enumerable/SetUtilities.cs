@@ -33,7 +33,7 @@ namespace NetExtender.Utilities.Types
 
             return new HashSetCollection<T>(source);
         }
-        
+
         public static HashSet<T> ToHashSet<T>(IEnumerable<T> source, IEqualityComparer<T> comparer)
         {
             if (source is null)
@@ -43,7 +43,7 @@ namespace NetExtender.Utilities.Types
 
             return new HashSetCollection<T>(source, comparer);
         }
-        
+
         public static HashSet<T> AsHashSet<T>(IEnumerable<T> source)
         {
             if (source is null)
@@ -53,7 +53,7 @@ namespace NetExtender.Utilities.Types
 
             return source as HashSet<T> ?? new HashSetCollection<T>(source);
         }
-        
+
         public static HashSet<T> AsHashSet<T>(IEnumerable<T> source, IEqualityComparer<T> comparer)
         {
             if (source is null)
@@ -73,7 +73,7 @@ namespace NetExtender.Utilities.Types
 
             return new SortedSetCollection<T>(source);
         }
-        
+
         public static SortedSet<T> ToSortedSet<T>(this IEnumerable<T> source, IComparer<T>? comparer)
         {
             if (source is null)
@@ -83,7 +83,7 @@ namespace NetExtender.Utilities.Types
 
             return new SortedSetCollection<T>(source, comparer);
         }
-        
+
         public static SortedSet<T> AsSortedSet<T>(this IEnumerable<T> source)
         {
             if (source is null)
@@ -93,7 +93,7 @@ namespace NetExtender.Utilities.Types
 
             return source as SortedSet<T> ?? new SortedSetCollection<T>(source);
         }
-        
+
         public static SortedSet<T> AsSortedSet<T>(this IEnumerable<T> source, IComparer<T>? comparer)
         {
             if (source is null)
@@ -113,7 +113,7 @@ namespace NetExtender.Utilities.Types
 
             return new OrderedSet<T>(source);
         }
-        
+
         public static OrderedSet<T> ToOrderedSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer) where T : notnull
         {
             if (source is null)
@@ -123,7 +123,7 @@ namespace NetExtender.Utilities.Types
 
             return new OrderedSet<T>(source, comparer);
         }
-        
+
         public static OrderedSet<T> AsOrderedSet<T>(this IEnumerable<T> source) where T : notnull
         {
             if (source is null)
@@ -133,7 +133,7 @@ namespace NetExtender.Utilities.Types
 
             return source as OrderedSet<T> ?? new OrderedSet<T>(source);
         }
-        
+
         public static OrderedSet<T> AsOrderedSet<T>(this IEnumerable<T> source, IEqualityComparer<T> comparer) where T : notnull
         {
             if (source is null)
@@ -158,7 +158,7 @@ namespace NetExtender.Utilities.Types
 
             set.IntersectWith(values);
         }
-        
+
         public static void UnionWith<T>(this ISet<T> set, params T[]? values)
         {
             if (set is null)
@@ -173,7 +173,7 @@ namespace NetExtender.Utilities.Types
 
             set.UnionWith(values);
         }
-        
+
         public static void ExceptWith<T>(this ISet<T> set, params T[]? values)
         {
             if (set is null)
@@ -188,7 +188,7 @@ namespace NetExtender.Utilities.Types
 
             set.ExceptWith(values);
         }
-        
+
         public static void SymmetricExceptWith<T>(this ISet<T> set, params T[]? values)
         {
             if (set is null)
@@ -250,7 +250,7 @@ namespace NetExtender.Utilities.Types
         {
             return NearestHigher(set, value, out T? result) ? result : default;
         }
-        
+
         public static Boolean NearestHigher<T>(this SortedSet<T> set, T value, [MaybeNullWhen(false)] out T result)
         {
             if (set is null)
@@ -321,7 +321,7 @@ namespace NetExtender.Utilities.Types
                 result = MathPositionType.None;
                 return default;
             }
-            
+
             Boolean first = set.TryGetLast(item => comparer.Compare(item, value) < 0, out T? left);
             Boolean second = set.TryGetFirst(item => comparer.Compare(item, value) > 0, out T? right);
 
@@ -376,7 +376,7 @@ namespace NetExtender.Utilities.Types
         {
             return NearestHigher(set, value, out T? result) ? result : default;
         }
-        
+
         public static Boolean NearestHigher<T>(this ImmutableSortedSet<T> set, T value, [MaybeNullWhen(false)] out T result)
         {
             if (set is null)
@@ -445,9 +445,9 @@ namespace NetExtender.Utilities.Types
                 result = MathPositionType.None;
                 return default;
             }
-            
+
             comparer ??= set.KeyComparer;
-            
+
             Boolean first = set.TryGetLast(item => comparer.Compare(item, value) < 0, out T? left);
             Boolean second = set.TryGetFirst(item => comparer.Compare(item, value) > 0, out T? right);
 

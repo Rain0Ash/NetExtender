@@ -22,7 +22,7 @@ namespace NetExtender.Types.Exceptions
             : base(message, innerException)
         {
         }
-        
+
         protected CollectionSynchronizationException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

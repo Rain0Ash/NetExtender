@@ -136,7 +136,7 @@ namespace NetExtender.Localization.Behavior
                 return LocalizationOptions.HasFlag(LocalizationOptions.ThreeLetterName);
             }
         }
-        
+
         public Boolean WithoutSystem
         {
             get
@@ -144,7 +144,7 @@ namespace NetExtender.Localization.Behavior
                 return LocalizationOptions.HasFlag(LocalizationOptions.WithoutSystem);
             }
         }
-        
+
         public ILocalizationConverter Converter { get; }
 
         public LocalizationBehavior(IConfigBehavior behavior)
@@ -156,7 +156,7 @@ namespace NetExtender.Localization.Behavior
             : this(behavior, (ILocalizationConverter?) null, options)
         {
         }
-        
+
         public LocalizationBehavior(IConfigBehavior behavior, ILocalizationConverter? converter)
             : this(behavior, converter, LocalizationOptions.None)
         {
@@ -166,7 +166,7 @@ namespace NetExtender.Localization.Behavior
             : this(behavior, default, converter, options)
         {
         }
-        
+
         public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization)
             : this(behavior, localization, LocalizationOptions.None)
         {
@@ -176,7 +176,7 @@ namespace NetExtender.Localization.Behavior
             : this(behavior, localization, (ILocalizationConverter?) null, options)
         {
         }
-        
+
         public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization, ILocalizationConverter? converter)
             : this(behavior, localization, converter, LocalizationOptions.None)
         {
@@ -186,7 +186,7 @@ namespace NetExtender.Localization.Behavior
             : this(behavior, localization, default, converter, options)
         {
         }
-        
+
         public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization, LocalizationIdentifier system)
             : this(behavior, localization, system, LocalizationOptions.None)
         {
@@ -196,7 +196,7 @@ namespace NetExtender.Localization.Behavior
             : this(behavior, localization, system, null, options)
         {
         }
-        
+
         public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization, LocalizationIdentifier system, ILocalizationConverter? converter)
             : this(behavior, localization, system, converter, LocalizationOptions.None)
         {
@@ -206,7 +206,7 @@ namespace NetExtender.Localization.Behavior
             : this(behavior, localization, system, converter, options, null)
         {
         }
-        
+
         public LocalizationBehavior(IConfigBehavior behavior, IComparer<LocalizationIdentifier>? comparer)
             : this(behavior, comparer, LocalizationOptions.None)
         {
@@ -216,7 +216,7 @@ namespace NetExtender.Localization.Behavior
             : this(behavior, null, comparer, options)
         {
         }
-        
+
         public LocalizationBehavior(IConfigBehavior behavior, ILocalizationConverter? converter, IComparer<LocalizationIdentifier>? comparer)
             : this(behavior, converter, comparer, LocalizationOptions.None)
         {
@@ -226,7 +226,7 @@ namespace NetExtender.Localization.Behavior
             : this(behavior, default, converter, options, comparer)
         {
         }
-        
+
         public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization, IComparer<LocalizationIdentifier>? comparer)
             : this(behavior, localization, LocalizationOptions.None, comparer)
         {
@@ -236,7 +236,7 @@ namespace NetExtender.Localization.Behavior
             : this(behavior, localization, (ILocalizationConverter?) null, options, comparer)
         {
         }
-        
+
         public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization, ILocalizationConverter? converter, IComparer<LocalizationIdentifier>? comparer)
             : this(behavior, localization, converter, LocalizationOptions.None, comparer)
         {
@@ -246,7 +246,7 @@ namespace NetExtender.Localization.Behavior
             : this(behavior, localization, default, converter, options, comparer)
         {
         }
-        
+
         public LocalizationBehavior(IConfigBehavior behavior, LocalizationIdentifier localization, LocalizationIdentifier system, IComparer<LocalizationIdentifier>? comparer)
             : this(behavior, localization, system, LocalizationOptions.None, comparer)
         {
@@ -294,7 +294,7 @@ namespace NetExtender.Localization.Behavior
             ConfigurationValueEntry[]? entries = await Behavior.GetExistsValuesAsync(Converter.Convert(key, sections, LocalizationOptions), token);
             return entries is not null && entries.Length > 0;
         }
-        
+
         public virtual Boolean Contains(String? key, LocalizationIdentifier identifier, IEnumerable<String>? sections)
         {
             return Behavior.Contains(Converter.Convert(key, identifier, ref sections, LocalizationOptions), sections);
@@ -304,7 +304,7 @@ namespace NetExtender.Localization.Behavior
         {
             return Behavior.ContainsAsync(Converter.Convert(key, identifier, ref sections, LocalizationOptions), sections, token);
         }
-        
+
         public virtual ILocalizationString? Get(String? key, IEnumerable<String>? sections)
         {
             ConfigurationValueEntry[]? entries = Behavior.GetExistsValues(Converter.Convert(key, sections, LocalizationOptions));
@@ -316,7 +316,7 @@ namespace NetExtender.Localization.Behavior
             ConfigurationValueEntry[]? entries = await Behavior.GetExistsValuesAsync(Converter.Convert(key, sections, LocalizationOptions), token);
             return entries is not null && entries.Length > 0 ? new LocalizationString(this, Converter.Extract(entries)) : null;
         }
-        
+
         String? IConfigBehavior.Get(String? key, IEnumerable<String>? sections)
         {
             return Get(key, sections)?.ToString();
@@ -336,27 +336,27 @@ namespace NetExtender.Localization.Behavior
         {
             return Behavior.GetAsync(Converter.Convert(key, identifier, ref sections, LocalizationOptions), sections, token);
         }
-        
+
         public virtual Boolean Set(String? key, ILocalizationString? value, IEnumerable<String>? sections)
         {
             if (IsReadOnly)
             {
                 return false;
             }
-            
+
             if (value is null)
             {
                 return Behavior.Set(key, null, sections);
             }
 
             sections = sections?.ToImmutableArray();
-            
+
             Boolean successful = false;
             foreach ((LocalizationIdentifier identifier, String? entry) in value)
             {
                 successful |= Set(key, identifier, entry, sections);
             }
-            
+
             return successful;
         }
 
@@ -366,20 +366,20 @@ namespace NetExtender.Localization.Behavior
             {
                 return false;
             }
-            
+
             if (value is null)
             {
                 return await Behavior.SetAsync(key, null, sections, token);
             }
 
             sections = sections?.ToImmutableArray();
-            
+
             Boolean successful = false;
             foreach ((LocalizationIdentifier identifier, String? entry) in value)
             {
                 successful |= await SetAsync(key, identifier, entry, sections, token);
             }
-            
+
             return successful;
         }
 
@@ -407,7 +407,7 @@ namespace NetExtender.Localization.Behavior
         {
             sections = sections?.ToImmutableArray();
             ILocalizationString? entry = Get(key, sections);
-            
+
             if (entry is not null)
             {
                 return entry;
@@ -425,7 +425,7 @@ namespace NetExtender.Localization.Behavior
         {
             sections = sections?.ToImmutableArray();
             ILocalizationString? entry = await GetAsync(key, sections, token);
-            
+
             if (entry is not null)
             {
                 return entry;
@@ -469,11 +469,11 @@ namespace NetExtender.Localization.Behavior
                 {
                     continue;
                 }
-                    
+
                 yield return new LocalizationMultiEntry(enumerator.Current.Key, enumerator.Current.Sections);
             }
         }
-        
+
         public virtual LocalizationMultiEntry[]? GetExists(IEnumerable<String>? sections)
         {
             ConfigurationEntry[]? entries = Behavior.GetExists(sections);
@@ -485,7 +485,7 @@ namespace NetExtender.Localization.Behavior
             ConfigurationEntry[]? entries = await Behavior.GetExistsAsync(sections, token);
             return entries is not null ? GetExistsInternal(entries).ToArray() : null;
         }
-        
+
         ConfigurationEntry[]? IConfigBehavior.GetExists(IEnumerable<String>? sections)
         {
             return Behavior.GetExists(sections);
@@ -495,12 +495,12 @@ namespace NetExtender.Localization.Behavior
         {
             return Behavior.GetExistsAsync(sections, token);
         }
-        
+
         protected virtual IEnumerable<LocalizationEntry> GetExistsInternal(LocalizationIdentifier identifier, IEnumerable<ConfigurationEntry> values)
         {
             return values.GroupBy(entry => entry.Sections).SelectMany(group => Converter.Extract(group).Where(entry => entry.Identifier == identifier));
         }
-        
+
         public virtual LocalizationEntry[]? GetExists(LocalizationIdentifier identifier, IEnumerable<String>? sections)
         {
             ConfigurationEntry[]? entries = Behavior.GetExists(sections);
@@ -512,7 +512,7 @@ namespace NetExtender.Localization.Behavior
             ConfigurationEntry[]? entries = await Behavior.GetExistsAsync(sections, token);
             return entries is not null ? GetExistsInternal(identifier, entries).ToArray() : null;
         }
-        
+
         protected virtual IEnumerable<LocalizationValueEntry> GetExistsValuesInternal(IEnumerable<ConfigurationValueEntry> values)
         {
             return Converter.Extract(values);
@@ -529,7 +529,7 @@ namespace NetExtender.Localization.Behavior
             ConfigurationValueEntry[]? entries = await Behavior.GetExistsValuesAsync(sections, token);
             return entries is not null ? GetExistsValuesInternal(entries).ToArray() : null;
         }
-        
+
         protected virtual IEnumerable<LocalizationMultiValueEntry> GetExistsMultiValuesInternal(IEnumerable<ConfigurationValueEntry> values)
         {
             foreach (IGrouping<ImmutableArray<String>, ConfigurationValueEntry> group in values.GroupBy(entry => entry.Sections))
@@ -540,7 +540,7 @@ namespace NetExtender.Localization.Behavior
                 {
                     continue;
                 }
-                
+
                 LocalizationValueEntry value = enumerator.Current;
                 ILocalizationString entry = new LocalizationString(this, enumerator.AsEnumerable().Prepend(value));
                 yield return new LocalizationMultiValueEntry(value.Key, entry, value.Sections);
@@ -595,7 +595,7 @@ namespace NetExtender.Localization.Behavior
         {
             return Behavior.ClearAsync(sections, token);
         }
-        
+
         public virtual Boolean Clear(String? key, IEnumerable<String>? sections)
         {
             return Behavior.Clear(Converter.Convert(key, sections, LocalizationOptions));
@@ -635,7 +635,7 @@ namespace NetExtender.Localization.Behavior
         {
             return Behavior.MergeAsync(entries, token);
         }
-        
+
         public virtual Boolean Merge(IEnumerable<LocalizationValueEntry>? entries)
         {
             return Behavior.Merge(Converter.Pack(entries));
@@ -665,7 +665,7 @@ namespace NetExtender.Localization.Behavior
         {
             return Behavior.ReplaceAsync(entries, token);
         }
-        
+
         public virtual Boolean Replace(IEnumerable<LocalizationValueEntry>? entries)
         {
             return Behavior.Replace(Converter.Pack(entries));
@@ -695,7 +695,7 @@ namespace NetExtender.Localization.Behavior
         {
             return Behavior.DifferenceAsync(entries, token);
         }
-        
+
         public virtual LocalizationValueEntry[]? Difference(IEnumerable<LocalizationValueEntry>? entries)
         {
             return Converter.Extract(Behavior.Difference(Converter.Pack(entries)))?.ToArray();
@@ -715,7 +715,7 @@ namespace NetExtender.Localization.Behavior
         {
             return Converter.Extract(await Behavior.DifferenceAsync(Converter.Pack(entries), token))?.ToArray();
         }
-        
+
         IConfigBehaviorTransaction? IConfigBehavior.Transaction()
         {
             return Behavior.Transaction();
@@ -732,30 +732,30 @@ namespace NetExtender.Localization.Behavior
             {
                 return null;
             }
-            
+
             LocalizationMultiValueEntry[]? entries = GetExistsMultiValues(null);
-            
+
             ILocalizationBehavior transaction = new MemoryConfigBehavior(ConfigOptions.IgnoreEvent).Localization();
 
             transaction.Merge(entries);
             return new LocalizationBehaviorTransaction(this, transaction);
         }
-        
+
         public virtual async Task<ILocalizationBehaviorTransaction?> TransactionAsync(CancellationToken token)
         {
             if (IsReadOnly)
             {
                 return null;
             }
-            
+
             LocalizationMultiValueEntry[]? entries = await GetExistsMultiValuesAsync(null, token);
-            
+
             ILocalizationBehavior transaction = new MemoryConfigBehavior(ConfigOptions.IgnoreEvent).Localization();
 
             await transaction.MergeAsync(entries, token);
             return new LocalizationBehaviorTransaction(this, transaction);
         }
-        
+
         public virtual IEnumerator<LocalizationMultiValueEntry> GetEnumerator()
         {
             LocalizationMultiValueEntry[]? entries = GetExistsMultiValues(null);
@@ -764,7 +764,7 @@ namespace NetExtender.Localization.Behavior
             {
                 yield break;
             }
-            
+
             foreach (LocalizationMultiValueEntry entry in entries)
             {
                 yield return entry;

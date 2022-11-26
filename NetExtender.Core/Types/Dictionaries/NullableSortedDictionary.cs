@@ -36,7 +36,7 @@ namespace NetExtender.Types.Dictionaries
                 return base.Values;
             }
         }
-        
+
         IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys
         {
             get
@@ -52,7 +52,7 @@ namespace NetExtender.Types.Dictionaries
                 return Values;
             }
         }
-        
+
         public NullableSortedDictionary()
         {
         }
@@ -71,32 +71,32 @@ namespace NetExtender.Types.Dictionaries
             : base(dictionary, comparer)
         {
         }
-        
+
         public Boolean Contains(KeyValuePair<TKey, TValue> item)
         {
             return ((IDictionary<NullMaybe<TKey>, TValue>) this).Contains(new KeyValuePair<NullMaybe<TKey>, TValue>(item.Key, item.Value));
         }
-        
+
         public Boolean ContainsKey(TKey key)
         {
             return base.ContainsKey(key);
         }
-        
+
         public Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
             return base.TryGetValue(key, out value);
         }
-        
+
         public void Add(KeyValuePair<TKey, TValue> item)
         {
             ((IDictionary<NullMaybe<TKey>, TValue>) this).Add(new KeyValuePair<NullMaybe<TKey>, TValue>(item.Key, item.Value));
         }
-        
+
         public void Add(TKey key, TValue value)
         {
             base.Add(key, value);
         }
-        
+
         public Boolean Remove(KeyValuePair<TKey, TValue> item)
         {
             return ((IDictionary<NullMaybe<TKey>, TValue>) this).Remove(new KeyValuePair<NullMaybe<TKey>, TValue>(item.Key, item.Value));
@@ -111,7 +111,7 @@ namespace NetExtender.Types.Dictionaries
         {
             CollectionUtilities.CopyTo(this, array, arrayIndex);
         }
-        
+
         public new IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             foreach ((NullMaybe<TKey> key, TValue? value) in (IEnumerable<KeyValuePair<NullMaybe<TKey>, TValue>>) this)

@@ -21,7 +21,7 @@ namespace NetExtender.Windows.Protocols
         private const String DefaultIcon = "DefaultIcon";
 
         public String Path { get; }
-        
+
         private String IconPath
         {
             get
@@ -37,7 +37,7 @@ namespace NetExtender.Windows.Protocols
                 return $"\"{Path}\" \"%1\"";
             }
         }
-        
+
         private String URLApplicationName
         {
             get
@@ -128,7 +128,7 @@ namespace NetExtender.Windows.Protocols
             {
                 throw new FileNotFoundException(null, nameof(path));
             }
-            
+
             Path = path;
         }
 
@@ -173,7 +173,7 @@ namespace NetExtender.Windows.Protocols
                 icon.SetValue(null, IconPath);
 
                 using RegistryKey? shell = registry.CreateSubKey(ShellSubKey);
-                
+
                 //TODO: CS8598
                 // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (shell is null)

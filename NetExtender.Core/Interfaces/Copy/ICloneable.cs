@@ -15,7 +15,7 @@ namespace NetExtender.Interfaces
             {
                 return cloneable.Clone<T>();
             }
-            
+
             throw new NotSupportedException($"Base implementation of {nameof(ICloneable<T>)}.{nameof(Clone)} is supported only for {nameof(ICloneable)} interface");
         }
     }

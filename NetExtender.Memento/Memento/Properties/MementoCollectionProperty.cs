@@ -12,7 +12,7 @@ namespace NetExtender.Types.Memento
     public sealed record MementoCollectionProperty<TSource, TProperty, TCollection> : MementoProperty<TSource, TCollection> where TSource : class where TCollection : class, ICollection<TProperty>
     {
         private List<TProperty> Internal { get; }
-        
+
         public MementoCollectionProperty(String name)
             : this(name, null)
         {
@@ -72,10 +72,10 @@ namespace NetExtender.Types.Memento
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return new MementoCollection<TSource, TProperty, TCollection>(source, Property);
         }
-        
+
         public override MementoCollectionProperty<TSource, TProperty, TCollection> Item()
         {
             return HasValue ? new MementoCollectionProperty<TSource, TProperty, TCollection>(Property, Value) : New();
@@ -87,7 +87,7 @@ namespace NetExtender.Types.Memento
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return HasValue ? new MementoCollection<TSource, TProperty, TCollection>(source, Property, Value) : New(source);
         }
 
@@ -106,7 +106,7 @@ namespace NetExtender.Types.Memento
 
             Internal.Clear();
             Internal.AddRange(array);
-            
+
             return this;
         }
 
@@ -116,10 +116,10 @@ namespace NetExtender.Types.Memento
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             Internal.Clear();
             Internal.AddRange(Value);
-            
+
             return this;
         }
 
@@ -131,7 +131,7 @@ namespace NetExtender.Types.Memento
             {
                 Internal.AddRange(values);
             }
-            
+
             return this;
         }
 

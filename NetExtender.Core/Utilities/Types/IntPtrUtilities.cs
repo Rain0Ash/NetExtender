@@ -16,23 +16,23 @@ namespace NetExtender.Utilities.Types
         {
             return checked((IntPtr) value);
         }
-        
+
         public static UIntPtr ToUIntPtr(this UInt32 value)
         {
             return checked((UIntPtr) value);
         }
-        
+
         public static IntPtr ToIntPtr(this Int64 value)
         {
             return checked((IntPtr) value);
         }
-        
+
         public static IntPtr ToIntPtr(this Int64 value, out Boolean overflow)
         {
             overflow = value > (Int64) IntPtr.MaxValue;
             return unchecked((IntPtr) value);
         }
-        
+
         public static UIntPtr ToUIntPtr(this UInt64 value)
         {
             return checked((UIntPtr) value);
@@ -43,19 +43,19 @@ namespace NetExtender.Utilities.Types
             overflow = value > (UInt64) IntPtr.MaxValue;
             return unchecked((UIntPtr) value);
         }
-        
+
         public static Int16 ToInt16(this IntPtr value)
         {
             return checked((Int16) value);
         }
-        
+
         public static Int16 ToInt16(this IntPtr value, out Boolean overflow)
         {
             Int64 result = (Int64) value;
             overflow = result > Int16.MaxValue || result < Int16.MinValue;
             return unchecked((Int16) result);
         }
-        
+
         public static UInt16 ToUInt16(this UIntPtr value)
         {
             return checked((UInt16) value);
@@ -87,44 +87,44 @@ namespace NetExtender.Utilities.Types
         {
             return value == IntPtr.Zero;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNull(this UIntPtr value)
         {
             return value == UIntPtr.Zero;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotNull(this IntPtr value)
         {
             return !IsNull(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotNull(this UIntPtr value)
         {
             return !IsNull(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsInvalid(this IntPtr value)
         {
             return value.ToInt64() < 0;
         }
-        
+
         // ReSharper disable once UnusedParameter.Global
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsInvalid(this UIntPtr value)
         {
             return false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNullOrInvalid(this IntPtr value)
         {
             return value.ToInt64() <= 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNullOrInvalid(this UIntPtr value)
         {

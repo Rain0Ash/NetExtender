@@ -39,7 +39,7 @@ namespace NetExtender.Domains
                     _application = value;
                 }
             }
-            
+
             public Boolean IsReady
             {
                 get
@@ -105,7 +105,7 @@ namespace NetExtender.Domains
                     return Data.Information;
                 }
             }
-            
+
             public DateTime StartedAt
             {
                 get
@@ -153,7 +153,7 @@ namespace NetExtender.Domains
                     return Data.ApplicationName;
                 }
             }
-            
+
             public String ApplicationIdentifier
             {
                 get
@@ -187,12 +187,12 @@ namespace NetExtender.Domains
                 Data = data ?? throw new ArgumentNullException(nameof(data));
                 Culture = CultureInfo.InvariantCulture;
             }
-            
+
             public IDomain Initialize<T>() where T : IApplication, new()
             {
                 return Initialize(new T());
             }
-            
+
             public IDomain Initialize(IApplication application)
             {
                 Application = application ?? throw new ArgumentNullException(nameof(application));
@@ -214,12 +214,12 @@ namespace NetExtender.Domains
                 view.Start();
                 return this;
             }
-            
+
             public IDomain View<T>(IEnumerable<String>? args) where T : IApplicationView, new()
             {
                 return View(new T(), args);
             }
-            
+
             public IDomain View(IApplicationView view, IEnumerable<String>? args)
             {
                 if (view is null)
@@ -299,7 +299,7 @@ namespace NetExtender.Domains
             {
                 return ViewAsync(new T(), args);
             }
-            
+
             public async Task<IDomain> ViewAsync(IApplicationView view, params String[]? args)
             {
                 if (view is null)
@@ -348,19 +348,19 @@ namespace NetExtender.Domains
                 Application.Run();
                 return this;
             }
-            
+
             public async Task<IDomain> RunAsync()
             {
                 await Application.RunAsync();
                 return this;
             }
-            
+
             public async Task<IDomain> RunAsync(CancellationToken token)
             {
                 await Application.RunAsync(token);
                 return this;
             }
-            
+
             IApplication IApplication.Run()
             {
                 return Application.Run();
@@ -395,7 +395,7 @@ namespace NetExtender.Domains
             {
                 Application.Shutdown(code, force);
             }
-            
+
             public Task<Boolean> ShutdownAsync()
             {
                 return Application.ShutdownAsync();
@@ -440,7 +440,7 @@ namespace NetExtender.Domains
             {
                 Application.Restart();
             }
-            
+
             public Task<Boolean> RestartAsync()
             {
                 return Application.RestartAsync();
@@ -480,7 +480,7 @@ namespace NetExtender.Domains
                 {
                     return;
                 }
-                
+
                 Dispose(disposing);
                 _disposed = true;
             }

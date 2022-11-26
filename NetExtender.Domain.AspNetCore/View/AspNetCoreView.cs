@@ -26,7 +26,7 @@ namespace NetExtender.Domains.AspNetCore.View
         {
         }
     }
-    
+
     public class AspNetCoreView : ApplicationView
     {
         protected IHost? Context { get; private set; }
@@ -90,7 +90,7 @@ namespace NetExtender.Domains.AspNetCore.View
             {
                 throw new ArgumentException($"{nameof(host)} not reference equals with {nameof(Context)}");
             }
-            
+
             AspNetCoreApplication application = Domain.Current.Application.As<AspNetCoreApplication>();
             await application.RunAsync(Context, token);
             return this;

@@ -10,9 +10,9 @@ namespace NetExtender.Windows.Services.Exceptions
     public class WindowsServiceNotFoundException : SystemException
     {
         public const String ServiceNotFoundMessage = "Windows service not found.";
-        
+
         public String? ServiceName { get; }
-        
+
         public override String Message
         {
             get
@@ -20,7 +20,7 @@ namespace NetExtender.Windows.Services.Exceptions
                 return ServiceName is null ? ServiceNotFoundMessage : $"Windows service with name '{ServiceName}' not found.";
             }
         }
-        
+
         public WindowsServiceNotFoundException()
             : base(ServiceNotFoundMessage)
         {
@@ -30,13 +30,13 @@ namespace NetExtender.Windows.Services.Exceptions
             : base(message)
         {
         }
-        
+
         public WindowsServiceNotFoundException(String? message, String? serviceName)
             : base(message)
         {
             ServiceName = serviceName;
         }
-        
+
         public WindowsServiceNotFoundException(String? message, Exception? innerException)
             : base(message, innerException)
         {
@@ -47,13 +47,13 @@ namespace NetExtender.Windows.Services.Exceptions
         {
             ServiceName = serviceName;
         }
-        
+
         protected WindowsServiceNotFoundException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             ServiceName = info.GetString(nameof(ServiceName));
         }
-        
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);

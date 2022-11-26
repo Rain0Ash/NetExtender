@@ -25,7 +25,7 @@ namespace NetExtender.Utilities.Types
                 return Uri.UriSchemeFtp;
             }
         }
-        
+
         public static String FtpDelimiter { get; } = Ftp + Delimiter;
 
         public static String Gopher
@@ -35,7 +35,7 @@ namespace NetExtender.Utilities.Types
                 return Uri.UriSchemeGopher;
             }
         }
-        
+
         public static String GopherDelimiter { get; } = Gopher + Delimiter;
 
         public static String Http
@@ -45,7 +45,7 @@ namespace NetExtender.Utilities.Types
                 return Uri.UriSchemeHttp;
             }
         }
-        
+
         public static String HttpDelimiter { get; } = Http + Delimiter;
 
         public static String Https
@@ -55,7 +55,7 @@ namespace NetExtender.Utilities.Types
                 return Uri.UriSchemeHttps;
             }
         }
-        
+
         public static String HttpsDelimiter { get; } = Https + Delimiter;
 
         public static String WebSocket
@@ -65,7 +65,7 @@ namespace NetExtender.Utilities.Types
                 return "ws";
             }
         }
-        
+
         public static String WebSocketDelimiter { get; } = WebSocket + Delimiter;
 
         public static String WebSocketSecure
@@ -75,7 +75,7 @@ namespace NetExtender.Utilities.Types
                 return "wss";
             }
         }
-        
+
         public static String WebSocketSecureDelimiter { get; } = WebSocketSecure + Delimiter;
 
         public static String MailTo
@@ -85,7 +85,7 @@ namespace NetExtender.Utilities.Types
                 return Uri.UriSchemeMailto;
             }
         }
-        
+
         public static String MailToDelimiter { get; } = MailTo + Delimiter;
 
         public static String News
@@ -95,7 +95,7 @@ namespace NetExtender.Utilities.Types
                 return Uri.UriSchemeNews;
             }
         }
-        
+
         public static String NewsDelimiter { get; } = News + Delimiter;
 
         public static String Nntp
@@ -105,7 +105,7 @@ namespace NetExtender.Utilities.Types
                 return Uri.UriSchemeNntp;
             }
         }
-        
+
         public static String NntpDelimiter { get; } = Nntp + Delimiter;
 
         public static String NetTcp
@@ -115,7 +115,7 @@ namespace NetExtender.Utilities.Types
                 return Uri.UriSchemeNetTcp;
             }
         }
-        
+
         public static String NetTcpDelimiter { get; } = NetTcp + Delimiter;
 
         public static String NetPipe
@@ -125,7 +125,7 @@ namespace NetExtender.Utilities.Types
                 return Uri.UriSchemeNetPipe;
             }
         }
-        
+
         public static String NetPipeDelimiter { get; } = NetPipe + Delimiter;
 
         public static String Delimiter
@@ -135,7 +135,7 @@ namespace NetExtender.Utilities.Types
                 return Uri.SchemeDelimiter;
             }
         }
-        
+
         public static Uri ToUri(this String uri)
         {
             if (uri is null)
@@ -145,7 +145,7 @@ namespace NetExtender.Utilities.Types
 
             return new UriBuilder(uri).Uri;
         }
-        
+
         public static Uri ToUri(this String uri, String parent)
         {
             if (uri is null)
@@ -160,7 +160,7 @@ namespace NetExtender.Utilities.Types
 
             return uri.ToUri(parent.ToUri());
         }
-        
+
         public static Uri ToUri(this String uri, Uri parent)
         {
             if (uri is null)
@@ -175,7 +175,7 @@ namespace NetExtender.Utilities.Types
 
             return new Uri(parent, new Uri(uri, UriKind.Relative));
         }
-        
+
         public static Uri SetQueryParameter(this Uri uri, String key, String? value)
         {
             if (uri is null)
@@ -189,13 +189,13 @@ namespace NetExtender.Utilities.Types
             }
 
             String uristring = uri.ToString();
-	
+
             Match match = Regex.Match(uristring, $@"[?&]({Regex.Escape(key)}=?.*?)(?:&|/|$)");
-	
+
             if (match.Success)
             {
                 Group group = match.Groups[1];
-	
+
                 uristring = uristring.Remove(group.Index, group.Length);
                 uristring = uristring.Insert(group.Index, $"{key}={value}");
                 return new Uri(uristring);
@@ -206,7 +206,7 @@ namespace NetExtender.Utilities.Types
 
             return new Uri(uristring);
         }
-        
+
         public static Uri SetRouteParameter(this Uri uri, String key, String? value)
         {
             if (uri is null)
@@ -220,13 +220,13 @@ namespace NetExtender.Utilities.Types
             }
 
             String uristring = uri.ToString();
-	
+
             Match match = Regex.Match(uristring, $@"/({Regex.Escape(key)}/?.*?)(?:/|$)");
-	
+
             if (match.Success)
             {
                 Group group = match.Groups[1];
-	
+
                 uristring = uristring.Remove(group.Index, group.Length);
                 uristring = uristring.Insert(group.Index, $"{key}/{value}");
                 return new Uri(uristring);

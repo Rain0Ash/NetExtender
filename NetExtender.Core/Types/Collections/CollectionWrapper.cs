@@ -31,12 +31,12 @@ namespace NetExtender.Types.Collections
         {
             Collection = collection ?? throw new ArgumentNullException(nameof(collection));
         }
-        
+
         public Boolean Contains(T item)
         {
             return Collection.Contains(item);
         }
-        
+
         public void Add(T item)
         {
             Collection.Add(item);
@@ -46,7 +46,7 @@ namespace NetExtender.Types.Collections
         {
             return Collection.Remove(item);
         }
-        
+
         public void Clear()
         {
             Collection.Clear();

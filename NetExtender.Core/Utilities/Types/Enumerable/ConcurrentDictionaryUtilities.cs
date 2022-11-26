@@ -24,7 +24,7 @@ namespace NetExtender.Utilities.Types
             Lazy<TValue> lazy = new Lazy<TValue>(factory, LazyThreadSafetyMode.ExecutionAndPublication);
             return dictionary.GetOrAdd(key, () => lazy.Value);
         }
-        
+
         public static TValue ConcurrentGetOrAdd<TKey, TValue>(this ConcurrentDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> factory) where TKey : notnull
         {
             if (dictionary is null)
@@ -36,7 +36,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(factory));
             }
-            
+
             Lazy<TValue> lazy = new Lazy<TValue>(() => factory(key), LazyThreadSafetyMode.ExecutionAndPublication);
             return dictionary.GetOrAdd(key, () => lazy.Value);
         }

@@ -43,7 +43,7 @@ namespace NetExtender.Types.Comparers
             : this(null, comparer)
         {
         }
-        
+
         public OrderedComparer(params T[]? order)
             : this((IEnumerable<T>?) order)
         {
@@ -53,7 +53,7 @@ namespace NetExtender.Types.Comparers
             : this(order, null)
         {
         }
-        
+
         public OrderedComparer(IComparer<T>? comparer, params T[]? order)
             : this(order, comparer)
         {
@@ -82,7 +82,7 @@ namespace NetExtender.Types.Comparers
             Order.AddRange(source);
             Indexer = Order.Count > 8 ? Order.ToIndexer() : null;
         }
-        
+
         public void Insert(Int32 index, T item)
         {
             Order.Insert(index, item);
@@ -109,29 +109,29 @@ namespace NetExtender.Types.Comparers
         {
             return Indexer?.IndexOf(item) ?? Order.IndexOf(item);
         }
-        
+
         public Boolean GetOrder(T item, out Int32 order)
         {
             return Indexer?.IndexOf(item, out order) ?? Order.IndexOf(item, out order);
         }
-        
+
         public Boolean Remove(T item)
         {
             if (!Order.Remove(item))
             {
                 return false;
             }
-            
+
             Indexer = Order.Count > 8 ? Order.ToIndexer() : null;
             return true;
         }
-        
+
         public void Clear()
         {
             Order.Clear();
             Indexer = null;
         }
-        
+
         public void CopyTo(T[] array, Int32 index)
         {
             Order.CopyTo(array, index);
@@ -140,10 +140,10 @@ namespace NetExtender.Types.Comparers
         protected Int32 Compare(Int32 first, Int32 second)
         {
             Int32 count = Count;
-            
+
             Int32 cx = first != -1 ? first : count;
             Int32 cy = second != -1 ? second : count;
-            
+
             return cx.CompareTo(cy);
         }
 
@@ -158,7 +158,7 @@ namespace NetExtender.Types.Comparers
 
             return compare == 0 ? Comparer.Compare(x, y) : compare;
         }
-        
+
         public IEnumerator<T> GetEnumerator()
         {
             return Order.GetEnumerator();

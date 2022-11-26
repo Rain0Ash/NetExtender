@@ -21,32 +21,32 @@ namespace NetExtender.Types.Flags
         {
             return new Flag1024(value);
         }
-        
+
         public static implicit operator Flag1024(Flag128 value)
         {
             return new Flag1024(value.High, value.Low);
         }
-        
+
         public static implicit operator Flag1024(Flag256 value)
         {
             return new Flag1024(value.High1, value.High0, value.Low1, value.Low0);
         }
-        
+
         public static implicit operator Flag1024(Flag512 value)
         {
             return new Flag1024(value.High3, value.High2, value.High1, value.High0, value.Low3, value.Low2, value.Low1, value.Low0);
         }
-        
+
         public static implicit operator Flag1024(SByte value)
         {
             return new Flag1024(Unsafe.As<SByte, Byte>(ref value));
         }
-        
+
         public static implicit operator Flag1024(Byte value)
         {
             return new Flag1024(value);
         }
-        
+
         public static implicit operator Flag1024(Int16 value)
         {
             return new Flag1024(Unsafe.As<Int16, UInt16>(ref value));
@@ -56,7 +56,7 @@ namespace NetExtender.Types.Flags
         {
             return new Flag1024(value);
         }
-        
+
         public static implicit operator Flag1024(Int32 value)
         {
             return new Flag1024(Unsafe.As<Int32, UInt32>(ref value));
@@ -66,7 +66,7 @@ namespace NetExtender.Types.Flags
         {
             return new Flag1024(value);
         }
-        
+
         public static implicit operator Flag1024(Int64 value)
         {
             return new Flag1024(Unsafe.As<Int64, UInt64>(ref value));
@@ -76,7 +76,7 @@ namespace NetExtender.Types.Flags
         {
             return new Flag1024(value);
         }
-        
+
         public static implicit operator ReadOnlySpan<Byte>(in Flag1024 value)
         {
             fixed (void* pointer = &value)
@@ -84,7 +84,7 @@ namespace NetExtender.Types.Flags
                 return new ReadOnlySpan<Byte>(pointer, sizeof(UInt64) * 4 / sizeof(Byte));
             }
         }
-        
+
         public static implicit operator ReadOnlySpan<UInt16>(in Flag1024 value)
         {
             fixed (void* pointer = &value)
@@ -92,7 +92,7 @@ namespace NetExtender.Types.Flags
                 return new ReadOnlySpan<UInt16>(pointer, sizeof(UInt64) * 4 / sizeof(UInt16));
             }
         }
-        
+
         public static implicit operator ReadOnlySpan<UInt32>(in Flag1024 value)
         {
             fixed (void* pointer = &value)
@@ -100,7 +100,7 @@ namespace NetExtender.Types.Flags
                 return new ReadOnlySpan<UInt32>(pointer, sizeof(UInt64) * 4 / sizeof(UInt32));
             }
         }
-        
+
         public static implicit operator ReadOnlySpan<UInt64>(in Flag1024 value)
         {
             fixed (void* pointer = &value)
@@ -108,7 +108,7 @@ namespace NetExtender.Types.Flags
                 return new ReadOnlySpan<UInt64>(pointer, sizeof(UInt64) * 4 / sizeof(UInt64));
             }
         }
-        
+
         public static Boolean operator ==(Flag1024 first, Flag1024 second)
         {
             return first.Low7 == second.Low7 && first.Low6 == second.Low6 &&
@@ -116,41 +116,41 @@ namespace NetExtender.Types.Flags
                    first.Low3 == second.Low3 && first.Low2 == second.Low2 &&
                    first.Low1 == second.Low1 && first.Low0 == second.Low0;
         }
-        
+
         public static Boolean operator !=(Flag1024 first, Flag1024 second)
         {
             return !(first == second);
         }
-        
+
         public static Flag1024 operator |(Flag1024 first, Flag1024 second)
         {
             return new Flag1024(first.Low7 | second.Low7, first.Low6 | second.Low6, first.Low5 | second.Low5, first.Low4 | second.Low4,
                                first.Low3 | second.Low3, first.Low2 | second.Low2, first.Low1 | second.Low1, first.Low0 | second.Low0);
         }
-        
+
         public static Flag1024 operator &(Flag1024 first, Flag1024 second)
         {
             return new Flag1024(first.Low7 & second.Low7, first.Low6 & second.Low6, first.Low5 & second.Low5, first.Low4 & second.Low4,
                                first.Low3 & second.Low3, first.Low2 & second.Low2, first.Low1 & second.Low1, first.Low0 & second.Low0);
         }
-        
+
         public static Flag1024 operator ^(Flag1024 first, Flag1024 second)
         {
             return new Flag1024(first.Low7 ^ second.Low7, first.Low6 ^ second.Low6, first.Low5 ^ second.Low5, first.Low4 ^ second.Low4,
                                first.Low3 ^ second.Low3, first.Low2 ^ second.Low2, first.Low1 ^ second.Low1, first.Low0 ^ second.Low0);
         }
-        
+
         public static Flag1024 operator ~(Flag1024 value)
         {
             return new Flag1024(~value.Low7, ~value.Low6, ~value.Low5, ~value.Low4,
                                ~value.Low3, ~value.Low2, ~value.Low1, ~value.Low0);
         }
-        
+
         public static Flag1024 operator <<(Flag1024 value, Int32 shift)
         {
             return value.BitwiseShiftLeft(shift);
         }
-        
+
         public static Flag1024 operator >>(Flag1024 value, Int32 shift)
         {
             return value.BitwiseShiftRight(shift);
@@ -163,7 +163,7 @@ namespace NetExtender.Types.Flags
                 return sizeof(Flag1024);
             }
         }
-        
+
         public Int32 Count
         {
             get
@@ -171,7 +171,7 @@ namespace NetExtender.Types.Flags
                 return Size * BitUtilities.BitInByte;
             }
         }
-        
+
         public Int32 PopCount
         {
             get
@@ -179,52 +179,52 @@ namespace NetExtender.Types.Flags
                 return this.BitwisePopCount();
             }
         }
-        
+
         [field: FieldOffset(120)]
         internal UInt64 High7 { get; }
-        
+
         [field: FieldOffset(112)]
         internal UInt64 High6 { get; }
-        
+
         [field: FieldOffset(104)]
         internal UInt64 High5 { get; }
-        
+
         [field: FieldOffset(96)]
         internal UInt64 High4 { get; }
 
         [field: FieldOffset(88)]
         internal UInt64 High3 { get; }
-        
+
         [field: FieldOffset(80)]
         internal UInt64 High2 { get; }
-        
+
         [field: FieldOffset(72)]
         internal UInt64 High1 { get; }
-        
+
         [field: FieldOffset(64)]
         internal UInt64 High0 { get; }
-        
+
         [field: FieldOffset(56)]
         internal UInt64 Low7 { get; }
-        
+
         [field: FieldOffset(48)]
         internal UInt64 Low6 { get; }
-        
+
         [field: FieldOffset(40)]
         internal UInt64 Low5 { get; }
-        
+
         [field: FieldOffset(32)]
         internal UInt64 Low4 { get; }
 
         [field: FieldOffset(24)]
         internal UInt64 Low3 { get; }
-        
+
         [field: FieldOffset(16)]
         internal UInt64 Low2 { get; }
-        
+
         [field: FieldOffset(8)]
         internal UInt64 Low1 { get; }
-        
+
         [field: FieldOffset(0)]
         internal UInt64 Low0 { get; }
 
@@ -232,77 +232,77 @@ namespace NetExtender.Types.Flags
             : this(0, low)
         {
         }
-        
+
         public Flag1024(UInt64 high, UInt64 low)
             : this(0, high, low)
         {
         }
-        
+
         public Flag1024(UInt64 high0, UInt64 low1, UInt64 low0)
             : this(0, high0, low1, low0)
         {
         }
-        
+
         public Flag1024(UInt64 high1, UInt64 high0, UInt64 low1, UInt64 low0)
             : this(0, high1, high0, low1, low0)
         {
         }
-        
+
         public Flag1024(UInt64 high0, UInt64 low3, UInt64 low2, UInt64 low1, UInt64 low0)
             : this(0, high0, low3, low2, low1, low0)
         {
         }
-        
+
         public Flag1024(UInt64 high1, UInt64 high0, UInt64 low3, UInt64 low2, UInt64 low1, UInt64 low0)
             : this(0, high1, high0, low3, low2, low1, low0)
         {
         }
-        
+
         public Flag1024(UInt64 low6, UInt64 low5, UInt64 low4, UInt64 low3, UInt64 low2, UInt64 low1, UInt64 low0)
             : this(0, low6, low5, low4, low3, low2, low1, low0)
         {
         }
-        
+
         public Flag1024(UInt64 low7, UInt64 low6, UInt64 low5, UInt64 low4, UInt64 low3, UInt64 low2, UInt64 low1, UInt64 low0)
             : this(0, low7, low6, low5, low4, low3, low2, low1, low0)
         {
         }
-        
+
         public Flag1024(UInt64 high0, UInt64 low7, UInt64 low6, UInt64 low5, UInt64 low4, UInt64 low3, UInt64 low2, UInt64 low1, UInt64 low0)
             : this(0, high0, low7, low6, low5, low4, low3, low2, low1, low0)
         {
         }
-        
+
         public Flag1024(UInt64 high1, UInt64 high0, UInt64 low7, UInt64 low6, UInt64 low5, UInt64 low4, UInt64 low3, UInt64 low2, UInt64 low1, UInt64 low0)
             : this(0, high1, high0, low7, low6, low5, low4, low3, low2, low1, low0)
         {
         }
-        
+
         public Flag1024(UInt64 high2, UInt64 high1, UInt64 high0, UInt64 low7, UInt64 low6, UInt64 low5, UInt64 low4, UInt64 low3, UInt64 low2, UInt64 low1, UInt64 low0)
             : this(0, high2, high1, high0, low7, low6, low5, low4, low3, low2, low1, low0)
         {
         }
-        
+
         public Flag1024(UInt64 high3, UInt64 high2, UInt64 high1, UInt64 high0, UInt64 low7, UInt64 low6, UInt64 low5, UInt64 low4, UInt64 low3, UInt64 low2, UInt64 low1, UInt64 low0)
             : this(0, high3, high2, high1, high0, low7, low6, low5, low4, low3, low2, low1, low0)
         {
         }
-        
+
         public Flag1024(UInt64 high4, UInt64 high3, UInt64 high2, UInt64 high1, UInt64 high0, UInt64 low7, UInt64 low6, UInt64 low5, UInt64 low4, UInt64 low3, UInt64 low2, UInt64 low1, UInt64 low0)
             : this(0, high4, high3, high2, high1, high0, low7, low6, low5, low4, low3, low2, low1, low0)
         {
         }
-        
+
         public Flag1024(UInt64 high5, UInt64 high4, UInt64 high3, UInt64 high2, UInt64 high1, UInt64 high0, UInt64 low7, UInt64 low6, UInt64 low5, UInt64 low4, UInt64 low3, UInt64 low2, UInt64 low1, UInt64 low0)
             : this(0, high5, high4, high3, high2, high1, high0, low7, low6, low5, low4, low3, low2, low1, low0)
         {
         }
-        
+
         public Flag1024(UInt64 high6, UInt64 high5, UInt64 high4, UInt64 high3, UInt64 high2, UInt64 high1, UInt64 high0, UInt64 low7, UInt64 low6, UInt64 low5, UInt64 low4, UInt64 low3, UInt64 low2, UInt64 low1, UInt64 low0)
             : this(0, high6, high5, high4, high3, high2, high1, high0, low7, low6, low5, low4, low3, low2, low1, low0)
         {
         }
-        
+
         public Flag1024(UInt64 high7, UInt64 high6, UInt64 high5, UInt64 high4, UInt64 high3, UInt64 high2, UInt64 high1, UInt64 high0, UInt64 low7, UInt64 low6, UInt64 low5, UInt64 low4, UInt64 low3, UInt64 low2, UInt64 low1, UInt64 low0)
         {
             High7 = high7;
@@ -322,7 +322,7 @@ namespace NetExtender.Types.Flags
             Low1 = low1;
             Low0 = low0;
         }
-        
+
         public ReadOnlySpan<Byte> AsSpan()
         {
             return this;
@@ -343,7 +343,7 @@ namespace NetExtender.Types.Flags
                     return false;
                 }
             }
-            
+
             return true;
         }
 
@@ -420,7 +420,7 @@ namespace NetExtender.Types.Flags
         {
             return other is not null && Equals(other.AsSpan());
         }
-        
+
         public override String ToString()
         {
             return Convert.ToString(unchecked((Int64) Low7), 2) + Convert.ToString(unchecked((Int64) Low6), 2) +
@@ -428,7 +428,7 @@ namespace NetExtender.Types.Flags
                    Convert.ToString(unchecked((Int64) Low3), 2) + Convert.ToString(unchecked((Int64) Low2), 2) +
                    Convert.ToString(unchecked((Int64) Low1), 2) + Convert.ToString(unchecked((Int64) Low0), 2);
         }
-        
+
         public IEnumerable<Int32> Enumerate()
         {
             Byte[] values = AsSpan().ToArray();
@@ -448,12 +448,12 @@ namespace NetExtender.Types.Flags
                 }
             }
         }
-        
+
         public IEnumerable<TEnum> Enumerate<TEnum>() where TEnum : unmanaged, Enum
         {
             return Enumerate().Select(item => Unsafe.As<Int32, TEnum>(ref item));
         }
-        
+
         public IEnumerator<Boolean> GetEnumerator()
         {
             for (Int32 i = 0; i < Count; i++)

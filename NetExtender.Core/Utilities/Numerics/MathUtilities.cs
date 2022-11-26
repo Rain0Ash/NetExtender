@@ -19,7 +19,7 @@ namespace NetExtender.Utilities.Numerics
         Right,
         Both
     }
-    
+
     public enum TrigonometryType
     {
         Sin,
@@ -4744,7 +4744,7 @@ namespace NetExtender.Utilities.Numerics
 
             Int32 position = i;
             buffer[i++] = '.';
-            
+
             do
             {
                 Double nv = remainder * @base;
@@ -4768,7 +4768,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentOutOfRangeException(nameof(@base), @base, $@"Base out of range. Minimum base: {MinimumBase}. Maximum base: {MaximumBase}");
             }
-            
+
             if (value == 0)
             {
                 return "0";
@@ -4782,7 +4782,7 @@ namespace NetExtender.Utilities.Numerics
 
             Int64 whole = (Int64) value;
             precise += (UInt16) ((precise > 0 ? 1 : 0) + (whole > 0 ? Math.Floor(Math.Log(whole, @base)) + 1 : 1));
-            
+
             Int32 i = precise;
             Span<Char> buffer = stackalloc Char[i];
 
@@ -4807,12 +4807,12 @@ namespace NetExtender.Utilities.Numerics
             }
 
             i = precise - i;
-            
+
             if (i >= buffer.Length)
             {
                 return new String(buffer.Slice(0, i)).Negative(negative);
             }
-            
+
             Int32 position = i;
             buffer[i++] = '.';
 

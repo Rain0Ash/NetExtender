@@ -22,7 +22,7 @@ namespace NetExtender.Windows.Types.IO
         {
             return layout.Handle;
         }
-        
+
         public static implicit operator LocalizationIdentifier(KeyboardLayout layout)
         {
             return layout.Culture?.LCID ?? default;
@@ -32,27 +32,27 @@ namespace NetExtender.Windows.Types.IO
         {
             return layout.Culture;
         }
-        
+
         public static explicit operator KeyboardLayout(IntPtr handle)
         {
             return new KeyboardLayout(handle);
         }
-        
+
         public static explicit operator KeyboardLayout(CultureIdentifier lcid)
         {
             return new KeyboardLayout(lcid);
         }
-        
+
         public static explicit operator KeyboardLayout(LocalizationIdentifier lcid)
         {
             return new KeyboardLayout(lcid);
         }
-        
+
         public static explicit operator KeyboardLayout(CultureInfo culture)
         {
             return new KeyboardLayout(culture);
         }
-        
+
         public static Boolean operator ==(KeyboardLayout first, KeyboardLayout second)
         {
             return first.Handle == second.Handle;
@@ -85,7 +85,7 @@ namespace NetExtender.Windows.Types.IO
         {
             Handle = handle;
         }
-        
+
         public KeyboardLayout(LocalizationIdentifier lcid)
             : this(lcid.GetCultureInfo())
         {
@@ -100,13 +100,13 @@ namespace NetExtender.Windows.Types.IO
 
             Int32 lcid = info.KeyboardLayoutId;
             Handle = KeyboardLayoutUtilities.KeyboardLayouts.FirstOrDefault(item => item.Handle.ToInt16(out _) == lcid).Handle;
-            
+
             if (Handle == IntPtr.Zero)
             {
                 throw new ArgumentException($"The specified keyboard layout '{info}' is not installed on the system.", nameof(info));
             }
         }
-        
+
         public override Int32 GetHashCode()
         {
             return Handle.GetHashCode();

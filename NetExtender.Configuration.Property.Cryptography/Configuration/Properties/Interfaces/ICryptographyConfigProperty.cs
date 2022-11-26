@@ -8,7 +8,7 @@ namespace NetExtender.Configuration.Cryptography.Properties.Interfaces
     public interface ICryptographyConfigProperty<T> : IConfigProperty<T>, ICryptographyConfigPropertyInfo
     {
     }
-    
+
     public interface ICryptographyConfigProperty : IConfigProperty, ICryptographyConfigPropertyInfo
     {
     }

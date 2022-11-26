@@ -35,7 +35,7 @@ namespace NetExtender.Utilities.Types
                     return true;
                 }
             }
-            
+
             public BlockingCollectionPartitioner(BlockingCollection<T> collection)
             {
                 Internal = collection ?? throw new ArgumentNullException(nameof(collection));
@@ -64,10 +64,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             return collection.TryAdd(item, timeout.ToTimeoutMilliseconds(), token);
         }
-        
+
         public static Boolean TryTake<T>(this BlockingCollection<T> collection, [MaybeNullWhen(false)] out T item, TimeSpan timeout, CancellationToken token)
         {
             if (collection is null)
@@ -151,7 +151,7 @@ namespace NetExtender.Utilities.Types
                 Error
             ));
         }
-        
+
         public static IProducerConsumerCollection<T> ToProducerConsumerCollection<T>(this BlockingCollection<T> collection)
         {
             if (collection is null)
@@ -161,7 +161,7 @@ namespace NetExtender.Utilities.Types
 
             return new BlockingProducerConsumerCollection<T>(collection);
         }
-        
+
         public static IProducerConsumerCollection<T> ToProducerConsumerCollection<T>(this BlockingCollection<T> collection, Int32 timeout)
         {
             if (collection is null)
@@ -171,7 +171,7 @@ namespace NetExtender.Utilities.Types
 
             return new BlockingProducerConsumerCollection<T>(collection, timeout);
         }
-        
+
         public static IProducerConsumerCollection<T> ToProducerConsumerCollection<T>(this BlockingCollection<T> collection, Int32 timeout, CancellationToken token)
         {
             if (collection is null)
@@ -181,7 +181,7 @@ namespace NetExtender.Utilities.Types
 
             return new BlockingProducerConsumerCollection<T>(collection, timeout, token);
         }
-        
+
         public static IProducerConsumerCollection<T> ToProducerConsumerCollection<T>(this BlockingCollection<T> collection, TimeSpan timeout)
         {
             if (collection is null)
@@ -191,7 +191,7 @@ namespace NetExtender.Utilities.Types
 
             return new BlockingProducerConsumerCollection<T>(collection, timeout);
         }
-        
+
         public static IProducerConsumerCollection<T> ToProducerConsumerCollection<T>(this BlockingCollection<T> collection, TimeSpan timeout, CancellationToken token)
         {
             if (collection is null)

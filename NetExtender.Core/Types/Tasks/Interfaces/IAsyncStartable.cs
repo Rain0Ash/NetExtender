@@ -13,7 +13,7 @@ namespace NetExtender.Types.Tasks.Interfaces
         {
             StartAsync().GetAwaiter().GetResult();
         }
-        
+
         public new async void Start()
         {
             // ReSharper disable once AsyncConverter.AsyncAwaitMayBeElidedHighlighting

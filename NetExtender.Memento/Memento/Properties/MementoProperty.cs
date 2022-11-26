@@ -38,7 +38,7 @@ namespace NetExtender.Types.Memento
         {
             Property = name is not null ? new ReflectionProperty<TSource, TProperty>(name) : throw new ArgumentNullException(nameof(name));
         }
-        
+
         protected MementoProperty(Expression<Func<TSource, TProperty>> expression)
         {
             Property = expression is not null ? new ReflectionProperty<TSource, TProperty>(expression) : throw new ArgumentNullException(nameof(expression));
@@ -74,7 +74,7 @@ namespace NetExtender.Types.Memento
         {
             return New(source);
         }
-        
+
         public abstract MementoProperty<TSource, TProperty> Item();
 
         IMementoProperty<TSource> IMementoProperty<TSource>.Item()

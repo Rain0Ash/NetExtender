@@ -22,7 +22,7 @@ namespace NetExtender.Types.Collections
     {
         public IProducerConsumerCollection<T> Internal { get; }
         private ProducerConsumerCollectionType Type { get; }
-        
+
         public Int32 Count
         {
             get
@@ -73,7 +73,7 @@ namespace NetExtender.Types.Collections
         {
             Internal.CopyTo(array, index);
         }
-        
+
         public void CopyTo(T[] array, Int32 index)
         {
             Internal.CopyTo(array, index);
@@ -83,7 +83,7 @@ namespace NetExtender.Types.Collections
         {
             return Internal.ToArray();
         }
-        
+
         public IEnumerator<T> GetEnumerator()
         {
             return Internal.GetEnumerator();

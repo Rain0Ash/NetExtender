@@ -70,7 +70,7 @@ namespace NetExtender.Types.TaskSchedulers
                                 break;
                             }
                         }
-                        
+
                         TryExecuteTask(item);
                     }
                 }
@@ -95,7 +95,7 @@ namespace NetExtender.Types.TaskSchedulers
 
             return TryExecuteTask(task);
         }
-        
+
         protected sealed override Boolean TryDequeue(Task task)
         {
             lock (Tasks)
@@ -110,12 +110,12 @@ namespace NetExtender.Types.TaskSchedulers
             try
             {
                 Monitor.TryEnter(Tasks, ref locked);
-                
+
                 if (locked)
                 {
                     return Tasks.ToArray();
                 }
-                
+
                 throw new NotSupportedException();
             }
             finally

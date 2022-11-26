@@ -28,7 +28,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
 
             return null;
         }
-        
+
         public static DependencyObject? GetParent(this DependencyObject value)
         {
             if (value is null)

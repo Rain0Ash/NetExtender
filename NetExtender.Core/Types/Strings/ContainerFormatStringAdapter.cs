@@ -13,22 +13,22 @@ namespace NetExtender.Types.Strings
         {
             return new ContainerFormatStringAdapter(value);
         }
-        
+
         public static IContainerFormatString Create(String value, params Object[]? format)
         {
             return new ContainerFormatStringAdapter(value);
         }
-        
+
         public static IContainerFormatString Create(IString value)
         {
             return new ContainerFormatIStringAdapter(value);
         }
-        
+
         public static IContainerFormatString Create(IString value, params Object[]? format)
         {
             return new ContainerFormatIStringAdapter(value, format);
         }
-        
+
         public static explicit operator String(ContainerFormatStringAdapter adapter)
         {
             return adapter.ToString();
@@ -85,7 +85,7 @@ namespace NetExtender.Types.Strings
             }
 
             protected override Object[] FormatArguments { get; }
-            
+
             public ContainerFormatIStringAdapter(IString value)
                 : this(value, null)
             {

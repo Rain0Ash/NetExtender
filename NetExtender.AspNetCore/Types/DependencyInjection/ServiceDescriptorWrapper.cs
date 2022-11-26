@@ -15,7 +15,7 @@ namespace NetExtender.AspNetCore.Types.DependencyInjection
         {
             return wrapper?.Service;
         }
-        
+
         private ServiceDescriptor Service { get; }
 
         public Func<IServiceProvider, Object>? ImplementationFactory
@@ -41,7 +41,7 @@ namespace NetExtender.AspNetCore.Types.DependencyInjection
                 return Service.ImplementationType;
             }
         }
-        
+
         public Type ServiceType
         {
             get
@@ -57,12 +57,12 @@ namespace NetExtender.AspNetCore.Types.DependencyInjection
                 return Service.Lifetime;
             }
         }
-        
+
         public ServiceDescriptorWrapper(ServiceDescriptor service)
         {
             Service = service ?? throw new ArgumentNullException(nameof(service));
         }
-        
+
         public override Boolean Equals(Object? obj)
         {
             return Service.Equals(obj);

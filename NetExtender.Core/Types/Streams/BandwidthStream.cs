@@ -42,7 +42,7 @@ namespace NetExtender.Types.Streams
         {
         }
     }
-    
+
     public class BandwidthStream<T> : Stream where T : Stream
     {
         private static IScheduler DefaultScheduler
@@ -52,7 +52,7 @@ namespace NetExtender.Types.Streams
                 return System.Reactive.Concurrency.Scheduler.Immediate;
             }
         }
-        
+
         public T BaseStream { get; }
 
         protected IScheduler Scheduler { get; }
@@ -61,7 +61,7 @@ namespace NetExtender.Types.Streams
         protected UInt64 Processed { get; set; }
 
         protected AutoResetEvent Wait { get; }
-        
+
         public override Boolean CanRead
         {
             get
@@ -113,17 +113,17 @@ namespace NetExtender.Types.Streams
                 BaseStream.Position = value;
             }
         }
-        
+
         public BandwidthStream(T stream, Int32 speed, InformationSize size)
             : this(stream, speed, size, DefaultScheduler)
         {
         }
-        
+
         public BandwidthStream(T stream, Int32 speed, InformationSize size, IScheduler scheduler)
             : this(stream, size.ConvertToBytes(speed.IsPositive() ? speed : throw new ArgumentOutOfRangeException(nameof(speed))), scheduler)
         {
         }
-        
+
         public BandwidthStream(T stream, UInt64 speed, InformationSize size)
             : this(stream, size.ConvertToBytes(speed))
         {
@@ -138,7 +138,7 @@ namespace NetExtender.Types.Streams
             : this(stream, speed, DefaultScheduler)
         {
         }
-        
+
         public BandwidthStream(T stream, UInt64 speed, IScheduler scheduler)
         {
             BaseStream = stream ?? throw new ArgumentNullException(nameof(stream));
@@ -156,11 +156,11 @@ namespace NetExtender.Types.Streams
         protected virtual void Throttle(UInt64 bytes)
         {
             Processed += bytes;
-            
+
             TimeSpan target = TimeSpan.FromSeconds((Double) Processed / MaximumSpeed);
             TimeSpan actual = Stopwatch.Elapsed;
             TimeSpan sleep = target - actual;
-            
+
             if (sleep <= TimeSpan.Zero)
             {
                 return;
@@ -186,7 +186,7 @@ namespace NetExtender.Types.Streams
             Throttle(read);
             return read;
         }
-        
+
         public override Int32 Read(Byte[] buffer, Int32 offset, Int32 count)
         {
             Int32 read = BaseStream.Read(buffer, offset, count);
@@ -199,7 +199,7 @@ namespace NetExtender.Types.Streams
             Throttle(buffer.Length);
             BaseStream.Write(buffer);
         }
-        
+
         public override void Write(Byte[] buffer, Int32 offset, Int32 count)
         {
             Throttle(count);

@@ -25,7 +25,7 @@ namespace NetExtender.Utilities.Types
         {
             return new TimerWrapper(interval);
         }
-        
+
         public static Double CheckInterval(Double interval)
         {
             if (!interval.InRange(0, Int32.MaxValue, MathPositionType.Right))
@@ -46,7 +46,7 @@ namespace NetExtender.Utilities.Types
         {
             return (Int32) Math.Ceiling(CheckInterval(interval));
         }
-        
+
         public static Int32 ToInterval(TimeSpan interval)
         {
             return ToInterval(interval.TotalMilliseconds);
@@ -68,17 +68,17 @@ namespace NetExtender.Utilities.Types
             {
                 return new ValueTask<Boolean>(false);
             }
-            
+
             TaskCompletionSource<Boolean> source = new TaskCompletionSource<Boolean>();
 
             token.Register(Cancel);
-                
+
             void Cancel()
             {
                 timer.Tick -= Tick;
                 source.SetResult(false);
             }
-            
+
             void Tick(Object? sender, TimeEventArgs args)
             {
                 timer.Tick -= Tick;
@@ -116,7 +116,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static Boolean TryChange(this Timer timer, Int32 dueTime, Int32 period)
         {
             if (timer is null)
@@ -133,7 +133,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static Boolean TryChange(this Timer timer, UInt32 dueTime, UInt32 period)
         {
             if (timer is null)
@@ -150,7 +150,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static Boolean TryChange(this Timer timer, Int64 dueTime, Int64 period)
         {
             if (timer is null)

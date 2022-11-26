@@ -51,7 +51,7 @@ namespace NetExtender.Utilities.Numerics
     {
         return type == nameof(Single) || type == nameof(Double);
     }
-    
+
     static String ToSignedType(String type)
     {
         return type switch
@@ -267,7 +267,7 @@ namespace NetExtender.Utilities.Numerics
     {
         ForEach(types, NextBytesImplementation, false);
     }
-    
+
     void NextNonNegativeImplementation(String type)
     {
         foreach ((String, String, Boolean)? item in random)
@@ -502,9 +502,9 @@ namespace NetExtender.Utilities.Numerics
         String negative = $"Negative{type}Sign";
         WriteLine($"\t\tprivate const {type} {positive} = 1;");
         WriteLine($"\t\tprivate const {type} {negative} = -1;");
-        
+
         WriteLine(String.Empty);
-        
+
         foreach ((String, String, Boolean)? item in random)
         {
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -595,7 +595,7 @@ namespace NetExtender.Utilities.Numerics
     {
         ForEach(types.Append(nameof(TimeSpan)).Append(nameof(DateTime)), RangeImplementation, false);
     }
-    
+
     void NonNegativeRangeImplementation(String type)
     {
         if (type == nameof(Int32))
@@ -676,11 +676,11 @@ namespace NetExtender.Utilities.Numerics
                 WriteLine("\t\t{");
                 WriteLine($"\t\t\treturn {nameof(NonZeroRange)}({(item.HasValue ? item.Value.Item2 + ", " : String.Empty)}{type}.MinValue, {type}.MaxValue);");
                 WriteLine("\t\t}");
-                
+
                 WriteLine(String.Empty);
             }
         }
-        
+
         foreach ((String, String, Boolean)? item in random)
         {
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -701,10 +701,10 @@ namespace NetExtender.Utilities.Numerics
             WriteLine("\t\t{");
             WriteLine($"\t\t\treturn {nameof(Range)}({(item.HasValue ? item.Value.Item2 + ", " : String.Empty)}min, max, {nameof(NextNonZero)}{type});");
             WriteLine("\t\t}");
-            
+
             WriteLine(String.Empty);
         }
-        
+
         foreach ((String, String, Boolean)? item in random)
         {
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -713,7 +713,7 @@ namespace NetExtender.Utilities.Numerics
             WriteLine("\t\t{");
             WriteLine($"\t\t\treturn {nameof(Range)}({(item.HasValue ? item.Value.Item2 + ", " : String.Empty)}min, max, count, {nameof(NextNonZero)}{type});");
             WriteLine("\t\t}");
-            
+
             WriteLine(String.Empty);
         }
     }
@@ -742,10 +742,10 @@ namespace NetExtender.Utilities.Numerics
             WriteLine("\t\t\t\t}");
             WriteLine("\t\t\t}");
             WriteLine("\t\t}");
-            
+
             WriteLine(String.Empty);
         }
-        
+
         foreach ((String, String, Boolean) item in random.Where(item => item.HasValue).Select(item => item.Value))
         {
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -762,7 +762,7 @@ namespace NetExtender.Utilities.Numerics
             WriteLine("\t\t\t\t}");
             WriteLine("\t\t\t}");
             WriteLine("\t\t}");
-                
+
             WriteLine(String.Empty);
         }
 
@@ -802,24 +802,24 @@ namespace NetExtender.Utilities.Numerics
                     WriteLine("\t\t{");
                     WriteLine($"\t\t\treturn {nameof(UniqueRange)}(min, max, 0);");
                     WriteLine("\t\t}");
-                    
+
                     WriteLine(String.Empty);
-                    
+
                     WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
                     WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}({type} min, {type} max{(IsIntType(type) ? String.Empty : $", {nameof(Byte)} digits")})");
                     WriteLine("\t\t{");
                     WriteLine($"\t\t\treturn {nameof(UniqueRange)}(min, max, digits, MathUtilities.DefaultRoundType);");
                     WriteLine("\t\t}");
-                    
+
                     WriteLine(String.Empty);
                 }
-                
+
                 WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
                 WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}({type} min, {type} max{(IsIntType(type) ? String.Empty : $", {nameof(Byte)} digits, {nameof(MidpointRounding)} rounding")})");
                 WriteLine("\t\t{");
                 WriteLine($"\t\t\treturn {nameof(UniqueRange)}({Generator}, min, max{(IsIntType(type) ? String.Empty : ", digits, rounding")});");
                 WriteLine("\t\t}");
-                
+
                 WriteLine(String.Empty);
                 continue;
             }
@@ -831,45 +831,45 @@ namespace NetExtender.Utilities.Numerics
                 WriteLine("\t\t{");
                 WriteLine($"\t\t\treturn {nameof(UniqueRange)}({item.Value.Item2}, min, max, 0);");
                 WriteLine("\t\t}");
-                    
+
                 WriteLine(String.Empty);
-                    
+
                 WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
                 WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}{(item.Value.Item3 ? $"<{item.Value.Item1}>" : String.Empty)}(this {item.Value.Item1} {item.Value.Item2}, {type} min, {type} max{(IsIntType(type) ? String.Empty : $", {nameof(Byte)} digits")}){(item.Value.Item3 ? $" where {item.Value.Item1} : {IRandom}" : String.Empty)}");
                 WriteLine("\t\t{");
                 WriteLine($"\t\t\treturn {nameof(UniqueRange)}({item.Value.Item2}, min, max, digits, MathUtilities.DefaultRoundType);");
                 WriteLine("\t\t}");
-                    
+
                 WriteLine(String.Empty);
             }
-            
+
             WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}{(item.Value.Item3 ? $"<{item.Value.Item1}>" : String.Empty)}(this {item.Value.Item1} {item.Value.Item2}, {type} min, {type} max{(IsIntType(type) ? String.Empty : $", {nameof(Byte)} digits, {nameof(MidpointRounding)} rounding")}){(item.Value.Item3 ? $" where {item.Value.Item1} : {IRandom}" : String.Empty)}");
             WriteLine("\t\t{");
             WriteLine($"\t\t\tif ({item.Value.Item2} is null)");
             WriteLine("\t\t\t{");
             WriteLine($"\t\t\t\tthrow new ArgumentNullException(nameof({item.Value.Item2}));");
             WriteLine("\t\t\t}");
-            
+
             WriteLine(String.Empty);
-            
+
             WriteLine($"\t\t\tif ({(IsFloatType(type) ? $"Math.Abs(max - min) < {type}.Epsilon" : "max == min")})");
             WriteLine("\t\t\t{");
             WriteLine("\t\t\t\treturn EnumerableUtilities.GetEnumerableFrom(min);");
             WriteLine("\t\t\t}");
-            
+
             WriteLine(String.Empty);
-            
+
             WriteLine("\t\t\tif (max < min)");
             WriteLine("\t\t\t{");
             WriteLine("\t\t\t\t(min, max) = (max, min);");
             WriteLine("\t\t\t}");
-            
+
             WriteLine(String.Empty);
 
             if (IsIntType(type))
             {
                 WriteLine($"\t\t\t{ToUnsignedType(type)} difference = max.DiscreteIncludeDifference(min, {ToUnsignedType(type)}.MaxValue);");
-                
+
                 if (type != nameof(Byte) && type != nameof(SByte))
                 {
                     WriteLine($"\t\t\treturn difference <= ({nameof(Byte)}.MaxValue + 1) * 4 ?");
@@ -890,10 +890,10 @@ namespace NetExtender.Utilities.Numerics
             }
 
             WriteLine("\t\t}");
-            
+
             WriteLine(String.Empty);
         }
-        
+
         foreach ((String, String, Boolean)? item in random)
         {
             if (item is null)
@@ -905,18 +905,18 @@ namespace NetExtender.Utilities.Numerics
                     WriteLine("\t\t{");
                     WriteLine($"\t\t\treturn {nameof(UniqueRange)}(min, max, 0, count);");
                     WriteLine("\t\t}");
-                    
+
                     WriteLine(String.Empty);
-                    
+
                     WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
                     WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}({type} min, {type} max{(IsIntType(type) ? String.Empty : $", {nameof(Byte)} digits")}, {nameof(Int32)} count)");
                     WriteLine("\t\t{");
                     WriteLine($"\t\t\treturn {nameof(UniqueRange)}(min, max, digits, MathUtilities.DefaultRoundType, count);");
                     WriteLine("\t\t}");
-                    
+
                     WriteLine(String.Empty);
                 }
-                
+
                 WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
                 WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}({type} min, {type} max{(IsIntType(type) ? String.Empty : $", {nameof(Byte)} digits, {nameof(MidpointRounding)} rounding")}, {nameof(Int32)} count)");
                 WriteLine("\t\t{");
@@ -925,7 +925,7 @@ namespace NetExtender.Utilities.Numerics
                 WriteLine(String.Empty);
                 continue;
             }
-            
+
             if (!IsIntType(type))
             {
                 WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -933,27 +933,27 @@ namespace NetExtender.Utilities.Numerics
                 WriteLine("\t\t{");
                 WriteLine($"\t\t\treturn {nameof(UniqueRange)}({item.Value.Item2}, min, max, 0, count);");
                 WriteLine("\t\t}");
-                    
+
                 WriteLine(String.Empty);
-                    
+
                 WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
                 WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}{(item.Value.Item3 ? $"<{item.Value.Item1}>" : String.Empty)}(this {item.Value.Item1} {item.Value.Item2}, {type} min, {type} max{(IsIntType(type) ? String.Empty : $", {nameof(Byte)} digits")}, {nameof(Int32)} count){(item.Value.Item3 ? $" where {item.Value.Item1} : {IRandom}" : String.Empty)}");
                 WriteLine("\t\t{");
                 WriteLine($"\t\t\treturn {nameof(UniqueRange)}({item.Value.Item2}, min, max, digits, MathUtilities.DefaultRoundType, count);");
                 WriteLine("\t\t}");
-                    
+
                 WriteLine(String.Empty);
             }
-            
+
             WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(UniqueRange)}{(item.Value.Item3 ? $"<{item.Value.Item1}>" : String.Empty)}(this {item.Value.Item1} {item.Value.Item2}, {type} min, {type} max{(IsIntType(type) ? String.Empty : $", {nameof(Byte)} digits, {nameof(MidpointRounding)} rounding")}, {nameof(Int32)} count){(item.Value.Item3 ? $" where {item.Value.Item1} : {IRandom}" : String.Empty)}");
             WriteLine("\t\t{");
             WriteLine($"\t\t\tif ({item.Value.Item2} is null)");
             WriteLine("\t\t\t{");
             WriteLine($"\t\t\t\tthrow new ArgumentNullException(nameof({item.Value.Item2}));");
             WriteLine("\t\t\t}");
-            
+
             WriteLine(String.Empty);
-            
+
             WriteLine("\t\t\tswitch (count)");
             WriteLine("\t\t\t{");
             WriteLine("\t\t\t\tcase <= 0:");
@@ -961,21 +961,21 @@ namespace NetExtender.Utilities.Numerics
             WriteLine("\t\t\t\tcase 1:");
             WriteLine($"\t\t\t\t\treturn EnumerableUtilities.GetEnumerableFrom({nameof(Next)}{type}(random, min, max));");
             WriteLine("\t\t\t}");
-            
+
             WriteLine(String.Empty);
-            
+
             WriteLine($"\t\t\tif ({(IsFloatType(type) ? $"Math.Abs(max - min) < {type}.Epsilon" : "max == min")})");
             WriteLine("\t\t\t{");
             WriteLine("\t\t\t\treturn EnumerableUtilities.GetEnumerableFrom(min);");
             WriteLine("\t\t\t}");
-            
+
             WriteLine(String.Empty);
-            
+
             WriteLine("\t\t\tif (max < min)");
             WriteLine("\t\t\t{");
             WriteLine("\t\t\t\t(min, max) = (max, min);");
             WriteLine("\t\t\t}");
-            
+
             WriteLine(String.Empty);
 
             if (IsIntType(type))
@@ -994,11 +994,11 @@ namespace NetExtender.Utilities.Numerics
             }
 
             WriteLine("\t\t}");
-            
+
             WriteLine(String.Empty);
         }
     }
-    
+
     void UniqueRange()
     {
         ForEach(types, UniqueRangeImplementation, false);

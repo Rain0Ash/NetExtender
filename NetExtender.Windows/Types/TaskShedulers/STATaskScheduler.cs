@@ -16,7 +16,7 @@ namespace NetExtender.Types.TaskSchedulers
     {
         public BlockingCollection<Task>? Tasks { get; private set; }
         private List<Thread> Threads { get; }
-        
+
         public override Int32 MaximumConcurrencyLevel
         {
             get
@@ -33,7 +33,7 @@ namespace NetExtender.Types.TaskSchedulers
             }
 
             Tasks = new BlockingCollection<Task>();
-            
+
             void Start()
             {
                 foreach (var task in Tasks.GetConsumingEnumerable())
@@ -58,7 +58,7 @@ namespace NetExtender.Types.TaskSchedulers
             {
                 throw new ObjectDisposedException(nameof(STATaskScheduler));
             }
-            
+
             Tasks.Add(task);
         }
 
@@ -68,7 +68,7 @@ namespace NetExtender.Types.TaskSchedulers
             {
                 throw new ObjectDisposedException(nameof(STATaskScheduler));
             }
-            
+
             return Tasks.ToArray();
         }
 
@@ -83,7 +83,7 @@ namespace NetExtender.Types.TaskSchedulers
             {
                 return;
             }
-            
+
             Tasks.CompleteAdding();
 
             foreach (Thread thread in Threads)
@@ -94,7 +94,7 @@ namespace NetExtender.Types.TaskSchedulers
             // Cleanup
             Tasks.Dispose();
             Tasks = null;
-            
+
             GC.SuppressFinalize(this);
         }
     }

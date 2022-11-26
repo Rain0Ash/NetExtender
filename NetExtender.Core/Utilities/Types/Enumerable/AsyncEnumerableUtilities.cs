@@ -16,9 +16,9 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             using IEnumerator<T> enumerator = source.GetEnumerator();
-            
+
             while (await Task.Run(enumerator.MoveNext).ConfigureAwait(false))
             {
                 yield return enumerator.Current;
@@ -38,7 +38,7 @@ namespace NetExtender.Utilities.Types
                 {
                     yield return item;
                 }
-                
+
                 yield break;
             }
 
@@ -77,12 +77,12 @@ namespace NetExtender.Utilities.Types
         {
             return MaterializeAsync(source, CancellationToken.None);
         }
-        
+
         public static Task<TCollection> MaterializeAsync<T, TCollection>(this IAsyncEnumerable<T> source) where TCollection : ICollection<T>, new()
         {
             return MaterializeAsync<T, TCollection>(source, CancellationToken.None);
         }
-        
+
         public static Task<List<T>> MaterializeAsync<T>(this IAsyncEnumerable<T> source, CancellationToken token)
         {
             return MaterializeAsync<T, List<T>>(source, token);
@@ -101,7 +101,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new NotSupportedException();
             }
-            
+
             await foreach (T record in source.WithCancellation(token).ConfigureAwait(false))
             {
                 collection.Add(record);

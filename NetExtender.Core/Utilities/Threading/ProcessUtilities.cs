@@ -74,7 +74,7 @@ namespace NetExtender.Utilities.Threading
             {
                 throw new ArgumentNullException(nameof(uri));
             }
-            
+
             OpenBrowser(uri.ToString());
         }
 
@@ -86,7 +86,7 @@ namespace NetExtender.Utilities.Threading
             }
 
             process.Kill(entireProcessTree);
-            
+
             if (dispose)
             {
                 process.Dispose();
@@ -132,7 +132,7 @@ namespace NetExtender.Utilities.Threading
                 return false;
             }
         }
-        
+
         public static Boolean TryKill(this Process process, Boolean entireProcessTree)
         {
             if (process is null)
@@ -150,7 +150,7 @@ namespace NetExtender.Utilities.Threading
                 return false;
             }
         }
-        
+
         public static Boolean TryKill(this Process process, Boolean entireProcessTree, Boolean dispose)
         {
             if (process is null)
@@ -160,7 +160,7 @@ namespace NetExtender.Utilities.Threading
 
             return dispose ? TryKill(process, entireProcessTree) : TryDisposeKill(process, entireProcessTree);
         }
-        
+
         public static Boolean TryDisposeKill(this Process process)
         {
             if (process is null)
@@ -179,7 +179,7 @@ namespace NetExtender.Utilities.Threading
                 return false;
             }
         }
-        
+
         public static Boolean TryDisposeKill(this Process process, Boolean entireProcessTree)
         {
             if (process is null)
@@ -527,7 +527,7 @@ namespace NetExtender.Utilities.Threading
         {
             return StartProcessAsync(path, (String?) null, wait, token);
         }
-        
+
         public static Task<Process?> StartProcessAsync(String path, String? arguments, Int32 milliseconds)
         {
             return StartProcessAsync(path, arguments, milliseconds, CancellationToken.None);
@@ -559,7 +559,7 @@ namespace NetExtender.Utilities.Threading
 
             return StartProcessAsync(info, wait, token);
         }
-        
+
         public static Task<Process?> StartProcessAsync(String path, IEnumerable<String> arguments, Int32 milliseconds)
         {
             return StartProcessAsync(path, arguments, milliseconds, CancellationToken.None);
@@ -588,7 +588,7 @@ namespace NetExtender.Utilities.Threading
             }
 
             ProcessStartInfo info = new ProcessStartInfo(path);
-            
+
             info.ArgumentList.AddRange(arguments);
 
             return StartProcessAsync(info, wait, token);
@@ -655,7 +655,7 @@ namespace NetExtender.Utilities.Threading
 
             return StartProcessAsync(info, wait, token);
         }
-        
+
         public static Task<Process?> StartProcessAsync(FileInfo path, String? arguments, Int32 milliseconds)
         {
             return StartProcessAsync(path, arguments , milliseconds, CancellationToken.None);
@@ -677,12 +677,12 @@ namespace NetExtender.Utilities.Threading
             {
                 return StartProcessAsync(path, wait, token);
             }
-            
+
             ProcessStartInfo info = new ProcessStartInfo(path.FullName, arguments);
 
             return StartProcessAsync(info, wait, token);
         }
-        
+
         public static Task<Process?> StartProcessAsync(FileInfo path, IEnumerable<String> arguments, Int32 milliseconds)
         {
             return StartProcessAsync(path, arguments, milliseconds, CancellationToken.None);
@@ -706,7 +706,7 @@ namespace NetExtender.Utilities.Threading
             }
 
             ProcessStartInfo info = new ProcessStartInfo(path.FullName);
-            
+
             info.ArgumentList.AddRange(arguments);
 
             return StartProcessAsync(info, wait, token);

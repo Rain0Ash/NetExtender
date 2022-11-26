@@ -49,7 +49,7 @@ namespace NetExtender.Types.Numerics
         {
             return new AngleRevolution(revolution);
         }
-        
+
         /// <summary>
         /// Indicates whether two <see cref="AngleRevolution"/> instances are equal.
         /// </summary>
@@ -73,7 +73,7 @@ namespace NetExtender.Types.Numerics
         {
             return Math.Abs(first.Revolution - second.Revolution) >= Double.Epsilon;
         }
-        
+
         /// <summary>
         /// Indicates whether a specified <see cref="AngleRevolution"/> is less than another specified <see cref="AngleRevolution"/>.
         /// </summary>
@@ -97,7 +97,7 @@ namespace NetExtender.Types.Numerics
         {
             return first.Revolution > second.Revolution;
         }
-        
+
         /// <summary>
         /// Indicates whether a specified <see cref="AngleRevolution"/> is less than or equal to another specified <see cref="AngleRevolution"/>.
         /// </summary>
@@ -121,7 +121,7 @@ namespace NetExtender.Types.Numerics
         {
             return first.Revolution >= second.Revolution;
         }
-        
+
         /// <summary>
         /// Adds two vectors. 
         /// </summary>
@@ -192,7 +192,7 @@ namespace NetExtender.Types.Numerics
         {
             return new AngleRevolution(first.Revolution % second);
         }
-        
+
         /// <summary>
         /// Gets the amplitude of the angle degrees.
         /// </summary>
@@ -202,7 +202,7 @@ namespace NetExtender.Types.Numerics
         {
             Revolution = degrees;
         }
-        
+
         [Pure]
         public Int32 CompareTo(AngleRevolution other)
         {
@@ -270,7 +270,7 @@ namespace NetExtender.Types.Numerics
         {
             return Revolution.ToString();
         }
-        
+
         /// <summary>
         /// Converts the value of the current <see cref="AngleRevolution"/> object to its equivalent string representation, using a specified format.
         /// </summary>

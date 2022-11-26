@@ -12,7 +12,7 @@ namespace NetExtender.Types.Strings
         {
             return value.ToString();
         }
-        
+
         public virtual Boolean Immutable
         {
             get
@@ -20,7 +20,7 @@ namespace NetExtender.Types.Strings
                 return true;
             }
         }
-        
+
         public virtual Boolean Constant
         {
             get
@@ -58,7 +58,7 @@ namespace NetExtender.Types.Strings
         {
             return ToString(null, provider);
         }
-        
+
         public virtual String ToString(String? format, IFormatProvider? provider)
         {
             return ToString();

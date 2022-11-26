@@ -12,13 +12,13 @@ namespace NetExtender.Configuration.Cryptography.Common
     public sealed class ConfigurationCryptor : IConfigurationCryptor
     {
         public IStringCryptor Cryptor { get; }
-        
+
         public IStringEncryptor Encryptor { get; }
-        
+
         public IStringDecryptor Decryptor { get; }
-        
+
         public CryptographyConfigOptions CryptographyOptions { get; }
-        
+
         public CryptAction Crypt
         {
             get
@@ -58,7 +58,7 @@ namespace NetExtender.Configuration.Cryptography.Common
                 return Encryptor.IsDeterministic;
             }
         }
-        
+
         public Boolean IsCryptDefault
         {
             get
@@ -111,7 +111,7 @@ namespace NetExtender.Configuration.Cryptography.Common
             : this(cryptor, CryptographyConfigOptions.All)
         {
         }
-        
+
         public ConfigurationCryptor(IStringCryptor cryptor, CryptographyConfigOptions options)
         {
             Cryptor = cryptor ?? throw new ArgumentNullException(nameof(cryptor));

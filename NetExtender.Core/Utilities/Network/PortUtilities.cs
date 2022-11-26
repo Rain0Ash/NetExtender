@@ -18,12 +18,12 @@ namespace NetExtender.Utilities.Network
         {
             return $"{NetworkUtilities.Localhost}:{port}";
         }
-        
+
         public static String LocalhostIPPort(UInt16 port)
         {
             return $"{NetworkUtilities.LocalhostIP}:{port}";
         }
-        
+
         public static TcpConnectionInformation[] ActiveTcpConnections
         {
             get
@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.Network
                 return properties.GetActiveTcpConnections();
             }
         }
-        
+
         public static IPEndPoint[] ActiveTcpListeners
         {
             get
@@ -41,7 +41,7 @@ namespace NetExtender.Utilities.Network
                 return properties.GetActiveTcpListeners();
             }
         }
-        
+
         public static IPEndPoint[] ActiveUdpListeners
         {
             get
@@ -71,7 +71,7 @@ namespace NetExtender.Utilities.Network
                 return set;
             }
         }
-        
+
         public static ISet<UInt16> BusyUdpPort
         {
             get
@@ -90,7 +90,7 @@ namespace NetExtender.Utilities.Network
         public const UInt16 RegisterPortMaximum = DynamicPortMinimum - 1;
         public const UInt16 DynamicPortMinimum = 1 << 15 | 1 << 14;
         public const UInt16 DynamicPortMaximum = PortMaximum;
-        
+
         public const UInt16 PortMinimum = 1;
         public const UInt16 PortMaximum = UInt16.MaxValue;
 
@@ -105,7 +105,7 @@ namespace NetExtender.Utilities.Network
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         public static PortType GetPortType(UInt16 port)
         {
             return port switch
@@ -116,13 +116,13 @@ namespace NetExtender.Utilities.Network
                 <= DynamicPortMaximum => PortType.Dynamic
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static PortType GetPortType(Int32 port)
         {
             return ValidatePort(port) ? GetPortType((UInt16) port) : PortType.Invalid;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static PortType GetPortType(String value)
         {
@@ -147,7 +147,7 @@ namespace NetExtender.Utilities.Network
         {
             return UInt16.TryParse(value, out port);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ValidatePort(UInt16 port)
         {
@@ -165,19 +165,19 @@ namespace NetExtender.Utilities.Network
         {
             return TryParsePort(value, out UInt16 port) && ValidatePort(port);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsPortAvailable(UInt16 port)
         {
             return IsTcpPortAvailable(port) && IsUdpPortAvailable(port);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsTcpPortAvailable(UInt16 port)
         {
             return ActiveTcpListeners.All(connection => connection.Port != port);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsUdpPortAvailable(UInt16 port)
         {
@@ -246,7 +246,7 @@ namespace NetExtender.Utilities.Network
         {
             return EnumerableUtilities.Factory(() => RandomPort(type)).Except(BusyPort).FirstOrDefault();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt16? RandomAvailableTcpPort()
         {
@@ -258,7 +258,7 @@ namespace NetExtender.Utilities.Network
         {
             return EnumerableUtilities.Factory(() => RandomPort(type)).Except(BusyTcpPort).FirstOrDefault();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt16? RandomAvailableUdpPort()
         {
@@ -270,7 +270,7 @@ namespace NetExtender.Utilities.Network
         {
             return EnumerableUtilities.Factory(() => RandomPort(type)).Except(BusyUdpPort).FirstOrDefault();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static IEnumerable<UInt16> RangeAvailablePort(this PortType type, ISet<UInt16> except)
         {
@@ -283,13 +283,13 @@ namespace NetExtender.Utilities.Network
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<UInt16> RangeAvailablePort()
         {
             return RangeAvailablePort(PortType.Dynamic);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<UInt16> RangeAvailablePort(Int32 count)
         {
@@ -313,13 +313,13 @@ namespace NetExtender.Utilities.Network
         {
             return count > 0 ? RangeAvailablePort(type).Take(count) : Array.Empty<UInt16>();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<UInt16> RangeAvailableTcpPort()
         {
             return RangeAvailableTcpPort(PortType.Dynamic);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<UInt16> RangeAvailableTcpPort(Int32 count)
         {
@@ -343,13 +343,13 @@ namespace NetExtender.Utilities.Network
         {
             return count > 0 ? RangeAvailableTcpPort(type).Take(count) : Array.Empty<UInt16>();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<UInt16> RangeAvailableUdpPort()
         {
             return RangeAvailableUdpPort(PortType.Dynamic);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<UInt16> RangeAvailableUdpPort(Int32 count)
         {

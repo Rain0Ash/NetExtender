@@ -20,7 +20,7 @@ namespace NetExtender.Serialization.Ini
         }
 
         private IndexDictionary<String, IniValue> Dictionary { get; }
-        
+
         public Int32 Count
         {
             get
@@ -36,7 +36,7 @@ namespace NetExtender.Serialization.Ini
                 return Count <= 0;
             }
         }
-        
+
         Boolean ICollection<KeyValuePair<String, IniValue>>.IsReadOnly
         {
             get
@@ -52,7 +52,7 @@ namespace NetExtender.Serialization.Ini
                 return Dictionary.Keys;
             }
         }
-        
+
         IEnumerable<String> IReadOnlyDictionary<String, IniValue>.Keys
         {
             get
@@ -134,7 +134,7 @@ namespace NetExtender.Serialization.Ini
         {
             return Dictionary.ContainsKey(key);
         }
-        
+
         public Boolean TryGetValue(String key, out IniValue value)
         {
             return Dictionary.TryGetValue(key, out value);
@@ -169,22 +169,22 @@ namespace NetExtender.Serialization.Ini
         {
             return Dictionary.LastIndexOf(key, index, count);
         }
-        
+
         public ICollection<IniValue> GetValues()
         {
             return Dictionary.GetValueEnumerator().AsEnumerable().ToList();
         }
-        
+
         public void Add(String key, IniValue value)
         {
             Dictionary.Add(key, value);
         }
-        
+
         void ICollection<KeyValuePair<String, IniValue>>.Add(KeyValuePair<String, IniValue> item)
         {
             Dictionary.Add(item);
         }
-        
+
         public void Insert(Int32 index, String key, IniValue value)
         {
             Dictionary.Insert(index, key, value);
@@ -194,7 +194,7 @@ namespace NetExtender.Serialization.Ini
         {
             Dictionary.Sort();
         }
-        
+
         public void Sort(Comparison<String> comparison)
         {
             Dictionary.Sort(comparison);
@@ -204,7 +204,7 @@ namespace NetExtender.Serialization.Ini
         {
             Dictionary.Sort(comparer);
         }
-        
+
         public void Reverse()
         {
             Dictionary.Reverse();
@@ -219,7 +219,7 @@ namespace NetExtender.Serialization.Ini
         {
             return Dictionary.Remove(key);
         }
-        
+
         Boolean ICollection<KeyValuePair<String, IniValue>>.Remove(KeyValuePair<String, IniValue> item)
         {
             return Dictionary.Remove(item);
@@ -229,7 +229,7 @@ namespace NetExtender.Serialization.Ini
         {
             return Dictionary.RemoveAt(index);
         }
-        
+
         public void Clear()
         {
             Dictionary.Clear();
@@ -261,7 +261,7 @@ namespace NetExtender.Serialization.Ini
                 Dictionary[key] = value;
             }
         }
-        
+
         public IniValue this[Int32 index]
         {
             get

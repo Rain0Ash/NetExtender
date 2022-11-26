@@ -139,6 +139,11 @@
         <Compile Update="Types\Region\Calling.cs">
           <DependentUpon>CountryInfo.cs</DependentUpon>
         </Compile>
+        <Compile Update="Types\Exceptions\GenericBusinessStatusException.cs">
+          <AutoGen>True</AutoGen>
+          <DesignTime>True</DesignTime>
+          <DependentUpon>GenericBusinessStatusException.tt</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>
@@ -161,6 +166,11 @@
         <None Update="Utilities\Types\Enumerable\GenericSpanUtilities.tt">
           <Generator>TextTemplatingFileGenerator</Generator>
           <LastGenOutput>GenericSpanUtilities.cs</LastGenOutput>
+        </None>
+        <None Update="Types\Exceptions\GenericBusinessStatusException.tt">
+          <DependentUpon>BusinessException.cs</DependentUpon>
+          <Generator>TextTemplatingFileGenerator</Generator>
+          <LastGenOutput>GenericBusinessStatusException.cs</LastGenOutput>
         </None>
     </ItemGroup>
 

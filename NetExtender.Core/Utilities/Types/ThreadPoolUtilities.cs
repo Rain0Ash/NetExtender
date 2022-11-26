@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.Types
                 return ThreadPool.ThreadCount;
             }
         }
-        
+
         public static Int64 CompletedWorkItemCount
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -26,7 +26,7 @@ namespace NetExtender.Utilities.Types
                 return ThreadPool.CompletedWorkItemCount;
             }
         }
-        
+
         public static Int64 PendingWorkItemCount
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -35,7 +35,7 @@ namespace NetExtender.Utilities.Types
                 return ThreadPool.PendingWorkItemCount;
             }
         }
-        
+
         public static Int32 AvailableThreads
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -44,7 +44,7 @@ namespace NetExtender.Utilities.Types
                 return GetAvailableThreads();
             }
         }
-        
+
         public static Int32 AvailableWorkerThreads
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -53,7 +53,7 @@ namespace NetExtender.Utilities.Types
                 return GetAvailableWorkerThreads();
             }
         }
-        
+
         public static Int32 AvailableCompletionThreads
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -62,7 +62,7 @@ namespace NetExtender.Utilities.Types
                 return GetAvailableCompletionThreads();
             }
         }
-        
+
         public static Int32 MinThreads
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -71,7 +71,7 @@ namespace NetExtender.Utilities.Types
                 return GetMinThreads();
             }
         }
-        
+
         public static Int32 MinWorkerThreads
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -88,7 +88,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static Int32 MinCompletionThreads
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -105,7 +105,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static Int32 MaxThreads
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -114,7 +114,7 @@ namespace NetExtender.Utilities.Types
                 return GetMaxThreads();
             }
         }
-        
+
         public static Int32 MaxWorkerThreads
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -131,7 +131,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static Int32 MaxCompletionThreads
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -148,121 +148,121 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetAvailableThreads()
         {
             GetAvailableThreads(out Int32 worker, out Int32 completion);
             return worker + completion;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetAvailableThreads(out Int32 worker, out Int32 completion)
         {
             ThreadPool.GetAvailableThreads(out worker, out completion);
             return worker + completion;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetAvailableWorkerThreads()
         {
             ThreadPool.GetAvailableThreads(out Int32 worker, out _);
             return worker;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetAvailableCompletionThreads()
         {
             ThreadPool.GetAvailableThreads(out _, out Int32 completion);
             return completion;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetMinThreads()
         {
             GetMinThreads(out Int32 worker, out Int32 completion);
             return worker + completion;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetMinThreads(out Int32 worker, out Int32 completion)
         {
             ThreadPool.GetMinThreads(out worker, out completion);
             return worker + completion;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetMinWorkerThreads()
         {
             ThreadPool.GetMinThreads(out Int32 worker, out _);
             return worker;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetMinCompletionThreads()
         {
             ThreadPool.GetMinThreads(out _, out Int32 completion);
             return completion;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetMaxThreads()
         {
             GetMaxThreads(out Int32 worker, out Int32 completion);
             return worker + completion;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetMaxThreads(out Int32 worker, out Int32 completion)
         {
             ThreadPool.GetMaxThreads(out worker, out completion);
             return worker + completion;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetMaxWorkerThreads()
         {
             ThreadPool.GetMaxThreads(out Int32 worker, out _);
             return worker;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 GetMaxCompletionThreads()
         {
             ThreadPool.GetMaxThreads(out _, out Int32 completion);
             return completion;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean SetMinThreads(Int32 worker, Int32 completion)
         {
             return ThreadPool.SetMinThreads(worker, completion);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean SetMinWorkerThreads(Int32 worker)
         {
             return ThreadPool.SetMinThreads(worker, MinCompletionThreads);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean SetMinCompletionThreads(Int32 completion)
         {
             return ThreadPool.SetMinThreads(MinWorkerThreads, completion);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean SetMaxThreads(Int32 worker, Int32 completion)
         {
             return ThreadPool.SetMaxThreads(worker, completion);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean SetMaxWorkerThreads(Int32 worker)
         {
             return ThreadPool.SetMaxThreads(worker, MaxCompletionThreads);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean SetMaxCompletionThreads(Int32 completion)
         {

@@ -21,7 +21,7 @@ namespace NetExtender.Types.Times
         {
             return value.ToString();
         }
-        
+
         /// <summary>
         /// Determines if two DateSpans are equal
         /// </summary>
@@ -56,37 +56,37 @@ namespace NetExtender.Types.Times
             DateTime end = first.End > second.End ? first.End : second.End;
             return new DateSpan(start, end);
         }
-        
+
         /// <summary>
         /// Start date
         /// </summary>
         public DateTime Start { get; }
-        
+
         /// <summary>
         /// End date
         /// </summary>
         public DateTime End { get; }
-        
+
         /// <summary>
         /// Years between the two dates
         /// </summary>
         public Int32 Years { get; }
-        
+
         /// <summary>
         /// Months between the two dates
         /// </summary>
         public Int32 Months { get; }
-        
+
         /// <summary>
         /// Days between the two dates
         /// </summary>
         public Int32 Days { get; }
-        
+
         /// <summary>
         /// Hours between the two dates
         /// </summary>
         public Int32 Hours { get; }
-        
+
         /// <summary>
         /// Minutes between the two dates
         /// </summary>
@@ -96,7 +96,7 @@ namespace NetExtender.Types.Times
         /// Seconds between the two dates
         /// </summary>
         public Int32 Seconds { get; }
-        
+
         /// <summary>
         /// Milliseconds between the two dates
         /// </summary>
@@ -115,10 +115,10 @@ namespace NetExtender.Types.Times
                 start = end;
                 end = temp;
             }
-            
+
             Start = start;
             End = end;
-            
+
             TimeSpan difference = End - Start;
 
             Years = difference.Years();
@@ -167,7 +167,7 @@ namespace NetExtender.Types.Times
         {
             return End <= span.End && End > span.Start || Start <= span.Start && End >= span.End;
         }
-        
+
         /// <summary>
         /// Determines if two objects are equal
         /// </summary>

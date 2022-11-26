@@ -96,47 +96,47 @@ namespace NetExtender.Configuration
         {
             return GetValue(key, sections) ?? alternate;
         }
-        
+
         public Task<String?> GetValueAsync(String? key, params String[]? sections)
         {
             return GetValueAsync(key, (IEnumerable<String>?) sections);
         }
-        
+
         public Task<String?> GetValueAsync(String? key, IEnumerable<String>? sections)
         {
             return GetValueAsync(key, sections, CancellationToken.None);
         }
-        
+
         public Task<String?> GetValueAsync(String? key, CancellationToken token, params String[]? sections)
         {
             return GetValueAsync(key, sections, token);
         }
-        
+
         public virtual Task<String?> GetValueAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
             return Behavior.GetAsync(key, sections, token);
         }
-        
+
         public Task<String?> GetValueAsync(String? key, String? alternate, params String[]? sections)
         {
             return GetValueAsync(key, alternate, (IEnumerable<String>?) sections);
         }
-        
+
         public Task<String?> GetValueAsync(String? key, String? alternate, IEnumerable<String>? sections)
         {
             return GetValueAsync(key, alternate, sections, CancellationToken.None);
         }
-        
+
         public Task<String?> GetValueAsync(String? key, String? alternate, CancellationToken token, params String[]? sections)
         {
             return GetValueAsync(key, alternate, sections, token);
         }
-        
+
         public async Task<String?> GetValueAsync(String? key, String? alternate, IEnumerable<String>? sections, CancellationToken token)
         {
             return await GetValueAsync(key, sections, token).ConfigureAwait(false) ?? alternate;
         }
-        
+
         public Boolean SetValue(String? key, String? value, params String[]? sections)
         {
             return SetValue(key, value, (IEnumerable<String>?) sections);
@@ -146,27 +146,27 @@ namespace NetExtender.Configuration
         {
             return Behavior.Set(key, value, sections);
         }
-        
+
         public Task<Boolean> SetValueAsync(String? key, String? value, params String[]? sections)
         {
             return SetValueAsync(key, value, (IEnumerable<String>?) sections);
         }
-        
+
         public Task<Boolean> SetValueAsync(String? key, String? value, IEnumerable<String>? sections)
         {
             return SetValueAsync(key, value, sections, CancellationToken.None);
         }
-        
+
         public Task<Boolean> SetValueAsync(String? key, String? value, CancellationToken token, params String[]? sections)
         {
             return SetValueAsync(key, value, sections, token);
         }
-        
+
         public virtual Task<Boolean> SetValueAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
         {
             return Behavior.SetAsync(key, value, sections, token);
         }
-        
+
         public String? GetOrSetValue(String? key, String? value, params String[]? sections)
         {
             return GetOrSetValue(key, value, (IEnumerable<String>?) sections);
@@ -176,27 +176,27 @@ namespace NetExtender.Configuration
         {
             return Behavior.GetOrSet(key, value, sections);
         }
-        
+
         public Task<String?> GetOrSetValueAsync(String? key, String? value, params String[]? sections)
         {
             return GetOrSetValueAsync(key, value, (IEnumerable<String>?) sections);
         }
-        
+
         public Task<String?> GetOrSetValueAsync(String? key, String? value, IEnumerable<String>? sections)
         {
             return GetOrSetValueAsync(key, value, sections, CancellationToken.None);
         }
-        
+
         public Task<String?> GetOrSetValueAsync(String? key, String? value, CancellationToken token, params String[]? sections)
         {
             return GetOrSetValueAsync(key, value, sections, token);
         }
-        
+
         public virtual Task<String?> GetOrSetValueAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
         {
             return Behavior.GetOrSetAsync(key, value, sections, token);
         }
-        
+
         public Boolean RemoveValue(String? key, params String[]? sections)
         {
             return RemoveValue(key, (IEnumerable<String>?) sections);
@@ -206,27 +206,27 @@ namespace NetExtender.Configuration
         {
             return SetValue(key, null, sections);
         }
-        
+
         public Task<Boolean> RemoveValueAsync(String? key, params String[]? sections)
         {
             return RemoveValueAsync(key, (IEnumerable<String>?) sections);
         }
-        
+
         public Task<Boolean> RemoveValueAsync(String? key, IEnumerable<String>? sections)
         {
             return RemoveValueAsync(key, sections, CancellationToken.None);
         }
-        
+
         public Task<Boolean> RemoveValueAsync(String? key, CancellationToken token, params String[]? sections)
         {
             return RemoveValueAsync(key, sections, token);
         }
-        
+
         public Task<Boolean> RemoveValueAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
             return SetValueAsync(key, null, sections, token);
         }
-        
+
         public Boolean KeyExist(String? key, params String[]? sections)
         {
             return KeyExist(key, (IEnumerable<String>?) sections);
@@ -236,22 +236,22 @@ namespace NetExtender.Configuration
         {
             return Behavior.Contains(key, sections);
         }
-        
+
         public Task<Boolean> KeyExistAsync(String? key, params String[]? sections)
         {
             return KeyExistAsync(key, (IEnumerable<String>?) sections);
         }
-        
+
         public Task<Boolean> KeyExistAsync(String? key, IEnumerable<String>? sections)
         {
             return KeyExistAsync(key, sections, CancellationToken.None);
         }
-        
+
         public Task<Boolean> KeyExistAsync(String? key, CancellationToken token, params String[]? sections)
         {
             return KeyExistAsync(key, sections, token);
         }
-        
+
         public virtual Task<Boolean> KeyExistAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
             return Behavior.ContainsAsync(key, sections, token);
@@ -346,12 +346,12 @@ namespace NetExtender.Configuration
         {
             return Behavior.GetExistsValuesAsync(sections, token);
         }
-        
+
         public Boolean Clear()
         {
             return Clear(null);
         }
-        
+
         public Boolean Clear(params String[]? sections)
         {
             return Clear((IEnumerable<String>?) sections);
@@ -376,12 +376,12 @@ namespace NetExtender.Configuration
         {
             return ClearAsync(sections, CancellationToken.None);
         }
-        
+
         public Task<Boolean> ClearAsync(CancellationToken token)
         {
             return ClearAsync(null, token);
         }
-        
+
         public Task<Boolean> ClearAsync(CancellationToken token, params String[]? sections)
         {
             return ClearAsync(sections, token);
@@ -496,19 +496,19 @@ namespace NetExtender.Configuration
                 config.SetValue(key, this[key, sections], sections);
             }
         }
-        
+
         public Task CopyToAsync(IConfig config)
         {
             return CopyToAsync(config, CancellationToken.None);
         }
-        
+
         public virtual async Task CopyToAsync(IConfig config, CancellationToken token)
         {
             if (config is null)
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             foreach ((String? key, ImmutableArray<String> sections) in this)
             {
                 await config.SetValueAsync(key, this[key, sections], sections, token);
@@ -553,7 +553,7 @@ namespace NetExtender.Configuration
                 yield return entry;
             }
         }
-        
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

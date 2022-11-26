@@ -17,9 +17,9 @@ namespace NetExtender.Serialization.Ini
         public static IEqualityComparer<String> DefaultComparer { get; } = StringComparer.OrdinalIgnoreCase;
 
         public IEqualityComparer<String> Comparer { get; }
-        
+
         private IndexDictionary<String, IniSection> Sections { get; }
-        
+
         Boolean ICollection<KeyValuePair<String, IniSection>>.IsReadOnly
         {
             get
@@ -27,7 +27,7 @@ namespace NetExtender.Serialization.Ini
                 return ((IDictionary<String, IniSection>) Sections).IsReadOnly;
             }
         }
-        
+
         public Int32 Count
         {
             get
@@ -43,7 +43,7 @@ namespace NetExtender.Serialization.Ini
                 return Sections.Keys;
             }
         }
-        
+
         IEnumerable<String> IReadOnlyDictionary<String, IniSection>.Keys
         {
             get
@@ -59,7 +59,7 @@ namespace NetExtender.Serialization.Ini
                 return Sections.Values;
             }
         }
-        
+
         IEnumerable<IniSection> IReadOnlyDictionary<String, IniSection>.Values
         {
             get
@@ -78,7 +78,7 @@ namespace NetExtender.Serialization.Ini
             Comparer = comparer ?? DefaultComparer;
             Sections = new IndexDictionary<String, IniSection>(Comparer);
         }
-        
+
         public Boolean ContainsKey(String section)
         {
             if (section is null)
@@ -88,7 +88,7 @@ namespace NetExtender.Serialization.Ini
 
             return Sections.ContainsKey(section);
         }
-        
+
         Boolean ICollection<KeyValuePair<String, IniSection>>.Contains(KeyValuePair<String, IniSection> item)
         {
             return ((IDictionary<String, IniSection>) Sections).Contains(item);
@@ -103,7 +103,7 @@ namespace NetExtender.Serialization.Ini
 
             return Sections.TryGetValue(section, out result);
         }
-        
+
         public IniSection Add(String section)
         {
             if (section is null)
@@ -136,12 +136,12 @@ namespace NetExtender.Serialization.Ini
             Sections.Add(section, value);
             return value;
         }
-        
+
         void IDictionary<String, IniSection>.Add(String key, IniSection value)
         {
             Add(key, value);
         }
-        
+
         public IniSection Add(String section, IDictionary<String, IniValue> values)
         {
             if (section is null)
@@ -171,7 +171,7 @@ namespace NetExtender.Serialization.Ini
         {
             return ((IDictionary<String, IniSection>) Sections).Remove(item);
         }
-        
+
         public void Clear()
         {
             Sections.Clear();
@@ -301,7 +301,7 @@ namespace NetExtender.Serialization.Ini
                 value = default;
                 return false;
             }
-            
+
             Int32 index = line.IndexOf('=');
             if (index <= 0)
             {
@@ -372,7 +372,7 @@ namespace NetExtender.Serialization.Ini
                 await writer.WriteLineAsync(String.Empty);
             }
         }
-        
+
         void ICollection<KeyValuePair<String, IniSection>>.CopyTo(KeyValuePair<String, IniSection>[] array, Int32 arrayIndex)
         {
             ((IDictionary<String, IniSection>) Sections).CopyTo(array, arrayIndex);

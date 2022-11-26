@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.Memento
 
             return source.WhereNotNull().ForEach(Internal);
         }
-        
+
         public static IEnumerable<T> Update<T>(this IEnumerable<T> source) where T : IMementoItem
         {
             if (source is null)
@@ -56,7 +56,7 @@ namespace NetExtender.Utilities.Memento
 
             return new Memento<TSource>(builder);
         }
-        
+
         public static Boolean Property<TSource, TProperty>(this IMemento<TSource> memento, TSource source, String name) where TSource : class
         {
             if (memento is null)
@@ -167,7 +167,7 @@ namespace NetExtender.Utilities.Memento
             MementoGroup<TSource> group = new MementoGroup<TSource>(source, selector);
             return memento.Remember(group);
         }
-        
+
         public static Boolean Property<TSource, TProperty>(this IMemento<TSource> memento, TSource source, params KeyValuePair<ReflectionProperty<TSource, TProperty>, TProperty>[] properties) where TSource : class
         {
             if (memento is null)
@@ -305,7 +305,7 @@ namespace NetExtender.Utilities.Memento
             MementoGroup<TSource> group = new MementoGroup<TSource>(source, selector);
             return memento.Remember(group);
         }
-        
+
         public static Boolean Clone<TSource, TProperty>(this IMemento<TSource> memento, TSource source, params KeyValuePair<ReflectionProperty<TSource, TProperty>, TProperty>[] properties) where TSource : class where TProperty : ICloneable
         {
             if (memento is null)
@@ -353,7 +353,7 @@ namespace NetExtender.Utilities.Memento
             MementoArray<TSource, TProperty> array = new MementoArray<TSource, TProperty>(source, name);
             return memento.Remember(array);
         }
-        
+
         public static Boolean Array<TSource, TProperty>(this IMemento<TSource> memento, TSource source, String name, IEnumerable<TProperty>? values) where TSource : class
         {
             if (memento is null)
@@ -374,7 +374,7 @@ namespace NetExtender.Utilities.Memento
             MementoArray<TSource, TProperty> array = new MementoArray<TSource, TProperty>(source, name, values);
             return memento.Remember(array);
         }
-        
+
         public static Boolean Array<TSource, TProperty>(this IMemento<TSource> memento, TSource source, Expression<Func<TSource, TProperty[]>> expression) where TSource : class
         {
             if (memento is null)
@@ -395,7 +395,7 @@ namespace NetExtender.Utilities.Memento
             MementoArray<TSource, TProperty> array = new MementoArray<TSource, TProperty>(source, expression);
             return memento.Remember(array);
         }
-        
+
         public static Boolean Array<TSource, TProperty>(this IMemento<TSource> memento, TSource source, Expression<Func<TSource, TProperty[]>> expression, IEnumerable<TProperty>? values) where TSource : class
         {
             if (memento is null)
@@ -416,7 +416,7 @@ namespace NetExtender.Utilities.Memento
             MementoArray<TSource, TProperty> array = new MementoArray<TSource, TProperty>(source, expression, values);
             return memento.Remember(array);
         }
-        
+
         public static Boolean Array<TSource, TProperty>(this IMemento<TSource> memento, TSource source, params ReflectionProperty<TSource, TProperty[]>[] properties) where TSource : class
         {
             if (memento is null)
@@ -443,7 +443,7 @@ namespace NetExtender.Utilities.Memento
             MementoGroup<TSource> group = new MementoGroup<TSource>(source, selector);
             return memento.Remember(group);
         }
-        
+
         public static Boolean Array<TSource, TProperty>(this IMemento<TSource> memento, TSource source, params KeyValuePair<ReflectionProperty<TSource, TProperty[]>, IEnumerable<TProperty>?>[] properties) where TSource : class
         {
             if (memento is null)
@@ -491,7 +491,7 @@ namespace NetExtender.Utilities.Memento
             MementoCollection<TSource, TProperty, TCollection> collection = new MementoCollection<TSource, TProperty, TCollection>(source, name);
             return memento.Remember(collection);
         }
-        
+
         public static Boolean Collection<TSource, TProperty, TCollection>(this IMemento<TSource> memento, TSource source, String name, IEnumerable<TProperty>? values) where TSource : class where TCollection : class, ICollection<TProperty>
         {
             if (memento is null)
@@ -512,7 +512,7 @@ namespace NetExtender.Utilities.Memento
             MementoCollection<TSource, TProperty, TCollection> collection = new MementoCollection<TSource, TProperty, TCollection>(source, name, values);
             return memento.Remember(collection);
         }
-        
+
         public static Boolean Collection<TSource, TProperty, TCollection>(this IMemento<TSource> memento, TSource source, Expression<Func<TSource, TCollection>> expression) where TSource : class where TCollection : class, ICollection<TProperty>
         {
             if (memento is null)
@@ -533,7 +533,7 @@ namespace NetExtender.Utilities.Memento
             MementoCollection<TSource, TProperty, TCollection> collection = new MementoCollection<TSource, TProperty, TCollection>(source, expression);
             return memento.Remember(collection);
         }
-        
+
         public static Boolean Collection<TSource, TProperty, TCollection>(this IMemento<TSource> memento, TSource source, Expression<Func<TSource, TCollection>> expression, IEnumerable<TProperty>? values) where TSource : class where TCollection : class, ICollection<TProperty>
         {
             if (memento is null)
@@ -554,7 +554,7 @@ namespace NetExtender.Utilities.Memento
             MementoCollection<TSource, TProperty, TCollection> collection = new MementoCollection<TSource, TProperty, TCollection>(source, expression, values);
             return memento.Remember(collection);
         }
-        
+
         public static Boolean Collection<TSource, TProperty, TCollection>(this IMemento<TSource> memento, TSource source, params ReflectionProperty<TSource, TCollection>[] properties) where TSource : class where TCollection : class, ICollection<TProperty>
         {
             if (memento is null)
@@ -581,7 +581,7 @@ namespace NetExtender.Utilities.Memento
             MementoGroup<TSource> group = new MementoGroup<TSource>(source, selector);
             return memento.Remember(group);
         }
-        
+
         public static Boolean Collection<TSource, TProperty, TCollection>(this IMemento<TSource> memento, TSource source, params KeyValuePair<ReflectionProperty<TSource, TCollection>, IEnumerable<TProperty>?>[] properties) where TSource : class where TCollection : class, ICollection<TProperty>
         {
             if (memento is null)

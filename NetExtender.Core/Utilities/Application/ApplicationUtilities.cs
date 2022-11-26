@@ -19,7 +19,7 @@ namespace NetExtender.Utilities.Application
         {
             FriendlyName = GetFriendlyNameInternal();
             Directory = GetDirectoryInternal();
-            
+
             if (FriendlyName is not null)
             {
                 Path = GetPathInternal(FriendlyName, Directory);
@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.Application
                 BuildDateTime = GetBuildDateTimeInternal(Path);
             }
         }
-        
+
         public static String? FriendlyName { get; }
         public static String? Path { get; }
 
@@ -126,7 +126,7 @@ namespace NetExtender.Utilities.Application
                 {
                     return null;
                 }
-                
+
                 if (directory is null)
                 {
                     return name;
@@ -148,7 +148,7 @@ namespace NetExtender.Utilities.Application
                 return null;
             }
         }
-        
+
         public static void Shutdown()
         {
             Shutdown(0);
@@ -158,7 +158,7 @@ namespace NetExtender.Utilities.Application
         {
             Environment.Exit(code);
         }
-        
+
         public static void Shutdown(Action<Int32>? shutdown)
         {
             Shutdown(shutdown, 0);
@@ -174,7 +174,7 @@ namespace NetExtender.Utilities.Application
 
             shutdown.Invoke(code);
         }
-        
+
         public static void Shutdown(this IDispatcher? dispatcher)
         {
             Shutdown(dispatcher, 0);
@@ -197,22 +197,22 @@ namespace NetExtender.Utilities.Application
                 Shutdown(shutdown, code);
                 return;
             }
-            
+
             dispatcher.Invoke(() => Shutdown(shutdown, code));
         }
-        
+
         public const Int32 DefaultMilliRestart = 1000;
-        
+
         public static Task<Boolean> Restart()
         {
             return Restart(DefaultMilliRestart);
         }
-        
+
         public static Task<Boolean> Restart(Int32 milliseconds)
         {
             return Restart(milliseconds, null);
         }
-        
+
         public static Task<Boolean> Restart(TimeSpan wait)
         {
             return Restart(wait, null);
@@ -222,12 +222,12 @@ namespace NetExtender.Utilities.Application
         {
             return Restart(DefaultMilliRestart, token);
         }
-        
+
         public static Task<Boolean> Restart(Int32 milliseconds, CancellationToken token)
         {
             return Restart(milliseconds, null, token);
         }
-        
+
         public static Task<Boolean> Restart(TimeSpan wait, CancellationToken token)
         {
             return Restart(wait, null, token);
@@ -237,12 +237,12 @@ namespace NetExtender.Utilities.Application
         {
             return Restart(DefaultMilliRestart, shutdown);
         }
-        
+
         public static Task<Boolean> Restart(Int32 milliseconds, Action<Int32>? shutdown)
         {
             return Restart(milliseconds, shutdown, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> Restart(TimeSpan wait, Action<Int32>? shutdown)
         {
             return Restart(wait, shutdown, CancellationToken.None);
@@ -252,12 +252,12 @@ namespace NetExtender.Utilities.Application
         {
             return Restart(DefaultMilliRestart, shutdown, token);
         }
-        
+
         public static Task<Boolean> Restart(Int32 milliseconds, Action<Int32>? shutdown, CancellationToken token)
         {
             return Restart(milliseconds, null, shutdown, token);
         }
-        
+
         public static Task<Boolean> Restart(TimeSpan wait, Action<Int32>? shutdown, CancellationToken token)
         {
             return Restart(wait, null, shutdown, token);
@@ -272,7 +272,7 @@ namespace NetExtender.Utilities.Application
         {
             return Restart(milliseconds, dispatcher, shutdown, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> Restart(TimeSpan wait, IDispatcher? dispatcher, Action<Int32>? shutdown)
         {
             return Restart(wait, dispatcher, shutdown, CancellationToken.None);
@@ -287,7 +287,7 @@ namespace NetExtender.Utilities.Application
         {
             return Restart(milliseconds, dispatcher, shutdown, token);
         }
-        
+
         public static Task<Boolean> Restart(this IDispatcher? dispatcher, TimeSpan wait, Action<Int32>? shutdown, CancellationToken token)
         {
             return Restart(wait, dispatcher, shutdown, token);

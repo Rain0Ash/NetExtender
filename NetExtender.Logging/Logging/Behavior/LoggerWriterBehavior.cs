@@ -26,17 +26,17 @@ namespace NetExtender.Logging.Behavior
             }
 
             message = Formatter.Format(message, type, options, offset, provider);
-            
+
             if (message is null)
             {
                 return false;
             }
-            
+
             Writer.WriteLine(message);
             Writer.Flush();
             return true;
         }
-        
+
         protected override void Dispose(Boolean disposing)
         {
             if (!disposing)

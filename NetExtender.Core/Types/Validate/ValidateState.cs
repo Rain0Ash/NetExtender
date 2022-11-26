@@ -13,11 +13,11 @@ namespace NetExtender.Types.Validate
             Successful,
             Invalid
         }
-        
+
         public static ValidateState Unknown { get; } = new ValidateState(State.Unknown);
         public static ValidateState Successful { get; } = new ValidateState(State.Successful);
         public static ValidateState Invalid { get; } = new ValidateState(State.Invalid);
-        
+
         public static implicit operator Boolean(ValidateState value)
         {
             return value.Value switch
@@ -104,7 +104,7 @@ namespace NetExtender.Types.Validate
         {
             return value.IsSuccessful;
         }
-        
+
         public static Boolean operator false(ValidateState value)
         {
             return value.IsInvalid;
@@ -203,12 +203,12 @@ namespace NetExtender.Types.Validate
                 _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
             };
         }
-        
+
         public static ValidateState operator |(Boolean first, ValidateState second)
         {
             return second | first;
         }
-        
+
         public static ValidateState operator |(Boolean? first, ValidateState second)
         {
             return second | first;
@@ -261,7 +261,7 @@ namespace NetExtender.Types.Validate
                 _ => false
             };
         }
-        
+
         private Boolean Equals(State other)
         {
             return Value == other;

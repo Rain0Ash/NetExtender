@@ -17,7 +17,7 @@ namespace NetExtender.Types.Strings
         {
             return new FormatStringAdapter(value);
         }
-        
+
         public override Int32 Arguments { get; }
         public override String Text { get; protected set; }
 

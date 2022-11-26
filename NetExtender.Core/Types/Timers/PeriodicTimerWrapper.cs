@@ -13,12 +13,12 @@ namespace NetExtender.Types.Timers
     public sealed class PeriodicTimer : IDisposable
     {
         private TimerWrapper Timer { get; }
-        
+
         public PeriodicTimer(TimeSpan interval)
         {
             Timer = new TimerWrapper(interval);
         }
-        
+
         public ValueTask<Boolean> WaitForNextTickAsync()
         {
             return Timer.WaitForNextTickAsync();
@@ -28,18 +28,18 @@ namespace NetExtender.Types.Timers
         {
             return Timer.WaitForNextTickAsync(token);
         }
-        
+
         public void Dispose()
         {
             Timer.Dispose();
         }
     }
 #endif
-    
+
     public sealed class PeriodicTimerWrapper : ITimer
     {
         private TimerWrapper Timer { get; }
-        
+
         public event TickHandler? Tick
         {
             add
@@ -51,7 +51,7 @@ namespace NetExtender.Types.Timers
                 Timer.Tick -= value;
             }
         }
-        
+
         public Boolean IsStarted
         {
             get
@@ -71,12 +71,12 @@ namespace NetExtender.Types.Timers
                 Timer.Interval = value;
             }
         }
-        
+
         public PeriodicTimerWrapper(Int32 interval)
         {
             Timer = new TimerWrapper(interval);
         }
-        
+
         public PeriodicTimerWrapper(Double interval)
         {
             Timer = new TimerWrapper(interval);
@@ -86,7 +86,7 @@ namespace NetExtender.Types.Timers
         {
             Timer = new TimerWrapper(interval);
         }
-        
+
         public ValueTask<Boolean> WaitForNextTickAsync()
         {
             return Timer.WaitForNextTickAsync();

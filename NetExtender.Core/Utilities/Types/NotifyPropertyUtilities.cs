@@ -13,7 +13,7 @@ namespace NetExtender.Utilities.Types
     public static class NotifyPropertyUtilities
     {
         private static IStore<Object, PropertySubnotifier> Store { get; } = new WeakStore<Object, PropertySubnotifier>();
-        
+
         public static PropertySubnotifier<T> RegisterSubnotifier<T>(T value, Action<Object?, PropertyChangedEventArgs>? changed) where T : class
         {
             if (value is null)
@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             return Store.GetOrAdd(value, () => new PropertySubnotifier<T>(value, changing)) as PropertySubnotifier<T> ??throw new InvalidOperationException();
         }
 
@@ -40,10 +40,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             return Store.GetOrAdd(value, () => new PropertySubnotifier<T>(value, changing, changed)) as PropertySubnotifier<T> ?? throw new InvalidOperationException();
         }
-        
+
         public static Boolean TryGetSubnotifier<T>(T value, [MaybeNullWhen(false)] out PropertySubnotifier<T> subnotifier) where T : class
         {
             if (value is null)

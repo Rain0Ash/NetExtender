@@ -34,7 +34,7 @@ namespace NetExtender.Types.Dictionaries
         {
             Internal.AddOrUpdate(key, value);
         }
-        
+
         public TValue GetOrAdd(TKey key, TValue value)
         {
             return Internal.GetOrAdd(key, value);
@@ -59,7 +59,7 @@ namespace NetExtender.Types.Dictionaries
         {
             Internal.Clear();
         }
-        
+
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             return ((IEnumerable<KeyValuePair<TKey, TValue>>) Internal).GetEnumerator();
@@ -69,7 +69,7 @@ namespace NetExtender.Types.Dictionaries
         {
             return GetEnumerator();
         }
-        
+
         public TValue this[TKey key]
         {
             get

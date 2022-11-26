@@ -45,7 +45,7 @@ namespace NetExtender.Types.Expressions.Specification
         {
             return value is not null ? new EntitySpecification<T>(value) : null;
         }
-        
+
         /// <summary>
         /// <remarks>
         /// For user-defined conditional logical operators.
@@ -56,7 +56,7 @@ namespace NetExtender.Types.Expressions.Specification
         {
             return false;
         }
-        
+
         /// <summary>
         /// <remarks>
         /// For user-defined conditional logical operators.
@@ -67,7 +67,7 @@ namespace NetExtender.Types.Expressions.Specification
         {
             return false;
         }
-        
+
         public static EntitySpecification<T> operator !(EntitySpecification<T>? value)
         {
             return value is not null ? new EntitySpecification<T>(value.Predicate.Not()) : true;
@@ -82,7 +82,7 @@ namespace NetExtender.Types.Expressions.Specification
         {
             return first is not null ? second is not null ? new EntitySpecification<T>(first.Predicate.Or(second.Predicate)) : first : second ?? false;
         }
-        
+
         private Func<T, Boolean>? _function;
         private Func<T, Boolean> Function
         {

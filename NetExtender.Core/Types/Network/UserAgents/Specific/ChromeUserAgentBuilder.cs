@@ -11,12 +11,12 @@ namespace NetExtender.Types.Network.UserAgents.Specific
     public class ChromeUserAgentBuilder : UserAgentSpecificBuilder
     {
         public new static IUserAgentSpecificBuilder Default { get; } = new ChromeUserAgentBuilder();
-        
+
         protected virtual String RandomChromeVersion()
         {
             return $"{Random.Next(74, 91)}.{0}.{Random.Next(1000, 4000)}.{Random.Next(75, 300)}";
         }
-        
+
         public override String Build(UserAgentArchitecture? architecture, CultureInfo? info)
         {
             String arch = GetArchitecture(architecture);

@@ -41,7 +41,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                 _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
             };
         }
-        
+
         public static Boolean IsModify(this EntityEntry entity)
         {
             if (entity is null)
@@ -51,7 +51,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 
             return IsModify(entity.State);
         }
-        
+
         public static Boolean IsModify<T>(this EntityEntry<T> entity) where T : class
         {
             if (entity is null)

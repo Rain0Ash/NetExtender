@@ -34,12 +34,12 @@ namespace NetExtender.Windows.Shortcut
                 return null;
             }
         }
-        
+
         public const String ShortcutExtension = ".lnk";
-        
+
         private static Type? ShellType { get; } = Type.GetTypeFromProgID("WScript.Shell");
         private static Object? MShell { get; } = ShellType is not null ? Activator.CreateInstance(ShellType) : null;
-        
+
         private static IWshShortcut? Create(String name)
         {
             try
@@ -51,11 +51,11 @@ namespace NetExtender.Windows.Shortcut
                 return null;
             }
         }
-        
+
         private IWshShortcut Internal { get; }
 
         public String Name { get; }
-        
+
         public String FullName
         {
             get
@@ -63,7 +63,7 @@ namespace NetExtender.Windows.Shortcut
                 return Internal.FullName;
             }
         }
-        
+
         public String? Arguments
         {
             get
@@ -112,7 +112,7 @@ namespace NetExtender.Windows.Shortcut
                 {
                     return;
                 }
-                
+
                 Internal.IconLocation = value;
             }
         }
@@ -190,7 +190,7 @@ namespace NetExtender.Windows.Shortcut
                 {
                     throw new ArgumentNullException(nameof(value));
                 }
-                
+
                 if (!PathUtilities.IsValidPath(value))
                 {
                     throw new ArgumentException(@"Path is not valid", nameof(value));
@@ -210,7 +210,7 @@ namespace NetExtender.Windows.Shortcut
             }
 
             String ext = Path.GetExtension(name);
-            
+
             if (String.IsNullOrEmpty(ext))
             {
                 name += ".lnk";
@@ -237,7 +237,7 @@ namespace NetExtender.Windows.Shortcut
             {
                 return false;
             }
-            
+
             Boolean exists = File.Exists(path);
             if (!Overwrite && exists)
             {
@@ -255,7 +255,7 @@ namespace NetExtender.Windows.Shortcut
             {
                 File.Delete(path);
             }
-            
+
             Directory.CreateDirectory(directory);
             Internal.Save();
             File.Move(CreatingPath, path);

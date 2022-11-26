@@ -17,13 +17,13 @@ namespace NetExtender.Types.Drawing.Colors
         {
             return color.ToColor();
         }
-        
+
         public static implicit operator HSVColor(Color color)
         {
             color.ToHSV(out Double h, out Double s, out Double v);
             return new HSVColor(h, s, v);
         }
-        
+
         public static Boolean operator ==(HSVColor first, HSVColor second)
         {
             return first.Equals(second);
@@ -41,7 +41,7 @@ namespace NetExtender.Types.Drawing.Colors
                 return ColorType.HSV;
             }
         }
-        
+
         public Double H { get; init; }
         public Double S { get; init; }
         public Double V { get; init; }
@@ -63,7 +63,7 @@ namespace NetExtender.Types.Drawing.Colors
             color = ToColor();
             return true;
         }
-        
+
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(H, S, V);
@@ -78,7 +78,7 @@ namespace NetExtender.Types.Drawing.Colors
         {
             return Math.Abs(H - other.H) < Double.Epsilon && Math.Abs(S - other.S) < Double.Epsilon && Math.Abs(V - other.V) < Double.Epsilon;
         }
-        
+
         public Boolean Equals(IColor? color)
         {
             return color is not null && ToColor(out Color first) && color.ToColor(out Color second) && first.Equals(second);
@@ -88,12 +88,12 @@ namespace NetExtender.Types.Drawing.Colors
         {
             return $"H:{H}° S:{S} V:{V}";
         }
-        
+
         public String ToString(String? format)
         {
             return ToString(format, null);
         }
-        
+
         public String ToString(String? format, IFormatProvider? provider)
         {
             if (String.IsNullOrEmpty(format))

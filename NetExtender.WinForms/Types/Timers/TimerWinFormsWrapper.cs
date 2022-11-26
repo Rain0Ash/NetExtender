@@ -18,7 +18,7 @@ namespace NetExtender.Types.Timers
         {
             return timer is not null ? new TimerWinFormsWrapper(timer) : null;
         }
-        
+
         [return: NotNullIfNotNull("wrapper")]
         public static implicit operator Timer?(TimerWinFormsWrapper? wrapper)
         {
@@ -57,12 +57,12 @@ namespace NetExtender.Types.Timers
             : this(new Timer { Interval = interval })
         {
         }
-        
+
         public TimerWinFormsWrapper(Double interval)
             : this(TimerUtilities.ToInterval(interval))
         {
         }
-        
+
         public TimerWinFormsWrapper(TimeSpan interval)
             : this(interval.TotalMilliseconds)
         {
@@ -94,7 +94,7 @@ namespace NetExtender.Types.Timers
             Timer.Tick -= OnTick;
             Timer.Dispose();
         }
-        
+
         public ValueTask DisposeAsync()
         {
             Dispose();

@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.Types
 
             queue.Enqueue(item);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void AddRange<T>(this Queue<T> queue, params T[] items)
         {
@@ -44,7 +44,7 @@ namespace NetExtender.Utilities.Types
         {
             EnqueueRange(queue, items);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void AddRange<T>(this SetQueue<T> queue, params T[] items)
         {
@@ -80,7 +80,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(queue));
             }
-            
+
             if (offset < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(offset));
@@ -100,7 +100,7 @@ namespace NetExtender.Utilities.Types
 
             return item;
         }
-        
+
         public static Boolean TryRotate<T>(this Queue<T> queue, [MaybeNullWhen(false)] out T result)
         {
             if (queue is null)
@@ -117,11 +117,11 @@ namespace NetExtender.Utilities.Types
             {
                 return false;
             }
-            
+
             queue.Enqueue(result);
             return true;
         }
-        
+
         public static Boolean TryRotate<T>(this Queue<T> queue, Int32 offset, [MaybeNullWhen(false)] out T result)
         {
             if (queue is null)
@@ -134,13 +134,13 @@ namespace NetExtender.Utilities.Types
                 result = default;
                 return false;
             }
-            
+
             if (offset < 0)
             {
                 result = default;
                 return false;
             }
-            
+
             if (queue.Count <= 1 || (offset %= queue.Count) == 0)
             {
                 return queue.TryPeek(out result);
@@ -153,13 +153,13 @@ namespace NetExtender.Utilities.Types
                 {
                     return false;
                 }
-                        
+
                 queue.Enqueue(result);
             }
 
             return true;
         }
-        
+
         public static T Rotate<T>(this SetQueue<T> queue)
         {
             if (queue is null)
@@ -171,14 +171,14 @@ namespace NetExtender.Utilities.Types
             queue.Enqueue(item);
             return item;
         }
-        
+
         public static T Rotate<T>(this SetQueue<T> queue, Int32 offset)
         {
             if (queue is null)
             {
                 throw new ArgumentNullException(nameof(queue));
             }
-            
+
             if (offset < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(offset));
@@ -198,7 +198,7 @@ namespace NetExtender.Utilities.Types
 
             return item;
         }
-        
+
         public static Boolean TryRotate<T>(this SetQueue<T> queue, [MaybeNullWhen(false)] out T result)
         {
             if (queue is null)
@@ -210,11 +210,11 @@ namespace NetExtender.Utilities.Types
             {
                 return false;
             }
-            
+
             queue.Enqueue(result);
             return true;
         }
-        
+
         public static Boolean TryRotate<T>(this SetQueue<T> queue, Int32 offset, [MaybeNullWhen(false)] out T result)
         {
             if (queue is null)
@@ -227,7 +227,7 @@ namespace NetExtender.Utilities.Types
                 result = default;
                 return false;
             }
-            
+
             if (offset < 0)
             {
                 result = default;
@@ -246,13 +246,13 @@ namespace NetExtender.Utilities.Types
                 {
                     return false;
                 }
-                        
+
                 queue.Enqueue(result);
             }
 
             return true;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void EnqueueRange<T>(this Queue<T> queue, params T[] items)
         {
@@ -270,13 +270,13 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(items));
             }
-            
+
             foreach (T item in items)
             {
                 queue.Enqueue(item);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void EnqueueRange<T>(this SetQueue<T> queue, params T[] items)
         {
@@ -294,7 +294,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(items));
             }
-            
+
             foreach (T item in items)
             {
                 queue.Enqueue(item);
@@ -314,7 +314,7 @@ namespace NetExtender.Utilities.Types
                 yield return value;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> DequeueMultiple<T>(this SetQueue<T> queue)
         {

@@ -49,7 +49,7 @@ namespace NetExtender.Types.Numerics
         {
             return new AngleDegree(degree);
         }
-        
+
         /// <summary>
         /// Indicates whether two <see cref="AngleDegree"/> instances are equal.
         /// </summary>
@@ -133,7 +133,7 @@ namespace NetExtender.Types.Numerics
         {
             return new AngleDegree(first.Degree + second.Degree);
         }
-        
+
         /// <summary>
         /// Negates an angle.
         /// </summary>
@@ -180,7 +180,7 @@ namespace NetExtender.Types.Numerics
         {
             return new AngleDegree(first.Degree / second);
         }
-        
+
         /// <summary>
         /// Modulo a angle by a scalar value. 
         /// </summary>
@@ -202,7 +202,7 @@ namespace NetExtender.Types.Numerics
         {
             Degree = degree;
         }
-        
+
         /// <summary>
         /// Gets the value of the current Angle structure expressed degrees and minutes.
         /// </summary>
@@ -218,13 +218,13 @@ namespace NetExtender.Types.Numerics
         public void Deconstruct(out Int32 degree, out Int32 minutes, out Double seconds)
         {
             degree = (Int32) Degree;
-            
+
             Double decimalminutes = Math.Abs(Degree - degree) * 60;
-            
+
             minutes = (Int32) decimalminutes;
             seconds = (decimalminutes - minutes) * 60;
         }
-        
+
         [Pure]
         public Int32 CompareTo(AngleDegree other)
         {

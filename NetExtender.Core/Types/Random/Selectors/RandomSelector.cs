@@ -30,7 +30,7 @@ namespace NetExtender.Types.Random
         /// Was calculated empirically. 
         /// </summary>
         protected const Int32 ListBreakpoint = 26;
-        
+
         public abstract IReadOnlyCollection<T> Collection { get; }
 
         public abstract Int32 Count { get; }
@@ -42,7 +42,7 @@ namespace NetExtender.Types.Random
         {
             return GetRandomOrDefault(default(T));
         }
-        
+
         [return: NotNullIfNotNull("alternate")]
         public abstract T? GetRandomOrDefault(T? alternate);
 
@@ -50,7 +50,7 @@ namespace NetExtender.Types.Random
         {
             return GetRandomOrDefault(value, default);
         }
-        
+
         [return: NotNullIfNotNull("alternate")]
         public abstract T? GetRandomOrDefault(Double value, T? alternate);
 
@@ -77,7 +77,7 @@ namespace NetExtender.Types.Random
             {
                 sum += source[i];
             }
-            
+
             Double k = 1F / sum;
 
             sum = 0;
@@ -133,7 +133,7 @@ namespace NetExtender.Types.Random
 
             return index;
         }
-        
+
         public virtual IEnumerator<T> GetEnumerator()
         {
             while (true)

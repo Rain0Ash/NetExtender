@@ -9,7 +9,7 @@ namespace NetExtender.UserInterface.Windows.Menu
     public class StringWindowsMenuItem : WindowsMenuItem
     {
         public String Title { get; }
-        
+
         public StringWindowsMenuItem(Byte command, String title)
             : base(command, UserInterfaceUtilities.WindowsMenuItemMask.String, UserInterfaceUtilities.WindowsMenuItemType.String)
         {

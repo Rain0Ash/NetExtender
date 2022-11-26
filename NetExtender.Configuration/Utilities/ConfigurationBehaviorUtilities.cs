@@ -44,7 +44,7 @@ namespace NetExtender.Utilities.Configuration
 
             return temporary;
         }
-        
+
         public static Task<IConfigBehavior> TemporaryAsync(this IConfigBehavior behavior)
         {
             return TemporaryAsync(behavior, true);

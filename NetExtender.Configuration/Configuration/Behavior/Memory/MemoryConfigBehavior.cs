@@ -21,7 +21,7 @@ namespace NetExtender.Configuration.Memory
             : this(ConfigOptions.None)
         {
         }
-        
+
         public MemoryConfigBehavior(ConfigOptions options)
             : this(new DictionaryTree<String, String>(), null, options)
         {
@@ -31,17 +31,17 @@ namespace NetExtender.Configuration.Memory
             : this(path, ConfigOptions.None)
         {
         }
-        
+
         public MemoryConfigBehavior(String? path, ConfigOptions options)
             : this(new DictionaryTree<String, String>(), path, options)
         {
         }
-        
+
         public MemoryConfigBehavior(DictionaryTree<String, String> config)
             : this(config, ConfigOptions.None)
         {
         }
-        
+
         public MemoryConfigBehavior(DictionaryTree<String, String> config, ConfigOptions options)
             : this(config, null, options)
         {
@@ -51,7 +51,7 @@ namespace NetExtender.Configuration.Memory
             : this(config, path, ConfigOptions.None)
         {
         }
-        
+
         public MemoryConfigBehavior(DictionaryTree<String, String> config, String? path, ConfigOptions options)
             : base(path ?? "RAM", options)
         {
@@ -70,12 +70,12 @@ namespace NetExtender.Configuration.Memory
             {
                 return false;
             }
-            
+
             if (key is null)
             {
                 return false;
             }
-            
+
             if (IsIgnoreEvent && !IsLazyWrite)
             {
                 if (value is null)
@@ -88,13 +88,13 @@ namespace NetExtender.Configuration.Memory
                     Config.Purge();
                     return true;
                 }
-                
+
                 Config[key, sections].Value = value;
                 return true;
             }
-            
+
             sections = ToSection(sections).AsIImmutableList();
-            
+
             if (IsLazyWrite && Get(key, sections) == value)
             {
                 return true;
@@ -106,9 +106,9 @@ namespace NetExtender.Configuration.Memory
                 {
                     return false;
                 }
-                
+
                 Config.Purge();
-                
+
                 if (IsIgnoreEvent)
                 {
                     return true;
@@ -124,7 +124,7 @@ namespace NetExtender.Configuration.Memory
             {
                 OnChanged(new ConfigurationValueEntry(key, value, sections));
             }
-            
+
             return true;
         }
 
@@ -132,7 +132,7 @@ namespace NetExtender.Configuration.Memory
         {
             return new ConfigurationEntry(entry.Key, entry.Sections);
         }
-        
+
         protected virtual ConfigurationValueEntry ValueEntriesConvert(DictionaryTreeEntry<String, String> entry)
         {
             return new ConfigurationValueEntry(entry.Key, entry.Value, entry.Sections);
@@ -154,7 +154,7 @@ namespace NetExtender.Configuration.Memory
             {
                 return false;
             }
-            
+
             if (sections is null)
             {
                 Config.Clear();
@@ -183,7 +183,7 @@ namespace NetExtender.Configuration.Memory
             {
                 return false;
             }
-            
+
             if (entries is null)
             {
                 return false;
@@ -212,7 +212,7 @@ namespace NetExtender.Configuration.Memory
                     {
                         continue;
                     }
-                    
+
                     Config[entry.Key, entry.Sections].Value = entry.Value;
                     changes?.Add(entry);
                     continue;
@@ -222,14 +222,14 @@ namespace NetExtender.Configuration.Memory
                 {
                     continue;
                 }
-                
+
                 if (entry.Value is null)
                 {
                     if (!Config.Remove(entry.Key, entry.Sections))
                     {
                         continue;
                     }
-                    
+
                     changes?.Add(entry);
                     continue;
                 }
@@ -258,7 +258,7 @@ namespace NetExtender.Configuration.Memory
             {
                 return false;
             }
-            
+
             if (entries is null)
             {
                 return false;
@@ -270,7 +270,7 @@ namespace NetExtender.Configuration.Memory
             {
                 return Merge(entries);
             }
-            
+
             IndexDictionary<ConfigurationEntry, ConfigurationValueEntry> dictionary = values.ToIndexDictionary(item => (ConfigurationEntry) item, item => item);
             List<ConfigurationValueEntry>? changes = !IsIgnoreEvent ? new List<ConfigurationValueEntry>(dictionary.Count) : null;
 
@@ -280,14 +280,14 @@ namespace NetExtender.Configuration.Memory
                 {
                     continue;
                 }
-                
+
                 if (!dictionary.Remove(entry, out ConfigurationValueEntry result))
                 {
                     if (entry.Value is null)
                     {
                         continue;
                     }
-                    
+
                     Config[entry.Key, entry.Sections].Value = entry.Value;
                     changes?.Add(entry);
                     continue;
@@ -297,14 +297,14 @@ namespace NetExtender.Configuration.Memory
                 {
                     continue;
                 }
-                
+
                 if (entry.Value is null)
                 {
                     if (!Config.Remove(entry.Key, entry.Sections))
                     {
                         continue;
                     }
-                    
+
                     changes?.Add(entry);
                     continue;
                 }
@@ -319,12 +319,12 @@ namespace NetExtender.Configuration.Memory
                 {
                     continue;
                 }
-                
+
                 if (!Config.Remove(key, sections))
                 {
                     continue;
                 }
-                
+
                 changes?.Add(new ConfigurationValueEntry(key, null, sections));
             }
 

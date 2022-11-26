@@ -37,7 +37,7 @@ namespace NetExtender.Utilities.IO
                 return ExpandSpecialFolder(Environment.SpecialFolder.MyDocuments);
             }
         }
-        
+
         public static String? Music
         {
             get
@@ -45,7 +45,7 @@ namespace NetExtender.Utilities.IO
                 return ExpandSpecialFolder(Environment.SpecialFolder.MyMusic);
             }
         }
-        
+
         public static String? Pictures
         {
             get
@@ -53,7 +53,7 @@ namespace NetExtender.Utilities.IO
                 return ExpandSpecialFolder(Environment.SpecialFolder.MyPictures);
             }
         }
-        
+
         public static String? Videos
         {
             get
@@ -61,7 +61,7 @@ namespace NetExtender.Utilities.IO
                 return ExpandSpecialFolder(Environment.SpecialFolder.MyVideos);
             }
         }
-        
+
         public static String? Temp
         {
             get
@@ -77,7 +77,7 @@ namespace NetExtender.Utilities.IO
                 }
             }
         }
-        
+
         public static String? Current
         {
             get
@@ -103,12 +103,12 @@ namespace NetExtender.Utilities.IO
                 return null;
             }
         }
-        
+
         public static Boolean TryCreateDirectory(String path)
         {
             return TryCreateDirectory(path, out _);
         }
-        
+
         public static Boolean TryCreateDirectory(String path, [MaybeNullWhen(false)] out DirectoryInfo result)
         {
             if (path is null)
@@ -127,7 +127,7 @@ namespace NetExtender.Utilities.IO
                 return false;
             }
         }
-        
+
         public static DirectoryInfo? LatestExist(String path)
         {
             if (path is null)
@@ -180,7 +180,7 @@ namespace NetExtender.Utilities.IO
 
             return info.Exists ? info : null;
         }
-        
+
         public static Boolean TryDelete(this DirectoryInfo info, Boolean recursive)
         {
             if (info is null)
@@ -261,7 +261,7 @@ namespace NetExtender.Utilities.IO
 
                 String path = Path.Combine(directoryname, name);
                 directory.MoveTo(path);
-                
+
                 return true;
             }
             catch (Exception)
@@ -270,11 +270,11 @@ namespace NetExtender.Utilities.IO
                 {
                     throw;
                 }
-                
+
                 return false;
             }
         }
-        
+
         /// <summary>
         /// Adds the specified suffix to all directories and files in the specified directory, using the specified search option.
         /// </summary>
@@ -285,7 +285,7 @@ namespace NetExtender.Utilities.IO
         {
             return AddSuffixToAll(directory, suffix, null);
         }
-        
+
         /// <summary>
         /// Adds the specified suffix to all directories and files in the specified directory, using the specified search option.
         /// </summary>
@@ -336,7 +336,7 @@ namespace NetExtender.Utilities.IO
             }
 
             ignore = ignore.Materialize();
-            
+
             Boolean successful = AddSuffixToAllFiles(directory, suffix, SearchOption.TopDirectoryOnly) | AddSuffixToAllDirectories(directory, suffix, SearchOption.TopDirectoryOnly, ignore);
 
             if (option != SearchOption.AllDirectories)
@@ -347,7 +347,7 @@ namespace NetExtender.Utilities.IO
             DirectoryInfo[] subdirectories = directory.GetDirectories("*", SearchOption.TopDirectoryOnly);
             return subdirectories.Aggregate(successful, (current, subdirectory) => current | AddSuffixToAll(subdirectory, suffix, SearchOption.AllDirectories, ignore));
         }
-        
+
         /// <summary>
         /// Adds the specified suffix to all directories in the specified directory, using the specified search option.
         /// </summary>
@@ -358,7 +358,7 @@ namespace NetExtender.Utilities.IO
         {
             return AddSuffixToAllDirectories(directory, suffix, null);
         }
-        
+
         /// <summary>
         /// Adds the specified suffix to all directories in the specified directory, using the specified search option.
         /// </summary>
@@ -407,16 +407,16 @@ namespace NetExtender.Utilities.IO
             {
                 return true;
             }
-            
+
             DirectoryInfo[] directories = directory.GetDirectories("*", SearchOption.TopDirectoryOnly);
 
             if (directories.Length <= 0)
             {
                 return true;
             }
-            
+
             HashSet<String>? set = ignore?.ToHashSet();
-            
+
             Boolean successful = false;
             foreach (DirectoryInfo subdirectory in directories)
             {
@@ -459,7 +459,7 @@ namespace NetExtender.Utilities.IO
             {
                 throw new ArgumentNullException(nameof(directory));
             }
-            
+
             if (suffix is null)
             {
                 throw new ArgumentNullException(nameof(suffix));
@@ -526,7 +526,7 @@ namespace NetExtender.Utilities.IO
             DirectoryInfo directory = new DirectoryInfo(source);
             return CopyDirectory(directory, destination, recursive, overwrite);
         }
-        
+
         /// <summary>
         /// Copies the specified source directory to the specified location.
         /// </summary>
@@ -564,7 +564,7 @@ namespace NetExtender.Utilities.IO
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (String.IsNullOrEmpty(destination))
             {
                 throw new ArgumentException(@"Value cannot be null or empty.", nameof(destination));
@@ -606,7 +606,7 @@ namespace NetExtender.Utilities.IO
             {
                 return successful;
             }
-            
+
             foreach (DirectoryInfo subdirectory in subdirectories)
             {
                 String path = Path.Combine(destination, subdirectory.Name);
@@ -628,7 +628,7 @@ namespace NetExtender.Utilities.IO
         {
             return CopyAllFilesWithPrefix(source, destination, prefix, true);
         }
-        
+
         /// <summary>
         /// Copies all files whose name starts with the specified prefix in the specified directory, including subdirectories.
         /// <para>If the destination directory doesn't exist, it is created.</para>
@@ -690,7 +690,7 @@ namespace NetExtender.Utilities.IO
         {
             return CopyAllFilesWithPrefix(source, destination, prefix, true);
         }
-        
+
         /// <summary>
         /// Copies all files whose name starts with the specified prefix in the specified directory, including subdirectories.
         /// <para>If the destination directory doesn't exist, it is created.</para>
@@ -704,7 +704,7 @@ namespace NetExtender.Utilities.IO
         {
             return CopyAllFilesWithPrefix(source, destination, prefix, option, true);
         }
-        
+
         /// <summary>
         /// Copies all files whose name starts with the specified prefix in the specified directory, including subdirectories.
         /// <para>If the destination directory doesn't exist, it is created.</para>
@@ -778,7 +778,7 @@ namespace NetExtender.Utilities.IO
 
             return successful;
         }
-        
+
         /// <summary>
         /// Deletes all directories in the specified directory, whose name is not ended by the specified suffix, using the specified search option.
         /// </summary>
@@ -789,7 +789,7 @@ namespace NetExtender.Utilities.IO
         {
             return DeleteAllDirectoriesWithoutSuffix(directory, suffix, null);
         }
-        
+
         /// <summary>
         /// Deletes all directories in the specified directory, whose name is not ended by the specified suffix, using the specified search option.
         /// </summary>
@@ -801,7 +801,7 @@ namespace NetExtender.Utilities.IO
         {
             return DeleteAllDirectoriesWithoutSuffix(directory, suffix, SearchOption.AllDirectories, ignore);
         }
-        
+
         /// <summary>
         /// Deletes all directories in the specified directory, whose name is not ended by the specified suffix, using the specified search option.
         /// </summary>
@@ -839,7 +839,7 @@ namespace NetExtender.Utilities.IO
             {
                 return true;
             }
-            
+
             if (!directory.Exists)
             {
                 throw new DirectoryNotFoundException($"Directory {directory.FullName} does not exist or could not be found.");
@@ -851,7 +851,7 @@ namespace NetExtender.Utilities.IO
             {
                 return true;
             }
-            
+
             HashSet<String>? set = ignore?.ToHashSet();
 
             Boolean successful = false;
@@ -986,7 +986,7 @@ namespace NetExtender.Utilities.IO
             {
                 return true;
             }
-            
+
             Int32 successful = files.Count(file => !file.Name.EndsWith(suffix) && file.TryDelete());
             return successful > 0;
         }
@@ -1014,7 +1014,7 @@ namespace NetExtender.Utilities.IO
             {
                 throw new ArgumentNullException(nameof(directory));
             }
-            
+
             if (suffix is null)
             {
                 throw new ArgumentNullException(nameof(suffix));
@@ -1031,7 +1031,7 @@ namespace NetExtender.Utilities.IO
             {
                 return true;
             }
-            
+
             Int32 successful = files.Count(file => file.TryDelete());
             return successful > 0;
         }
@@ -1045,7 +1045,7 @@ namespace NetExtender.Utilities.IO
         {
             return DeleteAllWithoutSuffix(directory, suffix, null);
         }
-        
+
         /// <summary>
         /// Deletes all files and directories in the specified directory, whose name is not ended by the specified suffix, using the specified search option.
         /// </summary>
@@ -1056,7 +1056,7 @@ namespace NetExtender.Utilities.IO
         {
             return DeleteAllWithoutSuffix(directory, suffix, SearchOption.AllDirectories, ignore);
         }
-        
+
         /// <summary>
         /// Deletes all files and directories in the specified directory, whose name is not ended by the specified suffix, using the specified search option.
         /// </summary>
@@ -1082,7 +1082,7 @@ namespace NetExtender.Utilities.IO
             {
                 throw new ArgumentNullException(nameof(directory));
             }
-            
+
             if (suffix is null)
             {
                 throw new ArgumentNullException(nameof(suffix));
@@ -1094,7 +1094,7 @@ namespace NetExtender.Utilities.IO
             }
 
             ignore = ignore.Materialize();
-            
+
             Boolean successful = DeleteAllFilesWithoutSuffix(directory, suffix, SearchOption.TopDirectoryOnly) | DeleteAllDirectoriesWithoutSuffix(directory, suffix, SearchOption.TopDirectoryOnly, ignore);
 
             if (option != SearchOption.AllDirectories)
@@ -1130,7 +1130,7 @@ namespace NetExtender.Utilities.IO
             {
                 throw new ArgumentNullException(nameof(directory));
             }
-            
+
             if (suffix is null)
             {
                 throw new ArgumentNullException(nameof(suffix));
@@ -1161,7 +1161,7 @@ namespace NetExtender.Utilities.IO
         {
             return RemoveSuffixInternal(directory, suffix, true);
         }
-        
+
         /// <summary>
         /// Renames the specified directory (removes the specified suffix from the end of the name, if present).
         /// </summary>
@@ -1195,7 +1195,7 @@ namespace NetExtender.Utilities.IO
             {
                 return true;
             }
-            
+
             if (!directory.Name.EndsWith(suffix))
             {
                 return true;
@@ -1352,7 +1352,7 @@ namespace NetExtender.Utilities.IO
         {
             return Environment.GetFolderPath(folder);
         }
-        
+
         public static DirectoryInfo ToDirectoryInfo(this Environment.SpecialFolder folder)
         {
             return new DirectoryInfo(GetPath(folder));

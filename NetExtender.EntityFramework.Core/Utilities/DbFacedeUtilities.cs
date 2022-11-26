@@ -17,15 +17,15 @@ namespace NetExtender.Utilities.EntityFrameworkCore
             {
                 throw new ArgumentNullException(nameof(database));
             }
-            
+
             return database.EnsureCreated();
         }
-        
+
         public static Task<Boolean> CreateDatabaseIfNotExistsAsync(this DatabaseFacade database)
         {
             return CreateDatabaseIfNotExistsAsync(database, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> CreateDatabaseIfNotExistsAsync(this DatabaseFacade database, CancellationToken token)
         {
             if (database is null)
@@ -35,7 +35,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 
             return database.EnsureCreatedAsync(token);
         }
-        
+
         public static Boolean CreateDatabaseIfNotExists(this DbContext context)
         {
             if (context is null)
@@ -45,7 +45,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 
             return CreateDatabaseIfNotExists(context.Database);
         }
-        
+
         public static Task<Boolean> CreateDatabaseIfNotExistsAsync(this DbContext context)
         {
             if (context is null)
@@ -55,7 +55,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 
             return CreateDatabaseIfNotExistsAsync(context.Database);
         }
-        
+
         public static Task<Boolean> CreateDatabaseIfNotExistsAsync(this DbContext context, CancellationToken token)
         {
             if (context is null)
@@ -65,7 +65,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 
             return CreateDatabaseIfNotExistsAsync(context.Database, token);
         }
-        
+
         public static Boolean DeleteDatabaseIfExists(this DatabaseFacade database)
         {
             if (database is null)
@@ -75,22 +75,22 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 
             return database.EnsureDeleted();
         }
-        
+
         public static Task<Boolean> DeleteDatabaseIfExistsAsync(this DatabaseFacade database)
         {
             return DeleteDatabaseIfExistsAsync(database, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> DeleteDatabaseIfExistsAsync(this DatabaseFacade database, CancellationToken token)
         {
             if (database is null)
             {
                 throw new ArgumentNullException(nameof(database));
             }
-            
+
             return database.EnsureDeletedAsync(token);
         }
-        
+
         public static Boolean DeleteDatabaseIfExists(this DbContext context)
         {
             if (context is null)
@@ -100,7 +100,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 
             return DeleteDatabaseIfExists(context.Database);
         }
-        
+
         public static Task<Boolean> DeleteDatabaseIfExistsAsync(this DbContext context)
         {
             if (context is null)
@@ -110,7 +110,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 
             return DeleteDatabaseIfExistsAsync(context.Database);
         }
-        
+
         public static Task<Boolean> DeleteDatabaseIfExistsAsync(this DbContext context, CancellationToken token)
         {
             if (context is null)
@@ -120,7 +120,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 
             return DeleteDatabaseIfExistsAsync(context.Database, token);
         }
-        
+
         public static Boolean RecreateDatabase(this DatabaseFacade database)
         {
             if (database is null)
@@ -131,12 +131,12 @@ namespace NetExtender.Utilities.EntityFrameworkCore
             database.EnsureDeleted();
             return database.EnsureCreated();
         }
-        
+
         public static Task<Boolean> RecreateDatabaseAsync(this DatabaseFacade database)
         {
             return RecreateDatabaseAsync(database, CancellationToken.None);
         }
-        
+
         public static async Task<Boolean> RecreateDatabaseAsync(this DatabaseFacade database, CancellationToken token)
         {
             if (database is null)
@@ -147,7 +147,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
             await database.EnsureDeletedAsync(token).ConfigureAwait(false);
             return await database.EnsureCreatedAsync(token).ConfigureAwait(false);
         }
-        
+
         public static Boolean RecreateDatabase(this DbContext context)
         {
             if (context is null)
@@ -157,7 +157,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 
             return RecreateDatabase(context.Database);
         }
-        
+
         public static Task<Boolean> RecreateDatabaseAsync(this DbContext context)
         {
             if (context is null)
@@ -167,7 +167,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 
             return RecreateDatabaseAsync(context.Database);
         }
-        
+
         public static Task<Boolean> RecreateDatabaseAsync(this DbContext context, CancellationToken token)
         {
             if (context is null)

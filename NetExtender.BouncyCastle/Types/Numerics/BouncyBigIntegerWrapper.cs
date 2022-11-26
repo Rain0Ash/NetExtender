@@ -16,33 +16,33 @@ namespace NetExtender.BouncyCastle.Types.Numerics
         {
             return new BouncyBigIntegerWrapper(value);
         }
-        
+
         public static implicit operator BouncyBigIntegerWrapper(UInt64 value)
         {
             return new BouncyBigIntegerWrapper(value);
         }
-        
+
         public static implicit operator BigInteger(BouncyBigIntegerWrapper wrapper)
         {
             return wrapper.Value;
         }
-        
+
         public static implicit operator BouncyBigIntegerWrapper(BigInteger value)
         {
             return new BouncyBigIntegerWrapper(value);
         }
-        
+
         public static implicit operator BounceBigInteger(BouncyBigIntegerWrapper wrapper)
         {
             BigInteger integer = wrapper.Value;
             return new BounceBigInteger(integer.Sign, BigInteger.Abs(integer).ToByteArray(true, true));
         }
-        
+
         public static implicit operator BouncyBigIntegerWrapper(BounceBigInteger? value)
         {
             return value is not null ? new BouncyBigIntegerWrapper(value) : default;
         }
-        
+
         public static Boolean operator ==(BouncyBigIntegerWrapper first, BouncyBigIntegerWrapper second)
         {
             return first.Value == second.Value;
@@ -52,22 +52,22 @@ namespace NetExtender.BouncyCastle.Types.Numerics
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator >(BouncyBigIntegerWrapper first, BouncyBigIntegerWrapper second)
         {
             return first.Value > second.Value;
         }
-        
+
         public static Boolean operator <(BouncyBigIntegerWrapper first, BouncyBigIntegerWrapper second)
         {
             return first.Value < second.Value;
         }
-        
+
         public static Boolean operator >=(BouncyBigIntegerWrapper first, BouncyBigIntegerWrapper second)
         {
             return first.Value >= second.Value;
         }
-        
+
         public static Boolean operator <=(BouncyBigIntegerWrapper first, BouncyBigIntegerWrapper second)
         {
             return first.Value <= second.Value;
@@ -79,17 +79,17 @@ namespace NetExtender.BouncyCastle.Types.Numerics
         {
             Value = value;
         }
-        
+
         public BouncyBigIntegerWrapper(UInt64 value)
         {
             Value = value;
         }
-        
+
         public BouncyBigIntegerWrapper(BounceBigInteger? value)
         {
             Value = value is not null ? new BigInteger(value.ToByteArrayUnsigned(), value.SignValue >= 0, true) : BigInteger.Zero;
         }
-        
+
         public BouncyBigIntegerWrapper(BigInteger value)
         {
             Value = value;
@@ -146,7 +146,7 @@ namespace NetExtender.BouncyCastle.Types.Numerics
         {
             return Value.ToString();
         }
-        
+
         public static BouncyBigIntegerWrapper CreateRandomInRange(BouncyBigIntegerWrapper min, BouncyBigIntegerWrapper max, SecureRandom random)
         {
             return BigIntegers.CreateRandomInRange(min, max, random);

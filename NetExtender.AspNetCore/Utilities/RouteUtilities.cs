@@ -43,7 +43,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return result;
         }
-        
+
         public static String? GetControllerNamespace<TController>() where TController : ControllerBase
         {
             Type type = typeof(TController);

@@ -44,7 +44,7 @@ namespace NetExtender.Types.Combinatoric
         /// Permutations object that handles permutations on booleans for combination inclusion.
         /// </summary>
         private Permutations<Boolean> Permutations { get; }
-        
+
         /// <summary>
         /// The number of unique combinations that are defined in this meta-collection.
         /// This value is mathematically defined as Choose(M, N) where M is the set size
@@ -78,7 +78,7 @@ namespace NetExtender.Types.Combinatoric
         /// The lower index of the meta-collection, equal to the number of items returned each iteration.
         /// </summary>
         public Int32 LowerIndex { get; }
-        
+
         /// <summary>
         /// Create a combination set from the provided list of values.
         /// The upper index is calculated as values.Count, the lower index is specified.
@@ -102,10 +102,10 @@ namespace NetExtender.Types.Combinatoric
         {
             Repetition = repetition;
             LowerIndex = index;
-            
+
             Values = new List<T>();
             Values.AddRange(values);
-            
+
             if (!Repetition)
             {
                 Permutations = new Permutations<Boolean>(Values.Select((_, i) => i < Values.Count - LowerIndex).ToList());
@@ -126,7 +126,7 @@ namespace NetExtender.Types.Combinatoric
 
             Permutations = new Permutations<Boolean>(map);
         }
-        
+
         /// <summary>
         /// Gets an enumerator for collecting the list of combinations.
         /// </summary>
@@ -164,7 +164,7 @@ namespace NetExtender.Types.Combinatoric
             /// An enumertor of the parents list of lexicographic orderings.
             /// </summary>
             private Permutations<Boolean>.Enumerator Permutations { get; }
-            
+
             /// <summary>
             /// The current combination
             /// </summary>
@@ -186,7 +186,7 @@ namespace NetExtender.Types.Combinatoric
                     return Next();
                 }
             }
-            
+
             /// <summary>
             /// Construct a enumerator with the parent object.
             /// </summary>
@@ -270,7 +270,7 @@ namespace NetExtender.Types.Combinatoric
 
                 return Values;
             }
-            
+
             /// <summary>
             /// Resets the combinations enumerator to the first combination.  
             /// </summary>
@@ -278,7 +278,7 @@ namespace NetExtender.Types.Combinatoric
             {
                 Permutations.Reset();
             }
-            
+
             /// <summary>
             /// Cleans up non-managed resources, of which there are none used here.
             /// </summary>

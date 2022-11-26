@@ -31,7 +31,7 @@ namespace NetExtender.Localization
                 return (ILocalizationBehavior) base.Behavior;
             }
         }
-        
+
         public new event LocalizationChangedEventHandler Changed
         {
             add
@@ -43,7 +43,7 @@ namespace NetExtender.Localization
                 Behavior.Changed -= value;
             }
         }
-        
+
         public event LocalizationValueChangedEventHandler ValueChanged
         {
             add
@@ -115,7 +115,7 @@ namespace NetExtender.Localization
                 return Behavior.Comparer;
             }
         }
-        
+
         public ILocalizationConverter Converter
         {
             get
@@ -128,7 +128,7 @@ namespace NetExtender.Localization
             : base(behavior)
         {
         }
-        
+
         public new ILocalizationString? GetValue(String? key, params String[]? sections)
         {
             return GetValue(key, (IEnumerable<String>?) sections);
@@ -218,7 +218,7 @@ namespace NetExtender.Localization
         {
             return await GetValueAsync(key, sections, token) ?? LocalizationString.Create(Behavior.Default, alternate);
         }
-        
+
         public String? GetValue(String? key, LocalizationIdentifier identifier, params String[]? sections)
         {
             return GetValue(key, identifier, (IEnumerable<String>?) sections);
@@ -503,7 +503,7 @@ namespace NetExtender.Localization
         {
             return Behavior.GetExistsAsync(sections, token);
         }
-        
+
         public LocalizationEntry[]? GetExists(LocalizationIdentifier identifier)
         {
             return GetExists(identifier, (IEnumerable<String>?) null);
@@ -860,7 +860,7 @@ namespace NetExtender.Localization
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             foreach ((String? key, ImmutableArray<String> sections) in this)
             {
                 await config.SetValueAsync(key, this[key, sections], sections, token);

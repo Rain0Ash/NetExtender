@@ -26,7 +26,7 @@ namespace NetExtender.Utilities.Network
             {
                 return client;
             }
-            
+
             if (client.AddUserAgentHeader(agent ?? UserAgentUtilities.CurrentSessionUserAgent))
             {
                 return client;
@@ -35,7 +35,7 @@ namespace NetExtender.Utilities.Network
             client.Dispose();
             throw new ArgumentException(@"Invalid user agent", nameof(agent));
         }
-        
+
         public static HttpClient Create()
         {
             return Create(UserAgentUtilities.CurrentSessionUserAgent);
@@ -46,7 +46,7 @@ namespace NetExtender.Utilities.Network
             HttpClient client = new HttpClient();
             return DisposeAndThrowOnInvalidAddUserAgent(client, agent);
         }
-        
+
         public static HttpClient Create(this HttpMessageHandler handler)
         {
             if (handler is null)
@@ -56,14 +56,14 @@ namespace NetExtender.Utilities.Network
 
             return Create(handler, UserAgentUtilities.CurrentSessionUserAgent);
         }
-        
+
         public static HttpClient Create(this HttpMessageHandler handler, String? agent)
         {
             if (handler is null)
             {
                 throw new ArgumentNullException(nameof(handler));
             }
-            
+
             HttpClient client = new HttpClient(handler);
             return DisposeAndThrowOnInvalidAddUserAgent(client, agent);
         }
@@ -98,12 +98,12 @@ namespace NetExtender.Utilities.Network
 
             return UserAgentUtilities.ValidateUserAgent(agent) && client.DefaultRequestHeaders.UserAgent.TryParseAdd(agent);
         }
-        
+
         private static Task<HttpResponseMessage> DownloadTaskAsync(this HttpClient client, String address, CancellationToken token)
         {
             return DownloadTaskAsync(client, address, HttpCompletionOption.ResponseHeadersRead, token);
         }
-        
+
         private static async Task<HttpResponseMessage> DownloadTaskAsync(this HttpClient client, String address, HttpCompletionOption option, CancellationToken token)
         {
             if (client is null)
@@ -127,12 +127,12 @@ namespace NetExtender.Utilities.Network
 
             return TaskUtilities.TimeoutRetryTaskAsync(DownloadTask, tries, timeout, callback, token);
         }
-        
+
         public static Task<String> GetHeadAsync(this HttpClient client, String address)
         {
             return GetHeadAsync(client, address, CancellationToken.None);
         }
-        
+
         public static async Task<String> GetHeadAsync(this HttpClient client, String address, CancellationToken token)
         {
             using HttpResponseMessage message = await client.SendAsync(new HttpRequestMessage(HttpMethod.Head, address), token).ConfigureAwait(false);
@@ -153,7 +153,7 @@ namespace NetExtender.Utilities.Network
         {
             return DownloadStringAsync(client, address, CancellationToken.None);
         }
-        
+
         public static Task<String> DownloadStringAsync(this HttpClient client, String address, CancellationToken token)
         {
             return DownloadStringAsync(client, address, Encoding.UTF8, token);
@@ -168,28 +168,28 @@ namespace NetExtender.Utilities.Network
         {
             using HttpResponseMessage message = await DownloadTaskAsync(client, address, token).ConfigureAwait(false);
             using HttpContent content = message.Content;
-            
+
             await using Stream stream = await content.ReadAsStreamAsync(token).ConfigureAwait(false);
             using StreamReader reader = new StreamReader(stream, encoding ?? Encoding.UTF8);
-            
+
             return await reader.ReadToEndAsync().ConfigureAwait(false);
         }
-        
+
         public static Task<String?> DownloadStringAsync(this HttpClient client, String address, Byte tries)
         {
             return DownloadStringAsync(client, address, tries, CancellationToken.None);
         }
-        
+
         public static Task<String?> DownloadStringAsync(this HttpClient client, String address, Byte tries, CancellationToken token)
         {
             return DownloadStringAsync(client, address, Encoding.UTF8, tries, token);
         }
-        
+
         public static Task<String?> DownloadStringAsync(this HttpClient client, String address, Encoding? encoding, Byte tries)
         {
             return DownloadStringAsync(client, address, encoding, tries, CancellationToken.None);
         }
-        
+
         public static Task<String?> DownloadStringAsync(this HttpClient client, String address, Encoding? encoding, Byte tries, CancellationToken token)
         {
             return DownloadStringAsync(client, address, encoding, tries, Time.Minute.OneHalf, token);
@@ -200,47 +200,47 @@ namespace NetExtender.Utilities.Network
         {
             return DownloadStringAsync(client, address, DefaultTries, timeout);
         }
-        
+
         public static Task<String?> DownloadStringAsync(this HttpClient client, String address, Byte tries, TimeSpan timeout)
         {
             return DownloadStringAsync(client, address, tries, timeout, CancellationToken.None);
         }
-        
+
         public static Task<String?> DownloadStringAsync(this HttpClient client, String address, Byte tries, TimeSpan timeout, CancellationToken token)
         {
             return DownloadStringAsync(client, address, tries, timeout, null, token);
         }
-        
+
         public static Task<String?> DownloadStringAsync(this HttpClient client, String address, Encoding? encoding, TimeSpan timeout)
         {
             return DownloadStringAsync(client, address, encoding, DefaultTries, timeout);
         }
-        
+
         public static Task<String?> DownloadStringAsync(this HttpClient client, String address, Encoding? encoding, Byte tries, TimeSpan timeout)
         {
             return DownloadStringAsync(client, address, encoding, tries, timeout, CancellationToken.None);
         }
-        
+
         public static Task<String?> DownloadStringAsync(this HttpClient client, String address, Encoding? encoding, Byte tries, TimeSpan timeout, CancellationToken token)
         {
             return DownloadStringAsync(client, address, encoding, tries, timeout, null, token);
         }
-        
+
         public static Task<String?> DownloadStringAsync(this HttpClient client, String address, Byte tries, TimeSpan timeout, Action<Byte>? callback)
         {
             return DownloadStringAsync(client, address, tries, timeout, callback, CancellationToken.None);
         }
-        
+
         public static Task<String?> DownloadStringAsync(this HttpClient client, String address, Byte tries, TimeSpan timeout, Action<Byte>? callback, CancellationToken token)
         {
             return DownloadStringAsync(client, address, Encoding.UTF8, tries, timeout, callback, token);
         }
-        
+
         public static Task<String?> DownloadStringAsync(this HttpClient client, String address, Encoding? encoding, Byte tries, TimeSpan timeout, Action<Byte>? callback)
         {
             return DownloadStringAsync(client, address, encoding, tries, timeout, callback, CancellationToken.None);
         }
-        
+
         public static Task<String?> DownloadStringAsync(this HttpClient client, String address, Encoding? encoding, Byte tries, TimeSpan timeout, Action<Byte>? callback, CancellationToken token)
         {
             Task<String> HandlerAsync(CancellationToken cancel)
@@ -256,7 +256,7 @@ namespace NetExtender.Utilities.Network
         {
             return DownloadFileTaskAsync(client, address, path, DefaultOverwrite, buffer, CancellationToken.None);
         }
-        
+
         public static Task<FileInfo?> DownloadFileTaskAsync(this HttpClient client, String address, String path, Boolean overwrite = DefaultOverwrite, Int32 buffer = BufferUtilities.DefaultBuffer)
         {
             return DownloadFileTaskAsync(client, address, path, overwrite, buffer, CancellationToken.None);
@@ -266,12 +266,12 @@ namespace NetExtender.Utilities.Network
         {
             return DownloadFileTaskAsync(client, address, path, DefaultOverwrite, token);
         }
-        
+
         public static Task<FileInfo?> DownloadFileTaskAsync(this HttpClient client, String address, String path, Boolean overwrite, CancellationToken token)
         {
             return DownloadFileTaskAsync(client, address, path, overwrite, BufferUtilities.DefaultBuffer, token);
         }
-        
+
         public static Task<FileInfo?> DownloadFileTaskAsync(this HttpClient client, String address, String path, Int32 buffer, CancellationToken token)
         {
             return DownloadFileTaskAsync(client, address, path, DefaultOverwrite, buffer, token);
@@ -282,7 +282,7 @@ namespace NetExtender.Utilities.Network
             using HttpResponseMessage message = await DownloadTaskAsync(client, address, HttpCompletionOption.ResponseHeadersRead, token).ConfigureAwait(false);
             using HttpContent content = message.Content;
             await using Stream stream = await content.ReadAsStreamAsync(token).ConfigureAwait(false);
-            
+
             try
             {
                 return await FileUtilities.SafeCreateFileAsync(path, stream, overwrite, buffer, token).ConfigureAwait(false);
@@ -292,12 +292,12 @@ namespace NetExtender.Utilities.Network
                 return null;
             }
         }
-        
+
         public static Task<Stream> GetSeekableStreamAsync(this HttpClient client, String address)
         {
             return GetSeekableStreamAsync(client, address, CancellationToken.None);
         }
-        
+
         public static Task<Stream> GetSeekableStreamAsync(this HttpClient client, String address, CancellationToken token)
         {
             return GetSeekableStreamAsync(client, address, HttpCompletionOption.ResponseHeadersRead, token);
@@ -307,7 +307,7 @@ namespace NetExtender.Utilities.Network
         {
             return GetSeekableStreamAsync(client, address, option, CancellationToken.None);
         }
-        
+
         public static async Task<Stream> GetSeekableStreamAsync(this HttpClient client, String address, HttpCompletionOption option, CancellationToken token)
         {
             if (client is null)

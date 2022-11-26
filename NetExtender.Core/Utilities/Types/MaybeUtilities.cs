@@ -13,12 +13,12 @@ namespace NetExtender.Utilities.Types
         {
             return maybe.HasValue ? maybe.Value : default;
         }
-        
+
         public static T Unwrap<T>(this Maybe<T> maybe, T alternate)
         {
             return maybe.HasValue ? maybe.Value : alternate;
         }
-        
+
         public static T Unwrap<T>(this Maybe<T> maybe, Func<T> alternate)
         {
             if (alternate is null)

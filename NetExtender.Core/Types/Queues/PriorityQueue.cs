@@ -196,7 +196,7 @@ namespace NetExtender.Types.Queues
                 queue = new Queue<T>(source.CountIfMaterialized() ?? Size);
                 Queue.Add(priority, queue);
             }
-            
+
             if (Count <= 0)
             {
                 Lower = priority;
@@ -268,12 +268,12 @@ namespace NetExtender.Types.Queues
 
                     continue;
                 }
-                
+
                 if (!queue.TryDequeue(out result))
                 {
                     continue;
                 }
-                
+
                 Count--;
 
                 if (queue.Count > 0)
@@ -312,7 +312,7 @@ namespace NetExtender.Types.Queues
                     result = default;
                     return false;
                 }
-                
+
                 if (!queue.TryDequeue(out result))
                 {
                     return false;

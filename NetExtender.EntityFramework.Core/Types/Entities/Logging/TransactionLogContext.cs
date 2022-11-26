@@ -28,7 +28,7 @@ namespace NetExtender.EntityFrameworkCore.Entities.Logging
             Context = context ?? throw new ArgumentNullException(nameof(context));
             StoreChangedEntries();
         }
-        
+
         private void StoreChangedEntries()
         {
             foreach (EntityEntry entry in Context.ChangeTracker.Entries().Where(EntityEntryUtilities.IsChange))
@@ -65,7 +65,7 @@ namespace NetExtender.EntityFrameworkCore.Entities.Logging
             Object? value = type != TransactionLogOperationType.Delete ? entity.CurrentValues.ToObject() : entity.Metadata.FindPrimaryKey()?.Properties
                 .Select(property => entity.Property(property.Name))
                 .ToDictionary(property => property.Metadata.Name, property => property.CurrentValue);
-            
+
             return new TransactionLog
             {
                 Guid = Guid,
@@ -92,12 +92,12 @@ namespace NetExtender.EntityFrameworkCore.Entities.Logging
             {
                 yield return CreateTransactionLog(entity, TransactionLogOperationType.Insert);
             }
-            
+
             foreach (EntityEntry entity in Update)
             {
                 yield return CreateTransactionLog(entity, TransactionLogOperationType.Update);
             }
-            
+
             foreach (TransactionLog entity in Delete)
             {
                 yield return entity;

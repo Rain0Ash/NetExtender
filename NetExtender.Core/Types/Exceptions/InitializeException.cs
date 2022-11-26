@@ -71,7 +71,7 @@ namespace NetExtender.Types.Exceptions
         {
         }
     }
-    
+
     [Serializable]
     public class InvalidInitializationException : InitializeException
     {
@@ -104,7 +104,7 @@ namespace NetExtender.Types.Exceptions
         {
         }
     }
-    
+
     [Serializable]
     public class InitializeException : ArgumentException
     {
@@ -131,7 +131,7 @@ namespace NetExtender.Types.Exceptions
             : base(message, paramName, innerException)
         {
         }
-        
+
         protected InitializeException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

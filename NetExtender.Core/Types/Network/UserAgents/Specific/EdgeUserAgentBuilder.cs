@@ -11,14 +11,14 @@ namespace NetExtender.Types.Network.UserAgents.Specific
     public class EdgeUserAgentBuilder : ChromeUserAgentBuilder
     {
         public new static IUserAgentSpecificBuilder Default { get; } = new EdgeUserAgentBuilder();
-        
+
         protected virtual (String Chrome, String Edge) RandomEdgeVersion()
         {
             Int32 chrome = Random.Next(74, 91);
             return ($"{chrome}.{0}.{Random.Next(1000, 4000)}.{Random.Next(75, 300)}",
                 $"{chrome}.{0}.{Random.Next(100, 999)}.{Random.Next(0, 99)}");
         }
-        
+
         public override String Build(UserAgentArchitecture? architecture, CultureInfo? info)
         {
             String arch = GetArchitecture(architecture);

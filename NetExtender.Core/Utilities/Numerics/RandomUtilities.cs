@@ -49,7 +49,7 @@ namespace NetExtender.Utilities.Numerics
                 GeneratorCache.Generator = value;
             }
         }
-        
+
         public static IRandom Create()
         {
             return Create(RandomType.Default);
@@ -947,7 +947,7 @@ namespace NetExtender.Utilities.Numerics
             TimeSpan span = NextTimeSpan(random, max - min);
             return min.Add(span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<Boolean> RangeChance()
         {
@@ -1135,7 +1135,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return Summary(random, default, max, count);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double[] Summary(this Random random, Int32 min, Int32 max, Int32 count)
         {
@@ -1197,7 +1197,7 @@ namespace NetExtender.Utilities.Numerics
             Array.Sort(values, (first, second) => second.CompareTo(first));
             return values;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double[] Summary<T>(this T random, Int32 count) where T : IRandom
         {
@@ -1249,7 +1249,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 return Array.Empty<Double>();
             }
-            
+
             Double[] values = new Double[count];
 
             UInt64 sum = 0;
@@ -1271,7 +1271,7 @@ namespace NetExtender.Utilities.Numerics
             Array.Sort(values, (first, second) => second.CompareTo(first));
             return values;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal[] Summary(this Random random, Decimal max, Int32 count)
         {
@@ -1285,7 +1285,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             if (min < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(min), min, null);
@@ -1322,7 +1322,7 @@ namespace NetExtender.Utilities.Numerics
             Array.Sort(values, (first, second) => second.CompareTo(first));
             return values;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal[] Summary<T>(this T random, Decimal max, Int32 count) where T : IRandom
         {
@@ -1351,7 +1351,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 return Array.Empty<Decimal>();
             }
-            
+
             Decimal[] values = new Decimal[count];
 
             Decimal sum = 0;
@@ -1446,7 +1446,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             Generator = random;
         }
 

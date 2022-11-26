@@ -17,13 +17,13 @@ namespace NetExtender.Types.Drawing.Colors
         {
             return color.ToColor();
         }
-        
+
         public static implicit operator XYZColor(Color color)
         {
             color.ToXYZ(out Double h, out Double s, out Double v);
             return new XYZColor(h, s, v);
         }
-        
+
         public static Boolean operator ==(XYZColor first, XYZColor second)
         {
             return first.Equals(second);
@@ -41,7 +41,7 @@ namespace NetExtender.Types.Drawing.Colors
                 return ColorType.XYZ;
             }
         }
-        
+
         public Double X { get; init; }
         public Double Y { get; init; }
         public Double Z { get; init; }
@@ -63,7 +63,7 @@ namespace NetExtender.Types.Drawing.Colors
             color = ToColor();
             return true;
         }
-        
+
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(X, Y, Z);
@@ -78,7 +78,7 @@ namespace NetExtender.Types.Drawing.Colors
         {
             return Math.Abs(X - other.X) < Double.Epsilon && Math.Abs(Y - other.Y) < Double.Epsilon && Math.Abs(Z - other.Z) < Double.Epsilon;
         }
-        
+
         public Boolean Equals(IColor? color)
         {
             return color is not null && ToColor(out Color first) && color.ToColor(out Color second) && first.Equals(second);
@@ -88,12 +88,12 @@ namespace NetExtender.Types.Drawing.Colors
         {
             return $"X:{X} Y:{Y} Z:{Z}";
         }
-        
+
         public String ToString(String? format)
         {
             return ToString(format, null);
         }
-        
+
         public String ToString(String? format, IFormatProvider? provider)
         {
             if (String.IsNullOrEmpty(format))

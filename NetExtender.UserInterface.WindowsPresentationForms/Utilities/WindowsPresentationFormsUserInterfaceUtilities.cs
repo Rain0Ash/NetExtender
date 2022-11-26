@@ -15,13 +15,13 @@ namespace NetExtender.Utilities.UserInterface
         {
             SetPrimaryScreenPercentageSize(window, 50);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetHandleScreenPercentageSize(this Window window, Byte percentage)
         {
             SetHandleScreenPercentageSize(window, percentage, percentage);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetPrimaryScreenPercentageSize(this Window window, Byte width, Byte height)
         {
@@ -32,19 +32,19 @@ namespace NetExtender.Utilities.UserInterface
 
             window.SetScreenPercentageSize(ScreenWrapper.PrimaryScreen, width, height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetHandleScreenPercentageSize(this Window window)
         {
             SetHandleScreenPercentageSize(window, 50);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetPrimaryScreenPercentageSize(this Window window, Byte percentage)
         {
             SetPrimaryScreenPercentageSize(window, percentage, percentage);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetHandleScreenPercentageSize(this Window window, Byte width, Byte height)
         {

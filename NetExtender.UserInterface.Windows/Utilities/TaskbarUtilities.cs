@@ -23,7 +23,7 @@ namespace NetExtender.Utilities.UserInterface
         Pause,
         Error
     }
-    
+
     public static class TaskbarUtilities
     {
         [DllImport("user32.dll")]
@@ -39,7 +39,7 @@ namespace NetExtender.Utilities.UserInterface
             public UInt32 uCount;
             public UInt32 dwTimeout;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static FlashInfo GetFlashInfo(IntPtr handle, UInt32 flags, UInt32 count, UInt32 timeout)
         {
@@ -52,16 +52,16 @@ namespace NetExtender.Utilities.UserInterface
                 dwTimeout = timeout
             };
         }
-        
+
         private static ITaskbarList4? Taskbar { get; }
-        
+
         static TaskbarUtilities()
         {
             // ReSharper disable once SuspiciousTypeConversion.Global
             Taskbar = new CTaskbarList() as ITaskbarList4;
             Taskbar?.HrInit();
         }
-        
+
         /// <summary>
         /// Displays or updates a progress bar hosted in a taskbar button of the given window handle 
         /// to show the specific percentage completed of the full operation.
@@ -99,12 +99,12 @@ namespace NetExtender.Utilities.UserInterface
             {
                 return false;
             }
-            
+
             if (handle == IntPtr.Zero)
             {
                 return false;
             }
-            
+
             Taskbar.SetProgressState(handle, state);
             return true;
         }
@@ -116,7 +116,7 @@ namespace NetExtender.Utilities.UserInterface
             {
                 return false;
             }
-            
+
             FlashInfo info = GetFlashInfo(handle, flags.ToUInt32(), count, 0);
             return FlashWindowEx(ref info);
         }
@@ -137,7 +137,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return Notify(handle.Handle);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean StartNotifyState(IntPtr handle)
         {
@@ -149,7 +149,7 @@ namespace NetExtender.Utilities.UserInterface
         {
             return SetProgressState(handle, TaskbarProgressBarState.NoProgress) & Stop(handle);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean SetNotifyStatus(IntPtr handle, TaskbarProgressBarState state)
         {
@@ -187,7 +187,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return Notify(handle.Handle, value, maximum, state);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Notify(IntPtr handle, UInt32 value, TaskbarFlashState state)
         {
@@ -204,7 +204,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return Notify(handle.Handle, value, state);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Notify(IntPtr handle, Double value, TaskbarFlashState state)
         {
@@ -221,7 +221,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return Notify(handle.Handle, value, state);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Notify(IntPtr handle, TaskbarFlashState state)
         {
@@ -238,7 +238,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return Notify(handle.Handle, state);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Start(IntPtr handle)
         {
@@ -250,7 +250,7 @@ namespace NetExtender.Utilities.UserInterface
         {
             return Flash(handle, FlashState.All, count);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Start<T>(this T handle) where T : IUserInterfaceHandle
         {
@@ -298,15 +298,15 @@ namespace NetExtender.Utilities.UserInterface
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         private static extern IntPtr FindWindow(String lpClassName, String? lpWindowName);
-        
+
         [DllImport("user32.dll")]
         private static extern Boolean ShowWindow(IntPtr hwnd, UInt32 nCmdShow);
-        
+
         public static Boolean ShowWindow(IntPtr handle, WindowStateType state)
         {
             return ShowWindow(handle, (UInt32) state);
         }
-        
+
         /// <summary>
         /// Hide or show the Windows taskbar and startmenu.
         /// </summary>

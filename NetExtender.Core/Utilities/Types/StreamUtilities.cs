@@ -34,7 +34,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(stream));
             }
-            
+
             return stream.IsSynchronized() ? stream : Stream.Synchronized(stream);
         }
 
@@ -71,7 +71,7 @@ namespace NetExtender.Utilities.Types
             MemoryMarshal.Write(buffer, ref value);
             stream.Write(buffer);
         }
-        
+
         public static Char ReadChar(this Stream stream)
         {
             return ReadChar(stream, Encoding.UTF8);
@@ -88,9 +88,9 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentException("Stream not support reading");
             }
-            
+
             encoding ??= Encoding.UTF8;
-            
+
             Span<Byte> first = stackalloc Byte[1];
             if (stream.Read(first) != 1)
             {
@@ -98,7 +98,7 @@ namespace NetExtender.Utilities.Types
             }
 
             Span<Char> symbol = stackalloc Char[1];
-            
+
             if (first[0] <= 0x7F)
             {
                 if (encoding.GetChars(first, symbol) != 1)
@@ -110,7 +110,7 @@ namespace NetExtender.Utilities.Types
             }
 
             Int32 remaining = (first[0] & 240) == 240 ? 3 : (first[0] & 224) == 224 ? 2 : (first[0] & 192) == 192 ? 1 : -1;
-            
+
             if (remaining <= 0)
             {
                 throw new InvalidOperationException($"Invalid {encoding.EncodingName} char sequence.");
@@ -150,7 +150,7 @@ namespace NetExtender.Utilities.Types
             }
 
             encoding ??= Encoding.UTF8;
-            
+
             Span<Byte> first = stackalloc Byte[1];
             if (stream.Read(first) != 1)
             {
@@ -158,7 +158,7 @@ namespace NetExtender.Utilities.Types
             }
 
             Span<Char> symbol = stackalloc Char[1];
-            
+
             if (first[0] <= 0x7F)
             {
                 if (encoding.GetChars(first, symbol) != 1)
@@ -170,7 +170,7 @@ namespace NetExtender.Utilities.Types
             }
 
             Int32 remaining = (first[0] & 240) == 240 ? 3 : (first[0] & 224) == 224 ? 2 : (first[0] & 192) == 192 ? 1 : -1;
-            
+
             if (remaining <= 0)
             {
                 return null;
@@ -221,7 +221,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentException("Stream not support reading");
             }
-            
+
             Span<Byte> first = stackalloc Byte[1];
             if (stream.Read(first) != 1)
             {
@@ -234,7 +234,7 @@ namespace NetExtender.Utilities.Types
             }
 
             Int32 remaining = (first[0] & 240) == 240 ? 3 : (first[0] & 224) == 224 ? 2 : (first[0] & 192) == 192 ? 1 : -1;
-            
+
             if (remaining <= 0)
             {
                 throw new InvalidOperationException("Invalid sequence.");
@@ -275,7 +275,7 @@ namespace NetExtender.Utilities.Types
             }
 
             Int32 remaining = (first[0] & 240) == 240 ? 3 : (first[0] & 224) == 224 ? 2 : (first[0] & 192) == 192 ? 1 : -1;
-            
+
             if (remaining <= 0)
             {
                 return null;
@@ -304,13 +304,13 @@ namespace NetExtender.Utilities.Types
                 yield return symbol;
             }
         }
-        
+
 #if NETCOREAPP3_1_OR_GREATER
         public static Rune? TryReadRune(this Stream stream)
         {
             return TryReadChar32(stream);
         }
-        
+
         public static IEnumerable<Rune> ReadRuneSequence(this Stream stream)
         {
             if (stream is null)
@@ -360,7 +360,7 @@ namespace NetExtender.Utilities.Types
         {
             return CopyStreamAsync(input, output, CancellationToken.None);
         }
-        
+
         public static Task CopyStreamAsync(this Stream input, Stream output, CancellationToken token)
         {
             return CopyStreamAsync(input, output, 0, token);
@@ -370,7 +370,7 @@ namespace NetExtender.Utilities.Types
         {
             return CopyStreamAsync(input, output, 0, progress, token);
         }
-        
+
         public static Task CopyStreamAsync(this Stream input, Stream output, Int32? position)
         {
             return CopyStreamAsync(input, output, position, CancellationToken.None);
@@ -380,7 +380,7 @@ namespace NetExtender.Utilities.Types
         {
             return CopyStreamAsync(input, output, position, null, token);
         }
-        
+
         public static Task CopyStreamAsync(this Stream input, Stream output, Int32? position, IProgress<Int64>? progress)
         {
             return CopyStreamAsync(input, output, position, progress, CancellationToken.None);
@@ -492,7 +492,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(stream));
             }
-            
+
             return new BandwidthStream(stream, speed, size);
         }
 
@@ -527,7 +527,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(stream));
             }
-            
+
             return new BandwidthStream<T>(stream, speed, size);
         }
 
@@ -584,7 +584,7 @@ namespace NetExtender.Utilities.Types
             CopyStream(input, output);
             return output;
         }
-        
+
         public static Task<MemoryStream> ToStreamAsync(this Byte[] bytes)
         {
             return Task.FromResult(new MemoryStream(bytes));
@@ -675,7 +675,7 @@ namespace NetExtender.Utilities.Types
             StreamReader reader = new StreamReader(stream, encoding ?? Encoding.UTF8);
             return reader.ReadToEndAsync();
         }
-        
+
         public static Boolean TryPosition(this Stream stream, out Int64 position)
         {
             if (stream is null)
@@ -690,7 +690,7 @@ namespace NetExtender.Utilities.Types
                     position = 0;
                     return false;
                 }
-                
+
                 position = stream.Position;
                 return true;
             }
@@ -705,7 +705,7 @@ namespace NetExtender.Utilities.Types
         {
             return ResetPosition(stream);
         }
-        
+
         public static T SetPosition<T>(this T stream, Int64 position) where T : Stream
         {
             if (stream is null)
@@ -730,7 +730,7 @@ namespace NetExtender.Utilities.Types
                 {
                     return false;
                 }
-                
+
                 stream.Position = position;
                 return true;
             }
@@ -739,17 +739,17 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static T ResetPosition<T>(this T stream) where T : Stream
         {
             return SetPosition(stream, 0);
         }
-        
+
         public static T TryResetPosition<T>(this T stream) where T : Stream
         {
             return TryResetPosition(stream, out _);
         }
-        
+
         public static T TryResetPosition<T>(this T stream, out Boolean successful) where T : Stream
         {
             successful = TrySetPosition(stream, 0);
@@ -790,7 +790,7 @@ namespace NetExtender.Utilities.Types
                 {
                     return false;
                 }
-                
+
                 stream.Seek(offset, origin);
                 return true;
             }
@@ -955,7 +955,7 @@ namespace NetExtender.Utilities.Types
         {
             return ToBinaryWriter(stream, encoding, true);
         }
-        
+
         /// <summary>
         /// Wraps <paramref name="stream"/> with <see cref="BinaryWriter"/>.
         /// </summary>
@@ -965,7 +965,7 @@ namespace NetExtender.Utilities.Types
         {
             return ToBinaryWriter(stream, null, leaveOpen);
         }
-        
+
         /// <summary>
         /// Wraps <paramref name="stream"/> with <see cref="BinaryWriter"/>.
         /// </summary>
@@ -1011,7 +1011,7 @@ namespace NetExtender.Utilities.Types
             using StreamReader reader = stream.ToStreamReader(encoding, true);
             return reader.ReadToEnd();
         }
-        
+
         /// <summary>
         /// Returns content of the stream as a string.
         /// </summary>
@@ -1085,7 +1085,7 @@ namespace NetExtender.Utilities.Types
                 yield return line;
             }
         }
-        
+
         public static void Write(this Stream stream, ReadOnlySpan<Char> buffer)
         {
             Write(stream, buffer, null);
@@ -1117,7 +1117,7 @@ namespace NetExtender.Utilities.Types
             using StreamWriter writer = stream.ToStreamWriter(encoding, true);
             writer.Write(value);
         }
-        
+
         public static void Write(this Stream stream, StringBuilder? value)
         {
             Write(stream, value, null);
@@ -1133,7 +1133,7 @@ namespace NetExtender.Utilities.Types
             using StreamWriter writer = stream.ToStreamWriter(encoding, true);
             writer.Write(value);
         }
-        
+
         public static void WriteLine(this Stream stream)
         {
             WriteLine(stream, (Encoding?) null);
@@ -1239,7 +1239,7 @@ namespace NetExtender.Utilities.Types
             await using StreamWriter writer = stream.ToStreamWriter(encoding, true);
             await writer.WriteAsync(value);
         }
-        
+
         public static Task WriteAsync(this Stream stream, StringBuilder? value)
         {
             return WriteAsync(stream, value, null, CancellationToken.None);
@@ -1265,7 +1265,7 @@ namespace NetExtender.Utilities.Types
             await using StreamWriter writer = stream.ToStreamWriter(encoding, true);
             await writer.WriteAsync(value, token);
         }
-        
+
         public static Task WriteLineAsync(this Stream stream)
         {
             return WriteLineAsync(stream, (Encoding?) null);
@@ -1323,7 +1323,7 @@ namespace NetExtender.Utilities.Types
             await using StreamWriter writer = stream.ToStreamWriter(encoding, true);
             await writer.WriteLineAsync(value);
         }
-        
+
         public static Task WriteLineAsync(this Stream stream, StringBuilder? value)
         {
             return WriteLineAsync(stream, value, null, CancellationToken.None);
@@ -1398,7 +1398,7 @@ namespace NetExtender.Utilities.Types
             private Stream Stream { get; }
             private Int64 Position { get; }
             private Boolean Safe { get; }
-            
+
             public StreamPositionFreeze(Stream stream, Int64 position, Boolean safe)
             {
                 Stream = stream ?? throw new ArgumentNullException(nameof(stream));

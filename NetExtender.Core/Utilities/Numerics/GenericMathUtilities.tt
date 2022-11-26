@@ -75,7 +75,7 @@ namespace NetExtender.Utilities.Numerics
     {
         return type != nameof(Char);
     }
-    
+
     static Boolean IsSmallType(String type)
     {
         return type == nameof(Char) || type == nameof(Byte) || type == nameof(SByte) || type == nameof(Int16) || type == nameof(UInt16);
@@ -85,12 +85,12 @@ namespace NetExtender.Utilities.Numerics
     {
         return type == nameof(Char) || type == nameof(Byte) || type == nameof(UInt16) || type == nameof(UInt32) || type == nameof(UInt64);
     }
-    
+
     Boolean IsIntType(String type)
     {
         return type == nameof(Char) || type == nameof(SByte) || type == nameof(Byte) || type == nameof(Int16) || type == nameof(UInt16) || type == nameof(Int32) || type == nameof(UInt32) || type == nameof(Int64) || type == nameof(UInt64) || type == biginteger;
     }
-    
+
     String ToLessType(String type)
     {
         return type switch
@@ -109,7 +109,7 @@ namespace NetExtender.Utilities.Numerics
             _ => type
             };
     }
-    
+
     String ToGreaterType(String type, String second)
     {
         return type switch
@@ -254,7 +254,7 @@ namespace NetExtender.Utilities.Numerics
                 WriteLine($"\t\t\t\t{type} value = {expression};");
                 WriteLine($"\t\t\t\treturn Unsafe.As<{type}, T>(ref value);");
             }
-            
+
             WriteLine("\t\t\t}");
             WriteLine(String.Empty);
         }
@@ -271,9 +271,9 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t{");
         WriteLine("\t\t\treturn value <= compare ? value : compare;");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static void {nameof(Min)}(ref {type} max, ref {type} min)");
         WriteLine("\t\t{");
@@ -283,12 +283,12 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
     }
-    
+
     void Min()
     {
         ForEach(types.Append(biginteger), MinImplementation);
     }
-    
+
     void MaxImplementation(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -296,9 +296,9 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t{");
         WriteLine("\t\t\treturn value >= compare ? value : compare;");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static void {nameof(Max)}(ref {type} max, ref {type} min)");
         WriteLine("\t\t{");
@@ -308,7 +308,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
     }
-    
+
     void Max()
     {
         ForEach(types.Append(biginteger), MaxImplementation);
@@ -338,9 +338,9 @@ namespace NetExtender.Utilities.Numerics
 
             WriteLine(String.Empty);
         }
-        
+
         WriteLine("\t\t\treturn Factorial((UInt32)value);");
-        
+
         WriteLine("\t\t}");
     }
 
@@ -358,7 +358,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t}");
 
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(Range)}({type} start, {type} stop)");
         WriteLine("\t\t{");
@@ -366,14 +366,14 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t}");
 
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(Range)}({type} start, {type} stop, {type} step)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\tif ({(type == nameof(Single) || type == nameof(Double) ? $"{nameof(Math)}.Abs(step) < {type}.Epsilon" : "step == 0")})");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\tthrow new ArgumentException(\"Step cannot be equals zero.\");");
         WriteLine("\t\t\t}");
-        
+
         WriteLine(String.Empty);
 
         if (IsUnsignedType(type))
@@ -427,12 +427,12 @@ namespace NetExtender.Utilities.Numerics
 
         WriteLine("\t\t}");
     }
-    
+
     void Range()
     {
         ForEach(types.Where(NotChar).Where(IsIntType), RangeImplementation);
     }
-    
+
     void RangeIncludeImplementation(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -442,7 +442,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t}");
 
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(RangeInclude)}({type} start, {type} stop)");
         WriteLine("\t\t{");
@@ -450,14 +450,14 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t}");
 
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\tpublic static IEnumerable<{type}> {nameof(RangeInclude)}({type} start, {type} stop, {type} step)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\tif ({(type == nameof(Single) || type == nameof(Double) ? $"{nameof(Math)}.Abs(step) < {type}.Epsilon" : "step == 0")})");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\tthrow new ArgumentException(\"Step cannot be equals zero.\");");
         WriteLine("\t\t\t}");
-        
+
         WriteLine(String.Empty);
 
         if (IsUnsignedType(type))
@@ -502,7 +502,7 @@ namespace NetExtender.Utilities.Numerics
 
         WriteLine("\t\t}");
     }
-    
+
     void RangeInclude()
     {
         ForEach(types.Where(NotChar).Where(IsIntType), RangeIncludeImplementation);
@@ -515,41 +515,41 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Clamp)}(value);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(ToRange)}(this {type} value, {nameof(Boolean)} looped)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Clamp)}(value, looped);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(ToRange)}(this {type} value, {type} maximum)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Clamp)}(value, maximum);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(ToRange)}(this {type} value, {type} maximum, {nameof(Boolean)} looped)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Clamp)}(value, maximum, looped);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(ToRange)}(this {type} value, {type} minimum, {type} maximum)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Clamp)}(value, minimum, maximum);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(ToRange)}(this {type} value, {type} minimum, {type} maximum, {nameof(Boolean)} looped)");
         WriteLine("\t\t{");
@@ -569,41 +569,41 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(InRange)}(value, MathPositionType.Both);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, MathPositionType comparison)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(InRange)}(value, default, {type}.MaxValue, comparison);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, {type} maximum)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(InRange)}(value, maximum, MathPositionType.Both);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, {type} maximum, MathPositionType comparison)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(InRange)}(value, default, maximum, comparison);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, {type} minimum, {type} maximum)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(InRange)}(value, minimum, maximum, MathPositionType.Both);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(InRange)}(this {type} value, {type} minimum, {type} maximum, MathPositionType comparison)");
         WriteLine("\t\t{");
@@ -629,52 +629,52 @@ namespace NetExtender.Utilities.Numerics
         {
             WriteLine("\t\t[SuppressMessage(\"ReSharper\", \"UnusedParameter.Global\")]");
         }
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(IsPositive)}(this {type} value)");
         WriteLine("\t\t{");
         WriteLine(IsUnsignedType(type) ? "\t\t\treturn true;" : "\t\t\treturn value >= 0;");
         WriteLine("\t\t}");
     }
-    
+
     void IsPositive()
     {
         ForEach(types.Append(biginteger), IsPositiveImplementation);
     }
-    
+
     void IsNegativeImplementation(String type)
     {
         if (IsUnsignedType(type))
         {
             WriteLine("\t\t[SuppressMessage(\"ReSharper\", \"UnusedParameter.Global\")]");
         }
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(IsNegative)}(this {type} value)");
         WriteLine("\t\t{");
         WriteLine(IsUnsignedType(type) ? "\t\t\treturn false;" : "\t\t\treturn value < 0;");
         WriteLine("\t\t}");
     }
-    
+
     void IsNegative()
     {
         ForEach(types.Append(biginteger), IsNegativeImplementation);
     }
-    
+
     void ToSignImplementation(String type)
     {
         if (IsUnsignedType(type))
         {
             WriteLine("\t\t[SuppressMessage(\"ReSharper\", \"UnusedParameter.Global\")]");
         }
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {nameof(Char)} {nameof(ToSign)}(this {type} value)");
         WriteLine("\t\t{");
         WriteLine(IsUnsignedType(type) ? "\t\t\treturn '+';" : "\t\t\treturn value >= 0 ? '+' : '-';");
         WriteLine("\t\t}");
     }
-    
+
     void ToSign()
     {
         ForEach(types.Append(biginteger), ToSignImplementation);
@@ -683,37 +683,37 @@ namespace NetExtender.Utilities.Numerics
     void RoundToMultiplierImplementation(String type)
     {
         Boolean integer = IsIntType(type) || type == nameof(Decimal);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tprivate static {type} RoundUpToMultiplierOriginal({type} value, {type} multiplier)");
         WriteLine("\t\t{");
         WriteLine("\t\t\treturn RoundUpToMultiplierOriginal(value, multiplier, value % multiplier);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tprivate static {type} RoundUpToMultiplierOriginal({type} value, {type} multiplier, {(IsSmallType(type) ? nameof(Int32) : type)} remainder)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {(integer ? "remainder == 0" : "IsEpsilon(remainder)")} ? value : {(IsSmallType(type) ? $"({type})(multiplier - remainder + value)" : "multiplier - remainder + value")};");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\tpublic static {type} RoundUpToMultiplier({type} value, {type} multiplier = 10)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\tif ({(integer ? "multiplier == 0" : "IsEpsilon(multiplier)")})");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\tthrow new ArgumentException(nameof(multiplier));");
         WriteLine("\t\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\t\tif ({(integer ? "value == 0" : "IsEpsilon(value)")} || {(integer ? $"value == multiplier || multiplier == 1{(!IsUnsignedType(type) ? " || multiplier == -1" : String.Empty)}" : "IsEpsilon(value - multiplier)")})");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\treturn value;");
         WriteLine("\t\t\t}");
-        
+
         WriteLine(String.Empty);
 
         if (!IsUnsignedType(type))
@@ -722,7 +722,7 @@ namespace NetExtender.Utilities.Numerics
             WriteLine("\t\t\t{");
             WriteLine("\t\t\t\treturn RoundDownToMultiplierOriginal(value, multiplier.Abs());");
             WriteLine("\t\t\t}");
-            
+
             WriteLine(String.Empty);
         }
 
@@ -731,14 +731,14 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t}");
 
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tprivate static {type} RoundDownToMultiplierOriginal({type} value, {type} multiplier)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\t{(IsSmallType(type) ? $"{nameof(Int32)}" : $"{type}")} remainder = value % multiplier;");
         WriteLine($"\t\t\treturn {(integer ? "remainder == 0" : "IsEpsilon(remainder)")} ? value : {(IsSmallType(type) ? $"({type})(value - remainder)" : "value - remainder")};");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
 
         WriteLine($"\t\tpublic static {type} RoundDownToMultiplier({type} value, {type} multiplier = 10)");
@@ -747,14 +747,14 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\tthrow new ArgumentException(nameof(multiplier));");
         WriteLine("\t\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\t\tif ({(integer ? "value == 0" : "IsEpsilon(value)")} || {(integer ? $"value == multiplier || multiplier == 1{(!IsUnsignedType(type) ? " || multiplier == -1" : String.Empty)}" : "IsEpsilon(value - multiplier)")})");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\treturn value;");
         WriteLine("\t\t\t}");
-        
+
         WriteLine(String.Empty);
 
         if (!IsUnsignedType(type))
@@ -765,42 +765,42 @@ namespace NetExtender.Utilities.Numerics
             WriteLine("\t\t\t\t{");
             WriteLine("\t\t\t\t\treturn 0;");
             WriteLine("\t\t\t\t}");
-            
+
             WriteLine(String.Empty);
-            
+
             WriteLine($"\t\t\t\tmultiplier = {(IsSmallType(type) ? $"({type})(-multiplier)" : "-multiplier")};");
             WriteLine("\t\t\t}");
-            
+
             WriteLine(String.Empty);
-            
+
             WriteLine("\t\t\tif (value < 0 || multiplier < 0)");
             WriteLine("\t\t\t{");
             WriteLine($"\t\t\t\treturn {(IsSmallType(type) ? $"({type})(-RoundUpToMultiplierOriginal(-value, multiplier))" : "-RoundUpToMultiplierOriginal(-value, multiplier)")};");
             WriteLine("\t\t\t}");
-            
+
             WriteLine(String.Empty);
         }
-        
+
         WriteLine("\t\t\treturn RoundDownToMultiplierOriginal(value, multiplier);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\tpublic static {type} RoundBankingToMultiplier({type} value, {type} multiplier = 10)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\tif ({(integer ? "multiplier == 0" : "IsEpsilon(multiplier)")})");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\tthrow new ArgumentException(nameof(multiplier));");
         WriteLine("\t\t\t}");
-        
-        
+
+
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\t\tif ({(integer ? "value == 0" : "IsEpsilon(value)")} || {(integer ? $"value == multiplier || multiplier == 1{(!IsUnsignedType(type) ? " || multiplier == -1" : String.Empty)}" : "IsEpsilon(value - multiplier)")})");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\treturn value;");
         WriteLine("\t\t\t}");
-        
+
         WriteLine(String.Empty);
 
         if (IsUnsignedType(type))
@@ -811,9 +811,9 @@ namespace NetExtender.Utilities.Numerics
         {
             WriteLine($"\t\t\t{(IsSmallType(type) ? nameof(Int32) : type)} remainder = value % multiplier;");
             WriteLine($"\t\t\t{(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} average = multiplier / 2{(type == nameof(Decimal) ? "M" : "D")};");
-        
+
             WriteLine(String.Empty);
-            
+
             WriteLine("\t\t\tif (value > 0)");
             WriteLine("\t\t\t{");
             WriteLine("\t\t\t\tif (multiplier > 0)");
@@ -822,26 +822,26 @@ namespace NetExtender.Utilities.Numerics
             WriteLine("\t\t\t\t}");
 
             WriteLine(String.Empty);
-        
+
             WriteLine("\t\t\t\treturn remainder <= -average ? RoundUpToMultiplier(value, multiplier) : RoundDownToMultiplier(value, multiplier);");
             WriteLine("\t\t\t}");
-        
+
             WriteLine(String.Empty);
-        
+
             WriteLine("\t\t\tif (multiplier > 0)");
             WriteLine("\t\t\t{");
             WriteLine("\t\t\t\treturn remainder >= -average ? RoundUpToMultiplier(value, multiplier) : RoundDownToMultiplier(value, multiplier);");
             WriteLine("\t\t\t}");
-        
+
             WriteLine(String.Empty);
-        
+
             WriteLine("\t\t\treturn remainder <= average ? RoundUpToMultiplierOriginal(value, multiplier) : RoundDownToMultiplierOriginal(value, multiplier);");
         }
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
-        
+
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} RoundToZeroMultiplier({type} value, {type} multiplier)");
         WriteLine("\t\t{");
@@ -856,15 +856,15 @@ namespace NetExtender.Utilities.Numerics
             WriteLine("\t\t\t{");
             WriteLine($"\t\t\t\treturn multiplier > 0 ? RoundDownToMultiplier(value, multiplier) : RoundDownToMultiplier(value, {(IsSmallType(type) ? $"({type})(-multiplier)" : "-multiplier")});");
             WriteLine("\t\t\t}");
-            
+
             WriteLine(String.Empty);
-            
+
             WriteLine($"\t\t\treturn multiplier > 0 ? RoundDownToMultiplier(value, {(IsSmallType(type) ? $"({type})(-multiplier)" : "-multiplier")}) : RoundDownToMultiplier(value, multiplier);");
         }
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} RoundAwayFromZeroToMultiplier({type} value, {type} multiplier)");
         WriteLine("\t\t{");
@@ -879,15 +879,15 @@ namespace NetExtender.Utilities.Numerics
             WriteLine("\t\t\t{");
             WriteLine($"\t\t\t\treturn multiplier > 0 ? RoundUpToMultiplier(value, multiplier) : RoundUpToMultiplier(value, {(IsSmallType(type) ? $"({type})(-multiplier)" : "-multiplier")});");
             WriteLine("\t\t\t}");
-            
+
             WriteLine(String.Empty);
-            
+
             WriteLine($"\t\t\treturn multiplier > 0 ? RoundUpToMultiplier(value, {(IsSmallType(type) ? $"({type})(-multiplier)" : "-multiplier")}) : RoundUpToMultiplier(value, multiplier);");
         }
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\tpublic static {type} {nameof(RoundToMultiplier)}(this {type} value, {type} multiplier, MidpointRounding rounding = MidpointRounding.ToEven)");
         WriteLine("\t\t{");
         WriteLine("\t\t\treturn rounding switch");
@@ -901,7 +901,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t};");
         WriteLine("\t\t}");
     }
-    
+
     void RoundToMultiplier()
     {
         ForEach(types.Where(NotChar), RoundToMultiplierImplementation);
@@ -921,19 +921,19 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t}");
 
         WriteLine(String.Empty);
-        
+
         if (!IsUnsignedType(type))
         {
             WriteLine($"\t\t/// <inheritdoc cref=\"Math.Abs({type})\"/>");
         }
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Abs)}(this {type} value)");
         WriteLine("\t\t{");
         WriteLine(!IsUnsignedType(type) ? "\t\t\treturn Math.Abs(value);" : "\t\t\treturn value;");
         WriteLine("\t\t}");
     }
-    
+
     void Abs()
     {
         ForEach(types, AbsImplementation);
@@ -943,7 +943,7 @@ namespace NetExtender.Utilities.Numerics
     {
         ForEach(types.Where(NotChar), MathematicalModuloImplementation);
     }
-    
+
     void MathematicalModuloImplementation(String type)
     {
         if (IsUnsignedType(type))
@@ -955,7 +955,7 @@ namespace NetExtender.Utilities.Numerics
             WriteLine("\t\t}");
             return;
         }
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(MathematicalModulo)}(this {type} value, {type} modulo)");
         WriteLine("\t\t{");
@@ -975,15 +975,15 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t\t{");
         WriteLine("\t\t\t\t\tret *= value;");
         WriteLine("\t\t\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t\t\tvalue *= value;");
         WriteLine("\t\t\t\tpow >>= 1;");
         WriteLine("\t\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t\treturn ret;");
         WriteLine("\t\t}");
     }
@@ -1004,7 +1004,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
     }
-    
+
     void RoundUpToPowerOf2()
     {
         ForEach(types.Where(NotChar).Where(IsIntType), RoundUpToPowerOf2Implementation);
@@ -1019,12 +1019,12 @@ namespace NetExtender.Utilities.Numerics
         WriteLine($"\t\t\treturn {(type == nameof(Single) ? $"{nameof(Math)}F" : nameof(Math))}.Sqrt(value);");
         WriteLine("\t\t}");
     }
-    
+
     void Sqrt()
     {
         ForEach(types.Where(type => type != nameof(Decimal) && type != nameof(Char)), SqrtImplementation);
     }
-    
+
     void LogImplementation(String type)
     {
         WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
@@ -1033,16 +1033,16 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {(type == nameof(Single) ? $"{nameof(Math)}F" : nameof(Math))}.Log(value);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {(type == nameof(Single) ? nameof(Single) : nameof(Double))} {nameof(Log)}(this {type} value, {(type == nameof(Single) ? nameof(Single) : nameof(Double))} @base)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {(type == nameof(Single) ? $"{nameof(Math)}F" : nameof(Math))}.Log(value, @base);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
 
         if (type == nameof(Single))
@@ -1053,7 +1053,7 @@ namespace NetExtender.Utilities.Numerics
             WriteLine("\t\t{");
             WriteLine($"\t\t\treturn {nameof(Math)}.Log(value, @base);");
             WriteLine("\t\t}");
-            
+
             WriteLine(String.Empty);
         }
 
@@ -1063,7 +1063,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {(type == nameof(Single) ? $"{nameof(Math)}F" : nameof(Math))}.Log2(value);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
 
         if (IsIntType(type))
@@ -1083,12 +1083,12 @@ namespace NetExtender.Utilities.Numerics
                 WriteLine($"\t\t\t\treturn BitOperations.Log2(({ToUnsignedType(type)}) value);");
                 WriteLine("\t\t\t}");
             }
-            
+
             WriteLine("\t\t}");
-        
+
             WriteLine(String.Empty);
         }
-        
+
         WriteLine("\t\t/// <inheritdoc cref=\"Math.Sqrt\"/>");
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {(type == nameof(Single) ? nameof(Single) : nameof(Double))} {nameof(Log)}10(this {type} value)");
@@ -1096,7 +1096,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine($"\t\t\treturn {(type == nameof(Single) ? $"{nameof(Math)}F" : nameof(Math))}.Log10(value);");
         WriteLine("\t\t}");
     }
-    
+
     void Log()
     {
         ForEach(types.Where(NotChar).Where(IsIntType), LogImplementation);
@@ -1109,41 +1109,41 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Clamp)}(value, default({type}));");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Clamp)}(this {type} value, {nameof(Boolean)} looped)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Clamp)}(value, default, {type}.MaxValue, looped);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Clamp)}(this {type} value, {type} maximum)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Clamp)}(value, default, maximum);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Clamp)}(this {type} value, {type} maximum, {nameof(Boolean)} looped)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Clamp)}(value, default, maximum, looped);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Clamp)}(this {type} value, {type} minimum, {type} maximum)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {(type == nameof(Char) ? $"({nameof(Char)}) " : String.Empty)}{nameof(Math)}.{nameof(Clamp)}(value, minimum, maximum);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Clamp)}(this {type} value, {type} minimum, {type} maximum, {nameof(Boolean)} looped)");
         WriteLine("\t\t{");
@@ -1151,16 +1151,16 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\treturn looped ? minimum : maximum;");
         WriteLine("\t\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t\tif (value < minimum)");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\treturn looped ? maximum : minimum;");
         WriteLine("\t\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t\treturn value;");
         WriteLine("\t\t}");
     }
@@ -1169,7 +1169,7 @@ namespace NetExtender.Utilities.Numerics
     {
         ForEach(types, ClampImplementation);
     }
-    
+
     void DifferenceImplementation(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -1188,15 +1188,15 @@ namespace NetExtender.Utilities.Numerics
             WriteLine($"\t\t\t\treturn {(IsSmallType(type) ? $"({ToUnsignedType(type)}) (value >= between ? ({ToUnsignedType(type)}) value - ({ToUnsignedType(type)}) between : ({ToUnsignedType(type)}) between - ({ToUnsignedType(type)}) value)" : $"value >= between ? ({ToUnsignedType(type)}) value - ({ToUnsignedType(type)}) between : ({ToUnsignedType(type)}) between - ({ToUnsignedType(type)}) value")};");
             WriteLine("\t\t\t}");
         }
-        
+
         WriteLine("\t\t}");
     }
-    
+
     void Difference()
     {
         ForEach(types.Append(biginteger), DifferenceImplementation);
     }
-    
+
     void DiscreteDifferenceImplementation(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -1205,12 +1205,12 @@ namespace NetExtender.Utilities.Numerics
         WriteLine($"\t\t\treturn {nameof(Difference)}(value, between);");
         WriteLine("\t\t}");
     }
-    
+
     void DiscreteDifference()
     {
         ForEach(types.Where(IsIntType), DiscreteDifferenceImplementation);
     }
-    
+
     void DiscreteIncludeDifferenceImplementation(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -1218,9 +1218,9 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(DiscreteIncludeDifference)}(value, between, {ToUnsignedType(type)}.MaxValue);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {ToUnsignedType(type)} {nameof(DiscreteIncludeDifference)}(this {type} value, {type} between, {ToUnsignedType(type)} overflow)");
         WriteLine("\t\t{");
@@ -1228,12 +1228,12 @@ namespace NetExtender.Utilities.Numerics
         WriteLine($"\t\t\treturn {(IsSmallType(type) ? $"difference < {ToUnsignedType(type)}.MaxValue ? ({ToUnsignedType(type)}) (difference + 1) : overflow" : $"difference < {ToUnsignedType(type)}.MaxValue ? difference + 1 : overflow")};");
         WriteLine("\t\t}");
     }
-    
+
     void DiscreteIncludeDifference()
     {
         ForEach(types.Where(IsIntType), DiscreteIncludeDifferenceImplementation);
     }
-    
+
     void ToRadiansImplementation(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -1242,7 +1242,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine($"\t\t\treturn ToRadians(({nameof(Double)}) value);");
         WriteLine("\t\t}");
     }
-    
+
     void ToRadians()
     {
         ForEach(types.Where(type => IsIntType(type) && type != nameof(Char)), ToRadiansImplementation);
@@ -1255,25 +1255,25 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t{");
         WriteLine($"\t\t\tvalue = {nameof(ToNonZero)}(value);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static void {nameof(ToNonZero)}(ref {type} value, {type} alternate)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\tvalue = {nameof(ToNonZero)}(value, alternate);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(ToNonZero)}(this {type} value)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(ToNonZero)}(value, {(IsSmallType(type) ? $"({type}) " : String.Empty)}1);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(ToNonZero)}(this {type} value, {type} alternate)");
         WriteLine("\t\t{");
@@ -1285,15 +1285,15 @@ namespace NetExtender.Utilities.Numerics
         {
             WriteLine("\t\t\treturn IsEpsilon(value) ? alternate : value;");
         }
-        
+
         WriteLine("\t\t}");
     }
-    
+
     void ToNonZero()
     {
         ForEach(types.Where(NotChar), ToNonZeroImplementation);
     }
-    
+
     void ToNonNegativeImplementation(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -1304,9 +1304,9 @@ namespace NetExtender.Utilities.Numerics
             WriteLine($"\t\t\tvalue = {nameof(ToNonNegative)}(value);");
         }
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static void {nameof(ToNonNegative)}(ref {type} value, {type} alternate)");
         WriteLine("\t\t{");
@@ -1315,24 +1315,24 @@ namespace NetExtender.Utilities.Numerics
             WriteLine($"\t\t\tvalue = {nameof(ToNonNegative)}(value, alternate);");
         }
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(ToNonNegative)}(this {type} value)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {(IsUnsignedType(type) ? "value" : $"value < 0 ? {(IsSmallType(type) ? $"({type}) " : String.Empty)}0 : value")};");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(ToNonNegative)}(this {type} value, {type} alternate)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {(IsUnsignedType(type) ? "value" : "value < 0 ? alternate : value")};");
         WriteLine("\t\t}");
     }
-    
+
     void ToNonNegative()
     {
         ForEach(types.Where(NotChar), ToNonNegativeImplementation);
@@ -1354,21 +1354,21 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t\tsum += value;");
         WriteLine("\t\t\t\t++count;");
         WriteLine("\t\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t\tif (count == 0 || count > sum)");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\treturn 0;");
         WriteLine("\t\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         Boolean remove = type == nameof(Int64) || type == nameof(UInt64) || type == nameof(Double) || type == nameof(Decimal) || type == biginteger;
         WriteLine($"\t\t\treturn {(remove ? "sum / count" : $"({type})(sum / count)")};");
         WriteLine("\t\t}");
     }
-    
+
     void Mean()
     {
         ForEach(types.Where(NotChar).Append(biginteger), MeanImplementation);
@@ -1382,7 +1382,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\tthrow new ArgumentOutOfRangeException(nameof(@base), @\"Base out of range\");");
         WriteLine("\t\t\t}");
-        
+
         WriteLine(String.Empty);
 
         if (IsUnsignedType(type))
@@ -1398,16 +1398,16 @@ namespace NetExtender.Utilities.Numerics
             WriteLine("\t\t\t{");
             WriteLine("\t\t\t\treturn \"0\";");
             WriteLine("\t\t\t}");
-            
+
             WriteLine(String.Empty);
-            
+
             WriteLine($"\t\t\t{nameof(Boolean)} negative = value < 0;");
             WriteLine("\t\t\tif (negative)");
             WriteLine("\t\t\t{");
             WriteLine("\t\t\t\tAbs(ref value);");
             WriteLine("\t\t\t}");
         }
-        
+
         WriteLine(String.Empty);
 
         if (type != biginteger)
@@ -1420,7 +1420,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine($"\t\t\tSpan<{nameof(Char)}> buffer = stackalloc {nameof(Char)}[max];");
 
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t\tdo");
         WriteLine("\t\t\t{");
         WriteLine($"\t\t\t\t{(IsSmallType(type) ? $"{nameof(Int32)}" : $"{type}")} number = value % @base;");
@@ -1428,11 +1428,11 @@ namespace NetExtender.Utilities.Numerics
         WriteLine(String.Empty);
         WriteLine($"\t\t\t\tvalue /= {(type == nameof(SByte) ? $"({nameof(SByte)})" : String.Empty)}@base;");
         WriteLine("\t\t\t} while (value > 0);");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\t\treturn {(IsUnsignedType(type) ? String.Empty : "$\"{(negative ? \"-\" : String.Empty)}\" + ")}new {nameof(String)}(buffer.Slice(i, max - i));");
-        
+
         WriteLine("\t\t}");
     }
 
@@ -1442,7 +1442,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\tprivate const Byte MaxBase = 36;");
         WriteLine("\t\tprivate const Int32 ZeroChar = '0';");
         WriteLine("\t\tprivate const Int32 AlphabetStart = '9' - MinBase;");
-        
+
         WriteLine(String.Empty);
 
         ForEach(types.Where(type => NotChar(type) && IsIntType(type)).Append(biginteger), ToBaseImplementation);
@@ -1460,10 +1460,10 @@ namespace NetExtender.Utilities.Numerics
             WriteLine($"\t\t\t\treturn source.Aggregate{(type != nameof(Int32) ? $"<{type}, {type}>" : String.Empty)}(0, (current, value) => {(IsSmallType(type) ? $"({type}) (current + value)" : "current + value")});");
             WriteLine("\t\t\t}");
             WriteLine("\t\t}");
-        
+
             WriteLine(String.Empty);
         }
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this IEnumerable<{type}> source, {type} overflow)");
         WriteLine("\t\t{");
@@ -1477,7 +1477,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
     }
-    
+
     void Sum()
     {
         ForEach(types.Where(NotChar).Append(biginteger).Append(complex), SumImplementation);
@@ -1522,9 +1522,9 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t\treturn result;");
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this IEnumerable<{type}> source, {type} overflow)");
         WriteLine("\t\t{");
@@ -1543,7 +1543,7 @@ namespace NetExtender.Utilities.Numerics
     {
         ForEach(types.Where(NotChar), MultiplyImplementation);
     }
-    
+
     void AverageImplementation(String type)
     {
         WriteLine("\t\t[SuppressMessage(\"ReSharper\", \"SuspiciousTypeConversion.Global\")]");
@@ -1554,13 +1554,13 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\tthrow new ArgumentNullException(nameof(source));");
         WriteLine("\t\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\t\treturn source.Select(item => ({nameof(Double)}) item).Average();");
         WriteLine("\t\t}");
     }
-    
+
     void Average()
     {
         ForEach(types.Where(type => IsSmallType(type) || IsUnsignedType(type)).Where(NotChar), AverageImplementation);
@@ -1574,32 +1574,32 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\tthrow new ArgumentNullException(nameof(source));");
         WriteLine("\t\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\t\tICollection<{type}> values = source as ICollection<{type}> ?? source.ToList();");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t\tif (values.Count <= 0)");
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\treturn 0;");
         WriteLine("\t\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\t\t{(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} mean = values.Average();");
         WriteLine($"\t\t\t{(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} sum = values.Sum(x => (x - mean).Pow(2));");
         WriteLine("\t\t\treturn sum / values.Count;");
-        
+
         WriteLine("\t\t}");
     }
-    
+
     void Variance()
     {
         ForEach(types.Where(NotChar), VarianceImplementation);
     }
-    
+
     void StandardDeviationImplementation(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -1609,13 +1609,13 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\tthrow new ArgumentNullException(nameof(source));");
         WriteLine("\t\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t\treturn source.Variance().Sqrt();");
         WriteLine("\t\t}");
     }
-    
+
     void StandardDeviation()
     {
         ForEach(types.Where(NotChar), StandardDeviationImplementation, false);

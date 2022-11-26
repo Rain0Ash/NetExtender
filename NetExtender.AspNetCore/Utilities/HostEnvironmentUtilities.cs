@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return !environment.IsStaging();
         }
-        
+
         public static IHostEnvironment IsStaging(this IHostEnvironment environment, Action? action)
         {
             if (environment is null)
@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return environment;
         }
-        
+
         public static IHostEnvironment IsStaging(this IHostEnvironment environment, Action? @if, Action? @else)
         {
             if (environment is null)
@@ -64,7 +64,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return environment;
         }
-        
+
         public static Boolean IsNotDevelopment(this IHostEnvironment environment)
         {
             if (environment is null)
@@ -74,7 +74,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return !environment.IsDevelopment();
         }
-        
+
         public static IHostEnvironment IsDevelopment(this IHostEnvironment environment, Action? action)
         {
             if (environment is null)
@@ -89,7 +89,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return environment;
         }
-        
+
         public static IHostEnvironment IsDevelopment(this IHostEnvironment environment, Action? @if, Action? @else)
         {
             if (environment is null)
@@ -121,7 +121,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return environment;
         }
-        
+
         public static Boolean IsNotProduction(this IHostEnvironment environment)
         {
             if (environment is null)
@@ -131,7 +131,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return !environment.IsProduction();
         }
-        
+
         public static IHostEnvironment IsProduction(this IHostEnvironment environment, Action? action)
         {
             if (environment is null)
@@ -146,7 +146,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return environment;
         }
-        
+
         public static IHostEnvironment IsProduction(this IHostEnvironment environment, Action? @if, Action? @else)
         {
             if (environment is null)
@@ -178,7 +178,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return environment;
         }
-        
+
         public static Boolean IsNotEnvironment(this IHostEnvironment environment, String name)
         {
             if (environment is null)
@@ -213,7 +213,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return environment;
         }
-        
+
         public static IHostEnvironment IsEnvironment(this IHostEnvironment environment, String name, Action? @if, Action? @else)
         {
             if (environment is null)

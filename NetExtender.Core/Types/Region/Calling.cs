@@ -15,7 +15,7 @@ namespace NetExtender.Types.Region
             {
                 return calling.Official16;
             }
-            
+
             public static implicit operator Int32(CountryCalling calling)
             {
                 return calling.Official;
@@ -25,7 +25,7 @@ namespace NetExtender.Types.Region
             {
                 return calling.ToString();
             }
-            
+
             public Int32 Official
             {
                 get
@@ -35,7 +35,7 @@ namespace NetExtender.Types.Region
             }
 
             public UInt16 Official16 { get; }
-            
+
             public Int32 Second
             {
                 get
@@ -45,7 +45,7 @@ namespace NetExtender.Types.Region
             }
 
             public UInt16 Second16 { get; }
-            
+
             public Int32 Third
             {
                 get
@@ -55,7 +55,7 @@ namespace NetExtender.Types.Region
             }
 
             public UInt16 Third16 { get; }
-            
+
             public Int32 Special { get; }
 
             public Boolean IsSpecial
@@ -65,7 +65,7 @@ namespace NetExtender.Types.Region
                     return Special > 0;
                 }
             }
-            
+
             public Int32 Count
             {
                 get
@@ -131,7 +131,7 @@ namespace NetExtender.Types.Region
                 third = Third16;
                 special = Special;
             }
-            
+
             public void Deconstruct(out Int32 official, out Int32 second, out Int32 third)
             {
                 Deconstruct(out official, out second, out third, out _);
@@ -144,7 +144,7 @@ namespace NetExtender.Types.Region
                 third = Third;
                 special = Special;
             }
-            
+
             public Boolean Contains(UInt16 code)
             {
                 return code > 0 && (Official16 == code || Second16 == code || Third16 == code || Special == code);

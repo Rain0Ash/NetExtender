@@ -23,7 +23,7 @@ namespace NetExtender.Types.Currency
         {
             return info?.Code ?? 0;
         }
-        
+
         public static implicit operator CurrencyIdentifier(CurrencyInfo? info)
         {
             return info?.Identifier ?? CurrencyIdentifier.Default;
@@ -44,7 +44,7 @@ namespace NetExtender.Types.Currency
         {
             return info?.FullName;
         }
-        
+
         public static implicit operator CurrencyInfo?(CultureIdentifier identifier)
         {
             return (CountryInfo?) identifier;
@@ -152,7 +152,7 @@ namespace NetExtender.Types.Currency
                 {
                     identifier = CurrencyIdentifier.Usd;
                 }
-                
+
                 return Cache.GetOrAdd(identifier, Create);
             }
 
@@ -233,7 +233,7 @@ namespace NetExtender.Types.Currency
                     CurrencyIdentifier.Mwk => new CurrencyInfo("K", "Kwacha", "Malawian kwacha", CurrencyIdentifier.Mwk),
                     CurrencyIdentifier.Myr => new CurrencyInfo("RM", "Malaysian Ringgit", "Malaysian Ringgit", CurrencyIdentifier.Myr),
                     CurrencyIdentifier.Mvr => new CurrencyInfo("ރ.", "Maldivian Rufiyaa", "Maldivian Rufiyaa", CurrencyIdentifier.Mvr),
-                    CurrencyIdentifier.Mro => new CurrencyInfo("UM", "	Mauritanian ouguiya", "	Mauritanian ouguiya", CurrencyIdentifier.Mro),
+                    CurrencyIdentifier.Mro => new CurrencyInfo("UM", "Mauritanian ouguiya", "Mauritanian ouguiya", CurrencyIdentifier.Mro),
                     CurrencyIdentifier.Mur => new CurrencyInfo("₨", "Mauritian rupee", "Mauritian rupee", CurrencyIdentifier.Mur),
                     CurrencyIdentifier.Mxn => new CurrencyInfo("$", "Mexican Peso", "Mexican Peso", CurrencyIdentifier.Mxn),
                     CurrencyIdentifier.Mnt => new CurrencyInfo("₮", "Mongolian Tugrik", "Mongolian Tugrik", CurrencyIdentifier.Mnt),

@@ -15,7 +15,7 @@ namespace NetExtender.Utilities.Types
     {
         public static Task<T?> Default { get; } = Task.FromResult(default(T));
     }
-    
+
     [SuppressMessage("ReSharper", "AsyncConverter.AsyncMethodNamingHighlighting")]
     public static class TaskUtilities
     {
@@ -23,12 +23,12 @@ namespace NetExtender.Utilities.Types
         /// Cached true task
         /// </summary>
         public static Task<Boolean> True { get; } = Task.FromResult(true);
-        
+
         /// <summary>
         /// Cached false task
         /// </summary>
         public static Task<Boolean> False { get; } = Task.FromResult(false);
-        
+
         /// <summary>
         /// Cached zero task
         /// </summary>
@@ -61,19 +61,19 @@ namespace NetExtender.Utilities.Types
         {
             return value is null ? TaskCache<T>.Default! : Task.FromResult(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task ToCanceledTask(this CancellationToken token)
         {
             return Task.FromCanceled(token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<T> ToCanceledTask<T>(this CancellationToken token)
         {
             return Task.FromCanceled<T>(token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task ToExceptionTask(this Exception exception)
         {
@@ -84,7 +84,7 @@ namespace NetExtender.Utilities.Types
 
             return Task.FromException(exception);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<T> ToExceptionTask<T>(this Exception exception)
         {
@@ -105,12 +105,12 @@ namespace NetExtender.Utilities.Types
         {
             return ToTasksCompletionQueue(tasks, token);
         }
-        
+
         public static IAsyncEnumerable<Task> ToTasksCompletionQueue(this Task source, CancellationToken token, params Task[]? tasks)
         {
             return ToTasksCompletionQueue(tasks.Prepend(source), token);
         }
-        
+
         public static IAsyncEnumerable<Task> ToTasksCompletionQueue(this IEnumerable<Task> source)
         {
             return ToTasksCompletionQueue(source, CancellationToken.None);
@@ -134,11 +134,11 @@ namespace NetExtender.Utilities.Types
                 {
                     yield break;
                 }
-                
+
                 yield return task;
             }
         }
-        
+
         public static IAsyncEnumerable<Task<T>> ToTasksCompletionQueue<T>(params Task<T>[] tasks)
         {
             return ToTasksCompletionQueue(tasks, CancellationToken.None);
@@ -148,12 +148,12 @@ namespace NetExtender.Utilities.Types
         {
             return ToTasksCompletionQueue(tasks, token);
         }
-        
+
         public static IAsyncEnumerable<Task<T>> ToTasksCompletionQueue<T>(this Task<T> source, CancellationToken token, params Task<T>[]? tasks)
         {
             return ToTasksCompletionQueue(tasks.Prepend(source), token);
         }
-        
+
         public static IAsyncEnumerable<Task<T>> ToTasksCompletionQueue<T>(this IEnumerable<Task<T>> source)
         {
             return ToTasksCompletionQueue(source, CancellationToken.None);
@@ -177,11 +177,11 @@ namespace NetExtender.Utilities.Types
                 {
                     yield break;
                 }
-                
+
                 yield return task;
             }
         }
-        
+
         public static Task Delay(this CancellationToken token)
         {
             return Delay(Timeout.InfiniteTimeSpan, token);
@@ -191,12 +191,12 @@ namespace NetExtender.Utilities.Types
         {
             return Delay(milliseconds, CancellationToken.None);
         }
-        
+
         public static Task Delay(this TimeSpan delay)
         {
             return Delay(delay, CancellationToken.None);
         }
-        
+
         public static async Task Delay(Int32 milliseconds, CancellationToken token)
         {
             try
@@ -207,7 +207,7 @@ namespace NetExtender.Utilities.Types
             {
             }
         }
-        
+
         public static async Task Delay(this TimeSpan delay, CancellationToken token)
         {
             try
@@ -226,13 +226,13 @@ namespace NetExtender.Utilities.Types
         {
             return WaitAsync(DefaultWaitDelay, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task WaitAsync(Int32 milliseconds, CancellationToken token)
         {
             return WaitAsync(TimeSpan.FromMilliseconds(milliseconds), token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task WaitAsync(this TimeSpan delay, CancellationToken token)
         {
@@ -258,13 +258,13 @@ namespace NetExtender.Utilities.Types
 
             return WaitAsync(condition, CancellationToken.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task WaitAsync(Func<Boolean>? condition, CancellationToken token)
         {
             return WaitAsync(condition, DefaultWaitDelay, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task WaitAsync(Func<Boolean> condition, Int32 delay)
         {
@@ -312,7 +312,7 @@ namespace NetExtender.Utilities.Types
             {
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task WaitAsync(Func<Boolean> condition, Int32 delay, Int32 timeout)
         {
@@ -323,13 +323,13 @@ namespace NetExtender.Utilities.Types
 
             return WaitAsync(condition, delay, timeout, CancellationToken.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task WaitAsync(Func<Boolean>? condition, Int32 delay, Int32 timeout, CancellationToken token)
         {
             return WaitAsync(condition, TimeSpan.FromMilliseconds(delay), TimeSpan.FromMilliseconds(timeout), token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task WaitAsync(Func<Boolean> condition, TimeSpan delay, Int32 timeout)
         {
@@ -340,13 +340,13 @@ namespace NetExtender.Utilities.Types
 
             return WaitAsync(condition, delay, timeout, CancellationToken.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task WaitAsync(Func<Boolean>? condition, TimeSpan delay, Int32 timeout, CancellationToken token)
         {
             return WaitAsync(condition, delay, TimeSpan.FromMilliseconds(timeout), token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task WaitAsync(Func<Boolean> condition, Int32 delay, TimeSpan timeout)
         {
@@ -379,23 +379,23 @@ namespace NetExtender.Utilities.Types
         {
             Task time = Task.Delay(timeout, token);
             Task wait = WaitAsync(condition, delay, token);
-                
+
             if (await Task.WhenAny(wait, time).ConfigureAwait(false) == time)
             {
                 throw new TimeoutException();
             }
         }
-        
+
         public static Task<Boolean> TryWaitAsync(CancellationToken token)
         {
             return TryWaitAsync(DefaultWaitDelay, token);
         }
-        
+
         public static Task<Boolean> TryWaitAsync(Int32 milliseconds, CancellationToken token)
         {
             return TryWaitAsync(TimeSpan.FromMilliseconds(milliseconds), token);
         }
-        
+
         public static async Task<Boolean> TryWaitAsync(TimeSpan delay, CancellationToken token)
         {
             try
@@ -416,7 +416,7 @@ namespace NetExtender.Utilities.Types
 
             return true;
         }
-        
+
         public static Task<Boolean> TryWaitAsync(Func<Boolean> condition)
         {
             if (condition is null)
@@ -441,7 +441,7 @@ namespace NetExtender.Utilities.Types
 
             return TryWaitAsync(condition, delay, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> TryWaitAsync(Func<Boolean>? condition, Int32 delay, CancellationToken token)
         {
             return TryWaitAsync(condition, TimeSpan.FromMilliseconds(delay), token);
@@ -463,7 +463,7 @@ namespace NetExtender.Utilities.Types
             {
                 return await TryWaitAsync(delay, token).ConfigureAwait(false);
             }
-            
+
             while (condition.Invoke() && !token.IsCancellationRequested)
             {
                 try
@@ -478,7 +478,7 @@ namespace NetExtender.Utilities.Types
 
             return true;
         }
-        
+
         public static Task<Boolean> TryWaitAsync(Func<Boolean> condition, Int32 delay, Int32 timeout)
         {
             if (condition is null)
@@ -493,7 +493,7 @@ namespace NetExtender.Utilities.Types
         {
             return TryWaitAsync(condition, TimeSpan.FromMilliseconds(delay), TimeSpan.FromMilliseconds(timeout), token);
         }
-        
+
         public static Task<Boolean> TryWaitAsync(Func<Boolean> condition, TimeSpan delay, Int32 timeout)
         {
             if (condition is null)
@@ -508,7 +508,7 @@ namespace NetExtender.Utilities.Types
         {
             return TryWaitAsync(condition, delay, TimeSpan.FromMilliseconds(timeout), token);
         }
-        
+
         public static Task<Boolean> TryWaitAsync(Func<Boolean> condition, Int32 delay, TimeSpan timeout)
         {
             if (condition is null)
@@ -616,12 +616,12 @@ namespace NetExtender.Utilities.Types
                 }
 
                 await Task.Delay(timeout, cancel).ConfigureAwait(false);
-                
+
             } while (tries <= 0 || ++count < tries);
 
             return default;
         }
-        
+
         /// <inheritdoc cref="Task.Run(Action)"/>
         public static Task Run(Action action)
         {
@@ -651,7 +651,7 @@ namespace NetExtender.Utilities.Types
         {
             return Task.Run(function);
         }
-        
+
         /// <inheritdoc cref="Task.Run(Func{Task?},CancellationToken)"/>
         public static Task Run(Func<Task?> function, CancellationToken token)
         {
@@ -669,7 +669,7 @@ namespace NetExtender.Utilities.Types
         {
             return Task.Run(function, token);
         }
-        
+
         /// <inheritdoc cref="Task.Run(Action)"/>
         public static Task RunWithDelay(Action action, Int32 milliseconds)
         {
@@ -680,7 +680,7 @@ namespace NetExtender.Utilities.Types
 
             return Task.Delay(milliseconds).ContinueWith(action);
         }
-        
+
         /// <inheritdoc cref="Task.Run(Action)"/>
         public static Task RunWithDelay(Action action, TimeSpan delay)
         {
@@ -688,7 +688,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Task.Delay(delay).ContinueWith(action);
         }
 
@@ -699,7 +699,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Task.Delay(milliseconds, token).ContinueWith(action, token);
         }
 
@@ -710,7 +710,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return Task.Delay(delay, token).ContinueWith(action, token);
         }
 
@@ -732,7 +732,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Task.Delay(delay).ContinueWith(function);
         }
 
@@ -743,7 +743,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Task.Delay(delay, token).ContinueWith(function, token);
         }
 
@@ -754,7 +754,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Task.Delay(milliseconds, token).ContinueWith(function, token);
         }
 
@@ -765,7 +765,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Task.Delay(milliseconds).ContinueWith(function);
         }
 
@@ -776,10 +776,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Task.Delay(delay).ContinueWith(function);
         }
-        
+
         /// <inheritdoc cref="Task.Run(Func{Task?},CancellationToken)"/>
         public static Task RunWithDelay(Func<Task?> function, Int32 milliseconds, CancellationToken token)
         {
@@ -787,10 +787,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Task.Delay(milliseconds, token).ContinueWith(function, token);
         }
-        
+
         /// <inheritdoc cref="Task.Run(Func{Task?},CancellationToken)"/>
         public static Task RunWithDelay(Func<Task?> function, TimeSpan delay, CancellationToken token)
         {
@@ -798,7 +798,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Task.Delay(delay, token).ContinueWith(function, token);
         }
 
@@ -809,7 +809,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Task.Delay(milliseconds).ContinueWith(function);
         }
 
@@ -820,7 +820,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Task.Delay(delay).ContinueWith(function);
         }
 
@@ -831,7 +831,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Task.Delay(milliseconds, token).ContinueWith(function, token);
         }
 
@@ -842,7 +842,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return Task.Delay(delay, token).ContinueWith(function, token);
         }
 
@@ -861,7 +861,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWith(_ => action());
         }
-        
+
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, CancellationToken)"/>
         public static Task ContinueWith(this Task source, Action action, CancellationToken token)
         {
@@ -877,7 +877,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWith(_ => action(), token);
         }
-        
+
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, CancellationToken, TaskContinuationOptions, TaskScheduler)"/>
         [SuppressMessage("ReSharper", "CA1068")]
         public static Task ContinueWith(this Task source, Action action, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
@@ -899,7 +899,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWith(_ => action(), token, options, scheduler);
         }
-        
+
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, TaskContinuationOptions)"/>
         public static Task ContinueWith(this Task source, Action action, TaskContinuationOptions options)
         {
@@ -915,7 +915,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWith(_ => action(), options);
         }
-        
+
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, TaskScheduler)"/>
         public static Task ContinueWith(this Task source, Action action, TaskScheduler scheduler)
         {
@@ -936,7 +936,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWith(_ => action(), scheduler);
         }
-        
+
         public static Task<T> ContinueWith<T>(this Task source, Func<T> function)
         {
             if (source is null)
@@ -951,7 +951,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWith(_ => function());
         }
-        
+
         public static Task<T> ContinueWith<T>(this Task source, Func<T> function, CancellationToken token)
         {
             if (source is null)
@@ -966,7 +966,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWith(_ => function(), token);
         }
-        
+
         [SuppressMessage("ReSharper", "CA1068")]
         public static Task<T> ContinueWith<T>(this Task source, Func<T> function, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
         {
@@ -987,7 +987,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWith(_ => function(), token, options, scheduler);
         }
-        
+
         public static Task<T> ContinueWith<T>(this Task source, Func<T> function, TaskContinuationOptions options)
         {
             if (source is null)
@@ -1002,7 +1002,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWith(_ => function(), options);
         }
-        
+
         public static Task<T> ContinueWith<T>(this Task source, Func<T> function, TaskScheduler scheduler)
         {
             if (source is null)
@@ -1022,7 +1022,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWith(_ => function(), scheduler);
         }
-        
+
         public static async Task<T> ContinueWith<T>(this Task source, Func<Task<T>?> function)
         {
             if (source is null)
@@ -1045,7 +1045,7 @@ namespace NetExtender.Utilities.Types
 
             return await next.ConfigureAwait(false);
         }
-        
+
         public static async Task<T> ContinueWith<T>(this Task source, Func<Task<T>?> function, CancellationToken token)
         {
             if (source is null)
@@ -1068,7 +1068,7 @@ namespace NetExtender.Utilities.Types
 
             return await next.ConfigureAwait(false);
         }
-        
+
         [SuppressMessage("ReSharper", "CA1068")]
         public static async Task<T> ContinueWith<T>(this Task source, Func<Task<T>?> function, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
         {
@@ -1097,7 +1097,7 @@ namespace NetExtender.Utilities.Types
 
             return await next.ConfigureAwait(false);
         }
-        
+
         public static async Task<T> ContinueWith<T>(this Task source, Func<Task<T>?> function, TaskContinuationOptions options)
         {
             if (source is null)
@@ -1120,7 +1120,7 @@ namespace NetExtender.Utilities.Types
 
             return await next.ConfigureAwait(false);
         }
-        
+
         public static async Task<T> ContinueWith<T>(this Task source, Func<Task<T>?> function, TaskScheduler scheduler)
         {
             if (source is null)
@@ -1154,7 +1154,7 @@ namespace NetExtender.Utilities.Types
         {
             return ContinueWithDelay(source, milliseconds, CancellationToken.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task ContinueWithDelay(this Task source, Int32 milliseconds, CancellationToken token)
         {
@@ -1167,16 +1167,16 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(milliseconds));
             }
-            
+
             return source.ContinueWith(_ => Task.Delay(milliseconds, token), token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task ContinueWithDelay(this Task source, TimeSpan delay)
         {
             return ContinueWithDelay(source, delay, CancellationToken.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task ContinueWithDelay(this Task source, TimeSpan delay, CancellationToken token)
         {
@@ -1192,7 +1192,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWith(_ => Task.Delay(delay, token), token);
         }
-        
+
         public static Task ContinueWithDelay(this Task source, Action<Task> action, Int32 milliseconds)
         {
             if (source is null)
@@ -1204,10 +1204,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return source.ContinueWithDelay(milliseconds).ContinueWith(action);
         }
-        
+
         public static Task ContinueWithDelay(this Task source, Action<Task> action, TimeSpan delay)
         {
             if (source is null)
@@ -1244,12 +1244,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return source.ContinueWithDelay(delay, token).ContinueWith(action, token);
         }
 
@@ -1259,7 +1259,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
@@ -1279,7 +1279,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
@@ -1289,7 +1289,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             return source.ContinueWithDelay(delay).ContinueWith(action, scheduler);
         }
 
@@ -1299,12 +1299,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return source.ContinueWithDelay(milliseconds).ContinueWith(action, options);
         }
 
@@ -1314,12 +1314,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return source.ContinueWithDelay(delay).ContinueWith(action, options);
         }
 
@@ -1330,7 +1330,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
@@ -1340,7 +1340,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             return source.ContinueWithDelay(milliseconds, token).ContinueWith(action, token, options, scheduler);
         }
 
@@ -1351,7 +1351,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
@@ -1361,7 +1361,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             return source.ContinueWithDelay(delay, token).ContinueWith(action, token, options, scheduler);
         }
 
@@ -1371,7 +1371,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
@@ -1386,12 +1386,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return source.ContinueWithDelay(delay).ContinueWith(action, state);
         }
 
@@ -1401,12 +1401,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return source.ContinueWithDelay(milliseconds, token).ContinueWith(action, state, token);
         }
 
@@ -1416,22 +1416,22 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return source.ContinueWithDelay(delay, token).ContinueWith(action, state, token);
         }
-        
+
         public static Task ContinueWithDelay(this Task source, Action<Task, Object?> action, Int32 milliseconds, Object? state, TaskScheduler scheduler)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
@@ -1444,14 +1444,14 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(milliseconds).ContinueWith(action, state, scheduler);
         }
-        
+
         public static Task ContinueWithDelay(this Task source, Action<Task, Object?> action, TimeSpan delay, Object? state, TaskScheduler scheduler)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
@@ -1461,7 +1461,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             return source.ContinueWithDelay(delay).ContinueWith(action, state, scheduler);
         }
 
@@ -1471,12 +1471,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return source.ContinueWithDelay(milliseconds).ContinueWith(action, state, options);
         }
 
@@ -1486,15 +1486,15 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             return source.ContinueWithDelay(delay).ContinueWith(action, state, options);
         }
-        
+
         [SuppressMessage("ReSharper", "CA1068")]
         public static Task ContinueWithDelay(this Task source, Action<Task, Object?> action, Int32 milliseconds, Object? state, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
         {
@@ -1502,7 +1502,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
@@ -1512,10 +1512,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             return source.ContinueWithDelay(milliseconds, token).ContinueWith(action, state, token, options, scheduler);
         }
-        
+
         [SuppressMessage("ReSharper", "CA1068")]
         public static Task ContinueWithDelay(this Task source, Action<Task, Object?> action, TimeSpan delay, Object? state, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
         {
@@ -1523,7 +1523,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (action is null)
             {
                 throw new ArgumentNullException(nameof(action));
@@ -1533,7 +1533,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             return source.ContinueWithDelay(delay, token).ContinueWith(action, state, token, options, scheduler);
         }
 
@@ -1543,12 +1543,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return source.ContinueWithDelay(milliseconds).ContinueWith(function);
         }
 
@@ -1558,12 +1558,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return source.ContinueWithDelay(delay).ContinueWith(function);
         }
 
@@ -1573,12 +1573,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return source.ContinueWithDelay(milliseconds, token).ContinueWith(function, token);
         }
 
@@ -1588,12 +1588,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return source.ContinueWithDelay(delay, token).ContinueWith(function, token);
         }
 
@@ -1603,7 +1603,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
@@ -1613,7 +1613,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             return source.ContinueWithDelay(milliseconds).ContinueWith(function, scheduler);
         }
 
@@ -1623,7 +1623,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
@@ -1633,7 +1633,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             return source.ContinueWithDelay(delay).ContinueWith(function, scheduler);
         }
 
@@ -1643,12 +1643,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return source.ContinueWithDelay(milliseconds).ContinueWith(function, options);
         }
 
@@ -1658,12 +1658,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return source.ContinueWithDelay(delay).ContinueWith(function, options);
         }
 
@@ -1674,7 +1674,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
@@ -1684,7 +1684,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             return source.ContinueWithDelay(milliseconds, token).ContinueWith(function, token, options, scheduler);
         }
 
@@ -1695,7 +1695,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
@@ -1705,7 +1705,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             return source.ContinueWithDelay(delay, token).ContinueWith(function, token, options, scheduler);
         }
 
@@ -1715,12 +1715,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return source.ContinueWithDelay(milliseconds).ContinueWith(function, state);
         }
 
@@ -1730,12 +1730,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return source.ContinueWithDelay(delay).ContinueWith(function, state);
         }
 
@@ -1745,12 +1745,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return source.ContinueWithDelay(milliseconds, token).ContinueWith(function, state, token);
         }
 
@@ -1760,12 +1760,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return source.ContinueWithDelay(delay, token).ContinueWith(function, state, token);
         }
 
@@ -1775,7 +1775,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
@@ -1785,7 +1785,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             return source.ContinueWithDelay(milliseconds).ContinueWith(function, state, scheduler);
         }
 
@@ -1795,7 +1795,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
@@ -1805,7 +1805,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             return source.ContinueWithDelay(delay).ContinueWith(function, state, scheduler);
         }
 
@@ -1815,12 +1815,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return source.ContinueWithDelay(milliseconds).ContinueWith(function, state, options);
         }
 
@@ -1830,12 +1830,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return source.ContinueWithDelay(delay).ContinueWith(function, state, options);
         }
 
@@ -1846,7 +1846,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
@@ -1856,7 +1856,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             return source.ContinueWithDelay(milliseconds, token).ContinueWith(function, state, token, options, scheduler);
         }
 
@@ -1867,7 +1867,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (function is null)
             {
                 throw new ArgumentNullException(nameof(function));
@@ -1877,10 +1877,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             return source.ContinueWithDelay(delay, token).ContinueWith(function, state, token, options, scheduler);
         }
-        
+
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, CancellationToken)"/>
         public static Task ContinueWithDelay(this Task source, Action action, Int32 milliseconds, CancellationToken token)
         {
@@ -1896,7 +1896,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(milliseconds, token).ContinueWith(action, token);
         }
-        
+
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, CancellationToken)"/>
         public static Task ContinueWithDelay(this Task source, Action action, TimeSpan delay, CancellationToken token)
         {
@@ -1912,7 +1912,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(delay, token).ContinueWith(action, token);
         }
-        
+
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, CancellationToken, TaskContinuationOptions, TaskScheduler)"/>
         [SuppressMessage("ReSharper", "CA1068")]
         public static Task ContinueWithDelay(this Task source, Action action, Int32 milliseconds, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
@@ -1934,7 +1934,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(milliseconds, token).ContinueWith(action, token, options, scheduler);
         }
-        
+
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, CancellationToken, TaskContinuationOptions, TaskScheduler)"/>
         [SuppressMessage("ReSharper", "CA1068")]
         public static Task ContinueWithDelay(this Task source, Action action, TimeSpan delay, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
@@ -1956,7 +1956,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(delay, token).ContinueWith(action, token, options, scheduler);
         }
-        
+
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, TaskContinuationOptions)"/>
         public static Task ContinueWithDelay(this Task source, Action action, Int32 milliseconds, TaskContinuationOptions options)
         {
@@ -1972,7 +1972,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(milliseconds).ContinueWith(action, options);
         }
-        
+
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, TaskContinuationOptions)"/>
         public static Task ContinueWithDelay(this Task source, Action action, TimeSpan delay, TaskContinuationOptions options)
         {
@@ -1988,7 +1988,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(delay).ContinueWith(action, options);
         }
-        
+
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, TaskScheduler)"/>
         public static Task ContinueWithDelay(this Task source, Action action, Int32 milliseconds, TaskScheduler scheduler)
         {
@@ -2009,7 +2009,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(milliseconds).ContinueWith(action, scheduler);
         }
-        
+
         /// <inheritdoc cref="Task.ContinueWith(System.Action{System.Threading.Tasks.Task}, TaskScheduler)"/>
         public static Task ContinueWithDelay(this Task source, Action action, TimeSpan delay, TaskScheduler scheduler)
         {
@@ -2030,7 +2030,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(delay).ContinueWith(action, scheduler);
         }
-        
+
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, Int32 milliseconds)
         {
             if (source is null)
@@ -2045,7 +2045,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(milliseconds).ContinueWith(function);
         }
-        
+
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, TimeSpan delay)
         {
             if (source is null)
@@ -2060,7 +2060,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(delay).ContinueWith(function);
         }
-        
+
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, Int32 milliseconds, CancellationToken token)
         {
             if (source is null)
@@ -2075,7 +2075,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(milliseconds, token).ContinueWith(function, token);
         }
-        
+
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, TimeSpan delay, CancellationToken token)
         {
             if (source is null)
@@ -2090,7 +2090,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(delay, token).ContinueWith(function, token);
         }
-        
+
         [SuppressMessage("ReSharper", "CA1068")]
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, Int32 milliseconds, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
         {
@@ -2111,7 +2111,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(milliseconds, token).ContinueWith(function, token, options, scheduler);
         }
-        
+
         [SuppressMessage("ReSharper", "CA1068")]
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, TimeSpan delay, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
         {
@@ -2132,7 +2132,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(delay, token).ContinueWith(function, token, options, scheduler);
         }
-        
+
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, Int32 milliseconds, TaskContinuationOptions options)
         {
             if (source is null)
@@ -2147,7 +2147,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(milliseconds).ContinueWith(function, options);
         }
-        
+
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, TimeSpan delay, TaskContinuationOptions options)
         {
             if (source is null)
@@ -2162,7 +2162,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(delay).ContinueWith(function, options);
         }
-        
+
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, Int32 milliseconds, TaskScheduler scheduler)
         {
             if (source is null)
@@ -2182,7 +2182,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(milliseconds).ContinueWith(function, scheduler);
         }
-        
+
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<T> function, TimeSpan delay, TaskScheduler scheduler)
         {
             if (source is null)
@@ -2202,7 +2202,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(delay).ContinueWith(function, scheduler);
         }
-        
+
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, Int32 milliseconds)
         {
             if (source is null)
@@ -2217,7 +2217,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(milliseconds).ContinueWith(function);
         }
-        
+
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, TimeSpan delay)
         {
             if (source is null)
@@ -2232,7 +2232,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(delay).ContinueWith(function);
         }
-        
+
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, Int32 milliseconds, CancellationToken token)
         {
             if (source is null)
@@ -2247,7 +2247,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(milliseconds, token).ContinueWith(function, token);
         }
-        
+
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, TimeSpan delay, CancellationToken token)
         {
             if (source is null)
@@ -2262,7 +2262,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(delay, token).ContinueWith(function, token);
         }
-        
+
         [SuppressMessage("ReSharper", "CA1068")]
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, Int32 milliseconds, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
         {
@@ -2283,7 +2283,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(milliseconds, token).ContinueWith(function, token, options, scheduler);
         }
-        
+
         [SuppressMessage("ReSharper", "CA1068")]
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, TimeSpan delay, CancellationToken token, TaskContinuationOptions options, TaskScheduler scheduler)
         {
@@ -2304,7 +2304,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(delay, token).ContinueWith(function, token, options, scheduler);
         }
-        
+
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, Int32 milliseconds, TaskContinuationOptions options)
         {
             if (source is null)
@@ -2319,7 +2319,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(milliseconds).ContinueWith(function, options);
         }
-        
+
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, TimeSpan delay, TaskContinuationOptions options)
         {
             if (source is null)
@@ -2334,7 +2334,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ContinueWithDelay(delay).ContinueWith(function, options);
         }
-        
+
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, Int32 milliseconds, TaskScheduler scheduler)
         {
             if (source is null)
@@ -2351,10 +2351,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             return source.ContinueWithDelay(milliseconds).ContinueWith(function, scheduler);
         }
-        
+
         public static Task<T> ContinueWithDelay<T>(this Task source, Func<Task<T>?> function, TimeSpan delay, TaskScheduler scheduler)
         {
             if (source is null)
@@ -2371,7 +2371,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             return source.ContinueWithDelay(delay).ContinueWith(function, scheduler);
         }
 
@@ -2392,7 +2392,7 @@ namespace NetExtender.Utilities.Types
 
             Task.WaitAll(source.AsArray());
         }
-        
+
         /// <summary>
         /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
         /// milliseconds or until the wait is cancelled.
@@ -2414,7 +2414,7 @@ namespace NetExtender.Utilities.Types
 
             Task.WaitAll(source.AsArray(), token);
         }
-        
+
         /// <summary>
         /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
         /// milliseconds or until the wait is cancelled.
@@ -2436,7 +2436,7 @@ namespace NetExtender.Utilities.Types
 
             return Task.WaitAll(source.AsArray(), timeout);
         }
-        
+
         /// <summary>
         /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
         /// milliseconds or until the wait is cancelled.
@@ -2483,7 +2483,7 @@ namespace NetExtender.Utilities.Types
 
             return Task.WaitAll(source.AsArray(), timeout);
         }
-        
+
         /// <summary>
         /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified
         /// <see cref="TimeSpan"/> or until the wait is cancelled.
@@ -2582,7 +2582,7 @@ namespace NetExtender.Utilities.Types
 
             return Task.WhenAny(source);
         }
-        
+
         /// <summary>
         /// Waits for all of the provided <see cref="Task"/> objects to complete execution within a specified number of
         /// milliseconds or until the wait is cancelled.
@@ -2833,7 +2833,7 @@ namespace NetExtender.Utilities.Types
                 action?.Invoke(exception);
             }
         }
-        
+
         public static void FireAndForget(this Task task)
         {
             if (task is null)
@@ -2866,7 +2866,7 @@ namespace NetExtender.Utilities.Types
 
             task.ContinueWith(Handle, TaskContinuationOptions.OnlyOnFaulted);
         }
-        
+
         public static Task ToAsync(this Task source, AsyncCallback? callback, Object? state)
         {
             if (source is null)
@@ -2880,10 +2880,10 @@ namespace NetExtender.Utilities.Types
                 completion.SetFromTask(source);
                 callback?.Invoke(completion.Task);
             });
-            
+
             return completion.Task;
         }
-        
+
         public static Task<T> ToAsync<T>(this Task<T> source, AsyncCallback? callback, Object? state)
         {
             if (source is null)
@@ -2897,12 +2897,12 @@ namespace NetExtender.Utilities.Types
                 completion.SetFromTask(source);
                 callback?.Invoke(completion.Task);
             });
-            
+
             return completion.Task;
         }
 
         private const TaskContinuationOptions TaskExceptionOptions = TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnFaulted;
-        
+
         public static Task IgnoreException(this Task source)
         {
             if (source is null)
@@ -2913,7 +2913,7 @@ namespace NetExtender.Utilities.Types
             source.ContinueWith(ActionUtilities.Default, CancellationToken.None, TaskExceptionOptions, TaskScheduler.Default);
             return source;
         }
-        
+
         public static Task<T> IgnoreException<T>(this Task<T> source)
         {
             if (source is null)
@@ -2939,7 +2939,7 @@ namespace NetExtender.Utilities.Types
                 Environment.FailFast("A task faulted.", exception);
             }
         }
-        
+
         public static Task FailFastOnException(this Task source)
         {
             if (source is null)
@@ -2950,7 +2950,7 @@ namespace NetExtender.Utilities.Types
             source.ContinueWith(TaskFault, CancellationToken.None, TaskExceptionOptions, TaskScheduler.Default);
             return source;
         }
-        
+
         public static Task<T> FailFastOnException<T>(this Task<T> source)
         {
             if (source is null)
@@ -2961,7 +2961,7 @@ namespace NetExtender.Utilities.Types
             source.ContinueWith(TaskFault, CancellationToken.None, TaskExceptionOptions, TaskScheduler.Default);
             return source;
         }
-        
+
         public static Task PropagateException(this Task source)
         {
             if (source is null)
@@ -2976,7 +2976,7 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         public static Task<T> PropagateException<T>(this Task<T> source)
         {
             if (source is null)
@@ -2991,7 +2991,7 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         public static IObservable<T> ToObservable<T>(this Task<T> task)
         {
             if (task is null)
@@ -3001,7 +3001,7 @@ namespace NetExtender.Utilities.Types
 
             return new TaskObservable<T>(task);
         }
-        
+
         private class TaskObservable<T> : IObservable<T>
         {
             private Task<T> Internal { get; }
@@ -3081,7 +3081,7 @@ namespace NetExtender.Utilities.Types
             {
                 return GetAwaiter(Timeout.InfiniteTimeSpan);
             }
-            
+
             TimeSpan wait = value > 0 ? TimeSpan.FromMilliseconds(value) : TimeSpan.Zero;
             return GetAwaiter(wait);
         }
@@ -3098,7 +3098,7 @@ namespace NetExtender.Utilities.Types
             {
                 return GetAwaiter(Timeout.InfiniteTimeSpan);
             }
-            
+
             TimeSpan wait = value > 0 ? TimeSpan.FromMilliseconds(value) : TimeSpan.Zero;
             return GetAwaiter(wait);
         }
@@ -3115,7 +3115,7 @@ namespace NetExtender.Utilities.Types
             {
                 return GetAwaiter(Timeout.InfiniteTimeSpan);
             }
-            
+
             TimeSpan wait = value > 0 ? TimeSpan.FromMilliseconds(value) : TimeSpan.Zero;
             return GetAwaiter(wait);
         }
@@ -3132,7 +3132,7 @@ namespace NetExtender.Utilities.Types
             {
                 return GetAwaiter(Timeout.InfiniteTimeSpan);
             }
-            
+
             TimeSpan wait = value > 0 ? TimeSpan.FromMilliseconds(value) : TimeSpan.Zero;
             return GetAwaiter(wait);
         }
@@ -3149,7 +3149,7 @@ namespace NetExtender.Utilities.Types
             {
                 return GetAwaiter(Timeout.InfiniteTimeSpan);
             }
-            
+
             TimeSpan wait = value > 0 ? TimeSpan.FromMilliseconds(value) : TimeSpan.Zero;
             return GetAwaiter(wait);
         }
@@ -3160,7 +3160,7 @@ namespace NetExtender.Utilities.Types
             {
                 return GetAwaiter(Timeout.InfiniteTimeSpan);
             }
-            
+
             TimeSpan wait = value > 0 ? TimeSpan.FromMilliseconds(value) : TimeSpan.Zero;
             return GetAwaiter(wait);
         }
@@ -3171,11 +3171,11 @@ namespace NetExtender.Utilities.Types
             {
                 return GetAwaiter(Timeout.InfiniteTimeSpan);
             }
-            
+
             TimeSpan wait = value > 0 ? TimeSpan.FromMilliseconds((Double) value) : TimeSpan.Zero;
             return GetAwaiter(wait);
         }
-        
+
         public static TaskAwaiter GetAwaiter(this TimeSpan value)
         {
             return value > TimeSpan.Zero || value == Timeout.InfiniteTimeSpan ? Task.Delay(value).GetAwaiter() : Task.CompletedTask.GetAwaiter();

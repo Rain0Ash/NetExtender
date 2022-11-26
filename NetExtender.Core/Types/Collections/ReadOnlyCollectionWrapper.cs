@@ -33,17 +33,17 @@ namespace NetExtender.Types.Collections
         {
             Collection = collection ?? throw new ArgumentNullException(nameof(collection));
         }
-        
+
         public Boolean Contains(T item)
         {
             return Collection.Contains(item);
         }
-        
+
         public void Add(T item)
         {
             throw new NotSupportedException();
         }
-        
+
         public Boolean Remove(T item)
         {
             throw new NotSupportedException();
@@ -53,7 +53,7 @@ namespace NetExtender.Types.Collections
         {
             throw new NotSupportedException();
         }
-        
+
         public void CopyTo(T[] array, Int32 arrayIndex)
         {
             Collection.CopyTo(array, arrayIndex);

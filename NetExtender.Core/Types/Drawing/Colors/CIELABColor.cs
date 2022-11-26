@@ -17,13 +17,13 @@ namespace NetExtender.Types.Drawing.Colors
         {
             return color.ToColor();
         }
-        
+
         public static implicit operator CIELABColor(Color color)
         {
             color.ToCIELAB(out Double h, out Double s, out Double v);
             return new CIELABColor(h, s, v);
         }
-        
+
         public static Boolean operator ==(CIELABColor first, CIELABColor second)
         {
             return first.Equals(second);
@@ -41,7 +41,7 @@ namespace NetExtender.Types.Drawing.Colors
                 return ColorType.CIELAB;
             }
         }
-        
+
         public Double L { get; init; }
         public Double A { get; init; }
         public Double B { get; init; }
@@ -63,7 +63,7 @@ namespace NetExtender.Types.Drawing.Colors
             color = ToColor();
             return true;
         }
-        
+
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(L, A, B);
@@ -78,7 +78,7 @@ namespace NetExtender.Types.Drawing.Colors
         {
             return Math.Abs(L - other.L) < Double.Epsilon && Math.Abs(A - other.A) < Double.Epsilon && Math.Abs(B - other.B) < Double.Epsilon;
         }
-        
+
         public Boolean Equals(IColor? color)
         {
             return color is not null && ToColor(out Color first) && color.ToColor(out Color second) && first.Equals(second);
@@ -88,12 +88,12 @@ namespace NetExtender.Types.Drawing.Colors
         {
             return $"L:{L} A:{A} B:{B}";
         }
-        
+
         public String ToString(String? format)
         {
             return ToString(format, null);
         }
-        
+
         public String ToString(String? format, IFormatProvider?provider)
         {
             if (String.IsNullOrEmpty(format))

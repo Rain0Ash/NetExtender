@@ -16,7 +16,7 @@ namespace NetExtender.Types.Comparers
                 return EqualityComparer<T?>.Default;
             }
         }
-        
+
         private EqualityComparison<T> Comparison { get; }
         private HashHandler<T> Hash { get; }
         public Boolean Nullable { get; }
@@ -42,7 +42,7 @@ namespace NetExtender.Types.Comparers
             Hash = hash ?? HashCode.Combine;
             Nullable = nullable;
         }
-        
+
         public Boolean Equals(T? x, T? y)
         {
             if (Nullable)
@@ -63,7 +63,7 @@ namespace NetExtender.Types.Comparers
             return Nullable || obj is not null ? Hash.Invoke(obj!) : 0;
         }
     }
-    
+
     public sealed class EqualityComparisonComparer<T1, T2> : IEqualityComparer<T1, T2>
     {
         private EqualityComparison<T1, T2> Comparison { get; }
@@ -93,7 +93,7 @@ namespace NetExtender.Types.Comparers
             Hash2 = hash2 ?? HashCode.Combine;
             Nullable = nullable;
         }
-        
+
         public Boolean Equals(T1? x, T2? y)
         {
             if (Nullable)
@@ -113,7 +113,7 @@ namespace NetExtender.Types.Comparers
         {
             return Nullable || obj is not null ? Hash1.Invoke(obj!) : 0;
         }
-        
+
         public Int32 GetHashCode(T2? obj)
         {
             return Nullable || obj is not null ? Hash2.Invoke(obj!) : 0;

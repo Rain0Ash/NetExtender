@@ -34,7 +34,7 @@ namespace NetExtender.Types.Comparers
             {
                 return second is null;
             }
-            
+
             return second is not null && BoxAvoidance.ToInt(first) == BoxAvoidance.ToInt(second);
         }
 
@@ -70,7 +70,7 @@ namespace NetExtender.Types.Comparers
             {
                 return second is null;
             }
-            
+
             return second is not null && BoxAvoidance.ToInt(first).Equals(BoxAvoidance.ToInt(second));
         }
 

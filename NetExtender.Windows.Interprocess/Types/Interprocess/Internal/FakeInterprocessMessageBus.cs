@@ -12,7 +12,7 @@ namespace NetExtender.Types.Interprocess
     internal sealed class FakeInterprocessMessageBus : IInterprocessMessageBus
     {
         public static FakeInterprocessMessageBus Instance { get; } = new FakeInterprocessMessageBus();
-        
+
         public event EventHandler<HandledEventArgs<Byte[]>> MessageReceived
         {
             add
@@ -22,7 +22,7 @@ namespace NetExtender.Types.Interprocess
             {
             }
         }
-        
+
         public Int64 SendedMessages
         {
             get
@@ -42,7 +42,7 @@ namespace NetExtender.Types.Interprocess
         private FakeInterprocessMessageBus()
         {
         }
-        
+
         public void ResetMetrics()
         {
         }

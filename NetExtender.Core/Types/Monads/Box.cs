@@ -14,24 +14,24 @@ namespace NetExtender.Types.Monads
         {
             return box is not null ? box.Value : default;
         }
-        
+
         public static implicit operator Box<T>(T value)
         {
             return new Box<T>(value);
         }
-        
+
         public static Boolean operator ==(Box<T>? first, Box<T>? second)
         {
             return EqualityComparer<Box<T>>.Default.Equals(first, second);
         }
-        
+
         public static Boolean operator !=(Box<T>? first, Box<T>? second)
         {
             return !(first == second);
         }
-        
+
         public T Value { get; }
-        
+
         public Box(T value)
         {
             Value = value;
@@ -41,7 +41,7 @@ namespace NetExtender.Types.Monads
         {
             return Value?.GetHashCode() ?? 0;
         }
-        
+
         public override Boolean Equals(Object? obj)
         {
             return obj is T other && Equals(other) || obj is Box<T> box && Equals(box);
@@ -56,7 +56,7 @@ namespace NetExtender.Types.Monads
         {
             return other is not null && Equals(other.Value);
         }
-        
+
         public override String? ToString()
         {
             return Value?.ToString();

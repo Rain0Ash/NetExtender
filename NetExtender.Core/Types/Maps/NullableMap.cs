@@ -20,7 +20,7 @@ namespace NetExtender.Types.Maps
                 return _keys ??= new SelectorCollectionWrapper<NullMaybe<TKey>, TKey>(base.Keys, nullable => nullable);
             }
         }
-        
+
         private ICollection<TValue>? _values { get; set; }
         public new ICollection<TValue> Values
         {
@@ -29,7 +29,7 @@ namespace NetExtender.Types.Maps
                 return _values ??= new SelectorCollectionWrapper<NullMaybe<TValue>, TValue>(base.Values, nullable => nullable);
             }
         }
-        
+
         IEnumerable<TKey> IReadOnlyMap<TKey, TValue>.Keys
         {
             get
@@ -45,7 +45,7 @@ namespace NetExtender.Types.Maps
                 return Values;
             }
         }
-        
+
         public new IEqualityComparer<TKey> Comparer
         {
             get
@@ -95,7 +95,7 @@ namespace NetExtender.Types.Maps
             : base(comparer)
         {
         }
-        
+
         public NullableMap(IEqualityComparer<NullMaybe<TKey>>? keyComparer, IEqualityComparer<NullMaybe<TValue>>? valueComparer)
             : base(keyComparer, valueComparer)
         {
@@ -115,7 +115,7 @@ namespace NetExtender.Types.Maps
             : base(source, comparer)
         {
         }
-        
+
         public NullableMap(IEnumerable<KeyValuePair<NullMaybe<TValue>, NullMaybe<TKey>>> source, IEqualityComparer<NullMaybe<TKey>>? comparer)
             : base(source, comparer)
         {
@@ -145,7 +145,7 @@ namespace NetExtender.Types.Maps
         {
             return base.Contains(new KeyValuePair<NullMaybe<TKey>, NullMaybe<TValue>>(item.Key, item.Value));
         }
-        
+
         public Boolean ContainsKey(TKey key)
         {
             return base.ContainsKey(key);
@@ -189,7 +189,7 @@ namespace NetExtender.Types.Maps
             value = result;
             return successful;
         }
-        
+
         public void Add(KeyValuePair<TKey, TValue> item)
         {
             base.Add(new KeyValuePair<NullMaybe<TKey>, NullMaybe<TValue>>(item.Key, item.Value));
@@ -229,7 +229,7 @@ namespace NetExtender.Types.Maps
         {
             return base.TryAddByValue(new KeyValuePair<NullMaybe<TValue>, NullMaybe<TKey>>(item.Key, item.Value));
         }
-        
+
         public Boolean Remove(KeyValuePair<TKey, TValue> item)
         {
             return base.Remove(new KeyValuePair<NullMaybe<TKey>, NullMaybe<TValue>>(item.Key, item.Value));
@@ -266,7 +266,7 @@ namespace NetExtender.Types.Maps
         {
             return base.RemoveByValue(new KeyValuePair<NullMaybe<TValue>, NullMaybe<TKey>>(item.Key, item.Value));
         }
-        
+
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 arrayIndex)
         {
             CollectionUtilities.CopyTo(this, array, arrayIndex);
@@ -284,7 +284,7 @@ namespace NetExtender.Types.Maps
                 yield return new KeyValuePair<TKey, TValue>(key, value);
             }
         }
-        
+
         public new IEnumerator<KeyValuePair<TValue, TKey>> GetValuesEnumerator()
         {
             foreach ((NullMaybe<TValue> key, NullMaybe<TKey> value) in (IEnumerable<KeyValuePair<NullMaybe<TValue>, NullMaybe<TKey>>>) this)

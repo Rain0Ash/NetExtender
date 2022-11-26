@@ -9,7 +9,7 @@ namespace NetExtender.Configuration
 {
     public delegate void ConfigurationChangedEventHandler(Object? sender, ConfigurationChangedEventArgs args);
     public delegate void ConfigurationChangedEventHandler<T>(Object? sender, ConfigurationChangedEventArgs<T> args);
-    
+
     public class ConfigurationChangedEventArgs : HandledEventArgs<ConfigurationValueEntry>
     {
         public ConfigurationChangedEventArgs(ConfigurationValueEntry value)
@@ -22,7 +22,7 @@ namespace NetExtender.Configuration
         {
         }
     }
-    
+
     public class ConfigurationChangedEventArgs<T> : HandledEventArgs<ConfigurationValueEntry<T>>
     {
         public ConfigurationChangedEventArgs(ConfigurationValueEntry<T> value)

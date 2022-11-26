@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(maximum, comparison));
         }
-        
+
         public static IEnumerable<SByte> WhereInRange(this IEnumerable<SByte> source, SByte minimum, SByte maximum)
         {
             if (source is null)
@@ -50,7 +50,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(minimum, maximum, comparison));
         }
-        
+
         public static IEnumerable<Byte> WhereInRange(this IEnumerable<Byte> source, Byte maximum)
         {
             if (source is null)
@@ -70,7 +70,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(maximum, comparison));
         }
-        
+
         public static IEnumerable<Byte> WhereInRange(this IEnumerable<Byte> source, Byte minimum, Byte maximum)
         {
             if (source is null)
@@ -90,7 +90,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(minimum, maximum, comparison));
         }
-        
+
         public static IEnumerable<Int16> WhereInRange(this IEnumerable<Int16> source, Int16 maximum)
         {
             if (source is null)
@@ -110,7 +110,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(maximum, comparison));
         }
-        
+
         public static IEnumerable<Int16> WhereInRange(this IEnumerable<Int16> source, Int16 minimum, Int16 maximum)
         {
             if (source is null)
@@ -130,7 +130,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(minimum, maximum, comparison));
         }
-        
+
         public static IEnumerable<UInt16> WhereInRange(this IEnumerable<UInt16> source, UInt16 maximum)
         {
             if (source is null)
@@ -150,7 +150,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(maximum, comparison));
         }
-        
+
         public static IEnumerable<UInt16> WhereInRange(this IEnumerable<UInt16> source, UInt16 minimum, UInt16 maximum)
         {
             if (source is null)
@@ -170,7 +170,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(minimum, maximum, comparison));
         }
-        
+
         public static IEnumerable<Int32> WhereInRange(this IEnumerable<Int32> source, Int32 maximum)
         {
             if (source is null)
@@ -190,7 +190,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange( maximum, comparison));
         }
-        
+
         public static IEnumerable<Int32> WhereInRange(this IEnumerable<Int32> source, Int32 minimum, Int32 maximum)
         {
             if (source is null)
@@ -210,7 +210,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(minimum, maximum, comparison));
         }
-        
+
         public static IEnumerable<UInt32> WhereInRange(this IEnumerable<UInt32> source, UInt32 maximum)
         {
             if (source is null)
@@ -230,7 +230,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(maximum, comparison));
         }
-        
+
         public static IEnumerable<UInt32> WhereInRange(this IEnumerable<UInt32> source, UInt32 minimum, UInt32 maximum)
         {
             if (source is null)
@@ -250,7 +250,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(minimum, maximum, comparison));
         }
-        
+
         public static IEnumerable<Int64> WhereInRange(this IEnumerable<Int64> source, Int64 maximum)
         {
             if (source is null)
@@ -270,7 +270,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(maximum, comparison));
         }
-        
+
         public static IEnumerable<Int64> WhereInRange(this IEnumerable<Int64> source, Int64 minimum, Int64 maximum)
         {
             if (source is null)
@@ -290,7 +290,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(minimum, maximum, comparison));
         }
-        
+
         public static IEnumerable<UInt64> WhereInRange(this IEnumerable<UInt64> source, UInt64 maximum)
         {
             if (source is null)
@@ -310,7 +310,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(maximum, comparison));
         }
-        
+
         public static IEnumerable<UInt64> WhereInRange(this IEnumerable<UInt64> source, UInt64 minimum, UInt64 maximum)
         {
             if (source is null)
@@ -330,7 +330,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(minimum, maximum, comparison));
         }
-        
+
         public static IEnumerable<Single> WhereInRange(this IEnumerable<Single> source, Single maximum)
         {
             if (source is null)
@@ -350,7 +350,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(maximum, comparison));
         }
-        
+
         public static IEnumerable<Single> WhereInRange(this IEnumerable<Single> source, Single minimum, Single maximum)
         {
             if (source is null)
@@ -370,7 +370,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(minimum, maximum, comparison));
         }
-        
+
         public static IEnumerable<Double> WhereInRange(this IEnumerable<Double> source, Double maximum)
         {
             if (source is null)
@@ -390,7 +390,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(maximum, comparison));
         }
-        
+
         public static IEnumerable<Double> WhereInRange(this IEnumerable<Double> source, Double minimum, Double maximum)
         {
             if (source is null)
@@ -410,7 +410,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(minimum, maximum, comparison));
         }
-        
+
         public static IEnumerable<Decimal> WhereInRange(this IEnumerable<Decimal> source, Decimal maximum)
         {
             if (source is null)
@@ -430,7 +430,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(maximum, comparison));
         }
-        
+
         public static IEnumerable<Decimal> WhereInRange(this IEnumerable<Decimal> source, Decimal minimum, Decimal maximum)
         {
             if (source is null)
@@ -450,7 +450,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(minimum, maximum, comparison));
         }
-        
+
         public static IEnumerable<BigInteger> WhereInRange(this IEnumerable<BigInteger> source, BigInteger maximum)
         {
             if (source is null)
@@ -470,7 +470,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(value => value.InRange(maximum, comparison));
         }
-        
+
         public static IEnumerable<BigInteger> WhereInRange(this IEnumerable<BigInteger> source, BigInteger minimum, BigInteger maximum)
         {
             if (source is null)

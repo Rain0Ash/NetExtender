@@ -41,7 +41,7 @@ namespace NetExtender.Types.Monads
             : this((ILazy<Task<T>>) new LazyWrapper<Task<T>>(lazy ?? throw new ArgumentNullException(nameof(lazy))))
         {
         }
-        
+
         public AsyncLazyWrapper(ILazy<Task<T>> lazy)
         {
             Internal = lazy ?? throw new ArgumentNullException(nameof(lazy));

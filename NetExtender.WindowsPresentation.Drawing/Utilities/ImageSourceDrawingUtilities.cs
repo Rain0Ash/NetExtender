@@ -19,14 +19,14 @@ namespace NetExtender.Utilities.Types
     {
         [DllImport("gdi32.dll", SetLastError = true)]
         private static extern Boolean DeleteObject(IntPtr handle);
-        
+
         private static BitmapSizeOptions Options { get; } = BitmapSizeOptions.FromEmptyOptions();
 
         public static ImageSource ToImageSource(this Icon icon)
         {
             return ToBitmapSource(icon);
         }
-        
+
         public static BitmapSource ToBitmapSource(this Icon icon)
         {
             if (icon is null)
@@ -50,12 +50,12 @@ namespace NetExtender.Utilities.Types
             }
 
             IntPtr handle = image.GetHbitmap();
-            
+
             if (handle == IntPtr.Zero)
             {
                 throw new InvalidOperationException("Could not get the handle of the image.");
             }
-            
+
             try
             {
                 BitmapSource source = Imaging.CreateBitmapSourceFromHBitmap(handle, IntPtr.Zero, Int32Rect.Empty, Options);
@@ -88,16 +88,16 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             Bitmap bitmap = new Bitmap(source.PixelWidth, source.PixelHeight, DrawingPixelFormat.Format32bppPArgb);
             BitmapData bits = bitmap.LockBits(new Rectangle(DrawingPoint.Empty, bitmap.Size), ImageLockMode.WriteOnly, DrawingPixelFormat.Format32bppPArgb);
-	
+
             source.CopyPixels(Int32Rect.Empty, bits.Scan0, bits.Height * bits.Stride, bits.Stride);
             bitmap.UnlockBits(bits);
-	
+
             return bitmap;
         }
-        
+
         public static BitmapSource SetOpacity(this BitmapSource source, Double opacity)
         {
             if (source is null)
@@ -116,12 +116,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(first));
             }
-            
+
             if (second is null)
             {
                 throw new ArgumentNullException(nameof(second));
             }
-            
+
             using Bitmap firstbitmap = first.ToBitmap();
             using Bitmap blending = firstbitmap.AlphaBlending(second, opacity);
             return blending.ToBitmapSource();
@@ -133,12 +133,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(first));
             }
-            
+
             if (second is null)
             {
                 throw new ArgumentNullException(nameof(second));
             }
-            
+
             using Bitmap firstbitmap = first.ToBitmap();
             using Bitmap secondbitmap = second.ToBitmap();
             using Bitmap blending = firstbitmap.AlphaBlending(secondbitmap, opacity);
@@ -156,7 +156,7 @@ namespace NetExtender.Utilities.Types
             encoder.Frames.Add(BitmapFrame.Create(image));
             using MemoryStream memory = new MemoryStream();
             encoder.Save(memory);
-                
+
             return memory.ToArray();
         }
 
@@ -171,7 +171,7 @@ namespace NetExtender.Utilities.Types
             PngBitmapDecoder decoder = new PngBitmapDecoder(memory, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
             return decoder.Frames[0];
         }
-        
+
         public static BitmapSource FromBytes(Stream image)
         {
             if (image is null)

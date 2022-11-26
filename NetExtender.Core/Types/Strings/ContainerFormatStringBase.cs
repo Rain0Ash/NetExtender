@@ -15,17 +15,17 @@ namespace NetExtender.Types.Strings
         {
             return Format(null);
         }
-        
+
         public virtual String Format(IFormatProvider? provider)
         {
             return Arguments > 0 ? Format(provider, StringUtilities.FormatSafeGetNotNullArguments(FormatArguments, Arguments)) : NonFormatToString(provider);
         }
-        
+
         public override String ToString()
         {
             return Format() ?? String.Empty;
         }
-        
+
         public override String ToString(IFormatProvider? provider)
         {
             return Format(provider) ?? String.Empty;

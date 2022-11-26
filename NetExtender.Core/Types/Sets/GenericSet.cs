@@ -16,7 +16,7 @@ namespace NetExtender.Types.Sets
         {
             return set is not null ? Set.Create(set) : null;
         }
-        
+
         [return: NotNullIfNotNull("set")]
         public static implicit operator Set<T>?(SortedSet<T>? set)
         {
@@ -61,7 +61,7 @@ namespace NetExtender.Types.Sets
             : this(new HashSet<T>())
         {
         }
-        
+
         public Set(ISet<T> set)
         {
             Internal = set ?? throw new ArgumentNullException(nameof(set));
@@ -136,12 +136,12 @@ namespace NetExtender.Types.Sets
         {
             return Internal.Remove(item);
         }
-        
+
         public void Clear()
         {
             Internal.Clear();
         }
-        
+
         void ICollection.CopyTo(Array array, Int32 index)
         {
             Internal.CopyTo((T[]) array, index);
@@ -151,7 +151,7 @@ namespace NetExtender.Types.Sets
         {
             Internal.CopyTo(array, arrayIndex);
         }
-        
+
         public IEnumerator<T> GetEnumerator()
         {
             return Internal.GetEnumerator();

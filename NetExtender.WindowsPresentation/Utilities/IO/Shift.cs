@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.Windows.IO
                     return Modifiers == ModifierKeys.Shift;
                 }
             }
-            
+
             public static Boolean HasShift
             {
                 get

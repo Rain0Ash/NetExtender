@@ -13,7 +13,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
         {
             return GetTableName(model, typeof(TEntity));
         }
-        
+
         public static String? GetTableName(this IModel model, Type type)
         {
             if (model is null)

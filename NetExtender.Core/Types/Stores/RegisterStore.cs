@@ -17,7 +17,7 @@ namespace NetExtender.Types.Stores
             return Store.GetOrAdd(key, () => Interlocked.Increment(ref Next));
         }
     }
-    
+
     public abstract class RegisterStore<TKey, TValue> : IRegisterStore<TKey, TValue> where TKey : class where TValue : struct, IEquatable<TValue>
     {
         protected IMemoryStore<TKey, TValue> Store { get; } = new MemoryStore<TKey, TValue>();
@@ -74,7 +74,7 @@ namespace NetExtender.Types.Stores
             Store.Clear();
             Next = default;
         }
-        
+
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             return Store.GetEnumerator();
@@ -84,7 +84,7 @@ namespace NetExtender.Types.Stores
         {
             return GetEnumerator();
         }
-        
+
         public TValue this[TKey key]
         {
             get

@@ -53,7 +53,7 @@ namespace NetExtender.Utilities.Cryptography
         {
             return Size(type) * BitUtilities.BitInByte;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Byte[] Hashing(this String value)
         {
@@ -156,7 +156,7 @@ namespace NetExtender.Utilities.Cryptography
         {
             return Hashing(value, destination, DefaultHashType);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Hashing(this Byte[] value, Span<Byte> destination, HashType type)
         {
@@ -167,7 +167,7 @@ namespace NetExtender.Utilities.Cryptography
 
             return Hashing((ReadOnlySpan<Byte>) value, destination, type);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Hashing(this Memory<Byte> value, Span<Byte> destination, HashType type)
         {
@@ -191,7 +191,7 @@ namespace NetExtender.Utilities.Cryptography
         {
             return Hashing(value, destination, type, out _);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Hashing(this Byte[] value, Span<Byte> destination, out Int32 written)
         {
@@ -202,7 +202,7 @@ namespace NetExtender.Utilities.Cryptography
 
             return Hashing((ReadOnlySpan<Byte>) value, destination, out written);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Hashing(this Memory<Byte> value, Span<Byte> destination, out Int32 written)
         {
@@ -226,7 +226,7 @@ namespace NetExtender.Utilities.Cryptography
         {
             return Hashing(value, destination, DefaultHashType, out written);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Hashing(this Byte[] value, Span<Byte> destination, HashType type, out Int32 written)
         {
@@ -237,7 +237,7 @@ namespace NetExtender.Utilities.Cryptography
 
             return Hashing((ReadOnlySpan<Byte>) value, destination, type, out written);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Hashing(this Memory<Byte> value, Span<Byte> destination, HashType type, out Int32 written)
         {
@@ -573,13 +573,13 @@ namespace NetExtender.Utilities.Cryptography
                 }
 
                 UInt32 checksum = Crc32(value);
-                    
+
                 for (written = 0; written < sizeof(UInt32); written++)
                 {
                     destination[written] = (Byte) checksum;
                     checksum >>= BitUtilities.BitInByte;
                 }
-                    
+
                 return true;
             }
 
@@ -591,7 +591,7 @@ namespace NetExtender.Utilities.Cryptography
             public static UInt64 Crc64(ReadOnlySpan<Byte> value)
             {
                 UInt64 checksum = 0;
-                
+
                 foreach (Byte item in value)
                 {
                     checksum = Crc64Table.Table[(Byte) (checksum ^ item)] ^ (checksum >> 8);
@@ -614,7 +614,7 @@ namespace NetExtender.Utilities.Cryptography
                 }
 
                 UInt64 checksum = Crc64(value);
-                    
+
                 for (written = 0; written < sizeof(UInt64); written++)
                 {
                     destination[written] = (Byte) checksum;

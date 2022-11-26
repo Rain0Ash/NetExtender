@@ -27,7 +27,7 @@ namespace NetExtender.Types.Queues
                 (Workers[i] = new Thread(Work) { Name = name + i }).Start();
             }
         }
-        
+
         public void Enqueue(Action item)
         {
             if (item is null)

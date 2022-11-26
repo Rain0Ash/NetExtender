@@ -27,7 +27,7 @@ namespace NetExtender.Types.Random
                 return 0;
             }
         }
-        
+
         private DefaultRandomSelector()
         {
         }

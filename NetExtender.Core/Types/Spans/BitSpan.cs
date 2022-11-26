@@ -11,7 +11,7 @@ namespace NetExtender.Types.Spans
         {
             return new ReadOnlyBitSpan(span.Span);
         }
-        
+
         private const Int32 Size = sizeof(Int32) * 8;
         private Span<Int32> Span { get; }
 
@@ -19,7 +19,7 @@ namespace NetExtender.Types.Spans
         {
             Span = span;
         }
-        
+
         public static Int32 GetLength(Int32 bits)
         {
             return bits > 0 ? (bits - 1) / Size + 1 : 0;
@@ -51,7 +51,7 @@ namespace NetExtender.Types.Spans
                     Span[index] |= bit;
                     return;
                 }
-                    
+
                 Span[index] &= ~bit;
             }
         }

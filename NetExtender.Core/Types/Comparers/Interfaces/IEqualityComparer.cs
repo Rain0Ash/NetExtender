@@ -11,12 +11,12 @@ namespace NetExtender.Types.Comparers.Interfaces
         {
             return Equals(x, y);
         }
-        
+
         public Boolean IsEquals(T2 x, T1 y)
         {
             return Equals(y, x);
         }
-        
+
         public Boolean Equals(T1 x, T2 y);
 
         public Int32 GetHashCode(T1 obj);

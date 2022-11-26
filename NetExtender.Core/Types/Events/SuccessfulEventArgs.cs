@@ -8,12 +8,12 @@ namespace NetExtender.Types.Events
     public class SuccessfulEventArgs<T> : SuccessfulEventArgs
     {
         public T Value { get; }
-        
+
         public SuccessfulEventArgs(T value)
             : this(value, true)
         {
         }
-        
+
         public SuccessfulEventArgs(Boolean successful)
             : this(default!, successful)
         {

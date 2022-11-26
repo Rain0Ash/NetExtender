@@ -15,7 +15,7 @@ namespace NetExtender.Types.TextWriters
     public class FilterTextWriterWrapper : TextWriter, ISet<String>, IReadOnlySet<String>
     {
         protected TextWriter Internal { get; }
-        
+
         public override Encoding Encoding
         {
             get
@@ -44,9 +44,9 @@ namespace NetExtender.Types.TextWriters
                 Internal.NewLine = value;
             }
         }
-        
+
         protected ISet<String> Filter { get; }
-        
+
         public Int32 Count
         {
             get
@@ -220,7 +220,7 @@ namespace NetExtender.Types.TextWriters
             {
                 return;
             }
-            
+
             Internal.WriteLine(buffer, index, count);
         }
 
@@ -265,7 +265,7 @@ namespace NetExtender.Types.TextWriters
             {
                 return;
             }
-            
+
             Internal.WriteLine(value);
         }
 
@@ -338,7 +338,7 @@ namespace NetExtender.Types.TextWriters
         {
             return Internal.WriteLineAsync(value, cancellationToken);
         }
-        
+
         public override void Flush()
         {
             Internal.Flush();
@@ -376,12 +376,12 @@ namespace NetExtender.Types.TextWriters
         {
             return Internal.InitializeLifetimeService();
         }
-        
+
         public Boolean Contains(String item)
         {
             return Filter.Contains(item);
         }
-        
+
         void ICollection<String>.Add(String item)
         {
             Add(item);
@@ -391,7 +391,7 @@ namespace NetExtender.Types.TextWriters
         {
             return Filter.Add(item);
         }
-        
+
         public Boolean Remove(String item)
         {
             return Filter.Remove(item);

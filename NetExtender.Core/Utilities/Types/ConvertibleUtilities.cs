@@ -18,7 +18,7 @@ namespace NetExtender.Utilities.Types
 
             return value.ToBoolean(null);
         }
-        
+
         [Pure]
         public static Char ToChar(this IConvertible value)
         {
@@ -29,7 +29,7 @@ namespace NetExtender.Utilities.Types
 
             return value.ToChar(null);
         }
-        
+
         [Pure]
         public static Char32 ToChar32(this IConvertible value)
         {
@@ -46,7 +46,7 @@ namespace NetExtender.Utilities.Types
 
             return value.ToUInt32(provider);
         }
-        
+
         [Pure]
         public static SByte ToSByte(this IConvertible value)
         {
@@ -57,7 +57,7 @@ namespace NetExtender.Utilities.Types
 
             return value.ToSByte(null);
         }
-        
+
         [Pure]
         public static Byte ToByte(this IConvertible value)
         {
@@ -68,7 +68,7 @@ namespace NetExtender.Utilities.Types
 
             return value.ToByte(null);
         }
-        
+
         [Pure]
         public static Int16 ToInt16(this IConvertible value)
         {
@@ -79,7 +79,7 @@ namespace NetExtender.Utilities.Types
 
             return value.ToInt16(null);
         }
-        
+
         [Pure]
         public static UInt16 ToUInt16(this IConvertible value)
         {
@@ -90,7 +90,7 @@ namespace NetExtender.Utilities.Types
 
             return value.ToUInt16(null);
         }
-        
+
         [Pure]
         public static Int32 ToInt32(this IConvertible value)
         {
@@ -101,7 +101,7 @@ namespace NetExtender.Utilities.Types
 
             return value.ToInt32(null);
         }
-        
+
         [Pure]
         public static UInt32 ToUInt32(this IConvertible value)
         {
@@ -112,7 +112,7 @@ namespace NetExtender.Utilities.Types
 
             return value.ToUInt32(null);
         }
-        
+
         [Pure]
         public static Int64 ToInt64(this IConvertible value)
         {
@@ -123,7 +123,7 @@ namespace NetExtender.Utilities.Types
 
             return value.ToInt64(null);
         }
-        
+
         [Pure]
         public static UInt64 ToUInt64(this IConvertible value)
         {
@@ -134,7 +134,7 @@ namespace NetExtender.Utilities.Types
 
             return value.ToUInt64(null);
         }
-        
+
         [Pure]
         public static Single ToSingle(this IConvertible value)
         {
@@ -145,7 +145,7 @@ namespace NetExtender.Utilities.Types
 
             return value.ToSingle(null);
         }
-        
+
         [Pure]
         public static Double ToDouble(this IConvertible value)
         {
@@ -156,7 +156,7 @@ namespace NetExtender.Utilities.Types
 
             return value.ToDouble(null);
         }
-        
+
         [Pure]
         public static Decimal ToDecimal(this IConvertible value)
         {
@@ -167,7 +167,7 @@ namespace NetExtender.Utilities.Types
 
             return value.ToDecimal(null);
         }
-        
+
         [Pure]
         public static DateTime ToDateTime(this IConvertible value)
         {
@@ -178,7 +178,7 @@ namespace NetExtender.Utilities.Types
 
             return value.ToDateTime(null);
         }
-        
+
         [Pure]
         public static String ToString(this IConvertible value)
         {
@@ -189,7 +189,7 @@ namespace NetExtender.Utilities.Types
 
             return value.ToString(null);
         }
-        
+
         [Pure]
         public static Object ToType(this IConvertible value, Type type)
         {

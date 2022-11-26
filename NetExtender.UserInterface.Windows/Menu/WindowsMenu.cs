@@ -47,7 +47,7 @@ namespace NetExtender.UserInterface.Windows.Menu
 
             return successful;
         }
-        
+
         public Boolean Contains(WindowsMenuItem item)
         {
             return Items.Contains(item);
@@ -57,41 +57,41 @@ namespace NetExtender.UserInterface.Windows.Menu
         {
             return Items.IndexOf(item);
         }
-        
+
         public WindowsMenu Add(WindowsMenuItem item)
         {
             if (Count >= Byte.MaxValue)
             {
                 throw new InvalidOperationException();
             }
-            
+
             Items.Add(item);
             return this;
         }
-        
+
         public WindowsMenu Insert(Byte index, WindowsMenuItem item)
         {
             if (Count >= Byte.MaxValue)
             {
                 throw new InvalidOperationException();
             }
-            
+
             Items.Insert(index, item);
             return this;
         }
-        
+
         public WindowsMenu Remove(WindowsMenuItem item)
         {
             Items.Remove(item);
             return this;
         }
-        
+
         public WindowsMenu Clear()
         {
             Items.Clear();
             return this;
         }
-        
+
         public WindowsMenuItem this[Byte index]
         {
             get
@@ -103,7 +103,7 @@ namespace NetExtender.UserInterface.Windows.Menu
                 Items[index] = value ?? throw new ArgumentNullException(nameof(value));
             }
         }
-        
+
         public IEnumerator<WindowsMenuItem> GetEnumerator()
         {
             return Items.GetEnumerator();

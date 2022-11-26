@@ -22,7 +22,7 @@ namespace NetExtender.Utilities.Cryptography
 
             return new DeterministicStringEncryptorWrapper(encryptor);
         }
-        
+
         public static DeterministicStringEncryptorWrapper CreateDeterministic(this IStringEncryptor encryptor, IEnumerable<KeyValuePair<String, String?>> source)
         {
             if (encryptor is null)
@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.Cryptography
 
             return new DeterministicStringEncryptorWrapper(encryptor, source);
         }
-        
+
         public static DeterministicStringCryptorWrapper CreateDeterministic(this IStringCryptor encryptor)
         {
             if (encryptor is null)
@@ -42,7 +42,7 @@ namespace NetExtender.Utilities.Cryptography
 
             return new DeterministicStringCryptorWrapper(encryptor);
         }
-        
+
         public static DeterministicStringCryptorWrapper CreateDeterministic(this IStringCryptor encryptor, IEnumerable<KeyValuePair<String, String?>> source)
         {
             if (encryptor is null)
@@ -52,7 +52,7 @@ namespace NetExtender.Utilities.Cryptography
 
             return new DeterministicStringCryptorWrapper(encryptor, source);
         }
-        
+
         public static DeterministicStringEncryptorWrapper<T> CreateDeterministic<T>(this T encryptor) where T : IStringEncryptor
         {
             if (encryptor is null)
@@ -62,7 +62,7 @@ namespace NetExtender.Utilities.Cryptography
 
             return new DeterministicStringEncryptorWrapper<T>(encryptor);
         }
-        
+
         public static DeterministicStringEncryptorWrapper<T> CreateDeterministic<T>(this T encryptor, IEnumerable<KeyValuePair<String, String?>> source) where T : IStringEncryptor
         {
             if (encryptor is null)
@@ -82,7 +82,7 @@ namespace NetExtender.Utilities.Cryptography
 
             return DeterministicStringEncryptorWrapper.Register(encryptor);
         }
-        
+
         public static Boolean TryEncrypt(this IStringEncryptor encryptor, String? value, out String? result)
         {
             if (encryptor is null)
@@ -113,7 +113,7 @@ namespace NetExtender.Utilities.Cryptography
                 return false;
             }
         }
-        
+
         public static Boolean TryDecrypt(this IStringDecryptor decryptor, String? value, out String? result)
         {
             if (decryptor is null)
@@ -126,7 +126,7 @@ namespace NetExtender.Utilities.Cryptography
                 result = value;
                 return true;
             }
-            
+
             try
             {
                 if (!decryptor.IsDecrypt)
@@ -134,7 +134,7 @@ namespace NetExtender.Utilities.Cryptography
                     result = default;
                     return false;
                 }
-                        
+
                 result = decryptor.Decrypt(value);
                 return result is not null;
             }
@@ -144,7 +144,7 @@ namespace NetExtender.Utilities.Cryptography
                 return false;
             }
         }
-        
+
         public static Boolean TryEncrypt(this IStringEncryptor encryptor, IEnumerable<String>? source, out IEnumerable<String>? result)
         {
             if (encryptor is null)
@@ -165,7 +165,7 @@ namespace NetExtender.Utilities.Cryptography
                     result = default;
                     return false;
                 }
-                        
+
                 result = encryptor.Encrypt(source).ThrowIfNull<String, CryptographicException>().ToArray();
                 return true;
             }
@@ -196,7 +196,7 @@ namespace NetExtender.Utilities.Cryptography
                     result = default;
                     return false;
                 }
-                        
+
                 result = decryptor.Decrypt(source).ThrowIfNull<String, CryptographicException>().ToArray();
                 return true;
             }

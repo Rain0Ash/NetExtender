@@ -20,7 +20,7 @@ namespace NetExtender.Utilities.Types
         {
             return span;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<T> AsReadOnly<T>(this Span<T> span)
         {
@@ -32,91 +32,91 @@ namespace NetExtender.Utilities.Types
         {
             return ref GetReference(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref T GetReference<T>(this Span<T> source)
         {
             return ref MemoryMarshal.GetReference(source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref T GetReference<T>(this ReadOnlyMemory<T> source)
         {
             return ref GetReference(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref T GetReference<T>(this ReadOnlySpan<T> source)
         {
             return ref MemoryMarshal.GetReference(source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Read<T>(this Memory<Byte> source) where T : struct
         {
             return Read<T>(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Read<T>(this Span<Byte> source) where T : struct
         {
             return MemoryMarshal.Read<T>(source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Read<T>(this ReadOnlyMemory<Byte> source) where T : struct
         {
             return Read<T>(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Read<T>(this ReadOnlySpan<Byte> source) where T : struct
         {
             return MemoryMarshal.Read<T>(source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<TTo> As<TFrom, TTo>(this Memory<TFrom> source) where TFrom : struct where TTo : struct
         {
             return As<TFrom, TTo>(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<TTo> As<TFrom, TTo>(this Span<TFrom> source) where TFrom : struct where TTo : struct
         {
             return MemoryMarshal.Cast<TFrom, TTo>(source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<TTo> As<TFrom, TTo>(this ReadOnlyMemory<TFrom> source) where TFrom : struct where TTo : struct
         {
             return As<TFrom, TTo>(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<TTo> As<TFrom, TTo>(this ReadOnlySpan<TFrom> source) where TFrom : struct where TTo : struct
         {
             return MemoryMarshal.Cast<TFrom, TTo>(source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<Byte> AsBytes<T>(this Memory<T> source) where T : struct
         {
             return AsBytes(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<Byte> AsBytes<T>(this Span<T> source) where T : struct
         {
             return MemoryMarshal.AsBytes(source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<Byte> AsBytes<T>(this ReadOnlyMemory<T> source) where T : struct
         {
             return AsBytes(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<Byte> AsBytes<T>(this ReadOnlySpan<T> source) where T : struct
         {
@@ -151,7 +151,7 @@ namespace NetExtender.Utilities.Types
                 {
                     continue;
                 }
-                
+
                 (source[count], source[i]) = (source[i], source[count]);
                 count++;
             }
@@ -180,25 +180,25 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Swap<T>(this Memory<T> source, Int32 first, Int32 second)
         {
             Swap(source.Span, first, second);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Swap<T>(this Span<T> source, Int32 first, Int32 second)
         {
             (source[first], source[second]) = (source[second], source[first]);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Clear<T>(this Memory<T> source)
         {
             source.Span.Clear();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Clear<T>(this Memory<T> source, Int32 start)
         {
@@ -282,7 +282,7 @@ namespace NetExtender.Utilities.Types
 
             return false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Any<T>(this Memory<T> source, Func<T, Int32, Boolean> predicate)
         {
@@ -343,7 +343,7 @@ namespace NetExtender.Utilities.Types
         {
             return !Any(source, predicate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean All<T>(this Memory<T> source, Func<T, Int32, Boolean> predicate)
         {
@@ -429,13 +429,13 @@ namespace NetExtender.Utilities.Types
 
             return count;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 CountWhile<T>(this Memory<T> source, Func<T, Boolean> predicate)
         {
             return CountWhile(source.Span, predicate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 CountWhile<T>(this Span<T> source, Func<T, Boolean> predicate)
         {
@@ -468,13 +468,13 @@ namespace NetExtender.Utilities.Types
 
             return count;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 CountWhile<T>(this Memory<T> source, Func<T, Int32, Boolean> predicate)
         {
             return CountWhile(source.Span, predicate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 CountWhile<T>(this Span<T> source, Func<T, Int32, Boolean> predicate)
         {
@@ -486,7 +486,7 @@ namespace NetExtender.Utilities.Types
         {
             return CountWhile(source.Span, predicate);
         }
-        
+
         public static Int32 CountWhile<T>(this ReadOnlySpan<T> source, Func<T, Int32, Boolean> predicate)
         {
             if (predicate is null)
@@ -508,13 +508,13 @@ namespace NetExtender.Utilities.Types
 
             return count;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 ReverseCountWhile<T>(this Memory<T> source, Func<T, Boolean> predicate)
         {
             return ReverseCountWhile(source.Span, predicate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 ReverseCountWhile<T>(this Span<T> source, Func<T, Boolean> predicate)
         {
@@ -526,7 +526,7 @@ namespace NetExtender.Utilities.Types
         {
             return ReverseCountWhile(source.Span, predicate);
         }
-        
+
         public static Int32 ReverseCountWhile<T>(this ReadOnlySpan<T> source, Func<T, Boolean> predicate)
         {
             if (predicate is null)
@@ -547,13 +547,13 @@ namespace NetExtender.Utilities.Types
 
             return count;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 ReverseCountWhile<T>(this Memory<T> source, Func<T, Int32, Boolean> predicate)
         {
             return ReverseCountWhile(source.Span, predicate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 ReverseCountWhile<T>(this Span<T> source, Func<T, Int32, Boolean> predicate)
         {
@@ -572,7 +572,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             Int32 count = 0;
             for (Int32 i = source.Length - 1; i >= 0; i--)
             {
@@ -592,37 +592,37 @@ namespace NetExtender.Utilities.Types
         {
             return IndexOf(source.Span, value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 IndexOf<T>(this Span<T> source, T value)
         {
             return IndexOf((ReadOnlySpan<T>) source, value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 IndexOf<T>(this ReadOnlyMemory<T> source, T value)
         {
             return IndexOf(source.Span, value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 IndexOf<T>(this ReadOnlySpan<T> source, T value)
         {
             return IndexOf(source, value, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 IndexOf<T>(this Memory<T> source, T value, IEqualityComparer<T>? comparer)
         {
             return IndexOf(source.Span, value, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 IndexOf<T>(this Span<T> source, T value, IEqualityComparer<T>? comparer)
         {
             return IndexOf((ReadOnlySpan<T>) source, value, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 IndexOf<T>(this ReadOnlyMemory<T> source, T value, IEqualityComparer<T>? comparer)
         {
@@ -632,7 +632,7 @@ namespace NetExtender.Utilities.Types
         public static Int32 IndexOf<T>(this ReadOnlySpan<T> source, T value, IEqualityComparer<T>? comparer)
         {
             comparer ??= EqualityComparer<T>.Default;
-            
+
             Int32 index = 0;
             foreach (T item in source)
             {
@@ -643,60 +643,60 @@ namespace NetExtender.Utilities.Types
 
                 index++;
             }
-            
+
             return -1;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IndexOf<T>(this Memory<T> source, T value, out Int32 index)
         {
             return IndexOf(source.Span, value, out index);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IndexOf<T>(this Span<T> source, T value, out Int32 index)
         {
             return IndexOf((ReadOnlySpan<T>) source, value, out index);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IndexOf<T>(this ReadOnlyMemory<T> source, T value, out Int32 index)
         {
             return IndexOf(source.Span, value, out index);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IndexOf<T>(this ReadOnlySpan<T> source, T value, out Int32 index)
         {
             index = IndexOf(source, value);
             return index >= 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IndexOf<T>(this Memory<T> source, T value, IEqualityComparer<T>? comparer, out Int32 index)
         {
             return IndexOf(source.Span, value, comparer, out index);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IndexOf<T>(this Span<T> source, T value, IEqualityComparer<T>? comparer, out Int32 index)
         {
             return IndexOf((ReadOnlySpan<T>) source, value, comparer, out index);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IndexOf<T>(this ReadOnlyMemory<T> source, T value, IEqualityComparer<T>? comparer, out Int32 index)
         {
             return IndexOf(source.Span, value, comparer, out index);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IndexOf<T>(this ReadOnlySpan<T> source, T value, IEqualityComparer<T>? comparer, out Int32 index)
         {
             index = IndexOf(source, value, comparer);
             return index >= 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 FindIndex<T>(this Memory<T> source, Func<T, Boolean> predicate)
         {
@@ -714,7 +714,7 @@ namespace NetExtender.Utilities.Types
         {
             return FindIndex(source.Span, predicate);
         }
-        
+
         public static Int32 FindIndex<T>(this ReadOnlySpan<T> source, Func<T, Boolean> predicate)
         {
             if (predicate is null)
@@ -729,7 +729,7 @@ namespace NetExtender.Utilities.Types
                 {
                     return index;
                 }
-                
+
                 ++index;
             }
 
@@ -760,7 +760,7 @@ namespace NetExtender.Utilities.Types
             index = FindIndex(source, predicate);
             return index >= 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Single<T>(this Memory<T> source)
         {
@@ -778,13 +778,13 @@ namespace NetExtender.Utilities.Types
         {
             return Single(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Single<T>(this ReadOnlySpan<T> source)
         {
             return source.Length == 1 ? source[0] : throw new InvalidOperationException();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Single<T>(this Memory<T> source, Func<T, Boolean> predicate)
         {
@@ -837,10 +837,10 @@ namespace NetExtender.Utilities.Types
                 return item;
 
             } while (enumerator.MoveNext());
-            
+
             throw new InvalidOperationException();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? SingleOrDefault<T>(this Memory<T> source)
         {
@@ -858,13 +858,13 @@ namespace NetExtender.Utilities.Types
         {
             return SingleOrDefault(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? SingleOrDefault<T>(this ReadOnlySpan<T> source)
         {
             return source.Length == 1 ? source[0] : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? SingleOrDefault<T>(this Memory<T> source, Func<T, Boolean> predicate)
         {
@@ -882,13 +882,13 @@ namespace NetExtender.Utilities.Types
         {
             return SingleOrDefault(source.Span, predicate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? SingleOrDefault<T>(this ReadOnlySpan<T> source, Func<T, Boolean> predicate)
         {
             return SingleOrDefault(source!, predicate!, default(T));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T SingleOrDefault<T>(this Memory<T> source, T alternate)
         {
@@ -912,7 +912,7 @@ namespace NetExtender.Utilities.Types
         {
             return source.Length == 1 ? source[0] : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T SingleOrDefault<T>(this Memory<T> source, Func<T, Boolean> predicate, T alternate)
         {
@@ -968,7 +968,7 @@ namespace NetExtender.Utilities.Types
 
             return alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T SingleOrDefault<T>(this Memory<T> source, Func<T> alternate)
         {
@@ -1059,7 +1059,7 @@ namespace NetExtender.Utilities.Types
 
             return alternate();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetSingle<T>(this Memory<T> source, [MaybeNullWhen(false)] out T result)
         {
@@ -1152,7 +1152,7 @@ namespace NetExtender.Utilities.Types
             result = default;
             return false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T First<T>(this Memory<T> source)
         {
@@ -1170,13 +1170,13 @@ namespace NetExtender.Utilities.Types
         {
             return First(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T First<T>(this ReadOnlySpan<T> source)
         {
             return source.Length >= 1 ? source[0] : throw new InvalidOperationException();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T First<T>(this Memory<T> source, Func<T, Boolean> predicate)
         {
@@ -1201,7 +1201,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             foreach (T item in source)
             {
                 if (predicate(item))
@@ -1212,7 +1212,7 @@ namespace NetExtender.Utilities.Types
 
             throw new InvalidOperationException();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? FirstOrDefault<T>(this Memory<T> source)
         {
@@ -1230,13 +1230,13 @@ namespace NetExtender.Utilities.Types
         {
             return FirstOrDefault(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? FirstOrDefault<T>(this ReadOnlySpan<T> source)
         {
             return source.Length >= 1 ? source[0] : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? FirstOrDefault<T>(this Memory<T> source, Func<T, Boolean> predicate)
         {
@@ -1254,13 +1254,13 @@ namespace NetExtender.Utilities.Types
         {
             return FirstOrDefault(source.Span, predicate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? FirstOrDefault<T>(this ReadOnlySpan<T> source, Func<T, Boolean> predicate)
         {
             return FirstOrDefault(source!, predicate!, default(T));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T FirstOrDefault<T>(this Memory<T> source, T alternate)
         {
@@ -1284,7 +1284,7 @@ namespace NetExtender.Utilities.Types
         {
             return source.Length >= 1 ? source[0] : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T FirstOrDefault<T>(this Memory<T> source, Func<T, Boolean> predicate, T alternate)
         {
@@ -1317,10 +1317,10 @@ namespace NetExtender.Utilities.Types
                     return item;
                 }
             }
-            
+
             return alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T FirstOrDefault<T>(this Memory<T> source, Func<T> alternate)
         {
@@ -1388,10 +1388,10 @@ namespace NetExtender.Utilities.Types
                     return item;
                 }
             }
-            
+
             return alternate();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetFirst<T>(this Memory<T> source, [MaybeNullWhen(false)] out T result)
         {
@@ -1447,7 +1447,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             foreach (T item in source)
             {
                 if (!predicate(item))
@@ -1458,11 +1458,11 @@ namespace NetExtender.Utilities.Types
                 result = item;
                 return true;
             }
-            
+
             result = default;
             return false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Last<T>(this Memory<T> source)
         {
@@ -1480,13 +1480,13 @@ namespace NetExtender.Utilities.Types
         {
             return Last(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Last<T>(this ReadOnlySpan<T> source)
         {
             return source.Length >= 1 ? source[^1] : throw new InvalidOperationException();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Last<T>(this Memory<T> source, Func<T, Boolean> predicate)
         {
@@ -1523,7 +1523,7 @@ namespace NetExtender.Utilities.Types
 
             throw new InvalidOperationException();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? LastOrDefault<T>(this Memory<T> source)
         {
@@ -1541,13 +1541,13 @@ namespace NetExtender.Utilities.Types
         {
             return LastOrDefault(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? LastOrDefault<T>(this ReadOnlySpan<T> source)
         {
             return source.Length >= 1 ? source[^1] : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? LastOrDefault<T>(this Memory<T> source, Func<T, Boolean> predicate)
         {
@@ -1565,13 +1565,13 @@ namespace NetExtender.Utilities.Types
         {
             return LastOrDefault(source.Span, predicate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? LastOrDefault<T>(this ReadOnlySpan<T> source, Func<T, Boolean> predicate)
         {
             return LastOrDefault(source!, predicate!, default(T));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T LastOrDefault<T>(this Memory<T> source, T alternate)
         {
@@ -1595,7 +1595,7 @@ namespace NetExtender.Utilities.Types
         {
             return source.Length >= 1 ? source[^1] : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T LastOrDefault<T>(this Memory<T> source, Func<T, Boolean> predicate, T alternate)
         {
@@ -1632,7 +1632,7 @@ namespace NetExtender.Utilities.Types
 
             return alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T LastOrDefault<T>(this Memory<T> source, Func<T> alternate)
         {
@@ -1679,7 +1679,7 @@ namespace NetExtender.Utilities.Types
         {
             return LastOrDefault(source.Span, predicate, alternate);
         }
-        
+
         public static T LastOrDefault<T>(this ReadOnlySpan<T> source, Func<T, Boolean> predicate, Func<T> alternate)
         {
             if (predicate is null)
@@ -1703,7 +1703,7 @@ namespace NetExtender.Utilities.Types
 
             return alternate();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetLast<T>(this Memory<T> source, [MaybeNullWhen(false)] out T result)
         {
@@ -1825,7 +1825,7 @@ namespace NetExtender.Utilities.Types
             ForEachWhere((ReadOnlySpan<T>) source, where, action);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<T> ForEachWhere<T>(this ReadOnlyMemory<T> source, Func<T, Boolean> where, Action<T> action)
         {
@@ -1855,7 +1855,7 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEachWhere<T>(this Memory<T> source, Func<T, Int32, Boolean> where, Action<T> action)
         {
@@ -1869,14 +1869,14 @@ namespace NetExtender.Utilities.Types
             ForEachWhere((ReadOnlySpan<T>) source, where, action);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<T> ForEachWhere<T>(this ReadOnlyMemory<T> source, Func<T, Int32, Boolean> where, Action<T> action)
         {
             ForEachWhere(source.Span, where, action);
             return source;
         }
-        
+
         public static ReadOnlySpan<T> ForEachWhere<T>(this ReadOnlySpan<T> source, Func<T, Int32, Boolean> where, Action<T> action)
         {
             if (where is null)
@@ -1902,7 +1902,7 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEachWhereNot<T>(this Memory<T> source, Func<T, Boolean> where, Action<T> action)
         {
@@ -1916,14 +1916,14 @@ namespace NetExtender.Utilities.Types
             ForEachWhereNot((ReadOnlySpan<T>) source, where, action);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<T> ForEachWhereNot<T>(this ReadOnlyMemory<T> source, Func<T, Boolean> where, Action<T> action)
         {
             ForEachWhereNot(source.Span, where, action);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<T> ForEachWhereNot<T>(this ReadOnlySpan<T> source, Func<T, Boolean> where, Action<T> action)
         {
@@ -1939,7 +1939,7 @@ namespace NetExtender.Utilities.Types
 
             return ForEachWhere(source, item => !where(item), action);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEachWhereNot<T>(this Memory<T> source, Func<T, Int32, Boolean> where, Action<T> action)
         {
@@ -1953,14 +1953,14 @@ namespace NetExtender.Utilities.Types
             ForEachWhereNot((ReadOnlySpan<T>) source, where, action);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<T> ForEachWhereNot<T>(this ReadOnlyMemory<T> source, Func<T, Int32, Boolean> where, Action<T> action)
         {
             ForEachWhereNot(source.Span, where, action);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<T> ForEachWhereNot<T>(this ReadOnlySpan<T> source, Func<T, Int32, Boolean> where, Action<T> action)
         {
@@ -1976,7 +1976,7 @@ namespace NetExtender.Utilities.Types
 
             return ForEachWhere(source, (item, index) => !where(item, index), action);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEach<T>(this Memory<T> source, Action<T, Int32> action)
         {
@@ -1990,7 +1990,7 @@ namespace NetExtender.Utilities.Types
             ForEach((ReadOnlySpan<T>) source, action);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<T> ForEach<T>(this ReadOnlyMemory<T> source, Action<T, Int32> action)
         {
@@ -2014,7 +2014,7 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEachWhere<T>(this Memory<T> source, Func<T, Boolean> where, Action<T, Int32> action)
         {
@@ -2028,7 +2028,7 @@ namespace NetExtender.Utilities.Types
             ForEachWhere((ReadOnlySpan<T>) source, where, action);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<T> ForEachWhere<T>(this ReadOnlyMemory<T> source, Func<T, Boolean> where, Action<T, Int32> action)
         {
@@ -2061,7 +2061,7 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEachWhere<T>(this Memory<T> source, Func<T, Int32, Boolean> where, Action<T, Int32> action)
         {
@@ -2075,14 +2075,14 @@ namespace NetExtender.Utilities.Types
             ForEachWhere((ReadOnlySpan<T>) source, where, action);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<T> ForEachWhere<T>(this ReadOnlyMemory<T> source, Func<T, Int32, Boolean> where, Action<T, Int32> action)
         {
             ForEachWhere(source.Span, where, action);
             return source;
         }
-        
+
         public static ReadOnlySpan<T> ForEachWhere<T>(this ReadOnlySpan<T> source, Func<T, Int32, Boolean> where, Action<T, Int32> action)
         {
             if (where is null)
@@ -2108,7 +2108,7 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEachWhereNot<T>(this Memory<T> source, Func<T, Boolean> where, Action<T, Int32> action)
         {
@@ -2122,7 +2122,7 @@ namespace NetExtender.Utilities.Types
             ForEachWhereNot((ReadOnlySpan<T>) source, where, action);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<T> ForEachWhereNot<T>(this ReadOnlyMemory<T> source, Func<T, Boolean> where, Action<T, Int32> action)
         {
@@ -2145,7 +2145,7 @@ namespace NetExtender.Utilities.Types
 
             return ForEachWhere(source, item => !where(item), action);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEachWhereNot<T>(this Memory<T> source, Func<T, Int32, Boolean> where, Action<T, Int32> action)
         {
@@ -2159,14 +2159,14 @@ namespace NetExtender.Utilities.Types
             ForEachWhereNot((ReadOnlySpan<T>) source, where, action);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<T> ForEachWhereNot<T>(this ReadOnlyMemory<T> source, Func<T, Int32, Boolean> where, Action<T, Int32> action)
         {
             ForEachWhereNot(source.Span, where, action);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<T> ForEachWhereNot<T>(this ReadOnlySpan<T> source, Func<T, Int32, Boolean> where, Action<T, Int32> action)
         {
@@ -2182,7 +2182,7 @@ namespace NetExtender.Utilities.Types
 
             return ForEachWhere(source, (item, index) => !where(item, index), action);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEachBy<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Action<TKey> action)
         {
@@ -2223,7 +2223,7 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEachByWhere<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Func<TKey, Boolean> where, Action<TKey> action)
         {
@@ -2273,7 +2273,7 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEachByWhere<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey> action)
         {
@@ -2294,7 +2294,7 @@ namespace NetExtender.Utilities.Types
             ForEachByWhere(source.Span, selector, where, action);
             return source;
         }
-        
+
         public static ReadOnlySpan<T> ForEachByWhere<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey> action)
         {
             if (selector is null)
@@ -2326,7 +2326,7 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEachByWhereNot<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Func<TKey, Boolean> where, Action<TKey> action)
         {
@@ -2347,7 +2347,7 @@ namespace NetExtender.Utilities.Types
             ForEachByWhereNot(source.Span, selector, where, action);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<T> ForEachByWhereNot<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, Func<TKey, Boolean> where, Action<TKey> action)
         {
@@ -2368,7 +2368,7 @@ namespace NetExtender.Utilities.Types
 
             return ForEachByWhere(source, selector, item => !where(item), action);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEachByWhereNot<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey> action)
         {
@@ -2389,7 +2389,7 @@ namespace NetExtender.Utilities.Types
             ForEachByWhereNot(source.Span, selector, where, action);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<T> ForEachByWhereNot<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey> action)
         {
@@ -2431,7 +2431,7 @@ namespace NetExtender.Utilities.Types
             ForEachBy(source.Span, selector, action);
             return source;
         }
-        
+
         public static ReadOnlySpan<T> ForEachBy<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, Action<TKey, Int32> action)
         {
             if (selector is null)
@@ -2453,7 +2453,7 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEachByWhere<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Func<TKey, Boolean> where, Action<TKey, Int32> action)
         {
@@ -2506,7 +2506,7 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEachByWhere<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey, Int32> action)
         {
@@ -2527,7 +2527,7 @@ namespace NetExtender.Utilities.Types
             ForEachByWhere(source.Span, selector, where, action);
             return source;
         }
-        
+
         public static ReadOnlySpan<T> ForEachByWhere<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey, Int32> action)
         {
             if (selector is null)
@@ -2559,7 +2559,7 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEachByWhereNot<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Func<TKey, Boolean> where, Action<TKey, Int32> action)
         {
@@ -2601,7 +2601,7 @@ namespace NetExtender.Utilities.Types
 
             return ForEachByWhere(source, selector, item => !where(item), action);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEachByWhereNot<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey, Int32> action)
         {
@@ -2622,7 +2622,7 @@ namespace NetExtender.Utilities.Types
             ForEachByWhereNot(source.Span, selector, where, action);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<T> ForEachByWhereNot<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey, Int32> action)
         {
@@ -2643,21 +2643,21 @@ namespace NetExtender.Utilities.Types
 
             return ForEachByWhere(source, selector, (item, index) => !where(item, index), action);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEachEvery<T>(this Memory<T> source, Action<T> action, Int32 every)
         {
             ForEachEvery(source.Span, action, every);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<T> ForEachEvery<T>(this Span<T> source, Action<T> action, Int32 every)
         {
             ForEachEvery((ReadOnlySpan<T>) source, action, every);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<T> ForEachEvery<T>(this ReadOnlyMemory<T> source, Action<T> action, Int32 every)
         {
@@ -2670,21 +2670,21 @@ namespace NetExtender.Utilities.Types
         {
             return ForEachEvery(source, action, every, false);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> ForEachEvery<T>(this Memory<T> source, Action<T> action, Int32 every, Boolean first)
         {
             ForEachEvery(source.Span, action, every, first);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<T> ForEachEvery<T>(this Span<T> source, Action<T> action, Int32 every, Boolean first)
         {
             ForEachEvery((ReadOnlySpan<T>) source, action, every, first);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<T> ForEachEvery<T>(this ReadOnlyMemory<T> source, Action<T> action, Int32 every, Boolean first)
         {
@@ -2703,7 +2703,7 @@ namespace NetExtender.Utilities.Types
             {
                 return ForEach(source, action);
             }
-            
+
             Int32 counter = first ? 0 : 1;
             return source.ForEachWhere(_ => counter++ % every == 0, action);
         }
@@ -2731,7 +2731,7 @@ namespace NetExtender.Utilities.Types
         {
             return TryGetValue(source, index, out T? value) ? value : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T TryGetValue<T>(this Memory<T> source, Int32 index, T alternate)
         {
@@ -2755,7 +2755,7 @@ namespace NetExtender.Utilities.Types
         {
             return TryGetValue(source, index, out T? value) ? value : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T TryGetValue<T>(this Memory<T> source, Int32 index, Func<T> alternate)
         {
@@ -2773,7 +2773,7 @@ namespace NetExtender.Utilities.Types
         {
             return TryGetValue(source.Span, index, alternate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T TryGetValue<T>(this ReadOnlySpan<T> source, Int32 index, Func<T> alternate)
         {
@@ -2798,7 +2798,7 @@ namespace NetExtender.Utilities.Types
         {
             return TryGetValue(source.Span, index, out value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetValue<T>(this ReadOnlySpan<T> source, Int32 index, [MaybeNullWhen(false)] out T value)
         {
@@ -2822,7 +2822,7 @@ namespace NetExtender.Utilities.Types
         {
             return TryGetValue(source.Span, index, alternate, out value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetValue<T>(this ReadOnlySpan<T> source, Int32 index, T alternate, out T value)
         {
@@ -2831,7 +2831,7 @@ namespace NetExtender.Utilities.Types
                 value = alternate;
                 return false;
             }
-            
+
             value = source[index];
             return true;
         }
@@ -2853,7 +2853,7 @@ namespace NetExtender.Utilities.Types
         {
             return TryGetValue(source.Span, index, alternate, out value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetValue<T>(this ReadOnlySpan<T> source, Int32 index, Func<T> alternate, out T value)
         {
@@ -2867,11 +2867,11 @@ namespace NetExtender.Utilities.Types
                 value = alternate();
                 return false;
             }
-            
+
             value = source[index];
             return true;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T GetRandom<T>(this Memory<T> source)
         {
@@ -2883,7 +2883,7 @@ namespace NetExtender.Utilities.Types
         {
             return GetRandom((ReadOnlySpan<T>) source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T GetRandom<T>(this ReadOnlyMemory<T> source)
         {
@@ -2895,7 +2895,7 @@ namespace NetExtender.Utilities.Types
         {
             return source.Length > 0 ? source[RandomUtilities.NextNonNegative(source.Length - 1)] : throw new InvalidOperationException();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T GetRandomOrDefault<T>(this Memory<T> source, T alternate)
         {
@@ -2907,19 +2907,19 @@ namespace NetExtender.Utilities.Types
         {
             return GetRandomOrDefault((ReadOnlySpan<T>) source, alternate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T GetRandomOrDefault<T>(this ReadOnlyMemory<T> source, T alternate)
         {
             return GetRandomOrDefault(source.Span, alternate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T GetRandomOrDefault<T>(this ReadOnlySpan<T> source, T alternate)
         {
             return source.Length > 0 ? source[RandomUtilities.NextNonNegative(source.Length - 1)] : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T GetRandomOrDefault<T>(this Memory<T> source, Func<T> alternate)
         {
@@ -2931,13 +2931,13 @@ namespace NetExtender.Utilities.Types
         {
             return GetRandomOrDefault((ReadOnlySpan<T>) source, alternate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T GetRandomOrDefault<T>(this ReadOnlyMemory<T> source, Func<T> alternate)
         {
             return GetRandomOrDefault(source.Span, alternate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T GetRandomOrDefault<T>(this ReadOnlySpan<T> source, Func<T> alternate)
         {
@@ -2948,7 +2948,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Length > 0 ? source[RandomUtilities.NextNonNegative(source.Length - 1)] : alternate();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? GetRandomOrDefault<T>(this Memory<T> source)
         {
@@ -2960,13 +2960,13 @@ namespace NetExtender.Utilities.Types
         {
             return GetRandomOrDefault((ReadOnlySpan<T>) source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? GetRandomOrDefault<T>(this ReadOnlyMemory<T> source)
         {
             return GetRandomOrDefault(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? GetRandomOrDefault<T>(this ReadOnlySpan<T> source)
         {
@@ -2984,7 +2984,7 @@ namespace NetExtender.Utilities.Types
         {
             return Aggregate((ReadOnlySpan<T>) source, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Aggregate<T>(this ReadOnlyMemory<T> source, Func<T, T, T> selector)
         {
@@ -2997,7 +2997,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             if (source.Length <= 0)
             {
                 throw new InvalidOperationException();
@@ -3011,7 +3011,7 @@ namespace NetExtender.Utilities.Types
 
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Aggregate<T>(this Memory<T> source, T seed, Func<T, T, T> selector)
         {
@@ -3023,20 +3023,20 @@ namespace NetExtender.Utilities.Types
         {
             return Aggregate<T>((ReadOnlySpan<T>) source, seed, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Aggregate<T>(this ReadOnlyMemory<T> source, T seed, Func<T, T, T> selector)
         {
             return Aggregate<T>(source.Span, seed, selector);
         }
-        
+
         public static T Aggregate<T>(this ReadOnlySpan<T> source, T seed, Func<T, T, T> selector)
         {
             if (selector is null)
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             T result = seed;
             foreach (T item in source)
             {
@@ -3045,7 +3045,7 @@ namespace NetExtender.Utilities.Types
 
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TAccumulate Aggregate<T, TAccumulate>(this Memory<T> source, TAccumulate seed, Func<TAccumulate, T, TAccumulate> selector)
         {
@@ -3057,13 +3057,13 @@ namespace NetExtender.Utilities.Types
         {
             return Aggregate((ReadOnlySpan<T>) source, seed, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TAccumulate Aggregate<T, TAccumulate>(this ReadOnlyMemory<T> source, TAccumulate seed, Func<TAccumulate, T, TAccumulate> selector)
         {
             return Aggregate(source.Span, seed, selector);
         }
-        
+
         public static TAccumulate Aggregate<T, TAccumulate>(this ReadOnlySpan<T> source, TAccumulate seed, Func<TAccumulate, T, TAccumulate> selector)
         {
             if (selector is null)
@@ -3079,7 +3079,7 @@ namespace NetExtender.Utilities.Types
 
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TResult Aggregate<T, TAccumulate, TResult>(this Memory<T> source, TAccumulate seed, Func<TAccumulate, T, TAccumulate> selector, Func<TAccumulate, TResult> result)
         {
@@ -3091,7 +3091,7 @@ namespace NetExtender.Utilities.Types
         {
             return Aggregate((ReadOnlySpan<T>) source, seed, selector, result);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TResult Aggregate<T, TAccumulate, TResult>(this ReadOnlyMemory<T> source, TAccumulate seed, Func<TAccumulate, T, TAccumulate> selector, Func<TAccumulate, TResult> result)
         {
@@ -3118,7 +3118,7 @@ namespace NetExtender.Utilities.Types
 
             return result(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> Shuffle<T>(this Memory<T> source)
         {
@@ -3151,13 +3151,13 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             for (Int32 i = 0; i < source.Length; i++)
             {
                 Int32 j = random.Next(i, source.Length);
                 (source[i], source[j]) = (source[j], source[i]);
             }
-            
+
             return source;
         }
 
@@ -3176,7 +3176,7 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> Rotate<T>(this Memory<T> source)
         {
@@ -3218,44 +3218,44 @@ namespace NetExtender.Utilities.Types
             source.Slice(source.Length - offset).CopyTo(buffer);
             source.Slice(0, source.Length - offset).CopyTo(source.Slice(offset));
             buffer.CopyTo(source.Slice(0, offset));
-            
+
             return source;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static BigInteger Multiply(this Memory<BigInteger> source)
-		{
-			return Multiply(source.Span);
-		}
+        public static BigInteger Multiply(this Memory<BigInteger> source)
+        {
+            return Multiply(source.Span);
+        }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static BigInteger Multiply(this Span<BigInteger> source)
-		{
-			return Multiply((ReadOnlySpan<BigInteger>) source);
-		}
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger Multiply(this Span<BigInteger> source)
+        {
+            return Multiply((ReadOnlySpan<BigInteger>) source);
+        }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static BigInteger Multiply(this ReadOnlyMemory<BigInteger> source)
-		{
-			return Multiply(source.Span);
-		}
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger Multiply(this ReadOnlyMemory<BigInteger> source)
+        {
+            return Multiply(source.Span);
+        }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static BigInteger Multiply(this ReadOnlySpan<BigInteger> source)
-		{
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static BigInteger Multiply(this ReadOnlySpan<BigInteger> source)
+        {
             // ReSharper disable once RedundantOverflowCheckingContext
             checked
-			{
-				ReadOnlySpan<BigInteger>.Enumerator enumerator = source.GetEnumerator();
+            {
+                ReadOnlySpan<BigInteger>.Enumerator enumerator = source.GetEnumerator();
 
-				if (!enumerator.MoveNext() || enumerator.Current == BigInteger.Zero)
-				{
-					return BigInteger.Zero;
-				}
+                if (!enumerator.MoveNext() || enumerator.Current == BigInteger.Zero)
+                {
+                    return BigInteger.Zero;
+                }
 
-				BigInteger result = enumerator.Current;
+                BigInteger result = enumerator.Current;
 
-				while (enumerator.MoveNext())
+                while (enumerator.MoveNext())
                 {
                     if (enumerator.Current == BigInteger.Zero)
                     {
@@ -3270,44 +3270,44 @@ namespace NetExtender.Utilities.Types
                     result *= enumerator.Current;
                 }
 
-				return result;
-			}
-		}
+                return result;
+            }
+        }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Complex Multiply(this Memory<Complex> source)
-		{
-			return Multiply(source.Span);
-		}
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Complex Multiply(this Memory<Complex> source)
+        {
+            return Multiply(source.Span);
+        }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Complex Multiply(this Span<Complex> source)
-		{
-			return Multiply((ReadOnlySpan<Complex>) source);
-		}
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Complex Multiply(this Span<Complex> source)
+        {
+            return Multiply((ReadOnlySpan<Complex>) source);
+        }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Complex Multiply(this ReadOnlyMemory<Complex> source)
-		{
-			return Multiply(source.Span);
-		}
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Complex Multiply(this ReadOnlyMemory<Complex> source)
+        {
+            return Multiply(source.Span);
+        }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Complex Multiply(this ReadOnlySpan<Complex> source)
-		{
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Complex Multiply(this ReadOnlySpan<Complex> source)
+        {
             // ReSharper disable once RedundantOverflowCheckingContext
             checked
-			{
-				ReadOnlySpan<Complex>.Enumerator enumerator = source.GetEnumerator();
+            {
+                ReadOnlySpan<Complex>.Enumerator enumerator = source.GetEnumerator();
 
-				if (!enumerator.MoveNext() || enumerator.Current == Complex.Zero)
-				{
-					return Complex.Zero;
-				}
+                if (!enumerator.MoveNext() || enumerator.Current == Complex.Zero)
+                {
+                    return Complex.Zero;
+                }
 
-				Complex result = enumerator.Current;
+                Complex result = enumerator.Current;
 
-				while (enumerator.MoveNext())
+                while (enumerator.MoveNext())
                 {
                     if (enumerator.Current == Complex.Zero)
                     {
@@ -3322,40 +3322,40 @@ namespace NetExtender.Utilities.Types
                     result *= enumerator.Current;
                 }
 
-				return result;
-			}
-		}
+                return result;
+            }
+        }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Complex Multiply(this Memory<Complex> source, Complex overflow)
-		{
-			return Multiply(source.Span, overflow);
-		}
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Complex Multiply(this Memory<Complex> source, Complex overflow)
+        {
+            return Multiply(source.Span, overflow);
+        }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Complex Multiply(this Span<Complex> source, Complex overflow)
-		{
-			return Multiply((ReadOnlySpan<Complex>) source, overflow);
-		}
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Complex Multiply(this Span<Complex> source, Complex overflow)
+        {
+            return Multiply((ReadOnlySpan<Complex>) source, overflow);
+        }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Complex Multiply(this ReadOnlyMemory<Complex> source, Complex overflow)
-		{
-			return Multiply(source.Span, overflow);
-		}
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Complex Multiply(this ReadOnlyMemory<Complex> source, Complex overflow)
+        {
+            return Multiply(source.Span, overflow);
+        }
 
-		[MethodImpl(MethodImplOptions.AggressiveInlining)]
-		public static Complex Multiply(this ReadOnlySpan<Complex> source, Complex overflow)
-		{
-			try
-			{
-				return source.Multiply();
-			}
-			catch (OverflowException)
-			{
-				return overflow;
-			}
-		}
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Complex Multiply(this ReadOnlySpan<Complex> source, Complex overflow)
+        {
+            try
+            {
+                return source.Multiply();
+            }
+            catch (OverflowException)
+            {
+                return overflow;
+            }
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Max<T>(this Memory<T> source)
@@ -3368,7 +3368,7 @@ namespace NetExtender.Utilities.Types
         {
             return Max(source.Span, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Min<T>(this Memory<T> source)
         {
@@ -3380,7 +3380,7 @@ namespace NetExtender.Utilities.Types
         {
             return Min(source.Span, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Max<T>(this Span<T> source)
         {
@@ -3392,7 +3392,7 @@ namespace NetExtender.Utilities.Types
         {
             return Max((ReadOnlySpan<T>) source, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Min<T>(this Span<T> source)
         {
@@ -3404,7 +3404,7 @@ namespace NetExtender.Utilities.Types
         {
             return Min((ReadOnlySpan<T>) source, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Max<T>(this ReadOnlyMemory<T> source)
         {
@@ -3416,7 +3416,7 @@ namespace NetExtender.Utilities.Types
         {
             return Max(source.Span, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Min<T>(this ReadOnlyMemory<T> source)
         {
@@ -3446,9 +3446,9 @@ namespace NetExtender.Utilities.Types
             }
 
             comparer ??= Comparer<T>.Default;
-            
+
             T max = source[0];
-                    
+
             for (Int32 i = 1; i < source.Length; i++)
             {
                 T item = source[i];
@@ -3462,7 +3462,7 @@ namespace NetExtender.Utilities.Types
 
             return max;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Min<T>(this ReadOnlySpan<T> source)
         {
@@ -3480,9 +3480,9 @@ namespace NetExtender.Utilities.Types
             }
 
             comparer ??= Comparer<T>.Default;
-            
+
             T min = source[0];
-                    
+
             for (Int32 i = 1; i < source.Length; i++)
             {
                 T item = source[i];
@@ -3496,7 +3496,7 @@ namespace NetExtender.Utilities.Types
 
             return min;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? MaxOrDefault<T>(this Memory<T> source)
         {
@@ -3508,7 +3508,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxOrDefault(source.Span, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? MinOrDefault<T>(this Memory<T> source)
         {
@@ -3520,7 +3520,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinOrDefault(source.Span, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? MaxOrDefault<T>(this Span<T> source)
         {
@@ -3532,7 +3532,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxOrDefault((ReadOnlySpan<T>) source, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? MinOrDefault<T>(this Span<T> source)
         {
@@ -3544,7 +3544,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinOrDefault((ReadOnlySpan<T>) source, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? MaxOrDefault<T>(this ReadOnlyMemory<T> source)
         {
@@ -3556,7 +3556,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxOrDefault(source.Span, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? MinOrDefault<T>(this ReadOnlyMemory<T> source)
         {
@@ -3580,7 +3580,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxOrDefault(source!, default(T), comparer!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? MinOrDefault<T>(this ReadOnlySpan<T> source)
         {
@@ -3592,7 +3592,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinOrDefault(source!, default(T), comparer!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxOrDefault<T>(this Memory<T> source, T alternate)
         {
@@ -3604,7 +3604,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxOrDefault(source.Span, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinOrDefault<T>(this Memory<T> source, T alternate)
         {
@@ -3616,7 +3616,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinOrDefault(source.Span, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxOrDefault<T>(this Span<T> source, T alternate)
         {
@@ -3628,7 +3628,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxOrDefault((ReadOnlySpan<T>) source, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinOrDefault<T>(this Span<T> source, T alternate)
         {
@@ -3640,7 +3640,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinOrDefault((ReadOnlySpan<T>) source, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxOrDefault<T>(this ReadOnlyMemory<T> source, T alternate)
         {
@@ -3652,7 +3652,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxOrDefault(source.Span, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinOrDefault<T>(this ReadOnlyMemory<T> source, T alternate)
         {
@@ -3682,9 +3682,9 @@ namespace NetExtender.Utilities.Types
             }
 
             comparer ??= Comparer<T>.Default;
-            
+
             T max = source[0];
-                    
+
             for (Int32 i = 1; i < source.Length; i++)
             {
                 T item = source[i];
@@ -3698,7 +3698,7 @@ namespace NetExtender.Utilities.Types
 
             return max;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinOrDefault<T>(this ReadOnlySpan<T> source, T alternate)
         {
@@ -3716,9 +3716,9 @@ namespace NetExtender.Utilities.Types
             }
 
             comparer ??= Comparer<T>.Default;
-            
+
             T min = source[0];
-                    
+
             for (Int32 i = 1; i < source.Length; i++)
             {
                 T item = source[i];
@@ -3732,7 +3732,7 @@ namespace NetExtender.Utilities.Types
 
             return min;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxOrDefault<T>(this Memory<T> source, Func<T> alternate)
         {
@@ -3744,7 +3744,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxOrDefault(source.Span, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinOrDefault<T>(this Memory<T> source, Func<T> alternate)
         {
@@ -3756,7 +3756,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinOrDefault(source.Span, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxOrDefault<T>(this Span<T> source, Func<T> alternate)
         {
@@ -3768,7 +3768,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxOrDefault((ReadOnlySpan<T>) source, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinOrDefault<T>(this Span<T> source, Func<T> alternate)
         {
@@ -3780,7 +3780,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinOrDefault((ReadOnlySpan<T>) source, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxOrDefault<T>(this ReadOnlyMemory<T> source, Func<T> alternate)
         {
@@ -3792,7 +3792,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxOrDefault(source.Span, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinOrDefault<T>(this ReadOnlyMemory<T> source, Func<T> alternate)
         {
@@ -3827,9 +3827,9 @@ namespace NetExtender.Utilities.Types
             }
 
             comparer ??= Comparer<T>.Default;
-            
+
             T max = source[0];
-                    
+
             for (Int32 i = 1; i < source.Length; i++)
             {
                 T item = source[i];
@@ -3843,7 +3843,7 @@ namespace NetExtender.Utilities.Types
 
             return max;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinOrDefault<T>(this ReadOnlySpan<T> source, Func<T> alternate)
         {
@@ -3866,9 +3866,9 @@ namespace NetExtender.Utilities.Types
             }
 
             comparer ??= Comparer<T>.Default;
-            
+
             T min = source[0];
-                    
+
             for (Int32 i = 1; i < source.Length; i++)
             {
                 T item = source[i];
@@ -3894,7 +3894,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxBy(source.Span, selector, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinBy<T, TKey>(this Memory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
@@ -3906,7 +3906,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinBy(source.Span, selector, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxBy<T, TKey>(this Span<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
@@ -3918,7 +3918,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxBy((ReadOnlySpan<T>) source, selector, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinBy<T, TKey>(this Span<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
@@ -3930,7 +3930,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinBy((ReadOnlySpan<T>) source, selector, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxBy<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
@@ -3942,7 +3942,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxBy(source.Span, selector, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinBy<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
@@ -3977,10 +3977,10 @@ namespace NetExtender.Utilities.Types
             }
 
             comparer ??= Comparer<TKey>.Default;
-            
+
             T max = source[0];
             TKey maxby = selector(max);
-                    
+
             for (Int32 i = 1; i < source.Length; i++)
             {
                 T item = source[i];
@@ -3996,7 +3996,7 @@ namespace NetExtender.Utilities.Types
 
             return max;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinBy<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
@@ -4019,10 +4019,10 @@ namespace NetExtender.Utilities.Types
             }
 
             comparer ??= Comparer<TKey>.Default;
-            
+
             T min = source[0];
             TKey minby = selector(min);
-                    
+
             for (Int32 i = 1; i < source.Length; i++)
             {
                 T item = source[i];
@@ -4038,7 +4038,7 @@ namespace NetExtender.Utilities.Types
 
             return min;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? MaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
@@ -4050,7 +4050,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxByOrDefault(source.Span, selector, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? MinByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
@@ -4062,7 +4062,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinByOrDefault(source.Span, selector, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? MaxByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
@@ -4074,7 +4074,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxByOrDefault((ReadOnlySpan<T>) source, selector, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? MinByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
@@ -4086,7 +4086,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinByOrDefault((ReadOnlySpan<T>) source, selector, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? MaxByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
@@ -4098,7 +4098,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxByOrDefault(source.Span, selector, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? MinByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
@@ -4122,7 +4122,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxByOrDefault(source!, selector!, default(T), comparer!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T? MinByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector) where TKey : IComparable<TKey>
         {
@@ -4134,7 +4134,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinByOrDefault(source!, selector!, default(T), comparer!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, T alternate) where TKey : IComparable<TKey>
         {
@@ -4146,7 +4146,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxByOrDefault(source.Span, selector, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, T alternate) where TKey : IComparable<TKey>
         {
@@ -4158,7 +4158,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinByOrDefault(source.Span, selector, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, T alternate) where TKey : IComparable<TKey>
         {
@@ -4170,7 +4170,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxByOrDefault((ReadOnlySpan<T>) source, selector, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, T alternate) where TKey : IComparable<TKey>
         {
@@ -4182,7 +4182,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinByOrDefault((ReadOnlySpan<T>) source, selector, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, T alternate) where TKey : IComparable<TKey>
         {
@@ -4194,7 +4194,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxByOrDefault(source.Span, selector, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, T alternate) where TKey : IComparable<TKey>
         {
@@ -4229,10 +4229,10 @@ namespace NetExtender.Utilities.Types
             }
 
             comparer ??= Comparer<TKey>.Default;
-            
+
             T max = source[0];
             TKey maxby = selector(max);
-                    
+
             for (Int32 i = 1; i < source.Length; i++)
             {
                 T item = source[i];
@@ -4248,7 +4248,7 @@ namespace NetExtender.Utilities.Types
 
             return max;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, T alternate) where TKey : IComparable<TKey>
         {
@@ -4271,10 +4271,10 @@ namespace NetExtender.Utilities.Types
             }
 
             comparer ??= Comparer<TKey>.Default;
-            
+
             T min = source[0];
             TKey minby = selector(min);
-                    
+
             for (Int32 i = 1; i < source.Length; i++)
             {
                 T item = source[i];
@@ -4290,7 +4290,7 @@ namespace NetExtender.Utilities.Types
 
             return min;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Func<T> alternate) where TKey : IComparable<TKey>
         {
@@ -4302,7 +4302,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxByOrDefault(source.Span, selector, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Func<T> alternate) where TKey : IComparable<TKey>
         {
@@ -4314,7 +4314,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinByOrDefault(source.Span, selector, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, Func<T>alternate) where TKey : IComparable<TKey>
         {
@@ -4326,7 +4326,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxByOrDefault((ReadOnlySpan<T>) source, selector, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinByOrDefault<T, TKey>(this Span<T> source, Func<T, TKey> selector, Func<T> alternate) where TKey : IComparable<TKey>
         {
@@ -4338,7 +4338,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinByOrDefault((ReadOnlySpan<T>) source, selector, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MaxByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, Func<T> alternate) where TKey : IComparable<TKey>
         {
@@ -4350,7 +4350,7 @@ namespace NetExtender.Utilities.Types
         {
             return MaxByOrDefault(source.Span, selector, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinByOrDefault<T, TKey>(this ReadOnlyMemory<T> source, Func<T, TKey> selector, Func<T> alternate) where TKey : IComparable<TKey>
         {
@@ -4390,10 +4390,10 @@ namespace NetExtender.Utilities.Types
             }
 
             comparer ??= Comparer<TKey>.Default;
-            
+
             T max = source[0];
             TKey maxby = selector(max);
-                    
+
             for (Int32 i = 1; i < source.Length; i++)
             {
                 T item = source[i];
@@ -4409,7 +4409,7 @@ namespace NetExtender.Utilities.Types
 
             return max;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T MinByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector, Func<T> alternate) where TKey : IComparable<TKey>
         {
@@ -4480,7 +4480,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinMax(source, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T Min, T Max) MinMax<T>(this Memory<T> source, IComparer<T>? comparer)
         {
@@ -4507,7 +4507,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new InvalidOperationException();
             }
-            
+
             comparer ??= Comparer<T>.Default;
 
             T current = enumerator.Current;
@@ -4538,13 +4538,13 @@ namespace NetExtender.Utilities.Types
         {
             return MinMaxOrDefault(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this Span<T> source)
         {
             return MinMaxOrDefault((ReadOnlySpan<T>) source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this ReadOnlyMemory<T> source)
         {
@@ -4556,19 +4556,19 @@ namespace NetExtender.Utilities.Types
         {
             return MinMaxOrDefault(source, (IComparer<T>?) null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this Memory<T> source, IComparer<T>? comparer)
         {
             return MinMaxOrDefault(source.Span, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this Span<T> source, IComparer<T>? comparer)
         {
             return MinMaxOrDefault((ReadOnlySpan<T>) source, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this ReadOnlyMemory<T> source, IComparer<T>? comparer)
         {
@@ -4580,19 +4580,19 @@ namespace NetExtender.Utilities.Types
         {
             return MinMaxOrDefault(source!, default(T), comparer!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this Memory<T> source, T alternate)
         {
             return MinMaxOrDefault(source.Span, alternate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this Span<T> source, T alternate)
         {
             return MinMaxOrDefault((ReadOnlySpan<T>) source, alternate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this ReadOnlyMemory<T> source, T alternate)
         {
@@ -4604,19 +4604,19 @@ namespace NetExtender.Utilities.Types
         {
             return MinMaxOrDefault(source, alternate, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this Memory<T> source, T alternate, IComparer<T>? comparer)
         {
             return MinMaxOrDefault(source.Span, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this Span<T> source, T alternate, IComparer<T>? comparer)
         {
             return MinMaxOrDefault((ReadOnlySpan<T>) source, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this ReadOnlyMemory<T> source, T alternate, IComparer<T>? comparer)
         {
@@ -4631,7 +4631,7 @@ namespace NetExtender.Utilities.Types
             {
                 return (alternate, alternate);
             }
-            
+
             comparer ??= Comparer<T>.Default;
 
             T current = enumerator.Current;
@@ -4662,37 +4662,37 @@ namespace NetExtender.Utilities.Types
         {
             return MinMaxOrDefault(source.Span, alternate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this Span<T> source, Func<T> alternate)
         {
             return MinMaxOrDefault((ReadOnlySpan<T>) source, alternate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this ReadOnlyMemory<T> source, Func<T> alternate)
         {
             return MinMaxOrDefault(source.Span, alternate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T Min, T Max) MinMaxOrDefault<T>(this ReadOnlySpan<T> source, Func<T> alternate)
         {
             return MinMaxOrDefault(source, alternate, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this Memory<T> source, Func<T> alternate, IComparer<T>? comparer)
         {
             return MinMaxOrDefault(source.Span, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this Span<T> source, Func<T> alternate, IComparer<T>? comparer)
         {
             return MinMaxOrDefault((ReadOnlySpan<T>) source, alternate, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this ReadOnlyMemory<T> source, Func<T> alternate, IComparer<T>? comparer)
         {
@@ -4709,13 +4709,13 @@ namespace NetExtender.Utilities.Types
             ReadOnlySpan<T>.Enumerator enumerator = source.GetEnumerator();
 
             T current;
-            
+
             if (!enumerator.MoveNext())
             {
                 current = alternate();
                 return (current, current);
             }
-            
+
             comparer ??= Comparer<T>.Default;
 
             current = enumerator.Current;
@@ -4764,7 +4764,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinMaxBy(source, selector, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T Min, T Max) MinMaxBy<T, TKey>(this Memory<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
         {
@@ -4796,7 +4796,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new InvalidOperationException();
             }
-            
+
             comparer ??= Comparer<TKey>.Default;
 
             T current = enumerator.Current;
@@ -4827,7 +4827,7 @@ namespace NetExtender.Utilities.Types
 
             return (min, max);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector)
         {
@@ -4845,13 +4845,13 @@ namespace NetExtender.Utilities.Types
         {
             return MinMaxByOrDefault(source.Span, selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxByOrDefault<T, TKey>(this ReadOnlySpan<T> source, Func<T, TKey> selector)
         {
             return MinMaxByOrDefault(source, selector, (IComparer<TKey>?) null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T? Min, T? Max) MinMaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, IComparer<TKey>? comparer)
         {
@@ -4875,7 +4875,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinMaxByOrDefault(source!, selector!, default(T), comparer!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, T alternate)
         {
@@ -4899,7 +4899,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinMaxByOrDefault(source, selector, alternate, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, T alternate, IComparer<TKey>? comparer)
         {
@@ -4931,7 +4931,7 @@ namespace NetExtender.Utilities.Types
             {
                 return (alternate, alternate);
             }
-            
+
             comparer ??= Comparer<TKey>.Default;
 
             T current = enumerator.Current;
@@ -4962,7 +4962,7 @@ namespace NetExtender.Utilities.Types
 
             return (min, max);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Func<T> alternate)
         {
@@ -4986,7 +4986,7 @@ namespace NetExtender.Utilities.Types
         {
             return MinMaxByOrDefault(source, selector, alternate, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static (T Min, T Max) MinMaxByOrDefault<T, TKey>(this Memory<T> source, Func<T, TKey> selector, Func<T> alternate, IComparer<TKey>? comparer)
         {
@@ -5020,13 +5020,13 @@ namespace NetExtender.Utilities.Types
             ReadOnlySpan<T>.Enumerator enumerator = source.GetEnumerator();
 
             T current;
-            
+
             if (!enumerator.MoveNext())
             {
                 current = alternate();
                 return (current, current);
             }
-            
+
             comparer ??= Comparer<TKey>.Default;
 
             current = enumerator.Current;
@@ -5080,7 +5080,7 @@ namespace NetExtender.Utilities.Types
         {
             return AllSame((ReadOnlySpan<T>) source, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean AllSame<T>(this ReadOnlyMemory<T> source)
         {
@@ -5098,20 +5098,20 @@ namespace NetExtender.Utilities.Types
         {
             return AllSame(source.Span, comparer);
         }
-        
+
         public static Boolean AllSame<T>(this ReadOnlySpan<T> source, IEqualityComparer<T>? comparer)
         {
             if (source.Length <= 0)
             {
                 return true;
             }
-            
+
             comparer ??= EqualityComparer<T>.Default;
 
             T first = source[0];
             return source.All(item => comparer.Equals(first, item));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsDistinct<T>(this Memory<T> source)
         {
@@ -5129,7 +5129,7 @@ namespace NetExtender.Utilities.Types
         {
             return IsDistinct(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsDistinct<T>(this ReadOnlySpan<T> source)
         {
@@ -5160,49 +5160,49 @@ namespace NetExtender.Utilities.Types
             HashSet<T> set = new HashSet<T>(comparer);
             return source.All(item => set.Add(item));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> Skip<T>(this Memory<T> source, Int32 count)
         {
             return count < source.Length ? count > 0 ? source.Slice(count) : source : Memory<T>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<T> Skip<T>(this Span<T> source, Int32 count)
         {
             return count < source.Length ? count > 0 ? source.Slice(count) : source : Span<T>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<T> Skip<T>(this ReadOnlyMemory<T> source, Int32 count)
         {
             return count < source.Length ? count > 0 ? source.Slice(count) : source : ReadOnlyMemory<T>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<T> Skip<T>(this ReadOnlySpan<T> source, Int32 count)
         {
             return count < source.Length ? count > 0 ? source.Slice(count) : source : ReadOnlySpan<T>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Memory<T> Take<T>(this Memory<T> source, Int32 count)
         {
             return count > 0 ? source.Slice(0, Math.Min(count, source.Length)) : Memory<T>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<T> Take<T>(this Span<T> source, Int32 count)
         {
             return count > 0 ? source.Slice(0, Math.Min(count, source.Length)) : Span<T>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyMemory<T> Take<T>(this ReadOnlyMemory<T> source, Int32 count)
         {
             return count > 0 ? source.Slice(0, Math.Min(count, source.Length)) : ReadOnlyMemory<T>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<T> Take<T>(this ReadOnlySpan<T> source, Int32 count)
         {
@@ -5214,19 +5214,19 @@ namespace NetExtender.Utilities.Types
         {
             return index >= 0 && index < source.Length;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean InBounds<T>(this Span<T> source, Int32 index)
         {
             return index >= 0 && index < source.Length;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean InBounds<T>(this ReadOnlyMemory<T> source, Int32 index)
         {
             return index >= 0 && index < source.Length;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean InBounds<T>(this ReadOnlySpan<T> source, Int32 index)
         {
@@ -5256,13 +5256,13 @@ namespace NetExtender.Utilities.Types
         {
             return source.Span.GetEnumerator();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlySpan<T>.Enumerator GetEnumerator<T>(this ReadOnlyMemory<T> source)
         {
             return source.Span.GetEnumerator();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Span<T> Mutate<T>(this ReadOnlyMemory<T> source) where T : unmanaged
         {
@@ -5277,25 +5277,25 @@ namespace NetExtender.Utilities.Types
                 return new Span<T>(pointer, source.Length);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SpanMutationEnumerator GetMutationEnumerator(this Memory<Byte> source)
         {
             return new SpanMutationEnumerator(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SpanMutationEnumerator GetMutationEnumerator(this Span<Byte> source)
         {
             return new SpanMutationEnumerator(source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SpanMutationEnumerator<T> GetMutationEnumerator<T>(this Memory<T> source)
         {
             return new SpanMutationEnumerator<T>(source.Span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SpanMutationEnumerator<T> GetMutationEnumerator<T>(this Span<T> source)
         {

@@ -46,7 +46,7 @@ namespace NetExtender.NAudio.Types.Streams
             Provider = provider ?? throw new ArgumentNullException(nameof(provider));
             Stream = (Stream?) (provider as WaveStream) ?? new SeekableStream(new WaveProviderStreamReader(provider));
         }
-        
+
         public override Int32 Read(Byte[] buffer, Int32 offset, Int32 count)
         {
             return Stream.Read(buffer, offset, count);

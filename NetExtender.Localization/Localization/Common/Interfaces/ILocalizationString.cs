@@ -21,7 +21,7 @@ namespace NetExtender.Localization.Common.Interfaces
         public new ILocalizationString Clone();
         public IMutableLocalizationString? ToMutable();
     }
-    
+
     public interface IMutableLocalizationString : ILocalizationString, ICloneable<IMutableLocalizationString>
     {
         public void Add(LocalizationIdentifier identifier, String value);

@@ -22,7 +22,7 @@ namespace NetExtender.Types.Timers
         private Timer? Timer { get; set; }
 
         public Boolean IsStarted { get; private set; }
-        
+
         public event TickHandler? Tick;
 
         private TimeSpan _interval = Time.Second.One;
@@ -38,7 +38,7 @@ namespace NetExtender.Types.Timers
                 {
                     return;
                 }
-                
+
                 _interval = TimerUtilities.CheckInterval(value);
             }
         }
@@ -57,11 +57,11 @@ namespace NetExtender.Types.Timers
             : this(TimeSpan.FromMilliseconds(TimerUtilities.CheckInterval(interval)))
         {
         }
-        
+
         public TimerThreadingWrapper(TimeSpan interval)
         {
             interval = TimerUtilities.CheckInterval(interval);
-            
+
             Timer = new Timer(OnTick);
             Interval = interval;
         }
@@ -74,16 +74,16 @@ namespace NetExtender.Types.Timers
             }
 
             Timer? timer = Timer;
-            
+
             if (timer is null)
             {
                 return;
             }
-            
+
             Tick?.Invoke(timer, new TimeEventArgs());
             timer?.TryChange(TimeSpan.Zero, Interval);
         }
-        
+
         public void Start()
         {
             Timer timer = Timer ?? throw new ObjectDisposedException(nameof(TimerThreadingWrapper));
@@ -102,7 +102,7 @@ namespace NetExtender.Types.Timers
         {
             Timer?.Dispose();
         }
-        
+
         public ValueTask DisposeAsync()
         {
             return Timer?.DisposeAsync() ?? ValueTask.CompletedTask;

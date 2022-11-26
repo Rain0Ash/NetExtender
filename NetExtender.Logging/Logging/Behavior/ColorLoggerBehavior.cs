@@ -19,7 +19,7 @@ namespace NetExtender.Logging.Behavior
             : base(formatter)
         {
         }
-        
+
         protected virtual void Color(LoggingMessageType type, out Color? foreground, out Color? background)
         {
             (foreground, background) = type switch

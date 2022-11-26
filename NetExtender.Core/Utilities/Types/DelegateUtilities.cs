@@ -204,7 +204,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(field));
             }
-            
+
             Type? declaring = field.DeclaringType;
 
             if (declaring is null)
@@ -213,10 +213,10 @@ namespace NetExtender.Utilities.Types
             }
 
             Type[] parameters = field.IsStatic ? Type.EmptyTypes : new[] { declaring };
-            
+
             DynamicMethod method = new DynamicMethod($"{field.Name}.GetValue", field.FieldType, parameters, true);
             ILGenerator generator = method.GetILGenerator();
-            
+
             if (field.IsStatic)
             {
                 generator.Emit(OpCodes.Ldsfld, field);
@@ -275,10 +275,10 @@ namespace NetExtender.Utilities.Types
             }
 
             Type[] parameters = field.IsStatic ? new[] { field.FieldType } : new[] { field.DeclaringType!, field.FieldType };
-            
+
             DynamicMethod method = new DynamicMethod($"{field.Name}.SetValue", typeof(void), parameters, true);
             ILGenerator generator = method.GetILGenerator();
-            
+
             if (field.IsStatic)
             {
                 method.DefineParameter(1, ParameterAttributes.None, "value");
@@ -340,9 +340,9 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentException("Constructor must not be static.", nameof(constructor));
             }
-            
+
             Type? declaring = constructor.DeclaringType;
-            
+
             if (declaring is null)
             {
                 throw new TypeAccessException();
@@ -352,7 +352,7 @@ namespace NetExtender.Utilities.Types
             Type[] types = Array.ConvertAll(parameters, param => param.ParameterType);
             DynamicMethod method = new DynamicMethod("CreateInstance", declaring, types, true);
             ILGenerator generator = method.GetILGenerator();
-            
+
             for (Int32 index = 0; index < parameters.Length; index++)
             {
                 ParameterInfo param = parameters[index];
@@ -384,7 +384,7 @@ namespace NetExtender.Utilities.Types
 
             return (TDelegate) method.CreateDelegate(typeof(TDelegate), target);
         }
-        
+
         private static ConcurrentDictionary<FieldInfo, DynamicMethod> DynamicGetMethods { get; } = new ConcurrentDictionary<FieldInfo, DynamicMethod>();
 
         private static ConcurrentDictionary<FieldInfo, DynamicMethod> DynamicSetMethods { get; } = new ConcurrentDictionary<FieldInfo, DynamicMethod>();
@@ -425,17 +425,17 @@ namespace NetExtender.Utilities.Types
             DynamicMethod method = new DynamicMethod($"{field.Name}.DynamicGetValue", typeof(Object), new[] { typeof(Object) }, true);
             method.DefineParameter(1, ParameterAttributes.None, "instance");
             ILGenerator generator = method.GetILGenerator();
-            
+
             if (!field.IsStatic)
             {
                 generator.Emit(OpCodes.Ldarg_0);
                 generator.EmitUnbox(field.DeclaringType!);
             }
-            
+
             generator.Emit(field.IsStatic ? OpCodes.Ldsfld : OpCodes.Ldfld, field);
             generator.EmitBox(field.FieldType);
             generator.Emit(OpCodes.Ret);
-            
+
             return method;
         }
 
@@ -472,18 +472,18 @@ namespace NetExtender.Utilities.Types
             method.DefineParameter(1, ParameterAttributes.None, "instance");
             method.DefineParameter(2, ParameterAttributes.None, "value");
             ILGenerator generator = method.GetILGenerator();
-            
+
             if (!field.IsStatic)
             {
                 generator.Emit(OpCodes.Ldarg_0);
                 generator.EmitUnbox(field.DeclaringType!);
             }
-            
+
             generator.Emit(OpCodes.Ldarg_1);
             generator.EmitUnbox(field.FieldType);
             generator.Emit(field.IsStatic ? OpCodes.Stsfld : OpCodes.Stfld, field);
             generator.Emit(OpCodes.Ret);
-            
+
             return method;
         }
 
@@ -493,7 +493,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(constructor));
             }
-            
+
             if (constructor.IsStatic)
             {
                 throw new ArgumentException("Constructor must not be static.", nameof(constructor));
@@ -509,7 +509,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(constructor));
             }
-            
+
             if (constructor.IsStatic)
             {
                 throw new ArgumentException("Constructor must not be static.", nameof(constructor));
@@ -519,21 +519,21 @@ namespace NetExtender.Utilities.Types
             DynamicMethod method = new DynamicMethod("DynamicCreateInstance", typeof(Object), new[] { typeof(Object?[]) }, true);
             method.DefineParameter(1, ParameterAttributes.None, "arguments");
             ILGenerator generator = method.GetILGenerator();
-            
+
             for (Int32 index = 0; index < parameters.Length; index++)
             {
                 generator.Emit(OpCodes.Ldarg_0);
                 generator.EmitLdcI4(index);
                 generator.Emit(OpCodes.Ldelem_Ref);
-                
+
                 ParameterInfo parameter = parameters[index];
                 generator.EmitUnbox(parameter.ParameterType);
             }
-            
+
             generator.Emit(OpCodes.Newobj, constructor);
             generator.EmitBox(constructor.DeclaringType!);
             generator.Emit(OpCodes.Ret);
-            
+
             return method;
         }
 
@@ -565,9 +565,9 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(info));
             }
-            
+
             Type? declaring = info.DeclaringType;
-            
+
             if (declaring is null)
             {
                 throw new TypeAccessException();
@@ -578,25 +578,25 @@ namespace NetExtender.Utilities.Types
             method.DefineParameter(1, ParameterAttributes.None, "instance");
             method.DefineParameter(2, ParameterAttributes.None, "arguments");
             ILGenerator generator = method.GetILGenerator();
-            
+
             if (!info.IsStatic)
             {
                 generator.Emit(OpCodes.Ldarg_0);
                 generator.EmitUnbox(declaring);
             }
-            
+
             for (Int32 index = 0; index < parameters.Length; index++)
             {
                 generator.Emit(OpCodes.Ldarg_1);
                 generator.EmitLdcI4(index);
                 generator.Emit(OpCodes.Ldelem_Ref);
-                
+
                 ParameterInfo parameter = parameters[index];
                 generator.EmitUnbox(parameter.ParameterType);
             }
 
             generator.Emit(info.IsVirtual ? OpCodes.Callvirt : OpCodes.Call, info);
-  
+
             if (info.ReturnType == typeof(void))
             {
                 generator.Emit(OpCodes.Ldnull);
@@ -606,7 +606,7 @@ namespace NetExtender.Utilities.Types
 
             generator.EmitBox(info.ReturnType);
             generator.Emit(OpCodes.Ret);
-            
+
             return method;
         }
     }

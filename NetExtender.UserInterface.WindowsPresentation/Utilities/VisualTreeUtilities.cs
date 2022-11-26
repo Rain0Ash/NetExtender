@@ -17,14 +17,14 @@ namespace NetExtender.Utilities.UserInterface
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             Int32 count = VisualTreeHelper.GetChildrenCount(value);
-            
+
             if (index < 0 || index >= count)
             {
                 return null;
             }
-            
+
             return VisualTreeHelper.GetChild(value, index);
         }
 
@@ -34,9 +34,9 @@ namespace NetExtender.Utilities.UserInterface
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             Int32 count = VisualTreeHelper.GetChildrenCount(value);
-            
+
             for (Int32 i = 0; i < count; i++)
             {
                 yield return VisualTreeHelper.GetChild(value, i);
@@ -54,9 +54,9 @@ namespace NetExtender.Utilities.UserInterface
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             Int32 count = VisualTreeHelper.GetChildrenCount(value);
-            
+
             for (Int32 i = 0; i < count; i++)
             {
                 if (VisualTreeHelper.GetChild(value, i) is T child)

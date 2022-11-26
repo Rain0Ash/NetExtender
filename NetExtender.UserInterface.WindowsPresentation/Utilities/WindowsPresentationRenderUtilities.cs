@@ -12,7 +12,7 @@ namespace NetExtender.Utilities.UserInterface
     {
         private const Int32 DefaultDpiX = 96;
         private const Int32 DefaultDpiY = 96;
-        
+
         public static RenderTargetBitmap Render(this UIElement element)
         {
             return Render(element, element.RenderSize);
@@ -49,20 +49,20 @@ namespace NetExtender.Utilities.UserInterface
             {
                 throw new ArgumentNullException(nameof(element));
             }
-            
+
             element.Measure(rectangle.Size);
             element.Arrange(new Rect(rectangle.Size));
             element.UpdateLayout();
-            
+
             RenderTargetBitmap render = new RenderTargetBitmap((Int32) rectangle.Size.Width, (Int32) rectangle.Size.Height, dpi.Width, dpi.Height, PixelFormats.Default);
 
             DrawingVisual visual = new DrawingVisual();
             VisualBrush brush = new VisualBrush(element);
-            
+
             using DrawingContext content = visual.RenderOpen();
             content.DrawRectangle(brush, null, rectangle);
             content.Close();
-            
+
             render.Render(visual);
             return render;
         }

@@ -17,15 +17,15 @@ namespace NetExtender.Windows.Services.Types.Services
         {
             return service?.Service;
         }
-        
+
         [return: NotNullIfNotNull("service")]
         public static implicit operator WindowsServiceWrapper?(ServiceBase? service)
         {
             return service is not null ? new WindowsServiceWrapper(service) : null;
         }
-        
+
         public ServiceBase Service { get; }
-        
+
         public IContainer? Container
         {
             get
@@ -149,7 +149,7 @@ namespace NetExtender.Windows.Services.Types.Services
                 Service.ExitCode = value;
             }
         }
-        
+
         public WindowsServiceWrapper(ServiceBase service)
         {
             Service = service ?? throw new ArgumentNullException(nameof(service));

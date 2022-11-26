@@ -16,7 +16,7 @@ namespace NetExtender.Utilities.Types
         {
             return value ? LazyThreadSafetyMode.ExecutionAndPublication : LazyThreadSafetyMode.None;
         }
-        
+
         public static Lazy<T> Create<T>(T value)
         {
             return new Lazy<T>(() => value, false).Force();
@@ -41,7 +41,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Value;
         }
-        
+
         public static T Initialize<T>(this ILazy<T> source)
         {
             if (source is null)
@@ -51,7 +51,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Value;
         }
-        
+
         public static Lazy<T> Force<T>(this Lazy<T> source)
         {
             if (source is null)
@@ -62,7 +62,7 @@ namespace NetExtender.Utilities.Types
             _ = source.Value;
             return source;
         }
-        
+
         public static ILazy<T> Force<T>(this ILazy<T> source)
         {
             if (source is null)
@@ -93,7 +93,7 @@ namespace NetExtender.Utilities.Types
 
             return source.IsValueCreated ? source.Value : alternate;
         }
-        
+
         public static T ValueOrDefault<T>(this Lazy<T> source, Func<T> alternate)
         {
             if (source is null)
@@ -108,7 +108,7 @@ namespace NetExtender.Utilities.Types
 
             return source.IsValueCreated ? source.Value : alternate.Invoke();
         }
-        
+
         public static T ValueOrDefault<T>(this ILazy<T> source, Func<T> alternate)
         {
             if (source is null)
@@ -123,7 +123,7 @@ namespace NetExtender.Utilities.Types
 
             return source.IsValueCreated ? source.Value : alternate.Invoke();
         }
-        
+
         public static T? ValueOrDefault<T>(this Lazy<T> source)
         {
             if (source is null)
@@ -133,7 +133,7 @@ namespace NetExtender.Utilities.Types
 
             return source.IsValueCreated ? source.Value : default;
         }
-        
+
         public static T? ValueOrDefault<T>(this ILazy<T> source)
         {
             if (source is null)
@@ -143,7 +143,7 @@ namespace NetExtender.Utilities.Types
 
             return source.IsValueCreated ? source.Value : default;
         }
-        
+
         public static T GetValue<T>(this Lazy<T> source)
         {
             if (source is null)
@@ -153,7 +153,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Value;
         }
-        
+
         public static T GetValue<T>(this ILazy<T> source)
         {
             if (source is null)
@@ -163,7 +163,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Value;
         }
-        
+
         public static Task<T> GetValueAsync<T>(this Lazy<T> source)
         {
             if (source is null)
@@ -173,7 +173,7 @@ namespace NetExtender.Utilities.Types
 
             return Task.Factory.StartNew(() => source.Value);
         }
-        
+
         public static Task<T> GetValueAsync<T>(this ILazy<T> source)
         {
             if (source is null)
@@ -183,7 +183,7 @@ namespace NetExtender.Utilities.Types
 
             return Task.Factory.StartNew(() => source.Value);
         }
-        
+
         public static Boolean TryGetValue<T>(this Lazy<T> source, [MaybeNullWhen(false)] out T result)
         {
             if (source is null)
@@ -200,7 +200,7 @@ namespace NetExtender.Utilities.Types
             result = source.Value;
             return true;
         }
-        
+
         public static Boolean TryGetValue<T>(this ILazy<T> source, [MaybeNullWhen(false)] out T result)
         {
             if (source is null)

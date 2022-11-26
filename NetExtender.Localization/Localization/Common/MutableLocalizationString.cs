@@ -19,7 +19,7 @@ namespace NetExtender.Localization.Common
             : base(info, comparer)
         {
         }
-        
+
         public MutableLocalizationString(ILocalizationInfo info, IEnumerable<KeyValuePair<LocalizationIdentifier, String>> localization)
             : base(info, localization)
         {
@@ -46,7 +46,7 @@ namespace NetExtender.Localization.Common
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             Localization.Add(identifier, value);
         }
 

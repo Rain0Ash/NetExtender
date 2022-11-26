@@ -20,7 +20,7 @@ namespace NetExtender.Types.Concurrent.Stores
         where TKey : class where TValue : struct, IEquatable<TValue> where TStore : class, IMemoryStore<TKey, TValue>, new()
     {
         protected TStore Store { get; } = new TStore();
-        
+
         public TKey? Current
         {
             get
@@ -83,7 +83,7 @@ namespace NetExtender.Types.Concurrent.Stores
                 return Store.TryGetValue(key, out value);
             }
         }
-        
+
         public Boolean TryGetKey(TValue value, [MaybeNullWhen(false)] out TKey key)
         {
             lock (Store)
@@ -147,7 +147,7 @@ namespace NetExtender.Types.Concurrent.Stores
                 Store.Clear();
             }
         }
-        
+
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             return Store.GetEnumerator();

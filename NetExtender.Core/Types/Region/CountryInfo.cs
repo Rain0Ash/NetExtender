@@ -24,7 +24,7 @@ namespace NetExtender.Types.Region
         {
             return info?.Code ?? 0;
         }
-        
+
         public static implicit operator CountryIdentifier(CountryInfo? info)
         {
             return info?.Identifier ?? CountryIdentifier.Default;
@@ -45,7 +45,7 @@ namespace NetExtender.Types.Region
         {
             return info?.Currency;
         }
-        
+
         public static implicit operator CountryInfo?(CultureIdentifier identifier)
         {
             return identifier.ToCultureInfo();
@@ -73,7 +73,7 @@ namespace NetExtender.Types.Region
                 return CountryInfoCache.Get(CountryIdentifier.Default);
             }
         }
-        
+
         public static CountryInfo[] Countries
         {
             get

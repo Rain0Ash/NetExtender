@@ -33,7 +33,7 @@ namespace NetExtender.Utilities.Types
             TryGetDescriptionOrName(value, out String result);
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetDescriptionOrName<T>(this T value, out String result) where T : unmanaged, Enum
         {
@@ -62,39 +62,39 @@ namespace NetExtender.Utilities.Types
         public static T Next<T>(this T value) where T : unmanaged, Enum
         {
             Int32 index = CacheValues<T>.Values.IndexOf(value);
-            
+
             if (index == -1)
             {
                 throw new ArgumentOutOfRangeException(nameof(value), value, "The value is not defined in the enum.");
             }
-            
+
             return CacheValues<T>.Values[(index + 1) % CacheValues<T>.Values.Count];
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean In<T>(this T value) where T : unmanaged, Enum
         {
             return CacheValues<T>.Contains(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean NotIn<T>(this T value) where T : unmanaged, Enum
         {
             return !In(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 Count<T>() where T : unmanaged, Enum
         {
             return CacheValues<T>.Values.Count;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 Count<T>(Boolean without) where T : unmanaged, Enum
         {
             return without ? CountWithoutDefault<T>() : Count<T>();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 CountWithoutDefault<T>() where T : unmanaged, Enum
         {
@@ -139,7 +139,7 @@ namespace NetExtender.Utilities.Types
         {
             return CacheValues<T>.Values.OfType<IConvertible>().ToDecimal();
         }
-        
+
         public static IEnumerable<UInt64> AsUInt64<T>() where T : unmanaged, Enum
         {
             return AsDecimal<T>().Select(ConvertUtilities.ToUInt64);
@@ -190,7 +190,7 @@ namespace NetExtender.Utilities.Types
             UInt64[] values = AsUInt64<T>().ToArray();
             return values.Length < 2 ? values.Length : values.Count(MathUtilities.IsPowerOf2);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static T[] Flags<T>(this T value) where T : unmanaged, Enum
         {
@@ -252,7 +252,7 @@ namespace NetExtender.Utilities.Types
                 return HasFlags(pf, ps);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         private static unsafe T SetFlags<T>(T* first, T* second) where T : unmanaged, Enum
         {
@@ -260,7 +260,7 @@ namespace NetExtender.Utilities.Types
             Byte* ps = (Byte*) second;
 
             Span<Byte> value = stackalloc Byte[sizeof(T)];
-            
+
             for (Int32 i = 0; i < value.Length; i++)
             {
                 value[i] = (Byte) (pf[i] | ps[i]);
@@ -268,13 +268,13 @@ namespace NetExtender.Utilities.Types
 
             return MemoryMarshal.Read<T>(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe T SetFlags<T>(this T first, T second) where T : unmanaged, Enum
         {
             return SetFlags(&first, &second);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void SetFlags<T>(ref T first, T second) where T : unmanaged, Enum
         {
@@ -283,7 +283,7 @@ namespace NetExtender.Utilities.Types
                 first = SetFlags(pf, &second);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void SetFlags<T>(ref T first, in T second) where T : unmanaged, Enum
         {
@@ -300,7 +300,7 @@ namespace NetExtender.Utilities.Types
             Byte* ps = (Byte*) second;
 
             Span<Byte> value = stackalloc Byte[sizeof(T)];
-            
+
             for (Int32 i = 0; i < value.Length; i++)
             {
                 value[i] = (Byte) (pf[i] & ~ps[i]);
@@ -314,7 +314,7 @@ namespace NetExtender.Utilities.Types
         {
             return RemoveFlags(&first, &second);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void RemoveFlags<T>(ref T first, T second) where T : unmanaged, Enum
         {
@@ -323,7 +323,7 @@ namespace NetExtender.Utilities.Types
                 first = RemoveFlags(pf, &second);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void RemoveFlags<T>(ref T first, in T second) where T : unmanaged, Enum
         {
@@ -343,37 +343,37 @@ namespace NetExtender.Utilities.Types
         {
             return CacheType<T>.UnderlyingType;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ContainsValue<T>(Int64 value) where T : unmanaged, Enum
         {
             return CacheValues<T>.Contains(Unsafe.As<Int64, T>(ref value));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ContainsValue<T>(UInt64 value) where T : unmanaged, Enum
         {
             return CacheValues<T>.Contains(Unsafe.As<UInt64, T>(ref value));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ContainsValue<T>(T value) where T : unmanaged, Enum
         {
             return CacheValues<T>.Contains(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ContainsValueWithoutDefault<T>(Int64 value) where T : unmanaged, Enum
         {
             return CacheValuesWithoutDefault<T>.Contains(Unsafe.As<Int64, T>(ref value));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ContainsValueWithoutDefault<T>(UInt64 value) where T : unmanaged, Enum
         {
             return CacheValuesWithoutDefault<T>.Contains(Unsafe.As<UInt64, T>(ref value));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ContainsValueWithoutDefault<T>(T value) where T : unmanaged, Enum
         {
@@ -390,7 +390,7 @@ namespace NetExtender.Utilities.Types
         {
             return CacheValues<T>.Values;
         }
-        
+
         /// <summary>
         ///     Retrieves an array of the values of the constants in a specified enumeration.
         /// </summary>
@@ -412,7 +412,7 @@ namespace NetExtender.Utilities.Types
         {
             return CacheValuesWithoutDefault<T>.Values;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ContainsName<T>(String name) where T : unmanaged, Enum
         {
@@ -644,7 +644,7 @@ namespace NetExtender.Utilities.Types
                     result = member.Value;
                     return true;
                 }
-                
+
                 result = default;
                 return false;
             }
@@ -669,7 +669,7 @@ namespace NetExtender.Utilities.Types
         {
             return GetMember(value);
         }
-        
+
         /// <summary>
         /// Gets the Attribute of specified enumration member.
         /// </summary>
@@ -707,7 +707,7 @@ namespace NetExtender.Utilities.Types
             {
                 return member;
             }
-            
+
             throw new NotFoundException($"{nameof(EnumMemberAttribute)} is not found.");
         }
 
@@ -721,7 +721,7 @@ namespace NetExtender.Utilities.Types
         public static Boolean TryGetEnumMemberValue<T>(this T value, out String? member) where T : unmanaged, Enum
         {
             EnumMemberAttribute? attribute = value.ToMember().EnumMemberAttribute;
-            
+
             if (attribute is not null)
             {
                 member = attribute.Value;
@@ -731,7 +731,7 @@ namespace NetExtender.Utilities.Types
             member = default;
             return false;
         }
-        
+
         /// <summary>
         ///     Gets the <see cref="EnumLabelAttribute.Value" /> of specified enumration member.
         /// </summary>
@@ -767,7 +767,7 @@ namespace NetExtender.Utilities.Types
 
             throw new NotFoundException($"{nameof(EnumLabelAttribute)} that is specified index {index} is not found.");
         }
-        
+
         /// <summary>
         ///     Gets the <see cref="EnumLabelAttribute.Value" /> of specified enumration member.
         /// </summary>
@@ -991,13 +991,13 @@ namespace NetExtender.Utilities.Types
                 Values = values.ToReadOnlyArray();
                 Set = Values.ToImmutableHashSet();
             }
-            
+
             public static Boolean Contains(T value)
             {
                 return Set.Contains(value);
             }
         }
-        
+
         private static class CacheValuesWithoutDefault<T> where T : unmanaged, Enum
         {
             public static ReadOnlyCollection<T> Values { get; }
@@ -1069,7 +1069,7 @@ namespace NetExtender.Utilities.Types
             {
                 Type type = typeof(T);
                 String? name = Enum.GetName(type, value);
-            
+
                 if (name is null)
                 {
                     return null;
@@ -1085,7 +1085,7 @@ namespace NetExtender.Utilities.Types
                 {
                     return attribute.Description;
                 }
-            
+
                 return null;
             }
         }
@@ -1099,7 +1099,7 @@ namespace NetExtender.Utilities.Types
                 Members = CacheNames<T>.Names.Select(value => new EnumMember<T>(value)).ToReadOnlyArray();
             }
         }
-        
+
         /// <summary>
         /// Provides cache for enum attributes.
         /// </summary>
@@ -1151,7 +1151,7 @@ namespace NetExtender.Utilities.Types
                 {
                     return member.Name;
                 }
-                
+
                 MemberByName = CacheMembers<T>.Members.ToImmutableDictionary(Selector);
                 MemberByNameInsensitive = CacheMembers<T>.Members.DistinctBy(Selector, StringComparer.OrdinalIgnoreCase).ToImmutableDictionary(Selector, StringComparer.OrdinalIgnoreCase);
             }
@@ -1169,7 +1169,7 @@ namespace NetExtender.Utilities.Types
                 T max = CacheMinMaxValues<T>.MaxValue;
                 EnumMember<T>[] distincted = CacheMembers<T>.Members.OrderBy(member => member.Value).Distinct(new EnumMember<T>.ValueComparer()).ToArray();
                 UnderlyingType = CacheType<T>.UnderlyingType;
-                
+
                 // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
                 UnderlyingOperation = Type.GetTypeCode(type) switch
                 {

@@ -14,32 +14,32 @@ namespace NetExtender.Utilities.Types
         {
             return identifier;
         }
-        
+
         public static CurrencyInfo? ToCurrencyInfo(this CountryIdentifier identifier)
         {
             return identifier;
         }
-        
+
         public static CurrencyInfo? ToCurrencyInfo(this CountryInfo? info)
         {
             return info;
         }
-        
+
         public static CurrencyInfo? ToCurrencyInfo(this CultureIdentifier identifier)
         {
             return identifier;
         }
-        
+
         public static CurrencyInfo? ToCurrencyInfo(this LocalizationIdentifier identifier)
         {
             return identifier;
         }
-        
+
         public static CurrencyInfo? ToCurrencyInfo(this CultureInfo? info)
         {
             return info;
         }
-        
+
         public static CurrencyInfo? ToCurrencyInfo(this RegionInfo? info)
         {
             return info;

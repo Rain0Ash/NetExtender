@@ -501,7 +501,7 @@ namespace NetExtender.Configuration.Cryptography.Utilities
         {
             return new CryptographyConfigProperty<T>(config, key, alternate, cryptor, validate, converter, options, sections);
         }
-        
+
         public static IReadOnlyCryptographyConfigProperty<T?> GetConfigurationProperty<T>(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor cryptor, params String[]? sections)
         {
             return GetConfigurationProperty<T>(config, key, cryptor, (IEnumerable<String>?) sections);

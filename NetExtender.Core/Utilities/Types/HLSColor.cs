@@ -24,16 +24,16 @@ namespace NetExtender.Utilities.Types
                 {
                     return Color.FromArgb(argb.Value);
                 }
-            
+
                 [FieldOffset(0)]
                 public readonly Byte B;
-            
+
                 [FieldOffset(1)]
                 public readonly Byte G;
-            
+
                 [FieldOffset(2)]
                 public readonly Byte R;
-            
+
                 [FieldOffset(3)]
                 public readonly Byte A;
 
@@ -55,7 +55,7 @@ namespace NetExtender.Utilities.Types
                     Value = value;
                 }
             }
-            
+
             public static Boolean operator ==(HLSColor a, HLSColor b)
             {
                 return a.Equals(b);
@@ -65,7 +65,7 @@ namespace NetExtender.Utilities.Types
             {
                 return !a.Equals(b);
             }
-            
+
             private const Int32 ShadowAdjustment = -333;
             private const Int32 HighlightAdjustment = 500;
 
@@ -258,7 +258,7 @@ namespace NetExtender.Utilities.Types
                     _ => n1
                 };
             }
-            
+
             public override Boolean Equals(Object? o)
             {
                 if (o is not HLSColor color)

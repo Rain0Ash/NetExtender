@@ -46,7 +46,7 @@ namespace NetExtender.Configuration.Ini
             : this(path, section, ConfigOptions.None)
         {
         }
-        
+
         public IniConfigBehavior(String? path, String? section, ConfigOptions options)
             : base(ValidatePathOrGetDefault(path, "ini"), options)
         {

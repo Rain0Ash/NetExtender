@@ -13,12 +13,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         Screen,
         Parent
     }
-    
+
     public abstract class CenterWindow : FixedWindow
     {
         public WindowCenterMode Position { get; set; } = WindowCenterMode.Parent;
         public Boolean BringToFront { get; set; } = true;
-        
+
         protected CenterWindow()
         {
             Started += SetSizeTo;
@@ -27,7 +27,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             Started += SetTaskbarVisible;
             Loaded += BringToForeground;
         }
-        
+
         protected virtual void SetSizeTo(Object? sender, EventArgs args)
         {
         }
@@ -40,14 +40,14 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         protected virtual void SetTaskbarVisible(Object? sender, RoutedEventArgs args)
         {
         }
-        
+
         protected virtual void BringToForeground(Object? sender, RoutedEventArgs args)
         {
             if (!BringToFront)
             {
                 return;
             }
-            
+
             UserInterfaceUtilities.BringToForegroundWindow(Handle);
         }
 
@@ -55,7 +55,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         {
             CenterTo();
         }
-        
+
         public virtual Boolean CenterTo()
         {
             return Position switch
@@ -81,7 +81,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             {
                 return CenterToScreen();
             }
-            
+
             Left = parent.Left + (parent.ActualWidth - ActualWidth) / 2;
             Top = parent.Top + (parent.ActualHeight - ActualHeight) / 2;
             return true;

@@ -9,7 +9,7 @@ namespace NetExtender.NAudio.Types.Playlist.Interfaces
     public interface IWaveStreamPlaylist : IWaveStreamPlaylist<WaveStream>
     {
     }
-    
+
     public interface IWaveStreamPlaylist<T> : IWavePlaylist<T> where T : WaveStream
     {
         public Int32 Index { get; set; }

@@ -16,12 +16,12 @@ namespace NetExtender.WindowsPresentation.Types.Converters
     public class WindowConverterWrapper<T, TWindow> : WindowConverter<TWindow> where T : class, IValueConverter, new() where TWindow : Window
     {
         public T Converter { get; }
-        
+
         public WindowConverterWrapper()
         {
             Converter = new T();
         }
-        
+
         public override Object? Convert(Object? value, Type? targetType, Object? parameter, CultureInfo? culture)
         {
             return Converter.Convert(value, targetType, parameter, culture);

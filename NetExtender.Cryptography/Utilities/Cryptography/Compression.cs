@@ -18,7 +18,7 @@ namespace NetExtender.Utilities.Cryptography
         Deflate,
         Brotli
     }
-    
+
     public static partial class CryptographyUtilities
     {
         public static class Compression
@@ -246,7 +246,7 @@ namespace NetExtender.Utilities.Cryptography
         {
             return Compress<MemoryStream>(stream, null, level, type).ResetPosition();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Compress<T>(this Stream stream, T? destination) where T : Stream
         {
@@ -279,10 +279,10 @@ namespace NetExtender.Utilities.Cryptography
             }
 
             Boolean empty = destination is null;
-            
+
             using CompressionStream compress = new CompressionStream(destination ??= (T)(Object) new MemoryStream(), type, level, true);
             stream.CopyTo(compress);
-            
+
             return empty ? destination.ResetPosition() : destination;
         }
 
@@ -312,10 +312,10 @@ namespace NetExtender.Utilities.Cryptography
             }
 
             Boolean empty = destination is null;
-            
+
             using CompressionStream compress = new CompressionStream(stream, type, CompressionMode.Decompress);
             compress.CopyTo(destination ??= (T)(Object) new MemoryStream());
-            
+
             return empty ? destination.ResetPosition() : destination;
         }
 
@@ -446,7 +446,7 @@ namespace NetExtender.Utilities.Cryptography
             }
 
             Boolean empty = destination is null;
-            
+
             await using CompressionStream compress = new CompressionStream(destination ??= (T)(Object) new MemoryStream(), type, level, true);
             await stream.CopyToAsync(compress, token).ConfigureAwait(false);
 
@@ -508,10 +508,10 @@ namespace NetExtender.Utilities.Cryptography
             }
 
             Boolean empty = destination is null;
-            
+
             await using CompressionStream compress = new CompressionStream(stream, type, CompressionMode.Decompress, true);
             await compress.CopyToAsync(destination ??= (T)(Object) new MemoryStream(), token).ConfigureAwait(false);
-            
+
             return empty ? destination.ResetPosition() : destination;
         }
     }

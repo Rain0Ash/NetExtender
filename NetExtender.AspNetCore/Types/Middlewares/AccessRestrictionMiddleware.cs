@@ -20,7 +20,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
         {
             AccessCondition = Access;
         }
-        
+
         public AccessRestrictionMiddleware(RequestDelegate next, Func<HttpContext, Boolean>? access)
             : this(next, access, DefaultRestrictionStatusCode)
         {
@@ -57,7 +57,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
         {
             return AllowStatusCode;
         }
-        
+
         public override async Task InvokeAsync(HttpContext context)
         {
             Int32 status = AccessCondition(context);

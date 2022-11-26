@@ -26,7 +26,7 @@ namespace NetExtender.Localization.Behavior.Transactions
                 return (ILocalizationBehavior) base.Transaction;
             }
         }
-        
+
         public LocalizationBehaviorTransaction(ILocalizationBehavior original, ILocalizationBehavior transaction)
             : base(original, transaction)
         {

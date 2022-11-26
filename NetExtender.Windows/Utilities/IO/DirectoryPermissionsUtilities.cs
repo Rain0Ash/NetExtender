@@ -16,7 +16,7 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return HasPermissions(new DirectoryInfo(path), access);
         }
-        
+
         public static Boolean IsHasPermissions(String path, FileSystemRights access)
         {
             return IsHasPermissions(new DirectoryInfo(path), access);

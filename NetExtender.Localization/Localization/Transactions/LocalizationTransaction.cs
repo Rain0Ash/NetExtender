@@ -29,12 +29,12 @@ namespace NetExtender.Localization.Transactions
                 return (ILocalizationConfig) base.Transaction;
             }
         }
-        
+
         public LocalizationTransaction(ILocalizationConfig original, ILocalizationBehaviorTransaction transaction)
             : this(original, transaction is not null ? transaction.Transaction.Create() : throw new ArgumentNullException(nameof(transaction)))
         {
         }
-        
+
         public LocalizationTransaction(ILocalizationConfig original, ILocalizationConfig transaction)
             : base(original, transaction)
         {

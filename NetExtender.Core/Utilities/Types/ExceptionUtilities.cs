@@ -38,7 +38,7 @@ namespace NetExtender.Utilities.Types
             Environment.FailFast(message);
             return new NeverOperationException(message);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Exception FailFast(String? message, Exception? exception)
         {
@@ -52,7 +52,7 @@ namespace NetExtender.Utilities.Types
             Environment.FailFast(exception?.Message, exception);
             return new NeverOperationException(exception);
         }
-        
+
         public static String ToDiagnosticString(this Exception source)
         {
             return ToDiagnosticString(source, null);

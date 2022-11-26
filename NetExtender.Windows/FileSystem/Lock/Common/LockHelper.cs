@@ -22,7 +22,7 @@ namespace NetExtender.IO.FileSystem.Lock.Common
                 EmitTypeInformation = EmitTypeInformation.Always,
                 MaxItemsInObjectGraph = Int32.MaxValue
             };
-                
+
             JsonSerializer = new DataContractJsonSerializer(typeof(FileLockContent), settings);
         }
 
@@ -41,7 +41,7 @@ namespace NetExtender.IO.FileSystem.Lock.Common
             try
             {
                 using FileStream stream = File.OpenRead(path);
-                
+
                 return JsonSerializer.ReadObject(stream) as FileLockContent ?? new MissingFileLockContent();
             }
             catch (FileNotFoundException)
@@ -63,9 +63,9 @@ namespace NetExtender.IO.FileSystem.Lock.Common
             try
             {
                 using FileStream stream = File.Create(path);
-                
+
                 JsonSerializer.WriteObject(stream, content);
-                
+
                 return true;
             }
             catch (Exception)

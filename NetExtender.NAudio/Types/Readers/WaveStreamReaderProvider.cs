@@ -23,7 +23,7 @@ namespace NetExtender.NAudio.Types.Readers
             Stream = stream ?? throw new ArgumentNullException(nameof(stream));
             WaveFormat = format ?? throw new ArgumentNullException(nameof(format));
         }
-        
+
         public Int32 Read(Byte[] buffer, Int32 offset, Int32 count)
         {
             return Stream.Read(buffer, offset, count);

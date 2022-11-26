@@ -19,52 +19,52 @@ namespace NetExtender.WindowsPresentation.Types.Input
         {
             return value.Internal;
         }
-        
+
         public static implicit operator ReadOnlySpan<UInt16>(in Keys value)
         {
             return value.Internal;
         }
-        
+
         public static implicit operator ReadOnlySpan<UInt32>(in Keys value)
         {
             return value.Internal;
         }
-        
+
         public static implicit operator ReadOnlySpan<UInt64>(in Keys value)
         {
             return value.Internal;
         }
-        
+
         public static Boolean operator ==(Keys first, Keys second)
         {
             return first.Internal == second.Internal;
         }
-        
+
         public static Boolean operator !=(Keys first, Keys second)
         {
             return !(first == second);
         }
-        
+
         public static Keys operator |(Keys first, Keys second)
         {
             return new Keys(first.Internal | second.Internal);
         }
-        
+
         public static Keys operator &(Keys first, Keys second)
         {
             return new Keys(first.Internal & second.Internal);
         }
-        
+
         public static Keys operator ^(Keys first, Keys second)
         {
             return new Keys(first.Internal ^ second.Internal);
         }
-        
+
         public static Keys operator ~(Keys value)
         {
             return new Keys(~value.Internal);
         }
-        
+
         Int32 IFlag.Size
         {
             get
@@ -72,7 +72,7 @@ namespace NetExtender.WindowsPresentation.Types.Input
                 return Internal.Size;
             }
         }
-        
+
         public Int32 Count
         {
             get
@@ -80,7 +80,7 @@ namespace NetExtender.WindowsPresentation.Types.Input
                 return Internal.PopCount;
             }
         }
-        
+
         Int32 IReadOnlyCollection<Boolean>.Count
         {
             get
@@ -96,7 +96,7 @@ namespace NetExtender.WindowsPresentation.Types.Input
                 return Internal.PopCount;
             }
         }
-        
+
         private Flag256 Internal { get; }
 
         private Keys(Flag256 value)
@@ -108,7 +108,7 @@ namespace NetExtender.WindowsPresentation.Types.Input
         {
             Internal = new Flag256(1) << (Int32) key;
         }
-        
+
         public Keys(params Key[]? keys)
             : this((IEnumerable<Key>?) keys)
         {
@@ -143,7 +143,7 @@ namespace NetExtender.WindowsPresentation.Types.Input
         {
             return HasFlag(new Keys(key));
         }
-        
+
         public Boolean HasFlag(Keys keys)
         {
             return Internal.HasFlag(keys.Internal);
@@ -188,7 +188,7 @@ namespace NetExtender.WindowsPresentation.Types.Input
         {
             return Internal.HasFlag(value);
         }
-        
+
         public override Int32 GetHashCode()
         {
             return Internal.GetHashCode();
@@ -213,7 +213,7 @@ namespace NetExtender.WindowsPresentation.Types.Input
         {
             return Equals(new Keys(other));
         }
-        
+
         public Boolean Equals(Keys other)
         {
             return Internal.Equals(other.Internal);
@@ -223,7 +223,7 @@ namespace NetExtender.WindowsPresentation.Types.Input
         {
             return String.Join(" + ", GetEnumerator().AsEnumerable());
         }
-        
+
         IEnumerable<Int32> IFlag.Enumerate()
         {
             return Internal.Enumerate();

@@ -15,19 +15,19 @@ namespace NetExtender.Utilities.Types
         {
             return ValueTask.FromResult(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ValueTask ToCanceledValueTask(this CancellationToken token)
         {
             return ValueTask.FromCanceled(token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ValueTask<T> ToCanceledValueTask<T>(this CancellationToken token)
         {
             return ValueTask.FromCanceled<T>(token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ValueTask ToExceptionValueTask(this Exception exception)
         {
@@ -38,7 +38,7 @@ namespace NetExtender.Utilities.Types
 
             return ValueTask.FromException(exception);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ValueTask<T> ToExceptionValueTask<T>(this Exception exception)
         {
@@ -49,7 +49,7 @@ namespace NetExtender.Utilities.Types
 
             return ValueTask.FromException<T>(exception);
         }
-        
+
 #if AWAIT_AS_IN_JAVASCRIPT
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ValueTaskAwaiter<T> GetAwaiter<T>(this T value)

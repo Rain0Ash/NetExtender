@@ -22,7 +22,7 @@ namespace NetExtender.Utilities.Types
 
             return TryPopRandom(collection, out T? result) ? result : throw new NotSupportedException();
         }
-        
+
         public static Boolean TryPopRandom<T>(this ICollection<T> collection, [MaybeNullWhen(false)] out T result)
         {
             if (collection is null)
@@ -47,7 +47,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static IList<IList<T>> GetCombinations<T>(this ICollection<T> collection, Int32 min = 1)
         {
             if (collection is null)
@@ -84,7 +84,7 @@ namespace NetExtender.Utilities.Types
 
             return combo.ToList();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsReadOnly<T>(this ICollection<T> collection)
         {
@@ -217,11 +217,11 @@ namespace NetExtender.Utilities.Types
             {
                 return false;
             }
-            
+
             collection.Add(item);
             return true;
         }
-        
+
         public static Boolean Remove<T>(this ICollection<T> collection, T item)
         {
             if (collection is null)
@@ -241,7 +241,7 @@ namespace NetExtender.Utilities.Types
 
             return condition && collection.Remove(item);
         }
-        
+
         public static Boolean RemoveIf<T>(this ICollection<T> collection, T item, Func<T, Boolean> predicate)
         {
             if (collection is null)
@@ -266,7 +266,7 @@ namespace NetExtender.Utilities.Types
 
             return !condition && collection.Remove(item);
         }
-        
+
         public static Boolean RemoveIfNot<T>(this ICollection<T> collection, T item, Func<T, Boolean> predicate)
         {
             if (collection is null)
@@ -281,7 +281,7 @@ namespace NetExtender.Utilities.Types
 
             return !predicate(item) && collection.Remove(item);
         }
-        
+
         public static void AddRange<T>(this ICollection<T> collection, params T[] items)
         {
             AddRange(collection, (IEnumerable<T>) items);
@@ -337,14 +337,14 @@ namespace NetExtender.Utilities.Types
                 collection.Remove(item);
             }
         }
-        
+
         public static Int32 RemoveAll<T>(this ICollection<T> collection, T item)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             if (collection.IsReadOnly)
             {
                 throw new NotSupportedException();
@@ -375,12 +375,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (collection.IsReadOnly)
             {
                 throw new NotSupportedException();
             }
-            
+
             Int32 count = 0;
             foreach (T item in source)
             {
@@ -422,7 +422,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(array));
             }
-            
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));

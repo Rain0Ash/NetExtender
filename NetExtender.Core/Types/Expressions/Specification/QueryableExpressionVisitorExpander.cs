@@ -107,7 +107,7 @@ namespace NetExtender.Types.Expressions.Specification
 
             return type;
         }
-        
+
         private static void AddTypeSignature(StringBuilder builder, Type type)
         {
             if (builder is null)

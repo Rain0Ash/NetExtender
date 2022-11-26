@@ -41,7 +41,7 @@ namespace NetExtender.Types.Random
         {
             Distribution = new List<Double>(DefaultCapacity);
         }
-        
+
         public DynamicRandomSelector(Int32 capacity)
             : base(capacity)
         {
@@ -65,7 +65,7 @@ namespace NetExtender.Types.Random
             capacity = capacity.Clamp(DefaultCapacity, Int32.MaxValue);
             Distribution = new List<Double>(capacity);
         }
-        
+
         public DynamicRandomSelector(IEnumerable<KeyValuePair<T, Double>>? items)
             : this(items.Materialize())
         {
@@ -121,7 +121,7 @@ namespace NetExtender.Types.Random
             {
                 throw new InvalidOperationException("Cannot build with no items.");
             }
-            
+
             Distribution.Clear();
             Distribution.AddRange(Items.Values);
             BuildCumulativeDistribution(Distribution);
@@ -147,7 +147,7 @@ namespace NetExtender.Types.Random
             Selector = SelectIndexBinarySearch;
             return this;
         }
-        
+
         /// <summary>
         /// Linear search, good/faster for small lists
         /// </summary>
@@ -215,7 +215,7 @@ namespace NetExtender.Types.Random
 
             return index;
         }
-        
+
         /// <summary>
         /// Selects random item based on its probability.
         /// Uses linear search or binary search, depending on internal list size.
@@ -248,7 +248,7 @@ namespace NetExtender.Types.Random
             {
                 return Build().GetRandom(value);
             }
-            
+
             if (Items.Count <= 0)
             {
                 throw new InvalidOperationException("Items is empty");
@@ -257,7 +257,7 @@ namespace NetExtender.Types.Random
             return Items.GetKeyByIndex(Selector(Distribution, value));
         }
 
-        
+
         [return: NotNullIfNotNull("alternate")]
         public override T? GetRandomOrDefault(T? alternate)
         {
@@ -276,7 +276,7 @@ namespace NetExtender.Types.Random
             {
                 return Build().GetRandomOrDefault(value, alternate);
             }
-            
+
             return Items.Count > 0 ? Items.GetKeyByIndex(Selector(Distribution, value)) : alternate;
         }
 

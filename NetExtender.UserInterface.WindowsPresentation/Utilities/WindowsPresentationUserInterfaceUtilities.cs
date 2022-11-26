@@ -22,7 +22,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return UserInterfaceUtilities.GetWindowRectangle(window.GetHandle());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ShowWindow(this Window window, WindowStateType state)
         {
@@ -33,7 +33,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return UserInterfaceUtilities.ShowWindow(window.GetHandle(), state);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean BringToForeground(this Window window)
         {

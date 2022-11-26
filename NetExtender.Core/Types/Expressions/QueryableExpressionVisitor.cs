@@ -9,7 +9,7 @@ namespace NetExtender.Types.Expressions
     public class QueryableExpressionVisitor : ExpressionVisitor
     {
         protected ExpressionVisitor Expander { get; } = new QueryableExpressionVisitorExpander();
-        
+
         protected override Expression VisitUnary(UnaryExpression node)
         {
             return node.NodeType == ExpressionType.Quote ? Expander.Visit(node) : base.VisitUnary(node);

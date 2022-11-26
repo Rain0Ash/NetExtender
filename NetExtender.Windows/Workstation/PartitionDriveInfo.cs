@@ -13,7 +13,7 @@ namespace NetExtender.Workstation
         {
             return value?.Hardware;
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static implicit operator LogicalDriveInfo?(PartitionDriveInfo? value)
         {
@@ -24,7 +24,7 @@ namespace NetExtender.Workstation
         public HardwareDriveInfo Hardware { get; }
         public UInt64? StartingAddress { get; init; }
         public UInt64? EndingAddress { get; init; }
-        
+
         public PartitionDriveInfo(LogicalDriveInfo logical, HardwareDriveInfo hardware)
         {
             Logical = logical ?? throw new ArgumentNullException(nameof(logical));

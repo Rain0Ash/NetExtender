@@ -14,7 +14,7 @@ namespace NetExtender.Utilities.Numerics
     public static partial class BitUtilities
     {
         public const Int32 BitInByte = 8;
-        
+
         public static void Deconstruct(this Char value, out Byte high, out Byte low)
         {
             unchecked
@@ -23,7 +23,7 @@ namespace NetExtender.Utilities.Numerics
                 low = (Byte) (value & Byte.MaxValue);
             }
         }
-        
+
         public static void Deconstruct(this Int16 value, out Byte high, out Byte low)
         {
             unchecked
@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.Numerics
                 low = (Byte) (value & Byte.MaxValue);
             }
         }
-        
+
         public static void Deconstruct(this UInt16 value, out Byte high, out Byte low)
         {
             unchecked
@@ -41,7 +41,7 @@ namespace NetExtender.Utilities.Numerics
                 low = (Byte) (value & Byte.MaxValue);
             }
         }
-        
+
         public static void Deconstruct(this Int32 value, out UInt16 high, out UInt16 low)
         {
             unchecked
@@ -50,7 +50,7 @@ namespace NetExtender.Utilities.Numerics
                 low = (UInt16) (value & UInt16.MaxValue);
             }
         }
-        
+
         public static void Deconstruct(this UInt32 value, out UInt16 high, out UInt16 low)
         {
             unchecked
@@ -59,7 +59,7 @@ namespace NetExtender.Utilities.Numerics
                 low = (UInt16) (value & UInt16.MaxValue);
             }
         }
-        
+
         public static void Deconstruct(this Int64 value, out UInt32 high, out UInt32 low)
         {
             unchecked
@@ -68,7 +68,7 @@ namespace NetExtender.Utilities.Numerics
                 low = (UInt32) (value & UInt32.MaxValue);
             }
         }
-        
+
         public static void Deconstruct(this UInt64 value, out UInt32 high, out UInt32 low)
         {
             unchecked
@@ -143,21 +143,21 @@ namespace NetExtender.Utilities.Numerics
         {
             return ((UInt64) high << (sizeof(UInt32) * BitInByte)) | low;
         }
-        
+
         private static ImmutableArray<ImmutableArray<Int32>> SetBitTable { get; } =
             MathUtilities.Range(256)
                 .Select(i => MathUtilities.Range(8)
                     .Where(bit => (i & (1 << bit)) != 0)
                     .ToImmutableArray())
                 .ToImmutableArray();
-        
-        
+
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Boolean TryGetSetBits(Byte value, Span<Int32> destination, out Int32 written)
         {
             written = 0;
             ImmutableArray<Int32> position = SetBitTable[value];
-            
+
             if (destination.Length < position.Length)
             {
                 return false;
@@ -171,7 +171,7 @@ namespace NetExtender.Utilities.Numerics
 
             return true;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe Boolean TryGetSetBits<T>(this T value, Span<Int32> destination, out Int32 written) where T : unmanaged
         {
@@ -216,23 +216,23 @@ namespace NetExtender.Utilities.Numerics
                 {
                     return false;
                 }
-                
+
                 if (destination.Length < written + count)
                 {
                     return false;
                 }
-                
+
                 for (Int32 j = 0; j < count; j++)
                 {
                     destination[written++] = position[j] + BitInByte * i;
                 }
             }
-            
+
             return true;
         }
 
         //TODO: BitUtilities Trailing/leading zeros for void*
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe Int32 BitwisePopCount(this Single value)
         {
@@ -291,7 +291,7 @@ namespace NetExtender.Utilities.Numerics
                 {
                     return Unsafe.Read<T>(UnsafeUtilities.Add(pointer, position));
                 }
-                
+
                 while (position < length)
                 {
                     switch (length - position)
@@ -301,39 +301,39 @@ namespace NetExtender.Utilities.Numerics
                             position += sizeof(UInt64);
 
                             break;
-                        
+
                         case sizeof(UInt64):
                             return count + (UInt32) BitOperations.PopCount(Read<UInt64>(pointer, position));
-                        
+
                         case sizeof(UInt32) + sizeof(UInt16) + sizeof(Byte):
                             count += (UInt32) BitOperations.PopCount(Read<UInt32>(pointer, position));
                             position += sizeof(UInt32);
                             goto case sizeof(UInt16) + sizeof(Byte);
-                            
+
                         case sizeof(UInt32) + sizeof(UInt16):
                             count += (UInt32) BitOperations.PopCount(Read<UInt32>(pointer, position));
                             position += sizeof(UInt32);
                             goto case sizeof(UInt16);
-                            
+
                         case sizeof(UInt32) + sizeof(Byte):
                             count += (UInt32) BitOperations.PopCount(Read<UInt32>(pointer, position));
                             position += sizeof(UInt32);
                             goto case sizeof(Byte);
-                            
+
                         case sizeof(UInt32):
                             return count + (UInt32) BitOperations.PopCount(Read<UInt32>(pointer, position));
-                        
+
                         case sizeof(UInt16) + sizeof(Byte):
                             count += (UInt32) BitOperations.PopCount(Read<UInt16>(pointer, position));
                             position += sizeof(UInt16);
                             goto case sizeof(Byte);
-                            
+
                         case sizeof(UInt16):
                             return count + (UInt32) BitOperations.PopCount(Read<UInt16>(pointer, position));
-                        
+
                         case sizeof(Byte):
                             return count + (UInt32) BitOperations.PopCount(Read<Byte>(pointer, position));
-                        
+
                         default:
                             return count;
                     }
@@ -850,7 +850,7 @@ namespace NetExtender.Utilities.Numerics
                     {
                         pointer[i] = pointer[i - offset];
                     }
-                    
+
                     UnsafeUtilities.Fill(pointer, offset);
                     return;
                 }
@@ -961,7 +961,7 @@ namespace NetExtender.Utilities.Numerics
                     {
                         pointer[i] = pointer[i + offset];
                     }
-                    
+
                     UnsafeUtilities.Fill(UnsafeUtilities.Add(pointer, limit + 1), length);
                     return;
                 }
@@ -972,7 +972,7 @@ namespace NetExtender.Utilities.Numerics
                 {
                     pointer[i] = (Byte) ((pointer[i + offset] >> shift) | pointer[i + offset + 1] << suboffset);
                 }
-                
+
                 pointer[limit] = (Byte) (pointer[length - 1] >> shift);
                 UnsafeUtilities.Fill(UnsafeUtilities.Add(pointer, limit + 1), length);
             }
@@ -992,7 +992,7 @@ namespace NetExtender.Utilities.Numerics
                 return BitwiseShiftRight<T>((Byte*) pointer, shift);
             }
         }
-        
+
         //TODO: bitwise rotate
     }
 }

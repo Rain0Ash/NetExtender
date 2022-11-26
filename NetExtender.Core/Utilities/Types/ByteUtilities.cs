@@ -58,7 +58,7 @@ namespace NetExtender.Utilities.Types
         {
             return ToHexString((ReadOnlySpan<Byte>) span);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String ToHexString(this ReadOnlyMemory<Byte> memory)
         {
@@ -181,7 +181,7 @@ namespace NetExtender.Utilities.Types
         {
             return ConvertInformation(value, from, to);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ConvertToBit(Int32 value, InformationSize from)
         {
@@ -193,7 +193,7 @@ namespace NetExtender.Utilities.Types
         {
             return ConvertToBit(value, from);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ConvertToBit(UInt32 value, InformationSize from)
         {
@@ -205,7 +205,7 @@ namespace NetExtender.Utilities.Types
         {
             return ConvertToBit(value, from);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ConvertToBit(Int64 value, InformationSize from)
         {
@@ -217,7 +217,7 @@ namespace NetExtender.Utilities.Types
         {
             return ConvertToBit(value, from);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ConvertToBit(UInt64 value, InformationSize from)
         {
@@ -229,7 +229,7 @@ namespace NetExtender.Utilities.Types
         {
             return ConvertToBit(value, from);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double ConvertToBit(Double value, InformationSize from)
         {
@@ -241,7 +241,7 @@ namespace NetExtender.Utilities.Types
         {
             return ConvertToBit(value, from);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal ConvertToBit(Decimal value, InformationSize from)
         {
@@ -259,31 +259,31 @@ namespace NetExtender.Utilities.Types
         {
             return value > 0 ? ConvertToBytes(from, (UInt64) value) : 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ConvertToBytes(this InformationSize from, Int32 value)
         {
             return ConvertToBytes(value, from);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ConvertToBytes(UInt32 value, InformationSize from)
         {
             return value > 0 ? ConvertToBytes(from, (UInt64) value) : 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ConvertToBytes(this InformationSize from, UInt32 value)
         {
             return ConvertToBytes(value, from);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ConvertToBytes(Int64 value, InformationSize from)
         {
             return value > 0 ? ConvertToBytes(from, (UInt64) value) : 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ConvertToBytes(this InformationSize from, Int64 value)
         {
@@ -300,7 +300,7 @@ namespace NetExtender.Utilities.Types
                 _ => value * ((UInt64) from / BitInByte)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static UInt64 ConvertToBytes(this InformationSize from, UInt64 value)
         {
@@ -317,13 +317,13 @@ namespace NetExtender.Utilities.Types
                 _ => value * ((UInt64) from / (Double) BitInByte)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double ConvertToBytes(this InformationSize from, Double value)
         {
             return ConvertToBytes(value, from);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal ConvertToBytes(Decimal value, InformationSize from)
         {

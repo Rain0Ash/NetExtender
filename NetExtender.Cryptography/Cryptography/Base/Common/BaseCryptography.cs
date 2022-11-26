@@ -14,10 +14,10 @@ namespace NetExtender.Cryptography.Base.Common
         {
             return Encode(Encoding.UTF8.GetBytes(plain));
         }
-        
+
         /// <inheritdoc/>
         public abstract String Encode(ReadOnlySpan<Byte> bytes);
-        
+
         /// <inheritdoc/>
         public Span<Byte> Decode(String encoded)
         {

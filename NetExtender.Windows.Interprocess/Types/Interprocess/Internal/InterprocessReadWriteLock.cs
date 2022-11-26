@@ -14,7 +14,7 @@ namespace NetExtender.Types.Interprocess
         private Semaphore? Semaphore { get; set; }
         private Int32 MaximumCount { get; }
         private TimeSpan Timeout { get; }
-        
+
         private Int32 _locks;
         private Int32 Locks
         {
@@ -37,7 +37,7 @@ namespace NetExtender.Types.Interprocess
         }
 
         public Boolean IsWriterLockHeld { get; private set; }
-        
+
         public static TimeSpan DefaultWaitTimeout
         {
             get
@@ -82,13 +82,13 @@ namespace NetExtender.Types.Interprocess
             {
                 throw new ArgumentOutOfRangeException(nameof(count), count, "Can't be less than 1");
             }
-            
+
             Mutex = CreateMutex(name);
             Semaphore = CreateSemaphore(name, count);
             MaximumCount = count;
             Timeout = timeout;
         }
-        
+
         /// <summary>
         /// Create a system wide Mutex that can be used to construct a <see cref="InterprocessReadWriteLock"/>
         /// </summary>
@@ -129,12 +129,12 @@ namespace NetExtender.Types.Interprocess
             {
                 throw new ObjectDisposedException(nameof(Mutex));
             }
-            
+
             if (Semaphore is null)
             {
                 throw new ObjectDisposedException(nameof(Semaphore));
             }
-            
+
             if (!Mutex.WaitOne(Timeout))
             {
                 throw new TimeoutException("Gave up waiting for read lock");
@@ -164,12 +164,12 @@ namespace NetExtender.Types.Interprocess
             {
                 throw new ObjectDisposedException(nameof(Mutex));
             }
-            
+
             if (Semaphore is null)
             {
                 throw new ObjectDisposedException(nameof(Semaphore));
             }
-            
+
             if (!Mutex.WaitOne(Timeout))
             {
                 throw new TimeoutException("Gave up waiting for write lock");
@@ -187,7 +187,7 @@ namespace NetExtender.Types.Interprocess
 
                     acquired++;
                 }
-                
+
                 IsWriterLockHeld = true;
             }
             catch (TimeoutException) when (acquired > 0)
@@ -210,7 +210,7 @@ namespace NetExtender.Types.Interprocess
             {
                 throw new ObjectDisposedException(nameof(Semaphore));
             }
-            
+
             Semaphore.Release();
             Interlocked.Decrement(ref _locks);
         }
@@ -224,11 +224,11 @@ namespace NetExtender.Types.Interprocess
             {
                 throw new ObjectDisposedException(nameof(Semaphore));
             }
-            
+
             IsWriterLockHeld = false;
             Semaphore.Release(MaximumCount);
         }
-        
+
         public void Dispose()
         {
             if (Mutex is null || Semaphore is null)

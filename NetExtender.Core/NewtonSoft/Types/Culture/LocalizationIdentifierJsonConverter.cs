@@ -22,7 +22,7 @@ namespace NetExtender.NewtonSoft.Types.Culture
         Native,
         Language
     }
-    
+
     public sealed class LocalizationIdentifierJsonConverter : JsonConverter
     {
         private static ImmutableHashSet<Type> Types { get; } = ImmutableHashSet.Create
@@ -47,7 +47,7 @@ namespace NetExtender.NewtonSoft.Types.Culture
                        Convert != LocalizationIdentifierJsonConvertType.Language;
             }
         }
-        
+
         public override Boolean CanWrite
         {
             get
@@ -55,14 +55,14 @@ namespace NetExtender.NewtonSoft.Types.Culture
                 return true;
             }
         }
-        
+
         public LocalizationIdentifierJsonConvertType Convert { get; init; }
-        
+
         public override Boolean CanConvert(Type objectType)
         {
             return Types.Contains(objectType);
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public override Object? ReadJson(JsonReader reader, Type objectType, Object? existingValue, JsonSerializer serializer)
         {
@@ -86,12 +86,12 @@ namespace NetExtender.NewtonSoft.Types.Culture
                     {
                         goto case JsonToken.Integer;
                     }
-                    
+
                     if (token.Token == JsonToken.String)
                     {
                         goto case JsonToken.String;
                     }
-                    
+
                     if (token.Token == JsonToken.Null)
                     {
                         goto case JsonToken.Null;
@@ -104,7 +104,7 @@ namespace NetExtender.NewtonSoft.Types.Culture
                     {
                         throw new JsonException();
                     }
-                        
+
                     return new LocalizationIdentifier(code);
                 }
                 case JsonToken.String:
@@ -125,7 +125,7 @@ namespace NetExtender.NewtonSoft.Types.Culture
                     {
                         throw new JsonException();
                     }
-                        
+
                     return identifier;
                 }
                 default:
@@ -152,7 +152,7 @@ namespace NetExtender.NewtonSoft.Types.Culture
                     {
                         goto case LocalizationIdentifierJsonConvertType.ThreeLetter;
                     }
-                    
+
                     writer.WriteValue(code);
                     break;
                 }

@@ -14,31 +14,31 @@ namespace NetExtender.Domains.Interfaces
     public interface IDomain : IApplication, IDisposable
     {
         public IApplication Application { get; }
-        
+
         public Boolean IsReady { get; }
-        
+
         public Guid Guid { get; }
-        
+
         public ApplicationVersion Version { get; }
-        
+
         public ApplicationInfo Information { get; }
-        
+
         public DateTime StartedAt { get; }
-        
+
         public IApplicationData Data { get; }
 
         public ApplicationStatus Status { get; }
 
         public String StatusData { get; }
-        
+
         public ApplicationBranch Branch { get; }
-        
+
         public String BranchData { get; }
 
         public String ApplicationName { get; }
-        
+
         public String ApplicationIdentifier { get; }
-        
+
         public CultureInfo Culture { get; set; }
         public Boolean AlreadyStarted { get; }
 
@@ -53,7 +53,7 @@ namespace NetExtender.Domains.Interfaces
         public IDomain View(IApplicationView view);
         public IDomain View<T>(IEnumerable<String>? args) where T : IApplicationView, new();
         public IDomain View(IApplicationView view, IEnumerable<String>? args);
-        
+
         public IDomain View<T>(params String[]? args) where T : IApplicationView, new();
         public IDomain View(IApplicationView view, params String[]? args);
         public Task<IDomain> ViewAsync<T>() where T : IApplicationView, new();

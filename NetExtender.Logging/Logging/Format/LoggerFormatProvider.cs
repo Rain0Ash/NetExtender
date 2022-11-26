@@ -11,7 +11,7 @@ namespace NetExtender.Logging.Format
     public class LoggerFormatProvider : ILoggerFormatProvider
     {
         public static ILoggerFormatProvider Default { get; } = new LoggerFormatProvider();
-        
+
         public String? Format(String? message, LoggingMessageType type, LoggingMessageOptions options, DateTimeOffset offset)
         {
             return Format(message, type, options, offset, null);
@@ -23,7 +23,7 @@ namespace NetExtender.Logging.Format
             {
                 return null;
             }
-            
+
             String? prefix = Prefix(type, options, offset, provider);
             String? time = Time(type, options, offset, provider);
             String? thread = Thread(type, options, offset, provider);
@@ -38,7 +38,7 @@ namespace NetExtender.Logging.Format
             capacity += 2;
             StringBuilder result = new StringBuilder(capacity, capacity);
             result.Append(prefix).Append(time).Append(thread);
-            
+
             return result.Length > 0 ? result.Append(": ").Append(message).ToString() : null;
         }
 
@@ -57,7 +57,7 @@ namespace NetExtender.Logging.Format
                 _ => null
             };
         }
-        
+
         protected virtual String? Thread(LoggingMessageType type, LoggingMessageOptions options, DateTimeOffset offset, IFormatProvider? provider)
         {
             return options.HasFlag(LoggingMessageOptions.Thread) ? $"|{Environment.CurrentManagedThreadId.ToString(provider)}|" : null;

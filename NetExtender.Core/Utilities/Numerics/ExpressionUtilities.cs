@@ -118,7 +118,7 @@ namespace NetExtender.Utilities.Numerics
             }
 
             Type type = typeof(TSource);
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
             MemberInfo? member = type.GetProperty(name, binding) ?? (MemberInfo?) type.GetField(name, binding);
 
@@ -129,7 +129,7 @@ namespace NetExtender.Utilities.Numerics
 
             return CreateGetExpression<TSource, TValue>(member);
         }
-        
+
         public static Expression<Func<TSource, TValue>> CreateGetExpression<TSource, TValue>(MemberInfo member)
         {
             if (member is null)
@@ -149,7 +149,7 @@ namespace NetExtender.Utilities.Numerics
 
             Type type = typeof(TSource);
             ParameterExpression parameter = Expression.Parameter(type, "source");
-            
+
             MemberExpression access = Expression.MakeMemberAccess(parameter, member);
             UnaryExpression convert = Expression.Convert(access, typeof(TValue));
             return Expression.Lambda<Func<TSource, TValue>>(convert, parameter);
@@ -173,7 +173,7 @@ namespace NetExtender.Utilities.Numerics
             }
 
             Type type = typeof(TSource);
-            
+
             const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
             MemberInfo? member = type.GetProperty(name, binding) ?? (MemberInfo?) type.GetField(name, binding);
 
@@ -191,7 +191,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentNullException(nameof(member));
             }
-            
+
             if (member is not PropertyInfo && member is not FieldInfo)
             {
                 throw new ArgumentException($"Member is not {nameof(PropertyInfo)} or {nameof(FieldInfo)}", nameof(member));
@@ -204,12 +204,12 @@ namespace NetExtender.Utilities.Numerics
 
             ParameterExpression source = Expression.Parameter(typeof(TSource), nameof(source));
             ParameterExpression value = Expression.Parameter(typeof(TValue), nameof(value));
-            
+
             MemberExpression access = Expression.MakeMemberAccess(source, member);
             BinaryExpression assign = Expression.Assign(access, value);
             return Expression.Lambda<Action<TSource, TValue>>(assign, source, value);
         }
-        
+
         public static Expression<Action<TSource, TValue>> CreateSetExpression<TSource, TValue>(this FieldInfo field)
         {
             return CreateSetExpression<TSource, TValue>((MemberInfo) field);
@@ -399,7 +399,7 @@ namespace NetExtender.Utilities.Numerics
 
                 Expression? inner = expression.Expression;
                 Object? instance = inner is not null ? GetValue(inner) : null;
-                
+
                 switch (expression.Member)
                 {
                     case FieldInfo field:
@@ -474,7 +474,7 @@ namespace NetExtender.Utilities.Numerics
                 Expression? value = expression.Object;
                 Object? instance = value is not null ? GetValue(value) : null;
                 Object?[] arguments = new Object[expression.Arguments.Count];
-                
+
                 for (Int32 i = 0; i < arguments.Length; i++)
                 {
                     arguments[i] = GetValue(expression.Arguments[i]);
@@ -490,11 +490,11 @@ namespace NetExtender.Utilities.Numerics
                 {
                     throw new ArgumentNullException(nameof(expression));
                 }
-                
+
                 result = GetValue(expression.Operand);
                 return true;
             }
-            
+
             private static Boolean LambdaExpressionHandler(Expression expression, out Object? result)
             {
                 result = expression ?? throw new ArgumentNullException(nameof(expression));
@@ -553,7 +553,7 @@ namespace NetExtender.Utilities.Numerics
             dynamic? result = GetValue(expression);
             return (T?) result;
         }
-        
+
         public static Boolean TryGetValue(this Expression expression, out Object? result)
         {
             if (expression is null)
@@ -591,7 +591,7 @@ namespace NetExtender.Utilities.Numerics
                 return false;
             }
         }
-        
+
         public static PropertyInfo? GetPropertyInfo<T, TProperty>(this Expression<Func<T, TProperty>> expression)
         {
             if (expression.Body is not MemberExpression member)
@@ -605,7 +605,7 @@ namespace NetExtender.Utilities.Numerics
             }
 
             Type? reflection = info.ReflectedType;
-            
+
             if (reflection is null)
             {
                 return null;

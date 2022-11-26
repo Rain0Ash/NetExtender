@@ -20,7 +20,7 @@ namespace NetExtender.Configuration.Properties.Interfaces
         public Boolean KeyExist();
         public Task<Boolean> KeyExistAsync();
         public Task<Boolean> KeyExistAsync(CancellationToken token);
-        
+
         public Boolean Read();
         public Task<Boolean> ReadAsync();
         public Task<Boolean> ReadAsync(CancellationToken token);
@@ -34,7 +34,7 @@ namespace NetExtender.Configuration.Properties.Interfaces
         public Boolean KeyExist();
         public Task<Boolean> KeyExistAsync();
         public Task<Boolean> KeyExistAsync(CancellationToken token);
-        
+
         public Boolean Read();
         public Task<Boolean> ReadAsync();
         public Task<Boolean> ReadAsync(CancellationToken token);

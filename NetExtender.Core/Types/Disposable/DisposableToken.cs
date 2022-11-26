@@ -24,21 +24,21 @@ namespace NetExtender.Types.Disposable
             {
             }
         }
-        
+
         public Boolean Active { get; private set; }
 
         public DisposableToken()
         {
             Active = true;
         }
-        
+
         public void Dispose()
         {
             if (!Active)
             {
                 return;
             }
-            
+
             Active = false;
             Dispose(true);
             GC.SuppressFinalize(this);
@@ -52,7 +52,7 @@ namespace NetExtender.Types.Disposable
             {
                 return;
             }
-            
+
             Dispose(false);
         }
     }

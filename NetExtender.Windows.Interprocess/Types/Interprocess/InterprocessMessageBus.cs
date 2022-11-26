@@ -24,7 +24,7 @@ namespace NetExtender.Types.Interprocess
                 return FakeInterprocessMessageBus.Instance;
             }
         }
-        
+
         public static TimeSpan DefaultMinimumMessageAge
         {
             get
@@ -173,7 +173,7 @@ namespace NetExtender.Types.Interprocess
             {
                 throw new ObjectDisposedException(nameof(MappedFile));
             }
-            
+
             InterprocessLogBook book = DeserializeLogBook(data);
             book.TrimEntries(DateTime.UtcNow - MessageAge);
             Int64 size = book.LogSize;
@@ -282,7 +282,7 @@ namespace NetExtender.Types.Interprocess
                 }
 
                 InterprocessLogBook book = DeserializeLogBook(MappedFile.Read());
-                
+
                 Int64 read = LastEntryId;
                 LastEntryId = book.LastId;
 
@@ -293,7 +293,7 @@ namespace NetExtender.Types.Interprocess
                 }
             }
         }
-        
+
         private static InterprocessLogBook DeserializeLogBook(Byte[] data)
         {
             if (data is null)
@@ -309,7 +309,7 @@ namespace NetExtender.Types.Interprocess
             using MemoryStream stream = new MemoryStream(data);
             return Serializer.Deserialize<InterprocessLogBook>(stream);
         }
-        
+
         /// <summary>
         /// Resets MessagesSent and MessagesReceived counters
         /// </summary>
@@ -317,14 +317,14 @@ namespace NetExtender.Types.Interprocess
         {
             Statistics.Reset();
         }
-        
+
         public void Dispose()
         {
             if (MappedFile is null)
             {
                 return;
             }
-            
+
             MappedFile.Changed -= WhenChanged;
 
             lock (MessageReaderLock)

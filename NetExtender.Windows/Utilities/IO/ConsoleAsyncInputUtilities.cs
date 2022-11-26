@@ -105,7 +105,7 @@ namespace NetExtender.Utilities.IO
         {
             return ReadAsync(milliseconds, CancellationToken.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Int32> ReadAsync(TimeSpan timeout)
         {
@@ -117,7 +117,7 @@ namespace NetExtender.Utilities.IO
         {
             return InputAsync(Console.Read, milliseconds, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Int32> ReadAsync(TimeSpan timeout, CancellationToken token)
         {
@@ -141,7 +141,7 @@ namespace NetExtender.Utilities.IO
         {
             return ReadKeyAsync(milliseconds, CancellationToken.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<ConsoleKeyInfo> ReadKeyAsync(TimeSpan timeout)
         {
@@ -153,7 +153,7 @@ namespace NetExtender.Utilities.IO
         {
             return ReadKeyInterceptAsync(milliseconds, CancellationToken.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<ConsoleKeyInfo> ReadKeyInterceptAsync(TimeSpan timeout)
         {
@@ -165,7 +165,7 @@ namespace NetExtender.Utilities.IO
         {
             return InputAsync(Console.ReadKey, milliseconds, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<ConsoleKeyInfo> ReadKeyAsync(TimeSpan timeout, CancellationToken token)
         {
@@ -177,7 +177,7 @@ namespace NetExtender.Utilities.IO
         {
             return InputAsync(ConsoleUtilities.ReadKeyIntercept, milliseconds, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<ConsoleKeyInfo> ReadKeyInterceptAsync(TimeSpan timeout, CancellationToken token)
         {
@@ -195,7 +195,7 @@ namespace NetExtender.Utilities.IO
         {
             return ReadLineAsync(milliseconds, CancellationToken.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<String?> ReadLineAsync(TimeSpan timeout)
         {
@@ -207,7 +207,7 @@ namespace NetExtender.Utilities.IO
         {
             return InputAsync(Console.ReadLine, milliseconds, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<String?> ReadLineAsync(TimeSpan timeout, CancellationToken token)
         {
@@ -239,13 +239,13 @@ namespace NetExtender.Utilities.IO
             String? read = await ReadLineAsync(token).ConfigureAwait(false);
             return read is not null ? read.CastConvert<T>(info) : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<T?> CastReadAsAsync<T>(Int32 milliseconds)
         {
             return CastReadAsAsync<T>(milliseconds, CultureInfo.InvariantCulture);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<T?> CastReadAsAsync<T>(TimeSpan timeout)
         {
@@ -257,7 +257,7 @@ namespace NetExtender.Utilities.IO
         {
             return CastReadAsAsync<T>(TimeSpan.FromMilliseconds(milliseconds), info);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<T?> CastReadAsAsync<T>(TimeSpan timeout, CultureInfo? info)
         {
@@ -270,7 +270,7 @@ namespace NetExtender.Utilities.IO
         {
             return CastReadAsAsync<T>(milliseconds, CultureInfo.InvariantCulture, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<T?> CastReadAsAsync<T>(TimeSpan timeout, CancellationToken token)
         {
@@ -683,7 +683,7 @@ namespace NetExtender.Utilities.IO
         {
             return CastAsEnumerableAsync<T>(StringUtilities.DefaultSeparator, milliseconds);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<T>?> CastAsEnumerableAsync<T>(TimeSpan timeout)
         {

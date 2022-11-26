@@ -24,7 +24,7 @@ namespace NetExtender.Types.Parallel
             : this(mode, ParallelMergeOptions.Default)
         {
         }
-        
+
         public ParallelLinqOptions(ParallelMergeOptions options)
             : this(ParallelExecutionMode.Default, options)
         {

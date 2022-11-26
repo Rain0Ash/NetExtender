@@ -18,7 +18,7 @@ namespace NetExtender.Utilities.UserInterface.Types
                 _ => MessageBoxResult.None
             };
         }
-        
+
         public static Boolean ToBoolean(this MessageBoxResult value)
         {
             return value switch
@@ -31,7 +31,7 @@ namespace NetExtender.Utilities.UserInterface.Types
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         public static MessageBoxResult ToMessageBoxResult(this InterfaceDialogResult value)
         {
             return value switch
@@ -47,7 +47,7 @@ namespace NetExtender.Utilities.UserInterface.Types
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         public static InterfaceDialogResult ToInterfaceDialogResult(this MessageBoxResult value)
         {
             return value switch

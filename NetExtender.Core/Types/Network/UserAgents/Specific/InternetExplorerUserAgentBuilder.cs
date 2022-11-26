@@ -19,7 +19,7 @@ namespace NetExtender.Types.Network.UserAgents.Specific
                 return Random.NextBoolean(0.8);
             }
         }
-        
+
         protected virtual (String Explorer, String Trident) RandomInternetExplorerVersion()
         {
             Int32 version = Random.Next(9, 11);

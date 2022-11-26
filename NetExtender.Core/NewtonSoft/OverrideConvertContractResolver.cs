@@ -57,7 +57,7 @@ namespace NetExtender.NewtonSoft
         {
             return Override.TryGetValue(objectType, out JsonConverter? converter) ? converter : base.ResolveContractConverter(objectType);
         }
-        
+
         public Boolean ContainsKey(Type type)
         {
             return Override.ContainsKey(type);
@@ -67,7 +67,7 @@ namespace NetExtender.NewtonSoft
         {
             return Override.TryGetValue(type, out value);
         }
-        
+
         public virtual OverrideConvertContractResolver Add(Type type, JsonConverter? converter)
         {
             if (type is null)
@@ -78,17 +78,17 @@ namespace NetExtender.NewtonSoft
             Override[type] = converter;
             return this;
         }
-        
+
         public OverrideConvertContractResolver Add<T>(JsonConverter? converter)
         {
             return Add(typeof(T), converter);
         }
-            
+
         public OverrideConvertContractResolver Without(Type type)
         {
             return Add(type, null);
         }
-            
+
         public OverrideConvertContractResolver Without<T>()
         {
             return Add<T>(null);

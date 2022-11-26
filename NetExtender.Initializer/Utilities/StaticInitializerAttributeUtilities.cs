@@ -19,7 +19,7 @@ namespace NetExtender.Utilities
             [StaticInitializerAttributePlatform.FreeBSD] = OSPlatform.FreeBSD,
             [StaticInitializerAttributePlatform.OSX] = OSPlatform.OSX
         };
-        
+
         public static Boolean RegisterOSPlatform(UInt64 value, OSPlatform platform)
         {
             return RegisterOSPlatform((StaticInitializerAttributePlatform) value, platform);
@@ -34,7 +34,7 @@ namespace NetExtender.Utilities
         {
             return IsOSPlatform(value, out _);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Boolean IsOSPlatform(this StaticInitializerAttributePlatform value, out OSPlatform platform)
         {

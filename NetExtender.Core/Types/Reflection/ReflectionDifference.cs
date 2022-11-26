@@ -16,52 +16,52 @@ namespace NetExtender.Initializer.Types.Reflection
         {
             return value.Constructors;
         }
-        
+
         public static implicit operator ReflectionDifferenceItem<ConstructorInfo>[](ReflectionDifference value)
         {
             return value.Constructors;
         }
-        
+
         public static implicit operator ReflectionDifference<FieldInfo>(ReflectionDifference value)
         {
             return value.Fields;
         }
-        
+
         public static implicit operator ReflectionDifferenceItem<FieldInfo>[](ReflectionDifference value)
         {
             return value.Fields;
         }
-        
+
         public static implicit operator ReflectionDifference<PropertyInfo>(ReflectionDifference value)
         {
             return value.Properties;
         }
-        
+
         public static implicit operator ReflectionDifferenceItem<PropertyInfo>[](ReflectionDifference value)
         {
             return value.Properties;
         }
-        
+
         public static implicit operator ReflectionDifference<MethodInfo>(ReflectionDifference value)
         {
             return value.Methods;
         }
-        
+
         public static implicit operator ReflectionDifferenceItem<MethodInfo>[](ReflectionDifference value)
         {
             return value.Methods;
         }
-        
+
         public static implicit operator ReflectionDifference<EventInfo>(ReflectionDifference value)
         {
             return value.Events;
         }
-        
+
         public static implicit operator ReflectionDifferenceItem<EventInfo>[](ReflectionDifference value)
         {
             return value.Events;
         }
-        
+
         public ReflectionDifference<ConstructorInfo> Constructors { get; }
         public ReflectionDifference<FieldInfo> Fields { get; }
         public ReflectionDifference<PropertyInfo> Properties { get; }
@@ -75,7 +75,7 @@ namespace NetExtender.Initializer.Types.Reflection
                 return Constructors.Count + Fields.Count + Properties.Count + Methods.Count + Events.Count;
             }
         }
-        
+
         public ReflectionDifference(ReflectionDifference<ConstructorInfo> constructors, ReflectionDifference<FieldInfo> fields, ReflectionDifference<PropertyInfo> properties, ReflectionDifference<MethodInfo> methods, ReflectionDifference<EventInfo> events)
         {
             Constructors = constructors;
@@ -92,22 +92,22 @@ namespace NetExtender.Initializer.Types.Reflection
             {
                 yield return constructor;
             }
-            
+
             foreach (ReflectionDifferenceItem<FieldInfo> field in Fields)
             {
                 yield return field;
             }
-            
+
             foreach (ReflectionDifferenceItem<PropertyInfo> property in Properties)
             {
                 yield return property;
             }
-            
+
             foreach (ReflectionDifferenceItem<MethodInfo> method in Methods)
             {
                 yield return method;
             }
-            
+
             foreach (ReflectionDifferenceItem<EventInfo> @event in Events)
             {
                 yield return @event;
@@ -126,7 +126,7 @@ namespace NetExtender.Initializer.Types.Reflection
         {
             return value.Equality;
         }
-        
+
         public static implicit operator ReflectionDifferenceItem<T>[](ReflectionDifference<T> value)
         {
             return value.Difference;
@@ -197,12 +197,12 @@ namespace NetExtender.Initializer.Types.Reflection
         {
             return value.Equality;
         }
-        
+
         public static implicit operator T(ReflectionDifferenceItem<T> value)
         {
             return value.Current;
         }
-        
+
         public T Current { get; }
         public T Other { get; }
         public ReflectionEqualityType Equality { get; }

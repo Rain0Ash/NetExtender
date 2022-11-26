@@ -36,7 +36,7 @@ namespace NetExtender.Utilities.Network
         {
             return IPAddress.TryParse(ip, out IPAddress? address) ? ConvertIP(address) : null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ConvertIP(String ip, [MaybeNullWhen(false)] out Byte[] bytes)
         {
@@ -59,7 +59,7 @@ namespace NetExtender.Utilities.Network
 
             return address.GetAddressBytes().InnerReverse();
         }
-        
+
         public static IPEndPoint ToIPEndPoint(this IPAddress address, UInt16 port)
         {
             if (address is null)

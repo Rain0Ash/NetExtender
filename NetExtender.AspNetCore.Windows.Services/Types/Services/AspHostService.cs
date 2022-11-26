@@ -18,7 +18,7 @@ namespace NetExtender.AspNetCore.Windows.Services.Types.Services
         protected AspHostService(IServiceProvider provider)
         {
             Provider = provider ?? throw new ArgumentNullException(nameof(provider));
-            
+
             PauseStateHandler = Provider.GetService<IWindowsServicePauseStateService>();
             CanPauseAndContinue = PauseStateHandler is not null;
         }
@@ -41,7 +41,7 @@ namespace NetExtender.AspNetCore.Windows.Services.Types.Services
             provider.GetRequiredService<IHostApplicationLifetime>().ApplicationStopping.Register(StopCancellationTokenRegister);
             return true;
         }
-        
+
         protected virtual void StopCancellationTokenRegister()
         {
             if (!StopRequestsByWindows)
@@ -49,7 +49,7 @@ namespace NetExtender.AspNetCore.Windows.Services.Types.Services
                 Stop();
             }
         }
-        
+
         protected override Boolean BeforeStopInternal()
         {
             StopRequestsByWindows = true;

@@ -22,15 +22,15 @@ namespace NetExtender.ImageSharp.Utilities
             }
 
             using MemoryStream stream = new MemoryStream();
-            
+
             IImageEncoder encoder = image.GetConfiguration().ImageFormatsManager.FindEncoder(PngFormat.Instance);
             image.Save(stream, encoder);
-	
+
             stream.Seek(0, SeekOrigin.Begin);
-	
+
             return new Bitmap(stream);
         }
-	
+
         public static Image<TPixel> ToSharpImage<TPixel>(this Bitmap bitmap) where TPixel : unmanaged, IPixel<TPixel>
         {
             if (bitmap is null)
@@ -39,10 +39,10 @@ namespace NetExtender.ImageSharp.Utilities
             }
 
             using MemoryStream stream = new MemoryStream();
-            
+
             bitmap.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
             stream.Seek(0, SeekOrigin.Begin);
-	
+
             return SixLabors.ImageSharp.Image.Load<TPixel>(stream);
         }
     }

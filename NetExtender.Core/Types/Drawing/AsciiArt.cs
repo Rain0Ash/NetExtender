@@ -18,9 +18,9 @@ namespace NetExtender.Types.Drawing
         {
             return art?.ToString();
         }
-        
+
         public Size Size { get; }
-        
+
         public Boolean VTCode { get; init; }
 
         private ImmutableArray<String> Art { get; }
@@ -38,11 +38,11 @@ namespace NetExtender.Types.Drawing
             }
 
             String[] art = stream.ReadAsLines();
-            
+
             Size = art.GetMatrixSize();
             Art = art.ToImmutableArray();
         }
-        
+
         public AsciiArt(IEnumerable<String> art)
         {
             if (art is null)
@@ -51,11 +51,11 @@ namespace NetExtender.Types.Drawing
             }
 
             ImmutableArray<String> array = art.ToImmutableArray();
-            
+
             Size = array.GetMatrixSize();
             Art = array;
         }
-        
+
         public override String ToString()
         {
             return Art.Join();

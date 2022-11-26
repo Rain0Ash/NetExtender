@@ -13,7 +13,7 @@ namespace NetExtender.JavaScript.Utilities.Interop.JavaScript
         {
             return Evaluate<Object>(runtime, javascript);
         }
-        
+
         public static async Task<T> Evaluate<T>(this IJSRuntime runtime, String javascript)
         {
             if (runtime is null)
@@ -28,7 +28,7 @@ namespace NetExtender.JavaScript.Utilities.Interop.JavaScript
 
             return await runtime.InvokeAsync<T>("eval", javascript);
         }
-        
+
         public static async Task Alert(this IJSRuntime runtime, String message)
         {
             if (runtime is null)
@@ -70,7 +70,7 @@ namespace NetExtender.JavaScript.Utilities.Interop.JavaScript
             {
                 throw new ArgumentException("Value cannot be null or empty.", nameof(message));
             }
-            
+
             return await runtime.InvokeAsync<Boolean>("confirm", message);
         }
 
@@ -85,7 +85,7 @@ namespace NetExtender.JavaScript.Utilities.Interop.JavaScript
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             return await runtime.InvokeAsync<T>("JSON.parse", value);
         }
 

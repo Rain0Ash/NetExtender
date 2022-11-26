@@ -19,7 +19,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return section.Get<T>() ?? Activator.CreateInstance<T>();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IConfigurationSection GetKestrelConfigurationSection(this IConfigurationRoot root)
         {

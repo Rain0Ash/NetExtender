@@ -23,7 +23,7 @@ namespace NetExtender.Configuration.Common
         {
             return !(first == second);
         }
-        
+
         public String? Key { get; }
         public ImmutableArray<String> Sections { get; }
 
@@ -45,12 +45,12 @@ namespace NetExtender.Configuration.Common
             : this(key, sections.AsImmutableArray())
         {
         }
-        
+
         public ConfigurationEntry(String? key, IEnumerable<String>? sections)
             : this(key, sections.AsImmutableArray())
         {
         }
-        
+
         public ConfigurationEntry(String? key, ImmutableArray<String> sections)
         {
             Key = key;
@@ -83,7 +83,7 @@ namespace NetExtender.Configuration.Common
 
                 return compare;
             }
-            
+
             return String.Compare(Key, other.Key, StringComparison.Ordinal);
         }
 

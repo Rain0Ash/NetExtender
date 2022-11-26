@@ -20,7 +20,7 @@ namespace NetExtender.Types.Lists
                 return ((ICollection<KeyValuePair<NullMaybe<TKey>, TValue>>) this).IsReadOnly;
             }
         }
-        
+
         private ICollection<TKey>? _keys { get; set; }
 
         public new ICollection<TKey> Keys

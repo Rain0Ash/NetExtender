@@ -13,7 +13,7 @@ namespace NetExtender.Configuration.Builder.Interfaces
     public interface IConfigBuilder
     {
         public Int32 Count { get; }
-        
+
         public IConfigBuilder Add(IConfigInfo config);
         public IConfigBuilder Add(IConfigInfo config, Func<IConfigInfo, ConfigurationValueEntry[]> predicate);
         public IConfigBuilder Remove(IConfigInfo config);

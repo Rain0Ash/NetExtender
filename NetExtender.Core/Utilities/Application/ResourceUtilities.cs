@@ -146,7 +146,7 @@ namespace NetExtender.Utilities.Application
         public static Boolean Resource(String resource, [MaybeNullWhen(false)] out String type, [MaybeNullWhen(false)] out Byte[] result)
         {
             Assembly? assembly = Assembly.GetEntryAssembly();
-            
+
             if (assembly is not null && Resource(assembly, resource, out type, out result))
             {
                 return true;
@@ -211,7 +211,7 @@ namespace NetExtender.Utilities.Application
             {
                 throw new ArgumentNullException(nameof(reader));
             }
-            
+
             foreach (DictionaryEntry entry in reader.OfType<DictionaryEntry>())
             {
                 if (entry.Key is String key)

@@ -18,7 +18,7 @@ namespace NetExtender.Configuration.Common
         {
             return new ConfigurationEntry(entry.Key, entry.Sections);
         }
-        
+
         public static Boolean operator ==(ConfigurationValueEntry first, ConfigurationValueEntry second)
         {
             return first.Equals(second);
@@ -28,7 +28,7 @@ namespace NetExtender.Configuration.Common
         {
             return !(first == second);
         }
-        
+
         public String? Key { get; }
         public String? Value { get; }
         public ImmutableArray<String> Sections { get; }
@@ -56,12 +56,12 @@ namespace NetExtender.Configuration.Common
             : this(key, value, sections.AsImmutableArray())
         {
         }
-        
+
         public ConfigurationValueEntry(String? key, String? value, IEnumerable<String>? sections)
             : this(key, value, sections.AsImmutableArray())
         {
         }
-        
+
         public ConfigurationValueEntry(String? key, String? value, ImmutableArray<String> sections)
         {
             Key = key;
@@ -105,7 +105,7 @@ namespace NetExtender.Configuration.Common
             compare = String.Compare(Key, other.Key, StringComparison.Ordinal);
             return compare == 0 ? String.Compare(Value, other.Value, StringComparison.Ordinal) : compare;
         }
-        
+
         public Boolean Equals(ConfigurationEntry other)
         {
             return Key == other.Key && Sections.SequenceEqual(other.Sections);
@@ -136,7 +136,7 @@ namespace NetExtender.Configuration.Common
             return this.JsonSerializeObject();
         }
     }
-    
+
     [Serializable]
     public readonly struct ConfigurationValueEntry<T> : IEquatable<ConfigurationValueEntry<T>>, IEquatable<ConfigurationEntry>
     {
@@ -144,7 +144,7 @@ namespace NetExtender.Configuration.Common
         {
             return new ConfigurationEntry(value.Key, value.Sections);
         }
-        
+
         public static Boolean operator ==(ConfigurationValueEntry<T> first, ConfigurationValueEntry<T> second)
         {
             return first.Equals(second);
@@ -154,7 +154,7 @@ namespace NetExtender.Configuration.Common
         {
             return !(first == second);
         }
-        
+
         public String? Key { get; }
         public T Value { get; }
         public ImmutableArray<String> Sections { get; }
@@ -182,12 +182,12 @@ namespace NetExtender.Configuration.Common
             : this(key, value, sections.AsImmutableArray())
         {
         }
-        
+
         public ConfigurationValueEntry(String? key, T value, IEnumerable<String>? sections)
             : this(key, value, sections.AsImmutableArray())
         {
         }
-        
+
         public ConfigurationValueEntry(String? key, T value, ImmutableArray<String> sections)
         {
             Key = key;

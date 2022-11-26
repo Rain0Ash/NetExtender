@@ -130,7 +130,7 @@ namespace NetExtender.Cryptography.Compression
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         public override Int64 Seek(Int64 offset, SeekOrigin origin)
         {
             return Compression.Seek(offset, origin);
@@ -140,27 +140,27 @@ namespace NetExtender.Cryptography.Compression
         {
             Compression.SetLength(value);
         }
-        
+
         public override Int32 ReadByte()
         {
             return Compression.ReadByte();
         }
-        
+
         public override Int32 Read(Span<Byte> buffer)
         {
             return Compression.Read(buffer);
         }
-        
+
         public override Int32 Read(Byte[] buffer, Int32 offset, Int32 count)
         {
             return Compression.Read(buffer, offset, count);
         }
-        
+
         public override ValueTask<Int32> ReadAsync(Memory<Byte> buffer, CancellationToken token = new CancellationToken())
         {
             return Compression.ReadAsync(buffer, token);
         }
-        
+
         public override Task<Int32> ReadAsync(Byte[] buffer, Int32 offset, Int32 count, CancellationToken token)
         {
             return Compression.ReadAsync(buffer, offset, count, token);
@@ -170,27 +170,27 @@ namespace NetExtender.Cryptography.Compression
         {
             return Compression.BeginRead(buffer, offset, count, callback, state);
         }
-        
+
         public override Int32 EndRead(IAsyncResult asyncResult)
         {
             return Compression.EndRead(asyncResult);
         }
-        
+
         public override void WriteByte(Byte value)
         {
             Compression.WriteByte(value);
         }
-        
+
         public override void Write(ReadOnlySpan<Byte> buffer)
         {
             Compression.Write(buffer);
         }
-        
+
         public override void Write(Byte[] buffer, Int32 offset, Int32 count)
         {
             Compression.Write(buffer, offset, count);
         }
-        
+
         public override ValueTask WriteAsync(ReadOnlyMemory<Byte> buffer, CancellationToken token = new CancellationToken())
         {
             return Compression.WriteAsync(buffer, token);
@@ -230,7 +230,7 @@ namespace NetExtender.Cryptography.Compression
         {
             return Compression.CopyToAsync(destination, bufferSize, token);
         }
-        
+
         public override void Close()
         {
             Compression.Close();

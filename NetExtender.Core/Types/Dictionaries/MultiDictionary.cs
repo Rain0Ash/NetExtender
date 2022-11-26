@@ -23,7 +23,7 @@ namespace NetExtender.Types.Dictionaries
                 return ((IDictionary<TKey, ImmutableHashSet<TValue>>) this).IsReadOnly;
             }
         }
-        
+
         ICollection<ImmutableHashSet<TValue>> IMultiDictionary<TKey, TValue>.Values
         {
             get
@@ -39,7 +39,7 @@ namespace NetExtender.Types.Dictionaries
                 return Keys;
             }
         }
-        
+
         IEnumerable<ImmutableHashSet<TValue>> IReadOnlyMultiDictionary<TKey, TValue>.Values
         {
             get
@@ -87,7 +87,7 @@ namespace NetExtender.Types.Dictionaries
                 return Values.SelectMany().ToImmutableArray();
             }
         }
-        
+
         public MultiDictionary()
         {
         }
@@ -101,7 +101,7 @@ namespace NetExtender.Types.Dictionaries
             : base(dictionary, comparer)
         {
         }
-        
+
         public MultiDictionary(IEnumerable<KeyValuePair<TKey, ImmutableHashSet<TValue>>> collection)
             : base(collection)
         {
@@ -138,7 +138,7 @@ namespace NetExtender.Types.Dictionaries
             {
                 throw new ArgumentNullException(nameof(key));
             }
-            
+
             return TryGetValue(key, out ImmutableHashSet<TValue>? result) && result.Contains(value);
         }
 
@@ -216,7 +216,7 @@ namespace NetExtender.Types.Dictionaries
         {
             return Contains(item.Key, item.Value);
         }
-        
+
         public Boolean Remove(KeyValuePair<TKey, TValue> item)
         {
             return Remove(item.Key, item.Value);
@@ -240,7 +240,7 @@ namespace NetExtender.Types.Dictionaries
             }
 
             ImmutableArray<KeyValuePair<TKey, TValue>> collection = ((IEnumerable<KeyValuePair<TKey, TValue>>) this).ToImmutableArray();
-            
+
             if (array.Length - arrayIndex < collection.Length)
             {
                 throw new ArgumentException("Destination array is not long enough to copy all the items in the collection. Check array index and length.", nameof(array));
@@ -290,7 +290,7 @@ namespace NetExtender.Types.Dictionaries
                 {
                     throw new ArgumentNullException(nameof(key));
                 }
-                
+
                 if (TryGetValue(key, out TValue? value))
                 {
                     return value;

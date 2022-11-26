@@ -10,11 +10,11 @@ namespace NetExtender.Interfaces
     public interface IMultiValidable : IMultiValidable<Object?>
     {
     }
-    
+
     public interface IMultiValidable<T> : IBaseValidable
     {
         public Func<T, Boolean>? ValidateItem { get; set; }
-        
+
         public new Boolean IsValid
         {
             get
@@ -24,7 +24,7 @@ namespace NetExtender.Interfaces
                 {
                     return enumerable.All(IsValidItem);
                 }
-            
+
                 throw new NotSupportedException();
             }
         }
@@ -41,7 +41,7 @@ namespace NetExtender.Interfaces
             {
                 return IsValidItem(enumerable.ElementAt(index));
             }
-            
+
             throw new NotSupportedException();
         }
     }

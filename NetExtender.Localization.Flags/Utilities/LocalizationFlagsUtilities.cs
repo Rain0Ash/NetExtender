@@ -25,14 +25,14 @@ namespace NetExtender.Utilities.Types
             return Name;
         }
     }
-    
+
     public static partial class LocalizationFlagsUtilities
     {
         public static Boolean Initialize<T>(Func<LocalizationIdentifier, T?>? converter) where T : class
         {
             return ImageStore<T>.Initialize(converter);
         }
-        
+
         public static T? GetFlagImage<T>(this CultureInfo info) where T : class
         {
             return ImageStore<T>.GetFlagImage(info);

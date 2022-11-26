@@ -20,62 +20,62 @@ namespace NetExtender.Types.Numerics
         {
             return new GenericNumber<T>(value);
         }
-        
+
         public static implicit operator GenericNumber(SByte value)
         {
             return Create(value);
         }
-        
+
         public static implicit operator GenericNumber(Byte value)
         {
             return Create(value);
         }
-        
+
         public static implicit operator GenericNumber(Int16 value)
         {
             return Create(value);
         }
-        
+
         public static implicit operator GenericNumber(UInt16 value)
         {
             return Create(value);
         }
-        
+
         public static implicit operator GenericNumber(Int32 value)
         {
             return Create(value);
         }
-        
+
         public static implicit operator GenericNumber(UInt32 value)
         {
             return Create(value);
         }
-        
+
         public static implicit operator GenericNumber(Int64 value)
         {
             return Create(value);
         }
-        
+
         public static implicit operator GenericNumber(UInt64 value)
         {
             return Create(value);
         }
-        
+
         public static implicit operator GenericNumber(Single value)
         {
             return Create(value);
         }
-        
+
         public static implicit operator GenericNumber(Double value)
         {
             return Create(value);
         }
-        
+
         public static implicit operator GenericNumber(Decimal value)
         {
             return Create(value);
         }
-        
+
         public static implicit operator GenericNumber(Enum value)
         {
             return new GenericNumber(value);
@@ -133,7 +133,7 @@ namespace NetExtender.Types.Numerics
         private static class GenericCache
         {
             private static ConcurrentDictionary<Type, Func<ValueType, IGenericNumber>> Constructors { get; }
-            
+
             static GenericCache()
             {
                 Constructors = new ConcurrentDictionary<Type, Func<ValueType, IGenericNumber>>();
@@ -145,12 +145,12 @@ namespace NetExtender.Types.Numerics
                 {
                     throw new InvalidOperationException($"Type {type} is not a value type.");
                 }
-            
+
                 if (!type.HasInterface(typeof(IConvertible)))
                 {
                     throw new InvalidOperationException($"Type {type} is not IConvertible");
                 }
-                
+
                 ConstructorInfo? info = typeof(GenericNumberWrapper<>).MakeGenericType(type).GetConstructor(new[] { type });
 
                 if (info is null)
@@ -168,7 +168,7 @@ namespace NetExtender.Types.Numerics
             {
                 return Constructors.GetOrAdd(typeof(T), CreateExpression).Invoke(value);
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
             public static IGenericNumber Create(ValueType value)
             {
@@ -358,22 +358,22 @@ namespace NetExtender.Types.Numerics
         {
             return value.Value;
         }
-        
+
         public static Boolean operator ==(GenericNumber<T> first, GenericNumber<T> second)
         {
             return first.Equals(second.Value);
         }
-        
+
         public static Boolean operator ==(GenericNumber<T> first, GenericNumber second)
         {
             return first.Equals(second);
         }
-        
+
         public static Boolean operator !=(GenericNumber<T> first, GenericNumber<T> second)
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator !=(GenericNumber<T> first, GenericNumber second)
         {
             return !(first == second);
@@ -383,7 +383,7 @@ namespace NetExtender.Types.Numerics
         {
             return first.CompareTo(second.Value) < 0;
         }
-        
+
         public static Boolean operator <(GenericNumber<T> first, GenericNumber second)
         {
             return first.CompareTo(second) < 0;
@@ -393,7 +393,7 @@ namespace NetExtender.Types.Numerics
         {
             return first.CompareTo(second.Value) > 0;
         }
-        
+
         public static Boolean operator >(GenericNumber<T> first, GenericNumber second)
         {
             return first.CompareTo(second) > 0;
@@ -403,7 +403,7 @@ namespace NetExtender.Types.Numerics
         {
             return first.CompareTo(second.Value) <= 0;
         }
-        
+
         public static Boolean operator <=(GenericNumber<T> first, GenericNumber second)
         {
             return first.CompareTo(second) <= 0;
@@ -413,7 +413,7 @@ namespace NetExtender.Types.Numerics
         {
             return first.CompareTo(second.Value) >= 0;
         }
-        
+
         public static Boolean operator >=(GenericNumber<T> first, GenericNumber second)
         {
             return first.CompareTo(second) >= 0;
@@ -441,7 +441,7 @@ namespace NetExtender.Types.Numerics
         {
             Value = value;
         }
-        
+
         public GenericNumber Generic()
         {
             return this;
@@ -538,7 +538,7 @@ namespace NetExtender.Types.Numerics
             {
                 return formattable.ToString(format, provider);
             }
-            
+
             return Value.ToString(provider);
         }
 

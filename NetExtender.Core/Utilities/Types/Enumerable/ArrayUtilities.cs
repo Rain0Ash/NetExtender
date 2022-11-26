@@ -84,7 +84,7 @@ namespace NetExtender.Utilities.Types
 
             return array;
         }
-        
+
         /// <summary>
         /// Adds the provided item to the end of the array.
         /// </summary>
@@ -107,13 +107,13 @@ namespace NetExtender.Utilities.Types
 
             Int32 position = array.Length;
             Array.Resize(ref array, array.Length + sum);
-            
+
             foreach (T[] item in items.WhereNotNull())
             {
                 Array.Copy(item, 0, array, position, item.Length);
                 position += item.Length;
             }
-            
+
             return array;
         }
 
@@ -137,7 +137,7 @@ namespace NetExtender.Utilities.Types
 
             return array;
         }
-        
+
         public static T[] InnerChangeWhere<T>(this T[] array, Func<T, Boolean> where, Func<T, T> selector)
         {
             if (array is null)
@@ -154,11 +154,11 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             for (Int32 i = 0; i < array.Length; i++)
             {
                 T item = array[i];
-                
+
                 if (where(item))
                 {
                     array[i] = selector(item);
@@ -167,7 +167,7 @@ namespace NetExtender.Utilities.Types
 
             return array;
         }
-        
+
         public static T[] InnerChangeWhereNot<T>(this T[] array, Func<T, Boolean> where, Func<T, T> selector)
         {
             if (array is null)
@@ -184,11 +184,11 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             for (Int32 i = 0; i < array.Length; i++)
             {
                 T item = array[i];
-                
+
                 if (!where(item))
                 {
                     array[i] = selector(item);
@@ -228,7 +228,7 @@ namespace NetExtender.Utilities.Types
             do
             {
                 action(array, walker.Position);
-                
+
             } while (walker.Step());
 
             return array;
@@ -369,7 +369,7 @@ namespace NetExtender.Utilities.Types
 
             array.AsSpan().Slice(start, length).Fill(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Shuffle<T>(this T[] source)
         {
@@ -377,7 +377,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             source.AsSpan().Shuffle();
         }
 
@@ -393,7 +393,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             source.AsSpan().Shuffle(random);
         }
 
@@ -539,7 +539,7 @@ namespace NetExtender.Utilities.Types
         {
             Array.Copy(source, index, destination, destindex, length);
         }
-        
+
         /// <inheritdoc cref="Array.Copy(System.Array,Int64,System.Array,Int64,Int64)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Copy(this Array source, Int64 index, Array destination, Int64 destindex, Int64 length)
@@ -815,7 +815,7 @@ namespace NetExtender.Utilities.Types
             Array.Sort(array);
             return array;
         }
-        
+
         /// <inheritdoc cref="Array.Sort{T}(T[],IComparer{T})"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T[] SortArray<T>(this T[] array, IComparer<T>? comparer)
@@ -906,7 +906,7 @@ namespace NetExtender.Utilities.Types
 
             return source is T[] array ? ToReadOnlyArray(array) : source.ToArray().ToReadOnlyArray();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ReadOnlyCollection<T> AsReadOnlyArray<T>(this IEnumerable<T>? source)
         {

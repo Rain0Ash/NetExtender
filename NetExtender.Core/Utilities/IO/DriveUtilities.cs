@@ -25,7 +25,7 @@ namespace NetExtender.Utilities.IO
                 return Drives.Where(drive => drive.IsReady).ToArray();
             }
         }
-        
+
         public static DriveInfo[] Removable
         {
             get

@@ -30,7 +30,7 @@ namespace NetExtender.AspNetCore.Windows.Services.Utilities
 
             return new HostService(host);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static WindowsService AsService(this IWebHost host)
         {
@@ -41,31 +41,31 @@ namespace NetExtender.AspNetCore.Windows.Services.Utilities
 
             return new WebHostService(host);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IHost RunAsService(this IHost host)
         {
             return RunAsServiceInternal(host, false);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IWebHost RunAsService(this IWebHost host)
         {
             return RunAsServiceInternal(host, false);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IHost RunAsServiceQuiet(this IHost host)
         {
             return RunAsServiceInternal(host, true);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IWebHost RunAsServiceQuiet(this IWebHost host)
         {
             return RunAsServiceInternal(host, true);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IHost RunAsServiceInternal(this IHost host, Boolean quiet)
         {
@@ -77,7 +77,7 @@ namespace NetExtender.AspNetCore.Windows.Services.Utilities
             host.AsService().Run(quiet);
             return host;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static IWebHost RunAsServiceInternal(this IWebHost host, Boolean quiet)
         {
@@ -123,17 +123,17 @@ namespace NetExtender.AspNetCore.Windows.Services.Utilities
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             return builder.UseMiddlewareWhen<ExternalAccessRestrictionMiddleware>(UseExternalAccessRestrictionMiddlewareOnWindowsServicePauseStateCondition, reject);
         }
-        
+
         public static IApplicationBuilder UseExternalAccessRestrictionMiddlewareOnWindowsServicePauseState(this IApplicationBuilder builder, HttpStatusCode reject)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             return builder.UseMiddlewareWhen<ExternalAccessRestrictionMiddleware>(UseExternalAccessRestrictionMiddlewareOnWindowsServicePauseStateCondition, reject);
         }
     }

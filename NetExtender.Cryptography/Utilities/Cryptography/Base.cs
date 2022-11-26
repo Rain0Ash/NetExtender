@@ -29,7 +29,7 @@ namespace NetExtender.Utilities.Cryptography
         {
             return Convert.ToBase64String(value, options);
         }
-        
+
         public static String? TryGetBase64StringFromBytes(this ReadOnlySpan<Byte> value)
         {
             return TryGetBase64StringFromBytes(value, Base64FormattingOptions.None);
@@ -157,7 +157,7 @@ namespace NetExtender.Utilities.Cryptography
         public static class Base
         {
             public const BaseCryptType DefaultBaseCryptType = BaseCryptType.Base64;
-            
+
             private static IBaseCrypt Base16 { get; } = new Base16(Base16Alphabet.UpperCase);
             private static IBaseCrypt Base32 { get; } = new Base32(Base32Alphabet.ZBase32);
             private static IBaseCrypt Base58 { get; } = new Base58(Base58Alphabet.Bitcoin);
@@ -185,7 +185,7 @@ namespace NetExtender.Utilities.Cryptography
                     _ => throw new NotSupportedException()
                 };
             }
-            
+
             public static String? TryEncode(String value)
             {
                 return TryEncode(value, DefaultBaseCryptType);

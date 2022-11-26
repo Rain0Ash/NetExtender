@@ -15,17 +15,17 @@ namespace NetExtender.EntityFrameworkCore.Entities.Tracking.Interfaces
     {
         public DateTime CreateTime { get; set; }
     }
-    
+
     public interface IModificationTrackableEntity
     {
         public DateTime? UpdateTime { get; set; }
     }
-    
+
     public interface IDeletionTrackableEntity : IDeletableEntity
     {
         public DateTime? DeleteTime { get; set; }
     }
-    
+
     public interface ITrackableEntity : ICreationTrackableEntity, IModificationTrackableEntity, IDeletionTrackableEntity
     {
     }

@@ -16,7 +16,7 @@ namespace NetExtender.UserInterface.Utilities
                 _ => InterfaceDialogResult.None
             };
         }
-        
+
         public static Boolean ToBoolean(this InterfaceDialogResult value)
         {
             return value switch

@@ -29,7 +29,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (type.IsInterface || type.IsAbstract)
             {
                 result = default;
@@ -82,7 +82,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return types is not null ? types.WhereNotNull().Aggregate(collection, (current, type) => current.RegisterType(type)) : collection;
         }
-        
+
         public static IServiceCollection RegisterAssembly(this IServiceCollection collection, Assembly assembly)
         {
             if (collection is null)
@@ -145,7 +145,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(implementation));
             }
-            
+
             return lifetime switch
             {
                 ServiceLifetime.Transient => collection.AddTransient(service, implementation),
@@ -210,7 +210,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return condition ? modifier(collection) : collection;
         }
-        
+
         public static IServiceCollection AddIf(this IServiceCollection collection, Func<IServiceCollection, IServiceCollection> @if, Func<IServiceCollection, IServiceCollection> @else , Boolean condition)
         {
             if (collection is null)
@@ -230,7 +230,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return condition ? @if(collection) : @else(collection);
         }
-        
+
         public static IServiceCollection AddIfNot(this IServiceCollection collection, Func<IServiceCollection, IServiceCollection> modifier, Boolean condition)
         {
             if (collection is null)
@@ -245,7 +245,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return !condition ? modifier(collection) : collection;
         }
-        
+
         public static IServiceCollection AddIfNot(this IServiceCollection collection, Func<IServiceCollection, IServiceCollection> @if, Func<IServiceCollection, IServiceCollection> @else , Boolean condition)
         {
             if (collection is null)
@@ -265,7 +265,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return !condition ? @if(collection) : @else(collection);
         }
-        
+
         public static IServiceCollection AddGenericLogging(this IServiceCollection collection)
         {
             return AddGenericLogging<Object?>(collection);
@@ -277,10 +277,10 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             return collection.AddSingleton<ILogger>(provider => provider.GetRequiredService<ILogger<T>>());
         }
-        
+
         public static IServiceCollection AddContextAccessor(this IServiceCollection collection)
         {
             if (collection is null)
@@ -300,7 +300,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return collection;
         }
-        
+
         public static IServiceCollection AddHttpContextAccessor(this IServiceCollection collection)
         {
             if (collection is null)
@@ -310,7 +310,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return collection.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
-        
+
         public static IServiceCollection AddDefaultUser<TUser, TKey>(this IServiceCollection collection) where TUser : IdentityUser<TKey> where TKey : IEquatable<TKey>
         {
             if (collection is null)

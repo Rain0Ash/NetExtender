@@ -11,7 +11,7 @@ namespace NetExtender.Configuration.Properties.Interfaces
         public String? Value { get; }
         public String? Alternate { get; }
     }
-    
+
     public interface IConfigPropertyValueInfo<T> : IConfigPropertyInfo
     {
         public event ConfigurationChangedEventHandler<T> Changed;

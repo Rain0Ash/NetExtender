@@ -15,7 +15,7 @@ namespace NetExtender.Types.Attributes
         OSX = 8,
         All = UInt64.MaxValue
     }
-    
+
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = true)]
     public class StaticInitializerAttribute : Attribute
     {
@@ -24,7 +24,7 @@ namespace NetExtender.Types.Attributes
         public Boolean Active { get; init; } = true;
         public StaticInitializerAttributePlatform Platform { get; init; } = StaticInitializerAttributePlatform.All;
     }
-    
+
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, Inherited = false, AllowMultiple = true)]
     public sealed class StaticInitializerRequiredAttribute : StaticInitializerAttribute
     {

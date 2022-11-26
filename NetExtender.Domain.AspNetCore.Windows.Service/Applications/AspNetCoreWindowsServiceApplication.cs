@@ -16,16 +16,16 @@ namespace NetExtender.Domains.AspNetCore.Windows.Service.Applications
     public class AspNetCoreWindowsServiceApplication : WindowsServiceApplication
     {
         protected IHost? Context { get; set; }
-        
+
         public AspNetCoreWindowsServiceApplication()
         {
         }
-        
+
         public AspNetCoreWindowsServiceApplication(LazyWindowsServiceInitializer? initializer)
             : base(initializer)
         {
         }
-        
+
         public AspNetCoreWindowsServiceApplication(WindowsServiceInstaller? installer)
             : base(installer)
         {
@@ -35,7 +35,7 @@ namespace NetExtender.Domains.AspNetCore.Windows.Service.Applications
             : base(initializer, installer)
         {
         }
-        
+
         public override Task<IApplication> RunAsync(CancellationToken token)
         {
             return RunAsync(null, token);
@@ -52,7 +52,7 @@ namespace NetExtender.Domains.AspNetCore.Windows.Service.Applications
             RegisterShutdownToken(token);
             return await RunAsync(Context.AsService(), token);
         }
-        
+
         public override void Shutdown(Int32 code)
         {
             try

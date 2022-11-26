@@ -20,11 +20,11 @@ namespace NetExtender.Utilities.Types
             {
                 return false;
             }
-            
+
             source.SetException(exception);
             return true;
         }
-        
+
         public static Boolean SetNotNullException(this TaskCompletionSource source, IEnumerable<Exception?>? exception)
         {
             if (source is null)
@@ -36,11 +36,11 @@ namespace NetExtender.Utilities.Types
             {
                 return false;
             }
-            
+
             source.SetException(exception.WhereNotNull());
             return true;
         }
-        
+
         public static Boolean TrySetNotNullException(this TaskCompletionSource source, Exception? exception)
         {
             if (source is null)
@@ -50,7 +50,7 @@ namespace NetExtender.Utilities.Types
 
             return exception is not null && source.TrySetException(exception);
         }
-        
+
         public static Boolean TrySetNotNullException(this TaskCompletionSource source, IEnumerable<Exception?>? exception)
         {
             if (source is null)
@@ -60,7 +60,7 @@ namespace NetExtender.Utilities.Types
 
             return exception is not null && source.TrySetException(exception.WhereNotNull());
         }
-        
+
         public static Boolean SetNotNullException<T>(this TaskCompletionSource<T> source, Exception? exception)
         {
             if (source is null)
@@ -72,11 +72,11 @@ namespace NetExtender.Utilities.Types
             {
                 return false;
             }
-            
+
             source.SetException(exception);
             return true;
         }
-        
+
         public static Boolean SetNotNullException<T>(this TaskCompletionSource<T> source, IEnumerable<Exception?>? exception)
         {
             if (source is null)
@@ -88,11 +88,11 @@ namespace NetExtender.Utilities.Types
             {
                 return false;
             }
-            
+
             source.SetException(exception.WhereNotNull());
             return true;
         }
-        
+
         public static Boolean TrySetNotNullException<T>(this TaskCompletionSource<T> source, Exception? exception)
         {
             if (source is null)
@@ -102,7 +102,7 @@ namespace NetExtender.Utilities.Types
 
             return exception is not null && source.TrySetException(exception);
         }
-        
+
         public static Boolean TrySetNotNullException<T>(this TaskCompletionSource<T> source, IEnumerable<Exception?>? exception)
         {
             if (source is null)
@@ -112,7 +112,7 @@ namespace NetExtender.Utilities.Types
 
             return exception is not null && source.TrySetException(exception.WhereNotNull());
         }
-        
+
         public static TaskCompletionSource SetFromTask(this TaskCompletionSource source, Task task)
         {
             if (source is null)
@@ -157,7 +157,7 @@ namespace NetExtender.Utilities.Types
             {
                 return SetFromTask(source!, result)!;
             }
-            
+
             switch (task.Status)
             {
                 case TaskStatus.RanToCompletion:
@@ -201,7 +201,7 @@ namespace NetExtender.Utilities.Types
                     throw new InvalidOperationException("The task was not completed.");
             }
         }
-        
+
         public static Boolean TrySetFromTask(this TaskCompletionSource source, Task task)
         {
             if (source is null)

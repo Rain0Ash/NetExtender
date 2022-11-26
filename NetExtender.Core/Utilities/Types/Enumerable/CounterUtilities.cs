@@ -21,7 +21,7 @@ namespace NetExtender.Utilities.Types
 
             return counter!.OrderByValues()!;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IOrderedEnumerable<KeyValuePair<TKey, Int32>> OrderDescending<TKey>(this ICounter<TKey> counter) where TKey : notnull
         {
@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.Types
 
             return counter!.OrderByValuesDescending()!;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IOrderedEnumerable<KeyValuePair<TKey, Int64>> Order<TKey>(this ILongCounter<TKey> counter) where TKey : notnull
         {
@@ -43,7 +43,7 @@ namespace NetExtender.Utilities.Types
 
             return counter!.OrderByValues()!;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IOrderedEnumerable<KeyValuePair<TKey, Int64>> OrderDescending<TKey>(this ILongCounter<TKey> counter) where TKey : notnull
         {

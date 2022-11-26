@@ -17,67 +17,67 @@ namespace NetExtender.Utilities.Types
         public static void Default()
         {
         }
-        
+
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public static void Default<T>(T first)
         {
         }
-        
+
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public static void Default<T1, T2>(T1 first, T2 second)
         {
         }
-        
+
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public static void Default<T1, T2, T3>(T1 first, T2 second, T3 third)
         {
         }
-        
+
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public static void Default<T1, T2, T3, T4>(T1 first, T2 second, T3 third, T4 fourth)
         {
         }
-        
+
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public static void Default<T1, T2, T3, T4, T5>(T1 first, T2 second, T3 third, T4 fourth, T5 fifth)
         {
         }
-        
+
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public static void Default<T1, T2, T3, T4, T5, T6>(T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth)
         {
         }
-        
+
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public static void Default<T1, T2, T3, T4, T5, T6, T7>(T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth, T7 seventh)
         {
         }
-        
+
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public static void Default<T1, T2, T3, T4, T5, T6, T7, T8>(T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth, T7 seventh, T8 eighth)
         {
         }
-        
+
         [SuppressMessage("ReSharper", "UnusedParameter.Global")]
         public static void Default<T1, T2, T3, T4, T5, T6, T7, T8, T9>(T1 first, T2 second, T3 third, T4 fourth, T5 fifth, T6 sixth, T7 seventh, T8 eighth, T9 ninth)
         {
         }
-        
+
         public static Task InBackground(this Action action)
         {
             return InBackground(action, false);
         }
-        
+
         public static Task InBackground(this Action action, Boolean fairness)
         {
             return InBackground(action, fairness, CancellationToken.None);
         }
-        
+
         public static Task InBackground(this Action action, CancellationToken token)
         {
             return InBackground(action, false, token);
         }
-        
+
         public static Task InBackground(this Action action, Boolean fairness, CancellationToken token)
         {
             if (action is null)

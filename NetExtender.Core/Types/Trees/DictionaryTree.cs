@@ -19,7 +19,7 @@ namespace NetExtender.Types.Trees
     {
         [JsonIgnore]
         private IDictionaryTreeNode<TKey, TValue>? _node;
-        
+
         [JsonIgnore]
         public IDictionaryTreeNode<TKey, TValue> Node
         {
@@ -37,7 +37,7 @@ namespace NetExtender.Types.Trees
                 return Node.FullCount;
             }
         }
-        
+
         [JsonIgnore]
         public Boolean IsEmpty
         {
@@ -88,7 +88,7 @@ namespace NetExtender.Types.Trees
             : base(dictionary, comparer)
         {
         }
-        
+
         public DictionaryTree(Dictionary<TKey, DictionaryTreeNode<TKey, TValue>> dictionary)
             : this(dictionary ?? throw new ArgumentNullException(nameof(dictionary)), dictionary.Comparer)
         {
@@ -134,7 +134,7 @@ namespace NetExtender.Types.Trees
         {
             return new DictionaryTreeNode<TKey, TValue>(Comparer);
         }
-        
+
         public Boolean ContainsKey(TKey key, IEnumerable<TKey>? sections)
         {
             if (key is null)
@@ -144,7 +144,7 @@ namespace NetExtender.Types.Trees
 
             return GetChild(key, sections) is not null;
         }
-        
+
         public Boolean ContainsKey(TKey key, params TKey[]? sections)
         {
             return ContainsKey(key, (IEnumerable<TKey>?) sections);
@@ -190,11 +190,11 @@ namespace NetExtender.Types.Trees
             {
                 return null;
             }
-            
+
             IDictionaryTreeNode<TKey, TValue>? node = Node;
             return sections.WhereNotNull().Any(section => !node.TryGetValue(section, out node)) ? null : node;
         }
-        
+
         public IDictionaryTreeNode<TKey, TValue>? GetChildSection(params TKey[]? sections)
         {
             return GetChildSection((IEnumerable<TKey>?) sections);
@@ -276,7 +276,7 @@ namespace NetExtender.Types.Trees
 
             return node.Value;
         }
-        
+
         public TValue? GetValue(TKey key, IEnumerable<TKey>? sections)
         {
             if (key is null)
@@ -303,12 +303,12 @@ namespace NetExtender.Types.Trees
             value = node.Value;
             return true;
         }
-        
+
         public new Boolean Remove(TKey key, [MaybeNullWhen(false)] out IDictionaryTreeNode<TKey, TValue> value)
         {
             return base.Remove(key, out value);
         }
-        
+
         public Boolean Remove(TKey key, IEnumerable<TKey>? sections)
         {
             return Remove(key, sections, out _);
@@ -336,7 +336,7 @@ namespace NetExtender.Types.Trees
             value = default;
             return false;
         }
-        
+
         public Boolean Remove(TKey key, [MaybeNullWhen(false)] out IDictionaryTreeNode<TKey, TValue> value, params TKey[]? sections)
         {
             return Remove(key, sections, out value);
@@ -352,7 +352,7 @@ namespace NetExtender.Types.Trees
 
             return successful;
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public Boolean Purge(TKey key)
         {
@@ -362,7 +362,7 @@ namespace NetExtender.Types.Trees
             }
 
             IDictionaryTreeNode<TKey, TValue>? node = GetChild(key);
-            
+
             if (node is null)
             {
                 return false;
@@ -404,7 +404,7 @@ namespace NetExtender.Types.Trees
             }
 
             IDictionaryTreeNode<TKey, TValue>? node = GetChildSection(sections);
-            
+
             if (node is null || node.Count <= 0)
             {
                 return false;
@@ -421,14 +421,14 @@ namespace NetExtender.Types.Trees
         private IEnumerable<DictionaryTreeEntry<TKey, TValue>> DumpInternal(IEnumerable<TKey>? sections)
         {
             ImmutableArray<TKey> section = sections.AsImmutableArray();
-            
+
             foreach ((TKey key, IDictionaryTreeNode<TKey, TValue> node) in this)
             {
                 if (node.HasValue)
                 {
                     yield return new DictionaryTreeEntry<TKey, TValue>(key, node.Value, section);
                 }
-                
+
                 DictionaryTreeEntry<TKey, TValue>[]? dump = node.Dump(section.Add(key));
 
                 if (dump is null)
@@ -442,7 +442,7 @@ namespace NetExtender.Types.Trees
                 }
             }
         }
-        
+
         public DictionaryTreeEntry<TKey, TValue>[]? Dump()
         {
             return Dump(null);
@@ -452,7 +452,7 @@ namespace NetExtender.Types.Trees
         {
             return Dump((IEnumerable<TKey>?) sections);
         }
-        
+
         public DictionaryTreeEntry<TKey, TValue>[]? Dump(IEnumerable<TKey>? sections)
         {
             try
@@ -505,7 +505,7 @@ namespace NetExtender.Types.Trees
                 this[key, (IEnumerable<TKey>?) sections] = value;
             }
         }
-        
+
         public IDictionaryTreeNode<TKey, TValue> this[TKey key, IEnumerable<TKey>? sections]
         {
             get

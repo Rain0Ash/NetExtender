@@ -22,11 +22,11 @@ namespace NetExtender.Types.Progress
             {
                 return;
             }
-            
+
             base.OnReport(value);
         }
     }
-    
+
     public class ConditionalProgress<T1, T2> : ConditionalProgress<(T1, T2)>, IProgress<T1, T2>
     {
         public ConditionalProgress(Func<(T1, T2), Boolean> condition, Action<(T1, T2)> handler)
@@ -34,7 +34,7 @@ namespace NetExtender.Types.Progress
         {
         }
     }
-    
+
     public class ConditionalProgress<T1, T2, T3> : ConditionalProgress<(T1, T2, T3)>, IProgress<T1, T2, T3>
     {
         public ConditionalProgress(Func<(T1, T2, T3), Boolean> condition, Action<(T1, T2, T3)> handler)
@@ -42,7 +42,7 @@ namespace NetExtender.Types.Progress
         {
         }
     }
-    
+
     public class ConditionalProgress<T1, T2, T3, T4> : ConditionalProgress<(T1, T2, T3, T4)>, IProgress<T1, T2, T3, T4>
     {
         public ConditionalProgress(Func<(T1, T2, T3, T4), Boolean> condition, Action<(T1, T2, T3, T4)> handler)
@@ -50,7 +50,7 @@ namespace NetExtender.Types.Progress
         {
         }
     }
-    
+
     public class ConditionalProgress<T1, T2, T3, T4, T5> : ConditionalProgress<(T1, T2, T3, T4, T5)>, IProgress<T1, T2, T3, T4, T5>
     {
         public ConditionalProgress(Func<(T1, T2, T3, T4, T5), Boolean> condition, Action<(T1, T2, T3, T4, T5)> handler)

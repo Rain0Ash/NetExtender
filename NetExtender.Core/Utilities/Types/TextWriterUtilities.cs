@@ -153,7 +153,7 @@ namespace NetExtender.Utilities.Types
 
             writer.WriteLine(String.Join(" ", values));
         }
-        
+
         public static async Task WriteLineTokensAsync(this TextWriter writer, params String?[] values)
         {
             if (writer is null)

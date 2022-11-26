@@ -15,7 +15,7 @@ namespace NetExtender.Types.Spans
         {
             Span = span;
         }
-        
+
         public static Int32 GetLength(Int32 bits)
         {
             return bits > 0 ? (bits - 1) / Size + 1 : 0;

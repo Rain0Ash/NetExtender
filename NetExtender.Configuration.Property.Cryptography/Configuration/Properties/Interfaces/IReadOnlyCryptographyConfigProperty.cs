@@ -8,7 +8,7 @@ namespace NetExtender.Configuration.Cryptography.Properties.Interfaces
     public interface IReadOnlyCryptographyConfigProperty<T> : IReadOnlyConfigProperty<T>, ICryptographyConfigPropertyInfo
     {
     }
-    
+
     public interface IReadOnlyCryptographyConfigProperty : IReadOnlyConfigProperty, ICryptographyConfigPropertyInfo
     {
     }

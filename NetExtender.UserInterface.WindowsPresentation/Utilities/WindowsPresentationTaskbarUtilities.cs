@@ -19,7 +19,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return TaskbarUtilities.Notify(window.GetHandle());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Notify(this Window window, UInt32 value, UInt32 maximum, TaskbarFlashState state)
         {
@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return TaskbarUtilities.Notify(window.GetHandle(), value, maximum, state);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Notify(this Window window, UInt32 value, TaskbarFlashState state)
         {
@@ -41,7 +41,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return TaskbarUtilities.Notify(window.GetHandle(), value, state);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Notify(this Window window, Double value, TaskbarFlashState state)
         {
@@ -52,7 +52,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return TaskbarUtilities.Notify(window.GetHandle(), value, state);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Notify(this Window window, TaskbarFlashState state)
         {
@@ -63,7 +63,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return TaskbarUtilities.Notify(window.GetHandle(), state);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Start(this Window window)
         {
@@ -74,7 +74,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return TaskbarUtilities.Start(window.GetHandle(), UInt32.MaxValue);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Start(this Window window, UInt32 count)
         {
@@ -85,7 +85,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return TaskbarUtilities.Start(window.GetHandle(), count);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Stop(this Window window)
         {

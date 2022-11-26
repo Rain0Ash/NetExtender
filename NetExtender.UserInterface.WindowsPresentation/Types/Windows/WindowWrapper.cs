@@ -17,7 +17,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         {
             return new WindowWrapper(window);
         }
-        
+
         public static implicit operator Window(WindowWrapper wrapper)
         {
             return wrapper.Window;
@@ -124,18 +124,18 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             Window = window ?? throw new ArgumentNullException(nameof(window));
             Window.Closing += OnClosing;
         }
-        
+
         private void OnClosing(Object? sender, CancelEventArgs args)
         {
             InterfaceClosingEventArgs closing = new InterfaceClosingEventArgs(InterfaceCloseReason.WindowClosing, args.Cancel);
             WindowClosing?.Invoke(sender, closing);
-            
+
             if (closing.Cancel)
             {
                 args.Cancel = closing.Cancel;
             }
         }
-        
+
         public void Show()
         {
             Window.Show();

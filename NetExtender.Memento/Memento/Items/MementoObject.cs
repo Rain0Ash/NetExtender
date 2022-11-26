@@ -28,12 +28,12 @@ namespace NetExtender.Types.Memento
             : base(source, expression is not null ? new MementoObjectProperty<TSource, TProperty>(expression, value) : throw new ArgumentNullException(nameof(expression)))
         {
         }
-        
+
         public MementoObject(TSource source, ReflectionProperty<TSource, TProperty> property)
             : base(source, new MementoObjectProperty<TSource, TProperty>(property))
         {
         }
-        
+
         public MementoObject(TSource source, ReflectionProperty<TSource, TProperty> property, TProperty value)
             : base(source, new MementoObjectProperty<TSource, TProperty>(property, value))
         {

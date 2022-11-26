@@ -27,10 +27,10 @@ namespace NetExtender.Utilities.Types
         Full = 2,
         FullWithNull = Null | Full
     }
-    
+
     public delegate String? StringConverter(Object? value, EscapeType escape, IFormatProvider? provider);
     public delegate String? StringFormatConverter(Object? value, EscapeType escape, String? format, IFormatProvider? provider);
-    
+
     [SuppressMessage("ReSharper", "UnusedParameter.Global")]
     public static class ConvertUtilities
     {
@@ -65,13 +65,13 @@ namespace NetExtender.Utilities.Types
         {
             return (T?) System.Convert.ChangeType(value, typeof(T));
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static T? ChangeType<T>(Object? value, IFormatProvider? provider)
         {
             return (T?) System.Convert.ChangeType(value, typeof(T), provider);
         }
-        
+
         // ReSharper disable once RedundantNullableFlowAttribute
         public static Boolean TryChangeType(Object? value, Type type, [MaybeNullWhen(false)] [NotNullIfNotNull("value")] out Object? result)
         {
@@ -91,7 +91,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         // ReSharper disable once RedundantNullableFlowAttribute
         public static Boolean TryChangeType(Object? value, Type type, IFormatProvider? provider, [MaybeNullWhen(false)] [NotNullIfNotNull("value")] out Object? result)
         {
@@ -111,7 +111,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         // ReSharper disable once RedundantNullableFlowAttribute
         public static Boolean TryChangeType(Object? value, TypeCode type, [MaybeNullWhen(false)] [NotNullIfNotNull("value")] out Object? result)
         {
@@ -126,7 +126,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         // ReSharper disable once RedundantNullableFlowAttribute
         public static Boolean TryChangeType(Object? value, TypeCode type, IFormatProvider? provider, [MaybeNullWhen(false)] [NotNullIfNotNull("value")] out Object? result)
         {
@@ -141,7 +141,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static Boolean TryChangeType<T>(Object? value, [NotNullIfNotNull("value")] out T? result)
         {
             if (TryChangeType(value, typeof(T), out Object? convert))
@@ -153,7 +153,7 @@ namespace NetExtender.Utilities.Types
             result = default;
             return false;
         }
-        
+
         public static Boolean TryChangeType<T>(Object? value, IFormatProvider? provider, [NotNullIfNotNull("value")] out T? result)
         {
             if (TryChangeType(value, typeof(T), provider, out Object? convert))
@@ -170,27 +170,27 @@ namespace NetExtender.Utilities.Types
         {
             return TryChangeType(value, type, out _);
         }
-        
+
         public static Boolean IsChangeType(Object? value, Type type, IFormatProvider? provider)
         {
             return TryChangeType(value, type, provider, out _);
         }
-        
+
         public static Boolean IsChangeType(Object? value, TypeCode type)
         {
             return TryChangeType(value, type, out _);
         }
-        
+
         public static Boolean IsChangeType(Object? value, TypeCode type, IFormatProvider? provider)
         {
             return TryChangeType(value, type, provider, out _);
         }
-        
+
         public static Boolean IsChangeType<T>(Object? value)
         {
             return TryChangeType<T>(value, out _);
         }
-        
+
         public static Boolean IsChangeType<T>(Object? value, IFormatProvider? provider)
         {
             return TryChangeType<T>(value, provider, out _);
@@ -210,7 +210,7 @@ namespace NetExtender.Utilities.Types
         {
             return CastConvert<T>(input, CultureInfo.InvariantCulture);
         }
-        
+
         public static T CastConvert<T>(this String? input, CultureInfo? info)
         {
             if (!TryConvert(input, out T? result))
@@ -220,7 +220,7 @@ namespace NetExtender.Utilities.Types
 
             return result!;
         }
-        
+
         public static T? Convert<T>(this Object? obj)
         {
             TryConvert(obj, out T? value);
@@ -231,18 +231,18 @@ namespace NetExtender.Utilities.Types
         {
             return Convert<T>(input, CultureInfo.InvariantCulture);
         }
-        
+
         public static T? Convert<T>(this String? input, CultureInfo? info)
         {
             TryConvert(input, info, out T? value);
             return value;
         }
-        
+
         public static IEnumerable<T> CastConvert<T>(this String? input, String? separator)
         {
             return CastConvert<T>(input, separator, CultureInfo.InvariantCulture);
         }
-        
+
         public static IEnumerable<T> CastConvert<T>(this String? input, String? separator, CultureInfo? info)
         {
             return String.IsNullOrEmpty(input) ? Enumerable.Empty<T>() : CastConvert<T>(input.Split(separator, StringSplitOptions.RemoveEmptyEntries), info);
@@ -252,12 +252,12 @@ namespace NetExtender.Utilities.Types
         {
             return String.IsNullOrEmpty(input) ? Enumerable.Empty<T>() : CastConvert<T>(input.Split(separators, StringSplitOptions.RemoveEmptyEntries), info);
         }
-        
+
         public static IEnumerable<T?> Convert<T>(this String? input, String? separator)
         {
             return Convert<T>(input, separator, CultureInfo.InvariantCulture);
         }
-        
+
         public static IEnumerable<T?> Convert<T>(this String? input, String? separator, CultureInfo? info)
         {
             return String.IsNullOrEmpty(input) ? Enumerable.Empty<T>() : Convert<T>(input.Split(separator, StringSplitOptions.RemoveEmptyEntries), info);
@@ -267,17 +267,17 @@ namespace NetExtender.Utilities.Types
         {
             return String.IsNullOrEmpty(input) ? Enumerable.Empty<T>() : Convert<T>(input.Split(separators, StringSplitOptions.RemoveEmptyEntries), info);
         }
-        
+
         public static IEnumerable<T> TryConvert<T>(this String? input, String? separator)
         {
             return TryConvert<T>(input, separator, CultureInfo.InvariantCulture);
         }
-        
+
         public static IEnumerable<T> TryConvert<T>(this String? input, String? separator, CultureInfo? info)
         {
             return String.IsNullOrEmpty(input) ? Enumerable.Empty<T>() : TryConvert<T>(input.Split(separator, StringSplitOptions.RemoveEmptyEntries), info);
         }
-        
+
         public static IEnumerable<T> TryConvert<T>(this String? input, String[]? separators, CultureInfo? info)
         {
             return String.IsNullOrEmpty(input) ? Enumerable.Empty<T>() : TryConvert<T>(input.Split(separators, StringSplitOptions.RemoveEmptyEntries), info);
@@ -297,12 +297,12 @@ namespace NetExtender.Utilities.Types
                 _ => source.Cast<T>()
             };
         }
-        
+
         public static IEnumerable<T> CastConvert<T>(this IEnumerable<String> source)
         {
             return CastConvert<T>(source, CultureInfo.InvariantCulture);
         }
-        
+
         public static IEnumerable<T> CastConvert<T>(this IEnumerable<String> source, CultureInfo? info)
         {
             if (source is null)
@@ -317,7 +317,7 @@ namespace NetExtender.Utilities.Types
         {
             return Convert<T>(source, CultureInfo.InvariantCulture);
         }
-        
+
         public static IEnumerable<T?> Convert<T>(this IEnumerable<String> source, CultureInfo? info)
         {
             if (source is null)
@@ -332,7 +332,7 @@ namespace NetExtender.Utilities.Types
         {
             return TryConvert<T>(source, CultureInfo.InvariantCulture);
         }
-        
+
         public static IEnumerable<T> TryConvert<T>(this IEnumerable<String> source, CultureInfo? info)
         {
             if (source is null)
@@ -344,7 +344,7 @@ namespace NetExtender.Utilities.Types
             {
                 return TryConvert(input, info, out result);
             }
-            
+
             return source.TryParse<String?, T>(TryConvertInner);
         }
 
@@ -484,18 +484,18 @@ namespace NetExtender.Utilities.Types
         {
             private StringConverter Handler { get; }
             private StringFormatConverter Format { get; }
-            
+
             public StringConverterInfo(StringConverter handler, StringFormatConverter format)
             {
                 Handler = handler ?? throw new ArgumentNullException(nameof(handler));
                 Format = format ?? throw new ArgumentNullException(nameof(format));
             }
-            
+
             public String? Convert(Object? value, EscapeType escape, IFormatProvider? provider)
             {
                 return Handler(value, escape, provider);
             }
-            
+
             public String? Convert(Object? value, EscapeType escape, String? format, IFormatProvider? provider)
             {
                 return Format(value, escape, format, provider);
@@ -545,7 +545,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Select(StringUtilities.ToString);
         }
-        
+
         public static IEnumerable<String?> ToStringEnumerable<T>(this IEnumerable<T> source, IFormatProvider? provider)
         {
             if (source is null)
@@ -555,7 +555,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Select(item => StringUtilities.ToString(item, provider));
         }
-        
+
         public static IEnumerable<String?> ToStringEnumerable<T>(this IEnumerable<T> source, String? format, IFormatProvider? provider)
         {
             if (source is null)
@@ -565,7 +565,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Select(item => StringUtilities.ToString(item, format, provider));
         }
-        
+
         public static IEnumerable<String?> GetStringEnumerable<T>(this IEnumerable<T> source)
         {
             if (source is null)
@@ -575,7 +575,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Select(GetString);
         }
-        
+
         public static IEnumerable<String?> GetStringEnumerable<T>(this IEnumerable<T> source, IFormatProvider? provider)
         {
             if (source is null)
@@ -585,7 +585,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Select(item => GetString(item, provider));
         }
-        
+
         public static IEnumerable<String?> GetStringEnumerable<T>(this IEnumerable<T> source, String? format, IFormatProvider? provider)
         {
             if (source is null)
@@ -600,12 +600,12 @@ namespace NetExtender.Utilities.Types
         {
             return GetString(value, EscapeType.None);
         }
-        
+
         public static String? GetStringEscape<T>(T value)
         {
             return GetString(value, EscapeType.FullWithNull);
         }
-        
+
         public static String? GetString<T>(this T value, EscapeType escape)
         {
             return GetString(value, escape, CultureInfo.InvariantCulture);
@@ -655,7 +655,7 @@ namespace NetExtender.Utilities.Types
                 _ => ToStringUnknown(value, escape, provider)
             };
         }
-        
+
         public static String? GetString<T>(this T value, String? format, IFormatProvider? provider)
         {
             return GetString(value, EscapeType.None, format, provider);
@@ -700,17 +700,17 @@ namespace NetExtender.Utilities.Types
                 _ => ToStringUnknown(value, escape, format, provider)
             };
         }
-        
+
         private static String? GetStringUnknown(Object? value, EscapeType escape, IFormatProvider? provider)
         {
             return GetStringUnknownInternal(value, escape, provider, out String? result) ? result : value.GetString(escape, provider);
         }
-        
+
         private static String? ToStringUnknown(Object? value, EscapeType escape, IFormatProvider? provider)
         {
             return GetStringUnknownInternal(value, escape, provider, out String? result) ? result : value?.ToString();
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         private static Boolean GetStringUnknownInternal(Object? value, EscapeType escape, IFormatProvider? provider, out String? result)
         {
@@ -719,7 +719,7 @@ namespace NetExtender.Utilities.Types
                 result = default;
                 return false;
             }
-            
+
             if (value is DictionaryEntry entry)
             {
                 result = $"{{{entry.Key.GetString(escape, provider)} : {entry.Value.GetString(escape, provider)}}}";
@@ -740,19 +740,19 @@ namespace NetExtender.Utilities.Types
             {
                 result = GetString(item.HasValue ? (Object) item.Value : null, escape, provider);
             }
-            
+
             if (generic == GenericTypeUtilities.NullMaybeType)
             {
                 result = GetString((Object) item.Value, escape, provider);
                 return true;
             }
-            
+
             if (GenericTypeUtilities.IsTuple(type, out Int32 count))
             {
                 String? Selector(Int32 index)
                 {
                     dynamic tuple = item;
-                    
+
                     while (true)
                     {
                         switch (index)
@@ -776,7 +776,7 @@ namespace NetExtender.Utilities.Types
                                 {
                                     return GetString((Object) tuple.Rest, escape, provider);
                                 }
-                                
+
                                 goto default;
                             default:
                                 tuple = tuple.Rest;
@@ -789,7 +789,7 @@ namespace NetExtender.Utilities.Types
                 result = $"({String.Join(", ", MathUtilities.Range(0, count).Select(Selector).Select(GetString))})";
                 return true;
             }
-            
+
             if (GenericTypeUtilities.IsMemorySpan(generic))
             {
                 result = GetString(item, escape, provider);
@@ -807,7 +807,7 @@ namespace NetExtender.Utilities.Types
 
                 type = type.BaseType;
             }
-            
+
             result = default;
             return false;
         }
@@ -816,12 +816,12 @@ namespace NetExtender.Utilities.Types
         {
             return GetStringUnknownInternal(value, escape, format, provider, out String? result) ? result : value.GetString(escape, format, provider);
         }
-        
+
         private static String? ToStringUnknown(Object? value, EscapeType escape, String? format, IFormatProvider? provider)
         {
             return GetStringUnknownInternal(value, escape, format, provider, out String? result) ? result : value?.ToString();
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         private static Boolean GetStringUnknownInternal(Object? value, EscapeType escape, String? format, IFormatProvider? provider, out String? result)
         {
@@ -830,7 +830,7 @@ namespace NetExtender.Utilities.Types
                 result = default;
                 return false;
             }
-            
+
             if (value is DictionaryEntry entry)
             {
                 result = $"{{{entry.Key.GetString(escape, format, provider)} : {entry.Value.GetString(escape, format, provider)}}}";
@@ -851,7 +851,7 @@ namespace NetExtender.Utilities.Types
             {
                 result = GetString(item.HasValue ? (Object) item.Value : null, escape, format, provider);
             }
-            
+
             if (generic == GenericTypeUtilities.NullMaybeType)
             {
                 result = GetString((Object) item.Value, escape, format, provider);
@@ -863,7 +863,7 @@ namespace NetExtender.Utilities.Types
                 String? Selector(Int32 index)
                 {
                     dynamic tuple = item;
-                    
+
                     while (true)
                     {
                         switch (index)
@@ -887,7 +887,7 @@ namespace NetExtender.Utilities.Types
                                 {
                                     return GetString((Object) tuple.Rest, escape, format, provider);
                                 }
-                                
+
                                 goto default;
                             default:
                                 tuple = tuple.Rest;
@@ -906,7 +906,7 @@ namespace NetExtender.Utilities.Types
                 result = GetString(item, escape, format, provider);
                 return true;
             }
-            
+
             type = value.GetType();
             while (type is not null)
             {
@@ -934,7 +934,7 @@ namespace NetExtender.Utilities.Types
         {
             return value.ToString();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Boolean value, String? format, IFormatProvider? provider)
         {
@@ -958,7 +958,7 @@ namespace NetExtender.Utilities.Types
         {
             return Char.ToString(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Char32 value)
         {
@@ -1174,7 +1174,7 @@ namespace NetExtender.Utilities.Types
         {
             return value.Normalize().ToString(format, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this BigInteger value)
         {
@@ -1198,73 +1198,73 @@ namespace NetExtender.Utilities.Types
         {
             return value.GetString(CultureInfo.InvariantCulture);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this DateTime value, IFormatProvider? provider)
         {
             return value.ToString(provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this DateTime value, String? format, IFormatProvider? provider)
         {
             return value.ToString(format, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this TimeSpan value)
         {
             return value.GetString(CultureInfo.InvariantCulture);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this TimeSpan value, IFormatProvider? provider)
         {
             return value.ToString(null, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this TimeSpan value, String? format, IFormatProvider? provider)
         {
             return value.ToString(format, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Enum? value)
         {
             return GetStringEscape(value?.ToString());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Enum? value, EscapeType escape)
         {
             return value is not null ? GetStringEscape(escape.HasFlag(EscapeType.Full) ? $"{value.GetType().Name}.{value.ToString()}" : value.ToString()) : StringUtilities.NullString;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Enum value, IFormatProvider? provider)
         {
             return GetString(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Enum value, String? format, IFormatProvider? provider)
         {
             return GetString(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Enum value, EscapeType escape, IFormatProvider? provider)
         {
             return GetString(value, escape);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Enum value, EscapeType escape, String? format, IFormatProvider? provider)
         {
             return GetString(value, escape);
         }
-        
+
 #if NETCOREAPP3_1_OR_GREATER
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this Rune value)
@@ -1284,13 +1284,13 @@ namespace NetExtender.Utilities.Types
             return ((IFormattable) value).ToString(format, provider);
         }
 #endif
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this Memory<T> source)
         {
             return GetString(source.Span, EscapeType.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this Memory<T> source, IFormatProvider? provider)
         {
@@ -1302,115 +1302,115 @@ namespace NetExtender.Utilities.Types
         {
             return GetString(source.Span, escape);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this Memory<T> source, EscapeType escape, IFormatProvider? provider)
         {
             return GetString(source.Span, escape, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this Memory<T> source, String? format, IFormatProvider? provider)
         {
             return GetString(source.Span, EscapeType.None, format, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this Memory<T> source, EscapeType escape, String? format, IFormatProvider? provider)
         {
             return GetString(source.Span, escape, format, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this Span<T> source)
         {
             return GetString(source, EscapeType.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this Span<T> source, IFormatProvider? provider)
         {
             return GetString(source, EscapeType.None, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this Span<T> source, EscapeType escape)
         {
             return GetString((ReadOnlySpan<T>) source, escape);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this Span<T> source, EscapeType escape, IFormatProvider? provider)
         {
             return GetString((ReadOnlySpan<T>) source, escape, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this Span<T> source, String? format, IFormatProvider? provider)
         {
             return GetString(source, EscapeType.None, format, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this Span<T> source, EscapeType escape, String? format, IFormatProvider? provider)
         {
             return GetString((ReadOnlySpan<T>) source, escape, format, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this ReadOnlyMemory<T> source)
         {
             return GetString(source.Span, EscapeType.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this ReadOnlyMemory<T> source, IFormatProvider? provider)
         {
             return GetString(source.Span, EscapeType.None, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this ReadOnlyMemory<T> source, EscapeType escape)
         {
             return GetString(source.Span, escape);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this ReadOnlyMemory<T> source, EscapeType escape, IFormatProvider? provider)
         {
             return GetString(source.Span, escape, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this ReadOnlyMemory<T> source, String? format, IFormatProvider? provider)
         {
             return GetString(source.Span, EscapeType.None, format, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this ReadOnlyMemory<T> source, EscapeType escape, String? format, IFormatProvider? provider)
         {
             return GetString(source.Span, escape, format, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this ReadOnlySpan<T> source)
         {
             return GetString(source, EscapeType.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this ReadOnlySpan<T> source, IFormatProvider? provider)
         {
             return GetString(source, EscapeType.None, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this ReadOnlySpan<T> source, EscapeType escape)
         {
             return GetString(source, escape, CultureInfo.InvariantCulture);
         }
-        
+
         public static String GetString<T>(this ReadOnlySpan<T> source, EscapeType escape, IFormatProvider? provider)
         {
             switch (source.Length)
@@ -1422,31 +1422,31 @@ namespace NetExtender.Utilities.Types
                 default:
                     StringBuilder builder = new StringBuilder();
                     builder.Append('[');
-                    
+
                     ReadOnlySpan<T>.Enumerator enumerator = source.GetEnumerator();
-                    
+
                     if (enumerator.MoveNext())
                     {
                         builder.Append(GetString(enumerator.Current, escape, provider));
-                        
+
                         while (enumerator.MoveNext())
                         {
                             builder.Append(", ");
                             builder.Append(GetString(enumerator.Current, escape, provider));
                         }
                     }
-                    
+
                     builder.Append(']');
                     return builder.ToString();
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString<T>(this ReadOnlySpan<T> source, String? format, IFormatProvider? provider)
         {
             return GetString(source, EscapeType.None, format, provider);
         }
-        
+
         public static String GetString<T>(this ReadOnlySpan<T> source, EscapeType escape, String? format, IFormatProvider? provider)
         {
             switch (source.Length)
@@ -1458,20 +1458,20 @@ namespace NetExtender.Utilities.Types
                 default:
                     StringBuilder builder = new StringBuilder();
                     builder.Append('[');
-                    
+
                     ReadOnlySpan<T>.Enumerator enumerator = source.GetEnumerator();
-                    
+
                     if (enumerator.MoveNext())
                     {
                         builder.Append(GetString(enumerator.Current, escape, format, provider));
-                        
+
                         while (enumerator.MoveNext())
                         {
                             builder.Append(", ");
                             builder.Append(GetString(enumerator.Current, escape, format, provider));
                         }
                     }
-                    
+
                     builder.Append(']');
                     return builder.ToString();
             }
@@ -1483,13 +1483,13 @@ namespace NetExtender.Utilities.Types
         {
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetStringEscape(this String? value)
         {
             return value ?? StringUtilities.NullString;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetString(this String value, EscapeType escape)
         {
@@ -1507,25 +1507,25 @@ namespace NetExtender.Utilities.Types
         {
             return value?.ToString(provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetStringEscape(String? value, IFormatProvider? provider)
         {
             return value?.ToString(provider) ?? StringUtilities.NullString;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String GetStringEscape(String? value, String? format, IFormatProvider? provider)
         {
             return value?.ToString(provider) ?? StringUtilities.NullString;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetString(this String? value, EscapeType escape, IFormatProvider? provider)
         {
             return escape.HasFlag(EscapeType.Null) ? GetStringEscape(value, provider) : GetString(value, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetString(this String? value, EscapeType escape, String? format, IFormatProvider? provider)
         {
@@ -1537,13 +1537,13 @@ namespace NetExtender.Utilities.Types
         {
             return GetString(source, EscapeType.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetStringEscape(IEnumerable source)
         {
             return GetString(source, EscapeType.FullWithNull);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetString(this IEnumerable source, EscapeType escape)
         {
@@ -1555,7 +1555,7 @@ namespace NetExtender.Utilities.Types
         {
             return GetString(source, EscapeType.None, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetStringEscape(IEnumerable source, IFormatProvider? provider)
         {
@@ -1587,18 +1587,18 @@ namespace NetExtender.Utilities.Types
                             {
                                 return jagged.JaggedGetString(escape, provider);
                             }
-                    
+
                             return source.EnumerableGetString(escape, provider);
                     }
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetString(this IEnumerable source, String? format, IFormatProvider? provider)
         {
             return GetString(source, EscapeType.None, format, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetStringEscape(IEnumerable source, String? format, IFormatProvider? provider)
         {
@@ -1630,7 +1630,7 @@ namespace NetExtender.Utilities.Types
                             {
                                 return jagged.JaggedGetString(escape, format, provider);
                             }
-                    
+
                             return source.EnumerableGetString(escape, format, provider);
                     }
             }
@@ -1648,7 +1648,7 @@ namespace NetExtender.Utilities.Types
                 yield return GetStringUnknown(obj, escape, provider);
             }
         }
-        
+
         private static IEnumerable<String?> PairGetString(this IEnumerable dictionary, EscapeType escape, String? format, IFormatProvider? provider)
         {
             if (dictionary is null)
@@ -1666,7 +1666,7 @@ namespace NetExtender.Utilities.Types
         {
             return $"{{{String.Join(", ", dictionary.PairGetString(escape, provider))}}}";
         }
-        
+
         private static String DictionaryGetString(this IEnumerable dictionary, EscapeType escape, String? format, IFormatProvider? provider)
         {
             return $"{{{String.Join(", ", dictionary.PairGetString(escape, format, provider))}}}";
@@ -1676,7 +1676,7 @@ namespace NetExtender.Utilities.Types
         {
             return $"{{{String.Join(", ", set.Cast<Object>().Select(item => item.GetString(escape, provider)))}}}";
         }
-        
+
         private static String SetGetString(this IEnumerable set, EscapeType escape, String? format, IFormatProvider? provider)
         {
             return $"{{{String.Join(", ", set.Cast<Object>().Select(item => item.GetString(escape, format, provider)))}}}";
@@ -1703,13 +1703,13 @@ namespace NetExtender.Utilities.Types
         }
 
         #endregion
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TOutput Convert<T, TOutput>(this ParseHandler<T, TOutput> converter, T input)
         {
             return Convert(input, converter);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TOutput Convert<T, TOutput>(this T input, ParseHandler<T, TOutput> converter)
         {
@@ -1720,25 +1720,25 @@ namespace NetExtender.Utilities.Types
 
             return converter.Invoke(input);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TOutput? Convert<T, TOutput>(this TryParseHandler<T, TOutput> converter, T input)
         {
             return Convert(input, converter);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TOutput? Convert<T, TOutput>(this T input, TryParseHandler<T, TOutput> converter)
         {
             return Convert(input, converter!, default(TOutput));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TOutput Convert<T, TOutput>(this TryParseHandler<T, TOutput> converter, T input, TOutput alternate)
         {
             return Convert(input, converter, alternate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TOutput Convert<T, TOutput>(this T input, TryParseHandler<T, TOutput> converter, TOutput alternate)
         {
@@ -1749,13 +1749,13 @@ namespace NetExtender.Utilities.Types
 
             return converter.Invoke(input, out TOutput? result) ? result! : alternate;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TOutput Convert<T, TOutput>(this TryParseHandler<T, TOutput> converter, T input, Func<TOutput> generator)
         {
             return Convert(input, converter, generator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TOutput Convert<T, TOutput>(this T input, TryParseHandler<T, TOutput> converter, Func<TOutput> generator)
         {
@@ -1771,13 +1771,13 @@ namespace NetExtender.Utilities.Types
 
             return converter.Invoke(input, out TOutput? result) ? result! : generator();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TOutput Convert<T, TOutput>(this TryParseHandler<T, TOutput> converter, T input, Func<T, TOutput> generator)
         {
             return Convert(input, converter, generator);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TOutput Convert<T, TOutput>(this T input, TryParseHandler<T, TOutput> converter, Func<T, TOutput> generator)
         {
@@ -1810,7 +1810,7 @@ namespace NetExtender.Utilities.Types
 
             return converter.Invoke(input, out result!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryConvert<T>(this String? input, [MaybeNullWhen(false)] out T result)
         {
@@ -1831,20 +1831,20 @@ namespace NetExtender.Utilities.Types
                 result = default;
                 return false;
             }
-            
+
             if (typeof(T) == typeof(String))
             {
                 result = Unsafe.As<String, T>(ref input);
                 return true;
             }
-            
+
             if (typeof(T) == typeof(Boolean))
             {
                 Boolean convert = ToBoolean(input);
                 result = Unsafe.As<Boolean, T>(ref convert);
                 return true;
             }
-            
+
             try
             {
                 try
@@ -1882,13 +1882,13 @@ namespace NetExtender.Utilities.Types
                             return true;
                         }
                     }
-                        
+
                     if (converter.ConvertFromString(context, input) is T contextresult)
                     {
                         result = contextresult;
                         return true;
                     }
-                        
+
                     result = default;
                     return false;
                 }
@@ -1907,7 +1907,7 @@ namespace NetExtender.Utilities.Types
                 result = Unsafe.As<TInput, TOutput>(ref input);
                 return true;
             }
-            
+
             if (typeof(TOutput) == typeof(Boolean))
             {
                 Boolean convert = ToBoolean(input);
@@ -1960,7 +1960,7 @@ namespace NetExtender.Utilities.Types
             {
                 return !EqualityComparer<T>.Default.Equals(value, default);
             }
-            
+
             return value switch
             {
                 null => false,
@@ -1981,7 +1981,7 @@ namespace NetExtender.Utilities.Types
             {
                 return false;
             }
-            
+
             return value.ToUpper() switch
             {
                 "TRUE" => true,
@@ -1999,7 +1999,7 @@ namespace NetExtender.Utilities.Types
         {
             return collection?.Count > 0;
         }
-        
+
         public static String GetStringFromBytes(this ReadOnlySpan<Byte> data)
         {
             return GetStringFromBytes(data, Encoding.UTF8);
@@ -2015,7 +2015,7 @@ namespace NetExtender.Utilities.Types
         {
             return GetStringFromBytes(data, Encoding.UTF8);
         }
-        
+
         public static String GetStringFromBytes(this Byte[] data, Encoding? encoding)
         {
             if (data is null)

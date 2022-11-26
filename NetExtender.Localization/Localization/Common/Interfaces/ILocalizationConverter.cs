@@ -17,26 +17,26 @@ namespace NetExtender.Localization.Common.Interfaces
         [return: NotNullIfNotNull("sections")]
         public IEnumerable<String>? Convert(String? key, IEnumerable<String>? sections, LocalizationOptions options);
         public String Convert(String? key, LocalizationIdentifier identifier, ref IEnumerable<String>? sections, LocalizationOptions options);
-        
+
         public Boolean Extract(ConfigurationEntry entry, out LocalizationEntry result);
         public Boolean Extract(ConfigurationValueEntry entry, out LocalizationValueEntry result);
-        
+
         [return: NotNullIfNotNull("entries")]
         public IEnumerable<LocalizationEntry>? Extract(IEnumerable<ConfigurationEntry>? entries);
-        
+
         [return: NotNullIfNotNull("entries")]
         public IEnumerable<LocalizationValueEntry>? Extract(IEnumerable<ConfigurationValueEntry>? entries);
-        
+
         public Boolean Pack(LocalizationEntry entry, out ConfigurationEntry result);
         public Boolean Pack(LocalizationValueEntry entry, out ConfigurationValueEntry result);
         public Boolean Pack(LocalizationMultiValueEntry entry, out ConfigurationValueEntry[] result);
-        
+
         [return: NotNullIfNotNull("entries")]
         public IEnumerable<ConfigurationEntry>? Pack(IEnumerable<LocalizationEntry>? entries);
-        
+
         [return: NotNullIfNotNull("entries")]
         public IEnumerable<ConfigurationValueEntry>? Pack(IEnumerable<LocalizationValueEntry>? entries);
-        
+
         [return: NotNullIfNotNull("entries")]
         public IEnumerable<ConfigurationValueEntry>? Pack(IEnumerable<LocalizationMultiValueEntry>? entries);
     }

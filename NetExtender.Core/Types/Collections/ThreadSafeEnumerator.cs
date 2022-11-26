@@ -12,7 +12,7 @@ namespace NetExtender.Types.Collections
     {
         private IEnumerator Enumerator { get; }
         private Object? Synchronization { get; }
-        
+
         Object? IEnumerator.Current
         {
             get
@@ -38,7 +38,7 @@ namespace NetExtender.Types.Collections
             Synchronization = synchronization ?? throw new ArgumentNullException(nameof(synchronization));
             Monitor.Enter(Synchronization);
         }
-        
+
         public Boolean MoveNext()
         {
             return Enumerator.MoveNext();
@@ -70,12 +70,12 @@ namespace NetExtender.Types.Collections
             Dispose(false);
         }
     }
-    
+
     public class ThreadSafeEnumerator<T> : IEnumerator<T>
     {
         private IEnumerator<T> Enumerator { get; }
         private Object? Synchronization { get; }
-        
+
         public T Current
         {
             get
@@ -110,7 +110,7 @@ namespace NetExtender.Types.Collections
 
             Monitor.Enter(Synchronization);
         }
-        
+
         public Boolean MoveNext()
         {
             return Enumerator.MoveNext();

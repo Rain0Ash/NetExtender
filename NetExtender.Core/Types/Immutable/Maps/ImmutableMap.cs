@@ -16,7 +16,7 @@ namespace NetExtender.Types.Immutable.Maps
     public sealed class ImmutableMap<TKey, TValue> : IImmutableMap<TKey, TValue> where TKey : notnull where TValue : notnull
     {
         public static ImmutableMap<TKey, TValue> Empty { get; } = new ImmutableMap<TKey, TValue>(ImmutableDictionary<TKey, TValue>.Empty, ImmutableDictionary<TValue, TKey>.Empty);
-        
+
         private ImmutableDictionary<TKey, TValue> Base { get; }
         private ImmutableDictionary<TValue, TKey> Reversed { get; }
 
@@ -29,7 +29,7 @@ namespace NetExtender.Types.Immutable.Maps
                 {
                     throw new CollectionSynchronizationException();
                 }
-                
+
                 return count;
             }
         }
@@ -41,7 +41,7 @@ namespace NetExtender.Types.Immutable.Maps
                 return Count <= 0;
             }
         }
-        
+
         public IEnumerable<TKey> Keys
         {
             get
@@ -117,7 +117,7 @@ namespace NetExtender.Types.Immutable.Maps
         {
             return Base.Contains(pair);
         }
-        
+
         public TValue GetValue(TKey key)
         {
             return this[key];
@@ -132,17 +132,17 @@ namespace NetExtender.Types.Immutable.Maps
         {
             return Base.TryGetValue(key, out value);
         }
-        
+
         public Boolean TryGetKey(TKey equalKey, out TKey actualKey)
         {
             return Base.TryGetKey(equalKey, out actualKey);
         }
-        
+
         public Boolean TryGetValue(TValue equalValue, out TValue actualValue)
         {
             return Reversed.TryGetKey(equalValue, out actualValue);
         }
-        
+
         public Boolean TryGetKey(TValue key, [MaybeNullWhen(false)] out TKey value)
         {
             return Reversed.TryGetValue(key, out value);
@@ -152,7 +152,7 @@ namespace NetExtender.Types.Immutable.Maps
         {
             return new ImmutableMap<TKey, TValue>(Base.Add(key, value), Reversed.Add(value, key));
         }
-        
+
         IImmutableMap<TKey, TValue> IImmutableMap<TKey, TValue>.Add(TKey key, TValue value)
         {
             return Add(key, value);
@@ -166,7 +166,7 @@ namespace NetExtender.Types.Immutable.Maps
             }
 
             pairs = pairs.Materialize();
-            
+
             return new ImmutableMap<TKey, TValue>(Base.AddRange(pairs), Reversed.AddRange(pairs.ReversePairs()));
         }
 
@@ -174,12 +174,12 @@ namespace NetExtender.Types.Immutable.Maps
         {
             return AddRange(pairs);
         }
-        
+
         public ImmutableMap<TKey, TValue> AddByValue(TValue key, TKey value)
         {
             return Add(value, key);
         }
-        
+
         IImmutableMap<TKey, TValue> IImmutableMap<TKey, TValue>.AddByValue(TValue key, TKey value)
         {
             return AddByValue(key, value);
@@ -190,7 +190,7 @@ namespace NetExtender.Types.Immutable.Maps
         {
             return Add(item.Value, item.Key);
         }
-        
+
         IImmutableMap<TKey, TValue> IImmutableMap<TKey, TValue>.AddByValue(KeyValuePair<TValue, TKey> item)
         {
             return AddByValue(item);
@@ -200,38 +200,38 @@ namespace NetExtender.Types.Immutable.Maps
         {
             return Base.ContainsKey(key) ? new ImmutableMap<TKey, TValue>(Base.Remove(key), Reversed.Remove(Base[key])) : this;
         }
-        
+
         IImmutableMap<TKey, TValue> IImmutableMap<TKey, TValue>.Remove(TKey key)
         {
             return Remove(key);
         }
-        
+
         public ImmutableMap<TKey, TValue> Remove(TKey key, TValue value)
         {
             return new ImmutableMap<TKey, TValue>(Base.Remove(key), Reversed.Remove(value));
         }
-        
+
         IImmutableMap<TKey, TValue> IImmutableMap<TKey, TValue>.Remove(TKey key, TValue value)
         {
             return Remove(key, value);
         }
-        
+
         // ReSharper disable once UseDeconstructionOnParameter
         public ImmutableMap<TKey, TValue> Remove(KeyValuePair<TKey, TValue> item)
         {
             return Remove(item.Key, item.Value);
         }
-        
+
         IImmutableMap<TKey, TValue> IImmutableMap<TKey, TValue>.Remove(KeyValuePair<TKey, TValue> item)
         {
             return Remove(item);
         }
-        
+
         public ImmutableMap<TKey, TValue> RemoveByValue(TValue key)
         {
             return Reversed.ContainsKey(key) ? new ImmutableMap<TKey, TValue>(Base.Remove(Reversed[key]), Reversed.Remove(key)) : this;
         }
-        
+
         IImmutableMap<TKey, TValue> IImmutableMap<TKey, TValue>.RemoveByValue(TValue key)
         {
             return RemoveByValue(key);
@@ -241,7 +241,7 @@ namespace NetExtender.Types.Immutable.Maps
         {
             return Remove(value, key);
         }
-        
+
         IImmutableMap<TKey, TValue> IImmutableMap<TKey, TValue>.RemoveByValue(TValue key, TKey value)
         {
             return RemoveByValue(key, value);
@@ -252,7 +252,7 @@ namespace NetExtender.Types.Immutable.Maps
         {
             return Remove(item.Value, item.Key);
         }
-        
+
         IImmutableMap<TKey, TValue> IImmutableMap<TKey, TValue>.RemoveByValue(KeyValuePair<TValue, TKey> item)
         {
             return RemoveByValue(item);
@@ -266,7 +266,7 @@ namespace NetExtender.Types.Immutable.Maps
             }
 
             keys = keys.Materialize();
-            
+
             return new ImmutableMap<TKey, TValue>(Base.RemoveRange(keys), Reversed.RemoveRange(keys.WhereNotNull(key => Base.ContainsKey(key)).Select(key => Base[key])));
         }
 
@@ -279,7 +279,7 @@ namespace NetExtender.Types.Immutable.Maps
         {
             return new ImmutableMap<TKey, TValue>(Base.SetItem(key, value), Reversed.SetItem(value, key));
         }
-        
+
         IImmutableMap<TKey, TValue> IImmutableMap<TKey, TValue>.SetItem(TKey key, TValue value)
         {
             return SetItem(key, value);
@@ -293,7 +293,7 @@ namespace NetExtender.Types.Immutable.Maps
             }
 
             items = items.Materialize();
-            
+
             return new ImmutableMap<TKey, TValue>(Base.SetItems(items), Reversed.SetItems(items.ReversePairs()));
         }
 
@@ -306,7 +306,7 @@ namespace NetExtender.Types.Immutable.Maps
         {
             return new ImmutableMap<TKey, TValue>(Base.Clear(), Reversed.Clear());
         }
-        
+
         IImmutableMap<TKey, TValue> IImmutableMap<TKey, TValue>.Clear()
         {
             return Clear();
@@ -319,7 +319,7 @@ namespace NetExtender.Types.Immutable.Maps
                 return Reversed[key];
             }
         }
-        
+
         public TValue this[TKey key]
         {
             get
@@ -337,7 +337,7 @@ namespace NetExtender.Types.Immutable.Maps
         {
             return GetEnumerator();
         }
-        
+
         public IEnumerator<KeyValuePair<TValue, TKey>> GetValuesEnumerator()
         {
             return Reversed.GetEnumerator();

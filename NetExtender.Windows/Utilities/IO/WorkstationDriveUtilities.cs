@@ -92,7 +92,7 @@ namespace NetExtender.Windows.Utilities.IO
             using ManagementObjectCollection logicalpartitioncollection = logicalpartitionsearcher.Get();
 
             Dictionary<String, HardwareDriveInfo> hardwarecache = new Dictionary<String, HardwareDriveInfo>(8);
-            
+
             foreach (LogicalDriveInfo drive in drives.WhereNotNull())
             {
                 if (drive.DeviceId is null)
@@ -140,7 +140,7 @@ namespace NetExtender.Windows.Utilities.IO
                 }
             }
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public static IEnumerable<PartitionDriveInfo> ToLogicalDriveInfo(this HardwareDriveInfo drive)
         {
@@ -154,7 +154,7 @@ namespace NetExtender.Windows.Utilities.IO
 
             using ManagementObjectSearcher logicalpartitionsearcher = new ManagementObjectSearcher("SELECT * FROM Win32_LogicalDiskToPartition");
             using ManagementObjectCollection logicalpartitioncollection = logicalpartitionsearcher.Get();
-            
+
             using ManagementObjectSearcher drivesearcher = new ManagementObjectSearcher("SELECT * FROM Win32_LogicalDisk");
             using ManagementObjectCollection drivecollection = drivesearcher.Get();
 
@@ -171,12 +171,12 @@ namespace NetExtender.Windows.Utilities.IO
                 {
                     continue;
                 }
-                
+
                 if (!partition.TryGetValue("Dependent", out String? dependent))
                 {
                     continue;
                 }
-                
+
                 foreach (ManagementBaseObject logical in logicalpartitioncollection)
                 {
                     if (!logical.TryGetValue("Antecedent", out antecedent) || antecedent != dependent)
@@ -204,7 +204,7 @@ namespace NetExtender.Windows.Utilities.IO
                 }
             }
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public static IEnumerable<PartitionDriveInfo> ToLogicalDriveInfo(this IEnumerable<HardwareDriveInfo> drives)
         {
@@ -218,10 +218,10 @@ namespace NetExtender.Windows.Utilities.IO
 
             using ManagementObjectSearcher logicalpartitionsearcher = new ManagementObjectSearcher("SELECT * FROM Win32_LogicalDiskToPartition");
             using ManagementObjectCollection logicalpartitioncollection = logicalpartitionsearcher.Get();
-            
+
             using ManagementObjectSearcher drivesearcher = new ManagementObjectSearcher("SELECT * FROM Win32_LogicalDisk");
             using ManagementObjectCollection drivecollection = drivesearcher.Get();
-            
+
             Dictionary<String, LogicalDriveInfo> logicalcache = new Dictionary<String, LogicalDriveInfo>(8);
 
             foreach (HardwareDriveInfo drive in drives.WhereNotNull())
@@ -237,12 +237,12 @@ namespace NetExtender.Windows.Utilities.IO
                     {
                         continue;
                     }
-                
+
                     if (!partition.TryGetValue("Dependent", out String? dependent))
                     {
                         continue;
                     }
-                
+
                     foreach (ManagementBaseObject logical in logicalpartitioncollection)
                     {
                         if (!logical.TryGetValue("Antecedent", out antecedent) || antecedent != dependent)

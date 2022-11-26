@@ -9,7 +9,7 @@ namespace NetExtender.Types.Comparers
     public sealed class ComparerEqualityWrapper<T> : IComparer<T>, IEqualityComparer<T>
     {
         private IComparer<T> Internal { get; }
-        
+
         public ComparerEqualityWrapper(IComparer<T> comparer)
         {
             Internal = comparer ?? throw new ArgumentNullException(nameof(comparer));

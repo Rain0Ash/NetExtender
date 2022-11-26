@@ -69,14 +69,14 @@ namespace NetExtender.Utilities.Windows
             {
                 throw new ArgumentNullException(nameof(handle));
             }
-            
+
             IntPtr monitor = MonitorFromWindow(handle, (UInt32) type);
 
             if (monitor == IntPtr.Zero)
             {
                 WindowsInteropUtilities.ThrowLastWin32Exception();
             }
-            
+
             MonitorInfo screen = new MonitorInfo();
             if (!GetMonitorInfo(monitor, screen))
             {

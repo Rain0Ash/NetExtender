@@ -54,7 +54,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(DaysInYear * 3);
                 }
             }
-            
+
             public static TimeSpan Four
             {
                 get
@@ -70,7 +70,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(DaysInYear * 5);
                 }
             }
-            
+
             public static TimeSpan Six
             {
                 get
@@ -78,7 +78,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(DaysInYear * 6);
                 }
             }
-            
+
             public static TimeSpan Seven
             {
                 get
@@ -86,7 +86,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(DaysInYear * 7);
                 }
             }
-            
+
             public static TimeSpan Eight
             {
                 get
@@ -94,7 +94,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(DaysInYear * 8);
                 }
             }
-            
+
             public static TimeSpan Nine
             {
                 get
@@ -110,7 +110,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(DaysInYear * 10);
                 }
             }
-            
+
             public static TimeSpan Eleven
             {
                 get
@@ -118,7 +118,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(DaysInYear * 11);
                 }
             }
-            
+
             public static TimeSpan Twelve
             {
                 get
@@ -300,7 +300,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(100);
                 }
             }
-            
+
             public static TimeSpan Fifty
             {
                 get
@@ -308,7 +308,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(50);
                 }
             }
-            
+
             public static TimeSpan Thirty
             {
                 get
@@ -316,7 +316,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(30);
                 }
             }
-            
+
             public static TimeSpan TwentyFive
             {
                 get
@@ -324,7 +324,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(25);
                 }
             }
-            
+
             public static TimeSpan Twenty
             {
                 get
@@ -332,7 +332,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(20);
                 }
             }
-            
+
             public static TimeSpan Fifteen
             {
                 get
@@ -340,7 +340,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(15);
                 }
             }
-            
+
             public static TimeSpan Twelve
             {
                 get
@@ -348,7 +348,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(12);
                 }
             }
-            
+
             public static TimeSpan Eleven
             {
                 get
@@ -356,7 +356,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(11);
                 }
             }
-            
+
             public static TimeSpan Ten
             {
                 get
@@ -364,7 +364,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(10);
                 }
             }
-            
+
             public static TimeSpan Nine
             {
                 get
@@ -372,7 +372,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(9);
                 }
             }
-            
+
             public static TimeSpan Eight
             {
                 get
@@ -412,7 +412,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(5);
                 }
             }
-            
+
             public static TimeSpan Four
             {
                 get
@@ -428,7 +428,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(3);
                 }
             }
-            
+
             public static TimeSpan TwoHalf
             {
                 get
@@ -468,7 +468,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(0.75);
                 }
             }
-            
+
             public static TimeSpan TwoThird
             {
                 get
@@ -484,7 +484,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(0.5);
                 }
             }
-            
+
             public static TimeSpan OneThird
             {
                 get
@@ -500,7 +500,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromDays(0.25);
                 }
             }
-            
+
             public static TimeSpan OneTenth
             {
                 get
@@ -524,7 +524,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(100);
                 }
             }
-            
+
             public static TimeSpan TwentyFour
             {
                 get
@@ -532,7 +532,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(24);
                 }
             }
-            
+
             public static TimeSpan TwentyThreeHalf
             {
                 get
@@ -540,7 +540,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(23.5);
                 }
             }
-            
+
             public static TimeSpan TwentyThree
             {
                 get
@@ -548,7 +548,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(23);
                 }
             }
-            
+
             public static TimeSpan TwentyTwoHalf
             {
                 get
@@ -556,7 +556,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(22.5);
                 }
             }
-            
+
             public static TimeSpan TwentyTwo
             {
                 get
@@ -564,7 +564,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(22);
                 }
             }
-            
+
             public static TimeSpan TwentyOneHalf
             {
                 get
@@ -572,7 +572,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(21.5);
                 }
             }
-            
+
             public static TimeSpan TwentyOne
             {
                 get
@@ -580,7 +580,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(21);
                 }
             }
-            
+
             public static TimeSpan TwentyHalf
             {
                 get
@@ -588,7 +588,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(20.5);
                 }
             }
-            
+
             public static TimeSpan Twenty
             {
                 get
@@ -596,7 +596,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(20);
                 }
             }
-            
+
             public static TimeSpan NineteenHalf
             {
                 get
@@ -604,7 +604,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(19.5);
                 }
             }
-            
+
             public static TimeSpan Nineteen
             {
                 get
@@ -612,7 +612,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(19);
                 }
             }
-            
+
             public static TimeSpan EighteenHalf
             {
                 get
@@ -620,7 +620,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(18.5);
                 }
             }
-            
+
             public static TimeSpan Eighteen
             {
                 get
@@ -628,7 +628,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(18);
                 }
             }
-            
+
             public static TimeSpan SeventeenHalf
             {
                 get
@@ -636,7 +636,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(17.5);
                 }
             }
-            
+
             public static TimeSpan Seventeen
             {
                 get
@@ -644,7 +644,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(17);
                 }
             }
-            
+
             public static TimeSpan SixteenHalf
             {
                 get
@@ -652,7 +652,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(16.5);
                 }
             }
-            
+
             public static TimeSpan Sixteen
             {
                 get
@@ -660,7 +660,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(16);
                 }
             }
-            
+
             public static TimeSpan FifteenHalf
             {
                 get
@@ -668,7 +668,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(15.5);
                 }
             }
-            
+
             public static TimeSpan Fifteen
             {
                 get
@@ -676,7 +676,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(15);
                 }
             }
-            
+
             public static TimeSpan FourteenHalf
             {
                 get
@@ -684,7 +684,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(14.5);
                 }
             }
-            
+
             public static TimeSpan Fourteen
             {
                 get
@@ -692,7 +692,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(14);
                 }
             }
-            
+
             public static TimeSpan ThirteenHalf
             {
                 get
@@ -700,7 +700,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(13.5);
                 }
             }
-            
+
             public static TimeSpan Thirteen
             {
                 get
@@ -708,7 +708,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(13);
                 }
             }
-            
+
             public static TimeSpan TwelveHalf
             {
                 get
@@ -716,7 +716,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(12.5);
                 }
             }
-            
+
             public static TimeSpan Twelve
             {
                 get
@@ -724,7 +724,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(12);
                 }
             }
-            
+
             public static TimeSpan ElevenHalf
             {
                 get
@@ -732,7 +732,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(11.5);
                 }
             }
-            
+
             public static TimeSpan Eleven
             {
                 get
@@ -740,7 +740,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(11);
                 }
             }
-            
+
             public static TimeSpan TenHalf
             {
                 get
@@ -748,7 +748,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(10.5);
                 }
             }
-            
+
             public static TimeSpan Ten
             {
                 get
@@ -756,7 +756,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(10);
                 }
             }
-            
+
             public static TimeSpan NineHalf
             {
                 get
@@ -764,7 +764,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(9.5);
                 }
             }
-            
+
             public static TimeSpan Nine
             {
                 get
@@ -772,7 +772,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(9);
                 }
             }
-            
+
             public static TimeSpan EightHalf
             {
                 get
@@ -780,7 +780,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(8.5);
                 }
             }
-            
+
             public static TimeSpan Eight
             {
                 get
@@ -788,7 +788,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(8);
                 }
             }
-            
+
             public static TimeSpan SevenHalf
             {
                 get
@@ -796,7 +796,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(7.5);
                 }
             }
-            
+
             public static TimeSpan Seven
             {
                 get
@@ -804,7 +804,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(7);
                 }
             }
-            
+
             public static TimeSpan SixHalf
             {
                 get
@@ -812,7 +812,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(6.5);
                 }
             }
-            
+
             public static TimeSpan Six
             {
                 get
@@ -820,7 +820,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(6);
                 }
             }
-            
+
             public static TimeSpan FiveHalf
             {
                 get
@@ -836,7 +836,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(5);
                 }
             }
-            
+
             public static TimeSpan FourHalf
             {
                 get
@@ -844,7 +844,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(4.5);
                 }
             }
-            
+
             public static TimeSpan Four
             {
                 get
@@ -852,7 +852,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(4);
                 }
             }
-            
+
             public static TimeSpan ThreeHalf
             {
                 get
@@ -860,7 +860,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(3.5);
                 }
             }
-            
+
             public static TimeSpan Three
             {
                 get
@@ -868,7 +868,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(3);
                 }
             }
-            
+
             public static TimeSpan TwoHalf
             {
                 get
@@ -924,7 +924,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(0.5);
                 }
             }
-            
+
             public static TimeSpan OneThird
             {
                 get
@@ -940,7 +940,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromHours(0.25);
                 }
             }
-            
+
             public static TimeSpan OneTenth
             {
                 get
@@ -964,7 +964,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMinutes(100);
                 }
             }
-            
+
             public static TimeSpan Ten
             {
                 get
@@ -972,7 +972,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMinutes(10);
                 }
             }
-            
+
             public static TimeSpan NineHalf
             {
                 get
@@ -980,7 +980,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMinutes(9.5);
                 }
             }
-            
+
             public static TimeSpan Nine
             {
                 get
@@ -988,7 +988,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMinutes(9);
                 }
             }
-            
+
             public static TimeSpan Eight
             {
                 get
@@ -996,7 +996,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMinutes(8);
                 }
             }
-            
+
             public static TimeSpan SevenFive
             {
                 get
@@ -1004,7 +1004,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMinutes(7.5);
                 }
             }
-            
+
             public static TimeSpan SixHalf
             {
                 get
@@ -1012,7 +1012,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMinutes(6.5);
                 }
             }
-            
+
             public static TimeSpan Six
             {
                 get
@@ -1020,7 +1020,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMinutes(6);
                 }
             }
-            
+
             public static TimeSpan FiveHalf
             {
                 get
@@ -1036,7 +1036,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMinutes(5);
                 }
             }
-            
+
             public static TimeSpan FourHalf
             {
                 get
@@ -1044,7 +1044,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMinutes(4.5);
                 }
             }
-            
+
             public static TimeSpan Four
             {
                 get
@@ -1052,7 +1052,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMinutes(4);
                 }
             }
-            
+
             public static TimeSpan ThreeHalf
             {
                 get
@@ -1068,7 +1068,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMinutes(3);
                 }
             }
-            
+
             public static TimeSpan TwoHalf
             {
                 get
@@ -1108,7 +1108,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMinutes(0.75);
                 }
             }
-            
+
             public static TimeSpan TwoThird
             {
                 get
@@ -1124,7 +1124,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMinutes(0.5);
                 }
             }
-            
+
             public static TimeSpan OneThird
             {
                 get
@@ -1140,7 +1140,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMinutes(0.25);
                 }
             }
-            
+
             public static TimeSpan OneTenth
             {
                 get
@@ -1164,7 +1164,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromSeconds(100);
                 }
             }
-            
+
             public static TimeSpan Ten
             {
                 get
@@ -1172,7 +1172,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromSeconds(10);
                 }
             }
-            
+
             public static TimeSpan NineHalf
             {
                 get
@@ -1180,7 +1180,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromSeconds(9.5);
                 }
             }
-            
+
             public static TimeSpan Nine
             {
                 get
@@ -1188,7 +1188,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromSeconds(9);
                 }
             }
-            
+
             public static TimeSpan EightHalf
             {
                 get
@@ -1196,7 +1196,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromSeconds(8.5);
                 }
             }
-            
+
             public static TimeSpan Eight
             {
                 get
@@ -1204,7 +1204,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromSeconds(8);
                 }
             }
-            
+
             public static TimeSpan SevenHalf
             {
                 get
@@ -1212,7 +1212,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromSeconds(7.5);
                 }
             }
-            
+
             public static TimeSpan Seven
             {
                 get
@@ -1220,7 +1220,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromSeconds(7);
                 }
             }
-            
+
             public static TimeSpan SixHalf
             {
                 get
@@ -1228,7 +1228,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromSeconds(6.5);
                 }
             }
-            
+
             public static TimeSpan Six
             {
                 get
@@ -1236,7 +1236,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromSeconds(6);
                 }
             }
-            
+
             public static TimeSpan FiveHalf
             {
                 get
@@ -1252,7 +1252,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromSeconds(5);
                 }
             }
-            
+
             public static TimeSpan FourHalf
             {
                 get
@@ -1260,7 +1260,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromSeconds(4.5);
                 }
             }
-            
+
             public static TimeSpan Four
             {
                 get
@@ -1268,7 +1268,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromSeconds(4);
                 }
             }
-            
+
             public static TimeSpan ThreeHalf
             {
                 get
@@ -1284,7 +1284,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromSeconds(3);
                 }
             }
-            
+
             public static TimeSpan TwoHalf
             {
                 get
@@ -1324,7 +1324,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromSeconds(0.75);
                 }
             }
-            
+
             public static TimeSpan TwoThird
             {
                 get
@@ -1340,7 +1340,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromSeconds(0.5);
                 }
             }
-            
+
             public static TimeSpan OneThird
             {
                 get
@@ -1356,7 +1356,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromSeconds(0.25);
                 }
             }
-            
+
             public static TimeSpan OneTenth
             {
                 get
@@ -1452,7 +1452,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMilliseconds(10);
                 }
             }
-            
+
             public static TimeSpan Nine
             {
                 get
@@ -1460,7 +1460,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMilliseconds(9);
                 }
             }
-            
+
             public static TimeSpan Eight
             {
                 get
@@ -1468,7 +1468,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMilliseconds(8);
                 }
             }
-            
+
             public static TimeSpan SevenHalf
             {
                 get
@@ -1476,7 +1476,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMilliseconds(7.5);
                 }
             }
-            
+
             public static TimeSpan Seven
             {
                 get
@@ -1484,7 +1484,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMilliseconds(7);
                 }
             }
-            
+
             public static TimeSpan SixHalf
             {
                 get
@@ -1500,7 +1500,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMilliseconds(5);
                 }
             }
-            
+
             public static TimeSpan Four
             {
                 get
@@ -1516,7 +1516,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMilliseconds(3);
                 }
             }
-            
+
             public static TimeSpan TwoHalf
             {
                 get
@@ -1540,7 +1540,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMilliseconds(1);
                 }
             }
-            
+
             public static TimeSpan ThreeQuarter
             {
                 get
@@ -1548,7 +1548,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMilliseconds(0.75);
                 }
             }
-            
+
             public static TimeSpan TwoThird
             {
                 get
@@ -1556,7 +1556,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMilliseconds(2.0 / 3.0);
                 }
             }
-            
+
             public static TimeSpan Half
             {
                 get
@@ -1564,7 +1564,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMilliseconds(0.5);
                 }
             }
-            
+
             public static TimeSpan OneThird
             {
                 get
@@ -1572,7 +1572,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMilliseconds(1.0 / 3.0);
                 }
             }
-            
+
             public static TimeSpan Quarter
             {
                 get
@@ -1580,7 +1580,7 @@ namespace NetExtender.Utilities.Types
                     return TimeSpan.FromMilliseconds(0.25);
                 }
             }
-            
+
             public static TimeSpan OneTenth
             {
                 get

@@ -8,9 +8,9 @@ namespace NetExtender.IO.Shortcut.Interfaces
     public interface IShortcut
     {
         public String Name { get; }
-        
+
         public String FullName { get; }
-        
+
         public String? Arguments { get; init; }
 
         public String? Description { get; init; }

@@ -88,7 +88,7 @@ namespace NetExtender.Initializer
                 return Initializer.Include;
             }
         }
-        
+
         public static ISet<String> Exclude
         {
             get
@@ -193,7 +193,7 @@ namespace NetExtender.Initializer
             Object? instance = Activator.CreateInstance(type, true);
             return instance is not null ? entry.Invoke(instance, new Object[] { Initializer }) : null;
         }
-        
+
 #pragma warning disable CA2255
         [ModuleInitializer]
         internal static void Initialize()

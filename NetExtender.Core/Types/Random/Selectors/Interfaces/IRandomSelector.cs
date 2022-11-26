@@ -18,11 +18,11 @@ namespace NetExtender.Types.Random
         public T GetRandom();
         public T GetRandom(Double value);
         public T? GetRandomOrDefault();
-        
+
         [return: NotNullIfNotNull("alternate")]
         public T? GetRandomOrDefault(T? alternate);
         public T? GetRandomOrDefault(Double value);
-        
+
         [return: NotNullIfNotNull("alternate")]
         public T? GetRandomOrDefault(Double value, T? alternate);
 

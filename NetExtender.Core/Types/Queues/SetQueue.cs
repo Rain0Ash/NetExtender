@@ -14,7 +14,7 @@ namespace NetExtender.Types.Queues
     {
         private LinkedList<T> Queue { get; }
         private HashSet<T> Set { get; }
-        
+
         Boolean ICollection<T>.IsReadOnly
         {
             get
@@ -57,23 +57,23 @@ namespace NetExtender.Types.Queues
             Queue = new LinkedList<T>();
             Set = new HashSet<T>(comparer);
         }
-        
+
         public SetQueue(Int32 capacity)
             : this(capacity, null)
         {
         }
-        
+
         public SetQueue(Int32 capacity, IEqualityComparer<T>? comparer)
         {
             Queue = new LinkedList<T>();
             Set = new HashSet<T>(capacity, comparer);
         }
-        
+
         public SetQueue(IEnumerable<T> source)
             : this(source, null)
         {
         }
-        
+
         public SetQueue(IEnumerable<T> source, IEqualityComparer<T>? comparer)
         {
             if (source is null)
@@ -110,7 +110,7 @@ namespace NetExtender.Types.Queues
         {
             return Queue.Peek();
         }
-        
+
         public Boolean TryPeek([MaybeNullWhen(false)] out T result)
         {
             return Queue.TryPeek(out result);
@@ -133,7 +133,7 @@ namespace NetExtender.Types.Queues
             {
                 return false;
             }
-            
+
             Queue.Remove(item);
             Queue.AddLast(item);
             return true;
@@ -145,7 +145,7 @@ namespace NetExtender.Types.Queues
             {
                 Queue.Remove(item);
             }
-            
+
             Queue.AddLast(item);
             return true;
         }
@@ -156,7 +156,7 @@ namespace NetExtender.Types.Queues
             Set.Remove(item);
             return item;
         }
-        
+
         public Boolean TryDequeue([MaybeNullWhen(false)] out T result)
         {
             if (!Queue.TryDequeue(out result))
@@ -177,7 +177,7 @@ namespace NetExtender.Types.Queues
         {
             Add(item);
         }
-        
+
         public Boolean IsProperSubsetOf(IEnumerable<T> other)
         {
             if (other is null)
@@ -248,18 +248,18 @@ namespace NetExtender.Types.Queues
             Queue.Remove(item);
             return true;
         }
-        
+
         public void Clear()
         {
             Queue.Clear();
             Set.Clear();
         }
-        
+
         public T[] ToArray()
         {
             return Queue.ToArray();
         }
-        
+
         public void CopyTo(T[] array, Int32 arrayIndex)
         {
             Queue.CopyTo(array, arrayIndex);
@@ -269,12 +269,12 @@ namespace NetExtender.Types.Queues
         {
             ((ICollection) Queue).CopyTo(array, index);
         }
-        
+
         public IEnumerator<T> GetEnumerator()
         {
             return Queue.GetEnumerator();
         }
-        
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return Queue.GetEnumerator();

@@ -22,7 +22,7 @@ namespace NetExtender.Types.Exceptions
             : base(message, innerException)
         {
         }
-        
+
         protected InvalidHashException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

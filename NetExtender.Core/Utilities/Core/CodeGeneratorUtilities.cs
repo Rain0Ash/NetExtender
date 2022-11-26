@@ -29,7 +29,7 @@ namespace NetExtender.Utilities.Core
             generator.Emit(OpCodes.Ldarg_0);
             generator.EmitUnbox(type);
         }
-        
+
         public static void EmitLdarg(this ILGenerator generator, Int32 position)
         {
             if (generator is null)
@@ -108,7 +108,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(generator));
             }
-            
+
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
@@ -138,7 +138,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(generator));
             }
-            
+
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
@@ -167,7 +167,7 @@ namespace NetExtender.Utilities.Core
                 generator.Emit(OpCodes.Castclass, type);
             }
         }
-        
+
         public static void Return(this ILGenerator generator)
         {
             if (generator is null)
@@ -248,7 +248,7 @@ namespace NetExtender.Utilities.Core
             {
                 return DefineConstructor(builder, attributes);
             }
-            
+
             Type[] types = parameters.Select(field => field.Value.FieldType).ToArray();
             ConstructorBuilder constructor = builder.DefineConstructor(attributes, CallingConventions.HasThis, types);
 
@@ -291,7 +291,7 @@ namespace NetExtender.Utilities.Core
             generator.Emit(OpCodes.Ret);
             return generator;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodBuilder DefineGetMethod(this MethodBuilder builder, FieldBuilder field)
         {
@@ -304,12 +304,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(field));
             }
-            
+
             ILGenerator generator = builder.GetILGenerator();
             DefineGetMethod(generator, field);
             return builder;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodBuilder DefineGetMethod(this TypeBuilder builder, PropertyBuilder property, FieldBuilder field, String name, Type type)
         {
@@ -354,7 +354,7 @@ namespace NetExtender.Utilities.Core
             property.SetGetMethod(accessor);
             return accessor;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static ILGenerator DefineSetMethod(this ILGenerator generator, FieldBuilder field)
         {
@@ -387,7 +387,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(field));
             }
-            
+
             ILGenerator generator = builder.GetILGenerator();
             DefineSetMethod(generator, field);
             return builder;
@@ -437,7 +437,7 @@ namespace NetExtender.Utilities.Core
             property.SetSetMethod(accessor);
             return accessor;
         }
-        
+
         public static class Generator
         {
             public static class Attribute
@@ -506,7 +506,7 @@ namespace NetExtender.Utilities.Core
                 {
                     const BindingFlags binding = BindingFlags.Static | BindingFlags.Public;
                     const String method = "Default";
-                    
+
                     Type type = typeof(EqualityComparer<>);
                     return type.GetProperty(method, binding)?.GetMethod ?? throw new MissingMemberException(type.FullName, nameof(Default));
                 }
@@ -514,7 +514,7 @@ namespace NetExtender.Utilities.Core
                 private static (MethodInfo GetHashCodeMethod, MethodInfo EqualsMethod) FindMethods()
                 {
                     const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public;
-                    
+
                     Type type = typeof(EqualityComparer<>);
                     Type generic = type.GetGenericArguments()[0];
                     MethodInfo hash = type.GetMethod(nameof(GetHashCode), binding, new[] { generic }) ?? throw new MissingMethodException(type.FullName, nameof(GetHashCode));
@@ -544,7 +544,7 @@ namespace NetExtender.Utilities.Core
                     }
 
                     const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public;
-                    
+
                     Type comparer = typeof(EqualityComparer<>).MakeGenericType(type);
                     return comparer.GetMethod(nameof(Equals), binding, new[] { type, type }) ?? throw new MissingMethodException(type.FullName, nameof(Equals));
                 }
@@ -558,7 +558,7 @@ namespace NetExtender.Utilities.Core
                 static Equatable()
                 {
                     const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public;
-                    
+
                     Interface = typeof(IEquatable<>);
                     Type generic = Interface.GetGenericArguments()[0];
                     EqualsMethod = Interface.GetMethod(nameof(Equals), binding, new[] { generic }) ?? throw new MissingMethodException(Interface.FullName, nameof(Equals));

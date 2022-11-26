@@ -121,7 +121,7 @@ namespace NetExtender.Types.Region
         /// Caribbean
         /// </summary>
         Caribbean,
-        
+
         /// <summary>
         /// Arctic
         /// </summary>

@@ -85,10 +85,10 @@ namespace NetExtender.Types.Collections
             {
                 Internal.RemoveAt(0);
             }
-            
+
             Tick?.Invoke(this, new TimeEventArgs(args.SignalTime));
         }
-        
+
         public Boolean Contains(KeyValuePair<DateTime, T> item)
         {
             return ((ICollection<KeyValuePair<DateTime, T>>) Internal).Contains(item);
@@ -98,12 +98,12 @@ namespace NetExtender.Types.Collections
         {
             return Internal.ContainsValue(item);
         }
-        
+
         public void Add(KeyValuePair<DateTime, T> item)
         {
             Internal.Add(item.Key, item.Value);
         }
-        
+
         public void Add(T item)
         {
             Add(item, Expire);
@@ -113,7 +113,7 @@ namespace NetExtender.Types.Collections
         {
             Internal.Add(DateTime.Now.Add(expire), item);
         }
-        
+
         public Boolean Remove(KeyValuePair<DateTime, T> item)
         {
             return ((ICollection<KeyValuePair<DateTime, T>>) Internal).Remove(item);
@@ -126,10 +126,10 @@ namespace NetExtender.Types.Collections
                 Internal.Remove(pair.Key);
                 return true;
             }
-            
+
             return false;
         }
-        
+
         public void Clear()
         {
             Internal.Clear();
@@ -139,7 +139,7 @@ namespace NetExtender.Types.Collections
         {
             ((ICollection<KeyValuePair<DateTime, T>>) Internal).CopyTo(array, arrayIndex);
         }
-        
+
         public void CopyTo(T[] array, Int32 arrayIndex)
         {
             Internal.Values.CopyTo(array, arrayIndex);
@@ -165,14 +165,14 @@ namespace NetExtender.Types.Collections
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        
+
         protected virtual void Dispose(Boolean disposing)
         {
             Tick = null;
             Timer.Stop();
             Timer.Dispose();
         }
-        
+
         ~ExpireCollection()
         {
             Dispose(false);

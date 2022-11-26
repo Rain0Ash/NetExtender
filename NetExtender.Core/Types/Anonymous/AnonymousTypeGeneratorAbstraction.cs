@@ -23,7 +23,7 @@ namespace NetExtender.Types.Anonymous
             {
                 throw new ArgumentNullException(nameof(assembly));
             }
-            
+
             AssemblyName = new AssemblyName(assembly);
             Assembly = AssemblyBuilder.DefineDynamicAssembly(AssemblyName, AssemblyBuilderAccess.Run);
             ModuleName = AssemblyName.Name ?? assembly;
@@ -45,7 +45,7 @@ namespace NetExtender.Types.Anonymous
         {
             return null;
         }
-        
+
         protected abstract FieldBuilder DefineField(TypeBuilder builder, AnonymousTypePropertyInfo info);
         protected abstract FieldBuilder DefinePropertyField(TypeBuilder builder, AnonymousTypePropertyInfo info);
         protected abstract Boolean DefineGetMethod(TypeBuilder builder, PropertyBuilder property, FieldBuilder field, AnonymousTypePropertyInfo info);
@@ -64,7 +64,7 @@ namespace NetExtender.Types.Anonymous
         {
             return null;
         }
-        
+
         protected virtual MethodBuilder? DefineEquals(TypeBuilder builder, (PropertyBuilder? Property, FieldBuilder Field)[] fields)
         {
             return null;

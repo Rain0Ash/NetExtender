@@ -101,12 +101,12 @@ namespace NetExtender.Utilities.Types
 
             return HasAtMostAsync(source.Where(predicate), count, token);
         }
-        
+
         public static Task<Boolean> HasAtMostAsync<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> predicate, Int32 count)
         {
             return HasAtMostAsync(source, predicate, count, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> HasAtMostAsync<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> predicate, Int32 count, CancellationToken token)
         {
             if (source is null)
@@ -121,7 +121,7 @@ namespace NetExtender.Utilities.Types
 
             return HasAtMostAsync(source.Where(predicate), count, token);
         }
-        
+
         public static Task<Boolean> HasExactlyAsync<T>(this IQueryable<T> source, Int32 count)
         {
             return HasExactlyAsync(source, count, CancellationToken.None);
@@ -136,12 +136,12 @@ namespace NetExtender.Utilities.Types
 
             return await source.Take(count + 1).CountAsync(token).ConfigureAwait(false) == count;
         }
-        
+
         public static Task<Boolean> HasExactlyAsync<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, Int32 count)
         {
             return HasExactlyAsync(source, predicate, count, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> HasExactlyAsync<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, Int32 count, CancellationToken token)
         {
             if (source is null)
@@ -156,12 +156,12 @@ namespace NetExtender.Utilities.Types
 
             return HasExactlyAsync(source.Where(predicate), count, token);
         }
-        
+
         public static Task<Boolean> HasExactlyAsync<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> predicate, Int32 count)
         {
             return HasExactlyAsync(source, predicate, count, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> HasExactlyAsync<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> predicate, Int32 count, CancellationToken token)
         {
             if (source is null)

@@ -13,7 +13,7 @@ namespace NetExtender.Utilities.Types
         {
             return new TaskSchedulerSynchronizationContext(scheduler);
         }
-        
+
         private sealed class TaskSchedulerSynchronizationContext : SynchronizationContext
         {
             private TaskScheduler Scheduler { get; }
@@ -22,12 +22,12 @@ namespace NetExtender.Utilities.Types
             {
                 Scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             public override void Post(SendOrPostCallback callback, Object? state)
             {
                 Task.Factory.StartNew(() => callback(state), CancellationToken.None, TaskCreationOptions.None, Scheduler);
             }
-	
+
             public override void Send(SendOrPostCallback callback, Object? state)
             {
                 Task task = new Task(() => callback(state));

@@ -24,12 +24,12 @@ namespace NetExtender.Utilities
         {
             return Mapper.Map<T>(value);
         }
-        
+
         public static T? Map<T>(this Object? value, T? alternate)
         {
             return Map(Mapper, value, alternate);
         }
-        
+
         public static T? Map<T>(this IMapper mapper, Object? value, T? alternate)
         {
             if (mapper is null)
@@ -39,7 +39,7 @@ namespace NetExtender.Utilities
 
             return mapper.TryMap(value, out T? result) ? result : alternate;
         }
-        
+
         public static T? Map<T>(this Object value, Func<T> factory)
         {
             return Map(Mapper, value, factory);
@@ -83,7 +83,7 @@ namespace NetExtender.Utilities
                 return false;
             }
         }
-        
+
         public static IEnumerable<TMap> MapSelect<T, TMap>(this IEnumerable<T?> source)
         {
             return MapSelect<T, TMap>(source, Mapper);
@@ -108,7 +108,7 @@ namespace NetExtender.Utilities
 
             return source.Select(MapInternal);
         }
-        
+
         public static IEnumerable<TMap> TryMapSelect<T, TMap>(this IEnumerable<T> source)
         {
             return TryMapSelect<T, TMap>(source, Mapper);
@@ -125,7 +125,7 @@ namespace NetExtender.Utilities
             {
                 throw new ArgumentNullException(nameof(mapper));
             }
-            
+
             Boolean MapInternal(T item, [MaybeNullWhen(false)] out TMap result)
             {
                 return mapper.TryMap(item, out result);

@@ -16,7 +16,7 @@ namespace NetExtender.NAudio.Types.Providers
             FadingOut,
             Silence
         }
-        
+
         private const Boolean Silence = false;
 
         private Object Synchronization { get; } = ConcurrentUtilities.Synchronization;
@@ -26,11 +26,11 @@ namespace NetExtender.NAudio.Types.Providers
         private Int32 FadeDelaySamples { get; set; }
         private Int32 FadeDelayPosition { get; set; }
         private FadeState State { get; set; }
-        
+
         public TimeSpan FadeIn { get; }
         public TimeSpan FadeOutDelay { get; }
         public TimeSpan FadeOut { get; }
-        
+
         public WaveFormat WaveFormat
         {
             get
@@ -38,7 +38,7 @@ namespace NetExtender.NAudio.Types.Providers
                 return Provider.WaveFormat;
             }
         }
-        
+
         public FadeOutSampleProvider(ISampleProvider provider, TimeSpan fadeout)
             : this(provider, fadeout, Silence)
         {
@@ -48,7 +48,7 @@ namespace NetExtender.NAudio.Types.Providers
             : this(provider, default, fadeout, silent)
         {
         }
-        
+
         public FadeOutSampleProvider(ISampleProvider provider, TimeSpan delay, TimeSpan fadeout)
             : this(provider, delay, fadeout, Silence)
         {
@@ -177,12 +177,12 @@ namespace NetExtender.NAudio.Types.Providers
                 }
 
                 State = FadeState.Standard;
-                
+
                 if (FadeOut > default(TimeSpan))
                 {
                     BeginFadeOut(FadeOutDelay, FadeOut);
                 }
-                
+
                 break;
             }
         }
@@ -190,7 +190,7 @@ namespace NetExtender.NAudio.Types.Providers
         private void FadeOutHandler(Span<Single> buffer, Int32 offset, Int32 read)
         {
             Int32 sample = 0;
-            
+
             while (sample < read)
             {
                 Single multiplier = 1F - FadePosition / (Single) FadeCount;

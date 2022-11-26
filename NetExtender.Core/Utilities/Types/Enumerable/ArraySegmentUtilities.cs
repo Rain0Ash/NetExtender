@@ -20,7 +20,7 @@ namespace NetExtender.Utilities.Types
 
             return new ArraySegment<T>(array);
         }
-        
+
         public static ArraySegment<T> Segment<T>(this T[] array, Int32 offset)
         {
             if (array is null)
@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.Types
 
             return Segment(array, offset, array.Length - offset);
         }
-        
+
         public static ArraySegment<T> Segment<T>(this T[] array, Int32 offset, Int32 count)
         {
             if (array is null)
@@ -56,7 +56,7 @@ namespace NetExtender.Utilities.Types
 
             return segment;
         }
-        
+
         public static ArraySegment<T> InnerChangeWhere<T>(this ArraySegment<T> segment, Func<T, Boolean> where, Func<T, T> selector)
         {
             if (where is null)
@@ -68,11 +68,11 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             for (Int32 i = 0; i < segment.Count; i++)
             {
                 T item = segment[i];
-                
+
                 if (where(item))
                 {
                     segment[i] = selector(item);
@@ -81,7 +81,7 @@ namespace NetExtender.Utilities.Types
 
             return segment;
         }
-        
+
         public static ArraySegment<T> InnerChangeWhereNot<T>(this ArraySegment<T> segment, Func<T, Boolean> where, Func<T, T> selector)
         {
             if (where is null)
@@ -93,11 +93,11 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             for (Int32 i = 0; i < segment.Count; i++)
             {
                 T item = segment[i];
-                
+
                 if (!where(item))
                 {
                     segment[i] = selector(item);
@@ -106,7 +106,7 @@ namespace NetExtender.Utilities.Types
 
             return segment;
         }
-        
+
         /// <inheritdoc cref="Array.Clear(System.Array)"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ArraySegment<T> Clear<T>(this ArraySegment<T> segment)
@@ -117,7 +117,7 @@ namespace NetExtender.Utilities.Types
             {
                 return segment;
             }
-            
+
             Array.Clear(array, segment.Offset, segment.Count);
             return segment;
         }
@@ -132,7 +132,7 @@ namespace NetExtender.Utilities.Types
             {
                 return segment;
             }
-            
+
             Array.Clear(array, segment.Offset + index, segment.Count - index);
             return segment;
         }
@@ -147,7 +147,7 @@ namespace NetExtender.Utilities.Types
             {
                 return segment;
             }
-            
+
             Array.Clear(array, segment.Offset + index, length);
             return segment;
         }
@@ -172,7 +172,7 @@ namespace NetExtender.Utilities.Types
             segment.AsSpan().Slice(start, length).Fill(value);
             return segment;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ArraySegment<T> Shuffle<T>(this ArraySegment<T> source)
         {
@@ -187,7 +187,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             source.AsSpan().Shuffle(random);
             return source;
         }
@@ -199,7 +199,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             source.AsSpan().Shuffle(random);
             return source;
         }
@@ -285,7 +285,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(match));
             }
-            
+
             if (start < 0 || start > segment.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(start));
@@ -327,7 +327,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(match));
             }
-            
+
             return FindLastIndex(segment, segment.Count - 1, segment.Count, match);
         }
 
@@ -371,7 +371,7 @@ namespace NetExtender.Utilities.Types
                     return i;
                 }
             }
-            
+
             return -1;
         }
 
@@ -388,7 +388,7 @@ namespace NetExtender.Utilities.Types
             {
                 action(item);
             }
-            
+
             return segment;
         }
 

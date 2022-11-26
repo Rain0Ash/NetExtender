@@ -169,7 +169,7 @@ namespace NetExtender.Utilities.Types
 
             return alternate.Invoke();
         }
-        
+
         public static IQueryable<T> Max<T>(this IQueryable<T> source, IComparer<T>? comparer)
         {
             if (source is null)
@@ -179,7 +179,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending(comparer);
         }
-        
+
         public static IQueryable<T> Max<T>(this IQueryable<T> source, Int32 count)
         {
             if (source is null)
@@ -205,7 +205,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.OrderByDescending().FirstOrDefault(alternate);
         }
 
@@ -215,10 +215,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.OrderByDescending(comparer).FirstOrDefault(alternate);
         }
-        
+
         public static T MaxOrDefault<T>(this IQueryable<T> source, Func<T> alternate)
         {
             if (source is null)
@@ -233,7 +233,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending().FirstOrDefault(alternate);
         }
-        
+
         public static T MaxOrDefault<T>(this IQueryable<T> source, Func<T> alternate, IComparer<T>? comparer)
         {
             if (source is null)
@@ -248,7 +248,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending(comparer).FirstOrDefault(alternate);
         }
-        
+
         public static T? MaxOrDefault<T>(this IQueryable<T> source)
         {
             if (source is null)
@@ -258,7 +258,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending().FirstOrDefault();
         }
-        
+
         public static T? MaxOrDefault<T>(this IQueryable<T> source, IComparer<T>? comparer)
         {
             if (source is null)
@@ -268,7 +268,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending(comparer).FirstOrDefault();
         }
-        
+
         public static T MaxBy<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector)
         {
             if (source is null)
@@ -298,7 +298,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending(selector, comparer).First();
         }
-        
+
         public static T MaxByOrDefault<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector, T alternate)
         {
             if (source is null)
@@ -328,7 +328,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending(selector, comparer).FirstOrDefault(alternate);
         }
-        
+
         public static T MaxByOrDefault<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector, Func<T> alternate)
         {
             if (source is null)
@@ -368,7 +368,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending(selector, comparer).FirstOrDefault(alternate);
         }
-        
+
         public static T? MaxByOrDefault<T, TKey>(this IQueryable<T> source, Expression<Func<T, TKey>> selector)
         {
             if (source is null)
@@ -428,7 +428,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending(selector, comparer).Take(count);
         }
-        
+
         public static IQueryable<T> Min<T>(this IQueryable<T> source, IComparer<T>? comparer)
         {
             if (source is null)
@@ -438,7 +438,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy(comparer);
         }
-        
+
         public static IQueryable<T> Min<T>(this IQueryable<T> source, Int32 count)
         {
             if (source is null)
@@ -448,7 +448,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy().Take(count);
         }
-        
+
         public static IQueryable<T> Min<T>(this IQueryable<T> source, IComparer<T>? comparer, Int32 count)
         {
             if (source is null)
@@ -458,7 +458,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy(comparer).Take(count);
         }
-        
+
         public static T MinOrDefault<T>(this IQueryable<T> source, T alternate)
         {
             if (source is null)
@@ -468,7 +468,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy().FirstOrDefault(alternate);
         }
-        
+
         public static T MinOrDefault<T>(this IQueryable<T> source, T alternate, IComparer<T>? comparer)
         {
             if (source is null)
@@ -508,7 +508,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy(comparer).FirstOrDefault(alternate);
         }
-        
+
         public static T? MinOrDefault<T>(this IQueryable<T> source)
         {
             if (source is null)
@@ -518,7 +518,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy().FirstOrDefault();
         }
-        
+
         public static T? MinOrDefault<T>(this IQueryable<T> source, IComparer<T>? comparer)
         {
             if (source is null)
@@ -688,7 +688,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy(selector, comparer).Take(count);
         }
-        
+
         public static Boolean HasAtLeast<T>(this IQueryable<T> source, Int32 count)
         {
             if (source is null)
@@ -698,7 +698,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Take(count).Count() >= count;
         }
-        
+
         public static Boolean HasAtLeast<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, Int32 count)
         {
             if (source is null)
@@ -713,7 +713,7 @@ namespace NetExtender.Utilities.Types
 
             return HasAtLeast(source.Where(predicate), count);
         }
-        
+
         public static Boolean HasAtLeast<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> predicate, Int32 count)
         {
             if (source is null)
@@ -728,7 +728,7 @@ namespace NetExtender.Utilities.Types
 
             return HasAtLeast(source.Where(predicate), count);
         }
-        
+
         public static Boolean HasAtMost<T>(this IQueryable<T> source, Int32 count)
         {
             if (source is null)
@@ -738,7 +738,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Take(count).Count() <= count;
         }
-        
+
         public static Boolean HasAtMost<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, Int32 count)
         {
             if (source is null)
@@ -753,7 +753,7 @@ namespace NetExtender.Utilities.Types
 
             return HasAtMost(source.Where(predicate), count);
         }
-        
+
         public static Boolean HasAtMost<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> predicate, Int32 count)
         {
             if (source is null)
@@ -778,7 +778,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Take(count + 1).Count() == count;
         }
-        
+
         public static Boolean HasExactly<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, Int32 count)
         {
             if (source is null)
@@ -793,7 +793,7 @@ namespace NetExtender.Utilities.Types
 
             return HasExactly(source.Where(predicate), count);
         }
-        
+
         public static Boolean HasExactly<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> predicate, Int32 count)
         {
             if (source is null)
@@ -808,7 +808,7 @@ namespace NetExtender.Utilities.Types
 
             return HasExactly(source.Where(predicate), count);
         }
-        
+
         /// <summary>
         /// Determines whether the given sequence is not empty.
         /// </summary>
@@ -837,7 +837,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             return source is not null && source.Any(predicate);
         }
 
@@ -874,7 +874,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             if (source is null)
             {
                 return false;
@@ -916,7 +916,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             if (source is null)
             {
                 return true;

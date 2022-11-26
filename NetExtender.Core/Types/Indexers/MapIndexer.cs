@@ -75,7 +75,7 @@ namespace NetExtender.Types.Indexers
                     Null = counter;
                 }
             }
-            
+
             Index.TrimExcess();
         }
 
@@ -83,7 +83,7 @@ namespace NetExtender.Types.Indexers
         {
             return item is not null ? Index.ContainsKey(item) : Null >= 0;
         }
-        
+
         public Boolean ContainsIndex(Int32 index)
         {
             return index == Null || Index.ContainsValue(index);
@@ -98,7 +98,7 @@ namespace NetExtender.Types.Indexers
 
             return Index.TryGetValue(item, out Int32 index) ? index : -1;
         }
-        
+
         public T? ValueOf(Int32 index)
         {
             return index >= 0 && index != Null && Index.TryGetKey(index, out T? key) ? key : default;
@@ -111,7 +111,7 @@ namespace NetExtender.Types.Indexers
                 value = default;
                 return false;
             }
-            
+
             if (index != Null)
             {
                 return Index.TryGetKey(index, out value);
@@ -120,14 +120,14 @@ namespace NetExtender.Types.Indexers
             value = default!;
             return true;
         }
-        
+
         public Boolean Rebuild(IEnumerable<T> source)
         {
             Clear();
             AddRange(source);
             return true;
         }
-        
+
         public void Clear()
         {
             Null = -1;
@@ -150,7 +150,7 @@ namespace NetExtender.Types.Indexers
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             if (array.Length - index - 1 < Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
@@ -172,7 +172,7 @@ namespace NetExtender.Types.Indexers
         {
             return GetEnumerator();
         }
-        
+
         public Int32 this[T item]
         {
             get

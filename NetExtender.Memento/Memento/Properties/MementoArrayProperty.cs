@@ -44,7 +44,7 @@ namespace NetExtender.Types.Memento
         {
             Value = values?.ToArray() ?? Array.Empty<TProperty>();
         }
-        
+
         public override MementoArrayProperty<TSource, TProperty> New()
         {
             return new MementoArrayProperty<TSource, TProperty>(Property);
@@ -64,17 +64,17 @@ namespace NetExtender.Types.Memento
 
             return New(value);
         }
-        
+
         public override MementoArray<TSource, TProperty> New(TSource source)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return new MementoArray<TSource, TProperty>(source, Property);
         }
-        
+
         public override MementoArrayProperty<TSource, TProperty> Item()
         {
             return HasValue ? new MementoArrayProperty<TSource, TProperty>(Property, Value) : New();
@@ -86,7 +86,7 @@ namespace NetExtender.Types.Memento
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return HasValue ? new MementoArray<TSource, TProperty>(source, Property, Value) : New(source);
         }
 
@@ -109,7 +109,7 @@ namespace NetExtender.Types.Memento
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             Value = GenericUtilities.Clone(Property.GetValue(source));
             return this;
         }

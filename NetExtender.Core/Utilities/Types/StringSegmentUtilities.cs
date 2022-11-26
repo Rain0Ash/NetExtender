@@ -30,12 +30,12 @@ namespace NetExtender.Utilities.Types
                 Current = Char.MinValue;
                 return false;
             }
-            
+
             Current = Value[++Index];
             return true;
         }
     }
-    
+
     public static class StringSegmentUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -101,7 +101,7 @@ namespace NetExtender.Utilities.Types
 
             return values.Aggregate<StringSegment, Int64>(0, (current, segment) => current + segment.Length);
         }
-        
+
         public static Boolean IsNumeric(this StringSegment value)
         {
             foreach (Char character in value)
@@ -114,7 +114,7 @@ namespace NetExtender.Utilities.Types
 
             return true;
         }
-        
+
         public static Boolean IsAlphabetic(this StringSegment value)
         {
             foreach (Char character in value)
@@ -140,7 +140,7 @@ namespace NetExtender.Utilities.Types
 
             return true;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean StartsWith(this StringSegment value, String substring)
         {
@@ -151,13 +151,13 @@ namespace NetExtender.Utilities.Types
 
             return value.StartsWith(substring, StringComparison.Ordinal);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean StartsWith(this StringSegment value, IEnumerable<String?> substrings)
         {
             return StartsWith(value, substrings, StringComparison.Ordinal);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean StartsWith(this StringSegment value, IEnumerable<String?> substrings, StringComparison comparison)
         {
@@ -185,7 +185,7 @@ namespace NetExtender.Utilities.Types
         {
             return EndsWith(value, substrings, StringComparison.Ordinal);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean EndsWith(this StringSegment value, IEnumerable<String?> substrings, StringComparison comparison)
         {
@@ -196,7 +196,7 @@ namespace NetExtender.Utilities.Types
 
             return substrings.WhereNotNull().Any(item => value.EndsWith(item, comparison));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equals(this String value, StringSegment segment)
         {
@@ -207,7 +207,7 @@ namespace NetExtender.Utilities.Types
 
             return segment.Equals(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equals(this String value, StringSegment segment, StringComparison comparison)
         {
@@ -218,14 +218,14 @@ namespace NetExtender.Utilities.Types
 
             return segment.Equals(value, comparison);
         }
-        
+
         public static Boolean Equals(this String value, StringSegment segment, Int32 start)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             if (start < 0 || start >= value.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(start), start, "The start index cannot be less than zero or greater than the length of the string.");
@@ -233,14 +233,14 @@ namespace NetExtender.Utilities.Types
 
             return segment.Equals(new StringSegment(value, start, value.Length - start));
         }
-        
+
         public static Boolean Equals(this String value, StringSegment segment, Int32 start, StringComparison comparison)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             if (start < 0 || start >= value.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(start), start, "The start index cannot be less than zero or greater than the length of the string.");
@@ -248,14 +248,14 @@ namespace NetExtender.Utilities.Types
 
             return segment.Equals(new StringSegment(value, start, value.Length - start), comparison);
         }
-        
+
         public static Boolean Equals(this String value, StringSegment segment, Int32 start, Int32 length)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             if (start < 0 || start >= value.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(start), start, "The start index cannot be less than zero or greater than the length of the string.");
@@ -268,14 +268,14 @@ namespace NetExtender.Utilities.Types
 
             return segment.Equals(new StringSegment(value, start, length));
         }
-        
+
         public static Boolean Equals(this String value, StringSegment segment, Int32 start, Int32 length, StringComparison comparison)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             if (start < 0 || start >= value.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(start), start, "The start index cannot be less than zero or greater than the length of the string.");
@@ -288,29 +288,29 @@ namespace NetExtender.Utilities.Types
 
             return segment.Equals(new StringSegment(value, start, length), comparison);
         }
-        
+
         public static Boolean Equals(this String value, String? other, Int32 start)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             if (start < 0 || start >= value.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(start), start, "The start index cannot be less than zero or greater than the length of the string.");
             }
-            
+
             return other is not null && new StringSegment(value, start, value.Length - start).Equals(other);
         }
-        
+
         public static Boolean Equals(this String value, String? other, Int32 start, StringComparison comparison)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             if (start < 0 || start >= value.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(start), start, "The start index cannot be less than zero or greater than the length of the string.");
@@ -318,14 +318,14 @@ namespace NetExtender.Utilities.Types
 
             return other is not null && new StringSegment(value, start, value.Length - start).Equals(other, comparison);
         }
-        
+
         public static Boolean Equals(this String value, String? other, Int32 start, Int32 length)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             if (start < 0 || start >= value.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(start), start, "The start index cannot be less than zero or greater than the length of the string.");
@@ -338,14 +338,14 @@ namespace NetExtender.Utilities.Types
 
             return other is not null && new StringSegment(value, start, length).Equals(other);
         }
-        
+
         public static Boolean Equals(this String value, String? other, Int32 start, Int32 length, StringComparison comparison)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             if (start < 0 || start >= value.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(start), start, "The start index cannot be less than zero or greater than the length of the string.");
@@ -364,7 +364,7 @@ namespace NetExtender.Utilities.Types
         {
             return CompareTo(value, other, StringComparison.Ordinal);
         }
-        
+
         public static Int32 CompareTo(this StringSegment value, String? other, StringComparison comparison)
         {
             return comparison switch
@@ -378,13 +378,13 @@ namespace NetExtender.Utilities.Types
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 CompareTo(this String value, StringSegment other)
         {
             return CompareTo(value, other, StringComparison.Ordinal);
         }
-        
+
         public static Int32 CompareTo(this String value, StringSegment other, StringComparison comparison)
         {
             if (value is null)
@@ -403,13 +403,13 @@ namespace NetExtender.Utilities.Types
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 CompareTo(this String value, StringSegment other, Int32 start)
         {
             return CompareTo(value, other, start, StringComparison.Ordinal);
         }
-        
+
         public static Int32 CompareTo(this String value, StringSegment other, Int32 start, StringComparison comparison)
         {
             if (value is null)
@@ -434,20 +434,20 @@ namespace NetExtender.Utilities.Types
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 CompareTo(this String value, StringSegment other, Int32 start, Int32 length)
         {
             return CompareTo(value, other, start, length, StringComparison.Ordinal);
         }
-        
+
         public static Int32 CompareTo(this String value, StringSegment other, Int32 start, Int32 length, StringComparison comparison)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             if (start < 0 || start >= value.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(start), start, "The start index cannot be less than zero or greater than the length of the string.");
@@ -470,13 +470,13 @@ namespace NetExtender.Utilities.Types
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 CompareTo(this String value, String? other, Int32 start)
         {
             return CompareTo(value, other, start, StringComparison.Ordinal);
         }
-        
+
         public static Int32 CompareTo(this String value, String? other, Int32 start, StringComparison comparison)
         {
             if (value is null)
@@ -506,20 +506,20 @@ namespace NetExtender.Utilities.Types
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 CompareTo(this String value, String? other, Int32 start, Int32 length)
         {
             return CompareTo(value, other, start, length, StringComparison.Ordinal);
         }
-        
+
         public static Int32 CompareTo(this String value, String? other, Int32 start, Int32 length, StringComparison comparison)
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             if (start < 0 || start >= value.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(start), start, "The start index cannot be less than zero or greater than the length of the string.");

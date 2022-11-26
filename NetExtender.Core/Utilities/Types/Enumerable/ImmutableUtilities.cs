@@ -23,19 +23,19 @@ namespace NetExtender.Utilities.Types
         {
             return source?.ToImmutableArray() ?? ImmutableArray<T>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableList<T> AsImmutableList<T>(this IEnumerable<T>? source)
         {
             return source is not null ? source as ImmutableList<T> ?? source.ToImmutableList() : ImmutableList<T>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IImmutableStack<T> AsIImmutableStack<T>(this IEnumerable<T>? source)
         {
             return source is not null ? source as IImmutableStack<T> ?? source.ToImmutableStack() : ImmutableStack<T>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableStack<T> ToImmutableStack<T>(this IEnumerable<T> source)
         {
@@ -52,13 +52,13 @@ namespace NetExtender.Utilities.Types
         {
             return source is not null ? source as ImmutableStack<T> ?? source.ToImmutableStack() : ImmutableStack<T>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IImmutableQueue<T> AsIImmutableQueue<T>(this IEnumerable<T>? source)
         {
             return source is not null ? source as IImmutableQueue<T> ?? source.ToImmutableQueue() : ImmutableQueue<T>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableQueue<T> ToImmutableQueue<T>(this IEnumerable<T> source)
         {
@@ -81,13 +81,13 @@ namespace NetExtender.Utilities.Types
         {
             return source is not null ? source as IImmutableSet<T> ?? source.ToImmutableHashSet() : ImmutableHashSet<T>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IImmutableSet<T> AsIImmutableSet<T>(this IEnumerable<T>? source, IEqualityComparer<T>? comparer)
         {
             return source is not null ? source as IImmutableSet<T> ?? source.ToImmutableHashSet(comparer) : ImmutableHashSet<T>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableHashSet<T> AsImmutableHashSet<T>(this IEnumerable<T>? source)
         {
@@ -99,25 +99,25 @@ namespace NetExtender.Utilities.Types
         {
             return source is not null ? source as ImmutableHashSet<T> ?? source.ToImmutableHashSet(comparer) : ImmutableHashSet<T>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<T> AsImmutableSortedSet<T>(this IEnumerable<T>? source)
         {
             return source is not null ? source as ImmutableSortedSet<T> ?? source.ToImmutableSortedSet() : ImmutableSortedSet<T>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedSet<T> AsImmutableSortedSet<T>(this IEnumerable<T>? source, IComparer<T>? comparer)
         {
             return source is not null ? source as ImmutableSortedSet<T> ?? source.ToImmutableSortedSet(comparer) : ImmutableSortedSet<T>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IImmutableDictionary<TKey, TValue> AsIImmutableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull
         {
             return source is not null ? source as IImmutableDictionary<TKey, TValue> ?? source.ToImmutableDictionary() : ImmutableDictionary<TKey, TValue>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IImmutableDictionary<TKey, TValue> AsIImmutableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer) where TKey : notnull
         {
@@ -130,44 +130,44 @@ namespace NetExtender.Utilities.Types
         {
             return source is not null ? source as IImmutableDictionary<TKey, TValue> ?? source.ToImmutableDictionary(keyComparer, valueComparer) : ImmutableDictionary<TKey, TValue>.Empty.WithComparers(keyComparer, valueComparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableDictionary<TKey, TValue> AsImmutableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull
         {
             return source is not null ? source as ImmutableDictionary<TKey, TValue> ?? source.ToImmutableDictionary() : ImmutableDictionary<TKey, TValue>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableDictionary<TKey, TValue> AsImmutableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TKey>? comparer) where TKey : notnull
         {
             return source is not null ? source as ImmutableDictionary<TKey, TValue> ?? source.ToImmutableDictionary(comparer) : ImmutableDictionary<TKey, TValue>.Empty.WithComparers(comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableDictionary<TKey, TValue> AsImmutableDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source,
             IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue> valueComparer) where TKey : notnull
         {
             return source is not null ? source as ImmutableDictionary<TKey, TValue> ?? source.ToImmutableDictionary(keyComparer, valueComparer) : ImmutableDictionary<TKey, TValue>.Empty.WithComparers(keyComparer, valueComparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedDictionary<TKey, TValue> AsImmutableSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source) where TKey : notnull
         {
             return source is not null ? source as ImmutableSortedDictionary<TKey, TValue> ?? source.ToImmutableSortedDictionary() : ImmutableSortedDictionary<TKey, TValue>.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedDictionary<TKey, TValue> AsImmutableSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IComparer<TKey>? comparer) where TKey : notnull
         {
             return source is not null ? source as ImmutableSortedDictionary<TKey, TValue> ?? source.ToImmutableSortedDictionary(comparer) : ImmutableSortedDictionary<TKey, TValue>.Empty.WithComparers(comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedDictionary<TKey, TValue> AsImmutableSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source, IEqualityComparer<TValue>? equality) where TKey : notnull
         {
             return source is not null ? source as ImmutableSortedDictionary<TKey, TValue> ?? source.ToImmutableSortedDictionary() : ImmutableSortedDictionary<TKey, TValue>.Empty.WithValueComparer(equality);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedDictionary<TKey, TValue> AsImmutableSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>>? source,
             IComparer<TKey>? keyComparer, IEqualityComparer<TValue> valueComparer) where TKey : notnull
@@ -240,7 +240,7 @@ namespace NetExtender.Utilities.Types
 
             return values.Length > 0 ? source.AddRange(values) : source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IImmutableList<T> AddRange<T>(this IImmutableList<T> source, params T[] values)
         {
@@ -256,7 +256,7 @@ namespace NetExtender.Utilities.Types
 
             return values.Length > 0 ? source.AddRange(values) : source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<T> InsertRange<T>(this ImmutableArray<T> source, Int32 index, params T[] values)
         {
@@ -267,7 +267,7 @@ namespace NetExtender.Utilities.Types
 
             return values.Length > 0 ? source.InsertRange(index, values) : source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableList<T> InsertRange<T>(this ImmutableList<T> source, Int32 index, params T[] values)
         {
@@ -283,7 +283,7 @@ namespace NetExtender.Utilities.Types
 
             return values.Length > 0 ? source.InsertRange(index, values) : source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IImmutableList<T> InsertRange<T>(this IImmutableList<T> source, Int32 index, params T[] values)
         {
@@ -299,7 +299,7 @@ namespace NetExtender.Utilities.Types
 
             return values.Length > 0 ? source.InsertRange(index, values) : source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<T> RemoveRange<T>(this ImmutableArray<T> source, params T[] values)
         {
@@ -310,7 +310,7 @@ namespace NetExtender.Utilities.Types
 
             return values.Length > 0 ? source.RemoveRange(values) : source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableArray<T> RemoveRange<T>(this ImmutableArray<T> source, IEqualityComparer<T>? comparer, params T[] values)
         {
@@ -321,7 +321,7 @@ namespace NetExtender.Utilities.Types
 
             return values.Length > 0 ? source.RemoveRange(values, comparer) : source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableList<T> RemoveRange<T>(this ImmutableList<T> source, params T[] values)
         {
@@ -337,7 +337,7 @@ namespace NetExtender.Utilities.Types
 
             return values.Length > 0 ? source.RemoveRange(values) : source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableList<T> RemoveRange<T>(this ImmutableList<T> source, IEqualityComparer<T>? comparer, params T[] values)
         {
@@ -353,7 +353,7 @@ namespace NetExtender.Utilities.Types
 
             return values.Length > 0 ? source.RemoveRange(values, comparer) : source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IImmutableList<T> RemoveRange<T>(this IImmutableList<T> source, params T[] values)
         {
@@ -369,7 +369,7 @@ namespace NetExtender.Utilities.Types
 
             return values.Length > 0 ? source.RemoveRange((IEnumerable<T>) values) : source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IImmutableList<T> RemoveRange<T>(this IImmutableList<T> source, IEqualityComparer<T>? comparer, params T[] values)
         {
@@ -396,7 +396,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WithComparers(null, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableDictionary<TKey, TValue> WithKeyComparer<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, IEqualityComparer<TKey>? keyComparer) where TKey : notnull
         {
@@ -407,7 +407,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WithComparers(keyComparer, source.ValueComparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableDictionary<TKey, TValue> WithValueComparer<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, IEqualityComparer<TValue>? valueComparer) where TKey : notnull
         {
@@ -418,7 +418,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WithComparers(source.KeyComparer, valueComparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedDictionary<TKey, TValue> WithDefaultComparers<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source) where TKey : notnull
         {
@@ -429,7 +429,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WithComparers(null, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedDictionary<TKey, TValue> WithKeyComparer<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, IComparer<TKey>? keyComparer) where TKey : notnull
         {
@@ -440,7 +440,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WithComparers(keyComparer, source.ValueComparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableSortedDictionary<TKey, TValue> WithValueComparer<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, IEqualityComparer<TValue>? valueComparer) where TKey : notnull
         {
@@ -451,7 +451,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WithComparers(source.KeyComparer, valueComparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableMap<TKey, TValue> WithDefaultComparers<TKey, TValue>(this ImmutableMap<TKey, TValue> source) where TKey : notnull where TValue : notnull
         {
@@ -462,7 +462,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WithComparers(null, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableMap<TKey, TValue> WithKeyComparer<TKey, TValue>(this ImmutableMap<TKey, TValue> source, IEqualityComparer<TKey>? keyComparer) where TKey : notnull where TValue : notnull
         {
@@ -473,7 +473,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WithComparers(keyComparer, source.ValueComparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ImmutableMap<TKey, TValue> WithValueComparer<TKey, TValue>(this ImmutableMap<TKey, TValue> source, IEqualityComparer<TValue>? valueComparer) where TKey : notnull where TValue : notnull
         {

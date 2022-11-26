@@ -15,7 +15,7 @@ namespace NetExtender.Types.Enums.Attributes
         /// Gets the value.
         /// </summary>
         public String Value { get; }
-        
+
         /// <summary>
         /// Gets the index.
         /// </summary>

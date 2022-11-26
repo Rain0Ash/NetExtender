@@ -23,9 +23,9 @@ namespace NetExtender.Types.Disposable
     public class DisposeCollection<T> : ICollection<T>, IReadOnlyCollection<T>, IDisposable where T : IDisposable
     {
         private ConcurrentDictionary<T, Boolean> Internal { get; }
-        
+
         public Boolean Active { get; set; }
-        
+
         public Int32 Count
         {
             get
@@ -46,7 +46,7 @@ namespace NetExtender.Types.Disposable
         {
             Internal = new ConcurrentDictionary<T, Boolean>(ReferenceEqualityComparer<T>.Default);
         }
-        
+
         public DisposeCollection(IEnumerable<T> source)
         {
             if (source is null)
@@ -87,7 +87,7 @@ namespace NetExtender.Types.Disposable
                 Dispose();
                 return;
             }
-            
+
             Internal.Clear();
         }
 
@@ -113,11 +113,11 @@ namespace NetExtender.Types.Disposable
             GC.SuppressFinalize(this);
         }
     }
-    
+
     public class AsyncDisposeCollection<T> : ICollection<T>, IReadOnlyCollection<T>, IAsyncDisposable where T : IAsyncDisposable
     {
         private ConcurrentDictionary<T, Boolean> Internal { get; }
-        
+
         public Int32 Count
         {
             get
@@ -138,7 +138,7 @@ namespace NetExtender.Types.Disposable
         {
             Internal = new ConcurrentDictionary<T, Boolean>(ReferenceEqualityComparer<T>.Default);
         }
-        
+
         public AsyncDisposeCollection(IEnumerable<T> source)
         {
             if (source is null)
@@ -183,7 +183,7 @@ namespace NetExtender.Types.Disposable
         {
             return GetEnumerator();
         }
-        
+
         public async ValueTask DisposeAsync()
         {
             await this.DisposeAllAsync();

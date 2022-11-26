@@ -84,7 +84,7 @@ namespace NetExtender.Types.Random
             : this(capacity, RandomUtilities.Create())
         {
         }
-        
+
         public RandomSelectorBuilder(Int32 capacity, Int32 seed)
             : this(capacity, RandomUtilities.Create(seed))
         {
@@ -94,13 +94,13 @@ namespace NetExtender.Types.Random
             : this(null, random)
         {
         }
-        
+
         public RandomSelectorBuilder(Int32 capacity, IRandom random)
         {
             Random = random ?? throw new ArgumentNullException(nameof(random));
             Items = new IndexDictionary<T, Double>(capacity.Clamp(8, Int32.MaxValue));
         }
-        
+
         public RandomSelectorBuilder(IEnumerable<KeyValuePair<T, Double>>? items)
             : this(items.Materialize())
         {
@@ -149,7 +149,7 @@ namespace NetExtender.Types.Random
         {
             Items.TrimExcess();
         }
-        
+
         public void TrimExcess(Int32 capacity)
         {
             Items.TrimExcess(capacity);
@@ -164,47 +164,47 @@ namespace NetExtender.Types.Random
         {
             return Items.ContainsKey(key);
         }
-        
+
         public Boolean Contains(KeyValuePair<T, Double> item)
         {
             return Items.Contains(item);
         }
-        
+
         public Int32 IndexOf(T key)
         {
             return Items.IndexOf(key);
         }
-        
+
         public Int32 IndexOf(T key, Int32 index)
         {
             return Items.IndexOf(key, index);
         }
-        
+
         public Int32 IndexOf(T key, Int32 index, Int32 count)
         {
             return Items.IndexOf(key, index, count);
         }
-        
+
         public Int32 LastIndexOf(T key)
         {
             return Items.LastIndexOf(key);
         }
-        
+
         public Int32 LastIndexOf(T key, Int32 index)
         {
             return Items.LastIndexOf(key, index);
         }
-        
+
         public Int32 LastIndexOf(T key, Int32 index, Int32 count)
         {
             return Items.LastIndexOf(key, index, count);
         }
-        
+
         public Boolean TryGetValue(T key, out Double value)
         {
             return Items.TryGetValue(key, out value);
         }
-        
+
         public T GetKeyByIndex(Int32 index)
         {
             return Items.GetKeyByIndex(index);
@@ -245,7 +245,7 @@ namespace NetExtender.Types.Random
                     Items[item] += weight;
                     return;
                 }
-            
+
                 Items.Add(item, weight);
                 Rebuild = true;
             }
@@ -255,7 +255,7 @@ namespace NetExtender.Types.Random
         {
             Add(item.Key, item.Value);
         }
-        
+
         public void Add(IEnumerable<KeyValuePair<T, Double>> items)
         {
             if (items is null)
@@ -275,7 +275,7 @@ namespace NetExtender.Types.Random
                 Rebuild |= any;
             }
         }
-        
+
         public void Insert(T item, Double weight)
         {
             Insert(0, item, weight);
@@ -295,7 +295,7 @@ namespace NetExtender.Types.Random
                     Items[item] += weight;
                     return;
                 }
-            
+
                 Items.Insert(item, weight);
                 Rebuild = true;
             }
@@ -320,7 +320,7 @@ namespace NetExtender.Types.Random
                     Items[item] += weight;
                     return true;
                 }
-            
+
                 Items.Insert(item, weight);
                 Rebuild = true;
                 return true;
@@ -354,25 +354,25 @@ namespace NetExtender.Types.Random
             Rebuild = true;
             return true;
         }
-        
+
         public Boolean Remove(KeyValuePair<T, Double> item)
         {
             if (!Items.Remove(item))
             {
                 return false;
             }
-            
+
             Rebuild = true;
             return true;
         }
-        
+
         public Boolean RemoveAt(Int32 index)
         {
             if (!Items.RemoveAt(index))
             {
                 return false;
             }
-            
+
             Rebuild = true;
             return true;
         }
@@ -383,11 +383,11 @@ namespace NetExtender.Types.Random
             {
                 return false;
             }
-            
+
             Rebuild = true;
             return true;
         }
-        
+
         public void Swap(Int32 index1, Int32 index2)
         {
             Items.Swap(index1, index2);
@@ -453,10 +453,10 @@ namespace NetExtender.Types.Random
             {
                 return Default;
             }
-            
+
             T[] items;
             Double[] cda;
-            
+
             lock (Items)
             {
                 Int32 count = Items.Count;
@@ -509,7 +509,7 @@ namespace NetExtender.Types.Random
         {
             return Build().GetRandomOrDefault(alternate);
         }
-        
+
         [return: NotNullIfNotNull("alternate")]
         public override T? GetRandomOrDefault(Double value, T? alternate)
         {
@@ -540,7 +540,7 @@ namespace NetExtender.Types.Random
         {
             return Items.GetEnumerator();
         }
-        
+
         public IEnumerator<T> GetKeyEnumerator()
         {
             return Items.GetKeyEnumerator();
@@ -555,7 +555,7 @@ namespace NetExtender.Types.Random
         {
             return GetEnumerator();
         }
-        
+
         public Double this[T key]
         {
             get
@@ -569,7 +569,7 @@ namespace NetExtender.Types.Random
                     Rebuild |= Items.Remove(key);
                     return;
                 }
-                
+
                 Items[key] = value;
                 Rebuild = true;
             }

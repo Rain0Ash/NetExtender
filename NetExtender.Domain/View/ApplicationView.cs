@@ -141,7 +141,7 @@ namespace NetExtender.Domains.View
             {
                 Domain.ShutdownMode = mode.Value;
             }
-            
+
             Initialize();
         }
 

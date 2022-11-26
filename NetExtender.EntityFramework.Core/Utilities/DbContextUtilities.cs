@@ -51,7 +51,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
             }
 
             using TransactionScope transaction = new TransactionScope(TransactionScopeOption.Required, TransactionParameters.ReadUncommitted);
-            
+
             T? result = action(context);
             transaction.Complete();
 
@@ -76,7 +76,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
             }
 
             using TransactionScope transaction = new TransactionScope(option);
-            
+
             T? result = action(context);
             transaction.Complete();
 
@@ -98,7 +98,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
             TEntity? entity = context.Find<TEntity>(keys);
             return entity is not null ? context.Remove(entity) : null;
         }
-        
+
         public static String? GetTableName<TEntity>(this DbContext context)
         {
             if (context is null)
@@ -108,7 +108,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 
             return context.Model.GetTableName<TEntity>();
         }
-        
+
         public static String? GetTableName(this DbContext context, Type type)
         {
             if (context is null)
@@ -146,7 +146,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                 {
                     transaction.Commit();
                 }
-                
+
                 return result;
             }
             catch (Exception)
@@ -190,7 +190,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                 {
                     await transaction.CommitAsync();
                 }
-                
+
                 return result;
             }
             catch
@@ -211,7 +211,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                 }
             }
         }
-        
+
         private const String RowVersion = nameof(IConcurrencyCheckableEntity<Guid>.RowVersion);
 
         private static void UpdateRowVersion(EntityEntry entity)
@@ -381,7 +381,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                     {
                         throw;
                     }
-                    
+
                     EntityEntry entity = exception.Entries.Single();
                     PropertyValues? values = entity.GetDatabaseValues();
                     entity.OriginalValues.SetValues(values!);
@@ -427,7 +427,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                     {
                         throw;
                     }
-                    
+
                     token.ThrowIfCancellationRequested();
                     EntityEntry entity = exception.Entries.Single();
                     PropertyValues? values = await entity.GetDatabaseValuesAsync(token);
@@ -489,7 +489,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
             {
                 throw new ArgumentNullException(nameof(entity));
             }
-            
+
             switch (entity.State)
             {
                 case EntityState.Added when entity.Entity is ICreationAuditableEntity<T> auditable:
@@ -650,7 +650,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
             {
                 TransactionLogContext transaction = new TransactionLogContext(context);
                 Int32 count = changes.Invoke(accept);
-                
+
                 transaction.AddTransactionLogEntities();
                 changes.Invoke(accept);
                 return count;
@@ -688,7 +688,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
             {
                 TransactionLogContext transaction = new TransactionLogContext(context);
                 Int32 count = await changes.Invoke(accept, token);
-                
+
                 transaction.AddTransactionLogEntities();
                 await changes.Invoke(accept, token);
                 return count;

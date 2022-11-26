@@ -16,9 +16,9 @@ namespace NetExtender.Windows.Protocols
     public class AutorunProtocol : ProtocolRegistration
     {
         private const String ShellSubKey = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
-        
+
         public String Path { get; }
-        
+
         public override ProtocolStatus Status
         {
             get
@@ -54,7 +54,7 @@ namespace NetExtender.Windows.Protocols
             : this(ApplicationUtilities.Path ?? throw new InitializeException(), ApplicationUtilities.FriendlyName ?? throw new InitializeException())
         {
         }
-        
+
         public AutorunProtocol(String path, String name)
             : base(name)
         {
@@ -62,7 +62,7 @@ namespace NetExtender.Windows.Protocols
             {
                 throw new ArgumentException("Value cannot be null or empty.", nameof(path));
             }
-            
+
             if (String.IsNullOrWhiteSpace(name))
             {
                 throw new ArgumentException("Value cannot be null or whitespace.", nameof(name));
@@ -91,7 +91,7 @@ namespace NetExtender.Windows.Protocols
                 {
                     return false;
                 }
-                
+
                 registry.SetValue(Name, Path);
                 return true;
             }
@@ -107,7 +107,7 @@ namespace NetExtender.Windows.Protocols
             {
                 return true;
             }
-            
+
             try
             {
                 using RegistryKey? registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(ShellSubKey, RegistryRights.Delete);

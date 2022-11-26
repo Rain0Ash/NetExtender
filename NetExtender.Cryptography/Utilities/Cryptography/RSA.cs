@@ -19,13 +19,13 @@ namespace NetExtender.Utilities.Cryptography
         /// <summary>X.509</summary>
         SubjectPublic
     }
-    
+
     public static partial class CryptographyUtilities
     {
         public static class RSA
         {
             public const RSAKeyType DefaultRSAKeyType = RSAKeyType.RSA;
-            
+
             public static Rsa Create(ReadOnlySpan<Byte> key, RSAKeyType type = DefaultRSAKeyType, RSAParameters? parameters = null)
             {
                 Rsa rsa = parameters is null ? Rsa.Create() : Rsa.Create(parameters.Value);
@@ -44,7 +44,7 @@ namespace NetExtender.Utilities.Cryptography
                 {
                     throw new ArgumentException($@"Invalid key size: {size}", nameof(key));
                 }
-                
+
                 switch (type)
                 {
                     case RSAKeyType.RSA:
@@ -72,7 +72,7 @@ namespace NetExtender.Utilities.Cryptography
 
                 return Encrypt(text, rsa);
             }
-            
+
             public static String? Encrypt(String? text, Rsa rsa)
             {
                 if (text is null)
@@ -121,7 +121,7 @@ namespace NetExtender.Utilities.Cryptography
                     return null;
                 }
             }
-            
+
             public static Byte[] Encrypt(Byte[] data, ReadOnlySpan<Byte> key, RSAKeyType type = DefaultRSAKeyType, RSAParameters? parameters = null)
             {
                 if (data is null)
@@ -175,7 +175,7 @@ namespace NetExtender.Utilities.Cryptography
 
                 return rsa.Decrypt(data);
             }
-            
+
             public static Rsa Clone(Rsa rsa)
             {
                 if (rsa is null)

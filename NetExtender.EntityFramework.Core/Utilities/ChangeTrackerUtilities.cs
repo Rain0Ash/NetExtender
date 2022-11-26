@@ -18,7 +18,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 
             return tracker.Entries();
         }
-        
+
         public static IEnumerable<EntityEntry<T>> AsEnumerable<T>(this ChangeTracker tracker) where T : class
         {
             if (tracker is null)

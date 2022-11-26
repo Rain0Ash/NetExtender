@@ -24,14 +24,14 @@ namespace NetExtender.Configuration.Utilities
 
             return new ReadOnlyConfigPropertyWrapper(property);
         }
-        
+
         public static IReadOnlyConfigProperty<T> AsReadOnly<T>(this IConfigProperty<T> property)
         {
             if (property is null)
             {
                 throw new ArgumentNullException(nameof(property));
             }
-            
+
             return new ReadOnlyConfigPropertyWrapper<T>(property);
         }
 
@@ -39,12 +39,12 @@ namespace NetExtender.Configuration.Utilities
         {
             return Converter(property, default(T));
         }
-        
+
         public static IReadOnlyConfigProperty<T?> Converter<T>(this IReadOnlyConfigProperty property, Func<T, Boolean>? validate)
         {
             return Converter<T>(property, validate, null);
         }
-        
+
         public static IReadOnlyConfigProperty<T?> Converter<T>(this IReadOnlyConfigProperty property, TryConverter<String?, T>? converter)
         {
             return Converter(property, null, converter);
@@ -59,17 +59,17 @@ namespace NetExtender.Configuration.Utilities
         {
             return Converter(property, alternate, null, null);
         }
-        
+
         public static IReadOnlyConfigProperty<T> Converter<T>(this IReadOnlyConfigProperty property, T alternate, Func<T, Boolean>? validate)
         {
             return Converter(property, alternate, validate, null);
         }
-        
+
         public static IReadOnlyConfigProperty<T> Converter<T>(this IReadOnlyConfigProperty property, T alternate, TryConverter<String?, T>? converter)
         {
             return Converter(property, alternate, null, converter);
         }
-        
+
         public static IReadOnlyConfigProperty<T> Converter<T>(this IReadOnlyConfigProperty property, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter)
         {
             if (property is null)
@@ -79,17 +79,17 @@ namespace NetExtender.Configuration.Utilities
 
             return new ReadOnlyConfigProperty<T>(property, alternate, validate, converter);
         }
-        
+
         public static IConfigProperty<T?> Converter<T>(this IConfigProperty property)
         {
             return Converter(property, default(T));
         }
-        
+
         public static IConfigProperty<T?> Converter<T>(this IConfigProperty property, Func<T, Boolean>? validate)
         {
             return Converter<T>(property, validate, null);
         }
-        
+
         public static IConfigProperty<T?> Converter<T>(this IConfigProperty property, TryConverter<String?, T>? converter)
         {
             return Converter(property, null, converter);
@@ -99,22 +99,22 @@ namespace NetExtender.Configuration.Utilities
         {
             return Converter(property, default, validate!, converter!);
         }
-        
+
         public static IConfigProperty<T> Converter<T>(this IConfigProperty property, T alternate)
         {
             return Converter(property, alternate, null, null);
         }
-        
+
         public static IConfigProperty<T> Converter<T>(this IConfigProperty property, T alternate, Func<T, Boolean>? validate)
         {
             return Converter(property, alternate, validate, null);
         }
-        
+
         public static IConfigProperty<T> Converter<T>(this IConfigProperty property, T alternate, TryConverter<String?, T>? converter)
         {
             return Converter(property, alternate, null, converter);
         }
-        
+
         public static IConfigProperty<T> Converter<T>(this IConfigProperty property, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter)
         {
             if (property is null)
@@ -124,7 +124,7 @@ namespace NetExtender.Configuration.Utilities
 
             return new ConfigProperty<T>(property, alternate, validate, converter);
         }
-        
+
         public static T? GetValue<T>(this IReadOnlyConfigProperty property, TryConverter<String?, T>? converter)
         {
             if (property is null)
@@ -172,7 +172,7 @@ namespace NetExtender.Configuration.Utilities
 
             return GetValueAsync(property, converter?.Invoke(property.Alternate, out T? result) == true ? result : default, converter!, token);
         }
-        
+
         public static Task<T> GetValueAsync<T>(this IReadOnlyConfigProperty property, T alternate)
         {
             return GetValueAsync(property, alternate, CancellationToken.None);
@@ -205,7 +205,7 @@ namespace NetExtender.Configuration.Utilities
             converter ??= ConvertUtilities.TryConvert;
             return converter(value, out T? result) ? result : alternate;
         }
-        
+
         public static T? GetValue<T>(this IConfigProperty property, TryConverter<String?, T>? converter)
         {
             if (property is null)
@@ -238,7 +238,7 @@ namespace NetExtender.Configuration.Utilities
             converter ??= ConvertUtilities.TryConvert;
             return converter(value, out T? result) ? result : alternate;
         }
-        
+
         public static Task<T?> GetValueAsync<T>(this IConfigProperty property, TryConverter<String?, T>? converter)
         {
             return GetValueAsync(property, converter, CancellationToken.None);
@@ -253,7 +253,7 @@ namespace NetExtender.Configuration.Utilities
 
             return GetValueAsync(property, converter?.Invoke(property.Alternate, out T? result) == true ? result : default, converter!, token);
         }
-        
+
         public static Task<T> GetValueAsync<T>(this IConfigProperty property, T alternate)
         {
             return GetValueAsync(property, alternate, CancellationToken.None);
@@ -298,7 +298,7 @@ namespace NetExtender.Configuration.Utilities
             {
                 return property.SetValue(null);
             }
-            
+
             String? convert = value.GetString();
             return convert is not null && property.SetValue(convert);
         }
@@ -319,7 +319,7 @@ namespace NetExtender.Configuration.Utilities
             {
                 return await property.SetValueAsync(null, token);
             }
-            
+
             String? convert = value.GetString();
             return convert is not null && await property.SetValueAsync(convert, token);
         }
@@ -328,17 +328,17 @@ namespace NetExtender.Configuration.Utilities
         {
             return GetConfigurationProperty(config, key, (IEnumerable<String>?) sections);
         }
-        
+
         public static IReadOnlyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, IEnumerable<String>? sections)
         {
             return GetConfigurationProperty(config, key, null, sections);
         }
-        
+
         public static IReadOnlyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, ConfigPropertyOptions options, params String[]? sections)
         {
             return GetConfigurationProperty(config, key, options, (IEnumerable<String>?) sections);
         }
-        
+
         public static IReadOnlyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return GetConfigurationProperty(config, key, null, options, sections);
@@ -358,27 +358,27 @@ namespace NetExtender.Configuration.Utilities
         {
             return GetConfigurationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
         }
-        
+
         public static IReadOnlyConfigProperty GetConfigurationProperty(this IReadOnlyConfig config, String? key, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ReadOnlyConfigProperty(config, key, alternate, options, sections);
         }
-        
+
         public static IConfigProperty GetConfigurationProperty(this IConfig config, String? key, params String[]? sections)
         {
             return GetConfigurationProperty(config, key, (IEnumerable<String>?) sections);
         }
-        
+
         public static IConfigProperty GetConfigurationProperty(this IConfig config, String? key, IEnumerable<String>? sections)
         {
             return GetConfigurationProperty(config, key, null, sections);
         }
-        
+
         public static IConfigProperty GetConfigurationProperty(this IConfig config, String? key, ConfigPropertyOptions options, params String[]? sections)
         {
             return GetConfigurationProperty(config, key, options, (IEnumerable<String>?) sections);
         }
-        
+
         public static IConfigProperty GetConfigurationProperty(this IConfig config, String? key, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return GetConfigurationProperty(config, key, null, options, sections);
@@ -398,27 +398,27 @@ namespace NetExtender.Configuration.Utilities
         {
             return GetConfigurationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
         }
-        
+
         public static IConfigProperty GetConfigurationProperty(this IConfig config, String? key, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ConfigProperty(config, key, alternate, options, sections);
         }
-        
+
         public static IReadOnlyConfigProperty GetReadOnlyConfigurationProperty(this IConfig config, String? key, params String[]? sections)
         {
             return GetReadOnlyConfigurationProperty(config, key, (IEnumerable<String>?) sections);
         }
-        
+
         public static IReadOnlyConfigProperty GetReadOnlyConfigurationProperty(this IConfig config, String? key, IEnumerable<String>? sections)
         {
             return GetReadOnlyConfigurationProperty(config, key, null, sections);
         }
-        
+
         public static IReadOnlyConfigProperty GetReadOnlyConfigurationProperty(this IConfig config, String? key, ConfigPropertyOptions options, params String[]? sections)
         {
             return GetReadOnlyConfigurationProperty(config, key, options, (IEnumerable<String>?) sections);
         }
-        
+
         public static IReadOnlyConfigProperty GetReadOnlyConfigurationProperty(this IConfig config, String? key, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return GetReadOnlyConfigurationProperty(config, key, null, options, sections);
@@ -438,17 +438,17 @@ namespace NetExtender.Configuration.Utilities
         {
             return GetReadOnlyConfigurationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
         }
-        
+
         public static IReadOnlyConfigProperty GetReadOnlyConfigurationProperty(this IConfig config, String? key, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ReadOnlyConfigPropertyWrapper(config, key, alternate, options, sections);
         }
-        
+
         public static IReadOnlyConfigProperty<T?> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, params String[]? sections)
         {
             return GetConfigurationProperty<T>(config, key, (IEnumerable<String>?) sections);
         }
-        
+
         public static IReadOnlyConfigProperty<T?> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, IEnumerable<String>? sections)
         {
             return GetConfigurationProperty(config, key, default(T), sections);
@@ -468,7 +468,7 @@ namespace NetExtender.Configuration.Utilities
         {
             return GetConfigurationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
         }
-        
+
         public static IReadOnlyConfigProperty<T> GetConfigurationProperty<T>(this IReadOnlyConfig config, String? key, T alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return GetConfigurationProperty(config, key, alternate, null, options, sections);
@@ -503,12 +503,12 @@ namespace NetExtender.Configuration.Utilities
         {
             return new ReadOnlyConfigProperty<T>(config, key, alternate, validate, converter, options, sections);
         }
-        
+
         public static IConfigProperty<T?> GetConfigurationProperty<T>(this IConfig config, String? key, params String[]? sections)
         {
             return GetConfigurationProperty<T>(config, key, (IEnumerable<String>?) sections);
         }
-        
+
         public static IConfigProperty<T?> GetConfigurationProperty<T>(this IConfig config, String? key, IEnumerable<String>? sections)
         {
             return GetConfigurationProperty(config, key, default(T), sections);
@@ -528,7 +528,7 @@ namespace NetExtender.Configuration.Utilities
         {
             return GetConfigurationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
         }
-        
+
         public static IConfigProperty<T> GetConfigurationProperty<T>(this IConfig config, String? key, T alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return GetConfigurationProperty(config, key, alternate, null, options, sections);
@@ -563,12 +563,12 @@ namespace NetExtender.Configuration.Utilities
         {
             return new ConfigProperty<T>(config, key, alternate, validate, converter, options, sections);
         }
-        
+
         public static IReadOnlyConfigProperty<T?> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, params String[]? sections)
         {
             return GetReadOnlyConfigurationProperty<T>(config, key, (IEnumerable<String>?) sections);
         }
-        
+
         public static IReadOnlyConfigProperty<T?> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, IEnumerable<String>? sections)
         {
             return GetReadOnlyConfigurationProperty(config, key, default(T), sections);
@@ -588,7 +588,7 @@ namespace NetExtender.Configuration.Utilities
         {
             return GetReadOnlyConfigurationProperty(config, key, alternate, options, (IEnumerable<String>?) sections);
         }
-        
+
         public static IReadOnlyConfigProperty<T> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, T alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return GetReadOnlyConfigurationProperty(config, key, alternate, null, options, sections);

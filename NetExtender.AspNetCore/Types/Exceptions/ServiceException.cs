@@ -21,7 +21,7 @@ namespace NetExtender.AspNetCore.Types.Exceptions
             : base(message)
         {
         }
-        
+
         public ServiceException(String message, Exception innerException)
             : base(message, innerException)
         {
@@ -31,13 +31,13 @@ namespace NetExtender.AspNetCore.Types.Exceptions
         {
             StatusCode = code;
         }
-        
+
         public ServiceException(HttpStatusCode code, String message)
             : base(message)
         {
             StatusCode = code;
         }
-        
+
         public ServiceException(HttpStatusCode code, String message, Exception innerException)
             : base(message, innerException)
         {
@@ -49,7 +49,7 @@ namespace NetExtender.AspNetCore.Types.Exceptions
         {
             StatusCode = info.GetValueOrDefault(nameof(StatusCode), HttpStatusCode.InternalServerError);
         }
-        
+
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);

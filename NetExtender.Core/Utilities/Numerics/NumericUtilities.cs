@@ -85,13 +85,13 @@ namespace NetExtender.Utilities.Numerics
             typeof(IntPtr),
             typeof(UIntPtr)
         );
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNumeric<T>() where T : unmanaged
         {
             return Numeric.Contains(typeof(T));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNumeric(this Type type)
         {
@@ -110,7 +110,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             return IsNumeric(type.UnderlyingType);
         }
 
@@ -148,7 +148,7 @@ namespace NetExtender.Utilities.Numerics
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSmall(this IUnderlyingType type)
         {
@@ -179,7 +179,7 @@ namespace NetExtender.Utilities.Numerics
 
             return Signed.Contains(type);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsSigned(this IUnderlyingType type)
         {
@@ -187,7 +187,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             return IsSigned(type.UnderlyingType);
         }
 
@@ -207,7 +207,7 @@ namespace NetExtender.Utilities.Numerics
 
             return Unsigned.Contains(type);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsUnsigned(this IUnderlyingType type)
         {
@@ -215,7 +215,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             return IsUnsigned(type.UnderlyingType);
         }
 
@@ -235,7 +235,7 @@ namespace NetExtender.Utilities.Numerics
 
             return Floating.Contains(type);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsFloating(this IUnderlyingType type)
         {
@@ -243,7 +243,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             return IsFloating(type.UnderlyingType);
         }
 
@@ -263,7 +263,7 @@ namespace NetExtender.Utilities.Numerics
 
             return Integer.Contains(type);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsInteger(this IUnderlyingType type)
         {
@@ -271,7 +271,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             return IsInteger(type.UnderlyingType);
         }
 

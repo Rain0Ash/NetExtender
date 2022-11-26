@@ -13,13 +13,13 @@ namespace NetExtender.Utilities.Types
         {
             return MemoryPool<T>.Shared;
         }
-        
+
         /// <inheritdoc cref="MemoryPool{T}.Rent"/>
         public static IMemoryOwner<T> Rent<T>()
         {
             return GetShared<T>().Rent();
         }
-        
+
         /// <inheritdoc cref="MemoryPool{T}.Rent"/>
         public static IMemoryOwner<T> Rent<T>(Int32 length)
         {

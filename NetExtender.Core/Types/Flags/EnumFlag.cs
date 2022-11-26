@@ -21,17 +21,17 @@ namespace NetExtender.Types.Flags
         {
             return value.Internal.AsUInt64();
         }
-        
+
         public static implicit operator Flag64(EnumFlag<T> value)
         {
             return new Flag64(value);
         }
-        
+
         public static implicit operator EnumFlag<T>(T value)
         {
             return new EnumFlag<T>(value);
         }
-        
+
         public static implicit operator ReadOnlySpan<Byte>(in EnumFlag<T> value)
         {
             fixed (void* pointer = &value)
@@ -39,7 +39,7 @@ namespace NetExtender.Types.Flags
                 return new ReadOnlySpan<Byte>(pointer, sizeof(T) / sizeof(Byte));
             }
         }
-        
+
         public static implicit operator ReadOnlySpan<UInt16>(in EnumFlag<T> value)
         {
             fixed (void* pointer = &value)
@@ -47,7 +47,7 @@ namespace NetExtender.Types.Flags
                 return new ReadOnlySpan<UInt16>(pointer, sizeof(T) / sizeof(UInt16));
             }
         }
-        
+
         public static implicit operator ReadOnlySpan<UInt32>(in EnumFlag<T> value)
         {
             fixed (void* pointer = &value)
@@ -55,7 +55,7 @@ namespace NetExtender.Types.Flags
                 return new ReadOnlySpan<UInt32>(pointer, sizeof(T) / sizeof(UInt32));
             }
         }
-        
+
         public static implicit operator ReadOnlySpan<UInt64>(in EnumFlag<T> value)
         {
             fixed (void* pointer = &value)
@@ -63,52 +63,52 @@ namespace NetExtender.Types.Flags
                 return new ReadOnlySpan<UInt64>(pointer, sizeof(T) / sizeof(UInt64));
             }
         }
-        
+
         public static Boolean operator ==(EnumFlag<T> first, T second)
         {
             return first.Internal.Equals(second);
         }
-        
+
         public static Boolean operator !=(EnumFlag<T> first, T second)
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator ==(EnumFlag<T> first, EnumFlag<T> second)
         {
             return first.Internal.Equals(second.Internal);
         }
-        
+
         public static Boolean operator !=(EnumFlag<T> first, EnumFlag<T> second)
         {
             return !(first == second);
         }
-        
+
         public static EnumFlag<T> operator |(EnumFlag<T> first, EnumFlag<T> second)
         {
             return new EnumFlag<T>(first.Internal.AsUInt64() | second.Internal.AsUInt64());
         }
-        
+
         public static EnumFlag<T> operator &(EnumFlag<T> first, EnumFlag<T> second)
         {
             return new EnumFlag<T>(first.Internal.AsUInt64() & second.Internal.AsUInt64());
         }
-        
+
         public static EnumFlag<T> operator ^(EnumFlag<T> first, EnumFlag<T> second)
         {
             return new EnumFlag<T>(first.Internal.AsUInt64() ^ second.Internal.AsUInt64());
         }
-        
+
         public static EnumFlag<T> operator ~(EnumFlag<T> value)
         {
             return new EnumFlag<T>(~value.Internal.AsUInt64());
         }
-        
+
         public static EnumFlag<T> operator <<(EnumFlag<T> value, Int32 shift)
         {
             return new EnumFlag<T>(value.Internal.AsUInt64() << shift);
         }
-        
+
         public static EnumFlag<T> operator >>(EnumFlag<T> value, Int32 shift)
         {
             return new EnumFlag<T>(value.Internal.AsUInt64() >> shift);
@@ -121,7 +121,7 @@ namespace NetExtender.Types.Flags
                 return sizeof(EnumFlag<T>);
             }
         }
-        
+
         public Int32 Count
         {
             get
@@ -129,7 +129,7 @@ namespace NetExtender.Types.Flags
                 return Size * BitUtilities.BitInByte;
             }
         }
-        
+
         public Int32 PopCount
         {
             get
@@ -149,12 +149,12 @@ namespace NetExtender.Types.Flags
         {
             Internal = value;
         }
-        
+
         public ReadOnlySpan<Byte> AsSpan()
         {
             return this;
         }
-        
+
         public Boolean HasFlag(ReadOnlySpan<Byte> value)
         {
             Int32 i = 0;
@@ -165,10 +165,10 @@ namespace NetExtender.Types.Flags
                     return false;
                 }
             }
-            
+
             return true;
         }
-        
+
         public Boolean HasFlag(T value)
         {
             UInt64 result = value.AsUInt64();
@@ -256,12 +256,12 @@ namespace NetExtender.Types.Flags
         {
             return other is not null && Equals(other.AsSpan());
         }
-        
+
         public override String ToString()
         {
             return Internal.ToString();
         }
-        
+
         public IEnumerable<Int32> Enumerate()
         {
             Byte[] values = AsSpan().ToArray();
@@ -281,12 +281,12 @@ namespace NetExtender.Types.Flags
                 }
             }
         }
-        
+
         public IEnumerable<TEnum> Enumerate<TEnum>() where TEnum : unmanaged, Enum
         {
             return Enumerate().Select(item => Unsafe.As<Int32, TEnum>(ref item));
         }
-        
+
         public IEnumerator<Boolean> GetEnumerator()
         {
             for (Int32 i = 0; i < Count; i++)

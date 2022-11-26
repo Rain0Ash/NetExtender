@@ -54,7 +54,7 @@ namespace NetExtender.Types.Numerics
         {
             return new AngleRadian(radian);
         }
-        
+
         /// <summary>
         /// Indicates whether two <see cref="AngleRadian"/> instances are equal.
         /// </summary>
@@ -78,7 +78,7 @@ namespace NetExtender.Types.Numerics
         {
             return Math.Abs(first.Radian - second.Radian) >= Double.Epsilon;
         }
-        
+
         /// <summary>
         /// Indicates whether a specified <see cref="AngleRadian"/> is less than another specified <see cref="AngleRadian"/>.
         /// </summary>
@@ -90,7 +90,7 @@ namespace NetExtender.Types.Numerics
         {
             return first.Radian < second.Radian;
         }
-        
+
         /// <summary>
         /// Indicates whether a specified <see cref="AngleRadian"/> is greater than another specified <see cref="AngleRadian"/>.
         /// </summary>
@@ -126,7 +126,7 @@ namespace NetExtender.Types.Numerics
         {
             return first.Radian >= second.Radian;
         }
-        
+
         /// <summary>
         /// Negates an angle.
         /// </summary>
@@ -137,7 +137,7 @@ namespace NetExtender.Types.Numerics
         {
             return new AngleRadian(-angle.Radian);
         }
-        
+
         /// <summary>
         /// Subtracts a angle from a angle.  
         /// </summary>
@@ -185,7 +185,7 @@ namespace NetExtender.Types.Numerics
         {
             return new AngleRadian(first.Radian / second);
         }
-        
+
         /// <summary>
         /// Modulo a angle by a scalar value. 
         /// </summary>
@@ -197,7 +197,7 @@ namespace NetExtender.Types.Numerics
         {
             return new AngleRadian(first.Radian % second);
         }
-        
+
         /// <summary>
         /// Gets the amplitude of the angle in radians.
         /// </summary>
@@ -207,7 +207,7 @@ namespace NetExtender.Types.Numerics
         {
             Radian = radian;
         }
-        
+
         [Pure]
         public Int32 CompareTo(AngleRadian other)
         {
@@ -263,7 +263,7 @@ namespace NetExtender.Types.Numerics
         {
             return Radian.GetHashCode();
         }
-        
+
         /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
@@ -272,7 +272,7 @@ namespace NetExtender.Types.Numerics
         {
             return Radian.ToString();
         }
-        
+
         /// <summary>
         /// Converts the value of the current <see cref="AngleRadian"/> object to its equivalent string representation, using a specified format.
         /// </summary>

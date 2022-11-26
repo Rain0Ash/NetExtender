@@ -15,15 +15,15 @@ namespace NetExtender.Utilities.Types
             {
                 return ToGCHandle(handle);
             }
-            
+
             return GCHandle.Alloc(obj);
         }
-        
+
         public static GCHandle ToGCHandle(this GCHandle handle)
         {
             return handle;
         }
-        
+
         public static IntPtr ToIntPtr(this Object obj)
         {
             return ToGCHandle(obj).ToIntPtr();
@@ -40,7 +40,7 @@ namespace NetExtender.Utilities.Types
             {
                 return ToGCHandleProvider(handle);
             }
-            
+
             return new GCHandleProvider(obj);
         }
 

@@ -43,7 +43,7 @@ namespace NetExtender.Types.TextReaders
             Reader = reader ?? throw new ArgumentNullException(nameof(reader));
             Disposing = disposing;
         }
-        
+
         public Boolean MoveNext()
         {
             return (Line = Reader.ReadLine()) is not null;
@@ -53,7 +53,7 @@ namespace NetExtender.Types.TextReaders
         {
             return (Line = await Reader.ReadLineAsync()) is not null;
         }
-        
+
         void IEnumerator.Reset()
         {
             throw new NotSupportedException();
@@ -73,7 +73,7 @@ namespace NetExtender.Types.TextReaders
         {
             return this;
         }
-        
+
         public void Dispose()
         {
             if (Disposing)

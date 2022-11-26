@@ -19,7 +19,7 @@ namespace NetExtender.Domains.Windows.Service.AspNetCore.Views
             : base(new T())
         {
         }
-        
+
         public AspNetCoreWindowsServiceView(T host)
             : base(host)
         {
@@ -29,12 +29,12 @@ namespace NetExtender.Domains.Windows.Service.AspNetCore.Views
     public class AspNetCoreWindowsServiceView : AspNetCoreView
     {
         protected new IHost? Context { get; set; }
-        
+
         public AspNetCoreWindowsServiceView(IHost host)
             : base(host)
         {
         }
-        
+
         public AspNetCoreWindowsServiceView(Action<IWebHostBuilder> builder)
             : base(builder)
         {
@@ -57,7 +57,7 @@ namespace NetExtender.Domains.Windows.Service.AspNetCore.Views
             {
                 throw new ArgumentException($"{nameof(host)} not reference equals with {nameof(Context)}");
             }
-            
+
             AspNetCoreWindowsServiceApplication application = Domain.Current.Application.As<AspNetCoreWindowsServiceApplication>();
             await application.RunAsync(Context, token);
             return this;

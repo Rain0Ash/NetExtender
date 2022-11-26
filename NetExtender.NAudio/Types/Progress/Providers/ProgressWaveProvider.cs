@@ -10,7 +10,7 @@ namespace NetExtender.NAudio.Types.Progress
     {
         protected IWaveProvider Provider { get; }
         protected Action<Int64> Callback { get; }
-        
+
         public WaveFormat WaveFormat
         {
             get
@@ -18,15 +18,15 @@ namespace NetExtender.NAudio.Types.Progress
                 return Provider.WaveFormat;
             }
         }
-        
+
         protected virtual Int64 Total { get; set; }
-        
+
         public ProgressWaveProvider(IWaveProvider provider, Action<Int64> callback)
         {
             Provider = provider ?? throw new ArgumentNullException(nameof(provider));
             Callback = callback ?? throw new ArgumentNullException(nameof(callback));
         }
-        
+
         public Int32 Read(Byte[] buffer, Int32 offset, Int32 count)
         {
             Int32 read = Provider.Read(buffer, offset, count);

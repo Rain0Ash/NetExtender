@@ -33,7 +33,7 @@ namespace NetExtender.NewtonSoft
                 .GetMethod(nameof(CreateProperty), new[]{typeof(MemberInfo), typeof(MemberSerialization)})?
                 .CreateDelegate<CreatePropertyHandler>() ?? base.CreateProperty;
         }
-        
+
         public PropertyContractResolver()
             : this(null)
         {
@@ -74,7 +74,7 @@ namespace NetExtender.NewtonSoft
 
             return this;
         }
-        
+
         public PropertyContractResolver IgnoreProperty(Type type, String property)
         {
             if (type is null)
@@ -86,7 +86,7 @@ namespace NetExtender.NewtonSoft
             {
                 throw new ArgumentException(@"Value cannot be null or empty.", nameof(property));
             }
-            
+
             if (!Ignore.ContainsKey(type))
             {
                 Ignore[type] = new HashSet<String>();
@@ -96,7 +96,7 @@ namespace NetExtender.NewtonSoft
 
             return this;
         }
-        
+
         public PropertyContractResolver IgnoreProperty(Type type, params String?[] properties)
         {
             if (type is null)

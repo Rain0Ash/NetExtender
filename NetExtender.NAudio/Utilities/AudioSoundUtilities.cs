@@ -11,7 +11,7 @@ namespace NetExtender.Utilities.NAudio
         Aiff,
         Flac
     }
-    
+
     public static class AudioSoundUtilities
     {
     }

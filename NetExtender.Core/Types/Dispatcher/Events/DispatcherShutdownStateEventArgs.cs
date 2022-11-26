@@ -7,7 +7,7 @@ using NetExtender.Types.Events;
 namespace NetExtender.Types.Dispatchers
 {
     public delegate void DispatcherShutdownStateEventHandler(Object? sender, DispatcherShutdownStateEventArgs args);
-    
+
     public class DispatcherShutdownStateEventArgs : HandledEventArgs<DispatcherShutdownState>
     {
         public DispatcherShutdownStateEventArgs(DispatcherShutdownState value)

@@ -12,7 +12,7 @@ namespace NetExtender.Types.Threading
         {
             return mutex?.Mutex;
         }
-        
+
         private Mutex? Mutex { get; set; }
 
         private UInt64 _count = 1;

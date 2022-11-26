@@ -90,7 +90,7 @@ namespace NetExtender.Types.Drawing.Colors
         {
             return $"C:{C} M:{M} Y:{Y} K:{K}";
         }
-        
+
         public String ToString(String? format)
         {
             return ToString(format, null);
@@ -102,7 +102,7 @@ namespace NetExtender.Types.Drawing.Colors
             {
                 return ToString();
             }
-            
+
             String c = C.ToString(provider);
             String m = M.ToString(provider);
             String y = Y.ToString(provider);

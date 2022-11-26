@@ -16,7 +16,7 @@ namespace NetExtender.Windows.Services.Types.Services
                 return this;
             }
         }
-        
+
         protected String[]? Arguments { get; set; }
 
         protected IWindowsServicePauseStateHandler? PauseStateHandler { get; init; }
@@ -69,12 +69,12 @@ namespace NetExtender.Windows.Services.Types.Services
         {
             return false;
         }
-        
+
         protected virtual Boolean FinallyCustomCommandInternalHandler(Int32 command)
         {
             return true;
         }
-        
+
         protected sealed override Boolean OnPowerEvent(PowerBroadcastStatus power)
         {
             try
@@ -120,17 +120,17 @@ namespace NetExtender.Windows.Services.Types.Services
         {
             return true;
         }
-        
+
         protected virtual Boolean ExceptionPowerEventInternalHandler(PowerBroadcastStatus power, Exception exception)
         {
             return false;
         }
-        
+
         protected virtual Boolean FinallyPowerEventInternalHandler(PowerBroadcastStatus power)
         {
             return true;
         }
-        
+
         protected sealed override void OnSessionChange(SessionChangeDescription description)
         {
             try
@@ -144,7 +144,7 @@ namespace NetExtender.Windows.Services.Types.Services
                 {
                     return;
                 }
-            
+
                 AfterSessionChangeInternal(description);
             }
             catch (Exception exception)
@@ -174,12 +174,12 @@ namespace NetExtender.Windows.Services.Types.Services
         {
             return true;
         }
-        
+
         protected virtual Boolean ExceptionSessionChangeInternalHandler(SessionChangeDescription description, Exception exception)
         {
             return false;
         }
-        
+
         protected virtual Boolean FinallySessionChangeInternalHandler(SessionChangeDescription description)
         {
             return true;
@@ -200,7 +200,7 @@ namespace NetExtender.Windows.Services.Types.Services
                 {
                     return;
                 }
-            
+
                 AfterStartInternal(args);
             }
             catch (Exception exception)
@@ -230,17 +230,17 @@ namespace NetExtender.Windows.Services.Types.Services
         {
             return true;
         }
-        
+
         protected virtual Boolean ExceptionStartInternalHandler(String[] args, Exception exception)
         {
             return false;
         }
-        
+
         protected virtual Boolean FinallyStartInternalHandler(String[] args)
         {
             return true;
         }
-        
+
         protected sealed override void OnStop()
         {
             try
@@ -254,7 +254,7 @@ namespace NetExtender.Windows.Services.Types.Services
                 {
                     return;
                 }
-            
+
                 AfterStopInternal();
             }
             catch (Exception exception)
@@ -284,17 +284,17 @@ namespace NetExtender.Windows.Services.Types.Services
         {
             return true;
         }
-        
+
         protected virtual Boolean ExceptionStopInternalHandler(Exception exception)
         {
             return false;
         }
-        
+
         protected virtual Boolean FinallyStopInternalHandler()
         {
             return true;
         }
-        
+
         protected sealed override void OnPause()
         {
             try
@@ -308,7 +308,7 @@ namespace NetExtender.Windows.Services.Types.Services
                 {
                     return;
                 }
-            
+
                 AfterPauseInternal();
             }
             catch (Exception exception)
@@ -335,7 +335,7 @@ namespace NetExtender.Windows.Services.Types.Services
             {
                 return false;
             }
-            
+
             PauseStateHandler.Pause();
             return true;
         }
@@ -344,17 +344,17 @@ namespace NetExtender.Windows.Services.Types.Services
         {
             return true;
         }
-        
+
         protected virtual Boolean ExceptionPauseInternalHandler(Exception exception)
         {
             return false;
         }
-        
+
         protected virtual Boolean FinallyPauseInternalHandler()
         {
             return true;
         }
-        
+
         protected sealed override void OnContinue()
         {
             try
@@ -368,7 +368,7 @@ namespace NetExtender.Windows.Services.Types.Services
                 {
                     return;
                 }
-            
+
                 AfterContinueInternal();
             }
             catch (Exception exception)
@@ -395,7 +395,7 @@ namespace NetExtender.Windows.Services.Types.Services
             {
                 return false;
             }
-            
+
             PauseStateHandler.Resume();
             return true;
         }
@@ -404,12 +404,12 @@ namespace NetExtender.Windows.Services.Types.Services
         {
             return true;
         }
-        
+
         protected virtual Boolean ExceptionContinueInternalHandler(Exception exception)
         {
             return false;
         }
-        
+
         protected virtual Boolean FinallyContinueInternalHandler()
         {
             return true;

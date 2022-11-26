@@ -15,7 +15,7 @@ namespace NetExtender.Types.Lists
     public class IndexList<T> : IIndexList<T>, IReadOnlyIndexList<T>
     {
         protected const Int32 MinimalIndexer = 4;
-        
+
         protected List<T> Internal { get; }
         protected Indexer<T> Indexer { get; }
 
@@ -45,7 +45,7 @@ namespace NetExtender.Types.Lists
                 Internal.Capacity = value;
             }
         }
-        
+
         public Int32 Count
         {
             get
@@ -69,19 +69,19 @@ namespace NetExtender.Types.Lists
                 return ((ICollection<T>) Internal).IsReadOnly;
             }
         }
-        
+
         public IndexList()
         {
             Internal = new List<T>();
             Indexer = new Indexer<T>();
         }
-        
+
         public IndexList(IEqualityComparer<T>? comparer)
         {
             Internal = new List<T>();
             Indexer = new Indexer<T>(comparer);
         }
-        
+
         public IndexList(Int32 capacity)
         {
             Internal = new List<T>(capacity);
@@ -132,7 +132,7 @@ namespace NetExtender.Types.Lists
             {
                 return Indexer.Contains(item);
             }
-            
+
             if (Internal.Count <= MinimalIndexer)
             {
                 return Internal.Contains(item);
@@ -163,7 +163,7 @@ namespace NetExtender.Types.Lists
 
             return Internal.Exists(match);
         }
-        
+
         public Int32 IndexOf(T item)
         {
             if (!Rebuild)
@@ -196,12 +196,12 @@ namespace NetExtender.Types.Lists
         {
             return Internal.IndexOf(item, index, count);
         }
-        
+
         public Int32 LastIndexOf(T item)
         {
             return Internal.LastIndexOf(item);
         }
-        
+
         public Int32 LastIndexOf(T item, Boolean rebuild)
         {
             return Internal.Count <= MinimalIndexer || !rebuild && Rebuild ? Internal.LastIndexOf(item) : LastIndexOf(item);
@@ -216,7 +216,7 @@ namespace NetExtender.Types.Lists
         {
             return Internal.LastIndexOf(item, index, count);
         }
-        
+
         T? IReadOnlyMapIndexer<T>.ValueOf(Int32 index)
         {
             return ((IReadOnlyMapIndexer<T>) this).ValueOf(index, out T? result) ? result : default;
@@ -243,7 +243,7 @@ namespace NetExtender.Types.Lists
 
             return Internal.Find(match);
         }
-        
+
         public IndexList<T> FindAll(Predicate<T> match)
         {
             if (match is null)
@@ -253,7 +253,7 @@ namespace NetExtender.Types.Lists
 
             return new IndexList<T>(Internal.FindAll(match));
         }
-        
+
         public Int32 FindIndex(Predicate<T> match)
         {
             if (match is null)
@@ -280,7 +280,7 @@ namespace NetExtender.Types.Lists
             {
                 throw new ArgumentNullException(nameof(match));
             }
-            
+
             return Internal.FindIndex(startIndex, count, match);
         }
 
@@ -293,7 +293,7 @@ namespace NetExtender.Types.Lists
 
             return Internal.FindLast(match);
         }
-        
+
         public Int32 FindLastIndex(Predicate<T> match)
         {
             if (match is null)
@@ -310,7 +310,7 @@ namespace NetExtender.Types.Lists
             {
                 throw new ArgumentNullException(nameof(match));
             }
-            
+
             return Internal.FindLastIndex(startIndex, match);
         }
 
@@ -320,7 +320,7 @@ namespace NetExtender.Types.Lists
             {
                 throw new ArgumentNullException(nameof(match));
             }
-            
+
             return Internal.FindLastIndex(startIndex, count, match);
         }
 
@@ -330,7 +330,7 @@ namespace NetExtender.Types.Lists
             {
                 throw new ArgumentNullException(nameof(match));
             }
-            
+
             return Internal.TrueForAll(match);
         }
 
@@ -346,20 +346,20 @@ namespace NetExtender.Types.Lists
             Internal.AddRange(collection);
             Rebuild |= Internal.Count != count;
         }
-        
+
         public void Insert(Int32 index, T item)
         {
             Internal.Insert(index, item);
             Rebuild = true;
         }
-        
+
         public void InsertRange(Int32 index, IEnumerable<T> collection)
         {
             Int32 count = Internal.Count;
             Internal.InsertRange(index, collection);
             Rebuild |= Internal.Count != count;
         }
-        
+
         public Boolean Remove(T item)
         {
             if (!Internal.Remove(item))
@@ -370,7 +370,7 @@ namespace NetExtender.Types.Lists
             Rebuild = true;
             return true;
         }
-        
+
         public void RemoveRange(Int32 index, Int32 length)
         {
             Int32 count = Internal.Count;
@@ -395,14 +395,14 @@ namespace NetExtender.Types.Lists
             Rebuild |= count > 0;
             return count;
         }
-        
+
         public void Clear()
         {
             Internal.Clear();
             Indexer.Clear();
             Rebuild = false;
         }
-        
+
         public void Sort()
         {
             Internal.Sort();
@@ -426,7 +426,7 @@ namespace NetExtender.Types.Lists
             Internal.Sort(comparison);
             Rebuild = true;
         }
-        
+
         public void Reverse()
         {
             Internal.Reverse();
@@ -463,7 +463,7 @@ namespace NetExtender.Types.Lists
 
             Internal.ForEach(action);
         }
-        
+
         public void CopyTo(T[] array)
         {
             Internal.CopyTo(array);
@@ -473,7 +473,7 @@ namespace NetExtender.Types.Lists
         {
             Internal.CopyTo(array, arrayIndex);
         }
-        
+
         public void CopyTo(Int32 index, T[] array, Int32 arrayIndex, Int32 count)
         {
             Internal.CopyTo(index, array, arrayIndex, count);
@@ -498,7 +498,7 @@ namespace NetExtender.Types.Lists
         {
             return ((IEnumerable) Internal).GetEnumerator();
         }
-        
+
         public T this[Int32 index]
         {
             get
@@ -511,7 +511,7 @@ namespace NetExtender.Types.Lists
                 Rebuild = true;
             }
         }
-        
+
         Int32 IReadOnlyIndexer<T>.this[T item]
         {
             get

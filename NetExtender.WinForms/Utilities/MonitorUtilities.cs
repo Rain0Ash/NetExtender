@@ -54,10 +54,10 @@ namespace NetExtender.Utilities.Windows
             public Int32 dmPanningHeight;
         }
 #pragma warning restore 649
-        
+
         [DllImport("user32.dll", CharSet = CharSet.Unicode)]
         private static extern Boolean EnumDisplaySettings(String lpszDeviceName, Int32 iModeNum, ref Devmode lpDevMode);
-        
+
         public static Monitor GetMonitor(Int32 id)
         {
             return GetMonitor(Screen.AllScreens[id], id);
@@ -72,7 +72,7 @@ namespace NetExtender.Utilities.Windows
         {
             Devmode devmode = new Devmode {dmSize = (Int16) Marshal.SizeOf(typeof(Devmode))};
             EnumDisplaySettings(screen.DeviceName, -1, ref devmode);
-            
+
             return new Monitor(customID, screen.DeviceName, screen.Bounds, screen.WorkingArea, screen.Bounds, devmode);
         }
 

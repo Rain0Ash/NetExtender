@@ -28,7 +28,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
 
             return null;
         }
-        
+
         private void OnShown(Object? sender, EventArgs args)
         {
             Icon = Owner?.Icon ?? GetLastParentForm()?.Icon ?? Icon;
@@ -45,7 +45,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
             {
                 Shown -= OnShown;
             }
-            
+
             base.Dispose(disposing);
         }
     }

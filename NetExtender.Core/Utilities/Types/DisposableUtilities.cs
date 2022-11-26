@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.Types
                 {
                     continue;
                 }
-                
+
                 try
                 {
                     item.Dispose();
@@ -66,7 +66,7 @@ namespace NetExtender.Utilities.Types
                 {
                     continue;
                 }
-                
+
                 try
                 {
                     await item.DisposeAsync();
@@ -93,7 +93,7 @@ namespace NetExtender.Utilities.Types
             {
                 return async.DisposeAsync();
             }
-            
+
             disposable.Dispose();
             return ValueTask.CompletedTask;
         }

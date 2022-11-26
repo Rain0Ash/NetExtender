@@ -18,7 +18,7 @@ namespace NetExtender.Utilities.Types
         {
             return value;
         }
-        
+
         /// <summary>
         /// Return value or default
         /// </summary>

@@ -9,7 +9,7 @@ namespace NetExtender.Interfaces
     public interface ICopyable : ICopyable<Object>
     {
     }
-    
+
     public interface ICopyable<out T>
     {
         public T? Copy()

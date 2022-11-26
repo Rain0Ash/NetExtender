@@ -15,7 +15,7 @@ namespace NetExtender.Types.Multithreading
                 return CurrentCount > 0;
             }
         }
-        
+
         public MutexSlim()
             : base(1, 1)
         {

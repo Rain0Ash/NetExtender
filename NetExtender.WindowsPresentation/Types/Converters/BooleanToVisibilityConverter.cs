@@ -11,10 +11,10 @@ namespace NetExtender.WindowsPresentation.Types.Converters
         {
             return collapsed ? Collapsed : Hidden;
         }
-        
+
         public static BooleanToVisibilityConverter Collapsed { get; } = new BooleanToVisibilityConverter(true);
         public static BooleanToVisibilityConverter Hidden { get; } = new BooleanToVisibilityConverter(false);
-        
+
         public Boolean FalseIsCollapsed { get; }
 
         public BooleanToVisibilityConverter()

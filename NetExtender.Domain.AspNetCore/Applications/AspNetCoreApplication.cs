@@ -14,7 +14,7 @@ namespace NetExtender.Domains.AspNetCore.Applications
     public class AspNetCoreApplication : Application
     {
         protected IHost? Context { get; set; }
-        
+
         public override IDispatcher? Dispatcher
         {
             get

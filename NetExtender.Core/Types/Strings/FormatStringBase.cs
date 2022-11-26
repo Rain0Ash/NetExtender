@@ -22,7 +22,7 @@ namespace NetExtender.Types.Strings
             {
                 return NonFormatToString(provider);
             }
-            
+
             if (format is null)
             {
                 throw new ArgumentNullException(nameof(format));
@@ -55,7 +55,7 @@ namespace NetExtender.Types.Strings
         {
             return NonFormatToString();
         }
-        
+
         public override String ToString(IFormatProvider? provider)
         {
             return NonFormatToString(provider);

@@ -22,12 +22,12 @@ namespace NetExtender.Initializer
             Algorithm = algorithm;
         }
     }
-    
+
     public static partial class NetExtenderFrameworkInitializer
     {
         //TODO: Autocreate binary hashes
         // ReSharper disable once CollectionNeverUpdated.Local
-        
+
         private static Assembly? Load(String assembly, Boolean isThrow)
         {
             return Load(assembly, null, default, isThrow);
@@ -87,12 +87,12 @@ namespace NetExtender.Initializer
             {
                 throw new CryptographicException($"Can't find cryptography for assembly: '{assembly}'");
             }
-            
+
             if (String.Equals(token, AssemblyVerifyInfo.NetExtenderPublicKeyToken, StringComparison.OrdinalIgnoreCase))
             {
                 return Load(assembly, true)!;
             }
-            
+
             if (strong != false)
             {
                 throw new CryptographicException($"Invalid cryptography for assembly '{assembly}'");
@@ -100,7 +100,7 @@ namespace NetExtender.Initializer
 
             return Load(assembly, true)!;
         }
-        
+
         private static Assembly LoadAssemblyHash(String assembly, Boolean? strong)
         {
             if (Assemblies.TryGetValue(assembly, out AssemblyVerifyInfo? info) && (info is null || info.Hash is not null))
@@ -120,7 +120,7 @@ namespace NetExtender.Initializer
 
             return Load(assembly, true)!;
         }
-        
+
         private static Assembly LoadAssembly(String assembly, AssemblySignInitialization initialization)
         {
             if (assembly is null)

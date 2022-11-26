@@ -19,7 +19,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return (T?) provider.GetService(typeof(T));
         }
-        
+
         public static Object GetServiceRequired(this IServiceProvider provider, Type service)
         {
             if (provider is null)
@@ -39,7 +39,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return provider.GetService<T>() ?? throw new ServiceNotFoundException(typeof(T));
         }
-        
+
         public static Boolean Exists(this IServiceProvider provider, Type service)
         {
             if (provider is null)

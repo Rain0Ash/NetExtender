@@ -3,6 +3,7 @@
 <#@ assembly name="System.Core"#>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
@@ -49,7 +50,7 @@ namespace NetExtender.Utilities.Types
     {
         return type == nameof(Single) || type == nameof(Double);
     }
-    
+
     static String ToSignedType(String type)
     {
         return type switch
@@ -96,9 +97,9 @@ namespace NetExtender.Utilities.Types
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(TryRead)}{type}(reader, out result);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveOptimization)]");
         WriteLine($"\t\tpublic static {nameof(Boolean)} {nameof(TryRead)}{type}(this {nameof(BinaryReader)} reader, {(type == nameof(String) ? "[MaybeNullWhen(false)] " : String.Empty)}out {type} result)");
         WriteLine("\t\t{");
@@ -119,7 +120,7 @@ namespace NetExtender.Utilities.Types
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
     }
-    
+
     void TryRead()
     {
         ForEach(types.Prepend(nameof(Boolean)).Append(nameof(String)), TryReadImplementation);

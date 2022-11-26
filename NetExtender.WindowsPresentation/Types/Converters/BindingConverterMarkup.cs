@@ -29,7 +29,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
         {
             Binding = binding;
         }
-        
+
         public override Object ProvideValue(IServiceProvider? provider)
         {
             MultiBinding binding = new MultiBinding();
@@ -39,7 +39,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
                 Binding.Mode = Mode;
                 binding.Bindings.Add(Binding);
             }
-            
+
             if (ConverterParameter is not null)
             {
                 ConverterParameter.Mode = BindingMode.OneWay;

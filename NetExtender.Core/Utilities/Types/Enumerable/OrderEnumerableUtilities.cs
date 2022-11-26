@@ -39,7 +39,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy(item => item, comparer);
         }
-        
+
         public static IOrderedEnumerable<T> OrderBy<T>(this IEnumerable<T> source, Comparison<T> comparison)
         {
             if (source is null)
@@ -54,7 +54,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy(item => item, comparison.ToComparer());
         }
-        
+
         public static IOrderedEnumerable<T> OrderBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Comparison<TKey> comparison)
         {
             if (source is null)
@@ -94,7 +94,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending(item => item, comparer);
         }
-        
+
         public static IOrderedEnumerable<T> OrderByDescending<T>(this IEnumerable<T> source, Comparison<T> comparison)
         {
             if (source is null)
@@ -109,7 +109,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending(item => item, comparison.ToComparer());
         }
-        
+
         public static IOrderedEnumerable<T> OrderByDescending<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Comparison<TKey> comparison)
         {
             if (source is null)
@@ -129,7 +129,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending(selector, comparison.ToComparer());
         }
-        
+
         public static IOrderedEnumerable<T> ThenBy<T>(this IOrderedEnumerable<T> source, IComparer<T>? comparer)
         {
             if (source is null)
@@ -139,7 +139,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ThenBy(item => item, comparer);
         }
-        
+
         public static IOrderedEnumerable<T> ThenBy<T>(this IOrderedEnumerable<T> source, Comparison<T> comparison)
         {
             if (source is null)
@@ -244,7 +244,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy(selector, comparer);
         }
-        
+
         public static IOrderedEnumerable<T> SortBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Comparison<TKey> comparison)
         {
             if (source is null)

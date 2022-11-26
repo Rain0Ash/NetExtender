@@ -17,7 +17,7 @@ namespace NetExtender.Cryptography.Hash.XXHash
         {
             return ComputeHash(data, data.Length, seed);
         }
-        
+
         /// <summary>
         /// Compute xxHash for the data byte array
         /// </summary>

@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.Windows.IO
         Down,
         Toggle
     }
-    
+
     public static partial class KeyboardUtilities
     {
         public static ModifierKeys Modifiers
@@ -45,7 +45,7 @@ namespace NetExtender.Utilities.Windows.IO
 
             return ThreadUtilities.STA(handler, value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Boolean IsKeyActive(Func<Key, Boolean> handler, Key first, Key second)
         {
@@ -56,7 +56,7 @@ namespace NetExtender.Utilities.Windows.IO
 
             return IsKeyActive(handler, first) || IsKeyActive(handler, second);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Boolean IsKeyActive(Func<Key, Boolean> handler, Key first, Key second, Key third)
         {
@@ -86,7 +86,7 @@ namespace NetExtender.Utilities.Windows.IO
                     keys[counter++] = key;
                 }
             }
-            
+
             Keys result = new Keys(keys.Slice(0, counter));
             return result;
         }

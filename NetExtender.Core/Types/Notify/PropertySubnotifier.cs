@@ -48,7 +48,7 @@ namespace NetExtender.Types.Notify
 
             return Store.TryGetValue(when, out LinkedList<String>? collection) && collection.Contains(property);
         }
-        
+
         public Boolean Contains<TProperty>(Expression<Func<T, TProperty>> when, Expression<Func<T, TProperty>> property)
         {
             if (when is null)
@@ -62,19 +62,19 @@ namespace NetExtender.Types.Notify
             }
 
             PropertyInfo? infowhen = when.GetPropertyInfo();
-            
+
             if (infowhen is null)
             {
                 throw new ArgumentException("Expression does not represent a property.", nameof(when));
             }
-            
+
             PropertyInfo? info = property.GetPropertyInfo();
-            
+
             if (info is null)
             {
                 throw new ArgumentException("Expression does not represent a property.", nameof(property));
             }
-            
+
             return Contains(infowhen.Name, info.Name);
         }
 
@@ -89,25 +89,25 @@ namespace NetExtender.Types.Notify
             {
                 throw new ArgumentNullException(nameof(when));
             }
-            
+
             if (properties is null)
             {
                 return this;
             }
-            
+
             foreach (String? property in properties)
             {
                 if (property is null)
                 {
                     continue;
                 }
-                
+
                 if (!Store.TryGetValue(when, out LinkedList<String>? collection))
                 {
                     collection = new LinkedList<String>();
                     Store.Add(when, collection);
                 }
-                
+
                 collection.AddLast(property);
             }
 
@@ -122,12 +122,12 @@ namespace NetExtender.Types.Notify
             }
 
             PropertyInfo? property = when.GetPropertyInfo();
-            
+
             if (property is null)
             {
                 throw new ArgumentException("Expression does not represent a property.", nameof(when));
             }
-            
+
             return Register(property.Name, properties?.WhereNotNull().Select(ExpressionUtilities.GetPropertyInfo).WhereNotNull().Select(info => info.Name));
         }
 
@@ -135,14 +135,14 @@ namespace NetExtender.Types.Notify
         {
             return Unregister(when, (IEnumerable<String?>?) properties);
         }
-        
+
         public PropertySubnotifier<T> Unregister(String when, IEnumerable<String?>? properties)
         {
             if (when is null)
             {
                 throw new ArgumentNullException(nameof(when));
             }
-            
+
             if (properties is null)
             {
                 return this;
@@ -165,21 +165,21 @@ namespace NetExtender.Types.Notify
 
             return this;
         }
-        
+
         public PropertySubnotifier<T> Unregister<TProperty>(Expression<Func<T, TProperty>> when, params Expression<Func<T, TProperty>>?[]? properties)
         {
             if (when is null)
             {
                 throw new ArgumentNullException(nameof(when));
             }
-            
+
             PropertyInfo? property = when.GetPropertyInfo();
-            
+
             if (property is null)
             {
                 throw new ArgumentException("Expression does not represent a property.", nameof(when));
             }
-            
+
             return Unregister(property.Name, properties?.WhereNotNull().Select(ExpressionUtilities.GetPropertyInfo).WhereNotNull().Select(info => info.Name));
         }
     }
@@ -187,7 +187,7 @@ namespace NetExtender.Types.Notify
     public abstract class PropertySubnotifier
     {
         protected Dictionary<String, LinkedList<String>> Store { get; } = new Dictionary<String, LinkedList<String>>(4);
-        
+
         private Action<Object?, PropertyChangingEventArgs>? Changing { get; }
         private Action<Object?, PropertyChangedEventArgs>? Changed { get; }
 
@@ -216,37 +216,37 @@ namespace NetExtender.Types.Notify
         private void OnPropertyChanging(Object? sender, PropertyChangingEventArgs args)
         {
             String? name = args.PropertyName;
-            
+
             if (name is null)
             {
                 return;
             }
-            
+
             if (!Store.TryGetValue(name, out LinkedList<String>? collection))
             {
                 return;
             }
-            
+
             foreach (String? property in collection)
             {
                 Changing?.Invoke(sender, new PropertyChangingEventArgs(property));
             }
         }
-        
+
         private void OnPropertyChanged(Object? sender, PropertyChangedEventArgs args)
         {
             String? name = args.PropertyName;
-            
+
             if (name is null)
             {
                 return;
             }
-            
+
             if (!Store.TryGetValue(name, out LinkedList<String>? collection))
             {
                 return;
             }
-            
+
             foreach (String? property in collection)
             {
                 Changed?.Invoke(sender, new PropertyChangedEventArgs(property));

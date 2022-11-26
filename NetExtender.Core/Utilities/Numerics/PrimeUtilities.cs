@@ -12,7 +12,7 @@ namespace NetExtender.Utilities.Numerics
     public static class PrimeUtilities
     {
         public const Int32 LargestPrime = Int32.MaxValue;
-        
+
         private static ImmutableArray<Int32> Primes { get; }
 
         static PrimeUtilities()
@@ -34,7 +34,7 @@ namespace NetExtender.Utilities.Numerics
 
             return Primes[i];
         }
-        
+
         /// <summary>
         /// Performs a prime factorization of a given integer using the table of primes in PrimeTable.
         /// Since this will only factor Int32 sized integers, a simple list of factors is returned instead
@@ -46,9 +46,9 @@ namespace NetExtender.Utilities.Numerics
         {
             Int32 index = 0;
             Int32 prime = Primes[index];
-            
+
             IList<Int32> factors = new List<Int32>();
-            
+
             while (i > 1)
             {
                 if (i % prime == 0)
@@ -63,7 +63,7 @@ namespace NetExtender.Utilities.Numerics
 
             return factors;
         }
-        
+
         /// <summary>
         /// Given two integers expressed as a list of prime factors, multiplies these numbers
         /// together and returns an integer also expressed as a set of prime factors.
@@ -87,10 +87,10 @@ namespace NetExtender.Utilities.Numerics
             List<Int32> product = left.ToList();
             product.AddRange(right);
             product.Sort();
-            
+
             return product;
         }
-        
+
         /// <summary>
         /// Given two integers expressed as a list of prime factors, divides these numbers
         /// and returns an integer also expressed as a set of prime factors.
@@ -123,7 +123,7 @@ namespace NetExtender.Utilities.Numerics
 
             return product;
         }
-        
+
         /// <summary>
         /// Given a list of prime factors returns the long representation.
         /// </summary>
@@ -138,7 +138,7 @@ namespace NetExtender.Utilities.Numerics
 
             return value.Aggregate<Int32, Int64>(1, (current, prime) => current * prime);
         }
-        
+
         /// <summary>
         /// Calculate all primes up to Sqrt(2^32) = 2^16.  
         /// This table will be large enough for all factorizations for Int32's.

@@ -46,7 +46,7 @@ namespace NetExtender.Types.Combinatoric
         /// comparing T each time, much faster to let the CLR optimize around integers.
         /// </summary>
         private Int32[] Orders { get; }
-        
+
         /// <summary>
         /// The count of all permutations that will be returned.
         /// If type is MetaCollectionType.WithholdGeneratedSets, then this does not double count permutations with multiple identical values.  
@@ -82,7 +82,7 @@ namespace NetExtender.Types.Combinatoric
                 return Values.Count;
             }
         }
-        
+
         /// <summary>
         /// Create a permutation set from the provided list of values.  
         /// The values (T) must implement IComparable.  
@@ -136,16 +136,16 @@ namespace NetExtender.Types.Combinatoric
 
             Values = new List<T>(values);
             Orders = new Int32[values.Count];
-            
+
             Repetition = repetition;
-            
+
             if (Repetition)
             {
                 for (Int32 i = 0; i < Orders.Length; ++i)
                 {
                     Orders[i] = i;
                 }
-                
+
                 Count = GetCount();
                 return;
             }
@@ -153,7 +153,7 @@ namespace NetExtender.Types.Combinatoric
             comparer ??= new SelfComparer();
 
             Values.Sort(comparer);
-            
+
             if (Orders.Length > 0)
             {
                 Orders[0] = 1;
@@ -184,12 +184,12 @@ namespace NetExtender.Types.Combinatoric
         {
             List<Int32> divisors = new List<Int32>();
             List<Int32> numerators = new List<Int32>();
-            
+
             Int32 count = 1;
             for (Int32 i = 1; i < Orders.Length; ++i)
             {
                 numerators.AddRange(PrimeUtilities.Factor(i + 1));
-                
+
                 if (Orders[i] == Orders[i - 1])
                 {
                     ++count;
@@ -220,7 +220,7 @@ namespace NetExtender.Types.Combinatoric
         {
             return new Enumerator(this);
         }
-        
+
         /// <summary>
         /// Gets an enumerator for collecting the list of permutations.
         /// </summary>
@@ -282,7 +282,7 @@ namespace NetExtender.Types.Combinatoric
                     throw new InvalidOperationException();
                 }
             }
-            
+
             /// <summary>
             /// The current permutation.
             /// </summary>
@@ -298,7 +298,7 @@ namespace NetExtender.Types.Combinatoric
                     throw new InvalidOperationException();
                 }
             }
-            
+
             /// <summary>
             /// Construct a enumerator with the parent object.
             /// </summary>
@@ -311,7 +311,7 @@ namespace NetExtender.Types.Combinatoric
                 source.Orders.CopyTo(Orders, 0);
                 Reset();
             }
-            
+
             /// <summary>
             /// Advances to the next permutation.
             /// </summary>
@@ -328,11 +328,11 @@ namespace NetExtender.Types.Combinatoric
                     case EnumeratorPosition.BeforeFirst:
                         Values.Clear();
                         Values.AddRange(Parent.Values);
-                        
+
                         Array.Sort(Orders);
-                        
+
                         Position = EnumeratorPosition.InSet;
-                        
+
                         break;
                     case EnumeratorPosition.InSet when Values.Count < 2:
                         Position = EnumeratorPosition.AfterLast;
@@ -352,7 +352,7 @@ namespace NetExtender.Types.Combinatoric
 
                 return Position != EnumeratorPosition.AfterLast;
             }
-            
+
             /// <summary>
             /// Calculates the next lexicographical permutation of the set.
             /// This is a permutation with repetition where values that compare as equal will not 

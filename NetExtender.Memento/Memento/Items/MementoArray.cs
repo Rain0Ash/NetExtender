@@ -29,12 +29,12 @@ namespace NetExtender.Types.Memento
             : base(source, expression is not null ? new MementoArrayProperty<TSource, TProperty>(expression, values) : throw new ArgumentNullException(nameof(expression)))
         {
         }
-        
+
         public MementoArray(TSource source, ReflectionProperty<TSource, TProperty[]> property)
             : base(source, new MementoArrayProperty<TSource, TProperty>(property))
         {
         }
-        
+
         public MementoArray(TSource source, ReflectionProperty<TSource, TProperty[]> property, IEnumerable<TProperty>? values)
             : base(source, new MementoArrayProperty<TSource, TProperty>(property, values))
         {
@@ -51,7 +51,7 @@ namespace NetExtender.Types.Memento
             Property.Update(Source);
             return this;
         }
-        
+
         public MementoArray<TSource, TProperty> With(IEnumerable<TProperty>? values)
         {
             if (Property is not MementoArrayProperty<TSource, TProperty> property)
@@ -62,7 +62,7 @@ namespace NetExtender.Types.Memento
             property.With(values);
             return this;
         }
-        
+
         public override MementoArray<TSource, TProperty> With(TProperty[] values)
         {
             if (values is null)

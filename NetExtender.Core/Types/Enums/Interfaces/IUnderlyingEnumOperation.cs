@@ -16,7 +16,7 @@ namespace NetExtender.Types.Enums.Interfaces
         public Boolean TryParse(String text, out T result);
         public EnumMember<T> GetMember(ref T value);
     }
-    
+
     /// <summary>
     /// Provides underlying type specified operation interface.
     /// </summary>

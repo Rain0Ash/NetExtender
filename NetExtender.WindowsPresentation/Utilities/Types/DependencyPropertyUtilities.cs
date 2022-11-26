@@ -22,7 +22,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             public PropertyInfo Property { get; }
             public MethodInfo? Method { get; }
             public PropertyChangedCallback? Delegate { get; }
-            
+
             public AnalysisInformation(Type type, FieldInfo dependency, PropertyInfo property, MethodInfo? method)
             {
                 Type = type ?? throw new ArgumentNullException(nameof(type));
@@ -34,7 +34,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         }
 
         private delegate void PropertyChangedSemiCallback(DependencyObject sender);
-        
+
         private static PropertyChangedCallback? CreateCallback(MethodInfo? method)
         {
             if (method is null)
@@ -51,7 +51,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 return (sender, _) => semi(sender);
             }
-                
+
             return null;
         }
 
@@ -66,19 +66,19 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             const BindingFlags binding = BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic;
-            
+
             result = type.GetMethod($"On{name}Changed", binding, AnalysisInformation.CallbackMethodTypes) ??
                 type.GetMethod($"{name}Changed", binding, AnalysisInformation.CallbackMethodTypes) ??
                 type.GetMethod($"Change{name}", binding, AnalysisInformation.CallbackMethodTypes) ??
                 type.GetMethod($"On{name}Changed", binding, AnalysisInformation.SemiCallbackMethodTypes) ??
                 type.GetMethod($"{name}Changed", binding, AnalysisInformation.SemiCallbackMethodTypes) ??
                 type.GetMethod($"Change{name}", binding, AnalysisInformation.SemiCallbackMethodTypes);
-            
+
             return result is not null;
         }
-        
+
         private static Boolean Analyze(Type type, String name, [MaybeNullWhen(false)] out AnalysisInformation result)
         {
             if (type is null)
@@ -93,7 +93,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
 
             PropertyInfo? property = type.GetProperty(name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             FieldInfo? field = type.GetField($"{name}Property", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
-            
+
             Analyze(type, name, out MethodInfo? method);
             result = field is not null && property is not null ? new AnalysisInformation(type, field, property, method) : null;
             return result is not null;
@@ -105,7 +105,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(information));
             }
-            
+
             if (!information.Dependency.FieldType.IsSameAsOrSubclassOf<DependencyProperty>())
             {
                 return false;
@@ -120,10 +120,10 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             {
                 throw new InvalidOperationException($"Dependency property method {information.Method.Name} must be static.");
             }
-            
+
             return true;
         }
-        
+
         private static AnalysisInformation Analyze(String name)
         {
             if (name is null)
@@ -139,18 +139,18 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
                 {
                     continue;
                 }
-                
+
                 return information;
             }
 
             throw new MissingMemberException($"Could not find {name} {nameof(DependencyProperty)} field and access property.");
         }
-        
+
         public static DependencyProperty Register<T, TType>(String name)
         {
             return Register<T, TType>(name, (PropertyMetadata?) null);
         }
-        
+
         public static DependencyProperty Register<T, TType>(String name, PropertyMetadata? metadata)
         {
             if (name is null)
@@ -178,7 +178,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             return Register<T, TType>(name, new FrameworkPropertyMetadata(default(T), options));
         }
-        
+
         public static DependencyProperty Register<T, TType>(String name, Boolean twoway, PropertyChangedCallback callback)
         {
             return twoway ? Register<T, TType>(name, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, callback) : Register<T, TType>(name, callback);
@@ -188,12 +188,12 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             return Register<T, TType>(name, new FrameworkPropertyMetadata(default(T), options, callback));
         }
-        
+
         public static DependencyProperty Register<T, TType>(String name, T value)
         {
             return Register<T, TType>(name, new PropertyMetadata(value));
         }
-        
+
         public static DependencyProperty Register<T, TType>(String name, T value, PropertyChangedCallback callback)
         {
             return Register<T, TType>(name, new PropertyMetadata(value, callback));
@@ -241,7 +241,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
             }
 
             value ??= ReflectionUtilities.Default(information.Property.PropertyType);
-            
+
             if (value is not null && !value.GetType().IsSameAsOrSubclassOf(information.Property.PropertyType))
             {
                 throw new InvalidOperationException($"Default value type '{value.GetType()}' does not match property type '{information.Property.PropertyType}'.");
@@ -262,7 +262,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             return twoway ? Register(name, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault) : Register(name);
         }
-        
+
         public static DependencyProperty Register(String name, Boolean value, Boolean twoway)
         {
             return Register<Boolean>(name, value, twoway);
@@ -272,12 +272,12 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             return Register(name, (PropertyMetadata) new FrameworkPropertyMetadata(default, options));
         }
-        
+
         public static DependencyProperty Register(String name, Boolean twoway, PropertyChangedCallback callback)
         {
             return twoway ? Register(name, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, callback) : Register(name, callback);
         }
-        
+
         public static DependencyProperty Register(String name, Boolean value, Boolean twoway, PropertyChangedCallback callback)
         {
             return Register<Boolean>(name, value, twoway, callback);
@@ -287,12 +287,12 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
         {
             return Register(name, (PropertyMetadata) new FrameworkPropertyMetadata(default, options, callback));
         }
-        
+
         public static DependencyProperty Register<T>(String name, T value)
         {
             return Register(name, new PropertyMetadata(value));
         }
-        
+
         public static DependencyProperty Register<T>(String name, T value, PropertyChangedCallback callback)
         {
             return Register(name, new PropertyMetadata(value, callback));

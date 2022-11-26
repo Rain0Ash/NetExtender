@@ -24,7 +24,7 @@ namespace NetExtender.NAudio.Types.Sound
                 return Start + StartActive;
             }
         }
-        
+
         public TimeSpan TotalStopActive
         {
             get
@@ -40,7 +40,7 @@ namespace NetExtender.NAudio.Types.Sound
                 return Stop - Start;
             }
         }
-        
+
         public abstract TimeSpan TotalTime { get; }
         public Single Volume { get; init; } = 1F;
 
@@ -51,7 +51,7 @@ namespace NetExtender.NAudio.Types.Sound
         {
             return ReadAsync(CancellationToken.None);
         }
-        
+
         public virtual async Task<Byte[]> ReadAsync(CancellationToken token)
         {
             return await Task.Run(Read, token);

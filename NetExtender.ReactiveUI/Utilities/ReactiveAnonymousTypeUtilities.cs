@@ -18,7 +18,7 @@ namespace NetExtender.ReactiveUI.Utilities
         {
             private const String ReactiveAnonymousTypeAssembly = nameof(ReactiveAnonymousTypeAssembly);
             public static ReactiveAnonymousTypeGenerator Generator { get; }
-            
+
             static ReactiveAnonymousType()
             {
                 Generator = new ReactiveAnonymousTypeGenerator(ReactiveAnonymousTypeAssembly);
@@ -36,7 +36,7 @@ namespace NetExtender.ReactiveUI.Utilities
         {
             return ReactiveAnonymousType.Generator.DefineAnonymousType(properties);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type DefineReactiveAnonymousType(this IEnumerable<KeyValuePair<String, Type>> properties)
         {

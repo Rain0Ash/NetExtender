@@ -60,10 +60,10 @@ namespace NetExtender.Types.Immutable.Maps.Interfaces
 
         /// <inheritdoc cref="IImmutableMap{TKey,TValue}.Remove(TKey)"/>
         public new IImmutableIndexMap<TKey, TValue> Remove(TKey key);
-        
+
         /// <inheritdoc cref="IImmutableMap{TKey,TValue}.RemoveRange"/>
         public new IImmutableIndexMap<TKey, TValue> RemoveRange(IEnumerable<TKey> keys);
-        
+
         /// <inheritdoc cref="IImmutableMap{TKey,TValue}.Clear"/>
         public new IImmutableIndexMap<TKey, TValue> Clear();
     }

@@ -30,14 +30,14 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static Boolean Capture(this SemaphoreMutex mutex)
         {
             if (mutex is null)
             {
                 throw new ArgumentNullException(nameof(mutex));
             }
-            
+
             try
             {
                 return mutex.WaitOne(0);
@@ -51,7 +51,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         private static ConcurrentDictionary<String, SemaphoreMutex> Mutexes { get; } = new ConcurrentDictionary<String, SemaphoreMutex>();
 
         public static Int32 GetMutexRegistrations(String name)
@@ -63,7 +63,7 @@ namespace NetExtender.Utilities.Types
 
             return Mutexes.TryGetValue(name, out SemaphoreMutex? mutex) ? mutex.Count : 0;
         }
-        
+
         public static UInt64 GetMutexRegistrationsLong(String name)
         {
             if (name is null)
@@ -73,7 +73,7 @@ namespace NetExtender.Utilities.Types
 
             return Mutexes.TryGetValue(name, out SemaphoreMutex? mutex) ? mutex.LongCount : 0;
         }
-        
+
         public static Boolean Capture(String name)
         {
             if (name is null)
@@ -83,20 +83,20 @@ namespace NetExtender.Utilities.Types
 
             return Mutexes.TryGetValue(name, out SemaphoreMutex? mutex) ? mutex.Capture() : CaptureRegisterMutex(name);
         }
-        
+
         public static Boolean RegisterMutex(String name)
         {
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             if (Mutexes.TryGetValue(name, out SemaphoreMutex? mutex))
             {
                 mutex.Take();
                 return true;
             }
-            
+
             try
             {
                 mutex = new SemaphoreMutex(true, name);
@@ -167,14 +167,14 @@ namespace NetExtender.Utilities.Types
             {
                 return false;
             }
-            
+
             mutex.Release();
 
             if (mutex.Disposed)
             {
                 Mutexes.TryRemove(name, out _);
             }
-            
+
             return true;
         }
 

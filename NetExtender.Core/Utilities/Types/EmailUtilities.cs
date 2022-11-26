@@ -14,7 +14,7 @@ namespace NetExtender.Utilities.Types
         {
             return MailAddress.TryCreate(address, out MailAddress? result) ? result : null;
         }
-        
+
         public static MailAddress? Create(String address, String? display)
         {
             return MailAddress.TryCreate(address, display, out MailAddress? result) ? result : null;
@@ -29,12 +29,12 @@ namespace NetExtender.Utilities.Types
         {
             return MailAddress.TryCreate(address, display, encoding, out MailAddress? result) ? result : null;
         }
-        
+
         public static Boolean TryCreate(String address, [MaybeNullWhen(false)] out MailAddress result)
         {
             return MailAddress.TryCreate(address, out result);
         }
-        
+
         public static Boolean TryCreate(String address, String? display, [MaybeNullWhen(false)] out MailAddress result)
         {
             return MailAddress.TryCreate(address, display, out result);
@@ -49,7 +49,7 @@ namespace NetExtender.Utilities.Types
         {
             return MailAddress.TryCreate(address, display, encoding, out result);
         }
-        
+
         public static Boolean CheckValidEmail(String address)
         {
             return MailAddress.TryCreate(address, out _);

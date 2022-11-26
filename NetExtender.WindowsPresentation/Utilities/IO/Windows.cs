@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.Windows.IO
                     return Modifiers == ModifierKeys.Windows;
                 }
             }
-            
+
             public static Boolean HasWindows
             {
                 get
@@ -25,7 +25,7 @@ namespace NetExtender.Utilities.Windows.IO
                     return Modifiers.HasFlag(ModifierKeys.Windows);
                 }
             }
-            
+
             public static Boolean IsWindowsDown
             {
                 get
@@ -33,7 +33,7 @@ namespace NetExtender.Utilities.Windows.IO
                     return IsKeyActive(Keyboard.IsKeyDown, Key.LWin, Key.RWin);
                 }
             }
-            
+
             public static Boolean IsWindowsToggled
             {
                 get
@@ -41,7 +41,7 @@ namespace NetExtender.Utilities.Windows.IO
                     return IsKeyActive(Keyboard.IsKeyToggled, Key.LWin, Key.RWin);
                 }
             }
-            
+
             public static Boolean IsWindowsUp
             {
                 get

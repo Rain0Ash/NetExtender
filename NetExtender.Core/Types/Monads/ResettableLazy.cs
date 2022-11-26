@@ -16,9 +16,9 @@ namespace NetExtender.Types.Monads
         {
             return lazy?.Internal;
         }
-        
+
         private Lazy<T> Internal { get; set; }
-        
+
         private LazyThreadSafetyMode Mode { get; }
 
         public T Value
@@ -82,7 +82,7 @@ namespace NetExtender.Types.Monads
             {
                 Internal = new Lazy<T>(Mode);
             }
-            
+
             return this;
         }
 
@@ -97,7 +97,7 @@ namespace NetExtender.Types.Monads
             {
                 Internal = new Lazy<T>(valueFactory, Mode);
             }
-            
+
             return this;
         }
     }

@@ -201,7 +201,7 @@ namespace NetExtender.Utilities.IO
                     _ => throw new NotSupportedException()
                 };
             }
-            
+
             if (IsExistAsFile(path))
             {
                 return new FileInfo(path);
@@ -295,7 +295,7 @@ namespace NetExtender.Utilities.IO
             path = path.Trim();
             return path.Length > 0 && Separators.Any(chr => path.EndsWith(chr.ToString()));
         }
-        
+
         public static Char GetPathSeparator(String path)
         {
             if (path is null)
@@ -521,19 +521,19 @@ namespace NetExtender.Utilities.IO
         {
             return Path.GetDirectoryName(path);
         }
-        
+
         [return: NotNullIfNotNull("path")]
         public static String? GetFileName(String? path)
         {
             return Path.GetFileName(path);
         }
-        
+
         [return: NotNullIfNotNull("path")]
         public static String? GetFileNameWithoutExtension(String? path)
         {
             return Path.GetFileNameWithoutExtension(path);
         }
-        
+
         /// <summary>
         /// Extracts the path of the directory in the DirectoryNotFoundException
         /// </summary>
@@ -573,7 +573,7 @@ namespace NetExtender.Utilities.IO
 
             Int32 first = value.IndexOf('\'') + 1;
             Int32 last = value.LastIndexOf('\'');
-            
+
             Int32 length = last - first;
 
             return length < 0 ? String.Empty : value.Substring(first, length);

@@ -24,7 +24,7 @@ namespace NetExtender.Utilities.Types
                 yield return item;
             }
         }
-        
+
         public static Boolean TryAdd<T>(this IProducerConsumerCollection<T> collection, IEnumerable<T> source)
         {
             if (collection is null)
@@ -39,7 +39,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Aggregate(false, (current, item) => current | collection.TryAdd(item));
         }
-        
+
         public static IDisposable Subscribe<T>(this IProducerConsumerCollection<T> collection, IObservable<T> observable)
         {
             if (collection is null)
@@ -54,7 +54,7 @@ namespace NetExtender.Utilities.Types
 
             return observable.Subscribe(new DelegateObserver<T>(ActionUtilities.Default, item => collection.TryAdd(item), ActionUtilities.Default));
         }
-        
+
         public static void Clear<T>(this IProducerConsumerCollection<T?> collection)
         {
             if (collection is null)
@@ -66,7 +66,7 @@ namespace NetExtender.Utilities.Types
             {
             }
         }
-        
+
         public static IProducerConsumerCollection<T> ToProducerOnlyCollection<T>(this IProducerConsumerCollection<T> collection)
         {
             if (collection is null)
@@ -76,7 +76,7 @@ namespace NetExtender.Utilities.Types
 
             return new ProducerOrConsumerCollection<T>(collection, ProducerConsumerCollectionType.Produce);
         }
-        
+
         public static IProducerConsumerCollection<T> ToConsumerOnlyCollection<T>(this IProducerConsumerCollection<T> collection)
         {
             if (collection is null)

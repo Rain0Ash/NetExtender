@@ -84,7 +84,7 @@ namespace NetExtender.Types.Collections
             return GetEnumerator();
         }
     }
-    
+
     public sealed class ReadOnlySelectorCollectionWrapper<T, TKey> : IReadOnlyCollection<TKey>
     {
         private IReadOnlyCollection<T> Internal { get; }
@@ -97,13 +97,13 @@ namespace NetExtender.Types.Collections
                 return Internal.Count;
             }
         }
-        
+
         public ReadOnlySelectorCollectionWrapper(IReadOnlyCollection<T> collection, Func<T, TKey> selector)
         {
             Internal = collection ?? throw new ArgumentNullException(nameof(collection));
             Selector = selector ?? throw new ArgumentNullException(nameof(selector));
         }
-        
+
         public IEnumerator<TKey> GetEnumerator()
         {
             return Internal.Select(Selector).GetEnumerator();

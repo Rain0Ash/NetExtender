@@ -20,7 +20,7 @@ namespace NetExtender.Workstation
                 return Screen.AllScreens.Select(screen => (IScreen) new ScreenWrapper(screen)).ToArray();
             }
         }
-        
+
         public static IScreen PrimaryScreen
         {
             get
@@ -28,39 +28,39 @@ namespace NetExtender.Workstation
                 return new ScreenWrapper(Screen.PrimaryScreen);
             }
         }
-        
+
         public static IScreen FromControl(Control control)
         {
             return new ScreenWrapper(Screen.FromControl(control));
         }
-        
+
         public static IScreen FromHandle(IntPtr handle)
         {
             return new ScreenWrapper(Screen.FromHandle(handle));
         }
-        
+
         public static IScreen FromPoint(Point point)
         {
             return new ScreenWrapper(Screen.FromPoint(point));
         }
-        
+
         public static IScreen FromRectangle(Rectangle rectangle)
         {
             return new ScreenWrapper(Screen.FromRectangle(rectangle));
         }
-        
+
         [return: NotNullIfNotNull("screen")]
         public static implicit operator ScreenWrapper?(Screen? screen)
         {
             return screen is not null ? new ScreenWrapper(screen) : null;
         }
-        
+
         [return: NotNullIfNotNull("wrapper")]
         public static implicit operator Screen?(ScreenWrapper? wrapper)
         {
             return wrapper?.Screen;
         }
-        
+
         private Screen Screen { get; }
 
         public Int32 Id
@@ -70,7 +70,7 @@ namespace NetExtender.Workstation
                 return Screen.AllScreens.IndexOf(Screen);
             }
         }
-        
+
         public String Name
         {
             get
@@ -110,7 +110,7 @@ namespace NetExtender.Workstation
                 return Screen.BitsPerPixel;
             }
         }
-        
+
         public ScreenWrapper(Screen screen)
         {
             Screen = screen ?? throw new ArgumentNullException(nameof(screen));

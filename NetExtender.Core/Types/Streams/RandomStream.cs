@@ -14,7 +14,7 @@ namespace NetExtender.Types.Streams
     public class RandomStream : Stream
     {
         private IRandom Random { get; }
-        
+
         public override Boolean CanRead
         {
             get
@@ -63,7 +63,7 @@ namespace NetExtender.Types.Streams
             : this(new RandomAdapter())
         {
         }
-        
+
         public RandomStream(Int32 seed)
             : this(new RandomAdapter(seed))
         {
@@ -73,7 +73,7 @@ namespace NetExtender.Types.Streams
             : this(new RandomAdapter(random))
         {
         }
-        
+
         public RandomStream(IRandom random)
         {
             Random = random ?? throw new ArgumentNullException(nameof(random));
@@ -127,7 +127,7 @@ namespace NetExtender.Types.Streams
             Read(buffer, offset, count);
             return Task.FromResult(count);
         }
-        
+
         public override void WriteByte(Byte value)
         {
             throw new NotSupportedException();
@@ -142,17 +142,17 @@ namespace NetExtender.Types.Streams
         {
             throw new NotSupportedException();
         }
-        
+
         public override ValueTask WriteAsync(ReadOnlyMemory<Byte> buffer, CancellationToken token = default)
         {
             throw new NotSupportedException();
         }
-        
+
         public override Task WriteAsync(Byte[] buffer, Int32 offset, Int32 count, CancellationToken token)
         {
             throw new NotSupportedException();
         }
-        
+
         public override void Flush()
         {
         }

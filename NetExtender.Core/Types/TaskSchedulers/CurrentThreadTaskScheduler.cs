@@ -17,7 +17,7 @@ namespace NetExtender.Types.TaskSchedulers
                 return 1;
             }
         }
-        
+
         protected override void QueueTask(Task task)
         {
             TryExecuteTask(task);

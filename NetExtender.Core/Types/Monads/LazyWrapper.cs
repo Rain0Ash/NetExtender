@@ -15,7 +15,7 @@ namespace NetExtender.Types.Monads
         {
             return value is not null ? new LazyWrapper<T>(value) : null;
         }
-        
+
         [return: NotNullIfNotNull("wrapper")]
         public static implicit operator Lazy<T>?(LazyWrapper<T>? wrapper)
         {
@@ -39,12 +39,12 @@ namespace NetExtender.Types.Monads
                 return Internal.IsValueCreated;
             }
         }
-        
+
         public LazyWrapper(Lazy<T> lazy)
         {
             Internal = lazy ?? throw new ArgumentNullException(nameof(lazy));
         }
-        
+
         public LazyWrapper(Func<T> valueFactory)
         {
             Internal = new Lazy<T>(valueFactory ?? throw new ArgumentNullException(nameof(valueFactory)));

@@ -26,9 +26,9 @@ namespace NetExtender.Registry
             [RegistryKeys.Users] = Microsoft.Win32.Registry.Users,
             [RegistryKeys.ClassesRoot] = Microsoft.Win32.Registry.ClassesRoot,
             [RegistryKeys.PerformanceData] = Microsoft.Win32.Registry.PerformanceData
-            
+
         }.ToImmutableDictionary();
-        
+
         public const String Separator = "\\";
 
         private RegistryKey? _registry;
@@ -41,9 +41,9 @@ namespace NetExtender.Registry
         }
 
         public RegistryKeys Key { get; }
-        
+
         public ImmutableArray<String> Sections { get; }
-        
+
         private String? _path;
         public String Path
         {
@@ -103,7 +103,7 @@ namespace NetExtender.Registry
                 }
             }
         }
-        
+
         private RegistryKey? _write;
         private RegistryKey? Write
         {
@@ -113,7 +113,7 @@ namespace NetExtender.Registry
                 {
                     return _write;
                 }
-                
+
                 if (IsReadOnly)
                 {
                     return null;
@@ -129,7 +129,7 @@ namespace NetExtender.Registry
                 }
             }
         }
-        
+
         private RegistryKey? _full;
         private RegistryKey? Full
         {
@@ -139,7 +139,7 @@ namespace NetExtender.Registry
                 {
                     return _full;
                 }
-                
+
                 if (IsReadOnly)
                 {
                     return null;
@@ -170,7 +170,7 @@ namespace NetExtender.Registry
                 {
                     return null;
                 }
-                
+
                 try
                 {
                     return _create ??= RegistryKey.CreateSubKey(Path, Permission, Options, Security);
@@ -181,7 +181,7 @@ namespace NetExtender.Registry
                 }
             }
         }
-        
+
         public RegistryKeyPermissionCheck Permission { get; init; }
         public RegistryOptions Options { get; init; }
         public RegistrySecurity? Security { get; init; }
@@ -265,7 +265,7 @@ namespace NetExtender.Registry
             : this(key, (IEnumerable<String>?) null)
         {
         }
-        
+
         public Registry(RegistryKeys key, IEnumerable<String>? sections)
         {
             Key = key;
@@ -276,17 +276,17 @@ namespace NetExtender.Registry
         {
             return SubKey((IEnumerable<String>?) sections);
         }
-        
+
         public IRegistry SubKey(IEnumerable<String>? sections)
         {
             return new Registry(Key, this, sections);
         }
-        
+
         public IRegistry SubKey(RegistryKeyPermissionCheck permission, params String[]? sections)
         {
             return SubKey(sections, permission);
         }
-        
+
         public IRegistry SubKey(IEnumerable<String>? sections, RegistryKeyPermissionCheck permission)
         {
             return new Registry(Key, this, sections)
@@ -294,12 +294,12 @@ namespace NetExtender.Registry
                 Permission = permission
             };
         }
-        
+
         public IRegistry SubKey(RegistryKeyPermissionCheck permission, RegistryOptions options, params String[]? sections)
         {
             return SubKey(sections, permission, options);
         }
-        
+
         public IRegistry SubKey(IEnumerable<String>? sections, RegistryKeyPermissionCheck permission, RegistryOptions options)
         {
             return new Registry(Key, this, sections)
@@ -308,12 +308,12 @@ namespace NetExtender.Registry
                 Options = options
             };
         }
-        
+
         public IRegistry SubKey(RegistryKeyPermissionCheck permission, RegistryOptions options, RegistrySecurity? security, params String[]? sections)
         {
             return SubKey(sections, permission, options, security);
         }
-        
+
         public IRegistry SubKey(IEnumerable<String>? sections, RegistryKeyPermissionCheck permission, RegistryOptions options, RegistrySecurity? security)
         {
             return new Registry(Key, this, sections)
@@ -323,22 +323,22 @@ namespace NetExtender.Registry
                 Security = security
             };
         }
-        
+
         public IRegistry NestedSubKey(params String[]? sections)
         {
             return NestedSubKey((IEnumerable<String>?) sections);
         }
-        
+
         public IRegistry NestedSubKey(IEnumerable<String>? sections)
         {
             return new Registry(Key, this, true, sections);
         }
-        
+
         public IRegistry NestedSubKey(RegistryKeyPermissionCheck permission, params String[]? sections)
         {
             return NestedSubKey(sections, permission);
         }
-        
+
         public IRegistry NestedSubKey(IEnumerable<String>? sections, RegistryKeyPermissionCheck permission)
         {
             return new Registry(Key, this, true, sections)
@@ -346,12 +346,12 @@ namespace NetExtender.Registry
                 Permission = permission
             };
         }
-        
+
         public IRegistry NestedSubKey(RegistryKeyPermissionCheck permission, RegistryOptions options, params String[]? sections)
         {
             return NestedSubKey(sections, permission, options);
         }
-        
+
         public IRegistry NestedSubKey(IEnumerable<String>? sections, RegistryKeyPermissionCheck permission, RegistryOptions options)
         {
             return new Registry(Key, this, true, sections)
@@ -360,12 +360,12 @@ namespace NetExtender.Registry
                 Options = options
             };
         }
-        
+
         public IRegistry NestedSubKey(RegistryKeyPermissionCheck permission, RegistrySecurity? security, params String[]? sections)
         {
             return NestedSubKey(sections, permission, security);
         }
-        
+
         public IRegistry NestedSubKey(IEnumerable<String>? sections, RegistryKeyPermissionCheck permission, RegistrySecurity? security)
         {
             return new Registry(Key, this, true, sections)
@@ -374,12 +374,12 @@ namespace NetExtender.Registry
                 Security = security
             };
         }
-        
+
         public IRegistry NestedSubKey(RegistryOptions options, RegistrySecurity? security, params String[]? sections)
         {
             return NestedSubKey(sections, options, security);
         }
-        
+
         public IRegistry NestedSubKey(IEnumerable<String>? sections, RegistryOptions options, RegistrySecurity? security)
         {
             return new Registry(Key, this, true, sections)
@@ -388,12 +388,12 @@ namespace NetExtender.Registry
                 Security = security
             };
         }
-        
+
         public IRegistry NestedSubKey(RegistryKeyPermissionCheck permission, RegistryOptions options, RegistrySecurity? security, params String[]? sections)
         {
             return NestedSubKey(sections, permission, options, security);
         }
-        
+
         public IRegistry NestedSubKey(IEnumerable<String>? sections, RegistryKeyPermissionCheck permission, RegistryOptions options, RegistrySecurity? security)
         {
             return new Registry(Key, this, true, sections)
@@ -403,12 +403,12 @@ namespace NetExtender.Registry
                 Security = security
             };
         }
-        
+
         public T? GetValue<T>(String? key)
         {
             return GetValue(key, out T? result) ? result : result is null ? default : throw new InvalidCastException();
         }
-        
+
         public T? GetValue<T>(String? key, params String[]? sections)
         {
             return GetValue<T>(key, (IEnumerable<String>?) sections);
@@ -420,10 +420,10 @@ namespace NetExtender.Registry
             {
                 return GetValue(key, sections, out T? result) ? result : result is null ? default : throw new InvalidCastException();
             }
-            
+
             return GetValue<T>(key);
         }
-        
+
         public Boolean GetValue<T>(String? key, out T? result)
         {
             if (Read is null)
@@ -431,10 +431,10 @@ namespace NetExtender.Registry
                 result = default;
                 return false;
             }
-            
+
             return Read.GetValue(key, out result);
         }
-        
+
         public Boolean GetValue<T>(String? key, out T? result, params String[]? sections)
         {
             return GetValue(key, sections, out result);
@@ -447,10 +447,10 @@ namespace NetExtender.Registry
                 using IRegistry registry = NestedSubKey(sections);
                 return registry.GetValue(key, out result);
             }
-            
+
             return GetValue(key, out result);
         }
-        
+
         public Object? GetObjectValue(String? key)
         {
             try
@@ -462,7 +462,7 @@ namespace NetExtender.Registry
                 return null;
             }
         }
-        
+
         public Object? GetObjectValue(String? key, params String[]? sections)
         {
             return GetObjectValue(key, (IEnumerable<String>?) sections);
@@ -478,7 +478,7 @@ namespace NetExtender.Registry
 
             return GetObjectValue(key);
         }
-        
+
         public Object? GetObjectValue(String? key, out RegistryValueKind kind)
         {
             try
@@ -490,10 +490,10 @@ namespace NetExtender.Registry
                     kind = RegistryValueKind.Unknown;
                     return null;
                 }
-                
+
                 Object? value = read.GetValue(key);
                 kind = read.GetValueKind(key);
-                
+
                 return value;
             }
             catch (Exception)
@@ -502,7 +502,7 @@ namespace NetExtender.Registry
                 return null;
             }
         }
-        
+
         public Object? GetObjectValue(String? key, out RegistryValueKind kind, params String[]? sections)
         {
             return GetObjectValue(key, sections, out kind);
@@ -518,7 +518,7 @@ namespace NetExtender.Registry
 
             return GetObjectValue(key, out kind);
         }
-        
+
         public String? GetValue(String? key)
         {
             try
@@ -546,7 +546,7 @@ namespace NetExtender.Registry
 
             return GetValue(key);
         }
-        
+
         public String? GetValue(String? key, out RegistryValueKind kind)
         {
             try
@@ -558,7 +558,7 @@ namespace NetExtender.Registry
                     kind = RegistryValueKind.Unknown;
                     return null;
                 }
-                
+
                 String? item = read.GetValue(key)?.GetString();
                 kind = read.GetValueKind(key);
 
@@ -586,7 +586,7 @@ namespace NetExtender.Registry
 
             return GetValue(key, out kind);
         }
-        
+
         public RegistryValueKind GetValueKind(String? key)
         {
             try
@@ -614,7 +614,7 @@ namespace NetExtender.Registry
 
             return GetValueKind(key);
         }
-        
+
         public Boolean SetValue(String? key, String? value)
         {
             try
@@ -665,12 +665,12 @@ namespace NetExtender.Registry
 
             return SetValue(key, value);
         }
-        
+
         public Boolean SetValue(String? key, Object? value)
         {
             return SetValue(key, value, RegistryValueKind.Unknown);
         }
-        
+
         public Boolean SetValue(String? key, Object? value, params String[]? sections)
         {
             return SetValue(key, value, (IEnumerable<String>?) sections);
@@ -680,13 +680,13 @@ namespace NetExtender.Registry
         {
             return SetValue(key, value, sections, RegistryValueKind.Unknown);
         }
-        
+
         public Boolean SetValue(String? key, Object? value, RegistryValueKind kind)
         {
             try
             {
                 Object? current = GetObjectValue(key);
-                
+
                 if (current is null && value is null || current is not null && current.Equals(value))
                 {
                     return true;
@@ -805,7 +805,7 @@ namespace NetExtender.Registry
             try
             {
                 Object? current = GetObjectValue(key);
-                
+
                 if (current is null && value is null || current is not null && current.Equals(value))
                 {
                     return true;
@@ -874,16 +874,16 @@ namespace NetExtender.Registry
             {
                 return false;
             }
-            
+
             try
             {
                 RegistryKey? read = Read;
-                
+
                 if (read is null)
                 {
                     return false;
                 }
-                
+
                 if (read.GetValue(key) is null)
                 {
                     return true;
@@ -900,7 +900,7 @@ namespace NetExtender.Registry
                 {
                     return false;
                 }
-                
+
                 write.DeleteValue(key);
                 return true;
             }
@@ -925,7 +925,7 @@ namespace NetExtender.Registry
 
             return RemoveKey(key);
         }
-        
+
         public String[]? GetValueNames()
         {
             try
@@ -971,7 +971,7 @@ namespace NetExtender.Registry
                 {
                     String name = names[i];
                     Object? value = GetObjectValue(name, out RegistryValueKind kind);
-                    
+
                     values[i] = new RegistryEntry
                     {
                         Key = Key,
@@ -1056,7 +1056,7 @@ namespace NetExtender.Registry
             foreach (String subkey in subkeys)
             {
                 using IRegistry registry = NestedSubKey(subkey);
-                    
+
                 RegistryEntry[]? subentries = registry.Dump();
 
                 if (subentries is null)
@@ -1070,7 +1070,7 @@ namespace NetExtender.Registry
                 }
             }
         }
-        
+
         public RegistryEntry[]? Dump()
         {
             try
@@ -1114,7 +1114,7 @@ namespace NetExtender.Registry
                 {
                     return false;
                 }
-                
+
                 if (read.SubKeyCount > 0)
                 {
                     return false;
@@ -1132,7 +1132,7 @@ namespace NetExtender.Registry
         {
             return RemoveSubKey((IEnumerable<String>?) sections);
         }
-        
+
         public Boolean RemoveSubKey(IEnumerable<String>? sections)
         {
             if (sections?.CountIfMaterialized() > 0)
@@ -1152,7 +1152,7 @@ namespace NetExtender.Registry
                 {
                     return false;
                 }
-                
+
                 RegistryKey? read = Read;
 
                 if (read is null)
@@ -1180,12 +1180,12 @@ namespace NetExtender.Registry
                 return false;
             }
         }
-        
+
         public Boolean RemoveSubKey(String? subkey, params String[]? sections)
         {
             return RemoveSubKey(subkey, (IEnumerable<String>?) sections);
         }
-        
+
         public Boolean RemoveSubKey(String? subkey, IEnumerable<String>? sections)
         {
             if (sections?.CountIfMaterialized() > 0)
@@ -1196,7 +1196,7 @@ namespace NetExtender.Registry
 
             return RemoveSubKey(subkey);
         }
-        
+
         public Boolean RemoveAllSubKey()
         {
             try
@@ -1219,7 +1219,7 @@ namespace NetExtender.Registry
                 {
                     return false;
                 }
-                
+
                 String[]? subkeys = GetSubKeyNames();
 
                 if (subkeys is null)
@@ -1240,7 +1240,7 @@ namespace NetExtender.Registry
                         //ignored
                     }
                 }
-                
+
                 return count > 0;
             }
             catch (Exception)
@@ -1248,12 +1248,12 @@ namespace NetExtender.Registry
                 return false;
             }
         }
-        
+
         public Boolean RemoveAllSubKey(params String[]? sections)
         {
             return RemoveAllSubKey((IEnumerable<String>?) sections);
         }
-        
+
         public Boolean RemoveAllSubKey(IEnumerable<String>? sections)
         {
             if (sections?.CountIfMaterialized() > 0)
@@ -1264,7 +1264,7 @@ namespace NetExtender.Registry
 
             return RemoveAllSubKey();
         }
-        
+
         public Boolean RemoveSubKeyTree()
         {
             try
@@ -1293,7 +1293,7 @@ namespace NetExtender.Registry
         {
             return RemoveSubKeyTree((IEnumerable<String>?) sections);
         }
-        
+
         public Boolean RemoveSubKeyTree(IEnumerable<String>? sections)
         {
             if (sections?.CountIfMaterialized() > 0)
@@ -1313,7 +1313,7 @@ namespace NetExtender.Registry
                 {
                     return false;
                 }
-                
+
                 RegistryKey? read = Read;
 
                 if (read is null)
@@ -1341,12 +1341,12 @@ namespace NetExtender.Registry
                 return false;
             }
         }
-        
+
         public Boolean RemoveSubKeyTree(String? subkey, params String[]? sections)
         {
             return RemoveSubKeyTree(subkey, (IEnumerable<String>?) sections);
         }
-        
+
         public Boolean RemoveSubKeyTree(String? subkey, IEnumerable<String>? sections)
         {
             if (sections?.CountIfMaterialized() > 0)
@@ -1357,7 +1357,7 @@ namespace NetExtender.Registry
 
             return RemoveSubKeyTree(subkey);
         }
-        
+
         public Boolean RemoveAllSubKeyTree()
         {
             try
@@ -1387,7 +1387,7 @@ namespace NetExtender.Registry
                 {
                     return false;
                 }
-                
+
                 Int32 count = 0;
                 foreach (String subkey in subkeys)
                 {
@@ -1401,7 +1401,7 @@ namespace NetExtender.Registry
                         //ignored
                     }
                 }
-                
+
                 return count > 0;
             }
             catch (Exception)
@@ -1409,13 +1409,13 @@ namespace NetExtender.Registry
                 return false;
             }
         }
-        
+
         public Boolean RemoveAllSubKeyTree(params String[]? sections)
         {
             return RemoveAllSubKeyTree((IEnumerable<String>?) sections);
         }
-        
-        
+
+
         public Boolean RemoveAllSubKeyTree(IEnumerable<String>? sections)
         {
             if (sections?.CountIfMaterialized() > 0)
@@ -1426,7 +1426,7 @@ namespace NetExtender.Registry
 
             return RemoveAllSubKeyTree();
         }
-        
+
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(Key, FullPath, Permission, Options, Security);
@@ -1457,15 +1457,15 @@ namespace NetExtender.Registry
         {
             if (disposing)
             {
-                
+
             }
-            
+
             _read?.Dispose();
             _write?.Dispose();
             _full?.Dispose();
             _create?.Dispose();
         }
-        
+
         ~Registry()
         {
             Dispose(false);

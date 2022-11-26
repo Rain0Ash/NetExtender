@@ -10,7 +10,7 @@ namespace NetExtender.Types.Drawing.Colors.Interfaces
     public interface IColor<T> : IColor, IEquatable<T>
     {
     }
-    
+
     public interface IColor : IFormattable
     {
         public ColorType Type { get; }

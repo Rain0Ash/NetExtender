@@ -20,7 +20,7 @@ namespace NetExtender.Utilities.Windows.IO
                     return Keyboard.PrimaryDevice.GetKeys(KeyState.Up);
                 }
             }
-            
+
             public static Boolean Alt
             {
                 get

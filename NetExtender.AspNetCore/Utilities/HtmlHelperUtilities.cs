@@ -19,7 +19,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             String title = helper.ViewBag.Title;
             return !String.IsNullOrEmpty(title) ? new HtmlString(title) : HtmlString.Empty;
         }
-        
+
         public static void SetTitle(this IHtmlHelper helper, HtmlString? value)
         {
             if (helper is null)

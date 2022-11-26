@@ -76,7 +76,7 @@ namespace NetExtender.Types.Dictionaries
         {
             return GetEnumerator();
         }
-        
+
         public TValue this[TKey key]
         {
             get

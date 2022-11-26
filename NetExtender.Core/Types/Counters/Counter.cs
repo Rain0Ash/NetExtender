@@ -20,7 +20,7 @@ namespace NetExtender.Types.Counters
                 return Internal.Count;
             }
         }
-        
+
         public IEnumerable<T> Keys
         {
             get
@@ -56,7 +56,7 @@ namespace NetExtender.Types.Counters
         {
             Internal = new Dictionary<T, Int32>(capacity, comparer);
         }
-        
+
         public Counter(IEnumerable<T> collection)
         {
             if (collection is null)
@@ -67,7 +67,7 @@ namespace NetExtender.Types.Counters
             Internal = new Dictionary<T, Int32>();
             AddRange(collection);
         }
-        
+
         public Counter(IEnumerable<T> collection, IEqualityComparer<T>? comparer)
         {
             if (collection is null)
@@ -98,7 +98,7 @@ namespace NetExtender.Types.Counters
 
             return Internal.TryGetValue(key, out value);
         }
-        
+
         public Int32 Add(T item)
         {
             if (item is null)
@@ -111,16 +111,16 @@ namespace NetExtender.Types.Counters
                 Internal[item] = ++count;
                 return count;
             }
-            
+
             Internal.Add(item, ++count);
             return count;
         }
-        
+
         public Boolean TryAdd(T item)
         {
             return TryAdd(item, out _);
         }
-        
+
         public Boolean TryAdd(T item, out Int32 count)
         {
             if (item is null)
@@ -175,7 +175,7 @@ namespace NetExtender.Types.Counters
                 count = 0;
                 return Internal.Remove(item);
             }
-                
+
             Internal[item] = --count;
             return true;
         }
@@ -192,7 +192,7 @@ namespace NetExtender.Types.Counters
                 Remove(item);
             }
         }
-        
+
         public IEnumerator<KeyValuePair<T, Int32>> GetEnumerator()
         {
             return Internal.GetEnumerator();
@@ -202,7 +202,7 @@ namespace NetExtender.Types.Counters
         {
             return GetEnumerator();
         }
-        
+
         public Int32 this[T key]
         {
             get

@@ -14,7 +14,7 @@ namespace NetExtender.Localization.Properties.Interfaces
         public event EventHandler StringChanged;
         public new event LocalizationValueChangedEventHandler Changed;
         public Int32 Count { get; }
-        
+
         public String? this[LocalizationIdentifier identifier] { get; }
     }
 }

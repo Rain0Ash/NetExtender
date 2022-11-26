@@ -27,7 +27,7 @@ namespace NetExtender.NAudio.Types.Playlist
         {
         }
     }
-    
+
     public class RepeatWaveStreamPlaylist<T> : WaveStreamPlaylist<T> where T : WaveStream
     {
         private Int32 _index;
@@ -47,14 +47,14 @@ namespace NetExtender.NAudio.Types.Playlist
                 {
                     throw new ArgumentOutOfRangeException(nameof(value));
                 }
-                
+
                 lock (Queue)
                 {
                     if (Queue.Count <= 0)
                     {
                         return;
                     }
-                    
+
                     _index = value % Queue.Count;
                 }
             }
@@ -99,7 +99,7 @@ namespace NetExtender.NAudio.Types.Playlist
                             StreamPosition = value;
                             return;
                         }
-                        
+
                         value -= length;
                     }
                 }
@@ -125,7 +125,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 base.Position = value;
             }
         }
-        
+
         public override TimeSpan TotalTime
         {
             get
@@ -160,7 +160,7 @@ namespace NetExtender.NAudio.Types.Playlist
                             StreamCurrentTime = value;
                             return;
                         }
-                        
+
                         value -= length;
                     }
                 }
@@ -197,7 +197,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 }
             }
         }
-        
+
         public RepeatWaveStreamPlaylist()
         {
         }

@@ -58,7 +58,7 @@ namespace NetExtender.Types.Memento
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return new MementoObject<TSource, TProperty>(source, Property);
         }
 
@@ -73,7 +73,7 @@ namespace NetExtender.Types.Memento
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return HasValue ? new MementoObject<TSource, TProperty>(source, Property, Value) : New(source);
         }
 
@@ -101,7 +101,7 @@ namespace NetExtender.Types.Memento
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             Value = Property.GetValue(source);
             return this;
         }

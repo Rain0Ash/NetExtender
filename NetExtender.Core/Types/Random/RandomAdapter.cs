@@ -14,7 +14,7 @@ namespace NetExtender.Types.Random
         {
             return random is not null ? new RandomAdapter(random) : null;
         }
-        
+
         [return: NotNullIfNotNull("random")]
         public static explicit operator System.Random?(RandomAdapter? random)
         {

@@ -10,22 +10,22 @@ namespace NetExtender.Types.Comparers
     public class OrderedStringComparer : OrderedComparer<String?>
     {
         public StringComparison ComparisonType { get; set; }
-        
+
         public OrderedStringComparer()
             : this(null)
         {
         }
-        
+
         public OrderedStringComparer(StringComparison comparison)
             : this(null, comparison)
         {
         }
-        
+
         public OrderedStringComparer(IEnumerable<String?>? order)
             : this(order, StringComparison.Ordinal)
         {
         }
-        
+
         public OrderedStringComparer(IEnumerable<String?>? order, StringComparison comparison)
             : base(order)
         {

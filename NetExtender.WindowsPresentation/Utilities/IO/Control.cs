@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.Windows.IO
                     return Modifiers == ModifierKeys.Control;
                 }
             }
-            
+
             public static Boolean HasControl
             {
                 get
@@ -25,7 +25,7 @@ namespace NetExtender.Utilities.Windows.IO
                     return Modifiers.HasFlag(ModifierKeys.Control);
                 }
             }
-            
+
             public static Boolean IsControlDown
             {
                 get
@@ -33,7 +33,7 @@ namespace NetExtender.Utilities.Windows.IO
                     return IsKeyActive(Keyboard.IsKeyDown, Key.LeftCtrl, Key.RightCtrl);
                 }
             }
-            
+
             public static Boolean IsControlToggled
             {
                 get
@@ -41,7 +41,7 @@ namespace NetExtender.Utilities.Windows.IO
                     return IsKeyActive(Keyboard.IsKeyToggled, Key.LeftCtrl, Key.RightCtrl);
                 }
             }
-            
+
             public static Boolean IsControlUp
             {
                 get

@@ -74,7 +74,7 @@ namespace NetExtender.Utilities.Types
         {
             return utc ? ElapsedUtc(value) : Elapsed(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeSpan ElapsedUtc(this DateTime value)
         {
@@ -688,7 +688,7 @@ namespace NetExtender.Utilities.Types
         {
             return DateTime.TryParse(text, out _);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsWeekend(this DateTime date)
         {
@@ -794,25 +794,25 @@ namespace NetExtender.Utilities.Types
 
             return date.Date.AddDays(diff);
         }
-        
+
         public static DateTime GetFirstDayOfMonth(this DateTime date)
         {
             return new DateTime(date.Year, date.Month, 1, 0, 0, 0, date.Kind);
         }
-	
+
         public static DateTime GetFirstDayOfMonth(this DateTime date, DayOfWeek day)
         {
             date = date.GetFirstDayOfMonth();
-	
+
             DayOfWeek current = date.DayOfWeek;
-            
+
             if (current == day)
             {
                 return date;
             }
 
             Int32 lwd = day - date.DayOfWeek;
-            
+
             if (lwd < 0)
             {
                 lwd += 7;
@@ -820,21 +820,21 @@ namespace NetExtender.Utilities.Types
 
             return date.AddDays(lwd);
         }
-	
+
         public static DateTime GetLastDayOfMonth(this DateTime date)
         {
             Int32 year = date.Year;
             Int32 month = date.Month;
             return new DateTime(year, month, DateTime.DaysInMonth(year, month));
         }
-	
+
         public static DateTime GetLastDayOfMonth(this DateTime date, DayOfWeek day)
         {
             DateTime last = GetLastDayOfMonth(date);
             Int32 lwd = day - last.DayOfWeek;
             return last.AddDays(lwd);
         }
-        
+
         public static DateTime GetFirstDayOfPreviousMonth(this DateTime date)
         {
             Int32 month = date.Month;
@@ -842,7 +842,7 @@ namespace NetExtender.Utilities.Types
                 new DateTime(date.Year - 1, 12, 1, 0, 0, 0, date.Kind) :
                 new DateTime(date.Year, month - 1, 1, 0, 0, 0, date.Kind);
         }
-	
+
         public static DateTime GetFirstDayOfNextMonth(this DateTime date)
         {
             Int32 month = date.Month;
@@ -850,7 +850,7 @@ namespace NetExtender.Utilities.Types
                 new DateTime(date.Year + 1, 1, 1, 0, 0, 0, date.Kind) :
                 new DateTime(date.Year, month + 1, 1, 0, 0, 0, date.Kind);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Quarter Quarter(this DateTime date)
         {
@@ -876,7 +876,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(quarter), quarter, @"Quarter not in range");
             }
-            
+
             return new DateTime(year, 1, 1).AddQuarters(quarter - 1);
         }
 
@@ -899,7 +899,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(quarter), quarter, @"Quarter not in range");
             }
-            
+
             return new DateTime(year, 1, 1).AddQuarters(quarter).AddDays(-1);
         }
 
@@ -928,7 +928,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(quarter), quarter, @"Quarter not in range");
             }
-            
+
             return date.Year == year && date.QuarterNumber() == quarter;
         }
 
@@ -1157,7 +1157,7 @@ namespace NetExtender.Utilities.Types
         {
             return new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, 0);
         }
-        
+
         /// <summary>
         ///     Checks if <paramref name="value" /> is between 1/1/1753 12:00:00 AM and 12/31/9999 11:59:59 PM.
         /// </summary>

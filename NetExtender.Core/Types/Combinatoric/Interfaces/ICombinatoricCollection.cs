@@ -19,7 +19,7 @@ namespace NetExtender.Types.Combinatoric.Interfaces
         /// determined from the inputs.
         /// </summary>
         public Boolean Repetition { get; }
-        
+
         /// <summary>
         /// The upper index of the meta-collection, which is the size of the input collection.
         /// </summary>
@@ -29,7 +29,7 @@ namespace NetExtender.Types.Combinatoric.Interfaces
         /// The lower index of the meta-collection, which is the size of each output collection.
         /// </summary>
         public Int32 LowerIndex { get; }
-        
+
         /// <summary>
         /// The count of items in the collection. This is not inherited from
         /// ICollection since this meta-collection cannot be extended by users.

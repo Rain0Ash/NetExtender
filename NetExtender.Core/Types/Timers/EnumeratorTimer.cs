@@ -49,7 +49,7 @@ namespace NetExtender.Types.Timers
                 return Current;
             }
         }
-        
+
         public Boolean IsStarted
         {
             get
@@ -71,12 +71,12 @@ namespace NetExtender.Types.Timers
         }
 
         public Boolean IsReset { get; init; }
-        
+
         public EnumeratorTimer(Int32 interval, IEnumerable<T> source)
             : this(source ?? throw new ArgumentNullException(nameof(source)), new TimerWrapper(interval))
         {
         }
-        
+
         public EnumeratorTimer(Double interval, IEnumerable<T> source)
             : this(source ?? throw new ArgumentNullException(nameof(source)), new TimerWrapper(interval))
         {
@@ -86,7 +86,7 @@ namespace NetExtender.Types.Timers
             : this(source ?? throw new ArgumentNullException(nameof(source)), new TimerWrapper(interval))
         {
         }
-        
+
         private EnumeratorTimer(IEnumerable<T> source, ITimer timer)
         {
             if (source is null)
@@ -120,7 +120,7 @@ namespace NetExtender.Types.Timers
             Finished?.Invoke(this, EventArgs.Empty);
             Dispose();
         }
-        
+
         public void Start()
         {
             Timer.Start();

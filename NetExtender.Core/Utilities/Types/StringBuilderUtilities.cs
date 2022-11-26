@@ -21,7 +21,7 @@ namespace NetExtender.Utilities.Types
         {
             return new StringBuilder(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder ToStringBuilder(this String? value, Int32 capacity)
         {
@@ -49,13 +49,13 @@ namespace NetExtender.Utilities.Types
         {
             return builder is null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotNull(this StringBuilder? builder)
         {
             return builder is not null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsEmpty(this StringBuilder? builder)
         {
@@ -67,13 +67,13 @@ namespace NetExtender.Utilities.Types
         {
             return !IsEmpty(builder);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNullOrEmpty(this StringBuilder? builder)
         {
             return builder is null || builder.Length <= 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotNullOrEmpty(this StringBuilder? builder)
         {
@@ -85,7 +85,7 @@ namespace NetExtender.Utilities.Types
         {
             return builder is not null && builder.Length > 0 && builder.AsEnumerable().All(Char.IsWhiteSpace);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotWhiteSpace(this StringBuilder? builder)
         {
@@ -115,7 +115,7 @@ namespace NetExtender.Utilities.Types
         {
             return AppendRange(builder, source);
         }
-        
+
         public static StringBuilder AppendRange(this StringBuilder builder, IEnumerable<Char> source)
         {
             if (builder is null)
@@ -130,7 +130,7 @@ namespace NetExtender.Utilities.Types
 
             return builder.Append(source.ToStringBuilder());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder Prepend(this StringBuilder builder, Char value)
         {
@@ -142,19 +142,19 @@ namespace NetExtender.Utilities.Types
         {
             return AddPrefix(builder, value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder Prepend(this StringBuilder builder, StringBuilder value)
         {
             return AddPrefix(builder, value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder Prepend(this StringBuilder builder, IEnumerable<Char> source)
         {
             return PrependRange(builder, source);
         }
-        
+
         public static StringBuilder PrependRange(this StringBuilder builder, IEnumerable<Char> source)
         {
             if (builder is null)
@@ -169,7 +169,7 @@ namespace NetExtender.Utilities.Types
 
             return builder.Prepend(source.ToStringBuilder());
         }
-        
+
         public static StringBuilder AddSuffix(this StringBuilder builder, String value)
         {
             if (builder is null)
@@ -179,7 +179,7 @@ namespace NetExtender.Utilities.Types
 
             return builder.Append(value);
         }
-        
+
         public static StringBuilder AddSuffix(this StringBuilder builder, StringBuilder value)
         {
             if (builder is null)
@@ -189,7 +189,7 @@ namespace NetExtender.Utilities.Types
 
             return builder.Append(value);
         }
-        
+
         public static StringBuilder AddSuffix(this StringBuilder builder, params String[]? values)
         {
             if (builder is null)
@@ -219,7 +219,7 @@ namespace NetExtender.Utilities.Types
                     return values.Aggregate(builder, (sb, str) => sb.Append(str));
             }
         }
-        
+
         public static StringBuilder AddPrefix(this StringBuilder builder, String? value)
         {
             if (builder is null)
@@ -229,7 +229,7 @@ namespace NetExtender.Utilities.Types
 
             return builder.Insert(0, value);
         }
-        
+
         public static StringBuilder AddPrefix(this StringBuilder builder, StringBuilder? value)
         {
             return AddPrefix(builder, value?.ToString());
@@ -285,7 +285,7 @@ namespace NetExtender.Utilities.Types
 
             return builder.AddPrefix(value).AddSuffix(value);
         }
-        
+
         public static StringBuilder AddPrefixAndSuffix(this StringBuilder builder, StringBuilder? value)
         {
             if (builder is null)
@@ -297,7 +297,7 @@ namespace NetExtender.Utilities.Types
             {
                 return builder;
             }
-            
+
             if (builder.Length + 2 * value.Length > builder.MaxCapacity)
             {
                 throw new ArgumentOutOfRangeException(nameof(value));
@@ -305,7 +305,7 @@ namespace NetExtender.Utilities.Types
 
             return builder.AddPrefix(value).AddSuffix(value);
         }
-        
+
         public static StringBuilder AddPrefixAndSuffix(this StringBuilder builder, params String[]? values)
         {
             if (builder is null)
@@ -317,7 +317,7 @@ namespace NetExtender.Utilities.Types
             {
                 return builder;
             }
-            
+
             if (builder.Length + 2 * values.CharLength() > builder.MaxCapacity)
             {
                 throw new ArgumentOutOfRangeException(nameof(values));
@@ -330,7 +330,7 @@ namespace NetExtender.Utilities.Types
                 _ => AddPrefixAndSuffix(builder, values.Join())
             };
         }
-        
+
         public static StringBuilder RemovePrefix(this StringBuilder builder, String? prefix)
         {
             return RemovePrefix(builder, prefix, StringComparison.Ordinal);
@@ -442,7 +442,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            
+
             return Char.GetUnicodeCategory(builder[index]);
         }
 
@@ -456,7 +456,7 @@ namespace NetExtender.Utilities.Types
 
             return builder.ToString(start, builder.Length - start);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder Substring(this StringBuilder builder, Int32 start)
         {
@@ -495,7 +495,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(length));
             }
-            
+
             if (length == 0)
             {
                 return builder.Clear();
@@ -508,7 +508,7 @@ namespace NetExtender.Utilities.Types
 
             return builder.Remove(0, start).Remove(length, builder.Length - length);
         }
-        
+
         public static Boolean StartsWith(this StringBuilder builder, String value)
         {
             return StartsWith(builder, value, StringComparison.CurrentCulture);
@@ -534,7 +534,7 @@ namespace NetExtender.Utilities.Types
             String start = builder.ToString(0, value.Length);
             return start.Equals(value, comparison);
         }
-        
+
         public static Boolean StartsWith(this StringBuilder builder, String value, Boolean ignoreCase, CultureInfo? culture)
         {
             if (builder is null)
@@ -559,7 +559,7 @@ namespace NetExtender.Utilities.Types
 
             return builder.Length > 0 && builder[0] == value;
         }
-        
+
         public static Boolean EndsWith(this StringBuilder builder, String value)
         {
             return EndsWith(builder, value, StringComparison.CurrentCulture);
@@ -585,7 +585,7 @@ namespace NetExtender.Utilities.Types
             String end = builder.ToString(builder.Length - value.Length, value.Length);
             return end.Equals(value, comparison);
         }
-        
+
         public static Boolean EndsWith(this StringBuilder builder, String value, Boolean ignoreCase, CultureInfo? culture)
         {
             if (builder is null)
@@ -597,7 +597,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             return builder.Length >= value.Length && builder.ToString(builder.Length - value.Length, value.Length).EndsWith(value, ignoreCase, culture);
         }
 
@@ -610,7 +610,7 @@ namespace NetExtender.Utilities.Types
 
             return builder.Length > 0 && builder[^1] == value;
         }
-        
+
         public static StringBuilder Trim(this StringBuilder builder)
         {
             if (builder is null)
@@ -640,7 +640,7 @@ namespace NetExtender.Utilities.Types
 
             return builder.TrimStart(trim).TrimEnd(trim);
         }
-        
+
         public static StringBuilder TrimStart(this StringBuilder builder, Func<Char, Boolean> predicate)
         {
             if (builder is null)
@@ -701,7 +701,7 @@ namespace NetExtender.Utilities.Types
             Int32 count = builder.AsEnumerable().ReverseCountWhile(predicate);
             return builder.Remove(builder.Length - count, count);
         }
-        
+
         public static StringBuilder TrimEnd(this StringBuilder builder)
         {
             return TrimEnd(builder, Char.IsWhiteSpace);
@@ -718,7 +718,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             if (builder.Length <= 0 || trim is null || trim.Length <= 0)
             {
                 return builder;
@@ -736,7 +736,7 @@ namespace NetExtender.Utilities.Types
 
             return builder.Length > 2 * length ? builder.TrimStart(length).TrimEnd(length) : builder.Clear();
         }
-        
+
         public static StringBuilder TrimStart(this StringBuilder builder, Int32 length)
         {
             if (builder is null)
@@ -746,7 +746,7 @@ namespace NetExtender.Utilities.Types
 
             return builder.Length > length ? builder.Remove(0, length) : builder.Clear();
         }
-        
+
         public static StringBuilder TrimEnd(this StringBuilder builder, Int32 length)
         {
             if (builder is null)
@@ -796,7 +796,7 @@ namespace NetExtender.Utilities.Types
 
             return builder.Remove(start, builder.Length - start);
         }
-        
+
         public static StringBuilder Remove(this StringBuilder builder, Int32 start, Int32 length, out String result)
         {
             return Pop(builder, start, length, out result);
@@ -811,19 +811,19 @@ namespace NetExtender.Utilities.Types
 
             return builder.Remove(index, 1);
         }
-        
+
         public static StringBuilder RemoveChar(this StringBuilder builder, Int32 index, out Char result)
         {
             return PopChar(builder, index, out result);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Char PopChar(this StringBuilder builder, Int32 index)
         {
             PopChar(builder, index, out Char result);
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder PopChar(this StringBuilder builder, Int32 index, out Char result)
         {
@@ -835,7 +835,7 @@ namespace NetExtender.Utilities.Types
             result = builder[index];
             return builder.RemoveChar(index);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder Pop(this StringBuilder builder, Int32 index, out Char result)
         {
@@ -867,7 +867,7 @@ namespace NetExtender.Utilities.Types
             Pop(builder, start, out String result);
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static StringBuilder Pop(this StringBuilder builder, Int32 start, out String result)
         {
@@ -910,7 +910,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             if (replace.IsEmpty)
             {
                 return builder;
@@ -995,7 +995,7 @@ namespace NetExtender.Utilities.Types
 
             return builder.Insert(0, builder.ToString(), count);
         }
-        
+
         public static StringBuilder Shuffle(this StringBuilder builder)
         {
             if (builder is null)
@@ -1011,14 +1011,14 @@ namespace NetExtender.Utilities.Types
             String value = builder.ToString();
             return builder.Clear().Append(value.Shuffle());
         }
-        
+
         public static StringBuilder Shuffle(this StringBuilder builder, Int32 index)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             if (index < 0 || index >= builder.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
@@ -1032,14 +1032,14 @@ namespace NetExtender.Utilities.Types
             String value = builder.ToString();
             return builder.Clear().Append(value.Shuffle(index));
         }
-        
+
         public static StringBuilder Shuffle(this StringBuilder builder, Int32 index, Int32 length)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             if (length < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(length));
@@ -1112,12 +1112,12 @@ namespace NetExtender.Utilities.Types
             String result = builder.ToString().ToLowerInvariant();
             return builder.Clear().Append(result);
         }
-        
+
         public static StringBuilder ToCapitalizeFirstChar(this StringBuilder builder)
         {
             return ToCapitalizeFirstChar(builder, null);
         }
-        
+
         public static StringBuilder ToCapitalizeFirstChar(this StringBuilder builder, CultureInfo? info)
         {
             if (builder is null)
@@ -1133,12 +1133,12 @@ namespace NetExtender.Utilities.Types
             builder[0] = builder[0].ToUpper(info);
             return builder;
         }
-        
+
         public static StringBuilder ToCapitalizeFirstCharLower(this StringBuilder builder)
         {
             return ToCapitalizeFirstCharLower(builder, null);
         }
-        
+
         public static StringBuilder ToCapitalizeFirstCharLower(this StringBuilder builder, CultureInfo? info)
         {
             if (builder is null)
@@ -1153,7 +1153,7 @@ namespace NetExtender.Utilities.Types
         {
             return ToTitleCase(builder, null);
         }
-        
+
         public static StringBuilder ToTitleCase(this StringBuilder builder, CultureInfo? info)
         {
             if (builder is null)
@@ -1169,7 +1169,7 @@ namespace NetExtender.Utilities.Types
             String result = builder.ToString().ToTitleCase(info);
             return builder.Clear().Append(result);
         }
-        
+
         public static StringBuilder ToTitleCaseLower(this StringBuilder builder)
         {
             return ToTitleCaseLower(builder, null);
@@ -1207,7 +1207,7 @@ namespace NetExtender.Utilities.Types
             String result = builder.ToString().Normalize(normalization);
             return builder.Clear().Append(result);
         }
-        
+
         public static Boolean IsNormalized(this StringBuilder builder)
         {
             if (builder is null)
@@ -1313,7 +1313,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
-            
+
             for (Int32 i = start; i < start + count; i++)
             {
                 if (builder[i] == value)
@@ -1332,7 +1332,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             if (builder.Length < value.Length)
             {
                 return -1;
@@ -1353,12 +1353,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(start));
             }
-            
+
             if (builder.Length - start < value.Length)
             {
                 return -1;
             }
-            
+
             return builder.ToString().IndexOf(value, start);
         }
 
@@ -1369,7 +1369,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             if (start < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(start));
@@ -1384,7 +1384,7 @@ namespace NetExtender.Utilities.Types
             {
                 return -1;
             }
-            
+
             if (builder.Length - start < value.Length)
             {
                 return -1;
@@ -1399,7 +1399,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             if (builder.Length < value.Length)
             {
                 return -1;
@@ -1414,12 +1414,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             if (start < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(start));
             }
-            
+
             if (builder.Length - start < value.Length)
             {
                 return -1;
@@ -1434,7 +1434,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             if (start < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(start));
@@ -1449,7 +1449,7 @@ namespace NetExtender.Utilities.Types
             {
                 return -1;
             }
-            
+
             if (builder.Length - start < value.Length)
             {
                 return -1;
@@ -1494,7 +1494,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
-            
+
             for (Int32 i = builder.Length - count; i >= start; i--)
             {
                 if (builder[i] == value)
@@ -1505,7 +1505,7 @@ namespace NetExtender.Utilities.Types
 
             return -1;
         }
-        
+
         [SuppressMessage("ReSharper", "StringLastIndexOfIsCultureSpecific.1")]
         public static Int32 LastIndexOf(this StringBuilder builder, String value)
         {
@@ -1534,7 +1534,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(start));
             }
-            
+
             if (builder.Length - start < value.Length)
             {
                 return -1;
@@ -1565,7 +1565,7 @@ namespace NetExtender.Utilities.Types
             {
                 return -1;
             }
-            
+
             if (builder.Length - start < value.Length)
             {
                 return -1;
@@ -1580,7 +1580,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             if (builder.Length < value.Length)
             {
                 return -1;
@@ -1595,12 +1595,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             if (start < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(start));
             }
-            
+
             if (builder.Length - start < value.Length)
             {
                 return -1;
@@ -1615,7 +1615,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             if (start < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(start));
@@ -1630,7 +1630,7 @@ namespace NetExtender.Utilities.Types
             {
                 return -1;
             }
-            
+
             if (builder.Length - start < value.Length)
             {
                 return -1;
@@ -1670,7 +1670,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
-            
+
             if (values is null || values.Length <= 0)
             {
                 return -1;
@@ -1686,7 +1686,7 @@ namespace NetExtender.Utilities.Types
 
             return -1;
         }
-        
+
         public static Int32 LastIndexOfAny(this StringBuilder builder, Char[]? values)
         {
             return LastIndexOfAny(builder, values, 0);
@@ -1723,12 +1723,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
-            
+
             if (values is null || values.Length <= 0)
             {
                 return -1;
             }
-            
+
             for (Int32 i = builder.Length - count - 1; i >= start; i--)
             {
                 if (values.Contains(builder[i]))
@@ -1871,7 +1871,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(builder));
             }
-            
+
             return builder.Clear().Append(result);
         }
 
@@ -1883,12 +1883,12 @@ namespace NetExtender.Utilities.Types
             }
 
             String result = builder.ToString().Replace(before, after, ignoreCase, culture);
-            
+
             if (result.Length > builder.MaxCapacity)
             {
                 throw new ArgumentOutOfRangeException(nameof(builder));
             }
-            
+
             return builder.Clear().Append(result);
         }
 
@@ -1900,12 +1900,12 @@ namespace NetExtender.Utilities.Types
             }
 
             String result = builder.ToString().Replace(before, after, comparison);
-            
+
             if (result.Length > builder.MaxCapacity)
             {
                 throw new ArgumentOutOfRangeException(nameof(builder));
             }
-            
+
             return builder.Clear().Append(result);
         }
 

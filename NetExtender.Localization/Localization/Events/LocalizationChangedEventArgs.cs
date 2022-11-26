@@ -10,7 +10,7 @@ namespace NetExtender.Localization.Events
 {
     public delegate void LocalizationChangedEventHandler(Object? sender, LocalizationChangedEventArgs args);
     public delegate void LocalizationValueChangedEventHandler(Object? sender, LocalizationValueChangedEventArgs args);
-    
+
     public class LocalizationChangedEventArgs : HandledEventArgs<LocalizationIdentifier>
     {
         public LocalizationChangedEventArgs(LocalizationIdentifier value)
@@ -23,7 +23,7 @@ namespace NetExtender.Localization.Events
         {
         }
     }
-    
+
     public class LocalizationValueChangedEventArgs : HandledEventArgs<LocalizationValueEntry>
     {
         public LocalizationValueChangedEventArgs(LocalizationValueEntry value)

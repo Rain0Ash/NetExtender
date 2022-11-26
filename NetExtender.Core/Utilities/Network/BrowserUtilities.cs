@@ -19,13 +19,13 @@ namespace NetExtender.Utilities.Network
         Safari,
         Other
     }
-    
+
     public static class BrowserUtilities
     {
         private static class BrowserDistribution
         {
             public static IDynamicRandomSelector<BrowserType> Selector { get; }
-        
+
             static BrowserDistribution()
             {
                 IDictionary<BrowserType, Double> browsers = new Dictionary<BrowserType, Double>
@@ -37,7 +37,7 @@ namespace NetExtender.Utilities.Network
                     [BrowserType.Firefox] = 9.1,
                     [BrowserType.Safari] = 3.8
                 };
-            
+
                 browsers.Add(BrowserType.Other, 100 - browsers.Values.Sum());
                 Selector = new DynamicRandomSelector<BrowserType>(browsers);
             }
@@ -58,7 +58,7 @@ namespace NetExtender.Utilities.Network
                 return EnumUtilities.Random<BrowserType>();
             }
         }
-        
+
         public static BrowserType RandomBrowserWithDistribution
         {
             get

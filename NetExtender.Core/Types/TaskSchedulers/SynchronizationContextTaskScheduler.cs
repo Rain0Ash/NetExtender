@@ -13,7 +13,7 @@ namespace NetExtender.Types.TaskSchedulers
     {
         private SynchronizationContext? Context { get; }
         private ConcurrentQueue<Task> Tasks { get; }
-        
+
         public override Int32 MaximumConcurrencyLevel
         {
             get
@@ -21,7 +21,7 @@ namespace NetExtender.Types.TaskSchedulers
                 return 1;
             }
         }
-        
+
         public SynchronizationContextTaskScheduler()
             : this(SynchronizationContext.Current)
         {

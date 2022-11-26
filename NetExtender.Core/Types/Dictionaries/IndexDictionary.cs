@@ -50,7 +50,7 @@ namespace NetExtender.Types.Dictionaries
                 return Dictionary.Keys;
             }
         }
-        
+
         public Dictionary<TKey, TValue>.ValueCollection Values
         {
             get
@@ -58,7 +58,7 @@ namespace NetExtender.Types.Dictionaries
                 return Dictionary.Values;
             }
         }
-        
+
         IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys
         {
             get
@@ -125,7 +125,7 @@ namespace NetExtender.Types.Dictionaries
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             Dictionary = new Dictionary<TKey, TValue>(collection);
             Order = new IndexList<TKey>(Dictionary.Keys, Comparer);
         }
@@ -165,7 +165,7 @@ namespace NetExtender.Types.Dictionaries
             {
                 return Count;
             }
-            
+
             Int32 ensure = Dictionary.EnsureCapacity(capacity);
             Order.Capacity = ensure;
             return ensure;
@@ -175,7 +175,7 @@ namespace NetExtender.Types.Dictionaries
         {
             TrimExcess(Count);
         }
-        
+
         public void TrimExcess(Int32 capacity)
         {
             Int32 count = Count;
@@ -188,18 +188,18 @@ namespace NetExtender.Types.Dictionaries
             {
                 return;
             }
-            
+
             Dictionary.TrimExcess(capacity);
             Order.Capacity = capacity;
         }
-        
+
         public TKey GetKeyByIndex(Int32 index)
         {
             if (index < 0 || index >= Order.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            
+
             return Order[index];
         }
 
@@ -214,7 +214,7 @@ namespace NetExtender.Types.Dictionaries
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            
+
             return this.GetPair(Order[index]);
         }
 
@@ -228,7 +228,7 @@ namespace NetExtender.Types.Dictionaries
             pair = default;
             return false;
         }
-        
+
         public Boolean ContainsKey(TKey key)
         {
             if (key is null)
@@ -238,7 +238,7 @@ namespace NetExtender.Types.Dictionaries
 
             return Dictionary.ContainsKey(key);
         }
-        
+
         Boolean ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
         {
             return ((ICollection<KeyValuePair<TKey, TValue>>) Dictionary).Contains(item);
@@ -324,7 +324,7 @@ namespace NetExtender.Types.Dictionaries
             Dictionary.Add(key, value);
             Order.Add(key);
         }
-        
+
         void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
         {
             Add(item.Key, item.Value);
@@ -392,7 +392,7 @@ namespace NetExtender.Types.Dictionaries
             Order.Insert(index, key);
             return true;
         }
-        
+
         public void SetValueByIndex(Int32 index, TValue value)
         {
             if (index < 0 || index >= Order.Count)
@@ -418,7 +418,7 @@ namespace NetExtender.Types.Dictionaries
         {
             Order.Swap(index1, index2);
         }
-        
+
         public void Reverse()
         {
             Order.Reverse();
@@ -468,7 +468,7 @@ namespace NetExtender.Types.Dictionaries
 
             return Dictionary.Remove(key, out value) | Order.Remove(key);
         }
-        
+
         Boolean ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
         {
             (TKey key, TValue value) = item;
@@ -484,20 +484,20 @@ namespace NetExtender.Types.Dictionaries
         {
             return RemoveAt(index, out _);
         }
-        
+
         public Boolean RemoveAt(Int32 index, out KeyValuePair<TKey, TValue> pair)
         {
             if (!index.InRange(0, Count - 1))
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            
+
             if (!Order.TryGetValue(index, out TKey? key))
             {
                 pair = default;
                 return false;
             }
-            
+
             Order.RemoveAt(index);
             if (Dictionary.Remove(key, out TValue? value))
             {
@@ -519,7 +519,7 @@ namespace NetExtender.Types.Dictionaries
         {
             ((ICollection<KeyValuePair<TKey, TValue>>) Dictionary).CopyTo(array, arrayIndex);
         }
-        
+
         public IEnumerator<TKey> GetKeyEnumerator()
         {
             return Order.GetEnumerator();
@@ -539,7 +539,7 @@ namespace NetExtender.Types.Dictionaries
         {
             return GetEnumerator();
         }
-        
+
         public TValue this[TKey key]
         {
             get
@@ -562,7 +562,7 @@ namespace NetExtender.Types.Dictionaries
                 {
                     throw new ArgumentNullException(nameof(key));
                 }
-                
+
                 if (!ContainsKey(key))
                 {
                     Add(key, value);

@@ -77,7 +77,7 @@ namespace NetExtender.NewtonSoft.Types.Trees
                 key = default!;
                 return KeyState.Value;
             }
-            
+
             // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
             if (token.TryConvert(out key!) && key is not null)
             {
@@ -108,7 +108,7 @@ namespace NetExtender.NewtonSoft.Types.Trees
             void PropertyName(JsonTokenEntry token, String? name)
             {
                 KeyState state = ReadJsonKey(token, out TKey key);
-                
+
                 switch (state)
                 {
                     case KeyState.None:
@@ -125,7 +125,7 @@ namespace NetExtender.NewtonSoft.Types.Trees
                 {
                     keys.RemoveRange(token.Depth - 1, keys.Count - token.Depth + 1);
                 }
-                            
+
                 keys.Add(key);
             }
 

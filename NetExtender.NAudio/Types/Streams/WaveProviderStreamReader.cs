@@ -10,7 +10,7 @@ namespace NetExtender.NAudio.Types.Streams
     public class WaveProviderStreamReader : Stream
     {
         protected IWaveProvider Provider { get; }
-        
+
         public override Boolean CanRead
         {
             get
@@ -54,17 +54,17 @@ namespace NetExtender.NAudio.Types.Streams
                 throw new NotSupportedException();
             }
         }
-        
+
         public WaveProviderStreamReader(IWaveProvider provider)
         {
             Provider = provider ?? throw new ArgumentNullException(nameof(provider));
         }
-        
+
         public override Int64 Seek(Int64 offset, SeekOrigin origin)
         {
             throw new NotSupportedException();
         }
-        
+
         public override Int32 Read(Byte[] buffer, Int32 offset, Int32 count)
         {
             return Provider.Read(buffer, offset, count);
@@ -74,7 +74,7 @@ namespace NetExtender.NAudio.Types.Streams
         {
             throw new NotSupportedException();
         }
-        
+
         public override void SetLength(Int64 value)
         {
             throw new NotSupportedException();

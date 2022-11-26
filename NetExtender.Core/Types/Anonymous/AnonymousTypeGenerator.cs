@@ -57,7 +57,7 @@ namespace NetExtender.Types.Anonymous
             {
                 throw new ArgumentNullException(nameof(fields));
             }
-            
+
             const MethodAttributes attributes = MethodAttributes.Public | MethodAttributes.HideBySig;
 
             if (fields.Length <= 0)
@@ -68,11 +68,11 @@ namespace NetExtender.Types.Anonymous
             static KeyValuePair<String, FieldBuilder> Convert((PropertyBuilder? Property, FieldBuilder Field) value)
             {
                 (PropertyBuilder? property, FieldBuilder? field) = value;
-                
+
                 String name = property?.Name ?? field.Name;
                 return new KeyValuePair<String, FieldBuilder>(name, field);
             }
-            
+
             return new[] { builder.DefineConstructor(attributes), builder.DefineConstructor(fields.Select(Convert).ToArray(), attributes) };
         }
 

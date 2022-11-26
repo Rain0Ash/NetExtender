@@ -199,7 +199,7 @@ namespace NetExtender.Localization.Properties
                 return Internal.Identifier;
             }
         }
-        
+
         public Int32 Count
         {
             get
@@ -207,7 +207,7 @@ namespace NetExtender.Localization.Properties
                 return Internal.Count;
             }
         }
-        
+
         public ILocalizationString? Value
         {
             get
@@ -239,7 +239,7 @@ namespace NetExtender.Localization.Properties
                 return Internal.Validate;
             }
         }
-        
+
         public TryConverter<String?, ILocalizationString?> Converter
         {
             get
@@ -247,27 +247,27 @@ namespace NetExtender.Localization.Properties
                 return Internal.Converter;
             }
         }
-        
+
         private Boolean Disposing { get; }
-        
+
         internal ReadOnlyLocalizationPropertyWrapper(ILocalizationConfig config, String? key, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : this(new LocalizationProperty(config, key, alternate, options, sections), true)
         {
         }
-        
-        
+
+
         internal ReadOnlyLocalizationPropertyWrapper(ILocalizationConfig config, String? key, ILocalizationString? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : this(new LocalizationProperty(config, key, alternate, options, sections), true)
         {
         }
-        
-        
+
+
         internal ReadOnlyLocalizationPropertyWrapper(ILocalizationConfig config, String? key, IEnumerable<KeyValuePair<LocalizationIdentifier, String>>? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : this(new LocalizationProperty(config, key, alternate, options, sections), true)
         {
         }
-        
-        
+
+
         internal ReadOnlyLocalizationPropertyWrapper(ILocalizationConfig config, String? key, IEnumerable<LocalizationValueEntry>? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : this(new LocalizationProperty(config, key, alternate, options, sections), true)
         {
@@ -370,11 +370,11 @@ namespace NetExtender.Localization.Properties
             }
         }
     }
-    
+
     public sealed class ReadOnlyLocalizationIdentifierPropertyWrapper : IReadOnlyLocalizationIdentifierProperty
     {
         private ILocalizationIdentifierProperty Internal { get; }
-        
+
         public event LocalizationChangedEventHandler? LocalizationChanged
         {
             add
@@ -386,7 +386,7 @@ namespace NetExtender.Localization.Properties
                 Internal.LocalizationChanged -= value;
             }
         }
-        
+
         event ConfigurationChangedEventHandler? IConfigPropertyValueInfo.Changed
         {
             add
@@ -410,7 +410,7 @@ namespace NetExtender.Localization.Properties
                 Internal.Changed -= value;
             }
         }
-        
+
         public event PropertyChangedEventHandler? PropertyChanged
         {
             add
@@ -422,7 +422,7 @@ namespace NetExtender.Localization.Properties
                 Internal.PropertyChanged -= value;
             }
         }
-        
+
         public String Path
         {
             get
@@ -518,7 +518,7 @@ namespace NetExtender.Localization.Properties
                 return Internal.Identifier;
             }
         }
-        
+
         public String? Value
         {
             get

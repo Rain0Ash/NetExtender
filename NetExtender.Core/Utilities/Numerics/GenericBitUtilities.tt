@@ -49,7 +49,7 @@ namespace NetExtender.Utilities.Numerics
     {
         return type != nameof(Char);
     }
-    
+
     static Boolean IsSmallType(String type)
     {
         return type == nameof(Char) || type == nameof(Byte) || type == nameof(SByte) || type == nameof(Int16) || type == nameof(UInt16);
@@ -59,7 +59,7 @@ namespace NetExtender.Utilities.Numerics
     {
         return type == nameof(Char) || type == nameof(Byte) || type == nameof(UInt16) || type == nameof(UInt32) || type == nameof(UInt64);
     }
-    
+
     Boolean IsIntType(String type)
     {
         return type == nameof(Char) || type == nameof(SByte) || type == nameof(Byte) || type == nameof(Int16) || type == nameof(UInt16) || type == nameof(Int32) || type == nameof(UInt32) || type == nameof(Int64) || type == nameof(UInt64);
@@ -83,7 +83,7 @@ namespace NetExtender.Utilities.Numerics
             _ => type
         };
     }
-    
+
     String ToGreaterType(String type, String second)
     {
         return type switch
@@ -102,7 +102,7 @@ namespace NetExtender.Utilities.Numerics
             _ => type
             };
     }
-    
+
     static String ToSignedType(String type)
     {
         return type switch
@@ -141,7 +141,7 @@ namespace NetExtender.Utilities.Numerics
             }
         }
     }
-    
+
     void BitwiseShiftImplementation(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -153,9 +153,9 @@ namespace NetExtender.Utilities.Numerics
         WriteLine($"\t\t\t\treturn {(!IsSmallType(type) ? shiftleftpart : $"({type}) ({shiftleftpart})")};");
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveOptimization)]");
         WriteLine($"\t\tpublic static {type} {nameof(BitwiseShift)}LeftTrue(this {type} value, {nameof(Int32)} shift)");
         WriteLine("\t\t{");
@@ -174,7 +174,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t}");
 
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(BitwiseShift)}Right(this {type} value, {nameof(Int32)} shift)");
         WriteLine("\t\t{");
@@ -186,7 +186,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t}");
 
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveOptimization)]");
         WriteLine($"\t\tpublic static {type} {nameof(BitwiseShift)}RightTrue(this {type} value, {nameof(Int32)} shift)");
         WriteLine("\t\t{");
@@ -204,7 +204,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
     }
-    
+
     void BitwiseShift()
     {
         ForEach(types.Where(NotChar).Where(IsIntType), BitwiseShiftImplementation);
@@ -235,9 +235,9 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t\t}");
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveOptimization)]");
         WriteLine($"\t\tpublic static {type} {nameof(BitwiseRotate)}Right(this {type} value, Int32 offset)");
         WriteLine("\t\t{");
@@ -264,13 +264,13 @@ namespace NetExtender.Utilities.Numerics
     {
         ForEach(types.Where(NotChar).Where(IsIntType), BitwiseRotateImplementation);
     }
-    
+
     void BitwisePopCountImplementation(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {nameof(Int32)} BitwisePopCount(this {type} value)");
         WriteLine("\t\t{");
-        
+
         if (IsUnsignedType(type))
         {
             WriteLine("\t\t\treturn BitOperations.PopCount(value);");
@@ -282,7 +282,7 @@ namespace NetExtender.Utilities.Numerics
             WriteLine($"\t\t\t\treturn BitwisePopCount(({(type == nameof(Int64) ? nameof(UInt64) : nameof(UInt32))}) value);");
             WriteLine("\t\t\t}");
         }
-        
+
         WriteLine("\t\t}");
     }
 
@@ -311,15 +311,15 @@ namespace NetExtender.Utilities.Numerics
 
         String leftorpart = $"{(!IsUnsignedType(type) ? $"({ToUnsignedType(type)}) " : String.Empty)}value | ({ToUnsignedType(type)}.MaxValue << (sizeof({ToUnsignedType(type)}) * BitInByte - count))";
         String leftandpart = $"{(!IsUnsignedType(type) ? $"({ToUnsignedType(type)}) " : String.Empty)}value & ({ToUnsignedType(type)}.MaxValue >> (sizeof({ToUnsignedType(type)}) * BitInByte - count))";
-        
+
         WriteLine("\t\t\t\treturn bit");
         WriteLine($"\t\t\t\t\t? {(IsSmallType(type) || !IsUnsignedType(type) ? $"({type}) ({leftorpart})" : leftorpart)}");
         WriteLine($"\t\t\t\t\t: {(IsSmallType(type) || !IsUnsignedType(type) ? $"({type}) ({leftandpart})" : leftandpart)};");
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveOptimization)]");
         WriteLine($"\t\tpublic static {type} {nameof(BitwiseFill)}Right(this {type} value, {nameof(Int32)} count, {nameof(Boolean)} bit)");
         WriteLine("\t\t{");
@@ -338,7 +338,7 @@ namespace NetExtender.Utilities.Numerics
 
         String rightorpart = $"{(!IsUnsignedType(type) ? $"({ToUnsignedType(type)}) " : String.Empty)}value | ({ToUnsignedType(type)}.MaxValue >> (sizeof({ToUnsignedType(type)}) * BitInByte - count))";
         String rightandpart = $"{(!IsUnsignedType(type) ? $"({ToUnsignedType(type)}) " : String.Empty)}value & ({ToUnsignedType(type)}.MaxValue << (sizeof({ToUnsignedType(type)}) * BitInByte - count))";
-        
+
         WriteLine("\t\t\t\treturn bit");
         WriteLine($"\t\t\t\t\t? {(IsSmallType(type) || !IsUnsignedType(type) ? $"({type}) ({rightorpart})" : rightorpart)}");
         WriteLine($"\t\t\t\t\t: {(IsSmallType(type) || !IsUnsignedType(type) ? $"({type}) ({rightandpart})" : rightandpart)};");
@@ -362,7 +362,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
     }
-    
+
     void High()
     {
         ForEach(types.Where(NotChar).Where(IsIntType).Where(type => type != nameof(SByte) && type != nameof(Byte)), HighImplementation);
@@ -384,7 +384,7 @@ namespace NetExtender.Utilities.Numerics
     {
         ForEach(types.Where(NotChar).Where(IsIntType).Where(type => type != nameof(SByte) && type != nameof(Byte)), LowImplementation);
     }
-    
+
     void HighestBitImplementation(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -396,9 +396,9 @@ namespace NetExtender.Utilities.Numerics
         WriteLine($"\t\t\t\treturn {(IsSmallType(type) ? $"({ToUnsignedType(type)}) (value & result)" : $"{(!IsUnsignedType(type) ? $"({ToUnsignedType(type)}) " : String.Empty)}value & result")};");
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {nameof(Int32)} {nameof(HighestBit)}Number(this {type} value)");
         WriteLine("\t\t{");
@@ -410,7 +410,7 @@ namespace NetExtender.Utilities.Numerics
     {
         ForEach(types.Where(NotChar).Where(IsIntType), HighestBitImplementation);
     }
-    
+
     void LowestBitImplementation(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -421,7 +421,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine($"\t\t\t\treturn {(IsSmallType(type) || !IsUnsignedType(type) ? $"({ToUnsignedType(type)}) (value & ~value + 1)" : "value & ~value + 1")};");
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {nameof(Int32)} {nameof(LowestBit)}Number(this {type} value)");
         WriteLine("\t\t{");
@@ -433,7 +433,7 @@ namespace NetExtender.Utilities.Numerics
     {
         ForEach(types.Where(NotChar).Where(IsIntType), LowestBitImplementation);
     }
-    
+
 #>
     [SuppressMessage("ReSharper", "RedundantOverflowCheckingContext")]
     public static partial class BitUtilities

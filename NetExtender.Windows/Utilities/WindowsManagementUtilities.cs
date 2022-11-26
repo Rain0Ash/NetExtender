@@ -24,14 +24,14 @@ namespace NetExtender.Windows.Utilities
                 yield return enumerator.Current;
             }
         }
-        
+
         public static IEnumerable<ManagementBaseObject> AsEnumerable(this ManagementObjectCollection collection)
         {
             if (collection is null)
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             foreach (ManagementBaseObject management in collection)
             {
                 yield return management;
@@ -44,7 +44,7 @@ namespace NetExtender.Windows.Utilities
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             foreach (ManagementObject management in collection.OfType<ManagementObject>())
             {
                 yield return management;
@@ -75,7 +75,7 @@ namespace NetExtender.Windows.Utilities
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Boolean TryGetValue(this ManagementBaseObject management, String property, [MaybeNullWhen(false)] out String result)
         {

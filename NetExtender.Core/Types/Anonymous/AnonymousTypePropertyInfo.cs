@@ -19,12 +19,12 @@ namespace NetExtender.Types.Anonymous
         {
             return new AnonymousTypePropertyInfo(info.Key, info.Value, MethodVisibilityType.Public, MethodVisibilityType.Public);
         }
-        
+
         public String Name { get; }
         public Type Type { get; }
         public Boolean? Read { get; }
         public Boolean? Write { get; }
-        
+
         private AnonymousTypePropertyInfo(String name, Type type, MethodVisibilityType read, MethodVisibilityType write)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));

@@ -55,12 +55,12 @@ namespace NetExtender.Types.Memento
         {
             Internal = new List<IMementoItem<TSource>>(capacity);
         }
-        
+
         public MementoItemCollection(params IMementoItem<TSource>[] items)
             : this((IEnumerable<IMementoItem<TSource>>) items)
         {
         }
-        
+
         public MementoItemCollection(IEnumerable<IMementoItem<TSource>> items)
         {
             Internal = new List<IMementoItem<TSource>>(items);
@@ -107,10 +107,10 @@ namespace NetExtender.Types.Memento
             {
                 throw new ArgumentNullException(nameof(items));
             }
-            
+
             Internal.AddRange(items);
         }
-        
+
         public void Insert(Int32 index, IMementoItem<TSource> item)
         {
             if (item is null)
@@ -161,17 +161,17 @@ namespace NetExtender.Types.Memento
 
             return Internal.Remove(item);
         }
-        
+
         public void RemoveAt(Int32 index)
         {
             Internal.RemoveAt(index);
         }
-        
+
         public void Clear()
         {
             Internal.Clear();
         }
-        
+
         public void CopyTo(IMementoItem<TSource>[] array, Int32 arrayIndex)
         {
             Internal.CopyTo(array, arrayIndex);
@@ -188,7 +188,7 @@ namespace NetExtender.Types.Memento
 
             return enumerator.GetEnumerator();
         }
-        
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

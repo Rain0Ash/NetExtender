@@ -53,7 +53,7 @@ namespace NetExtender.Utilities.Types
 
             return new Dictionary<TKey, TValue>(source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? comparer) where TKey : notnull
         {
@@ -64,7 +64,7 @@ namespace NetExtender.Utilities.Types
 
             return new Dictionary<TKey, TValue>(source, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source) where TKey : notnull
         {
@@ -75,7 +75,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ToKeyValuePairs().ToDictionary();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Dictionary<TKey, TValue> ToDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source, IEqualityComparer<TKey>? comparer) where TKey : notnull
         {
@@ -86,19 +86,19 @@ namespace NetExtender.Utilities.Types
 
             return source.ToKeyValuePairs().ToDictionary(comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source) where TKey : notnull
         {
             return ToSortedDictionary(source, (IComparer<TKey>?) null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? equality) where TKey : notnull
         {
             return ToSortedDictionary(source, equality, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TKey>? comparer) where TKey : notnull
         {
@@ -109,10 +109,10 @@ namespace NetExtender.Utilities.Types
 
             SortedDictionary<TKey, TValue> sorted = new SortedDictionary<TKey, TValue>(comparer);
             sorted.AddRange(source);
-            
+
             return sorted;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IEqualityComparer<TKey>? equality, IComparer<TKey>? comparer) where TKey : notnull
         {
@@ -123,7 +123,7 @@ namespace NetExtender.Utilities.Types
 
             return new SortedDictionary<TKey, TValue>(source.ToDictionary(equality), comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source) where TKey : notnull
         {
@@ -134,7 +134,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ToKeyValuePairs().ToSortedDictionary();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source, IEqualityComparer<TKey>? equality) where TKey : notnull
         {
@@ -145,7 +145,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ToKeyValuePairs().ToSortedDictionary(equality);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source, IComparer<TKey>? comparer) where TKey : notnull
         {
@@ -156,7 +156,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ToKeyValuePairs().ToSortedDictionary(comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedDictionary<TKey, TValue> ToSortedDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source, IEqualityComparer<TKey>? equality, IComparer<TKey>? comparer) where TKey : notnull
         {
@@ -167,7 +167,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ToKeyValuePairs().ToSortedDictionary(equality, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedDictionary<TKey, TSource> ToSortedDictionary<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) where TKey : notnull
         {
@@ -183,7 +183,7 @@ namespace NetExtender.Utilities.Types
 
             return new SortedDictionary<TKey, TSource>(source.ToDictionary(keySelector));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedDictionary<TKey, TSource> ToSortedDictionary<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey>? equality) where TKey : notnull
         {
@@ -199,7 +199,7 @@ namespace NetExtender.Utilities.Types
 
             return new SortedDictionary<TKey, TSource>(source.ToDictionary(keySelector, equality));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedDictionary<TKey, TSource> ToSortedDictionary<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer) where TKey : notnull
         {
@@ -232,7 +232,7 @@ namespace NetExtender.Utilities.Types
 
             return new SortedDictionary<TKey, TSource>(source.ToDictionary(keySelector, equality), comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedDictionary<TKey, TElement> ToSortedDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
             Func<TSource, TElement> elementSelector) where TKey : notnull
@@ -254,7 +254,7 @@ namespace NetExtender.Utilities.Types
 
             return new SortedDictionary<TKey, TElement>(source.ToDictionary(keySelector, elementSelector));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedDictionary<TKey, TElement> ToSortedDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
             Func<TSource, TElement> elementSelector, IEqualityComparer<TKey>? equality) where TKey : notnull
@@ -276,7 +276,7 @@ namespace NetExtender.Utilities.Types
 
             return new SortedDictionary<TKey, TElement>(source.ToDictionary(keySelector, elementSelector, equality));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedDictionary<TKey, TElement> ToSortedDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
             Func<TSource, TElement> elementSelector, IComparer<TKey>? comparer) where TKey : notnull
@@ -320,7 +320,7 @@ namespace NetExtender.Utilities.Types
 
             return new SortedDictionary<TKey, TElement>(source.ToDictionary(keySelector, elementSelector, equality), comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IndexDictionary<TKey, TValue> ToIndexDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source) where TKey : notnull
         {
@@ -337,7 +337,7 @@ namespace NetExtender.Utilities.Types
 
             return new IndexDictionary<TKey, TValue>(source, comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IndexDictionary<TKey, TValue> ToIndexDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source) where TKey : notnull
         {
@@ -348,7 +348,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ToKeyValuePairs().ToIndexDictionary();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IndexDictionary<TKey, TValue> ToIndexDictionary<TKey, TValue>(this IEnumerable<(TKey, TValue)> source, IEqualityComparer<TKey>? comparer) where TKey : notnull
         {
@@ -359,7 +359,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ToKeyValuePairs().ToIndexDictionary(comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IndexDictionary<TKey, TSource> ToIndexDictionary<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) where TKey : notnull
         {
@@ -391,7 +391,7 @@ namespace NetExtender.Utilities.Types
 
             return new IndexDictionary<TKey, TSource>(source.Select(item => new KeyValuePair<TKey, TSource>(keySelector(item), item)), comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IndexDictionary<TKey, TElement> ToIndexDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector,
             Func<TSource, TElement> elementSelector) where TKey : notnull
@@ -435,14 +435,14 @@ namespace NetExtender.Utilities.Types
 
             return new IndexDictionary<TKey, TElement>(source.Select(item => new KeyValuePair<TKey, TElement>(keySelector(item), elementSelector(item))), comparer);
         }
-        
+
         public static ImmutableMultiDictionary<TKey, TValue> ToImmutableMultiDictionary<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, ImmutableHashSet<TValue>>> source) where TKey : notnull
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return ImmutableMultiDictionary<TKey, TValue>.Empty.AddRange(source);
         }
 
@@ -483,7 +483,7 @@ namespace NetExtender.Utilities.Types
             dictionary.Add(key, value);
             return value;
         }
-        
+
         public static TValue GetOrAdd<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, Func<TKey, TValue> factory)
         {
             if (dictionary is null)
@@ -574,7 +574,7 @@ namespace NetExtender.Utilities.Types
         {
             return NearestHigher(source, value, out KeyValuePair<TKey, TValue>? result) ? result : default;
         }
-        
+
         public static Boolean NearestHigher<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, out KeyValuePair<TKey, TValue>? result) where TKey : notnull
         {
             if (source is null)
@@ -647,7 +647,7 @@ namespace NetExtender.Utilities.Types
                 result = MathPositionType.None;
                 return default;
             }
-            
+
             Boolean first = source.TryGetLast(item => comparer.Compare(item.Key, value) < 0, out KeyValuePair<TKey, TValue> left);
             Boolean second = source.TryGetFirst(item => comparer.Compare(item.Key, value) > 0, out KeyValuePair<TKey, TValue> right);
 
@@ -699,12 +699,12 @@ namespace NetExtender.Utilities.Types
                     return successful;
             }
         }
-        
+
         public static KeyValuePair<TKey, TValue>? NearestHigher<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value) where TKey : notnull
         {
             return NearestHigher(source, value, out KeyValuePair<TKey, TValue>? result) ? result : default;
         }
-        
+
         public static Boolean NearestHigher<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, out KeyValuePair<TKey, TValue>? result) where TKey : notnull
         {
             if (source is null)
@@ -775,9 +775,9 @@ namespace NetExtender.Utilities.Types
                 result = MathPositionType.None;
                 return default;
             }
-            
+
             comparer ??= source.KeyComparer;
-            
+
             Boolean first = source.TryGetLast(item => comparer.Compare(item.Key, value) < 0, out KeyValuePair<TKey, TValue> left);
             Boolean second = source.TryGetFirst(item => comparer.Compare(item.Key, value) > 0, out KeyValuePair<TKey, TValue> right);
 
@@ -790,7 +790,7 @@ namespace NetExtender.Utilities.Types
 
             return (left, right);
         }
-        
+
         public static TKey? NearestLowerKey<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value) where TKey : notnull
         {
             return NearestLowerKey(source, value, out TKey? result) ? result : default;
@@ -837,7 +837,7 @@ namespace NetExtender.Utilities.Types
         {
             return NearestHigherKey(source, value, out TKey? result) ? result : default;
         }
-        
+
         public static Boolean NearestHigherKey<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, [MaybeNullWhen(false)] out TKey result) where TKey : notnull
         {
             if (source is null)
@@ -908,7 +908,7 @@ namespace NetExtender.Utilities.Types
                 result = MathPositionType.None;
                 return default;
             }
-            
+
             Boolean first = source.Keys.TryGetLast(item => comparer.Compare(item, value) < 0, out TKey? left);
             Boolean second = source.Keys.TryGetFirst(item => comparer.Compare(item, value) > 0, out TKey? right);
 
@@ -963,7 +963,7 @@ namespace NetExtender.Utilities.Types
         {
             return NearestHigherKey(source, value, out TKey? result) ? result : default;
         }
-        
+
         public static Boolean NearestHigherKey<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, [MaybeNullWhen(false)] out TKey result) where TKey : notnull
         {
             if (source is null)
@@ -1032,9 +1032,9 @@ namespace NetExtender.Utilities.Types
                 result = MathPositionType.None;
                 return default;
             }
-            
+
             comparer ??= source.KeyComparer;
-            
+
             Boolean first = source.Keys.TryGetLast(item => comparer.Compare(item, value) < 0, out TKey? left);
             Boolean second = source.Keys.TryGetFirst(item => comparer.Compare(item, value) > 0, out TKey? right);
 
@@ -1065,7 +1065,7 @@ namespace NetExtender.Utilities.Types
                 source.Remove(key);
             }
         }
-        
+
         public static void RemoveRange<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
         {
             if (source is null)
@@ -1083,7 +1083,7 @@ namespace NetExtender.Utilities.Types
                 source.Remove(pair);
             }
         }
-        
+
         public static void Union<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
         {
             if (source is null)
@@ -1109,7 +1109,7 @@ namespace NetExtender.Utilities.Types
                     break;
             }
         }
-        
+
         public static void Union<TKey, TValue>(this Dictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
         {
             if (source is null)
@@ -1124,7 +1124,7 @@ namespace NetExtender.Utilities.Types
 
             source.AddRange(other.WhereNotNull(pair => !source.ContainsKey(pair.Key)));
         }
-        
+
         public static void Union<TKey, TValue>(this SortedDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
         {
             if (source is null)
@@ -1139,7 +1139,7 @@ namespace NetExtender.Utilities.Types
 
             source.AddRange(other.WhereNotNull(pair => !source.ContainsKey(pair.Key)));
         }
-        
+
         public static IImmutableDictionary<TKey, TValue> Union<TKey, TValue>(this IImmutableDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
         {
             if (source is null)
@@ -1159,7 +1159,7 @@ namespace NetExtender.Utilities.Types
                 _ => source.AddRange(other.Where(pair => !source.ContainsKey(pair.Key)))
             };
         }
-        
+
         public static ImmutableDictionary<TKey, TValue> Union<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
         {
             if (source is null)
@@ -1174,7 +1174,7 @@ namespace NetExtender.Utilities.Types
 
             return source.AddRange(other.WhereNotNull(pair => !source.ContainsKey(pair.Key)));
         }
-        
+
         public static ImmutableSortedDictionary<TKey, TValue> Union<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
         {
             if (source is null)
@@ -1221,7 +1221,7 @@ namespace NetExtender.Utilities.Types
                     intersect.Add(key, value);
                 }
             }
-            
+
             source.Clear();
 
             foreach ((TKey key, TValue value) in intersect)
@@ -1229,7 +1229,7 @@ namespace NetExtender.Utilities.Types
                 source.TryAdd(key, value);
             }
         }
-        
+
         public static void Intersect<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
         {
             if (source is null)
@@ -1266,7 +1266,7 @@ namespace NetExtender.Utilities.Types
                     intersect.Add(key, value);
                 }
             }
-            
+
             source.Clear();
             source.EnsureCapacity(intersect.Count);
 
@@ -1275,7 +1275,7 @@ namespace NetExtender.Utilities.Types
                 source.TryAdd(key, value);
             }
         }
-        
+
         public static void Intersect<TKey, TValue>(this Dictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
         {
             if (source is null)
@@ -1312,7 +1312,7 @@ namespace NetExtender.Utilities.Types
                     intersect.TryAdd(key, value);
                 }
             }
-            
+
             source.Clear();
 
             foreach ((TKey key, TValue value) in intersect)
@@ -1320,7 +1320,7 @@ namespace NetExtender.Utilities.Types
                 source.Add(key, value);
             }
         }
-        
+
         public static void Intersect<TKey, TValue>(this SortedDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
         {
             if (source is null)
@@ -1368,7 +1368,7 @@ namespace NetExtender.Utilities.Types
 
             return intersect.ToImmutableDictionary();
         }
-        
+
         public static IImmutableDictionary<TKey, TValue> Intersect<TKey, TValue>(this IImmutableDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
         {
             if (source is null)
@@ -1408,7 +1408,7 @@ namespace NetExtender.Utilities.Types
 
             return intersect.ToImmutableDictionary(source.KeyComparer, source.ValueComparer);
         }
-        
+
         public static ImmutableDictionary<TKey, TValue> Intersect<TKey, TValue>(this ImmutableDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
         {
             if (source is null)
@@ -1448,7 +1448,7 @@ namespace NetExtender.Utilities.Types
 
             return intersect.ToImmutableSortedDictionary(source.KeyComparer, source.ValueComparer);
         }
-        
+
         public static ImmutableSortedDictionary<TKey, TValue> Intersect<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
         {
             if (source is null)
@@ -1489,7 +1489,7 @@ namespace NetExtender.Utilities.Types
                     return;
             }
         }
-        
+
         public static void Except<TKey, TValue>(this IDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
         {
             if (source is null)
@@ -1515,7 +1515,7 @@ namespace NetExtender.Utilities.Types
                     return;
             }
         }
-        
+
         public static void Except<TKey, TValue>(this Dictionary<TKey, TValue> source, IEnumerable<TKey> other) where TKey : notnull
         {
             if (source is null)
@@ -1530,7 +1530,7 @@ namespace NetExtender.Utilities.Types
 
             source.RemoveRange(other);
         }
-        
+
         public static void Except<TKey, TValue>(this Dictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
         {
             if (source is null)
@@ -1545,7 +1545,7 @@ namespace NetExtender.Utilities.Types
 
             source.RemoveRange(other);
         }
-        
+
         public static void Except<TKey, TValue>(this SortedDictionary<TKey, TValue> source, IEnumerable<TKey> other) where TKey : notnull
         {
             if (source is null)
@@ -1560,7 +1560,7 @@ namespace NetExtender.Utilities.Types
 
             source.RemoveRange(other);
         }
-        
+
         public static void Except<TKey, TValue>(this SortedDictionary<TKey, TValue> source, IEnumerable<KeyValuePair<TKey, TValue>> other) where TKey : notnull
         {
             if (source is null)
@@ -1610,7 +1610,7 @@ namespace NetExtender.Utilities.Types
 
             return source.RemoveRange(other.WhereNotNull());
         }
-        
+
         public static ImmutableSortedDictionary<TKey, TValue> Except<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, IEnumerable<TKey> other) where TKey : notnull
         {
             if (source is null)
@@ -1642,7 +1642,7 @@ namespace NetExtender.Utilities.Types
 
             return dictionary;
         }
-        
+
         public static SortedDictionary<TKey, TValue> Clone<TKey, TValue>(this SortedDictionary<TKey, TValue> source) where TKey : notnull where TValue : ICloneable
         {
             if (source is null)

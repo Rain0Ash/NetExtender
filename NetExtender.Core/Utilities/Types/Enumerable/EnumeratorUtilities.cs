@@ -18,7 +18,7 @@ namespace NetExtender.Utilities.Types
         {
             return Enumerable.Empty<T>().GetEnumerator();
         }
-        
+
         public static Boolean TryReset(this IEnumerator enumerator)
         {
             if (enumerator is null)
@@ -36,7 +36,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static Boolean TryReset<T>(this IEnumerator<T> enumerator)
         {
             if (enumerator is null)
@@ -71,7 +71,7 @@ namespace NetExtender.Utilities.Types
             result = enumerator.Current;
             return true;
         }
-        
+
         public static IEnumerable<Object?> AsEnumerable(this IEnumerator enumerator)
         {
             if (enumerator is null)
@@ -84,7 +84,7 @@ namespace NetExtender.Utilities.Types
                 yield return enumerator.Current;
             }
         }
-        
+
         public static IEnumerable<T> AsEnumerable<T>(this IEnumerator<T> enumerator)
         {
             if (enumerator is null)
@@ -109,19 +109,19 @@ namespace NetExtender.Utilities.Types
             {
             }
         }
-        
+
         public static void Evaluate<T>(this IEnumerator<T> enumerator)
         {
             if (enumerator is null)
             {
                 throw new ArgumentNullException(nameof(enumerator));
             }
-            
+
             while (enumerator.MoveNext())
             {
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerator GetThreadSafeEnumerator(this IEnumerable enumerable)
         {
@@ -132,7 +132,7 @@ namespace NetExtender.Utilities.Types
 
             return new ThreadSafeEnumerator(enumerable);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerator GetThreadSafeEnumerator(this IEnumerable enumerable, Object synchronization)
         {
@@ -148,7 +148,7 @@ namespace NetExtender.Utilities.Types
 
             return new ThreadSafeEnumerator(enumerable, synchronization);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerator GetThreadSafeEnumerator(this IEnumerator enumerator, Object synchronization)
         {
@@ -164,7 +164,7 @@ namespace NetExtender.Utilities.Types
 
             return new ThreadSafeEnumerator(enumerator, synchronization);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerator<T> GetThreadSafeEnumerator<T>(this IEnumerable<T> enumerable)
         {
@@ -175,7 +175,7 @@ namespace NetExtender.Utilities.Types
 
             return new ThreadSafeEnumerator<T>(enumerable);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerator<T> GetThreadSafeEnumerator<T>(this IEnumerable<T> enumerable, Object synchronization)
         {
@@ -191,7 +191,7 @@ namespace NetExtender.Utilities.Types
 
             return new ThreadSafeEnumerator<T>(enumerable, synchronization);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerator<T> GetThreadSafeEnumerator<T>(this IEnumerator<T> enumerator, Object synchronization)
         {

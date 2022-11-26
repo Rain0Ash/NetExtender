@@ -11,7 +11,7 @@ namespace NetExtender.Types.Network
     public class HeadOnlyWebClient : WebClient
     {
         public Boolean HeadOnly { get; set; } = true;
-        
+
 #if NET6_0_OR_GREATER
         [Obsolete]
 #endif
@@ -20,7 +20,7 @@ namespace NetExtender.Types.Network
             Encoding = Encoding.UTF8;
             Headers.Add(UserAgentUtilities.OtherUserAgent);
         }
-        
+
         protected override WebRequest GetWebRequest(Uri address)
         {
             WebRequest request = base.GetWebRequest(address);
@@ -29,7 +29,7 @@ namespace NetExtender.Types.Network
             {
                 request.Method = "HEAD";
             }
-            
+
             return request;
         }
     }

@@ -14,7 +14,7 @@ namespace NetExtender.Serialization.Ini
         {
             return new IniValue(value);
         }
-        
+
         public static implicit operator IniValue(Byte value)
         {
             return new IniValue(value);
@@ -24,7 +24,7 @@ namespace NetExtender.Serialization.Ini
         {
             return new IniValue(value);
         }
-        
+
         public static implicit operator IniValue(UInt16 value)
         {
             return new IniValue(value);
@@ -81,7 +81,7 @@ namespace NetExtender.Serialization.Ini
         }
 
         public static IniValue Default { get; } = new IniValue();
-            
+
         public Boolean Immutable
         {
             get
@@ -113,7 +113,7 @@ namespace NetExtender.Serialization.Ini
                 return Value ?? String.Empty;
             }
         }
-        
+
         public String? Value { get; }
 
         public IniValue(Object? value)
@@ -130,7 +130,7 @@ namespace NetExtender.Serialization.Ini
         {
             Value = value;
         }
-        
+
         public override String ToString()
         {
             return ToString(true, false);

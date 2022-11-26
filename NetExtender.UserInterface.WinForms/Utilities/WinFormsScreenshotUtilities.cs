@@ -21,7 +21,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return ScreenshotUtilities.TakeScreenshot(form.Handle, out screenshot);
         }
-        
+
         public static Boolean TakeScreenshot<T>(this T window, [MaybeNullWhen(false)] out Bitmap screenshot) where T : IUserInterfaceHandle
         {
             if (window is null)

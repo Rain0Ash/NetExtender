@@ -49,7 +49,7 @@ namespace NetExtender.Types.Numerics
         {
             return new AngleGradian(gradian);
         }
-        
+
         /// <summary>
         /// Indicates whether two <see cref="AngleGradian"/> instances are equal.
         /// </summary>
@@ -73,7 +73,7 @@ namespace NetExtender.Types.Numerics
         {
             return Math.Abs(first.Gradian - second.Gradian) >= Double.Epsilon;
         }
-        
+
         /// <summary>
         /// Indicates whether a specified <see cref="AngleGradian"/> is less than another specified <see cref="AngleGradian"/>.
         /// </summary>
@@ -85,7 +85,7 @@ namespace NetExtender.Types.Numerics
         {
             return first.Gradian < second.Gradian;
         }
-        
+
         /// <summary>
         /// Indicates whether a specified <see cref="AngleGradian"/> is greater than another specified <see cref="AngleGradian"/>.
         /// </summary>
@@ -121,7 +121,7 @@ namespace NetExtender.Types.Numerics
         {
             return first.Gradian >= second.Gradian;
         }
-        
+
         /// <summary>
         /// Adds two vectors. 
         /// </summary>
@@ -133,7 +133,7 @@ namespace NetExtender.Types.Numerics
         {
             return new AngleGradian(first.Gradian + second.Gradian);
         }
-        
+
         /// <summary>
         /// Negates an angle.
         /// </summary>
@@ -144,7 +144,7 @@ namespace NetExtender.Types.Numerics
         {
             return new AngleGradian(-angle.Gradian);
         }
-        
+
         /// <summary>
         /// Subtracts a angle from a angle.  
         /// </summary>
@@ -180,7 +180,7 @@ namespace NetExtender.Types.Numerics
         {
             return new AngleGradian(first.Gradian / second);
         }
-        
+
         /// <summary>
         /// Modulo a angle by a scalar value. 
         /// </summary>
@@ -192,7 +192,7 @@ namespace NetExtender.Types.Numerics
         {
             return new AngleGradian(first.Gradian % second);
         }
-        
+
         /// <summary>
         /// Gets the amplitude of the angle degrees. This field is read-only.
         /// </summary>
@@ -208,7 +208,7 @@ namespace NetExtender.Types.Numerics
         {
             return Gradian.CompareTo(other.Gradian);
         }
-        
+
         /// <summary>
         /// Indicates whether two <see cref="AngleGradian"/> instances are equal.
         /// </summary>
@@ -270,7 +270,7 @@ namespace NetExtender.Types.Numerics
         {
             return Gradian.ToString();
         }
-        
+
         /// <summary>
         /// Converts the value of the current <see cref="AngleGradian"/> object to its equivalent string representation, using a specified format.
         /// </summary>

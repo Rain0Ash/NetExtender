@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
         Width,
         Height
     }
-    
+
     public static class ControlUtilities
     {
         private static IDisposable BindTo(Control relative, String name, Action<EventPattern<Object>> action)
@@ -26,7 +26,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             {
                 throw new ArgumentNullException(nameof(relative));
             }
-            
+
             if (name is null)
             {
                 throw new ArgumentNullException(nameof(name));
@@ -34,7 +34,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
 
             return Observable.FromEventPattern(relative, name).Subscribe(action);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T SetPosition<T>(this T control, Int32 x, Int32 y) where T : Control
         {
@@ -45,7 +45,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
 
             return SetPosition(control, new Point(x, y));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T SetPosition<T>(this T control, Point point) where T : Control
         {
@@ -57,7 +57,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             control.Location = point;
             return control;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T SetPosition<T>(this T control, Control x, Control y) where T : Control
         {
@@ -68,13 +68,13 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
 
             return SetPosition(control, new Point(x.Location.X, y.Location.Y));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T SetPosition<T>(this T control, Control relative, Int32 distance = UserInterfaceUtilities.Distance) where T : Control
         {
             return SetPosition(control, relative, PointOffset.Right, distance);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T SetPosition<T>(this T control, Control relative, HorizontalAlignment alignment, Int32 distance = UserInterfaceUtilities.Distance) where T : Control
         {
@@ -93,12 +93,12 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             {
                 throw new ArgumentNullException(nameof(relative));
             } 
-            
+
             if (relative is Form form)
             {
                 return SetPositionInner(control, form, offset, distance);
             }
-            
+
             return SetPositionOuter(control, relative, offset, distance);
         }
 
@@ -118,10 +118,10 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             {
                 return SetPositionInner(control, form, offset, distance);
             }
-            
+
             return SetPositionOuter(control, relative, offset, alignment, distance);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T SetPositionInner<T>(this T control, Control relative, Int32 distance = UserInterfaceUtilities.Distance) where T : Control
         {
@@ -151,7 +151,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             {
                 throw new ArgumentNullException(nameof(relative));
             }
-            
+
             control.Location = offset switch
             {
                 PointOffset.None => control.Location,
@@ -174,7 +174,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
         {
             return SetPositionOuter(control, relative, PointOffset.Right, distance);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T SetPositionOuter<T>(this T control, Control relative, HorizontalAlignment alignment, Int32 distance = UserInterfaceUtilities.Distance) where T : Control
         {
@@ -192,7 +192,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             {
                 throw new ArgumentNullException(nameof(relative));
             }
-            
+
             control.Location = offset switch
             {
                 PointOffset.None => control.Location,
@@ -221,7 +221,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             {
                 throw new ArgumentNullException(nameof(relative));
             }
-            
+
             control.Location = offset switch
             {
                 PointOffset.None => control.Location,
@@ -269,7 +269,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             {
                 throw new ArgumentNullException(nameof(control));
             }
-            
+
             if (relative is null)
             {
                 throw new ArgumentNullException(nameof(relative));
@@ -278,14 +278,14 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             control.SetPosition(relative, distance);
             return BindTo(relative, nameof(relative.LocationChanged), next => control.SetPosition(((Control?) next.Sender)!, distance));
         }
-        
+
         public static IDisposable BindPositionTo(this Control control, Control relative, PointOffset offset, Int32 distance = UserInterfaceUtilities.Distance)
         {
             if (control is null)
             {
                 throw new ArgumentNullException(nameof(control));
             }
-            
+
             if (relative is null)
             {
                 throw new ArgumentNullException(nameof(relative));
@@ -294,14 +294,14 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             control.SetPosition(relative, offset, distance);
             return BindTo(relative, nameof(relative.LocationChanged), next => control.SetPosition(((Control?) next.Sender)!, offset, distance));
         }
-        
+
         public static IDisposable BindPositionTo(this Control control, Control relative, HorizontalAlignment alignment, Int32 distance = UserInterfaceUtilities.Distance)
         {
             if (control is null)
             {
                 throw new ArgumentNullException(nameof(control));
             }
-            
+
             if (relative is null)
             {
                 throw new ArgumentNullException(nameof(relative));
@@ -310,14 +310,14 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             control.SetPosition(relative, alignment, distance);
             return BindTo(relative, nameof(relative.LocationChanged), next => control.SetPosition(((Control?) next.Sender)!, alignment, distance));
         }
-        
+
         public static IDisposable BindPositionTo(this Control control, Control relative, PointOffset offset, HorizontalAlignment alignment, Int32 distance = UserInterfaceUtilities.Distance)
         {
             if (control is null)
             {
                 throw new ArgumentNullException(nameof(control));
             }
-            
+
             if (relative is null)
             {
                 throw new ArgumentNullException(nameof(relative));
@@ -326,14 +326,14 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             control.SetPosition(relative, offset, alignment, distance);
             return BindTo(relative, nameof(relative.LocationChanged), next => control.SetPosition(((Control?) next.Sender)!, offset, alignment, distance));
         }
-        
+
         public static IDisposable BindPositionInnerTo(this Control control, Control relative, Int32 distance = UserInterfaceUtilities.Distance)
         {
             if (control is null)
             {
                 throw new ArgumentNullException(nameof(control));
             }
-            
+
             if (relative is null)
             {
                 throw new ArgumentNullException(nameof(relative));
@@ -342,14 +342,14 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             control.SetPositionInner(relative, distance);
             return BindTo(relative, nameof(relative.LocationChanged), next => control.SetPositionInner(((Control?) next.Sender)!, distance));
         }
-        
+
         public static IDisposable BindPositionInnerTo(this Control control, Control relative, PointOffset offset, Int32 distance = UserInterfaceUtilities.Distance)
         {
             if (control is null)
             {
                 throw new ArgumentNullException(nameof(control));
             }
-            
+
             if (relative is null)
             {
                 throw new ArgumentNullException(nameof(relative));
@@ -365,7 +365,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             {
                 throw new ArgumentNullException(nameof(control));
             }
-            
+
             if (relative is null)
             {
                 throw new ArgumentNullException(nameof(relative));
@@ -374,14 +374,14 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             control.SetPositionOuter(relative, distance);
             return BindTo(relative, nameof(relative.LocationChanged), next => control.SetPositionOuter(((Control?) next.Sender)!, distance));
         }
-        
+
         public static IDisposable BindPositionOuterTo(this Control control, Control relative, PointOffset offset, Int32 distance = UserInterfaceUtilities.Distance)
         {
             if (control is null)
             {
                 throw new ArgumentNullException(nameof(control));
             }
-            
+
             if (relative is null)
             {
                 throw new ArgumentNullException(nameof(relative));
@@ -390,14 +390,14 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             control.SetPositionOuter(relative, offset, distance);
             return BindTo(relative, nameof(relative.LocationChanged), next => control.SetPositionOuter(((Control?) next.Sender)!, offset, distance));
         }
-        
+
         public static IDisposable BindPositionOuterTo(this Control control, Control relative, HorizontalAlignment alignment, Int32 distance = UserInterfaceUtilities.Distance)
         {
             if (control is null)
             {
                 throw new ArgumentNullException(nameof(control));
             }
-            
+
             if (relative is null)
             {
                 throw new ArgumentNullException(nameof(relative));
@@ -406,14 +406,14 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             control.SetPositionOuter(relative, alignment, distance);
             return BindTo(relative, nameof(relative.LocationChanged), next => control.SetPositionOuter(((Control?) next.Sender)!, alignment, distance));
         }
-        
+
         public static IDisposable BindPositionOuterTo(this Control control, Control relative, PointOffset offset, HorizontalAlignment alignment, Int32 distance = UserInterfaceUtilities.Distance)
         {
             if (control is null)
             {
                 throw new ArgumentNullException(nameof(control));
             }
-            
+
             if (relative is null)
             {
                 throw new ArgumentNullException(nameof(relative));
@@ -450,7 +450,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
 
             return SetSize(control, new Size(width, height));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T SetSize<T>(this T control, Size size) where T : Control
         {
@@ -462,7 +462,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             control.Size = size;
             return control;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T SetSize<T>(this T control, Control width, Control height) where T : Control
         {
@@ -480,10 +480,10 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             {
                 throw new ArgumentNullException(nameof(height));
             }
-            
+
             return SetSizeOuter(control, width, height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T SetSize<T>(this T control, Control relative, ControlSizeType type = ControlSizeType.Both) where T : Control
         {
@@ -491,7 +491,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             {
                 throw new ArgumentNullException(nameof(control));
             }
-            
+
             if (relative is null)
             {
                 throw new ArgumentNullException(nameof(relative));
@@ -501,7 +501,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             {
                 return SetSizeInner(control, form, type);
             }
-            
+
             return SetSizeOuter(control, relative, type);
         }
 
@@ -512,12 +512,12 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             {
                 throw new ArgumentNullException(nameof(control));
             }
-            
+
             if (relative is null)
             {
                 throw new ArgumentNullException(nameof(relative));
             }
-            
+
             control.Size = type switch
             {
                 ControlSizeType.Both => relative.ClientSize,
@@ -528,7 +528,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
 
             return control;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T SetSizeInner<T>(this T control, Control width, Control height) where T : Control
         {
@@ -546,7 +546,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             {
                 throw new ArgumentNullException(nameof(height));
             }
-            
+
             control.Size = new Size(width.ClientSize.Width, height.ClientSize.Height);
             return control;
         }
@@ -558,12 +558,12 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             {
                 throw new ArgumentNullException(nameof(control));
             }
-            
+
             if (relative is null)
             {
                 throw new ArgumentNullException(nameof(relative));
             }
-            
+
             control.Size = type switch
             {
                 ControlSizeType.Both => relative.Size,
@@ -574,7 +574,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
 
             return control;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T SetSizeOuter<T>(this T control, Control width, Control height) where T : Control
         {
@@ -592,7 +592,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             {
                 throw new ArgumentNullException(nameof(height));
             }
-            
+
             control.Size = new Size(width.Size.Width, height.Size.Height);
             return control;
         }
@@ -603,7 +603,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             {
                 throw new ArgumentNullException(nameof(control));
             }
-            
+
             if (relative is null)
             {
                 throw new ArgumentNullException(nameof(relative));
@@ -612,14 +612,14 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             control.SetSize(relative, type);
             return BindTo(relative, nameof(relative.SizeChanged), next => control.SetSize(((Control?) next.Sender)!, type));
         }
-        
+
         public static IDisposable BindSizeInnerTo(this Control control, Control relative, ControlSizeType type = ControlSizeType.Both)
         {
             if (control is null)
             {
                 throw new ArgumentNullException(nameof(control));
             }
-            
+
             if (relative is null)
             {
                 throw new ArgumentNullException(nameof(relative));
@@ -628,14 +628,14 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
             control.SetSizeInner(relative, type);
             return BindTo(relative, nameof(relative.SizeChanged), next => control.SetSizeInner(((Control?) next.Sender)!, type));
         }
-        
+
         public static IDisposable BindSizeOuterTo(this Control control, Control relative, ControlSizeType type = ControlSizeType.Both)
         {
             if (control is null)
             {
                 throw new ArgumentNullException(nameof(control));
             }
-            
+
             if (relative is null)
             {
                 throw new ArgumentNullException(nameof(relative));

@@ -10,7 +10,7 @@ namespace NetExtender.Cryptography.Certificate
     {
         public X509Certificate2 Root { get; }
         public X509Certificate2 Certificate { get; }
-        
+
         public X509Certificate2RootContainer(X509Certificate2 root, X509Certificate2 certificate)
         {
             Root = root ?? throw new ArgumentNullException(nameof(root));

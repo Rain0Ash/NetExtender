@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             collection.AddSpaStaticFiles(Configuration);
             return collection;
         }
-        
+
         public static IServiceCollection AddSpaStaticFiles(this IServiceCollection collection, String path)
         {
             if (collection is null)

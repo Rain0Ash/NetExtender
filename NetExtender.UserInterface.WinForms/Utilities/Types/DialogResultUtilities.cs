@@ -34,7 +34,7 @@ namespace NetExtender.Utilities.Types
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         public static DialogResult ToDialogResult(this InterfaceDialogResult value)
         {
             return value switch

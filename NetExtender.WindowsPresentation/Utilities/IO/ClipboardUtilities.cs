@@ -27,16 +27,16 @@ namespace NetExtender.Utilities.Windows.IO
         Audio,
         Files
     }
-    
+
     public static class ClipboardUtilities
     {
         private static IImmutableList<String> DataFormats { get; }
-        
+
         static ClipboardUtilities()
         {
             DataFormats = typeof(DataFormats).GetFields(BindingFlags.Public | BindingFlags.Static).Select(x => x.Name).ToImmutableList();
         }
-        
+
         public static Boolean IsEmpty
         {
             get
@@ -49,7 +49,7 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return ThreadUtilities.IsSTA ? Clipboard.ContainsText() : ThreadUtilities.STA(Clipboard.ContainsText);
         }
-        
+
         public static Boolean ContainsText(TextDataFormat format)
         {
             return ThreadUtilities.IsSTA ? Clipboard.ContainsText(format) : ThreadUtilities.STA(Clipboard.ContainsText, format);
@@ -59,27 +59,27 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return ThreadUtilities.IsSTA ? ContainsRawInternal() : ThreadUtilities.STA(ContainsRawInternal);
         }
-        
+
         private static Boolean ContainsRawInternal()
         {
             return Clipboard.GetDataObject() is DataObject data && data.GetDataPresent("rawbinary");
         }
-        
+
         public static Boolean ContainsImage()
         {
             return ThreadUtilities.IsSTA ? Clipboard.ContainsImage() : ThreadUtilities.STA(Clipboard.ContainsImage);
         }
-        
+
         public static Boolean ContainsAudio()
         {
             return ThreadUtilities.IsSTA ? Clipboard.ContainsAudio() : ThreadUtilities.STA(Clipboard.ContainsAudio);
         }
-        
+
         public static Boolean ContainsFiles()
         {
             return ThreadUtilities.IsSTA ? Clipboard.ContainsFileDropList() : ThreadUtilities.STA(Clipboard.ContainsFileDropList);
         }
-        
+
         public static Boolean ContainsData(String format)
         {
             if (format is null)
@@ -113,12 +113,12 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return ThreadUtilities.IsSTA ? Clipboard.GetText() : ThreadUtilities.STA(Clipboard.GetText) ?? String.Empty;
         }
-        
+
         public static String GetText(TextDataFormat format)
         {
             return ThreadUtilities.IsSTA ? Clipboard.GetText(format) : ThreadUtilities.STA(Clipboard.GetText, format) ?? String.Empty;
         }
-        
+
         public static Byte[]? GetRaw()
         {
             return ThreadUtilities.IsSTA ? GetRawInternal() : ThreadUtilities.STA(GetRawInternal);
@@ -134,27 +134,27 @@ namespace NetExtender.Utilities.Windows.IO
             using MemoryStream? raw = data.GetData("rawbinary") as MemoryStream;
             return raw?.ToArray();
         }
-        
+
         public static BitmapSource? GetImage()
         {
             return ThreadUtilities.IsSTA ? Clipboard.GetImage() : ThreadUtilities.STA(Clipboard.GetImage);
         }
-        
+
         public static Stream? GetAudio()
         {
             return ThreadUtilities.IsSTA ? Clipboard.GetAudioStream() : ThreadUtilities.STA(Clipboard.GetAudioStream);
         }
-        
+
         public static StringCollection GetFiles()
         {
             return ThreadUtilities.IsSTA ? Clipboard.GetFileDropList() : ThreadUtilities.STA(Clipboard.GetFileDropList) ?? new StringCollection();
         }
-        
+
         public static IDataObject? GetData()
         {
             return ThreadUtilities.IsSTA ? Clipboard.GetDataObject() : ThreadUtilities.STA(Clipboard.GetDataObject);
         }
-        
+
         public static Object? GetData(String format)
         {
             if (format is null)
@@ -164,7 +164,7 @@ namespace NetExtender.Utilities.Windows.IO
 
             return ThreadUtilities.IsSTA ? Clipboard.GetData(format) : ThreadUtilities.STA(Clipboard.GetData, format);
         }
-        
+
         public static Boolean SetText(String? text)
         {
             if (text is null)
@@ -212,7 +212,7 @@ namespace NetExtender.Utilities.Windows.IO
                 return false;
             }
         }
-        
+
         public static Boolean SetRaw(Byte[]? raw)
         {
             if (raw is null)
@@ -230,7 +230,7 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 return Clear();
             }
-            
+
             if (stream is MemoryStream memory)
             {
                 return SetRaw(memory);
@@ -238,7 +238,7 @@ namespace NetExtender.Utilities.Windows.IO
 
             using MemoryStream ms = new MemoryStream();
             stream.CopyTo(ms);
-            
+
             return SetRaw(ms);
         }
 
@@ -268,7 +268,7 @@ namespace NetExtender.Utilities.Windows.IO
                 return false;
             }
         }
-        
+
         public static async Task<Boolean> SetRawAsync(Byte[]? raw)
         {
             if (raw is null)
@@ -279,14 +279,14 @@ namespace NetExtender.Utilities.Windows.IO
             await using MemoryStream stream = await raw.ToStreamAsync();
             return SetRaw(stream);
         }
-        
+
         public static async Task<Boolean> SetRawAsync(Stream? stream)
         {
             if (stream is null)
             {
                 return Clear();
             }
-            
+
             if (stream is MemoryStream memory)
             {
                 return SetRaw(memory);
@@ -294,10 +294,10 @@ namespace NetExtender.Utilities.Windows.IO
 
             await using MemoryStream ms = new MemoryStream();
             await stream.CopyToAsync(ms);
-            
+
             return SetRaw(ms);
         }
-        
+
         public static Boolean SetImage(BitmapSource? image)
         {
             if (image is null)
@@ -345,7 +345,7 @@ namespace NetExtender.Utilities.Windows.IO
                 return false;
             }
         }
-        
+
         public static Boolean SetAudio(Byte[]? audio)
         {
             if (audio is null)
@@ -369,12 +369,12 @@ namespace NetExtender.Utilities.Windows.IO
                 return false;
             }
         }
-        
+
         public static Boolean SetFiles(IEnumerable<String>? files)
         {
             return files is not null ? SetFiles(files.ToStringCollection()) : Clear();
         }
-        
+
         public static Boolean SetFiles(StringCollection? files)
         {
             if (files is null)
@@ -398,7 +398,7 @@ namespace NetExtender.Utilities.Windows.IO
                 return false;
             }
         }
-        
+
         public static Boolean SetData(IDataObject? data)
         {
             if (data is null)
@@ -422,7 +422,7 @@ namespace NetExtender.Utilities.Windows.IO
                 return false;
             }
         }
-        
+
         public static Boolean SetData(IDataObject? data, Boolean copy)
         {
             if (data is null)
@@ -446,7 +446,7 @@ namespace NetExtender.Utilities.Windows.IO
                 return false;
             }
         }
-        
+
         public static Boolean SetData(Object? data, String format)
         {
             if (data is null)
@@ -458,7 +458,7 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 throw new ArgumentNullException(nameof(format));
             }
-            
+
             try
             {
                 if (ThreadUtilities.IsSTA)
@@ -475,7 +475,7 @@ namespace NetExtender.Utilities.Windows.IO
                 return false;
             }
         }
-        
+
         public static Boolean FlushSetText(String text)
         {
             return SetText(text) && Flush();
@@ -485,7 +485,7 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return SetText(text, format) && Flush();
         }
-        
+
         public static Boolean FlushSetRaw(Byte[] raw)
         {
             return SetRaw(raw) && Flush();
@@ -500,17 +500,17 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return SetRaw(stream) && Flush();
         }
-        
+
         public static async Task<Boolean> FlushSetRawAsync(Byte[] raw)
         {
             return await SetRawAsync(raw) && Flush();
         }
-        
+
         public static async Task<Boolean> FlushSetRawAsync(Stream stream)
         {
             return await SetRawAsync(stream) && Flush();
         }
-        
+
         public static Boolean FlushSetImage(BitmapSource image)
         {
             return SetImage(image) && Flush();
@@ -520,37 +520,37 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return SetAudio(stream) && Flush();
         }
-        
+
         public static Boolean FlushSetAudio(Byte[] audio)
         {
             return SetAudio(audio) && Flush();
         }
-        
+
         public static Boolean FlushSetFiles(IEnumerable<String> files)
         {
             return SetFiles(files) && Flush();
         }
-        
+
         public static Boolean FlushSetFiles(StringCollection files)
         {
             return SetFiles(files) && Flush();
         }
-        
+
         public static Boolean FlushSetData(IDataObject data)
         {
             return SetData(data) && Flush();
         }
-        
+
         public static Boolean FlushSetData(IDataObject data, Boolean copy)
         {
             return SetData(data, copy) && Flush();
         }
-        
+
         public static Boolean FlushSetData(Object data, String format)
         {
             return SetData(data, format) && Flush();
         }
-        
+
         public static Boolean SetText(String text, Boolean flush)
         {
             return flush ? FlushSetText(text) : SetText(text);
@@ -560,7 +560,7 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return flush ? FlushSetText(text, format) : SetText(text, format);
         }
-        
+
         public static Boolean SetRaw(Byte[] raw, Boolean flush)
         {
             return flush ? FlushSetRaw(raw) : SetRaw(raw);
@@ -575,17 +575,17 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return flush ? FlushSetRaw(stream) : SetRaw(stream);
         }
-        
+
         public static Task<Boolean> SetRawAsync(Byte[] raw, Boolean flush)
         {
             return flush ? FlushSetRawAsync(raw) : SetRawAsync(raw);
         }
-        
+
         public static Task<Boolean> SetRawAsync(Stream stream, Boolean flush)
         {
             return flush ? FlushSetRawAsync(stream) : SetRawAsync(stream);
         }
-        
+
         public static Boolean SetImage(BitmapSource image, Boolean flush)
         {
             return flush ? FlushSetImage(image) : SetImage(image);
@@ -595,17 +595,17 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return flush ? FlushSetAudio(stream) : SetAudio(stream);
         }
-        
+
         public static Boolean SetAudio(Byte[] audio, Boolean flush)
         {
             return flush ? FlushSetAudio(audio) : SetAudio(audio);
         }
-        
+
         public static Boolean SetFiles(IEnumerable<String> files, Boolean flush)
         {
             return flush ? FlushSetFiles(files) : SetFiles(files);
         }
-        
+
         public static Boolean SetFiles(StringCollection files, Boolean flush)
         {
             return flush ? FlushSetFiles(files) : SetFiles(files);
@@ -615,12 +615,12 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return flush ? FlushSetData(data, copy) : SetData(data, copy);
         }
-        
+
         public static Boolean SetData(Object data, String format, Boolean flush)
         {
             return flush ? FlushSetData(data, format) : SetData(data, format);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboard(this String text)
         {
@@ -632,25 +632,25 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return SetText(text, format);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboard(this Byte[] value)
         {
             return SetRaw(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> ToClipboardAsync(this Byte[] value)
         {
             return SetRawAsync(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboard(this MemoryStream value)
         {
             return SetRaw(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboard(this BitmapSource image)
         {
@@ -662,37 +662,37 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return SetAudio(stream);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboardAudio(this Byte[] audio)
         {
             return SetAudio(audio);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboardFiles(this IEnumerable<String> files)
         {
             return SetFiles(files);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboard(this IDataObject data)
         {
             return SetData(data);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboard(this IDataObject data, Boolean copy)
         {
             return SetData(data, copy);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboardData(this Object data, String format)
         {
             return SetData(data, format);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboardFlush(this String text)
         {
@@ -704,25 +704,25 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return FlushSetText(text, format);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboardFlush(this Byte[] value)
         {
             return FlushSetRaw(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> ToClipboardFlushAsync(this Byte[] value)
         {
             return FlushSetRawAsync(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboardFlush(this MemoryStream value)
         {
             return FlushSetRaw(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboardFlush(this BitmapSource image)
         {
@@ -734,37 +734,37 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return FlushSetAudio(stream);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboardFlushAudio(this Byte[] audio)
         {
             return FlushSetAudio(audio);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboardFlushFiles(this IEnumerable<String> files)
         {
             return FlushSetFiles(files);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboardFlush(this IDataObject data)
         {
             return FlushSetData(data);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboardFlush(this IDataObject data, Boolean copy)
         {
             return FlushSetData(data, copy);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboardFlushData(this Object data, String format)
         {
             return FlushSetData(data, format);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboard(this String text, Boolean flush)
         {
@@ -776,25 +776,25 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return SetText(text, format, flush);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboard(this Byte[] value, Boolean flush)
         {
             return SetRaw(value, flush);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<Boolean> ToClipboardAsync(this Byte[] value, Boolean flush)
         {
             return SetRawAsync(value, flush);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboard(this MemoryStream value, Boolean flush)
         {
             return SetRaw(value, flush);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboard(this BitmapSource image, Boolean flush)
         {
@@ -806,13 +806,13 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return SetAudio(stream, flush);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboardAudio(this Byte[] audio, Boolean flush)
         {
             return SetAudio(audio, flush);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboardFiles(this IEnumerable<String> files, Boolean flush)
         {
@@ -824,13 +824,13 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return SetData(data, copy, flush);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToClipboardData(this Object data, String format, Boolean flush)
         {
             return SetData(data, format, flush);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsCurrent(IDataObject? data)
         {
@@ -843,7 +843,7 @@ namespace NetExtender.Utilities.Windows.IO
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Boolean FlushInternal()
         {
@@ -857,7 +857,7 @@ namespace NetExtender.Utilities.Windows.IO
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Flush()
         {
@@ -877,7 +877,7 @@ namespace NetExtender.Utilities.Windows.IO
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Clear()
         {

@@ -17,21 +17,21 @@ namespace NetExtender.Utilities.Types
         {
             return ToSortedList(source, null);
         }
-        
+
         public static SortedList<TKey, TValue> ToSortedList<TKey, TValue>(this IEnumerable<KeyValuePair<TKey, TValue>> source, IComparer<TKey>? comparer) where TKey : notnull
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             SortedList<TKey, TValue> sorted = source.CountIfMaterialized() is Int32 count ? new SortedList<TKey, TValue>(count, comparer) : new SortedList<TKey, TValue>(comparer);
             sorted.AddRange(source);
             sorted.TrimExcess();
-            
+
             return sorted;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedList<TKey, TValue> ToSortedList<TKey, TValue>(this IEnumerable<(TKey, TValue)> source) where TKey : notnull
         {
@@ -42,7 +42,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ToKeyValuePairs().ToSortedList();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedList<TKey, TValue> ToSortedList<TKey, TValue>(this IEnumerable<(TKey, TValue)> source, IComparer<TKey>? comparer) where TKey : notnull
         {
@@ -53,13 +53,13 @@ namespace NetExtender.Utilities.Types
 
             return source.ToKeyValuePairs().ToSortedList(comparer);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedList<TKey, TSource> ToSortedList<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) where TKey : notnull
         {
             return ToSortedList(source, keySelector, null);
         }
-        
+
         public static SortedList<TKey, TSource> ToSortedList<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, IComparer<TKey>? comparer) where TKey : notnull
         {
             if (source is null)
@@ -81,13 +81,13 @@ namespace NetExtender.Utilities.Types
             sorted.TrimExcess();
             return sorted;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SortedList<TKey, TElement> ToSortedList<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector) where TKey : notnull
         {
             return ToSortedList(source, keySelector, elementSelector, null);
         }
-        
+
         public static SortedList<TKey, TElement> ToSortedList<TSource, TKey, TElement>(this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IComparer<TKey>? comparer) where TKey : notnull
         {
             if (source is null)
@@ -114,7 +114,7 @@ namespace NetExtender.Utilities.Types
             sorted.TrimExcess();
             return sorted;
         }
-        
+
         private static class SortedListBinarySearchExpression<TKey, TValue> where TKey : notnull
         {
             private static Func<SortedList<TKey, TValue>, TKey[]> Keys { get; }
@@ -126,7 +126,7 @@ namespace NetExtender.Utilities.Types
                 LambdaExpression lambda = Expression.Lambda(typeof(Func<SortedList<TKey, TValue>, TKey[]>), member, parameter);
                 Keys = (Func<SortedList<TKey, TValue>, TKey[]>) lambda.Compile();
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
             public static Int32 BinarySearch(SortedList<TKey, TValue> collection, TKey value)
             {

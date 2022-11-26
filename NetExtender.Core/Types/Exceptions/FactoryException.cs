@@ -32,7 +32,7 @@ namespace NetExtender.Types.Exceptions
             : base(message, paramName, innerException)
         {
         }
-        
+
         protected FactoryException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

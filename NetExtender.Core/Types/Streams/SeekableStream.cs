@@ -26,14 +26,14 @@ namespace NetExtender.Types.Streams
 
                 Int64 position = Position;
                 Seek(0, SeekOrigin.End);
-                
+
                 Int64 length = Position;
                 Position = position;
 
                 return length;
             }
         }
-        
+
         public override Int64 Position
         {
             get
@@ -73,7 +73,7 @@ namespace NetExtender.Types.Streams
                     }
 
                     Buffer.Write(buffer, 0, read);
-                
+
                     total -= read;
                 }
             }
@@ -86,7 +86,7 @@ namespace NetExtender.Types.Streams
                 return true;
             }
         }
-        
+
         public override Boolean CanSeek
         {
             get
@@ -94,7 +94,7 @@ namespace NetExtender.Types.Streams
                 return true;
             }
         }
-        
+
         public override Boolean CanWrite
         {
             get
@@ -102,7 +102,7 @@ namespace NetExtender.Types.Streams
                 return false;
             }
         }
-        
+
         public SeekableStream(Stream stream)
             : this(stream ?? throw new ArgumentNullException(nameof(stream)), new RecyclableMemoryStream())
         {

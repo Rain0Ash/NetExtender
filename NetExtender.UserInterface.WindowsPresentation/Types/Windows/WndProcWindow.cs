@@ -17,12 +17,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             Started += InitizalizeWndProc;
             Closed += DisposeWndProc;
         }
-        
+
         protected virtual Boolean WndProc(ref WinMessage message)
         {
             return false;
         }
-        
+
         // ReSharper disable once RedundantAssignment
         private IntPtr WndProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, ref Boolean handled)
         {

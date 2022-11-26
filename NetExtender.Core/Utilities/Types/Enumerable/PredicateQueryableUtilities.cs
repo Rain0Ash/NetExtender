@@ -26,7 +26,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(predicate.Not());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> WhereNot<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> predicate)
         {
@@ -42,7 +42,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(predicate.Not());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> WhereNotNull<T>(this IQueryable<T> source)
         {
@@ -53,7 +53,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(item => item != null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> WhereNotNull<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate)
         {
@@ -69,7 +69,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WhereNotNull().Where(predicate);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> WhereNotNull<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> predicate)
         {
@@ -85,7 +85,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WhereNotNull().Where(predicate);
         }
-        
+
         public static IQueryable<T> WhereIf<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> predicate, Boolean condition)
         {
             if (source is null)
@@ -100,7 +100,7 @@ namespace NetExtender.Utilities.Types
 
             return condition ? source.Where(predicate) : source;
         }
-        
+
         public static IQueryable<T> WhereIf<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> predicate, Boolean condition)
         {
             if (source is null)
@@ -130,7 +130,7 @@ namespace NetExtender.Utilities.Types
 
             return condition ? source.WhereNot(predicate) : source;
         }
-        
+
         public static IQueryable<T> WhereIfNot<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> predicate, Boolean condition)
         {
             if (source is null)
@@ -145,7 +145,7 @@ namespace NetExtender.Utilities.Types
 
             return condition ? source.WhereNot(predicate) : source;
         }
-        
+
         /// <summary>
         /// Extracts <paramref name="count"/> elements from a sequence at a particular zero-based starting index.
         /// </summary>

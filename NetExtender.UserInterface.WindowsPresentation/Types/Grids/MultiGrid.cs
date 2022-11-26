@@ -12,7 +12,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.Grids
     {
         public static readonly DependencyProperty ColumnsDependencyProperty = DependencyProperty.Register(nameof(Columns), typeof(Int32), typeof(MultiGrid), new PropertyMetadata(0));
         private DependencyPropertyDescriptor ColumnsPropertyDescriptor { get; } = DependencyPropertyDescriptor.FromProperty(ColumnsDependencyProperty, typeof(MultiGrid));
-        
+
         public Int32 Columns
         {
             get
@@ -24,10 +24,10 @@ namespace NetExtender.UserInterface.WindowsPresentation.Types.Grids
                 SetValue(ColumnsDependencyProperty, value);
             }
         }
-        
+
         public static readonly DependencyProperty RowsDependencyProperty = DependencyProperty.Register(nameof(Rows), typeof(Int32), typeof(MultiGrid), new PropertyMetadata(0));
         private DependencyPropertyDescriptor RowsPropertyDescriptor { get; } = DependencyPropertyDescriptor.FromProperty(RowsDependencyProperty, typeof(MultiGrid));
-        
+
         public Int32 Rows
         {
             get

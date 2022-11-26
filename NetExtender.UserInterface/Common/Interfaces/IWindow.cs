@@ -10,13 +10,13 @@ namespace NetExtender.UserInterface.Interfaces
         public String Name { get; set; }
 
         public String Title { get; set; }
-        
+
         public Boolean ShowInTaskbar { get; set; }
-        
+
         public Boolean TopMost { get; set; }
-        
+
         public Double Top { get; set; }
-        
+
         public Double Width { get; set; }
         public Double Height { get; set; }
 

@@ -19,7 +19,7 @@ namespace NetExtender.Localization.Common
         public static implicit operator ConfigurationEntry(LocalizationEntry entry)
         {
             ImmutableArray<String> sections = entry.Sections;
-            
+
             String? key = entry.Key;
             if (key is not null)
             {
@@ -28,7 +28,7 @@ namespace NetExtender.Localization.Common
 
             return new ConfigurationEntry(entry.Identifier.TwoLetterISOLanguageName, sections);
         }
-        
+
         public static implicit operator LocalizationMultiEntry(LocalizationEntry value)
         {
             return new LocalizationMultiEntry(value.Key, value.Sections);
@@ -43,11 +43,11 @@ namespace NetExtender.Localization.Common
         {
             return !(first == second);
         }
-        
+
         public String? Key { get; }
         public LocalizationIdentifier Identifier { get; }
         public ImmutableArray<String> Sections { get; }
-        
+
         [JsonIgnore]
         public Int32 Length
         {
@@ -66,12 +66,12 @@ namespace NetExtender.Localization.Common
             : this(key, identifier, sections.AsImmutableArray())
         {
         }
-        
+
         public LocalizationEntry(String? key, LocalizationIdentifier identifier, IEnumerable<String>? sections)
             : this(key, identifier, sections.AsImmutableArray())
         {
         }
-        
+
         public LocalizationEntry(String? key, LocalizationIdentifier identifier, ImmutableArray<String> sections)
         {
             Key = key;
@@ -89,7 +89,7 @@ namespace NetExtender.Localization.Common
         public static Boolean TryConvert(ConfigurationEntry entry, out LocalizationEntry result)
         {
             (String? key, ImmutableArray<String> sections) = entry;
-            
+
             if (key is null)
             {
                 result = default;
@@ -113,7 +113,7 @@ namespace NetExtender.Localization.Common
             result = new LocalizationEntry(key, identifier, sections);
             return true;
         }
-        
+
         public Int32 CompareTo(LocalizationEntry other)
         {
             Int32 compare = Sections.Length.CompareTo(other.Sections.Length);
@@ -134,7 +134,7 @@ namespace NetExtender.Localization.Common
 
                 return compare;
             }
-            
+
             compare = StringComparer.Ordinal.Compare(Key, other.Key);
             return compare == 0 ? Identifier.CompareTo(other.Identifier) : compare;
         }
@@ -143,7 +143,7 @@ namespace NetExtender.Localization.Common
         {
             return Identifier == other.Identifier && Key == other.Key && Sections.SequenceEqual(other.Sections);
         }
-        
+
         public override Boolean Equals(Object? obj)
         {
             return obj is LocalizationEntry other && Equals(other);
@@ -159,7 +159,7 @@ namespace NetExtender.Localization.Common
             return this.JsonSerializeObject();
         }
     }
-    
+
     [Serializable]
     public readonly struct LocalizationMultiEntry : IComparable<LocalizationMultiEntry>, IEquatable<LocalizationMultiEntry>
     {
@@ -172,10 +172,10 @@ namespace NetExtender.Localization.Common
         {
             return !(first == second);
         }
-        
+
         public String? Key { get; }
         public ImmutableArray<String> Sections { get; }
-        
+
         [JsonIgnore]
         public Int32 Length
         {
@@ -194,12 +194,12 @@ namespace NetExtender.Localization.Common
             : this(key, sections.AsImmutableArray())
         {
         }
-        
+
         public LocalizationMultiEntry(String? key, IEnumerable<String>? sections)
             : this(key, sections.AsImmutableArray())
         {
         }
-        
+
         public LocalizationMultiEntry(String? key, ImmutableArray<String> sections)
         {
             Key = key;
@@ -211,7 +211,7 @@ namespace NetExtender.Localization.Common
             key = Key;
             sections = Sections;
         }
-        
+
         public Int32 CompareTo(LocalizationMultiEntry other)
         {
             Int32 compare = Sections.Length.CompareTo(other.Sections.Length);
@@ -232,7 +232,7 @@ namespace NetExtender.Localization.Common
 
                 return compare;
             }
-            
+
             return StringComparer.Ordinal.Compare(Key, other.Key);
         }
 
@@ -240,7 +240,7 @@ namespace NetExtender.Localization.Common
         {
             return Key == other.Key && Sections.SequenceEqual(other.Sections);
         }
-        
+
         public override Boolean Equals(Object? obj)
         {
             return obj is LocalizationEntry other && Equals(other);

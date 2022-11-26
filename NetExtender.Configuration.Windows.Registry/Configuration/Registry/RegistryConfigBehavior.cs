@@ -33,17 +33,17 @@ namespace NetExtender.Configuration.Windows.Registry
         {
             return String.IsNullOrEmpty(path) ? $"Software\\{ApplicationUtilities.FriendlyName}" : path;
         }
-        
+
         public RegistryConfigBehavior()
             : this(null, ConfigOptions.None)
         {
         }
-        
+
         public RegistryConfigBehavior(ConfigOptions options)
             : this(null, options)
         {
         }
-        
+
         public RegistryConfigBehavior(String? path)
             : this(path, ConfigOptions.None)
         {
@@ -53,7 +53,7 @@ namespace NetExtender.Configuration.Windows.Registry
             : this(RegistryKeys.CurrentUser, path, options)
         {
         }
-        
+
         public RegistryConfigBehavior(RegistryKeys key)
             : this(key, null, ConfigOptions.None)
         {
@@ -63,12 +63,12 @@ namespace NetExtender.Configuration.Windows.Registry
             : this(key, null, options)
         {
         }
-        
+
         public RegistryConfigBehavior(RegistryKeys key, String? path)
             : this(key, path, ConfigOptions.None)
         {
         }
-        
+
         public RegistryConfigBehavior(RegistryKeys key, String? path, ConfigOptions options)
             : base(GetDefaultPath(path), options)
         {
@@ -86,19 +86,19 @@ namespace NetExtender.Configuration.Windows.Registry
             {
                 return false;
             }
-            
+
             if (IsIgnoreEvent && !IsLazyWrite)
             {
                 return Registry.SetValue(key, value, sections);
             }
-            
+
             sections = ToSection(sections).AsIImmutableList();
 
             if (IsLazyWrite && Get(key, sections) == value)
             {
                 return true;
             }
-            
+
             if (!Registry.SetValue(key, value, sections))
             {
                 return false;
@@ -107,12 +107,12 @@ namespace NetExtender.Configuration.Windows.Registry
             OnChanged(new ConfigurationValueEntry(key, value, sections));
             return true;
         }
-        
+
         protected virtual ConfigurationEntry EntriesConvert(RegistryEntry entry)
         {
             return new ConfigurationEntry(entry.Name, entry.Sections);
         }
-        
+
         protected virtual ConfigurationValueEntry ValueEntriesConvert(RegistryEntry entry)
         {
             return new ConfigurationValueEntry(entry.Name, Get(entry.Name, entry.Sections), entry.Sections);
@@ -145,7 +145,7 @@ namespace NetExtender.Configuration.Windows.Registry
             {
                 return false;
             }
-            
+
             if (entries is null)
             {
                 return false;
@@ -179,7 +179,7 @@ namespace NetExtender.Configuration.Windows.Registry
                     {
                         continue;
                     }
-                    
+
                     changes?.Add(entry);
                     continue;
                 }
@@ -188,14 +188,14 @@ namespace NetExtender.Configuration.Windows.Registry
                 {
                     continue;
                 }
-                
+
                 if (entry.Value is null)
                 {
                     if (!Registry.RemoveKey(entry.Key, entry.Sections))
                     {
                         continue;
                     }
-                    
+
                     changes?.Add(entry);
                     continue;
                 }
@@ -204,7 +204,7 @@ namespace NetExtender.Configuration.Windows.Registry
                 {
                     continue;
                 }
-                
+
                 changes?.Add(entry);
             }
 
@@ -228,7 +228,7 @@ namespace NetExtender.Configuration.Windows.Registry
             {
                 return false;
             }
-            
+
             if (entries is null)
             {
                 return false;
@@ -240,7 +240,7 @@ namespace NetExtender.Configuration.Windows.Registry
             {
                 return Merge(entries);
             }
-            
+
             IndexDictionary<ConfigurationEntry, ConfigurationValueEntry> dictionary = values.ToIndexDictionary(item => (ConfigurationEntry) item, item => item);
             List<ConfigurationValueEntry>? changes = !IsIgnoreEvent ? new List<ConfigurationValueEntry>(dictionary.Count) : null;
 
@@ -250,7 +250,7 @@ namespace NetExtender.Configuration.Windows.Registry
                 {
                     continue;
                 }
-                
+
                 if (!dictionary.Remove(entry, out ConfigurationValueEntry result))
                 {
                     if (entry.Value is null)
@@ -262,7 +262,7 @@ namespace NetExtender.Configuration.Windows.Registry
                     {
                         continue;
                     }
-                    
+
                     changes?.Add(entry);
                     continue;
                 }
@@ -271,14 +271,14 @@ namespace NetExtender.Configuration.Windows.Registry
                 {
                     continue;
                 }
-                
+
                 if (entry.Value is null)
                 {
                     if (!Registry.RemoveKey(entry.Key, entry.Sections))
                     {
                         continue;
                     }
-                    
+
                     changes?.Add(entry);
                     continue;
                 }
@@ -287,7 +287,7 @@ namespace NetExtender.Configuration.Windows.Registry
                 {
                     continue;
                 }
-                
+
                 changes?.Add(entry);
             }
 
@@ -297,12 +297,12 @@ namespace NetExtender.Configuration.Windows.Registry
                 {
                     continue;
                 }
-                
+
                 if (!Registry.RemoveKey(key, sections))
                 {
                     continue;
                 }
-                
+
                 changes?.Add(new ConfigurationValueEntry(key, null, sections));
             }
 

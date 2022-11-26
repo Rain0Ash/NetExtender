@@ -14,15 +14,15 @@ namespace NetExtender.Types.Events
         {
             return args is not null ? new CancelEventArgs<T>(args.Value, args.IsCancelled) : null;
         }
-        
+
         [return: NotNullIfNotNull("args")]
         public static implicit operator CancelEventArgs<T>?(HandledEventArgs<T>? args)
         {
             return args is not null ? new CancelEventArgs<T>(args.Value, args.Handled) : null;
         }
-        
+
         public T Value { get; }
-        
+
         public CancelEventArgs(T value)
         {
             Value = value;

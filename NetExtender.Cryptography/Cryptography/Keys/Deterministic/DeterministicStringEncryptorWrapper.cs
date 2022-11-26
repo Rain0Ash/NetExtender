@@ -31,7 +31,7 @@ namespace NetExtender.Cryptography.Keys.Deterministic
 
             return Registrations.GetValue(encryptor, _ => encryptor.CreateDeterministic());
         }
-        
+
         private Dictionary<String, String?>? Dictionary { get; }
 
         private Maybe<String?> Null { get; set; }
@@ -61,7 +61,7 @@ namespace NetExtender.Cryptography.Keys.Deterministic
                 return true;
             }
         }
-        
+
         public DeterministicStringEncryptorWrapper(IStringEncryptor encryptor)
             : this(encryptor, null)
         {
@@ -88,7 +88,7 @@ namespace NetExtender.Cryptography.Keys.Deterministic
             Null = result;
             return result;
         }
-        
+
         private String? EncryptNullStringInternal()
         {
             if (Null.HasValue)
@@ -119,7 +119,7 @@ namespace NetExtender.Cryptography.Keys.Deterministic
             {
                 return Encryptor.Encrypt(value);
             }
-            
+
             //TODO: CS8598
             // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             return value is not null ? Dictionary.GetOrAdd(value, Encryptor.EncryptString) : EncryptNullStringInternal();
@@ -155,17 +155,17 @@ namespace NetExtender.Cryptography.Keys.Deterministic
             return source.Select(EncryptString).ToArray();
         }
     }
-    
+
     public class DeterministicStringEncryptorWrapper<T> : DeterministicStringEncryptorWrapper where T : IStringEncryptor
     {
         public new T Encryptor { get; }
-        
+
         public DeterministicStringEncryptorWrapper(T encryptor)
             : base(encryptor)
         {
             Encryptor = encryptor ?? throw new ArgumentNullException(nameof(encryptor));
         }
-        
+
         public DeterministicStringEncryptorWrapper(T encryptor, IEnumerable<KeyValuePair<String, String?>>? source)
             : base(encryptor, source)
         {

@@ -20,14 +20,14 @@ namespace NetExtender.Types.Immutable.Stacks
                 return Stack.IsEmpty;
             }
         }
-        
+
         private ImmutableList<T> Stack { get; }
-        
+
         private ImmutableReversedStack(ImmutableList<T> stack)
         {
             Stack = stack ?? throw new ArgumentNullException(nameof(stack));
         }
-        
+
         public ImmutableReversedStack(IEnumerable<T> stack)
         {
             Stack = stack?.AsImmutableList() ?? throw new ArgumentNullException(nameof(stack));
@@ -39,10 +39,10 @@ namespace NetExtender.Types.Immutable.Stacks
             {
                 throw new InvalidOperationException("This operation does not apply to an empty instance.");
             }
-            
+
             return Stack[^1];
         }
-        
+
         public ref readonly T PeekRef()
         {
             if (IsEmpty)
@@ -52,7 +52,7 @@ namespace NetExtender.Types.Immutable.Stacks
 
             return ref Stack.ItemRef(Stack.Count - 1);
         }
-        
+
         public ImmutableReversedStack<T> Push(T value)
         {
             return new ImmutableReversedStack<T>(Stack.Add(value));
@@ -62,7 +62,7 @@ namespace NetExtender.Types.Immutable.Stacks
         {
             return Push(value);
         }
-        
+
         public ImmutableReversedStack<T> Pop()
         {
             return Pop(out _);
@@ -72,7 +72,7 @@ namespace NetExtender.Types.Immutable.Stacks
         {
             return Pop();
         }
-        
+
         public ImmutableReversedStack<T> Pop(out T value)
         {
             if (IsEmpty)
@@ -83,17 +83,17 @@ namespace NetExtender.Types.Immutable.Stacks
             value = Stack[^1];
             return new ImmutableReversedStack<T>(Stack.RemoveAt(Stack.Count - 1));
         }
-        
+
         public ImmutableReversedStack<T> Clear()
         {
             return Empty;
         }
-        
+
         IImmutableStack<T> IImmutableStack<T>.Clear()
         {
             return Clear();
         }
-        
+
         public IEnumerator<T> GetEnumerator()
         {
             return Stack.GetEnumerator();

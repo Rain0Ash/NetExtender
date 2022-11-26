@@ -24,7 +24,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return UserInterfaceUtilities.GetWindowRectangle(form.Handle);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ShowWindow(this Form form, WindowStateType state)
         {
@@ -35,7 +35,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return UserInterfaceUtilities.ShowWindow(form.Handle, state);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean BringToForeground(this Form form)
         {
@@ -46,7 +46,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return UserInterfaceUtilities.BringToForegroundWindow(form.Handle);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetPrimaryScreenPercentageSize(this Form form)
         {
@@ -125,7 +125,7 @@ namespace NetExtender.Utilities.UserInterface
             form.Width = (Int32) (width / 100D * screen.WorkingArea.Width);
             form.Height = (Int32) (height / 100D * screen.WorkingArea.Height);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetPrimaryScreenPercentageSize<T>(this T window) where T : IWindow
         {
@@ -168,7 +168,7 @@ namespace NetExtender.Utilities.UserInterface
             {
                 throw new ArgumentNullException(nameof(window));
             }
-            
+
             window.SetScreenPercentageSize(ScreenWrapper.FromHandle(window.Handle), width, height);
         }
     }

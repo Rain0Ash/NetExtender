@@ -120,13 +120,13 @@ namespace NetExtender.Utilities.Memento
             {
                 return new MementoObjectProperty<TSource, TProperty>(property.Key, property.Value);
             }
-            
+
             IEnumerable<MementoObjectProperty<TSource, TProperty>> selector = properties.Select(Convert);
             MementoGroupProperty<TSource> property = new MementoGroupProperty<TSource>(selector);
             builder.Remember(property);
             return builder;
         }
-        
+
         public static IMementoBuilder<TSource> Clone<TSource, TProperty>(this IMementoBuilder<TSource> builder, String name) where TSource : class where TProperty : ICloneable
         {
             if (builder is null)
@@ -234,7 +234,7 @@ namespace NetExtender.Utilities.Memento
             {
                 return new MementoCloneProperty<TSource, TProperty>(property.Key, property.Value);
             }
-            
+
             IEnumerable<MementoCloneProperty<TSource, TProperty>> selector = properties.Select(Convert);
             MementoGroupProperty<TSource> property = new MementoGroupProperty<TSource>(selector);
             builder.Remember(property);
@@ -291,7 +291,7 @@ namespace NetExtender.Utilities.Memento
             builder.Remember(property);
             return builder;
         }
-        
+
         public static IMementoBuilder<TSource> Array<TSource, TProperty>(this IMementoBuilder<TSource> builder, Expression<Func<TSource, TProperty[]>> expression, IEnumerable<TProperty>? values) where TSource : class
         {
             if (builder is null)
@@ -325,7 +325,7 @@ namespace NetExtender.Utilities.Memento
             {
                 return new MementoArrayProperty<TSource, TProperty>(property);
             }
-            
+
             IEnumerable<MementoArrayProperty<TSource, TProperty>> selector = properties.Select(Convert);
             MementoGroupProperty<TSource> property = new MementoGroupProperty<TSource>(selector);
             builder.Remember(property);
@@ -348,7 +348,7 @@ namespace NetExtender.Utilities.Memento
             {
                 return new MementoArrayProperty<TSource, TProperty>(property.Key, property.Value);
             }
-            
+
             IEnumerable<MementoArrayProperty<TSource, TProperty>> selector = properties.Select(Convert);
             MementoGroupProperty<TSource> property = new MementoGroupProperty<TSource>(selector);
             builder.Remember(property);
@@ -457,7 +457,7 @@ namespace NetExtender.Utilities.Memento
             {
                 throw new ArgumentNullException(nameof(properties));
             }
-            
+
             static MementoCollectionProperty<TSource, TProperty, TCollection> Convert(KeyValuePair<ReflectionProperty<TSource, TCollection>, IEnumerable<TProperty>?> property)
             {
                 return new MementoCollectionProperty<TSource, TProperty, TCollection>(property.Key, property.Value);

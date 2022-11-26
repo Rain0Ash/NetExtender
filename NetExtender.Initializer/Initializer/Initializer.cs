@@ -65,7 +65,7 @@ namespace NetExtender.Initializer
                     result = shutdown;
                     return true;
                 }
-                
+
                 exception = exception.InnerException;
             }
 
@@ -110,7 +110,7 @@ namespace NetExtender.Initializer
         {
             Shutdown(sender, true);
         }
-        
+
         protected void Shutdown(Object? sender)
         {
             Shutdown(sender, false);
@@ -130,7 +130,7 @@ namespace NetExtender.Initializer
         {
             Environment.Exit(code);
         }
-        
+
         protected virtual void Terminate(Object? sender, Exception? exception)
         {
             Environment.Exit(exception?.HResult ?? 1);

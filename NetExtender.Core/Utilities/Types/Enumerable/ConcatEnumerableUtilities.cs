@@ -29,7 +29,7 @@ namespace NetExtender.Utilities.Types
         {
             return source?.Append(value) ?? Factory(value);
         }
-        
+
         [return: NotNullIfNotNull("source")]
         public static IEnumerable<T>? AppendOr<T>(this IEnumerable<T>? source, IEnumerable<T>? additional)
         {
@@ -63,7 +63,7 @@ namespace NetExtender.Utilities.Types
                 yield return item;
             }
         }
-        
+
         public static IEnumerable<T> AppendIf<T>(this IEnumerable<T> source, Boolean condition, T item)
         {
             if (source is null)
@@ -100,7 +100,7 @@ namespace NetExtender.Utilities.Types
         {
             return condition ? source.Append(value, values) : source;
         }
-        
+
         public static IEnumerable<T> AppendIf<T>(this IEnumerable<T> source, Func<Boolean> condition, T item)
         {
             if (source is null)
@@ -154,20 +154,20 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(condition));
             }
-            
+
             return condition() ? source.Append(value, values) : source;
         }
-        
+
         public static IEnumerable<T> AppendIfNot<T>(this IEnumerable<T> source, Boolean condition, T item)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return !condition ? Enumerable.Append(source, item) : source;
         }
-        
+
         public static IEnumerable<T> AppendIfNot<T>(this IEnumerable<T> source, Boolean condition, IEnumerable<T> additional)
         {
             if (source is null)
@@ -194,7 +194,7 @@ namespace NetExtender.Utilities.Types
         {
             return !condition ? source.Append(value, values) : source;
         }
-        
+
         public static IEnumerable<T> AppendIfNot<T>(this IEnumerable<T> source, Func<Boolean> condition, T item)
         {
             if (source is null)
@@ -209,7 +209,7 @@ namespace NetExtender.Utilities.Types
 
             return !condition() ? Enumerable.Append(source, item) : source;
         }
-        
+
         public static IEnumerable<T> AppendIfNot<T>(this IEnumerable<T> source, Func<Boolean> condition, IEnumerable<T> additional)
         {
             if (source is null)
@@ -237,7 +237,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(condition));
             }
-            
+
             return !condition() ? source.Append(additionals) : source;
         }
 
@@ -248,7 +248,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(condition));
             }
-            
+
             return !condition() ? source.Append(value, values) : source;
         }
 
@@ -265,7 +265,7 @@ namespace NetExtender.Utilities.Types
             }
 
             using IEnumerator<T> enumerator = source.GetEnumerator();
-            
+
             Int64 i = 0;
             while (i++ < index && enumerator.MoveNext())
             {
@@ -291,7 +291,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(additional));
             }
-            
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
@@ -326,9 +326,9 @@ namespace NetExtender.Utilities.Types
                     yield return enumerator.Current;
                 }
             }
-            
+
             yield return value;
-            
+
             if (values is not null)
             {
                 foreach (T item in values)
@@ -336,7 +336,7 @@ namespace NetExtender.Utilities.Types
                     yield return item;
                 }
             }
-            
+
             if (enumerator is null)
             {
                 yield break;
@@ -428,7 +428,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(condition));
             }
-            
+
             return condition() ? source.AppendAt(index, value, values) : source;
         }
 
@@ -512,7 +512,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(condition));
             }
-            
+
             return !condition() ? source.AppendAt(index, value, values) : source;
         }
 
@@ -530,12 +530,12 @@ namespace NetExtender.Utilities.Types
 
             return source.Preconcat(additional);
         }
-        
+
         public static IEnumerable<T> PrependOr<T>(this IEnumerable<T>? source, T value)
         {
             return source?.Prepend(value) ?? Factory(value);
         }
-        
+
         [return: NotNullIfNotNull("source")]
         public static IEnumerable<T>? PrependOr<T>(this IEnumerable<T>? source, IEnumerable<T>? additional)
         {
@@ -569,7 +569,7 @@ namespace NetExtender.Utilities.Types
                 yield return item;
             }
         }
-        
+
         public static IEnumerable<T> PrependIf<T>(this IEnumerable<T> source, Boolean condition, T item)
         {
             if (source is null)
@@ -606,7 +606,7 @@ namespace NetExtender.Utilities.Types
         {
             return condition ? source.Prepend(value, values) : source;
         }
-        
+
         public static IEnumerable<T> PrependIf<T>(this IEnumerable<T> source, Func<Boolean> condition, T item)
         {
             if (source is null)
@@ -660,20 +660,20 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(condition));
             }
-            
+
             return condition() ? source.Prepend(value, values) : source;
         }
-        
+
         public static IEnumerable<T> PrependIfNot<T>(this IEnumerable<T> source, Boolean condition, T item)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return !condition ? Enumerable.Prepend(source, item) : source;
         }
-        
+
         public static IEnumerable<T> PrependIfNot<T>(this IEnumerable<T> source, Boolean condition, IEnumerable<T> additional)
         {
             if (source is null)
@@ -700,7 +700,7 @@ namespace NetExtender.Utilities.Types
         {
             return !condition ? source.Prepend(value, values) : source;
         }
-        
+
         public static IEnumerable<T> PrependIfNot<T>(this IEnumerable<T> source, Func<Boolean> condition, T item)
         {
             if (source is null)
@@ -715,7 +715,7 @@ namespace NetExtender.Utilities.Types
 
             return !condition() ? Enumerable.Prepend(source, item) : source;
         }
-        
+
         public static IEnumerable<T> PrependIfNot<T>(this IEnumerable<T> source, Func<Boolean> condition, IEnumerable<T> additional)
         {
             if (source is null)
@@ -743,7 +743,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(condition));
             }
-            
+
             return !condition() ? source.Prepend(additionals) : source;
         }
 
@@ -754,7 +754,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(condition));
             }
-            
+
             return !condition() ? source.Prepend(value, values) : source;
         }
 
@@ -781,7 +781,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         [return: NotNullIfNotNull("source")]
         public static IEnumerable<T>? ConcatOr<T>(this IEnumerable<T>? source, IEnumerable<T>? additional)
         {
@@ -802,7 +802,7 @@ namespace NetExtender.Utilities.Types
 
             return condition ? Enumerable.Concat(source, additional) : source;
         }
-        
+
         public static IEnumerable<T> ConcatIf<T>(this IEnumerable<T> source, Func<Boolean> condition, IEnumerable<T> additional)
         {
             if (source is null)
@@ -819,7 +819,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(additional));
             }
-            
+
             return condition() ? Enumerable.Concat(source, additional) : source;
         }
 
@@ -828,7 +828,7 @@ namespace NetExtender.Utilities.Types
         {
             return condition ? source.Concat(additionals) : source;
         }
-        
+
         [return: NotNullIfNotNull("source")]
         public static IEnumerable<T>? ConcatIf<T>(this IEnumerable<T>? source, Func<Boolean> condition, params IEnumerable<T>?[]? additionals)
         {
@@ -839,7 +839,7 @@ namespace NetExtender.Utilities.Types
 
             return condition() ? source.Concat(additionals) : source;
         }
-        
+
         public static IEnumerable<T> ConcatIfNot<T>(this IEnumerable<T> source, Boolean condition, IEnumerable<T> additional)
         {
             if (source is null)
@@ -871,7 +871,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(additional));
             }
-            
+
             return !condition() ? Enumerable.Concat(source, additional) : source;
         }
 
@@ -880,7 +880,7 @@ namespace NetExtender.Utilities.Types
         {
             return !condition ? source.Concat(additionals) : source;
         }
-        
+
         [return: NotNullIfNotNull("source")]
         public static IEnumerable<T>? ConcatIfNot<T>(this IEnumerable<T>? source, Func<Boolean> condition, params IEnumerable<T>?[]? additionals)
         {
@@ -903,14 +903,14 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(additional));
             }
-            
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             using IEnumerator<T> enumerator = source.GetEnumerator();
-            
+
             Int64 i = 0;
             while (i++ < index && enumerator.MoveNext())
             {
@@ -979,37 +979,37 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(additional));
             }
-            
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             return condition ? source.ConcatAt(index, additional) : source;
         }
-        
+
         public static IEnumerable<T> ConcatAtIf<T>(this IEnumerable<T> source, Func<Boolean> condition, Int32 index, IEnumerable<T> additional)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (condition is null)
             {
                 throw new ArgumentNullException(nameof(condition));
             }
-            
+
             if (additional is null)
             {
                 throw new ArgumentNullException(nameof(additional));
             }
-            
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             return condition() ? source.ConcatAt(index, additional) : source;
         }
 
@@ -1020,7 +1020,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             return condition ? source.ConcatAt(index, additionals) : source;
         }
 
@@ -1031,12 +1031,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(condition));
             }
-            
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             return condition() ? source.ConcatAt(index, additionals) : source;
         }
 
@@ -1051,37 +1051,37 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(additional));
             }
-            
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             return !condition ? source.ConcatAt(index, additional) : source;
         }
-        
+
         public static IEnumerable<T> ConcatAtIfNot<T>(this IEnumerable<T> source, Func<Boolean> condition, Int32 index, IEnumerable<T> additional)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (condition is null)
             {
                 throw new ArgumentNullException(nameof(condition));
             }
-            
+
             if (additional is null)
             {
                 throw new ArgumentNullException(nameof(additional));
             }
-            
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             return !condition() ? source.ConcatAt(index, additional) : source;
         }
 
@@ -1092,7 +1092,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             return !condition ? source.ConcatAt(index, additionals) : source;
         }
 
@@ -1103,12 +1103,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(condition));
             }
-            
+
             if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             return !condition() ? source.ConcatAt(index, additionals) : source;
         }
 
@@ -1150,13 +1150,13 @@ namespace NetExtender.Utilities.Types
                 yield return item;
             }
         }
-        
+
         [return: NotNullIfNotNull("source")]
         public static IEnumerable<T>? PreconcatOr<T>(this IEnumerable<T>? source, IEnumerable<T>? additional)
         {
             return additional is not null ? source?.Preconcat(additional) ?? additional : source;
         }
-        
+
         public static IEnumerable<T> PreconcatIf<T>(this IEnumerable<T> source, Boolean condition, IEnumerable<T> additional)
         {
             if (source is null)
@@ -1171,7 +1171,7 @@ namespace NetExtender.Utilities.Types
 
             return condition ? source.Preconcat(additional) : source;
         }
-        
+
         public static IEnumerable<T> PreconcatIf<T>(this IEnumerable<T> source, Func<Boolean> condition, IEnumerable<T> additional)
         {
             if (source is null)
@@ -1197,7 +1197,7 @@ namespace NetExtender.Utilities.Types
         {
             return condition ? source.Preconcat(additionals) : source;
         }
-        
+
         [return: NotNullIfNotNull("source")]
         public static IEnumerable<T>? PreconcatIf<T>(this IEnumerable<T>? source, Func<Boolean> condition, params IEnumerable<T>?[]? additionals)
         {
@@ -1208,7 +1208,7 @@ namespace NetExtender.Utilities.Types
 
             return condition() ? source.Preconcat(additionals) : source;
         }
-        
+
         public static IEnumerable<T> PreconcatIfNot<T>(this IEnumerable<T> source, Boolean condition, IEnumerable<T> additional)
         {
             if (source is null)
@@ -1223,7 +1223,7 @@ namespace NetExtender.Utilities.Types
 
             return !condition ? source.Preconcat(additional) : source;
         }
-        
+
         public static IEnumerable<T> PreconcatIfNot<T>(this IEnumerable<T> source, Func<Boolean> condition, IEnumerable<T> additional)
         {
             if (source is null)
@@ -1243,13 +1243,13 @@ namespace NetExtender.Utilities.Types
 
             return !condition() ? source.Preconcat(additional) : source;
         }
-        
+
         [return: NotNullIfNotNull("source")]
         public static IEnumerable<T>? PreconcatIfNot<T>(this IEnumerable<T>? source, Boolean condition, params IEnumerable<T>?[]? additionals)
         {
             return !condition ? source.Preconcat(additionals) : source;
         }
-        
+
         [return: NotNullIfNotNull("source")]
         public static IEnumerable<T>? PreconcatIfNot<T>(this IEnumerable<T>? source, Func<Boolean> condition, params IEnumerable<T>?[]? additionals)
         {
@@ -1257,7 +1257,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(condition));
             }
-            
+
             return !condition() ? source.Preconcat(additionals) : source;
         }
 
@@ -1281,7 +1281,7 @@ namespace NetExtender.Utilities.Types
 
             T result = enumerator.Current;
             yield return result;
-            
+
             while (enumerator.MoveNext())
             {
                 result = aggregate(result, enumerator.Current);
@@ -1290,7 +1290,7 @@ namespace NetExtender.Utilities.Types
 
             yield return result;
         }
-        
+
         public static IEnumerable<T> AppendAggregate<T>(this IEnumerable<T> source, T seed, Func<T, T, T> aggregate)
         {
             if (source is null)
@@ -1304,16 +1304,16 @@ namespace NetExtender.Utilities.Types
             }
 
             T result = seed;
-            
+
             using IEnumerator<T> enumerator = source.GetEnumerator();
             if (!enumerator.MoveNext())
             {
                 yield return result;
                 yield break;
             }
-            
+
             yield return enumerator.Current;
-            
+
             while (enumerator.MoveNext())
             {
                 result = aggregate(result, enumerator.Current);

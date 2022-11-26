@@ -26,7 +26,7 @@ namespace NetExtender.Domains.Applications
             : base(application)
         {
         }
-        
+
         public override Task<IApplication> RunAsync(CancellationToken token)
         {
             RegisterShutdownToken(token);

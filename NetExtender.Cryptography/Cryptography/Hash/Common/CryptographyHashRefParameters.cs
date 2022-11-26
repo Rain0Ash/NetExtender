@@ -11,7 +11,7 @@ namespace NetExtender.Cryptography.Hash.Common
         {
             return new CryptographyHashParameters(parameters.FirstSaltArray, parameters.LastSaltArray, parameters.FirstPepperArray, parameters.LastPepperArray, parameters.Iterations);
         }
-        
+
         public ReadOnlySpan<Byte> FirstSalt { get; }
 
         public Byte[] FirstSaltArray
@@ -53,12 +53,12 @@ namespace NetExtender.Cryptography.Hash.Common
         }
 
         public UInt16 Iterations { get; }
-        
+
         public CryptographyHashRefParameters(ReadOnlySpan<Byte> salt, ReadOnlySpan<Byte> pepper, UInt16 iterations = 1)
             : this(salt, salt, pepper, pepper, iterations)
         {
         }
-        
+
         public CryptographyHashRefParameters(ReadOnlySpan<Byte> lsalt, ReadOnlySpan<Byte> rsalt, ReadOnlySpan<Byte> lpepper, ReadOnlySpan<Byte> rpepper, UInt16 iterations = 1)
         {
             FirstSalt = lsalt;

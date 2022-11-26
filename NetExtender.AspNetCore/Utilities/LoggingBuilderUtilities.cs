@@ -22,7 +22,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return condition ? factory(builder) : builder;
         }
-        
+
         public static ILoggingBuilder AddIfNot(this ILoggingBuilder builder, Func<ILoggingBuilder, ILoggingBuilder> factory, Boolean condition)
         {
             if (builder is null)
@@ -37,7 +37,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return !condition ? factory(builder) : builder;
         }
-        
+
         public static ILoggingBuilder LoggingOff(this ILoggingBuilder builder)
         {
             if (builder is null)

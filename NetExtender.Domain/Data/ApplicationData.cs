@@ -47,12 +47,12 @@ namespace NetExtender.Domains
             {
                 return true;
             }
-            
+
             if (first is null || second is null)
             {
                 return false;
             }
-            
+
             return first.CompareTo(second) == 0;
         }
 
@@ -91,11 +91,11 @@ namespace NetExtender.Domains
         }
 
         public Guid Guid { get; }
-        
+
         public String ApplicationName { get; }
-        
+
         public String ApplicationIdentifier { get; }
-        
+
         public DateTime StartedAt { get; }
 
         public ApplicationVersion Version { get; }
@@ -140,7 +140,7 @@ namespace NetExtender.Domains
         {
         }
 
-        
+
         public ApplicationData(ApplicationVersion version, ApplicationInfo information, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
             : this(Process.GetCurrentProcess().ProcessName, version, information, status, branch)
         {
@@ -150,17 +150,17 @@ namespace NetExtender.Domains
             : this(name, version, ApplicationInfo.Default, status, branch)
         {
         }
-        
+
         public ApplicationData(String name, ApplicationVersion version, ApplicationInfo information, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
             : this(name, name, version, information, status, branch)
         {
         }
-        
+
         public ApplicationData(String name, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
             : this(name, name, status, branch)
         {
         }
-        
+
         public ApplicationData(String name, String identifier, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
             : this(name, identifier, ApplicationVersion.Default, status, branch)
         {
@@ -170,7 +170,7 @@ namespace NetExtender.Domains
             : this(name, identifier, version, ApplicationInfo.Default, status, branch)
         {
         }
-        
+
         public ApplicationData(String name, String identifier, ApplicationVersion version, ApplicationInfo information, ApplicationStatus status = ApplicationStatus.Release, ApplicationBranch branch = ApplicationBranch.Master)
         {
             if (name is null)
@@ -212,12 +212,12 @@ namespace NetExtender.Domains
             {
                 return 2;
             }
-            
+
             if (ApplicationName != other.ApplicationName)
             {
                 throw new ArgumentException("Applications name is not equals");
             }
-            
+
             Int32 compare = Version.CompareTo(other.Version);
 
             if (version && compare != 0)
@@ -232,7 +232,7 @@ namespace NetExtender.Domains
 
             return compare;
         }
-        
+
         public override String ToString()
         {
             return $"{Version}:{StatusData}{BranchData}";
@@ -254,7 +254,7 @@ namespace NetExtender.Domains
         }
 
         private Boolean _disposed;
-        
+
         public void Dispose()
         {
             DisposeInternal(true);
@@ -264,7 +264,7 @@ namespace NetExtender.Domains
         protected virtual void Dispose(Boolean disposing)
         {
         }
-        
+
         private void DisposeInternal(Boolean disposing)
         {
             if (_disposed)

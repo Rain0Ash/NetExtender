@@ -28,7 +28,7 @@ namespace NetExtender.Utilities.Serialization
 
             return document.ToXDocument().ToString();
         }
-        
+
         public static XmlDocument FromIntendXml(String xml)
         {
             if (xml is null)
@@ -38,7 +38,7 @@ namespace NetExtender.Utilities.Serialization
 
             return XDocument.Parse(xml).ToXmlDocument();
         }
-        
+
         public static XmlDocument ToXmlDocument(this XDocument document)
         {
             if (document is null)
@@ -47,10 +47,10 @@ namespace NetExtender.Utilities.Serialization
             }
 
             XmlDocument xml = new XmlDocument();
-            
+
             using XmlReader reader = document.CreateReader();
             xml.Load(reader);
-            
+
             return xml;
         }
 
@@ -63,7 +63,7 @@ namespace NetExtender.Utilities.Serialization
 
             using XmlNodeReader reader = new XmlNodeReader(document);
             reader.MoveToContent();
-            
+
             return XDocument.Load(reader);
         }
 
@@ -76,10 +76,10 @@ namespace NetExtender.Utilities.Serialization
 
             XmlDocument document = new XmlDocument();
             document.LoadXml(xml);
-            
+
             return document;
         }
-        
+
         public static Boolean TryParse(String xml, out XmlDocument document)
         {
             if (xml is null)
@@ -234,7 +234,7 @@ namespace NetExtender.Utilities.Serialization
             }
 
             HashSet<XName> set = new HashSet<XName>(names);
-            
+
             foreach (XElement element in parent.Elements())
             {
                 if (set.Contains(element.Name))
@@ -425,7 +425,7 @@ namespace NetExtender.Utilities.Serialization
 
             return ElementAltValueOrDefault(parent, element => element.Value, alternate, name);
         }
-        
+
         /// <summary>
         /// Converts an object to Xml
         /// </summary>
@@ -459,11 +459,11 @@ namespace NetExtender.Utilities.Serialization
             }
 
             using MemoryStream stream = new MemoryStream();
-            
+
             XmlSerializer serializer = new XmlSerializer(value.GetType(), new XmlRootAttribute(root));
             serializer.Serialize(stream, value);
             stream.Flush();
-            
+
             return Encoding.UTF8.GetString(stream.GetBuffer(), 0, (Int32) stream.Position);
         }
 
@@ -500,7 +500,7 @@ namespace NetExtender.Utilities.Serialization
 
             using MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(xml));
             XmlSerializer serializer = new XmlSerializer(typeof(T), new XmlRootAttribute(root));
-            
+
             return (T?) serializer.Deserialize(stream);
         }
 
@@ -540,7 +540,7 @@ namespace NetExtender.Utilities.Serialization
             {
                 throw new ArgumentException(@"Value cannot be null or empty.", nameof(xml));
             }
-            
+
             if (type is null)
             {
                 throw new ArgumentNullException(nameof(type));
@@ -548,10 +548,10 @@ namespace NetExtender.Utilities.Serialization
 
             using MemoryStream stream = new MemoryStream(Encoding.UTF8.GetBytes(xml));
             XmlSerializer serializer = new XmlSerializer(type, new XmlRootAttribute(root));
-            
+
             return serializer.Deserialize(stream);
         }
-        
+
         /// <summary>
         /// Serializes an object.
         /// </summary>
@@ -567,11 +567,11 @@ namespace NetExtender.Utilities.Serialization
             try
             {
                 using MemoryStream stream = new MemoryStream();
-                
+
                 XmlSerializer serializer = new XmlSerializer(value.GetType());
                 serializer.Serialize(stream, value);
                 stream.Position = 0;
-                
+
                 return Encoding.ASCII.GetString(stream.ToArray());
             }
             catch (Exception)
@@ -597,7 +597,7 @@ namespace NetExtender.Utilities.Serialization
             {
                 Type type = typeof(T);
                 XmlSerializer serializer = new XmlSerializer(type);
-                
+
                 using StringReader reader = new StringReader(value);
                 using XmlReader xml = new XmlTextReader(reader);
 

@@ -14,7 +14,7 @@ namespace NetExtender.Configuration.Wrappers
     internal sealed class ReadOnlyConfigWrapper : IReadOnlyConfig
     {
         private IConfig Config { get; }
-        
+
         public event ConfigurationChangedEventHandler? Changed
         {
             add
@@ -166,7 +166,7 @@ namespace NetExtender.Configuration.Wrappers
         {
             return Config.Difference(entries);
         }
-        
+
         public Task<ConfigurationValueEntry[]?> DifferenceAsync(IEnumerable<ConfigurationValueEntry>? entries)
         {
             return Config.DifferenceAsync(entries);
@@ -297,7 +297,7 @@ namespace NetExtender.Configuration.Wrappers
                 return Config[key, sections];
             }
         }
-        
+
         public IEnumerator<ConfigurationEntry> GetEnumerator()
         {
             return Config.GetEnumerator();

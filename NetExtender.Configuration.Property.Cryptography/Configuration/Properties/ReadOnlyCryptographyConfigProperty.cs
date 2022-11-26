@@ -22,7 +22,7 @@ namespace NetExtender.Configuration.Cryptography.Properties
     public sealed class ReadOnlyCryptographyConfigProperty<T> : ReadOnlyConfigProperty<T>, IReadOnlyCryptographyConfigProperty<T>
     {
         private new IReadOnlyCryptographyConfigProperty Internal { get; }
-        
+
         public CryptAction Crypt
         {
             get
@@ -94,17 +94,17 @@ namespace NetExtender.Configuration.Cryptography.Properties
                 return Internal.IsCryptAll;
             }
         }
-        
+
         internal ReadOnlyCryptographyConfigProperty(IReadOnlyConfig config, String? key, T alternate, IStringCryptor cryptor, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : this(new ReadOnlyCryptographyConfigPropertyWrapper(config, key, null, cryptor, options, sections), alternate, validate, converter)
         {
         }
-        
+
         internal ReadOnlyCryptographyConfigProperty(IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : this(new ReadOnlyCryptographyConfigProperty(config, key, null, cryptor, options, sections), alternate, validate, converter)
         {
         }
-        
+
         internal ReadOnlyCryptographyConfigProperty(IReadOnlyCryptographyConfigProperty property, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter)
             : base(property, alternate, validate, converter)
         {
@@ -115,7 +115,7 @@ namespace NetExtender.Configuration.Cryptography.Properties
     public class ReadOnlyCryptographyConfigProperty : ReadOnlyConfigProperty, IReadOnlyCryptographyConfigProperty
     {
         protected IReadOnlyCryptographyConfig Cryptography { get; }
-        
+
         public CryptAction Crypt
         {
             get
@@ -123,7 +123,7 @@ namespace NetExtender.Configuration.Cryptography.Properties
                 return Cryptor.Crypt;
             }
         }
-        
+
         protected IConfigurationCryptor? InternalCryptor { get; }
 
         public IConfigurationCryptor Cryptor
@@ -173,7 +173,7 @@ namespace NetExtender.Configuration.Cryptography.Properties
                 return Cryptography.IsCryptSections;
             }
         }
-        
+
         public Boolean IsCryptConfig
         {
             get
@@ -181,7 +181,7 @@ namespace NetExtender.Configuration.Cryptography.Properties
                 return Cryptography.IsCryptConfig;
             }
         }
-        
+
         public Boolean IsCryptAll
         {
             get
@@ -189,14 +189,14 @@ namespace NetExtender.Configuration.Cryptography.Properties
                 return Cryptography.IsCryptAll;
             }
         }
-        
+
         protected internal ReadOnlyCryptographyConfigProperty(IReadOnlyCryptographyConfig config, String? key, String? alternate, IStringCryptor? cryptor, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : base(config, key, alternate, options, sections)
         {
             Cryptography = config ?? throw new ArgumentNullException(nameof(config));
             InternalCryptor = cryptor?.AsCryptor(Cryptography.CryptographyOptions);
         }
-        
+
         protected override Boolean KeyExistInternal()
         {
             return Cryptography.KeyExist(Key, Cryptor, Sections);
@@ -291,7 +291,7 @@ namespace NetExtender.Configuration.Cryptography.Properties
         {
             Cryptor = cryptor?.AsCryptor() ?? throw new ArgumentNullException(nameof(cryptor));
         }
-        
+
         protected virtual Boolean TryEncryptKey(String? key, IStringEncryptor? encryptor, out String? result)
         {
             if (encryptor is null && !IsCryptDefault)
@@ -344,7 +344,7 @@ namespace NetExtender.Configuration.Cryptography.Properties
 
             return Config.KeyExist(key, sections);
         }
-        
+
         protected override Task<Boolean> KeyExistInternalAsync(CancellationToken token)
         {
             String? key = Key;
@@ -385,7 +385,7 @@ namespace NetExtender.Configuration.Cryptography.Properties
 
             return value;
         }
-        
+
         protected override async Task<String?> GetValueInternalAsync(CancellationToken token)
         {
             String? key = Key;

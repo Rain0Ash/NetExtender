@@ -59,7 +59,7 @@ namespace NetExtender.Configuration.Builder
             Internal.RemoveAll(item => item.Config == config);
             return this;
         }
-        
+
         public virtual IConfigBuilder Remove(IConfigInfo config, Func<IConfigInfo, ConfigurationValueEntry[]>? predicate)
         {
             if (config is null)
@@ -81,7 +81,7 @@ namespace NetExtender.Configuration.Builder
         public virtual IConfig Build()
         {
             IConfig config = new MemoryConfigBehavior().Create();
-            
+
             ConfigurationValueEntry[]? Selector((IConfigInfo Config, Func<IConfigInfo, ConfigurationValueEntry[]>? Selector) item)
             {
                 return item.Selector?.Invoke(item.Config) ?? item.Config.GetExistsValues();

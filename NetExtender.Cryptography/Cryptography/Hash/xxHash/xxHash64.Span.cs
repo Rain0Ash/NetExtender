@@ -22,7 +22,7 @@ namespace NetExtender.Cryptography.Hash.XXHash
                 return UnsafeComputeHash(pData, length, seed);
             }
         }
-        
+
         /// <summary>
         /// Compute xxHash for the data byte span
         /// </summary>

@@ -9,15 +9,15 @@ namespace NetExtender.Types.Progress
     public class Progress<T1, T2> : Progress<(T1, T2)>, IProgress<T1, T2>
     {
     }
-    
+
     public class Progress<T1, T2, T3> : Progress<(T1, T2, T3)>, IProgress<T1, T2, T3>
     {
     }
-    
+
     public class Progress<T1, T2, T3, T4> : Progress<(T1, T2, T3, T4)>, IProgress<T1, T2, T3, T4>
     {
     }
-    
+
     public class Progress<T1, T2, T3, T4, T5> : Progress<(T1, T2, T3, T4, T5)>, IProgress<T1, T2, T3, T4, T5>
     {
     }

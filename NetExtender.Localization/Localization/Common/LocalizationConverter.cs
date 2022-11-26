@@ -15,14 +15,14 @@ namespace NetExtender.Localization.Common
     public class LocalizationConverter : ILocalizationConverter
     {
         public static LocalizationConverter Default { get; } = new LocalizationConverter();
-        
+
         [return: NotNullIfNotNull("sections")]
         public virtual IEnumerable<String>? Convert(LocalizationIdentifier identifier, IEnumerable<String>? sections, LocalizationOptions options)
         {
             Convert(null, identifier, ref sections, options);
             return sections;
         }
-        
+
         [return: NotNullIfNotNull("sections")]
         public virtual IEnumerable<String>? Convert(String? key, IEnumerable<String>? sections, LocalizationOptions options)
         {
@@ -42,10 +42,10 @@ namespace NetExtender.Localization.Common
             {
                 return identifier.ToString();
             }
-            
+
             return options.HasFlag(LocalizationOptions.ThreeLetterName) ? info.ThreeLetterISOLanguageName : info.TwoLetterISOLanguageName;
         }
-        
+
         public virtual Boolean Extract(ConfigurationEntry entry, out LocalizationEntry result)
         {
             return LocalizationEntry.TryConvert(entry, out result);
@@ -55,13 +55,13 @@ namespace NetExtender.Localization.Common
         {
             return LocalizationValueEntry.TryConvert(entry, out result);
         }
-        
+
         [return: NotNullIfNotNull("entries")]
         public IEnumerable<LocalizationEntry>? Extract(IEnumerable<ConfigurationEntry>? entries)
         {
             return entries?.TryParse<ConfigurationEntry, LocalizationEntry>(Extract);
         }
-        
+
         [return: NotNullIfNotNull("entries")]
         public IEnumerable<LocalizationValueEntry>? Extract(IEnumerable<ConfigurationValueEntry>? entries)
         {
@@ -85,19 +85,19 @@ namespace NetExtender.Localization.Common
             result = entry;
             return true;
         }
-        
+
         [return: NotNullIfNotNull("entries")]
         public IEnumerable<ConfigurationEntry>? Pack(IEnumerable<LocalizationEntry>? entries)
         {
             return entries?.TryParse<LocalizationEntry, ConfigurationEntry>(Pack);
         }
-        
+
         [return: NotNullIfNotNull("entries")]
         public IEnumerable<ConfigurationValueEntry>? Pack(IEnumerable<LocalizationValueEntry>? entries)
         {
             return entries?.TryParse<LocalizationValueEntry, ConfigurationValueEntry>(Pack);
         }
-        
+
         [return: NotNullIfNotNull("entries")]
         public IEnumerable<ConfigurationValueEntry>? Pack(IEnumerable<LocalizationMultiValueEntry>? entries)
         {

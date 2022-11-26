@@ -34,7 +34,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(graphics));
             }
-            
+
             graphics.FillEllipse(brush, x, y, d, d);
         }
 

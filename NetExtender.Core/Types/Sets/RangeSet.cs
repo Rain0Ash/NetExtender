@@ -30,7 +30,7 @@ namespace NetExtender.Types.Sets
         {
             return Add(new Range<T>(min, max));
         }
-        
+
         public Boolean Contains(T value)
         {
             return Count > 0 && this.Any(range => range.Contains(value));
@@ -50,7 +50,7 @@ namespace NetExtender.Types.Sets
         {
             return this.MinBy(range => range.Min);
         }
-        
+
         public Range<T> Maximum()
         {
             return this.MaxBy(range => range.Max);

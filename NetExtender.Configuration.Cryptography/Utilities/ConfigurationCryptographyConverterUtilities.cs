@@ -70,7 +70,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             converter ??= ConvertUtilities.TryConvert;
             return converter(value, out T? result) ? result : alternate;
         }
-        
+
         public static T? GetValue<T>(this IReadOnlyCryptographyConfig config, String? key, IStringCryptor? cryptor, params String[]? sections)
         {
             return GetValue<T>(config, key, cryptor, (IEnumerable<String>?) sections);
@@ -90,7 +90,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
         {
             return GetValue(config, key, default, cryptor, converter!, sections);
         }
-        
+
         public static T GetValue<T>(this IReadOnlyCryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, params String[]? sections)
         {
             return GetValue(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
@@ -112,7 +112,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is IReadOnlyCryptographyConverterConfig configuration)
             {
                 return configuration.GetValue(key, alternate, cryptor, converter, sections);
@@ -128,7 +128,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             converter ??= ConvertUtilities.TryConvert;
             return converter(value, out T? result) ? result : alternate;
         }
-        
+
         public static T? GetRawValue<T>(this IReadOnlyCryptographyConfig config, String? key, params String[]? sections)
         {
             return GetRawValue<T>(config, key, (IEnumerable<String>?) sections);
@@ -170,7 +170,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is IReadOnlyCryptographyConverterConfig configuration)
             {
                 return configuration.GetRawValue(key, alternate, converter, sections);
@@ -186,7 +186,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             converter ??= ConvertUtilities.TryConvert;
             return converter(value, out T? result) ? result : alternate;
         }
-        
+
         public static Task<T?> GetValueAsync<T>(this IReadOnlyCryptographyConfig config, String? key, params String[]? sections)
         {
             return GetValueAsync<T>(config, key, (IEnumerable<String>?) sections);
@@ -268,7 +268,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is IReadOnlyCryptographyConverterConfig configuration)
             {
                 return await configuration.GetValueAsync(key, alternate, converter, sections, token);
@@ -346,7 +346,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is IReadOnlyCryptographyConverterConfig configuration)
             {
                 return await configuration.GetValueAsync(key, alternate, cryptor, converter, sections, token);
@@ -444,7 +444,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is IReadOnlyCryptographyConverterConfig configuration)
             {
                 return await configuration.GetRawValueAsync(key, alternate, converter, sections, token);
@@ -460,7 +460,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             converter ??= ConvertUtilities.TryConvert;
             return converter(value, out T? result) ? result : alternate;
         }
-        
+
         public static T? GetValue<T>(this ICryptographyConfig config, String? key, params String[]? sections)
         {
             return GetValue<T>(config, key, (IEnumerable<String>?) sections);
@@ -502,7 +502,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is ICryptographyConverterConfig configuration)
             {
                 return configuration.GetValue(key, alternate, converter, sections);
@@ -518,7 +518,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             converter ??= ConvertUtilities.TryConvert;
             return converter(value, out T? result) ? result : alternate;
         }
-        
+
         public static T? GetValue<T>(this ICryptographyConfig config, String? key, IStringCryptor? cryptor, params String[]? sections)
         {
             return GetValue<T>(config, key, cryptor, (IEnumerable<String>?) sections);
@@ -538,7 +538,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
         {
             return GetValue(config, key, default, cryptor, converter!, sections);
         }
-        
+
         public static T GetValue<T>(this ICryptographyConfig config, String? key, T alternate, IStringCryptor? cryptor, params String[]? sections)
         {
             return GetValue(config, key, alternate, cryptor, (IEnumerable<String>?) sections);
@@ -560,7 +560,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is ICryptographyConverterConfig configuration)
             {
                 return configuration.GetValue(key, alternate, cryptor, converter, sections);
@@ -576,7 +576,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             converter ??= ConvertUtilities.TryConvert;
             return converter(value, out T? result) ? result : alternate;
         }
-        
+
         public static T? GetRawValue<T>(this ICryptographyConfig config, String? key, params String[]? sections)
         {
             return GetRawValue<T>(config, key, (IEnumerable<String>?) sections);
@@ -618,7 +618,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is ICryptographyConverterConfig configuration)
             {
                 return configuration.GetRawValue(key, alternate, converter, sections);
@@ -634,7 +634,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             converter ??= ConvertUtilities.TryConvert;
             return converter(value, out T? result) ? result : alternate;
         }
-        
+
         public static Task<T?> GetValueAsync<T>(this ICryptographyConfig config, String? key, params String[]? sections)
         {
             return GetValueAsync<T>(config, key, (IEnumerable<String>?) sections);
@@ -716,7 +716,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is ICryptographyConverterConfig configuration)
             {
                 return await configuration.GetValueAsync(key, alternate, converter, sections, token);
@@ -794,7 +794,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is ICryptographyConverterConfig configuration)
             {
                 return await configuration.GetValueAsync(key, alternate, cryptor, converter, sections, token);
@@ -892,7 +892,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is ICryptographyConverterConfig configuration)
             {
                 return await configuration.GetRawValueAsync(key, alternate, converter, sections, token);
@@ -908,7 +908,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             converter ??= ConvertUtilities.TryConvert;
             return converter(value, out T? result) ? result : alternate;
         }
-        
+
         public static Boolean SetValue<T>(this ICryptographyConfig config, String? key, T value, params String[]? sections)
         {
             return SetValue(config, key, value, (IEnumerable<String>?) sections);
@@ -920,7 +920,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is ICryptographyConverterConfig configuration)
             {
                 return configuration.SetValue(key, value, sections);
@@ -930,11 +930,11 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 return config.SetValue(key, null, sections);
             }
-            
+
             String? convert = value.GetString();
             return convert is not null && config.SetValue(key, convert, sections);
         }
-        
+
         public static Boolean SetValue<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, params String[]? sections)
         {
             return SetValue(config, key, value, cryptor, (IEnumerable<String>?) sections);
@@ -946,7 +946,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is ICryptographyConverterConfig configuration)
             {
                 return configuration.SetValue(key, value, cryptor, sections);
@@ -956,11 +956,11 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 return config.SetValue(key, null, cryptor, sections);
             }
-            
+
             String? convert = value.GetString();
             return convert is not null && config.SetValue(key, convert, cryptor, sections);
         }
-        
+
         public static Boolean SetRawValue<T>(this ICryptographyConfig config, String? key, T value, params String[]? sections)
         {
             return SetRawValue(config, key, value, (IEnumerable<String>?) sections);
@@ -972,7 +972,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is ICryptographyConverterConfig configuration)
             {
                 return configuration.SetRawValue(key, value, sections);
@@ -982,7 +982,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 return config.SetRawValue(key, null, sections);
             }
-            
+
             String? convert = value.GetString();
             return convert is not null && config.SetRawValue(key, convert, sections);
         }
@@ -1008,7 +1008,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is ICryptographyConverterConfig configuration)
             {
                 return await configuration.SetValueAsync(key, value, sections, token);
@@ -1018,7 +1018,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 return await config.SetValueAsync(key, null, sections, token);
             }
-            
+
             String? convert = value.GetString();
             return convert is not null && await config.SetValueAsync(key, convert, sections, token);
         }
@@ -1044,7 +1044,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is ICryptographyConverterConfig configuration)
             {
                 return await configuration.SetValueAsync(key, value, cryptor, sections, token);
@@ -1054,7 +1054,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 return await config.SetValueAsync(key, null, cryptor, sections, token);
             }
-            
+
             String? convert = value.GetString();
             return convert is not null && await config.SetValueAsync(key, convert, cryptor, sections, token);
         }
@@ -1080,7 +1080,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is ICryptographyConverterConfig configuration)
             {
                 return await configuration.SetRawValueAsync(key, value, sections, token);
@@ -1090,11 +1090,11 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 return await config.SetRawValueAsync(key, null, sections, token);
             }
-            
+
             String? convert = value.GetString();
             return convert is not null && await config.SetRawValueAsync(key, convert, sections, token);
         }
-        
+
         public static T? GetOrSetValue<T>(this ICryptographyConfig config, String? key, T value, params String[]? sections)
         {
             return GetOrSetValue(config, key, value, (IEnumerable<String>?) sections);
@@ -1116,7 +1116,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is ICryptographyConverterConfig configuration)
             {
                 return configuration.GetOrSetValue(key, value, converter, sections);
@@ -1129,11 +1129,11 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 return default;
             }
-            
+
             converter ??= ConvertUtilities.TryConvert;
             return converter(get, out T? result) ? result : default;
         }
-        
+
         public static T? GetOrSetValue<T>(this ICryptographyConfig config, String? key, T value, IStringCryptor? cryptor, params String[]? sections)
         {
             return GetOrSetValue(config, key, value, cryptor, (IEnumerable<String>?) sections);
@@ -1155,7 +1155,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is ICryptographyConverterConfig configuration)
             {
                 return configuration.GetOrSetValue(key, value, cryptor, converter, sections);
@@ -1168,11 +1168,11 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 return default;
             }
-            
+
             converter ??= ConvertUtilities.TryConvert;
             return converter(get, out T? result) ? result : default;
         }
-        
+
         public static T? GetOrSetRawValue<T>(this ICryptographyConfig config, String? key, T value, params String[]? sections)
         {
             return GetOrSetRawValue(config, key, value, (IEnumerable<String>?) sections);
@@ -1194,7 +1194,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is ICryptographyConverterConfig configuration)
             {
                 return configuration.GetOrSetRawValue(key, value, converter, sections);
@@ -1207,7 +1207,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 return default;
             }
-            
+
             converter ??= ConvertUtilities.TryConvert;
             return converter(get, out T? result) ? result : default;
         }
@@ -1253,7 +1253,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is ICryptographyConverterConfig configuration)
             {
                 return await configuration.GetOrSetValueAsync(key, value, converter, sections, token);
@@ -1266,7 +1266,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 return default;
             }
-            
+
             converter ??= ConvertUtilities.TryConvert;
             return converter(get, out T? result) ? result : default;
         }
@@ -1312,7 +1312,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is ICryptographyConverterConfig configuration)
             {
                 return await configuration.GetOrSetValueAsync(key, value, cryptor, converter, sections, token);
@@ -1325,7 +1325,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 return default;
             }
-            
+
             converter ??= ConvertUtilities.TryConvert;
             return converter(get, out T? result) ? result : default;
         }
@@ -1371,7 +1371,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is ICryptographyConverterConfig configuration)
             {
                 return await configuration.GetOrSetRawValueAsync(key, value, converter, sections, token);
@@ -1384,7 +1384,7 @@ namespace NetExtender.Configuration.Cryptography.Convert.Utilities
             {
                 return default;
             }
-            
+
             converter ??= ConvertUtilities.TryConvert;
             return converter(get, out T? result) ? result : default;
         }

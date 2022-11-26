@@ -66,7 +66,7 @@ namespace NetExtender.Utilities.Numerics.Physics
                 _ => ElectromagneticType.Radiowave
             };
         }
-        
+
         /// <summary>
         /// Return <see cref="ElectromagneticType"/> from it's wavelength
         /// </summary>
@@ -86,7 +86,7 @@ namespace NetExtender.Utilities.Numerics.Physics
                 _ => ElectromagneticType.Radiowave
             };
         }
-        
+
         /// <summary>
         /// Return <see cref="ElectromagneticType"/> from it's frequency
         /// </summary>
@@ -106,7 +106,7 @@ namespace NetExtender.Utilities.Numerics.Physics
                 _ => ElectromagneticType.Radiowave
             };
         }
-        
+
         /// <summary>
         /// Return <see cref="ElectromagneticType"/> from it's frequency
         /// </summary>
@@ -155,7 +155,7 @@ namespace NetExtender.Utilities.Numerics.Physics
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         public static Double Frequency(Double wavelength)
         {
             if (wavelength < Double.Epsilon)
@@ -165,7 +165,7 @@ namespace NetExtender.Utilities.Numerics.Physics
 
             return PhysicsUtilities.C / wavelength;
         }
-        
+
         public static Decimal Frequency(Decimal wavelength)
         {
             if (wavelength <= 0)
@@ -175,7 +175,7 @@ namespace NetExtender.Utilities.Numerics.Physics
 
             return PhysicsUtilities.C / wavelength;
         }
-        
+
         public static Double Wavelength(Double frequency)
         {
             if (frequency < Double.Epsilon)
@@ -185,7 +185,7 @@ namespace NetExtender.Utilities.Numerics.Physics
 
             return PhysicsUtilities.C / frequency;
         }
-        
+
         public static Decimal Wavelength(Decimal frequency)
         {
             if (frequency <= 0)
@@ -200,7 +200,7 @@ namespace NetExtender.Utilities.Numerics.Physics
         {
             return DoplerWavelength(wavelength, velocity, 0);
         }
-        
+
         public static Decimal DoplerWavelength(Decimal wavelength, Decimal velocity)
         {
             return DoplerWavelength(wavelength, velocity, 0);
@@ -220,7 +220,7 @@ namespace NetExtender.Utilities.Numerics.Physics
                 _ => Wavelength(DoplerFrequency(Frequency(wavelength), velocity, angle))
             };
         }
-        
+
         public static Decimal DoplerWavelength(Decimal wavelength, Decimal velocity, Decimal angle)
         {
             if (wavelength <= 0)
@@ -240,7 +240,7 @@ namespace NetExtender.Utilities.Numerics.Physics
         {
             return DoplerFrequency(frequency, velocity, 0);
         }
-        
+
         public static Decimal DoplerFrequency(Decimal frequency, Decimal velocity)
         {
             return DoplerFrequency(frequency, velocity, 0);
@@ -260,7 +260,7 @@ namespace NetExtender.Utilities.Numerics.Physics
                 _ => frequency * Math.Sqrt(1 - velocity * velocity / PhysicsUtilities.SquareC) / (1 - velocity / PhysicsUtilities.C * Math.Cos(angle))
             };
         }
-        
+
         public static Decimal DoplerFrequency(Decimal frequency, Decimal velocity, Decimal angle)
         {
             if (frequency <= 0)

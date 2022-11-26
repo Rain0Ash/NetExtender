@@ -8,7 +8,7 @@ namespace NetExtender.Cryptography.Keys.Interfaces
     public interface IByteDecryptor : IDecryptor
     {
         public Byte[]? Decrypt(Byte[] value);
-        
+
         public Byte[]? DecryptBytes(Byte[] value);
     }
 }

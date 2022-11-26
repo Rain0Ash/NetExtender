@@ -19,17 +19,17 @@ namespace NetExtender.Utilities.UserInterface.Winforms.ListView
 
             return Contains(images.Images, image);
         }
-        
+
         public static Boolean Contains(this ImageList.ImageCollection images, Image? image)
         {
             return IndexOfImage(images, image) >= 0;
         }
-        
+
         public static String? KeyOfImage(this ImageList images, Image? image)
         {
             return KeyOfImage(images.Images, image);
         }
-        
+
         public static String? KeyOfImage(this ImageList images, Image? image, out Int32 index)
         {
             return KeyOfImage(images.Images, image, out index);
@@ -39,7 +39,7 @@ namespace NetExtender.Utilities.UserInterface.Winforms.ListView
         {
             return KeyOfImage(images, image, out _);
         }
-        
+
         public static String? KeyOfImage(this ImageList.ImageCollection images, Image? image, out Int32 index)
         {
             if (images is null)
@@ -71,7 +71,7 @@ namespace NetExtender.Utilities.UserInterface.Winforms.ListView
 
             return IndexOfImage(images.Images, image);
         }
-        
+
         public static Int32 IndexOfImage(this ImageList.ImageCollection images, Image? image)
         {
             if (images is null)
@@ -89,7 +89,7 @@ namespace NetExtender.Utilities.UserInterface.Winforms.ListView
 
             return -1;
         }
-        
+
         public static String? GetOrSetImageKey(this ImageList images, Image image)
         {
             if (images is null)
@@ -99,7 +99,7 @@ namespace NetExtender.Utilities.UserInterface.Winforms.ListView
 
             return GetOrSetImageKey(images.Images, image);
         }
-        
+
         public static String? GetOrSetImageKey(this ImageList.ImageCollection images, Image image)
         {
             if (images is null)
@@ -131,7 +131,7 @@ namespace NetExtender.Utilities.UserInterface.Winforms.ListView
             images.Add(key, image);
             return key;
         }
-        
+
         public static Image? GetImage(this ListViewItem item)
         {
             if (item is null)
@@ -144,7 +144,7 @@ namespace NetExtender.Utilities.UserInterface.Winforms.ListView
 
             return images[item.ImageKey] ?? (index >= 0 && index < images.Count ? images[index] : null);
         }
-        
+
         public static void SetImage(this ListViewItem item, Image image)
         {
             if (item is null)

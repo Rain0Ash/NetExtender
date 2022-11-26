@@ -15,12 +15,12 @@ namespace NetExtender.Configuration.Json
         protected static JsonSerializerSettings Default { get; } = new DefaultJsonSerializerSettings();
 
         public JsonSerializerSettings? Settings { get; init; } = Default;
-        
+
         public JsonConfigBehavior()
             : this(ConfigOptions.None)
         {
         }
-        
+
         public JsonConfigBehavior(ConfigOptions options)
             : this(null, options)
         {
@@ -30,7 +30,7 @@ namespace NetExtender.Configuration.Json
             : this(path, ConfigOptions.None)
         {
         }
-        
+
         public JsonConfigBehavior(String? path, ConfigOptions options)
             : base(ValidatePathOrGetDefault(path, "json"), options)
         {

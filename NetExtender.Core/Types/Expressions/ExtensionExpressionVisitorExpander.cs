@@ -24,7 +24,7 @@ namespace NetExtender.Types.Expressions
 
             QueryableEmptyMethod = typeof(ExtensionExpressionVisitorRebinder).GetMethod(nameof(QueryableEmpty), BindingFlags.Static | BindingFlags.NonPublic);
         }
-        
+
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
             MethodInfo method = node.Method;
@@ -37,7 +37,7 @@ namespace NetExtender.Types.Expressions
             ParameterInfo[] parameters = method.GetParameters();
             Type queryable = parameters.First().ParameterType;
             Type entity = queryable.GetGenericArguments().Single();
-                
+
             Object input = MakeEnumerableQuery(entity) ?? throw new InvalidOperationException("Can't make query");
             Object?[] arguments = new Object[parameters.Length];
             arguments[0] = input;
@@ -59,7 +59,7 @@ namespace NetExtender.Types.Expressions
                     {
                         throw new InvalidOperationException($"Parameter {info} mush have name", exception);
                     }
-                    
+
                     replacements.Add(new KeyValuePair<String, Expression>(info.Name, node.Arguments[i]));
                 }
             }
@@ -76,7 +76,7 @@ namespace NetExtender.Types.Expressions
             expression = new ExtensionExpressionVisitorRebinder(input, argument, replacements).Visit(expression);
             return Visit(expression) ?? throw new InvalidOperationException("Can't visit expression");
         }
-        
+
         private static Object? MakeEnumerableQuery(Type type)
         {
             if (type is null)

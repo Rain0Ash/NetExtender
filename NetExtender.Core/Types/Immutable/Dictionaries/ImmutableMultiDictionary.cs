@@ -17,9 +17,9 @@ namespace NetExtender.Types.Immutable.Dictionaries
     public sealed class ImmutableMultiDictionary<TKey, TValue> : IImmutableMultiDictionary<TKey, TValue> where TKey : notnull
     {
         public static ImmutableMultiDictionary<TKey, TValue> Empty { get; } = new ImmutableMultiDictionary<TKey, TValue>(ImmutableDictionary<TKey, ImmutableHashSet<TValue>>.Empty);
-        
+
         private ImmutableDictionary<TKey, ImmutableHashSet<TValue>> Dictionary { get; }
-        
+
         public Int32 Count
         {
             get
@@ -27,7 +27,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
                 return Dictionary.Count;
             }
         }
-        
+
         public IEnumerable<TKey> Keys
         {
             get
@@ -56,7 +56,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
         {
             Dictionary = dictionary ?? throw new ArgumentNullException(nameof(dictionary));
         }
-        
+
         public Boolean Contains(TKey key, TValue value)
         {
             if (key is null)
@@ -66,13 +66,13 @@ namespace NetExtender.Types.Immutable.Dictionaries
 
             return Dictionary.TryGetValue(key, out ImmutableHashSet<TValue>? result) && result.Contains(value);
         }
-        
+
         // ReSharper disable once UseDeconstructionOnParameter
         public Boolean Contains(KeyValuePair<TKey, TValue> pair)
         {
             return Contains(pair.Key, pair.Value);
         }
-        
+
         public Boolean Contains(KeyValuePair<TKey, ImmutableHashSet<TValue>> pair)
         {
             (TKey key, ImmutableHashSet<TValue> value) = pair;
@@ -81,10 +81,10 @@ namespace NetExtender.Types.Immutable.Dictionaries
             {
                 throw new ArgumentNullException(nameof(key));
             }
-            
+
             return Dictionary.Contains(key, value);
         }
-        
+
         public Boolean ContainsKey(TKey key)
         {
             if (key is null)
@@ -94,7 +94,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
 
             return Dictionary.ContainsKey(key);
         }
-        
+
         public Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
             if (key is null)
@@ -121,7 +121,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
 
             return Dictionary.TryGetValue(key, out value);
         }
-        
+
         public Boolean TryGetKey(TKey equalKey, out TKey actualKey)
         {
             if (equalKey is null)
@@ -191,7 +191,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
         {
             return SetItems(items);
         }
-        
+
         public ImmutableMultiDictionary<TKey, TValue> Remove(TKey key, ImmutableHashSet<TValue> value)
         {
             if (key is null)
@@ -201,12 +201,12 @@ namespace NetExtender.Types.Immutable.Dictionaries
 
             return Dictionary.Contains(key, value) ? new ImmutableMultiDictionary<TKey, TValue>(Dictionary.Remove(key)) : this;
         }
-        
+
         IImmutableMultiDictionary<TKey, TValue> IImmutableMultiDictionary<TKey, TValue>.Remove(TKey key, ImmutableHashSet<TValue> value)
         {
             return Remove(key, value);
         }
-        
+
         public ImmutableMultiDictionary<TKey, TValue> Remove(TKey key)
         {
             if (key is null)
@@ -257,12 +257,12 @@ namespace NetExtender.Types.Immutable.Dictionaries
         {
             return SetItem(key, value);
         }
-        
+
         IImmutableMultiDictionary<TKey, TValue> IImmutableMultiDictionary<TKey, TValue>.Add(TKey key, TValue value)
         {
             return Add(key, value);
         }
-        
+
         public IImmutableMultiDictionary<TKey, TValue> AddRange(IEnumerable<KeyValuePair<TKey, TValue>> pairs)
         {
             if (pairs is null)
@@ -298,7 +298,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
             }
 
             IMultiDictionary<TKey, TValue> dictionary = new MultiDictionary<TKey, TValue>(Dictionary.KeyComparer);
-            
+
             foreach ((TKey key, TValue value) in items)
             {
                 dictionary.Add(key, value);
@@ -328,7 +328,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
         {
             return Empty;
         }
-        
+
         IImmutableMultiDictionary<TKey, TValue> IImmutableMultiDictionary<TKey, TValue>.Clear()
         {
             return Clear();
@@ -353,7 +353,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
         {
             return SetItems(items);
         }
-        
+
         IImmutableDictionary<TKey, ImmutableHashSet<TValue>> IImmutableDictionary<TKey, ImmutableHashSet<TValue>>.Remove(TKey key)
         {
             return Remove(key);
@@ -363,12 +363,12 @@ namespace NetExtender.Types.Immutable.Dictionaries
         {
             return RemoveRange(keys);
         }
-        
+
         IImmutableDictionary<TKey, ImmutableHashSet<TValue>> IImmutableDictionary<TKey, ImmutableHashSet<TValue>>.Clear()
         {
             return Clear();
         }
-        
+
         IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.Add(TKey key, TValue value)
         {
             return Add(key, value);
@@ -388,7 +388,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
         {
             return SetItems(items);
         }
-        
+
         IImmutableDictionary<TKey, TValue> IImmutableDictionary<TKey, TValue>.Remove(TKey key)
         {
             return Remove(key);
@@ -411,7 +411,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
                 return Dictionary[key];
             }
         }
-        
+
         TValue IReadOnlyDictionary<TKey, TValue>.this[TKey key]
         {
             get
@@ -420,7 +420,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
                 {
                     throw new ArgumentNullException(nameof(key));
                 }
-                
+
                 if (TryGetValue(key, out TValue? value))
                 {
                     return value;
@@ -429,7 +429,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
                 throw new KeyNotFoundException($"The given key '{key}' was not present in the dictionary.");
             }
         }
-        
+
         IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
         {
             foreach ((TKey key, ImmutableHashSet<TValue> value) in this)

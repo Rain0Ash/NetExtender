@@ -160,7 +160,7 @@ namespace NetExtender.Utilities.Windows.IO
 
             return WindowsPathUtilities.Safe.FileExists(BuildStreamPath(path, name));
         }
-        
+
         public static AlternateDataStreamInfo OpenAlternateDataStream(this FileSystemInfo file, String name)
         {
             if (file is null)
@@ -271,7 +271,7 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 throw new ArgumentNullException(nameof(path));
             }
-            
+
             if (String.IsNullOrEmpty(name))
             {
                 throw new ArgumentNullException(nameof(name));

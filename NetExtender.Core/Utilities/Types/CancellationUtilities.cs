@@ -20,12 +20,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             CancellationToken token = source.Token;
             token.Register(source.Dispose);
             return token;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CancellationToken CreateToken(TimeSpan delay)
         {
@@ -33,11 +33,11 @@ namespace NetExtender.Utilities.Types
             {
                 return new CancellationToken(true);
             }
-            
+
             CancellationTokenSource source = new CancellationTokenSource(delay);
             return source.GetWeakToken();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CancellationToken CreateToken(Int32 milliseconds)
         {
@@ -45,11 +45,11 @@ namespace NetExtender.Utilities.Types
             {
                 return new CancellationToken(true);
             }
-            
+
             CancellationTokenSource source = new CancellationTokenSource(milliseconds);
             return source.GetWeakToken();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CancellationTokenSource CreateLinkedSource(this CancellationToken token)
         {
@@ -61,13 +61,13 @@ namespace NetExtender.Utilities.Types
         {
             return CreateLinkedSource(CancellationToken.None, token, timeout);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CancellationTokenSource CreateLinkedSource(this CancellationToken token, TimeSpan? timeout)
         {
             return timeout.HasValue ? CreateLinkedSource(token, timeout.Value) : CreateLinkedSource(token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CancellationTokenSource CreateLinkedSource(this CancellationToken first, CancellationToken second)
         {
@@ -82,7 +82,7 @@ namespace NetExtender.Utilities.Types
             source.CancelAfter(timeout);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [SuppressMessage("ReSharper", "CA1068")]
         public static CancellationTokenSource CreateLinkedSource(this CancellationToken first, CancellationToken second, TimeSpan? timeout)
@@ -95,7 +95,7 @@ namespace NetExtender.Utilities.Types
         {
             return CancellationTokenSource.CreateLinkedTokenSource(tokens);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CancellationTokenSource CreateLinkedSource(this CancellationToken[] tokens, TimeSpan timeout)
         {
@@ -103,13 +103,13 @@ namespace NetExtender.Utilities.Types
             source.CancelAfter(timeout);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CancellationTokenSource CreateLinkedSource(this CancellationToken[] tokens, TimeSpan? timeout)
         {
             return timeout.HasValue ? CreateLinkedSource(tokens, timeout.Value) : CreateLinkedSource(tokens);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CancellationTokenSource CreateLinkedSource(this CancellationToken token, params CancellationToken[] tokens)
         {
@@ -120,7 +120,7 @@ namespace NetExtender.Utilities.Types
                 _ => CreateLinkedSource(tokens.Prepend(token).ToArray())
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CancellationTokenSource CreateLinkedSource(this CancellationToken token, TimeSpan timeout, params CancellationToken[] tokens)
         {
@@ -128,13 +128,13 @@ namespace NetExtender.Utilities.Types
             source.CancelAfter(timeout);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CancellationTokenSource CreateLinkedSource(this CancellationToken first, TimeSpan? timeout, params CancellationToken[] tokens)
         {
             return timeout.HasValue ? CreateLinkedSource(first, timeout.Value, tokens) : CreateLinkedSource(first, tokens);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CancellationTokenSource CreateLinkedSource(this IEnumerable<CancellationToken> tokens)
         {
@@ -158,7 +158,7 @@ namespace NetExtender.Utilities.Types
             source.CancelAfter(timeout);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static CancellationTokenSource CreateLinkedSource(this IEnumerable<CancellationToken> tokens, TimeSpan? timeout)
         {
@@ -180,7 +180,7 @@ namespace NetExtender.Utilities.Types
             source.Cancel();
             source.Token.ThrowIfCancellationRequested();
         }
-        
+
         /// <summary>
         /// Allows a cancellation token to be awaited.
         /// </summary>
@@ -200,9 +200,9 @@ namespace NetExtender.Utilities.Types
             {
                 return new CancellationTokenAwaiter(token);
             }
-            
+
             public CancellationToken CancellationToken { get; }
-            
+
             public Boolean IsCompleted
             {
                 get
@@ -210,7 +210,7 @@ namespace NetExtender.Utilities.Types
                     return CancellationToken.IsCancellationRequested;
                 }
             }
-            
+
             public CancellationTokenAwaiter(CancellationToken token)
             {
                 CancellationToken = token;

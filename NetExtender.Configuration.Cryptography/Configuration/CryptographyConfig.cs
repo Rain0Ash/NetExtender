@@ -26,7 +26,7 @@ namespace NetExtender.Configuration.Cryptography
                 return Behavior.Cryptor;
             }
         }
-        
+
         public CryptAction Crypt
         {
             get
@@ -42,7 +42,7 @@ namespace NetExtender.Configuration.Cryptography
                 return Behavior.CryptographyOptions;
             }
         }
-        
+
         public Boolean IsCryptDefault
         {
             get
@@ -50,7 +50,7 @@ namespace NetExtender.Configuration.Cryptography
                 return Behavior.IsCryptDefault;
             }
         }
-        
+
         public Boolean IsCryptKey
         {
             get
@@ -58,7 +58,7 @@ namespace NetExtender.Configuration.Cryptography
                 return Behavior.IsCryptKey;
             }
         }
-        
+
         public Boolean IsCryptValue
         {
             get
@@ -66,7 +66,7 @@ namespace NetExtender.Configuration.Cryptography
                 return Behavior.IsCryptValue;
             }
         }
-        
+
         public Boolean IsCryptSections
         {
             get
@@ -74,7 +74,7 @@ namespace NetExtender.Configuration.Cryptography
                 return Behavior.IsCryptSections;
             }
         }
-        
+
         public Boolean IsCryptConfig
         {
             get
@@ -82,7 +82,7 @@ namespace NetExtender.Configuration.Cryptography
                 return Behavior.IsCryptConfig;
             }
         }
-        
+
         public Boolean IsCryptAll
         {
             get
@@ -96,7 +96,7 @@ namespace NetExtender.Configuration.Cryptography
         {
             Behavior = behavior ?? throw new ArgumentNullException(nameof(behavior));
         }
-        
+
         public String? GetRawValue(String? key, params String[]? sections)
         {
             return GetRawValue(key, (IEnumerable<String>?) sections);
@@ -106,7 +106,7 @@ namespace NetExtender.Configuration.Cryptography
         {
             return Behavior.GetRaw(key, sections);
         }
-        
+
         public String? GetRawValue(String? key, String? alternate, params String[]? sections)
         {
             return GetRawValue(key, alternate, (IEnumerable<String>?) sections);
@@ -116,7 +116,7 @@ namespace NetExtender.Configuration.Cryptography
         {
             return GetRawValue(key, sections) ?? alternate;
         }
-        
+
         public String? GetValue(String? key, IStringCryptor? cryptor, params String[]? sections)
         {
             return GetValue(key, cryptor, (IEnumerable<String>?) sections);
@@ -136,22 +136,22 @@ namespace NetExtender.Configuration.Cryptography
         {
             return GetValue(key, cryptor, sections) ?? alternate;
         }
-        
+
         public Task<String?> GetRawValueAsync(String? key, params String[]? sections)
         {
             return GetRawValueAsync(key, (IEnumerable<String>?) sections);
         }
-        
+
         public Task<String?> GetRawValueAsync(String? key, IEnumerable<String>? sections)
         {
             return GetRawValueAsync(key, sections, CancellationToken.None);
         }
-        
+
         public Task<String?> GetRawValueAsync(String? key, CancellationToken token, params String[]? sections)
         {
             return GetRawValueAsync(key, sections, token);
         }
-        
+
         public virtual Task<String?> GetRawValueAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
             return Behavior.GetRawAsync(key, sections, token);
@@ -226,7 +226,7 @@ namespace NetExtender.Configuration.Cryptography
         {
             return Behavior.SetRaw(key, value, sections);
         }
-        
+
         public Boolean SetValue(String? key, String? value, IStringCryptor? cryptor, params String[]? sections)
         {
             return SetValue(key, value, cryptor, (IEnumerable<String>?) sections);
@@ -236,47 +236,47 @@ namespace NetExtender.Configuration.Cryptography
         {
             return Behavior.Set(key, value, cryptor, sections);
         }
-        
+
         public Task<Boolean> SetRawValueAsync(String? key, String? value, params String[]? sections)
         {
             return SetRawValueAsync(key, value, (IEnumerable<String>?) sections);
         }
-        
+
         public Task<Boolean> SetRawValueAsync(String? key, String? value, IEnumerable<String>? sections)
         {
             return SetRawValueAsync(key, value, sections, CancellationToken.None);
         }
-        
+
         public Task<Boolean> SetRawValueAsync(String? key, String? value, CancellationToken token, params String[]? sections)
         {
             return SetRawValueAsync(key, value, sections, token);
         }
-        
+
         public virtual Task<Boolean> SetRawValueAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
         {
             return Behavior.SetRawAsync(key, value, sections, token);
         }
-        
+
         public Task<Boolean> SetValueAsync(String? key, String? value, IStringCryptor? cryptor, params String[]? sections)
         {
             return SetValueAsync(key, value, cryptor, (IEnumerable<String>?) sections);
         }
-        
+
         public Task<Boolean> SetValueAsync(String? key, String? value, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             return SetValueAsync(key, value, cryptor, sections, CancellationToken.None);
         }
-        
+
         public Task<Boolean> SetValueAsync(String? key, String? value, IStringCryptor? cryptor, CancellationToken token, params String[]? sections)
         {
             return SetValueAsync(key, value, cryptor, sections, token);
         }
-        
+
         public virtual Task<Boolean> SetValueAsync(String? key, String? value, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
         {
             return Behavior.SetAsync(key, value, cryptor, sections, token);
         }
-        
+
         public String? GetOrSetRawValue(String? key, String? value, params String[]? sections)
         {
             return GetOrSetRawValue(key, value, (IEnumerable<String>?) sections);
@@ -286,7 +286,7 @@ namespace NetExtender.Configuration.Cryptography
         {
             return Behavior.GetOrSetRaw(key, value, sections);
         }
-        
+
         public String? GetOrSetValue(String? key, String? value, IStringCryptor? cryptor, params String[]? sections)
         {
             return GetOrSetValue(key, value, cryptor, (IEnumerable<String>?) sections);
@@ -296,27 +296,27 @@ namespace NetExtender.Configuration.Cryptography
         {
             return Behavior.GetOrSet(key, value, cryptor, sections);
         }
-        
+
         public Task<String?> GetOrSetRawValueAsync(String? key, String? value, params String[]? sections)
         {
             return GetOrSetRawValueAsync(key, value, (IEnumerable<String>?) sections);
         }
-        
+
         public Task<String?> GetOrSetRawValueAsync(String? key, String? value, IEnumerable<String>? sections)
         {
             return GetOrSetRawValueAsync(key, value, sections, CancellationToken.None);
         }
-        
+
         public Task<String?> GetOrSetRawValueAsync(String? key, String? value, CancellationToken token, params String[]? sections)
         {
             return GetOrSetRawValueAsync(key, value, sections, token);
         }
-        
+
         public virtual Task<String?> GetOrSetRawValueAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
         {
             return Behavior.GetOrSetRawAsync(key, value, sections, token);
         }
-        
+
         public Task<String?> GetOrSetValueAsync(String? key, String? value, IStringCryptor? cryptor, params String[]? sections)
         {
             return GetOrSetValueAsync(key, value, cryptor, (IEnumerable<String>?) sections);
@@ -346,7 +346,7 @@ namespace NetExtender.Configuration.Cryptography
         {
             return SetRawValue(key, null, sections);
         }
-        
+
         public Boolean RemoveValue(String? key, IStringCryptor? cryptor, params String[]? sections)
         {
             return RemoveValue(key, cryptor, (IEnumerable<String>?) sections);
@@ -356,27 +356,27 @@ namespace NetExtender.Configuration.Cryptography
         {
             return SetValue(key, null, cryptor, sections);
         }
-        
+
         public Task<Boolean> RemoveRawValueAsync(String? key, params String[]? sections)
         {
             return RemoveRawValueAsync(key, (IEnumerable<String>?) sections);
         }
-        
+
         public Task<Boolean> RemoveRawValueAsync(String? key, IEnumerable<String>? sections)
         {
             return RemoveRawValueAsync(key, sections, CancellationToken.None);
         }
-        
+
         public Task<Boolean> RemoveRawValueAsync(String? key, CancellationToken token, params String[]? sections)
         {
             return RemoveRawValueAsync(key, sections, token);
         }
-        
+
         public Task<Boolean> RemoveRawValueAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
             return SetRawValueAsync(key, null, sections, token);
         }
-        
+
         public Task<Boolean> RemoveValueAsync(String? key, IStringCryptor? cryptor, params String[]? sections)
         {
             return RemoveValueAsync(key, cryptor, (IEnumerable<String>?) sections);
@@ -406,7 +406,7 @@ namespace NetExtender.Configuration.Cryptography
         {
             return Behavior.ContainsRaw(key, sections);
         }
-        
+
         public Boolean KeyExist(String? key, IStringCryptor? cryptor, params String[]? sections)
         {
             return KeyExist(key, cryptor, (IEnumerable<String>?) sections);
@@ -416,22 +416,22 @@ namespace NetExtender.Configuration.Cryptography
         {
             return Behavior.Contains(key, cryptor, sections);
         }
-        
+
         public Task<Boolean> KeyExistRawAsync(String? key, params String[]? sections)
         {
             return KeyExistRawAsync(key, (IEnumerable<String>?) sections);
         }
-        
+
         public Task<Boolean> KeyExistRawAsync(String? key, IEnumerable<String>? sections)
         {
             return KeyExistRawAsync(key, sections, CancellationToken.None);
         }
-        
+
         public Task<Boolean> KeyExistRawAsync(String? key, CancellationToken token, params String[]? sections)
         {
             return KeyExistRawAsync(key, sections, token);
         }
-        
+
         public virtual Task<Boolean> KeyExistRawAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
             return Behavior.ContainsRawAsync(key, sections, token);
@@ -486,17 +486,17 @@ namespace NetExtender.Configuration.Cryptography
         {
             return Behavior.GetExistsRaw(sections);
         }
-        
+
         public ConfigurationValueEntry[]? GetExistsValues(IStringCryptor? cryptor)
         {
             return GetExistsValues(cryptor, null);
         }
-        
+
         public virtual ConfigurationValueEntry[]? GetExistsValues(IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             return Behavior.GetExistsValues(cryptor, sections);
         }
-        
+
         public ConfigurationValueEntry[]? GetExistsValuesRaw()
         {
             return GetExistsValuesRaw(null);
@@ -506,12 +506,12 @@ namespace NetExtender.Configuration.Cryptography
         {
             return Behavior.GetExistsValuesRaw(sections);
         }
-        
+
         public Task<ConfigurationEntry[]?> GetExistsAsync(IStringCryptor? cryptor)
         {
             return GetExistsAsync(cryptor, CancellationToken.None);
         }
-        
+
         public Task<ConfigurationEntry[]?> GetExistsAsync(IStringCryptor? cryptor, CancellationToken token)
         {
             return GetExistsAsync(cryptor, null, token);
@@ -566,7 +566,7 @@ namespace NetExtender.Configuration.Cryptography
         {
             return Behavior.GetExistsRawAsync(sections, token);
         }
-        
+
         public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IStringCryptor? cryptor)
         {
             return GetExistsValuesAsync(cryptor, CancellationToken.None);

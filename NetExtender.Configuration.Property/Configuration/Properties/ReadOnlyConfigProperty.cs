@@ -150,7 +150,7 @@ namespace NetExtender.Configuration.Properties
             : this(new ReadOnlyConfigProperty(config, key, null, options, sections), alternate, validate, converter)
         {
         }
-        
+
         protected internal ReadOnlyConfigProperty(IReadOnlyConfigProperty property, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter)
         {
             Property = property ?? throw new ArgumentNullException(nameof(property));
@@ -213,7 +213,7 @@ namespace NetExtender.Configuration.Properties
             {
                 return Alternate;
             }
-            
+
             T value = Property.GetValue(Alternate, Converter);
             return predicate?.Invoke(value) != false ? value : Alternate;
         }
@@ -239,7 +239,7 @@ namespace NetExtender.Configuration.Properties
             {
                 return Alternate;
             }
-            
+
             T value = await Property.GetValueAsync(Alternate, Converter, token);
             return predicate?.Invoke(value) != false ? value : Alternate;
         }
@@ -265,7 +265,7 @@ namespace NetExtender.Configuration.Properties
             {
                 return false;
             }
-            
+
             T value = Property.GetValue(Alternate, Converter);
 
             Internal.Reset(value);
@@ -284,7 +284,7 @@ namespace NetExtender.Configuration.Properties
             {
                 return false;
             }
-            
+
             T value = await Property.GetValueAsync(Alternate, Converter, token);
 
             Internal.Reset(value);
@@ -301,13 +301,13 @@ namespace NetExtender.Configuration.Properties
         {
             return new ConfigurationValueEntry<T>(Key, Value, Sections).GetString(format, provider) ?? String.Empty;
         }
-        
+
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        
+
         protected virtual void Dispose(Boolean disposing)
         {
             Changed = null;
@@ -330,7 +330,7 @@ namespace NetExtender.Configuration.Properties
     public class ReadOnlyConfigProperty : ConfigPropertyInfo<String?>, IReadOnlyConfigProperty
     {
         protected IReadOnlyConfig Config { get; }
-        
+
         public event ConfigurationChangedEventHandler? Changed;
 
         public override String Path
@@ -363,7 +363,7 @@ namespace NetExtender.Configuration.Properties
             Changed?.Invoke(this, args);
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
         }
-        
+
         protected virtual void OnChanged(String? value)
         {
             OnChanged(new ConfigurationChangedEventArgs(new ConfigurationValueEntry(Key, value, Sections)));
@@ -381,7 +381,7 @@ namespace NetExtender.Configuration.Properties
             {
                 return;
             }
-            
+
             Internal.Reset(value);
             OnChanged(args);
         }
@@ -390,12 +390,12 @@ namespace NetExtender.Configuration.Properties
         {
             return !IsAlwaysDefault ? GetValueInternal() : Alternate;
         }
-        
+
         protected virtual String? GetValueInternal()
         {
             return Config.GetValue(Key, Alternate, Sections);
         }
-        
+
         protected virtual Task<String?> GetValueInternalAsync(CancellationToken token)
         {
             return Config.GetValueAsync(Key, Alternate, Sections, token);
@@ -417,7 +417,7 @@ namespace NetExtender.Configuration.Properties
             {
                 return Alternate;
             }
-            
+
             if (!IsCaching)
             {
                 Read();
@@ -437,7 +437,7 @@ namespace NetExtender.Configuration.Properties
             {
                 return Alternate;
             }
-            
+
             if (!IsCaching)
             {
                 await ReadAsync(token);
@@ -450,31 +450,31 @@ namespace NetExtender.Configuration.Properties
         {
             return KeyExistInternal();
         }
-        
+
         public Task<Boolean> KeyExistAsync()
         {
             return KeyExistAsync(CancellationToken.None);
         }
-        
+
         public virtual Task<Boolean> KeyExistAsync(CancellationToken token)
         {
             return KeyExistInternalAsync(token);
         }
-        
+
         public virtual Boolean Read()
         {
             if (IsAlwaysDefault)
             {
                 return false;
             }
-            
+
             String? value = GetValueInternal() ?? Alternate;
 
             if (Internal.IsValueCreated && value == Internal.Value)
             {
                 return true;
             }
-            
+
             Internal.Reset(value);
             OnChanged(value);
             return true;
@@ -491,14 +491,14 @@ namespace NetExtender.Configuration.Properties
             {
                 return false;
             }
-            
+
             String? value = await GetValueInternalAsync(token) ?? Alternate;
 
             if (Internal.IsValueCreated && value == Internal.Value)
             {
                 return true;
             }
-            
+
             Internal.Reset(value);
             OnChanged(value);
             return true;

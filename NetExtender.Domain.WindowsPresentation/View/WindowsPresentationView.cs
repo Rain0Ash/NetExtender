@@ -23,7 +23,7 @@ namespace NetExtender.Domains.View
         {
         }
     }
-    
+
     public class WindowsPresentationView : ApplicationView
     {
         protected Window? Context { get; private set; }
@@ -44,7 +44,7 @@ namespace NetExtender.Domains.View
         {
             Context = context;
         }
-        
+
         protected override Task<IApplicationView> RunAsync(CancellationToken token)
         {
             return RunAsync(Context, token);
@@ -53,7 +53,7 @@ namespace NetExtender.Domains.View
         protected virtual async Task<IApplicationView> RunAsync(Window? window, CancellationToken token)
         {
             WindowsPresentationApplication application = Domain.Current.Application.As<WindowsPresentationApplication>();
-            
+
             if (window is null)
             {
                 await application.RunAsync(token);
@@ -65,17 +65,17 @@ namespace NetExtender.Domains.View
             {
                 throw new ArgumentException($"{nameof(window)} not reference equals with {nameof(Context)}");
             }
-            
+
             Context.Closed += OnFormClosed;
             await application.RunAsync(Context, token);
             return this;
         }
-        
+
         protected Task<IApplicationView> RunAsync<T>() where T : Window, new()
         {
             return RunAsync<T>(CancellationToken.None);
         }
-        
+
         protected Task<IApplicationView> RunAsync<T>(CancellationToken token) where T : Window, new()
         {
             return RunAsync(new T(), token);
@@ -87,7 +87,7 @@ namespace NetExtender.Domains.View
             {
                 return;
             }
-            
+
             try
             {
                 Domain.Shutdown(true);

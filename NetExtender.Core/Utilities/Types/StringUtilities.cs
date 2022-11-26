@@ -56,7 +56,7 @@ namespace NetExtender.Utilities.Types
         public const String NullString = "null";
 
         public const String DefaultSeparator = " ";
-        
+
         public const String FormatVariableRegexPattern = @"\{([^\{\}]+)\}";
 
         private static String[] NewLine { get; } = { "\r\n", "\r", "\n" };
@@ -68,13 +68,13 @@ namespace NetExtender.Utilities.Types
         {
             return value?.ToString();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? ToString<T>(T value, IFormatProvider? provider)
         {
             return ToString(value, null, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? ToString<T>(T value, String? format, IFormatProvider? provider)
         {
@@ -85,13 +85,13 @@ namespace NetExtender.Utilities.Types
 
             return value?.ToString();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 CompareTo(this String value, String? other)
         {
             return String.Compare(value, other, StringComparison.Ordinal);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 CompareTo(this String value, String? other, StringComparison comparison)
         {
@@ -102,7 +102,7 @@ namespace NetExtender.Utilities.Types
 
             return String.Compare(value, other, comparison);
         }
-        
+
         public static Int32 CharLength(this String?[] values)
         {
             if (values is null)
@@ -202,12 +202,12 @@ namespace NetExtender.Utilities.Types
 
             return values.WhereNotNull().Aggregate<IString, Int64>(0, (current, item) => current + item.Length);
         }
-        
+
         public static Boolean IsNumeric(this String value)
         {
             return value.All(Char.IsDigit);
         }
-        
+
         public static Boolean IsAlphabetic(this String value)
         {
             return value.All(Char.IsLetter);
@@ -467,7 +467,7 @@ namespace NetExtender.Utilities.Types
 
             return options.HasFlag(StringSplitOptions.TrimEntries) ? value.Trim() : value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Trim(this String value, Char trim, StringSplitOptions options)
         {
@@ -495,7 +495,7 @@ namespace NetExtender.Utilities.Types
         {
             return Trim(value, trim, options);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IString Trim(this IString value, StringSplitOptions options)
         {
@@ -506,7 +506,7 @@ namespace NetExtender.Utilities.Types
 
             return options.HasFlag(StringSplitOptions.TrimEntries) ? value.Trim() : value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IString Trim(this IString value, Char trim, StringSplitOptions options)
         {
@@ -534,7 +534,7 @@ namespace NetExtender.Utilities.Types
         {
             return Trim(value, trim, options);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String TrimStart(this String value, StringSplitOptions options)
         {
@@ -545,7 +545,7 @@ namespace NetExtender.Utilities.Types
 
             return options.HasFlag(StringSplitOptions.TrimEntries) ? value.TrimStart() : value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String TrimStart(this String value, Char trim, StringSplitOptions options)
         {
@@ -573,7 +573,7 @@ namespace NetExtender.Utilities.Types
         {
             return TrimStart(value, trim, options);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IString TrimStart(this IString value, StringSplitOptions options)
         {
@@ -584,7 +584,7 @@ namespace NetExtender.Utilities.Types
 
             return options.HasFlag(StringSplitOptions.TrimEntries) ? value.TrimStart() : value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IString TrimStart(this IString value, Char trim, StringSplitOptions options)
         {
@@ -612,7 +612,7 @@ namespace NetExtender.Utilities.Types
         {
             return TrimStart(value, trim, options);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String TrimEnd(this String value, StringSplitOptions options)
         {
@@ -623,7 +623,7 @@ namespace NetExtender.Utilities.Types
 
             return options.HasFlag(StringSplitOptions.TrimEntries) ? value.TrimEnd() : value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String TrimEnd(this String value, Char trim, StringSplitOptions options)
         {
@@ -651,7 +651,7 @@ namespace NetExtender.Utilities.Types
         {
             return TrimEnd(value, trim, options);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IString TrimEnd(this IString value, StringSplitOptions options)
         {
@@ -662,7 +662,7 @@ namespace NetExtender.Utilities.Types
 
             return options.HasFlag(StringSplitOptions.TrimEntries) ? value.TrimEnd() : value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IString TrimEnd(this IString value, Char trim, StringSplitOptions options)
         {
@@ -728,7 +728,7 @@ namespace NetExtender.Utilities.Types
 
             return new String(buffer);
         }
-        
+
 #if NETCOREAPP3_1_OR_GREATER
         public static String ReverseRune(this String value)
         {
@@ -949,7 +949,7 @@ namespace NetExtender.Utilities.Types
                 > 0 => args.Take(expected).ToArray()
             };
         }
-        
+
         public static Object[] FormatSafeGetNotNullArguments(Object?[]? args, Int32 expected)
         {
             if (args is null)
@@ -1023,7 +1023,7 @@ namespace NetExtender.Utilities.Types
 
             return chars.Any(value.StartsWith);
         }
-        
+
         public static Boolean StartsWith(this IString value, params Char[] chars)
         {
             return StartsWith(value, (IEnumerable<Char>) chars);
@@ -1038,7 +1038,7 @@ namespace NetExtender.Utilities.Types
 
             return StartsWith(value.ToString(), chars);
         }
-        
+
         public static Boolean StartsWith(this String value, params String[] substrings)
         {
             return StartsWith(value, (IEnumerable<String>) substrings);
@@ -1058,7 +1058,7 @@ namespace NetExtender.Utilities.Types
 
             return substrings.WhereNotNull().Any(value.StartsWith);
         }
-        
+
         public static Boolean StartsWith(this String value, StringComparison comparison, params String[] substrings)
         {
             return StartsWith(value, substrings, comparison);
@@ -1078,7 +1078,7 @@ namespace NetExtender.Utilities.Types
 
             return substrings.WhereNotNull().Any(item => value.StartsWith(item, comparison));
         }
-        
+
         public static Boolean StartsWith(this IString value, params String[] substrings)
         {
             return StartsWith(value, (IEnumerable<String>) substrings);
@@ -1093,7 +1093,7 @@ namespace NetExtender.Utilities.Types
 
             return StartsWith(value.ToString(), substrings);
         }
-        
+
         public static Boolean StartsWith(this IString value, StringComparison comparison, params String[] substrings)
         {
             return StartsWith(value, substrings, comparison);
@@ -1108,7 +1108,7 @@ namespace NetExtender.Utilities.Types
 
             return StartsWith(value.ToString(), substrings, comparison);
         }
-        
+
         public static Boolean EndsWith(this String value, params Char[] chars)
         {
             return EndsWith(value, (IEnumerable<Char>) chars);
@@ -1128,7 +1128,7 @@ namespace NetExtender.Utilities.Types
 
             return chars.Any(value.EndsWith);
         }
-        
+
         public static Boolean EndsWith(this IString value, params Char[] chars)
         {
             return EndsWith(value, (IEnumerable<Char>) chars);
@@ -1143,7 +1143,7 @@ namespace NetExtender.Utilities.Types
 
             return EndsWith(value.ToString(), chars);
         }
-        
+
         public static Boolean EndsWith(this String value, params String[] substrings)
         {
             return EndsWith(value, (IEnumerable<String>) substrings);
@@ -1163,12 +1163,12 @@ namespace NetExtender.Utilities.Types
 
             return substrings.WhereNotNull().Any(value.EndsWith);
         }
-        
+
         public static Boolean EndsWith(this String value, StringComparison comparison, params String[] substrings)
         {
             return EndsWith(value, substrings, comparison);
         }
-        
+
         public static Boolean EndsWith(this String value, IEnumerable<String?> substrings, StringComparison comparison)
         {
             if (value is null)
@@ -1183,7 +1183,7 @@ namespace NetExtender.Utilities.Types
 
             return substrings.WhereNotNull().Any(item => value.EndsWith(item, comparison));
         }
-        
+
         public static Boolean EndsWith(this IString value, params String[] substrings)
         {
             return EndsWith(value, (IEnumerable<String>) substrings);
@@ -1198,12 +1198,12 @@ namespace NetExtender.Utilities.Types
 
             return EndsWith(value.ToString(), substrings);
         }
-        
+
         public static Boolean EndsWith(this IString value, StringComparison comparison, params String[] substrings)
         {
             return EndsWith(value, substrings, comparison);
         }
-        
+
         public static Boolean EndsWith(this IString value, IEnumerable<String?> substrings, StringComparison comparison)
         {
             if (value is null)
@@ -1223,7 +1223,7 @@ namespace NetExtender.Utilities.Types
 
             return !String.IsNullOrEmpty(value) ? source.Where(item => item.StartsWith(value)) : source;
         }
-        
+
         public static IEnumerable<String> WhereStartsWith(this IEnumerable<String> source, String? value, StringComparison comparison)
         {
             if (source is null)
@@ -1233,7 +1233,7 @@ namespace NetExtender.Utilities.Types
 
             return !String.IsNullOrEmpty(value) ? source.Where(item => item.StartsWith(value, comparison)) : source;
         }
-        
+
         public static IEnumerable<String> WhereEndsWith(this IEnumerable<String> source, String? value)
         {
             if (source is null)
@@ -1243,7 +1243,7 @@ namespace NetExtender.Utilities.Types
 
             return !String.IsNullOrEmpty(value) ? source.Where(item => item.EndsWith(value)) : source;
         }
-        
+
         public static IEnumerable<String> WhereEndsWith(this IEnumerable<String> source, String? value, StringComparison comparison)
         {
             if (source is null)
@@ -1842,12 +1842,12 @@ namespace NetExtender.Utilities.Types
             }
 
             result = value.Substring(index, value.Length - index);
-            
+
             if (trim)
             {
                 result = result.Trim();
             }
-            
+
             if (allentries || !String.IsNullOrEmpty(result))
             {
                 yield return result;
@@ -1904,7 +1904,7 @@ namespace NetExtender.Utilities.Types
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         public static String[] SplitBy(this IString value)
         {
             return SplitBy(value, SplitType.NewLine);
@@ -1992,7 +1992,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             return values is not null ? String.Join(separator, values.Where(predicate)) : String.Empty;
         }
 
@@ -2002,10 +2002,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             return values is not null && values.Length > 0 ? String.Join(separator, values.Where(predicate)) : String.Empty;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Join<T>(this IEnumerable<T> source)
         {
@@ -2016,7 +2016,7 @@ namespace NetExtender.Utilities.Types
 
             return Join(String.Empty, source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Join<T>(this IEnumerable<T> source, String? separator)
         {
@@ -2027,7 +2027,7 @@ namespace NetExtender.Utilities.Types
 
             return Join(separator, source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Join<T>(this IEnumerable<T> source, String? separator, String? end)
         {
@@ -2057,7 +2057,7 @@ namespace NetExtender.Utilities.Types
 
             return $"{start}{Join(separator, source)}{end}";
         }
-        
+
         public static String JoinNewLine<T>(this IEnumerable<T> source)
         {
             if (source is null)
@@ -2067,7 +2067,7 @@ namespace NetExtender.Utilities.Types
 
             return Join(source, Environment.NewLine);
         }
-        
+
         public static String JoinNewLine<T>(this IEnumerable<T> source, String? end)
         {
             if (source is null)
@@ -2077,7 +2077,7 @@ namespace NetExtender.Utilities.Types
 
             return Join(source, Environment.NewLine, end);
         }
-        
+
         public static String JoinNewLine<T>(this IEnumerable<T> source, String? start, String? end)
         {
             if (source is null)
@@ -2087,7 +2087,7 @@ namespace NetExtender.Utilities.Types
 
             return Join(source, Environment.NewLine, start, end);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Join<T>(this IEnumerable<T> source, JoinType type)
         {
@@ -2098,7 +2098,7 @@ namespace NetExtender.Utilities.Types
 
             return Join(String.Empty, source.ToStringEnumerable(), type);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Join<T>(this IEnumerable<T> source, String? separator, JoinType type)
         {
@@ -2109,7 +2109,7 @@ namespace NetExtender.Utilities.Types
 
             return Join(separator, source.ToStringEnumerable(), type);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Join<T>(this IEnumerable<T> source, String? separator, JoinType type, String? end)
         {
@@ -2130,22 +2130,22 @@ namespace NetExtender.Utilities.Types
 
             return $"{start}{Join(source, separator, type)}{end}";
         }
-        
+
         public static String JoinNewLine<T>(this IEnumerable<T> source, JoinType type)
         {
             return Join(source, Environment.NewLine, type);
         }
-        
+
         public static String JoinNewLine<T>(this IEnumerable<T> source, JoinType type, String? end)
         {
             return Join(source, Environment.NewLine, type, end);
         }
-        
+
         public static String JoinNewLine<T>(this IEnumerable<T> source, JoinType type, String? start, String? end)
         {
             return Join(source, Environment.NewLine, type, start, end);
         }
-        
+
         public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector)
         {
             if (source is null)
@@ -2160,7 +2160,7 @@ namespace NetExtender.Utilities.Types
 
             return Join(source.Select(selector));
         }
-        
+
         public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, String? separator)
         {
             if (source is null)
@@ -2175,7 +2175,7 @@ namespace NetExtender.Utilities.Types
 
             return Join(source.Select(selector), separator);
         }
-        
+
         public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, String? separator, String? end)
         {
             if (source is null)
@@ -2205,7 +2205,7 @@ namespace NetExtender.Utilities.Types
 
             return Join(source.Select(selector), separator, start, end);
         }
-        
+
         public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector)
         {
             if (source is null)
@@ -2220,7 +2220,7 @@ namespace NetExtender.Utilities.Types
 
             return Join(source.Select(selector), Environment.NewLine);
         }
-        
+
         public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, String? start)
         {
             if (source is null)
@@ -2235,7 +2235,7 @@ namespace NetExtender.Utilities.Types
 
             return Join(source.Select(selector), Environment.NewLine, start);
         }
-        
+
         public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, String? start, String? end)
         {
             if (source is null)
@@ -2250,7 +2250,7 @@ namespace NetExtender.Utilities.Types
 
             return Join(source.Select(selector), Environment.NewLine, start, end);
         }
-        
+
         public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, JoinType type)
         {
             if (source is null)
@@ -2265,7 +2265,7 @@ namespace NetExtender.Utilities.Types
 
             return Join(source.Select(selector), type);
         }
-        
+
         public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, String? separator, JoinType type)
         {
             if (source is null)
@@ -2280,7 +2280,7 @@ namespace NetExtender.Utilities.Types
 
             return Join(source.Select(selector), separator, type);
         }
-        
+
         public static String Join<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, String? separator, JoinType type, String? end)
         {
             if (source is null)
@@ -2310,7 +2310,7 @@ namespace NetExtender.Utilities.Types
 
             return Join(source.Select(selector), separator, type, start, end);
         }
-        
+
         public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, JoinType type)
         {
             if (source is null)
@@ -2325,7 +2325,7 @@ namespace NetExtender.Utilities.Types
 
             return JoinNewLine(source.Select(selector), type);
         }
-        
+
         public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, JoinType type, String? start)
         {
             if (source is null)
@@ -2340,7 +2340,7 @@ namespace NetExtender.Utilities.Types
 
             return JoinNewLine(source.Select(selector), type, start);
         }
-        
+
         public static String JoinNewLine<T, TOutput>(this IEnumerable<T> source, Func<T, TOutput> selector, JoinType type, String? start, String? end)
         {
             if (source is null)
@@ -2799,7 +2799,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(lower));
             }
-            
+
             if (value.Length <= 0)
             {
                 return value;
@@ -2902,7 +2902,7 @@ namespace NetExtender.Utilities.Types
 
             String indentation = new String(' ', count);
             String replacement = Environment.NewLine + indentation;
-            
+
             return indentation + value.Replace(Environment.NewLine, replacement);
         }
 
@@ -2916,7 +2916,7 @@ namespace NetExtender.Utilities.Types
 
             return value.Count(chr => chr == character);
         }
-        
+
         /// <inheritdoc cref="OccurrencesOf(String,Char,Boolean)"/>
         public static Int32 OccurrencesInsensitiveOf(this String value, Char character)
         {
@@ -2927,7 +2927,7 @@ namespace NetExtender.Utilities.Types
 
             character = Char.ToLowerInvariant(character);
             value = value.ToLowerInvariant();
-            
+
             return value.Count(chr => chr == character);
         }
 
@@ -3067,7 +3067,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(length), length, "Length must be greater than dots.");
             }
-            
+
             if (include)
             {
                 length -= dots;
@@ -3075,7 +3075,7 @@ namespace NetExtender.Utilities.Types
 
             return value.Length <= length ? value : String.Concat(value.AsSpan(0, length), "...");
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IString ShortWithDots(this IString value, Int32 length)
         {
@@ -3142,7 +3142,7 @@ namespace NetExtender.Utilities.Types
 
             return new StringAdapter(Negative(value.ToString()));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IString Negative(this IString value, Boolean negative)
         {
@@ -3159,7 +3159,7 @@ namespace NetExtender.Utilities.Types
         {
             return HttpUtility.HtmlEncode(value);
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static String? HtmlAttributeEncode(this String? value)
         {
@@ -3171,19 +3171,19 @@ namespace NetExtender.Utilities.Types
         {
             return HttpUtility.HtmlDecode(value);
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static String? UrlEncode(this String? value)
         {
             return HttpUtility.UrlEncode(value);
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static String? UrlEncode(this String? value, Encoding? encoding)
         {
             return HttpUtility.UrlEncode(value, encoding ?? Encoding.UTF8);
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static String? UrlEncodeUnicode(this String? value)
         {
@@ -3250,7 +3250,7 @@ namespace NetExtender.Utilities.Types
 
             return values[first.Length, second.Length];
         }
-        
+
         public static Int32 LevenshteinDistance(this String first, String second, StringComparison comparison)
         {
             if (first is null)
@@ -3485,14 +3485,14 @@ namespace NetExtender.Utilities.Types
                     throw new NotSupportedException();
             }
         }
-        
+
         private static Regex RightToLeftChecker { get; } = new Regex("[\u04c7-\u0591\u05D0-\u05EA\u05F0-\u05F4\u0600-\u06FF]", RegexOptions.Compiled);
 
         public static Boolean IsRightToLeft(this String? value)
         {
             return !String.IsNullOrEmpty(value) && RightToLeftChecker.Match(value).Success;
         }
-        
+
         public static Boolean IsRightToLeft(this IString? value)
         {
             return IsRightToLeft(value?.ToString());
@@ -3539,7 +3539,7 @@ namespace NetExtender.Utilities.Types
 
             return stream;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Mutate(this String value, Char character)
         {
@@ -3562,7 +3562,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(position));
             }
-            
+
             fixed (Char* pinned = value)
             {
                 pinned[position] = character;
@@ -3570,7 +3570,7 @@ namespace NetExtender.Utilities.Types
 
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Mutate(this String value, String mutate)
         {
@@ -3592,7 +3592,7 @@ namespace NetExtender.Utilities.Types
 
             return Mutate(value, mutate.AsSpan(), position);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String Mutate(this String value, ReadOnlySpan<Char> span)
         {
@@ -3615,7 +3615,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(span.Length > value.Length ? nameof(span) : nameof(position));
             }
-            
+
             fixed (Char* pinned = value)
             {
                 for (Int32 i = 0; i < span.Length; i++)

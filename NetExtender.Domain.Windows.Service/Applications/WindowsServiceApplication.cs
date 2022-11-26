@@ -32,7 +32,7 @@ namespace NetExtender.Domains.Service.Applications
             {
             }
         }
-        
+
         public override Boolean? IsElevate
         {
             get
@@ -61,7 +61,7 @@ namespace NetExtender.Domains.Service.Applications
         }
 
         protected LazyWindowsServiceInitializer Initializer { get; }
-        
+
         public ServiceBase Service
         {
             get
@@ -193,7 +193,7 @@ namespace NetExtender.Domains.Service.Applications
                 Initializer.ExitCode = value;
             }
         }
-        
+
         private WindowsServiceInstaller? _installer;
         public WindowsServiceInstaller? Installer
         {
@@ -203,7 +203,7 @@ namespace NetExtender.Domains.Service.Applications
                 {
                     return _installer;
                 }
-                
+
                 String? path = ApplicationUtilities.Path;
                 if (path is null)
                 {
@@ -217,19 +217,19 @@ namespace NetExtender.Domains.Service.Applications
                 _installer = value;
             }
         }
-        
+
         public Boolean Quiet { get; init; } = true;
-        
+
         public WindowsServiceApplication()
             : this(null, null)
         {
         }
-        
+
         public WindowsServiceApplication(LazyWindowsServiceInitializer? initializer)
             : this(initializer, null)
         {
         }
-        
+
         public WindowsServiceApplication(WindowsServiceInstaller? installer)
             : this(null, installer)
         {
@@ -257,7 +257,7 @@ namespace NetExtender.Domains.Service.Applications
             {
                 throw new InitializeException("Can't initialize service. Maybe need elevate execute for install service.");
             }
-            
+
             if (WindowsServiceUtilities.IsServiceExist(Domain.ApplicationIdentifier))
             {
                 if (!await WindowsServiceUtilities.StartServiceAsync(Domain.ApplicationIdentifier, token))

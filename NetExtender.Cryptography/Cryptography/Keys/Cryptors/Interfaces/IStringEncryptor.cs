@@ -11,7 +11,7 @@ namespace NetExtender.Cryptography.Keys.Interfaces
         public String? Encrypt(String value);
 
         public String? EncryptString(String value);
-        
+
         public IEnumerable<String?> Encrypt(IEnumerable<String> source);
 
         public IEnumerable<String?> EncryptString(IEnumerable<String> source);

@@ -17,12 +17,12 @@ namespace NetExtender.Types.Drawing.Colors
         {
             return color.ToColor();
         }
-        
+
         public static implicit operator RGBColor(Color color)
         {
             return new RGBColor(color.R, color.G, color.B);
         }
-        
+
         public static Boolean operator ==(RGBColor first, RGBColor second)
         {
             return first.Equals(second);
@@ -51,7 +51,7 @@ namespace NetExtender.Types.Drawing.Colors
             G = g;
             B = b;
         }
-        
+
         public Color ToColor()
         {
             return Color.FromArgb(R, G, B);
@@ -62,7 +62,7 @@ namespace NetExtender.Types.Drawing.Colors
             color = ToColor();
             return true;
         }
-        
+
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(R, G, B);
@@ -87,19 +87,19 @@ namespace NetExtender.Types.Drawing.Colors
         {
             return $"R:{R} G:{G} B:{B}";
         }
-        
+
         public String ToString(String? format)
         {
             return ToString(format, null);
         }
-        
+
         public String ToString(String? format, IFormatProvider? provider)
         {
             if (String.IsNullOrEmpty(format))
             {
                 return ToString();
             }
-            
+
             String r = R.ToString(provider);
             String g = G.ToString(provider);
             String b = B.ToString(provider);

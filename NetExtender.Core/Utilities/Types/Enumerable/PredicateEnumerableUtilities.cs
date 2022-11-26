@@ -27,7 +27,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static IEnumerable<T> WhereIs<T>(this IEnumerable<T> source, Type type)
         {
             if (source is null)
@@ -68,7 +68,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(item => predicate(selector(item)));
         }
-        
+
         public static IEnumerable<T> WhereBy<T, TResult>(this IEnumerable<T> source, Func<T, Int32, TResult> selector, Func<TResult, Boolean> predicate)
         {
             if (source is null)
@@ -85,10 +85,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             return source.Where((item, index) => predicate(selector(item, index)));
         }
-        
+
         public static IEnumerable<T> WhereBy<T, TResult>(this IEnumerable<T> source, Func<T, TResult> selector, Func<TResult, Int32, Boolean> predicate)
         {
             if (source is null)
@@ -105,10 +105,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             return source.Where((item, index) => predicate(selector(item), index));
         }
-        
+
         public static IEnumerable<T> WhereBy<T, TResult>(this IEnumerable<T> source, Func<T, Int32, TResult> selector, Func<TResult, Int32, Boolean> predicate)
         {
             if (source is null)
@@ -125,10 +125,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             return source.Where((item, index) => predicate(selector(item, index), index));
         }
-        
+
         public static IEnumerable<T> WhereNotBy<T, TResult>(this IEnumerable<T> source, Func<T, TResult> selector, Func<TResult, Boolean> predicate)
         {
             if (source is null)
@@ -148,7 +148,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(item => !predicate(selector(item)));
         }
-        
+
         public static IEnumerable<T> WhereNotBy<T, TResult>(this IEnumerable<T> source, Func<T, Int32, TResult> selector, Func<TResult, Boolean> predicate)
         {
             if (source is null)
@@ -165,10 +165,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             return source.Where((item, index) => !predicate(selector(item, index)));
         }
-        
+
         public static IEnumerable<T> WhereNotBy<T, TResult>(this IEnumerable<T> source, Func<T, TResult> selector, Func<TResult, Int32, Boolean> predicate)
         {
             if (source is null)
@@ -185,10 +185,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             return source.Where((item, index) => !predicate(selector(item), index));
         }
-        
+
         public static IEnumerable<T> WhereNotBy<T, TResult>(this IEnumerable<T> source, Func<T, Int32, TResult> selector, Func<TResult, Int32, Boolean> predicate)
         {
             if (source is null)
@@ -205,7 +205,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             return source.Where((item, index) => !predicate(selector(item, index), index));
         }
 
@@ -243,7 +243,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(item => item.HasValue);
         }
-        
+
         public static IEnumerable<T> WhereNotNull<T, TItem>(this IEnumerable<T?> source, Func<T, TItem> predicate)
         {
             if (source is null)
@@ -279,7 +279,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WhereNotNull().Where(predicate);
         }
-        
+
         public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate)
         {
             if (source is null)
@@ -294,7 +294,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WhereNotNull().Where(predicate);
         }
-        
+
         public static IEnumerable<T> WhereIf<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, Boolean condition)
         {
             if (source is null)
@@ -309,7 +309,7 @@ namespace NetExtender.Utilities.Types
 
             return condition ? source.Where(predicate) : source;
         }
-        
+
         public static IEnumerable<T> WhereIf<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, Boolean condition)
         {
             if (source is null)
@@ -324,7 +324,7 @@ namespace NetExtender.Utilities.Types
 
             return condition ? source.Where(predicate) : source;
         }
-        
+
         public static IEnumerable<T> WhereIfNot<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, Boolean condition)
         {
             if (source is null)
@@ -339,7 +339,7 @@ namespace NetExtender.Utilities.Types
 
             return condition ? source.WhereNot(predicate) : source;
         }
-        
+
         public static IEnumerable<T> WhereIfNot<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate, Boolean condition)
         {
             if (source is null)
@@ -388,7 +388,7 @@ namespace NetExtender.Utilities.Types
             {
                 yield break;
             }
-            
+
             comparer ??= EqualityComparer<T>.Default;
             T first = enumerator.Current;
             yield return first;
@@ -402,7 +402,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static IEnumerable<T> WhereSameBy<T, TComparable>(this IEnumerable<T> source, Func<T, TComparable> selector)
         {
             return WhereSameBy(source, selector, (IEqualityComparer<TComparable>?) null);
@@ -426,7 +426,7 @@ namespace NetExtender.Utilities.Types
             {
                 yield break;
             }
-            
+
             comparer ??= EqualityComparer<TComparable>.Default;
             TComparable comparable = selector(enumerator.Current);
             yield return enumerator.Current;
@@ -440,7 +440,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static IEnumerable<T> WhereSameBy<T, TComparable>(this IEnumerable<T> source, T sample, Func<T, TComparable> selector)
         {
             return WhereSameBy(source, sample, selector, null);
@@ -465,7 +465,7 @@ namespace NetExtender.Utilities.Types
 
             return WhereSameBy(source, selector(sample), selector, comparer);
         }
-        
+
         public static IEnumerable<T> WhereSameBy<T, TComparable>(this IEnumerable<T> source, TComparable sample, Func<T, TComparable> selector)
         {
             return WhereSameBy(source, sample, selector, null);
@@ -482,9 +482,9 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             comparer ??= EqualityComparer<TComparable>.Default;
-            
+
             using IEnumerator<T> enumerator = source.GetEnumerator();
 
             while (enumerator.MoveNext())
@@ -496,7 +496,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static IEnumerable<T> WhereNotSame<T>(this IEnumerable<T> source)
         {
             return WhereNotSame(source, null);
@@ -515,7 +515,7 @@ namespace NetExtender.Utilities.Types
             {
                 yield break;
             }
-            
+
             comparer ??= EqualityComparer<T>.Default;
             T first = enumerator.Current;
             yield return first;
@@ -529,7 +529,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static IEnumerable<T> WhereNotSameBy<T, TComparable>(this IEnumerable<T> source, Func<T, TComparable> selector)
         {
             return WhereNotSameBy(source, selector, (IEqualityComparer<TComparable>?) null);
@@ -553,7 +553,7 @@ namespace NetExtender.Utilities.Types
             {
                 yield break;
             }
-            
+
             comparer ??= EqualityComparer<TComparable>.Default;
             TComparable comparable = selector(enumerator.Current);
             yield return enumerator.Current;
@@ -567,7 +567,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static IEnumerable<T> WhereNotSameBy<T, TComparable>(this IEnumerable<T> source, T sample, Func<T, TComparable> selector)
         {
             return WhereNotSameBy(source, sample, selector, null);
@@ -592,7 +592,7 @@ namespace NetExtender.Utilities.Types
 
             return WhereNotSameBy(source, selector(sample), selector, comparer);
         }
-        
+
         public static IEnumerable<T> WhereNotSameBy<T, TComparable>(this IEnumerable<T> source, TComparable sample, Func<T, TComparable> selector)
         {
             return WhereNotSameBy(source, sample, selector, null);
@@ -609,9 +609,9 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             comparer ??= EqualityComparer<TComparable>.Default;
-            
+
             using IEnumerator<T> enumerator = source.GetEnumerator();
 
             while (enumerator.MoveNext())
@@ -623,7 +623,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static IEnumerable<Int32> IndexWhere<T>(this IEnumerable<T> source, Func<T, Boolean> predicate)
         {
             if (source is null)
@@ -772,7 +772,7 @@ namespace NetExtender.Utilities.Types
                 yield return item;
             }
         }
-        
+
         public static IEnumerable<T> WhereCompareInRange<T>(this IEnumerable<T> source, T minimum, T maximum, IComparer<T>? comparer)
         {
             if (source is null)
@@ -797,7 +797,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(item => item.CompareInRange(minimum, maximum, comparer, comparison));
         }
-        
+
         public static IEnumerable<T> WhereCompareInRangeBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, TKey minimum, TKey maximum) where TKey : IComparable<TKey>
         {
             return WhereCompareInRangeBy(source, selector, minimum, maximum, Comparer<TKey>.Default);
@@ -849,7 +849,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         /// <summary>
         /// Returns all elements of <paramref name="source"/> without <paramref name="without"/> using the specified equality comparer to compare values.
         /// Does not throw an exception if <paramref name="source"/> does not contain <paramref name="without"/>.
@@ -918,7 +918,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(item => !remove.Contains(item));
         }
-        
+
         public static IEnumerable<T> Slice<T>(this IEnumerable<T> source, Int32 index, Int32 count)
         {
             if (source is null)
@@ -938,7 +938,7 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         public static IEnumerable<T> Page<T>(this IEnumerable<T> source, Int32 index, Int32 size)
         {
             if (source is null)
@@ -958,7 +958,7 @@ namespace NetExtender.Utilities.Types
 
             return source;
         }
-        
+
         public static IEnumerable<T> ThrowIf<T, TException>(this IEnumerable<T> source, Func<T, Boolean> predicate) where TException : Exception, new()
         {
             if (source is null)
@@ -977,11 +977,11 @@ namespace NetExtender.Utilities.Types
                 {
                     throw new TException();
                 }
-                
+
                 yield return item;
             }
         }
-        
+
         public static IEnumerable<T> ThrowIf<T, TException>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate) where TException : Exception, new()
         {
             if (source is null)
@@ -1001,11 +1001,11 @@ namespace NetExtender.Utilities.Types
                 {
                     throw new TException();
                 }
-                
+
                 yield return item;
             }
         }
-        
+
         public static IEnumerable<T> ThrowIfNot<T, TException>(this IEnumerable<T> source, Func<T, Boolean> predicate) where TException : Exception, new()
         {
             if (source is null)
@@ -1024,11 +1024,11 @@ namespace NetExtender.Utilities.Types
                 {
                     throw new TException();
                 }
-                
+
                 yield return item;
             }
         }
-        
+
         public static IEnumerable<T> ThrowIfNot<T, TException>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate) where TException : Exception, new()
         {
             if (source is null)
@@ -1048,11 +1048,11 @@ namespace NetExtender.Utilities.Types
                 {
                     throw new TException();
                 }
-                
+
                 yield return item;
             }
         }
-        
+
         public static IEnumerable<T> ThrowIfNull<T>(this IEnumerable<T?> source)
         {
             return ThrowIfNull<T, ArgumentNullException>(source);
@@ -1071,11 +1071,11 @@ namespace NetExtender.Utilities.Types
                 {
                     throw new TException();
                 }
-                
+
                 yield return item;
             }
         }
-        
+
         public static IEnumerable<T> ThrowIfNull<T>(this IEnumerable<T?> source) where T : struct
         {
             return ThrowIfNull<T, InvalidOperationException>(source);
@@ -1094,7 +1094,7 @@ namespace NetExtender.Utilities.Types
                 {
                     throw new TException();
                 }
-                
+
                 yield return item.Value;
             }
         }
@@ -1103,7 +1103,7 @@ namespace NetExtender.Utilities.Types
         {
             return DistinctLast(source, null);
         }
-        
+
         public static IEnumerable<T> DistinctLast<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer)
         {
             if (source is null)
@@ -1155,7 +1155,7 @@ namespace NetExtender.Utilities.Types
                 return HashCode.Combine(Key);
             }
         }
-        
+
         public static IEnumerable<T> DistinctLastBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
         {
             return DistinctLastBy(source, selector, null);
@@ -1172,9 +1172,9 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             comparer ??= EqualityComparer<TKey>.Default;
-            
+
             EqualityComparison<DistinctLastByEntry<T, TKey>> comparison = (x, y) => comparer.Equals(x.Key, y.Key);
             SetQueue<DistinctLastByEntry<T, TKey>> set = new SetQueue<DistinctLastByEntry<T, TKey>>(comparison.ToEqualityComparer());
 
@@ -1193,14 +1193,14 @@ namespace NetExtender.Utilities.Types
         {
             return DistinctThrow(source, null);
         }
-        
+
         public static IEnumerable<T> DistinctThrow<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             HashSet<T> already = new HashSet<T>(comparer);
 
             foreach (T item in source)
@@ -1209,7 +1209,7 @@ namespace NetExtender.Utilities.Types
                 {
                     throw new ArgumentException($"Item {item} already in {nameof(source)}");
                 }
-                
+
                 yield return item;
             }
         }
@@ -1240,11 +1240,11 @@ namespace NetExtender.Utilities.Types
                 {
                     throw new ArgumentException($"Item \"{distinct}\" already in {nameof(source)}");
                 }
-                
+
                 yield return item;
             }
         }
-        
+
 #if !NET6_0_OR_GREATER
         /// <summary>
         /// Returns distinct elements from a sequence using the provided value selector for equality comparison.
@@ -1294,7 +1294,7 @@ namespace NetExtender.Utilities.Types
         {
             return DistinctCount(source, count, null);
         }
-        
+
         public static IEnumerable<T> DistinctCount<T>(this IEnumerable<T> source, Int32 count, IEqualityComparer<T>? comparer)
         {
             if (source is null)
@@ -1306,7 +1306,7 @@ namespace NetExtender.Utilities.Types
             {
                 yield break;
             }
-            
+
             SetQueue<T> set = new SetQueue<T>(count, comparer);
 
             foreach (T item in source)
@@ -1327,12 +1327,12 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static IEnumerable<T> DistinctCountBy<T, TDistinct>(this IEnumerable<T> source, Func<T, TDistinct> selector, Int32 count)
         {
             return DistinctCountBy(source, selector, count, null);
         }
-        
+
         public static IEnumerable<T> DistinctCountBy<T, TDistinct>(this IEnumerable<T> source, Func<T, TDistinct> selector, Int32 count, IEqualityComparer<TDistinct>? comparer)
         {
             if (source is null)
@@ -1349,7 +1349,7 @@ namespace NetExtender.Utilities.Types
             {
                 yield break;
             }
-            
+
             SetQueue<TDistinct> set = new SetQueue<TDistinct>(count, comparer);
 
             foreach (T item in source)

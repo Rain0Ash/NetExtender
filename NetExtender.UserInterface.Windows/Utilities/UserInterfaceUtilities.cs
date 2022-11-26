@@ -22,7 +22,7 @@ namespace NetExtender.Utilities.UserInterface
         {
             return action | (UserInterfaceActionType) ((UInt64) UserInterfaceActionType.Additional << additional);
         }
-        
+
         public const Int32 Distance = 5;
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -81,12 +81,12 @@ namespace NetExtender.Utilities.UserInterface
         {
             return GetMenuItemInfo(hMenu, uItem, false, lpmii);
         }
-        
+
         private static Boolean GetMenuItemInfoByPosition(IntPtr hMenu, UInt32 uItem, [In, Out] MenuItemInfo lpmii)
         {
             return GetMenuItemInfo(hMenu, uItem, true, lpmii);
         }
-        
+
         [DllImport("user32.dll")]
         private static extern Int32 GetMenuItemCount(IntPtr hMenu);
 
@@ -118,7 +118,7 @@ namespace NetExtender.Utilities.UserInterface
         private static extern UInt32 GetWindowThreadProcessId(IntPtr hwnd, out Int32 lpdwProcessId);
 
         private delegate Boolean EnumThreadProc(IntPtr hwnd, IntPtr lParam);
-        
+
         [Flags]
         internal enum WindowsMenuItemMask
         {
@@ -132,7 +132,7 @@ namespace NetExtender.Utilities.UserInterface
             Bitmap = 128,
             FType = 256
         }
-        
+
         [Flags]
         internal enum WindowsMenuItemType : UInt32
         {
@@ -146,7 +146,7 @@ namespace NetExtender.Utilities.UserInterface
             RightOrder = 8192,
             RightJustify = 16384
         }
-        
+
         [Flags]
         internal enum WindowsMenuItemState : UInt32
         {
@@ -226,9 +226,9 @@ namespace NetExtender.Utilities.UserInterface
             {
                 yield break;
             }
-            
+
             IntPtr menu = GetSystemMenu(hwnd);
-            
+
             if (menu == IntPtr.Zero)
             {
                 yield break;
@@ -243,7 +243,7 @@ namespace NetExtender.Utilities.UserInterface
                     Mask = WindowsMenuItemMask.String,
                     Type = WindowsMenuItemType.String
                 };
-                
+
                 if (!GetMenuItemInfoByPosition(menu, i, info))
                 {
                     yield return default;
@@ -263,14 +263,14 @@ namespace NetExtender.Utilities.UserInterface
 
             return GetSystemMenuItemsInternal(hwnd).Any(item => item.TypeData == title);
         }
-        
+
         public static Boolean AppendMenuSeparator(IntPtr hwnd)
         {
             if (hwnd == IntPtr.Zero)
             {
                 return false;
             }
-            
+
             IntPtr menu = GetSystemMenu(hwnd);
             return menu != IntPtr.Zero && AppendMenu(menu, (Int32) WindowsMenuItemType.Separator, 0, String.Empty);
         }
@@ -281,11 +281,11 @@ namespace NetExtender.Utilities.UserInterface
             {
                 return false;
             }
-            
+
             IntPtr menu = GetSystemMenu(hwnd);
             return menu != IntPtr.Zero && InsertMenu(menu, position, (UInt32) WindowsMenuItemType.Separator, 0, String.Empty);
         }
-        
+
         public static Boolean AppendMenu(IntPtr hwnd, Int32 id, String item)
         {
             if (item is null)
@@ -297,23 +297,23 @@ namespace NetExtender.Utilities.UserInterface
             {
                 return false;
             }
-            
+
             IntPtr menu = GetSystemMenu(hwnd);
             return menu != IntPtr.Zero && AppendMenu(menu, (UInt32) WindowsMenuItemType.String, id, item);
         }
-        
+
         public static Boolean InsertMenu(IntPtr hwnd, Byte position, Int32 id, String item)
         {
             if (item is null)
             {
                 throw new ArgumentNullException(nameof(item));
             }
-            
+
             if (hwnd == IntPtr.Zero)
             {
                 return false;
             }
-            
+
             IntPtr menu = GetSystemMenu(hwnd);
             return menu != IntPtr.Zero && InsertMenu(menu, position, (UInt32) WindowsMenuItemType.String, id, item);
         }
@@ -324,18 +324,18 @@ namespace NetExtender.Utilities.UserInterface
             {
                 return false;
             }
-            
+
             IntPtr menu = GetSystemMenu(hwnd);
             return menu != IntPtr.Zero && DeleteMenu(menu, position, true);
         }
-        
+
         public static Boolean RemoveMenuBy(IntPtr hwnd, Int32 command)
         {
             if (hwnd == IntPtr.Zero)
             {
                 return false;
             }
-            
+
             IntPtr menu = GetSystemMenu(hwnd);
             return menu != IntPtr.Zero && DeleteMenu(menu, command, false);
         }

@@ -24,7 +24,7 @@ namespace NetExtender.Utilities.Windows
         public Rectangle WorkingArea { get; }
 
         public Rectangle Bounds { get; }
-        
+
         public Int32 BitsPerPixel
         {
             get
@@ -50,7 +50,7 @@ namespace NetExtender.Utilities.Windows
                 return Devmode.dmDisplayFrequency;
             }
         }
-        
+
         internal Monitor(Int32 id, String name, Rectangle resolution, Rectangle workingArea, Rectangle bounds, MonitorUtilities.Devmode devmode)
         {
             Id = id;

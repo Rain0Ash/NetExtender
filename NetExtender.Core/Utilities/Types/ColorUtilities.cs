@@ -27,11 +27,11 @@ namespace NetExtender.Utilities.Types
         XYZ,
         ANSI
     }
-    
+
     public static partial class ColorUtilities
     {
         public const ColorType DefaultColorType = ColorType.RGB;
-        
+
         private static readonly IImmutableMap<Color, ConsoleColor> ColorMap = new Dictionary<Color, ConsoleColor>(16)
         {
             [Color.Black] = ConsoleColor.Black,
@@ -57,7 +57,7 @@ namespace NetExtender.Utilities.Types
         {
             return ToConsoleColor(color, out ConsoleColor result) ? result : null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ConsoleColor? ToConsoleColor<TColor>(this TColor? color) where TColor : IColor
         {
@@ -99,13 +99,13 @@ namespace NetExtender.Utilities.Types
             result = default;
             return false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetConsoleColor(this Color color, out ConsoleColor result)
         {
             return ColorMap.TryGetValue(color, out result);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetConsoleColor<TColor>(this TColor? color, out ConsoleColor result) where TColor : IColor
         {
@@ -140,10 +140,10 @@ namespace NetExtender.Utilities.Types
                     result = default;
                     return false;
                 }
-                
+
                 Color value = Color.FromName(name == "DarkYellow" ? "Orange" : name);
                 Double temp = Math.Pow(value.R - r, 2) + Math.Pow(value.G - g, 2) + Math.Pow(value.B - b, 2);
-                
+
                 if (Math.Abs(temp) < Double.Epsilon)
                 {
                     result = console;
@@ -158,7 +158,7 @@ namespace NetExtender.Utilities.Types
                 delta = temp;
                 result = console;
             }
-            
+
             return true;
         }
 
@@ -209,7 +209,7 @@ namespace NetExtender.Utilities.Types
         }
 
         private static ColorConverter ColorConverter { get; } = new ColorConverter();
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Parse(String value)
         {
@@ -219,7 +219,7 @@ namespace NetExtender.Utilities.Types
             }
 
             Object? convert = ColorConverter.ConvertFromInvariantString(value);
-            
+
             if (convert is not Color result)
             {
                 throw new NotSupportedException();
@@ -227,7 +227,7 @@ namespace NetExtender.Utilities.Types
 
             return result;
         }
-        
+
         public static Boolean TryParse(String value, out Color result)
         {
             if (value is null)
@@ -244,7 +244,7 @@ namespace NetExtender.Utilities.Types
                     result = default;
                     return false;
                 }
-                
+
                 result = color;
                 return true;
             }
@@ -254,7 +254,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         private const Double AccessibilityContrast = 4.5 / 21D;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -262,7 +262,7 @@ namespace NetExtender.Utilities.Types
         {
             return IsAccessibilityContrast(color, other, AccessibilityContrast);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsAccessibilityContrast(this Color color, Color other, Double contrast)
         {
@@ -291,7 +291,7 @@ namespace NetExtender.Utilities.Types
 
             return (Math.Max(l1, l2) + 0.05) / (Math.Min(l1, l2) + 0.05) / 21;
         }
-        
+
         /// <summary>
         /// Returns either black or white, depending on the luminosity of the specified background color.
         /// </summary>
@@ -335,7 +335,7 @@ namespace NetExtender.Utilities.Types
         {
             RGBToCMYK(color.R, color.G, color.B, out c, out m, out y, out k);
         }
-        
+
         public static void RGBToCMYK(Byte r, Byte g, Byte b, out Byte c, out Byte m, out Byte y, out Byte k)
         {
             Double kd = 1 - Math.Max(r, Math.Max(g, b)) / 255.0;
@@ -346,17 +346,17 @@ namespace NetExtender.Utilities.Types
             m = (Byte) Math.Round((1 - g / 255.0 - kd) / div);
             y = (Byte) Math.Round((1 - b / 255.0 - kd) / div);
         }
-        
+
         public static Color CMYKToRGB(Byte c, Byte m, Byte y, Byte k)
         {
             CMYKToRGB(c, m, y, k, out Byte r, out Byte g, out Byte b);
             return Color.FromArgb(r, g, b);
         }
-        
+
         public static void CMYKToRGB(Byte c, Byte m, Byte y, Byte k, out Byte r, out Byte g, out Byte b)
         {
             Double kd = 1 - k * 0.01;
-            
+
             r = (Byte) Math.Round(255 * (1 - c * 0.01) * kd);
             g = (Byte) Math.Round(255 * (1 - m * 0.01) * kd);
             b = (Byte) Math.Round(255 * (1 - y * 0.01) * kd);
@@ -557,7 +557,7 @@ namespace NetExtender.Utilities.Types
 
             Double min = Math.Min(red, Math.Min(green, blue));
             Double max = Math.Max(red, Math.Max(green, blue));
-            
+
             Double delta = max - min;
             Double ld = (min + max) / 2;
             Double hd = 0;
@@ -588,7 +588,7 @@ namespace NetExtender.Utilities.Types
             s = (Byte) Math.Round(sd * 100);
             l = (Byte) Math.Round(ld * 100);
         }
-        
+
         public static void HSLToRGB(Int32 h, Byte s, Byte l, out Byte r, out Byte g, out Byte b)
         {
             Double hd = h / 360.0;
@@ -613,7 +613,7 @@ namespace NetExtender.Utilities.Types
             g = (Byte) Math.Round(gd * 255);
             b = (Byte) Math.Round(bd * 255);
         }
-        
+
         public static Double GetHue(Double p, Double q, Double t)
         {
             t += t switch
@@ -631,7 +631,7 @@ namespace NetExtender.Utilities.Types
                 _ => p
             };
         }
-        
+
         public static Color HSLToRGB(Int32 h, Byte s, Byte l)
         {
             HSLToRGB(h, s, l, out Byte r, out Byte g, out Byte b);
@@ -1026,7 +1026,7 @@ namespace NetExtender.Utilities.Types
         {
             return HEXToARGB(hex, out Color color) ? color : Color.Black;
         }
-        
+
         public static Boolean HEXToARGB(String hex, out Color color)
         {
             try
@@ -1040,7 +1040,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static Boolean HEXToARGB(String hex, out Byte a, out Byte r, out Byte g, out Byte b)
         {
             if (HEXToARGB(hex, out Color color))
@@ -1064,13 +1064,13 @@ namespace NetExtender.Utilities.Types
         {
             return ColorTranslator.ToHtml(Color.FromArgb(r, g, b));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String RGBToHEX(Byte a, Byte r, Byte g, Byte b)
         {
             return ColorTranslator.ToHtml(Color.FromArgb(a, r, g, b));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TColor ToColor<TColor>(this Color color) where TColor : IColor
         {
@@ -1091,49 +1091,49 @@ namespace NetExtender.Utilities.Types
                 result = (TColor) (Object) (ARGBColor) color;
                 return true;
             }
-            
+
             if (typeof(TColor) == typeof(CMYKColor))
             {
                 result = (TColor) (Object) (CMYKColor) color;
                 return true;
             }
-            
+
             if (typeof(TColor) == typeof(HEXColor))
             {
                 result = (TColor) (Object) (HEXColor) color;
                 return true;
             }
-            
+
             if (typeof(TColor) == typeof(HSVColor))
             {
                 result = (TColor) (Object) (HSVColor) color;
                 return true;
             }
-            
+
             if (typeof(TColor) == typeof(HSLColor))
             {
                 result = (TColor) (Object) (HSLColor) color;
                 return true;
             }
-            
+
             if (typeof(TColor) == typeof(CIELABColor))
             {
                 result = (TColor) (Object) (CIELABColor) color;
                 return true;
             }
-            
+
             if (typeof(TColor) == typeof(XYZColor))
             {
                 result = (TColor) (Object) (XYZColor) color;
                 return true;
             }
-            
+
             if (typeof(TColor) == typeof(ANSIColor))
             {
                 result = (TColor) (Object) (ANSIColor) color;
                 return true;
             }
-            
+
             result = default;
             return false;
         }
@@ -1143,7 +1143,7 @@ namespace NetExtender.Utilities.Types
         {
             return ToColor<TColor, TOutput>(color, out TOutput? result) ? result : throw new InvalidCastException();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean ToColor<TColor, TOutput>(this TColor? color, [MaybeNullWhen(false)] out TOutput result) where TColor : IColor? where TOutput : IColor?
         {
@@ -1161,78 +1161,78 @@ namespace NetExtender.Utilities.Types
             result = Unsafe.As<TColor, TOutput>(ref color);
             return true;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Light(this Color color, Single percent)
         {
             return new HLSColor(color).Lighter(percent);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("color")]
         public static TColor? Light<TColor>(this TColor? color, Single percent) where TColor : IColor
         {
             return color is not null ? color.ToColor().Light(percent).ToColor<TColor>() : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Light(this Color color, Double percent)
         {
             return Light(color, (Single) percent);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("color")]
         public static TColor? Light<TColor>(this TColor? color, Double percent) where TColor : IColor
         {
             return color is not null ? color.ToColor().Light(percent).ToColor<TColor>() : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Light(this Color color)
         {
             return Light(color, 0.25F);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("color")]
         public static TColor? Light<TColor>(this TColor? color) where TColor : IColor
         {
             return color is not null ? color.ToColor().Light().ToColor<TColor>() : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Lighter(this Color color)
         {
             return Light(color, 0.5F);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("color")]
         public static TColor? Lighter<TColor>(this TColor? color) where TColor : IColor
         {
             return color is not null ? color.ToColor().Lighter().ToColor<TColor>() : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Lightest(this Color color)
         {
             return Light(color, 0.75F);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("color")]
         public static TColor? Lightest<TColor>(this TColor? color) where TColor : IColor
         {
             return color is not null ? color.ToColor().Light().ToColor<TColor>() : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color SuperLight(this Color color)
         {
             return Light(color, 1.00F);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("color")]
         public static TColor? SuperLight<TColor>(this TColor? color) where TColor : IColor
@@ -1252,65 +1252,65 @@ namespace NetExtender.Utilities.Types
         {
             return color is not null ? color.ToColor().Dark(percent).ToColor<TColor>() : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Dark(this Color color, Double percent)
         {
             return Dark(color, (Single) percent);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("color")]
         public static TColor? Dark<TColor>(this TColor? color, Double percent) where TColor : IColor
         {
             return color is not null ? color.ToColor().Dark(percent).ToColor<TColor>() : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Dark(this Color color)
         {
             return Dark(color, 0.25F);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("color")]
         public static TColor? Dark<TColor>(this TColor? color) where TColor : IColor
         {
             return color is not null ? color.ToColor().Dark().ToColor<TColor>() : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Darker(this Color color)
         {
             return Dark(color, 0.5F);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("color")]
         public static TColor? Darker<TColor>(this TColor? color) where TColor : IColor
         {
             return color is not null ? color.ToColor().Darker().ToColor<TColor>() : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color Darkest(this Color color)
         {
             return Dark(color, 0.75F);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("color")]
         public static TColor? Darkest<TColor>(this TColor? color) where TColor : IColor
         {
             return color is not null ? color.ToColor().Darkest().ToColor<TColor>() : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Color SuperDark(this Color color)
         {
             return Dark(color, 1.00F);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         [return: NotNullIfNotNull("color")]
         public static TColor? SuperDark<TColor>(this TColor? color) where TColor : IColor
@@ -1344,7 +1344,7 @@ namespace NetExtender.Utilities.Types
                 >= 701 and < 781 => 0.3 + 0.7 * (780 - wavelength) / (780 - 700),
                 _ => 0D
             };
-            
+
             const Double Gamma = 0.80;
             const Double IntensityMax = 255;
 
@@ -1353,7 +1353,7 @@ namespace NetExtender.Utilities.Types
             b = blue < Double.Epsilon ? (Byte) 0 : (Byte) Math.Round(IntensityMax * Math.Pow(blue * factor, Gamma));
             return true;
         }
-        
+
         public static Boolean WaveLengthToRGB(Decimal wavelength, out Byte r, out Byte g, out Byte b)
         {
             if (wavelength < 380 || wavelength > 780)
@@ -1380,7 +1380,7 @@ namespace NetExtender.Utilities.Types
                 >= 701 and < 781 => 0.3M + 0.7M * (780 - wavelength) / (780 - 700),
                 _ => 0M
             };
-            
+
             const Decimal Gamma = 0.80M;
             const Decimal IntensityMax = 255;
 
@@ -1389,12 +1389,12 @@ namespace NetExtender.Utilities.Types
             b = blue <= 0 ? (Byte) 0 : (Byte) Math.Round(IntensityMax * (blue * factor).Pow(Gamma));
             return true;
         }
-        
+
         public static Color WaveLengthToRGB(Double wavelength)
         {
             return WaveLengthToRGB(wavelength, out Byte red, out Byte green, out Byte blue) ? Color.FromArgb(red, green, blue) : Color.Black;
         }
-        
+
         public static Color WaveLengthToRGB(Decimal wavelength)
         {
             return WaveLengthToRGB(wavelength, out Byte red, out Byte green, out Byte blue) ? Color.FromArgb(red, green, blue) : Color.Black;
@@ -1407,11 +1407,11 @@ namespace NetExtender.Utilities.Types
                 color = Color.FromArgb(red, green, blue);
                 return true;
             }
-            
+
             color = Color.Black;
             return false;
         }
-        
+
         public static Boolean WaveLengthToRGB(Decimal wavelength, out Color color)
         {
             if (WaveLengthToRGB(wavelength, out Byte red, out Byte green, out Byte blue))
@@ -1419,16 +1419,16 @@ namespace NetExtender.Utilities.Types
                 color = Color.FromArgb(red, green, blue);
                 return true;
             }
-            
+
             color = Color.Black;
             return false;
         }
-        
+
         public static IColor ConvertToColorType(this Color color, ColorType type)
         {
             return ConvertRGBToColorType(color.R, color.G, color.B, type);
         }
-        
+
         public static IColor ConvertRGBToColorType(Byte r, Byte g, Byte b, ColorType type)
         {
             switch (type)
@@ -1474,54 +1474,54 @@ namespace NetExtender.Utilities.Types
                     throw new NotSupportedException();
             }
         }
-        
+
         public static Color GetRandomColor()
         {
             return GetRandomColor(RandomUtilities.Generator);
         }
-        
+
         public static Color GetRandomColor(this Random random)
         {
             if (random is null)
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             return Color.FromArgb(random.NextByte(), random.NextByte(), random.NextByte());
         }
-        
+
         public static Color GetRandomColor<T>(this T random) where T : IRandom
         {
             if (random is null)
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             return Color.FromArgb(random.NextByte(), random.NextByte(), random.NextByte());
         }
-        
+
         public static Color GetRandomAlphaColor()
         {
             return GetRandomAlphaColor(RandomUtilities.Generator);
         }
-        
+
         public static Color GetRandomAlphaColor(this Random random)
         {
             if (random is null)
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             return Color.FromArgb(random.NextByte(), random.NextByte(), random.NextByte(), random.NextByte());
         }
-        
+
         public static Color GetRandomAlphaColor<T>(this T random) where T : IRandom
         {
             if (random is null)
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             return Color.FromArgb(random.NextByte(), random.NextByte(), random.NextByte(), random.NextByte());
         }
 
@@ -1529,34 +1529,34 @@ namespace NetExtender.Utilities.Types
         {
             return GetRandomColor(RandomUtilities.Generator, type);
         }
-        
+
         public static IColor GetRandomColor(this ColorType type, Random random)
         {
             return GetRandomColor(random, type);
         }
-        
+
         public static IColor GetRandomColor<T>(this ColorType type, T random) where T : IRandom
         {
             return GetRandomColor(random, type);
         }
-        
+
         public static IColor GetRandomColor(this Random random, ColorType type)
         {
             if (random is null)
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             return ConvertRGBToColorType(random.NextByte(), random.NextByte(), random.NextByte(), type);
         }
-        
+
         public static IColor GetRandomColor<T>(this T random, ColorType type) where T : IRandom
         {
             if (random is null)
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             return ConvertRGBToColorType(random.NextByte(), random.NextByte(), random.NextByte(), type);
         }
 
@@ -1564,59 +1564,59 @@ namespace NetExtender.Utilities.Types
         {
             return GetRandomLightColor(RandomUtilities.Generator);
         }
-        
+
         public static Color GetRandomLightColor(this Random random)
         {
             if (random is null)
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             return Color.FromArgb(
                 random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
                 random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
                 random.NextByte(MinimumLightRGBColor, Byte.MaxValue));
         }
-        
+
         public static Color GetRandomLightColor<T>(this T random) where T : IRandom
         {
             if (random is null)
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             return Color.FromArgb(
                 random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
                 random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
                 random.NextByte(MinimumLightRGBColor, Byte.MaxValue));
         }
-        
+
         public static Color GetRandomLightAlphaColor()
         {
             return GetRandomLightAlphaColor(RandomUtilities.Generator);
         }
-        
+
         public static Color GetRandomLightAlphaColor(this Random random)
         {
             if (random is null)
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             return Color.FromArgb(
                 random.NextByte(),
                 random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
                 random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
                 random.NextByte(MinimumLightRGBColor, Byte.MaxValue));
         }
-        
+
         public static Color GetRandomLightAlphaColor<T>(this T random) where T : IRandom
         {
             if (random is null)
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             return Color.FromArgb(
                 random.NextByte(),
                 random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
@@ -1628,17 +1628,17 @@ namespace NetExtender.Utilities.Types
         {
             return GetRandomLightColor(RandomUtilities.Generator, type);
         }
-        
+
         public static IColor GetRandomLightColor(this ColorType type, Random random)
         {
             return GetRandomLightColor(random, type);
         }
-        
+
         public static IColor GetRandomLightColor<T>(this ColorType type, T random) where T : IRandom
         {
             return GetRandomLightColor(random, type);
         }
-        
+
         public const Byte MinimumLightRGBColor = 170;
         public const Byte MaximumDarkRGBColor = 80;
 
@@ -1648,7 +1648,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             return ConvertRGBToColorType(
                 random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
                 random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
@@ -1662,7 +1662,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             return ConvertRGBToColorType(
                 random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
                 random.NextByte(MinimumLightRGBColor, Byte.MaxValue),
@@ -1674,59 +1674,59 @@ namespace NetExtender.Utilities.Types
         {
             return GetRandomDarkColor(RandomUtilities.Generator);
         }
-        
+
         public static Color GetRandomDarkColor(this Random random)
         {
             if (random is null)
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             return Color.FromArgb(
                 random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
                 random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
                 random.NextByte(Byte.MinValue, MaximumDarkRGBColor));
         }
-        
+
         public static Color GetRandomDarkColor<T>(this T random) where T : IRandom
         {
             if (random is null)
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             return Color.FromArgb(
                 random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
                 random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
                 random.NextByte(Byte.MinValue, MaximumDarkRGBColor));
         }
-        
+
         public static Color GetRandomDarkAlphaColor()
         {
             return GetRandomDarkAlphaColor(RandomUtilities.Generator);
         }
-        
+
         public static Color GetRandomDarkAlphaColor(this Random random)
         {
             if (random is null)
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             return Color.FromArgb(
                 random.NextByte(),
                 random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
                 random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
                 random.NextByte(Byte.MinValue, MaximumDarkRGBColor));
         }
-        
+
         public static Color GetRandomDarkAlphaColor<T>(this T random) where T : IRandom
         {
             if (random is null)
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             return Color.FromArgb(
                 random.NextByte(),
                 random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
@@ -1738,12 +1738,12 @@ namespace NetExtender.Utilities.Types
         {
             return GetRandomDarkColor(RandomUtilities.Generator, type);
         }
-        
+
         public static IColor GetRandomDarkColor(this ColorType type, Random random)
         {
             return GetRandomDarkColor(random, type);
         }
-        
+
         public static IColor GetRandomDarkColor<T>(this ColorType type, T random) where T : IRandom
         {
             return GetRandomDarkColor(random, type);
@@ -1755,7 +1755,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             return ConvertRGBToColorType(
                 random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
                 random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
@@ -1769,7 +1769,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             return ConvertRGBToColorType(
                 random.NextByte(Byte.MinValue, MaximumDarkRGBColor),
                 random.NextByte(Byte.MinValue, MaximumDarkRGBColor),

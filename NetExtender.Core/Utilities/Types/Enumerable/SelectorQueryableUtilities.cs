@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(where).Select(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> SelectWhereNot<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> where, Expression<Func<T, T>> selector)
         {
@@ -48,7 +48,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WhereNot(where).Select(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> SelectWhere<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> where, Expression<Func<T, T>> selector)
         {
@@ -64,7 +64,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(where).Select(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> SelectWhereNot<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> where, Expression<Func<T, T>> selector)
         {
@@ -80,7 +80,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WhereNot(where).Select(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> SelectWhere<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> where, Expression<Func<T, Int32, T>> selector)
         {
@@ -96,7 +96,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(where).Select(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> SelectWhereNot<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> where, Expression<Func<T, Int32, T>> selector)
         {
@@ -112,7 +112,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WhereNot(where).Select(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> SelectWhere<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> where, Expression<Func<T, Int32, T>> selector)
         {
@@ -128,7 +128,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(where).Select(selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> SelectWhereNot<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> where, Expression<Func<T, Int32, T>> selector)
         {
@@ -144,7 +144,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WhereNot(where).Select(selector);
         }
-        
+
         public static IQueryable<T> SelectWhereNotNull<T>(this IQueryable<T?> source) where T : struct
         {
             if (source is null)
@@ -154,7 +154,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(item => item.HasValue).Select(item => item!.Value);
         }
-        
+
         public static IQueryable<TResult> SelectWhereNotNull<T, TResult>(this IQueryable<T?> source, Expression<Func<T, TResult>> selector) where T : struct
         {
             if (source is null)
@@ -169,7 +169,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WhereNotNull().SelectWhereNotNull().Select(selector);
         }
-        
+
         public static IQueryable<TResult> SelectWhereNotNull<T, TResult>(this IQueryable<T> source, Expression<Func<T, TResult>> selector)
         {
             if (source is null)
@@ -184,7 +184,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WhereNotNull().Select(selector);
         }
-        
+
         public static IQueryable<T> Change<T>(this IQueryable<T> source, Expression<Func<T, T>> selector)
         {
             if (source is null)
@@ -199,7 +199,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Select(selector);
         }
-        
+
         public static IQueryable<T> Change<T>(this IQueryable<T> source, Expression<Func<T, Int32, T>> selector)
         {
             if (source is null)
@@ -214,7 +214,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Select(selector);
         }
-        
+
         public static IQueryable<T> ChangeWhere<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> where, Expression<Func<T, T>> selector)
         {
             if (source is null)
@@ -256,7 +256,7 @@ namespace NetExtender.Utilities.Types
 
             return ChangeWhere(source, where.Not(), selector);
         }
-        
+
         public static IQueryable<T> ChangeWhere<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> where, Expression<Func<T, T>> selector)
         {
             if (source is null)
@@ -298,7 +298,7 @@ namespace NetExtender.Utilities.Types
 
             return ChangeWhere(source, where.Not(), selector);
         }
-        
+
         public static IQueryable<T> ChangeWhere<T>(this IQueryable<T> source, Expression<Func<T, Boolean>> where, Expression<Func<T, Int32, T>> selector)
         {
             if (source is null)
@@ -340,7 +340,7 @@ namespace NetExtender.Utilities.Types
 
             return ChangeWhere(source, where.Not(), selector);
         }
-        
+
         public static IQueryable<T> ChangeWhere<T>(this IQueryable<T> source, Expression<Func<T, Int32, Boolean>> where, Expression<Func<T, Int32, T>> selector)
         {
             if (source is null)
@@ -382,7 +382,7 @@ namespace NetExtender.Utilities.Types
 
             return ChangeWhere(source, where.Not(), selector);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IQueryable<T> SelectMany<T>(this IQueryable<IEnumerable<T>> source)
         {

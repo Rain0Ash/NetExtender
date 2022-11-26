@@ -27,12 +27,12 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-	
+
             if (factory is null)
             {
                 throw new ArgumentNullException(nameof(factory));
             }
-	
+
             return condition ? factory(builder) : builder;
         }
 
@@ -42,15 +42,15 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-	
+
             if (factory is null)
             {
                 throw new ArgumentNullException(nameof(factory));
             }
-	
+
             return !condition ? factory(builder) : builder;
         }
-        
+
         public static IWebHostBuilder UseStartup(this IWebHostBuilder builder, IStartupProvider provider)
         {
             if (builder is null)
@@ -65,7 +65,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseStartup(_ => provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IWebHostBuilder Configure(this IWebHostBuilder builder, AspNetCoreStartupInitializer initializer)
         {
@@ -77,7 +77,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
         {
             return Configure(builder, null, configuration);
         }
-        
+
         public static IWebHostBuilder Configure(this IWebHostBuilder builder, Action<IServiceCollection>? services, Action<IApplicationBuilder, IServiceProvider>? configuration)
         {
             if (builder is null)
@@ -111,7 +111,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
                 return Initializers.ContainsKey(builder);
             }
-            
+
             public static Boolean TryGetProvider(IWebHostBuilder builder, [MaybeNullWhen(false)] out IStartupRegistrationProvider provider)
             {
                 if (builder is null)
@@ -121,7 +121,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
                 return Initializers.TryGetValue(builder, out provider);
             }
-            
+
             public static Boolean Remove(IWebHostBuilder builder, [MaybeNullWhen(false)] out IStartupRegistrationProvider provider)
             {
                 if (builder is null)
@@ -131,12 +131,12 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
                 return Initializers.TryRemove(builder, out provider);
             }
-            
+
             private static IStartupRegistrationProvider Factory(IWebHostBuilder builder)
             {
                 return new AspNetCoreStartupInitializer().RegisterCallback(() => Remove(builder, out _));
             }
-            
+
             public static IStartupRegistrationProvider Initialize(IWebHostBuilder builder)
             {
                 if (builder is null)
@@ -183,11 +183,11 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(application));
             }
-            
+
             builder.InitializeBuilder().Register(application);
             return builder;
         }
-        
+
         public static IWebHostBuilder Register(this IWebHostBuilder builder, Action<IServiceProvider> provider)
         {
             if (builder is null)
@@ -199,11 +199,11 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(provider));
             }
-            
+
             builder.InitializeBuilder().Register(provider);
             return builder;
         }
-        
+
         public static IWebHostBuilder Register(this IWebHostBuilder builder, Action<IApplicationBuilder> application, Action<IServiceProvider> provider)
         {
             if (builder is null)
@@ -220,11 +220,11 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(provider));
             }
-            
+
             builder.InitializeBuilder().Register(application, provider);
             return builder;
         }
-        
+
         public static IWebHostBuilder Register(this IWebHostBuilder builder, Action<IApplicationBuilder, IServiceProvider> configuration)
         {
             if (builder is null)
@@ -236,11 +236,11 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(configuration));
             }
-            
+
             builder.InitializeBuilder().Register(configuration);
             return builder;
         }
-        
+
         public static IWebHostBuilder UseDevelopmentExceptionPage(this IWebHostBuilder builder)
         {
             if (builder is null)
@@ -256,16 +256,16 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 {
                     throw new ServiceNotFoundException(typeof(IWebHostEnvironment));
                 }
-                
+
                 if (environment.IsDevelopment())
                 {
                     application.UseDeveloperExceptionPage();
                 }
             }
-            
+
             return builder.Register(UseDeveloperPage);
         }
-        
+
         public static IWebHostBuilder UseDevelopmentExceptionPage(this IWebHostBuilder builder, IWebHostEnvironment environment)
         {
             if (builder is null)
@@ -285,10 +285,10 @@ namespace NetExtender.Utilities.AspNetCore.Types
                     application.UseDeveloperExceptionPage();
                 }
             }
-            
+
             return builder.Register(UseDeveloperPage);
         }
-        
+
         public static IWebHostBuilder LoggingOff(this IWebHostBuilder builder)
         {
             if (builder is null)
@@ -298,7 +298,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.ConfigureLogging(logging => logging.LoggingOff());
         }
-        
+
         public static IWebHostBuilder UseHttpUrls(this IWebHostBuilder builder, UInt16 port)
         {
             if (builder is null)
@@ -315,7 +315,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             return builder.UseHttpUrls(IPAddress.Loopback.ToIPEndPoint(port));
         }
 
@@ -328,7 +328,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseUrls(UriUtilities.HttpDelimiter, endpoints);
         }
-        
+
         public static IWebHostBuilder UseHttpsUrls(this IWebHostBuilder builder, UInt16 port)
         {
             if (builder is null)
@@ -345,10 +345,10 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             return builder.UseHttpsUrls(IPAddress.Loopback.ToIPEndPoint(port));
         }
-        
+
         public static IWebHostBuilder UseHttpsUrls(this IWebHostBuilder builder, params IPEndPoint[] endpoints)
         {
             if (builder is null)
@@ -368,7 +368,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseUrls(endpoints.SelectWhereNotNull(endpoint => delemiter + endpoint).ToArray());
         }
-        
+
         public static IWebHostBuilder UseUrls(this IWebHostBuilder builder, UInt16 http, UInt16 https)
         {
             if (builder is null)
@@ -385,7 +385,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             return builder.UseUrls(IPAddress.Loopback.ToIPEndPoint(http), IPAddress.Loopback.ToIPEndPoint(https));
         }
 

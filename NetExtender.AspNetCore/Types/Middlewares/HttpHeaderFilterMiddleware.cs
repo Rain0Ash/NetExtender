@@ -12,7 +12,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
     public class HttpHeaderFilterMiddleware : AsyncMiddleware
     {
         protected ISet<String>? Exclude { get; }
-        
+
         public HttpHeaderFilterMiddleware(RequestDelegate next, params String[]? exclude)
             : this(next, (IEnumerable<String>?) exclude)
         {
@@ -40,20 +40,20 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             {
                 return Next.Invoke(context);
             }
-            
+
             foreach (String exclude in Exclude)
             {
                 context.Response.Headers.Remove(exclude);
             }
-            
+
             return Next.Invoke(context);
         }
     }
-    
+
     public sealed class NoServerHttpHeaderFilterMiddleware : HttpHeaderFilterMiddleware
     {
         private const String ServerHttpHeaderName = "Server";
-        
+
         public NoServerHttpHeaderFilterMiddleware(RequestDelegate next)
             : base(next)
         {

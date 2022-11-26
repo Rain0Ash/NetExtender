@@ -15,7 +15,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
     public sealed class ImmutableIndexDictionary<TKey, TValue> : IImmutableIndexDictionary<TKey, TValue>
     {
         public static ImmutableIndexDictionary<TKey, TValue> Empty { get; } = new ImmutableIndexDictionary<TKey, TValue>(ImmutableDictionary<TKey, TValue>.Empty, ImmutableList<TKey>.Empty);
-        
+
         private ImmutableDictionary<TKey, TValue> Dictionary { get; }
         private ImmutableList<TKey> Order { get; }
 
@@ -26,7 +26,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
                 return Dictionary.IsEmpty;
             }
         }
-        
+
         public Int32 Count
         {
             get
@@ -42,7 +42,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
                 return Dictionary.KeyComparer;
             }
         }
-        
+
         public IEqualityComparer<TValue> ValueComparer
         {
             get
@@ -66,7 +66,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
                 return Dictionary.Values;
             }
         }
-        
+
         public IReadOnlyList<TKey> OrderedKeys
         {
             get
@@ -74,38 +74,38 @@ namespace NetExtender.Types.Immutable.Dictionaries
                 return Order;
             }
         }
-        
+
         private ImmutableIndexDictionary([NotNull] ImmutableDictionary<TKey, TValue> dictionary, [NotNull] ImmutableList<TKey> order)
         {
             Dictionary = dictionary ?? throw new ArgumentNullException(nameof(dictionary));
             Order = order ?? throw new ArgumentNullException(nameof(order));
         }
-        
+
         public Boolean ContainsKey(TKey key)
         {
             return Dictionary.ContainsKey(key);
         }
-        
+
         public Boolean Contains(KeyValuePair<TKey, TValue> pair)
         {
             return Dictionary.Contains(pair);
         }
-        
+
         public Int32 IndexOf(TKey key)
         {
             return Order.IndexOf(key);
         }
-        
+
         public Boolean TryGetKey(TKey equalKey, out TKey actualKey)
         {
             return Dictionary.TryGetKey(equalKey, out actualKey);
         }
-        
+
         public Boolean TryGetValue(TKey key, out TValue value)
         {
             return Dictionary.TryGetValue(key, out value);
         }
-        
+
         public TValue GetValueByIndex(Int32 index)
         {
             if (index < 0 || index >= Order.Count)
@@ -122,7 +122,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            
+
             return this.GetPair(Order[index]);
         }
 
@@ -141,12 +141,12 @@ namespace NetExtender.Types.Immutable.Dictionaries
         {
             return null;
         }
-        
+
         public IImmutableIndexDictionary<TKey, TValue> InsertRange(IEnumerable<KeyValuePair<TKey, TValue>> pairs)
         {
             return InsertRange(0, pairs);
         }
-        
+
         public IImmutableIndexDictionary<TKey, TValue> InsertRange(Int32 index, IEnumerable<KeyValuePair<TKey, TValue>> pairs)
         {
             throw new NotImplementedException();
@@ -160,7 +160,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
             }
 
             ICollection<TKey> collection = keys as ICollection<TKey> ?? keys.ToArray();
-            
+
             return new ImmutableIndexDictionary<TKey, TValue>(Dictionary.RemoveRange(collection), Order.RemoveRange(collection));
         }
 
@@ -215,7 +215,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            
+
             return new ImmutableIndexDictionary<TKey, TValue>(Dictionary.Add(key, value), Order.Insert(0, key));
         }
 
@@ -306,7 +306,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
                 return Dictionary[key];
             }
         }
-        
+
         public IEnumerator<TKey> GetKeyEnumerator()
         {
             return Order.GetEnumerator();
@@ -316,7 +316,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
         {
             return Order.Select(key => this[key]).GetEnumerator();
         }
-        
+
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             return Order.Select(key => new KeyValuePair<TKey, TValue>(key, this[key])).GetEnumerator();

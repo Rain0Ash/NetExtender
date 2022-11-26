@@ -15,10 +15,10 @@ namespace NetExtender.Types.Sets
     public class IndexSortedSet<T> : IIndexSortedSet<T>, IReadOnlyIndexSortedSet<T>
     {
         protected const Int32 MinimalIndexer = 4;
-        
+
         protected SortedSet<T> Internal { get; }
         protected MapIndexer<T> Indexer { get; }
-        
+
         protected Boolean Rebuild
         {
             get
@@ -33,7 +33,7 @@ namespace NetExtender.Types.Sets
                 }
             }
         }
-        
+
         public Int32 Count
         {
             get
@@ -41,7 +41,7 @@ namespace NetExtender.Types.Sets
                 return Internal.Count;
             }
         }
-        
+
         public IComparer<T> Comparer
         {
             get
@@ -57,7 +57,7 @@ namespace NetExtender.Types.Sets
                 return Indexer.Comparer;
             }
         }
-        
+
         Boolean ICollection<T>.IsReadOnly
         {
             get
@@ -65,13 +65,13 @@ namespace NetExtender.Types.Sets
                 return ((ICollection<T>) Internal).IsReadOnly;
             }
         }
-        
+
         public IndexSortedSet()
         {
             Internal = new SortedSet<T>();
             Indexer = new MapIndexer<T>();
         }
-        
+
         public IndexSortedSet(IComparer<T>? comparer)
         {
             Internal = new SortedSet<T>(comparer);
@@ -173,7 +173,7 @@ namespace NetExtender.Types.Sets
         {
             return Internal.SetEquals(other);
         }
-        
+
         public Boolean Add(T item)
         {
             Boolean successful = Internal.Add(item);
@@ -185,7 +185,7 @@ namespace NetExtender.Types.Sets
         {
             Add(item);
         }
-        
+
         public void UnionWith(IEnumerable<T> other)
         {
             Int32 count = Internal.Count;
@@ -199,7 +199,7 @@ namespace NetExtender.Types.Sets
             Internal.IntersectWith(other);
             Rebuild = Internal.Count < count;
         }
-        
+
         public void ExceptWith(IEnumerable<T> other)
         {
             Int32 count = Internal.Count;
@@ -223,7 +223,7 @@ namespace NetExtender.Types.Sets
             Rebuild = true;
             return true;
         }
-        
+
         public void Clear()
         {
             Internal.Clear();
@@ -271,7 +271,7 @@ namespace NetExtender.Types.Sets
                 Rebuild = true;
             }
         }
-        
+
         Int32 IReadOnlyIndexer<T>.this[T item]
         {
             get

@@ -19,7 +19,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return host as IHost ?? new WebHostWrapper(host);
         }
-        
+
         public static IWebHost ToWebHost(this IHost host)
         {
             if (host is null)

@@ -19,7 +19,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return TaskbarUtilities.Notify(form.Handle);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Notify(this Form form, UInt32 value, UInt32 maximum, TaskbarFlashState state)
         {
@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return TaskbarUtilities.Notify(form.Handle, value, maximum, state);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Notify(this Form form, UInt32 value, TaskbarFlashState state)
         {
@@ -41,7 +41,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return TaskbarUtilities.Notify(form.Handle, value, state);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Notify(this Form form, Double value, TaskbarFlashState state)
         {
@@ -52,7 +52,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return TaskbarUtilities.Notify(form.Handle, value, state);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Notify(this Form form, TaskbarFlashState state)
         {
@@ -63,7 +63,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return TaskbarUtilities.Notify(form.Handle, state);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Start(this Form form)
         {
@@ -74,7 +74,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return TaskbarUtilities.Start(form.Handle);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Start(this Form form, UInt32 count)
         {
@@ -85,7 +85,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return TaskbarUtilities.Start(form.Handle, count);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Stop(this Form form)
         {

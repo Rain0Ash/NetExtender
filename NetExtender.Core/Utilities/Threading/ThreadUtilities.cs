@@ -20,7 +20,7 @@ namespace NetExtender.Utilities.Threading
                 return Thread.CurrentThread.GetApartmentState();
             }
         }
-        
+
         public static Boolean IsSTA
         {
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -38,7 +38,7 @@ namespace NetExtender.Utilities.Threading
                 return State == ApartmentState.MTA;
             }
         }
-        
+
         public static Thread SetName(this Thread thread, String? name)
         {
             if (thread is null)
@@ -141,7 +141,7 @@ namespace NetExtender.Utilities.Threading
                 throw exception;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void STA(Action action)
         {
@@ -152,7 +152,7 @@ namespace NetExtender.Utilities.Threading
 
             Create(action, ApartmentState.STA);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void STA<T>(Action<T> action, T arg)
         {
@@ -174,7 +174,7 @@ namespace NetExtender.Utilities.Threading
 
             STA(() => action.Invoke(arg1, arg2));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void STA<T1, T2, T3>(Action<T1, T2, T3> action, T1 arg1, T2 arg2, T3 arg3)
         {
@@ -196,7 +196,7 @@ namespace NetExtender.Utilities.Threading
 
             STA(() => action.Invoke(arg1, arg2, arg3, arg4));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void STA<T1, T2, T3, T4, T5>(Action<T1, T2, T3, T4, T5> action, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
@@ -207,7 +207,7 @@ namespace NetExtender.Utilities.Threading
 
             STA(() => action.Invoke(arg1, arg2, arg3, arg4, arg5));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void STA<T1, T2, T3, T4, T5, T6>(Action<T1, T2, T3, T4, T5, T6> action, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
         {
@@ -218,7 +218,7 @@ namespace NetExtender.Utilities.Threading
 
             STA(() => action.Invoke(arg1, arg2, arg3, arg4, arg5, arg6));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void STA<T1, T2, T3, T4, T5, T6, T7>(Action<T1, T2, T3, T4, T5, T6, T7> action, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
         {
@@ -229,7 +229,7 @@ namespace NetExtender.Utilities.Threading
 
             STA(() => action.Invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void STA<T1, T2, T3, T4, T5, T6, T7, T8>(Action<T1, T2, T3, T4, T5, T6, T7, T8> action, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
         {
@@ -240,7 +240,7 @@ namespace NetExtender.Utilities.Threading
 
             STA(() => action.Invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void STA<T1, T2, T3, T4, T5, T6, T7, T8, T9>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9> action, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
         {
@@ -251,7 +251,7 @@ namespace NetExtender.Utilities.Threading
 
             STA(() => action.Invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void MTA(Action action)
         {
@@ -262,7 +262,7 @@ namespace NetExtender.Utilities.Threading
 
             Create(action.Invoke, ApartmentState.MTA);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void MTA<T>(Action<T> action, T arg)
         {
@@ -273,7 +273,7 @@ namespace NetExtender.Utilities.Threading
 
             MTA(() => action.Invoke(arg));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void MTA<T1, T2>(Action<T1, T2> action, T1 arg1, T2 arg2)
         {
@@ -284,7 +284,7 @@ namespace NetExtender.Utilities.Threading
 
             MTA(() => action.Invoke(arg1, arg2));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void MTA<T1, T2, T3>(Action<T1, T2, T3> action, T1 arg1, T2 arg2, T3 arg3)
         {
@@ -306,7 +306,7 @@ namespace NetExtender.Utilities.Threading
 
             MTA(() => action.Invoke(arg1, arg2, arg3, arg4));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void MTA<T1, T2, T3, T4, T5>(Action<T1, T2, T3, T4, T5> action, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
@@ -317,7 +317,7 @@ namespace NetExtender.Utilities.Threading
 
             MTA(() => action.Invoke(arg1, arg2, arg3, arg4, arg5));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void MTA<T1, T2, T3, T4, T5, T6>(Action<T1, T2, T3, T4, T5, T6> action, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
         {
@@ -328,7 +328,7 @@ namespace NetExtender.Utilities.Threading
 
             MTA(() => action.Invoke(arg1, arg2, arg3, arg4, arg5, arg6));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void MTA<T1, T2, T3, T4, T5, T6, T7>(Action<T1, T2, T3, T4, T5, T6, T7> action, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
         {
@@ -339,7 +339,7 @@ namespace NetExtender.Utilities.Threading
 
             MTA(() => action.Invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void MTA<T1, T2, T3, T4, T5, T6, T7, T8>(Action<T1, T2, T3, T4, T5, T6, T7, T8> action, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
         {
@@ -350,7 +350,7 @@ namespace NetExtender.Utilities.Threading
 
             MTA(() => action.Invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void MTA<T1, T2, T3, T4, T5, T6, T7, T8, T9>(Action<T1, T2, T3, T4, T5, T6, T7, T8, T9> action, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
         {
@@ -361,7 +361,7 @@ namespace NetExtender.Utilities.Threading
 
             MTA(() => action.Invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9));
         }
-        
+
         private static T Create<T>(Func<T> function, ApartmentState state)
         {
             if (function is null)
@@ -371,7 +371,7 @@ namespace NetExtender.Utilities.Threading
 
             T result = default!;
             Exception? exception = null;
-            
+
             Thread thread = new Thread(() => exception = SafeInvoke(() => result = function.Invoke()));
             thread.TrySetApartmentState(state);
             thread.Start();
@@ -384,7 +384,7 @@ namespace NetExtender.Utilities.Threading
 
             return result;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult STA<TResult>(Func<TResult> function)
         {
@@ -395,7 +395,7 @@ namespace NetExtender.Utilities.Threading
 
             return Create(function, ApartmentState.STA);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult STA<T, TResult>(Func<T, TResult> function, T arg)
         {
@@ -406,7 +406,7 @@ namespace NetExtender.Utilities.Threading
 
             return STA(() => function.Invoke(arg));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult STA<T1, T2, TResult>(Func<T1, T2, TResult> function, T1 arg1, T2 arg2)
         {
@@ -417,7 +417,7 @@ namespace NetExtender.Utilities.Threading
 
             return STA(() => function.Invoke(arg1, arg2));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult STA<T1, T2, T3, TResult>(Func<T1, T2, T3, TResult> function, T1 arg1, T2 arg2, T3 arg3)
         {
@@ -428,7 +428,7 @@ namespace NetExtender.Utilities.Threading
 
             return STA(() => function.Invoke(arg1, arg2, arg3));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult STA<T1, T2, T3, T4, TResult>(Func<T1, T2, T3, T4, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
@@ -439,7 +439,7 @@ namespace NetExtender.Utilities.Threading
 
             return STA(() => function.Invoke(arg1, arg2, arg3, arg4));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult STA<T1, T2, T3, T4, T5, TResult>(Func<T1, T2, T3, T4, T5, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
@@ -450,7 +450,7 @@ namespace NetExtender.Utilities.Threading
 
             return STA(() => function.Invoke(arg1, arg2, arg3, arg4, arg5));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult STA<T1, T2, T3, T4, T5, T6, TResult>(Func<T1, T2, T3, T4, T5, T6, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
         {
@@ -461,7 +461,7 @@ namespace NetExtender.Utilities.Threading
 
             return STA(() => function.Invoke(arg1, arg2, arg3, arg4, arg5, arg6));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult STA<T1, T2, T3, T4, T5, T6, T7, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
         {
@@ -472,7 +472,7 @@ namespace NetExtender.Utilities.Threading
 
             return STA(() => function.Invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult STA<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
         {
@@ -480,10 +480,10 @@ namespace NetExtender.Utilities.Threading
             {
                 throw new ArgumentNullException(nameof(function));
             }
-            
+
             return STA(() => function.Invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult STA<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
         {
@@ -494,7 +494,7 @@ namespace NetExtender.Utilities.Threading
 
             return STA(() => function.Invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult MTA<TResult>(Func<TResult> function)
         {
@@ -505,7 +505,7 @@ namespace NetExtender.Utilities.Threading
 
             return Create(function.Invoke, ApartmentState.MTA);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult MTA<T, TResult>(Func<T, TResult> function, T arg)
         {
@@ -516,7 +516,7 @@ namespace NetExtender.Utilities.Threading
 
             return MTA(() => function.Invoke(arg));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult MTA<T1, T2, TResult>(Func<T1, T2, TResult> function, T1 arg1, T2 arg2)
         {
@@ -527,7 +527,7 @@ namespace NetExtender.Utilities.Threading
 
             return MTA(() => function.Invoke(arg1, arg2));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult MTA<T1, T2, T3, TResult>(Func<T1, T2, T3, TResult> function, T1 arg1, T2 arg2, T3 arg3)
         {
@@ -538,7 +538,7 @@ namespace NetExtender.Utilities.Threading
 
             return MTA(() => function.Invoke(arg1, arg2, arg3));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult MTA<T1, T2, T3, T4, TResult>(Func<T1, T2, T3, T4, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
@@ -549,7 +549,7 @@ namespace NetExtender.Utilities.Threading
 
             return MTA(() => function.Invoke(arg1, arg2, arg3, arg4));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult MTA<T1, T2, T3, T4, T5, TResult>(Func<T1, T2, T3, T4, T5, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
@@ -560,7 +560,7 @@ namespace NetExtender.Utilities.Threading
 
             return MTA(() => function.Invoke(arg1, arg2, arg3, arg4, arg5));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult MTA<T1, T2, T3, T4, T5, T6, TResult>(Func<T1, T2, T3, T4, T5, T6, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
         {
@@ -571,7 +571,7 @@ namespace NetExtender.Utilities.Threading
 
             return MTA(() => function.Invoke(arg1, arg2, arg3, arg4, arg5, arg6));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult MTA<T1, T2, T3, T4, T5, T6, T7, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7)
         {
@@ -582,7 +582,7 @@ namespace NetExtender.Utilities.Threading
 
             return MTA(() => function.Invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult MTA<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8)
         {
@@ -593,7 +593,7 @@ namespace NetExtender.Utilities.Threading
 
             return MTA(() => function.Invoke(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult MTA<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> function, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9)
         {

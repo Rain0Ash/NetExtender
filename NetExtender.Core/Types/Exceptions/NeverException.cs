@@ -17,7 +17,7 @@ namespace NetExtender.Types.Exceptions
             : base(message)
         {
         }
-        
+
         public NeverOperationException(Exception? exception)
             : this(exception?.Message, exception)
         {
@@ -27,7 +27,7 @@ namespace NetExtender.Types.Exceptions
             : base(message, innerException)
         {
         }
-        
+
         protected NeverOperationException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

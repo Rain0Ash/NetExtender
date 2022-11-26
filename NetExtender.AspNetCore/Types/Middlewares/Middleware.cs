@@ -16,13 +16,13 @@ namespace NetExtender.AspNetCore.Types.Middlewares
         {
             Next = next ?? throw new ArgumentNullException(nameof(next));
         }
-        
+
         public virtual void Invoke(HttpContext context)
         {
             Next.Invoke(context).ConfigureAwait(false);
         }
     }
-    
+
     public abstract class AsyncMiddleware : IAsyncMiddleware
     {
         protected RequestDelegate Next { get; }
@@ -31,7 +31,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
         {
             Next = next ?? throw new ArgumentNullException(nameof(next));
         }
-        
+
         public virtual async Task InvokeAsync(HttpContext context)
         {
             await Next.Invoke(context).ConfigureAwait(false);

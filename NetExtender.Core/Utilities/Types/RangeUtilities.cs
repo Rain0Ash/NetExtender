@@ -38,7 +38,7 @@ namespace NetExtender.Utilities.Types
             return Current < To;
         }
     }
-    
+
     public static class RangeUtilities
     {
         public static IComparer<Range> Comparer { get; } = new ComparisonComparer<Range>(CompareTo);
@@ -50,7 +50,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new InvalidOperationException($"Range {nameof(Index)}.{nameof(Index.Start)} can't use {nameof(Index.IsFromEnd)}.");
             }
-            
+
             return range.Start.Value;
         }
 
@@ -64,7 +64,7 @@ namespace NetExtender.Utilities.Types
 
             return Math.Abs(range.End.Value - range.Start.Value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static Int32 GetOffset(this Range range, Int32 length)
         {

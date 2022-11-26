@@ -14,10 +14,10 @@ namespace NetExtender.Workstation
         {
             [field: FieldOffset(0)]
             public UInt32 OemId { get; init; }
-            
+
             [field: FieldOffset(0)]
             public UInt16 Architecture { get; init; }
-            
+
             [field: FieldOffset(2)]
             public UInt16 Reserved { get; init; }
         }

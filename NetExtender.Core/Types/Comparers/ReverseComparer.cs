@@ -10,7 +10,7 @@ namespace NetExtender.Types.Comparers
     public class ReverseComparer<T> : IReverseComparer<T>
     {
         public IComparer<T> Original { get; }
-        
+
         public ReverseComparer(IComparer<T> comparer)
         {
             Original = comparer ?? throw new ArgumentNullException(nameof(comparer));

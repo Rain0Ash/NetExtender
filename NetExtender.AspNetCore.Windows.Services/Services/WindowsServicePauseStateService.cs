@@ -9,7 +9,7 @@ namespace NetExtender.AspNetCore.Windows.Services
     public sealed class WindowsServicePauseStateService : IWindowsServicePauseStateService
     {
         public Boolean IsPaused { get; private set; }
-        
+
         public void Pause()
         {
             IsPaused = true;

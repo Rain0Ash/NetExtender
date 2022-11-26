@@ -20,7 +20,7 @@ namespace NetExtender.Utilities.Types
 
             return new LinkedList<T>(source);
         }
-        
+
         public static LinkedListNode<T> Add<T>(this LinkedList<T> collection, T item)
         {
             if (collection is null)
@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.Types
 
             return collection.AddLast(item);
         }
-        
+
         public static void Add<T>(this LinkedList<T> collection, LinkedListNode<T> node)
         {
             if (collection is null)
@@ -45,7 +45,7 @@ namespace NetExtender.Utilities.Types
 
             collection.AddLast(node);
         }
-        
+
         public static LinkedListNode<T> Insert<T>(this LinkedList<T> collection, Int32 index, T item)
         {
             if (collection is null)
@@ -64,10 +64,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            
+
             return collection.AddBefore(node, item);
         }
-        
+
         public static LinkedListNode<T> Insert<T>(this LinkedList<T> collection, Index index, T item)
         {
             if (collection is null)
@@ -77,7 +77,7 @@ namespace NetExtender.Utilities.Types
 
             return Insert(collection, index.GetOffset(collection.Count), item);
         }
-        
+
         public static void Insert<T>(this LinkedList<T> collection, Int32 index, LinkedListNode<T> newNode)
         {
             if (collection is null)
@@ -101,10 +101,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            
+
             collection.AddBefore(node, newNode);
         }
-        
+
         public static void Insert<T>(this LinkedList<T> collection, Index index, LinkedListNode<T> node)
         {
             if (collection is null)
@@ -119,7 +119,7 @@ namespace NetExtender.Utilities.Types
 
             Insert(collection, index.GetOffset(collection.Count), node);
         }
-        
+
         public static LinkedListNode<T> RemoveAt<T>(this LinkedList<T> collection, Int32 index)
         {
             if (collection is null)
@@ -138,7 +138,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            
+
             collection.Remove(node);
             return node;
         }
@@ -165,7 +165,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static Boolean TryRemoveLast<T>(this LinkedList<T> collection)
         {
             if (collection is null)
@@ -197,7 +197,7 @@ namespace NetExtender.Utilities.Types
             }
 
             IEqualityComparer<T> comparer = EqualityComparer<T>.Default;
-            
+
             switch (collection.Count)
             {
                 case 0:
@@ -232,7 +232,7 @@ namespace NetExtender.Utilities.Types
             LinkedListNode<T>? node = collection.First;
             return node is not null ? node.Value : throw new InvalidOperationException();
         }
-        
+
         public static Boolean TryPeek<T>(this LinkedList<T> collection, [MaybeNullWhen(false)] out T result)
         {
             if (collection is null)
@@ -275,11 +275,11 @@ namespace NetExtender.Utilities.Types
             {
                 throw new InvalidOperationException();
             }
-            
+
             collection.RemoveFirst();
             return node.Value;
         }
-        
+
         public static Boolean TryDequeue<T>(this LinkedList<T> collection, [MaybeNullWhen(false)] out T result)
         {
             if (collection is null)
@@ -294,7 +294,7 @@ namespace NetExtender.Utilities.Types
                 result = default;
                 return false;
             }
-            
+
             collection.TryRemoveFirst();
             result = node.Value;
             return true;
@@ -313,11 +313,11 @@ namespace NetExtender.Utilities.Types
             {
                 throw new InvalidOperationException();
             }
-            
+
             collection.RemoveLast();
             return node.Value;
         }
-        
+
         public static Boolean TryDequeueLast<T>(this LinkedList<T> collection, [MaybeNullWhen(false)] out T result)
         {
             if (collection is null)
@@ -332,12 +332,12 @@ namespace NetExtender.Utilities.Types
                 result = default;
                 return false;
             }
-            
+
             collection.TryRemoveLast();
             result = node.Value;
             return true;
         }
-        
+
         public static void Swap<T>(this LinkedListNode<T> first, LinkedListNode<T> second)
         {
             if (first is null)
@@ -352,7 +352,7 @@ namespace NetExtender.Utilities.Types
 
             (first.Value, second.Value) = (second.Value, first.Value);
         }
-        
+
         [SuppressMessage("ReSharper", "CognitiveComplexity")]
         public static void Swap<T>(this LinkedList<T> collection, Int32 index1, Int32 index2)
         {
@@ -365,7 +365,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(index1));
             }
-            
+
             if (index2 < 0 || index2 >= collection.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(index2));
@@ -382,7 +382,7 @@ namespace NetExtender.Utilities.Types
             }
 
             Int32 right = collection.Count - index2 - 1;
-            
+
             LinkedListNode<T>? first;
             LinkedListNode<T>? second;
             if (index1 <= right)
@@ -410,7 +410,7 @@ namespace NetExtender.Utilities.Types
             else
             {
                 first = collection.NodeAt(index2);
-                
+
                 Int32 offset = index1 - index2;
                 if (right > offset)
                 {
@@ -434,7 +434,7 @@ namespace NetExtender.Utilities.Types
             {
                 return;
             }
-            
+
             Swap(first, second);
         }
 
@@ -474,7 +474,7 @@ namespace NetExtender.Utilities.Types
                     current = current.Previous;
                 }
             }
-            
+
             return current;
         }
 
@@ -486,7 +486,7 @@ namespace NetExtender.Utilities.Types
             }
 
             LinkedListNode<T>? current = node;
-            
+
             switch (offset)
             {
                 case 0:
@@ -505,7 +505,7 @@ namespace NetExtender.Utilities.Types
                     {
                         current = current.Previous;
                     }
-                    
+
                     break;
             }
 
@@ -526,7 +526,7 @@ namespace NetExtender.Utilities.Types
                 current = current.Next;
             }
         }
-        
+
         public static IEnumerable<LinkedListNode<T>> AsNodeReversedEnumerable<T>(this LinkedList<T> collection)
         {
             if (collection is null)
@@ -551,7 +551,7 @@ namespace NetExtender.Utilities.Types
 
             return AsNodeEnumerable(collection).GetEnumerator();
         }
-        
+
         public static IEnumerator<LinkedListNode<T>> GetReversedNodeEnumerator<T>(this LinkedList<T> collection)
         {
             if (collection is null)

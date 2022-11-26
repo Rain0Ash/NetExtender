@@ -44,7 +44,7 @@ namespace NetExtender.NAudio.Types.Sound
                 {
                     return _reader.TotalTime;
                 }
-                
+
                 if (!Exists)
                 {
                     throw new FileNotFoundException("File not found", Path);
@@ -95,7 +95,7 @@ namespace NetExtender.NAudio.Types.Sound
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        
+
         protected virtual void Dispose(Boolean disposing)
         {
             _reader?.Dispose();
@@ -103,7 +103,7 @@ namespace NetExtender.NAudio.Types.Sound
             (_provider as IDisposable)?.Dispose();
             _provider = null;
         }
-        
+
         ~AudioSoundFile()
         {
             Dispose(false);

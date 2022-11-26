@@ -14,7 +14,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 throw new ArgumentNullException(nameof(configuration));
             }
-            
+
             return configuration.GetSection(section).GetConfigurations<T>();
         }
     }

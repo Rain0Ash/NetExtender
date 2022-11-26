@@ -98,7 +98,7 @@ namespace NetExtender.Windows.Services.Utilities
             {
                 return manager?.Handle ?? IntPtr.Zero;
             }
-            
+
             public IntPtr Handle { get; }
 
             public Boolean Successful
@@ -108,7 +108,7 @@ namespace NetExtender.Windows.Services.Utilities
                     return Handle != IntPtr.Zero;
                 }
             }
-            
+
             public ServiceHandleManager(Int32 right, Boolean isThrow = true)
             {
                 Handle = OpenSCManager(null, null, right);
@@ -3506,7 +3506,7 @@ namespace NetExtender.Windows.Services.Utilities
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ServiceErrorControl GetServiceErrorControl(String name)
         {
@@ -3518,7 +3518,7 @@ namespace NetExtender.Windows.Services.Utilities
         {
             return TryGetServiceErrorControl(name, ServiceErrorControl.Normal);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ServiceErrorControl TryGetServiceErrorControl(String name, ServiceErrorControl alternate)
         {
@@ -3584,7 +3584,7 @@ namespace NetExtender.Windows.Services.Utilities
         {
             return TryGetServiceErrorControl(controller, ServiceErrorControl.Normal);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ServiceErrorControl TryGetServiceErrorControl(this ServiceController controller, ServiceErrorControl alternate)
         {
@@ -3976,7 +3976,7 @@ namespace NetExtender.Windows.Services.Utilities
             return ChangeServiceConfigInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
                 installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, false, true);
         }
-        
+
         public static Boolean TryChangeServiceConfig(this WindowsServiceInstaller installer)
         {
             if (installer is null)
@@ -3987,7 +3987,7 @@ namespace NetExtender.Windows.Services.Utilities
             return ChangeServiceConfigInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
                 installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, false, false);
         }
-        
+
         public static Boolean InstallServiceOrChangeServiceConfig(this WindowsServiceInstaller installer)
         {
             if (installer is null)
@@ -3998,7 +3998,7 @@ namespace NetExtender.Windows.Services.Utilities
             return ChangeServiceConfigInternal(installer.Path, installer.Name, installer.DisplayName, installer.Description, installer.ServiceType, installer.StartMode,
                 installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, true, true);
         }
-        
+
         public static Boolean TryInstallServiceOrChangeServiceConfig(this WindowsServiceInstaller installer)
         {
             if (installer is null)
@@ -4053,7 +4053,7 @@ namespace NetExtender.Windows.Services.Utilities
             {
                 return false;
             }
-            
+
             IntPtr service = OpenService(manager, name, 0x20000);
             if (service == IntPtr.Zero)
             {
@@ -4066,10 +4066,10 @@ namespace NetExtender.Windows.Services.Utilities
 
                     return false;
                 }
-                
+
                 service = CreateService(manager, name, displayname, 983551, type, mode, error,
                     path, null, IntPtr.Zero, dependency.ConvertToDependencyString(), username, password);
-                
+
                 if (service == IntPtr.Zero)
                 {
                     if (isThrow)
@@ -4216,7 +4216,7 @@ namespace NetExtender.Windows.Services.Utilities
                     throw;
                 }
             }
-            
+
             return Task.CompletedTask;
         }
 

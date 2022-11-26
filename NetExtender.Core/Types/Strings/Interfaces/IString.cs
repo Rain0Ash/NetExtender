@@ -18,7 +18,7 @@ namespace NetExtender.Types.Strings.Interfaces
         /// Is immutable (ex. String) or mutable (ex. StringBuilder)
         /// </summary>
         public Boolean Immutable { get; }
-        
+
         /// <summary>
         /// Is constant (single inner instance)
         /// </summary>
@@ -129,7 +129,7 @@ namespace NetExtender.Types.Strings.Interfaces
         {
             return Equals(other?.ToString(provider), comparison, provider);
         }
-        
+
         public IString ToUpper()
         {
             return ToString().ToUpper().ToIString();
@@ -169,7 +169,7 @@ namespace NetExtender.Types.Strings.Interfaces
         {
             return ToString().Normalize(normalization).ToIString();
         }
-        
+
         public Boolean IsNormalized()
         {
             return ToString().IsNormalized();
@@ -267,7 +267,7 @@ namespace NetExtender.Types.Strings.Interfaces
         {
             return ToString().LastIndexOf(value, start, count);
         }
-        
+
         [SuppressMessage("ReSharper", "StringLastIndexOfIsCultureSpecific.1")]
         public Int32 LastIndexOf(String value)
         {
@@ -315,7 +315,7 @@ namespace NetExtender.Types.Strings.Interfaces
         {
             return ToString().IndexOfAny(values, start, count);
         }
-        
+
         public Int32 LastIndexOfAny(Char[] values)
         {
             return ToString().LastIndexOfAny(values);
@@ -470,7 +470,7 @@ namespace NetExtender.Types.Strings.Interfaces
         {
             return ToString().Trim(trim).ToIString();
         }
-        
+
         public Boolean StartsWith(String value)
         {
             return ToString().StartsWith(value);
@@ -490,7 +490,7 @@ namespace NetExtender.Types.Strings.Interfaces
         {
             return ToString().StartsWith(value);
         }
-        
+
         public Boolean EndsWith(String value)
         {
             return ToString().EndsWith(value);
@@ -530,7 +530,7 @@ namespace NetExtender.Types.Strings.Interfaces
         {
             return ToString().PadRight(width, padding).ToIString();
         }
-        
+
         public StringRuneEnumerator EnumerateRunes()
         {
             return ToString().EnumerateRunes();

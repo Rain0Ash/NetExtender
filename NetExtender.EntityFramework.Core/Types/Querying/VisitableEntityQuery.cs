@@ -72,7 +72,7 @@ namespace NetExtender.EntityFrameworkCore.Expressions.Querying
         {
             return Query.GetAsyncEnumerator();
         }
-        
+
         protected class VisitableQueryProvider : IAsyncQueryProvider
         {
             private VisitableEntityQuery<T> Query { get; }

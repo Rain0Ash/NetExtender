@@ -66,7 +66,7 @@ namespace NetExtender.Workstation
             Architecture = architecture;
         }
     }
-    
+
     public static partial class Software
     {
         public static OperationSystemInfo Information { get; } = GetOperatingSystemInfo();
@@ -140,7 +140,7 @@ namespace NetExtender.Workstation
                 }
 
                 String split = exact.Split('.').TryGetValue(1, "0");
-                
+
                 return Int32.TryParse(split, out Int32 value) ? value : 0;
             }
         }
@@ -162,7 +162,7 @@ namespace NetExtender.Workstation
                 }
 
                 String split = exact.Split('.').TryGetValue(1, "0");
-                
+
                 return Int32.TryParse(split, out Int32 value) ? value : 0;
             }
         }
@@ -213,7 +213,7 @@ namespace NetExtender.Workstation
         public static OperationSystemInfo GetOperatingSystemInfo()
         {
             SoftwareArchitecture architecture = GetOperationSystemArchitecture();
-            
+
             switch (SystemVersion.Platform)
             {
                 case PlatformID.Win32S:

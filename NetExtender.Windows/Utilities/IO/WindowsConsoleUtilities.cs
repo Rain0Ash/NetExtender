@@ -10,7 +10,7 @@ namespace NetExtender.Utilities.IO
     {
         [DllImport("kernel32.dll", SetLastError = true)]
         private static extern IntPtr GetStdHandle(Int32 handle);
-        
+
         public static IntPtr ConsoleInputHandle { get; } = GetStdHandle(-10);
         public static IntPtr ConsoleOutputHandle { get; } = GetStdHandle(-11);
         public static IntPtr ConsoleErrorHandle { get; } = GetStdHandle(-12);

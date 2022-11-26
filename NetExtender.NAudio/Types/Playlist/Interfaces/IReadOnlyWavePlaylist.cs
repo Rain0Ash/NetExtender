@@ -9,7 +9,7 @@ namespace NetExtender.NAudio.Types.Playlist.Interfaces
     public interface IReadOnlyWavePlaylist : IReadOnlyWavePlaylist<IWaveProvider>
     {
     }
-    
+
     public interface IReadOnlyWavePlaylist<out T> : IWaveProvider, IReadOnlyList<T> where T : class, IWaveProvider
     {
     }

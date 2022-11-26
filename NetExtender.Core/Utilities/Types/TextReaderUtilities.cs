@@ -84,7 +84,7 @@ namespace NetExtender.Utilities.Types
 
             return result.Length > 0 ? result.ToString() : null;
         }
-        
+
         public static String? ReadToken(this TextReader reader)
         {
             if (reader is null)

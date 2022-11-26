@@ -28,7 +28,7 @@ namespace NetExtender.Types.Memento
             {
                 Boolean undo = CanUndo;
                 Boolean redo = CanRedo;
-                
+
                 _index = value;
 
                 if (undo != CanUndo)
@@ -138,7 +138,7 @@ namespace NetExtender.Types.Memento
             IMementoItem<TSource> build = builder.Build(item);
             return Remember(build);
         }
-        
+
         public virtual Boolean Remember(IMementoItem<TSource> item)
         {
             if (item is null)
@@ -170,7 +170,7 @@ namespace NetExtender.Types.Memento
         {
             return Internal.Remove(item);
         }
-        
+
         public virtual void Clear()
         {
             Internal.Clear();
@@ -195,7 +195,7 @@ namespace NetExtender.Types.Memento
             {
                 return false;
             }
-            
+
             Internal[++Index].Swap();
             return true;
         }

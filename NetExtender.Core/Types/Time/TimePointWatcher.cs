@@ -14,14 +14,14 @@ namespace NetExtender.Types.Times
         {
             return value?.Point ?? default;
         }
-        
+
         public static implicit operator TimePointWatcher(DateTimeOffset value)
         {
             return new TimePointWatcher(value);
         }
-        
+
         public event EventHandler<TimePointEventArgs>? Changed;
-        
+
         private DateTimeOffset _point;
         public DateTimeOffset Point
         {
@@ -36,7 +36,7 @@ namespace NetExtender.Types.Times
                 {
                     return;
                 }
-                
+
                 _point = value;
                 Changed?.Invoke(this, new TimePointEventArgs(offset, value));
             }
@@ -46,7 +46,7 @@ namespace NetExtender.Types.Times
             : this(DateTimeOffset.UtcNow)
         {
         }
-        
+
         public TimePointWatcher(DateTimeOffset point)
         {
             Point = point;
@@ -55,7 +55,7 @@ namespace NetExtender.Types.Times
         public virtual Boolean Compare(DateTimeOffset point, TimeSpan epsilon, TimeWatcherComparison comparison)
         {
             TimeSpan difference = point.UtcDateTime.Subtract(Point.UtcDateTime);
-            
+
             return comparison switch
             {
                 TimeWatcherComparison.Less => difference < epsilon,
@@ -92,7 +92,7 @@ namespace NetExtender.Types.Times
             {
                 Point = point;
             }
-            
+
             return result;
         }
 
@@ -122,33 +122,33 @@ namespace NetExtender.Types.Times
             Point = point;
             return result;
         }
-        
+
         public Boolean UpdateNow(TimeSpan epsilon, TimeWatcherComparison comparison)
         {
             return Update(DateTimeOffset.Now, epsilon, comparison);
         }
-        
+
         public Boolean UpdateUtcNow(TimeSpan epsilon, TimeWatcherComparison comparison)
         {
             return Update(DateTimeOffset.UtcNow, epsilon, comparison);
         }
-        
+
         public Boolean Set(DateTimeOffset point)
         {
             Point = point;
             return true;
         }
-        
+
         public Boolean SetNow()
         {
             return Set(DateTimeOffset.Now);
         }
-        
+
         public Boolean SetUtcNow()
         {
             return Set(DateTimeOffset.UtcNow);
         }
-        
+
         public Int32 CompareTo(DateTime other)
         {
             return Point.UtcDateTime.CompareTo(other);
@@ -214,7 +214,7 @@ namespace NetExtender.Types.Times
         {
             return Point.ToString(format);
         }
-        
+
         public String ToString(IFormatProvider? provider)
         {
             return Point.ToString(provider);

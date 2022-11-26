@@ -17,12 +17,12 @@ namespace NetExtender.Serialization
                 return Line >= 0;
             }
         }
-        
+
         public ParseException(Int32 line)
             : this(line, null)
         {
         }
-        
+
         public ParseException(Int32 line, Exception? exception)
             : this(null, line, exception)
         {
@@ -32,7 +32,7 @@ namespace NetExtender.Serialization
             : this(message, null)
         {
         }
-        
+
         public ParseException(String? message, Exception? exception)
             : this(message, -1, exception)
         {

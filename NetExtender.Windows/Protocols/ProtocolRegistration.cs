@@ -38,7 +38,7 @@ namespace NetExtender.Windows.Protocols
                 Unregister();
             }
         }
-        
+
         public abstract ProtocolStatus Status { get; }
 
         public abstract Boolean Register();

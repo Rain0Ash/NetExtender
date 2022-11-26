@@ -16,7 +16,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
     public static class MiddlewareUtilities
     {
         private const DynamicallyAccessedMemberTypes MiddlewareAccessibility = DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicMethods;
-        
+
         public static Func<HttpContext, Task>? GetMiddlewareInvokeAsync<[DynamicallyAccessedMembers(MiddlewareAccessibility)]TMiddleware>(TMiddleware middleware) where TMiddleware : class
         {
             if (middleware is null)
@@ -74,7 +74,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseMiddleware<AccessRestrictionMiddleware>(access, reject);
         }
-        
+
         public static IApplicationBuilder UseAccessRestrictionMiddleware(this IApplicationBuilder builder, Func<HttpContext, Boolean> access, Int32 reject)
         {
             if (builder is null)
@@ -89,7 +89,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseMiddleware<AccessRestrictionMiddleware>(access, reject);
         }
-        
+
         public static IApplicationBuilder UseAccessRestrictionMiddleware(this IApplicationBuilder builder, Func<HttpContext, HttpStatusCode> access)
         {
             if (builder is null)
@@ -104,7 +104,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseMiddleware<AccessRestrictionMiddleware>(access);
         }
-        
+
         public static IApplicationBuilder UseAccessRestrictionMiddleware(this IApplicationBuilder builder, Func<HttpContext, Int32> access)
         {
             if (builder is null)
@@ -129,7 +129,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseMiddleware<ExternalAccessRestrictionMiddleware>();
         }
-        
+
         public static IApplicationBuilder UseExternalAccessRestrictionMiddleware(this IApplicationBuilder builder, HttpStatusCode code)
         {
             if (builder is null)
@@ -139,7 +139,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseMiddleware<ExternalAccessRestrictionMiddleware>(code);
         }
-        
+
         public static IApplicationBuilder UseExternalAccessRestrictionMiddleware(this IApplicationBuilder builder, Int32 code)
         {
             if (builder is null)
@@ -149,7 +149,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseMiddleware<ExternalAccessRestrictionMiddleware>(code);
         }
-        
+
         public static IApplicationBuilder UseUserAgentAccessRestrictionMiddleware(this IApplicationBuilder builder, String? agent)
         {
             if (builder is null)
@@ -159,7 +159,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseMiddleware<UserAgentAccessRestrictionMiddleware>(agent!);
         }
-        
+
         public static IApplicationBuilder UseUserAgentAccessRestrictionMiddleware(this IApplicationBuilder builder, String? agent, HttpStatusCode code)
         {
             if (builder is null)
@@ -169,7 +169,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseMiddleware<UserAgentAccessRestrictionMiddleware>(agent!, code);
         }
-        
+
         public static IApplicationBuilder UseUserAgentAccessRestrictionMiddleware(this IApplicationBuilder builder, String? agent, Int32 code)
         {
             if (builder is null)
@@ -179,7 +179,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseMiddleware<UserAgentAccessRestrictionMiddleware>(agent!, code);
         }
-        
+
         public static IApplicationBuilder UseUserAgentAccessRestrictionMiddleware(this IApplicationBuilder builder, IEnumerable<String?> agents)
         {
             if (builder is null)
@@ -194,7 +194,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseMiddleware<UserAgentAccessRestrictionMiddleware>(agents);
         }
-        
+
         public static IApplicationBuilder UseUserAgentAccessRestrictionMiddleware(this IApplicationBuilder builder, IEnumerable<String?> agents, HttpStatusCode code)
         {
             if (builder is null)
@@ -209,7 +209,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseMiddleware<UserAgentAccessRestrictionMiddleware>(agents, code);
         }
-        
+
         public static IApplicationBuilder UseUserAgentAccessRestrictionMiddleware(this IApplicationBuilder builder, IEnumerable<String?> agents, Int32 code)
         {
             if (builder is null)
@@ -224,17 +224,17 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseMiddleware<UserAgentAccessRestrictionMiddleware>(agents, code);
         }
-        
+
         public static IApplicationBuilder UseUserAgentExternalAccessRestrictionMiddleware(this IApplicationBuilder builder, String? agent)
         {
             if (builder is null)
             {
                 throw new ArgumentNullException(nameof(builder));
             }
-            
+
             return builder.UseExternalAccessRestrictionMiddleware().UseUserAgentAccessRestrictionMiddleware(agent);
         }
-        
+
         public static IApplicationBuilder UseUserAgentExternalAccessRestrictionMiddleware(this IApplicationBuilder builder, String? agent, HttpStatusCode code)
         {
             if (builder is null)
@@ -244,7 +244,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseExternalAccessRestrictionMiddleware(code).UseUserAgentAccessRestrictionMiddleware(agent, code);
         }
-        
+
         public static IApplicationBuilder UseUserAgentExternalAccessRestrictionMiddleware(this IApplicationBuilder builder, String? agent, Int32 code)
         {
             if (builder is null)
@@ -254,7 +254,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseExternalAccessRestrictionMiddleware(code).UseUserAgentAccessRestrictionMiddleware(agent, code);
         }
-        
+
         public static IApplicationBuilder UseUserAgentExternalAccessRestrictionMiddleware(this IApplicationBuilder builder, IEnumerable<String?> agents)
         {
             if (builder is null)
@@ -269,7 +269,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseExternalAccessRestrictionMiddleware().UseUserAgentAccessRestrictionMiddleware(agents);
         }
-        
+
         public static IApplicationBuilder UseUserAgentExternalAccessRestrictionMiddleware(this IApplicationBuilder builder, IEnumerable<String?> agents, HttpStatusCode code)
         {
             if (builder is null)
@@ -284,7 +284,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return builder.UseExternalAccessRestrictionMiddleware(code).UseUserAgentAccessRestrictionMiddleware(agents, code);
         }
-        
+
         public static IApplicationBuilder UseUserAgentExternalAccessRestrictionMiddleware(this IApplicationBuilder builder, IEnumerable<String?> agents, Int32 code)
         {
             if (builder is null)
@@ -328,7 +328,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             {
                 app.UseMiddleware(middleware, args ?? Array.Empty<Object>());
             }
-            
+
             return builder.UseWhen(predicate, Configuration);
         }
     }

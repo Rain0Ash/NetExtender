@@ -14,7 +14,7 @@ namespace NetExtender.Types.Dispatchers
         {
             return dispatcher is not null ? new DispatcherWrapper(dispatcher) : null;
         }
-        
+
         public static implicit operator Dispatcher?(DispatcherWrapper? wrapper)
         {
             return wrapper?.Dispatcher;
@@ -23,7 +23,7 @@ namespace NetExtender.Types.Dispatchers
         private Dispatcher Dispatcher { get; }
 
         public event DispatcherShutdownStateEventHandler? Shutdown;
-        
+
         public DispatcherWrapper(Dispatcher dispatcher)
         {
             Dispatcher = dispatcher ?? throw new ArgumentNullException(nameof(dispatcher));
@@ -35,7 +35,7 @@ namespace NetExtender.Types.Dispatchers
         {
             Shutdown?.Invoke(obj, new DispatcherShutdownStateEventArgs(DispatcherShutdownState.Started));
         }
-        
+
         private void OnShutdownFinished(Object? obj, EventArgs args)
         {
             Shutdown?.Invoke(obj, new DispatcherShutdownStateEventArgs(DispatcherShutdownState.Finished));

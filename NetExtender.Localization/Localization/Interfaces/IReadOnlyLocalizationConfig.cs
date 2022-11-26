@@ -17,7 +17,7 @@ namespace NetExtender.Localization.Interfaces
     {
         public new event LocalizationChangedEventHandler Changed;
         public event LocalizationValueChangedEventHandler ValueChanged;
-        
+
         public ILocalizationConverter Converter { get; }
         public new ILocalizationString? GetValue(String? key, params String[]? sections);
         public new ILocalizationString? GetValue(String? key, IEnumerable<String>? sections);

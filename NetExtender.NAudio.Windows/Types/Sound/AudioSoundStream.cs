@@ -62,12 +62,12 @@ namespace NetExtender.NAudio.Types.Sound
             {
                 throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
-            
+
             if (stop < default(TimeSpan))
             {
                 throw new ArgumentOutOfRangeException(nameof(stop), stop, null);
             }
-            
+
             if (stop != default && stop < start)
             {
                 throw new ArgumentOutOfRangeException(nameof(stop), stop, "Stop must be greater than start");
@@ -84,10 +84,10 @@ namespace NetExtender.NAudio.Types.Sound
             };
 
             Provider = new AudioSoundSampleProvider(this, new WaveToSampleProvider(Stream));
-            
+
             // ReSharper disable once VirtualMemberCallInConstructor
             TimeSpan total = TotalTime;
-            
+
             if (start > total)
             {
                 throw new ArgumentOutOfRangeException(nameof(start), start, "Start must be less than total time");
@@ -170,12 +170,12 @@ namespace NetExtender.NAudio.Types.Sound
             Dispose(true);
             GC.SuppressFinalize(this);
         }
-        
+
         protected virtual void Dispose(Boolean disposing)
         {
             Stream.Dispose();
         }
-        
+
         ~AudioSoundStream()
         {
             Dispose(false);

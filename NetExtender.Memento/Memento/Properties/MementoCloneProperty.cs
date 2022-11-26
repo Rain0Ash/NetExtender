@@ -59,7 +59,7 @@ namespace NetExtender.Types.Memento
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return new MementoClone<TSource, TProperty>(source, Property);
         }
 
@@ -74,7 +74,7 @@ namespace NetExtender.Types.Memento
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return HasValue ? new MementoClone<TSource, TProperty>(source, Property, Value) : New(source);
         }
 
@@ -102,7 +102,7 @@ namespace NetExtender.Types.Memento
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             Value = GenericUtilities.Clone(Property.GetValue(source));
             return this;
         }

@@ -428,7 +428,7 @@ namespace NetExtender.Utilities.Types
 
             return source.WhereNot(where).Select(selector);
         }
-        
+
         public static IEnumerable<T> SelectWhereNotNull<T>(this IEnumerable<T?> source) where T : struct
         {
             if (source is null)
@@ -438,7 +438,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Where(item => item.HasValue).Select(item => item!.Value);
         }
-        
+
         public static IEnumerable<TResult> SelectWhereNotNull<T, TResult>(this IEnumerable<T?> source, Func<T, TResult> selector) where T : struct
         {
             if (source is null)
@@ -651,7 +651,7 @@ namespace NetExtender.Utilities.Types
 
             return !condition ? source.Select(selector) : source;
         }
-        
+
         public static IEnumerable<T> ChangeWhere<T>(this IEnumerable<T> source, Func<T, (Boolean, T)> selector)
         {
             if (source is null)
@@ -691,7 +691,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Select(item => where(item) ? selector(item) : item);
         }
-        
+
         public static IEnumerable<T> ChangeWhere<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Func<T, T> selector)
         {
             if (source is null)
@@ -711,7 +711,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Select((item, index) => !where(item, index) ? selector(item) : item);
         }
-        
+
         public static IEnumerable<T> ChangeWhere<T>(this IEnumerable<T> source, Func<T, Boolean> where, Func<T, Int32, T> selector)
         {
             if (source is null)
@@ -731,7 +731,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Select((item, index) => where(item) ? selector(item, index) : item);
         }
-        
+
         public static IEnumerable<T> ChangeWhere<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Func<T, Int32, T> selector)
         {
             if (source is null)
@@ -831,7 +831,7 @@ namespace NetExtender.Utilities.Types
 
             return ChangeWhere(source, (item, index) => !where(item, index), selector);
         }
-        
+
         public static IEnumerable<T> ChangeWhereNull<T>(this IEnumerable<T?> source, T alternate)
         {
             if (source is null)
@@ -846,7 +846,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Select(item => item ?? alternate);
         }
-        
+
         public static IEnumerable<T> ChangeWhereNull<T>(this IEnumerable<T?> source, Func<T> selector)
         {
             if (source is null)
@@ -861,7 +861,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Select(item => item ?? selector());
         }
-        
+
         public static IEnumerable<T> ChangeWhereNull<T>(this IEnumerable<T?> source, Func<Int32, T> selector)
         {
             if (source is null)
@@ -1170,7 +1170,7 @@ namespace NetExtender.Utilities.Types
 
             return TrySelectWhere(source, item => !where(item), predicate);
         }
-        
+
         /// <summary>
         /// Return item if source is empty
         /// </summary>
@@ -1195,7 +1195,7 @@ namespace NetExtender.Utilities.Types
             do
             {
                 yield return enumerator.Current;
-                
+
             } while (enumerator.MoveNext());
         }
 
@@ -1245,7 +1245,7 @@ namespace NetExtender.Utilities.Types
                 yield return predicate(item) ? item : alternate;
             }
         }
-        
+
         public static IEnumerable<T> NotEmptyOrDefault<T>(this IEnumerable<T>? source, params T[] alternate)
         {
             if (alternate is null)
@@ -1269,7 +1269,7 @@ namespace NetExtender.Utilities.Types
                 {
                     yield return item;
                 }
-                
+
                 yield break;
             }
 
@@ -1281,17 +1281,17 @@ namespace NetExtender.Utilities.Types
                 {
                     yield return item;
                 }
-                
+
                 yield break;
             }
 
             do
             {
                 yield return enumerator.Current;
-                
+
             } while (enumerator.MoveNext());
         }
-        
+
         public static TSource AggregateWhile<TSource>(this IEnumerable<TSource> source, Func<TSource, TSource, TSource> aggregator, Func<TSource, Boolean> predicate)
         {
             if (source is null)
@@ -1326,7 +1326,7 @@ namespace NetExtender.Utilities.Types
             while (enumerator.MoveNext())
             {
                 accumulate = aggregator(accumulate, enumerator.Current);
-                
+
                 if (!predicate(accumulate))
                 {
                     return accumulate;
@@ -1352,7 +1352,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             if (!predicate(seed))
             {
                 return seed;
@@ -1372,7 +1372,7 @@ namespace NetExtender.Utilities.Types
 
             return accumulate;
         }
-        
+
         public static TSource AggregateWhileNot<TSource>(this IEnumerable<TSource> source, Func<TSource, TSource, TSource> aggregator, Func<TSource, Boolean> predicate)
         {
             if (source is null)
@@ -1398,7 +1398,7 @@ namespace NetExtender.Utilities.Types
             }
 
             TSource accumulate = enumerator.Current;
-            
+
             if (predicate(accumulate))
             {
                 return accumulate;
@@ -1407,7 +1407,7 @@ namespace NetExtender.Utilities.Types
             while (enumerator.MoveNext())
             {
                 accumulate = aggregator(accumulate, enumerator.Current);
-                
+
                 if (predicate(accumulate))
                 {
                     return accumulate;
@@ -1416,7 +1416,7 @@ namespace NetExtender.Utilities.Types
 
             return accumulate;
         }
-        
+
         public static TAccumulate AggregateWhileNot<TSource, TAccumulate>(this IEnumerable<TSource> source, TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> aggregator, Func<TAccumulate, Boolean> predicate)
         {
             if (source is null)
@@ -1433,7 +1433,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             if (predicate(seed))
             {
                 return seed;
@@ -1468,7 +1468,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Select(grouping => new KeyValuePair<T, TResult>(grouping.Key, aggregator(grouping)));
         }
-        
+
 #if !NET6_0_OR_GREATER
         /// <summary>
         /// Combines two Enumerable objects into a sequence of Tuples containing each element
@@ -1556,7 +1556,7 @@ namespace NetExtender.Utilities.Types
                 yield return (enumerator1.Current, enumerator2.Current, enumerator3.Current, enumerator4.Current);
             }
         }
-        
+
         /// <summary>
         /// Combines five Enumerable objects into a sequence of Tuples containing each element
         /// of the source Enumerable in the first position with the element that has the same
@@ -1636,7 +1636,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Zip(other, TupleUtilities.Append);
         }
-        
+
         public static IEnumerable<(T1 First, T2 Second, T3 Third, T4 Fourth, T5 Fifth)> ThenZip<T1, T2, T3, T4, T5>(this IEnumerable<(T1, T2, T3, T4)> source, IEnumerable<T5> other)
         {
             if (source is null)
@@ -1651,7 +1651,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Zip(other, TupleUtilities.Append);
         }
-        
+
         public static IEnumerable<(T1 First, T2 Second, T3 Third, T4 Fourth, T5 Fifth, T6 Sixth)> ThenZip<T1, T2, T3, T4, T5, T6>(this IEnumerable<(T1, T2, T3, T4, T5)> source, IEnumerable<T6> other)
         {
             if (source is null)
@@ -1686,7 +1686,7 @@ namespace NetExtender.Utilities.Types
                 {
                     yield return item;
                 }
-                
+
                 yield break;
             }
 
@@ -1759,7 +1759,7 @@ namespace NetExtender.Utilities.Types
                 buffer[j] = buffer[i];
             }
         }
-        
+
 #if !NET6_0_OR_GREATER
         /// <summary>
         /// Splits the given sequence into chunks of the given size.
@@ -1846,14 +1846,14 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(length));
             }
-            
+
             if (chunk.Length <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(chunk));
             }
 
             length = length <= 0 ? chunk.Length : length;
-            
+
             using IEnumerator<T> enumerator = source.GetEnumerator();
             while (enumerator.MoveNext())
             {
@@ -1905,19 +1905,19 @@ namespace NetExtender.Utilities.Types
             }
 
             Int32 chunklength = Math.Min(chunk1.Length, chunk2.Length);
-            
+
             if (length > chunklength)
             {
                 throw new ArgumentOutOfRangeException(nameof(length));
             }
-            
+
             if (chunklength <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(chunklength));
             }
 
             length = length <= 0 ? chunklength : length;
-            
+
             using IEnumerator<T1> enumerator1 = first.GetEnumerator();
             using IEnumerator<T2> enumerator2 = second.GetEnumerator();
 
@@ -1983,19 +1983,19 @@ namespace NetExtender.Utilities.Types
             }
 
             Int32 chunklength = Math.Min(chunk1.Length, Math.Min(chunk2.Length, chunk3.Length));
-            
+
             if (length > chunklength)
             {
                 throw new ArgumentOutOfRangeException(nameof(length));
             }
-            
+
             if (chunklength <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(chunklength));
             }
 
             length = length <= 0 ? chunklength : length;
-            
+
             using IEnumerator<T1> enumerator1 = first.GetEnumerator();
             using IEnumerator<T2> enumerator2 = second.GetEnumerator();
             using IEnumerator<T3> enumerator3 = third.GetEnumerator();
@@ -2030,7 +2030,7 @@ namespace NetExtender.Utilities.Types
         {
             return ZipChunk(first, second, third, fourth, chunk1, chunk2, chunk3, chunk4, 0);
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public static IEnumerable<Int32> ZipChunk<T1, T2, T3, T4>(this IEnumerable<T1> first, IEnumerable<T2> second, IEnumerable<T3> third, IEnumerable<T4> fourth, T1[] chunk1, T2[] chunk2, T3[] chunk3, T4[] chunk4, Int32 length)
         {
@@ -2075,19 +2075,19 @@ namespace NetExtender.Utilities.Types
             }
 
             Int32 chunklength = Math.Min(Math.Min(chunk1.Length, chunk2.Length), Math.Min(chunk3.Length, chunk4.Length));
-            
+
             if (length > chunklength)
             {
                 throw new ArgumentOutOfRangeException(nameof(length));
             }
-            
+
             if (chunklength <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(chunklength));
             }
 
             length = length <= 0 ? chunklength : length;
-            
+
             using IEnumerator<T1> enumerator1 = first.GetEnumerator();
             using IEnumerator<T2> enumerator2 = second.GetEnumerator();
             using IEnumerator<T3> enumerator3 = third.GetEnumerator();

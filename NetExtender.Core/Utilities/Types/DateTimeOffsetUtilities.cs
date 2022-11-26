@@ -14,19 +14,19 @@ namespace NetExtender.Utilities.Types
         {
             return new DateTimeOffset(1970, 1, 1, 0, 0, 0, offset);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTimeOffset Epoch(Calendar? calendar, TimeSpan offset)
         {
             return calendar is not null ? new DateTimeOffset(1970, 1, 1, 0, 0, 0, 0, calendar, offset) : Epoch(offset);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeSpan Elapsed(this DateTimeOffset value)
         {
             return DateTimeOffset.Now - value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static TimeSpan ElapsedUtc(this DateTimeOffset value)
         {
@@ -62,7 +62,7 @@ namespace NetExtender.Utilities.Types
         {
             return new DateTimeOffset(year, (Int32) month, day, hour, minute, second, millisecond, calendar, offset);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 Age(this DateTimeOffset date)
         {
@@ -85,7 +85,7 @@ namespace NetExtender.Utilities.Types
 
             return (at - date).Years();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTimeOffset Min(this DateTimeOffset first, DateTimeOffset second)
         {
@@ -97,7 +97,7 @@ namespace NetExtender.Utilities.Types
         {
             return first > second ? first : second;
         }
-        
+
         /// <summary>
         /// Determines whether the provided text represents a valid <see cref="DateTimeOffset"/>.
         /// </summary>
@@ -107,7 +107,7 @@ namespace NetExtender.Utilities.Types
         {
             return DateTimeOffset.TryParse(text, out _);
         }
-        
+
         /// <summary>
         /// Set date of datetime
         /// </summary>
@@ -273,7 +273,7 @@ namespace NetExtender.Utilities.Types
         {
             return SetTime(date, date.Hour, date.Minute, date.Second, millisecond);
         }
-        
+
         /// <summary>
         /// Set offset of date
         /// </summary>
@@ -297,7 +297,7 @@ namespace NetExtender.Utilities.Types
         {
             return new DateTimeOffset(date.Year, date.Month, date.Day, 0, 0, 0, date.Offset).Add(time);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DateTimeOffset TruncateToMilliseconds(this DateTimeOffset date)
         {

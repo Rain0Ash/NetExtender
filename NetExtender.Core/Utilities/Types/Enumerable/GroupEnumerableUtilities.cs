@@ -47,7 +47,7 @@ namespace NetExtender.Utilities.Types
                 values.Add((index - count - 1)..(index - 1));
                 count = 0;
             }
-            
+
             if (count > 0)
             {
                 values.Add((index - count - 1)..(index - 1));
@@ -56,7 +56,7 @@ namespace NetExtender.Utilities.Types
             values.Sort(RangeUtilities.CompareTo);
             return values.ToArray();
         }
-        
+
         public static IEnumerable<IGrouping<T, Int32>> CountGroup<T>(this IEnumerable<T> source) where T : notnull
         {
             return CountGroup(source, null);
@@ -70,7 +70,7 @@ namespace NetExtender.Utilities.Types
             }
 
             IDictionary<T, Int32> counter = new Dictionary<T, Int32>(comparer);
-            
+
             foreach (T item in source)
             {
                 if (counter.ContainsKey(item))
@@ -84,7 +84,7 @@ namespace NetExtender.Utilities.Types
 
             return counter.GroupManyByKey();
         }
-        
+
         public static IEnumerable<IGrouping<TKey, Int32>> CountGroupBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector) where TKey : notnull
         {
             return CountGroupBy(source, selector, null);
@@ -104,7 +104,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Select(selector).CountGroup(comparer);
         }
-        
+
         public static IEnumerable<IGrouping<T, Int64>> LongCountGroup<T>(this IEnumerable<T> source) where T : notnull
         {
             return LongCountGroup(source, null);
@@ -118,7 +118,7 @@ namespace NetExtender.Utilities.Types
             }
 
             IDictionary<T, Int64> counter = new Dictionary<T, Int64>(comparer);
-            
+
             foreach (T item in source)
             {
                 if (counter.ContainsKey(item))
@@ -132,7 +132,7 @@ namespace NetExtender.Utilities.Types
 
             return counter.GroupManyByKey();
         }
-        
+
         public static IEnumerable<IGrouping<TKey, Int64>> LongCountGroupBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector) where TKey : notnull
         {
             return LongCountGroupBy(source, selector, null);
@@ -152,7 +152,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Select(selector).LongCountGroup(comparer);
         }
-        
+
         public static IEnumerable<IGrouping<Type, T>> GroupByType<T>(this IEnumerable<T> source)
         {
             if (source is null)

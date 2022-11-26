@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.Windows
 
             return new WindowsPrincipal(identity).HasRole(role);
         }
-        
+
         public static Boolean HasRole(this WindowsPrincipal principal, WindowsBuiltInRole role)
         {
             if (principal is null)

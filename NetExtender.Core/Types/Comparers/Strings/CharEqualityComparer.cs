@@ -10,7 +10,7 @@ namespace NetExtender.Types.Comparers
     public sealed class CharEqualityComparer : IEqualityComparer<Char>
     {
         private delegate Boolean CompareHandler(Char x, Char y);
-        
+
         public static IComparer<Char> Default
         {
             get
@@ -18,7 +18,7 @@ namespace NetExtender.Types.Comparers
                 return Comparer<Char>.Default;
             }
         }
-        
+
         public StringComparison Comparison { get; }
         private CompareHandler Comparer { get; }
 
@@ -26,7 +26,7 @@ namespace NetExtender.Types.Comparers
             : this(StringComparison.Ordinal)
         {
         }
-        
+
         public CharEqualityComparer(StringComparison comparison)
         {
             Comparison = comparison;
@@ -37,7 +37,7 @@ namespace NetExtender.Types.Comparers
         {
             return GetComparer(Comparison);
         }
-        
+
         private CompareHandler GetComparer(StringComparison comparison)
         {
             if (comparison == Comparison)
@@ -66,7 +66,7 @@ namespace NetExtender.Types.Comparers
         {
             return comparison(x, y);
         }
-        
+
         public Boolean Equals(Char x, Char y)
         {
             return Equals(x, y, Comparer);

@@ -23,7 +23,7 @@ namespace NetExtender.Utilities.Types
         {
             private const String AnonymousTypeAssembly = nameof(AnonymousTypeAssembly);
             public static AnonymousTypeGenerator Generator { get; }
-            
+
             static AnonymousType()
             {
                 Generator = new AnonymousTypeGenerator(AnonymousTypeAssembly);
@@ -35,7 +35,7 @@ namespace NetExtender.Utilities.Types
         {
             return DefineAnonymousType(AnonymousType.Generator, value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Type DefineAnonymousType(this AnonymousTypeGenerator generator, ExpandoObject value)
         {
@@ -48,7 +48,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             static IEnumerable<KeyValuePair<String, Type>> Internal(ExpandoObject value)
             {
                 foreach ((String name, Object? item) in value)
@@ -81,7 +81,7 @@ namespace NetExtender.Utilities.Types
         {
             return DefineAnonymousType(AnonymousType.Generator, properties);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type DefineAnonymousType(this AnonymousTypeGenerator generator, IEnumerable<PropertyInfo> properties)
         {
@@ -97,13 +97,13 @@ namespace NetExtender.Utilities.Types
 
             return DefineAnonymousType(generator, properties.Select(property => (AnonymousTypePropertyInfo) property).ToProperties());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type DefineAnonymousType(this IEnumerable<KeyValuePair<String, Type>> properties)
         {
             return DefineAnonymousType(AnonymousType.Generator, properties);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type DefineAnonymousType(this AnonymousTypeGenerator generator, IEnumerable<KeyValuePair<String, Type>> properties)
         {
@@ -116,7 +116,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(properties));
             }
-            
+
             return DefineAnonymousType(generator, properties.Select(property => (AnonymousTypePropertyInfo) property).ToProperties());
         }
 
@@ -125,7 +125,7 @@ namespace NetExtender.Utilities.Types
         {
             return DefineAnonymousType(AnonymousType.Generator, properties);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type DefineAnonymousType(this AnonymousTypeGenerator generator, AnonymousTypePropertyInfo[] properties)
         {
@@ -138,7 +138,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(properties));
             }
-            
+
             lock (generator)
             {
                 return generator.DefineType(properties);
@@ -159,7 +159,7 @@ namespace NetExtender.Utilities.Types
             }
 
             Type type = value.GetType();
-            
+
             foreach ((String? key, Object? item) in properties)
             {
                 const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
@@ -218,7 +218,7 @@ namespace NetExtender.Utilities.Types
         {
             return CreateAnonymousObject<AnonymousObject>(properties);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T CreateAnonymousObject<T>(this IEnumerable<KeyValuePair<String, Object?>> properties) where T : class, IAnonymousObject
         {
@@ -247,7 +247,7 @@ namespace NetExtender.Utilities.Types
             static KeyValuePair<String, (Type Type, Object? Value)> Convert(KeyValuePair<String, Object?> pair)
             {
                 (String property, Object? value) = pair;
-                
+
                 if (String.IsNullOrEmpty(property))
                 {
                     throw new ArgumentException("Value cannot be null or empty.", nameof(property));
@@ -304,7 +304,7 @@ namespace NetExtender.Utilities.Types
                 {
                     throw new ArgumentException(nameof(type));
                 }
-                
+
                 types.Add(new KeyValuePair<String, Type>(property, type));
                 values.Add(new KeyValuePair<String, Object?>(property, value));
             }
@@ -321,7 +321,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new InvalidOperationException($"Can't activate '{anonymous.FullName}' instance. Request: {typeof(T).FullName}. Taken: '{active.GetType().FullName}'.");
             }
-            
+
             return result.FillAnonymousObject(values);
         }
 
@@ -368,12 +368,12 @@ namespace NetExtender.Utilities.Types
             {
                 throw new InvalidOperationException($"Can't activate '{anonymous.FullName}' instance. Request: {typeof(T).FullName}. Taken: '{active.GetType().FullName}'.");
             }
-            
+
             return result.FillAnonymousObject(value);
         }
-        
+
         private static IStore<Type, IndexDictionary<String, MemberInfo>> Store { get; } = new WeakStore<Type, IndexDictionary<String, MemberInfo>>();
-        
+
         private static IndexDictionary<String, MemberInfo> Find(Type type)
         {
             if (type is null)
@@ -416,7 +416,7 @@ namespace NetExtender.Utilities.Types
                 List<MemberInfo> members = new List<MemberInfo>(16);
                 members.AddRange(type.GetProperties(binding).Where(IsProperty));
                 members.AddRange(type.GetFields(binding).Where(IsField));
-                
+
                 store.AddRange(members.OrderBy(member => member.Name, StringComparer.Ordinal).Select(member => new KeyValuePair<String, MemberInfo>(member.Name, member)));
                 return store;
             }
@@ -435,7 +435,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(store));
             }
-            
+
             Store.AddOrUpdate(type, store);
         }
 
@@ -446,7 +446,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             Type type = value.GetType();
             IndexDictionary<String, MemberInfo> properties = Store.GetOrAdd(type, Find);
 
@@ -493,7 +493,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             Type type = value.GetType();
             IndexDictionary<String, MemberInfo> properties = Store.GetOrAdd(type, Find);
 
@@ -523,7 +523,7 @@ namespace NetExtender.Utilities.Types
             IndexDictionary<String, MemberInfo> properties = Store.GetOrAdd(type, Find);
             return properties.TryGetValue(name, out MemberInfo? member) ? member : throw new MissingMemberException(type.FullName, name);
         }
-        
+
         public static Int32 Count(IAnonymousObject type)
         {
             if (type is null)
@@ -533,14 +533,14 @@ namespace NetExtender.Utilities.Types
 
             return Store.GetOrAdd(type.GetType(), Find).Count;
         }
-        
+
         public static Type Type(IAnonymousObject anonymous, Int32 index)
         {
             if (anonymous is null)
             {
                 throw new ArgumentNullException(nameof(anonymous));
             }
-            
+
             return Member(anonymous, index) switch
             {
                 PropertyInfo property => property.PropertyType,
@@ -548,7 +548,7 @@ namespace NetExtender.Utilities.Types
                 _ => throw new MissingMemberException(anonymous.GetType().FullName, index.ToString())
             };
         }
-        
+
         public static Type Type(IAnonymousObject anonymous, String name)
         {
             if (anonymous is null)
@@ -568,7 +568,7 @@ namespace NetExtender.Utilities.Types
                 _ => throw new MissingMemberException(anonymous.GetType().FullName, name)
             };
         }
-        
+
         public static (Type Type, Object? Value) Get(IAnonymousObject anonymous, Int32 index)
         {
             if (anonymous is null)
@@ -583,7 +583,7 @@ namespace NetExtender.Utilities.Types
                 _ => throw new MissingMemberException(anonymous.GetType().FullName, index.ToString())
             };
         }
-        
+
         public static (Type Type, Object? Value) Get(IAnonymousObject anonymous, String name)
         {
             if (anonymous is null)

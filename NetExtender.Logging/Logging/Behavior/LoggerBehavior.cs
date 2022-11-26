@@ -15,7 +15,7 @@ namespace NetExtender.Logging.Behavior
     public abstract class LoggerBehavior : ILoggerBehavior
     {
         protected ILoggerFormatProvider Formatter { get; }
-        
+
         public virtual Boolean IsThreadSafe
         {
             get
@@ -28,7 +28,7 @@ namespace NetExtender.Logging.Behavior
             : this(LoggerFormatProvider.Default)
         {
         }
-        
+
         protected LoggerBehavior(ILoggerFormatProvider formatter)
         {
             Formatter = formatter ?? throw new ArgumentNullException(nameof(formatter));
@@ -47,7 +47,7 @@ namespace NetExtender.Logging.Behavior
             String message = value.GetString(escape, format, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
             return Log(message, type, options, escape, offset, provider);
         }
-        
+
         public void Dispose()
         {
             Dispose(true);

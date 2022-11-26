@@ -12,12 +12,12 @@ namespace NetExtender.Utilities.Types
         /// True task
         /// </summary>
         public static Task<Trilean> True { get; } = Task.FromResult(Trilean.True);
-        
+
         /// <summary>
         /// Trit task
         /// </summary>
         public static Task<Trilean> Trit { get; } = Task.FromResult(Trilean.Trit);
-            
+
         /// <summary>
         /// False task
         /// </summary>

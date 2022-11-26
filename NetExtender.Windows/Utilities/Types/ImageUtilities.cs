@@ -68,14 +68,14 @@ namespace NetExtender.Utilities.Types
                 _ => ImageType.Unknown
             };
         }
-        
+
         public static Bitmap? ToBitmap(this Image? image)
         {
             if (image is null)
             {
                 return null;
             }
-            
+
             try
             {
                 return new Bitmap(image);
@@ -321,7 +321,7 @@ namespace NetExtender.Utilities.Types
             using MemoryStream stream = new MemoryStream(image);
             return Image.FromStream(stream);
         }
-        
+
         public static Boolean TrySave(this Image image, Stream stream, ImageFormat format)
         {
             if (image is null)
@@ -375,7 +375,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static Boolean TrySave(this Image image, String filename, ImageFormat format)
         {
             if (image is null)
@@ -613,7 +613,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(second));
             }
-            
+
             Bitmap bitmap = new Bitmap(Math.Max(first.Width, second.Width), Math.Max(first.Height, second.Height));
 
             using ImageAttributes attributes = new ImageAttributes();
@@ -622,7 +622,7 @@ namespace NetExtender.Utilities.Types
             using Graphics graphics = Graphics.FromImage(bitmap);
             graphics.DrawImage(first, 0, 0, first.Width, first.Height);
             graphics.DrawImage(second, new Rectangle(0, 0, second.Width, second.Height), 0, 0, second.Width, second.Height, GraphicsUnit.Pixel, attributes);
-            
+
             return bitmap;
         }
 

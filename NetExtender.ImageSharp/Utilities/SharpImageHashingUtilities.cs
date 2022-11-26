@@ -27,7 +27,7 @@ namespace NetExtender.ImageSharp.Utilities
             2, 3, 3, 4, 3, 4, 4, 5, 3, 4, 4, 5, 4, 5, 5, 6, 3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7,
             3, 4, 4, 5, 4, 5, 5, 6, 4, 5, 5, 6, 5, 6, 6, 7, 4, 5, 5, 6, 5, 6, 6, 7, 5, 6, 6, 7, 6, 7, 7, 8,
         };
-        
+
         public static UInt64 Hashing(this ISharpImageHashEvaluator evaluator, Stream stream)
         {
             if (evaluator is null)
@@ -41,17 +41,17 @@ namespace NetExtender.ImageSharp.Utilities
             }
 
             using Image<Rgba32>? image = Image.Load<Rgba32>(stream);
-            
+
             return evaluator.Hash(image);
         }
-        
+
         public static UInt64 AverageHashing(Image<Rgba32> image)
         {
             const Int32 Width = 8;
             const Int32 Height = 8;
             const Int32 Size = Width * Height;
             const UInt64 MostSignificantBitMask = 1UL << (Size - 1);
-            
+
             if (image is null)
             {
                 throw new ArgumentNullException(nameof(image));
@@ -102,12 +102,12 @@ namespace NetExtender.ImageSharp.Utilities
 
             return hash;
         }
-        
+
         public static UInt64 DifferenceHashing(Image<Rgba32> image)
         {
             const Int32 Width = 9;
             const Int32 Height = 8;
-            
+
             if (image is null)
             {
                 throw new ArgumentNullException(nameof(image));
@@ -144,12 +144,12 @@ namespace NetExtender.ImageSharp.Utilities
 
             return hash;
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public static UInt64 PerceptualHashing(Image<Rgba32> image)
         {
             const Int32 Size = 64;
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             static Double[] Dct1D(IReadOnlyList<Double> values)
             {
@@ -163,7 +163,7 @@ namespace NetExtender.ImageSharp.Utilities
                     }
 
                     array[coefficient] *= MathUtilities.DoubleConstants.Sqrt2 / 8;
-                
+
                     if (coefficient == 0)
                     {
                         array[coefficient] *= MathUtilities.DoubleConstants.InvertedSqrt2;
@@ -172,7 +172,7 @@ namespace NetExtender.ImageSharp.Utilities
 
                 return array;
             }
-            
+
             if (image is null)
             {
                 throw new ArgumentNullException(nameof(image));

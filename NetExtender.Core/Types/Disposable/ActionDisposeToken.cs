@@ -8,12 +8,12 @@ namespace NetExtender.Types.Disposable
     public class ActionDisposeToken : DisposableToken
     {
         protected Action Action { get; }
-        
+
         public ActionDisposeToken(Action action)
         {
             Action = action ?? throw new ArgumentNullException(nameof(action));
         }
-        
+
         protected override Boolean Dispose(Boolean dispose)
         {
             if (!dispose)

@@ -24,7 +24,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             context.Abort();
             return Task.CompletedTask;
         }
-        
+
         private const String NoCache = "no-cache";
         private const String NoCacheMaxAge = "no-cache,max-age=";
         private const String NoStore = "no-store";
@@ -65,7 +65,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             }
 
             String duration = profile.Duration.GetValueOrDefault().ToString(CultureInfo.InvariantCulture);
-            
+
             switch (profile.Location)
             {
                 case ResponseCacheLocation.Any:

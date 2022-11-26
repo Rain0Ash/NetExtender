@@ -17,11 +17,11 @@ namespace NetExtender.Types.Immutable.Maps.Interfaces
 
         public IImmutableMap<TKey, TValue> Remove(TKey key, TValue value);
         public IImmutableMap<TKey, TValue> Remove(KeyValuePair<TKey, TValue> item);
-        
+
         public IImmutableMap<TKey, TValue> RemoveByValue(TValue key);
 
         public IImmutableMap<TKey, TValue> RemoveByValue(TValue key, TKey value);
-        
+
         public IImmutableMap<TKey, TValue> RemoveByValue(KeyValuePair<TValue, TKey> item);
 
         /// <inheritdoc cref="IImmutableDictionary{TKey,TValue}.Add"/>
@@ -38,10 +38,10 @@ namespace NetExtender.Types.Immutable.Maps.Interfaces
 
         /// <inheritdoc cref="IImmutableDictionary{TKey,TValue}.Remove"/>
         public IImmutableMap<TKey, TValue> Remove(TKey key);
-        
+
         /// <inheritdoc cref="IImmutableDictionary{TKey,TValue}.RemoveRange"/>
         public IImmutableMap<TKey, TValue> RemoveRange(IEnumerable<TKey> keys);
-        
+
         /// <inheritdoc cref="IImmutableDictionary{TKey,TValue}.Clear"/>
         public IImmutableMap<TKey, TValue> Clear();
     }

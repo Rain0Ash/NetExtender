@@ -12,7 +12,7 @@ namespace NetExtender.Utilities.IO
         private static class AsyncInput
         {
             private static CancellationTokenSource? source;
-            
+
             private static ConsoleInputType inputType;
             public static ConsoleInputType InputType
             {
@@ -36,7 +36,7 @@ namespace NetExtender.Utilities.IO
             private static async Task StartAsyncInputAsync(ConsoleInputType type)
             {
                 await StopAsyncInputAsync().ConfigureAwait(false);
-                
+
                 source = new CancellationTokenSource();
 
                 Func<Task> input = type switch
@@ -58,14 +58,14 @@ namespace NetExtender.Utilities.IO
                     await StopAsyncInputAsync().ConfigureAwait(false);
                 }
             }
-            
+
             private static Task StopAsyncInputAsync()
             {
                 StopRead();
                 source?.Cancel();
                 source?.Dispose();
                 source = null;
-                
+
                 return Task.CompletedTask;
             }
 
@@ -83,7 +83,7 @@ namespace NetExtender.Utilities.IO
                     action.Invoke(value);
                 }
             }
-            
+
             private static Task LineInputHandlerAsync()
             {
                 return InputHandlerAsync(ReadLineAsync, OnConsoleLineInput);

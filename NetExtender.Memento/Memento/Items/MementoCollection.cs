@@ -29,17 +29,17 @@ namespace NetExtender.Types.Memento
             : base(source, expression is not null ? new MementoCollectionProperty<TSource, TProperty, TCollection>(expression, values) : throw new ArgumentNullException(nameof(expression)))
         {
         }
-        
+
         public MementoCollection(TSource source, ReflectionProperty<TSource, TCollection> property)
             : base(source, new MementoCollectionProperty<TSource, TProperty, TCollection>(property))
         {
         }
-        
+
         public MementoCollection(TSource source, ReflectionProperty<TSource, TCollection> property, IEnumerable<TProperty>? values)
             : base(source, new MementoCollectionProperty<TSource, TProperty, TCollection>(property, values))
         {
         }
-        
+
         public override MementoCollection<TSource, TProperty, TCollection> Swap()
         {
             Property.Swap(Source);
@@ -58,7 +58,7 @@ namespace NetExtender.Types.Memento
             {
                 throw new InvalidOperationException();
             }
-            
+
             property.With(values);
             return this;
         }

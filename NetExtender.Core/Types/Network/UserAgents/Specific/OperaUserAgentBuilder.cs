@@ -11,14 +11,14 @@ namespace NetExtender.Types.Network.UserAgents.Specific
     public class OperaUserAgentBuilder : UserAgentSpecificBuilder
     {
         public new static IUserAgentSpecificBuilder Default { get; } = new OperaUserAgentBuilder();
-        
+
         protected virtual (String Chrome, String Opera) RandomOperaVersion()
         {
             Int32 chrome = Random.Next(74, 91);
             return ($"{chrome}.{0}.{Random.Next(1000, 4000)}.{Random.Next(75, 300)}",
                 $"{chrome - 13}.{0}.{Random.Next(1000, 4000)}.{Random.Next(75, 300)}");
         }
-        
+
         public override String Build(UserAgentArchitecture? architecture, CultureInfo? info)
         {
             String arch = GetArchitecture(architecture);

@@ -21,7 +21,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 
             return builder.IsRequired(false);
         }
-    
+
         public static PropertyBuilder<String> HasMaxLength(this PropertyBuilder<String> builder)
         {
             if (builder is null)
@@ -42,13 +42,13 @@ namespace NetExtender.Utilities.EntityFrameworkCore
             return builder.HasConversion(item => item.JsonSerializeObject(),
                 json => json.JsonDeserializeObject<T>()!);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static PropertyBuilder<T> HasJsonConversion<T>(this PropertyBuilder<T> builder, JsonSerializerSettings? settings)
         {
             return HasJsonConversion(builder, settings, settings);
         }
-        
+
         public static PropertyBuilder<T> HasJsonConversion<T>(this PropertyBuilder<T> builder, JsonSerializerSettings? serializer, JsonSerializerSettings? deserializer)
         {
             if (builder is null)

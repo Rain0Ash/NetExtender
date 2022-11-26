@@ -46,7 +46,7 @@ namespace NetExtender.Types.Comparers
 
             Type xdefinition = x.GetGenericTypeDefinition();
             Type ydefenition = y.GetGenericTypeDefinition();
-            
+
             if (xdefinition != ydefenition)
             {
                 return false;
@@ -54,7 +54,7 @@ namespace NetExtender.Types.Comparers
 
             Type[] xgeneric = x.GetGenericArguments();
             Type[] ygeneric = y.GetGenericArguments();
-            
+
             return xgeneric.Length == ygeneric.Length && xgeneric.All((type, index) => TypeEquals(type, ygeneric[index]));
         }
 
@@ -103,10 +103,10 @@ namespace NetExtender.Types.Comparers
 
             Type[] xparameters = Array.ConvertAll(x.GetParameters(), ConvertType);
             Type[] yparameters = Array.ConvertAll(y.GetParameters(), ConvertType);
-            
+
             return xparameters.Length == yparameters.Length && xparameters.All((type, index) => TypeEquals(type, yparameters[index]));
         }
-        
+
         private static Int32 GetTypeHashCode(Type type)
         {
             if (type.IsGenericParameter)
@@ -123,7 +123,7 @@ namespace NetExtender.Types.Comparers
             Type generic = type.GetGenericTypeDefinition();
             code.Add(generic);
             code.AddRange(type.GetGenericArguments());
-            
+
             return code.ToHashCode();
         }
 
@@ -142,7 +142,7 @@ namespace NetExtender.Types.Comparers
             {
                 method = method.GetGenericMethodDefinition();
             }
-            
+
             Type[]? arguments = method.TryGetGenericArguments();
 
             if (arguments is not null)
@@ -171,7 +171,7 @@ namespace NetExtender.Types.Comparers
                 hash.Add(type.GetGenericTypeDefinition());
                 hash.AddRange(type.GetGenericArguments());
             }
-            
+
             hash.AddRange(types);
             return hash.ToHashCode();
         }

@@ -100,7 +100,7 @@ namespace NetExtender.Types.Concurrent.Dictionaries
         {
             return ((IEnumerable) Internal).GetEnumerator();
         }
-        
+
         public TValue this[TKey key]
         {
             get

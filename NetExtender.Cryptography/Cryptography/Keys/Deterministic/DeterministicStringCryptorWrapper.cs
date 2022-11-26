@@ -11,7 +11,7 @@ namespace NetExtender.Cryptography.Keys.Deterministic
     public class DeterministicStringCryptorWrapper : DeterministicStringEncryptorWrapper, IStringCryptor
     {
         private IStringCryptor Cryptor { get; }
-        
+
         public CryptAction Crypt
         {
             get
@@ -39,7 +39,7 @@ namespace NetExtender.Cryptography.Keys.Deterministic
         {
             Cryptor = cryptor ?? throw new ArgumentNullException(nameof(cryptor));
         }
-        
+
         public String? Decrypt(String value)
         {
             return Cryptor.Decrypt(value);
@@ -60,17 +60,17 @@ namespace NetExtender.Cryptography.Keys.Deterministic
             return Cryptor.DecryptString(source);
         }
     }
-    
+
     public class DeterministicStringCryptorWrapper<T> : DeterministicStringEncryptorWrapper where T : IStringCryptor
     {
         public T Cryptor { get; }
-        
+
         public DeterministicStringCryptorWrapper(T cryptor)
             : base(cryptor)
         {
             Cryptor = cryptor ?? throw new ArgumentNullException(nameof(cryptor));
         }
-        
+
         public DeterministicStringCryptorWrapper(T cryptor, IEnumerable<KeyValuePair<String, String?>>? source)
             : base(cryptor, source)
         {

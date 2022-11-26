@@ -21,7 +21,7 @@ namespace NetExtender.Localization.Common
         {
             return value is not null ? new FakeLocalizationString(value) : null;
         }
-        
+
         [return: NotNullIfNotNull("value")]
         public static ILocalizationString? Create(LocalizationIdentifier identifier, String? value)
         {
@@ -33,7 +33,7 @@ namespace NetExtender.Localization.Common
 
         [JsonProperty(PropertyName = null)]
         protected SortedDictionary<LocalizationIdentifier, String> Localization { get; }
-        
+
         [JsonIgnore]
         protected Dictionary<String, Int32> LocalizationArguments { get; }
 
@@ -276,7 +276,7 @@ namespace NetExtender.Localization.Common
                 : this(default, value)
             {
             }
-            
+
             public FakeLocalizationString(LocalizationIdentifier identifier, String value)
             {
                 Identifier = identifier;

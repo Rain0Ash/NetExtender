@@ -17,7 +17,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
         {
             return new FormWrapper(window);
         }
-        
+
         public static implicit operator Form(FormWrapper wrapper)
         {
             return wrapper.Form;
@@ -118,7 +118,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
         }
 
         private Form Form { get; }
-        
+
         public FormWrapper(Form form)
         {
             Form = form ?? throw new ArgumentNullException(nameof(form));
@@ -129,13 +129,13 @@ namespace NetExtender.UserInterface.WinForms.Forms
         {
             InterfaceClosingEventArgs closing = new InterfaceClosingEventArgs(InterfaceCloseReason.WindowClosing, args.Cancel);
             WindowClosing?.Invoke(sender, closing);
-            
+
             if (closing.Cancel)
             {
                 args.Cancel = closing.Cancel;
             }
         }
-        
+
         public void Show()
         {
             Form.Show();

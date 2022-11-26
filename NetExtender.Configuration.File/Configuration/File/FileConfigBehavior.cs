@@ -54,7 +54,7 @@ namespace NetExtender.Configuration.File
                     result = default;
                     return false;
                 }
-                
+
                 result = DeserializeConfig(config);
                 return result is not null;
             }
@@ -107,7 +107,7 @@ namespace NetExtender.Configuration.File
         {
             return SerializeConfigAsync(CancellationToken.None);
         }
-        
+
         protected virtual Task<String?> SerializeConfigAsync(CancellationToken token)
         {
             return !token.IsCancellationRequested ? SerializeConfig().ToTask() : StringUtilities.Null;
@@ -130,7 +130,7 @@ namespace NetExtender.Configuration.File
             {
                 return TaskUtilities.False;
             }
-            
+
             String? config = SerializeConfig();
             return WriteConfigTextAsync(config, token);
         }
@@ -159,7 +159,7 @@ namespace NetExtender.Configuration.File
         {
             return await base.MergeAsync(entries, token) && await WriteConfigAsync(token);
         }
-        
+
         public override Boolean Replace(IEnumerable<ConfigurationValueEntry>? entries)
         {
             return base.Replace(entries) && WriteConfig();
@@ -181,7 +181,7 @@ namespace NetExtender.Configuration.File
             {
                 return false;
             }
-            
+
             Config.AddRange(config);
             return true;
         }

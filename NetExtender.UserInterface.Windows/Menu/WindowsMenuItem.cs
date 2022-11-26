@@ -15,7 +15,7 @@ namespace NetExtender.UserInterface.Windows.Menu
         public static WindowsMenuItem Maximize { get; } = new WindowsMenuItem(0xF030);
         public static WindowsMenuItem Restore { get; } = new WindowsMenuItem(0xF120);
         public static WindowsMenuItem Separator { get; } = new WindowsMenuItem((Int32) UserInterfaceUtilities.WindowsMenuItemType.Separator, UserInterfaceUtilities.WindowsMenuItemMask.Id, UserInterfaceUtilities.WindowsMenuItemType.Separator);
-        
+
         public Int32 Command { get; }
         internal UserInterfaceUtilities.WindowsMenuItemMask Mask { get; }
         internal UserInterfaceUtilities.WindowsMenuItemType Type { get; }
@@ -25,7 +25,7 @@ namespace NetExtender.UserInterface.Windows.Menu
             : this(command, UserInterfaceUtilities.WindowsMenuItemMask.String, UserInterfaceUtilities.WindowsMenuItemType.String)
         {
         }
-        
+
         private protected WindowsMenuItem(Int32 command, UserInterfaceUtilities.WindowsMenuItemMask mask, UserInterfaceUtilities.WindowsMenuItemType type, UserInterfaceUtilities.WindowsMenuItemState state = UserInterfaceUtilities.WindowsMenuItemState.None)
         {
             Command = command;

@@ -35,7 +35,7 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 return false;
             }
-            
+
             IShortcut shortcut = new Shortcut(file)
             {
                 TargetPath = path,

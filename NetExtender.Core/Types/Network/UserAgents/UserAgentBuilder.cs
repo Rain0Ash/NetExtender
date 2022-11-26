@@ -29,7 +29,7 @@ namespace NetExtender.Types.Network.UserAgents
                 return Browser;
             }
         }
-        
+
         protected HashSet<UserAgentArchitecture> Architecture { get; }
 
         IReadOnlySet<UserAgentArchitecture> IUserAgentBuilder.Architecture
@@ -223,7 +223,7 @@ namespace NetExtender.Types.Network.UserAgents
             {
                 throw new ArgumentNullException(nameof(architectures));
             }
-            
+
             foreach (UserAgentArchitecture architecture in architectures)
             {
                 RemoveArchitecture(architecture);
@@ -275,7 +275,7 @@ namespace NetExtender.Types.Network.UserAgents
             {
                 return this;
             }
-            
+
             Culture.Remove(culture);
             return this;
         }
@@ -312,7 +312,7 @@ namespace NetExtender.Types.Network.UserAgents
                 yield return result;
             }
         }
-        
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

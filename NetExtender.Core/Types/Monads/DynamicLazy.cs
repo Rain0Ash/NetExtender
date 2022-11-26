@@ -42,7 +42,7 @@ namespace NetExtender.Types.Monads
         {
             Internal = new LazyWrapper<T>(valueFactory ?? throw new ArgumentNullException(nameof(valueFactory)));
         }
-        
+
         public DynamicLazy(Func<T> valueFactory, Boolean isThreadSafe)
         {
             Internal = new LazyWrapper<T>(valueFactory ?? throw new ArgumentNullException(nameof(valueFactory)), isThreadSafe);

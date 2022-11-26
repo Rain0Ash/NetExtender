@@ -35,7 +35,7 @@ namespace NetExtender.Utilities.Core
             {
                 GetPinnedPtr.Invoke(value, ptr => pointer = ptr);
             }
-            
+
             return pointer;
         }
 
@@ -50,7 +50,7 @@ namespace NetExtender.Utilities.Core
             {
                 action.Invoke(IntPtr.Zero);
             }
-            
+
             GetPinnedPtr.Invoke(value, action);
             return true;
         }

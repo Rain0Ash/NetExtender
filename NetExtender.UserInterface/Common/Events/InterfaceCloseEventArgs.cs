@@ -12,7 +12,7 @@ namespace NetExtender.UserInterface.Events
         ///  Provides the reason for the Form close.
         /// </summary>
         public InterfaceCloseReason Reason { get; }
-        
+
         public InterfaceClosingEventArgs(InterfaceCloseReason reason, Boolean cancel)
             : base(cancel)
         {

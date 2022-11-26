@@ -17,7 +17,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
                 return base.UserAgentWhitelist;
             }
         }
-        
+
         public Boolean IsReadOnly
         {
             get
@@ -25,7 +25,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
                 return UserAgentWhitelist.IsReadOnly;
             }
         }
-        
+
         public UserAgentSetAccessRestrictionMiddleware(RequestDelegate next)
             : base(next, Array.Empty<String?>())
         {
@@ -50,7 +50,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
         {
             return UserAgentWhitelist.Add(item);
         }
-        
+
         public Boolean Remove(String? item)
         {
             return UserAgentWhitelist.Remove(item);
@@ -60,7 +60,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
         {
             UserAgentWhitelist.Clear();
         }
-        
+
         public void CopyTo(String?[] array, Int32 arrayIndex)
         {
             UserAgentWhitelist.CopyTo(array, arrayIndex);

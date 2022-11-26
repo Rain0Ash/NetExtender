@@ -14,17 +14,17 @@ namespace NetExtender.Types.Network.UserAgents.Specific
         public static IUserAgentSpecificBuilder Default { get; } = new UserAgentBuilder();
 
         protected IRandom Random { get; } = RandomUtilities.Create();
-        
+
         protected virtual String GetWindowsNTVersionX32(String version)
         {
             return $"Windows NT {version}; Win32; x86";
         }
-        
+
         protected virtual String GetWindowsNTVersionX64(String version)
         {
             return $"Windows NT {version}; Win64; x64";
         }
-        
+
         protected virtual String GetWindowsNTVersionWOW64(String version)
         {
             return $"Windows NT {version}; WOW64";
@@ -34,7 +34,7 @@ namespace NetExtender.Types.Network.UserAgents.Specific
         {
             return $"Macintosh; Intel Mac OS X {version}";
         }
-        
+
         protected virtual String GetMacVersionPPC(String version)
         {
             return $"Macintosh; PPC Mac OS X {version}";
@@ -81,7 +81,7 @@ namespace NetExtender.Types.Network.UserAgents.Specific
         {
             return info?.Name ?? String.Empty;
         }
-        
+
         public abstract String Build(UserAgentArchitecture? architecture, CultureInfo? info);
     }
 }

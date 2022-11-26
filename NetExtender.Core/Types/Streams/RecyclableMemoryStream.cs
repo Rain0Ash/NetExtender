@@ -18,15 +18,15 @@ namespace NetExtender.Types.Streams
         {
             return stream?.Stream;
         }
-        
+
         [return: NotNullIfNotNull("stream")]
         public static implicit operator Microsoft.IO.RecyclableMemoryStream?(RecyclableMemoryStream? stream)
         {
             return stream?.Stream;
         }
-        
+
         protected Microsoft.IO.RecyclableMemoryStream Stream { get; }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.Length"/>
         public Int64 Length
         {
@@ -48,7 +48,7 @@ namespace NetExtender.Types.Streams
                 Stream.Position = value;
             }
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.Capacity"/>
         public Int32 Capacity
         {
@@ -146,7 +146,7 @@ namespace NetExtender.Types.Streams
 
             Stream = new Microsoft.IO.RecyclableMemoryStream(manager);
         }
-        
+
         public RecyclableMemoryStream(RecyclableMemoryStreamManager manager, Int64 size)
         {
             if (manager is null)
@@ -156,7 +156,7 @@ namespace NetExtender.Types.Streams
 
             Stream = new Microsoft.IO.RecyclableMemoryStream(manager, null, size);
         }
-        
+
         public RecyclableMemoryStream()
             : this(new RecyclableMemoryStreamManager())
         {
@@ -186,7 +186,7 @@ namespace NetExtender.Types.Streams
             : this(new RecyclableMemoryStreamManager(block, multiple, size, exponential, smallpool, largepool))
         {
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.SetLength"/>
         public void SetLength(Int64 value)
         {
@@ -198,7 +198,7 @@ namespace NetExtender.Types.Streams
         {
             return Stream.Seek(offset, origin);
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.ReadByte"/>
         public Int32 ReadByte()
         {
@@ -216,7 +216,7 @@ namespace NetExtender.Types.Streams
         {
             return Stream.SafeReadByte(ref position);
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.Read(Byte[],Int32,Int32)"/>
         public Int32 Read(Byte[] buffer, Int32 offset, Int32 count)
         {
@@ -264,7 +264,7 @@ namespace NetExtender.Types.Streams
         {
             return Stream.ReadAsync(buffer, offset, count, token);
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.ReadAsync(Memory{Byte},CancellationToken)"/>
         public ValueTask<Int32> ReadAsync(Memory<Byte> destination)
         {
@@ -276,13 +276,13 @@ namespace NetExtender.Types.Streams
         {
             return Stream.ReadAsync(destination, token);
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.WriteByte"/>
         public void WriteByte(Byte value)
         {
             Stream.WriteByte(value);
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.Write(Byte[],Int32,Int32)"/>
         public void Write(Byte[] buffer, Int32 offset, Int32 count)
         {
@@ -336,13 +336,13 @@ namespace NetExtender.Types.Streams
         {
             return Stream.WriteAsync(buffer, offset, count);
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.WriteAsync(Byte[],Int32,Int32,CancellationToken)"/>
         public Task WriteAsync(Byte[] buffer, Int32 offset, Int32 count, CancellationToken token)
         {
             return Stream.WriteAsync(buffer, offset, count, token);
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.WriteAsync(ReadOnlyMemory{Byte},CancellationToken)"/>
         public ValueTask WriteAsync(ReadOnlyMemory<Byte> source)
         {
@@ -354,13 +354,13 @@ namespace NetExtender.Types.Streams
         {
             return Stream.WriteAsync(source, token);
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.BeginRead(Byte[],Int32,Int32,AsyncCallback,Object)"/>
         public IAsyncResult BeginRead(Byte[] buffer, Int32 offset, Int32 count, AsyncCallback? callback, Object? state)
         {
             return Stream.BeginRead(buffer, offset, count, callback, state);
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.EndRead"/>
         public Int32 EndRead(IAsyncResult result)
         {
@@ -390,7 +390,7 @@ namespace NetExtender.Types.Streams
         {
             Stream.CopyTo(destination);
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.CopyTo(System.IO.Stream,Int32)"/>
         public void CopyTo(Stream destination, Int32 bufferSize)
         {
@@ -414,37 +414,37 @@ namespace NetExtender.Types.Streams
         {
             return Stream.CopyToAsync(destination, token);
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.CopyToAsync(System.IO.Stream,Int32,CancellationToken)"/>
         public Task CopyToAsync(Stream destination, Int32 bufferSize, CancellationToken token)
         {
             return Stream.CopyToAsync(destination, bufferSize, token);
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.GetBuffer"/>
         public Byte[] GetBuffer()
         {
             return Stream.GetBuffer();
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.TryGetBuffer"/>
         public Boolean TryGetBuffer(out ArraySegment<Byte> buffer)
         {
             return Stream.TryGetBuffer(out buffer);
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.GetMemory"/>
         public Memory<Byte> GetMemory()
         {
             return Stream.GetMemory();
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.GetMemory"/>
         public Memory<Byte> GetMemory(Int32 size)
         {
             return Stream.GetMemory(size);
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.GetSpan"/>
         public Span<Byte> GetSpan()
         {
@@ -462,7 +462,7 @@ namespace NetExtender.Types.Streams
         {
             return Stream.GetReadOnlySequence();
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.ToArray"/>
         [Obsolete]
         public Byte[] ToArray()
@@ -475,19 +475,19 @@ namespace NetExtender.Types.Streams
         {
             Stream.Flush();
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.FlushAsync(CancellationToken)"/>
         public Task FlushAsync()
         {
             return Stream.FlushAsync();
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.FlushAsync(CancellationToken)"/>
         public Task FlushAsync(CancellationToken token)
         {
             return Stream.FlushAsync(token);
         }
-        
+
         /// <inheritdoc cref="Microsoft.IO.RecyclableMemoryStream.Close"/>
         public void Close()
         {

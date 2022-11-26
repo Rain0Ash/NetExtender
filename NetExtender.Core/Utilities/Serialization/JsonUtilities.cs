@@ -84,7 +84,7 @@ namespace NetExtender.Utilities.Serialization
         {
             return JsonConvert.DeserializeObject<T>(json);
         }
-        
+
         public static T? JsonDeserializeObject<T>(this String json, JsonSerializerSettings? settings)
         {
             return JsonConvert.DeserializeObject<T>(json, settings);
@@ -196,7 +196,7 @@ namespace NetExtender.Utilities.Serialization
             InitializePropertyResolver(settings).OrderProperty(type, property, order);
             return settings;
         }
-        
+
         public static OverrideConvertContractResolver InitializeOverrideContractResolver(JsonSerializerSettings settings)
         {
             if (settings is null)
@@ -244,25 +244,25 @@ namespace NetExtender.Utilities.Serialization
                 }
             }
         }
-        
+
         public static TSettings ConverterOverride<TSettings>(this TSettings settings, Type type, JsonConverter? converter) where TSettings : JsonSerializerSettings
         {
             InitializeOverrideContractResolver(settings).Add(type, converter);
             return settings;
         }
-        
+
         public static TSettings ConverterOverride<T, TSettings>(this TSettings settings, JsonConverter? converter) where TSettings : JsonSerializerSettings
         {
             InitializeOverrideContractResolver(settings).Add<T>(converter);
             return settings;
         }
-        
+
         public static TSettings ConverterOverrideWithout<TSettings>(this TSettings settings, Type type) where TSettings : JsonSerializerSettings
         {
             InitializeOverrideContractResolver(settings).Without(type);
             return settings;
         }
-        
+
         public static TSettings ConverterOverrideWithout<T, TSettings>(this TSettings settings) where TSettings : JsonSerializerSettings
         {
             InitializeOverrideContractResolver(settings).Without<T>();
@@ -323,7 +323,7 @@ namespace NetExtender.Utilities.Serialization
             {
                 throw new ArgumentNullException(nameof(reader));
             }
-            
+
             return new JsonTokenEntry(reader.TokenType, reader.ValueType, reader.Value, reader.Depth);
         }
 
@@ -365,14 +365,14 @@ namespace NetExtender.Utilities.Serialization
             result = reader.GetToken();
             return successful;
         }
-        
+
         public static IEnumerable<JsonTokenEntry> AsEnumerable(this JsonReader reader)
         {
             if (reader is null)
             {
                 throw new ArgumentNullException(nameof(reader));
             }
-            
+
             if (reader.TokenType == JsonToken.None && !reader.Read())
             {
                 yield break;
@@ -381,7 +381,7 @@ namespace NetExtender.Utilities.Serialization
             do
             {
                 yield return new JsonTokenEntry(reader.TokenType, reader.ValueType, reader.Value, reader.Depth);
-                
+
             } while (reader.Read() && reader.TokenType != JsonToken.None);
         }
 
@@ -391,7 +391,7 @@ namespace NetExtender.Utilities.Serialization
             {
                 throw new ArgumentNullException(nameof(reader));
             }
-            
+
             return reader.AsEnumerable().GetEnumerator();
         }
 
@@ -438,12 +438,12 @@ namespace NetExtender.Utilities.Serialization
             }
 
             using IEnumerator<JsonTokenEntry> enumerator = source.GetEnumerator();
-            
+
             if (!enumerator.MoveNext())
             {
                 throw new InvalidOperationException("The source sequence is empty.");
             }
-            
+
             if (enumerator.Current.Token != token)
             {
                 throw new InvalidOperationException($"The source sequence does not start with {token}.");
@@ -452,7 +452,7 @@ namespace NetExtender.Utilities.Serialization
             do
             {
                 yield return enumerator.Current;
-                
+
             } while (enumerator.MoveNext());
         }
 
@@ -467,18 +467,18 @@ namespace NetExtender.Utilities.Serialization
             {
                 throw new ArgumentNullException(nameof(action));
             }
-            
+
             foreach (JsonTokenEntry value in source)
             {
                 if (value.Token == token)
                 {
                     action(value);
                 }
-                
+
                 yield return value;
             }
         }
-        
+
         public static IEnumerable<JsonTokenEntry> WithBoolean(this IEnumerable<JsonTokenEntry> source, Action<JsonTokenEntry, Boolean> action)
         {
             if (source is null)
@@ -493,7 +493,7 @@ namespace NetExtender.Utilities.Serialization
 
             return With(source, JsonToken.Boolean, item => action(item, item.TryConvert(out Boolean value) ? value : throw new InvalidOperationException($"The value of {item} is not a boolean.")));
         }
-        
+
         public static IEnumerable<JsonTokenEntry> WithInteger(this IEnumerable<JsonTokenEntry> source, Action<JsonTokenEntry, Int64> action)
         {
             if (source is null)
@@ -508,7 +508,7 @@ namespace NetExtender.Utilities.Serialization
 
             return With(source, JsonToken.Integer, item => action(item, item.TryConvert(out Int64 value) ? value : throw new InvalidOperationException($"The value of {item} is not an integer.")));
         }
-        
+
         public static IEnumerable<JsonTokenEntry> WithFloat(this IEnumerable<JsonTokenEntry> source, Action<JsonTokenEntry, Double> action)
         {
             if (source is null)
@@ -523,7 +523,7 @@ namespace NetExtender.Utilities.Serialization
 
             return With(source, JsonToken.Float, item => action(item, item.TryConvert(out Double value) ? value : throw new InvalidOperationException($"The value of {item} is not a float.")));
         }
-        
+
         public static IEnumerable<JsonTokenEntry> WithDateTime(this IEnumerable<JsonTokenEntry> source, Action<JsonTokenEntry, DateTime> action)
         {
             if (source is null)
@@ -538,7 +538,7 @@ namespace NetExtender.Utilities.Serialization
 
             return With(source, JsonToken.Date, item => action(item, item.TryConvert(out DateTime value) ? value : throw new InvalidOperationException($"The value of {item} is not a date.")));
         }
-        
+
         public static IEnumerable<JsonTokenEntry> WithBytes(this IEnumerable<JsonTokenEntry> source, Action<JsonTokenEntry, Byte[]?> action)
         {
             if (source is null)
@@ -568,7 +568,7 @@ namespace NetExtender.Utilities.Serialization
 
             return With(source, JsonToken.String, item => action(item, item.TryConvert(out String? value) ? value : throw new InvalidOperationException($"The value of {item} is not a string.")));
         }
-        
+
         public static IEnumerable<JsonTokenEntry> WithValue(this IEnumerable<JsonTokenEntry> source, Action<JsonTokenEntry> action)
         {
             if (source is null)
@@ -587,7 +587,7 @@ namespace NetExtender.Utilities.Serialization
                 {
                     action(value);
                 }
-                
+
                 yield return value;
             }
         }
@@ -606,12 +606,12 @@ namespace NetExtender.Utilities.Serialization
 
             return With(source, JsonToken.PropertyName, item => action(item, item.Current));
         }
-        
+
         public static IEnumerable<JsonTokenEntry> WithStartObject(this IEnumerable<JsonTokenEntry> source, Action<JsonTokenEntry> action)
         {
             return With(source, JsonToken.StartObject, action);
         }
-        
+
         public static IEnumerable<JsonTokenEntry> WithEndObject(this IEnumerable<JsonTokenEntry> source, Action<JsonTokenEntry> action)
         {
             return With(source, JsonToken.EndObject, action);
@@ -621,7 +621,7 @@ namespace NetExtender.Utilities.Serialization
         {
             return MustEndWith(source, JsonToken.EndObject);
         }
-        
+
         public static IEnumerable<JsonTokenEntry> MustEndWith(this IEnumerable<JsonTokenEntry> source, JsonToken token)
         {
             if (source is null)
@@ -630,18 +630,18 @@ namespace NetExtender.Utilities.Serialization
             }
 
             using IEnumerator<JsonTokenEntry> enumerator = source.GetEnumerator();
-            
+
             if (!enumerator.MoveNext())
             {
                 throw new InvalidOperationException("The source sequence is empty.");
             }
-            
+
             do
             {
                 yield return enumerator.Current;
-                
+
             } while (enumerator.MoveNext());
-            
+
             if (enumerator.Current.Token != token)
             {
                 throw new InvalidOperationException($"The source sequence does not end with {token}.");
@@ -654,23 +654,23 @@ namespace NetExtender.Utilities.Serialization
             {
                 throw new ArgumentNullException(nameof(writer));
             }
-            
+
             if (value.Token == JsonToken.None)
             {
                 return false;
             }
-            
+
             writer.WriteToken(value.Token, value.Value);
             return true;
         }
-        
+
         public static Boolean Write(this JsonWriter writer, IEnumerable<JsonTokenEntry> values)
         {
             if (writer is null)
             {
                 throw new ArgumentNullException(nameof(writer));
             }
-            
+
             if (values is null)
             {
                 throw new ArgumentNullException(nameof(values));
@@ -679,19 +679,19 @@ namespace NetExtender.Utilities.Serialization
             return values.All(writer.Write);
         }
     }
-    
+
     public readonly struct JsonTokenEntry
     {
         public static implicit operator JsonToken(JsonTokenEntry value)
         {
             return value.Token;
         }
-        
+
         public static implicit operator String?(JsonTokenEntry value)
         {
             return value.Current;
         }
-        
+
         public JsonToken Token { get; }
         public Type? Type { get; }
         public Object? Value { get; }
@@ -725,19 +725,19 @@ namespace NetExtender.Utilities.Serialization
         {
             Deconstruct(out token, out _, out value);
         }
-        
+
         public void Deconstruct(out JsonToken token, out String? value)
         {
             Deconstruct(out token, out _, out value);
         }
-        
+
         public void Deconstruct(out JsonToken token, out Type? type, out Object? value)
         {
             token = Token;
             type = Type;
             value = Value;
         }
-        
+
         public void Deconstruct(out JsonToken token, out Type? type, out String? value)
         {
             token = Token;

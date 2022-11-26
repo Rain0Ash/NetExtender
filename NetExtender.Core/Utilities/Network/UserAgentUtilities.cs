@@ -19,7 +19,7 @@ namespace NetExtender.Utilities.Network
     public static class UserAgentUtilities
     {
         public const String OtherUserAgent = "User-Agent: Other";
-        
+
         public static IImmutableDictionary<BrowserType, IUserAgentSpecificBuilder> UserAgents { get; } =
             new Dictionary<BrowserType, IUserAgentSpecificBuilder>
             {
@@ -31,7 +31,7 @@ namespace NetExtender.Utilities.Network
                 [BrowserType.Safari] = SafariUserAgentBuilder.Default,
                 [BrowserType.Other] = UserAgentSpecificBuilder.Default
             }.ToImmutableDictionary();
-        
+
         private static class UserAgentBrowserDistribution
         {
             public static IDynamicRandomSelector<BrowserType> Selector { get; }
@@ -49,7 +49,7 @@ namespace NetExtender.Utilities.Network
                 return UserAgentBrowserDistribution.Selector;
             }
         }
-        
+
         public static BrowserType RandomBrowser
         {
             get
@@ -57,7 +57,7 @@ namespace NetExtender.Utilities.Network
                 return EnumUtilities.Random<BrowserType>();
             }
         }
-        
+
         public static BrowserType RandomBrowserWithDistribution
         {
             get
@@ -65,7 +65,7 @@ namespace NetExtender.Utilities.Network
                 return UserAgentBrowserDistribution.Selector.GetRandom();
             }
         }
-        
+
         private static class UserAgentArchitectureDistribution
         {
             public static IDynamicRandomSelector<UserAgentArchitecture> Selector { get; }
@@ -91,10 +91,10 @@ namespace NetExtender.Utilities.Network
                     { UserAgentArchitecture.Win10X32, 0.82 * windows * 0.3 },
                     { UserAgentArchitecture.Win10X64, 0.82 * windows * 0.35 },
                     { UserAgentArchitecture.Wow10X64, 0.82 * windows * 0.35 },
-                    
+
                     { UserAgentArchitecture.MacOSXIntel, 1 * osx * 0.95 },
                     { UserAgentArchitecture.MacOSXPPC, 1 * osx * 0.05 },
-                    
+
                     { UserAgentArchitecture.LinuxI686, 0.5 * linux * 0.2 },
                     { UserAgentArchitecture.LinuxX64, 0.5 * linux * 0.4 },
                     { UserAgentArchitecture.LinuxAMD64, 0.5 * linux * 0.4 },
@@ -115,7 +115,7 @@ namespace NetExtender.Utilities.Network
                 return UserAgentArchitectureDistribution.Selector;
             }
         }
-        
+
         public static UserAgentArchitecture RandomArchitecture
         {
             get
@@ -123,7 +123,7 @@ namespace NetExtender.Utilities.Network
                 return EnumUtilities.Random<UserAgentArchitecture>();
             }
         }
-        
+
         public static UserAgentArchitecture RandomArchitectureWithDistribution
         {
             get
@@ -131,7 +131,7 @@ namespace NetExtender.Utilities.Network
                 return UserAgentArchitectureDistribution.Selector.GetRandom();
             }
         }
-        
+
         private static class UserAgentCultureDistribution
         {
             public static IDynamicRandomSelector<CultureInfo> Selector { get; }
@@ -156,7 +156,7 @@ namespace NetExtender.Utilities.Network
                     { CultureIdentifier.Lv.ToCultureInfo(), 0.000345 },
                     { CultureIdentifier.Et.ToCultureInfo(), 0.00024 }
                 };
-                
+
                 Selector.Add(CultureIdentifier.Invariant.ToCultureInfo(), 1 - Selector.Values.Sum());
             }
         }
@@ -214,17 +214,17 @@ namespace NetExtender.Utilities.Network
                 {
                     throw new ArgumentNullException(nameof(value));
                 }
-                
+
                 if (session is not null)
                 {
                     throw new AlreadyInitializedException("User agent already initialized", nameof(SessionUserAgent));
                 }
-                
+
                 if (!ValidateUserAgent(value))
                 {
                     throw new ArgumentException(@"Is not valid user agent", nameof(value));
                 }
-                
+
                 session = value;
             }
         }
@@ -242,12 +242,12 @@ namespace NetExtender.Utilities.Network
                 {
                     throw new ArgumentNullException(nameof(value));
                 }
-                
+
                 if (!ValidateUserAgent(value))
                 {
                     throw new ArgumentException(@"Is not valid user agent", nameof(value));
                 }
-                
+
                 current = value;
             }
         }
@@ -258,10 +258,10 @@ namespace NetExtender.Utilities.Network
             {
                 throw new AlreadyInitializedException("User agent already initialized", nameof(SessionUserAgent));
             }
-            
+
             return InitializeSessionUserAgent(RandomUserAgentWithDistribution);
         }
-        
+
         public static String InitializeSessionUserAgent(IUserAgentBuilder builder)
         {
             if (builder is null)
@@ -273,17 +273,17 @@ namespace NetExtender.Utilities.Network
             {
                 throw new AlreadyInitializedException("User agent already initialized", nameof(SessionUserAgent));
             }
-            
+
             return InitializeSessionUserAgent(builder.Build() ?? OtherUserAgent);
         }
-        
+
         public static String InitializeSessionUserAgent(BrowserType type)
         {
             if (session is not null)
             {
                 throw new AlreadyInitializedException("User agent already initialized", nameof(SessionUserAgent));
             }
-            
+
             return InitializeSessionUserAgent(type.CreateUserAgent());
         }
 
@@ -293,7 +293,7 @@ namespace NetExtender.Utilities.Network
             {
                 throw new AlreadyInitializedException("User agent already initialized", nameof(SessionUserAgent));
             }
-            
+
             return InitializeSessionUserAgent(type.CreateUserAgent(architecture));
         }
 
@@ -303,46 +303,46 @@ namespace NetExtender.Utilities.Network
             {
                 throw new AlreadyInitializedException("User agent already initialized", nameof(SessionUserAgent));
             }
-            
+
             return InitializeSessionUserAgent(type.CreateUserAgent(info));
         }
-        
+
         public static String InitializeSessionUserAgent(BrowserType type, UserAgentArchitecture? architecture, CultureInfo? info)
         {
             if (session is not null)
             {
                 throw new AlreadyInitializedException("User agent already initialized", nameof(SessionUserAgent));
             }
-            
+
             return InitializeSessionUserAgent(type.CreateUserAgent(architecture, info));
         }
-        
+
         public static String InitializeSessionUserAgent(String agent)
         {
             if (session is not null)
             {
                 throw new AlreadyInitializedException("User agent already initialized", nameof(SessionUserAgent));
             }
-            
+
             SessionUserAgent = agent ?? throw new ArgumentNullException(nameof(agent));
             return SessionUserAgent;
         }
-        
+
         public static String CreateUserAgent(this BrowserType type)
         {
             return CreateUserAgent(type, null, null);
         }
-        
+
         public static String CreateUserAgent(this BrowserType type, UserAgentArchitecture? architecture)
         {
             return CreateUserAgent(type, architecture, null);
         }
-        
+
         public static String CreateUserAgent(this BrowserType type, CultureInfo? info)
         {
             return CreateUserAgent(type, null, info);
         }
-        
+
         public static String CreateUserAgent(this BrowserType type, UserAgentArchitecture? architecture, CultureInfo? info)
         {
             return UserAgents.TryGetValue(type, out IUserAgentSpecificBuilder? builder) ? builder.Build(architecture, info) ?? OtherUserAgent : throw new NotSupportedException();
@@ -352,7 +352,7 @@ namespace NetExtender.Utilities.Network
         {
             return !String.IsNullOrEmpty(agent);
         }
-        
+
         private static Boolean IsInternetExplorer(String agent)
         {
             if (agent is null)

@@ -30,7 +30,7 @@ namespace NetExtender.NAudio.Types.Playlist
     public class WavePlaylist<T> : IReadOnlyWavePlaylist<T>, IWavePlaylist<T> where T : class, IWaveProvider
     {
         protected IList<T> Queue { get; }
-        
+
         public Boolean IsReadOnly
         {
             get
@@ -38,7 +38,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 return Queue.IsReadOnly;
             }
         }
-        
+
         public Int32 Count
         {
             get
@@ -54,7 +54,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 return Current?.WaveFormat ?? throw new InvalidOperationException();
             }
         }
-        
+
         protected virtual T? Current
         {
             get
@@ -65,12 +65,12 @@ namespace NetExtender.NAudio.Types.Playlist
                 }
             }
         }
-        
+
         public WavePlaylist()
         {
             Queue = new List<T>();
         }
-        
+
         public WavePlaylist(params T[] items)
             : this((IEnumerable<T>) items)
         {
@@ -85,7 +85,7 @@ namespace NetExtender.NAudio.Types.Playlist
 
             Queue = new List<T>(source.WhereNotNull());
         }
-        
+
         public virtual Int32 Read(Byte[] buffer, Int32 offset, Int32 count)
         {
             Int32 read;
@@ -103,7 +103,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 {
                     Remove(current);
                 }
-                
+
             } while (read <= 0);
 
             return read;
@@ -121,7 +121,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 return Queue.Contains(item);
             }
         }
-        
+
         public Int32 IndexOf(T? item)
         {
             if (item is null)
@@ -147,7 +147,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 Queue.Add(item);
             }
         }
-        
+
         public void AddRange(IEnumerable<T> source)
         {
             if (source is null)
@@ -160,7 +160,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 Add(item);
             }
         }
-        
+
         public void Insert(Int32 index, T? item)
         {
             if (item is null)
@@ -186,7 +186,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 return Queue.Remove(item);
             }
         }
-        
+
         public void RemoveAt(Int32 index)
         {
             if (index < 0)
@@ -204,7 +204,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 Queue.RemoveAt(index);
             }
         }
-        
+
         public void Clear()
         {
             lock (Queue)
@@ -220,7 +220,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 Queue.CopyTo(array, arrayIndex);
             }
         }
-        
+
         public IEnumerator<T> GetEnumerator()
         {
             lock (Queue)

@@ -13,7 +13,7 @@ namespace NetExtender.Types.TextWriters
     public class LockedTextWriterWrapper : TextWriter
     {
         public TextWriter Internal { get; }
-        
+
         public override Encoding Encoding
         {
             get
@@ -308,7 +308,7 @@ namespace NetExtender.Types.TextWriters
         {
             return Internal.WriteLineAsync(value, cancellationToken);
         }
-        
+
         public override void Flush()
         {
             Internal.Flush();

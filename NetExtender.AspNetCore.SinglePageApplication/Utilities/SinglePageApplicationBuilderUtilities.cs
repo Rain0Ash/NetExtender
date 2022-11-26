@@ -20,7 +20,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             builder.Options.DefaultPage = page;
             return builder;
         }
-        
+
         public static ISpaBuilder SetSourcePath(this ISpaBuilder builder, String? path)
         {
             if (builder is null)
@@ -47,7 +47,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             builder.Options.StartupTimeout = timeout;
             return builder;
         }
-        
+
         public static ISpaBuilder SetPackageManagerCommand(this ISpaBuilder builder, String command)
         {
             if (builder is null)
@@ -58,7 +58,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             builder.Options.PackageManagerCommand = command;
             return builder;
         }
-        
+
         public static ISpaBuilder SetDefaultPageStaticFileOptions(this ISpaBuilder builder, StaticFileOptions? command)
         {
             if (builder is null)

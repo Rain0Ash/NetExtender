@@ -140,7 +140,7 @@ namespace NetExtender.Utilities.Numerics
             DivideInternal = new Lazy<Func<TResult, T, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, T, TResult>(Expression.Divide, true), true);
             ModuloInternal = new Lazy<Func<TResult, T, TResult>>(() => ExpressionUtilities.CreateExpression<TResult, T, TResult>(Expression.Modulo, true), true);
         }
-        
+
         private static Lazy<Func<T, TResult>> ConvertInternal { get; }
 
         public static Func<T, TResult> Convert
@@ -160,7 +160,7 @@ namespace NetExtender.Utilities.Numerics
                 return AddInternal.Value;
             }
         }
-        
+
         private static Lazy<Func<TResult, T, TResult>> SubtractInternal { get; }
 
         public static Func<TResult, T, TResult> Subtract
@@ -170,7 +170,7 @@ namespace NetExtender.Utilities.Numerics
                 return SubtractInternal.Value;
             }
         }
-        
+
         private static Lazy<Func<TResult, T, TResult>> MultiplyInternal { get; }
 
         public static Func<TResult, T, TResult> Multiply
@@ -180,7 +180,7 @@ namespace NetExtender.Utilities.Numerics
                 return MultiplyInternal.Value;
             }
         }
-        
+
         private static Lazy<Func<TResult, T, TResult>> DivideInternal { get; }
 
         public static Func<TResult, T, TResult> Divide
@@ -190,7 +190,7 @@ namespace NetExtender.Utilities.Numerics
                 return DivideInternal.Value;
             }
         }
-        
+
         private static Lazy<Func<TResult, T, TResult>> ModuloInternal { get; }
 
         public static Func<TResult, T, TResult> Modulo
@@ -250,7 +250,7 @@ namespace NetExtender.Utilities.Numerics
                 return NegateInternal.Value;
             }
         }
-        
+
         private static Lazy<Func<T, T>> NotInternal { get; }
 
         public static Func<T, T> Not
@@ -260,7 +260,7 @@ namespace NetExtender.Utilities.Numerics
                 return NotInternal.Value;
             }
         }
-        
+
         private static Lazy<Func<T, T, T>> OrInternal { get; }
 
         public static Func<T, T, T> Or
@@ -270,7 +270,7 @@ namespace NetExtender.Utilities.Numerics
                 return OrInternal.Value;
             }
         }
-        
+
         private static Lazy<Func<T, T, T>> AndInternal { get; }
 
         public static Func<T, T, T> And
@@ -280,7 +280,7 @@ namespace NetExtender.Utilities.Numerics
                 return AndInternal.Value;
             }
         }
-        
+
         private static Lazy<Func<T, T, T>> XorInternal { get; }
 
         public static Func<T, T, T> Xor
@@ -300,7 +300,7 @@ namespace NetExtender.Utilities.Numerics
                 return AddInternal.Value;
             }
         }
-        
+
         private static Lazy<Func<T, T, T>> SubtractInternal { get; }
 
         public static Func<T, T, T> Subtract
@@ -310,7 +310,7 @@ namespace NetExtender.Utilities.Numerics
                 return SubtractInternal.Value;
             }
         }
-        
+
         private static Lazy<Func<T, T, T>> MultiplyInternal { get; }
 
         public static Func<T, T, T> Multiply
@@ -320,7 +320,7 @@ namespace NetExtender.Utilities.Numerics
                 return MultiplyInternal.Value;
             }
         }
-        
+
         private static Lazy<Func<T, T, T>> DivideInternal { get; }
 
         public static Func<T, T, T> Divide
@@ -330,7 +330,7 @@ namespace NetExtender.Utilities.Numerics
                 return DivideInternal.Value;
             }
         }
-        
+
         private static Lazy<Func<T, T, T>> ModuloInternal { get; }
 
         public static Func<T, T, T> Modulo
@@ -350,7 +350,7 @@ namespace NetExtender.Utilities.Numerics
                 return EqualInternal.Value;
             }
         }
-        
+
         private static Lazy<Func<T, T, Boolean>> NotEqualInternal { get; }
 
         public static Func<T, T, Boolean> NotEqual
@@ -360,7 +360,7 @@ namespace NetExtender.Utilities.Numerics
                 return NotEqualInternal.Value;
             }
         }
-        
+
         private static Lazy<Func<T, T, Boolean>> GreaterInternal { get; }
 
         public static Func<T, T, Boolean> Greater
@@ -370,7 +370,7 @@ namespace NetExtender.Utilities.Numerics
                 return GreaterInternal.Value;
             }
         }
-        
+
         private static Lazy<Func<T, T, Boolean>> LessInternal { get; }
 
         public static Func<T, T, Boolean> GreaterEqual
@@ -380,7 +380,7 @@ namespace NetExtender.Utilities.Numerics
                 return GreaterEqualInternal.Value;
             }
         }
-        
+
         private static Lazy<Func<T, T, Boolean>> GreaterEqualInternal { get; }
 
         public static Func<T, T, Boolean> Less
@@ -390,7 +390,7 @@ namespace NetExtender.Utilities.Numerics
                 return LessInternal.Value;
             }
         }
-        
+
         private static Lazy<Func<T, T, Boolean>> LessEqualInternal { get; }
 
         public static Func<T, T, Boolean> LessEqual

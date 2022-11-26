@@ -14,7 +14,7 @@ namespace NetExtender.EntityFrameworkCore.Entities.Logging
         Update,
         Delete
     }
-    
+
     public class TransactionLog
     {
         /// <summary>
@@ -81,7 +81,7 @@ namespace NetExtender.EntityFrameworkCore.Entities.Logging
                 {
                     return null;
                 }
-                
+
                 Type? type = Type;
                 return _entity ??= type is not null ? JsonConvert.DeserializeObject(json, type) : EntityJson;
             }

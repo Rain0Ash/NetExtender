@@ -23,7 +23,7 @@ namespace NetExtender.BouncyCastle.Utilities
                 return new CryptoApiRandomGenerator();
             }
         }
-        
+
         public static SecureRandom SecureRandom
         {
             get
@@ -31,7 +31,7 @@ namespace NetExtender.BouncyCastle.Utilities
                 return new SecureRandom(RandomGenerator);
             }
         }
-        
+
         public static X509V3CertificateGenerator CertificateGenerator
         {
             get
@@ -52,7 +52,7 @@ namespace NetExtender.BouncyCastle.Utilities
                 _ => throw new ArgumentOutOfRangeException(nameof(value), value, "Invalid key strength")
             };
         }
-        
+
         public static RsaKeyPairGenerator CreateRsaKeyPairGenerator(SecureRandom random, CertificateKeyStrength strength)
         {
             if (random is null)
@@ -67,7 +67,7 @@ namespace NetExtender.BouncyCastle.Utilities
 
             return CreateRsaKeyPairGenerator(new KeyGenerationParameters(random, (Int32) strength));
         }
-        
+
         public static RsaKeyPairGenerator CreateRsaKeyPairGenerator(KeyGenerationParameters parameters)
         {
             if (parameters is null)
@@ -89,7 +89,7 @@ namespace NetExtender.BouncyCastle.Utilities
 
             return new BouncyBigIntegerWrapper(value);
         }
-        
+
         public static Org.BouncyCastle.Math.BigInteger ToBounceBigInteger(this BigInteger value)
         {
             return new BouncyBigIntegerWrapper(value);

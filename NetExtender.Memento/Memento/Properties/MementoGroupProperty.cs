@@ -108,7 +108,7 @@ namespace NetExtender.Types.Memento
             IEnumerable<IMementoProperty<TSource>> selector = this.Select(property => property.New());
             return new MementoGroupProperty<TSource>(selector);
         }
-        
+
         IMementoProperty<TSource> IMementoProperty<TSource>.New()
         {
             return New();
@@ -129,7 +129,7 @@ namespace NetExtender.Types.Memento
         {
             return New(source);
         }
-        
+
         public MementoGroupProperty<TSource> Item()
         {
             IEnumerable<IMementoProperty<TSource>> selector = this.Select(property => property.Item());
@@ -151,7 +151,7 @@ namespace NetExtender.Types.Memento
             IEnumerable<IMementoProperty<TSource>> selector = this.Select(property => property.Item());
             return new MementoGroup<TSource>(source, selector);
         }
-        
+
         IMementoItem<TSource> IMementoProperty<TSource>.Item(TSource source)
         {
             return Item(source);
@@ -196,18 +196,18 @@ namespace NetExtender.Types.Memento
         {
             return Update(source);
         }
-        
+
         public MementoGroupProperty<TSource> Clear()
         {
             Internal.Clear();
             return this;
         }
-        
+
         IMementoProperty<TSource> IMementoProperty<TSource>.Clear()
         {
             return Clear();
         }
-        
+
         void ICollection<IMementoProperty<TSource>>.Clear()
         {
             Clear();

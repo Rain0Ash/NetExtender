@@ -81,7 +81,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                 {
                     throw new AlreadyInitializedException("Singleton window is already initialized");
                 }
-            
+
                 return _singleton = new SingletonWindow<T>(factory ?? Create) { IsExitOnFocusLost = exit };
             }
         }
@@ -107,7 +107,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                 return null;
             }
         }
-        
+
         public Boolean? ShowDialog()
         {
             lock (Synchronization)
@@ -128,7 +128,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                 return null;
             }
         }
-        
+
         public void Close()
         {
             lock (Synchronization)
@@ -144,18 +144,18 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                 _window = null;
             }
         }
-        
+
         private void InstanceLostFocus(Object? sender, EventArgs args)
         {
             lock (Synchronization)
             {
                 Watcher.SetNow();
-            
+
                 if (!IsExitOnFocusLost)
                 {
                     return;
                 }
-            
+
                 try
                 {
                     if (sender is Window window)

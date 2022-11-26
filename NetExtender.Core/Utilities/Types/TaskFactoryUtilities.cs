@@ -392,7 +392,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             if (timeout < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(timeout));
@@ -447,7 +447,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             if (timeout < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(timeout));
@@ -525,7 +525,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(scheduler));
             }
-            
+
             if (timeout < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(timeout));
@@ -538,7 +538,7 @@ namespace NetExtender.Utilities.Types
             {
                 timer.Dispose();
                 return function();
-                
+
             }, token, options.ToContinuationOptions(), scheduler);
         }
 

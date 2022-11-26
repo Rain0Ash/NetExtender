@@ -12,7 +12,7 @@ namespace NetExtender.Utilities.Types
         {
             public static ReadOnlyCollection<T> Empty { get; } = Array.AsReadOnly(Array.Empty<T>());
         }
-        
+
         public static ReadOnlyCollection<T> Empty<T>()
         {
             return EmptyReadOnlyCollection<T>.Empty;

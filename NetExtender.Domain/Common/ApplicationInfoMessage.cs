@@ -9,11 +9,11 @@ namespace NetExtender.Domains
     public record ApplicationInfoMessage
     {
         public Guid Guid { get; }
-        
+
         public String ApplicationName { get; }
-        
+
         public String ApplicationIdentifier { get; }
-        
+
         public DateTime StartedAt { get; }
 
         public ApplicationVersion Version { get; }

@@ -33,12 +33,12 @@ namespace NetExtender.Utilities.NAudio
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (sound is null)
             {
                 throw new ArgumentNullException(nameof(sound));
             }
-            
+
             return new AudioSoundSampleProvider(sound, source);
         }
     }

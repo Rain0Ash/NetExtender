@@ -24,7 +24,7 @@ namespace NetExtender.Types.Maps
                 return Base.Count;
             }
         }
-        
+
         public ICollection<TKey> Keys
         {
             get
@@ -111,7 +111,7 @@ namespace NetExtender.Types.Maps
             : this(dictionary, comparer, null)
         {
         }
-        
+
         public Map(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey>? keyComparer, IEqualityComparer<TValue>? valueComparer)
         {
             if (dictionary is null)
@@ -134,7 +134,7 @@ namespace NetExtender.Types.Maps
             Base = new Dictionary<TKey, TValue>(keyComparer);
             Reversed = new Dictionary<TValue, TKey>(valueComparer);
         }
-        
+
         public Map(IEnumerable<KeyValuePair<TKey, TValue>> source)
         {
             if (source is null)
@@ -175,7 +175,7 @@ namespace NetExtender.Types.Maps
             Reversed = new Dictionary<TValue, TKey>(valueComparer);
             AddRangeConstructor(source);
         }
-        
+
         public Map(IEnumerable<KeyValuePair<TValue, TKey>> source, IEqualityComparer<TKey>? comparer)
             : this(source, comparer, null)
         {
@@ -218,14 +218,14 @@ namespace NetExtender.Types.Maps
                     throw new CollectionSynchronizationException();
                 }
             }
-            
+
             foreach ((TKey key, TValue value) in source)
             {
                 Base.Add(key, value);
                 Reversed.Add(value, key);
             }
         }
-        
+
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         private void AddRangeConstructor(IEnumerable<KeyValuePair<TValue, TKey>> source)
         {
@@ -239,27 +239,27 @@ namespace NetExtender.Types.Maps
                     throw new CollectionSynchronizationException();
                 }
             }
-            
+
             foreach ((TValue key, TKey value) in source)
             {
                 Base.Add(value, key);
                 Reversed.Add(key, value);
             }
         }
-        
+
         public virtual Int32 EnsureCapacity(Int32 capacity)
         {
             if (Count >= capacity)
             {
                 return Count;
             }
-            
+
             Int32 ensure = Base.EnsureCapacity(capacity);
             if (ensure != Reversed.EnsureCapacity(capacity))
             {
                 throw new CollectionSynchronizationException();
             }
-            
+
             return ensure;
         }
 
@@ -267,7 +267,7 @@ namespace NetExtender.Types.Maps
         {
             TrimExcess(Count);
         }
-        
+
         public virtual void TrimExcess(Int32 capacity)
         {
             Int32 count = Count;
@@ -280,7 +280,7 @@ namespace NetExtender.Types.Maps
             {
                 return;
             }
-            
+
             Base.TrimExcess(capacity);
             Reversed.TrimExcess(capacity);
         }
@@ -291,12 +291,12 @@ namespace NetExtender.Types.Maps
             {
                 throw new ArgumentNullException(nameof(key));
             }
-            
+
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             return Base.TryGetValue(key, out TValue? bvalue) && Reversed.TryGetValue(value, out TKey? rvalue) && bvalue.Equals(value) && rvalue.Equals(key);
         }
 
@@ -309,12 +309,12 @@ namespace NetExtender.Types.Maps
         {
             return Contains(item.Key, item.Value);
         }
-        
+
         public Boolean ContainsByValue(KeyValuePair<TValue, TKey> item)
         {
             return ContainsByValue(item.Key, item.Value);
         }
-        
+
         public Boolean ContainsKey(TKey key)
         {
             if (key is null)
@@ -339,12 +339,12 @@ namespace NetExtender.Types.Maps
         {
             return this[key];
         }
-        
+
         public TKey GetKey(TValue value)
         {
             return this[value];
         }
-        
+
         public Boolean TryGetValue(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
             if (key is null)
@@ -354,7 +354,7 @@ namespace NetExtender.Types.Maps
 
             return Base.TryGetValue(key, out value);
         }
-        
+
         public Boolean TryGetKey(TValue key, [MaybeNullWhen(false)] out TKey value)
         {
             if (key is null)
@@ -371,7 +371,7 @@ namespace NetExtender.Types.Maps
             {
                 throw new ArgumentNullException(nameof(key));
             }
-            
+
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
@@ -381,12 +381,12 @@ namespace NetExtender.Types.Maps
             {
                 throw new ArgumentException(@"Already exists", nameof(key));
             }
-            
+
             if (ContainsValue(value))
             {
                 throw new ArgumentException(@"Already exists", nameof(value));
             }
-            
+
             Base.Add(key, value);
             Reversed.Add(value, key);
         }
@@ -395,12 +395,12 @@ namespace NetExtender.Types.Maps
         {
             Add(value, key);
         }
-        
+
         public void Add(KeyValuePair<TKey, TValue> item)
         {
             Add(item.Key, item.Value);
         }
-        
+
         public void AddByValue(KeyValuePair<TValue, TKey> item)
         {
             AddByValue(item.Key, item.Value);
@@ -412,7 +412,7 @@ namespace NetExtender.Types.Maps
             {
                 throw new ArgumentNullException(nameof(key));
             }
-            
+
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
@@ -422,7 +422,7 @@ namespace NetExtender.Types.Maps
             {
                 return false;
             }
-            
+
             Boolean added = Base.TryAdd(key, value);
 
             if (added ^ Reversed.TryAdd(value, key))
@@ -442,17 +442,17 @@ namespace NetExtender.Types.Maps
         {
             return TryAdd(item.Key, item.Value);
         }
-        
+
         public Boolean TryAddByValue(KeyValuePair<TValue, TKey> item)
         {
             return TryAddByValue(item.Key, item.Value);
         }
-        
+
         public Boolean Remove(TKey key)
         {
             return Remove(key, out _);
         }
-        
+
         public Boolean Remove(TKey key, [MaybeNullWhen(false)] out TValue value)
         {
             if (key is null)
@@ -465,7 +465,7 @@ namespace NetExtender.Types.Maps
                 value = default;
                 return false;
             }
-            
+
             value = Base[key];
             return Remove(key, value);
         }
@@ -486,7 +486,7 @@ namespace NetExtender.Types.Maps
             {
                 return false;
             }
-            
+
             Boolean removed = Base.Remove(key);
 
             if (removed ^ Reversed.Remove(value))
@@ -496,7 +496,7 @@ namespace NetExtender.Types.Maps
 
             return removed;
         }
-        
+
         public Boolean Remove(KeyValuePair<TKey, TValue> item)
         {
             return Remove(item.Key, item.Value);
@@ -519,7 +519,7 @@ namespace NetExtender.Types.Maps
                 value = default;
                 return false;
             }
-            
+
             value = Reversed[key];
             return RemoveByValue(key, value);
         }
@@ -544,12 +544,12 @@ namespace NetExtender.Types.Maps
         {
             Base.CopyTo(array, index);
         }
-        
+
         public void CopyTo(KeyValuePair<TValue, TKey>[] array, Int32 index)
         {
             Reversed.CopyTo(array, index);
         }
-        
+
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
             return Base.GetEnumerator();
@@ -559,7 +559,7 @@ namespace NetExtender.Types.Maps
         {
             return GetEnumerator();
         }
-        
+
         public IEnumerator<KeyValuePair<TValue, TKey>> GetValuesEnumerator()
         {
             return Reversed.GetEnumerator();
@@ -573,7 +573,7 @@ namespace NetExtender.Types.Maps
                 {
                     throw new ArgumentNullException(nameof(key));
                 }
-                
+
                 return Base[key];
             }
             set
@@ -592,7 +592,7 @@ namespace NetExtender.Types.Maps
                 {
                     Base.Remove(removekey);
                 }
-                
+
                 if (Base.Remove(key, out TValue? removevalue))
                 {
                     Reversed.Remove(removevalue);
@@ -620,7 +620,7 @@ namespace NetExtender.Types.Maps
                 {
                     throw new ArgumentNullException(nameof(key));
                 }
-                
+
                 if (value is null)
                 {
                     throw new ArgumentNullException(nameof(value));

@@ -14,7 +14,7 @@ namespace NetExtender.Utilities.Cryptography
         Rsa8192 = 8192,
         Rsa16384 = 16384
     }
-    
+
     public static class CertificateUtilities
     {
         public static void AddCertificateToStore(this X509Certificate2 certificate, X509Store store)
@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.Cryptography
             store.Open(OpenFlags.ReadWrite);
             store.Add(certificate);
         }
-        
+
         public static void AddCertificateToStore(this X509Certificate2 certificate, StoreName name, StoreLocation location)
         {
             if (certificate is null)
@@ -55,7 +55,7 @@ namespace NetExtender.Utilities.Cryptography
             {
                 throw new ArgumentNullException(nameof(store));
             }
-            
+
             try
             {
                 AddCertificateToStore(certificate, store);

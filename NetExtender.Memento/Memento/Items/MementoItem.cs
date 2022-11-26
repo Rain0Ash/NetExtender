@@ -8,7 +8,7 @@ namespace NetExtender.Types.Memento
     public abstract class MementoItem<TSource, TProperty> : MementoItem<TSource>, IMementoItem<TSource, TProperty> where TSource : class
     {
         protected sealed override MementoProperty<TSource, TProperty> Property { get; }
-        
+
         public TProperty Value
         {
             get
@@ -41,24 +41,24 @@ namespace NetExtender.Types.Memento
         }
 
         public abstract override MementoItem<TSource, TProperty> Update();
-        
+
         IMementoItem<TSource, TProperty> IMementoItem<TSource, TProperty>.Update()
         {
             return Update();
         }
-        
+
         IMementoItem<TSource> IMementoItem<TSource>.Update()
         {
             return Update();
         }
-        
+
         IMementoItem IMementoItem.Update()
         {
             return Update();
         }
 
         public abstract MementoItem<TSource, TProperty> With(TProperty value);
-        
+
         IMementoItem<TSource, TProperty> IMementoItem<TSource, TProperty>.With(TProperty value)
         {
             return With(value);
@@ -82,7 +82,7 @@ namespace NetExtender.Types.Memento
         {
             Source = source ?? throw new ArgumentNullException(nameof(source));
         }
-        
+
         public abstract MementoItem<TSource> Swap();
 
         IMementoItem<TSource> IMementoItem<TSource>.Swap()
@@ -96,12 +96,12 @@ namespace NetExtender.Types.Memento
         }
 
         public abstract MementoItem<TSource> Update();
-        
+
         IMementoItem<TSource> IMementoItem<TSource>.Update()
         {
             return Update();
         }
-        
+
         IMementoItem IMementoItem.Update()
         {
             return Update();

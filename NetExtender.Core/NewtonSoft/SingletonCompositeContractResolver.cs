@@ -37,17 +37,17 @@ namespace NetExtender.NewtonSoft
             {
                 throw new ArgumentNullException(nameof(resolver));
             }
-            
+
             Resolvers.Add(resolver.GetType(), resolver);
         }
-        
+
         public void Add<T>() where T : class, IContractResolver, new()
         {
             if (Resolvers.ContainsKey(typeof(T)))
             {
                 return;
             }
-            
+
             Resolvers.Add(typeof(T), new T());
         }
 
@@ -85,7 +85,7 @@ namespace NetExtender.NewtonSoft
 
             return (T) Resolvers.GetOrAdd(typeof(T), resolver);
         }
-        
+
         public SingletonCompositeContractResolver SetPosition(IContractResolver resolver, Int32 index)
         {
             if (resolver is null)
@@ -98,12 +98,12 @@ namespace NetExtender.NewtonSoft
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             if (!Resolvers.Remove(resolver.GetType(), out resolver!))
             {
                 return this;
             }
-            
+
             if (index < count - 1)
             {
                 Resolvers.Insert(index, resolver.GetType(), resolver);

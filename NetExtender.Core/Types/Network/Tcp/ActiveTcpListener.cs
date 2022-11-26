@@ -21,7 +21,7 @@ namespace NetExtender.Types.Network.Tcp
                 {
                     return;
                 }
-                
+
                 if (value)
                 {
                     Start();
@@ -31,13 +31,13 @@ namespace NetExtender.Types.Network.Tcp
                 Stop();
             }
         }
-        
+
         [Obsolete]
         public ActiveTcpListener(Int32 port)
             : base(port)
         {
         }
-        
+
         public ActiveTcpListener(IPAddress localaddr, Int32 port)
             : base(localaddr, port)
         {

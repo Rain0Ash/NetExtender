@@ -50,7 +50,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         }
 
         public virtual Boolean IsAltF4Enabled { get; set; } = true;
-        
+
         public Boolean IsExitOnFocusLost { get; set; }
 
         public event InterfaceClosingEventHandler? WindowClosing;
@@ -112,7 +112,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             {
                 return;
             }
-            
+
             CloseReason = InterfaceCloseReason.WindowClosing;
         }
 

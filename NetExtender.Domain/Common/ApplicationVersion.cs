@@ -17,17 +17,17 @@ namespace NetExtender.Domains
 
         private const String ParsePattern = @"^(?<major>\d+)(?:\.(?<minor>\d+))?(?:\.(?<patch>\d+))?(?: (?<datetime>(?<date>\d{2}(?:\/|\.)\d{2}(?:\/|\.)\d{1,4})(?: (?<time>\d{1,2}:\d{1,2}:\d{1,2}))?))?$";
         private static readonly Regex ParseRegex = new Regex(ParsePattern, RegexOptions.Compiled);
-        
+
         public static ApplicationVersion Parse(String value)
         {
             if (String.IsNullOrWhiteSpace(value))
             {
                 throw new ArgumentException(@"Value cannot be null or whitespace.", nameof(value));
             }
-            
+
             CultureInfo info = CultureInfo.InvariantCulture;
             IDictionary<String, IList<String>> captures = ParseRegex.MatchNamedCaptures(value);
-            
+
             UInt32 major = captures.TryGetValue(nameof(major), out IList<String>? values) ? UInt32.Parse(values[0], info) : 1;
             UInt32 minor = captures.TryGetValue(nameof(minor), out values) ? UInt32.Parse(values[0], info) : 0;
             UInt32 patch = captures.TryGetValue(nameof(patch), out values) ? UInt32.Parse(values[0], info) : 0;
@@ -54,12 +54,12 @@ namespace NetExtender.Domains
                 return false;
             }
         }
-        
+
         public static implicit operator String(ApplicationVersion data)
         {
             return data.ToString();
         }
-        
+
         public static Boolean operator ==(ApplicationVersion first, ApplicationVersion second)
         {
             return first.CompareTo(second) == 0;
@@ -69,7 +69,7 @@ namespace NetExtender.Domains
         {
             return !(first == second);
         }
-        
+
         public static Boolean operator >(ApplicationVersion first, ApplicationVersion second)
         {
             return first.CompareTo(second) > 0;
@@ -93,7 +93,7 @@ namespace NetExtender.Domains
         public UInt32 Major { get; }
         public UInt32 Minor { get; }
         public UInt32 Patch { get; }
-        
+
         public DateTime? BuildTime { get; }
 
         public String Version
@@ -112,12 +112,12 @@ namespace NetExtender.Domains
             : this(major, minor, patch, ApplicationUtilities.BuildDateTime)
         {
         }
-        
+
         public ApplicationVersion(UInt32 major, DateTime? time)
             : this(major, 0, 0, time)
         {
         }
-        
+
         public ApplicationVersion(UInt32 major, UInt32 minor, DateTime? time)
             : this(major, minor, 0, time)
         {
@@ -163,12 +163,12 @@ namespace NetExtender.Domains
 
             return BuildTime?.CompareTo(other.BuildTime) ?? -1;
         }
-        
+
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(Major, Minor, Patch, BuildTime);
         }
-        
+
         public override String ToString()
         {
             return $"{Version}{(BuildTime is not null ? $" {Convert.ToString(BuildTime, CultureInfo.InvariantCulture)}" : String.Empty)}";

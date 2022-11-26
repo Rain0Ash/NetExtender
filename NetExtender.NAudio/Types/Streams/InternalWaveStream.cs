@@ -9,7 +9,7 @@ namespace NetExtender.NAudio.Types.Streams
     public abstract class InternalWaveStream : WaveStream
     {
         protected WaveStream Stream { get; }
-        
+
         public override WaveFormat WaveFormat
         {
             get
@@ -17,7 +17,7 @@ namespace NetExtender.NAudio.Types.Streams
                 return Stream.WaveFormat;
             }
         }
-        
+
         public override Int64 Length
         {
             get
@@ -37,7 +37,7 @@ namespace NetExtender.NAudio.Types.Streams
                 Stream.Position = value;
             }
         }
-        
+
         public override TimeSpan TotalTime
         {
             get
@@ -62,7 +62,7 @@ namespace NetExtender.NAudio.Types.Streams
         {
             Stream = stream ?? throw new ArgumentNullException(nameof(stream));
         }
-        
+
         public override Int32 Read(Byte[] buffer, Int32 offset, Int32 count)
         {
             return Stream.Read(buffer, offset, count);

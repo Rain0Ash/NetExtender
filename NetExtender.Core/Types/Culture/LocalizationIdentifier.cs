@@ -21,67 +21,67 @@ namespace NetExtender.Types.Culture
         {
             return first.Equals(second);
         }
-        
+
         public static Boolean operator ==(LocalizationIdentifier first, Int32 second)
         {
             return first.Equals(second);
         }
-        
+
         public static Boolean operator ==(Int32 first, LocalizationIdentifier second)
         {
             return second.Equals(first);
         }
-        
+
         public static Boolean operator ==(LocalizationIdentifier first, UInt16 second)
         {
             return first.Equals(second);
         }
-        
+
         public static Boolean operator ==(UInt16 first, LocalizationIdentifier second)
         {
             return second.Equals(first);
         }
-        
+
         public static Boolean operator ==(LocalizationIdentifier first, CultureIdentifier second)
         {
             return first.Equals(second);
         }
-        
+
         public static Boolean operator ==(CultureIdentifier first, LocalizationIdentifier second)
         {
             return second.Equals(first);
         }
-        
+
         public static Boolean operator !=(LocalizationIdentifier first, LocalizationIdentifier second)
         {
             return !first.Equals(second);
         }
-        
+
         public static Boolean operator !=(LocalizationIdentifier first, Int32 second)
         {
             return !first.Equals(second);
         }
-        
+
         public static Boolean operator !=(Int32 first, LocalizationIdentifier second)
         {
             return !second.Equals(first);
         }
-        
+
         public static Boolean operator !=(LocalizationIdentifier first, UInt16 second)
         {
             return !first.Equals(second);
         }
-        
+
         public static Boolean operator !=(UInt16 first, LocalizationIdentifier second)
         {
             return !second.Equals(first);
         }
-        
+
         public static Boolean operator !=(LocalizationIdentifier first, CultureIdentifier second)
         {
             return !first.Equals(second);
         }
-        
+
         public static Boolean operator !=(CultureIdentifier first, LocalizationIdentifier second)
         {
             return !second.Equals(first);
@@ -106,7 +106,7 @@ namespace NetExtender.Types.Culture
         {
             return new LocalizationIdentifier(identifier);
         }
-        
+
         public static implicit operator UInt16(LocalizationIdentifier identifier)
         {
             return identifier.Code16;
@@ -186,7 +186,7 @@ namespace NetExtender.Types.Culture
                 return (UInt16) Code;
             }
         }
-        
+
         public CultureIdentifier Identifier
         {
             get
@@ -202,7 +202,7 @@ namespace NetExtender.Types.Culture
                 return CultureUtilities.TryGetCultureInfo(Code, out CultureInfo info) ? info : null;
             }
         }
-        
+
         public RegionInfo? Region
         {
             get
@@ -234,7 +234,7 @@ namespace NetExtender.Types.Culture
                 return Info?.GetNativeLanguageName();
             }
         }
-        
+
         public String? CultureLanguageName
         {
             get
@@ -242,7 +242,7 @@ namespace NetExtender.Types.Culture
                 return Info?.Name;
             }
         }
-        
+
         public String? EnglishLanguageName
         {
             get
@@ -250,7 +250,7 @@ namespace NetExtender.Types.Culture
                 return Info?.EnglishName;
             }
         }
-        
+
         public String? DisplayLanguageName
         {
             get
@@ -274,7 +274,7 @@ namespace NetExtender.Types.Culture
                 return Info?.TwoLetterISOLanguageName;
             }
         }
-        
+
         public String? ThreeLetterISOLanguageName
         {
             get
@@ -282,7 +282,7 @@ namespace NetExtender.Types.Culture
                 return Info?.ThreeLetterISOLanguageName;
             }
         }
-        
+
         public String? RegionName
         {
             get
@@ -290,7 +290,7 @@ namespace NetExtender.Types.Culture
                 return Region?.Name;
             }
         }
-        
+
         public String? EnglishRegionName
         {
             get
@@ -322,7 +322,7 @@ namespace NetExtender.Types.Culture
                 return Region?.TwoLetterISORegionName;
             }
         }
-        
+
         public String? ThreeLetterISORegionName
         {
             get
@@ -330,7 +330,7 @@ namespace NetExtender.Types.Culture
                 return Region?.ThreeLetterISORegionName;
             }
         }
-        
+
         public String? ThreeLetterWindowsRegionName
         {
             get
@@ -338,7 +338,7 @@ namespace NetExtender.Types.Culture
                 return Region?.ThreeLetterWindowsRegionName;
             }
         }
-        
+
         public String? RegionCurrencySymbol
         {
             get
@@ -346,7 +346,7 @@ namespace NetExtender.Types.Culture
                 return Region?.CurrencySymbol;
             }
         }
-        
+
         public String? RegionISOCurrencySymbol
         {
             get
@@ -354,7 +354,7 @@ namespace NetExtender.Types.Culture
                 return Region?.ISOCurrencySymbol;
             }
         }
-        
+
         public String? RegionCurrencyEnglishName
         {
             get
@@ -362,7 +362,7 @@ namespace NetExtender.Types.Culture
                 return Region?.CurrencyEnglishName;
             }
         }
-        
+
         public String? RegionCurrencyNativeName
         {
             get
@@ -370,7 +370,7 @@ namespace NetExtender.Types.Culture
                 return Region?.CurrencyNativeName;
             }
         }
-        
+
         public Boolean IsMetric
         {
             get
@@ -378,7 +378,7 @@ namespace NetExtender.Types.Culture
                 return Region?.IsMetric ?? false;
             }
         }
-        
+
         public Int32 GeoId
         {
             get
@@ -434,7 +434,7 @@ namespace NetExtender.Types.Culture
                 return Country?.Code16 ?? 0;
             }
         }
-        
+
         public String? TwoLetterISOCountryName
         {
             get
@@ -564,12 +564,12 @@ namespace NetExtender.Types.Culture
             : this((Int32) identifier)
         {
         }
-        
+
         public LocalizationIdentifier(Int32 identifier)
         {
             Code = identifier > 0 ? identifier : CultureUtilities.Default;
         }
-        
+
         public override Int32 GetHashCode()
         {
             return Code;
@@ -607,7 +607,7 @@ namespace NetExtender.Types.Culture
                 _ => false
             };
         }
-        
+
         public Int32 CompareTo(LocalizationIdentifier other)
         {
             return Code.CompareTo(other.Code);

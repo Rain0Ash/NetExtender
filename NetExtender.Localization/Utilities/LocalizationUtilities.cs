@@ -22,17 +22,17 @@ namespace NetExtender.Localization.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             return new ReadOnlyLocalizationConfigWrapper(config);
         }
-        
+
         public static ILocalizationBehavior Localization(this IConfigBehavior behavior)
         {
             if (behavior is null)
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior);
         }
 
@@ -42,17 +42,17 @@ namespace NetExtender.Localization.Utilities
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, options);
         }
-        
+
         public static ILocalizationBehavior Localization(this IConfigBehavior behavior, ILocalizationConverter? converter)
         {
             if (behavior is null)
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, converter);
         }
 
@@ -62,17 +62,17 @@ namespace NetExtender.Localization.Utilities
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, converter, options);
         }
-        
+
         public static ILocalizationBehavior Localization(this IConfigBehavior behavior, LocalizationIdentifier localization)
         {
             if (behavior is null)
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, localization);
         }
 
@@ -82,17 +82,17 @@ namespace NetExtender.Localization.Utilities
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, localization, options);
         }
-        
+
         public static ILocalizationBehavior Localization(this IConfigBehavior behavior, LocalizationIdentifier localization, ILocalizationConverter? converter)
         {
             if (behavior is null)
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, localization, converter);
         }
 
@@ -102,17 +102,17 @@ namespace NetExtender.Localization.Utilities
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, localization, converter, options);
         }
-        
+
         public static ILocalizationBehavior Localization(this IConfigBehavior behavior, LocalizationIdentifier localization, LocalizationIdentifier system)
         {
             if (behavior is null)
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, localization, system);
         }
 
@@ -122,17 +122,17 @@ namespace NetExtender.Localization.Utilities
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, localization, system, options);
         }
-        
+
         public static ILocalizationBehavior Localization(this IConfigBehavior behavior, LocalizationIdentifier localization, LocalizationIdentifier system, ILocalizationConverter? converter)
         {
             if (behavior is null)
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, localization, system, converter);
         }
 
@@ -142,17 +142,17 @@ namespace NetExtender.Localization.Utilities
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, localization, system, converter, options);
         }
-        
+
         public static ILocalizationBehavior Localization(this IConfigBehavior behavior, IComparer<LocalizationIdentifier>? comparer)
         {
             if (behavior is null)
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, comparer);
         }
 
@@ -162,17 +162,17 @@ namespace NetExtender.Localization.Utilities
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, comparer, options);
         }
-        
+
         public static ILocalizationBehavior Localization(this IConfigBehavior behavior, ILocalizationConverter? converter, IComparer<LocalizationIdentifier>? comparer)
         {
             if (behavior is null)
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, converter, comparer);
         }
 
@@ -182,17 +182,17 @@ namespace NetExtender.Localization.Utilities
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, converter, comparer, options);
         }
-        
+
         public static ILocalizationBehavior Localization(this IConfigBehavior behavior, LocalizationIdentifier localization, IComparer<LocalizationIdentifier>? comparer)
         {
             if (behavior is null)
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, localization, comparer);
         }
 
@@ -202,17 +202,17 @@ namespace NetExtender.Localization.Utilities
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, localization, options, comparer);
         }
-        
+
         public static ILocalizationBehavior Localization(this IConfigBehavior behavior, LocalizationIdentifier localization, ILocalizationConverter? converter, IComparer<LocalizationIdentifier>? comparer)
         {
             if (behavior is null)
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, localization, converter, comparer);
         }
 
@@ -222,17 +222,17 @@ namespace NetExtender.Localization.Utilities
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, localization, converter, options, comparer);
         }
-        
+
         public static ILocalizationBehavior Localization(this IConfigBehavior behavior, LocalizationIdentifier localization, LocalizationIdentifier system, IComparer<LocalizationIdentifier>? comparer)
         {
             if (behavior is null)
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, localization, system, comparer);
         }
 
@@ -242,7 +242,7 @@ namespace NetExtender.Localization.Utilities
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, localization, system, options, comparer);
         }
 
@@ -252,7 +252,7 @@ namespace NetExtender.Localization.Utilities
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, localization, system, converter, comparer);
         }
 
@@ -262,7 +262,7 @@ namespace NetExtender.Localization.Utilities
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
-            
+
             return new LocalizationBehavior(behavior, localization, system, converter, options, comparer);
         }
 

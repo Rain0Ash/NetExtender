@@ -16,11 +16,11 @@ namespace NetExtender.Types.Region
             {
                 return currency.Official ?? currency.Second ?? currency.Third;
             }
-            
+
             public CurrencyInfo? Official { get; }
             public CurrencyInfo? Second { get; }
             public CurrencyInfo? Third { get; }
-            
+
             public Int32 Count
             {
                 get

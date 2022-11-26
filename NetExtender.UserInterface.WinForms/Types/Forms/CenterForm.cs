@@ -33,7 +33,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
             {
                 Load -= CenterTo;
             }
-            
+
             base.Dispose(disposing);
         }
     }

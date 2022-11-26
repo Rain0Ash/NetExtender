@@ -60,12 +60,12 @@ namespace NetExtender.Types.Sets
         {
             _set.Clear();
         }
-        
+
         void ICollection.CopyTo(Array array, Int32 index)
         {
             _set.CopyTo(array, index);
         }
-        
+
         public IEnumerator GetEnumerator()
         {
             return _set.GetEnumerator();

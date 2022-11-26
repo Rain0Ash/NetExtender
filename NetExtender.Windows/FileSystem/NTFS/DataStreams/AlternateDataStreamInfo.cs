@@ -52,7 +52,7 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
         {
             return !Equals(first, second);
         }
-        
+
         /// <summary>
         /// Returns the full path of this stream.
         /// </summary>
@@ -111,7 +111,7 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
         /// </value>
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         public FileStreamAttributes Attributes { get; }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AlternateDataStreamInfo"/> class.
         /// </summary>
@@ -357,7 +357,7 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
             Stream? stream = Open(FileMode.Open, FileAccess.Read, FileShare.Read);
             return new StreamReader(stream!);
         }
-        
+
         /// <summary>
         /// Deletes this stream from the parent file.
         /// </summary>
@@ -423,7 +423,7 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
             StringComparer comparer = StringComparer.OrdinalIgnoreCase;
             return comparer.Equals(Path, other.Path) && comparer.Equals(Name, other.Name);
         }
-        
+
         /// <summary>
         /// Serves as a hash function for a particular type.
         /// </summary>
@@ -435,7 +435,7 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
             StringComparer comparer = StringComparer.OrdinalIgnoreCase;
             return comparer.GetHashCode(Path) ^ comparer.GetHashCode(Name);
         }
-        
+
         /// <summary>
         /// Returns a <see cref="String"/> that represents the current instance.
         /// </summary>

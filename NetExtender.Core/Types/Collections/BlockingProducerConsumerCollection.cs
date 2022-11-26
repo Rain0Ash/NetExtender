@@ -16,7 +16,7 @@ namespace NetExtender.Types.Collections
         private BlockingCollection<T> Internal { get; }
         private TimeSpan Timeout { get; }
         private CancellationToken Token { get; }
-        
+
         public Int32 Count
         {
             get
@@ -45,7 +45,7 @@ namespace NetExtender.Types.Collections
             : this(collection, System.Threading.Timeout.InfiniteTimeSpan, CancellationToken.None)
         {
         }
-        
+
         public BlockingProducerConsumerCollection(BlockingCollection<T> collection, Int32 timeout)
             : this(collection, timeout, CancellationToken.None)
         {
@@ -77,12 +77,12 @@ namespace NetExtender.Types.Collections
         {
             return Internal.TryTake(out item, Timeout, Token);
         }
-        
+
         public void CopyTo(Array array, Int32 index)
         {
             ((ICollection) Internal).CopyTo(array, index);
         }
-        
+
         public void CopyTo(T[] array, Int32 index)
         {
             Internal.CopyTo(array, index);

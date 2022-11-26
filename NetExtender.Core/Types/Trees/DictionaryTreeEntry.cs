@@ -23,7 +23,7 @@ namespace NetExtender.Types.Trees
         {
             return !(first == second);
         }
-        
+
         public TKey Key { get; }
         public TValue? Value { get; }
         public ImmutableArray<TKey> Sections { get; }
@@ -36,17 +36,17 @@ namespace NetExtender.Types.Trees
                 return Sections.Length;
             }
         }
-        
+
         public DictionaryTreeEntry(TKey key, TValue? value)
             : this(key, value, ImmutableArray<TKey>.Empty)
         {
         }
-        
+
         public DictionaryTreeEntry(TKey key, TValue? value, params TKey[]? sections)
             : this(key, value, sections.AsImmutableArray())
         {
         }
-        
+
         public DictionaryTreeEntry(TKey key, TValue? value, IEnumerable<TKey>? sections)
             : this(key, value, sections.AsImmutableArray())
         {
@@ -58,12 +58,12 @@ namespace NetExtender.Types.Trees
             Value = value;
             Sections = sections;
         }
-        
+
         public void Deconstruct(out TKey key, out ImmutableArray<TKey> sections)
         {
             Deconstruct(out key, out _, out sections);
         }
-        
+
         public void Deconstruct(out TKey key, out TValue? value, out ImmutableArray<TKey> sections)
         {
             key = Key;

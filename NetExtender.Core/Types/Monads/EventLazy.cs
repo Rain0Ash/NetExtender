@@ -15,7 +15,7 @@ namespace NetExtender.Types.Monads
         {
             return wrapper?.Internal;
         }
-        
+
         private Lazy<T> Internal { get; }
 
         private event Action<T>? Init;

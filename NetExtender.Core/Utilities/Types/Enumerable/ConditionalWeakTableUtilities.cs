@@ -27,7 +27,7 @@ namespace NetExtender.Utilities.Types
 
             return collection.GetValue(key, _ => value);
         }
-        
+
         public static TValue GetOrAdd<TKey, TValue>(this ConditionalWeakTable<TKey, TValue> collection, TKey key, Func<TValue> factory) where TKey : class where TValue : class?
         {
             if (collection is null)
@@ -42,7 +42,7 @@ namespace NetExtender.Utilities.Types
 
             return collection.GetValue(key, _ => factory());
         }
-        
+
         public static TValue GetOrAdd<TKey, TValue>(this ConditionalWeakTable<TKey, TValue> collection, TKey key, Func<TKey, TValue> factory) where TKey : class where TValue : class?
         {
             if (collection is null)

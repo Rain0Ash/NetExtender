@@ -18,9 +18,9 @@ namespace NetExtender.Logging.Format
         Prefix,
         Thread
     }
-    
+
     public delegate String? LoggerFormatResolver(LoggingMessageType type, LoggingMessageOptions options, DateTimeOffset offset, IFormatProvider? provider);
-    
+
     public class LoggerCustomFormatProvider : LoggerFormatProvider, IReadOnlyList<LoggerFormatResolver>
     {
         protected List<LoggerFormatResolver> Resolvers { get; }
@@ -44,7 +44,7 @@ namespace NetExtender.Logging.Format
             {
                 return null;
             }
-            
+
             Int32 count = Resolvers.Count;
             String?[] buffer = ArrayPool<String?>.Shared.Rent(count);
             try
@@ -156,7 +156,7 @@ namespace NetExtender.Logging.Format
                 {
                     return false;
                 }
-                
+
                 if (index >= Resolvers.Count)
                 {
                     Resolvers.Add(resolver);

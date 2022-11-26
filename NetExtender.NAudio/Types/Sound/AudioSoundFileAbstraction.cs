@@ -13,7 +13,7 @@ namespace NetExtender.NAudio.Types.Sound
     public abstract class AudioSoundFileAbstraction : AudioSoundSampleProviderAbstraction, IAudioSoundFile
     {
         protected FileInfo File { get; }
-        
+
         public String Path
         {
             get
@@ -21,7 +21,7 @@ namespace NetExtender.NAudio.Types.Sound
                 return File.FullName;
             }
         }
-        
+
         public String Extension
         {
             get
@@ -37,7 +37,7 @@ namespace NetExtender.NAudio.Types.Sound
                 return File.Exists;
             }
         }
-        
+
         public override Int64 Size
         {
             get
@@ -52,17 +52,17 @@ namespace NetExtender.NAudio.Types.Sound
         protected AudioSoundFileAbstraction(FileInfo file, TimeSpan start, TimeSpan stop)
         {
             File = file ?? throw new ArgumentNullException(nameof(file));
-            
+
             if (start < default(TimeSpan))
             {
                 throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
-            
+
             if (stop < default(TimeSpan))
             {
                 throw new ArgumentOutOfRangeException(nameof(stop), stop, null);
             }
-            
+
             if (stop != default && stop < start)
             {
                 throw new ArgumentOutOfRangeException(nameof(stop), stop, "Stop must be greater than start");
@@ -70,7 +70,7 @@ namespace NetExtender.NAudio.Types.Sound
 
             // ReSharper disable once VirtualMemberCallInConstructor
             TimeSpan total = TotalTime;
-            
+
             if (start > total)
             {
                 throw new ArgumentOutOfRangeException(nameof(start), start, "Start must be less than total time");

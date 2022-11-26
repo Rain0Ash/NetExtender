@@ -18,13 +18,13 @@ namespace NetExtender.Utilities.Network
         {
             return GetProxyStatusAsync(proxy, CancellationToken.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpStatusCode> GetProxyStatusAsync(this WebProxy proxy, CancellationToken token)
         {
             return GetProxyStatusAsync(proxy, Time.Second.Three, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<HttpStatusCode> GetProxyStatusAsync(this WebProxy proxy, TimeSpan timeout)
         {
@@ -42,7 +42,7 @@ namespace NetExtender.Utilities.Network
 
             using HttpClient client = new HttpClient(new HttpClientHandler { Proxy = proxy }) { Timeout = timeout };
             client.AddUserAgentHeader(UserAgentUtilities.CurrentSessionUserAgent);
-            
+
             try
             {
                 using HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Head, address);

@@ -13,19 +13,19 @@ namespace NetExtender.Utilities.Threading
     public static class ParallelUtilities
     {
         public const String DefaultProcessName = "ParallelProcess";
-        
+
         /// <inheritdoc cref="RunInParallel{TSource,TTarget}(System.Collections.Generic.IEnumerable{TSource},String,Int32,System.Func{TSource,TTarget},Int32,System.Action{TTarget})"/>
         public static void RunInParallel<TSource, TTarget>(this IEnumerable<TSource> source, Func<TSource, TTarget> function, Int32 consumer, Action<TTarget> action)
         {
             RunInParallel(source, DefaultProcessName, function, consumer, action);
         }
-        
+
         /// <inheritdoc cref="RunInParallel{TSource,TTarget}(System.Collections.Generic.IEnumerable{TSource},String,Int32,System.Func{TSource,TTarget},Int32,System.Action{TTarget})"/>
         public static void RunInParallel<TSource, TTarget>(this IEnumerable<TSource> source, String name, Func<TSource, TTarget> function, Int32 consumer, Action<TTarget> action)
         {
             RunInParallel(source, name, Environment.ProcessorCount, function, consumer, action);
         }
-        
+
         /// <inheritdoc cref="RunInParallel{TSource,TTarget}(System.Collections.Generic.IEnumerable{TSource},String,Int32,System.Func{TSource,TTarget},Int32,System.Action{TTarget})"/>
         public static void RunInParallel<TSource, TTarget>(this IEnumerable<TSource> source, Int32 provider, Func<TSource, TTarget> function, Action<TTarget> action)
         {
@@ -37,7 +37,7 @@ namespace NetExtender.Utilities.Threading
         {
             RunInParallel(source, name, provider, function, Environment.ProcessorCount, action);
         }
-        
+
         /// <inheritdoc cref="RunInParallel{TSource,TTarget}(System.Collections.Generic.IEnumerable{TSource},String,Int32,System.Func{TSource,TTarget},Int32,System.Action{TTarget})"/>
         public static void RunInParallel<TSource, TTarget>(this IEnumerable<TSource> source, Func<TSource, TTarget> function, Action<TTarget> action)
         {
@@ -49,7 +49,7 @@ namespace NetExtender.Utilities.Threading
         {
             RunInParallel(source, name, Environment.ProcessorCount / 2, function, Environment.ProcessorCount / 2, action);
         }
-        
+
         /// <inheritdoc cref="RunInParallel{TSource,TTarget}(System.Collections.Generic.IEnumerable{TSource},String,Int32,System.Func{TSource,TTarget},Int32,System.Action{TTarget})"/>
         public static void RunInParallel<TSource, TTarget>(this IEnumerable<TSource> source, Int32 provider, Func<TSource, TTarget> function, Int32 consumer, Action<TTarget> action)
         {
@@ -91,7 +91,7 @@ namespace NetExtender.Utilities.Threading
 
             using ParallelQueue pqueue = new ParallelQueue(provider, name + "_provider_");
             using ParallelQueue cqueue = new ParallelQueue(consumer, name + "_consumer_");
-            
+
             foreach (TSource item in source)
             {
                 pqueue.Enqueue(() =>
@@ -105,19 +105,19 @@ namespace NetExtender.Utilities.Threading
             pqueue.WaitAll();
             cqueue.WaitAll();
         }
-        
+
         /// <inheritdoc cref="RunInParallel(System.Collections.Generic.IEnumerable{Action},String,Int32)"/>
         public static void RunInParallel(this IEnumerable<Action> source)
         {
             RunInParallel(source, DefaultProcessName);
         }
-        
+
         /// <inheritdoc cref="RunInParallel(System.Collections.Generic.IEnumerable{Action},String,Int32)"/>
         public static void RunInParallel(this IEnumerable<Action> source, Int32 count)
         {
             RunInParallel(source, DefaultProcessName, count);
         }
-        
+
         /// <inheritdoc cref="RunInParallel(System.Collections.Generic.IEnumerable{Action},String,Int32)"/>
         public static void RunInParallel(this IEnumerable<Action> source, String name)
         {
@@ -136,14 +136,14 @@ namespace NetExtender.Utilities.Threading
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (String.IsNullOrEmpty(name))
             {
                 throw new ArgumentException(@"Value cannot be null or empty.", nameof(name));
             }
 
             using ParallelQueue queue = new ParallelQueue(count, name + '_');
-            
+
             foreach (Action action in source)
             {
                 queue.Enqueue(action);
@@ -151,7 +151,7 @@ namespace NetExtender.Utilities.Threading
 
             queue.WaitAll();
         }
-        
+
         /// <inheritdoc cref="RunInParallel{T}(System.Collections.Generic.IEnumerable{T},String,Int32,System.Action{T})"/>
         public static void RunInParallel<T>(this IEnumerable<T> source, Int32 count, Action<T> action)
         {
@@ -184,7 +184,7 @@ namespace NetExtender.Utilities.Threading
             }
 
             using ParallelQueue queue = new ParallelQueue(count, name + '_');
-            
+
             foreach (T item in source)
             {
                 queue.Enqueue(() => action(item));
@@ -192,7 +192,7 @@ namespace NetExtender.Utilities.Threading
 
             queue.WaitAll();
         }
-        
+
         /// <inheritdoc cref="RunInParallel{T}(System.Collections.Generic.IEnumerable{T},String,System.Action{T})"/>
         public static void RunInParallel<T>(this IEnumerable<T> source, Action<T> action)
         {

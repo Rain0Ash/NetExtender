@@ -14,7 +14,7 @@ namespace NetExtender.Utilities.Types
         {
             return default;
         }
-        
+
         public static Func<T> WithFailFast<T>(this Func<T> function)
         {
             if (function is null)

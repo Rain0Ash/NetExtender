@@ -23,7 +23,7 @@ namespace NetExtender.Utilities.Types
             {
                 yield break;
             }
-            
+
             foreach (T item in other)
             {
                 yield return item;
@@ -40,7 +40,7 @@ namespace NetExtender.Utilities.Types
         {
             yield return first;
             yield return second;
-            
+
             if (other is null || other.Length <= 0)
             {
                 yield break;
@@ -69,7 +69,7 @@ namespace NetExtender.Utilities.Types
             {
                 yield break;
             }
-            
+
             foreach (T item in other)
             {
                 yield return item;
@@ -116,7 +116,7 @@ namespace NetExtender.Utilities.Types
                 yield return generator(i++);
             }
         }
-        
+
         public static IEnumerable<T> Cycle<T>(this IEnumerable<T> source)
         {
             if (source is null)
@@ -134,7 +134,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static IEnumerable<T> Cycle<T>(this IEnumerable<T> source, CancellationToken token)
         {
             if (source is null)
@@ -179,7 +179,7 @@ namespace NetExtender.Utilities.Types
                 {
                     yield return item;
                 }
-                
+
                 yield break;
             }
 
@@ -193,7 +193,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         /// <summary>
         /// Creates a sequence from start value and next element factory till factory returns null.
         /// </summary>
@@ -242,7 +242,7 @@ namespace NetExtender.Utilities.Types
                 value = next(value);
             }
         }
-        
+
         /// <summary>
         /// Creates a sequence from start value and next element factory till factory returns null.
         /// </summary>

@@ -35,7 +35,7 @@ namespace NetExtender.Utilities.Types
                 handler(arg);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void Then<T1, T2>(this Boolean value, Action<T1, T2> handler, T1 arg1, T2 arg2)
         {
@@ -49,7 +49,7 @@ namespace NetExtender.Utilities.Types
                 handler(arg1, arg2);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void Then<T1, T2, T3>(this Boolean value, Action<T1, T2, T3> handler, T1 arg1, T2 arg2, T3 arg3)
         {
@@ -63,7 +63,7 @@ namespace NetExtender.Utilities.Types
                 handler(arg1, arg2, arg3);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void Then<T1, T2, T3, T4>(this Boolean value, Action<T1, T2, T3, T4> handler, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
@@ -77,7 +77,7 @@ namespace NetExtender.Utilities.Types
                 handler(arg1, arg2, arg3, arg4);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void Then<T1, T2, T3, T4, T5>(this Boolean value, Action<T1, T2, T3, T4, T5> handler, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
@@ -91,7 +91,7 @@ namespace NetExtender.Utilities.Types
                 handler(arg1, arg2, arg3, arg4, arg5);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void Then<T1, T2, T3, T4, T5, T6>(this Boolean value, Action<T1, T2, T3, T4, T5, T6> handler, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
         {
@@ -116,7 +116,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? handler() : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult? Then<T, TResult>(this Boolean value, Func<T, TResult?> handler, T arg)
         {
@@ -127,7 +127,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? handler(arg) : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult? Then<T1, T2, TResult>(this Boolean value, Func<T1, T2, TResult?> handler, T1 arg1, T2 arg2)
         {
@@ -138,7 +138,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? handler(arg1, arg2) : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult? Then<T1, T2, T3, TResult>(this Boolean value, Func<T1, T2, T3, TResult?> handler, T1 arg1, T2 arg2, T3 arg3)
         {
@@ -149,7 +149,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? handler(arg1, arg2, arg3) : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult? Then<T1, T2, T3, T4, TResult>(this Boolean value, Func<T1, T2, T3, T4, TResult?> handler, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
@@ -160,7 +160,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? handler(arg1, arg2, arg3, arg4) : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult? Then<T1, T2, T3, T4, T5, TResult>(this Boolean value, Func<T1, T2, T3, T4, T5, TResult?> handler, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
@@ -171,7 +171,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? handler(arg1, arg2, arg3, arg4, arg5) : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult? Then<T1, T2, T3, T4, T5, T6, TResult>(this Boolean value, Func<T1, T2, T3, T4, T5, T6, TResult?> handler, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
         {
@@ -182,7 +182,7 @@ namespace NetExtender.Utilities.Types
 
             return value ? handler(arg1, arg2, arg3, arg4, arg5, arg6) : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult Then<TResult>(this Boolean value, Func<Boolean, TResult> handler)
         {
@@ -204,7 +204,7 @@ namespace NetExtender.Utilities.Types
 
             return handler(value, arg);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult Then<T1, T2, TResult>(this Boolean value, Func<Boolean, T1, T2, TResult> handler, T1 arg1, T2 arg2)
         {
@@ -215,7 +215,7 @@ namespace NetExtender.Utilities.Types
 
             return handler(value, arg1, arg2);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult Then<T1, T2, T3, TResult>(this Boolean value, Func<Boolean, T1, T2, T3, TResult> handler, T1 arg1, T2 arg2, T3 arg3)
         {
@@ -226,7 +226,7 @@ namespace NetExtender.Utilities.Types
 
             return handler(value, arg1, arg2, arg3);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult Then<T1, T2, T3, T4, TResult>(this Boolean value, Func<Boolean, T1, T2, T3, T4, TResult> handler, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
@@ -237,7 +237,7 @@ namespace NetExtender.Utilities.Types
 
             return handler(value, arg1, arg2, arg3, arg4);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult Then<T1, T2, T3, T4, T5, TResult>(this Boolean value, Func<Boolean, T1, T2, T3, T4, T5, TResult> handler, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
@@ -248,7 +248,7 @@ namespace NetExtender.Utilities.Types
 
             return handler(value, arg1, arg2, arg3, arg4, arg5);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static TResult Then<T1, T2, T3, T4, T5, T6, TResult>(this Boolean value, Func<Boolean, T1, T2, T3, T4, T5, T6, TResult> handler, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
         {
@@ -273,7 +273,7 @@ namespace NetExtender.Utilities.Types
                 handler();
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void Else<T>(this Boolean value, Action<T> handler, T arg)
         {
@@ -287,7 +287,7 @@ namespace NetExtender.Utilities.Types
                 handler(arg);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void Else<T1, T2>(this Boolean value, Action<T1, T2> handler, T1 arg1, T2 arg2)
         {
@@ -301,7 +301,7 @@ namespace NetExtender.Utilities.Types
                 handler(arg1, arg2);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void Else<T1, T2, T3>(this Boolean value, Action<T1, T2, T3> handler, T1 arg1, T2 arg2, T3 arg3)
         {
@@ -315,7 +315,7 @@ namespace NetExtender.Utilities.Types
                 handler(arg1, arg2, arg3);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void Else<T1, T2, T3, T4>(this Boolean value, Action<T1, T2, T3, T4> handler, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
         {
@@ -329,7 +329,7 @@ namespace NetExtender.Utilities.Types
                 handler(arg1, arg2, arg3, arg4);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void Else<T1, T2, T3, T4, T5>(this Boolean value, Action<T1, T2, T3, T4, T5> handler, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5)
         {
@@ -343,7 +343,7 @@ namespace NetExtender.Utilities.Types
                 handler(arg1, arg2, arg3, arg4, arg5);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
         public static void Else<T1, T2, T3, T4, T5, T6>(this Boolean value, Action<T1, T2, T3, T4, T5, T6> handler, T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6)
         {

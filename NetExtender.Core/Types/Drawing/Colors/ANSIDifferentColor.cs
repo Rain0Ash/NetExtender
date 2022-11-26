@@ -17,7 +17,7 @@ namespace NetExtender.Types.Drawing.Colors
         {
             return color.ToColor();
         }
-        
+
         public static explicit operator ANSIDifferentColor(Color color)
         {
             return new ANSIDifferentColor(color.R, color.G, color.B, color.R, color.G, color.B);
@@ -44,7 +44,7 @@ namespace NetExtender.Types.Drawing.Colors
         public Byte ForegroundR { get; init; }
         public Byte ForegroundG { get; init; }
         public Byte ForegroundB { get; init; }
-        
+
         public Byte BackgroundR { get; init; }
         public Byte BackgroundG { get; init; }
         public Byte BackgroundB { get; init; }
@@ -73,7 +73,7 @@ namespace NetExtender.Types.Drawing.Colors
         {
             return Color.FromArgb(ForegroundR, ForegroundG, ForegroundB);
         }
-        
+
         public Color ToColor(AnsiColorSequenceMode mode)
         {
             return mode switch

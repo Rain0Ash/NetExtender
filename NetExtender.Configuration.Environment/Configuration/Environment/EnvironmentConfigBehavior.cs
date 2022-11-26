@@ -18,12 +18,12 @@ namespace NetExtender.Configuration.Environment
     public class EnvironmentConfigBehavior : ConfigBehavior
     {
         public EnvironmentVariableTarget Target { get; init; } = EnvironmentVariableTarget.Process;
-        
+
         public EnvironmentConfigBehavior()
             : this(ConfigOptions.None)
         {
         }
-        
+
         public EnvironmentConfigBehavior(ConfigOptions options)
             : this(null, options)
         {
@@ -33,12 +33,12 @@ namespace NetExtender.Configuration.Environment
             : this(path, ConfigOptions.None)
         {
         }
-        
+
         public EnvironmentConfigBehavior(String? path, ConfigOptions options)
             : base(path ?? nameof(System.Environment), options)
         {
         }
-        
+
         [return: NotNullIfNotNull("key")]
         protected virtual String? Join(String? key, IEnumerable<String>? sections)
         {
@@ -46,7 +46,7 @@ namespace NetExtender.Configuration.Environment
             {
                 return null;
             }
-            
+
             return sections is not null ? Joiner.Join(sections.Append(key)) : key;
         }
 
@@ -89,49 +89,49 @@ namespace NetExtender.Configuration.Environment
                 return null;
             }
         }
-        
+
         public override Boolean Set(String? key, String? value, IEnumerable<String>? sections)
         {
             if (IsReadOnly)
             {
                 return false;
             }
-            
+
             try
             {
                 if (IsIgnoreEvent && !IsLazyWrite)
                 {
                     key = Join(key, sections);
-                    
+
                     if (key is null)
                     {
                         return false;
                     }
-                    
+
                     return EnvironmentUtilities.TrySetEnvironmentVariable(key, value, Target);
                 }
-                
+
                 sections = ToSection(sections).AsIImmutableList();
-                
+
                 if (IsLazyWrite && Get(key, sections) == value)
                 {
                     return true;
                 }
-                
+
                 key = Join(key, sections);
-                    
+
                 if (key is null)
                 {
                     return false;
                 }
-                
+
                 EnvironmentUtilities.TrySetEnvironmentVariable(key, value, Target);
 
                 if (!IsIgnoreEvent)
                 {
                     OnChanged(new ConfigurationValueEntry(key, value, sections));
                 }
-                
+
                 return true;
             }
             catch (Exception)
@@ -139,12 +139,12 @@ namespace NetExtender.Configuration.Environment
                 return false;
             }
         }
-        
+
         protected virtual ConfigurationEntry EntriesConvert(String entry)
         {
             return new ConfigurationEntry(entry);
         }
-        
+
         protected virtual ConfigurationValueEntry ValueEntriesConvert(EnvironmentValueEntry entry)
         {
             return new ConfigurationValueEntry(entry.Key, entry.Value);
@@ -160,7 +160,7 @@ namespace NetExtender.Configuration.Environment
                 }
 
                 sections = sections.Materialize(out Int32 count);
-                
+
                 Boolean IsEqualSections(String entry)
                 {
                     return Deconstruct(entry, out _, out IEnumerable<String>? sequence) && (sequence?.SequencePartialEqual(sections) ?? count <= 0);
@@ -184,7 +184,7 @@ namespace NetExtender.Configuration.Environment
                 }
 
                 sections = sections.Materialize(out Int32 count);
-                
+
                 Boolean IsEqualSections(EnvironmentValueEntry entry)
                 {
                     return Deconstruct(entry.Key, out _, out IEnumerable<String>? sequence) && (sequence?.SequencePartialEqual(sections) ?? count <= 0);
@@ -204,9 +204,9 @@ namespace NetExtender.Configuration.Environment
             {
                 return false;
             }
-            
+
             ConfigurationEntry[]? exists = GetExists(sections);
-            
+
             if (exists is null)
             {
                 return false;
@@ -217,7 +217,7 @@ namespace NetExtender.Configuration.Environment
             {
                 successful |= Set(key.Key, null, key.Sections);
             }
-            
+
             return successful;
         }
 
@@ -233,7 +233,7 @@ namespace NetExtender.Configuration.Environment
             {
                 return false;
             }
-            
+
             if (entries is null)
             {
                 return false;
@@ -267,7 +267,7 @@ namespace NetExtender.Configuration.Environment
                     {
                         continue;
                     }
-                    
+
                     changes?.Add(entry);
                     continue;
                 }
@@ -276,14 +276,14 @@ namespace NetExtender.Configuration.Environment
                 {
                     continue;
                 }
-                
+
                 if (entry.Value is null)
                 {
                     if (!EnvironmentUtilities.TryRemoveEnvironmentVariable(Join(entry.Key, entry.Sections), Target))
                     {
                         continue;
                     }
-                    
+
                     changes?.Add(entry);
                     continue;
                 }
@@ -292,7 +292,7 @@ namespace NetExtender.Configuration.Environment
                 {
                     continue;
                 }
-                
+
                 changes?.Add(entry);
             }
 
@@ -316,7 +316,7 @@ namespace NetExtender.Configuration.Environment
             {
                 return false;
             }
-            
+
             if (entries is null)
             {
                 return false;
@@ -328,7 +328,7 @@ namespace NetExtender.Configuration.Environment
             {
                 return Merge(entries);
             }
-            
+
             IndexDictionary<ConfigurationEntry, ConfigurationValueEntry> dictionary = values.ToIndexDictionary(item => (ConfigurationEntry) item, item => item);
             List<ConfigurationValueEntry>? changes = !IsIgnoreEvent ? new List<ConfigurationValueEntry>(dictionary.Count) : null;
 
@@ -338,7 +338,7 @@ namespace NetExtender.Configuration.Environment
                 {
                     continue;
                 }
-                
+
                 if (!dictionary.Remove(entry, out ConfigurationValueEntry result))
                 {
                     if (entry.Value is null)
@@ -350,7 +350,7 @@ namespace NetExtender.Configuration.Environment
                     {
                         continue;
                     }
-                    
+
                     changes?.Add(entry);
                     continue;
                 }
@@ -359,14 +359,14 @@ namespace NetExtender.Configuration.Environment
                 {
                     continue;
                 }
-                
+
                 if (entry.Value is null)
                 {
                     if (!EnvironmentUtilities.TryRemoveEnvironmentVariable(Join(entry.Key, entry.Sections), Target))
                     {
                         continue;
                     }
-                    
+
                     changes?.Add(entry);
                     continue;
                 }
@@ -375,7 +375,7 @@ namespace NetExtender.Configuration.Environment
                 {
                     continue;
                 }
-                
+
                 changes?.Add(entry);
             }
 
@@ -385,12 +385,12 @@ namespace NetExtender.Configuration.Environment
                 {
                     continue;
                 }
-                
+
                 if (!EnvironmentUtilities.TryRemoveEnvironmentVariable(Join(key, sections), Target))
                 {
                     continue;
                 }
-                
+
                 changes?.Add(new ConfigurationValueEntry(key, null, sections));
             }
 

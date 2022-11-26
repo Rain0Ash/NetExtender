@@ -5,6 +5,6 @@ namespace NetExtender.Utilities.EntityFrameworkCore
 {
     public static class DbConnectionStringBuilderUtilities
     {
-        
+
     }
 }

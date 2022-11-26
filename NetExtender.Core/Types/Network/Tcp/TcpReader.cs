@@ -20,7 +20,7 @@ namespace NetExtender.Types.Network.Tcp
         {
             Listener = new ActiveTcpListener(port);
         }
-        
+
         public TcpReader(IPAddress? address, Int32 port)
         {
             Listener = new ActiveTcpListener(address ?? IPAddress.Loopback, port);

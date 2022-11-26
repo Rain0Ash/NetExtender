@@ -15,7 +15,7 @@ namespace NetExtender.Types.Comparers
             CultureIdentifier.Ru, CultureIdentifier.Uk, CultureIdentifier.Be, CultureIdentifier.Kk, CultureIdentifier.Pl,
             CultureIdentifier.De, CultureIdentifier.Fr, CultureIdentifier.It, CultureIdentifier.Es, CultureIdentifier.Tr,
             CultureIdentifier.Lt, CultureIdentifier.Lv, CultureIdentifier.Et, CultureIdentifier.Zh);
-        
+
         public LocalizationComparer()
         {
         }
@@ -24,7 +24,7 @@ namespace NetExtender.Types.Comparers
             : base(comparer)
         {
         }
-        
+
         public LocalizationComparer(params LocalizationIdentifier[]? order)
             : base(order)
         {
@@ -34,12 +34,12 @@ namespace NetExtender.Types.Comparers
             : base(order)
         {
         }
-        
+
         public LocalizationComparer(IComparer<LocalizationIdentifier>? comparer, params LocalizationIdentifier[]? order)
             : base(order, comparer)
         {
         }
-        
+
         public LocalizationComparer(IEnumerable<LocalizationIdentifier>? order, IComparer<LocalizationIdentifier>? comparer)
             : base(order, comparer)
         {
@@ -61,7 +61,7 @@ namespace NetExtender.Types.Comparers
             Behavior = behavior ?? throw new ArgumentNullException(nameof(behavior));
             Comparer = comparer ?? LocalizationComparer.Default;
         }
-        
+
         public Int32 Compare(String? x, String? y)
         {
             if (x is null || !CultureUtilities.TryGetIdentifier(x, out CultureIdentifier first))

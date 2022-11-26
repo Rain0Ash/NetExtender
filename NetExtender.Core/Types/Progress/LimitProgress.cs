@@ -32,14 +32,14 @@ namespace NetExtender.Types.Progress
                 return Value.CompareTo(Maximum) >= 0;
             }
         }
-        
+
         public LimitProgressState(T value, T maximum)
         {
             Value = value;
             Maximum = maximum;
         }
     }
-    
+
     public class NumericLimitProgress<T> : LimitProgressAbstraction<T> where T : unmanaged, IConvertible, IComparable<T>
     {
         public NumericLimitProgress(T value, T maximum)
@@ -90,7 +90,7 @@ namespace NetExtender.Types.Progress
         {
             OnReport(value);
         }
-        
+
         protected virtual void OnReport(T value)
         {
             if (value.CompareTo(Maximum) > 0)

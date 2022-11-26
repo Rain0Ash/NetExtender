@@ -14,24 +14,24 @@ namespace NetExtender.Windows.Utilities.IO
     public static class KeyboardLayoutUtilities
     {
         private const UInt32 SetKeyboardLayoutToProcess = 0x100;
-        
+
         [DllImport("user32.dll")]
         private static extern IntPtr GetKeyboardLayout(UInt32 thread);
-        
+
         [DllImport("user32.dll")]
         private static extern unsafe Int32 GetKeyboardLayoutList(Int32 number, IntPtr* lplist);
 
         [DllImport("user32.dll")]
         private static extern IntPtr ActivateKeyboardLayout(IntPtr handle, UInt32 flags);
-        
+
         private static IntPtr ActivateKeyboardLayout(IntPtr handle, Boolean process)
         {
             return ActivateKeyboardLayout(handle, process ? SetKeyboardLayoutToProcess : 0);
         }
-        
+
         [DllImport("user32.dll")]
         private static extern unsafe Boolean SystemParametersInfoW(UInt32 action, UInt32 uiParam, void* pvParam, UInt32 fWinIni);
-        
+
         private static unsafe Boolean SystemParametersInfoW<T>(UInt32 action, ref T value) where T : unmanaged
         {
             fixed (void* pointer = &value)
@@ -57,7 +57,7 @@ namespace NetExtender.Windows.Utilities.IO
 
                     return pointers.Select(KeyboardLayout.Create).ToArray();
                 }
-                
+
                 return ThreadUtilities.STA(Internal);
             }
         }
@@ -110,7 +110,7 @@ namespace NetExtender.Windows.Utilities.IO
             try
             {
                 KeyboardLayout current = KeyboardLayout;
-                
+
                 if (current == layout)
                 {
                     return true;
@@ -128,7 +128,7 @@ namespace NetExtender.Windows.Utilities.IO
         {
             return Next(false);
         }
-        
+
         public static Boolean Next(Boolean process)
         {
             return Next(1, process);
@@ -138,7 +138,7 @@ namespace NetExtender.Windows.Utilities.IO
         {
             return Next(count, false);
         }
-        
+
         public static Boolean Next(Int32 count, Boolean process)
         {
             if (count == 0)
@@ -149,7 +149,7 @@ namespace NetExtender.Windows.Utilities.IO
             try
             {
                 KeyboardLayout[] layouts = KeyboardLayouts;
-                
+
                 if (layouts.Length <= 0)
                 {
                     return false;
@@ -159,11 +159,11 @@ namespace NetExtender.Windows.Utilities.IO
                 {
                     return true;
                 }
-                
+
                 KeyboardLayout current = KeyboardLayout;
-                
+
                 Int32 index = layouts.IndexOf(current);
-                
+
                 if (index == -1)
                 {
                     return false;
@@ -171,7 +171,7 @@ namespace NetExtender.Windows.Utilities.IO
 
                 KeyboardLayout next = layouts[unchecked(index + count) % layouts.Length];
                 SetKeyboardLayoutInternal(next, process);
-                
+
                 return KeyboardLayout == next;
             }
             catch (Exception)

@@ -35,7 +35,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return first == second && second == third;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Eq(Trilean first, Trilean second, Trilean third, params Trilean[] values)
         {
@@ -53,7 +53,7 @@ namespace NetExtender.Utilities.Numerics
                 _ => values.AllSame()
             };
         }
-        
+
         /// <summary>
         /// Return AND (&&)
         /// </summary>
@@ -78,13 +78,13 @@ namespace NetExtender.Utilities.Numerics
         {
             return first & second & third;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean And(Trilean first, Trilean second, Trilean third, params Trilean[] values)
         {
             return values.Prepend(first, second, third).All(trilean => trilean);
         }
-        
+
         public static Trilean And(ReadOnlySpan<Trilean> values)
         {
             return values.Length switch
@@ -121,13 +121,13 @@ namespace NetExtender.Utilities.Numerics
         {
             return first | second | third;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Or(Trilean first, Trilean second, Trilean third, params Trilean[] values)
         {
             return values.Prepend(first, second, third).Any(trilean => trilean);
         }
-        
+
         public static Trilean Or(ReadOnlySpan<Trilean> values)
         {
             return values.Length switch
@@ -164,13 +164,13 @@ namespace NetExtender.Utilities.Numerics
         {
             return first ^ second ^ third;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Xor(Trilean first, Trilean second, Trilean third, params Trilean[] values)
         {
             return values.Prepend(first, second, third).Aggregate((current, value) => current ^ value);
         }
-        
+
         public static Trilean Xor(ReadOnlySpan<Trilean> values)
         {
             return values.Length switch
@@ -188,13 +188,13 @@ namespace NetExtender.Utilities.Numerics
         {
             return !first | second;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Impl(Trilean first, Trilean second, Trilean third)
         {
             return Impl(Impl(first, second), third);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Impl(Trilean first, Trilean second, Trilean third, params Trilean[] values)
         {
@@ -212,7 +212,7 @@ namespace NetExtender.Utilities.Numerics
                 _ => values.Aggregate(Impl)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Rimpl(Trilean first, Trilean second)
         {
@@ -230,7 +230,7 @@ namespace NetExtender.Utilities.Numerics
         {
             return values.Prepend(first, second, third).Aggregate(Rimpl);
         }
-        
+
         public static Trilean Rimpl(ReadOnlySpan<Trilean> values)
         {
             return values.Length switch
@@ -242,7 +242,7 @@ namespace NetExtender.Utilities.Numerics
                 _ => values.Aggregate(Rimpl)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Neq(Trilean first, Trilean second)
         {
@@ -254,37 +254,37 @@ namespace NetExtender.Utilities.Numerics
         {
             return !Eq(first, second, third);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Neq(Trilean first, Trilean second, Trilean third, params Trilean[] values)
         {
             return !Eq(first, second, third, values);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Neq(ReadOnlySpan<Trilean> values)
         {
             return !Eq(values);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Nand(Trilean first, Trilean second)
         {
             return !And(first, second);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Nand(Trilean first, Trilean second, Trilean third)
         {
             return !And(first, second, third);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Nand(Trilean first, Trilean second, Trilean third, params Trilean[] values)
         {
             return !And(first, second, third, values);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Nand(ReadOnlySpan<Trilean> values)
         {
@@ -296,19 +296,19 @@ namespace NetExtender.Utilities.Numerics
         {
             return !Or(first, second);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Nor(Trilean first, Trilean second, Trilean third)
         {
             return !Or(first, second, third);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Nor(Trilean first, Trilean second, Trilean third, params Trilean[] values)
         {
             return !Or(first, second, third, values);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Nor(ReadOnlySpan<Trilean> values)
         {
@@ -320,19 +320,19 @@ namespace NetExtender.Utilities.Numerics
         {
             return !Xor(first, second);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Xnor(Trilean first, Trilean second, Trilean third)
         {
             return !Xor(first, second, third);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Xnor(Trilean first, Trilean second, Trilean third, params Trilean[] values)
         {
             return !Xor(first, second, third, values);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Xnor(ReadOnlySpan<Trilean> values)
         {
@@ -344,43 +344,43 @@ namespace NetExtender.Utilities.Numerics
         {
             return !Impl(first, second);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Nimpl(Trilean first, Trilean second, Trilean third)
         {
             return !Impl(first, second, third);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Nimpl(Trilean first, Trilean second, Trilean third, params Trilean[] values)
         {
             return !Impl(first, second, third, values);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Nimpl(ReadOnlySpan<Trilean> values)
         {
             return !Impl(values);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Nrimpl(Trilean first, Trilean second)
         {
             return !Rimpl(first, second);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Nrimpl(Trilean first, Trilean second, Trilean third)
         {
             return !Rimpl(first, second, third);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Nrimpl(Trilean first, Trilean second, Trilean third, params Trilean[] values)
         {
             return !Rimpl(first, second, third, values);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Trilean Nrimpl(ReadOnlySpan<Trilean> values)
         {

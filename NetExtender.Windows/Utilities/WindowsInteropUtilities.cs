@@ -15,7 +15,7 @@ namespace NetExtender.Utilities.Core
         {
             return new Win32Exception(Marshal.GetLastWin32Error());
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ThrowLastWin32Exception()
         {

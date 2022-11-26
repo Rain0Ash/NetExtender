@@ -82,7 +82,7 @@ namespace NetExtender.Types.Stores
         {
             return GetEnumerator();
         }
-        
+
         public TValue this[TKey key]
         {
             get
@@ -94,7 +94,7 @@ namespace NetExtender.Types.Stores
                 Internal.AddOrUpdate(key, value);
             }
         }
-        
+
         private class Enumerator : IEnumerator<KeyValuePair<TKey, TValue>>
         {
             private IEnumerator<KeyValuePair<TKey, Box<TValue>>> Internal { get; }

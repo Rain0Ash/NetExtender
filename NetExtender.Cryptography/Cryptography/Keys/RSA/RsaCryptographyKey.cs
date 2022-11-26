@@ -12,7 +12,7 @@ namespace NetExtender.Cryptography.Keys.RSA
     public class RsaCryptographyKey : CryptographyKey, IAsymmetricCryptographyKey
     {
         public static IAsymmetricCryptographyKey Default { get; } = new RsaCryptographyKey(2048, false);
-        
+
         protected Rsa Rsa { get; }
 
         public override Int32 KeySize
@@ -30,7 +30,7 @@ namespace NetExtender.Cryptography.Keys.RSA
                 return Rsa.ExportRSAPrivateKey();
             }
         }
-        
+
         public ReadOnlySpan<Byte> PublicKey
         {
             get
@@ -46,7 +46,7 @@ namespace NetExtender.Cryptography.Keys.RSA
                 return Rsa.ExportParameters();
             }
         }
-        
+
         public RSAParameters PrivateParameters
         {
             get
@@ -77,7 +77,7 @@ namespace NetExtender.Cryptography.Keys.RSA
             {
                 throw new ArgumentException("Length must be a multiple of 8");
             }
-            
+
             Rsa = Rsa.Create(length);
         }
 
@@ -106,7 +106,7 @@ namespace NetExtender.Cryptography.Keys.RSA
             : this(key, type, parameters, true)
         {
         }
-        
+
         protected RsaCryptographyKey(ReadOnlySpan<Byte> key, RSAKeyType type, RSAParameters? parameters, Boolean disposable)
             : this(CryptographyUtilities.RSA.Create(key, type, parameters), disposable)
         {
@@ -170,7 +170,7 @@ namespace NetExtender.Cryptography.Keys.RSA
 
             return CryptographyUtilities.RSA.Decrypt(value, Rsa);
         }
-        
+
         public override IAsymmetricCryptographyKey Clone()
         {
             return Clone(Crypt);

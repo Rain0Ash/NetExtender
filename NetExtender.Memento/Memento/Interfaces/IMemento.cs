@@ -11,7 +11,7 @@ namespace NetExtender.Types.Memento.Interfaces
     {
         public Boolean CanUndo { get; }
         public Boolean CanRedo { get; }
-        
+
         public Boolean Remember(TSource item);
         public Boolean Remember(IMementoItem<TSource> item);
 

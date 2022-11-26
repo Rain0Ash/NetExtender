@@ -22,13 +22,13 @@ namespace NetExtender.Utilities.Types
             typeof(Tuple<>), typeof(Tuple<,>), typeof(Tuple<,,>), typeof(Tuple<,,,>),
             typeof(Tuple<,,,,>), typeof(Tuple<,,,,,>), typeof(Tuple<,,,,,,>), typeof(Tuple<,,,,,,,>)
         }.ToImmutableDictionary(type => type, ReflectionUtilities.GetGenericArgumentsCount);
-        
+
         public static IImmutableDictionary<Type, Int32> ValueTupleType { get; } = new HashSet<Type>
         {
             typeof(ValueTuple<>), typeof(ValueTuple<,>), typeof(ValueTuple<,,>), typeof(ValueTuple<,,,>),
             typeof(ValueTuple<,,,,>), typeof(ValueTuple<,,,,,>), typeof(ValueTuple<,,,,,,>), typeof(ValueTuple<,,,,,,,>)
         }.ToImmutableDictionary(type => type, ReflectionUtilities.GetGenericArgumentsCount);
-        
+
         public static IImmutableSet<Type> MemorySpanType { get; } = new HashSet<Type>
         {
             typeof(Memory<>), typeof(ReadOnlyMemory<>), typeof(Span<>), typeof(ReadOnlySpan<>)
@@ -59,7 +59,7 @@ namespace NetExtender.Utilities.Types
                 _ => typeof(Tuple<,,,,,,,>).MakeGenericType(arguments[0], arguments[1], arguments[2], arguments[3], arguments[4], arguments[5], arguments[6], CreateTupleType(arguments.Skip(7).ToArray())),
             };
         }
-        
+
         public static Type CreateValueTupleType(params Type[] arguments)
         {
             if (arguments is null)
@@ -119,7 +119,7 @@ namespace NetExtender.Utilities.Types
             {
                 return true;
             }
-            
+
             count += inner - 1;
             return true;
         }

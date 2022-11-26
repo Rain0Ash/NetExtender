@@ -11,7 +11,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
     public class ExternalAccessRestrictionMiddleware : AccessRestrictionMiddleware
     {
         protected Int32 RestrictionStatusCode { get; }
-        
+
         public ExternalAccessRestrictionMiddleware(RequestDelegate next)
             : this(next, DefaultRestrictionStatusCode)
         {

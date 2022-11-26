@@ -11,7 +11,7 @@ namespace NetExtender.Utilities.Types
         {
             return GetAspectRatio((Double) width, height);
         }
-        
+
         public static Double GetAspectRatio(Double width, Double height)
         {
             return width / height;

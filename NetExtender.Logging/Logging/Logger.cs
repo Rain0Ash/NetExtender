@@ -25,7 +25,7 @@ namespace NetExtender.Logging
                 return Offset == default && Options.HasFlag(LoggingMessageOptions.Utc);
             }
         }
-        
+
         public Boolean IsDate
         {
             get
@@ -33,7 +33,7 @@ namespace NetExtender.Logging
                 return Options.HasFlag(LoggingMessageOptions.Date);
             }
         }
-        
+
         public Boolean IsUtcDate
         {
             get
@@ -41,7 +41,7 @@ namespace NetExtender.Logging
                 return Options.HasFlag(LoggingMessageOptions.UtcDate);
             }
         }
-        
+
         public Boolean IsTime
         {
             get
@@ -49,7 +49,7 @@ namespace NetExtender.Logging
                 return Options.HasFlag(LoggingMessageOptions.Time);
             }
         }
-        
+
         public Boolean IsUtcTime
         {
             get
@@ -57,7 +57,7 @@ namespace NetExtender.Logging
                 return Options.HasFlag(LoggingMessageOptions.UtcTime);
             }
         }
-        
+
         public Boolean IsDateTime
         {
             get
@@ -65,7 +65,7 @@ namespace NetExtender.Logging
                 return Options.HasFlag(LoggingMessageOptions.DateTime);
             }
         }
-        
+
         public Boolean IsUtcDateTime
         {
             get
@@ -106,7 +106,7 @@ namespace NetExtender.Logging
             Offset = offset;
             Provider = provider;
         }
-        
+
         protected virtual DateTimeOffset Now(LoggingMessageOptions options)
         {
             return Offset != default ? DateTimeOffset.UtcNow.ToOffset(Offset) : options.HasFlag(LoggingMessageOptions.Utc) ? DateTimeOffset.UtcNow : DateTimeOffset.Now;
@@ -193,7 +193,7 @@ namespace NetExtender.Logging
             DateTimeOffset now = Now(options);
             Behavior.Log(value, type, options, escape, now, format, provider);
         }
-        
+
         public void Dispose()
         {
             Dispose(true);

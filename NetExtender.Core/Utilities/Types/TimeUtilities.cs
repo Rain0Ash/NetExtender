@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.Types
     public static class TimeUtilities
     {
         private static readonly DateTime UnixDate = new DateTime(1970, 1, 1, 0, 0, 0);
-        
+
         /// <summary>
         /// Return unix time in seconds
         /// </summary>
@@ -38,7 +38,7 @@ namespace NetExtender.Utilities.Types
         public static Double GetTime(TimeType type)
         {
             TimeSpan time = DateTime.Now - UnixDate;
-            
+
             return type switch
             {
                 TimeType.Milliseconds => time.TotalMilliseconds,

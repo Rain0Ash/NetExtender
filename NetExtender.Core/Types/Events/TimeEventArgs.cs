@@ -14,14 +14,14 @@ namespace NetExtender.Types.Events
         {
             return args is not null ? new TimeEventArgs(args.SignalTime) : null;
         }
-        
+
         public DateTime SignalTime { get; }
 
         public TimeEventArgs()
             : this(DateTime.Now)
         {
         }
-        
+
         public TimeEventArgs(DateTime time)
         {
             SignalTime = time;

@@ -21,7 +21,7 @@ namespace NetExtender.Utilities.Cryptography
             {
                 return Create(key, ReadOnlySpan<Byte>.Empty);
             }
-            
+
             public static Aes Create(ReadOnlySpan<Byte> key, ReadOnlySpan<Byte> iv)
             {
                 Aes aes = Aes.Create();
@@ -36,7 +36,7 @@ namespace NetExtender.Utilities.Cryptography
                 {
                     throw new ArgumentException($@"Invalid key size: {size}", nameof(key));
                 }
-                
+
                 if (iv.IsEmpty)
                 {
                     iv = DefaultIV.ToArray();
@@ -57,7 +57,7 @@ namespace NetExtender.Utilities.Cryptography
 
                 return aes;
             }
-            
+
             public static String? Encrypt(String? text, String key, HashType hash)
             {
                 return Encrypt(text, Hashing(key, hash));
@@ -74,14 +74,14 @@ namespace NetExtender.Utilities.Cryptography
 
                 return Encrypt(text, aes);
             }
-            
+
             public static String? Encrypt(String? text, Aes aes)
             {
                 if (text is null)
                 {
                     return null;
                 }
-                
+
                 try
                 {
                     using ICryptoTransform encryptor = aes.CreateEncryptor();
@@ -130,7 +130,7 @@ namespace NetExtender.Utilities.Cryptography
                 try
                 {
                     Byte[] buffer = Convert.FromBase64String(cipher);
-                    
+
                     using ICryptoTransform decryptor = aes.CreateDecryptor();
 
                     using MemoryStream memory = new MemoryStream(buffer);
@@ -143,12 +143,12 @@ namespace NetExtender.Utilities.Cryptography
                     return null;
                 }
             }
-            
+
             public static Byte[]? Encrypt(Byte[]? data, ReadOnlySpan<Byte> key)
             {
                 return Encrypt(data, key, ReadOnlySpan<Byte>.Empty);
             }
-            
+
             public static Byte[]? Encrypt(Byte[]? data, ReadOnlySpan<Byte> key, ReadOnlySpan<Byte> iv)
             {
                 using Aes aes = Create(key, iv);
@@ -191,7 +191,7 @@ namespace NetExtender.Utilities.Cryptography
                 {
                     return null;
                 }
-                
+
                 using MemoryStream memory = new MemoryStream();
                 using CryptoStream crypto = new CryptoStream(memory, transform, CryptoStreamMode.Write);
 
@@ -204,7 +204,7 @@ namespace NetExtender.Utilities.Cryptography
                 {
                     return null;
                 }
-                
+
                 return memory.ToArray();
             }
 
@@ -216,7 +216,7 @@ namespace NetExtender.Utilities.Cryptography
                 }
 
                 Aes copy = Aes.Create() ?? throw new FactoryException();
-                
+
                 copy.Mode = aes.Mode;
                 copy.KeySize = aes.KeySize;
                 copy.BlockSize = aes.BlockSize;

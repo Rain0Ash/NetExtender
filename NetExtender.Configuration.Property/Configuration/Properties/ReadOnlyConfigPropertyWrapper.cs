@@ -16,7 +16,7 @@ namespace NetExtender.Configuration.Properties
     public sealed class ReadOnlyConfigPropertyWrapper<T> : IReadOnlyConfigProperty<T>
     {
         private IConfigProperty<T> Internal { get; }
-        
+
         public event ConfigurationChangedEventHandler<T>? Changed
         {
             add
@@ -40,7 +40,7 @@ namespace NetExtender.Configuration.Properties
                 Internal.PropertyChanged -= value;
             }
         }
-        
+
         public String Path
         {
             get
@@ -168,7 +168,7 @@ namespace NetExtender.Configuration.Properties
                 return Internal.Converter;
             }
         }
-        
+
         private Boolean Disposing { get; }
 
         internal ReadOnlyConfigPropertyWrapper(IConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
@@ -256,7 +256,7 @@ namespace NetExtender.Configuration.Properties
         {
             return Internal.ToString();
         }
-        
+
         public String ToString(String? format, IFormatProvider? provider)
         {
             return Internal.ToString(format, provider);
@@ -270,11 +270,11 @@ namespace NetExtender.Configuration.Properties
             }
         }
     }
-    
+
     public sealed class ReadOnlyConfigPropertyWrapper : IReadOnlyConfigProperty
     {
         private IConfigProperty Internal { get; }
-        
+
         public event ConfigurationChangedEventHandler? Changed
         {
             add
@@ -298,7 +298,7 @@ namespace NetExtender.Configuration.Properties
                 Internal.PropertyChanged -= value;
             }
         }
-        
+
         public String Path
         {
             get
@@ -386,7 +386,7 @@ namespace NetExtender.Configuration.Properties
                 return Internal.IsAlwaysDefault;
             }
         }
-        
+
         public String? Value
         {
             get
@@ -402,7 +402,7 @@ namespace NetExtender.Configuration.Properties
                 return Internal.Alternate;
             }
         }
-        
+
         private Boolean Disposing { get; }
 
         internal ReadOnlyConfigPropertyWrapper(IConfig config, String? key, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
@@ -470,7 +470,7 @@ namespace NetExtender.Configuration.Properties
         {
             return Internal.ToString();
         }
-        
+
         public String ToString(String? format, IFormatProvider? provider)
         {
             return Internal.ToString(format, provider);

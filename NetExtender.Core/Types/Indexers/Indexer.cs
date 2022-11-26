@@ -74,7 +74,7 @@ namespace NetExtender.Types.Indexers
                     Null = counter;
                 }
             }
-            
+
             Index.TrimExcess();
         }
 
@@ -92,14 +92,14 @@ namespace NetExtender.Types.Indexers
 
             return Index.TryGetValue(item, out Int32 index) ? index : -1;
         }
-        
+
         public Boolean Rebuild(IEnumerable<T> source)
         {
             Clear();
             AddRange(source);
             return true;
         }
-        
+
         public void Clear()
         {
             Null = -1;
@@ -122,7 +122,7 @@ namespace NetExtender.Types.Indexers
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
-            
+
             if (array.Length - index - 1 < Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
@@ -144,7 +144,7 @@ namespace NetExtender.Types.Indexers
         {
             return GetEnumerator();
         }
-        
+
         public Int32 this[T item]
         {
             get

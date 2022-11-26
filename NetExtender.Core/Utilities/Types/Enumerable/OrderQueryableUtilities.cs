@@ -16,7 +16,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return OrderBy(source, Comparer<T>.Default);
         }
 
@@ -69,7 +69,7 @@ namespace NetExtender.Utilities.Types
 
             return source.ThenByDescending(item => item, comparer);
         }
-        
+
         /// <summary>
         /// Sorts the elements of a sequence in ascending order according to a key.
         /// </summary>

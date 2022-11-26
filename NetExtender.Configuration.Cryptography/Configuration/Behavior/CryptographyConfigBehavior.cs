@@ -30,7 +30,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
     public class CryptographyConfigBehavior : ICryptographyConfigBehavior
     {
         private IConfigBehavior Behavior { get; }
-        
+
         public IConfigurationCryptor Cryptor { get; }
 
         public event ConfigurationChangedEventHandler? Changed;
@@ -58,7 +58,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
                 return Behavior.IsReadOnly;
             }
         }
-        
+
         public Boolean IsIgnoreEvent
         {
             get
@@ -165,7 +165,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
             Behavior = behavior ?? throw new ArgumentNullException(nameof(behavior));
             Cryptor = cryptor.AsCryptor();
         }
-        
+
         protected virtual Boolean TryEncryptKey(String? key, IStringEncryptor? encryptor, out String? result)
         {
             if (encryptor is null && !IsCryptDefault)
@@ -251,17 +251,17 @@ namespace NetExtender.Configuration.Cryptography.Behavior
             IEnumerable<ConfigurationValueEntry> Internal()
             {
                 IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
-                
+
                 foreach (ConfigurationValueEntry entry in entries)
                 {
                     (String? key, String? value, ImmutableArray<String> array) = entry;
                     IEnumerable<String>? sections = array;
-                    
+
                     if ((configuration?.IsCryptKey ?? IsCryptKey) && !TryEncryptKey(key, configuration, out key))
                     {
                         throw new CryptographicException();
                     }
-                
+
                     if ((configuration?.IsCryptValue ?? IsCryptValue) && !TryEncryptValue(value, configuration, out value))
                     {
                         throw new CryptographicException();
@@ -278,7 +278,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
 
             return Internal();
         }
-        
+
         [return: NotNullIfNotNull("entries")]
         // ReSharper disable once CognitiveComplexity
         protected virtual IEnumerable<ConfigurationValueEntry>? Decrypt(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries)
@@ -292,17 +292,17 @@ namespace NetExtender.Configuration.Cryptography.Behavior
             IEnumerable<ConfigurationValueEntry> Internal()
             {
                 IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
-                
+
                 foreach (ConfigurationValueEntry entry in entries)
                 {
                     (String? key, String? value, ImmutableArray<String> array) = entry;
                     IEnumerable<String>? sections = array;
-                    
+
                     if ((configuration?.IsCryptKey ?? IsCryptKey) && !TryDecryptKey(key, configuration, out key))
                     {
                         throw new CryptographicException();
                     }
-                
+
                     if ((configuration?.IsCryptValue ?? IsCryptValue) && !TryDecryptValue(value, configuration, out value))
                     {
                         throw new CryptographicException();
@@ -324,11 +324,11 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         {
             return Contains(key, null, sections);
         }
-        
+
         public virtual Boolean Contains(String? key, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
-            
+
             if ((configuration?.IsCryptKey ?? IsCryptKey) && !TryEncryptKey(key, configuration, out key))
             {
                 throw new CryptographicException();
@@ -341,7 +341,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
 
             return ContainsRaw(key, sections);
         }
-        
+
         public Boolean ContainsRaw(String? key, IEnumerable<String>? sections)
         {
             return Behavior.Contains(key, sections);
@@ -351,11 +351,11 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         {
             return ContainsAsync(key, null, sections, token);
         }
-        
+
         public virtual Task<Boolean> ContainsAsync(String? key, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
         {
             IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
-            
+
             if ((configuration?.IsCryptKey ?? IsCryptKey) && !TryEncryptKey(key, configuration, out key))
             {
                 throw new CryptographicException();
@@ -378,16 +378,16 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         {
             return Get(key, null, sections);
         }
-        
+
         public virtual String? Get(String? key, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
-            
+
             if ((configuration?.IsCryptKey ?? IsCryptKey) && !TryEncryptKey(key, configuration, out key))
             {
                 throw new CryptographicException();
             }
-            
+
             if ((configuration?.IsCryptSections ?? IsCryptSections) && !TryEncryptSections(sections, configuration, out sections))
             {
                 throw new CryptographicException();
@@ -402,7 +402,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
 
             return value;
         }
-        
+
         public String? GetRaw(String? key, IEnumerable<String>? sections)
         {
             return Behavior.Get(key, sections);
@@ -412,16 +412,16 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         {
             return GetAsync(key, null, sections, token);
         }
-        
+
         public virtual async Task<String?> GetAsync(String? key, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
         {
             IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
-            
+
             if ((configuration?.IsCryptKey ?? IsCryptKey) && !TryEncryptKey(key, configuration, out key))
             {
                 throw new CryptographicException();
             }
-            
+
             if ((configuration?.IsCryptSections ?? IsCryptSections) && !TryEncryptSections(sections, configuration, out sections))
             {
                 throw new CryptographicException();
@@ -446,21 +446,21 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         {
             return Set(key, value, null, sections);
         }
-        
+
         public virtual Boolean Set(String? key, String? value, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
-            
+
             if ((configuration?.IsCryptKey ?? IsCryptKey) && !TryEncryptKey(key, configuration, out key))
             {
                 throw new CryptographicException();
             }
-            
+
             if ((configuration?.IsCryptValue ?? IsCryptValue) && !TryEncryptValue(value, configuration, out value))
             {
                 throw new CryptographicException();
             }
-            
+
             if ((configuration?.IsCryptSections ?? IsCryptSections) && !TryEncryptSections(sections, configuration, out sections))
             {
                 throw new CryptographicException();
@@ -478,21 +478,21 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         {
             return SetAsync(key, value, null, sections, token);
         }
-        
+
         public virtual Task<Boolean> SetAsync(String? key, String? value, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
         {
             IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
-            
+
             if ((configuration?.IsCryptKey ?? IsCryptKey) && !TryEncryptKey(key, configuration, out key))
             {
                 throw new CryptographicException();
             }
-            
+
             if ((configuration?.IsCryptValue ?? IsCryptValue) && !TryEncryptValue(value, configuration, out value))
             {
                 throw new CryptographicException();
             }
-            
+
             if ((configuration?.IsCryptSections ?? IsCryptSections) && !TryEncryptSections(sections, configuration, out sections))
             {
                 throw new CryptographicException();
@@ -500,7 +500,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
 
             return SetRawAsync(key, value, sections, token);
         }
-        
+
         public Task<Boolean> SetRawAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
         {
             return Behavior.SetAsync(key, value, sections, token);
@@ -514,17 +514,17 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         public virtual String? GetOrSet(String? key, String? value, IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
-            
+
             if ((configuration?.IsCryptKey ?? IsCryptKey) && !TryEncryptKey(key, configuration, out key))
             {
                 throw new CryptographicException();
             }
-            
+
             if ((configuration?.IsCryptValue ?? IsCryptValue) && !TryEncryptValue(value, configuration, out value))
             {
                 throw new CryptographicException();
             }
-            
+
             if ((configuration?.IsCryptSections ?? IsCryptSections) && !TryEncryptSections(sections, configuration, out sections))
             {
                 throw new CryptographicException();
@@ -539,7 +539,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
 
             return raw;
         }
-        
+
         public String? GetOrSetRaw(String? key, String? value, IEnumerable<String>? sections)
         {
             return Behavior.GetOrSet(key, value, sections);
@@ -553,17 +553,17 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         public virtual async Task<String?> GetOrSetAsync(String? key, String? value, IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
         {
             IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
-            
+
             if ((configuration?.IsCryptKey ?? IsCryptKey) && !TryEncryptKey(key, configuration, out key))
             {
                 throw new CryptographicException();
             }
-            
+
             if ((configuration?.IsCryptValue ?? IsCryptValue) && !TryEncryptValue(value, configuration, out value))
             {
                 throw new CryptographicException();
             }
-            
+
             if ((configuration?.IsCryptSections ?? IsCryptSections) && !TryEncryptSections(sections, configuration, out sections))
             {
                 throw new CryptographicException();
@@ -588,12 +588,12 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         {
             return GetExists(null, sections);
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public virtual ConfigurationEntry[]? GetExists(IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
-            
+
             if (sections is not null)
             {
                 if ((configuration?.IsCryptSections ?? IsCryptSections) && !TryEncryptSections(sections, configuration, out sections))
@@ -601,14 +601,14 @@ namespace NetExtender.Configuration.Cryptography.Behavior
                     throw new CryptographicException();
                 }
             }
-            
+
             ConfigurationEntry[]? entries = GetExistsRaw(sections);
 
             if (entries is null)
             {
                 return null;
             }
-            
+
             for (Int32 i = 0; i < entries.Length; i++)
             {
                 (String? key, ImmutableArray<String> array) = entries[i];
@@ -623,7 +623,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
                 {
                     throw new CryptographicException();
                 }
-                
+
                 entries[i] = new ConfigurationEntry(key, sections.AsImmutableArray());
             }
 
@@ -634,17 +634,17 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         {
             return Behavior.GetExists(sections);
         }
-        
+
         public ConfigurationValueEntry[]? GetExistsValues(IEnumerable<String>? sections)
         {
             return GetExistsValues(null, sections);
         }
-        
+
         // ReSharper disable once CognitiveComplexity
         public virtual ConfigurationValueEntry[]? GetExistsValues(IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
-            
+
             if (sections is not null)
             {
                 if ((configuration?.IsCryptSections ?? IsCryptSections) && !TryEncryptSections(sections, configuration, out sections))
@@ -652,14 +652,14 @@ namespace NetExtender.Configuration.Cryptography.Behavior
                     throw new CryptographicException();
                 }
             }
-            
+
             ConfigurationValueEntry[]? entries = GetExistsValuesRaw(sections);
 
             if (entries is null)
             {
                 return null;
             }
-            
+
             for (Int32 i = 0; i < entries.Length; i++)
             {
                 (String? key, String? value, ImmutableArray<String> array) = entries[i];
@@ -668,7 +668,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
                 {
                     throw new CryptographicException();
                 }
-                
+
                 if ((configuration?.IsCryptValue ?? IsCryptValue) && !TryDecryptValue(value, configuration, out value))
                 {
                     throw new CryptographicException();
@@ -679,7 +679,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
                 {
                     throw new CryptographicException();
                 }
-                
+
                 entries[i] = new ConfigurationValueEntry(key, value, sections.AsImmutableArray());
             }
 
@@ -700,7 +700,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         public async virtual Task<ConfigurationEntry[]?> GetExistsAsync(IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
         {
             IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
-            
+
             if (sections is not null)
             {
                 if ((configuration?.IsCryptSections ?? IsCryptSections) && !TryEncryptSections(sections, configuration, out sections))
@@ -708,7 +708,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
                     throw new CryptographicException();
                 }
             }
-            
+
             ConfigurationEntry[]? entries = await GetExistsRawAsync(sections, token);
 
             if (entries is null)
@@ -730,7 +730,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
                 {
                     throw new CryptographicException();
                 }
-                
+
                 entries[i] = new ConfigurationEntry(key, sections.AsImmutableArray());
             }
 
@@ -741,7 +741,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         {
             return Behavior.GetExistsAsync(sections, token);
         }
-        
+
         public Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IEnumerable<String>? sections, CancellationToken token)
         {
             return GetExistsValuesAsync(null, sections, token);
@@ -751,7 +751,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         public virtual async Task<ConfigurationValueEntry[]?> GetExistsValuesAsync(IStringCryptor? cryptor, IEnumerable<String>? sections, CancellationToken token)
         {
             IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
-            
+
             if (sections is not null)
             {
                 if ((configuration?.IsCryptSections ?? IsCryptSections) && !TryEncryptSections(sections, configuration, out sections))
@@ -759,7 +759,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
                     throw new CryptographicException();
                 }
             }
-            
+
             ConfigurationValueEntry[]? entries = await GetExistsValuesRawAsync(sections, token);
 
             if (entries is null)
@@ -775,7 +775,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
                 {
                     throw new CryptographicException();
                 }
-                
+
                 if ((configuration?.IsCryptValue ?? IsCryptValue) && !TryDecryptValue(value, configuration, out value))
                 {
                     throw new CryptographicException();
@@ -786,7 +786,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
                 {
                     throw new CryptographicException();
                 }
-                
+
                 entries[i] = new ConfigurationValueEntry(key, value, sections.AsImmutableArray());
             }
 
@@ -802,7 +802,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         {
             return Clear(null, sections);
         }
-        
+
         public virtual Boolean Clear(IStringCryptor? cryptor, IEnumerable<String>? sections)
         {
             if (sections is null)
@@ -811,7 +811,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
             }
 
             IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
-            
+
             if ((configuration?.IsCryptSections ?? IsCryptSections) && !TryEncryptSections(sections, configuration, out sections))
             {
                 throw new CryptographicException();
@@ -819,7 +819,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
 
             return Behavior.Clear(sections);
         }
-        
+
         public Boolean ClearRaw(IEnumerable<String>? sections)
         {
             return Behavior.Clear(sections);
@@ -838,7 +838,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
             }
 
             IConfigurationCryptor? configuration = cryptor?.AsCryptor(Cryptor.CryptographyOptions);
-            
+
             if ((configuration?.IsCryptSections ?? IsCryptSections) && !TryEncryptSections(sections, configuration, out sections))
             {
                 throw new CryptographicException();
@@ -861,7 +861,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         {
             return Behavior.ReloadAsync(token);
         }
-        
+
         public Boolean Reset()
         {
             return Behavior.Reset();
@@ -876,12 +876,12 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         {
             return Merge(null, entries);
         }
-        
+
         public Boolean Merge(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries)
         {
             return Behavior.Merge(Encrypt(cryptor, entries));
         }
-        
+
         public Boolean MergeRaw(IEnumerable<ConfigurationValueEntry>? entries)
         {
             return Behavior.Merge(entries);
@@ -891,12 +891,12 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         {
             return MergeAsync(null, entries, token);
         }
-        
+
         public Task<Boolean> MergeAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
         {
             return Behavior.MergeAsync(Encrypt(cryptor, entries), token);
         }
-        
+
         public Task<Boolean> MergeRawAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
         {
             return Behavior.MergeAsync(entries, token);
@@ -916,52 +916,52 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         {
             return Behavior.Replace(entries);
         }
-        
+
         public Task<Boolean> ReplaceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
         {
             return ReplaceAsync(null, entries, token);
         }
-        
+
         public Task<Boolean> ReplaceAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
         {
             return Behavior.ReplaceAsync(Encrypt(cryptor, entries), token);
         }
-        
+
         public Task<Boolean> ReplaceRawAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
         {
             return Behavior.ReplaceAsync(entries, token);
         }
-        
+
         public ConfigurationValueEntry[]? Difference(IEnumerable<ConfigurationValueEntry>? entries)
         {
             return Difference(null, entries);
         }
-        
+
         public ConfigurationValueEntry[]? Difference(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries)
         {
             return Decrypt(cryptor, Behavior.Difference(Encrypt(cryptor, entries)))?.ToArray();
         }
-        
+
         public ConfigurationValueEntry[]? DifferenceRaw(IEnumerable<ConfigurationValueEntry>? entries)
         {
             return Behavior.Difference(entries);
         }
-        
+
         public Task<ConfigurationValueEntry[]?> DifferenceAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
         {
             return DifferenceAsync(null, entries, token);
         }
-        
+
         public async Task<ConfigurationValueEntry[]?> DifferenceAsync(IStringCryptor? cryptor, IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
         {
             return Decrypt(cryptor, await Behavior.DifferenceAsync(Encrypt(cryptor, entries), token))?.ToArray();
         }
-        
+
         public Task<ConfigurationValueEntry[]?> DifferenceRawAsync(IEnumerable<ConfigurationValueEntry>? entries, CancellationToken token)
         {
             return Behavior.DifferenceAsync(entries, token);
         }
-        
+
         IConfigBehaviorTransaction? IConfigBehavior.Transaction()
         {
             return Transaction();
@@ -983,9 +983,9 @@ namespace NetExtender.Configuration.Cryptography.Behavior
             {
                 return null;
             }
-            
+
             ConfigurationValueEntry[]? entries = GetExistsValues(null);
-            
+
             ICryptographyConfigBehavior transaction = new MemoryConfigBehavior(ConfigOptions.IgnoreEvent).Cryptography(cryptor ?? Cryptor);
 
             transaction.Merge(entries);
@@ -1003,9 +1003,9 @@ namespace NetExtender.Configuration.Cryptography.Behavior
             {
                 return null;
             }
-            
+
             ConfigurationValueEntry[]? entries = await GetExistsValuesAsync(null, token);
-            
+
             ICryptographyConfigBehavior transaction = new MemoryConfigBehavior(ConfigOptions.IgnoreEvent).Cryptography(cryptor ?? Cryptor);
 
             await transaction.MergeAsync(entries, token);
@@ -1016,7 +1016,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         {
             Changed?.Invoke(this, new ConfigurationChangedEventArgs(entry));
         }
-        
+
         public IEnumerator<ConfigurationValueEntry> GetEnumerator()
         {
             return Decrypt(null, Behavior).GetEnumerator();
@@ -1026,7 +1026,7 @@ namespace NetExtender.Configuration.Cryptography.Behavior
         {
             return GetEnumerator();
         }
-        
+
         public void Dispose()
         {
             Behavior.Dispose();

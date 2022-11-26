@@ -36,7 +36,7 @@ namespace NetExtender.Types.Interprocess.Interfaces
         /// </summary>
         /// <param name="messages"></param>
         public Task SendMessageAsync(IEnumerable<Byte[]> messages);
-        
+
         /// <summary>
         /// Resets MessagesSent and MessagesReceived counters
         /// </summary>

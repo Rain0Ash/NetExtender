@@ -43,7 +43,7 @@ namespace NetExtender.Types.Region
                     {
                         counter++;
                     }
-                    
+
                     if (Additional is not null)
                     {
                         counter++;
@@ -135,7 +135,7 @@ namespace NetExtender.Types.Region
                     {
                         throw new ArgumentException($"Invalid regional domain '{value}'", nameof(other));
                     }
-                    
+
                     set ??= new OrderedSet<String>(StringComparer.OrdinalIgnoreCase);
                     set.Add(value);
                 }
@@ -147,7 +147,7 @@ namespace NetExtender.Types.Region
             {
                 return domain is not null && (RegionalValidator.IsMatch(domain) || domain.IsRightToLeft() && domain.Length < 20 && domain.EndsWith("."));
             }
-            
+
             public void Deconstruct(out String? global, out String? regional)
             {
                 Deconstruct(out global, out _, out regional);

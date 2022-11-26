@@ -64,7 +64,7 @@ namespace NetExtender.Types.Memento
 
             return Property.Add(property);
         }
-        
+
         void ICollection<IMementoProperty<TSource>>.Add(IMementoProperty<TSource> item)
         {
             Add(item);
@@ -117,7 +117,7 @@ namespace NetExtender.Types.Memento
             Property.Clear();
             return this;
         }
-        
+
         void ICollection<IMementoProperty<TSource>>.Clear()
         {
             Clear();

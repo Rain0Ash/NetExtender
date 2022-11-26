@@ -18,7 +18,7 @@ namespace NetExtender.Domains.View.Console
                 return ApplicationShutdownMode.OnExplicitShutdown;
             }
         }
-        
+
         protected override Task<IApplicationView> RunAsync(CancellationToken token)
         {
             ConsoleUtilities.CancelKeyPress += ExitHandle;

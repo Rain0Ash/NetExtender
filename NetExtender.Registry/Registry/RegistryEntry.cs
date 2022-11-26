@@ -25,11 +25,11 @@ namespace NetExtender.Registry
         {
             return !(first == second);
         }
-        
+
         [JsonConverter(typeof(StringEnumConverter))]
         public RegistryKeys Key { get; init; }
         public ImmutableArray<String> Sections { get; init; }
-        
+
         [JsonIgnore]
         public Int32 Length
         {
@@ -38,7 +38,7 @@ namespace NetExtender.Registry
                 return Sections.Length;
             }
         }
-        
+
         [JsonIgnore]
         public String Path
         {
@@ -56,12 +56,12 @@ namespace NetExtender.Registry
                 return $"{Key.ToRegistryName()}{Registry.Separator}{Path}";
             }
         }
-        
+
         public String Name { get; init; }
-        
+
         [JsonConverter(typeof(StringEnumConverter))]
         public RegistryValueKind Kind { get; init; }
-        
+
         public Object? Value { get; init; }
 
         public Boolean Equals(RegistryEntry other)
@@ -78,7 +78,7 @@ namespace NetExtender.Registry
         {
             return HashCode.Combine((Int32) Key, Sections, Name, (Int32) Kind, Value);
         }
-        
+
         public override String ToString()
         {
             return this.JsonSerializeObject();

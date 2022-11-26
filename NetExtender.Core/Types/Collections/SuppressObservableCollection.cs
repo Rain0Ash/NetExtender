@@ -16,7 +16,7 @@ namespace NetExtender.Types.Collections
         public Boolean IsAllowSuppress { get; }
         public Boolean IsSuppressed { get; }
         public Int32 SuppressDepth { get; }
-        
+
         public IDisposable? Suppress();
         public Boolean Unsuppress();
     }
@@ -27,7 +27,7 @@ namespace NetExtender.Types.Collections
         protected Boolean IsChanged { get; set; }
 
         public Boolean IsAllowSuppress { get; set; } = true;
-        
+
         public Boolean IsSuppressed
         {
             get
@@ -70,14 +70,14 @@ namespace NetExtender.Types.Collections
         {
             return Unsuppress();
         }
-        
+
         protected virtual Boolean Unsuppress()
         {
             if (!IsAllowSuppress)
             {
                 return false;
             }
-            
+
             if (IsSuppressed || !IsChanged)
             {
                 return !IsSuppressed;
@@ -95,10 +95,10 @@ namespace NetExtender.Types.Collections
                 IsChanged = true;
                 return;
             }
-            
+
             base.OnCollectionChanged(e);
         }
-        
+
         protected override void OnPropertyChanged(PropertyChangedEventArgs e)
         {
             if (IsSuppressed)
@@ -134,7 +134,7 @@ namespace NetExtender.Types.Collections
         private Boolean IsChanged { get; set; }
 
         public Boolean IsAllowSuppress { get; set; } = true;
-        
+
         public Boolean IsSuppressed
         {
             get
@@ -150,7 +150,7 @@ namespace NetExtender.Types.Collections
                 return Suppression.Count;
             }
         }
-        
+
         public Int32 Count
         {
             get
@@ -181,17 +181,17 @@ namespace NetExtender.Types.Collections
             {
                 return;
             }
-            
+
             CollectionChanged?.Invoke(this, args);
         }
-        
+
         private void OnPropertyChanged(Object? sender, PropertyChangedEventArgs args)
         {
             if (IsSuppressed)
             {
                 return;
             }
-            
+
             PropertyChanged?.Invoke(this, args);
         }
 
@@ -199,7 +199,7 @@ namespace NetExtender.Types.Collections
         {
             return IsAllowSuppress ? Suppression.Suppress() : null;
         }
-        
+
         Boolean ISuppressObservableCollectionHandler.Unsuppress()
         {
             return Unsuppress();
@@ -211,7 +211,7 @@ namespace NetExtender.Types.Collections
             {
                 return false;
             }
-            
+
             if (IsSuppressed || !IsChanged)
             {
                 return !IsSuppressed;
@@ -231,7 +231,7 @@ namespace NetExtender.Types.Collections
         {
             return Internal.IndexOf(item);
         }
-        
+
         public void Move(Int32 oldIndex, Int32 newIndex)
         {
             Internal.Move(oldIndex, newIndex);
@@ -320,7 +320,7 @@ namespace NetExtender.Types.Collections
             {
                 return;
             }
-                
+
             Count--;
             Collection.Unsuppress();
         }

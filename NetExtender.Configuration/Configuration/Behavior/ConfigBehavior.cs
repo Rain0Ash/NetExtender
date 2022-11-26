@@ -101,14 +101,14 @@ namespace NetExtender.Configuration.Behavior
 
             return sections is null ? new[] { key } : ToSection(sections.Append(key));
         }
-        
+
         protected virtual String? FromSection(ref IEnumerable<String>? sections)
         {
             if (sections is null)
             {
                 return null;
             }
-            
+
             List<String> collection = sections.ToList();
 
             if (collection.Count <= 0)
@@ -135,7 +135,7 @@ namespace NetExtender.Configuration.Behavior
             sections = sections.Materialize();
 
             String? result = Get(key, sections);
-            
+
             if (result is not null)
             {
                 return result;
@@ -143,7 +143,7 @@ namespace NetExtender.Configuration.Behavior
 
             return value is not null && Set(key, value, sections) ? value : null;
         }
-        
+
         public virtual Task<Boolean> ContainsAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
         {
             return Contains(key, sections).ToTask();
@@ -158,7 +158,7 @@ namespace NetExtender.Configuration.Behavior
         {
             return Set(key, value, sections).ToTask();
         }
-        
+
         public virtual Task<String?> GetOrSetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
         {
             return GetOrSet(key, value, sections).ToTask();
@@ -219,7 +219,7 @@ namespace NetExtender.Configuration.Behavior
         public virtual ConfigurationValueEntry[]? Difference(IEnumerable<ConfigurationValueEntry>? entries)
         {
             ConfigurationValueEntry[]? values = GetExistsValues(null);
-            
+
             if (entries is null)
             {
                 return values;
@@ -236,9 +236,9 @@ namespace NetExtender.Configuration.Behavior
             {
                 equality.TryAdd(entry, entry);
             }
-            
+
             List<ConfigurationValueEntry> difference = new List<ConfigurationValueEntry>(equality.Count);
-            
+
             foreach (ConfigurationValueEntry value in values)
             {
                 if (!equality.TryGetValue(value, out ConfigurationValueEntry result))
@@ -251,7 +251,7 @@ namespace NetExtender.Configuration.Behavior
                 {
                     continue;
                 }
-                
+
                 difference.Add(result);
             }
 
@@ -269,24 +269,24 @@ namespace NetExtender.Configuration.Behavior
             {
                 return null;
             }
-            
+
             ConfigurationValueEntry[]? entries = GetExistsValues(null);
-            
+
             IConfigBehavior transaction = new MemoryConfigBehavior(ConfigOptions.IgnoreEvent);
 
             transaction.Merge(entries);
             return new ConfigBehaviorTransaction(this, transaction);
         }
-        
+
         public virtual async Task<IConfigBehaviorTransaction?> TransactionAsync(CancellationToken token)
         {
             if (IsReadOnly)
             {
                 return null;
             }
-            
+
             ConfigurationValueEntry[]? entries = await GetExistsValuesAsync(null, token);
-            
+
             IConfigBehavior transaction = new MemoryConfigBehavior(ConfigOptions.IgnoreEvent);
 
             await transaction.MergeAsync(entries, token);
@@ -297,7 +297,7 @@ namespace NetExtender.Configuration.Behavior
         {
             Changed?.Invoke(this, new ConfigurationChangedEventArgs(entry));
         }
-        
+
         public virtual IEnumerator<ConfigurationValueEntry> GetEnumerator()
         {
             ConfigurationValueEntry[]? values = GetExistsValues(null);

@@ -11,7 +11,7 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
         public FileStreamAttributes StreamAttributes { get; }
         public Int64 StreamSize { get; }
         public String StreamName { get; }
-        
+
         public Win32StreamInfo(FileStreamType type, FileStreamAttributes attributes, Int64 size, String name)
         {
             StreamType = type;

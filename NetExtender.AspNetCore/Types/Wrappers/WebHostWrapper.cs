@@ -13,7 +13,7 @@ namespace NetExtender.AspNetCore.Types.Wrappers
     public sealed class WebHostWrapper : IHost, IWebHost
     {
         private IWebHost Host { get; }
-        
+
         public IFeatureCollection ServerFeatures
         {
             get

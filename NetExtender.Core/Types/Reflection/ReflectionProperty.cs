@@ -21,7 +21,7 @@ namespace NetExtender.Types.Reflection
 
             return new ReflectionProperty<TSource, TProperty>(value);
         }
-        
+
         public static implicit operator ReflectionProperty<TSource, TProperty>(Expression<Func<TSource, TProperty>> value)
         {
             if (value is null)

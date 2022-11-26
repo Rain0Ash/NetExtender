@@ -36,5 +36,5 @@
         <DependentUpon>NetExtenderFrameworkInitializer.cs</DependentUpon>
       </Compile>
     </ItemGroup>
-    
+
 </Project>

@@ -22,7 +22,7 @@ namespace NetExtender.Utilities.Core
 
             return ref **(IntPtr**)Unsafe.AsPointer(ref instance);
         }
-        
+
         public static T UncheckedCast<T>(this Object instance)
         {
             if (instance is null)
@@ -52,7 +52,7 @@ namespace NetExtender.Utilities.Core
         {
             return Unsafe.ReadUnaligned<T>(ref source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void Fill(void* destination, Int32 length)
         {
@@ -230,7 +230,7 @@ namespace NetExtender.Utilities.Core
                 destination = Add<T>(destination);
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void Write<T>(void* destination, T value)
         {
@@ -401,7 +401,7 @@ namespace NetExtender.Utilities.Core
                 > 0 => stackalloc Byte[(Int32) Math.Min(length, (UInt32) stackbuffer)],
                 _ => new Byte[Math.Min(length, (UInt32) (-stackbuffer))]
             };
-            
+
             SwapBlock(destination, source, length, buffer);
         }
 
@@ -424,7 +424,7 @@ namespace NetExtender.Utilities.Core
                 fixed (void* pointer = buffer)
                 {
                     UInt32 count = Math.Min(length, (UInt32) buffer.Length);
-                    
+
                     UInt64 position = 0;
 
                     while (position < length - count)
@@ -485,7 +485,7 @@ namespace NetExtender.Utilities.Core
                 > 0 => stackalloc Byte[(Int32) Math.Min(length, (UInt32) stackbuffer)],
                 _ => new Byte[Math.Min(length, (UInt32) (-stackbuffer))]
             };
-            
+
             SwapBlockUnaligned(destination, source, length, buffer);
         }
 
@@ -508,7 +508,7 @@ namespace NetExtender.Utilities.Core
                 fixed (void* pointer = buffer)
                 {
                     UInt32 count = Math.Min(length, (UInt32) buffer.Length);
-                    
+
                     UInt64 position = 0;
 
                     while (position < length - count)
@@ -584,7 +584,7 @@ namespace NetExtender.Utilities.Core
         {
             source = Add(source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void* Increment(ref void* source)
         {
@@ -603,13 +603,13 @@ namespace NetExtender.Utilities.Core
         {
             return byteOffset <= Int32.MaxValue ? Add(source, (Int32) byteOffset) : Add(Add(source, Int32.MaxValue), (Int32) (byteOffset - Int32.MaxValue));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void Add(ref void* source, Int32 byteOffset)
         {
             source = Add(source, byteOffset);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void Add(ref void* source, UInt32 byteOffset)
         {
@@ -629,45 +629,45 @@ namespace NetExtender.Utilities.Core
             Add(ref source, byteOffset);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void* Add<T>(void* source)
         {
             return Add<T>(source, 1);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void Add<T>(ref void* source)
         {
             source = Add<T>(source);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void* Increment<T>(ref void* source)
         {
             Add<T>(ref source);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void* Add<T>(void* source, Int32 elementOffset)
         {
             return Unsafe.Add<T>(source, elementOffset);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void Add<T>(ref void* source, Int32 elementOffset)
         {
             source = Add<T>(source, elementOffset);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static unsafe void* Increment<T>(ref void* source, Int32 elementOffset)
         {
             Add<T>(ref source, elementOffset);
             return source;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ref T Add<T>(ref T source)
         {

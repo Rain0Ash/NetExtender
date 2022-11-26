@@ -26,7 +26,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore.Types
 
             return source.Query.Include(property).AsVisitable(source.Visitors);
         }
-        
+
         public static IQueryable<T> ToExpandable<T>(this IQueryable<T> queryable)
         {
             if (queryable == null)
@@ -36,7 +36,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore.Types
 
             return queryable.AsVisitable(new ExtensionExpressionVisitorExpander(), new QueryableExpressionVisitor());
         }
-        
+
         public static IQueryable<T> AsExpandable<T>(this IQueryable<T> queryable)
         {
             if (queryable == null)
@@ -46,7 +46,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore.Types
 
             return queryable.ToExpandable();
         }
-        
+
         public static IQueryable<T> ToVisitable<T>(this IQueryable<T> source, params ExpressionVisitor[] visitors)
         {
             if (source is null)
@@ -61,7 +61,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore.Types
 
             return VisitableEntityQuery<T>.Create(source, visitors);
         }
-        
+
         public static IQueryable<T> AsVisitable<T>(this IQueryable<T> source, params ExpressionVisitor[] visitors)
         {
             if (source is null)

@@ -16,14 +16,14 @@ namespace NetExtender.IO.FileSystem.Lock
         public String Name { get; }
 
         public String Path { get; }
-        
+
         public FileLock(String name, TimeSpan timeout)
         {
             if (String.IsNullOrEmpty(name))
             {
                 throw new ArgumentNullException(nameof(name), @"Name cannot be null or empty.");
             }
-            
+
             Name = name;
             Path = LockHelper.GetFilePath(name);
             Timeout = timeout;
@@ -49,7 +49,7 @@ namespace NetExtender.IO.FileSystem.Lock
             {
                 return AcquireLock();
             }
-            
+
             DateTime timestamp = new DateTime(content.Timestamp);
 
             //This lock belongs to this process - we can reacquire the lock
@@ -77,7 +77,7 @@ namespace NetExtender.IO.FileSystem.Lock
         private static FileLockContent CreateLockContent()
         {
             Process process = Process.GetCurrentProcess();
-            
+
             return new FileLockContent
             {
                 ProcessId = process.Id,

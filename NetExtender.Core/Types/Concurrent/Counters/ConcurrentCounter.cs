@@ -29,7 +29,7 @@ namespace NetExtender.Types.Concurrent.Counters
         {
             Internal = new ConcurrentDictionary<T, Int32>(comparer);
         }
-        
+
         public ConcurrentCounter(IEnumerable<T> collection)
         {
             if (collection is null)
@@ -59,7 +59,7 @@ namespace NetExtender.Types.Concurrent.Counters
 
             Internal = new ConcurrentDictionary<T, Int32>(concurrencyLevel, new Counter<T>(collection, comparer), comparer);
         }
-        
+
         public Boolean IsEmpty
         {
             get
@@ -112,12 +112,12 @@ namespace NetExtender.Types.Concurrent.Counters
         {
             return ++current;
         }
-        
+
         private static Int32 Decrement(T item, Int32 current)
         {
             return --current;
         }
-        
+
         public Boolean ContainsKey(T key)
         {
             if (key is null)
@@ -213,7 +213,7 @@ namespace NetExtender.Types.Concurrent.Counters
                 return count > 0;
             }
         }
-        
+
         public void RemoveRange(IEnumerable<T> source)
         {
             if (source is null)
@@ -241,7 +241,7 @@ namespace NetExtender.Types.Concurrent.Counters
         {
             return GetEnumerator();
         }
-        
+
         public Int32 this[T key]
         {
             get

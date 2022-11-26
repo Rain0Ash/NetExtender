@@ -40,7 +40,7 @@ namespace NetExtender.NewtonSoft.Types.Trees
                 {
                     return objectType;
                 }
-                
+
                 Type definition = objectType.GetGenericTypeDefinition();
 
                 if (definition == IEqualityComparerTypeDifinition)
@@ -71,7 +71,7 @@ namespace NetExtender.NewtonSoft.Types.Trees
             {
                 return null;
             }
-            
+
             Type type = obj.GetType();
 
             if (!type.IsGenericType)

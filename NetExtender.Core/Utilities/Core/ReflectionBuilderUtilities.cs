@@ -21,7 +21,7 @@ namespace NetExtender.Utilities.Core
 
             return info.ParameterType;
         }
-        
+
         private static String ConverterName(MemberInfo type)
         {
             if (type is null)
@@ -31,7 +31,7 @@ namespace NetExtender.Utilities.Core
 
             return type.Name;
         }
-        
+
         public static ConstructorBuilder DefineConstructor(this TypeBuilder builder, ConstructorInfo info)
         {
             if (builder is null)
@@ -82,7 +82,7 @@ namespace NetExtender.Utilities.Core
 
             ILGenerator generator = constructor.GetILGenerator();
             generator.Emit(OpCodes.Ldarg_0);
-            
+
             for (Int32 index = 0; index < info.GetParameters().Length; index++)
             {
                 generator.EmitLdarg(index + 1);
@@ -126,7 +126,7 @@ namespace NetExtender.Utilities.Core
             ParameterInfo parameter = info.ReturnParameter;
             ParameterInfo[] parameters = info.GetParameters();
             String name = info.Name;
-            
+
             if (@explicit)
             {
                 name += $"#{info.MethodHandle.Value.ToString()}";
@@ -134,7 +134,7 @@ namespace NetExtender.Utilities.Core
 
             MethodAttributes attributes = info.Attributes;
             attributes &= ~MethodAttributes.Abstract;
-            
+
             if (!declaring.IsInterface)
             {
                 attributes &= ~MethodAttributes.NewSlot;
@@ -154,7 +154,7 @@ namespace NetExtender.Utilities.Core
             }
 
             method.DefineParameter(0, parameter.Attributes, parameter.Name);
-            
+
             for (Int32 index = 0; index < parameters.Length; index++)
             {
                 parameter = parameters[index];
@@ -337,7 +337,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new MemberAccessException();
             }
-            
+
             Type? handlertype = info.EventHandlerType;
 
             if (handlertype is null)
@@ -384,14 +384,14 @@ namespace NetExtender.Utilities.Core
             }
 
             MethodInfo? addmethod = info.AddMethod;
-            
+
             if (addmethod is null || !addmethod.IsOverridable())
             {
                 throw new MemberAccessException();
             }
-            
+
             Type? handlertype = info.EventHandlerType;
-            
+
             if (handlertype is null)
             {
                 throw new TypeAccessException();
@@ -402,7 +402,7 @@ namespace NetExtender.Utilities.Core
             {
                 name += $"#{addmethod.MethodHandle.Value.ToString()}";
             }
-            
+
             static Boolean IsGenericMethod(MethodInfo info)
             {
                 return info.Name == nameof(Interlocked.CompareExchange) && info.IsGenericMethod;
@@ -445,9 +445,9 @@ namespace NetExtender.Utilities.Core
             generator.Emit(OpCodes.Ret);
 
             @event.SetAddOnMethod(method);
-            
+
             MethodInfo? removemethod = info.RemoveMethod;
-            
+
             if (removemethod is not null)
             {
                 method = builder.DefineMethodOverride(removemethod, @explicit);

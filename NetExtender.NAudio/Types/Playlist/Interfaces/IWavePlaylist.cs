@@ -9,7 +9,7 @@ namespace NetExtender.NAudio.Types.Playlist.Interfaces
     public interface IWavePlaylist : IWavePlaylist<IWaveProvider>
     {
     }
-    
+
     public interface IWavePlaylist<T> : IWaveProvider, IList<T> where T : class, IWaveProvider
     {
         public void AddRange(IEnumerable<T> source);

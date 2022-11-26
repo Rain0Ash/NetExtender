@@ -49,7 +49,7 @@ namespace NetExtender.Windows.Services.Types.Installers
                 Username = controller.TryGetServiceUsername()
             };
         }
-        
+
         public FileInfo Path { get; }
         public String Name { get; }
         public String DisplayName { get; }
@@ -87,7 +87,7 @@ namespace NetExtender.Windows.Services.Types.Installers
                     Password = null;
                     return;
                 }
-                
+
                 Username = value switch
                 {
                     ServiceAccount.LocalService => "NT AUTHORITY\\LocalService",

@@ -52,7 +52,7 @@ namespace NetExtender.Types.Times
         {
             DateTimeOffset current = Point;
             Boolean result = base.CompareOrUpdate(point, epsilon, comparison);
-            
+
             if (result == on)
             {
                 Internal.Add(current);
@@ -86,7 +86,7 @@ namespace NetExtender.Types.Times
                 return index < Internal.Count ? Internal[index] : Point;
             }
         }
-        
+
         public override Object Clone()
         {
             return new TimePointHistoryWatcher(Point, Internal);

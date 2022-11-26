@@ -14,7 +14,7 @@ namespace NetExtender.Types.Anonymous
         {
             return property.Maybe;
         }
-        
+
         private IAnonymousObject Anonymous { get; }
         public Int32? Index { get; }
         public String? Property { get; }
@@ -56,7 +56,7 @@ namespace NetExtender.Types.Anonymous
                     AnonymousTypeUtilities.Set(Anonymous, index, value);
                     return;
                 }
-                
+
                 throw new InvalidOperationException();
             }
         }
@@ -82,7 +82,7 @@ namespace NetExtender.Types.Anonymous
             Index = index;
             Property = null;
         }
-        
+
         public AnonymousObjectProperty(IAnonymousObject anonymous, String property)
         {
             Anonymous = anonymous ?? throw new ArgumentNullException(nameof(anonymous));

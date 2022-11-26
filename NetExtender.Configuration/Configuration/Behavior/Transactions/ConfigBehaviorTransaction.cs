@@ -29,14 +29,14 @@ namespace NetExtender.Configuration.Behavior.Transactions
         {
             IsCommit = false;
         }
-            
+
         public virtual void Dispose()
         {
             if (IsCommit is null)
             {
                 Rollback();
             }
-            
+
             Transaction.Dispose();
             GC.SuppressFinalize(this);
         }

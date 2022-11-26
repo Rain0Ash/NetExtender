@@ -11,9 +11,9 @@ namespace NetExtender.Cryptography.Hash.Common
         {
             return new CryptographyHashRefParameters(parameters.FirstSalt, parameters.LastSalt, parameters.FirstPepper, parameters.LastPepper, parameters.Iterations);
         }
-        
+
         public Byte[] FirstSalt { get; }
-        
+
         public Byte[] LastSalt { get; }
 
         public Byte[] FirstPepper { get; }
@@ -26,27 +26,27 @@ namespace NetExtender.Cryptography.Hash.Common
             : this(CryptographyHash.DefaultIterations)
         {
         }
-        
+
         public CryptographyHashParameters(UInt16 iterations)
             : this(null, iterations)
         {
         }
-        
+
         public CryptographyHashParameters(Byte[]? salt)
             : this(salt, CryptographyHash.DefaultIterations)
         {
         }
-        
+
         public CryptographyHashParameters(Byte[]? salt, UInt16 iterations)
             : this(salt, null, iterations)
         {
         }
-        
+
         public CryptographyHashParameters(Byte[]? salt, Byte[]? pepper)
             : this(salt, pepper, CryptographyHash.DefaultIterations)
         {
         }
-        
+
         public CryptographyHashParameters(Byte[]? salt, Byte[]? pepper, UInt16 iterations)
             : this(salt, salt, pepper, pepper, iterations)
         {

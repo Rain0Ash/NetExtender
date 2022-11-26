@@ -37,7 +37,7 @@ namespace NetExtender.Types.Maps
         {
             Order = new IndexList<TKey>(Base.Keys, Comparer);
         }
-        
+
         public IndexMap(IEqualityComparer<TKey>? comparer)
             : base(comparer)
         {
@@ -79,7 +79,7 @@ namespace NetExtender.Types.Maps
         {
             Order = new IndexList<TKey>(capacity, Comparer);
         }
-        
+
         public override Int32 EnsureCapacity(Int32 capacity)
         {
             if (Count >= capacity)
@@ -89,10 +89,10 @@ namespace NetExtender.Types.Maps
 
             Int32 ensure = base.EnsureCapacity(capacity);
             Order.Capacity = ensure;
-            
+
             return ensure;
         }
-        
+
         public override void TrimExcess(Int32 capacity)
         {
             Int32 count = Count;
@@ -105,16 +105,16 @@ namespace NetExtender.Types.Maps
             {
                 return;
             }
-            
+
             base.TrimExcess(capacity);
             Order.Capacity = capacity;
         }
-        
+
         public TKey GetKeyByIndex(Int32 index)
         {
             return Order[index];
         }
-        
+
         public TValue GetValueByIndex(Int32 index)
         {
             return this[GetKeyByIndex(index)];
@@ -275,7 +275,7 @@ namespace NetExtender.Types.Maps
             base.Add(key, value);
             Order.Add(key);
         }
-        
+
         public void Insert(KeyValuePair<TKey, TValue> item)
         {
             Insert(0, item);
@@ -297,12 +297,12 @@ namespace NetExtender.Types.Maps
             {
                 throw new ArgumentNullException(nameof(key));
             }
-            
+
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             if (index < 0 || index >= Order.Count)
             {
                 throw new ArgumentException(@"Less than zero or more than count", nameof(index));
@@ -312,16 +312,16 @@ namespace NetExtender.Types.Maps
             {
                 throw new ArgumentException(@"Already exists", nameof(key));
             }
-            
+
             if (ContainsValue(value))
             {
                 throw new ArgumentException(@"Already exists", nameof(value));
             }
-            
+
             base.Add(key, value);
             Order.Insert(index, key);
         }
-        
+
         public void InsertByValue(KeyValuePair<TValue, TKey> item)
         {
             InsertByValue(0, item);
@@ -341,7 +341,7 @@ namespace NetExtender.Types.Maps
         {
             Insert(index, value, key);
         }
-        
+
         public Boolean TryInsert(KeyValuePair<TKey, TValue> item)
         {
             return TryInsert(0, item);
@@ -363,12 +363,12 @@ namespace NetExtender.Types.Maps
             {
                 throw new ArgumentNullException(nameof(key));
             }
-            
+
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             if (index < 0 || index >= Order.Count)
             {
                 return false;
@@ -382,7 +382,7 @@ namespace NetExtender.Types.Maps
             Insert(index, key, value);
             return true;
         }
-        
+
         public Boolean TryInsertByValue(KeyValuePair<TValue, TKey> item)
         {
             return TryInsertByValue(0, item);
@@ -407,7 +407,7 @@ namespace NetExtender.Types.Maps
         {
             Order.Swap(index1, index2);
         }
-        
+
         public void Reverse()
         {
             Order.Reverse();
@@ -454,29 +454,29 @@ namespace NetExtender.Types.Maps
             {
                 return false;
             }
-            
+
             Order.Remove(key);
             return true;
         }
-        
+
         public Boolean RemoveAt(Int32 index)
         {
             return RemoveAt(index, out _);
         }
-        
+
         public Boolean RemoveAt(Int32 index, out KeyValuePair<TKey, TValue> pair)
         {
             if (!index.InRange(0, Count - 1))
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            
+
             if (!Order.TryGetValue(index, out TKey? key))
             {
                 pair = default;
                 return false;
             }
-            
+
             Order.RemoveAt(index);
             if (base.Remove(key, out TValue? value))
             {
@@ -493,7 +493,7 @@ namespace NetExtender.Types.Maps
             base.Clear();
             Order.Clear();
         }
-        
+
         public IEnumerator<TKey> GetKeyEnumerator()
         {
             return Order.GetEnumerator();
@@ -521,7 +521,7 @@ namespace NetExtender.Types.Maps
                 {
                     throw new ArgumentNullException(nameof(key));
                 }
-                
+
                 if (value is null)
                 {
                     throw new ArgumentNullException(nameof(value));
@@ -530,7 +530,7 @@ namespace NetExtender.Types.Maps
                 Boolean contains = ContainsKey(key);
 
                 base[key] = value;
-                
+
                 if (!contains)
                 {
                     Order.Add(key);

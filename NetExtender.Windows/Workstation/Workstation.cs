@@ -16,7 +16,7 @@ namespace NetExtender.Workstation
     public static class WorkStation
     {
         public static OperationSystemInfo Data { get; } = Software.GetOperatingSystemInfo();
-        
+
         public static String? CurrentUserSID { get; } = GetCurrentUserSID();
 
         private static String? GetCurrentUserSID()
@@ -50,7 +50,7 @@ namespace NetExtender.Workstation
             set
             {
                 Boolean locked = IsLocked;
-                
+
                 switch (value)
                 {
                     case true when locked:
@@ -65,7 +65,7 @@ namespace NetExtender.Workstation
                 }
             }
         }
-        
+
         [Flags]
         private enum ScreenSaverExecutionState : UInt32
         {
@@ -74,7 +74,7 @@ namespace NetExtender.Workstation
             AwayModeRequired = 0x00000040,
             Continuous = 0x80000000
         }
-        
+
         [DllImportAttribute("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         private static extern ScreenSaverExecutionState SetThreadExecutionState(ScreenSaverExecutionState state);
 
@@ -87,7 +87,7 @@ namespace NetExtender.Workstation
                     SetThreadExecutionState(ScreenSaverExecutionState.DisplayRequired | ScreenSaverExecutionState.Continuous);
                     return;
                 }
-                
+
                 SetThreadExecutionState(ScreenSaverExecutionState.Continuous);
             }
         }
@@ -122,11 +122,11 @@ namespace NetExtender.Workstation
                 system.Get();
 
                 system.Scope.Options.EnablePrivileges = true;
-                
+
                 ManagementBaseObject parameters = system.GetMethodParameters("Win32Shutdown");
                 parameters["Flags"] = reboot ? "2" : "1";
                 parameters["Reserved"] = "0";
-                
+
                 foreach (ManagementObject? management in system.GetInstances().OfType<ManagementObject>())
                 {
                     management.InvokeMethod("Win32Shutdown", parameters, null);
@@ -144,17 +144,17 @@ namespace NetExtender.Workstation
         {
             return ShutdownAsync().GetAwaiter().GetResult();
         }
-        
+
         public static Task<Boolean> ShutdownAsync()
         {
             return ShutdownAsync(TimeSpan.Zero, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> ShutdownAsync(Int32 milliseconds)
         {
             return ShutdownAsync(milliseconds, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> ShutdownAsync(TimeSpan wait)
         {
             return ShutdownAsync(wait, CancellationToken.None);
@@ -183,27 +183,27 @@ namespace NetExtender.Workstation
 
             return WmiShutdown(false);
         }
-        
+
         public static Boolean Restart()
         {
             return RestartAsync().GetAwaiter().GetResult();
         }
-        
+
         public static Task<Boolean> RestartAsync()
         {
             return RestartAsync(TimeSpan.Zero, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> RestartAsync(Int32 milliseconds)
         {
             return RestartAsync(milliseconds, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> RestartAsync(TimeSpan wait)
         {
             return RestartAsync(wait, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> RestartAsync(Int32 milliseconds, CancellationToken token)
         {
             return RestartAsync(TimeSpan.FromMilliseconds(milliseconds), token);
@@ -232,17 +232,17 @@ namespace NetExtender.Workstation
         {
             return LockAsync().GetAwaiter().GetResult();
         }
-        
+
         public static Task<Boolean> LockAsync()
         {
             return LockAsync(TimeSpan.Zero, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> LockAsync(Int32 milliseconds)
         {
             return LockAsync(milliseconds, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> LockAsync(TimeSpan wait)
         {
             return LockAsync(wait, CancellationToken.None);
@@ -284,17 +284,17 @@ namespace NetExtender.Workstation
         {
             return LogoffAsync().GetAwaiter().GetResult();
         }
-        
+
         public static Task<Boolean> LogoffAsync()
         {
             return LogoffAsync(TimeSpan.Zero, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> LogoffAsync(Int32 milliseconds)
         {
             return LogoffAsync(milliseconds, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> LogoffAsync(TimeSpan wait)
         {
             return LogoffAsync(wait, CancellationToken.None);
@@ -323,7 +323,7 @@ namespace NetExtender.Workstation
 
             return ExitWindowsEx(0, 0);
         }
-        
+
         [DllImport("PowrProf.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         private static extern Boolean SetSuspendState(Boolean hibernate, Boolean forceCritical, Boolean disableWakeEvent);
 
@@ -331,52 +331,52 @@ namespace NetExtender.Workstation
         {
             return SetSuspendState(false, true, !wake);
         }
-        
+
         public static Boolean Sleep()
         {
             return Sleep(false);
         }
-        
+
         public static Boolean Sleep(Boolean wake)
         {
             return SetSuspendStateSleep(wake);
         }
-        
+
         public static Task<Boolean> SleepAsync()
         {
             return SleepAsync(TimeSpan.Zero);
         }
-        
+
         public static Task<Boolean> SleepAsync(Boolean wake)
         {
             return SleepAsync(TimeSpan.Zero, wake);
         }
-        
+
         public static Task<Boolean> SleepAsync(Int32 milliseconds)
         {
             return SleepAsync(milliseconds, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> SleepAsync(TimeSpan wait)
         {
             return SleepAsync(wait, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> SleepAsync(Int32 milliseconds, CancellationToken token)
         {
             return SleepAsync(milliseconds, false, token);
         }
-        
+
         public static Task<Boolean> SleepAsync(TimeSpan wait, CancellationToken token)
         {
             return SleepAsync(wait, false, token);
         }
-        
+
         public static Task<Boolean> SleepAsync(Int32 milliseconds, Boolean wake)
         {
             return SleepAsync(milliseconds, wake, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> SleepAsync(TimeSpan wait, Boolean wake)
         {
             return SleepAsync(wait, wake, CancellationToken.None);
@@ -405,37 +405,37 @@ namespace NetExtender.Workstation
 
             return SetSuspendStateSleep(wake);
         }
-        
+
         private static Boolean SetSuspendStateHibernate(Boolean wake)
         {
             return SetSuspendState(true, true, !wake);
         }
-        
+
         public static Boolean Hibernate()
         {
             return Hibernate(false);
         }
-        
+
         public static Boolean Hibernate(Boolean wake)
         {
             return SetSuspendStateHibernate(wake);
         }
-        
+
         public static Task<Boolean> HibernateAsync()
         {
             return HibernateAsync(TimeSpan.Zero);
         }
-        
+
         public static Task<Boolean> HibernateAsync(Boolean wake)
         {
             return HibernateAsync(TimeSpan.Zero, wake);
         }
-        
+
         public static Task<Boolean> HibernateAsync(Int32 milliseconds)
         {
             return HibernateAsync(milliseconds, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> HibernateAsync(TimeSpan wait)
         {
             return HibernateAsync(wait, CancellationToken.None);
@@ -445,7 +445,7 @@ namespace NetExtender.Workstation
         {
             return HibernateAsync(milliseconds, wake, CancellationToken.None);
         }
-        
+
         public static Task<Boolean> HibernateAsync(TimeSpan wait, Boolean wake)
         {
             return HibernateAsync(wait, wake, CancellationToken.None);
@@ -455,7 +455,7 @@ namespace NetExtender.Workstation
         {
             return HibernateAsync(milliseconds, false, token);
         }
-        
+
         public static Task<Boolean> HibernateAsync(TimeSpan wait, CancellationToken token)
         {
             return HibernateAsync(wait, false, token);

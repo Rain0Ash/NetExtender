@@ -45,7 +45,7 @@ namespace NetExtender.Localization.Wrappers
                 Config.Changed -= value;
             }
         }
-        
+
         public event LocalizationValueChangedEventHandler ValueChanged
         {
             add
@@ -57,7 +57,7 @@ namespace NetExtender.Localization.Wrappers
                 Config.ValueChanged -= value;
             }
         }
-        
+
         public String Path
         {
             get
@@ -157,7 +157,7 @@ namespace NetExtender.Localization.Wrappers
                 return Config.Comparer;
             }
         }
-        
+
         public ILocalizationConverter Converter
         {
             get
@@ -165,7 +165,7 @@ namespace NetExtender.Localization.Wrappers
                 return Config.Converter;
             }
         }
-        
+
         public ReadOnlyLocalizationConfigWrapper(ILocalizationConfig config)
         {
             Config = config ?? throw new ArgumentNullException(nameof(config));
@@ -175,7 +175,7 @@ namespace NetExtender.Localization.Wrappers
         {
             return ((IConfig) Config).GetValue(key, sections);
         }
-        
+
         String? IReadOnlyConfig.GetValue(String? key, IEnumerable<String>? sections)
         {
             return ((IConfig) Config).GetValue(key, sections);
@@ -190,7 +190,7 @@ namespace NetExtender.Localization.Wrappers
         {
             return ((IConfig) Config).GetValue(key, alternate, sections);
         }
-        
+
         public ILocalizationString? GetValue(String? key, params String[]? sections)
         {
             return Config.GetValue(key, sections);
@@ -210,7 +210,7 @@ namespace NetExtender.Localization.Wrappers
         {
             return Config.GetValue(key, alternate, sections);
         }
-        
+
         public ILocalizationString? GetValue(String? key, ILocalizationString? alternate, params String[]? sections)
         {
             return Config.GetValue(key, alternate, sections);
@@ -220,7 +220,7 @@ namespace NetExtender.Localization.Wrappers
         {
             return Config.GetValue(key, alternate, sections);
         }
-        
+
         public String? GetValue(String? key, LocalizationIdentifier identifier, params String[]? sections)
         {
             return Config.GetValue(key, identifier, sections);
@@ -320,7 +320,7 @@ namespace NetExtender.Localization.Wrappers
         {
             return Config.GetValueAsync(key, alternate, sections, token);
         }
-        
+
         public Task<ILocalizationString?> GetValueAsync(String? key, ILocalizationString? alternate, params String[]? sections)
         {
             return Config.GetValueAsync(key, alternate, sections);
@@ -380,7 +380,7 @@ namespace NetExtender.Localization.Wrappers
         {
             return Config.GetValueAsync(key, identifier, alternate, sections, token);
         }
-        
+
         public Boolean KeyExist(String? key, params String[]? sections)
         {
             return Config.KeyExist(key, sections);
@@ -400,7 +400,7 @@ namespace NetExtender.Localization.Wrappers
         {
             return Config.KeyExist(key, identifier, sections);
         }
-        
+
         public Task<Boolean> KeyExistAsync(String? key, params String[]? sections)
         {
             return Config.KeyExistAsync(key, sections);
@@ -440,7 +440,7 @@ namespace NetExtender.Localization.Wrappers
         {
             return Config.KeyExistAsync(key, identifier, sections, token);
         }
-        
+
         ConfigurationEntry[]? IConfigInfo.GetExists()
         {
             return ((IConfig) Config).GetExists();
@@ -530,12 +530,12 @@ namespace NetExtender.Localization.Wrappers
         {
             return Config.GetExistsAsync(sections, token);
         }
-        
+
         public LocalizationEntry[]? GetExists(LocalizationIdentifier identifier)
         {
             return Config.GetExists(identifier);
         }
-        
+
         public Task<LocalizationEntry[]?> GetExistsAsync(LocalizationIdentifier identifier)
         {
             return Config.GetExistsAsync(identifier);
@@ -575,7 +575,7 @@ namespace NetExtender.Localization.Wrappers
         {
             return Config.GetExistsAsync(identifier, sections, token);
         }
-        
+
         ConfigurationValueEntry[]? IConfigInfo.GetExistsValues()
         {
             return ((IConfig) Config).GetExistsValues();
@@ -665,7 +665,7 @@ namespace NetExtender.Localization.Wrappers
         {
             return Config.GetExistsValuesAsync(sections, token);
         }
-        
+
         public LocalizationValueEntry[]? GetExistsValues(LocalizationIdentifier identifier)
         {
             return Config.GetExistsValues(identifier);
@@ -755,7 +755,7 @@ namespace NetExtender.Localization.Wrappers
         {
             return Config.GetExistsMultiValuesAsync(sections, token);
         }
-        
+
         public ConfigurationValueEntry[]? Difference(IEnumerable<ConfigurationValueEntry>? entries)
         {
             return Config.Difference(entries);
@@ -800,7 +800,7 @@ namespace NetExtender.Localization.Wrappers
         {
             return Config.DifferenceAsync(entries, token);
         }
-        
+
         public void CopyTo(IConfig config)
         {
             Config.CopyTo(config);
@@ -830,7 +830,7 @@ namespace NetExtender.Localization.Wrappers
         {
             return Config.CopyToAsync(config, token);
         }
-        
+
         String? IReadOnlyConfig.this[String? key, params String[]? sections]
         {
             get

@@ -39,7 +39,7 @@ namespace NetExtender.Types.Combinatoric
         /// Permutations object that handles permutations on int for variation inclusion and ordering.
         /// </summary>
         private Permutations<Int32>? Permutations { get; }
-        
+
         /// <summary>
         /// The number of unique variations that are defined in this meta-collection.
         /// </summary>
@@ -99,9 +99,9 @@ namespace NetExtender.Types.Combinatoric
         {
             LowerIndex = index;
             Values = new List<T>(values);
-            
+
             Repetition = repetition;
-            
+
             if (Repetition)
             {
                 return;
@@ -160,7 +160,7 @@ namespace NetExtender.Types.Combinatoric
             /// An enumertor of the parents list of lexicographic orderings.
             /// </summary>
             private List<Int32>? Indexes { get; set; }
-            
+
             /// <summary>
             /// The current variation
             /// </summary>
@@ -182,7 +182,7 @@ namespace NetExtender.Types.Combinatoric
                     return Next();
                 }
             }
-            
+
             /// <summary>
             /// Construct a enumerator with the parent object.
             /// </summary>
@@ -221,7 +221,7 @@ namespace NetExtender.Types.Combinatoric
                     {
                         Indexes[i] += carry;
                         carry = 0;
-                        
+
                         if (Indexes[i] < Parent.UpperIndex)
                         {
                             continue;
@@ -235,7 +235,7 @@ namespace NetExtender.Types.Combinatoric
                 CurrentList = null;
                 return carry != 1;
             }
-            
+
             /// <summary>
             /// Computes the current list based on the internal list index.
             /// </summary>
@@ -254,7 +254,7 @@ namespace NetExtender.Types.Combinatoric
 
                 return CurrentList;
             }
-            
+
             /// <summary>
             /// Resets the Variations enumerator to the first variation.  
             /// </summary>
@@ -291,7 +291,7 @@ namespace NetExtender.Types.Combinatoric
             /// An enumertor of the parents list of lexicographic orderings.
             /// </summary>
             private Permutations<Int32>.Enumerator Permutations { get; }
-            
+
             /// <summary>
             /// The current variation.
             /// </summary>
@@ -313,7 +313,7 @@ namespace NetExtender.Types.Combinatoric
                     return Next();
                 }
             }
-            
+
             /// <summary>
             /// Construct a enumerator with the parent object.
             /// </summary>
@@ -323,7 +323,7 @@ namespace NetExtender.Types.Combinatoric
                 Parent = source;
                 Permutations = (Permutations<Int32>.Enumerator) Parent.Permutations!.GetEnumerator();
             }
-            
+
             /// <summary>
             /// Resets the Variations enumerator to the first variation.  
             /// </summary>
@@ -342,7 +342,7 @@ namespace NetExtender.Types.Combinatoric
                 CurrentList = null;
                 return successful;
             }
-            
+
             /// <summary>
             /// Creates a list of original values from the int permutation provided.  
             /// The exception for accessing current (InvalidOperationException) is generated
@@ -367,7 +367,7 @@ namespace NetExtender.Types.Combinatoric
 
                 CurrentList = new List<T>();
                 IList<Int32> permutation = (IList<Int32>) Permutations.Current;
-                
+
                 Int32 index = 0;
                 for (Int32 i = 0; i < Parent.LowerIndex; ++i)
                 {
@@ -383,7 +383,7 @@ namespace NetExtender.Types.Combinatoric
                         {
                             ++index;
                         }
-                        
+
                         continue;
                     }
 

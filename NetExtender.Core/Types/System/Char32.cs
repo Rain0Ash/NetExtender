@@ -105,7 +105,7 @@ namespace System
         {
             return first == second.Value;
         }
-        
+
 #if NETCOREAPP3_1_OR_GREATER
         public static Boolean operator ==(Char32 first, Rune second)
         {
@@ -152,7 +152,7 @@ namespace System
         {
             return !(first == second);
         }
-        
+
 #if NETCOREAPP3_1_OR_GREATER
         public static Boolean operator !=(Char32 first, Rune second)
         {
@@ -199,7 +199,7 @@ namespace System
         {
             return first > second.Value;
         }
-        
+
 #if NETCOREAPP3_1_OR_GREATER
         public static Boolean operator >(Char32 first, Rune second)
         {
@@ -246,7 +246,7 @@ namespace System
         {
             return first >= second.Value;
         }
-        
+
 #if NETCOREAPP3_1_OR_GREATER
         public static Boolean operator >=(Char32 first, Rune second)
         {
@@ -293,7 +293,7 @@ namespace System
         {
             return first < second.Value;
         }
-        
+
 #if NETCOREAPP3_1_OR_GREATER
         public static Boolean operator <(Char32 first, Rune second)
         {
@@ -340,7 +340,7 @@ namespace System
         {
             return first <= second.Value;
         }
-        
+
 #if NETCOREAPP3_1_OR_GREATER
         public static Boolean operator <=(Char32 first, Rune second)
         {
@@ -389,7 +389,7 @@ namespace System
         {
             return new Char32(first + second.Value);
         }
-        
+
 #if NETCOREAPP3_1_OR_GREATER
         public static Char32 operator +(Char32 first, Rune second)
         {
@@ -438,7 +438,7 @@ namespace System
         {
             return new Char32(first - second.Value);
         }
-        
+
 #if NETCOREAPP3_1_OR_GREATER
         public static Char32 operator -(Char32 first, Rune second)
         {
@@ -457,7 +457,7 @@ namespace System
         }
 
         private UInt32 Value { get; }
-        
+
 #if NETCOREAPP3_1_OR_GREATER
         public Rune Rune
         {
@@ -532,7 +532,7 @@ namespace System
         {
             return Value.CompareTo(other.Value);
         }
-        
+
 #if NETCOREAPP3_1_OR_GREATER
         public Int32 CompareTo(Rune other)
         {
@@ -551,7 +551,7 @@ namespace System
             return Value == unchecked((UInt32) other.Value);
         }
 #endif
-        
+
         public Boolean Equals(Char32 other)
         {
             return Value == other.Value;

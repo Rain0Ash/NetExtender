@@ -28,12 +28,12 @@ namespace NetExtender.Types.Memento
             : base(source, expression is not null ? new MementoCloneProperty<TSource, TProperty>(expression, value) : throw new ArgumentNullException(nameof(expression)))
         {
         }
-        
+
         public MementoClone(TSource source, ReflectionProperty<TSource, TProperty> property)
             : base(source, new MementoCloneProperty<TSource, TProperty>(property))
         {
         }
-        
+
         public MementoClone(TSource source, ReflectionProperty<TSource, TProperty> property, TProperty value)
             : base(source, new MementoCloneProperty<TSource, TProperty>(property, value))
         {

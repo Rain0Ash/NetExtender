@@ -22,7 +22,7 @@ namespace NetExtender.Utilities.Types
 
             return new ReadOnlyCollection<T>(collection);
         }
-        
+
         public static T GetRandom<T>(this IList<T> collection)
         {
             if (collection is null)
@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.Types
 
             return collection.Count > 0 ? collection[RandomUtilities.NextNonNegative(collection.Count - 1)] : throw new InvalidOperationException();
         }
-        
+
         public static T GetRandomOrDefault<T>(this IList<T> collection, T alternate)
         {
             if (collection is null)
@@ -42,7 +42,7 @@ namespace NetExtender.Utilities.Types
 
             return collection.Count > 0 ? collection[RandomUtilities.NextNonNegative(collection.Count - 1)] : alternate;
         }
-        
+
         public static T GetRandomOrDefault<T>(this IList<T> collection, Func<T> alternate)
         {
             if (collection is null)
@@ -57,7 +57,7 @@ namespace NetExtender.Utilities.Types
 
             return collection.Count > 0 ? collection[RandomUtilities.NextNonNegative(collection.Count - 1)] : alternate();
         }
-        
+
         public static T? GetRandomOrDefault<T>(this IList<T> collection)
         {
             if (collection is null)
@@ -74,10 +74,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             collection.Insert(index.GetOffset(collection.Count), item);
         }
-        
+
         public static void InsertRange<T>(this IList<T> collection, Int32 index, IEnumerable<T> source)
         {
             if (collection is null)
@@ -107,7 +107,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(first));
             }
-            
+
             if (second < 0 || second >= collection.Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(second));
@@ -115,7 +115,7 @@ namespace NetExtender.Utilities.Types
 
             (collection[first], collection[second]) = (collection[second], collection[first]);
         }
-        
+
         public static Boolean TrySwap<T>(this IList<T> collection, Int32 first, Int32 second)
         {
             if (collection is null)
@@ -127,7 +127,7 @@ namespace NetExtender.Utilities.Types
             {
                 return false;
             }
-            
+
             if (second < 0 || second >= collection.Count)
             {
                 return false;
@@ -136,7 +136,7 @@ namespace NetExtender.Utilities.Types
             (collection[first], collection[second]) = (collection[second], collection[first]);
             return true;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Shuffle<T>(this IList<T> collection)
         {
@@ -161,7 +161,7 @@ namespace NetExtender.Utilities.Types
                 (collection[i], collection[j]) = (collection[j], collection[i]);
             }
         }
-        
+
         public static void Shuffle<T>(this IList<T> collection, IRandom random)
         {
             if (collection is null)
@@ -173,7 +173,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(random));
             }
-            
+
             for (Int32 i = 0; i < collection.Count; i++)
             {
                 Int32 j = random.Next(i, collection.Count);
@@ -229,7 +229,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         internal static Int32 BinarySearch<T>(IEnumerable<T> collection, T value)
         {
             if (collection is null)
@@ -251,7 +251,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(collection));
             }
-            
+
             return collection switch
             {
                 IList<T> list => BinarySearch(list, value, comparer),
@@ -283,7 +283,7 @@ namespace NetExtender.Utilities.Types
             {
                 Int32 middle = lower + (upper - lower) / 2;
                 Int32 comparison = comparer.Compare(value, collection[middle]);
-                
+
                 switch (comparison)
                 {
                     case 0:
@@ -299,7 +299,7 @@ namespace NetExtender.Utilities.Types
 
             return ~lower;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Int32 BinarySearch<T>(IList<T> collection, T value)
         {
@@ -323,7 +323,7 @@ namespace NetExtender.Utilities.Types
             {
                 Int32 middle = lower + (upper - lower) / 2;
                 Int32 comparison = comparer.Compare(value, collection[middle]);
-                
+
                 switch (comparison)
                 {
                     case 0:
@@ -339,12 +339,12 @@ namespace NetExtender.Utilities.Types
 
             return ~lower;
         }
-        
+
         public static void Sort<T, TKey>(this List<T> collection, Func<T, TKey> selector)
         {
             Sort(collection, selector, (IComparer<TKey>?) null);
         }
-        
+
         public static void Sort<T, TKey>(this List<T> collection, Func<T, TKey> selector, Comparison<TKey> comparison)
         {
             if (collection is null)
@@ -364,7 +364,7 @@ namespace NetExtender.Utilities.Types
 
             collection.Sort((first, second) => comparison(selector(first), selector(second)));
         }
-        
+
         public static void Sort<T, TKey>(this List<T> collection, Func<T, TKey> selector, IComparer<TKey>? comparer)
         {
             if (collection is null)
@@ -376,11 +376,11 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(selector));
             }
-            
+
             comparer ??= Comparer<TKey>.Default;
             collection.Sort((first, second) => comparer.Compare(selector(first), selector(second)));
         }
-        
+
         public static void Sort<T, TKey>(this List<T> collection, Func<T, TKey> selector, Int32 index, Int32 count, IComparer<TKey>? comparer)
         {
             if (collection is null)
@@ -394,15 +394,15 @@ namespace NetExtender.Utilities.Types
             }
 
             comparer ??= Comparer<TKey>.Default;
-            
+
             Int32 Comparison(T? first, T? second)
             {
                 return comparer.Compare(selector(first!), selector(second!));
             }
-            
+
             collection.Sort(index, count, new ComparisonComparer<T>(Comparison));
         }
-        
+
         public static void Sort<T, TKey>(this List<T> collection, Func<T, TKey> selector, Int32 index, Int32 count, Comparison<TKey> comparison)
         {
             if (collection is null)

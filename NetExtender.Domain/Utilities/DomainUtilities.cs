@@ -24,20 +24,20 @@ namespace NetExtender.Domain.Utilities
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (!ReflectionUtilities.TryGetEntryPointType(out Type? type))
             {
                 throw new EntryPointNotFoundException("Entry point type not found.");
             }
-            
+
             Assembly assembly = type.Assembly;
             if (!assembly.TryGetEntryTypeNamespace(out String? @namespace))
             {
                 throw new EntryPointNotFoundException($"Entry point type namespace not found at '{assembly.FullName}'.");
             }
-            
+
             Type? applicationtype = assembly.GetTypeWithoutNamespace($"{source.ApplicationName}Application") ?? assembly.GetTypeWithoutNamespace($"{@namespace}Application");
-            
+
             if (applicationtype is null)
             {
                 throw new InvalidOperationException($"Application type not found at '{assembly.FullName}' with name {source.ApplicationName}Application or {@namespace}Application.");
@@ -50,7 +50,7 @@ namespace NetExtender.Domain.Utilities
 
             return application;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IDomain AutoInitialize(this IDomain source)
         {
@@ -61,7 +61,7 @@ namespace NetExtender.Domain.Utilities
 
             return source.Initialize(AutoInitializeInternal(source));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IDomain> AutoInitialize(this Task<IDomain> source)
         {
@@ -72,7 +72,7 @@ namespace NetExtender.Domain.Utilities
 
             return AutoInitialize(await source.ConfigureAwait(false));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IDomain AutoInitializeWithView(this IDomain source, IEnumerable<String>? args)
         {
@@ -84,7 +84,7 @@ namespace NetExtender.Domain.Utilities
             IApplication application = AutoInitializeInternal(source);
             return application is IApplicationInitializer initializer ? source.Initialize(initializer).View(initializer, args) : source.Initialize(application).AutoView(args);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IDomain> AutoInitializeWithView(this Task<IDomain> source, IEnumerable<String>? args)
         {
@@ -95,7 +95,7 @@ namespace NetExtender.Domain.Utilities
 
             return AutoInitializeWithView(await source.ConfigureAwait(false), args);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IDomain AutoInitializeWithView(this IDomain source, params String[]? args)
         {
@@ -107,7 +107,7 @@ namespace NetExtender.Domain.Utilities
             IApplication application = AutoInitializeInternal(source);
             return application is IApplicationInitializer initializer ? source.Initialize(initializer).View(initializer, args) : source.Initialize(application).AutoView(args);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static async Task<IDomain> AutoInitializeWithView(this Task<IDomain> source, params String[]? args)
         {
@@ -129,7 +129,7 @@ namespace NetExtender.Domain.Utilities
             IDomain domain = await source.ConfigureAwait(false);
             return domain.Initialize<T>();
         }
-        
+
         public static async Task<IDomain> Initialize(this Task<IDomain> source, IApplication application)
         {
             if (source is null)
@@ -152,20 +152,20 @@ namespace NetExtender.Domain.Utilities
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             if (!ReflectionUtilities.TryGetEntryPointType(out Type? type))
             {
                 throw new EntryPointNotFoundException("Entry point type not found.");
             }
-            
+
             Assembly assembly = type.Assembly;
             if (!assembly.TryGetEntryTypeNamespace(out String? @namespace))
             {
                 throw new EntryPointNotFoundException($"Entry point type namespace not found at '{assembly.FullName}'.");
             }
-            
+
             Type? viewtype = assembly.GetTypeWithoutNamespace($"{source.ApplicationName}View") ?? assembly.GetTypeWithoutNamespace($"{@namespace}View");
-            
+
             if (viewtype is null)
             {
                 throw new InvalidOperationException($"View type not found at '{assembly.FullName}' with name {source.ApplicationName}View or {@namespace}View.");
@@ -175,7 +175,7 @@ namespace NetExtender.Domain.Utilities
             {
                 throw new InvalidOperationException("View instance can't be instantiated.");
             }
-            
+
             return view;
         }
 
@@ -262,7 +262,7 @@ namespace NetExtender.Domain.Utilities
             IDomain domain = await source.ConfigureAwait(false);
             return await domain.ViewAsync(AutoViewInternal(await source.ConfigureAwait(false)), args, token);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IDomain View<T>(this Task<IDomain> source) where T : IApplicationView, new()
         {
@@ -285,11 +285,11 @@ namespace NetExtender.Domain.Utilities
             {
                 throw new ArgumentNullException(nameof(view));
             }
-            
+
             IDomain domain = source.GetAwaiter().GetResult();
             return domain.View(view);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IDomain View<T>(this Task<IDomain> source, IEnumerable<String>? args) where T : IApplicationView, new()
         {
@@ -300,7 +300,7 @@ namespace NetExtender.Domain.Utilities
 
             return View(source, new T(), args);
         }
-        
+
         public static IDomain View(this Task<IDomain> source, IApplicationView view, IEnumerable<String>? args)
         {
             if (source is null)
@@ -316,7 +316,7 @@ namespace NetExtender.Domain.Utilities
             IDomain domain = source.GetAwaiter().GetResult();
             return domain.View(view, args);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IDomain View<T>(this Task<IDomain> source, params String[]? args) where T : IApplicationView, new()
         {
@@ -324,10 +324,10 @@ namespace NetExtender.Domain.Utilities
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return View(source, new T(), args);
         }
-        
+
         public static IDomain View(this Task<IDomain> source, IApplicationView view, params String[]? args)
         {
             if (source is null)
@@ -339,11 +339,11 @@ namespace NetExtender.Domain.Utilities
             {
                 throw new ArgumentNullException(nameof(view));
             }
-            
+
             IDomain domain = source.GetAwaiter().GetResult();
             return domain.View(view, args);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IDomain> ViewAsync<T>(this Task<IDomain> source) where T : IApplicationView, new()
         {
@@ -351,10 +351,10 @@ namespace NetExtender.Domain.Utilities
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return ViewAsync(source, new T());
         }
-        
+
         public static async Task<IDomain> ViewAsync(this Task<IDomain> source, IApplicationView view)
         {
             if (source is null)
@@ -370,7 +370,7 @@ namespace NetExtender.Domain.Utilities
             IDomain domain = await source.ConfigureAwait(false);
             return await domain.ViewAsync(view).ConfigureAwait(false);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IDomain> ViewAsync<T>(this Task<IDomain> source, CancellationToken token) where T : IApplicationView, new()
         {
@@ -378,10 +378,10 @@ namespace NetExtender.Domain.Utilities
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return ViewAsync(source, new T(), token);
         }
-        
+
         public static async Task<IDomain> ViewAsync(this Task<IDomain> source, IApplicationView view, CancellationToken token)
         {
             if (source is null)
@@ -393,11 +393,11 @@ namespace NetExtender.Domain.Utilities
             {
                 throw new ArgumentNullException(nameof(view));
             }
-            
+
             IDomain domain = await source.ConfigureAwait(false);
             return await domain.ViewAsync(view, token).ConfigureAwait(false);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IDomain> ViewAsync<T>(this Task<IDomain> source, IEnumerable<String>? args) where T : IApplicationView, new()
         {
@@ -405,10 +405,10 @@ namespace NetExtender.Domain.Utilities
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return ViewAsync(source, new T(), args);
         }
-        
+
         public static async Task<IDomain> ViewAsync(this Task<IDomain> source, IApplicationView view, IEnumerable<String>? args)
         {
             if (source is null)
@@ -420,11 +420,11 @@ namespace NetExtender.Domain.Utilities
             {
                 throw new ArgumentNullException(nameof(view));
             }
-            
+
             IDomain domain = await source.ConfigureAwait(false);
             return await domain.ViewAsync(view, args).ConfigureAwait(false);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IDomain> ViewAsync<T>(this Task<IDomain> source, params String[]? args) where T : IApplicationView, new()
         {
@@ -432,10 +432,10 @@ namespace NetExtender.Domain.Utilities
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return ViewAsync(source, new T(), args);
         }
-        
+
         public static async Task<IDomain> ViewAsync(this Task<IDomain> source, IApplicationView view, params String[]? args)
         {
             if (source is null)
@@ -447,11 +447,11 @@ namespace NetExtender.Domain.Utilities
             {
                 throw new ArgumentNullException(nameof(view));
             }
-            
+
             IDomain domain = await source.ConfigureAwait(false);
             return await domain.ViewAsync(view, args).ConfigureAwait(false);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IDomain> ViewAsync<T>(this Task<IDomain> source, IEnumerable<String>? args, CancellationToken token) where T : IApplicationView, new()
         {
@@ -459,10 +459,10 @@ namespace NetExtender.Domain.Utilities
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return ViewAsync(source, new T(), args, token);
         }
-        
+
         public static async Task<IDomain> ViewAsync(this Task<IDomain> source, IApplicationView view, IEnumerable<String>? args, CancellationToken token)
         {
             if (source is null)
@@ -474,7 +474,7 @@ namespace NetExtender.Domain.Utilities
             {
                 throw new ArgumentNullException(nameof(view));
             }
-            
+
             IDomain domain = await source.ConfigureAwait(false);
             return await domain.ViewAsync(view, args, token).ConfigureAwait(false);
         }
@@ -486,7 +486,7 @@ namespace NetExtender.Domain.Utilities
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return ViewAsync(source, new T(), token, args);
         }
 
@@ -501,7 +501,7 @@ namespace NetExtender.Domain.Utilities
             {
                 throw new ArgumentNullException(nameof(view));
             }
-            
+
             IDomain domain = await source.ConfigureAwait(false);
             return await domain.ViewAsync(view, token, args).ConfigureAwait(false);
         }
@@ -517,7 +517,7 @@ namespace NetExtender.Domain.Utilities
             {
                 application = initializer.Application;
             }
-            
+
             return application as T ?? throw new InitializeException($"{nameof(application)} is not {typeof(T).Name}");
         }
     }

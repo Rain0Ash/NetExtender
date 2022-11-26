@@ -15,7 +15,7 @@ namespace NetExtender.Domains.Applications
     public abstract class Application : IApplication
     {
         public virtual Boolean? Elevate { get; init; }
-        
+
         public virtual Boolean? IsElevate
         {
             get
@@ -23,7 +23,7 @@ namespace NetExtender.Domains.Applications
                 return null;
             }
         }
-        
+
         public abstract IDispatcher? Dispatcher { get; }
         public abstract ApplicationShutdownMode ShutdownMode { get; set; }
 
@@ -44,7 +44,7 @@ namespace NetExtender.Domains.Applications
         {
             return RunAsync(CancellationToken.None);
         }
-        
+
         public abstract Task<IApplication> RunAsync(CancellationToken token);
 
         public void Shutdown()
@@ -56,7 +56,7 @@ namespace NetExtender.Domains.Applications
         {
             ApplicationUtilities.Shutdown(code);
         }
-        
+
         public void Shutdown(Boolean force)
         {
             Shutdown(0, force);
@@ -126,7 +126,7 @@ namespace NetExtender.Domains.Applications
             {
                 return false;
             }
-            
+
             Shutdown(code, force);
             return true;
         }

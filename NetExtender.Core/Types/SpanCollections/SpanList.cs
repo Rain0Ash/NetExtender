@@ -10,7 +10,7 @@ namespace NetExtender.Types.SpanCollections
     {
         public const Int32 Size = 1;
     }
-    
+
     //TODO: LastIndexOf, Insert, other list methods
     public ref struct SpanList<T>
     {
@@ -18,7 +18,7 @@ namespace NetExtender.Types.SpanCollections
         {
             return value.Internal.Slice(0, value.Count);
         }
-        
+
         public static implicit operator ReadOnlySpan<T>(SpanList<T> value)
         {
             return value.Internal.Slice(0, value.Count);
@@ -34,7 +34,7 @@ namespace NetExtender.Types.SpanCollections
                 return Internal.Length;
             }
         }
-        
+
         private Int32 Version { get; set; }
 
         public SpanList(Span<T> destination)
@@ -43,7 +43,7 @@ namespace NetExtender.Types.SpanCollections
             Count = 0;
             Version = 0;
         }
-        
+
         public void EnsureCapacity(Span<T> destination)
         {
             if (destination.Length <= Count || !Internal.Slice(0, Count).TryCopyTo(destination))
@@ -55,7 +55,7 @@ namespace NetExtender.Types.SpanCollections
             Internal.Slice(Count).Clear();
             Version++;
         }
-        
+
         public void TrimExcess()
         {
             if (Count >= Capacity - Capacity / 10)
@@ -66,12 +66,12 @@ namespace NetExtender.Types.SpanCollections
             Internal = Internal.Slice(0, Count + Count / 10);
             Version++;
         }
-        
+
         public readonly Boolean Contains(T item)
         {
             return IndexOf(item) != -1;
         }
-        
+
         public readonly Int32 IndexOf(T item)
         {
             return IndexOf(item, 0, Count);
@@ -86,7 +86,7 @@ namespace NetExtender.Types.SpanCollections
 
             return IndexOf(item, index, Count - index);
         }
-        
+
         public readonly Int32 IndexOf(T item, Int32 index, Int32 count)
         {
             if (index < 0 || index > Count)
@@ -109,12 +109,12 @@ namespace NetExtender.Types.SpanCollections
 
             return -1;
         }
-        
+
         public readonly Boolean Exists(Predicate<T> match)
         {
             return FindIndex(match) != -1;
         }
-        
+
         public readonly Boolean TrueForAll(Predicate<T> match)
         {
             if (match is null)
@@ -132,7 +132,7 @@ namespace NetExtender.Types.SpanCollections
 
             return true;
         }
-        
+
         public readonly T? Find(Predicate<T> match)
         {
             if (match is null)
@@ -143,7 +143,7 @@ namespace NetExtender.Types.SpanCollections
             Int32 index = FindIndex(match);
             return index >= 0 ? Internal[index] : default;
         }
-        
+
         public readonly Int32 FindIndex(Predicate<T> match)
         {
             return FindIndex(0, Count, match);
@@ -179,10 +179,10 @@ namespace NetExtender.Types.SpanCollections
                     return i;
                 }
             }
-            
+
             return -1;
         }
-        
+
         public readonly T? FindLast(Predicate<T> match)
         {
             if (match is null)
@@ -193,7 +193,7 @@ namespace NetExtender.Types.SpanCollections
             Int32 index = FindLastIndex(match);
             return index >= 0 ? Internal[index] : default;
         }
-        
+
         public readonly Int32 FindLastIndex(Predicate<T> match)
         {
             return FindLastIndex(Count - 1, Count, match);
@@ -229,10 +229,10 @@ namespace NetExtender.Types.SpanCollections
                     return i;
                 }
             }
-            
+
             return -1;
         }
-        
+
         public readonly void ForEach(Action<T> action)
         {
             if (action is null)
@@ -302,11 +302,11 @@ namespace NetExtender.Types.SpanCollections
 
                 Internal[count++] = item;
             }
-            
+
             Count = count;
             Version++;
         }
-        
+
         public void Remove(T item)
         {
             Int32 index = IndexOf(item);
@@ -315,7 +315,7 @@ namespace NetExtender.Types.SpanCollections
                 RemoveAt(index);
             }
         }
-        
+
         public void RemoveAt(Int32 index)
         {
             if (index < 0 || index >= Count)
@@ -332,7 +332,7 @@ namespace NetExtender.Types.SpanCollections
         {
             Internal.Slice(0, Count).Reverse();
         }
-        
+
         public readonly void Sort()
         {
             Sort(default(IComparer<T>));
@@ -364,22 +364,22 @@ namespace NetExtender.Types.SpanCollections
             Count = 0;
             Version++;
         }
-        
+
         public readonly void CopyTo(Span<T> destination)
         {
             Internal.Slice(0, Count).CopyTo(destination);
         }
-        
+
         public readonly Boolean TryCopyTo(Span<T> destination)
         {
             return Internal.Slice(0, Count).TryCopyTo(destination);
         }
-        
+
         public readonly Enumerator GetEnumerator()
         {
             return new Enumerator(this);
         }
-        
+
         public T this[Int32 index]
         {
             readonly get
@@ -402,7 +402,7 @@ namespace NetExtender.Types.SpanCollections
                 Version++;
             }
         }
-        
+
         public ref struct Enumerator
         {
             private SpanList<T> Internal { get; }

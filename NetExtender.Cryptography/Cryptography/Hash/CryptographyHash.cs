@@ -12,7 +12,7 @@ namespace NetExtender.Cryptography.Hash
     public class CryptographyHash : ICryptographyHash
     {
         public const Int32 DefaultIterations = 1;
-        
+
         public HashType HashType { get; }
         public Byte[] LeftSalt { get; }
         public Byte[] RightSalt { get; }
@@ -24,7 +24,7 @@ namespace NetExtender.Cryptography.Hash
             : this(type, DefaultIterations)
         {
         }
-        
+
         public CryptographyHash(HashType type, UInt16 iterations)
             : this(type, null, iterations)
         {
@@ -58,13 +58,13 @@ namespace NetExtender.Cryptography.Hash
         public CryptographyHash(HashType type, Byte[]? lsalt, Byte[]? rsalt, Byte[]? lpepper, Byte[]? rpepper, UInt16 iterations)
         {
             HashType = type;
-            
+
             LeftSalt = lsalt ?? Array.Empty<Byte>();
             RightSalt = rsalt ?? Array.Empty<Byte>();
-            
+
             LeftPepper = lpepper ?? Array.Empty<Byte>();
             RightPepper = rpepper ?? Array.Empty<Byte>();
-            
+
             Iterations = iterations;
         }
 
@@ -72,7 +72,7 @@ namespace NetExtender.Cryptography.Hash
             : this(type, parameters.FirstSalt, parameters.LastSalt, parameters.FirstPepper, parameters.LastPepper, parameters.Iterations)
         {
         }
-        
+
         public Byte[] Hashing(String value)
         {
             return Hashing(value.ToBytes());
@@ -165,7 +165,7 @@ namespace NetExtender.Cryptography.Hash
         {
             return Hashing(value, destination, out _);
         }
-        
+
         public Boolean Hashing(ReadOnlySpan<Byte> value, Span<Byte> destination, out Int32 written)
         {
             return Hashing(value, LeftSalt, RightSalt, LeftPepper, RightPepper, Iterations, destination, out written);
@@ -175,7 +175,7 @@ namespace NetExtender.Cryptography.Hash
         {
             return Hashing(value, salt, destination, out _);
         }
-        
+
         public Boolean Hashing(ReadOnlySpan<Byte> value, ReadOnlySpan<Byte> salt, Span<Byte> destination, out Int32 written)
         {
             return Hashing(value, salt, Iterations, destination, out written);
@@ -185,7 +185,7 @@ namespace NetExtender.Cryptography.Hash
         {
             return Hashing(value, salt, iterations, destination, out _);
         }
-        
+
         public Boolean Hashing(ReadOnlySpan<Byte> value, ReadOnlySpan<Byte> salt, UInt16 iterations, Span<Byte> destination, out Int32 written)
         {
             return Hashing(value, salt, salt, LeftPepper, RightPepper, iterations, destination, out written);
@@ -195,7 +195,7 @@ namespace NetExtender.Cryptography.Hash
         {
             return Hashing(value, salt, pepper, destination, out _);
         }
-        
+
         public Boolean Hashing(ReadOnlySpan<Byte> value, ReadOnlySpan<Byte> salt, ReadOnlySpan<Byte> pepper, Span<Byte> destination, out Int32 written)
         {
             return Hashing(value, salt, pepper, Iterations, destination, out written);
@@ -205,7 +205,7 @@ namespace NetExtender.Cryptography.Hash
         {
             return Hashing(value, salt, pepper, iterations, destination, out _);
         }
-        
+
         public Boolean Hashing(ReadOnlySpan<Byte> value, ReadOnlySpan<Byte> salt, ReadOnlySpan<Byte> pepper, UInt16 iterations, Span<Byte> destination, out Int32 written)
         {
             return Hashing(value, salt, salt, pepper, pepper, iterations, destination, out written);
@@ -215,7 +215,7 @@ namespace NetExtender.Cryptography.Hash
         {
             return Hashing(value, lsalt, rsalt, lpepper, rpepper, destination, out _);
         }
-        
+
         public Boolean Hashing(ReadOnlySpan<Byte> value, ReadOnlySpan<Byte> lsalt, ReadOnlySpan<Byte> rsalt, ReadOnlySpan<Byte> lpepper, ReadOnlySpan<Byte> rpepper, Span<Byte> destination, out Int32 written)
         {
             return Hashing(value, lsalt, rsalt, lpepper, rpepper, Iterations, destination, out written);
@@ -225,7 +225,7 @@ namespace NetExtender.Cryptography.Hash
         {
             return Hashing(value, lsalt, rsalt, lpepper, rpepper, iterations, destination, out _);
         }
-        
+
         public Boolean Hashing(ReadOnlySpan<Byte> value, ReadOnlySpan<Byte> lsalt, ReadOnlySpan<Byte> rsalt, ReadOnlySpan<Byte> lpepper, ReadOnlySpan<Byte> rpepper, UInt16 iterations, Span<Byte> destination, out Int32 written)
         {
             if (destination.Length < (UInt16) HashType)
@@ -233,22 +233,22 @@ namespace NetExtender.Cryptography.Hash
                 written = 0;
                 return false;
             }
-            
+
             Byte[] buffer = new Byte[value.Length + lsalt.Length + rsalt.Length + lpepper.Length + rpepper.Length];
 
             Int32 offset = 0;
-            
+
             lpepper.CopyTo(buffer.Slice(offset, lpepper.Length));
             lsalt.CopyTo(buffer.Slice(offset += lpepper.Length, lsalt.Length));
             value.CopyTo(buffer.Slice(offset += lsalt.Length, value.Length));
             rsalt.CopyTo(buffer.Slice(offset += value.Length, rsalt.Length));
             // ReSharper disable once RedundantAssignment
             rpepper.CopyTo(buffer.Slice(offset += rsalt.Length, rpepper.Length));
-            
+
             Span<Byte> current = stackalloc Byte[(UInt16) HashType];
-            
+
             Boolean successfull = buffer.Hashing(current, HashType, out written);
-            
+
             while (--iterations > 0 && successfull)
             {
                 successfull = current.Hashing(current, HashType, out written);
@@ -268,7 +268,7 @@ namespace NetExtender.Cryptography.Hash
         {
             return Hashing(value, parameters, destination, out _);
         }
-        
+
         public Boolean Hashing(ReadOnlySpan<Byte> value, CryptographyHashRefParameters parameters, Span<Byte> destination, out Int32 written)
         {
             return Hashing(value, parameters.FirstSalt, parameters.LastSalt, parameters.FirstPepper, parameters.LastPepper, parameters.Iterations, destination, out written);

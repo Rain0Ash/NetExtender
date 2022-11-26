@@ -31,19 +31,19 @@ namespace NetExtender.Configuration.Properties
             Internal = new DynamicLazy<T>(Initialize, true);
             Alternate = alternate;
         }
-        
+
         protected abstract T Initialize();
     }
-    
+
     public abstract class ConfigPropertyAbstraction : IConfigPropertyInfo
     {
         public abstract String Path { get; }
-        
+
         public String? Key { get; }
         public ImmutableArray<String> Sections { get; }
-        
+
         public ConfigPropertyOptions Options { get; }
-        
+
         public abstract Boolean HasValue { get; }
 
         public Boolean IsCaching
@@ -69,7 +69,7 @@ namespace NetExtender.Configuration.Properties
                 return Options.HasFlag(ConfigPropertyOptions.ThrowWhenValueSetInvalid);
             }
         }
-        
+
         public Boolean IsIgnoreEvent
         {
             get
@@ -85,7 +85,7 @@ namespace NetExtender.Configuration.Properties
                 return Options.HasFlag(ConfigPropertyOptions.DisableSave);
             }
         }
-        
+
         public Boolean IsAlwaysDefault
         {
             get
@@ -93,7 +93,7 @@ namespace NetExtender.Configuration.Properties
                 return Options.HasFlag(ConfigPropertyOptions.AlwaysDefault);
             }
         }
-        
+
         protected abstract event PropertyChangedEventHandler? PropertyChanged;
         event PropertyChangedEventHandler? INotifyPropertyChanged.PropertyChanged
         {

@@ -21,7 +21,7 @@ namespace NetExtender.Localization.Common
         public static implicit operator ConfigurationEntry(LocalizationValueEntry entry)
         {
             ImmutableArray<String> sections = entry.Sections;
-            
+
             String? key = entry.Key;
             if (key is not null)
             {
@@ -34,7 +34,7 @@ namespace NetExtender.Localization.Common
         public static implicit operator ConfigurationValueEntry(LocalizationValueEntry entry)
         {
             ImmutableArray<String> sections = entry.Sections;
-            
+
             String? key = entry.Key;
             if (key is not null)
             {
@@ -48,7 +48,7 @@ namespace NetExtender.Localization.Common
         {
             return new LocalizationEntry(value.Key, value.Identifier, value.Sections);
         }
-        
+
         public static Boolean operator ==(LocalizationValueEntry first, LocalizationValueEntry second)
         {
             return first.Equals(second);
@@ -58,7 +58,7 @@ namespace NetExtender.Localization.Common
         {
             return !(first == second);
         }
-        
+
         public String? Key { get; }
         public LocalizationIdentifier Identifier { get; }
         public String? Value { get; }
@@ -87,12 +87,12 @@ namespace NetExtender.Localization.Common
             : this(key, identifier, value, sections.AsImmutableArray())
         {
         }
-        
+
         public LocalizationValueEntry(String? key, LocalizationIdentifier identifier, String? value, IEnumerable<String>? sections)
             : this(key, identifier, value, sections.AsImmutableArray())
         {
         }
-        
+
         public LocalizationValueEntry(String? key, LocalizationIdentifier identifier, String? value, ImmutableArray<String> sections)
         {
             Key = key;
@@ -113,11 +113,11 @@ namespace NetExtender.Localization.Common
             value = Value;
             sections = Sections;
         }
-        
+
         public static Boolean TryConvert(ConfigurationValueEntry entry, out LocalizationValueEntry result)
         {
             (String? key, String? value, ImmutableArray<String> sections) = entry;
-            
+
             if (key is null)
             {
                 result = default;
@@ -164,15 +164,15 @@ namespace NetExtender.Localization.Common
             }
 
             compare = String.Compare(Key, other.Key, StringComparison.Ordinal);
-            
+
             if (compare == 0)
             {
                 compare = String.Compare(Value, other.Value, StringComparison.Ordinal);
             }
-            
+
             return compare == 0 ? Identifier.CompareTo(other.Identifier) : compare;
         }
-        
+
         public Boolean Equals(LocalizationEntry other)
         {
             return Identifier == other.Identifier && Key == other.Key && Sections.SequenceEqual(other.Sections);
@@ -203,7 +203,7 @@ namespace NetExtender.Localization.Common
             return this.JsonSerializeObject();
         }
     }
-    
+
     [Serializable]
     public readonly struct LocalizationMultiValueEntry : IComparable<LocalizationMultiValueEntry>, IEquatable<LocalizationMultiValueEntry>, IEquatable<LocalizationMultiEntry>, IEnumerable<LocalizationValueEntry>
     {
@@ -216,7 +216,7 @@ namespace NetExtender.Localization.Common
         {
             return value.Select(entry => (ConfigurationValueEntry) entry).ToArray();
         }
-        
+
         public static implicit operator LocalizationMultiEntry(LocalizationMultiValueEntry value)
         {
             return new LocalizationMultiEntry(value.Key, value.Sections);
@@ -231,7 +231,7 @@ namespace NetExtender.Localization.Common
         {
             return value.ToArray();
         }
-        
+
         public static Boolean operator ==(LocalizationMultiValueEntry first, LocalizationMultiValueEntry second)
         {
             return first.Equals(second);
@@ -241,7 +241,7 @@ namespace NetExtender.Localization.Common
         {
             return !(first == second);
         }
-        
+
         public String? Key { get; }
         public ILocalizationString Value { get; }
         public ImmutableArray<String> Sections { get; }
@@ -269,12 +269,12 @@ namespace NetExtender.Localization.Common
             : this(key, value, sections.AsImmutableArray())
         {
         }
-        
+
         public LocalizationMultiValueEntry(String? key, ILocalizationString value, IEnumerable<String>? sections)
             : this(key, value, sections.AsImmutableArray())
         {
         }
-        
+
         public LocalizationMultiValueEntry(String? key, ILocalizationString value, ImmutableArray<String> sections)
         {
             Key = key;
@@ -286,7 +286,7 @@ namespace NetExtender.Localization.Common
         {
             Deconstruct(out key, out ILocalizationString _, out sections);
         }
-        
+
         public void Deconstruct(out String? key, out String value, out ImmutableArray<String> sections)
         {
             key = Key;
@@ -324,7 +324,7 @@ namespace NetExtender.Localization.Common
 
             return String.Compare(Key, other.Key, StringComparison.Ordinal);
         }
-        
+
         public Boolean Equals(LocalizationMultiEntry other)
         {
             return Key == other.Key && Sections.SequenceEqual(other.Sections);
@@ -342,7 +342,7 @@ namespace NetExtender.Localization.Common
                 yield return new LocalizationValueEntry(Key, identifier, value, Sections);
             }
         }
-        
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

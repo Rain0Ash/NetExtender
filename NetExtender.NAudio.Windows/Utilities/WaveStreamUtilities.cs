@@ -14,7 +14,7 @@ namespace NetExtender.Utilities.NAudio
             {
                 throw new ArgumentNullException(nameof(stream));
             }
-            
+
             return new BlockAlignReductionStream(WaveFormatConversionStream.CreatePcmStream(stream));
         }
     }

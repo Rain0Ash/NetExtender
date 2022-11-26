@@ -86,7 +86,7 @@ namespace NetExtender.Types.Enums
             {
                 return EqualityComparer<T?>.Default.Equals(x?.Value, y?.Value);
             }
-            
+
             public Int32 GetHashCode(EnumMember<T> obj)
             {
                 return EqualityComparer<T>.Default.GetHashCode(obj.Value);

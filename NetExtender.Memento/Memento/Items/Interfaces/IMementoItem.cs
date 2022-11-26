@@ -17,7 +17,7 @@ namespace NetExtender.Types.Memento
     public interface IMementoItem<out TSource> : IMementoItem where TSource : class
     {
         public TSource Source { get; }
-        
+
         public new IMementoItem<TSource> Swap();
         public new IMementoItem<TSource> Update();
     }
@@ -25,7 +25,7 @@ namespace NetExtender.Types.Memento
     public interface IMementoItem
     {
         public Boolean HasValue { get; }
-        
+
         public IMementoItem Swap();
         public IMementoItem Update();
     }

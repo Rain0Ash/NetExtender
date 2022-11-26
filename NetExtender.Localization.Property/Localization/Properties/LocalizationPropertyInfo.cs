@@ -21,7 +21,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
         {
         }
     }
-    
+
     public abstract class LocalizationIdentifierPropertyInfo : LocalizationPropertyInfoAbstraction<String?>, ILocalizationIdentifierPropertyInfo
     {
         public abstract event LocalizationValueChangedEventHandler? Changed;
@@ -38,7 +38,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
     {
         public abstract event LocalizationChangedEventHandler? LocalizationChanged;
         public abstract LocalizationIdentifier Identifier { get; }
-        
+
         public virtual String Current
         {
             get
@@ -48,17 +48,17 @@ namespace NetExtender.Localization.Property.Localization.Properties
                 {
                     result = Internal.Value?.ToString();
                 }
-                
+
                 if (result is not null)
                 {
                     return result;
                 }
-                
+
                 result = Alternate?.ToString();
                 return result ?? AlternateKeyValueIdentifier;
             }
         }
-        
+
         private String? _alternate;
         protected String AlternateKeyValueIdentifier
         {
@@ -72,7 +72,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
             : base(key, alternate, options, sections)
         {
         }
-        
+
         protected virtual String CreateAlternateKeyValueIdentifier()
         {
             String? key = Key;

@@ -64,7 +64,7 @@ namespace NetExtender.Utilities.Cryptography
         {
             return GenerateSelfSignedCertificate(subject, issuer, key, DefaultCertificateKeyStrength);
         }
-        
+
         public static X509Certificate2 GenerateSelfSignedCertificate(String subject, String issuer, AsymmetricKeyParameter key, CertificateKeyStrength strength)
         {
             return GenerateSelfSignedCertificate(subject, issuer, key, DefaultExpirationTime, strength);
@@ -96,17 +96,17 @@ namespace NetExtender.Utilities.Cryptography
             {
                 throw new ArgumentOutOfRangeException(nameof(expiration), expiration, "Expiration must be less than a millennium.");
             }
-            
+
             if (!EnumUtilities.ContainsValue(strength))
             {
                 throw new ArgumentOutOfRangeException(nameof(strength), strength, "Invalid key strength");
             }
-            
+
             if (!subject.StartsWith("CN="))
             {
                 subject = "CN=" + subject;
             }
-            
+
             if (!issuer.StartsWith("CN="))
             {
                 issuer = "CN=" + issuer;
@@ -129,15 +129,15 @@ namespace NetExtender.Utilities.Cryptography
             AsymmetricCipherKeyPair cipher = rsa.GenerateKeyPair();
 
             generator.SetPublicKey(cipher.Public);
-            
+
             Asn1SignatureFactory factory = new Asn1SignatureFactory(DefaultSignatureAlgorithm, key, random);
             Org.BouncyCastle.X509.X509Certificate x509 = generator.Generate(factory);
             PrivateKeyInfo info = PrivateKeyInfoFactory.CreatePrivateKeyInfo(cipher.Private);
-            
+
             using X509Certificate2 certificate = new X509Certificate2(x509.GetEncoded());
             Asn1Sequence sequence = (Asn1Sequence) Asn1Object.FromByteArray(info.PrivateKeyData.GetDerEncoded());
             RsaPrivateCrtKeyParameters parameters = new RsaPrivateCrtKeyParameters(RsaPrivateKeyStructure.GetInstance(sequence));
-            
+
             using RSA instance = DotNetUtilities.ToRSA(parameters);
             return certificate.CopyWithPrivateKey(instance);
         }
@@ -173,7 +173,7 @@ namespace NetExtender.Utilities.Cryptography
             {
                 throw new ArgumentOutOfRangeException(nameof(strength), strength, "Invalid key strength");
             }
-            
+
             if (!subject.StartsWith("CN="))
             {
                 subject = "CN=" + subject;
@@ -195,9 +195,9 @@ namespace NetExtender.Utilities.Cryptography
 
             RsaKeyPairGenerator rsa = BouncyCastleUtilities.CreateRsaKeyPairGenerator(random, strength);
             AsymmetricCipherKeyPair cipher = rsa.GenerateKeyPair();
-            
+
             generator.SetPublicKey(cipher.Public);
-            
+
             Asn1SignatureFactory factory = new Asn1SignatureFactory(DefaultSignatureAlgorithm, cipher.Private, random);
             Org.BouncyCastle.X509.X509Certificate x509 = generator.Generate(factory);
             X509Certificate2 certificate = new X509Certificate2(x509.GetEncoded());

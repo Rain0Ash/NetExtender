@@ -26,7 +26,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return connection.RemoteIpAddress is null && connection.LocalIpAddress is null;
         }
-        
+
         public static String? GetRequestId(this HttpRequest request)
         {
             if (request is null)
@@ -36,7 +36,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return request.Headers.TryGetValue("X-Request-ID", out StringValues id) ? id.ToString() : null;
         }
-        
+
         public static String? GetUserAgent(this HttpRequest request)
         {
             if (request is null)
@@ -46,7 +46,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
 
             return request.Headers.TryGetValue("User-Agent", out StringValues agent) ? agent.ToString() : null;
         }
-        
+
         public static String GetAbsoluteUri(this HttpRequest request)
         {
             if (request is null)

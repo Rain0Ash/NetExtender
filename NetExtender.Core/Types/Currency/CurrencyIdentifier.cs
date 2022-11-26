@@ -11,7 +11,7 @@ namespace NetExtender.Types.Currency
         /// Default
         /// </summary>
         Default = 0,
-        
+
         /// <summary>
         /// Albanian lek
         /// </summary>

@@ -167,7 +167,7 @@ namespace NetExtender.Utilities.Core
                 CallStaticInitializerAttribute(args.LoadedAssembly);
             }
         }
-        
+
         public static Boolean IsVarArgType(this Type type)
         {
             if (type is null)
@@ -177,7 +177,7 @@ namespace NetExtender.Utilities.Core
 
             return VarArgTypes.Contains(type);
         }
-        
+
         public static Boolean IsStackOnly(this Type type)
         {
             if (type is null)
@@ -412,7 +412,7 @@ namespace NetExtender.Utilities.Core
 
             return interfaces;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodInfo TryGetGenericMethodDefinition(this MethodInfo method)
         {
@@ -423,7 +423,7 @@ namespace NetExtender.Utilities.Core
 
             return method.IsGenericMethod ? method.GetGenericMethodDefinition() : method;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type[]? TryGetGenericArguments(this Type type)
         {
@@ -434,7 +434,7 @@ namespace NetExtender.Utilities.Core
 
             return type.IsGenericType ? type.GetGenericArguments() : null;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type[]? TryGetGenericArguments(this MethodBase method)
         {
@@ -445,7 +445,7 @@ namespace NetExtender.Utilities.Core
 
             return method.IsGenericMethod ? method.GetGenericArguments() : null;
         }
-        
+
         public static Boolean IsInheritable(this MethodBase method)
         {
             if (method is null)
@@ -462,7 +462,7 @@ namespace NetExtender.Utilities.Core
 
             return declaring.IsVisible && !declaring.IsSealed && !method.IsStatic && (method.IsPublic || method.IsFamily || method.IsFamilyOrAssembly);
         }
-        
+
         public static Boolean IsOverridable(this MethodInfo method)
         {
             if (method is null)
@@ -615,7 +615,7 @@ namespace NetExtender.Utilities.Core
                 result = default;
                 return false;
             }
-            
+
             result = type;
             return true;
         }
@@ -1107,7 +1107,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new InvalidOperationException();
             }
-            
+
             return root ? @namespace.Split('.')[0] : @namespace;
         }
 
@@ -1123,7 +1123,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(assembly));
             }
-            
+
             String? @namespace = GetEntryPointType(assembly).Namespace;
 
             if (@namespace is null)
@@ -1147,7 +1147,7 @@ namespace NetExtender.Utilities.Core
                 result = null;
                 return false;
             }
-            
+
             result = root ? type.Namespace?.Split('.')[0] : type.Namespace;
             return result is not null;
         }
@@ -1170,7 +1170,7 @@ namespace NetExtender.Utilities.Core
                 result = null;
                 return false;
             }
-            
+
             result = root ? type.Namespace?.Split('.')[0] : type.Namespace;
             return result is not null;
         }
@@ -1204,7 +1204,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             StringComparison comparison = insensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
             return assembly.GetTypes().Where(type => String.Equals(type.Name, name, comparison)).ToArray();
         }
@@ -1226,7 +1226,7 @@ namespace NetExtender.Utilities.Core
         {
             return GetTypeWithoutNamespace(assembly, name, false);
         }
-        
+
         public static Type? GetTypeWithoutNamespace(this Assembly assembly, String name, Boolean insensitive)
         {
             if (assembly is null)
@@ -1238,7 +1238,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             Type[] type = GetTypesWithoutNamespace(assembly, name, insensitive);
 
             return type.Length switch
@@ -1260,7 +1260,7 @@ namespace NetExtender.Utilities.Core
         {
             return TryGetTypeWithoutNamespace(Assembly.GetEntryAssembly() ?? throw new InvalidOperationException(), name, insensitive, out result);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetTypeWithoutNamespace(this Assembly assembly, String name, [MaybeNullWhen(false)] out Type result)
         {
@@ -1278,7 +1278,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(name));
             }
-            
+
             Type[] type = GetTypesWithoutNamespace(assembly, name, insensitive);
 
             if (type.Length == 1)
@@ -2004,7 +2004,7 @@ namespace NetExtender.Utilities.Core
         {
             return attributes & MethodAttributes.MemberAccessMask;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodVisibilityType IsRead(this PropertyInfo info)
         {
@@ -2025,7 +2025,7 @@ namespace NetExtender.Utilities.Core
                 true => MethodVisibilityType.Public
             };
         }
-                
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static MethodVisibilityType IsWrite(this PropertyInfo info)
         {
@@ -2140,7 +2140,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             Type[] arguments = type.GetGenericArguments();
 
             if (arguments.Length <= 0)
@@ -2175,7 +2175,7 @@ namespace NetExtender.Utilities.Core
             BindingFlags binding = BindingFlags.Public | BindingFlags.Static | (inherited ? BindingFlags.FlattenHierarchy : BindingFlags.DeclaredOnly);
             return type.GetFields(binding).Where(field => field.IsLiteral && !field.IsInitOnly);
         }
-        
+
         public static IEnumerable<EventInfo> GetAccessibleEvents(this Type type)
         {
             return GetAccessibleMembers(type, RuntimeReflectionExtensions.GetRuntimeEvents);
@@ -2202,7 +2202,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(type));
             }
-            
+
             if (finder is null)
             {
                 throw new ArgumentNullException(nameof(finder));
@@ -2222,7 +2222,7 @@ namespace NetExtender.Utilities.Core
                     result.AddRange(finder.Invoke(@interface));
                 }
             }
-            
+
             result.AddRange(finder.Invoke(typeof(Object)));
             return result.ToArray();
         }
@@ -2235,12 +2235,12 @@ namespace NetExtender.Utilities.Core
             {
                 result |= MethodDifferenceStrictMode.Name;
             }
-            
+
             if (strict.HasFlag(PropertyDifferenceStrictMode.Access))
             {
                 result |= MethodDifferenceStrictMode.Access;
             }
-            
+
             if (strict.HasFlag(PropertyDifferenceStrictMode.Attribute))
             {
                 result |= MethodDifferenceStrictMode.Access;
@@ -2268,7 +2268,7 @@ namespace NetExtender.Utilities.Core
 
             Byte[]? il1 = first.GetILAsByteArray();
             Byte[]? il2 = second.GetILAsByteArray();
-            
+
             return il1 == il2 || il1 is not null && il2 is not null && il1.SequenceEqual(il2);
         }
 
@@ -2277,13 +2277,13 @@ namespace NetExtender.Utilities.Core
         {
             return Difference(first, second) == ReflectionEqualityType.Equals;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equality(this ConstructorInfo first, ConstructorInfo second, Boolean strict)
         {
             return Difference(first, second, strict) == ReflectionEqualityType.Equals;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equality(this ConstructorInfo first, ConstructorInfo second, ConstructorDifferenceStrictMode strict)
         {
@@ -2361,19 +2361,19 @@ namespace NetExtender.Utilities.Core
             Boolean equals = parameters1.Zip(parameters2).Select(Check).All(difference => difference.Equality == ReflectionEqualityType.Equals);
             return new ReflectionDifferenceItem<ConstructorInfo>(first, second, equals ? ReflectionEqualityType.Equals : ReflectionEqualityType.SignatureNotEquals);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equality(this FieldInfo first, FieldInfo second)
         {
             return Difference(first, second) == ReflectionEqualityType.Equals;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equality(this FieldInfo first, FieldInfo second, Boolean strict)
         {
             return Difference(first, second, strict) == ReflectionEqualityType.Equals;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equality(this FieldInfo first, FieldInfo second, FieldDifferenceStrictMode strict)
         {
@@ -2404,7 +2404,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(second));
             }
-            
+
             if (first == second)
             {
                 return new ReflectionDifferenceItem<FieldInfo>(first, second, ReflectionEqualityType.Equals);
@@ -2442,19 +2442,19 @@ namespace NetExtender.Utilities.Core
 
             return new ReflectionDifferenceItem<FieldInfo>(first, second, ReflectionEqualityType.Equals);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equality(this PropertyInfo first, PropertyInfo second)
         {
             return Difference(first, second) == ReflectionEqualityType.Equals;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equality(this PropertyInfo first, PropertyInfo second, Boolean strict)
         {
             return Difference(first, second, strict) == ReflectionEqualityType.Equals;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equality(this PropertyInfo first, PropertyInfo second, PropertyDifferenceStrictMode strict)
         {
@@ -2485,12 +2485,12 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(second));
             }
-            
+
             if (first == second)
             {
                 return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.Equals);
             }
-            
+
             if (strict.HasFlag(PropertyDifferenceStrictMode.Name) && first.Name != second.Name)
             {
                 return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.NameNotEquals);
@@ -2519,15 +2519,15 @@ namespace NetExtender.Utilities.Core
             MethodInfo? get1 = first.GetMethod;
             MethodInfo? get2 = second.GetMethod;
             MethodDifferenceStrictMode difference = strict.ToMethodDifferenceStrictMode();
-                
+
             if (get1 is not null && get2 is not null && !Equality(get1, get2, difference))
             {
                 return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
             }
-                
+
             MethodInfo? set1 = first.SetMethod;
             MethodInfo? set2 = second.SetMethod;
-                
+
             if (set1 is not null && set2 is not null && !Equality(set1, set2, difference))
             {
                 return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
@@ -2535,19 +2535,19 @@ namespace NetExtender.Utilities.Core
 
             return new ReflectionDifferenceItem<PropertyInfo>(first, second, ReflectionEqualityType.Equals);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equality(this MethodInfo first, MethodInfo second)
         {
             return Difference(first, second) == ReflectionEqualityType.Equals;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equality(this MethodInfo first, MethodInfo second, Boolean strict)
         {
             return Difference(first, second, strict) == ReflectionEqualityType.Equals;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equality(this MethodInfo first, MethodInfo second, MethodDifferenceStrictMode strict)
         {
@@ -2578,37 +2578,37 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(second));
             }
-            
+
             if (first == second)
             {
                 return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.Equals);
             }
-            
+
             if (strict.HasFlag(MethodDifferenceStrictMode.Name) && first.Name != second.Name)
             {
                 return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.NameNotEquals);
             }
-            
+
             if (first.ReturnType != second.ReturnType)
             {
                 return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
             }
-            
+
             if (strict.HasFlag(MethodDifferenceStrictMode.CallingConvention) && first.CallingConvention != second.CallingConvention)
             {
                 return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
             }
-            
+
             if (strict.HasFlag(MethodDifferenceStrictMode.Attribute) && first.Attributes != second.Attributes)
             {
                 return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
             }
-            
+
             if (strict.HasFlag(MethodDifferenceStrictMode.Access) && first.Attributes.Access() != second.Attributes.Access())
             {
                 return new ReflectionDifferenceItem<MethodInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
             }
-            
+
             ParameterInfo[] parameters1 = first.GetParameters();
             ParameterInfo[] parameters2 = second.GetParameters();
 
@@ -2625,19 +2625,19 @@ namespace NetExtender.Utilities.Core
             Boolean equals = parameters1.Zip(parameters2).Select(Check).All(difference => difference.Equality == ReflectionEqualityType.Equals);
             return new ReflectionDifferenceItem<MethodInfo>(first, second, equals ? ReflectionEqualityType.Equals : ReflectionEqualityType.SignatureNotEquals);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equality(this EventInfo first, EventInfo second)
         {
             return Difference(first, second) == ReflectionEqualityType.Equals;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equality(this EventInfo first, EventInfo second, Boolean strict)
         {
             return Difference(first, second, strict) == ReflectionEqualityType.Equals;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equality(this EventInfo first, EventInfo second, EventDifferenceStrictMode strict)
         {
@@ -2667,27 +2667,27 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(second));
             }
-            
+
             if (first == second)
             {
                 return new ReflectionDifferenceItem<EventInfo>(first, second, ReflectionEqualityType.Equals);
             }
-            
+
             if (strict.HasFlag(EventDifferenceStrictMode.Name) && first.Name != second.Name)
             {
                 return new ReflectionDifferenceItem<EventInfo>(first, second, ReflectionEqualityType.NameNotEquals);
             }
-            
+
             if (first.EventHandlerType != second.EventHandlerType)
             {
                 return new ReflectionDifferenceItem<EventInfo>(first, second, ReflectionEqualityType.SignatureNotEquals);
             }
-            
+
             if (strict.HasFlag(EventDifferenceStrictMode.Attribute) && first.Attributes != second.Attributes)
             {
                 return new ReflectionDifferenceItem<EventInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
             }
-            
+
             if (strict.HasFlag(EventDifferenceStrictMode.Multicast) && first.IsMulticast != second.IsMulticast)
             {
                 return new ReflectionDifferenceItem<EventInfo>(first, second, ReflectionEqualityType.AttributeNotEquals);
@@ -2695,19 +2695,19 @@ namespace NetExtender.Utilities.Core
 
             return new ReflectionDifferenceItem<EventInfo>(first, second, ReflectionEqualityType.Equals);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equality(this ParameterInfo first, ParameterInfo second)
         {
             return Difference(first, second) == ReflectionEqualityType.Equals;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equality(this ParameterInfo first, ParameterInfo second, Boolean strict)
         {
             return Difference(first, second, strict) == ReflectionEqualityType.Equals;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Equality(this ParameterInfo first, ParameterInfo second, ParameterDifferenceStrictMode strict)
         {
@@ -2738,7 +2738,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(second));
             }
-            
+
             if (first == second)
             {
                 return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.Equals);
@@ -2796,12 +2796,12 @@ namespace NetExtender.Utilities.Core
 
             return new ReflectionDifferenceItem<ParameterInfo>(first, second, ReflectionEqualityType.Equals);
         }
-        
+
         public static Boolean Equality(this MemberInfo first, MemberInfo second)
         {
             return Difference(first, second) == ReflectionEqualityType.Equals;
         }
-        
+
         public static ReflectionDifferenceItem<MemberInfo> Difference(this MemberInfo first, MemberInfo second)
         {
             if (first is null)
@@ -2813,7 +2813,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(second));
             }
-            
+
             if (first == second)
             {
                 return new ReflectionDifferenceItem<MemberInfo>(first, second, ReflectionEqualityType.Equals);
@@ -3496,7 +3496,7 @@ namespace NetExtender.Utilities.Core
         private static class GenericDefaultCache
         {
             private static ConcurrentDictionary<Type, ValueType> Values { get; } = new ConcurrentDictionary<Type, ValueType>();
-            
+
             // ReSharper disable once MemberHidesStaticFromOuterClass
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
             public static Object? Default(Type type)
@@ -3535,7 +3535,7 @@ namespace NetExtender.Utilities.Core
             {
                 throw new ArgumentNullException(nameof(stack));
             }
-            
+
             foreach (StackFrame frame in stack)
             {
                 if (frame.GetMethod()?.DeclaringType is Type type)
@@ -3544,14 +3544,14 @@ namespace NetExtender.Utilities.Core
                 }
             }
         }
-        
+
         public static IEnumerable<Type> GetStackTypesUnique(this StackTrace stack)
         {
             if (stack is null)
             {
                 throw new ArgumentNullException(nameof(stack));
             }
-            
+
             return stack.GetStackTypes().Distinct();
         }
 

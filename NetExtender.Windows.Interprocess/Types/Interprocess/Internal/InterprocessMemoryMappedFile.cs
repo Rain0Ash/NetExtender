@@ -12,7 +12,7 @@ namespace NetExtender.Types.Interprocess
     internal sealed class InterprocessMemoryMappedFile : IInterprocessMemoryMappedFile
     {
         public event EventHandler? Changed;
-        
+
         private Task FileWatcherTask { get; }
         private MemoryMappedFile? MappedFile { get; set; }
         private IInterprocessReadWriteLock ReadWriteLock { get; }
@@ -66,7 +66,7 @@ namespace NetExtender.Types.Interprocess
             DisposeWaitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
             FileWatcherTask = Task.Run(FileWatcher);
         }
-        
+
         /// <summary>
         /// Create or open a MemoryMappedFile that can be used to construct a <see cref="InterprocessMemoryMappedFile"/>
         /// </summary>
@@ -113,7 +113,7 @@ namespace NetExtender.Types.Interprocess
             {
                 throw new ObjectDisposedException(nameof(MappedFile));
             }
-            
+
             ReadWriteLock.AcquireReadLock();
 
             try
@@ -224,7 +224,7 @@ namespace NetExtender.Types.Interprocess
             {
                 throw new ObjectDisposedException(nameof(MappedFile));
             }
-            
+
             using MemoryMappedViewAccessor accessor = MappedFile.CreateViewAccessor();
             Int32 length = accessor.ReadInt32(0);
             Byte[] data = new Byte[length];
@@ -253,7 +253,7 @@ namespace NetExtender.Types.Interprocess
             accessor.Write(0, data.Length);
             accessor.WriteArray(sizeof(Int32), data, 0, data.Length);
         }
-        
+
         public void Dispose()
         {
             if (MappedFile is null)

@@ -16,7 +16,7 @@ namespace NetExtender.Utilities.Types
             key = entry.Key;
             value = entry.Value;
         }
-        
+
         // ReSharper disable once UseDeconstructionOnParameter
         public static KeyValuePair<TValue, TKey> Reverse<TKey, TValue>(this KeyValuePair<TKey, TValue> pair)
         {
@@ -28,7 +28,7 @@ namespace NetExtender.Utilities.Types
         {
             return new KeyValuePair<TKey, TKey>(pair.Key, pair.Value.Key);
         }
-        
+
         // ReSharper disable once UseDeconstructionOnParameter
         public static KeyValuePair<TKey, TValue> FlattenByValue<TKey, TValue>(this KeyValuePair<TKey, KeyValuePair<TKey, TValue>> pair)
         {

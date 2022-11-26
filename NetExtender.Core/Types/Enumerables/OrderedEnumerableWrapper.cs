@@ -11,12 +11,12 @@ namespace NetExtender.Types.Enumerables
     internal sealed class OrderedEnumerableWrapper<T> : IOrderedEnumerable<T>
     {
         private IEnumerable<T> Source { get; }
-            
+
         public OrderedEnumerableWrapper(IEnumerable<T> source)
         {
             Source = source ?? throw new ArgumentNullException(nameof(source));
         }
-            
+
         public IOrderedEnumerable<T> CreateOrderedEnumerable<TKey>(Func<T, TKey> keySelector, IComparer<TKey>? comparer, Boolean descending)
         {
             if (Source is IOrderedEnumerable<T> order)

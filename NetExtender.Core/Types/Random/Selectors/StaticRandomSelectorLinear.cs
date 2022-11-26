@@ -63,7 +63,7 @@ namespace NetExtender.Types.Random
             {
                 throw new InvalidOperationException("Items is empty");
             }
-            
+
             return Items[SelectIndexBinarySearch(Distribution, Random.NextDouble())];
         }
 
@@ -78,7 +78,7 @@ namespace NetExtender.Types.Random
             {
                 throw new InvalidOperationException("Items is empty");
             }
-            
+
             return Items[SelectIndexBinarySearch(Distribution, value)];
         }
 
@@ -98,7 +98,7 @@ namespace NetExtender.Types.Random
         {
             return Collection.ToArray();
         }
-        
+
         public override List<T> ToItemList()
         {
             return Collection.ToList();
@@ -107,7 +107,7 @@ namespace NetExtender.Types.Random
         public override NullableDictionary<T, Double> ToItemDictionary()
         {
             NullableDictionary<T, Double> dictionary = new NullableDictionary<T, Double>(Count);
-            
+
             foreach ((T? item, Double weight) in Items.Zip(Distribution))
             {
                 if (dictionary.ContainsKey(item))

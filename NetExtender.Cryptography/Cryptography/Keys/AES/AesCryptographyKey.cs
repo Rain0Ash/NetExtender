@@ -22,7 +22,7 @@ namespace NetExtender.Cryptography.Keys.AES
                 return Key.Length;
             }
         }
-        
+
         public override Boolean IsDeterministic
         {
             get
@@ -30,7 +30,7 @@ namespace NetExtender.Cryptography.Keys.AES
                 return true;
             }
         }
-        
+
         public ReadOnlySpan<Byte> Key
         {
             get
@@ -54,7 +54,7 @@ namespace NetExtender.Cryptography.Keys.AES
                 return Aes.Mode;
             }
         }
-        
+
         public PaddingMode Padding
         {
             get
@@ -70,7 +70,7 @@ namespace NetExtender.Cryptography.Keys.AES
                 return Aes.BlockSize;
             }
         }
-        
+
         public Int32 FeedbackSize
         {
             get
@@ -88,7 +88,7 @@ namespace NetExtender.Cryptography.Keys.AES
             : this(Aes.Create() ?? throw new FactoryException(), disposable)
         {
         }
-        
+
         public AesCryptographyKey(ReadOnlySpan<Byte> key)
             : this(key, ReadOnlySpan<Byte>.Empty)
         {

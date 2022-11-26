@@ -35,14 +35,14 @@ namespace NetExtender.Cryptography.Base.Interfaces
         /// <param name="encoded">Base16 text.</param>
         /// <returns>Decoded bytes.</returns>
         public Span<Byte> Decode(String encoded);
-        
+
         /// <summary>
         /// Decode base-encoded text into bytes.
         /// </summary>
         /// <param name="bytes">Base16 text.</param>
         /// <returns>Decoded bytes.</returns>
         public Span<Byte> Decode(ReadOnlySpan<Byte> bytes);
-        
+
         /// <summary>
         /// Decode base-encoded text into bytes.
         /// </summary>

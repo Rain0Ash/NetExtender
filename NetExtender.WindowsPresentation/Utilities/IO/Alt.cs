@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.Windows.IO
                     return Modifiers == ModifierKeys.Alt;
                 }
             }
-            
+
             public static Boolean HasAlt
             {
                 get
@@ -25,7 +25,7 @@ namespace NetExtender.Utilities.Windows.IO
                     return Modifiers.HasFlag(ModifierKeys.Alt);
                 }
             }
-            
+
             public static Boolean IsAltDown
             {
                 get
@@ -33,7 +33,7 @@ namespace NetExtender.Utilities.Windows.IO
                     return IsKeyActive(Keyboard.IsKeyDown, Key.LeftAlt, Key.RightAlt);
                 }
             }
-            
+
             public static Boolean IsAltToggled
             {
                 get
@@ -41,7 +41,7 @@ namespace NetExtender.Utilities.Windows.IO
                     return IsKeyActive(Keyboard.IsKeyToggled, Key.LeftAlt, Key.RightAlt);
                 }
             }
-            
+
             public static Boolean IsAltUp
             {
                 get

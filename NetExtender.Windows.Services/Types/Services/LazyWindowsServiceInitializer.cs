@@ -81,7 +81,7 @@ namespace NetExtender.Windows.Services.Types.Services
                 {
                     throw new ArgumentException("Service name is invalid.", nameof(value));
                 }
-                
+
                 if (Initialized)
                 {
                     Service.ServiceName = value;
@@ -263,10 +263,10 @@ namespace NetExtender.Windows.Services.Types.Services
             {
                 Service = service;
             }
-            
+
             return service;
         }
-        
+
         public WindowsService Initialize(WindowsService service)
         {
             if (service is null)
@@ -277,7 +277,7 @@ namespace NetExtender.Windows.Services.Types.Services
             Initialize(service.Service);
             return service;
         }
-        
+
         public IWindowsService Initialize(IWindowsService service)
         {
             if (service is null)
@@ -288,7 +288,7 @@ namespace NetExtender.Windows.Services.Types.Services
             Initialize(service.Service);
             return service;
         }
-        
+
         public void Dispose()
         {
         }

@@ -45,7 +45,7 @@ namespace NetExtender.Types.Stores
                 key = item.Key;
                 return true;
             }
-            
+
             key = default;
             return false;
         }
@@ -97,7 +97,7 @@ namespace NetExtender.Types.Stores
         {
             return GetEnumerator();
         }
-        
+
         public TValue this[TKey key]
         {
             get

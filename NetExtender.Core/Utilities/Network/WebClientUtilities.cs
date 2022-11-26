@@ -32,7 +32,7 @@ namespace NetExtender.Utilities.Network
             Bytes = bytes != 0 ? bytes : 1;
         }
     }
-    
+
     public static class WebClientUtilities
     {
         private static async Task<T?> DownloadTaskAsync<T>(WebClient client, Func<WebClient, String, Task<T?>> handler, String address, CancellationToken token)
@@ -82,7 +82,7 @@ namespace NetExtender.Utilities.Network
             {
                 return DownloadTaskAsync(client, handler, address, cancel);
             }
-            
+
             return TaskUtilities.TimeoutRetryTaskAsync(DownloadTask, tries, timeout, callback, token);
         }
 
@@ -202,7 +202,7 @@ namespace NetExtender.Utilities.Network
             {
                 throw new IOException();
             }
-            
+
             await client.DownloadFileTaskAsync(address, path).ConfigureAwait(false);
             try
             {
@@ -320,7 +320,7 @@ namespace NetExtender.Utilities.Network
             {
                 return DownloadFileHandlerAsync(web, url, path, overwrite);
             }
-            
+
             return DownloadTaskAsync(client, DownloadWebFileTaskAsync, address, tries, timeout, callback, token);
         }
 
@@ -421,7 +421,7 @@ namespace NetExtender.Utilities.Network
                 }
 
                 buffer ??= new Byte[BufferUtilities.DefaultBuffer];
-                
+
                 Int32 received = 0;
                 Int32 read;
                 while ((read = await stream.ReadAsync(buffer.AsMemory(0, buffer.Length), token).ConfigureAwait(false)) > 0)

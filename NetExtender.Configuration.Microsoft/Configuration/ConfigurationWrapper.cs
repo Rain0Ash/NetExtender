@@ -57,13 +57,13 @@ namespace NetExtender.Configuration.Microsoft
                 Config.SetValue(key, value);
             }
         }
-        
+
         private sealed class ConfigurationSection : IConfigurationSection
         {
             private IConfig Config { get; }
-            
+
             public String? Path { get; init; }
-            
+
             public String? Key { get; }
 
             public String? Value
@@ -82,22 +82,22 @@ namespace NetExtender.Configuration.Microsoft
                     Config.SetValue(Key, value, Sections);
                 }
             }
-            
+
             public ImmutableArray<String> Sections { get; }
 
             public ConfigurationSection(IConfig config, String? key)
                 : this(config, key, ImmutableArray<String>.Empty)
             {
             }
-            
+
             public ConfigurationSection(IConfig config, String? key, ImmutableArray<String> sections)
             {
                 Config = config ?? throw new ArgumentNullException(nameof(config));
-                
+
                 Key = key;
                 Sections = sections;
             }
-            
+
             public IConfigurationSection GetSection(String key)
             {
                 return new ConfigurationSection(Config, key, Key is not null ? Sections.Add(Key) : Sections);
@@ -138,7 +138,7 @@ namespace NetExtender.Configuration.Microsoft
         private sealed class ChangeToken : IChangeToken, IDisposable
         {
             private IConfig Config { get; }
-            
+
             private CancellationTokenSource Source { get; } = new CancellationTokenSource();
 
             public Boolean HasChanged
@@ -174,7 +174,7 @@ namespace NetExtender.Configuration.Microsoft
                 Source.Cancel();
                 Source.Dispose();
             }
-            
+
             private void Dispose(Object? sender, ConfigurationChangedEventArgs value)
             {
                 Dispose();

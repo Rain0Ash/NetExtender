@@ -16,7 +16,7 @@ namespace NetExtender.Types.Spans
 
         private Span<T> Internal { get; }
         private Int32 Index { get; }
-        
+
         public ref T Value
         {
             get
@@ -36,7 +36,7 @@ namespace NetExtender.Types.Spans
     {
         private Span<T> Internal { get; }
         private Int32 Index { get; set; }
-        
+
         public readonly SpanMutationReference<T> Current
         {
             get
@@ -64,11 +64,11 @@ namespace NetExtender.Types.Spans
             {
                 return false;
             }
-            
+
             Index += count;
             return true;
         }
-        
+
         internal Boolean MoveNext(Int32 count, out Span<T> result)
         {
             if (count < 0 || count >= Internal.Length - Index)
@@ -76,17 +76,17 @@ namespace NetExtender.Types.Spans
                 result = default;
                 return false;
             }
-            
+
             result = Internal.Slice(Index, count);
             return MoveNext(count);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean MovePrevious()
         {
             return MovePrevious(1);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean MovePrevious(Int32 count)
         {
@@ -105,7 +105,7 @@ namespace NetExtender.Types.Spans
             return this;
         }
     }
-    
+
     public readonly ref struct SpanMutationEnumerator
     {
         private SpanMutationEnumerator<Byte> Internal { get; }
@@ -128,13 +128,13 @@ namespace NetExtender.Types.Spans
         {
             return Internal.MoveNext();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean MoveNext(Int32 count)
         {
             return Internal.MoveNext(count);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean MoveNext(Int32 count, out Span<Byte> result)
         {
@@ -149,7 +149,7 @@ namespace NetExtender.Types.Spans
                 value = default;
                 return false;
             }
-            
+
             value = MemoryMarshal.AsRef<T>(span);
             return true;
         }
@@ -159,25 +159,25 @@ namespace NetExtender.Types.Spans
         {
             return Internal.MovePrevious();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean MovePrevious(Int32 count)
         {
             return Internal.MovePrevious(count);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean MovePrevious<T>(out T value) where T : struct
         {
             return MoveNext(out value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Reset()
         {
             Internal.Reset();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public SpanMutationEnumerator GetEnumerator()
         {

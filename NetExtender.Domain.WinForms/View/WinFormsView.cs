@@ -17,13 +17,13 @@ namespace NetExtender.Domains.View
             : base(new T())
         {
         }
-        
+
         public WinFormsView(T? context)
             : base(context)
         {
         }
     }
-    
+
     public class WinFormsView : ApplicationView
     {
         protected Form? Context { get; private set; }
@@ -52,7 +52,7 @@ namespace NetExtender.Domains.View
         {
             Context = context;
         }
-        
+
         protected static void EnableVisualStyles()
         {
             System.Windows.Forms.Application.EnableVisualStyles();
@@ -81,9 +81,9 @@ namespace NetExtender.Domains.View
             {
                 throw new ArgumentException($"{nameof(form)} not reference equals with {nameof(Context)}");
             }
-            
+
             Context.Closed += OnFormClosed;
-            
+
             WinFormsApplication application = Domain.Current.Application.As<WinFormsApplication>();
             await application.RunAsync(Context, token);
             return this;
@@ -93,7 +93,7 @@ namespace NetExtender.Domains.View
         {
             return RunAsync<T>(CancellationToken.None);
         }
-        
+
         protected virtual Task<IApplicationView> RunAsync<T>(CancellationToken token) where T : Form, new()
         {
             return RunAsync(new T(), token);
@@ -105,7 +105,7 @@ namespace NetExtender.Domains.View
             {
                 return;
             }
-            
+
             try
             {
                 Domain.Shutdown(true);
@@ -122,7 +122,7 @@ namespace NetExtender.Domains.View
             {
                 Context.Closed -= OnFormClosed;
             }
-            
+
             base.Dispose(disposing);
         }
     }

@@ -29,7 +29,7 @@ namespace NetExtender.Utilities.Types
         nameof(Double),
         nameof(Decimal)
     };
-    
+
     const String biginteger = "BigInteger";
     const String complex = "Complex";
 
@@ -37,7 +37,7 @@ namespace NetExtender.Utilities.Types
     {
         return type != nameof(Char);
     }
-    
+
     static Boolean IsSmallType(String type)
     {
         return type == nameof(Char) || type == nameof(Byte) || type == nameof(SByte) || type == nameof(Int16) || type == nameof(UInt16);
@@ -47,12 +47,12 @@ namespace NetExtender.Utilities.Types
     {
         return type == nameof(Char) || type == nameof(Byte) || type == nameof(UInt16) || type == nameof(UInt32) || type == nameof(UInt64);
     }
-    
+
     Boolean IsIntType(String type)
     {
         return type == nameof(Char) || type == nameof(SByte) || type == nameof(Byte) || type == nameof(Int16) || type == nameof(UInt16) || type == nameof(Int32) || type == nameof(UInt32) || type == nameof(Int64) || type == nameof(UInt64) || type == biginteger;
     }
-    
+
     static String ToUnsignedType(String type)
     {
         return type switch
@@ -79,7 +79,7 @@ namespace NetExtender.Utilities.Types
             }
         }
     }
-    
+
     void SumImplementation(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -87,25 +87,25 @@ namespace NetExtender.Utilities.Types
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Sum)}(source.Span);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this Span<{type}> source)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Sum)}((ReadOnlySpan<{type}>) source);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this ReadOnlyMemory<{type}> source)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Sum)}(source.Span);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this ReadOnlySpan<{type}> source)");
         WriteLine("\t\t{");
@@ -114,33 +114,33 @@ namespace NetExtender.Utilities.Types
         WriteLine($"\t\t\t\treturn source.Aggregate<{type}, {type}>(0, (current, value) => {(IsSmallType(type) ? $"({type}) (current + value)" : "current + value")});");
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this Memory<{type}> source, {type} overflow)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Sum)}(source.Span, overflow);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this Span<{type}> source, {type} overflow)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Sum)}((ReadOnlySpan<{type}>) source, overflow);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this ReadOnlyMemory<{type}> source, {type} overflow)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Sum)}(source.Span, overflow);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Sum)}(this ReadOnlySpan<{type}> source, {type} overflow)");
         WriteLine("\t\t{");
@@ -153,7 +153,7 @@ namespace NetExtender.Utilities.Types
         WriteLine("\t\t\t\treturn overflow;");
         WriteLine("\t\t\t}");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
 
         if (!IsSmallType(type))
@@ -163,25 +163,25 @@ namespace NetExtender.Utilities.Types
             WriteLine("\t\t{");
             WriteLine($"\t\t\treturn {nameof(Sum)}(source.Span, selector);");
             WriteLine("\t\t}");
-        
+
             WriteLine(String.Empty);
-        
+
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
             WriteLine($"\t\tpublic static {type} {nameof(Sum)}<T>(this Span<T> source, Func<T, {type}> selector)");
             WriteLine("\t\t{");
             WriteLine($"\t\t\treturn {nameof(Sum)}((ReadOnlySpan<T>) source, selector);");
             WriteLine("\t\t}");
-        
+
             WriteLine(String.Empty);
-        
+
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
             WriteLine($"\t\tpublic static {type} {nameof(Sum)}<T>(this ReadOnlyMemory<T> source, Func<T, {type}> selector)");
             WriteLine("\t\t{");
             WriteLine($"\t\t\treturn {nameof(Sum)}(source.Span, selector);");
             WriteLine("\t\t}");
-        
+
             WriteLine(String.Empty);
-            
+
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
             WriteLine($"\t\tpublic static {type} {nameof(Sum)}<T>(this ReadOnlySpan<T> source, Func<T, {type}> selector)");
             WriteLine("\t\t{");
@@ -190,33 +190,33 @@ namespace NetExtender.Utilities.Types
             WriteLine($"\t\t\t\treturn source.Aggregate{(type != nameof(Int32) ? $"<T, {type}>" : String.Empty)}(0, (current, item) => current + selector(item));");
             WriteLine("\t\t\t}");
             WriteLine("\t\t}");
-            
+
             WriteLine(String.Empty);
-            
+
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
             WriteLine($"\t\tpublic static {type} {nameof(Sum)}<T>(this Memory<T> source, Func<T, {type}> selector, {type} overflow)");
             WriteLine("\t\t{");
             WriteLine($"\t\t\treturn {nameof(Sum)}(source.Span, selector, overflow);");
             WriteLine("\t\t}");
-        
+
             WriteLine(String.Empty);
-        
+
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
             WriteLine($"\t\tpublic static {type} {nameof(Sum)}<T>(this Span<T> source, Func<T, {type}> selector, {type} overflow)");
             WriteLine("\t\t{");
             WriteLine($"\t\t\treturn {nameof(Sum)}((ReadOnlySpan<T>) source, selector, overflow);");
             WriteLine("\t\t}");
-        
+
             WriteLine(String.Empty);
-        
+
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
             WriteLine($"\t\tpublic static {type} {nameof(Sum)}<T>(this ReadOnlyMemory<T> source, Func<T, {type}> selector, {type} overflow)");
             WriteLine("\t\t{");
             WriteLine($"\t\t\treturn {nameof(Sum)}(source.Span, selector, overflow);");
             WriteLine("\t\t}");
-        
+
             WriteLine(String.Empty);
-            
+
             WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
             WriteLine($"\t\tpublic static {type} {nameof(Sum)}<T>(this ReadOnlySpan<T> source, Func<T, {type}> selector, {type} overflow)");
             WriteLine("\t\t{");
@@ -231,7 +231,7 @@ namespace NetExtender.Utilities.Types
             WriteLine("\t\t}");
         }
     }
-    
+
     void Sum()
     {
         ForEach(types.Where(NotChar).Append(biginteger).Append(complex), SumImplementation);
@@ -244,25 +244,25 @@ namespace NetExtender.Utilities.Types
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Multiply)}(source.Span);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this Span<{type}> source)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Multiply)}((ReadOnlySpan<{type}>) source);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this ReadOnlyMemory<{type}> source)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Multiply)}(source.Span);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this ReadOnlySpan<{type}> source)");
         WriteLine("\t\t{");
@@ -299,33 +299,33 @@ namespace NetExtender.Utilities.Types
         {
             return;
         }
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this Memory<{type}> source, {type} overflow)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Multiply)}(source.Span, overflow);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this Span<{type}> source, {type} overflow)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Multiply)}((ReadOnlySpan<{type}>) source, overflow);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this ReadOnlyMemory<{type}> source, {type} overflow)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Multiply)}(source.Span, overflow);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {type} {nameof(Multiply)}(this ReadOnlySpan<{type}> source, {type} overflow)");
         WriteLine("\t\t{");
@@ -369,7 +369,7 @@ namespace NetExtender.Utilities.Types
         WriteLine("\t\t\treturn result / count;");
         WriteLine("\t\t}");
     }
-    
+
     void Average()
     {
         ForEach(types.Where(NotChar).Append(complex), AverageImplementation);
@@ -382,25 +382,25 @@ namespace NetExtender.Utilities.Types
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Variance)}(source.Span);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(Variance)}(this Span<{type}> source)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Variance)}((ReadOnlySpan<{type}>) source);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(Variance)}(this ReadOnlyMemory<{type}> source)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(Variance)}(source.Span);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(Variance)}(this ReadOnlySpan<{type}> source)");
         WriteLine("\t\t{");
@@ -408,21 +408,21 @@ namespace NetExtender.Utilities.Types
         WriteLine("\t\t\t{");
         WriteLine("\t\t\t\treturn 0;");
         WriteLine("\t\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine($"\t\t\t{(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} mean = source.Average();");
         WriteLine($"\t\t\t{(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} sum = source.Sum(x => (x - mean).Pow(2));");
         WriteLine("\t\t\treturn sum / source.Length;");
-        
+
         WriteLine("\t\t}");
     }
-    
+
     void Variance()
     {
         ForEach(types.Where(NotChar), VarianceImplementation);
     }
-    
+
     void StandardDeviationImplementation(String type)
     {
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
@@ -430,32 +430,32 @@ namespace NetExtender.Utilities.Types
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(StandardDeviation)}(source.Span);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(StandardDeviation)}(this Span<{type}> source)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(StandardDeviation)}((ReadOnlySpan<{type}>) source);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(StandardDeviation)}(this ReadOnlyMemory<{type}> source)");
         WriteLine("\t\t{");
         WriteLine($"\t\t\treturn {nameof(StandardDeviation)}(source.Span);");
         WriteLine("\t\t}");
-        
+
         WriteLine(String.Empty);
-        
+
         WriteLine("\t\t[MethodImpl(MethodImplOptions.AggressiveInlining)]");
         WriteLine($"\t\tpublic static {(type == nameof(Decimal) ? nameof(Decimal) : nameof(Double))} {nameof(StandardDeviation)}(this ReadOnlySpan<{type}> source)");
         WriteLine("\t\t{");
         WriteLine("\t\t\treturn source.Variance().Sqrt();");
         WriteLine("\t\t}");
     }
-    
+
     void StandardDeviation()
     {
         ForEach(types.Where(NotChar), StandardDeviationImplementation, false);

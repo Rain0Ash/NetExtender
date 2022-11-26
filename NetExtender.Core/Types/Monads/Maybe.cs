@@ -18,7 +18,7 @@ namespace NetExtender.Types.Monads
         {
             return value.Value;
         }
-        
+
         public static Boolean operator ==(Maybe<T> first, Maybe<T> second)
         {
             return first.Equals(second);
@@ -28,7 +28,7 @@ namespace NetExtender.Types.Monads
         {
             return !(first == second);
         }
-        
+
         public Boolean HasValue { get; }
         private T Internal { get; }
 
@@ -69,22 +69,22 @@ namespace NetExtender.Types.Monads
 
             return other is not null && Equals(Value, other);
         }
-        
+
         public Boolean Equals(T? other)
         {
             return HasValue && EqualityComparer<T>.Default.Equals(Value, other);
         }
-        
+
         public Boolean Equals(Maybe<T> other)
         {
             return !HasValue && !other.HasValue || HasValue && other.HasValue && EqualityComparer<T>.Default.Equals(Value, other.Value);
         }
-        
+
         public Boolean Equals(NullMaybe<T> other)
         {
             return HasValue && EqualityComparer<T>.Default.Equals(Value, other.Value);
         }
-        
+
         public override Int32 GetHashCode()
         {
             return HasValue ? Value?.GetHashCode() ?? 0 : 0;

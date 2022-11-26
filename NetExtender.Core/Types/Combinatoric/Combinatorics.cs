@@ -27,7 +27,7 @@ namespace NetExtender.Types.Combinatoric
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         public static ICombinatoricCollection<T> Create<T>(this CombinatoricsType type, IList<T> values)
         {
             return Create(values, type, 2);

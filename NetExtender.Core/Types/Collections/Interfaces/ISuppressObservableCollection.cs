@@ -13,7 +13,7 @@ namespace NetExtender.Types.Collections.Interfaces
         public Boolean IsAllowSuppress { get; }
         public Boolean IsSuppressed { get; }
         public Int32 SuppressDepth { get; }
-        
+
         public IDisposable? Suppress();
         public void Move(Int32 oldIndex, Int32 newIndex);
     }

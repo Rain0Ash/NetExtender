@@ -16,7 +16,7 @@ namespace NetExtender.ReactiveUI.Utilities
     public static class ReactiveObjectUtilities
     {
         private static IStore<ReactiveObject, PropertySubnotifier> Store { get; } = new WeakStore<ReactiveObject, PropertySubnotifier>();
-        
+
         public static PropertySubnotifier<T> Register<T>(this T value) where T : ReactiveObject
         {
             if (value is null)
@@ -46,14 +46,14 @@ namespace NetExtender.ReactiveUI.Utilities
 
             return value.Register().Register(when, properties);
         }
-        
+
         public static PropertySubnotifier<T> Register<T>(this T value, String when, IEnumerable<String?>? properties) where T : ReactiveObject
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             return value.Register().Register(when, properties);
         }
 
@@ -63,7 +63,7 @@ namespace NetExtender.ReactiveUI.Utilities
             {
                 throw new ArgumentNullException(nameof(when));
             }
-            
+
             return value.Register().Register(when, properties);
         }
 

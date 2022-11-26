@@ -33,7 +33,7 @@ namespace NetExtender.Domains.Initializer
                 {
                     throw new InvalidOperationException();
                 }
-                
+
                 instance = value;
             }
         }
@@ -41,7 +41,7 @@ namespace NetExtender.Domains.Initializer
         static ApplicationInitializer()
         {
             Assembly? assembly = Assembly.GetEntryAssembly();
-            
+
             if (assembly is null)
             {
                 throw new EntryPointNotFoundException();
@@ -100,12 +100,12 @@ namespace NetExtender.Domains.Initializer
         {
             return Instance.Start(args);
         }
-        
+
         protected static Task<Int32> Async(String[]? args)
         {
             return Instance.StartAsync(args);
         }
-        
+
         protected static Task<Int32> Async(String[]? args, CancellationToken token)
         {
             return Instance.StartAsync(args, token);
@@ -155,7 +155,7 @@ namespace NetExtender.Domains.Initializer
             Domain.Shutdown(code, true);
         }
     }
-    
+
     [SuppressMessage("ReSharper", "MethodSupportsCancellation")]
     public abstract class ApplicationInitializer<TApplication, TView> : IApplicationInitializer where TApplication : class, IApplication, new() where TView : class, IApplicationView, new()
     {
@@ -164,7 +164,7 @@ namespace NetExtender.Domains.Initializer
         {
             return application?.Application;
         }
-        
+
         [return: NotNullIfNotNull("application")]
         public static implicit operator TView?(ApplicationInitializer<TApplication, TView>? application)
         {

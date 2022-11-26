@@ -18,7 +18,7 @@ namespace NetExtender.Types.Environments
         {
             return !(first == second);
         }
-        
+
         public String Key { get; }
         public String? Value { get; }
 
@@ -32,7 +32,7 @@ namespace NetExtender.Types.Environments
             Key = key ?? throw new ArgumentNullException(nameof(key));
             Value = value;
         }
-        
+
         public override Boolean Equals(Object? obj)
         {
             return obj is EnvironmentValueEntry other && Equals(other);

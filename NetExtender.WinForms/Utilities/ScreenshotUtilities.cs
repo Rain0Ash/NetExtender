@@ -91,7 +91,7 @@ namespace NetExtender.Utilities.Windows
 
             return screens.Select(TakeScreenshot);
         }
-        
+
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern Boolean GetWindowRect(IntPtr hWnd, out WinRectangle lpRect);

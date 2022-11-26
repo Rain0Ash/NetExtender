@@ -63,13 +63,13 @@ namespace NetExtender.Types.Sets
             Inner = new OrderedComparer<T>();
             Set = new SortedSetCollection<T>((IComparer<T>) Inner);
         }
-        
+
         public OrderedSortedSet(IComparer<T>? comparer)
         {
             Inner = new OrderedComparer<T>(comparer);
             Set = new SortedSetCollection<T>((IComparer<T>) Inner);
         }
-        
+
         public OrderedSortedSet(IEnumerable<T> source)
         {
             if (source is null)
@@ -82,14 +82,14 @@ namespace NetExtender.Types.Sets
             Inner = new OrderedComparer<T>(source);
             Set = new SortedSetCollection<T>(source, Inner);
         }
-        
+
         public OrderedSortedSet(IEnumerable<T> source, IComparer<T>? comparer)
         {
             if (source is null)
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             source = source.Materialize();
 
             Inner = new OrderedComparer<T>(source, comparer);
@@ -102,7 +102,7 @@ namespace NetExtender.Types.Sets
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             source = source.Materialize();
 
             Inner = new OrderedComparer<T>(order?.Append(source) ?? source);
@@ -114,13 +114,13 @@ namespace NetExtender.Types.Sets
         {
             return item is not null && Set.Contains(item);
         }
-        
+
         /// <inheritdoc cref="SortedSet{T}.Add"/>
         void ICollection<T>.Add(T item)
         {
             Add(item);
         }
-        
+
         /// <inheritdoc cref="SortedSet{T}.Add"/>
         public Boolean Add(T item)
         {
@@ -144,7 +144,7 @@ namespace NetExtender.Types.Sets
             {
                 throw new ArgumentOutOfRangeException(nameof(index));
             }
-            
+
             if (!Set.Add(item))
             {
                 return false;
@@ -161,7 +161,7 @@ namespace NetExtender.Types.Sets
             {
                 throw new ArgumentNullException(nameof(other));
             }
-            
+
             if (Count <= 0)
             {
                 return;
@@ -198,11 +198,11 @@ namespace NetExtender.Types.Sets
                 {
                     continue;
                 }
-                
+
                 Remove(item);
             }
         }
-        
+
         /// <inheritdoc cref="SortedSet{T}.SymmetricExceptWith"/>
         public void SymmetricExceptWith(IEnumerable<T> other)
         {
@@ -356,13 +356,13 @@ namespace NetExtender.Types.Sets
         {
             Set.CopyTo(array, arrayIndex);
         }
-        
+
         /// <inheritdoc cref="SortedSet{T}.CopyTo(T[],Int32)"/>
         void ICollection.CopyTo(Array array, Int32 index)
         {
             ((ICollection) Set).CopyTo(array, index);
         }
-        
+
         public T this[Int32 index]
         {
             get

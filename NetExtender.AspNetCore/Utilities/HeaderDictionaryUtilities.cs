@@ -13,7 +13,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
         {
             RemoveRange(dictionary, (IEnumerable<String>) items);
         }
-        
+
         public static void RemoveRange(this IHeaderDictionary dictionary, IEnumerable<String> items)
         {
             if (dictionary is null)

@@ -16,13 +16,13 @@ namespace NetExtender.Types.Sets
         {
             return set is not null ? new SetAdapter<T>(set) : null;
         }
-        
+
         [return: NotNullIfNotNull("set")]
         public static implicit operator SetAdapter<T>?(SortedSet<T>? set)
         {
             return set is not null ? new SetAdapter<T>(set) : null;
         }
-        
+
         private readonly ISet<T> _set;
 
         public Int32 Count
@@ -66,7 +66,7 @@ namespace NetExtender.Types.Sets
         {
             return _set.Contains(item);
         }
-        
+
         public void ExceptWith(IEnumerable<T> other)
         {
             _set.ExceptWith(other);
@@ -116,7 +116,7 @@ namespace NetExtender.Types.Sets
         {
             _set.UnionWith(other);
         }
-        
+
         void ICollection<T>.Add(T item)
         {
             Add(item ?? throw new ArgumentNullException(nameof(item)));
@@ -131,12 +131,12 @@ namespace NetExtender.Types.Sets
         {
             return _set.Remove(item);
         }
-        
+
         public void Clear()
         {
             _set.Clear();
         }
-        
+
         void ICollection.CopyTo(Array array, Int32 index)
         {
             _set.CopyTo((T[]) array, index);

@@ -29,7 +29,7 @@ namespace NetExtender.UserInterface.Windows.Types
         public IntPtr WParam { get; init; }
 
         public IntPtr LParam { get; init; }
-        
+
         public IntPtr Result { get; init; }
 
         public WinMessage(IntPtr hwnd, Int32 message, IntPtr wparam, IntPtr lparam)
@@ -40,14 +40,14 @@ namespace NetExtender.UserInterface.Windows.Types
         public WinMessage(IntPtr hwnd, Int32 message, IntPtr wparam, IntPtr lparam, IntPtr result)
             : this(hwnd, (WM) message, wparam, lparam, result)
         {
-            
+
         }
-        
+
         public WinMessage(IntPtr hwnd, WM message, IntPtr wparam, IntPtr lparam)
             : this(hwnd, message, wparam, lparam, IntPtr.Zero)
         {
         }
-        
+
         public WinMessage(IntPtr hwnd, WM message, IntPtr wparam, IntPtr lparam, IntPtr result)
         {
             HWnd = hwnd;
@@ -56,7 +56,7 @@ namespace NetExtender.UserInterface.Windows.Types
             LParam = lparam;
             Result = result;
         }
-        
+
         /// <summary>
         ///  Gets the <see cref='LParam'/> value, and converts the value to an object.
         /// </summary>
@@ -64,7 +64,7 @@ namespace NetExtender.UserInterface.Windows.Types
         {
             return Marshal.PtrToStructure(LParam, cls);
         }
-        
+
         public override Boolean Equals(Object? obj)
         {
             if (obj is not WinMessage message)

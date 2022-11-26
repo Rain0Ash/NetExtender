@@ -19,7 +19,7 @@ namespace NetExtender.Configuration.Xml
             : this(ConfigOptions.None)
         {
         }
-        
+
         public XmlConfigBehavior(ConfigOptions options)
             : this(null, options)
         {
@@ -29,7 +29,7 @@ namespace NetExtender.Configuration.Xml
             : this(path, ConfigOptions.None)
         {
         }
-        
+
         public XmlConfigBehavior(String? path, ConfigOptions options)
             : base(ValidatePathOrGetDefault(path, "xml"), options)
         {
@@ -40,7 +40,7 @@ namespace NetExtender.Configuration.Xml
         {
             return key?.Replace(' ', '_');
         }
-        
+
         [return: NotNullIfNotNull("sections")]
         private static IEnumerable<String>? Convert(IEnumerable<String>? sections)
         {
@@ -69,7 +69,7 @@ namespace NetExtender.Configuration.Xml
             {
                 return new DictionaryTree<String, String>();
             }
-            
+
             try
             {
                 return base.DeserializeConfig(JsonUtilities.ToJson(config));

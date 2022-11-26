@@ -9,9 +9,9 @@ namespace NetExtender.Cryptography.Keys.Interfaces
     public interface IStringDecryptor : IDecryptor
     {
         public String? Decrypt(String value);
-        
+
         public String? DecryptString(String value);
-        
+
         public IEnumerable<String?> Decrypt(IEnumerable<String> source);
 
         public IEnumerable<String?> DecryptString(IEnumerable<String> source);

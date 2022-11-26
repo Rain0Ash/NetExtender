@@ -15,7 +15,7 @@ namespace NetExtender.Types.Streams
         Read,
         Write
     }
-    
+
     public readonly struct ProgressStreamInfo : IEquatable<ProgressStreamInfo>
     {
         public static Boolean operator ==(ProgressStreamInfo left, ProgressStreamInfo right)
@@ -27,23 +27,23 @@ namespace NetExtender.Types.Streams
         {
             return !(left == right);
         }
-        
+
         public ProgressStreamInfoType Type { get; }
         public Int64 Offset { get; }
         public Int64 Count { get; }
-        
+
         public ProgressStreamInfo(ProgressStreamInfoType type, Int64 offset, Int64 count)
         {
             Offset = offset;
             Count = count;
             Type = type;
         }
-        
+
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(Type, Offset, Count);
         }
-        
+
         public override Boolean Equals(Object? obj)
         {
             return obj is ProgressStreamInfo info && Equals(info);
@@ -59,7 +59,7 @@ namespace NetExtender.Types.Streams
             return $"{Type} {Offset} {Count}";
         }
     }
-    
+
     public class ProgressStream : Stream
     {
         protected Stream Internal { get; }
@@ -115,7 +115,7 @@ namespace NetExtender.Types.Streams
                 return Internal.CanTimeout;
             }
         }
-        
+
         public override Int32 ReadTimeout
         {
             get
@@ -127,7 +127,7 @@ namespace NetExtender.Types.Streams
                 Internal.ReadTimeout = value;
             }
         }
-        
+
         public override Int32 WriteTimeout
         {
             get
@@ -164,11 +164,11 @@ namespace NetExtender.Types.Streams
             {
                 position = -1;
             }
-            
+
             Int64 offset = position - count;
             Progress.Report(new ProgressStreamInfo(ProgressStreamInfoType.Read, offset >= 0 ? offset : -1, count));
         }
-        
+
         public override Int32 ReadByte()
         {
             Int32 value = Internal.ReadByte();
@@ -203,14 +203,14 @@ namespace NetExtender.Types.Streams
             OnReadProgress(count);
             return count;
         }
-        
+
         protected virtual void OnWriteProgress(Int32 count)
         {
             if (!this.TryPosition(out Int64 position))
             {
                 position = -1;
             }
-            
+
             Int64 offset = position - count;
             Progress.Report(new ProgressStreamInfo(ProgressStreamInfoType.Write, offset >= 0 ? offset : -1, count));
         }
@@ -232,19 +232,19 @@ namespace NetExtender.Types.Streams
             Internal.Write(buffer, offset, count);
             OnWriteProgress(buffer.AsSpan(offset, count).Length);
         }
-        
+
         public override async ValueTask WriteAsync(ReadOnlyMemory<Byte> buffer, CancellationToken token = default)
         {
             await Internal.WriteAsync(buffer, token);
             OnWriteProgress(buffer.Length);
         }
-        
+
         public override async Task WriteAsync(Byte[] buffer, Int32 offset, Int32 count, CancellationToken token)
         {
             await Internal.WriteAsync(buffer, offset, count, token);
             OnWriteProgress(buffer.AsSpan(offset, count).Length);
         }
-        
+
         public override void Flush()
         {
             Internal.Flush();

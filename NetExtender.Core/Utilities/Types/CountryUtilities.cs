@@ -13,27 +13,27 @@ namespace NetExtender.Utilities.Types
         {
             return identifier;
         }
-        
+
         public static CountryInfo? ToCountryInfo(this CountryInfo? info)
         {
             return info;
         }
-        
+
         public static CountryInfo? ToCountryInfo(this CultureIdentifier identifier)
         {
             return identifier;
         }
-        
+
         public static CountryInfo? ToCountryInfo(this LocalizationIdentifier identifier)
         {
             return identifier;
         }
-        
+
         public static CountryInfo? ToCountryInfo(this CultureInfo? info)
         {
             return info;
         }
-        
+
         public static CountryInfo? ToCountryInfo(this RegionInfo? info)
         {
             return info;

@@ -12,7 +12,7 @@ namespace NetExtender.Types.Sets
         private BitArray Bits { get; }
 
         public Int32 Count { get; }
-        
+
         Boolean ICollection.IsSynchronized
         {
             get
@@ -122,7 +122,7 @@ namespace NetExtender.Types.Sets
             Bits.CopyTo(result, 0);
             return result;
         }
-        
+
         void ICollection.CopyTo(Array array, Int32 index)
         {
             Bits.CopyTo(array, index);
@@ -132,7 +132,7 @@ namespace NetExtender.Types.Sets
         {
             return Bits.GetEnumerator();
         }
-        
+
         public Boolean this[Int32 index]
         {
             get

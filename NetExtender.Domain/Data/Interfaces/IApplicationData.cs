@@ -29,13 +29,13 @@ namespace NetExtender.Domains.Interfaces
         }
 
         public ApplicationInfoMessage Message { get; }
-        
+
         public Guid Guid { get; }
-        
+
         public String ApplicationName { get; }
-        
+
         public String ApplicationIdentifier { get; }
-        
+
         public DateTime StartedAt { get; }
 
         public ApplicationVersion Version { get; }
@@ -46,7 +46,7 @@ namespace NetExtender.Domains.Interfaces
         public ApplicationBranch Branch { get; }
 
         public String StatusData { get; }
-        
+
         public String BranchData { get; }
         public Boolean HasAnotherInstance { get; }
     }

@@ -42,12 +42,12 @@ namespace NetExtender.Types.Random
             : this(items ?? throw new ArgumentNullException(nameof(items)), cda ?? throw new ArgumentNullException(nameof(cda)), RandomUtilities.Create())
         {
         }
-        
+
         public StaticRandomSelectorBinary(T[] items, Double[] cda, Int32 seed)
             : this(items ?? throw new ArgumentNullException(nameof(items)), cda ?? throw new ArgumentNullException(nameof(cda)), RandomUtilities.Create(seed))
         {
         }
-        
+
         /// <summary>
         /// Constructor, used by StaticRandomSelectorBuilder
         /// Needs array of items and CDA (Cummulative Distribution Array). 
@@ -73,7 +73,7 @@ namespace NetExtender.Types.Random
             {
                 throw new InvalidOperationException("Items is empty");
             }
-            
+
             return Items[SelectIndexBinarySearch(Distribution, Random.NextDouble())];
         }
 
@@ -89,7 +89,7 @@ namespace NetExtender.Types.Random
             {
                 throw new InvalidOperationException("Items is empty");
             }
-            
+
             return Items[SelectIndexBinarySearch(Distribution, value)];
         }
 
@@ -118,7 +118,7 @@ namespace NetExtender.Types.Random
         public override NullableDictionary<T, Double> ToItemDictionary()
         {
             NullableDictionary<T, Double> dictionary = new NullableDictionary<T, Double>(Count);
-            
+
             foreach ((T? item, Double weight) in Items.Zip(Distribution))
             {
                 if (dictionary.ContainsKey(item))

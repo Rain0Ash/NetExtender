@@ -10,7 +10,7 @@ namespace NetExtender.Configuration.Cryptography.Common.Interfaces
     {
         public CryptAction Crypt { get; }
         public CryptographyConfigOptions CryptographyOptions { get; }
-        
+
         public Boolean IsCryptDefault { get; }
         public Boolean IsCryptKey { get; }
         public Boolean IsCryptValue { get; }

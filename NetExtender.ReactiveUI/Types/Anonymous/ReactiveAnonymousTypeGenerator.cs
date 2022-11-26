@@ -21,7 +21,7 @@ namespace NetExtender.ReactiveUI.Anonymous.Core
             : base(assemblyname, assembly, modulename, module)
         {
         }
-        
+
         protected override String GenerateTypeName(AnonymousTypePropertyInfo[] properties)
         {
             if (properties is null)
@@ -48,7 +48,7 @@ namespace NetExtender.ReactiveUI.Anonymous.Core
             {
                 throw new ArgumentNullException(nameof(field));
             }
-            
+
             if (info.Write is null)
             {
                 return false;

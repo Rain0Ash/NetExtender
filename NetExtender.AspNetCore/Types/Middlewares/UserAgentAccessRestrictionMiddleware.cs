@@ -40,7 +40,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             RestrictionStatusCode = code;
             UserAgentWhitelist = new HashSet<String?>(1) { agent };
         }
-        
+
         public UserAgentAccessRestrictionMiddleware(RequestDelegate next, IEnumerable<String?> agents)
             : this(next, agents, DefaultRestrictionStatusCode)
         {
@@ -68,7 +68,7 @@ namespace NetExtender.AspNetCore.Types.Middlewares
             String? agent = context.Request.GetUserAgent();
             return Contains(agent) ? AllowStatusCode : RestrictionStatusCode;
         }
-        
+
         public Boolean Contains(String? item)
         {
             return UserAgentWhitelist.Contains(item);

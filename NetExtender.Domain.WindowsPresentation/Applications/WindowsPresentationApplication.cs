@@ -24,7 +24,7 @@ namespace NetExtender.Domains.Applications
         {
         }
     }
-    
+
     public class WindowsPresentationApplication : Application
     {
         public System.Windows.Application Application { get; }
@@ -64,7 +64,7 @@ namespace NetExtender.Domains.Applications
         {
             Application = application ?? throw new ArgumentNullException(nameof(application));
         }
-        
+
         public override Task<IApplication> RunAsync(CancellationToken token)
         {
             RegisterShutdownToken(token);

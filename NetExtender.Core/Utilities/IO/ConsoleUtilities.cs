@@ -24,7 +24,7 @@ namespace NetExtender.Utilities.IO
     public static class ConsoleUtilities
     {
         private static Object Synchronization { get; } = ConcurrentUtilities.Synchronization;
-        
+
         public static event ConsoleCancelEventHandler CancelKeyPress
         {
             add
@@ -194,7 +194,7 @@ namespace NetExtender.Utilities.IO
                 Write(value);
                 return;
             }
-            
+
             lock (Synchronization)
             {
                 ConsoleColor console = Console.ForegroundColor;
@@ -203,7 +203,7 @@ namespace NetExtender.Utilities.IO
                 Console.ForegroundColor = console;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         private static void Write(String value, ConsoleColor? foreground, ConsoleColor? background)
         {
@@ -212,7 +212,7 @@ namespace NetExtender.Utilities.IO
                 Write(value, foreground);
                 return;
             }
-            
+
             lock (Synchronization)
             {
                 ConsoleColor color = Console.BackgroundColor;
@@ -265,7 +265,7 @@ namespace NetExtender.Utilities.IO
         {
             return Write(value, color, ConvertUtilities.DefaultEscapeType, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static T Write<T>(T value, ConsoleColor? color, EscapeType escape, IFormatProvider? provider)
         {
@@ -299,7 +299,7 @@ namespace NetExtender.Utilities.IO
             Write(text, foreground, background);
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Write<T>(T value, Color color)
         {
@@ -311,7 +311,7 @@ namespace NetExtender.Utilities.IO
         {
             return Write(value, color, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Write<T>(T value, Color color, EscapeType escape)
         {
@@ -323,7 +323,7 @@ namespace NetExtender.Utilities.IO
         {
             return Write(value, color, escape, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Write<T>(T value, Color color, IFormatProvider? provider)
         {
@@ -349,7 +349,7 @@ namespace NetExtender.Utilities.IO
             {
                 return Write(value, escape, provider);
             }
-            
+
             return color.NearestConsoleColor(out ConsoleColor console) ? Write(value, console, escape, provider) : Write(value, escape, provider);
         }
 
@@ -373,7 +373,7 @@ namespace NetExtender.Utilities.IO
             }
 
             String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
-            
+
             if (typeof(TColor) == typeof(ANSIColor))
             {
                 Write(color.ToString(text, provider), escape, provider);
@@ -383,7 +383,7 @@ namespace NetExtender.Utilities.IO
             Write(color.ToColor<TColor, ANSIColor>().ToString(text, provider), escape, provider);
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Write<T>(T value, Color foreground, Color background)
         {
@@ -395,7 +395,7 @@ namespace NetExtender.Utilities.IO
         {
             return Write(value, foreground, background, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Write<T>(T value, Color foreground, Color background, EscapeType escape)
         {
@@ -407,7 +407,7 @@ namespace NetExtender.Utilities.IO
         {
             return Write(value, foreground, background, escape, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T Write<T>(T value, Color foreground, Color background, IFormatProvider? provider)
         {
@@ -433,7 +433,7 @@ namespace NetExtender.Utilities.IO
             {
                 return Write(value, foreground, escape, provider);
             }
-            
+
             Boolean backsuccessful = background.NearestConsoleColor(out ConsoleColor backcolor);
 
             if (foreground is not null && foreground.NearestConsoleColor(out ConsoleColor forecolor))
@@ -475,7 +475,7 @@ namespace NetExtender.Utilities.IO
             {
                 return WriteWithoutAnsi(value, foreground, background, escape, provider);
             }
-            
+
             String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
 
             if (foreground is null)
@@ -485,7 +485,7 @@ namespace NetExtender.Utilities.IO
                     Write(background.ToString(text, provider), escape, provider);
                     return value;
                 }
-                
+
                 Write(background.ToColor<TBackground, ANSIColor>().Clone(AnsiColorSequenceMode.Background).ToString(text, provider), escape, provider);
                 return value;
             }
@@ -509,7 +509,7 @@ namespace NetExtender.Utilities.IO
                 WriteLine(value);
                 return;
             }
-            
+
             lock (Synchronization)
             {
                 ConsoleColor console = Console.ForegroundColor;
@@ -518,7 +518,7 @@ namespace NetExtender.Utilities.IO
                 Console.ForegroundColor = console;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         private static void WriteLine(String value, ConsoleColor? foreground, ConsoleColor? background)
         {
@@ -527,7 +527,7 @@ namespace NetExtender.Utilities.IO
                 WriteLine(value, foreground);
                 return;
             }
-            
+
             lock (Synchronization)
             {
                 ConsoleColor color = Console.BackgroundColor;
@@ -586,7 +586,7 @@ namespace NetExtender.Utilities.IO
         {
             return WriteLine(value, color, ConvertUtilities.DefaultEscapeType, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static T WriteLine<T>(T value, ConsoleColor? color, EscapeType escape, IFormatProvider? provider)
         {
@@ -620,7 +620,7 @@ namespace NetExtender.Utilities.IO
             WriteLine(text, foreground, background);
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T WriteLine<T>(T value, Color color)
         {
@@ -632,7 +632,7 @@ namespace NetExtender.Utilities.IO
         {
             return WriteLine(value, color, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T WriteLine<T>(T value, Color color, EscapeType escape)
         {
@@ -644,7 +644,7 @@ namespace NetExtender.Utilities.IO
         {
             return WriteLine(value, color, escape, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T WriteLine<T>(T value, Color color, IFormatProvider? provider)
         {
@@ -670,7 +670,7 @@ namespace NetExtender.Utilities.IO
             {
                 return WriteLine(value, escape, provider);
             }
-            
+
             return color.NearestConsoleColor(out ConsoleColor console) ? WriteLine(value, console, escape, provider) : WriteLine(value, escape, provider);
         }
 
@@ -694,7 +694,7 @@ namespace NetExtender.Utilities.IO
             }
 
             String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
-            
+
             if (typeof(TColor) == typeof(ANSIColor))
             {
                 WriteLine(color.ToString(text, provider), escape, provider);
@@ -704,7 +704,7 @@ namespace NetExtender.Utilities.IO
             WriteLine(color.ToColor<TColor, ANSIColor>().ToString(text, provider), escape, provider);
             return value;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T WriteLine<T>(T value, Color foreground, Color background)
         {
@@ -716,7 +716,7 @@ namespace NetExtender.Utilities.IO
         {
             return WriteLine(value, foreground, background, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T WriteLine<T>(T value, Color foreground, Color background, EscapeType escape)
         {
@@ -728,7 +728,7 @@ namespace NetExtender.Utilities.IO
         {
             return WriteLine(value, foreground, background, escape, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T WriteLine<T>(T value, Color foreground, Color background, IFormatProvider? provider)
         {
@@ -754,7 +754,7 @@ namespace NetExtender.Utilities.IO
             {
                 return WriteLine(value, foreground, escape, provider);
             }
-            
+
             Boolean backsuccessful = background.NearestConsoleColor(out ConsoleColor backcolor);
 
             if (foreground is not null && foreground.NearestConsoleColor(out ConsoleColor forecolor))
@@ -796,7 +796,7 @@ namespace NetExtender.Utilities.IO
             {
                 return WriteLineWithoutAnsi(value, foreground, background, escape, provider);
             }
-            
+
             String text = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
 
             if (foreground is null)
@@ -806,7 +806,7 @@ namespace NetExtender.Utilities.IO
                     WriteLine(background.ToString(text, provider), escape, provider);
                     return value;
                 }
-                
+
                 WriteLine(background.ToColor<TBackground, ANSIColor>().Clone(AnsiColorSequenceMode.Background).ToString(text, provider), escape, provider);
                 return value;
             }
@@ -905,7 +905,7 @@ namespace NetExtender.Utilities.IO
         {
             return newLine ? WriteLine(value, color, provider) : Write(value, color, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ToConsole<T>(this T value, ConsoleColor? color, Boolean newLine, EscapeType escape, IFormatProvider? provider)
         {
@@ -965,13 +965,13 @@ namespace NetExtender.Utilities.IO
         {
             return WriteLine(value, color);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ToConsole<T, TColor>(this T value, TColor? color) where TColor : IColor
         {
             return WriteLine(value, color);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ToConsole<T>(this T value, Color color, EscapeType escape)
         {
@@ -983,7 +983,7 @@ namespace NetExtender.Utilities.IO
         {
             return WriteLine(value, color, escape);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ToConsole<T>(this T value, Color color, IFormatProvider? provider)
         {
@@ -1007,7 +1007,7 @@ namespace NetExtender.Utilities.IO
         {
             return WriteLine(value, color, escape, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ToConsole<T>(this T value, Color color, Boolean newLine)
         {
@@ -1019,7 +1019,7 @@ namespace NetExtender.Utilities.IO
         {
             return newLine ? WriteLine(value, color) : Write(value, color);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ToConsole<T>(this T value, Color color, Boolean newLine, EscapeType escape)
         {
@@ -1031,7 +1031,7 @@ namespace NetExtender.Utilities.IO
         {
             return newLine ? WriteLine(value, color, escape) : Write(value, color, escape);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ToConsole<T>(this T value, Color color, Boolean newLine, IFormatProvider? provider)
         {
@@ -1055,19 +1055,19 @@ namespace NetExtender.Utilities.IO
         {
             return newLine ? WriteLine(value, color, escape, provider) : Write(value, color, escape, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ToConsole<T>(this T value, Color foreground, Color background)
         {
             return WriteLine(value, foreground, background);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ToConsole<T, TForeground, TBackground>(this T value, TForeground? foreground, TBackground? background) where TForeground : IColor where TBackground : IColor
         {
             return WriteLine(value, foreground, background);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ToConsole<T>(this T value, Color foreground, Color background, EscapeType escape)
         {
@@ -1079,7 +1079,7 @@ namespace NetExtender.Utilities.IO
         {
             return WriteLine(value, foreground, background, escape);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ToConsole<T>(this T value, Color foreground, Color background, IFormatProvider? provider)
         {
@@ -1103,7 +1103,7 @@ namespace NetExtender.Utilities.IO
         {
             return WriteLine(value, foreground, background, escape, provider);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ToConsole<T>(this T value, Color foreground, Color background, Boolean newLine)
         {
@@ -1115,7 +1115,7 @@ namespace NetExtender.Utilities.IO
         {
             return newLine ? WriteLine(value, foreground, background) : Write(value, foreground, background);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ToConsole<T>(this T value, Color foreground, Color background, Boolean newLine, EscapeType escape)
         {
@@ -1127,7 +1127,7 @@ namespace NetExtender.Utilities.IO
         {
             return newLine ? WriteLine(value, foreground, background, escape) : Write(value, foreground, background, escape);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static T ToConsole<T>(this T value, Color foreground, Color background, Boolean newLine, IFormatProvider? provider)
         {

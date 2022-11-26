@@ -9,7 +9,7 @@ namespace NetExtender.NAudio.Types.Streams
     public class WaveProviderWaveStreamLazyReader : WaveProviderWaveStreamReader
     {
         protected Int64 MaxLength { get; set; }
-        
+
         public override Int64 Length
         {
             get
@@ -30,7 +30,7 @@ namespace NetExtender.NAudio.Types.Streams
             : base(provider)
         {
         }
-        
+
         public override Int32 Read(Byte[] buffer, Int32 offset, Int32 count)
         {
             Int32 read = Stream.Read(buffer, offset, count);

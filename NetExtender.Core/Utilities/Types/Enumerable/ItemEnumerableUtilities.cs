@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.Types
             Int32 i = 0;
             return source.Any(item => predicate(item, i++));
         }
-        
+
         public static Boolean All<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate)
         {
             if (source is null)
@@ -52,13 +52,13 @@ namespace NetExtender.Utilities.Types
         {
             return Contains(source, (IEnumerable<T>?) values);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Contains<T>(this IEnumerable<T> source, IEnumerable<T>? values)
         {
             return Contains(source, values, null);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean Contains<T>(this IEnumerable<T> source, IEqualityComparer<T>? comparer, params T[]? values)
         {
@@ -71,7 +71,7 @@ namespace NetExtender.Utilities.Types
             {
                 return false;
             }
-            
+
             return values.Length > 0 && Contains(source, values, comparer);
         }
 
@@ -116,7 +116,7 @@ namespace NetExtender.Utilities.Types
 
             return count;
         }
-        
+
         public static Int32 CountWhile<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> predicate)
         {
             if (source is null)
@@ -280,7 +280,7 @@ namespace NetExtender.Utilities.Types
             }
 
             comparer ??= EqualityComparer<T>.Default;
-            
+
             Int32 index = 0;
             foreach (T item in source)
             {
@@ -291,10 +291,10 @@ namespace NetExtender.Utilities.Types
 
                 index++;
             }
-            
+
             return -1;
         }
-        
+
         public static Boolean IndexOf<T>(this IEnumerable<T> source, T value, out Int32 index)
         {
             if (source is null)
@@ -305,7 +305,7 @@ namespace NetExtender.Utilities.Types
             index = IndexOf(source, value);
             return index >= 0;
         }
-        
+
         public static Boolean IndexOf<T>(this IEnumerable<T> source, T value, IEqualityComparer<T>? comparer, out Int32 index)
         {
             if (source is null)
@@ -316,7 +316,7 @@ namespace NetExtender.Utilities.Types
             index = IndexOf(source, value, comparer);
             return index >= 0;
         }
-        
+
         public static Int32 FindIndex<T>(this IEnumerable<T> source, Func<T, Boolean> predicate)
         {
             if (source is null)
@@ -336,7 +336,7 @@ namespace NetExtender.Utilities.Types
                 {
                     return index;
                 }
-                
+
                 ++index;
             }
 
@@ -374,13 +374,13 @@ namespace NetExtender.Utilities.Types
 
             return -1;
         }
-        
+
         public static Boolean LongFindIndex<T>(this IEnumerable<T> source, Func<T, Boolean> predicate, out Int64 index)
         {
             index = LongFindIndex(source, predicate);
             return index >= 0;
         }
-        
+
         public static T ElementAtOrDefault<T>(this IEnumerable<T> source, Int32 index, T alternate)
         {
             if (source is null)
@@ -427,7 +427,7 @@ namespace NetExtender.Utilities.Types
                 _ => Array.BinarySearch(source.ToArray(), value)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Int32 BinarySearch<T>(this IEnumerable<T> source, T value, IComparer<T>? comparer)
         {
@@ -435,7 +435,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source switch
             {
                 T[] array => Array.BinarySearch(array, value, comparer),
@@ -495,7 +495,7 @@ namespace NetExtender.Utilities.Types
                 _ => index >= 0 && index < source.Count()
             };
         }
-        
+
         public static T? TryGetValue<T>(this IEnumerable<T> source, Int32 index)
         {
             if (source is null)
@@ -505,7 +505,7 @@ namespace NetExtender.Utilities.Types
 
             return TryGetValue(source, index, out T? value) ? value : default;
         }
-        
+
         public static T TryGetValue<T>(this IEnumerable<T> source, Int32 index, T alternate)
         {
             if (source is null)
@@ -515,7 +515,7 @@ namespace NetExtender.Utilities.Types
 
             return TryGetValue(source, index, out T? value) ? value : alternate;
         }
-        
+
         public static T TryGetValue<T>(this IEnumerable<T> source, Int32 index, Func<T> alternate)
         {
             if (source is null)
@@ -586,7 +586,7 @@ namespace NetExtender.Utilities.Types
 
             return result;
         }
-        
+
         private static Boolean TryGetValueInternal<T>(IEnumerable<T> source, Int32 index, [MaybeNullWhen(false)] out T value)
         {
             if (source is null)
@@ -631,7 +631,7 @@ namespace NetExtender.Utilities.Types
                 _ => source.ToList().GetRandom()
             };
         }
-        
+
         public static T GetRandomOrDefault<T>(this IEnumerable<T> source, T alternate)
         {
             if (source is null)
@@ -648,7 +648,7 @@ namespace NetExtender.Utilities.Types
                 _ => source.ToList().GetRandomOrDefault(alternate)
             };
         }
-        
+
         public static T GetRandomOrDefault<T>(this IEnumerable<T> source, Func<T> alternate)
         {
             if (source is null)
@@ -687,7 +687,7 @@ namespace NetExtender.Utilities.Types
                 _ => source.ToList().GetRandomOrDefault()
             };
         }
-        
+
         public static T Aggregate<T>(this IEnumerable<T> source, T seed, Func<T, T, T> selector)
         {
             if (source is null)
@@ -701,13 +701,13 @@ namespace NetExtender.Utilities.Types
             }
 
             using IEnumerator<T> enumerator = source.GetEnumerator();
-            
+
             T result = seed;
             while (enumerator.MoveNext())
             {
                 result = selector(result, enumerator.Current);
             }
-            
+
             return result;
         }
 
@@ -776,11 +776,11 @@ namespace NetExtender.Utilities.Types
                 return item;
 
             } while (enumerator.MoveNext());
-            
+
             return alternate;
         }
 #endif
-        
+
         public static T SingleOrDefault<T>(this IEnumerable<T> source, Func<T> alternate)
         {
             if (source is null)
@@ -850,10 +850,10 @@ namespace NetExtender.Utilities.Types
                 return item;
 
             } while (enumerator.MoveNext());
-            
+
             return alternate.Invoke();
         }
-        
+
         public static Boolean TryGetSingle<T>(this IEnumerable<T> source, [MaybeNullWhen(false)] out T result)
         {
             if (source is null)
@@ -926,11 +926,11 @@ namespace NetExtender.Utilities.Types
                 return true;
 
             } while (enumerator.MoveNext());
-            
+
             result = default;
             return false;
         }
-        
+
 #if !NET6_0_OR_GREATER
         public static T FirstOrDefault<T>(this IEnumerable<T> source, T alternate)
         {
@@ -1087,7 +1087,7 @@ namespace NetExtender.Utilities.Types
                 result = item;
                 return true;
             }
-            
+
             result = default;
             return false;
         }
@@ -1103,18 +1103,18 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             foreach (T item in source)
             {
                 if (!predicate(item))
                 {
                     continue;
                 }
-                
+
                 result = item;
                 return true;
             }
-            
+
             result = default;
             return false;
         }
@@ -1161,7 +1161,7 @@ namespace NetExtender.Utilities.Types
                 return false;
             }
         }
-        
+
         public static IEnumerable<T> Max<T>(this IEnumerable<T> source, IComparer<T>? comparer)
         {
             if (source is null)
@@ -1171,7 +1171,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending(comparer);
         }
-        
+
         public static IEnumerable<T> Max<T>(this IEnumerable<T> source, Int32 count)
         {
             if (source is null)
@@ -1181,7 +1181,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending().Take(count);
         }
-        
+
         public static IEnumerable<T> Max<T>(this IEnumerable<T> source, IComparer<T>? comparer, Int32 count)
         {
             if (source is null)
@@ -1198,7 +1198,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.OrderByDescending().FirstOrDefault(alternate);
         }
 
@@ -1208,10 +1208,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return source.OrderByDescending(comparer).FirstOrDefault(alternate);
         }
-        
+
         public static T MaxOrDefault<T>(this IEnumerable<T> source, Func<T> alternate)
         {
             if (source is null)
@@ -1226,7 +1226,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending().FirstOrDefault(alternate);
         }
-        
+
         public static T MaxOrDefault<T>(this IEnumerable<T> source, Func<T> alternate, IComparer<T>? comparer)
         {
             if (source is null)
@@ -1241,7 +1241,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending(comparer).FirstOrDefault(alternate);
         }
-        
+
         public static T? MaxOrDefault<T>(this IEnumerable<T> source)
         {
             if (source is null)
@@ -1251,7 +1251,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending().FirstOrDefault();
         }
-        
+
         public static T? MaxOrDefault<T>(this IEnumerable<T> source, IComparer<T>? comparer)
         {
             if (source is null)
@@ -1261,7 +1261,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending(comparer).FirstOrDefault();
         }
-        
+
 #if !NET6_0_OR_GREATER
         public static T MaxBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
         {
@@ -1293,7 +1293,7 @@ namespace NetExtender.Utilities.Types
             return source.OrderByDescending(selector, comparer).First();
         }
 #endif
-        
+
         public static T MaxByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, T alternate)
         {
             if (source is null)
@@ -1323,7 +1323,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending(selector, comparer).FirstOrDefault(alternate);
         }
-        
+
         public static T MaxByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<T> alternate)
         {
             if (source is null)
@@ -1363,7 +1363,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending(selector, comparer).FirstOrDefault(alternate);
         }
-        
+
         public static T? MaxByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
         {
             if (source is null)
@@ -1423,7 +1423,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderByDescending(selector, comparer).Take(count);
         }
-        
+
         public static IEnumerable<T> Min<T>(this IEnumerable<T> source, IComparer<T>? comparer)
         {
             if (source is null)
@@ -1433,7 +1433,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy(comparer);
         }
-        
+
         public static IEnumerable<T> Min<T>(this IEnumerable<T> source, Int32 count)
         {
             if (source is null)
@@ -1443,7 +1443,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy().Take(count);
         }
-        
+
         public static IEnumerable<T> Min<T>(this IEnumerable<T> source, IComparer<T>? comparer, Int32 count)
         {
             if (source is null)
@@ -1453,7 +1453,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy(comparer).Take(count);
         }
-        
+
         public static T MinOrDefault<T>(this IEnumerable<T> source, T alternate)
         {
             if (source is null)
@@ -1463,7 +1463,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy().FirstOrDefault(alternate);
         }
-        
+
         public static T MinOrDefault<T>(this IEnumerable<T> source, T alternate, IComparer<T>? comparer)
         {
             if (source is null)
@@ -1503,7 +1503,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy(comparer).FirstOrDefault(alternate);
         }
-        
+
         public static T? MinOrDefault<T>(this IEnumerable<T> source)
         {
             if (source is null)
@@ -1513,7 +1513,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy().FirstOrDefault();
         }
-        
+
         public static T? MinOrDefault<T>(this IEnumerable<T> source, IComparer<T>? comparer)
         {
             if (source is null)
@@ -1685,7 +1685,7 @@ namespace NetExtender.Utilities.Types
 
             return source.OrderBy(selector, comparer).Take(count);
         }
-        
+
         public static (T Min, T Max) MinMax<T>(this IEnumerable<T> source)
         {
             return MinMax(source, null);
@@ -1704,7 +1704,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new InvalidOperationException();
             }
-            
+
             comparer ??= Comparer<T>.Default;
 
             T current = enumerator.Current;
@@ -1729,7 +1729,7 @@ namespace NetExtender.Utilities.Types
 
             return (min, max);
         }
-        
+
         public static (T? Min, T? Max) MinMaxOrDefault<T>(this IEnumerable<T> source)
         {
             return MinMaxOrDefault(source, (IComparer<T>?) null);
@@ -1751,14 +1751,14 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             using IEnumerator<T> enumerator = source.GetEnumerator();
 
             if (!enumerator.MoveNext())
             {
                 return (alternate, alternate);
             }
-            
+
             comparer ??= Comparer<T>.Default;
 
             T current = enumerator.Current;
@@ -1804,13 +1804,13 @@ namespace NetExtender.Utilities.Types
             using IEnumerator<T> enumerator = source.GetEnumerator();
 
             T current;
-            
+
             if (!enumerator.MoveNext())
             {
                 current = alternate();
                 return (current, current);
             }
-            
+
             comparer ??= Comparer<T>.Default;
 
             current = enumerator.Current;
@@ -1835,7 +1835,7 @@ namespace NetExtender.Utilities.Types
 
             return (min, max);
         }
-        
+
         public static (T Min, T Max) MinMaxBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
         {
             return MinMaxBy(source, selector, null);
@@ -1859,7 +1859,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new InvalidOperationException();
             }
-            
+
             comparer ??= Comparer<TKey>.Default;
 
             T current = enumerator.Current;
@@ -1890,7 +1890,7 @@ namespace NetExtender.Utilities.Types
 
             return (min, max);
         }
-        
+
         public static (T? Min, T? Max) MinMaxByOrDefault<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
         {
             return MinMaxByOrDefault(source, selector, (IComparer<TKey>?) null);
@@ -1924,7 +1924,7 @@ namespace NetExtender.Utilities.Types
             {
                 return (alternate, alternate);
             }
-            
+
             comparer ??= Comparer<TKey>.Default;
 
             T current = enumerator.Current;
@@ -1981,13 +1981,13 @@ namespace NetExtender.Utilities.Types
             using IEnumerator<T> enumerator = source.GetEnumerator();
 
             T current;
-            
+
             if (!enumerator.MoveNext())
             {
                 current = alternate();
                 return (current, current);
             }
-            
+
             comparer ??= Comparer<TKey>.Default;
 
             current = enumerator.Current;
@@ -2025,7 +2025,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             return Median(source, (x, _) => x, x => x);
         }
 
@@ -2040,10 +2040,10 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(order));
             }
-            
+
             return Median(source, (x, _) => x, order);
         }
-        
+
         public static T? Median<T>(this IEnumerable<T> source, Func<T, T, T> average)
         {
             if (source is null)
@@ -2055,7 +2055,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(average));
             }
-            
+
             return Median(source, average, x => x);
         }
 
@@ -2087,7 +2087,7 @@ namespace NetExtender.Utilities.Types
             }
 
             List<T> values = source.OrderBy(order).ToList();
-            
+
             if (values.Count <= 0)
             {
                 return default;
@@ -2103,7 +2103,7 @@ namespace NetExtender.Utilities.Types
 
             return average(first, second);
         }
-        
+
         /// <summary>
         /// Determines whether all elements in this collection are equal to each other. Compares using the <see cref="object.Equals(object)"/> method.
         /// <para>This method returns true if the collection is empty or it contains only one element.</para>
@@ -2153,7 +2153,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             comparer ??= EqualityComparer<T>.Default;
 
             using IEnumerator<T> enumerator = source.GetEnumerator();
@@ -2223,7 +2223,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Select(selector).AllSame(comparer);
         }
-        
+
         public static Boolean IsDistinct<T>(this IEnumerable<T> source)
         {
             return IsDistinct(source, null);
@@ -2235,11 +2235,11 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             HashSet<T> set = new HashSet<T>(comparer);
             return source.All(item => set.Add(item));
         }
-        
+
         /// <summary>
         /// Determines whether the specified sequence's element count is equal to or greater than <paramref name="count"/>.
         /// </summary>
@@ -2302,7 +2302,7 @@ namespace NetExtender.Utilities.Types
             Int32 matches = 0;
             return source.Where(predicate).Any(_ => ++matches >= count);
         }
-        
+
         /// <summary>
         /// Determines whether the specified sequence's element count is equal to or greater than <paramref name="count"/>.
         /// </summary>
@@ -2396,7 +2396,7 @@ namespace NetExtender.Utilities.Types
             Int32 matches = 0;
             return source.Where(predicate).All(_ => ++matches <= count);
         }
-        
+
         /// <summary>
         /// Determines whether the specified sequence contains at most <paramref name="count"/> elements satisfying a condition.
         /// </summary>
@@ -2492,7 +2492,7 @@ namespace NetExtender.Utilities.Types
 
             return matches == count;
         }
-        
+
         /// <summary>
         /// Determines whether the specified sequence contains exactly the specified number of elements satisfying the specified condition.
         /// </summary>
@@ -2524,7 +2524,7 @@ namespace NetExtender.Utilities.Types
 
             return matches == count;
         }
-        
+
         public static IEnumerable<T> ForEach<T>(this IEnumerable<T> source, Action<T> action)
         {
             if (source is null)
@@ -2571,7 +2571,7 @@ namespace NetExtender.Utilities.Types
                 yield return item;
             }
         }
-        
+
         public static IEnumerable<T> ForEachWhere<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Action<T> action)
         {
             if (source is null)
@@ -2601,7 +2601,7 @@ namespace NetExtender.Utilities.Types
                 yield return item;
             }
         }
-        
+
         public static IEnumerable<T> ForEachWhereNot<T>(this IEnumerable<T> source, Func<T, Boolean> where, Action<T> action)
         {
             if (source is null)
@@ -2621,7 +2621,7 @@ namespace NetExtender.Utilities.Types
 
             return ForEachWhere(source, item => !where(item), action);
         }
-        
+
         public static IEnumerable<T> ForEachWhereNot<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Action<T> action)
         {
             if (source is null)
@@ -2692,7 +2692,7 @@ namespace NetExtender.Utilities.Types
                 yield return item;
             }
         }
-        
+
         public static IEnumerable<T> ForEachWhere<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Action<T, Int32> action)
         {
             if (source is null)
@@ -2742,7 +2742,7 @@ namespace NetExtender.Utilities.Types
 
             return ForEachWhere(source, item => !where(item), action);
         }
-        
+
         public static IEnumerable<T> ForEachWhereNot<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Action<T, Int32> action)
         {
             if (source is null)
@@ -2762,7 +2762,7 @@ namespace NetExtender.Utilities.Types
 
             return ForEachWhere(source, (item, index) => !where(item, index), action);
         }
-        
+
         public static IEnumerable<T> ForEachBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Action<TKey> action)
         {
             if (source is null)
@@ -2820,7 +2820,7 @@ namespace NetExtender.Utilities.Types
                 yield return item;
             }
         }
-        
+
         public static IEnumerable<T> ForEachByWhere<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey> action)
         {
             if (source is null)
@@ -2856,7 +2856,7 @@ namespace NetExtender.Utilities.Types
                 yield return item;
             }
         }
-        
+
         public static IEnumerable<T> ForEachByWhereNot<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Boolean> where, Action<TKey> action)
         {
             if (source is null)
@@ -2881,7 +2881,7 @@ namespace NetExtender.Utilities.Types
 
             return ForEachByWhere(source, selector, item => !where(item), action);
         }
-        
+
         public static IEnumerable<T> ForEachByWhereNot<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey> action)
         {
             if (source is null)
@@ -2968,7 +2968,7 @@ namespace NetExtender.Utilities.Types
                 yield return item;
             }
         }
-        
+
         public static IEnumerable<T> ForEachByWhere<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey, Int32> action)
         {
             if (source is null)
@@ -3029,7 +3029,7 @@ namespace NetExtender.Utilities.Types
 
             return ForEachByWhere(source, selector, item => !where(item), action);
         }
-        
+
         public static IEnumerable<T> ForEachByWhereNot<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey, Int32> action)
         {
             if (source is null)
@@ -3076,7 +3076,7 @@ namespace NetExtender.Utilities.Types
             {
                 return ForEach(source, action);
             }
-            
+
             Int32 counter = first ? 0 : 1;
             return source.ForEachWhere(_ => counter++ % every == 0, action);
         }
@@ -3107,7 +3107,7 @@ namespace NetExtender.Utilities.Types
 
                 dictionary.Add(item, 1);
             }
-            
+
             foreach (T item in other)
             {
                 count++;
@@ -3124,7 +3124,7 @@ namespace NetExtender.Utilities.Types
             {
                 return 0;
             }
-            
+
             return dictionary.Values.Sum(Math.Abs) / (Double) count;
         }
 
@@ -3171,7 +3171,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static void InvokeWhere<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Action<T> action)
         {
             if (source is null)
@@ -3200,7 +3200,7 @@ namespace NetExtender.Utilities.Types
                 ++index;
             }
         }
-        
+
         public static void InvokeWhereNot<T>(this IEnumerable<T> source, Func<T, Boolean> where, Action<T> action)
         {
             if (source is null)
@@ -3220,7 +3220,7 @@ namespace NetExtender.Utilities.Types
 
             InvokeWhere(source, item => !where(item), action);
         }
-        
+
         public static void InvokeWhereNot<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Action<T> action)
         {
             if (source is null)
@@ -3289,7 +3289,7 @@ namespace NetExtender.Utilities.Types
                 ++index;
             }
         }
-        
+
         public static void InvokeWhere<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Action<T, Int32> action)
         {
             if (source is null)
@@ -3338,7 +3338,7 @@ namespace NetExtender.Utilities.Types
 
             InvokeWhere(source, item => !where(item), action);
         }
-        
+
         public static void InvokeWhereNot<T>(this IEnumerable<T> source, Func<T, Int32, Boolean> where, Action<T, Int32> action)
         {
             if (source is null)
@@ -3358,7 +3358,7 @@ namespace NetExtender.Utilities.Types
 
             InvokeWhere(source, (item, index) => !where(item, index), action);
         }
-        
+
         public static void InvokeBy<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Action<TKey> action)
         {
             if (source is null)
@@ -3413,7 +3413,7 @@ namespace NetExtender.Utilities.Types
                 }
             }
         }
-        
+
         public static void InvokeByWhere<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey> action)
         {
             if (source is null)
@@ -3448,7 +3448,7 @@ namespace NetExtender.Utilities.Types
                 ++index;
             }
         }
-        
+
         public static void InvokeByWhereNot<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Boolean> where, Action<TKey> action)
         {
             if (source is null)
@@ -3473,7 +3473,7 @@ namespace NetExtender.Utilities.Types
 
             InvokeByWhere(source, selector, item => !where(item), action);
         }
-        
+
         public static void InvokeByWhereNot<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey> action)
         {
             if (source is null)
@@ -3558,7 +3558,7 @@ namespace NetExtender.Utilities.Types
                 ++index;
             }
         }
-        
+
         public static void InvokeByWhere<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey, Int32> action)
         {
             if (source is null)
@@ -3618,7 +3618,7 @@ namespace NetExtender.Utilities.Types
 
             InvokeByWhere(source, selector, item => !where(item), action);
         }
-        
+
         public static void InvokeByWhereNot<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector, Func<TKey, Int32, Boolean> where, Action<TKey, Int32> action)
         {
             if (source is null)
@@ -3666,7 +3666,7 @@ namespace NetExtender.Utilities.Types
                 Invoke(source, action);
                 return;
             }
-            
+
             Int32 counter = first ? 0 : 1;
             source.InvokeWhere(_ => counter++ % every == 0, action);
         }
@@ -3709,7 +3709,7 @@ namespace NetExtender.Utilities.Types
             {
             }
         }
-        
+
         public static Int32 SequenceHashCode<T>(this IEnumerable<T> source)
         {
             return SequenceHashCode(source, null);
@@ -3741,7 +3741,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(sequence));
             }
-            
+
             comparer ??= EqualityComparer<T>.Default;
 
             using IEnumerator<T> enumerator1 = source.GetEnumerator();
@@ -3788,7 +3788,7 @@ namespace NetExtender.Utilities.Types
 
             return Progress(source, progress.Report, size);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> Progress<T>(this IEnumerable<T> source, Action callback)
         {
@@ -3841,16 +3841,16 @@ namespace NetExtender.Utilities.Types
             {
                 yield break;
             }
-            
+
             Int32 count = 0;
             Int32 counter = 0;
-            
+
             //TODO: check algorithm
 
             do
             {
                 T item = enumerator.Current;
-                
+
                 if (++counter >= size)
                 {
                     count += counter;
@@ -3869,7 +3869,7 @@ namespace NetExtender.Utilities.Types
                     yield return item;
                     yield break;
                 }
-                
+
                 yield return item;
 
             } while (true);
@@ -3896,7 +3896,7 @@ namespace NetExtender.Utilities.Types
 
             return LongProgress(source, progress.Report, size);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<T> LongProgress<T>(this IEnumerable<T> source, Action callback)
         {
@@ -3942,14 +3942,14 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentOutOfRangeException(nameof(size));
             }
-            
+
             using IEnumerator<T> enumerator = source.GetEnumerator();
 
             if (!enumerator.MoveNext())
             {
                 yield break;
             }
-            
+
             Int64 count = 0;
             Int64 counter = 0;
 
@@ -3957,7 +3957,7 @@ namespace NetExtender.Utilities.Types
             do
             {
                 T item = enumerator.Current;
-                
+
                 if (++counter >= size)
                 {
                     count += counter;
@@ -3977,12 +3977,12 @@ namespace NetExtender.Utilities.Types
                     yield return item;
                     yield break;
                 }
-                
+
                 yield return item;
 
             } while (true);
         }
-        
+
         /// <summary>
         /// Determines whether the given sequence is not empty.
         /// </summary>
@@ -4011,7 +4011,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             return source is not null && source.Any(predicate);
         }
 
@@ -4048,7 +4048,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             if (source is null)
             {
                 return false;
@@ -4090,7 +4090,7 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(predicate));
             }
-            
+
             if (source is null)
             {
                 return true;

@@ -22,7 +22,7 @@ namespace NetExtender.Configuration.Utilities
 
             return behavior.Create().ToBuilder();
         }
-        
+
         public static IConfigBuilder ToBuilder(this IConfigInfo configuration)
         {
             if (configuration is null)
@@ -47,7 +47,7 @@ namespace NetExtender.Configuration.Utilities
 
             return builder.Add(source.Build());
         }
-        
+
         public static IConfigBuilder Add(this IConfigBuilder builder, IConfigBuilder source, Func<IConfigInfo, ConfigurationValueEntry[]> selector)
         {
             if (builder is null)
@@ -78,7 +78,7 @@ namespace NetExtender.Configuration.Utilities
             IConfig config = builder.Build();
             return builder.Clear().Add(config);
         }
-        
+
         public static IConfigBuilder Union(this IConfigBuilder builder, Func<IConfigInfo, ConfigurationValueEntry[]> selector)
         {
             if (builder is null)

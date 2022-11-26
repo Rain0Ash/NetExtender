@@ -19,17 +19,17 @@ namespace NetExtender.WindowsPresentationForms.Types.Converters
             {
                 return bitmap.ToBitmapSource();
             }
-	
+
             return value;
         }
-	
+
         public Object ConvertBack(Object value, Type targetType, Object parameter, CultureInfo culture)
         {
             if (value is BitmapSource source && typeof(Bitmap) == targetType)
             {
                 return source.ToBitmap();
             }
-	
+
             return value;
         }
     }

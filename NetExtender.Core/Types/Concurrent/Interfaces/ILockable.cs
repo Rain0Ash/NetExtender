@@ -8,7 +8,7 @@ namespace NetExtender.Types.Concurrent.Interfaces
     public interface ILockable
     {
         public Boolean IsLock { get; }
-        
+
         public Boolean Lock();
         public Boolean Lock(TimeSpan timeout);
         public Boolean Unlock();

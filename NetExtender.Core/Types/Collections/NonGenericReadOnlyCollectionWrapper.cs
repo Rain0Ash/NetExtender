@@ -19,7 +19,7 @@ namespace NetExtender.Types.Collections
                 return Collection.Count;
             }
         }
-        
+
         public NonGenericReadOnlyCollectionWrapper(ICollection collection)
         {
             Collection = collection ?? throw new ArgumentNullException(nameof(collection));
@@ -29,7 +29,7 @@ namespace NetExtender.Types.Collections
         {
             return Collection.Cast<T>().GetEnumerator();
         }
-    
+
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

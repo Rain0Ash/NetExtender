@@ -21,7 +21,7 @@ namespace NetExtender.Configuration.Cryptography.Transactions
             Original = original ?? throw new ArgumentNullException(nameof(original));
             Transaction = transaction is not null ? transaction.Transaction.Create() : throw new ArgumentNullException(nameof(transaction));
         }
-        
+
         public CryptographyConfigTransaction(ICryptographyConfig original, ICryptographyConfig transaction)
             : base(original, transaction)
         {

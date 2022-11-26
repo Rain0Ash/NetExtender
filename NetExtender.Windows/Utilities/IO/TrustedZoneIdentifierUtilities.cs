@@ -132,7 +132,7 @@ namespace NetExtender.Windows.Utilities.IO
                 identifier = default;
                 return false;
             }
-            
+
             try
             {
                 Int32 index = value.IndexOf(ZoneId, StringComparison.Ordinal);
@@ -318,7 +318,7 @@ namespace NetExtender.Windows.Utilities.IO
                 {
                     return false;
                 }
-                
+
                 info.TryDeleteTrustedZoneIdentifier();
                 AlternateDataStreamInfo alternate = info.OpenAlternateDataStream(ZoneIdentifier, FileMode.Create);
                 using FileStream? stream = alternate.OpenWrite();

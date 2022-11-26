@@ -30,14 +30,14 @@ namespace NetExtender.Types.Comparers
             Comparison = comparison ?? throw new ArgumentNullException(nameof(comparison));
             Nullable = nullable;
         }
-        
+
         public Int32 Compare(T? x, T? y)
         {
             if (Nullable)
             {
                 return Comparison.Invoke(x!, y!);
             }
-            
+
             if (x is null)
             {
                 return y is null ? 0 : -1;
@@ -46,7 +46,7 @@ namespace NetExtender.Types.Comparers
             return y is not null ? Comparison.Invoke(x, y) : 1;
         }
     }
-    
+
     public sealed class ComparisonComparer<T1, T2> : IComparer<T1, T2>
     {
         private Comparison<T1, T2> Comparison { get; }
@@ -62,14 +62,14 @@ namespace NetExtender.Types.Comparers
             Comparison = comparison ?? throw new ArgumentNullException(nameof(comparison));
             Nullable = nullable;
         }
-        
+
         public Int32 Compare(T1? x, T2? y)
         {
             if (Nullable)
             {
                 return Comparison.Invoke(x!, y!);
             }
-            
+
             if (x is null)
             {
                 return y is null ? 0 : -1;

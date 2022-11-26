@@ -17,19 +17,19 @@ namespace NetExtender.Utilities.Types
         {
             return value == default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNotDefault(this TimeSpan value)
         {
             return !IsDefault(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsPositive(this TimeSpan value)
         {
             return value.Ticks >= 0;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNegative(this TimeSpan value)
         {
@@ -41,7 +41,7 @@ namespace NetExtender.Utilities.Types
         {
             return value == Timeout.InfiniteTimeSpan;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsTimeout(this TimeSpan value)
         {
@@ -70,7 +70,7 @@ namespace NetExtender.Utilities.Types
         {
             return (Int32) value.TotalMilliseconds.ToRange(Int32.MinValue, Int32.MaxValue);
         }
-        
+
         public static Int64 ToLongMilliseconds(this TimeSpan value)
         {
             return (Int64) value.TotalMilliseconds.ToRange(Int64.MinValue, Int64.MaxValue);
@@ -82,7 +82,7 @@ namespace NetExtender.Utilities.Types
             {
                 return -1;
             }
-            
+
             return value > TimeSpan.Zero ? value.ToMilliseconds() : 0;
         }
 
@@ -95,7 +95,7 @@ namespace NetExtender.Utilities.Types
 
             return source.Aggregate(TimeSpan.Zero, (current, next) => current + next);
         }
-        
+
         public static TimeSpan Sum<T>(this IEnumerable<T> source, Func<T, TimeSpan> selector)
         {
             if (source is null)
@@ -115,12 +115,12 @@ namespace NetExtender.Utilities.Types
         {
             return new TimeSpan(value.Ticks * factor);
         }
-        
+
         public static TimeSpan Multiply(this TimeSpan value, UInt32 factor)
         {
             return new TimeSpan(value.Ticks * factor);
         }
-        
+
         public static TimeSpan Multiply(this TimeSpan value, Int64 factor)
         {
             return new TimeSpan(value.Ticks * factor);
@@ -130,17 +130,17 @@ namespace NetExtender.Utilities.Types
         {
             return new TimeSpan((Int64) (value.Ticks * factor));
         }
-        
+
         public static TimeSpan Divide(this TimeSpan value, Int32 factor)
         {
             return new TimeSpan(value.Ticks / factor);
         }
-        
+
         public static TimeSpan Divide(this TimeSpan value, UInt32 factor)
         {
             return new TimeSpan(value.Ticks / factor);
         }
-        
+
         public static TimeSpan Divide(this TimeSpan value, Int64 factor)
         {
             return new TimeSpan(value.Ticks / factor);
@@ -160,12 +160,12 @@ namespace NetExtender.Utilities.Types
         {
             return Range(TimeSpan.Zero, stop);
         }
-        
+
         public static IEnumerable<TimeSpan> Range(TimeSpan start, TimeSpan stop, TimeType type = TimeType.Minutes)
         {
             return Range(start, stop, From(type));
         }
-        
+
         public static IEnumerable<TimeSpan> Range(TimeSpan start, TimeSpan stop, TimeSpan step)
         {
             for (TimeSpan current = start; current < stop; current += step)
@@ -209,7 +209,7 @@ namespace NetExtender.Utilities.Types
         {
             return (DateTime.MinValue + span).Month - 1;
         }
-        
+
         /// <summary>
         /// Years in the TimeSpan
         /// </summary>

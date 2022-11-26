@@ -56,7 +56,7 @@ namespace NetExtender.Cryptography.Base.Alphabet
             for (Int32 i = 0; i < alphaLen; i++)
             {
                 Char c = Value[i];
-                
+
                 if (!Char.IsLetter(c))
                 {
                     continue;

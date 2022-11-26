@@ -14,15 +14,15 @@ namespace NetExtender.Types.Events
         {
             return args is not null ? new CancellationEventArgs<T>(args.Value, args.Cancel) : null;
         }
-        
+
         [return: NotNullIfNotNull("args")]
         public static implicit operator CancellationEventArgs<T>?(HandledEventArgs<T>? args)
         {
             return args is not null ? new CancellationEventArgs<T>(args.Value, args.Handled) : null;
         }
-        
+
         public T Value { get; }
-        
+
         public CancellationEventArgs(T value)
         {
             Value = value;
@@ -40,7 +40,7 @@ namespace NetExtender.Types.Events
             Value = value;
         }
     }
-    
+
     public class CancellationEventArgs : EventArgs
     {
         [return: NotNullIfNotNull("args")]
@@ -48,31 +48,31 @@ namespace NetExtender.Types.Events
         {
             return args is not null ? new CancellationEventArgs(args.Cancel) : null;
         }
-        
+
         [return: NotNullIfNotNull("args")]
         public static implicit operator CancelEventArgs?(CancellationEventArgs? args)
         {
             return args is not null ? new CancelEventArgs(args.IsCancelled) : null;
         }
-        
+
         [return: NotNullIfNotNull("args")]
         public static implicit operator CancellationEventArgs?(HandledEventArgs? args)
         {
             return args is not null ? new CancellationEventArgs(args.Handled) : null;
         }
-        
+
         [return: NotNullIfNotNull("args")]
         public static implicit operator HandledEventArgs?(CancellationEventArgs? args)
         {
             return args is not null ? new HandledEventArgs(args.IsCancelled) : null;
         }
-        
+
         public Boolean IsCancelled { get; private set; }
 
         public CancellationEventArgs()
         {
         }
-        
+
         public CancellationEventArgs(Boolean cancel)
         {
             IsCancelled = cancel;

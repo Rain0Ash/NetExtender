@@ -23,7 +23,7 @@ namespace NetExtender.Utilities.NAudio
 
             return Progress(provider, progress.Report);
         }
-        
+
         public static IWaveProvider Progress(this IWaveProvider provider, Action<Int64> callback)
         {
             if (provider is null)
@@ -38,7 +38,7 @@ namespace NetExtender.Utilities.NAudio
 
             return new ProgressWaveProvider(provider, callback);
         }
-        
+
         public static WaveStream Progress(this WaveStream stream, IProgress<Int64> progress)
         {
             if (stream is null)
@@ -53,7 +53,7 @@ namespace NetExtender.Utilities.NAudio
 
             return Progress(stream, progress.Report);
         }
-        
+
         public static WaveStream Progress(this WaveStream stream, Action<Int64> callback)
         {
             if (stream is null)
@@ -98,7 +98,7 @@ namespace NetExtender.Utilities.NAudio
 
             return new ProgressWaveStream(stream, callback);
         }
-        
+
         public static WaveStream TimeProgress(this WaveStream stream, IProgress<TimeSpan> progress)
         {
             if (stream is null)
@@ -113,7 +113,7 @@ namespace NetExtender.Utilities.NAudio
 
             return TimeProgress(stream, progress.Report);
         }
-        
+
         public static WaveStream TimeProgress(this WaveStream stream, Action<TimeSpan> callback)
         {
             if (stream is null)

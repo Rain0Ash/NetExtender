@@ -21,77 +21,77 @@ namespace NetExtender.Utilities.Numerics
         {
             return Complex.Abs(value);
         }
-        
+
         /// <inheritdoc cref="Complex.Conjugate"/>>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Complex Conjugate(this Complex value)
         {
             return Complex.Conjugate(value);
         }
-        
+
         /// <inheritdoc cref="Complex.Exp"/>>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Complex Exp(this Complex value)
         {
             return Complex.Exp(value);
         }
-        
+
         /// <inheritdoc cref="Complex.Log(Complex)"/>>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Complex Log(this Complex value)
         {
             return Complex.Log(value);
         }
-        
+
         /// <inheritdoc cref="Complex.Log(Complex,Double)"/>>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Complex Log(this Complex value, Double @base)
         {
             return Complex.Log(value, @base);
         }
-        
+
         /// <inheritdoc cref="Complex.Log10"/>>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Complex Log10(this Complex value)
         {
             return Complex.Log10(value);
         }
-        
+
         /// <inheritdoc cref="Complex.Pow(Complex,Complex)"/>>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Complex Pow(this Complex value, Complex pow)
         {
             return Complex.Pow(value, pow);
         }
-        
+
         /// <inheritdoc cref="Complex.Pow(Complex,Double)"/>>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Complex Pow(this Complex value, Double pow)
         {
             return Complex.Pow(value, pow);
         }
-        
+
         /// <inheritdoc cref="Complex.Sqrt"/>>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Complex Sqrt(this Complex value)
         {
             return Complex.Sqrt(value);
         }
-        
+
         /// <inheritdoc cref="Complex.Reciprocal"/>>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Complex Reciprocal(this Complex value)
         {
             return Complex.Reciprocal(value);
         }
-        
+
         /// <inheritdoc cref="Complex.FromPolarCoordinates"/>>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Complex ToComplex(this Double magnitude, Double phase)
         {
             return Complex.FromPolarCoordinates(magnitude, phase);
         }
-        
+
         /// <inheritdoc cref="Complex.Sin"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Complex Sin(this Complex value)
@@ -282,19 +282,19 @@ namespace NetExtender.Utilities.Numerics
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsFinite(this Complex value)
         {
             return Complex.IsFinite(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsInfinity(this Complex value)
         {
             return Complex.IsInfinity(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsNaN(this Complex value)
         {

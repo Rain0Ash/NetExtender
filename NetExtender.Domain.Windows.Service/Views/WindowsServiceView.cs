@@ -18,13 +18,13 @@ namespace NetExtender.Domains.Service.Views
             : base(new T())
         {
         }
-        
+
         public WindowsServiceView(T service)
             : base(service)
         {
         }
     }
-    
+
     public class WindowsServiceView : ApplicationView
     {
         protected IWindowsService? Context { get; set; }
@@ -53,13 +53,13 @@ namespace NetExtender.Domains.Service.Views
             {
                 return await RunAsync(token);
             }
-            
+
             Context ??= service;
             if (service != Context)
             {
                 throw new ArgumentException($"{nameof(service)} not reference equals with {nameof(Context)}");
             }
-            
+
             WindowsServiceApplication application = Domain.Current.Application.As<WindowsServiceApplication>();
             await application.RunAsync(Context, token);
             return this;

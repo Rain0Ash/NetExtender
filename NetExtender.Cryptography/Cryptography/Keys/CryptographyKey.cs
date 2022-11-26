@@ -16,7 +16,7 @@ namespace NetExtender.Cryptography.Keys
         AES,
         RSA
     }
-    
+
     public abstract class CryptographyKey : ICryptographyKey
     {
         private static class AES
@@ -59,7 +59,7 @@ namespace NetExtender.Cryptography.Keys
                 }
             }
         }
-        
+
         private static class RSA
         {
             public static IAsymmetricCryptographyKey Default
@@ -128,11 +128,11 @@ namespace NetExtender.Cryptography.Keys
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         public abstract Int32 KeySize { get; }
 
         protected Boolean Disposable { get; }
-        
+
         public CryptAction Crypt { get; init; } = CryptAction.Crypt;
 
         public Boolean IsEncrypt
@@ -167,7 +167,7 @@ namespace NetExtender.Cryptography.Keys
 
             return Crypt.HasFlag(CryptAction.Encrypt) ? EncryptString(value) : value;
         }
-        
+
         public IEnumerable<String?> Encrypt(IEnumerable<String> source)
         {
             if (source is null)
@@ -199,7 +199,7 @@ namespace NetExtender.Cryptography.Keys
 
             return Crypt.HasFlag(CryptAction.Encrypt) ? EncryptBytes(value) : value;
         }
-        
+
         public abstract Byte[]? EncryptBytes(Byte[] value);
 
         public String? Decrypt(String value)
@@ -211,7 +211,7 @@ namespace NetExtender.Cryptography.Keys
 
             return Crypt.HasFlag(CryptAction.Decrypt) ? DecryptString(value) : value;
         }
-        
+
         public IEnumerable<String?> Decrypt(IEnumerable<String> source)
         {
             if (source is null)
@@ -221,9 +221,9 @@ namespace NetExtender.Cryptography.Keys
 
             return Crypt.HasFlag(CryptAction.Decrypt) ? DecryptString(source) : source;
         }
-        
+
         public abstract String? DecryptString(String value);
-        
+
         public IEnumerable<String?> DecryptString(IEnumerable<String> source)
         {
             if (source is null)
@@ -243,14 +243,14 @@ namespace NetExtender.Cryptography.Keys
 
             return Crypt.HasFlag(CryptAction.Decrypt) ? DecryptBytes(value) : value;
         }
-        
+
         public abstract Byte[]? DecryptBytes(Byte[] value);
 
         public virtual ICryptographyKey Clone()
         {
             return Clone(Crypt);
         }
-        
+
         public abstract ICryptographyKey Clone(CryptAction crypt);
 
         public void Dispose()

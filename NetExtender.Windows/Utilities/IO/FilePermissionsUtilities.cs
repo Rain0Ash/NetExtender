@@ -20,7 +20,7 @@ namespace NetExtender.Utilities.Windows.IO
         {
             return IsHasPermissions(new FileInfo(path), access);
         }
-        
+
         public static Boolean HasPermissions(this FileInfo info, FileSystemRights access)
         {
             if (info is null)

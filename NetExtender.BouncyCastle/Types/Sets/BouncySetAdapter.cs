@@ -95,17 +95,17 @@ namespace NetExtender.Types.Sets
         {
             Internal.RemoveAll(enumerable);
         }
-        
+
         public void Clear()
         {
             Internal.Clear();
         }
-        
+
         void ICollection.CopyTo(Array array, Int32 index)
         {
             Internal.CopyTo(array, index);
         }
-        
+
         public IEnumerator GetEnumerator()
         {
             return Internal.GetEnumerator();

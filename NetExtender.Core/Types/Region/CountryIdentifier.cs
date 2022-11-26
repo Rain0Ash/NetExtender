@@ -11,7 +11,7 @@ namespace NetExtender.Types.Region
         /// Default
         /// </summary>
         Default = 0,
-        
+
         /// <summary>
         /// Afghanistan
         /// </summary>

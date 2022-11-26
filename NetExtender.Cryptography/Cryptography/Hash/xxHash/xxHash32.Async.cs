@@ -23,8 +23,8 @@ namespace NetExtender.Cryptography.Hash.XXHash
         {
             return ComputeHashAsync(stream, bufferSize, seed, CancellationToken.None);
         }
-        
-        
+
+
         /// <summary>
         /// Compute xxHash for the async stream
         /// </summary>
@@ -58,7 +58,7 @@ namespace NetExtender.Cryptography.Hash.XXHash
                     {
                         return await Task.FromCanceled<UInt32>(token).ConfigureAwait(false);
                     }
-                    
+
                     length += readBytes;
                     offset += readBytes;
 

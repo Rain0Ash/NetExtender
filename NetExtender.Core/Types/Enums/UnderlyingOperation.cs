@@ -41,10 +41,10 @@ namespace NetExtender.Types.Enums
             {
                 ref SByte result = ref Unsafe.As<T, SByte>(ref value);
                 Int32 index = result - Min;
-                
+
                 return Members[index];
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override Boolean TryParse(String text, out T result)
             {
@@ -78,7 +78,7 @@ namespace NetExtender.Types.Enums
                 ref SByte result = ref Unsafe.As<T, SByte>(ref value);
                 return Value[result];
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override Boolean TryParse(String text, out T result)
             {
@@ -92,18 +92,18 @@ namespace NetExtender.Types.Enums
         {
             SByte minimum = Unsafe.As<T, SByte>(ref min);
             SByte maximum = Unsafe.As<T, SByte>(ref max);
-            
+
             ImmutableDictionary<SByte, EnumMember<T>> dictionary = members.ToImmutableDictionary(x =>
             {
                 T value = x.Value;
                 return Unsafe.As<T, SByte>(ref value);
             });
-            
+
             if (dictionary.Count > 0)
             {
                 Int32 length = maximum - minimum;
                 Int32 count = dictionary.Count - 1;
-                
+
                 if (length == count)
                 {
                     Operation = new Continuous(minimum, maximum, members);
@@ -114,19 +114,19 @@ namespace NetExtender.Types.Enums
             Operation = new Discontinuous(dictionary);
             return Operation;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsDefined(ref SByte value)
         {
             return Operation?.IsDefined(ref value) ?? false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static Boolean TryParse(String text, out T result)
         {
             result = default;
             ref SByte value = ref Unsafe.As<T, SByte>(ref result);
-                
+
             return SByte.TryParse(text, out value);
         }
     }
@@ -162,17 +162,17 @@ namespace NetExtender.Types.Enums
             {
                 ref Byte result = ref Unsafe.As<T, Byte>(ref value);
                 Int32 index = result - Min;
-                
+
                 return Members[index];
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override Boolean TryParse(String text, out T result)
             {
                 return ByteOperation<T>.TryParse(text, out result);
             }
         }
-        
+
         private sealed class Discontinuous : DiscontinuousUnderlyingEnumOperation<T, Byte>
         {
             public Discontinuous(ImmutableDictionary<Byte, EnumMember<T>> value)
@@ -199,7 +199,7 @@ namespace NetExtender.Types.Enums
                 ref Byte result = ref Unsafe.As<T, Byte>(ref value);
                 return Value[result];
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override Boolean TryParse(String text, out T result)
             {
@@ -213,18 +213,18 @@ namespace NetExtender.Types.Enums
         {
             Byte minimum = Unsafe.As<T, Byte>(ref min);
             Byte maximum = Unsafe.As<T, Byte>(ref max);
-            
+
             ImmutableDictionary<Byte, EnumMember<T>> dictionary = members.ToImmutableDictionary(x =>
             {
                 T value = x.Value;
                 return Unsafe.As<T, Byte>(ref value);
             });
-            
+
             if (dictionary.Count > 0)
             {
                 Int32 length = maximum - minimum;
                 Int32 count = dictionary.Count - 1;
-                
+
                 if (length == count)
                 {
                     Operation = new Continuous(minimum, maximum, members);
@@ -235,19 +235,19 @@ namespace NetExtender.Types.Enums
             Operation = new Discontinuous(dictionary);
             return Operation;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsDefined(ref Byte value)
         {
             return Operation?.IsDefined(ref value) ?? false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(String text, out T result)
         {
             result = default;
             ref Byte value = ref Unsafe.As<T, Byte>(ref result);
-                
+
             return Byte.TryParse(text, out value);
         }
     }
@@ -283,10 +283,10 @@ namespace NetExtender.Types.Enums
             {
                 ref Int16 result = ref Unsafe.As<T, Int16>(ref value);
                 Int32 index = result - Min;
-                
+
                 return Members[index];
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override Boolean TryParse(String text, out T result)
             {
@@ -320,32 +320,32 @@ namespace NetExtender.Types.Enums
                 ref Int16 result = ref Unsafe.As<T, Int16>(ref value);
                 return Value[result];
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override Boolean TryParse(String text, out T result)
             {
                 return Int16Operation<T>.TryParse(text, out result);
             }
         }
-        
+
         private static UnderlyingEnumOperation<T, Int16>? Operation { get; set; }
-        
+
         public static IUnderlyingEnumOperation<T, Int16> Create(T min, T max, EnumMember<T>[] members)
         {
             Int16 minimum = Unsafe.As<T, Int16>(ref min);
             Int16 maximum = Unsafe.As<T, Int16>(ref max);
-            
+
             ImmutableDictionary<Int16, EnumMember<T>> dictionary = members.ToImmutableDictionary(x =>
             {
                 T value = x.Value;
                 return Unsafe.As<T, Int16>(ref value);
             });
-            
+
             if (dictionary.Count > 0)
             {
                 Int32 length = maximum - minimum;
                 Int32 count = dictionary.Count - 1;
-                
+
                 if (length == count)
                 {
                     Operation = new Continuous(minimum, maximum, members);
@@ -362,17 +362,17 @@ namespace NetExtender.Types.Enums
         {
             return Operation?.IsDefined(ref value) ?? false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(String text, out T result)
         {
             result = default;
             ref Int16 value = ref Unsafe.As<T, Int16>(ref result);
-                
+
             return Int16.TryParse(text, out value);
         }
     }
-    
+
     /// <summary>
     /// Provides ushort specified operation.
     /// </summary>
@@ -404,17 +404,17 @@ namespace NetExtender.Types.Enums
             {
                 ref UInt16 result = ref Unsafe.As<T, UInt16>(ref value);
                 Int32 index = result - Min;
-                
+
                 return Members[index];
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override Boolean TryParse(String text, out T result)
             {
                 return UInt16Operation<T>.TryParse(text, out result);
             }
         }
-        
+
         private sealed class Discontinuous : DiscontinuousUnderlyingEnumOperation<T, UInt16>
         {
             public Discontinuous(ImmutableDictionary<UInt16, EnumMember<T>> value)
@@ -441,32 +441,32 @@ namespace NetExtender.Types.Enums
                 ref UInt16 result = ref Unsafe.As<T, UInt16>(ref value);
                 return Value[result];
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override Boolean TryParse(String text, out T result)
             {
                 return UInt16Operation<T>.TryParse(text, out result);
             }
         }
-        
+
         private static UnderlyingEnumOperation<T, UInt16>? Operation { get; set; }
 
         public static IUnderlyingEnumOperation<T, UInt16> Create(T min, T max, EnumMember<T>[] members)
         {
             UInt16 minimum = Unsafe.As<T, UInt16>(ref min);
             UInt16 maximum = Unsafe.As<T, UInt16>(ref max);
-            
+
             ImmutableDictionary<UInt16, EnumMember<T>> dictionary = members.ToImmutableDictionary(x =>
             {
                 T value = x.Value;
                 return Unsafe.As<T, UInt16>(ref value);
             });
-            
+
             if (dictionary.Count > 0)
             {
                 Int32 length = maximum - minimum;
                 Int32 count = dictionary.Count - 1;
-                
+
                 if (length == count)
                 {
                     Operation = new Continuous(minimum, maximum, members);
@@ -484,17 +484,17 @@ namespace NetExtender.Types.Enums
         {
             return Operation?.IsDefined(ref value) ?? false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(String text, out T result)
         {
             result = default;
             ref UInt16 value = ref Unsafe.As<T, UInt16>(ref result);
-                
+
             return UInt16.TryParse(text, out value);
         }
     }
-    
+
     /// <summary>
     /// Provides int specified operation.
     /// </summary>
@@ -526,10 +526,10 @@ namespace NetExtender.Types.Enums
             {
                 ref Int32 result = ref Unsafe.As<T, Int32>(ref value);
                 Int32 index = result - Min;
-                
+
                 return Members[index];
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override Boolean TryParse(String text, out T result)
             {
@@ -563,32 +563,32 @@ namespace NetExtender.Types.Enums
                 ref Int32 result = ref Unsafe.As<T, Int32>(ref value);
                 return Value[result];
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override Boolean TryParse(String text, out T result)
             {
                 return Int32Operation<T>.TryParse(text, out result);
             }
         }
-        
+
         private static UnderlyingEnumOperation<T, Int32>? Operation { get; set; }
 
         public static IUnderlyingEnumOperation<T, Int32> Create(T min, T max, EnumMember<T>[] members)
         {
             Int32 minimum = Unsafe.As<T, Int32>(ref min);
             Int32 maximum = Unsafe.As<T, Int32>(ref max);
-            
+
             ImmutableDictionary<Int32, EnumMember<T>> dictionary = members.ToImmutableDictionary(x =>
             {
                 T value = x.Value;
                 return Unsafe.As<T, Int32>(ref value);
             });
-            
+
             if (dictionary.Count > 0)
             {
                 Int32 length = maximum - minimum;
                 Int32 count = dictionary.Count - 1;
-                
+
                 if (length == count)
                 {
                     Operation = new Continuous(minimum, maximum, members);
@@ -605,13 +605,13 @@ namespace NetExtender.Types.Enums
         {
             return Operation?.IsDefined(ref value) ?? false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(String text, out T result)
         {
             result = default;
             ref Int32 value = ref Unsafe.As<T, Int32>(ref result);
-                
+
             return Int32.TryParse(text, out value);
         }
     }
@@ -628,7 +628,7 @@ namespace NetExtender.Types.Enums
                 : base(min, max, members)
             {
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override Boolean IsDefined(ref T value)
             {
@@ -647,10 +647,10 @@ namespace NetExtender.Types.Enums
             {
                 ref UInt32 result = ref Unsafe.As<T, UInt32>(ref value);
                 UInt32 index = result - Min;
-                
+
                 return Members[index];
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override Boolean TryParse(String text, out T result)
             {
@@ -684,32 +684,32 @@ namespace NetExtender.Types.Enums
                 ref UInt32 result = ref Unsafe.As<T, UInt32>(ref value);
                 return Value[result];
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override Boolean TryParse(String text, out T result)
             {
                 return UInt32Operation<T>.TryParse(text, out result);
             }
         }
-        
+
         private static UnderlyingEnumOperation<T, UInt32>? Operation { get; set; }
-        
+
         public static IUnderlyingEnumOperation<T, UInt32> Create(T min, T max, EnumMember<T>[] members)
         {
             UInt32 minimum = Unsafe.As<T, UInt32>(ref min);
             UInt32 maximum = Unsafe.As<T, UInt32>(ref max);
-            
+
             ImmutableDictionary<UInt32, EnumMember<T>> dictionary = members.ToImmutableDictionary(x =>
             {
                 T value = x.Value;
                 return Unsafe.As<T, UInt32>(ref value);
             });
-            
+
             if (dictionary.Count > 0)
             {
                 UInt32 length = maximum - minimum;
                 Int32 count = dictionary.Count - 1;
-                
+
                 if (length == count)
                 {
                     Operation = new Continuous(minimum, maximum, members);
@@ -720,19 +720,19 @@ namespace NetExtender.Types.Enums
             Operation = new Discontinuous(dictionary);
             return Operation;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsDefined(ref UInt32 value)
         {
             return Operation?.IsDefined(ref value) ?? false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(String text, out T result)
         {
             result = default;
             ref UInt32 value = ref Unsafe.As<T, UInt32>(ref result);
-                
+
             return UInt32.TryParse(text, out value);
         }
     }
@@ -768,17 +768,17 @@ namespace NetExtender.Types.Enums
             {
                 ref Int64 result = ref Unsafe.As<T, Int64>(ref value);
                 Int64 index = result - Min;
-                
+
                 return Members[index];
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override Boolean TryParse(String text, out T result)
             {
                 return Int64Operation<T>.TryParse(text, out result);
             }
         }
-        
+
         private sealed class Discontinuous : DiscontinuousUnderlyingEnumOperation<T, Int64>
         {
             public Discontinuous(ImmutableDictionary<Int64, EnumMember<T>> value)
@@ -805,32 +805,32 @@ namespace NetExtender.Types.Enums
                 ref Int64 result = ref Unsafe.As<T, Int64>(ref value);
                 return Value[result];
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override Boolean TryParse(String text, out T result)
             {
                 return Int64Operation<T>.TryParse(text, out result);
             }
         }
-        
+
         private static UnderlyingEnumOperation<T, Int64>? Operation { get; set; }
 
         public static IUnderlyingEnumOperation<T, Int64> Create(T min, T max, EnumMember<T>[] members)
         {
             Int64 minimum = Unsafe.As<T, Int64>(ref min);
             Int64 maximum = Unsafe.As<T, Int64>(ref max);
-            
+
             ImmutableDictionary<Int64, EnumMember<T>> dictionary = members.ToImmutableDictionary(x =>
             {
                 T value = x.Value;
                 return Unsafe.As<T, Int64>(ref value);
             });
-            
+
             if (dictionary.Count > 0)
             {
                 Int64 length = maximum - minimum;
                 Int32 count = dictionary.Count - 1;
-                
+
                 if (length == count)
                 {
                     Operation = new Continuous(minimum, maximum, members);
@@ -847,17 +847,17 @@ namespace NetExtender.Types.Enums
         {
             return Operation?.IsDefined(ref value) ?? false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(String text, out T result)
         {
             result = default;
             ref Int64 value = ref Unsafe.As<T, Int64>(ref result);
-                
+
             return Int64.TryParse(text, out value);
         }
     }
-    
+
     /// <summary>
     /// Provides ulong specified operation.
     /// </summary>
@@ -889,10 +889,10 @@ namespace NetExtender.Types.Enums
             {
                 ref UInt64 result = ref Unsafe.As<T, UInt64>(ref value);
                 UInt64 index = result - Min;
-                
+
                 return Members[index];
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override Boolean TryParse(String text, out T result)
             {
@@ -926,7 +926,7 @@ namespace NetExtender.Types.Enums
                 ref UInt64 result = ref Unsafe.As<T, UInt64>(ref value);
                 return Value[result];
             }
-            
+
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             public override Boolean TryParse(String text, out T result)
             {
@@ -935,12 +935,12 @@ namespace NetExtender.Types.Enums
         }
 
         private static UnderlyingEnumOperation<T, UInt64>? Operation { get; set; }
-        
+
         public static IUnderlyingEnumOperation<T, UInt64> Create(T min, T max, EnumMember<T>[] members)
         {
             UInt64 minval = Unsafe.As<T, UInt64>(ref min);
             UInt64 maxval = Unsafe.As<T, UInt64>(ref max);
-            
+
             ImmutableDictionary<UInt64, EnumMember<T>> dictionary = members.ToImmutableDictionary(x =>
             {
                 T value = x.Value;
@@ -961,19 +961,19 @@ namespace NetExtender.Types.Enums
             Operation = new Discontinuous(dictionary);
             return Operation;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsDefined(ref UInt64 value)
         {
             return Operation?.IsDefined(ref value) ?? false;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryParse(String text, out T result)
         {
             result = default;
             ref UInt64 value = ref Unsafe.As<T, UInt64>(ref result);
-                
+
             return UInt64.TryParse(text, out value);
         }
     }

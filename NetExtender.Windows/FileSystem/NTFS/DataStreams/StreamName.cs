@@ -104,10 +104,10 @@ namespace NetExtender.IO.FileSystem.NTFS.DataStreams
             }
 
             sepindex = name.IndexOf('\0');
-            
+
             return sepindex > 1 ? name.Substring(1, sepindex - 1) : null;
         }
-        
+
         /// <summary>
         /// Performs application-defined tasks associated with freeing, 
         /// releasing, or resetting unmanaged resources.

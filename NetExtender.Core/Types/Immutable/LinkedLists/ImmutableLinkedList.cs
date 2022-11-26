@@ -57,7 +57,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
         }
 
         private readonly Node? _head;
-        
+
         /// <summary>
         /// The length of the list
         /// </summary>
@@ -401,7 +401,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
                 thatCurrent = thatCurrent.Next;
             }
         }
-        
+
         /// <summary>
         /// Returns a new list with <paramref name="value"/> prepended.
         /// 
@@ -475,7 +475,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
             newLast.Next = _head;
             return new ImmutableLinkedList<T>(newHead, Count + list.Count);
         }
-        
+
         /// <summary>
         /// Returns a new list with <paramref name="value"/> appended.
         /// 
@@ -512,7 +512,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
         {
             return list.PrependRange(this);
         }
-        
+
         /// <summary>
         /// Returns a new list with the first instance of <paramref name="value"/> removed (if present).
         /// 
@@ -631,7 +631,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
 
             return new ImmutableLinkedList<T>(newHead, withoutPrefix.Count - countRemoved);
         }
-        
+
         /// <summary>
         /// Same as <see cref="Enumerable.Skip{TSource}(IEnumerable{TSource}, int)"/>, except the
         /// return type is <see cref="ImmutableLinkedList{T}"/> and allocations are avoided.

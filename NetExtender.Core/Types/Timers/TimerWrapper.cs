@@ -17,7 +17,7 @@ namespace NetExtender.Types.Timers
         {
             return timer is not null ? new TimerWrapper(timer) : null;
         }
-        
+
         [return: NotNullIfNotNull("wrapper")]
         public static implicit operator Timer?(TimerWrapper? wrapper)
         {
@@ -56,7 +56,7 @@ namespace NetExtender.Types.Timers
             : this((Double) interval)
         {
         }
-        
+
         public TimerWrapper(Double interval)
             : this(new Timer(interval))
         {
@@ -66,7 +66,7 @@ namespace NetExtender.Types.Timers
             : this(interval.TotalMilliseconds)
         {
         }
-        
+
         public TimerWrapper(Timer timer)
         {
             Timer = timer ?? throw new ArgumentNullException(nameof(timer));

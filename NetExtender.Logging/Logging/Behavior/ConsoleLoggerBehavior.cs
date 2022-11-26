@@ -37,7 +37,7 @@ namespace NetExtender.Logging.Behavior
             {
                 return false;
             }
-            
+
             if (!options.HasFlag(LoggingMessageOptions.Color))
             {
                 message.ToConsole(escape, provider);

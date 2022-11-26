@@ -15,7 +15,7 @@ namespace NetExtender.Domains.Applications.Interfaces
         public IDispatcher? Dispatcher { get; }
         public ApplicationShutdownMode ShutdownMode { get; set; }
         public CancellationToken ShutdownToken { get; }
-        
+
         public IApplication Run();
         public Task<IApplication> RunAsync();
         public Task<IApplication> RunAsync(CancellationToken token);

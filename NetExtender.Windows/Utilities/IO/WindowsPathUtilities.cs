@@ -18,7 +18,7 @@ namespace NetExtender.Utilities.Windows.IO
         public const Int32 MaxLongPathLength = UInt16.MaxValue;
 
         public const String LongPathPrefix = @"\\?\";
-        
+
         [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
         internal static class Native
         {
@@ -157,7 +157,7 @@ namespace NetExtender.Utilities.Windows.IO
 
                 return 0;
             }
-            
+
             private const Int32 NativeErrorCode = -2147024896;
 
             public static Int32 MakeHRFromErrorCode(Int32 code)

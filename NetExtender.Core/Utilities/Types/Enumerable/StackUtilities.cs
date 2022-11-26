@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.Types
 
             return new Stack<T>(source);
         }
-        
+
         /// <summary>
         /// Pushes a range of items into a stack
         /// </summary>

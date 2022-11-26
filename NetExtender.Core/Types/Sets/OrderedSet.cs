@@ -45,7 +45,7 @@ namespace NetExtender.Types.Sets
                 return ((IDictionary<T, LinkedListNode<T>>) Node).IsReadOnly;
             }
         }
-        
+
         private NullableDictionary<T, LinkedListNode<T>> Node { get; }
         private LinkedList<T> Linked { get; }
 
@@ -59,7 +59,7 @@ namespace NetExtender.Types.Sets
             Node = new NullableDictionary<T, LinkedListNode<T>>(comparer?.ToNullMaybeEqualityComparer());
             Linked = new LinkedList<T>();
         }
-        
+
         public OrderedSet(IEnumerable<T> collection)
             : this(collection, null)
         {
@@ -74,18 +74,18 @@ namespace NetExtender.Types.Sets
 
             Node = new NullableDictionary<T, LinkedListNode<T>>(comparer?.ToNullMaybeEqualityComparer());
             Linked = new LinkedList<T>();
-            
+
             foreach (T item in collection)
             {
                 Add(item);
             }
         }
-        
+
         public Boolean Contains(T item)
         {
             return Node.ContainsKey(item);
         }
-        
+
         public Boolean Add(T item)
         {
             if (Node.ContainsKey(item))
@@ -95,20 +95,20 @@ namespace NetExtender.Types.Sets
 
             LinkedListNode<T> node = Linked.AddLast(item);
             Node.Add(item, node);
-            
+
             return true;
         }
-        
+
         void ICollection<T>.Add(T item)
         {
             Add(item);
         }
-        
+
         public Boolean Insert(T item)
         {
             return Insert(0, item);
         }
-        
+
         public Boolean Insert(Int32 index, T item)
         {
             if (index < 0 || index >= Count)
@@ -125,7 +125,7 @@ namespace NetExtender.Types.Sets
             Node.Add(item, node);
             return true;
         }
-        
+
         /// <inheritdoc cref="SortedSet{T}.UnionWith"/>
         public void UnionWith(IEnumerable<T> other)
         {
@@ -144,7 +144,7 @@ namespace NetExtender.Types.Sets
                 Add(item);
             }
         }
-        
+
         /// <inheritdoc cref="SortedSet{T}.IntersectWith"/>
         public void IntersectWith(IEnumerable<T> other)
         {
@@ -164,7 +164,7 @@ namespace NetExtender.Types.Sets
                 {
                     continue;
                 }
-                
+
                 Remove(item);
             }
         }
@@ -176,7 +176,7 @@ namespace NetExtender.Types.Sets
             {
                 throw new ArgumentNullException(nameof(other));
             }
-            
+
             if (Count <= 0)
             {
                 return;
@@ -322,13 +322,13 @@ namespace NetExtender.Types.Sets
             {
                 return false;
             }
-            
+
             Node.Remove(item);
             Linked.Remove(node);
 
             return true;
         }
-        
+
         public void Clear()
         {
             Linked.Clear();
@@ -339,17 +339,17 @@ namespace NetExtender.Types.Sets
         {
             Linked.CopyTo(array, arrayIndex);
         }
-        
+
         void ICollection.CopyTo(Array array, Int32 index)
         {
             if (array is not T[] generic)
             {
                 throw new ArgumentException(@"Invalid type", nameof(array));
             }
-            
+
             CopyTo(generic, index);
         }
-        
+
         public IEnumerator<T> GetEnumerator()
         {
             return Linked.GetEnumerator();

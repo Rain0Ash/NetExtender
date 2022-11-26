@@ -10,7 +10,7 @@ namespace NetExtender.Types.Monads.Interfaces
     public interface IAsyncLazy<T> : ILazy<Task<T>>
     {
         public Boolean IsTaskCreated { get; }
-        
+
         public TaskAwaiter<T> GetAwaiter();
     }
 }

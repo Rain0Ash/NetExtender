@@ -27,7 +27,7 @@ namespace NetExtender.Configuration.Properties.Interfaces
         public Boolean KeyExist();
         public Task<Boolean> KeyExistAsync();
         public Task<Boolean> KeyExistAsync(CancellationToken token);
-        
+
         public Boolean Read();
         public Task<Boolean> ReadAsync();
         public Task<Boolean> ReadAsync(CancellationToken token);
@@ -38,7 +38,7 @@ namespace NetExtender.Configuration.Properties.Interfaces
         public Task<Boolean> ResetAsync();
         public Task<Boolean> ResetAsync(CancellationToken token);
     }
-    
+
     public interface IConfigProperty : IConfigPropertyValueInfo, IFormattable
     {
         public new String? Value { get; set; }
@@ -54,7 +54,7 @@ namespace NetExtender.Configuration.Properties.Interfaces
         public Boolean KeyExist();
         public Task<Boolean> KeyExistAsync();
         public Task<Boolean> KeyExistAsync(CancellationToken token);
-        
+
         public Boolean Read();
         public Task<Boolean> ReadAsync();
         public Task<Boolean> ReadAsync(CancellationToken token);

@@ -24,7 +24,7 @@ namespace NetExtender.Cryptography.Hash.Interfaces
         public Byte[] Hashing(String value, Byte[] lsalt, Byte[] rsalt, Byte[] lpepper, Byte[] rpepper);
         public Byte[] Hashing(String value, Byte[] lsalt, Byte[] rsalt, Byte[] lpepper, Byte[] rpepper, UInt16 iterations);
         public Byte[] Hashing(String value, CryptographyHashParameters parameters);
-        
+
         public Byte[] Hashing(Byte[] value);
         public Byte[] Hashing(Byte[] value, Byte[] salt);
         public Byte[] Hashing(Byte[] value, Byte[] salt, UInt16 iterations);

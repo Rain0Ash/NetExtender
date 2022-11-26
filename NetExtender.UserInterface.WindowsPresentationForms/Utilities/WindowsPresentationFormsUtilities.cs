@@ -19,7 +19,7 @@ namespace NetExtender.Utilities.UserInterface
 
             return DialogResultUtilities.ToDialogResult(window.ShowDialog());
         }
-        
+
         public static MessageBoxResult ToMessageBoxResult(this DialogResult result)
         {
             return result switch
@@ -35,7 +35,7 @@ namespace NetExtender.Utilities.UserInterface
                 _ => throw new NotSupportedException()
             };
         }
-        
+
         public static DialogResult ToDialogResult(this MessageBoxResult result)
         {
             return result switch

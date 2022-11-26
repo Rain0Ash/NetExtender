@@ -16,7 +16,7 @@ namespace NetExtender.ReactiveUI.Utilities
     public static class ReactiveRecordUtilities
     {
         private static IStore<ReactiveRecord, PropertySubnotifier> Store { get; } = new WeakStore<ReactiveRecord, PropertySubnotifier>();
-        
+
         public static PropertySubnotifier<T> Register<T>(this T value) where T : ReactiveRecord
         {
             if (value is null)
@@ -36,7 +36,7 @@ namespace NetExtender.ReactiveUI.Utilities
 
             return Store.GetOrAdd(value, () => new PropertySubnotifier<T>(value, Changing, Changed)) as PropertySubnotifier<T> ?? throw new InvalidOperationException();
         }
-        
+
         public static PropertySubnotifier<T> Register<T>(this T value, String when, params String?[]? properties) where T : ReactiveRecord
         {
             if (value is null)
@@ -46,14 +46,14 @@ namespace NetExtender.ReactiveUI.Utilities
 
             return value.Register().Register(when, properties);
         }
-        
+
         public static PropertySubnotifier<T> Register<T>(this T value, String when, IEnumerable<String?>? properties) where T : ReactiveRecord
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
-            
+
             return value.Register().Register(when, properties);
         }
 
@@ -63,10 +63,10 @@ namespace NetExtender.ReactiveUI.Utilities
             {
                 throw new ArgumentNullException(nameof(when));
             }
-            
+
             return value.Register().Register(when, properties);
         }
-        
+
         public static Boolean TryGetSubnotifier<T>(this T value, [MaybeNullWhen(false)] out PropertySubnotifier<T> subnotifier) where T : ReactiveRecord
         {
             if (value is null)

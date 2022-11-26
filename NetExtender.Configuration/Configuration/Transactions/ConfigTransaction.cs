@@ -20,7 +20,7 @@ namespace NetExtender.Configuration.Transactions
             Original = original ?? throw new ArgumentNullException(nameof(original));
             Transaction = transaction is not null ? transaction.Transaction.Create() : throw new ArgumentNullException(nameof(transaction));
         }
-        
+
         public ConfigTransaction(IConfig original, IConfig transaction)
         {
             Original = original ?? throw new ArgumentNullException(nameof(original));
@@ -44,7 +44,7 @@ namespace NetExtender.Configuration.Transactions
             {
                 Rollback();
             }
-            
+
             Transaction.Dispose();
             GC.SuppressFinalize(this);
         }

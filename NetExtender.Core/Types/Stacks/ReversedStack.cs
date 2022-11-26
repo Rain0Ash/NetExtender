@@ -35,7 +35,7 @@ namespace NetExtender.Types.Stacks
                 return ((ICollection) Stack).SyncRoot;
             }
         }
-        
+
         public ReversedStack()
         {
             Stack = new List<T>();
@@ -55,7 +55,7 @@ namespace NetExtender.Types.Stacks
         {
             Stack = new List<T>(capacity);
         }
-        
+
         public Boolean Contains(T item)
         {
             return Stack.Contains(item);
@@ -67,10 +67,10 @@ namespace NetExtender.Types.Stacks
             {
                 throw new InvalidOperationException("Stack empty.");
             }
-            
+
             return Stack[^1];
         }
-        
+
         public Boolean TryPeek(out T? result)
         {
             if (Count <= 0)
@@ -78,11 +78,11 @@ namespace NetExtender.Types.Stacks
                 result = default;
                 return false;
             }
-            
+
             result = Stack[^1];
             return true;
         }
-        
+
         public T Pop()
         {
             if (Count <= 0)
@@ -92,10 +92,10 @@ namespace NetExtender.Types.Stacks
 
             T item = Stack[^1];
             Stack.RemoveAt(Stack.Count - 1);
-            
+
             return item;
         }
-        
+
         public Boolean TryPop(out T? result)
         {
             if (Count <= 0)
@@ -103,10 +103,10 @@ namespace NetExtender.Types.Stacks
                 result = default;
                 return false;
             }
-            
+
             result = Stack[^1];
             Stack.RemoveAt(Stack.Count - 1);
-            
+
             return true;
         }
 
@@ -114,17 +114,17 @@ namespace NetExtender.Types.Stacks
         {
             Stack.Add(item);
         }
-        
+
         public void Clear()
         {
             Stack.Clear();
         }
-        
+
         public void CopyTo(Array array, Int32 index)
         {
             ((ICollection) Stack).CopyTo(array, index);
         }
-        
+
         public void CopyTo(T[] array, Int32 index)
         {
             Stack.CopyTo(array, index);

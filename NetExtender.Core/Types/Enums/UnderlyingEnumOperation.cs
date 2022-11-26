@@ -21,7 +21,7 @@ namespace NetExtender.Types.Enums
         protected TUnderlying Min { get; }
         protected TUnderlying Max { get; }
         protected EnumMember<T>[] Members { get; }
-        
+
         public override Boolean IsContinuous
         {
             get
@@ -37,11 +37,11 @@ namespace NetExtender.Types.Enums
             Members = members;
         }
     }
-    
+
     internal abstract class DiscontinuousUnderlyingEnumOperation<T, TUnderlying> : UnderlyingEnumOperation<T, TUnderlying> where T : unmanaged, Enum where TUnderlying : unmanaged
     {
         protected ImmutableDictionary<TUnderlying, EnumMember<T>> Value { get; }
-        
+
         public override Boolean IsContinuous
         {
             get

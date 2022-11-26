@@ -17,12 +17,12 @@ namespace NetExtender.Types.Observers
             Next = next;
             Error = error;
         }
-        
+
         public void OnCompleted()
         {
             Complete?.Invoke();
         }
-        
+
         public void OnNext(T value)
         {
             Next?.Invoke(value);

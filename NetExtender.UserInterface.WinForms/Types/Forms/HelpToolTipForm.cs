@@ -42,7 +42,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
             {
                 ToolTip?.Dispose();
             }
-            
+
             base.Dispose(disposing);
         }
     }

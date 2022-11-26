@@ -25,7 +25,7 @@ namespace NetExtender.Utilities.NAudio
 
             return new WavePlaylist(provider);
         }
-        
+
         public static IWavePlaylist Playlist(this IWaveProvider provider, params IWaveProvider[] items)
         {
             if (provider is null)
@@ -37,7 +37,7 @@ namespace NetExtender.Utilities.NAudio
             playlist.AddRange(items);
             return playlist;
         }
-        
+
         public static IWavePlaylist Playlist(this IEnumerable<IWaveProvider> playlist)
         {
             if (playlist is null)
@@ -47,7 +47,7 @@ namespace NetExtender.Utilities.NAudio
 
             return new WavePlaylist(playlist);
         }
-        
+
         public static IWavePlaylist<T> WithPlaylist<T>(this T provider) where T : class, IWaveProvider
         {
             if (provider is null)
@@ -62,7 +62,7 @@ namespace NetExtender.Utilities.NAudio
 
             return new WavePlaylist<T>(provider);
         }
-        
+
         public static IWavePlaylist<T> WithPlaylist<T>(this T provider, params T[] items) where T : class, IWaveProvider
         {
             if (provider is null)
@@ -74,7 +74,7 @@ namespace NetExtender.Utilities.NAudio
             playlist.AddRange(items);
             return playlist;
         }
-        
+
         public static IWavePlaylist<T> WithPlaylist<T>(this IEnumerable<T> playlist) where T : class, IWaveProvider
         {
             if (playlist is null)

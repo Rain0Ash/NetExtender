@@ -13,13 +13,13 @@ namespace NetExtender.Utilities.Types
         {
             return ArrayPool<T>.Shared;
         }
-        
+
         /// <inheritdoc cref="ArrayPool{T}.Create()"/>
         public static ArrayPool<T> Create<T>()
         {
             return ArrayPool<T>.Create();
         }
-        
+
         /// <inheritdoc cref="ArrayPool{T}.Create(Int32,Int32)"/>
         public static ArrayPool<T> Create<T>(Int32 maxlength, Int32 bucket)
         {

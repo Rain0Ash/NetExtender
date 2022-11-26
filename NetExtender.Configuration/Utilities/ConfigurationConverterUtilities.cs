@@ -23,7 +23,7 @@ namespace NetExtender.Configuration.Utilities
         {
             return GetValue(config, key, default(T), sections);
         }
-        
+
         public static T? GetValue<T>(this IReadOnlyConfig config, String? key, TryConverter<String, T>? converter, params String[]? sections)
         {
             return GetValue(config, key, converter, (IEnumerable<String>?) sections);
@@ -91,7 +91,7 @@ namespace NetExtender.Configuration.Utilities
         {
             return GetValueAsync(config, key, default(T), sections, token);
         }
-        
+
         public static Task<T?> GetValueAsync<T>(this IReadOnlyConfig config, String? key, TryConverter<String, T>? converter, params String[]? sections)
         {
             return GetValueAsync(config, key, converter, (IEnumerable<String>?) sections);
@@ -153,7 +153,7 @@ namespace NetExtender.Configuration.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is IReadOnlyConverterConfig configuration)
             {
                 return await configuration.GetValueAsync(key, alternate, converter, sections, token);
@@ -169,7 +169,7 @@ namespace NetExtender.Configuration.Utilities
             converter ??= ConvertUtilities.TryConvert;
             return converter(value, out T? result) ? result : alternate;
         }
-        
+
         public static T? GetValue<T>(this IConfig config, String? key, params String[]? sections)
         {
             return GetValue<T>(config, key, (IEnumerable<String>?) sections);
@@ -179,7 +179,7 @@ namespace NetExtender.Configuration.Utilities
         {
             return GetValue(config, key, default(T), sections);
         }
-        
+
         public static T? GetValue<T>(this IConfig config, String? key, TryConverter<String, T>? converter, params String[]? sections)
         {
             return GetValue(config, key, converter, (IEnumerable<String>?) sections);
@@ -211,7 +211,7 @@ namespace NetExtender.Configuration.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is IConverterConfig configuration)
             {
                 return configuration.GetValue(key, alternate, converter, sections);
@@ -247,7 +247,7 @@ namespace NetExtender.Configuration.Utilities
         {
             return GetValueAsync(config, key, default(T), sections, token);
         }
-        
+
         public static Task<T?> GetValueAsync<T>(this IConfig config, String? key, TryConverter<String, T>? converter, params String[]? sections)
         {
             return GetValueAsync(config, key, converter, (IEnumerable<String>?) sections);
@@ -309,7 +309,7 @@ namespace NetExtender.Configuration.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is IConverterConfig configuration)
             {
                 return await configuration.GetValueAsync(key, alternate, converter, sections, token);
@@ -337,7 +337,7 @@ namespace NetExtender.Configuration.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is IConverterConfig configuration)
             {
                 return configuration.SetValue(key, value, sections);
@@ -347,7 +347,7 @@ namespace NetExtender.Configuration.Utilities
             {
                 return config.SetValue(key, null, sections);
             }
-            
+
             String? convert = value.GetString();
             return convert is not null && config.SetValue(key, convert, sections);
         }
@@ -373,7 +373,7 @@ namespace NetExtender.Configuration.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is IConverterConfig configuration)
             {
                 return await configuration.SetValueAsync(key, value, sections, token);
@@ -383,11 +383,11 @@ namespace NetExtender.Configuration.Utilities
             {
                 return await config.SetValueAsync(key, null, sections, token);
             }
-            
+
             String? convert = value.GetString();
             return convert is not null && await config.SetValueAsync(key, convert, sections, token);
         }
-        
+
         public static T? GetOrSetValue<T>(this IConfig config, String? key, T value, params String[]? sections)
         {
             return GetOrSetValue(config, key, value, (IEnumerable<String>?) sections);
@@ -409,7 +409,7 @@ namespace NetExtender.Configuration.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is IConverterConfig configuration)
             {
                 return configuration.GetOrSetValue(key, value, converter, sections);
@@ -422,7 +422,7 @@ namespace NetExtender.Configuration.Utilities
             {
                 return default;
             }
-            
+
             converter ??= ConvertUtilities.TryConvert;
             return converter(get, out T? result) ? result : default;
         }
@@ -468,7 +468,7 @@ namespace NetExtender.Configuration.Utilities
             {
                 throw new ArgumentNullException(nameof(config));
             }
-            
+
             if (config is IConverterConfig configuration)
             {
                 return await configuration.GetOrSetValueAsync(key, value, converter, sections, token);
@@ -481,7 +481,7 @@ namespace NetExtender.Configuration.Utilities
             {
                 return default;
             }
-            
+
             converter ??= ConvertUtilities.TryConvert;
             return converter(get, out T? result) ? result : default;
         }

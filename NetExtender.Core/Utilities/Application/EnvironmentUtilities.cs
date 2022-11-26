@@ -23,7 +23,7 @@ namespace NetExtender.Utilities.Application
 
             return Environment.ExpandEnvironmentVariables(value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? GetEnvironmentVariable(String key)
         {
@@ -47,7 +47,7 @@ namespace NetExtender.Utilities.Application
                 return null;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static String? TryGetEnvironmentVariable(String? key)
         {
@@ -59,7 +59,7 @@ namespace NetExtender.Utilities.Application
         {
             return TryGetEnvironmentVariable(key, target, out String? result) ? result : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetEnvironmentVariable(String? key, [MaybeNullWhen(false)] out String result)
         {
@@ -74,7 +74,7 @@ namespace NetExtender.Utilities.Application
                 result = default;
                 return false;
             }
-            
+
             try
             {
                 result = Environment.GetEnvironmentVariable(key, target);
@@ -86,7 +86,7 @@ namespace NetExtender.Utilities.Application
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean SetEnvironmentVariable(String key, String? value)
         {
@@ -111,7 +111,7 @@ namespace NetExtender.Utilities.Application
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TrySetEnvironmentVariable(String? key, String? value)
         {
@@ -125,7 +125,7 @@ namespace NetExtender.Utilities.Application
             {
                 return false;
             }
-            
+
             try
             {
                 Environment.SetEnvironmentVariable(key, value, target);
@@ -136,7 +136,7 @@ namespace NetExtender.Utilities.Application
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean RemoveEnvironmentVariable(String key)
         {
@@ -161,7 +161,7 @@ namespace NetExtender.Utilities.Application
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean RemoveEnvironmentVariable(String key, out String? value)
         {
@@ -182,7 +182,7 @@ namespace NetExtender.Utilities.Application
                 {
                     return false;
                 }
-                
+
                 Environment.SetEnvironmentVariable(key, null, target);
                 return true;
             }
@@ -192,7 +192,7 @@ namespace NetExtender.Utilities.Application
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryRemoveEnvironmentVariable(String? key)
         {
@@ -206,7 +206,7 @@ namespace NetExtender.Utilities.Application
             {
                 return false;
             }
-            
+
             try
             {
                 Environment.SetEnvironmentVariable(key, null, target);
@@ -217,7 +217,7 @@ namespace NetExtender.Utilities.Application
                 return false;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryRemoveEnvironmentVariable(String? key, out String? value)
         {
@@ -239,7 +239,7 @@ namespace NetExtender.Utilities.Application
                 {
                     return false;
                 }
-                
+
                 Environment.SetEnvironmentVariable(key, null, target);
                 return true;
             }
@@ -343,7 +343,7 @@ namespace NetExtender.Utilities.Application
                 return null;
             }
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static EnvironmentValueEntry[]? TryGetExistsValuesEnvironmentVariables()
         {
@@ -355,7 +355,7 @@ namespace NetExtender.Utilities.Application
         {
             return TryGetExistsValuesEnvironmentVariables(target, out EnvironmentValueEntry[]? result) ? result : default;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TryGetExistsValuesEnvironmentVariables([MaybeNullWhen(false)] out EnvironmentValueEntry[] result)
         {
@@ -374,19 +374,19 @@ namespace NetExtender.Utilities.Application
         {
             return ExceptionUtilities.FailFast();
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Exception FailFast(String? message)
         {
             return ExceptionUtilities.FailFast(message);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Exception FailFast(String? message, Exception? exception)
         {
             return ExceptionUtilities.FailFast(message, exception);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Exception FailFast(Exception? exception)
         {

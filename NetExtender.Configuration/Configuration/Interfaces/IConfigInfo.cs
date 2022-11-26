@@ -16,7 +16,7 @@ namespace NetExtender.Configuration.Interfaces
         public Boolean IsReadOnly { get; }
         public Boolean IsLazyWrite { get; }
         public Boolean IsThreadSafe { get; }
-        
+
         public ConfigurationEntry[]? GetExists();
         public Task<ConfigurationEntry[]?> GetExistsAsync();
         public Task<ConfigurationEntry[]?> GetExistsAsync(CancellationToken token);

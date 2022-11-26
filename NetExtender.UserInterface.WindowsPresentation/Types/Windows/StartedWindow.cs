@@ -16,7 +16,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         {
             Loaded += OnStarted;
         }
-        
+
         private void OnStarted(Object? sender, RoutedEventArgs args)
         {
             if (IsStarted)
@@ -26,7 +26,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
             Loaded -= OnStarted;
             Started?.Invoke(sender, args);
-            
+
             IsStarted = true;
         }
     }

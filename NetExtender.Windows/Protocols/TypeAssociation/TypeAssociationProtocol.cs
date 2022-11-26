@@ -35,7 +35,7 @@ namespace NetExtender.Windows.Protocols
 
             String? progid = registry.GetValue("ProgId", extension, "UserChoice");
             String? hash = registry.GetValue("Hash", extension, "UserChoice");
-            
+
             return new KeyValuePair<String?, String?>(progid, hash);
         }
 
@@ -59,7 +59,7 @@ namespace NetExtender.Windows.Protocols
             {
                 yield break;
             }
-            
+
             foreach (String? entry in subkeys)
             {
                 String? progid = registry.GetValue("ProgId", entry, "UserChoice");
@@ -102,7 +102,7 @@ namespace NetExtender.Windows.Protocols
             }
 
             using IRegistry registry = RegistryKeys.CurrentUser.Create(FileAccess.Read, "Software", "Microsoft", "Windows", "Shell", "Associations", "UrlAssociations");
-            
+
             String? progid = registry.GetValue("ProgId", protocol, "UserChoice");
             String? hash = registry.GetValue("Hash", protocol, "UserChoice");
 
@@ -129,7 +129,7 @@ namespace NetExtender.Windows.Protocols
             {
                 yield break;
             }
-            
+
             foreach (String entry in subkeys)
             {
                 String? progid = registry.GetValue("ProgId", entry, "UserChoice");
@@ -248,7 +248,7 @@ namespace NetExtender.Windows.Protocols
                 using IRegistry registry = RegistryKeys.CurrentUser.Create(FileAccess.ReadWrite, "Software", "Classes");
                 registry.SetValue(null, icon, progid, "DefaultIcon");
             }
-            
+
             Refresh();
             return true;
         }
@@ -354,7 +354,7 @@ namespace NetExtender.Windows.Protocols
             {
                 return UserExperience;
             }
-            
+
             await using FileStream stream = new FileStream(Path.Combine(Environment.SpecialFolder.SystemX86.GetPath(), "shell32.dll"), FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
             return UserExperience ??= stream.ReadAsSequential(Encoding.Unicode)
@@ -424,7 +424,7 @@ namespace NetExtender.Windows.Protocols
                 {
                     return String.Empty;
                 }
-                
+
                 Int32 pdata = 0;
                 Int64 cache = 0;
                 Int64 md5_1 = (GetLong(md5bytes) | 1) + 0x69FB0000L;
@@ -455,7 +455,7 @@ namespace NetExtender.Windows.Protocols
                 buffer.CopyTo(outhash, 0);
                 buffer = BitConverter.GetBytes(outhash2);
                 buffer.CopyTo(outhash, 4);
-                
+
                 pdata = 0;
                 cache = 0;
                 md5_1 = GetLong(md5bytes) | 1;
@@ -481,7 +481,7 @@ namespace NetExtender.Windows.Protocols
                     outhash2 = ConvertInt32(outhash1 + cache + r3);
                     cache = outhash2;
                 }
-                
+
                 buffer = BitConverter.GetBytes(outhash1);
                 buffer.CopyTo(outhash, 8);
                 buffer = BitConverter.GetBytes(outhash2);
@@ -492,7 +492,7 @@ namespace NetExtender.Windows.Protocols
                 buffer.CopyTo(outhashbase, 0);
                 buffer = BitConverter.GetBytes((Int32) (GetLong(outhash, 12) ^ GetLong(outhash, 4)));
                 buffer.CopyTo(outhashbase, 4);
-                
+
                 return Convert.ToBase64String(outhashbase); 
             }
         }

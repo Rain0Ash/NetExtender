@@ -43,7 +43,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 Skip(value);
             }
         }
-        
+
         public virtual Boolean IsReadOnly
         {
             get
@@ -51,7 +51,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 return false;
             }
         }
-        
+
         public virtual Int32 Count
         {
             get
@@ -59,7 +59,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 return Queue.Count;
             }
         }
-        
+
         public override WaveFormat WaveFormat
         {
             get
@@ -88,7 +88,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 {
                     return;
                 }
-                
+
                 Current.Position = value;
             }
         }
@@ -108,7 +108,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 return Current?.TotalTime ?? TimeSpan.Zero;
             }
         }
-        
+
         public override TimeSpan CurrentTime
         {
             get
@@ -138,7 +138,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 }
             }
         }
-        
+
         public WaveStreamPlaylist()
         {
             Queue = new List<T>();
@@ -155,7 +155,7 @@ namespace NetExtender.NAudio.Types.Playlist
             {
                 throw new ArgumentNullException(nameof(source));
             }
-            
+
             Queue = new List<T>(source.WhereNotNull());
         }
 
@@ -176,33 +176,33 @@ namespace NetExtender.NAudio.Types.Playlist
 
             return read;
         }
-        
+
         public virtual Boolean Contains(T? item)
         {
             if (item is null)
             {
                 return false;
             }
-            
+
             lock (Queue)
             {
                 return Queue.Contains(item);
             }
         }
-        
+
         public virtual Int32 IndexOf(T? item)
         {
             if (item is null)
             {
                 return -1;
             }
-            
+
             lock (Queue)
             {
                 return Queue.IndexOf(item);
             }
         }
-        
+
         public virtual void Add(T? item)
         {
             if (item is null)
@@ -290,7 +290,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 Queue.RemoveAt(index);
             }
         }
-        
+
         public virtual void RemoveRange(Int32 index, Int32 count)
         {
             lock (Queue)
@@ -311,7 +311,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 return Queue.RemoveAll(match);
             }
         }
-        
+
         public virtual void Clear()
         {
             lock (Queue)
@@ -327,7 +327,7 @@ namespace NetExtender.NAudio.Types.Playlist
                 Queue.CopyTo(array, arrayIndex);
             }
         }
-        
+
         public virtual IEnumerator<T> GetEnumerator()
         {
             lock (Queue)

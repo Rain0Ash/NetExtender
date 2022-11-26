@@ -89,9 +89,9 @@ namespace NetExtender.Utilities.UserInterface
             {
                 return new FontInfo(0);
             }
-            
+
             private const Int32 CBSize = 84;
-            
+
             // ReSharper disable once UnusedAutoPropertyAccessor.Local
             private Int32 cbSize { get; }
             public Int32 Index { get; init; }
@@ -107,7 +107,7 @@ namespace NetExtender.Utilities.UserInterface
                 : this(null, size)
             {
             }
-            
+
             public FontInfo(String? name, Int16 size)
             {
                 cbSize = CBSize;
@@ -137,7 +137,7 @@ namespace NetExtender.Utilities.UserInterface
         public delegate void ConsoleMouseEvent(MOUSE_EVENT_RECORD r);
         public delegate void ConsoleKeyEvent(KEY_EVENT_RECORD r);
         public delegate void ConsoleWindowBufferSizeEvent(WINDOW_BUFFER_SIZE_RECORD r);
-        
+
         public static event ConsoleMouseEvent MouseEvent;
         public static event ConsoleKeyEvent KeyEvent;
         public static event ConsoleWindowBufferSizeEvent WindowBufferSizeEvent;
@@ -526,7 +526,7 @@ namespace NetExtender.Utilities.UserInterface
         {
             return TrySetWindowSize(value.Width, value.Height);
         }
-        
+
         public static Rectangle Rectangle
         {
             get
@@ -590,7 +590,7 @@ namespace NetExtender.Utilities.UserInterface
         {
             SetWindowPosition(x, y, Rectangle);
         }
-        
+
         /// <inheritdoc cref="Console.SetWindowPosition"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetWindowPosition(Point position, Rectangle rectangle)
@@ -604,7 +604,7 @@ namespace NetExtender.Utilities.UserInterface
         {
             SetWindowPosition(x, y, rectangle.Size);
         }
-        
+
         /// <inheritdoc cref="Console.SetWindowPosition"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void SetWindowPosition(Point position, Size size)
@@ -621,7 +621,7 @@ namespace NetExtender.Utilities.UserInterface
                 WindowsInteropUtilities.ThrowLastWin32Exception();
             }
         }
-        
+
         /// <inheritdoc cref="Console.SetWindowPosition"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TrySetWindowPosition(Point position)
@@ -635,7 +635,7 @@ namespace NetExtender.Utilities.UserInterface
         {
             return TrySetWindowPosition(x, y, Rectangle);
         }
-        
+
         /// <inheritdoc cref="Console.SetWindowPosition"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TrySetWindowPosition(Point position, Rectangle rectangle)
@@ -649,7 +649,7 @@ namespace NetExtender.Utilities.UserInterface
         {
             return TrySetWindowPosition(x, y, rectangle.Size);
         }
-        
+
         /// <inheritdoc cref="Console.SetWindowPosition"/>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean TrySetWindowPosition(Point position, Size size)
@@ -868,7 +868,7 @@ namespace NetExtender.Utilities.UserInterface
                 ChangeMode(WindowsConsoleUtilities.ConsoleInputHandle, value, MouseInputMode);
             }
         }
-        
+
         /*
 
         public static Boolean ConsoleExitButtonEnabled
@@ -894,7 +894,7 @@ namespace NetExtender.Utilities.UserInterface
                 throw new NotImplementedException();
             }
         }
-        
+
         */
 
         private static Boolean OnConsoleExit(ConsoleCtrlType type)

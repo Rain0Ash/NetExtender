@@ -12,7 +12,7 @@ namespace NetExtender.Types.Exceptions
     public class ModuleNotInitializedException : AssemblyNotInitializedException
     {
         public Module Module { get; }
-        
+
         public ModuleNotInitializedException(Module module)
             : this(module, null)
         {
@@ -30,7 +30,7 @@ namespace NetExtender.Types.Exceptions
             Module = info.GetValue<Module>(nameof(Module));
         }
     }
-    
+
     [Serializable]
     public class AssemblyNotInitializedException : NotInitializedException
     {

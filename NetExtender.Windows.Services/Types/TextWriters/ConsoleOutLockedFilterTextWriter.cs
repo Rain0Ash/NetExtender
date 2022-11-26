@@ -10,7 +10,7 @@ namespace NetExtender.Windows.Services.Types.TextWriters
     internal class ConsoleOutLockedFilterTextWriter : FilterTextWriterWrapper
     {
         protected TextWriter Original { get; }
-        
+
         public ConsoleOutLockedFilterTextWriter()
             : base(new LockedTextWriterWrapper(Console.Out))
         {

@@ -57,7 +57,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
                 return Config.Localization;
             }
         }
-        
+
         public Int32 Count
         {
             get
@@ -73,7 +73,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
                 return GetValue();
             }
         }
-        
+
         public virtual Func<ILocalizationString?, Boolean>? Validate
         {
             get
@@ -99,12 +99,12 @@ namespace NetExtender.Localization.Property.Localization.Properties
         }
 
         protected override event PropertyChangedEventHandler? PropertyChanged;
-        
+
         protected internal ReadOnlyLocalizationProperty(ReadOnlyLocalizationIdentifierProperty property, ILocalizationString? alternate)
             : this(property, property.Config, alternate)
         {
         }
-        
+
         protected internal ReadOnlyLocalizationProperty(IReadOnlyLocalizationIdentifierProperty property, IReadOnlyLocalizationConfig config, ILocalizationString? alternate)
             : base(property is not null ? property.Key : throw new ArgumentNullException(nameof(property)), alternate, property.Options, property.Sections)
         {
@@ -112,7 +112,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
             Config.Changed += OnLocalizationChanged;
             Config.ValueChanged += OnChanged;
         }
-        
+
         protected internal ReadOnlyLocalizationProperty(IReadOnlyLocalizationConfig config, String? key, String? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : this(config ?? throw new ArgumentNullException(nameof(config)), key, alternate is not null ? LocalizationString.Create(config.Default, alternate) : null, options, sections)
         {
@@ -125,7 +125,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
             Config.Changed += OnLocalizationChanged;
             Config.ValueChanged += OnChanged;
         }
-        
+
         protected internal ReadOnlyLocalizationProperty(IReadOnlyLocalizationConfig config, String? key, IEnumerable<KeyValuePair<LocalizationIdentifier, String>>? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : base(key, alternate is not null ? new LocalizationString(config ?? throw new ArgumentNullException(nameof(config)), alternate) : null, options | ConfigPropertyOptions.ReadOnly, sections)
         {
@@ -133,7 +133,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
             Config.Changed += OnLocalizationChanged;
             Config.ValueChanged += OnChanged;
         }
-        
+
         protected internal ReadOnlyLocalizationProperty(IReadOnlyLocalizationConfig config, String? key, IEnumerable<LocalizationValueEntry>? alternate, ConfigPropertyOptions options, IEnumerable<String>? sections)
             : base(key, alternate is not null ? new LocalizationString(config ?? throw new ArgumentNullException(nameof(config)), alternate) : null, options | ConfigPropertyOptions.ReadOnly, sections)
         {
@@ -161,7 +161,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Current)));
         }
-        
+
         protected virtual void OnChanged(String? value)
         {
             OnChanged(new LocalizationValueChangedEventArgs(new LocalizationValueEntry(Key, Identifier, value, Sections)));
@@ -193,7 +193,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
             }
 
             IMutableLocalizationString? mutable = localization as IMutableLocalizationString ?? localization?.ToMutable();
-            
+
             mutable?.Set(identifier, value);
             OnChanged(args);
         }
@@ -202,12 +202,12 @@ namespace NetExtender.Localization.Property.Localization.Properties
         {
             return !IsAlwaysDefault ? GetValueInternal() : Alternate;
         }
-        
+
         protected virtual ILocalizationString? GetValueInternal()
         {
             return Config.GetValue(Key, Alternate, Sections);
         }
-        
+
         protected virtual Task<ILocalizationString?> GetValueInternalAsync(CancellationToken token)
         {
             return Config.GetValueAsync(Key, Alternate, Sections, token);
@@ -229,7 +229,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
             {
                 return Alternate;
             }
-            
+
             if (!IsCaching)
             {
                 Read();
@@ -244,7 +244,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
             {
                 return Alternate;
             }
-            
+
             ILocalizationString? value = GetValue();
             return predicate?.Invoke(value) != false ? value : Alternate;
         }
@@ -260,7 +260,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
             {
                 return Alternate;
             }
-            
+
             if (!IsCaching)
             {
                 await ReadAsync(token);
@@ -280,7 +280,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
             {
                 return Alternate;
             }
-            
+
             ILocalizationString? value = await GetValueAsync(token);
             return predicate?.Invoke(value) != false ? value : Alternate;
         }
@@ -289,26 +289,26 @@ namespace NetExtender.Localization.Property.Localization.Properties
         {
             return KeyExistInternal();
         }
-        
+
         public Task<Boolean> KeyExistAsync()
         {
             return KeyExistAsync(CancellationToken.None);
         }
-        
+
         public virtual Task<Boolean> KeyExistAsync(CancellationToken token)
         {
             return KeyExistInternalAsync(token);
         }
-        
+
         public virtual Boolean Read()
         {
             if (IsAlwaysDefault)
             {
                 return false;
             }
-            
+
             ILocalizationString? value = GetValueInternal() ?? Alternate;
-            
+
             Internal.Reset(value);
             OnChanged(value);
             return true;
@@ -325,7 +325,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
             {
                 return false;
             }
-            
+
             ILocalizationString? value = await GetValueInternalAsync(token) ?? Alternate;
 
             Internal.Reset(value);
@@ -371,11 +371,11 @@ namespace NetExtender.Localization.Property.Localization.Properties
             Config.ValueChanged -= OnChanged;
         }
     }
-    
+
     public class ReadOnlyLocalizationIdentifierProperty : LocalizationIdentifierPropertyInfo, IReadOnlyLocalizationIdentifierProperty
     {
         protected internal IReadOnlyLocalizationConfig Config { get; }
-        
+
         public override event LocalizationValueChangedEventHandler? Changed;
         public override event LocalizationChangedEventHandler? LocalizationChanged;
 
@@ -414,7 +414,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
             : this(property, property.Config, identifier, alternate)
         {
         }
-        
+
         protected internal ReadOnlyLocalizationIdentifierProperty(IReadOnlyLocalizationProperty property, IReadOnlyLocalizationConfig config, LocalizationIdentifier identifier, String? alternate)
             : base(property is not null ? property.Key : throw new ArgumentNullException(nameof(property)), identifier, alternate, property.Options, property.Sections)
         {
@@ -443,7 +443,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Value)));
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Current)));
         }
-        
+
         protected virtual void OnChanged(String? value)
         {
             OnChanged(new LocalizationValueChangedEventArgs(new LocalizationValueEntry(Key, Identifier, value, Sections)));
@@ -461,7 +461,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
             {
                 return;
             }
-            
+
             Internal.Reset(value);
             OnChanged(args);
         }
@@ -470,12 +470,12 @@ namespace NetExtender.Localization.Property.Localization.Properties
         {
             return !IsAlwaysDefault ? GetValueInternal() : Alternate;
         }
-        
+
         protected virtual String? GetValueInternal()
         {
             return Config.GetValue(Key, Identifier, Alternate, Sections);
         }
-        
+
         protected virtual Task<String?> GetValueInternalAsync(CancellationToken token)
         {
             return Config.GetValueAsync(Key, Identifier, Alternate, Sections, token);
@@ -497,7 +497,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
             {
                 return Alternate;
             }
-            
+
             if (!IsCaching)
             {
                 Read();
@@ -517,7 +517,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
             {
                 return Alternate;
             }
-            
+
             if (!IsCaching)
             {
                 await ReadAsync(token);
@@ -530,31 +530,31 @@ namespace NetExtender.Localization.Property.Localization.Properties
         {
             return KeyExistInternal();
         }
-        
+
         public Task<Boolean> KeyExistAsync()
         {
             return KeyExistAsync(CancellationToken.None);
         }
-        
+
         public virtual Task<Boolean> KeyExistAsync(CancellationToken token)
         {
             return KeyExistInternalAsync(token);
         }
-        
+
         public virtual Boolean Read()
         {
             if (IsAlwaysDefault)
             {
                 return false;
             }
-            
+
             String? value = GetValueInternal() ?? Alternate;
 
             if (Internal.IsValueCreated && value == Internal.Value)
             {
                 return true;
             }
-            
+
             Internal.Reset(value);
             OnChanged(value);
             return true;
@@ -571,14 +571,14 @@ namespace NetExtender.Localization.Property.Localization.Properties
             {
                 return false;
             }
-            
+
             String? value = await GetValueInternalAsync(token) ?? Alternate;
 
             if (Internal.IsValueCreated && value == Internal.Value)
             {
                 return true;
             }
-            
+
             Internal.Reset(value);
             OnChanged(value);
             return true;

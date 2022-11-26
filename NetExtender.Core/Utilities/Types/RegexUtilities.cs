@@ -201,7 +201,7 @@ namespace NetExtender.Utilities.Types
         {
             return IfMatchGetCaptures(value, pattern, RegexOptions.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<String> IfMatchGetCaptures(String value, String pattern, RegexOptions options)
         {
@@ -218,7 +218,7 @@ namespace NetExtender.Utilities.Types
 
             return IfMatchGetCaptures(regex.Matches(value), value);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IEnumerable<String>> IfMatchGetCapturesAsync(String value, String pattern)
         {
@@ -288,7 +288,7 @@ namespace NetExtender.Utilities.Types
 
             return MatchNamedCaptures(matches, groups, nogroup);
         }
-        
+
         public static IDictionary<String, IList<String>> MatchNamedCaptures(this MatchCollection matches, params String?[] groups)
         {
             return MatchNamedCaptures(matches, (IEnumerable<String?>) groups);
@@ -298,7 +298,7 @@ namespace NetExtender.Utilities.Types
         {
             return MatchNamedCaptures(matches, groups, true);
         }
-        
+
         public static IDictionary<String, IList<String>> MatchNamedCaptures(this MatchCollection matches, Boolean nogroup, params String?[] groups)
         {
             return MatchNamedCaptures(matches, groups, nogroup);
@@ -331,19 +331,19 @@ namespace NetExtender.Utilities.Types
             captures.TrimExcess();
             return captures;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IDictionary<String, IList<String>>> MatchNamedCapturesAsync(this Regex regex, String input)
         {
             return MatchNamedCapturesAsync(regex, input, true);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IDictionary<String, IList<String>>> MatchNamedCapturesAsync(this Regex regex, String input, Boolean nogroup)
         {
             return MatchNamedCapturesAsync(regex, input, nogroup, CancellationToken.None);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<IDictionary<String, IList<String>>> MatchNamedCapturesAsync(this Regex regex, String input, CancellationToken token)
         {

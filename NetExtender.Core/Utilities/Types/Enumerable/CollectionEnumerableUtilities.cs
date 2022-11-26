@@ -76,7 +76,7 @@ namespace NetExtender.Utilities.Types
                 _ => source.ToArray()
             };
         }
-        
+
         public static IReadOnlyCollection<T> Materialize<T>(this IEnumerable<T>? source, out Int32 count)
         {
             switch (source)
@@ -96,7 +96,7 @@ namespace NetExtender.Utilities.Types
                     return result;
             }
         }
-        
+
         public static IReadOnlyCollection<T> Materialize<T>(this IEnumerable<T>? source, out Int64 count)
         {
             switch (source)
@@ -139,12 +139,12 @@ namespace NetExtender.Utilities.Types
                 count = default;
                 return source;
             }
-            
+
             source = Materialize(source, out Int32 result);
             count = result;
             return source;
         }
-        
+
         public static IEnumerable<T> MaterializeIf<T>(this IEnumerable<T> source, Boolean condition, out Int64? count)
         {
             if (source is null)
@@ -157,12 +157,12 @@ namespace NetExtender.Utilities.Types
                 count = default;
                 return source;
             }
-            
+
             source = Materialize(source, out Int64 result);
             count = result;
             return source;
         }
-        
+
         public static IEnumerable<T> MaterializeIf<T>(this IEnumerable<T> source, Func<Boolean> condition)
         {
             if (source is null)
@@ -177,7 +177,7 @@ namespace NetExtender.Utilities.Types
 
             return MaterializeIf(source, condition());
         }
-        
+
         public static IEnumerable<T> MaterializeIf<T>(this IEnumerable<T> source, Func<Boolean> condition, out Int32? count)
         {
             if (source is null)
@@ -192,7 +192,7 @@ namespace NetExtender.Utilities.Types
 
             return MaterializeIf(source, condition(), out count);
         }
-        
+
         public static IEnumerable<T> MaterializeIf<T>(this IEnumerable<T> source, Func<Boolean> condition, out Int64? count)
         {
             if (source is null)
@@ -207,7 +207,7 @@ namespace NetExtender.Utilities.Types
 
             return MaterializeIf(source, condition(), out count);
         }
-        
+
         public static IEnumerable<T> MaterializeIfNot<T>(this IEnumerable<T> source, Boolean condition)
         {
             if (source is null)
@@ -230,12 +230,12 @@ namespace NetExtender.Utilities.Types
                 count = default;
                 return source;
             }
-            
+
             source = Materialize(source, out Int32 result);
             count = result;
             return source;
         }
-        
+
         public static IEnumerable<T> MaterializeIfNot<T>(this IEnumerable<T> source, Boolean condition, out Int64? count)
         {
             if (source is null)
@@ -248,12 +248,12 @@ namespace NetExtender.Utilities.Types
                 count = default;
                 return source;
             }
-            
+
             source = Materialize(source, out Int64 result);
             count = result;
             return source;
         }
-        
+
         public static IEnumerable<T> MaterializeIfNot<T>(this IEnumerable<T> source, Func<Boolean> condition)
         {
             if (source is null)
@@ -268,7 +268,7 @@ namespace NetExtender.Utilities.Types
 
             return MaterializeIfNot(source, condition());
         }
-        
+
         public static IEnumerable<T> MaterializeIfNot<T>(this IEnumerable<T> source, Func<Boolean> condition, out Int32? count)
         {
             if (source is null)
@@ -283,7 +283,7 @@ namespace NetExtender.Utilities.Types
 
             return MaterializeIfNot(source, condition(), out count);
         }
-        
+
         public static IEnumerable<T> MaterializeIfNot<T>(this IEnumerable<T> source, Func<Boolean> condition, out Int64? count)
         {
             if (source is null)
@@ -312,7 +312,7 @@ namespace NetExtender.Utilities.Types
                 source.TryGetPropertyValue("LongLength", out length) ? length :
                 source.TryGetPropertyValue("LongCount", out length) ? length : default;
         }
-        
+
         [Pure]
         public static Int64? LongCountIfMaterializedByReflection(this IEnumerable source)
         {
@@ -333,7 +333,7 @@ namespace NetExtender.Utilities.Types
         {
             return IsMaterializedByReflection(source, out Int32? _);
         }
-        
+
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsMaterializedByReflection(this IEnumerable source, [NotNullWhen(true)] out Int32? count)
@@ -346,21 +346,21 @@ namespace NetExtender.Utilities.Types
             count = CountIfMaterializedByReflection(source);
             return count is not null;
         }
-        
+
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsMaterializedByReflection(this IEnumerable source, [NotNullWhen(true)] out Int64? count)
         {
             return IsLongMaterializedByReflection(source, out count);
         }
-        
+
         [Pure]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean IsLongMaterializedByReflection(this IEnumerable source)
         {
             return IsLongMaterializedByReflection(source, out _);
         }
-        
+
         [Pure]
         public static Boolean IsLongMaterializedByReflection(this IEnumerable source, [NotNullWhen(true)] out Int64? count)
         {
@@ -391,7 +391,7 @@ namespace NetExtender.Utilities.Types
                 _ => source.ToArray()
             };
         }
-        
+
         public static IEnumerable<T> Dematerialize<T>(this IEnumerable<T> source)
         {
             if (source is null)

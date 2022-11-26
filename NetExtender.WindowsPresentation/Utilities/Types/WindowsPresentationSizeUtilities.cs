@@ -17,7 +17,7 @@ namespace NetExtender.Utilities.Types
         {
             return new Size(size.Width, size.Height);
         }
-        
+
         public static Double GetAspectRatio(this Size size)
         {
             return DrawingUtilities.GetAspectRatio(size.Width, size.Height);

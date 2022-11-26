@@ -39,7 +39,7 @@ namespace NetExtender.Utilities.Windows.IO
 
             return OpenExplorer(info.FullName);
         }
-        
+
         public static Boolean OpenExplorer(String path)
         {
             if (path is null)
@@ -58,14 +58,14 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 return false;
             }
-            
+
             path = fullpath;
 
             if (!PathUtilities.IsExistAsFolder(path))
             {
                 return false;
             }
-            
+
             IntPtr directory = SHParseDisplayName(path);
 
             if (directory == IntPtr.Zero)
@@ -79,7 +79,7 @@ namespace NetExtender.Utilities.Windows.IO
 
             return hresult == 0;
         }
-        
+
         public static Boolean OpenExplorerWithSelection(this FileInfo info)
         {
             if (info is null)
@@ -94,7 +94,7 @@ namespace NetExtender.Utilities.Windows.IO
 
             return info.Directory is not null && OpenExplorerWithSelection(info.Directory.FullName, info.Name);
         }
-        
+
         public static Boolean OpenExplorerWithSelection(String path)
         {
             if (path is null)
@@ -127,14 +127,14 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 throw new ArgumentNullException(nameof(files));
             }
-            
+
             FileInfo[] values = files.Where(item => item?.Directory?.FullName is not null)
                 .WhereSameBy(item => item!.Directory!.FullName, StringComparer.FromComparison(comparison))
                 .DistinctBy(item => item!.FullName).ToArray()!;
 
             return values.Length > 0 && OpenExplorerWithSelection(values[0].Directory!.FullName, values.Select(item => item.Name), comparison);
         }
-        
+
         public static Boolean OpenExplorerWithSelection(params FileInfo[] files)
         {
             if (files is null)
@@ -226,7 +226,7 @@ namespace NetExtender.Utilities.Windows.IO
                 {
                     continue;
                 }
-                
+
                 yield return PathUtilities.GetFileName(path);
             }
         }
@@ -237,7 +237,7 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 throw new ArgumentNullException(nameof(directory));
             }
-            
+
             String? fullpath = PathUtilities.GetFullPath(directory);
 
             if (fullpath is null)
@@ -273,10 +273,10 @@ namespace NetExtender.Utilities.Windows.IO
             IntPtr[] ptrfiles = filename.Select(file => SHParseDisplayName(Path.Combine(directory, file))).Where(IntPtrUtilities.IsNotNull).ToArray();
 
             Int32 hresult = SHOpenFolderAndSelectItems(ptrdirectory, (UInt32) ptrfiles.Length, ptrfiles, 0);
-            
+
             Marshal.FreeCoTaskMem(ptrdirectory);
             ptrfiles.ForEach(Marshal.FreeCoTaskMem);
-            
+
             return hresult == 0;
         }
 
@@ -291,13 +291,13 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 return null;
             }
-            
+
             FileInfo? info = null;
 
             try
             {
                 info = new FileInfo(Path.GetTempFileName());
-                
+
                 await using (FileStream write = info.OpenWrite())
                 {
                     await write.WriteAsync(value);

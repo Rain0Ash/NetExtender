@@ -15,7 +15,7 @@ namespace NetExtender.Types.Numerics
         Down = 3,
         Left = 4,
         Right = 12,
-        
+
         UpLeft = 5,
         DownLeft = 7,
         UpRight = 13,
@@ -33,7 +33,7 @@ namespace NetExtender.Types.Numerics
         {
             return !(first == second);
         }
-        
+
         public static Point2<T> operator +(Point2<T> first, Point2<T> second)
         {
             return new Point2<T>(MathUnsafe.Add(first.X, second.X), MathUnsafe.Add(first.Y, second.Y));
@@ -127,13 +127,13 @@ namespace NetExtender.Types.Numerics
                 _ => throw new ArgumentOutOfRangeException(nameof(offset), offset, null)
             };
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point2<T> Delta(Point2<T> point)
         {
             return this - point;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point2<T> Delta(T x, T y)
         {
@@ -145,13 +145,13 @@ namespace NetExtender.Types.Numerics
         {
             return MathUnsafe.GreaterEqual(X, default) && MathUnsafe.GreaterEqual(Y, default);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean IsNegative()
         {
             return MathUnsafe.LessEqual(X, default) && MathUnsafe.LessEqual(Y, default);
         }
-        
+
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(X, Y);
@@ -172,7 +172,7 @@ namespace NetExtender.Types.Numerics
             return $"X:{X}, Y:{Y}";
         }
     }
-    
+
     public readonly struct Point3<T> : IEquatable<Point3<T>> where T : unmanaged, IEquatable<T>, IComparable<T>, IConvertible
     {
         public static Boolean operator ==(Point3<T> fisrt, Point3<T> second)
@@ -184,7 +184,7 @@ namespace NetExtender.Types.Numerics
         {
             return !(first == second);
         }
-        
+
         public static Point3<T> operator +(Point3<T> first, Point3<T> second)
         {
             return new Point3<T>(MathUnsafe.Add(first.X, second.X), MathUnsafe.Add(first.Y, second.Y), MathUnsafe.Add(first.Z, second.Z));
@@ -209,7 +209,7 @@ namespace NetExtender.Types.Numerics
         {
             return new Point3<T>(MathUnsafe.Modulo(first.X, second.X), MathUnsafe.Modulo(first.Y, second.Y), MathUnsafe.Modulo(first.Z, second.Z));
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static T ToGeneric(Int32 value)
         {
@@ -229,48 +229,48 @@ namespace NetExtender.Types.Numerics
             Y = y;
             Z = z;
         }
-        
+
         public Point3(Int32 x, Int32 y, Int32 z)
             : this(ToGeneric(x), ToGeneric(y), ToGeneric(z))
         {
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point3<T> Offset(Point3<T> point)
         {
             return this + point;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point3<T> Offset(T x, T y, T z)
         {
             return this + new Point3<T>(x, y, z);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point3<T> Delta(Point3<T> point)
         {
             return this - point;
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Point3<T> Delta(T x, T y, T z)
         {
             return this - new Point3<T>(x, y, z);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean IsPositive()
         {
             return MathUnsafe.GreaterEqual(X, default) && MathUnsafe.GreaterEqual(Y, default) && MathUnsafe.GreaterEqual(Z, default);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean IsNegative()
         {
             return MathUnsafe.LessEqual(X, default) && MathUnsafe.LessEqual(Y, default) && MathUnsafe.LessEqual(Z, default);
         }
-        
+
         public override Int32 GetHashCode()
         {
             return HashCode.Combine(X, Y);
@@ -285,7 +285,7 @@ namespace NetExtender.Types.Numerics
         {
             return MathUnsafe.Equal(X, other.X) && MathUnsafe.Equal(Y, other.Y) && MathUnsafe.Equal(Z, other.Z);
         }
-        
+
         public override String ToString()
         {
             return $"X:{X}, Y:{Y}, Z:{Z}";

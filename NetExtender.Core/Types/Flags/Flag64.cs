@@ -21,17 +21,17 @@ namespace NetExtender.Types.Flags
         {
             return value.Internal;
         }
-        
+
         public static implicit operator Flag64(SByte value)
         {
             return new Flag64(Unsafe.As<SByte, Byte>(ref value));
         }
-        
+
         public static implicit operator Flag64(Byte value)
         {
             return new Flag64(value);
         }
-        
+
         public static implicit operator Flag64(Int16 value)
         {
             return new Flag64(Unsafe.As<Int16, UInt16>(ref value));
@@ -41,7 +41,7 @@ namespace NetExtender.Types.Flags
         {
             return new Flag64(value);
         }
-        
+
         public static implicit operator Flag64(Int32 value)
         {
             return new Flag64(Unsafe.As<Int32, UInt32>(ref value));
@@ -51,7 +51,7 @@ namespace NetExtender.Types.Flags
         {
             return new Flag64(value);
         }
-        
+
         public static implicit operator Flag64(Int64 value)
         {
             return new Flag64(Unsafe.As<Int64, UInt64>(ref value));
@@ -61,7 +61,7 @@ namespace NetExtender.Types.Flags
         {
             return new Flag64(value);
         }
-        
+
         public static implicit operator ReadOnlySpan<Byte>(in Flag64 value)
         {
             fixed (void* pointer = &value)
@@ -69,7 +69,7 @@ namespace NetExtender.Types.Flags
                 return new ReadOnlySpan<Byte>(pointer, sizeof(UInt64) / sizeof(Byte));
             }
         }
-        
+
         public static implicit operator ReadOnlySpan<UInt16>(in Flag64 value)
         {
             fixed (void* pointer = &value)
@@ -77,7 +77,7 @@ namespace NetExtender.Types.Flags
                 return new ReadOnlySpan<UInt16>(pointer, sizeof(UInt64) / sizeof(UInt16));
             }
         }
-        
+
         public static implicit operator ReadOnlySpan<UInt32>(in Flag64 value)
         {
             fixed (void* pointer = &value)
@@ -85,7 +85,7 @@ namespace NetExtender.Types.Flags
                 return new ReadOnlySpan<UInt32>(pointer, sizeof(UInt64) / sizeof(UInt32));
             }
         }
-        
+
         public static implicit operator ReadOnlySpan<UInt64>(in Flag64 value)
         {
             fixed (void* pointer = &value)
@@ -93,42 +93,42 @@ namespace NetExtender.Types.Flags
                 return new ReadOnlySpan<UInt64>(pointer, sizeof(UInt64) / sizeof(UInt64));
             }
         }
-        
+
         public static Boolean operator ==(Flag64 first, Flag64 second)
         {
             return first.Internal == second.Internal;
         }
-        
+
         public static Boolean operator !=(Flag64 first, Flag64 second)
         {
             return !(first == second);
         }
-        
+
         public static Flag64 operator |(Flag64 first, Flag64 second)
         {
             return new Flag64(first.Internal | second.Internal);
         }
-        
+
         public static Flag64 operator &(Flag64 first, Flag64 second)
         {
             return new Flag64(first.Internal & second.Internal);
         }
-        
+
         public static Flag64 operator ^(Flag64 first, Flag64 second)
         {
             return new Flag64(first.Internal ^ second.Internal);
         }
-        
+
         public static Flag64 operator ~(Flag64 value)
         {
             return new Flag64(~value.Internal);
         }
-        
+
         public static Flag64 operator <<(Flag64 value, Int32 shift)
         {
             return value.BitwiseShiftLeft(shift);
         }
-        
+
         public static Flag64 operator >>(Flag64 value, Int32 shift)
         {
             return value.BitwiseShiftRight(shift);
@@ -149,7 +149,7 @@ namespace NetExtender.Types.Flags
                 return Size * BitUtilities.BitInByte;
             }
         }
-        
+
         public Int32 PopCount
         {
             get
@@ -159,7 +159,7 @@ namespace NetExtender.Types.Flags
         }
 
         internal UInt64 Internal { get; }
-        
+
         public Flag64(UInt64 value)
         {
             Internal = value;
@@ -180,7 +180,7 @@ namespace NetExtender.Types.Flags
                     return false;
                 }
             }
-            
+
             return true;
         }
 
@@ -223,7 +223,7 @@ namespace NetExtender.Types.Flags
         {
             return HasFlag(value.AsSpan());
         }
-        
+
         public override Int32 GetHashCode()
         {
             return Internal.GetHashCode();
@@ -260,7 +260,7 @@ namespace NetExtender.Types.Flags
         {
             return Convert.ToString(unchecked((Int64) Internal), 2);
         }
-        
+
         public IEnumerable<Int32> Enumerate()
         {
             Byte[] values = AsSpan().ToArray();

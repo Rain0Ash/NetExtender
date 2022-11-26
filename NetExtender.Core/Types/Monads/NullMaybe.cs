@@ -13,12 +13,12 @@ namespace NetExtender.Types.Monads
         {
             return value.HasValue ? new NullMaybe<T>(value.Value) : default;
         }
-        
+
         public static implicit operator Maybe<T>(NullMaybe<T> value)
         {
             return new Maybe<T>(value);
         }
-        
+
         public static implicit operator NullMaybe<T>(T value)
         {
             return new NullMaybe<T>(value);
@@ -28,7 +28,7 @@ namespace NetExtender.Types.Monads
         {
             return value.Value;
         }
-        
+
         public static Boolean operator ==(NullMaybe<T> first, NullMaybe<T> second)
         {
             return first.Equals(second);
@@ -57,22 +57,22 @@ namespace NetExtender.Types.Monads
                 _ => Equals(Value, other)
             };
         }
-        
+
         public Boolean Equals(T? other)
         {
             return EqualityComparer<T>.Default.Equals(Value, other);
         }
-        
+
         public Boolean Equals(Maybe<T> other)
         {
             return other.HasValue && EqualityComparer<T>.Default.Equals(Value, other.Value);
         }
-        
+
         public Boolean Equals(NullMaybe<T> other)
         {
             return EqualityComparer<T>.Default.Equals(Value, other.Value);
         }
-        
+
         public override Int32 GetHashCode()
         {
             return Value is not null ? Value.GetHashCode() : 0;

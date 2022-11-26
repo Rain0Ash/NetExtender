@@ -32,7 +32,7 @@ namespace NetExtender.Types.Exceptions.Enum
             : base(message, paramName, innerException)
         {
         }
-        
+
         protected NotFlagsEnumTypeException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {

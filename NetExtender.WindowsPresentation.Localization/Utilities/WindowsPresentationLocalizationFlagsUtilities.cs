@@ -17,7 +17,7 @@ namespace NetExtender.WindowsPresentation.Localization.Utilities
         {
             WindowsPresentationLocalizationFlagsUtilities.Initialize();
         }
-        
+
         public LocalizationFlagBitmapSourceEntry(LocalizationIdentifier identifier)
             : base(identifier)
         {
@@ -27,7 +27,7 @@ namespace NetExtender.WindowsPresentation.Localization.Utilities
     public static class WindowsPresentationLocalizationFlagsUtilities
     {
         private static Assembly Assembly { get; }
-        
+
         static WindowsPresentationLocalizationFlagsUtilities()
         {
             Assembly = typeof(LocalizationFlagsUtilities).Assembly;
@@ -43,19 +43,19 @@ namespace NetExtender.WindowsPresentation.Localization.Utilities
             try
             {
                 String? region = info.TwoLetterISORegionName?.ToLower() ?? info.TwoLetterISOLanguageName?.ToLower();
-                
+
                 if (region is null)
                 {
                     return null;
                 }
-                
+
                 using Stream? stream = Assembly.GetManifestResourceStream($"NetExtender.Localization.Flags.Flags.{region}.png");
-                
+
                 if (stream is null)
                 {
                     return null;
                 }
-                
+
                 PngBitmapDecoder decoder = new PngBitmapDecoder(stream, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
                 return decoder.Frames[0];
             }
@@ -64,7 +64,7 @@ namespace NetExtender.WindowsPresentation.Localization.Utilities
                 return null;
             }
         }
-        
+
         public static BitmapSource? GetFlagImage(this CultureInfo info)
         {
             return info.GetFlagImage<BitmapSource>();
