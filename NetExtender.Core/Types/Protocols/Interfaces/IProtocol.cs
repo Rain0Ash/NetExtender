@@ -11,5 +11,6 @@ namespace NetExtender.Types.Protocols.Interfaces
 
         public Boolean Register();
         public Boolean Unregister();
+        public Boolean Unregister(Boolean force);
     }
 }

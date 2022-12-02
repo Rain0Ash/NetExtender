@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using NetExtender.Utilities.Serialization;
 using Newtonsoft.Json;
 
@@ -284,18 +285,28 @@ namespace NetExtender.Types.Exceptions
         [SuppressMessage("ReSharper", "AutoPropertyCanBeMadeGetOnly.Global")]
         public record BusinessInfo
         {
+            [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            [JsonPropertyOrder(0)]
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore, Order = 0)]
             public String? Message { get; init; }
 
+            [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            [JsonPropertyOrder(1)]
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore, Order = 1)]
             public String? Description { get; init; }
 
+            [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            [JsonPropertyOrder(2)]
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore, Order = 2)]
             public HttpStatusCode? Status { get; init; }
 
+            [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.Never)]
+            [JsonPropertyOrder(Int32.MaxValue - 1)]
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore, Order = Int32.MaxValue - 1)]
             public Boolean Business { get; init; }
 
+            [System.Text.Json.Serialization.JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+            [JsonPropertyOrder(Int32.MaxValue)]
             [JsonProperty(NullValueHandling = NullValueHandling.Ignore, Order = Int32.MaxValue)]
             public BusinessInfo? Inner { get; init; }
 

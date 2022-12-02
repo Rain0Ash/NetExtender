@@ -11,6 +11,8 @@ namespace NetExtender.Windows.Protocols
     {
         public String Name { get; }
 
+        public abstract ProtocolStatus Status { get; }
+
         public virtual Boolean IsRegister
         {
             get
@@ -35,19 +37,46 @@ namespace NetExtender.Windows.Protocols
                     return;
                 }
 
-                Unregister();
+                Unregister(true);
             }
         }
 
-        public abstract ProtocolStatus Status { get; }
+        public Boolean IsUnknown
+        {
+            get
+            {
+                return Status == ProtocolStatus.Unknown;
+            }
+        }
 
-        public abstract Boolean Register();
+        public Boolean IsAnother
+        {
+            get
+            {
+                return Status == ProtocolStatus.Another;
+            }
+        }
 
-        public abstract Boolean Unregister();
+        public Boolean IsError
+        {
+            get
+            {
+                return Status == ProtocolStatus.Error;
+            }
+        }
 
         protected ProtocolRegistration(String name)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
         }
+        
+        public abstract Boolean Register();
+
+        public Boolean Unregister()
+        {
+            return Unregister(false);
+        }
+        
+        public abstract Boolean Unregister(Boolean force);
     }
 }

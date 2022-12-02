@@ -10,6 +10,7 @@ namespace NetExtender.Types.Protocols
         Unknown,
         Unregister,
         Register,
+        Another,
         Error
     }
 }

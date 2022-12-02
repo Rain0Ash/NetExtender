@@ -32,12 +32,14 @@ namespace NetExtender.Windows.Protocols
 
                     using RegistryKey? registry = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(ShellSubKey);
 
-                    if (registry is null)
-                    {
-                        return ProtocolStatus.Unregister;
-                    }
+                    String? path = registry?.GetValue(Name)?.ToString();
 
-                    return registry.GetValue(Name)?.ToString() == Path ? ProtocolStatus.Register : ProtocolStatus.Unregister;
+                    return path switch
+                    {
+                        null => ProtocolStatus.Unregister,
+                        "" => ProtocolStatus.Error,
+                        _ => path == Path ? ProtocolStatus.Register : ProtocolStatus.Another
+                    };
                 }
                 catch (SecurityException)
                 {
@@ -101,11 +103,16 @@ namespace NetExtender.Windows.Protocols
             }
         }
 
-        public override Boolean Unregister()
+        public override Boolean Unregister(Boolean force)
         {
             if (Status == ProtocolStatus.Unregister)
             {
                 return true;
+            }
+
+            if (!force && IsAnother)
+            {
+                return false;
             }
 
             try

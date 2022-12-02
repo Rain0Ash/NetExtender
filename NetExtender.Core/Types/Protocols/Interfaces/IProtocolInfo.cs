@@ -8,7 +8,10 @@ namespace NetExtender.Types.Protocols.Interfaces
     public interface IProtocolInfo
     {
         public String Name { get; }
-        public Boolean IsRegister { get; }
         public ProtocolStatus Status { get; }
+        public Boolean IsRegister { get; }
+        public Boolean IsUnknown { get; }
+        public Boolean IsAnother { get; }
+        public Boolean IsError { get; }
     }
 }

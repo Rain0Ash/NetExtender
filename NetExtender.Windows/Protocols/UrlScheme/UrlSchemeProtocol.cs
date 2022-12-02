@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security;
 using Microsoft.Win32;
@@ -75,12 +76,7 @@ namespace NetExtender.Windows.Protocols
                     {
                         return ProtocolStatus.Error;
                     }
-
-                    if (icon.GetValue(null)?.ToString() != IconPath)
-                    {
-                        return ProtocolStatus.Error;
-                    }
-
+                    
                     using RegistryKey? shell = registry.OpenSubKey(ShellSubKey);
 
                     if (shell is null)
@@ -88,9 +84,14 @@ namespace NetExtender.Windows.Protocols
                         return ProtocolStatus.Error;
                     }
 
+                    if (icon.GetValue(null)?.ToString() != IconPath)
+                    {
+                        return ProtocolStatus.Another;
+                    }
+                    
                     if (shell.GetValue(null)?.ToString() != CommandPath)
                     {
-                        return ProtocolStatus.Error;
+                        return ProtocolStatus.Another;
                     }
 
                     return ProtocolStatus.Register;
@@ -137,6 +138,7 @@ namespace NetExtender.Windows.Protocols
             return Register(URLApplicationName);
         }
 
+        [SuppressMessage("ReSharper", "ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract")]
         public virtual Boolean Register(String? about)
         {
             if (IsRegister)
@@ -151,7 +153,6 @@ namespace NetExtender.Windows.Protocols
                 using RegistryKey? registry = Microsoft.Win32.Registry.ClassesRoot.CreateSubKey(Name);
 
                 //TODO: CS8598
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (registry is null)
                 {
                     return false;
@@ -164,7 +165,6 @@ namespace NetExtender.Windows.Protocols
                 using RegistryKey? icon = registry.CreateSubKey(DefaultIcon);
 
                 //TODO: CS8598
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (icon is null)
                 {
                     return false;
@@ -175,7 +175,6 @@ namespace NetExtender.Windows.Protocols
                 using RegistryKey? shell = registry.CreateSubKey(ShellSubKey);
 
                 //TODO: CS8598
-                // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (shell is null)
                 {
                     return false;
@@ -191,11 +190,16 @@ namespace NetExtender.Windows.Protocols
             }
         }
 
-        public override Boolean Unregister()
+        public override Boolean Unregister(Boolean force)
         {
             if (Status == ProtocolStatus.Unregister)
             {
                 return true;
+            }
+            
+            if (!force && IsAnother)
+            {
+                return false;
             }
 
             try

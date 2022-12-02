@@ -44,6 +44,9 @@
         <DependentUpon>Hardware.cs</DependentUpon>
       </Compile>
       <Compile Remove="Utilities\WindowsReflectionHookUtilities.cs" />
+      <Compile Update="Protocols\TypeAssociation\TypeAssociation.cs">
+        <DependentUpon>TypeAssociationProtocol.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
     <ItemGroup>

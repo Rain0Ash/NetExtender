@@ -17,25 +17,36 @@ namespace NetExtender.Utilities.Types
             value = entry.Value;
         }
 
-        // ReSharper disable once UseDeconstructionOnParameter
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static KeyValuePair<TValue, TKey> Reverse<TKey, TValue>(this KeyValuePair<TKey, TValue> pair)
         {
             return new KeyValuePair<TValue, TKey>(pair.Value, pair.Key);
         }
 
-        // ReSharper disable once UseDeconstructionOnParameter
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static KeyValuePair<TKey, TKey> FlattenByKey<TKey, TValue>(this KeyValuePair<TKey, KeyValuePair<TKey, TValue>> pair)
         {
-            return new KeyValuePair<TKey, TKey>(pair.Key, pair.Value.Key);
+            return FlattenByInnerKey(pair);
         }
 
-        // ReSharper disable once UseDeconstructionOnParameter
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static KeyValuePair<TKey, TInnerKey> FlattenByInnerKey<TKey, TInnerKey, TValue>(this KeyValuePair<TKey, KeyValuePair<TInnerKey, TValue>> pair)
+        {
+            return new KeyValuePair<TKey, TInnerKey>(pair.Key, pair.Value.Key);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static KeyValuePair<TKey, TValue> FlattenByValue<TKey, TValue>(this KeyValuePair<TKey, KeyValuePair<TKey, TValue>> pair)
+        {
+            return FlattenByInnerValue(pair);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static KeyValuePair<TKey, TValue> FlattenByInnerValue<TKey, TInnerKey, TValue>(this KeyValuePair<TKey, KeyValuePair<TInnerKey, TValue>> pair)
         {
             return new KeyValuePair<TKey, TValue>(pair.Key, pair.Value.Value);
         }
 
-        // ReSharper disable once UseDeconstructionOnParameter
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DictionaryEntry ToDictionaryEntry<TKey, TValue>(this KeyValuePair<TKey, TValue> pair)
         {
