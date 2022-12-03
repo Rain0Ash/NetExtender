@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using NetExtender.Types.Anonymous.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Anonymous
@@ -99,5 +100,6 @@ namespace NetExtender.Types.Anonymous
 
         public abstract Type DefineType(AnonymousTypePropertyInfo[] properties);
         protected abstract Type DefineType<TParent>(AnonymousTypePropertyInfo[] properties) where TParent : class;
+        public abstract IAnonymousActivatorInfo CreateActivator(AnonymousTypePropertyInfo[] properties);
     }
 }

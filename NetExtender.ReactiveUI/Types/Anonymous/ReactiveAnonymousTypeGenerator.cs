@@ -2,8 +2,11 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
+using NetExtender.ReactiveUI.Types.Anonymous;
+using NetExtender.ReactiveUI.Types.Anonymous.Interfaces;
 using NetExtender.ReactiveUI.Utilities;
 using NetExtender.Types.Anonymous;
 using NetExtender.Utilities.Types;
@@ -62,6 +65,28 @@ namespace NetExtender.ReactiveUI.Anonymous.Core
         public override Type DefineType(AnonymousTypePropertyInfo[] properties)
         {
             return DefineType<ReactiveAnonymousObject>(properties);
+        }
+
+        public override IReactiveAnonymousActivatorInfo CreateActivator(AnonymousTypePropertyInfo[] properties)
+        {
+            if (properties is null)
+            {
+                throw new ArgumentNullException(nameof(properties));
+            }
+
+            Type type = DefineType(properties);
+            
+            ConstructorInfo[] constructors = type.GetConstructors();
+            ConstructorInfo constructor = constructors.Length switch
+            {
+                0 => throw new MissingMethodException(type.Name, ".ctor"),
+                1 => constructors[0],
+                2 => constructors[1],
+                _ => throw new AmbiguousMatchException(type.Name)
+            };
+            
+            Type[] parameters = constructor.GetParameters().Select(parameter => parameter.ParameterType).ToArray();
+            return ReactiveAnonymousActivator.Create(type, parameters);
         }
     }
 }

@@ -30,6 +30,25 @@ namespace NetExtender.Utilities.Types
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        private static IEnumerable<KeyValuePair<String, Type>> Expando(ExpandoObject value)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            foreach ((String name, Object? item) in value)
+            {
+                if (item is null)
+                {
+                    continue;
+                }
+
+                yield return new KeyValuePair<String, Type>(name, item.GetType());
+            }
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type DefineAnonymousType(this ExpandoObject value)
         {
@@ -48,21 +67,8 @@ namespace NetExtender.Utilities.Types
             {
                 throw new ArgumentNullException(nameof(value));
             }
-
-            static IEnumerable<KeyValuePair<String, Type>> Internal(ExpandoObject value)
-            {
-                foreach ((String name, Object? item) in value)
-                {
-                    if (item is null)
-                    {
-                        continue;
-                    }
-
-                    yield return new KeyValuePair<String, Type>(name, item.GetType());
-                }
-            }
-
-            return DefineAnonymousType(generator, Internal(value));
+            
+            return DefineAnonymousType(generator, Expando(value));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -142,6 +148,97 @@ namespace NetExtender.Utilities.Types
             lock (generator)
             {
                 return generator.DefineType(properties);
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IAnonymousActivatorInfo CreateAnonymousActivator(this ExpandoObject value)
+        {
+            return CreateAnonymousActivator(AnonymousType.Generator, value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static IAnonymousActivatorInfo CreateAnonymousActivator(this AnonymousTypeGenerator generator, ExpandoObject value)
+        {
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
+            if (value is null)
+            {
+                throw new ArgumentNullException(nameof(value));
+            }
+            
+            return CreateAnonymousActivator(generator, Expando(value));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IAnonymousActivatorInfo CreateAnonymousActivator(this IEnumerable<PropertyInfo> properties)
+        {
+            return CreateAnonymousActivator(AnonymousType.Generator, properties);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IAnonymousActivatorInfo CreateAnonymousActivator(this AnonymousTypeGenerator generator, IEnumerable<PropertyInfo> properties)
+        {
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
+            if (properties is null)
+            {
+                throw new ArgumentNullException(nameof(properties));
+            }
+            
+            return CreateAnonymousActivator(generator, properties.Select(property => (AnonymousTypePropertyInfo) property).ToProperties());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IAnonymousActivatorInfo CreateAnonymousActivator(this IEnumerable<KeyValuePair<String, Type>> properties)
+        {
+            return CreateAnonymousActivator(AnonymousType.Generator, properties);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IAnonymousActivatorInfo CreateAnonymousActivator(this AnonymousTypeGenerator generator, IEnumerable<KeyValuePair<String, Type>> properties)
+        {
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
+            if (properties is null)
+            {
+                throw new ArgumentNullException(nameof(properties));
+            }
+            
+            return CreateAnonymousActivator(generator, properties.Select(property => (AnonymousTypePropertyInfo) property).ToProperties());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IAnonymousActivatorInfo CreateAnonymousActivator(this AnonymousTypePropertyInfo[] properties)
+        {
+            return CreateAnonymousActivator(AnonymousType.Generator, properties);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IAnonymousActivatorInfo CreateAnonymousActivator(this AnonymousTypeGenerator generator, AnonymousTypePropertyInfo[] properties)
+        {
+            if (generator is null)
+            {
+                throw new ArgumentNullException(nameof(generator));
+            }
+
+            if (properties is null)
+            {
+                throw new ArgumentNullException(nameof(properties));
+            }
+            
+            lock (generator)
+            {
+                return generator.CreateActivator(properties);
             }
         }
 

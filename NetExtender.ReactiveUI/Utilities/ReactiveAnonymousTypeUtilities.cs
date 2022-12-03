@@ -7,6 +7,7 @@ using System.Dynamic;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using NetExtender.ReactiveUI.Anonymous.Core;
+using NetExtender.ReactiveUI.Types.Anonymous.Interfaces;
 using NetExtender.Types.Anonymous;
 using NetExtender.Utilities.Types;
 
@@ -47,6 +48,30 @@ namespace NetExtender.ReactiveUI.Utilities
         public static Type DefineReactiveAnonymousType(this AnonymousTypePropertyInfo[] properties)
         {
             return ReactiveAnonymousType.Generator.DefineAnonymousType(properties);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IReactiveAnonymousActivatorInfo CreateReactiveAnonymousActivator(this ExpandoObject value)
+        {
+            return (IReactiveAnonymousActivatorInfo) ReactiveAnonymousType.Generator.CreateAnonymousActivator(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IReactiveAnonymousActivatorInfo CreateReactiveAnonymousActivator(this IEnumerable<PropertyInfo> properties)
+        {
+            return (IReactiveAnonymousActivatorInfo) ReactiveAnonymousType.Generator.CreateAnonymousActivator(properties);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IReactiveAnonymousActivatorInfo CreateReactiveAnonymousActivator(this IEnumerable<KeyValuePair<String, Type>> properties)
+        {
+            return (IReactiveAnonymousActivatorInfo) ReactiveAnonymousType.Generator.CreateAnonymousActivator(properties);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IReactiveAnonymousActivatorInfo CreateReactiveAnonymousActivator(this AnonymousTypePropertyInfo[] properties)
+        {
+            return (IReactiveAnonymousActivatorInfo) ReactiveAnonymousType.Generator.CreateAnonymousActivator(properties);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
