@@ -110,6 +110,233 @@ namespace NetExtender.Utilities.Numerics
             return casting ? CreateExpression<T1, T2, TResult>(function) : CreateExpressionWithoutCasting<T1, T2, TResult>(function);
         }
 
+        public static Expression<Func<TSource>> CreateNewExpression<TSource>()
+        {
+            Type type = typeof(TSource);
+            
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            ConstructorInfo? constructor = type.GetConstructor(binding, Type.EmptyTypes);
+
+            NewExpression expression = constructor is not null ? Expression.New(constructor) : Expression.New(type);
+            return Expression.Lambda<Func<TSource>>(expression);
+        }
+
+        public static Expression<Func<T, TSource>> CreateNewExpression<TSource, T>()
+        {
+            Type type = typeof(TSource);
+            
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+            
+            Type[] types = { typeof(T) };
+            ConstructorInfo? constructor = type.GetConstructor(binding, types);
+
+            if (constructor is null)
+            {
+                throw new MissingMemberException(typeof(TSource).Name, ".ctor");
+            }
+
+            ParameterExpression argument = Expression.Parameter(typeof(T), nameof(argument));
+            
+            NewExpression expression = Expression.New(constructor, argument);
+            return Expression.Lambda<Func<T, TSource>>(expression, argument);
+        }
+
+        public static Expression<Func<T1, T2, TSource>> CreateNewExpression<TSource, T1, T2>()
+        {
+            Type type = typeof(TSource);
+            
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+            Type[] types = { typeof(T1), typeof(T2) };
+            ConstructorInfo? constructor = type.GetConstructor(binding, types);
+
+            if (constructor is null)
+            {
+                throw new MissingMemberException(typeof(TSource).Name, ".ctor");
+            }
+
+            ParameterExpression first = Expression.Parameter(typeof(T1), nameof(first));
+            ParameterExpression second = Expression.Parameter(typeof(T2), nameof(second));
+            
+            NewExpression expression = Expression.New(constructor, first, second);
+            return Expression.Lambda<Func<T1, T2, TSource>>(expression, first, second);
+        }
+
+        public static Expression<Func<T1, T2, T3, TSource>> CreateNewExpression<TSource, T1, T2, T3>()
+        {
+            Type type = typeof(TSource);
+            
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+            Type[] types = { typeof(T1), typeof(T2), typeof(T3) };
+            ConstructorInfo? constructor = type.GetConstructor(binding, types);
+
+            if (constructor is null)
+            {
+                throw new MissingMemberException(typeof(TSource).Name, ".ctor");
+            }
+
+            ParameterExpression first = Expression.Parameter(typeof(T1), nameof(first));
+            ParameterExpression second = Expression.Parameter(typeof(T2), nameof(second));
+            ParameterExpression third = Expression.Parameter(typeof(T3), nameof(third));
+            
+            NewExpression expression = Expression.New(constructor, first, second, third);
+            return Expression.Lambda<Func<T1, T2, T3, TSource>>(expression, first, second, third);
+        }
+
+        public static Expression<Func<T1, T2, T3, T4, TSource>> CreateNewExpression<TSource, T1, T2, T3, T4>()
+        {
+            Type type = typeof(TSource);
+            
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+            Type[] types = { typeof(T1), typeof(T2), typeof(T3), typeof(T4) };
+            ConstructorInfo? constructor = type.GetConstructor(binding, types);
+
+            if (constructor is null)
+            {
+                throw new MissingMemberException(typeof(TSource).Name, ".ctor");
+            }
+
+            ParameterExpression first = Expression.Parameter(typeof(T1), nameof(first));
+            ParameterExpression second = Expression.Parameter(typeof(T2), nameof(second));
+            ParameterExpression third = Expression.Parameter(typeof(T3), nameof(third));
+            ParameterExpression fourth = Expression.Parameter(typeof(T4), nameof(fourth));
+            
+            NewExpression expression = Expression.New(constructor, first, second, third, fourth);
+            return Expression.Lambda<Func<T1, T2, T3, T4, TSource>>(expression, first, second, third, fourth);
+        }
+
+        public static Expression<Func<T1, T2, T3, T4, T5, TSource>> CreateNewExpression<TSource, T1, T2, T3, T4, T5>()
+        {
+            Type type = typeof(TSource);
+            
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+            Type[] types = { typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5) };
+            ConstructorInfo? constructor = type.GetConstructor(binding, types);
+
+            if (constructor is null)
+            {
+                throw new MissingMemberException(typeof(TSource).Name, ".ctor");
+            }
+
+            ParameterExpression first = Expression.Parameter(typeof(T1), nameof(first));
+            ParameterExpression second = Expression.Parameter(typeof(T2), nameof(second));
+            ParameterExpression third = Expression.Parameter(typeof(T3), nameof(third));
+            ParameterExpression fourth = Expression.Parameter(typeof(T4), nameof(fourth));
+            ParameterExpression fifth = Expression.Parameter(typeof(T5), nameof(fifth));
+            
+            NewExpression expression = Expression.New(constructor, first, second, third, fourth, fifth);
+            return Expression.Lambda<Func<T1, T2, T3, T4, T5, TSource>>(expression, first, second, third, fourth, fifth);
+        }
+
+        public static Expression<Func<T1, T2, T3, T4, T5, T6, TSource>> CreateNewExpression<TSource, T1, T2, T3, T4, T5, T6>()
+        {
+            Type type = typeof(TSource);
+            
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+            Type[] types = { typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6) };
+            ConstructorInfo? constructor = type.GetConstructor(binding, types);
+
+            if (constructor is null)
+            {
+                throw new MissingMemberException(typeof(TSource).Name, ".ctor");
+            }
+
+            ParameterExpression first = Expression.Parameter(typeof(T1), nameof(first));
+            ParameterExpression second = Expression.Parameter(typeof(T2), nameof(second));
+            ParameterExpression third = Expression.Parameter(typeof(T3), nameof(third));
+            ParameterExpression fourth = Expression.Parameter(typeof(T4), nameof(fourth));
+            ParameterExpression fifth = Expression.Parameter(typeof(T5), nameof(fifth));
+            ParameterExpression sixth = Expression.Parameter(typeof(T6), nameof(sixth));
+            
+            NewExpression expression = Expression.New(constructor, first, second, third, fourth, fifth, sixth);
+            return Expression.Lambda<Func<T1, T2, T3, T4, T5, T6, TSource>>(expression, first, second, third, fourth, fifth, sixth);
+        }
+
+        public static Expression<Func<T1, T2, T3, T4, T5, T6, T7, TSource>> CreateNewExpression<TSource, T1, T2, T3, T4, T5, T6, T7>()
+        {
+            Type type = typeof(TSource);
+            
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+            Type[] types = { typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7) };
+            ConstructorInfo? constructor = type.GetConstructor(binding, types);
+
+            if (constructor is null)
+            {
+                throw new MissingMemberException(typeof(TSource).Name, ".ctor");
+            }
+
+            ParameterExpression first = Expression.Parameter(typeof(T1), nameof(first));
+            ParameterExpression second = Expression.Parameter(typeof(T2), nameof(second));
+            ParameterExpression third = Expression.Parameter(typeof(T3), nameof(third));
+            ParameterExpression fourth = Expression.Parameter(typeof(T4), nameof(fourth));
+            ParameterExpression fifth = Expression.Parameter(typeof(T5), nameof(fifth));
+            ParameterExpression sixth = Expression.Parameter(typeof(T6), nameof(sixth));
+            ParameterExpression seventh = Expression.Parameter(typeof(T7), nameof(seventh));
+            
+            NewExpression expression = Expression.New(constructor, first, second, third, fourth, fifth, sixth, seventh);
+            return Expression.Lambda<Func<T1, T2, T3, T4, T5, T6, T7, TSource>>(expression, first, second, third, fourth, fifth, sixth, seventh);
+        }
+
+        public static Expression<Func<T1, T2, T3, T4, T5, T6, T7, T8, TSource>> CreateNewExpression<TSource, T1, T2, T3, T4, T5, T6, T7, T8>()
+        {
+            Type type = typeof(TSource);
+            
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+            Type[] types = { typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7), typeof(T8) };
+            ConstructorInfo? constructor = type.GetConstructor(binding, types);
+
+            if (constructor is null)
+            {
+                throw new MissingMemberException(typeof(TSource).Name, ".ctor");
+            }
+
+            ParameterExpression first = Expression.Parameter(typeof(T1), nameof(first));
+            ParameterExpression second = Expression.Parameter(typeof(T2), nameof(second));
+            ParameterExpression third = Expression.Parameter(typeof(T3), nameof(third));
+            ParameterExpression fourth = Expression.Parameter(typeof(T4), nameof(fourth));
+            ParameterExpression fifth = Expression.Parameter(typeof(T5), nameof(fifth));
+            ParameterExpression sixth = Expression.Parameter(typeof(T6), nameof(sixth));
+            ParameterExpression seventh = Expression.Parameter(typeof(T7), nameof(seventh));
+            ParameterExpression eighth = Expression.Parameter(typeof(T8), nameof(eighth));
+            
+            NewExpression expression = Expression.New(constructor, first, second, third, fourth, fifth, sixth, seventh, eighth);
+            return Expression.Lambda<Func<T1, T2, T3, T4, T5, T6, T7, T8, TSource>>(expression, first, second, third, fourth, fifth, sixth, seventh, eighth);
+        }
+
+        public static Expression<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TSource>> CreateNewExpression<TSource, T1, T2, T3, T4, T5, T6, T7, T8, T9>()
+        {
+            Type type = typeof(TSource);
+            
+            const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
+            Type[] types = { typeof(T1), typeof(T2), typeof(T3), typeof(T4), typeof(T5), typeof(T6), typeof(T7), typeof(T8), typeof(T9) };
+            ConstructorInfo? constructor = type.GetConstructor(binding, types);
+
+            if (constructor is null)
+            {
+                throw new MissingMemberException(typeof(TSource).Name, ".ctor");
+            }
+
+            ParameterExpression first = Expression.Parameter(typeof(T1), nameof(first));
+            ParameterExpression second = Expression.Parameter(typeof(T2), nameof(second));
+            ParameterExpression third = Expression.Parameter(typeof(T3), nameof(third));
+            ParameterExpression fourth = Expression.Parameter(typeof(T4), nameof(fourth));
+            ParameterExpression fifth = Expression.Parameter(typeof(T5), nameof(fifth));
+            ParameterExpression sixth = Expression.Parameter(typeof(T6), nameof(sixth));
+            ParameterExpression seventh = Expression.Parameter(typeof(T7), nameof(seventh));
+            ParameterExpression eighth = Expression.Parameter(typeof(T8), nameof(eighth));
+            ParameterExpression ninth = Expression.Parameter(typeof(T9), nameof(ninth));
+            
+            NewExpression expression = Expression.New(constructor, first, second, third, fourth, fifth, sixth, seventh, eighth, ninth);
+            return Expression.Lambda<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TSource>>(expression, first, second, third, fourth, fifth, sixth, seventh, eighth, ninth);
+        }
+
         public static Expression<Func<TSource, TValue>> CreateGetExpression<TSource, TValue>(String name)
         {
             if (name is null)
