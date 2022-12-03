@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 namespace NetExtender.Utilities.Numerics
 {
@@ -337,6 +338,7 @@ namespace NetExtender.Utilities.Numerics
             return Expression.Lambda<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TSource>>(expression, first, second, third, fourth, fifth, sixth, seventh, eighth, ninth);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Expression<Func<TSource, TValue>> CreateGetExpression<TSource, TValue>(String name)
         {
             if (name is null)
@@ -356,7 +358,38 @@ namespace NetExtender.Utilities.Numerics
 
             return CreateGetExpression<TSource, TValue>(member);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean TryCreateGetExpression<TSource, TValue>(String name, [MaybeNullWhen(false)] out Expression<Func<TSource, TValue>> result)
+        {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
 
+            try
+            {
+                Type type = typeof(TSource);
+
+                const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+                MemberInfo? member = type.GetProperty(name, binding) ?? (MemberInfo?) type.GetField(name, binding);
+
+                if (member is not null)
+                {
+                    return TryCreateGetExpression(member, out result);
+                }
+
+                result = default;
+                return false;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Expression<Func<TSource, TValue>> CreateGetExpression<TSource, TValue>(MemberInfo member)
         {
             if (member is null)
@@ -382,16 +415,55 @@ namespace NetExtender.Utilities.Numerics
             return Expression.Lambda<Func<TSource, TValue>>(convert, parameter);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean TryCreateGetExpression<TSource, TValue>(MemberInfo member, [MaybeNullWhen(false)] out Expression<Func<TSource, TValue>> result)
+        {
+            if (member is null)
+            {
+                throw new ArgumentNullException(nameof(member));
+            }
+
+            if (member is not PropertyInfo && member is not FieldInfo)
+            {
+                throw new ArgumentException($"Member with type {member.GetType()} is not {nameof(PropertyInfo)} or {nameof(FieldInfo)}", nameof(member));
+            }
+
+            if (member is PropertyInfo { CanRead: false })
+            {
+                result = default;
+                return false;
+            }
+
+            try
+            {
+                Type type = typeof(TSource);
+                ParameterExpression parameter = Expression.Parameter(type, "source");
+
+                MemberExpression access = Expression.MakeMemberAccess(parameter, member);
+                UnaryExpression convert = Expression.Convert(access, typeof(TValue));
+                result = Expression.Lambda<Func<TSource, TValue>>(convert, parameter);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Expression<Func<TSource, TValue>> CreateGetExpression<TSource, TValue>(this FieldInfo field)
         {
             return CreateGetExpression<TSource, TValue>((MemberInfo) field);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Expression<Func<TSource, TValue>> CreateGetExpression<TSource, TValue>(this PropertyInfo field)
         {
             return CreateGetExpression<TSource, TValue>((MemberInfo) field);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Expression<Action<TSource, TValue>> CreateSetExpression<TSource, TValue>(String name)
         {
             if (name is null)
@@ -411,7 +483,38 @@ namespace NetExtender.Utilities.Numerics
 
             return CreateSetExpression<TSource, TValue>(member);
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean TryCreateSetExpression<TSource, TValue>(String name, [MaybeNullWhen(false)] out Expression<Action<TSource, TValue>> result)
+        {
+            if (name is null)
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
 
+            try
+            {
+                Type type = typeof(TSource);
+
+                const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+                MemberInfo? member = type.GetProperty(name, binding) ?? (MemberInfo?) type.GetField(name, binding);
+
+                if (member is not null)
+                {
+                    return TryCreateSetExpression(member, out result);
+                }
+
+                result = default;
+                return false;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Expression<Action<TSource, TValue>> CreateSetExpression<TSource, TValue>(MemberInfo member)
         {
             if (member is null)
@@ -437,16 +540,67 @@ namespace NetExtender.Utilities.Numerics
             return Expression.Lambda<Action<TSource, TValue>>(assign, source, value);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean TryCreateSetExpression<TSource, TValue>(MemberInfo member, [MaybeNullWhen(false)] out Expression<Action<TSource, TValue>> result)
+        {
+            if (member is null)
+            {
+                throw new ArgumentNullException(nameof(member));
+            }
+
+            if (member is not PropertyInfo && member is not FieldInfo)
+            {
+                throw new ArgumentException($"Member is not {nameof(PropertyInfo)} or {nameof(FieldInfo)}", nameof(member));
+            }
+
+            if (member is PropertyInfo { CanWrite: false })
+            {
+                result = default;
+                return false;
+            }
+
+            try
+            {
+                ParameterExpression source = Expression.Parameter(typeof(TSource), nameof(source));
+                ParameterExpression value = Expression.Parameter(typeof(TValue), nameof(value));
+
+                MemberExpression access = Expression.MakeMemberAccess(source, member);
+                BinaryExpression assign = Expression.Assign(access, value);
+                result = Expression.Lambda<Action<TSource, TValue>>(assign, source, value);
+                return true;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Expression<Action<TSource, TValue>> CreateSetExpression<TSource, TValue>(this FieldInfo field)
         {
             return CreateSetExpression<TSource, TValue>((MemberInfo) field);
         }
-
-        public static Expression<Action<TSource, TValue>> CreateSetExpression<TSource, TValue>(this PropertyInfo field)
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryCreateSetExpression<TSource, TValue>(this FieldInfo field, [MaybeNullWhen(false)] out Expression<Action<TSource, TValue>> result)
         {
-            return CreateSetExpression<TSource, TValue>((MemberInfo) field);
+            return TryCreateSetExpression((MemberInfo) field, out result);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Expression<Action<TSource, TValue>> CreateSetExpression<TSource, TValue>(this PropertyInfo property)
+        {
+            return CreateSetExpression<TSource, TValue>((MemberInfo) property);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryCreateSetExpression<TSource, TValue>(this PropertyInfo property, [MaybeNullWhen(false)] out Expression<Action<TSource, TValue>> result)
+        {
+            return TryCreateSetExpression((MemberInfo) property, out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static Expression<Action<TSource, TValue>> CreateSetExpression<TSource, TValue>(this Expression<Func<TSource, TValue>> expression)
         {
             if (expression is null)
@@ -466,6 +620,38 @@ namespace NetExtender.Utilities.Numerics
                 FieldInfo field => (source, value) => field.SetValue(source, value),
                 _ => throw new InvalidOperationException($"Selector with type {member.GetType()} is not {nameof(PropertyInfo)} or {nameof(FieldInfo)}")
             };
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean TryCreateSetExpression<TSource, TValue>(this Expression<Func<TSource, TValue>> expression, [MaybeNullWhen(false)] out Expression<Action<TSource, TValue>> result)
+        {
+            if (expression is null)
+            {
+                throw new ArgumentNullException(nameof(expression));
+            }
+
+            if (expression.Body is not MemberExpression selector)
+            {
+                throw new ArgumentException($"Expression is not {nameof(MemberExpression)}", nameof(expression));
+            }
+
+            try
+            {
+                MemberInfo member = selector.Member;
+                result = member switch
+                {
+                    PropertyInfo property => (source, value) => property.SetValue(source, value),
+                    FieldInfo field => (source, value) => field.SetValue(source, value),
+                    _ => default
+                };
+
+                return result is not null;
+            }
+            catch (Exception)
+            {
+                result = default;
+                return false;
+            }
         }
 
         public static Expression<Func<Boolean>> Not(this Expression<Func<Boolean>> expression)

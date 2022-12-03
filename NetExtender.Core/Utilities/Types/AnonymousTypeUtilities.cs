@@ -11,6 +11,8 @@ using System.Runtime.CompilerServices;
 using NetExtender.Types.Anonymous;
 using NetExtender.Types.Anonymous.Interfaces;
 using NetExtender.Types.Dictionaries;
+using NetExtender.Types.Reflection;
+using NetExtender.Types.Reflection.Interfaces;
 using NetExtender.Types.Stores;
 using NetExtender.Types.Stores.Interfaces;
 using NetExtender.Utilities.Core;
@@ -469,9 +471,9 @@ namespace NetExtender.Utilities.Types
             return result.FillAnonymousObject(value);
         }
 
-        private static IStore<Type, IndexDictionary<String, MemberInfo>> Store { get; } = new WeakStore<Type, IndexDictionary<String, MemberInfo>>();
+        private static IStore<Type, IndexDictionary<String, IReflectionProperty>> Store { get; } = new WeakStore<Type, IndexDictionary<String, IReflectionProperty>>();
 
-        private static IndexDictionary<String, MemberInfo> Find(Type type)
+        private static IndexDictionary<String, IReflectionProperty> Find(Type type)
         {
             if (type is null)
             {
@@ -504,9 +506,9 @@ namespace NetExtender.Utilities.Types
                 return !info.IsSpecialName && IsAnonymous(info);
             }
 
-            static IndexDictionary<String, MemberInfo> Internal(Type type)
+            static IndexDictionary<String, IReflectionProperty> Internal(Type type)
             {
-                IndexDictionary<String, MemberInfo> store = new IndexDictionary<String, MemberInfo>();
+                IndexDictionary<String, IReflectionProperty> store = new IndexDictionary<String, IReflectionProperty>();
 
                 const BindingFlags binding = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
 
@@ -514,14 +516,21 @@ namespace NetExtender.Utilities.Types
                 members.AddRange(type.GetProperties(binding).Where(IsProperty));
                 members.AddRange(type.GetFields(binding).Where(IsField));
 
-                store.AddRange(members.OrderBy(member => member.Name, StringComparer.Ordinal).Select(member => new KeyValuePair<String, MemberInfo>(member.Name, member)));
+                KeyValuePair<String, IReflectionProperty> Property(MemberInfo member)
+                {
+                    Type reflection = typeof(ReflectionProperty<,>).MakeGenericType(type, member.GetMemberType());
+                    IReflectionProperty property = (IReflectionProperty?) Activator.CreateInstance(reflection, member.Name) ?? throw new InvalidOperationException();
+                    return new KeyValuePair<String, IReflectionProperty>(member.Name, property);
+                }
+
+                store.AddRange(members.OrderBy(member => member.Name, StringComparer.Ordinal).Select(Property));
                 return store;
             }
 
             return Store.GetOrAdd(type, Internal);
         }
 
-        public static void Register(Type type, IndexDictionary<String, MemberInfo> store)
+        public static void Register(Type type, IndexDictionary<String, IReflectionProperty> store)
         {
             if (type is null)
             {
@@ -537,7 +546,7 @@ namespace NetExtender.Utilities.Types
         }
 
         // ReSharper disable once ReturnTypeCanBeEnumerable.Global
-        public static KeyValuePair<String, MemberInfo>[] Enumerate(IAnonymousObject value)
+        public static KeyValuePair<String, IReflectionProperty>[] Enumerate(IAnonymousObject value)
         {
             if (value is null)
             {
@@ -545,7 +554,7 @@ namespace NetExtender.Utilities.Types
             }
 
             Type type = value.GetType();
-            IndexDictionary<String, MemberInfo> properties = Store.GetOrAdd(type, Find);
+            IndexDictionary<String, IReflectionProperty> properties = Store.GetOrAdd(type, Find);
 
             lock (properties)
             {
@@ -562,29 +571,16 @@ namespace NetExtender.Utilities.Types
 
             static IEnumerable<KeyValuePair<String, Object?>> Internal(IAnonymousObject value)
             {
-                foreach ((String? name, MemberInfo? member) in Enumerate(value))
+                foreach ((String name, IReflectionProperty member) in Enumerate(value))
                 {
-                    Object? item;
-                    switch (member)
-                    {
-                        case PropertyInfo property:
-                            item = property.GetValue(value);
-                            break;
-                        case FieldInfo field:
-                            item = field.GetValue(value);
-                            break;
-                        default:
-                            continue;
-                    }
-
-                    yield return new KeyValuePair<String, Object?>(name, item);
+                    yield return new KeyValuePair<String, Object?>(name, member.GetValue(value));
                 }
             }
 
             return Internal(value).ToArray();
         }
 
-        private static MemberInfo Member(IAnonymousObject value, Int32 index)
+        private static IReflectionProperty Member(IAnonymousObject value, Int32 index)
         {
             if (value is null)
             {
@@ -592,7 +588,7 @@ namespace NetExtender.Utilities.Types
             }
 
             Type type = value.GetType();
-            IndexDictionary<String, MemberInfo> properties = Store.GetOrAdd(type, Find);
+            IndexDictionary<String, IReflectionProperty> properties = Store.GetOrAdd(type, Find);
 
             try
             {
@@ -604,7 +600,7 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        private static MemberInfo Member(IAnonymousObject value, String name)
+        private static IReflectionProperty Member(IAnonymousObject value, String name)
         {
             if (value is null)
             {
@@ -617,8 +613,8 @@ namespace NetExtender.Utilities.Types
             }
 
             Type type = value.GetType();
-            IndexDictionary<String, MemberInfo> properties = Store.GetOrAdd(type, Find);
-            return properties.TryGetValue(name, out MemberInfo? member) ? member : throw new MissingMemberException(type.FullName, name);
+            IndexDictionary<String, IReflectionProperty> properties = Store.GetOrAdd(type, Find);
+            return properties.TryGetValue(name, out IReflectionProperty? member) ? member : throw new MissingMemberException(type.FullName, name);
         }
 
         public static Int32 Count(IAnonymousObject type)
@@ -638,12 +634,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(anonymous));
             }
 
-            return Member(anonymous, index) switch
-            {
-                PropertyInfo property => property.PropertyType,
-                FieldInfo field => field.FieldType,
-                _ => throw new MissingMemberException(anonymous.GetType().FullName, index.ToString())
-            };
+            return Member(anonymous, index).Property;
         }
 
         public static Type Type(IAnonymousObject anonymous, String name)
@@ -658,12 +649,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(name));
             }
 
-            return Member(anonymous, name) switch
-            {
-                PropertyInfo property => property.PropertyType,
-                FieldInfo field => field.FieldType,
-                _ => throw new MissingMemberException(anonymous.GetType().FullName, name)
-            };
+            return Member(anonymous, name).Property;
         }
 
         public static (Type Type, Object? Value) Get(IAnonymousObject anonymous, Int32 index)
@@ -673,12 +659,8 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(anonymous));
             }
 
-            return Member(anonymous, index) switch
-            {
-                PropertyInfo property => (property.PropertyType, property.GetValue(anonymous)),
-                FieldInfo field => (field.FieldType, field.GetValue(anonymous)),
-                _ => throw new MissingMemberException(anonymous.GetType().FullName, index.ToString())
-            };
+            IReflectionProperty member = Member(anonymous, index);
+            return (member.Property, member.GetValue(anonymous));
         }
 
         public static (Type Type, Object? Value) Get(IAnonymousObject anonymous, String name)
@@ -693,12 +675,8 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(name));
             }
 
-            return Member(anonymous, name) switch
-            {
-                PropertyInfo property => (property.PropertyType, property.GetValue(anonymous)),
-                FieldInfo field => (field.FieldType, field.GetValue(anonymous)),
-                _ => throw new MissingMemberException(anonymous.GetType().FullName, name)
-            };
+            IReflectionProperty member = Member(anonymous, name);
+            return (member.Property, member.GetValue(anonymous));
         }
 
         public static void Set(IAnonymousObject anonymous, Int32 index, Object? value)
@@ -708,17 +686,8 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(anonymous));
             }
 
-            switch (Member(anonymous, index))
-            {
-                case PropertyInfo property:
-                    property.SetValue(anonymous, value);
-                    return;
-                case FieldInfo field:
-                    field.SetValue(anonymous, value);
-                    return;
-                default:
-                    throw new MissingMemberException(anonymous.GetType().FullName, index.ToString());
-            }
+            IReflectionProperty member = Member(anonymous, index);
+            member.SetValue(anonymous, value);
         }
 
         public static void Set(IAnonymousObject anonymous, String name, Object? value)
@@ -733,17 +702,8 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(name));
             }
 
-            switch (Member(anonymous, name))
-            {
-                case PropertyInfo property:
-                    property.SetValue(anonymous, value);
-                    return;
-                case FieldInfo field:
-                    field.SetValue(anonymous, value);
-                    return;
-                default:
-                    throw new MissingMemberException(anonymous.GetType().FullName, name);
-            }
+            IReflectionProperty member = Member(anonymous, name);
+            member.SetValue(anonymous, value);
         }
     }
 }

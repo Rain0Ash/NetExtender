@@ -570,7 +570,23 @@ namespace NetExtender.Utilities.Core
 
             return info.GetCustomAttributes(typeof(T), inherit).OfType<T>();
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Type GetMemberType(this MemberInfo info)
+        {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
 
+            return info switch
+            {
+                FieldInfo field => field.FieldType,
+                PropertyInfo property => property.PropertyType,
+                _ => throw new ArgumentException($"Member {info.GetType().Name} is not {nameof(FieldInfo)} or {nameof(PropertyInfo)}")
+            };
+        }
+        
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type GetEntryPointType()
         {

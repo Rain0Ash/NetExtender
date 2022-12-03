@@ -95,18 +95,21 @@ namespace NetExtender.Types.Anonymous
             return Value;
         }
 
+        public T? Get<T>()
+        {
+            Object? value = Get();
+
+            if (value is null)
+            {
+                return default;
+            }
+
+            return value.TryConvert(out T? result) ? result : throw new InvalidCastException($"Can't cast object of type {value.GetType()} to {typeof(T).Name}");
+        }
+
         public Boolean Get<T>(out T? result)
         {
-            try
-            {
-                result = (T?) Get();
-                return true;
-            }
-            catch (Exception)
-            {
-                result = default;
-                return false;
-            }
+            return Get().TryConvert(out result);
         }
 
         public Boolean Set<T>(T value)

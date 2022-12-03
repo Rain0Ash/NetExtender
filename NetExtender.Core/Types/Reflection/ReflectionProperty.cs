@@ -32,9 +32,25 @@ namespace NetExtender.Types.Reflection
             return new ReflectionProperty<TSource, TProperty>(value);
         }
 
-        private static ConcurrentDictionary<String, Property> Cache { get; } = new ConcurrentDictionary<String, Property>();
+        private static ConcurrentDictionary<String, Handler> Cache { get; } = new ConcurrentDictionary<String, Handler>();
 
-        private Property Internal { get; }
+        private Handler Internal { get; }
+
+        public Type Source
+        {
+            get
+            {
+                return typeof(TSource);
+            }
+        }
+
+        public Type Property
+        {
+            get
+            {
+                return typeof(TProperty);
+            }
+        }
 
         public ReflectionProperty(String name)
         {
@@ -43,7 +59,7 @@ namespace NetExtender.Types.Reflection
                 throw new ArgumentNullException(nameof(name));
             }
 
-            Internal = Cache.GetOrAdd(name, static name => new Property(name));
+            Internal = Cache.GetOrAdd(name, static name => new Handler(name));
         }
 
         public ReflectionProperty(Expression<Func<TSource, TProperty>> property)
@@ -58,7 +74,7 @@ namespace NetExtender.Types.Reflection
                 throw new InvalidOperationException();
             }
 
-            Internal = Cache.GetOrAdd(info.Name, static (_, expression) => new Property(expression), property);
+            Internal = Cache.GetOrAdd(info.Name, static (_, expression) => new Handler(expression), property);
         }
 
         public TProperty GetValue(in TSource source)
@@ -68,7 +84,33 @@ namespace NetExtender.Types.Reflection
                 throw new ArgumentNullException(nameof(source));
             }
 
-            return Internal.Getter.Invoke(source);
+            Func<TSource, TProperty> getter = Internal.Getter ?? throw new InvalidOperationException();
+            return getter.Invoke(source);
+        }
+
+        Object? IReflectionProperty<TSource>.GetValue(in TSource source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return GetValue(in source);
+        }
+
+        Object? IReflectionProperty.GetValue(in Object source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (source is not TSource @object)
+            {
+                throw new ArgumentException($"Source is not {typeof(TSource).Name}", nameof(source));
+            }
+
+            return GetValue(in @object);
         }
 
         public void SetValue(in TSource source, TProperty value)
@@ -78,26 +120,66 @@ namespace NetExtender.Types.Reflection
                 throw new ArgumentNullException(nameof(source));
             }
 
-            Internal.Setter.Invoke(source, value);
+            Action<TSource, TProperty> setter = Internal.Setter ?? throw new InvalidOperationException();
+            setter.Invoke(source, value);
         }
 
-        private readonly struct Property
+        void IReflectionProperty<TSource>.SetValue(in TSource source, Object? value)
         {
-            public Func<TSource, TProperty> Getter { get; }
-            public Action<TSource, TProperty> Setter { get; }
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
 
-            public Property(String property)
+            TProperty property = value switch
+            {
+                null => default!,
+                TProperty result => result,
+                _ => throw new ArgumentException($"Value is not {typeof(TProperty).Name}", nameof(value))
+            };
+            
+            SetValue(in source, property);
+        }
+
+        void IReflectionProperty.SetValue(in Object source, Object? value)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+            
+            if (source is not TSource @object)
+            {
+                throw new ArgumentException($"Source is not {typeof(TSource).Name}", nameof(source));
+            }
+            
+            TProperty property = value switch
+            {
+                null => default!,
+                TProperty result => result,
+                _ => throw new ArgumentException($"Value is not {typeof(TProperty).Name}", nameof(value))
+            };
+            
+            SetValue(in @object, property);
+        }
+
+        private readonly struct Handler
+        {
+            public Func<TSource, TProperty>? Getter { get; }
+            public Action<TSource, TProperty>? Setter { get; }
+
+            public Handler(String property)
             {
                 if (property is null)
                 {
                     throw new ArgumentNullException(nameof(property));
                 }
 
-                Getter = ExpressionUtilities.CreateGetExpression<TSource, TProperty>(property).Compile();
-                Setter = ExpressionUtilities.CreateSetExpression<TSource, TProperty>(property).Compile();
+                Getter = ExpressionUtilities.TryCreateGetExpression(property, out Expression<Func<TSource, TProperty>>? getter) ? getter.Compile() : null;
+                Setter = ExpressionUtilities.TryCreateSetExpression(property, out Expression<Action<TSource, TProperty>>? setter) ? setter.Compile() : null;
             }
 
-            public Property(Expression<Func<TSource, TProperty>> property)
+            public Handler(Expression<Func<TSource, TProperty>> property)
             {
                 if (property is null)
                 {
@@ -105,10 +187,10 @@ namespace NetExtender.Types.Reflection
                 }
 
                 Getter = property.Compile();
-                Setter = property.CreateSetExpression().Compile();
+                Setter = property.TryCreateSetExpression(out Expression<Action<TSource, TProperty>>? setter) ? setter.Compile() : null;
             }
 
-            public Property(Func<TSource, TProperty> getter, Action<TSource, TProperty> setter)
+            public Handler(Func<TSource, TProperty> getter, Action<TSource, TProperty> setter)
             {
                 Getter = getter ?? throw new ArgumentNullException(nameof(getter));
                 Setter = setter ?? throw new ArgumentNullException(nameof(setter));
