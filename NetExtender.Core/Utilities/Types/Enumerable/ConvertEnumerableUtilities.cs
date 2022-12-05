@@ -11,6 +11,7 @@ using System.Runtime.CompilerServices;
 using NetExtender.Types.Collections;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Types.Dictionaries.Interfaces;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Immutable.Dictionaries.Interfaces;
 using NetExtender.Types.Immutable.Maps.Interfaces;
 using NetExtender.Types.Maps;
@@ -451,7 +452,7 @@ namespace NetExtender.Utilities.Types
                 CollectionType.GenericStack => TypeCache.IsGenericStack(type),
                 CollectionType.Queue => TypeCache.IsQueue(type),
                 CollectionType.GenericQueue => TypeCache.IsGenericQueue(type),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<CollectionType>(collection, nameof(collection), null)
             };
 
             if (strict || istype)

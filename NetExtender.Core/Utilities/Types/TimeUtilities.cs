@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Utilities.Types
 {
@@ -46,7 +47,7 @@ namespace NetExtender.Utilities.Types
                 TimeType.Minutes => time.TotalMinutes,
                 TimeType.Hours => time.TotalHours,
                 TimeType.Days => time.TotalDays,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<TimeType>(type, nameof(type), null)
             };
         }
 

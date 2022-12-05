@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Primitives;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Utilities.Types
 {
@@ -375,7 +376,7 @@ namespace NetExtender.Utilities.Types
                 StringComparison.CurrentCultureIgnoreCase => StringSegmentComparer.OrdinalIgnoreCase.Compare(value, other),
                 StringComparison.InvariantCulture => StringSegmentComparer.Ordinal.Compare(value, other),
                 StringComparison.InvariantCultureIgnoreCase => StringSegmentComparer.OrdinalIgnoreCase.Compare(value, other),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<StringComparison>(comparison, nameof(comparison), null)
             };
         }
 
@@ -400,7 +401,7 @@ namespace NetExtender.Utilities.Types
                 StringComparison.CurrentCultureIgnoreCase => StringSegmentComparer.OrdinalIgnoreCase.Compare(value, other),
                 StringComparison.InvariantCulture => StringSegmentComparer.Ordinal.Compare(value, other),
                 StringComparison.InvariantCultureIgnoreCase => StringSegmentComparer.OrdinalIgnoreCase.Compare(value, other),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<StringComparison>(comparison, nameof(comparison), null)
             };
         }
 
@@ -431,7 +432,7 @@ namespace NetExtender.Utilities.Types
                 StringComparison.CurrentCultureIgnoreCase => StringSegmentComparer.OrdinalIgnoreCase.Compare(segment, other),
                 StringComparison.InvariantCulture => StringSegmentComparer.Ordinal.Compare(segment, other),
                 StringComparison.InvariantCultureIgnoreCase => StringSegmentComparer.OrdinalIgnoreCase.Compare(segment, other),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<StringComparison>(comparison, nameof(comparison), null)
             };
         }
 
@@ -467,7 +468,7 @@ namespace NetExtender.Utilities.Types
                 StringComparison.CurrentCultureIgnoreCase => StringSegmentComparer.OrdinalIgnoreCase.Compare(segment, other),
                 StringComparison.InvariantCulture => StringSegmentComparer.Ordinal.Compare(segment, other),
                 StringComparison.InvariantCultureIgnoreCase => StringSegmentComparer.OrdinalIgnoreCase.Compare(segment, other),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<StringComparison>(comparison, nameof(comparison), null)
             };
         }
 
@@ -503,7 +504,7 @@ namespace NetExtender.Utilities.Types
                 StringComparison.CurrentCultureIgnoreCase => StringSegmentComparer.OrdinalIgnoreCase.Compare(segment, other),
                 StringComparison.InvariantCulture => StringSegmentComparer.Ordinal.Compare(segment, other),
                 StringComparison.InvariantCultureIgnoreCase => StringSegmentComparer.OrdinalIgnoreCase.Compare(segment, other),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<StringComparison>(comparison, nameof(comparison), null)
             };
         }
 
@@ -544,7 +545,7 @@ namespace NetExtender.Utilities.Types
                 StringComparison.CurrentCultureIgnoreCase => StringSegmentComparer.OrdinalIgnoreCase.Compare(segment, other),
                 StringComparison.InvariantCulture => StringSegmentComparer.Ordinal.Compare(segment, other),
                 StringComparison.InvariantCultureIgnoreCase => StringSegmentComparer.OrdinalIgnoreCase.Compare(segment, other),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<StringComparison>(comparison, nameof(comparison), null)
             };
         }
     }

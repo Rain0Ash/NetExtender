@@ -4,6 +4,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using NetExtender.Types.Exceptions;
 using NetExtender.UserInterface;
 using NetExtender.UserInterface.Interfaces;
 using NetExtender.UserInterface.Windows.Taskbar;
@@ -173,7 +174,7 @@ namespace NetExtender.Utilities.UserInterface
                 TaskbarFlashState.Indeterminate => SetNotifyStatus(handle, TaskbarProgressBarState.Indeterminate),
                 TaskbarFlashState.Pause => SetNotifyStatus(handle, value, maximum, TaskbarProgressBarState.Paused),
                 TaskbarFlashState.Error => SetNotifyStatus(handle, value, maximum, TaskbarProgressBarState.Error),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<TaskbarFlashState>(state, nameof(state), null)
             };
         }
 

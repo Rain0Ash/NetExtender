@@ -7,6 +7,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Numerics;
 
 namespace NetExtender.Utilities.UserInterface.WinForms.Controls
@@ -163,7 +164,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
                 PointOffset.DownLeft => new Point(distanceX, relative.ClientSize.Height - control.Size.Height - distanceY),
                 PointOffset.UpRight => new Point(relative.ClientSize.Width - control.Size.Width - distanceX, distanceY),
                 PointOffset.DownRight => new Point(relative.ClientSize.Width - control.Size.Width - distanceX, relative.ClientSize.Height - control.Size.Height - distanceY),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<PointOffset>(offset, nameof(offset), null)
             };
 
             return control;
@@ -204,7 +205,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
                 PointOffset.DownLeft => new Point(relative.Location.X - control.Size.Width - distance, relative.Location.Y + relative.Size.Height + distance),
                 PointOffset.UpRight => new Point(relative.Location.X + relative.Size.Width + distance, relative.Location.Y - control.Size.Height - distance),
                 PointOffset.DownRight => new Point(relative.Location.X + relative.Size.Width + distance, relative.Location.Y + relative.Size.Height + distance),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<PointOffset>(offset, nameof(offset), null)
             };
 
             return control;
@@ -230,34 +231,34 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
                     HorizontalAlignment.Left => new Point(relative.Location.X, relative.Location.Y - control.Size.Height - distance),
                     HorizontalAlignment.Right => new Point(relative.Location.X + relative.Size.Width - control.Size.Width, relative.Location.Y - control.Size.Height - distance),
                     HorizontalAlignment.Center => new Point(relative.Location.X + (relative.Size.Width - control.Size.Width) / 2, relative.Location.Y - control.Size.Height - distance),
-                    _ => throw new NotSupportedException()
+                    _ => throw new EnumUndefinedOrNotSupportedException<HorizontalAlignment>(alignment, nameof(alignment), null)
                 },
                 PointOffset.Down => alignment switch
                 {
                     HorizontalAlignment.Left => new Point(relative.Location.X, relative.Location.Y + relative.Size.Height + distance),
                     HorizontalAlignment.Right => new Point(relative.Location.X + relative.Size.Width - control.Size.Width, relative.Location.Y + relative.Size.Height + distance),
                     HorizontalAlignment.Center => new Point(relative.Location.X + (relative.Size.Width - control.Size.Width) / 2, relative.Location.Y + relative.Size.Height + distance),
-                    _ => throw new NotSupportedException()
+                    _ => throw new EnumUndefinedOrNotSupportedException<HorizontalAlignment>(alignment, nameof(alignment), null)
                 },
                 PointOffset.Left => alignment switch
                 {
                     HorizontalAlignment.Left => new Point(relative.Location.X - control.Size.Width - distance, relative.Location.Y),
                     HorizontalAlignment.Right => new Point(relative.Location.X - control.Size.Width - distance, relative.Location.Y + relative.Size.Height - control.Size.Height),
                     HorizontalAlignment.Center => new Point(relative.Location.X - control.Size.Width - distance, relative.Location.Y + (relative.Size.Height - control.Size.Height) / 2),
-                    _ => throw new NotSupportedException()
+                    _ => throw new EnumUndefinedOrNotSupportedException<HorizontalAlignment>(alignment, nameof(alignment), null)
                 },
                 PointOffset.Right => alignment switch
                 {
                     HorizontalAlignment.Left => new Point(relative.Location.X + relative.Size.Width + distance, relative.Location.Y),
                     HorizontalAlignment.Right => new Point(relative.Location.X + relative.Size.Width + distance, relative.Location.Y + relative.Size.Height - control.Size.Height),
                     HorizontalAlignment.Center => new Point(relative.Location.X + relative.Size.Width + distance, relative.Location.Y + (relative.Size.Height - control.Size.Height) / 2),
-                    _ => throw new NotSupportedException()
+                    _ => throw new EnumUndefinedOrNotSupportedException<HorizontalAlignment>(alignment, nameof(alignment), null)
                 },
                 PointOffset.UpLeft => new Point(relative.Location.X - control.Size.Width - distance, relative.Location.Y - control.Size.Height - distance),
                 PointOffset.DownLeft => new Point(relative.Location.X - control.Size.Width - distance, relative.Location.Y + relative.Size.Height + distance),
                 PointOffset.UpRight => new Point(relative.Location.X + relative.Size.Width + distance, relative.Location.Y - control.Size.Height - distance),
                 PointOffset.DownRight => new Point(relative.Location.X + relative.Size.Width + distance, relative.Location.Y + relative.Size.Height + distance),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<PointOffset>(offset, nameof(offset), null)
             };
 
             return control;
@@ -436,7 +437,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
                 ControlSizeType.Both => SetSize(control, size, size),
                 ControlSizeType.Width => SetSize(control, size, control.Size.Height),
                 ControlSizeType.Height => SetSize(control, control.Size.Width, size),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<ControlSizeType>(type, nameof(type), null)
             };
         }
 
@@ -523,7 +524,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
                 ControlSizeType.Both => relative.ClientSize,
                 ControlSizeType.Width => new Size(relative.ClientSize.Width, control.ClientSize.Height),
                 ControlSizeType.Height => new Size(control.ClientSize.Width, relative.ClientSize.Height),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<ControlSizeType>(type, nameof(type), null)
             };
 
             return control;
@@ -569,7 +570,7 @@ namespace NetExtender.Utilities.UserInterface.WinForms.Controls
                 ControlSizeType.Both => relative.Size,
                 ControlSizeType.Width => new Size(relative.Size.Width, control.Size.Height),
                 ControlSizeType.Height => new Size(control.Size.Width, relative.Size.Height),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<ControlSizeType>(type, nameof(type), null)
             };
 
             return control;

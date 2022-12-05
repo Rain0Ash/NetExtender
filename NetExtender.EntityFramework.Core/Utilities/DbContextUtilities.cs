@@ -15,6 +15,7 @@ using NetExtender.EntityFrameworkCore.Entities.Auditing.Interfaces;
 using NetExtender.EntityFrameworkCore.Entities.Concurrent.Interfaces;
 using NetExtender.EntityFrameworkCore.Entities.Logging;
 using NetExtender.EntityFrameworkCore.Entities.Tracking.Interfaces;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Utilities.EntityFrameworkCore
 {
@@ -449,7 +450,8 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                 throw new ArgumentException("Value cannot be null or empty.", nameof(editor));
             }
 
-            switch (entity.State)
+            EntityState state = entity.State;
+            switch (state)
             {
                 case EntityState.Added when entity.Entity is ICreationAuditableEntity auditable:
                 {
@@ -479,7 +481,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                     return;
                 }
                 default:
-                    throw new NotSupportedException();
+                    throw new EnumUndefinedOrNotSupportedException<EntityState>(state, nameof(state), null);
             }
         }
 
@@ -490,7 +492,8 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            switch (entity.State)
+            EntityState state = entity.State;
+            switch (state)
             {
                 case EntityState.Added when entity.Entity is ICreationAuditableEntity<T> auditable:
                 {
@@ -520,7 +523,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                     return;
                 }
                 default:
-                    throw new NotSupportedException();
+                    throw new EnumUndefinedOrNotSupportedException<EntityState>(state, nameof(state), null);
             }
         }
 
@@ -564,7 +567,8 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            switch (entity.State)
+            EntityState state = entity.State;
+            switch (state)
             {
                 case EntityState.Added when entity.Entity is ICreationTrackableEntity trackable:
                 {
@@ -600,7 +604,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                     return;
                 }
                 default:
-                    throw new NotSupportedException();
+                    throw new EnumUndefinedOrNotSupportedException<EntityState>(state, nameof(state), null);
             }
         }
 

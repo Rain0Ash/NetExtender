@@ -277,7 +277,7 @@ namespace NetExtender.NAudio.Types.Playlist
         {
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             lock (Queue)

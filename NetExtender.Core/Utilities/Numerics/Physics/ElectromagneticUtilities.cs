@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Utilities.Numerics.Physics
 {
@@ -152,7 +153,7 @@ namespace NetExtender.Utilities.Numerics.Physics
                 ElectromagneticRadiation.UltraLowFrequency => ElectromagneticType.Radiowave,
                 ElectromagneticRadiation.SuperLowFrequency => ElectromagneticType.Radiowave,
                 ElectromagneticRadiation.ExtremelyLowFrequency => ElectromagneticType.Radiowave,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<ElectromagneticRadiation>(type, nameof(type), null)
             };
         }
 
@@ -160,7 +161,7 @@ namespace NetExtender.Utilities.Numerics.Physics
         {
             if (wavelength < Double.Epsilon)
             {
-                throw new ArgumentOutOfRangeException(nameof(wavelength));
+                throw new ArgumentOutOfRangeException(nameof(wavelength), wavelength, null);
             }
 
             return PhysicsUtilities.C / wavelength;
@@ -170,7 +171,7 @@ namespace NetExtender.Utilities.Numerics.Physics
         {
             if (wavelength <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(wavelength));
+                throw new ArgumentOutOfRangeException(nameof(wavelength), wavelength, null);
             }
 
             return PhysicsUtilities.C / wavelength;
@@ -180,7 +181,7 @@ namespace NetExtender.Utilities.Numerics.Physics
         {
             if (frequency < Double.Epsilon)
             {
-                throw new ArgumentOutOfRangeException(nameof(frequency));
+                throw new ArgumentOutOfRangeException(nameof(frequency), frequency, null);
             }
 
             return PhysicsUtilities.C / frequency;
@@ -190,7 +191,7 @@ namespace NetExtender.Utilities.Numerics.Physics
         {
             if (frequency <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(frequency));
+                throw new ArgumentOutOfRangeException(nameof(frequency), frequency, null);
             }
 
             return PhysicsUtilities.C / frequency;
@@ -210,13 +211,13 @@ namespace NetExtender.Utilities.Numerics.Physics
         {
             if (wavelength < Double.Epsilon)
             {
-                throw new ArgumentOutOfRangeException(nameof(wavelength));
+                throw new ArgumentOutOfRangeException(nameof(wavelength), wavelength, null);
             }
 
             return velocity switch
             {
                 < Double.Epsilon => wavelength,
-                >= PhysicsUtilities.C => throw new ArgumentOutOfRangeException(nameof(velocity)),
+                >= PhysicsUtilities.C => throw new ArgumentOutOfRangeException(nameof(velocity), velocity, $"Velocity can't be faster or equal than light speed ({PhysicsUtilities.C})m/s."),
                 _ => Wavelength(DoplerFrequency(Frequency(wavelength), velocity, angle))
             };
         }
@@ -225,13 +226,13 @@ namespace NetExtender.Utilities.Numerics.Physics
         {
             if (wavelength <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(wavelength));
+                throw new ArgumentOutOfRangeException(nameof(wavelength), wavelength, null);
             }
 
             return velocity switch
             {
                 <= 0 => wavelength,
-                >= PhysicsUtilities.C => throw new ArgumentOutOfRangeException(nameof(velocity)),
+                >= PhysicsUtilities.C => throw new ArgumentOutOfRangeException(nameof(velocity), velocity, $"Velocity can't be faster or equal than light speed ({PhysicsUtilities.C})m/s."),
                 _ => Wavelength(DoplerFrequency(Frequency(wavelength), velocity, angle))
             };
         }
@@ -250,13 +251,13 @@ namespace NetExtender.Utilities.Numerics.Physics
         {
             if (frequency < Double.Epsilon)
             {
-                throw new ArgumentOutOfRangeException(nameof(frequency));
+                throw new ArgumentOutOfRangeException(nameof(frequency), frequency, null);
             }
 
             return velocity switch
             {
                 < Double.Epsilon => frequency,
-                >= PhysicsUtilities.C => throw new ArgumentOutOfRangeException(nameof(velocity)),
+                >= PhysicsUtilities.C => throw new ArgumentOutOfRangeException(nameof(velocity), velocity, $"Velocity can't be faster or equal than light speed ({PhysicsUtilities.C})m/s."),
                 _ => frequency * Math.Sqrt(1 - velocity * velocity / PhysicsUtilities.SquareC) / (1 - velocity / PhysicsUtilities.C * Math.Cos(angle))
             };
         }
@@ -265,13 +266,13 @@ namespace NetExtender.Utilities.Numerics.Physics
         {
             if (frequency <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(frequency));
+                throw new ArgumentOutOfRangeException(nameof(frequency), frequency, null);
             }
 
             return velocity switch
             {
                 <= 0 => frequency,
-                >= PhysicsUtilities.C => throw new ArgumentOutOfRangeException(nameof(velocity)),
+                >= PhysicsUtilities.C => throw new ArgumentOutOfRangeException(nameof(velocity), velocity, $"Velocity can't be faster or equal than light speed ({PhysicsUtilities.C})m/s."),
                 _ => frequency * (1 - velocity * velocity / PhysicsUtilities.SquareC).Sqrt() / (1 - velocity / PhysicsUtilities.C * angle.Cos())
             };
         }

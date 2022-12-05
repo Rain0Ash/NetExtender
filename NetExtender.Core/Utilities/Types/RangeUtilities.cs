@@ -23,7 +23,7 @@ namespace NetExtender.Utilities.Types
         {
             if (step == 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(step));
+                throw new ArgumentOutOfRangeException(nameof(step), step, null);
             }
 
             Step = step;

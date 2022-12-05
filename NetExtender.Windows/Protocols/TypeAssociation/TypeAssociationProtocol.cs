@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Protocols;
 using NetExtender.Workstation;
 
@@ -39,7 +40,8 @@ namespace NetExtender.Windows.Protocols
         
         public override Boolean Register()
         {
-            switch (Status)
+            ProtocolStatus status = Status;
+            switch (status)
             {
                 case ProtocolStatus.Register:
                     return true;
@@ -57,7 +59,7 @@ namespace NetExtender.Windows.Protocols
                 case ProtocolStatus.Unregister:
                     return Path is not null && RegisterFileTypeAssociation(Path, Extension, null, Icon, Sid);
                 default:
-                    throw new NotSupportedException();
+                    throw new EnumUndefinedOrNotSupportedException<ProtocolStatus>(status, nameof(status), null);
             }
         }
 
@@ -115,7 +117,8 @@ namespace NetExtender.Windows.Protocols
         
         public override Boolean Register()
         {
-            switch (Status)
+            ProtocolStatus status = Status;
+            switch (status)
             {
                 case ProtocolStatus.Register:
                     return true;
@@ -133,7 +136,7 @@ namespace NetExtender.Windows.Protocols
                 case ProtocolStatus.Unregister:
                     return Path is not null && RegisterProtocolTypeAssociation(Path, Protocol, null, Icon, Sid);
                 default:
-                    throw new NotSupportedException();
+                    throw new EnumUndefinedOrNotSupportedException<ProtocolStatus>(status, nameof(status), null);
             }
         }
 

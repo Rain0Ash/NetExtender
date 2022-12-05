@@ -273,7 +273,7 @@ namespace NetExtender.Types.Maps
             Int32 count = Count;
             if (capacity < count)
             {
-                throw new ArgumentOutOfRangeException(nameof(capacity));
+                throw new ArgumentOutOfRangeException(nameof(capacity), capacity, null);
             }
 
             if (capacity == count)

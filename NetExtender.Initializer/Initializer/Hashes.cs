@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Initializer
 {
@@ -139,7 +140,7 @@ namespace NetExtender.Initializer
                 AssemblySignInitialization.Hash => LoadAssemblyHash(assembly, null),
                 AssemblySignInitialization.WeakHash => LoadAssemblyHash(assembly, false),
                 AssemblySignInitialization.StrongHash => LoadAssemblyHash(assembly, true),
-                _ => throw new NotSupportedException()
+                _ => throw new AssemblySignInitializationNotSupportedException()
             };
         }
     }

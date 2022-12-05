@@ -70,7 +70,7 @@ namespace NetExtender.Cryptography.Keys.RSA
         {
             if (length < 384 || length > 16384)
             {
-                throw new ArgumentOutOfRangeException(nameof(length));
+                throw new ArgumentOutOfRangeException(nameof(length), length, null);
             }
 
             if (length % 8 != 0)

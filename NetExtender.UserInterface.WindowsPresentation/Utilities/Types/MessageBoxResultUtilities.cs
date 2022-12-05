@@ -3,18 +3,24 @@
 
 using System;
 using System.Windows;
+using NetExtender.Types.Exceptions;
 using NetExtender.UserInterface;
 
 namespace NetExtender.Utilities.UserInterface.Types
 {
     public static class MessageBoxResultUtilities
     {
-        public static MessageBoxResult ToMessageBoxResult(Boolean? result)
+        public static MessageBoxResult ToMessageBoxResult(Boolean value)
         {
-            return result switch
+            return value ? MessageBoxResult.Yes : MessageBoxResult.No;
+        }
+
+        public static MessageBoxResult ToMessageBoxResult(Boolean? value)
+        {
+            return value switch
             {
-                true => MessageBoxResult.OK,
-                false => MessageBoxResult.Cancel,
+                true => MessageBoxResult.Yes,
+                false => MessageBoxResult.No,
                 _ => MessageBoxResult.None
             };
         }
@@ -28,7 +34,7 @@ namespace NetExtender.Utilities.UserInterface.Types
                 MessageBoxResult.Cancel => false,
                 MessageBoxResult.Yes => true,
                 MessageBoxResult.No => false,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MessageBoxResult>(value, nameof(value), null)
             };
         }
 
@@ -44,7 +50,9 @@ namespace NetExtender.Utilities.UserInterface.Types
                 InterfaceDialogResult.Ignore => MessageBoxResult.Cancel,
                 InterfaceDialogResult.Yes => MessageBoxResult.Yes,
                 InterfaceDialogResult.No => MessageBoxResult.No,
-                _ => throw new NotSupportedException()
+                InterfaceDialogResult.TryAgain => MessageBoxResult.Yes,
+                InterfaceDialogResult.Continue => MessageBoxResult.Yes,
+                _ => throw new EnumUndefinedOrNotSupportedException<InterfaceDialogResult>(value, nameof(value), null)
             };
         }
 
@@ -57,7 +65,7 @@ namespace NetExtender.Utilities.UserInterface.Types
                 MessageBoxResult.Cancel => InterfaceDialogResult.Cancel,
                 MessageBoxResult.Yes => InterfaceDialogResult.Yes,
                 MessageBoxResult.No => InterfaceDialogResult.No,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MessageBoxResult>(value, nameof(value), null)
             };
         }
     }

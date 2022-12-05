@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Comparers;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Random.Interfaces;
 using NetExtender.Utilities.Numerics;
 
@@ -105,12 +106,12 @@ namespace NetExtender.Utilities.Types
 
             if (first < 0 || first >= collection.Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(first));
+                throw new ArgumentOutOfRangeException(nameof(first), first, null);
             }
 
             if (second < 0 || second >= collection.Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(second));
+                throw new ArgumentOutOfRangeException(nameof(second), second, null);
             }
 
             (collection[first], collection[second]) = (collection[second], collection[first]);
@@ -241,7 +242,7 @@ namespace NetExtender.Utilities.Types
             {
                 IList<T> list => BinarySearch(list, value),
                 IReadOnlyList<T> list => BinarySearch(list, value),
-                _ => throw new NotSupportedException()
+                _ => throw new TypeNotSupportedException(collection.GetType())
             };
         }
 
@@ -256,7 +257,7 @@ namespace NetExtender.Utilities.Types
             {
                 IList<T> list => BinarySearch(list, value, comparer),
                 IReadOnlyList<T> list => BinarySearch(list, value, comparer),
-                _ => throw new NotSupportedException()
+                _ => throw new TypeNotSupportedException(collection.GetType())
             };
         }
 

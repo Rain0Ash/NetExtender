@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Drawing.Colors;
 using NetExtender.Types.Drawing.Colors.Interfaces;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.IO
@@ -459,7 +460,7 @@ namespace NetExtender.Utilities.IO
                 AnsiColorSequenceMode.Foreground => Write(value, backcolor, escape, provider),
                 AnsiColorSequenceMode.Background => Write(value, null, backcolor, escape, provider),
                 AnsiColorSequenceMode.Fill => Write(value, backcolor, backcolor, escape, provider),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new EnumUndefinedOrNotSupportedException<AnsiColorSequenceMode>(color.Mode, nameof(color), null)
             };
         }
 
@@ -780,7 +781,7 @@ namespace NetExtender.Utilities.IO
                 AnsiColorSequenceMode.Foreground => WriteLine(value, backcolor, escape, provider),
                 AnsiColorSequenceMode.Background => WriteLine(value, null, backcolor, escape, provider),
                 AnsiColorSequenceMode.Fill => WriteLine(value, backcolor, backcolor, escape, provider),
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new EnumUndefinedOrNotSupportedException<AnsiColorSequenceMode>(color.Mode, nameof(color), null)
             };
         }
 

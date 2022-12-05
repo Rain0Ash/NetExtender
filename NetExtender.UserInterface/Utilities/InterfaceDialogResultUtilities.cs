@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.UserInterface.Utilities
 {
@@ -29,7 +30,9 @@ namespace NetExtender.UserInterface.Utilities
                 InterfaceDialogResult.Ignore => false,
                 InterfaceDialogResult.Yes => true,
                 InterfaceDialogResult.No => false,
-                _ => throw new NotSupportedException()
+                InterfaceDialogResult.TryAgain => true,
+                InterfaceDialogResult.Continue => true,
+                _ => throw new EnumUndefinedOrNotSupportedException<InterfaceDialogResult>(value, nameof(value), null)
             };
         }
     }

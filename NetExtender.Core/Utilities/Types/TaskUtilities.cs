@@ -1165,7 +1165,7 @@ namespace NetExtender.Utilities.Types
 
             if (milliseconds < -1)
             {
-                throw new ArgumentOutOfRangeException(nameof(milliseconds));
+                throw new ArgumentOutOfRangeException(nameof(milliseconds), milliseconds, null);
             }
 
             return source.ContinueWith(_ => Task.Delay(milliseconds, token), token);
@@ -1187,7 +1187,7 @@ namespace NetExtender.Utilities.Types
 
             if (!delay.IsTimeout())
             {
-                throw new ArgumentOutOfRangeException(nameof(delay));
+                throw new ArgumentOutOfRangeException(nameof(delay), delay, null);
             }
 
             return source.ContinueWith(_ => Task.Delay(delay, token), token);

@@ -2,14 +2,18 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Forms;
+using NetExtender.Types.Exceptions;
+using NetExtender.UserInterface;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.UserInterface
 {
     public static class WindowsPresentationFormsUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static DialogResult ShowResultDialog(this Window window)
         {
             if (window is null)
@@ -20,9 +24,20 @@ namespace NetExtender.Utilities.UserInterface
             return DialogResultUtilities.ToDialogResult(window.ShowDialog());
         }
 
-        public static MessageBoxResult ToMessageBoxResult(this DialogResult result)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static InterfaceDialogResult ShowInterfaceResultDialog(this Window window)
         {
-            return result switch
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            return ShowResultDialog(window).ToInterfaceDialogResult();
+        }
+
+        public static MessageBoxResult ToMessageBoxResult(this DialogResult value)
+        {
+            return value switch
             {
                 DialogResult.None => MessageBoxResult.None,
                 DialogResult.OK => MessageBoxResult.OK,
@@ -32,20 +47,22 @@ namespace NetExtender.Utilities.UserInterface
                 DialogResult.Ignore => MessageBoxResult.Cancel,
                 DialogResult.Yes => MessageBoxResult.Yes,
                 DialogResult.No => MessageBoxResult.No,
-                _ => throw new NotSupportedException()
+                DialogResult.TryAgain => MessageBoxResult.Yes,
+                DialogResult.Continue => MessageBoxResult.Yes,
+                _ => throw new EnumUndefinedOrNotSupportedException<DialogResult>(value, nameof(value), null)
             };
         }
 
-        public static DialogResult ToDialogResult(this MessageBoxResult result)
+        public static DialogResult ToDialogResult(this MessageBoxResult value)
         {
-            return result switch
+            return value switch
             {
                 MessageBoxResult.None => DialogResult.None,
                 MessageBoxResult.OK => DialogResult.OK,
                 MessageBoxResult.Cancel => DialogResult.Cancel,
                 MessageBoxResult.Yes => DialogResult.Yes,
                 MessageBoxResult.No => DialogResult.No,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MessageBoxResult>(value, nameof(value), null)
             };
         }
     }

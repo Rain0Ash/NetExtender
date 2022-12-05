@@ -795,7 +795,7 @@ namespace NetExtender.Utilities.IO
 
             if (timeout != Timeout.Infinite && timeout <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(timeout));
+                throw new ArgumentOutOfRangeException(nameof(timeout), timeout, null);
             }
 
             Int64 timestamp = Environment.TickCount64;

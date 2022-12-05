@@ -53,7 +53,12 @@ namespace NetExtender.Types.Random
         /// <param name="key">The array for initializing keys.</param>
         public MersenneTwister(IEnumerable<UInt32> key)
         {
-            Init(key?.ToArray() ?? throw new ArgumentNullException(nameof(key)));
+            if (key is null)
+            {
+                throw new ArgumentNullException(nameof(key));
+            }
+
+            Init(key.ToArray());
         }
 
         /// <summary>
@@ -97,7 +102,7 @@ namespace NetExtender.Types.Random
         {
             if (min > max)
             {
-                throw new ArgumentOutOfRangeException(nameof(min));
+                throw new ArgumentOutOfRangeException(nameof(min), min, null);
             }
 
             return (UInt32) (GenerateUInt32() / ((Double) UInt32.MaxValue / (max - min)) + min);
@@ -127,7 +132,7 @@ namespace NetExtender.Types.Random
             return max switch
             {
                 >= 1 => (Int32) (NextDouble() * max),
-                < 0 => throw new ArgumentOutOfRangeException(nameof(max)),
+                < 0 => throw new ArgumentOutOfRangeException(nameof(max), max, null),
                 _ => 0
             };
         }
@@ -148,7 +153,7 @@ namespace NetExtender.Types.Random
         {
             if (max < min)
             {
-                throw new ArgumentOutOfRangeException(nameof(min));
+                throw new ArgumentOutOfRangeException(nameof(min), min, null);
             }
 
             if (max == min)

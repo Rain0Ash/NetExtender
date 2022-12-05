@@ -1780,7 +1780,7 @@ namespace NetExtender.Utilities.Types
             switch (size)
             {
                 case <= 0:
-                    throw new ArgumentOutOfRangeException(nameof(size));
+                    throw new ArgumentOutOfRangeException(nameof(size), size, null);
                 case 1:
                 {
                     foreach (T item in source)
@@ -1844,12 +1844,12 @@ namespace NetExtender.Utilities.Types
 
             if (length > chunk.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(length));
+                throw new ArgumentOutOfRangeException(nameof(length), length, null);
             }
 
             if (chunk.Length <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(chunk));
+                throw new ArgumentOutOfRangeException(nameof(chunk), chunk.Length, null);
             }
 
             length = length <= 0 ? chunk.Length : length;
@@ -1908,12 +1908,12 @@ namespace NetExtender.Utilities.Types
 
             if (length > chunklength)
             {
-                throw new ArgumentOutOfRangeException(nameof(length));
+                throw new ArgumentOutOfRangeException(nameof(length), length, null);
             }
 
             if (chunklength <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(chunklength));
+                throw new ArgumentOutOfRangeException(nameof(chunklength), chunklength, null);
             }
 
             length = length <= 0 ? chunklength : length;
@@ -1986,12 +1986,12 @@ namespace NetExtender.Utilities.Types
 
             if (length > chunklength)
             {
-                throw new ArgumentOutOfRangeException(nameof(length));
+                throw new ArgumentOutOfRangeException(nameof(length), length, null);
             }
 
             if (chunklength <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(chunklength));
+                throw new ArgumentOutOfRangeException(nameof(chunklength), chunklength, null);
             }
 
             length = length <= 0 ? chunklength : length;
@@ -2078,12 +2078,12 @@ namespace NetExtender.Utilities.Types
 
             if (length > chunklength)
             {
-                throw new ArgumentOutOfRangeException(nameof(length));
+                throw new ArgumentOutOfRangeException(nameof(length), length, null);
             }
 
             if (chunklength <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(chunklength));
+                throw new ArgumentOutOfRangeException(nameof(chunklength), chunklength, null);
             }
 
             length = length <= 0 ? chunklength : length;

@@ -4,6 +4,7 @@
 using System;
 using System.IO;
 using System.Security.AccessControl;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Utilities.Windows.IO
 {
@@ -20,7 +21,7 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 DirectoryInfo directory => directory.HasPermissions(access),
                 FileInfo file => file.HasPermissions(access),
-                _ => throw new NotSupportedException()
+                _ => throw new TypeNotSupportedException(info.GetType())
             };
         }
 
@@ -35,10 +36,8 @@ namespace NetExtender.Utilities.Windows.IO
             {
                 DirectoryInfo directory => directory.IsHasPermissions(access),
                 FileInfo file => file.IsHasPermissions(access),
-                _ => throw new NotSupportedException()
+                _ => throw new TypeNotSupportedException(info.GetType())
             };
         }
-
-
     }
 }

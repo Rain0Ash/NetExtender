@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.IO
@@ -16,13 +17,13 @@ namespace NetExtender.Utilities.IO
         None = 0,
         LocalFolder = 1,
         LocalFile = 2,
-        LocalPath = 3,
+        LocalPath = LocalFolder | LocalFile,
         NetworkFolder = 4,
-        Folder = 5,
+        Folder = LocalFolder | NetworkFolder,
         NetworkFile = 8,
-        File = 10,
-        NetworkPath = 12,
-        All = 15
+        File = LocalFile | NetworkFile,
+        NetworkPath = NetworkFolder | NetworkFile,
+        All = LocalPath | NetworkPath
     }
 
     public enum PathStatus : Byte
@@ -186,7 +187,8 @@ namespace NetExtender.Utilities.IO
 
             if (!IsExist(path))
             {
-                return GetPathType(path) switch
+                PathType type = GetPathType(path);
+                return type switch
                 {
                     PathType.None => throw new IOException($"Invalid path '{path}'"),
                     PathType.LocalFolder => new DirectoryInfo(path),
@@ -198,7 +200,7 @@ namespace NetExtender.Utilities.IO
                     PathType.File => new FileInfo(path),
                     PathType.NetworkPath => new FileInfo(path),
                     PathType.All => new FileInfo(path),
-                    _ => throw new NotSupportedException()
+                    _ => throw new EnumUndefinedOrNotSupportedException<PathType>(type, nameof(type), null)
                 };
             }
 

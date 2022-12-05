@@ -456,7 +456,7 @@ namespace NetExtender.Utilities.Types
 
             if (length < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(length));
+                throw new ArgumentOutOfRangeException(nameof(length), length, null);
             }
 
             length = (array.Length - index) % (length + 1);

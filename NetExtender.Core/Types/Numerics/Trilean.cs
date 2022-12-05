@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Types.Numerics
 {
@@ -39,7 +40,7 @@ namespace NetExtender.Types.Numerics
                 State.True => true,
                 State.False => false,
                 State.Trit => null,
-                _ => throw new ArgumentOutOfRangeException(nameof(value), value.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(value.Value, nameof(value), null)
             };
         }
 
@@ -120,7 +121,7 @@ namespace NetExtender.Types.Numerics
                 State.True => False,
                 State.Trit => Trit,
                 State.False => True,
-                _ => throw new ArgumentOutOfRangeException(nameof(value), value.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(value.Value, nameof(value), null)
             };
         }
 
@@ -133,17 +134,17 @@ namespace NetExtender.Types.Numerics
                     State.True => True,
                     State.Trit => Trit,
                     State.False => False,
-                    _ => throw new ArgumentOutOfRangeException(nameof(second), second.Value, null)
+                    _ => throw new EnumUndefinedOrNotSupportedException<State>(second.Value, nameof(second), null)
                 },
                 State.Trit => second.Value switch
                 {
                     State.True => Trit,
                     State.Trit => Trit,
                     State.False => False,
-                    _ => throw new ArgumentOutOfRangeException(nameof(second), second.Value, null)
+                    _ => throw new EnumUndefinedOrNotSupportedException<State>(second.Value, nameof(second), null)
                 },
                 State.False => False,
-                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(first.Value, nameof(first), null)
             };
         }
 
@@ -154,7 +155,7 @@ namespace NetExtender.Types.Numerics
                 State.True => second ? True : False,
                 State.Trit => second ? Trit : False,
                 State.False => False,
-                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(first.Value, nameof(first), null)
             };
         }
 
@@ -175,7 +176,7 @@ namespace NetExtender.Types.Numerics
                     null => Trit
                 },
                 State.False => False,
-                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(first.Value, nameof(first), null)
             };
         }
 
@@ -199,16 +200,16 @@ namespace NetExtender.Types.Numerics
                     State.True => True,
                     State.Trit => Trit,
                     State.False => Trit,
-                    _ => throw new ArgumentOutOfRangeException(nameof(second), second.Value, null)
+                    _ => throw new EnumUndefinedOrNotSupportedException<State>(second.Value, nameof(second), null)
                 },
                 State.False => second.Value switch
                 {
                     State.True => True,
                     State.Trit => Trit,
                     State.False => False,
-                    _ => throw new ArgumentOutOfRangeException(nameof(second), second.Value, null)
+                    _ => throw new EnumUndefinedOrNotSupportedException<State>(second.Value, nameof(second), null)
                 },
-                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(first.Value, nameof(first), null)
             };
         }
 
@@ -219,7 +220,7 @@ namespace NetExtender.Types.Numerics
                 State.True => True,
                 State.Trit => second ? True : Trit,
                 State.False => second ? True : False,
-                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(first.Value, nameof(first), null)
             };
         }
 
@@ -240,7 +241,7 @@ namespace NetExtender.Types.Numerics
                     false => False,
                     null => Trit
                 },
-                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(first.Value, nameof(first), null)
             };
         }
 
@@ -263,7 +264,7 @@ namespace NetExtender.Types.Numerics
                     State.True => False,
                     State.Trit => Trit,
                     State.False => True,
-                    _ => throw new ArgumentOutOfRangeException(nameof(second), second.Value, null)
+                    _ => throw new EnumUndefinedOrNotSupportedException<State>(second.Value, nameof(second), null)
                 },
                 State.Trit => Trit,
                 State.False => second.Value switch
@@ -271,9 +272,9 @@ namespace NetExtender.Types.Numerics
                     State.True => True,
                     State.Trit => Trit,
                     State.False => False,
-                    _ => throw new ArgumentOutOfRangeException(nameof(second), second.Value, null)
+                    _ => throw new EnumUndefinedOrNotSupportedException<State>(second.Value, nameof(second), null)
                 },
-                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(first.Value, nameof(first), null)
             };
         }
 
@@ -284,7 +285,7 @@ namespace NetExtender.Types.Numerics
                 State.True => second ? False : True,
                 State.Trit => Trit,
                 State.False => second ? True : False,
-                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(first.Value, nameof(first), null)
             };
         }
 
@@ -305,7 +306,7 @@ namespace NetExtender.Types.Numerics
                     false => False,
                     null => Trit
                 },
-                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(first.Value, nameof(first), null)
             };
         }
 
@@ -489,7 +490,7 @@ namespace NetExtender.Types.Numerics
                 State.False => nameof(False),
                 State.True => nameof(True),
                 State.Trit => nameof(Trit),
-                _ => throw new ArgumentOutOfRangeException(nameof(Value), Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(Value, nameof(Value), null)
             };
         }
     }

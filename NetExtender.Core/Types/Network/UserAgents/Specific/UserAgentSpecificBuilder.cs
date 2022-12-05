@@ -3,6 +3,7 @@
 
 using System;
 using System.Globalization;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Network.UserAgents.Interfaces;
 using NetExtender.Types.Random.Interfaces;
 using NetExtender.Utilities.Numerics;
@@ -73,7 +74,7 @@ namespace NetExtender.Types.Network.UserAgents.Specific
                 UserAgentArchitecture.NetBSDAMD64 => "X11; NetBSD amd64",
                 UserAgentArchitecture.MacOSXIntel => GetMacVersionIntel(RandomMacVersion()),
                 UserAgentArchitecture.MacOSXPPC => GetMacVersionPPC(RandomMacVersion()),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<UserAgentArchitecture>(architecture.Value)
             };
         }
 

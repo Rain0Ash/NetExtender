@@ -288,12 +288,12 @@ namespace NetExtender.Utilities.Types
 
             if (start < 0 || start > segment.Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(start));
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
 
             if (count < 0 || start > segment.Count - count)
             {
-                throw new ArgumentOutOfRangeException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count), count, null);
             }
 
             for (Int32 i = start; i < count; i++)
@@ -355,12 +355,12 @@ namespace NetExtender.Utilities.Types
 
             if (segment.Count <= 0 && start != -1 || segment.Count > 0 && (start < 0 || start >= segment.Count))
             {
-                throw new ArgumentOutOfRangeException(nameof(start));
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
 
             if (count < 0 || start - count + 1 < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count), count, null);
             }
 
             Int32 index = start - count;

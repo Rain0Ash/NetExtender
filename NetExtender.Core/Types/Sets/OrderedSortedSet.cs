@@ -142,7 +142,7 @@ namespace NetExtender.Types.Sets
         {
             if (index < 0 || index >= Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (!Set.Add(item))

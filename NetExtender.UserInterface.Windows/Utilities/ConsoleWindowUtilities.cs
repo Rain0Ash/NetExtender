@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using NetExtender.Types.Events;
+using NetExtender.Types.Exceptions;
 using NetExtender.UserInterface;
 using NetExtender.Utilities.Core;
 using NetExtender.Utilities.IO;
@@ -287,7 +288,7 @@ namespace NetExtender.Utilities.UserInterface
 
                 if (value >= fonts.Length)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(value));
+                    throw new ArgumentOutOfRangeException(nameof(value), value, null);
                 }
 
                 SetConsoleFont(WindowsConsoleUtilities.ConsoleOutputHandle, value);
@@ -706,7 +707,8 @@ namespace NetExtender.Utilities.UserInterface
                     return null;
                 }
 
-                return (WindowStateType) placement.ShowCmd switch
+                WindowStateType state = (WindowStateType) placement.ShowCmd;
+                return state switch
                 {
                     WindowStateType.Hide => false,
                     WindowStateType.Normal => true,
@@ -718,7 +720,7 @@ namespace NetExtender.Utilities.UserInterface
                     WindowStateType.ShowNoActivate => true,
                     WindowStateType.ShowMininimizedNoActive => true,
                     WindowStateType.ShowNormalNoActivate => true,
-                    _ => throw new NotSupportedException()
+                    _ => throw new EnumUndefinedOrNotSupportedException<WindowStateType>(state, nameof(state), null)
                 };
             }
             set

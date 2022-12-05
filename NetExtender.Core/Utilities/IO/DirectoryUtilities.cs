@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Application;
 using NetExtender.Utilities.Types;
 
@@ -140,11 +141,16 @@ namespace NetExtender.Utilities.IO
 
         public static DirectoryInfo? LatestExist(this FileSystemInfo info)
         {
+            if (info is null)
+            {
+                throw new ArgumentNullException(nameof(info));
+            }
+
             return info switch
             {
                 DirectoryInfo directory => LatestExist(directory),
                 FileInfo file => LatestExist(file),
-                _ => throw new NotSupportedException($"{nameof(info)} not supported {info.GetType()}")
+                _ => throw new TypeNotSupportedException(info.GetType())
             };
         }
 

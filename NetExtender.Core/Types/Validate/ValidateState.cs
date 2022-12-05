@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Types.Validate
 {
@@ -25,7 +26,7 @@ namespace NetExtender.Types.Validate
                 State.Unknown => true,
                 State.Successful => true,
                 State.Invalid => false,
-                _ => throw new ArgumentOutOfRangeException(nameof(value), value.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(value.Value, nameof(value), null)
             };
         }
 
@@ -41,7 +42,7 @@ namespace NetExtender.Types.Validate
                 State.Unknown => null,
                 State.Successful => true,
                 State.Invalid => false,
-                _ => throw new ArgumentOutOfRangeException(nameof(value), value.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(value.Value, nameof(value), null)
             };
         }
 
@@ -126,10 +127,10 @@ namespace NetExtender.Types.Validate
                     State.Unknown => new ValidateState(State.Successful),
                     State.Successful => new ValidateState(State.Successful),
                     State.Invalid => new ValidateState(State.Invalid),
-                    _ => throw new ArgumentOutOfRangeException(nameof(second), second.Value, null)
+                    _ => throw new EnumUndefinedOrNotSupportedException<State>(second.Value, nameof(second), null)
                 },
                 State.Invalid => new ValidateState(State.Invalid),
-                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(first.Value, nameof(first), null)
             };
         }
 
@@ -140,7 +141,7 @@ namespace NetExtender.Types.Validate
                 State.Unknown => second,
                 State.Successful => second,
                 State.Invalid => false,
-                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(first.Value, nameof(first), null)
             };
         }
 
@@ -151,7 +152,7 @@ namespace NetExtender.Types.Validate
                 State.Unknown => second,
                 State.Successful => second != false,
                 State.Invalid => false,
-                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(first.Value, nameof(first), null)
             };
         }
 
@@ -176,9 +177,9 @@ namespace NetExtender.Types.Validate
                     State.Unknown => new ValidateState(State.Invalid),
                     State.Successful => new ValidateState(State.Successful),
                     State.Invalid => new ValidateState(State.Invalid),
-                    _ => throw new ArgumentOutOfRangeException(nameof(second), second.Value, null)
+                    _ => throw new EnumUndefinedOrNotSupportedException<State>(second.Value, nameof(second), null)
                 },
-                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(first.Value, nameof(first), null)
             };
         }
 
@@ -189,7 +190,7 @@ namespace NetExtender.Types.Validate
                 State.Unknown => second,
                 State.Successful => true,
                 State.Invalid => second,
-                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(first.Value, nameof(first), null)
             };
         }
 
@@ -200,7 +201,7 @@ namespace NetExtender.Types.Validate
                 State.Unknown => second,
                 State.Successful => true,
                 State.Invalid => second != false,
-                _ => throw new ArgumentOutOfRangeException(nameof(first), first.Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(first.Value, nameof(first), null)
             };
         }
 
@@ -289,7 +290,7 @@ namespace NetExtender.Types.Validate
                 State.Unknown => nameof(Unknown),
                 State.Successful => nameof(Successful),
                 State.Invalid => nameof(Invalid),
-                _ => throw new ArgumentOutOfRangeException(nameof(Value), Value, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<State>(Value, nameof(Value), null)
             };
         }
     }

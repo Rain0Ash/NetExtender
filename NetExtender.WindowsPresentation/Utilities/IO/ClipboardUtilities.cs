@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media.Imaging;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Threading;
 using NetExtender.Utilities.Types;
 
@@ -105,7 +106,7 @@ namespace NetExtender.Utilities.Windows.IO
                 ClipboardType.Image => ContainsImage(),
                 ClipboardType.Audio => ContainsAudio(),
                 ClipboardType.Files => ContainsFiles(),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<ClipboardType>(type, nameof(type), null)
             };
         }
 

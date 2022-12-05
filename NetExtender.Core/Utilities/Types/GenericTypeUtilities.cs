@@ -43,7 +43,7 @@ namespace NetExtender.Utilities.Types
 
             if (arguments.Length <= 0)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(arguments), arguments.Length, null);
             }
 
             return arguments.Length switch
@@ -69,7 +69,7 @@ namespace NetExtender.Utilities.Types
 
             if (arguments.Length <= 0)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(arguments), arguments.Length, null);
             }
 
             return arguments.Length switch

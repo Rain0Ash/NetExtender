@@ -4,11 +4,19 @@
 using System;
 using System.Runtime.Serialization;
 
-namespace NetExtender.Types.Exceptions.Enum
+namespace NetExtender.Types.Exceptions
 {
     [Serializable]
-    public class NotEnumTypeException : NotFlagsEnumTypeException
+    public class NotEnumTypeException<T> : IncorrentEnumTypeException<T>
     {
+        public override Type Type
+        {
+            get
+            {
+                return typeof(T);
+            }
+        }
+
         public NotEnumTypeException()
         {
         }

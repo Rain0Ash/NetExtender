@@ -444,19 +444,14 @@ namespace NetExtender.Cryptography.Base
             return WriteDecodedValue(ref pOutput, pOutputEnd, value, ByteBlockSize);
         }
 
-        private static Int32 GetSafeCharCountForEncoding(Int32 bytesLength)
+        private static Int32 GetSafeCharCountForEncoding(Int32 length)
         {
-            if (bytesLength < 0)
+            return length switch
             {
-                throw new ArgumentOutOfRangeException(nameof(bytesLength));
-            }
-
-            if (bytesLength == 0)
-            {
-                return 0;
-            }
-
-            return (bytesLength + ByteBlockSize - 1) * StringBlockSize / ByteBlockSize;
+                < 0 => throw new ArgumentOutOfRangeException(nameof(length), length, null),
+                0 => 0,
+                _ => (length + ByteBlockSize - 1) * StringBlockSize / ByteBlockSize
+            };
         }
 
         private static Int32 GetSafeByteCountForDecoding(Int32 textLength, Boolean usingShortcuts)

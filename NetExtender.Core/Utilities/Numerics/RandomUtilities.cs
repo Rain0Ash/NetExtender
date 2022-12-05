@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Random;
 using NetExtender.Types.Random.Interfaces;
 
@@ -66,7 +67,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 RandomType.Default => new RandomAdapter(),
                 RandomType.MersenneTwister => new MersenneTwister(),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<RandomType>(type, nameof(type), null)
             };
         }
 
@@ -76,7 +77,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 RandomType.Default => new RandomAdapter(seed),
                 RandomType.MersenneTwister => new MersenneTwister(seed),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<RandomType>(type, nameof(type), null)
             };
         }
 

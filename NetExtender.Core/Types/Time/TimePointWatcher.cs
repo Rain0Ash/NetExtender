@@ -4,6 +4,7 @@
 using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Times.Interfaces;
 
 namespace NetExtender.Types.Times
@@ -70,7 +71,7 @@ namespace NetExtender.Types.Times
                 TimeWatcherComparison.GreaterAbsolute => difference.Duration() > epsilon,
                 TimeWatcherComparison.NotEqual => difference != epsilon,
                 TimeWatcherComparison.NotEqualAbsolute => difference.Duration() != epsilon,
-                _ => throw new ArgumentOutOfRangeException(nameof(comparison), comparison, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<TimeWatcherComparison>(comparison, nameof(comparison), null)
             };
         }
 

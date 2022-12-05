@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using NetExtender.Types.Drawing.Colors.Interfaces;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Drawing.Colors
@@ -82,7 +83,7 @@ namespace NetExtender.Types.Drawing.Colors
                 AnsiColorSequenceMode.Foreground => Color.FromArgb(ForegroundR, ForegroundG, ForegroundB),
                 AnsiColorSequenceMode.Background => Color.FromArgb(BackgroundR, BackgroundG, BackgroundB),
                 AnsiColorSequenceMode.Fill => default,
-                _ => throw new ArgumentOutOfRangeException(nameof(mode), mode, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<AnsiColorSequenceMode>(mode, nameof(mode), null)
             };
         }
 
@@ -109,7 +110,7 @@ namespace NetExtender.Types.Drawing.Colors
                     color = default;
                     return false;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+                    throw new EnumUndefinedOrNotSupportedException<AnsiColorSequenceMode>(mode, nameof(mode), null);
             }
         }
 

@@ -4,9 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using NetExtender.Cryptography.Keys.AES;
 using NetExtender.Cryptography.Keys.Interfaces;
 using NetExtender.Cryptography.Keys.RSA;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Cryptography;
 
 namespace NetExtender.Cryptography.Keys
@@ -100,9 +102,26 @@ namespace NetExtender.Cryptography.Keys
             }
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static ICryptographyKey Create()
+        {
+            return Create(CryptographyKeyType.AES);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static ICryptographyKey Create(CryptAction crypt)
         {
             return Create(crypt, CryptographyKeyType.AES);
+        }
+
+        public static ICryptographyKey Create(CryptographyKeyType type)
+        {
+            return type switch
+            {
+                CryptographyKeyType.AES => AES.Default,
+                CryptographyKeyType.RSA => RSA.Default,
+                _ => throw new EnumUndefinedOrNotSupportedException<CryptographyKeyType>(type, nameof(type), null)
+            };
         }
 
         public static ICryptographyKey Create(CryptAction crypt, CryptographyKeyType type)
@@ -115,7 +134,7 @@ namespace NetExtender.Cryptography.Keys
                     CryptAction.Decrypt => AES.KeyDecrypt,
                     CryptAction.Encrypt => AES.KeyEncrypt,
                     CryptAction.Crypt => AES.KeyCrypt,
-                    _ => AES.Default
+                    _ => throw new EnumUndefinedOrNotSupportedException<CryptAction>(crypt, nameof(crypt), null)
                 },
                 CryptographyKeyType.RSA => crypt switch
                 {
@@ -123,9 +142,9 @@ namespace NetExtender.Cryptography.Keys
                     CryptAction.Decrypt => RSA.KeyDecrypt,
                     CryptAction.Encrypt => RSA.KeyEncrypt,
                     CryptAction.Crypt => RSA.KeyCrypt,
-                    _ => RSA.Default
+                    _ => throw new EnumUndefinedOrNotSupportedException<CryptAction>(crypt, nameof(crypt), null)
                 },
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<CryptographyKeyType>(type, nameof(type), null)
             };
         }
 

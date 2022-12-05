@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using NetExtender.Types.Combinatoric.Interfaces;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Types.Combinatoric
 {
@@ -24,7 +25,7 @@ namespace NetExtender.Types.Combinatoric
                 CombinatoricsType.CombinationsWithRepetition => new Combinations<T>(values, take, true),
                 CombinatoricsType.Variations => new Variations<T>(values, take),
                 CombinatoricsType.VariationsWithRepetition => new Variations<T>(values, take, true),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<CombinatoricsType>(type, nameof(type), null)
             };
         }
 

@@ -4,6 +4,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Utilities.EntityFrameworkCore
 {
@@ -38,7 +39,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                 EntityState.Deleted => true,
                 EntityState.Modified => true,
                 EntityState.Added => true,
-                _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<EntityState>(state, nameof(state), null)
             };
         }
 
@@ -71,7 +72,7 @@ namespace NetExtender.Utilities.EntityFrameworkCore
                 EntityState.Deleted => true,
                 EntityState.Modified => true,
                 EntityState.Added => false,
-                _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<EntityState>(state, nameof(state), null)
             };
         }
     }

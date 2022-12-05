@@ -3832,7 +3832,7 @@ namespace NetExtender.Utilities.Types
 
             if (size <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(size));
+                throw new ArgumentOutOfRangeException(nameof(size), size, null);
             }
 
             using IEnumerator<T> enumerator = source.GetEnumerator();
@@ -3940,7 +3940,7 @@ namespace NetExtender.Utilities.Types
 
             if (size <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(size));
+                throw new ArgumentOutOfRangeException(nameof(size), size, null);
             }
 
             using IEnumerator<T> enumerator = source.GetEnumerator();

@@ -4,6 +4,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Utilities.IO
 {
@@ -46,7 +47,7 @@ namespace NetExtender.Utilities.IO
                     ConsoleInputType.KeyInfo => KeyInfoInputHandlerAsync,
                     ConsoleInputType.KeyInfoIntercept => KeyInfoInterceptInputHandlerAsync,
                     ConsoleInputType.KeyCode => KeyCodeInputHandlerAsync,
-                    _ => throw new NotSupportedException()
+                    _ => throw new EnumUndefinedOrNotSupportedException<ConsoleInputType>(type, nameof(type), null)
                 };
 
                 try

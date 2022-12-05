@@ -6,6 +6,7 @@ using System.Text;
 using NetExtender.Cryptography.Base;
 using NetExtender.Cryptography.Base.Alphabet;
 using NetExtender.Cryptography.Base.Interfaces;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Utilities.Cryptography
 {
@@ -182,7 +183,7 @@ namespace NetExtender.Utilities.Cryptography
                     BaseCryptType.Base58 => Encode(Base58, value),
                     BaseCryptType.Base64 => Base64Encode(value),
                     BaseCryptType.Base85 => Encode(Base85, value),
-                    _ => throw new NotSupportedException()
+                    _ => throw new EnumUndefinedOrNotSupportedException<BaseCryptType>(type, nameof(type), null)
                 };
             }
 
@@ -205,7 +206,7 @@ namespace NetExtender.Utilities.Cryptography
                     BaseCryptType.Base58 => TryEncode(Base58, value),
                     BaseCryptType.Base64 => TryBase64Encode(value),
                     BaseCryptType.Base85 => TryEncode(Base85, value),
-                    _ => throw new NotSupportedException()
+                    _ => throw new EnumUndefinedOrNotSupportedException<BaseCryptType>(type, nameof(type), null)
                 };
             }
 
@@ -228,7 +229,7 @@ namespace NetExtender.Utilities.Cryptography
                     BaseCryptType.Base58 => Encode(Base58, value),
                     BaseCryptType.Base64 => Base64Encode(value),
                     BaseCryptType.Base85 => Encode(Base85, value),
-                    _ => throw new NotSupportedException()
+                    _ => throw new EnumUndefinedOrNotSupportedException<BaseCryptType>(type, nameof(type), null)
                 };
             }
 
@@ -251,7 +252,7 @@ namespace NetExtender.Utilities.Cryptography
                     BaseCryptType.Base58 => TryEncode(Base58, value),
                     BaseCryptType.Base64 => TryBase64Encode(value),
                     BaseCryptType.Base85 => TryEncode(Base85, value),
-                    _ => throw new NotSupportedException()
+                    _ => throw new EnumUndefinedOrNotSupportedException<BaseCryptType>(type, nameof(type), null)
                 };
             }
 
@@ -274,7 +275,7 @@ namespace NetExtender.Utilities.Cryptography
                     BaseCryptType.Base58 => Decode(Base58, value),
                     BaseCryptType.Base64 => Base64Decode(value),
                     BaseCryptType.Base85 => Decode(Base85, value),
-                    _ => throw new NotSupportedException()
+                    _ => throw new EnumUndefinedOrNotSupportedException<BaseCryptType>(type, nameof(type), null)
                 };
             }
 
@@ -297,7 +298,7 @@ namespace NetExtender.Utilities.Cryptography
                     BaseCryptType.Base58 => TryDecode(Base58, value),
                     BaseCryptType.Base64 => TryBase64Decode(value),
                     BaseCryptType.Base85 => TryDecode(Base85, value),
-                    _ => throw new NotSupportedException()
+                    _ => throw new EnumUndefinedOrNotSupportedException<BaseCryptType>(type, nameof(type), null)
                 };
             }
 
@@ -320,7 +321,7 @@ namespace NetExtender.Utilities.Cryptography
                     BaseCryptType.Base58 => Decode(Base58, value),
                     BaseCryptType.Base64 => Base64Decode(value),
                     BaseCryptType.Base85 => Decode(Base85, value),
-                    _ => throw new NotSupportedException()
+                    _ => throw new EnumUndefinedOrNotSupportedException<BaseCryptType>(type, nameof(type), null)
                 };
             }
 
@@ -343,7 +344,7 @@ namespace NetExtender.Utilities.Cryptography
                     BaseCryptType.Base58 => TryDecode(Base58, value),
                     BaseCryptType.Base64 => TryBase64Decode(value),
                     BaseCryptType.Base85 => TryDecode(Base85, value),
-                    _ => throw new NotSupportedException()
+                    _ => throw new EnumUndefinedOrNotSupportedException<BaseCryptType>(type, nameof(type), null)
                 };
             }
 

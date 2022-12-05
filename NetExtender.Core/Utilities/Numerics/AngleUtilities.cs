@@ -5,6 +5,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Numerics;
 
 namespace NetExtender.Utilities.Numerics
@@ -1969,7 +1970,7 @@ namespace NetExtender.Utilities.Numerics
                 TrigonometryType.Csch => Csch(value),
                 TrigonometryType.Acsc => Acsc(value),
                 TrigonometryType.Acsch => Acsch(value),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<TrigonometryType>(type, nameof(type), null)
             };
         }
 
@@ -2001,7 +2002,7 @@ namespace NetExtender.Utilities.Numerics
                 TrigonometryType.Csch => Csch(value),
                 TrigonometryType.Acsc => Acsc(value),
                 TrigonometryType.Acsch => Acsch(value),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<TrigonometryType>(type, nameof(type), null)
             };
         }
 
@@ -2033,7 +2034,7 @@ namespace NetExtender.Utilities.Numerics
                 TrigonometryType.Csch => Csch(value),
                 TrigonometryType.Acsc => Acsc(value),
                 TrigonometryType.Acsch => Acsch(value),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<TrigonometryType>(type, nameof(type), null)
             };
         }
 
@@ -2065,7 +2066,7 @@ namespace NetExtender.Utilities.Numerics
                 TrigonometryType.Csch => Csch(value),
                 TrigonometryType.Acsc => Acsc(value),
                 TrigonometryType.Acsch => Acsch(value),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<TrigonometryType>(type, nameof(type), null)
             };
         }
     }

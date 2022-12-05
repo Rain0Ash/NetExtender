@@ -181,7 +181,7 @@ namespace NetExtender.Types.Dictionaries
             Int32 count = Count;
             if (capacity < count)
             {
-                throw new ArgumentOutOfRangeException(nameof(capacity));
+                throw new ArgumentOutOfRangeException(nameof(capacity), capacity, null);
             }
 
             if (capacity == count)
@@ -197,7 +197,7 @@ namespace NetExtender.Types.Dictionaries
         {
             if (index < 0 || index >= Order.Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             return Order[index];
@@ -212,7 +212,7 @@ namespace NetExtender.Types.Dictionaries
         {
             if (index < 0 || index >= Order.Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             return this.GetPair(Order[index]);
@@ -360,7 +360,7 @@ namespace NetExtender.Types.Dictionaries
 
             if (index < 0 || index >= Order.Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             Dictionary.Add(key, value);
@@ -397,7 +397,7 @@ namespace NetExtender.Types.Dictionaries
         {
             if (index < 0 || index >= Order.Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             Dictionary[Order[index]] = value;
@@ -489,7 +489,7 @@ namespace NetExtender.Types.Dictionaries
         {
             if (!index.InRange(0, Count - 1))
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (!Order.TryGetValue(index, out TKey? key))

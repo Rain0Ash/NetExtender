@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using NetExtender.Types.Drawing.Colors.Interfaces;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Drawing.Colors
@@ -136,7 +137,7 @@ namespace NetExtender.Types.Drawing.Colors
                 AnsiColorSequenceMode.Foreground => $"\x1b[38;2;{r};{g};{b}m{format}\x1b[0m",
                 AnsiColorSequenceMode.Background => $"\x1b[48;2;{r};{g};{b}m{format}\x1b[0m",
                 AnsiColorSequenceMode.Fill => $"\x1b[38;2;{r};{g};{b};48;2;{r};{g};{b}m{format}\x1b[0m",
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<AnsiColorSequenceMode>(Mode, nameof(Mode), null)
             };
         }
     }

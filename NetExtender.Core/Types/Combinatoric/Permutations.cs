@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using NetExtender.Types.Combinatoric.Interfaces;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 
@@ -328,29 +329,27 @@ namespace NetExtender.Types.Combinatoric
                     case EnumeratorPosition.BeforeFirst:
                         Values.Clear();
                         Values.AddRange(Parent.Values);
-
                         Array.Sort(Orders);
-
+                        
                         Position = EnumeratorPosition.InSet;
-
-                        break;
+                        return Position != EnumeratorPosition.AfterLast;
                     case EnumeratorPosition.InSet when Values.Count < 2:
                         Position = EnumeratorPosition.AfterLast;
-                        break;
+                        return Position != EnumeratorPosition.AfterLast;
                     case EnumeratorPosition.InSet:
                         if (!NextPermutation())
                         {
                             Position = EnumeratorPosition.AfterLast;
                         }
 
-                        break;
+                        return Position != EnumeratorPosition.AfterLast;
                     case EnumeratorPosition.AfterLast:
-                        break;
+                        return Position != EnumeratorPosition.AfterLast;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        throw new EnumUndefinedOrNotSupportedException<EnumeratorPosition>(Position, nameof(Position), null);
                 }
 
-                return Position != EnumeratorPosition.AfterLast;
+                
             }
 
             /// <summary>

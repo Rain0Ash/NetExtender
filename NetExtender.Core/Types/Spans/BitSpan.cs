@@ -32,7 +32,7 @@ namespace NetExtender.Types.Spans
                 Int32 index;
                 if (position < 0 || (index = position / Size) > Span.Length) 
                 {
-                    throw new ArgumentOutOfRangeException(nameof(position));
+                    throw new ArgumentOutOfRangeException(nameof(position), position, null);
                 }
 
                 return (Span[index] & (1 << (position % Size))) != 0;
@@ -42,7 +42,7 @@ namespace NetExtender.Types.Spans
                 Int32 index;
                 if (position < 0 || (index = position / Size) > Span.Length)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(position));
+                    throw new ArgumentOutOfRangeException(nameof(position), position, null);
                 }
 
                 Int32 bit = 1 << (position % Size);

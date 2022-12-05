@@ -110,7 +110,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
         {
             if (index < 0 || index >= Order.Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             return this[Order[index]];
@@ -120,7 +120,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
         {
             if (index < 0 || index >= Order.Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             return this.GetPair(Order[index]);
@@ -213,7 +213,7 @@ namespace NetExtender.Types.Immutable.Dictionaries
         {
             if (index < 0 || index >= Order.Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             return new ImmutableIndexDictionary<TKey, TValue>(Dictionary.Add(key, value), Order.Insert(0, key));

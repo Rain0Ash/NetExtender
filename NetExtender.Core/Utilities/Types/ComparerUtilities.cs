@@ -7,6 +7,7 @@ using System.Diagnostics.Contracts;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Comparers;
 using NetExtender.Types.Comparers.Interfaces;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Monads;
 using NetExtender.Utilities.Numerics;
 
@@ -708,7 +709,7 @@ namespace NetExtender.Utilities.Types
                 MathPositionType.Left => min >= 0 && max < 0,
                 MathPositionType.Right => min > 0 && max <= 0,
                 MathPositionType.Both => min >= 0 && max <= 0,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MathPositionType>(comparison, nameof(comparison), null)
             };
         }
 

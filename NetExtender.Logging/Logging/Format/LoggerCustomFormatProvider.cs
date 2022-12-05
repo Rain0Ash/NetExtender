@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NetExtender.Logging.Common;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Logging.Format
@@ -80,7 +81,7 @@ namespace NetExtender.Logging.Format
                 LoggerFormatProviderEvaluatorType.Time => Time,
                 LoggerFormatProviderEvaluatorType.Prefix => Prefix,
                 LoggerFormatProviderEvaluatorType.Thread => Thread,
-                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<LoggerFormatProviderEvaluatorType>(type, nameof(type), null)
             };
         }
 

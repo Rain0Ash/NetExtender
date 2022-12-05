@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NetExtender.AspNetCore.Types.DependencyInjection.Interfaces;
 using NetExtender.AspNetCore.Types.Identities;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.AspNetCore.Types
@@ -125,7 +126,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 ServiceLifetime.Transient => collection.AddTransient(service),
                 ServiceLifetime.Scoped => collection.AddScoped(service),
                 ServiceLifetime.Singleton => collection.AddSingleton(service),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<ServiceLifetime>(lifetime, nameof(lifetime), null)
             };
         }
 
@@ -151,7 +152,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 ServiceLifetime.Transient => collection.AddTransient(service, implementation),
                 ServiceLifetime.Scoped => collection.AddScoped(service, implementation),
                 ServiceLifetime.Singleton => collection.AddSingleton(service, implementation),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<ServiceLifetime>(lifetime, nameof(lifetime), null)
             };
         }
 
@@ -177,7 +178,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 ServiceLifetime.Transient => collection.AddTransient(service, factory),
                 ServiceLifetime.Scoped => collection.AddScoped(service, factory),
                 ServiceLifetime.Singleton => collection.AddSingleton(service, factory),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<ServiceLifetime>(lifetime, nameof(lifetime), null)
             };
         }
 

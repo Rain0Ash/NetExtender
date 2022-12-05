@@ -6,6 +6,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Threading;
 using System.Threading.Tasks;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Cryptography;
 
 namespace NetExtender.Cryptography.Compression
@@ -111,7 +112,7 @@ namespace NetExtender.Cryptography.Compression
                 CompressionType.GZip => new GZipStream(stream, mode, leaveOpen),
                 CompressionType.Deflate => new DeflateStream(stream, mode, leaveOpen),
                 CompressionType.Brotli => new BrotliStream(stream, mode, leaveOpen),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<CompressionType>(type, nameof(type), null)
             };
         }
 
@@ -127,7 +128,7 @@ namespace NetExtender.Cryptography.Compression
                 CompressionType.GZip => new GZipStream(stream, level, leaveOpen),
                 CompressionType.Deflate => new DeflateStream(stream, level, leaveOpen),
                 CompressionType.Brotli => new BrotliStream(stream, level, leaveOpen),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<CompressionType>(type, nameof(type), null)
             };
         }
 

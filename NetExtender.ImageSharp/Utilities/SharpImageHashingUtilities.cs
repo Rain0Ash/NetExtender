@@ -252,12 +252,12 @@ namespace NetExtender.ImageSharp.Utilities
 
             if (first.Length != 8)
             {
-                throw new ArgumentOutOfRangeException(nameof(first));
+                throw new ArgumentOutOfRangeException(nameof(first), first.Length, null);
             }
 
             if (second.Length != 8)
             {
-                throw new ArgumentOutOfRangeException(nameof(second));
+                throw new ArgumentOutOfRangeException(nameof(second), second.Length, null);
             }
 
             UInt64 fhash = BitConverter.ToUInt64(first, 0);

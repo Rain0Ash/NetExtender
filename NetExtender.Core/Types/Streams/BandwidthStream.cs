@@ -120,7 +120,7 @@ namespace NetExtender.Types.Streams
         }
 
         public BandwidthStream(T stream, Int32 speed, InformationSize size, IScheduler scheduler)
-            : this(stream, size.ConvertToBytes(speed.IsPositive() ? speed : throw new ArgumentOutOfRangeException(nameof(speed))), scheduler)
+            : this(stream, size.ConvertToBytes(speed.IsPositive() ? speed : throw new ArgumentOutOfRangeException(nameof(speed), speed, null)), scheduler)
         {
         }
 

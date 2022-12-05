@@ -98,7 +98,7 @@ namespace NetExtender.Types.Maps
             Int32 count = Count;
             if (capacity < count)
             {
-                throw new ArgumentOutOfRangeException(nameof(capacity));
+                throw new ArgumentOutOfRangeException(nameof(capacity), capacity, null);
             }
 
             if (capacity == count)
@@ -468,7 +468,7 @@ namespace NetExtender.Types.Maps
         {
             if (!index.InRange(0, Count - 1))
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (!Order.TryGetValue(index, out TKey? key))

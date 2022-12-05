@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Types.Comparers
 {
@@ -20,7 +21,7 @@ namespace NetExtender.Types.Comparers
         }
 
         public StringComparison Comparison { get; }
-        private CompareHandler Comparer { get; }
+        private CompareHandler? Comparer { get; }
 
         public CharEqualityComparer()
             : this(StringComparison.Ordinal)
@@ -58,12 +59,13 @@ namespace NetExtender.Types.Comparers
                 StringComparison.InvariantCultureIgnoreCase => (x, y) => Char.ToUpper(x, CultureInfo.InvariantCulture) == Char.ToUpper(y, CultureInfo.InvariantCulture),
                 StringComparison.Ordinal => (x, y) => x == y,
                 StringComparison.OrdinalIgnoreCase => (x, y) => Char.ToUpperInvariant(x) == Char.ToUpperInvariant(y),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<StringComparison>(comparison, nameof(comparison), null)
             };
         }
 
-        private static Boolean Equals(Char x, Char y, CompareHandler comparison)
+        private Boolean Equals(Char x, Char y, CompareHandler? comparison)
         {
+            comparison ??= GetComparer();
             return comparison(x, y);
         }
 

@@ -5,6 +5,7 @@ using System;
 using System.Collections.Immutable;
 using System.IO;
 using System.ServiceProcess;
+using NetExtender.Types.Exceptions;
 using NetExtender.Windows.Services.Exceptions;
 using NetExtender.Windows.Services.Utilities;
 
@@ -81,20 +82,20 @@ namespace NetExtender.Windows.Services.Types.Installers
             }
             init
             {
-                if (value is null)
+                if (value is not ServiceAccount account)
                 {
                     Username = null;
                     Password = null;
                     return;
                 }
 
-                Username = value switch
+                Username = account switch
                 {
                     ServiceAccount.LocalService => "NT AUTHORITY\\LocalService",
                     ServiceAccount.NetworkService => "NT AUTHORITY\\NetworkService",
                     ServiceAccount.LocalSystem => "NT AUTHORITY\\LocalSystem",
                     ServiceAccount.User => null,
-                    _ => throw new NotSupportedException()
+                    _ => throw new EnumUndefinedOrNotSupportedException<ServiceAccount>(account, nameof(value), null)
                 };
             }
         }

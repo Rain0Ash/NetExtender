@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Drawing.Colors;
 using NetExtender.Types.Drawing.Colors.Interfaces;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Immutable.Maps.Interfaces;
 using NetExtender.Types.Random.Interfaces;
 using NetExtender.Utilities.Numerics;
@@ -1434,7 +1435,7 @@ namespace NetExtender.Utilities.Types
             switch (type)
             {
                 case ColorType.Unknown:
-                    throw new NotSupportedException();
+                    throw new EnumNotSupportedException<ColorType>(ColorType.Unknown);
                 case ColorType.RGB:
                     return new RGBColor(r, g, b);
                 case ColorType.ARGB:
@@ -1471,7 +1472,7 @@ namespace NetExtender.Utilities.Types
                     return new ANSIColor(r, g, b);
                 }
                 default:
-                    throw new NotSupportedException();
+                    throw new EnumUndefinedOrNotSupportedException<ColorType>(type, nameof(type), null);
             }
         }
 

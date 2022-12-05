@@ -9,6 +9,7 @@ using NAudio.Flac;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
 using NetExtender.NAudio.Types.Providers;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.NAudio;
 using NetExtender.Utilities.Types;
 
@@ -80,7 +81,7 @@ namespace NetExtender.NAudio.Types.Sound
                 AudioSoundType.Mp3 => new Mp3FileReader(stream),
                 AudioSoundType.Aiff => new AiffFileReader(stream),
                 AudioSoundType.Flac => new FlacReader(stream),
-                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<AudioSoundType>(type, nameof(type), null)
             };
 
             Provider = new AudioSoundSampleProvider(this, new WaveToSampleProvider(Stream));

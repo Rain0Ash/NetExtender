@@ -83,7 +83,7 @@ namespace NetExtender.Utilities.Types
 
             if (offset < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(offset));
+                throw new ArgumentOutOfRangeException(nameof(offset), offset, null);
             }
 
             if (queue.Count <= 1 || (offset %= queue.Count) == 0)
@@ -181,7 +181,7 @@ namespace NetExtender.Utilities.Types
 
             if (offset < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(offset));
+                throw new ArgumentOutOfRangeException(nameof(offset), offset, null);
             }
 
             if (queue.Count <= 1 || (offset %= queue.Count) == 0)

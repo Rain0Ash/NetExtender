@@ -45,7 +45,7 @@ namespace NetExtender.NAudio.Types.Playlist
             {
                 if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(value));
+                    throw new ArgumentOutOfRangeException(nameof(value), value, null);
                 }
 
                 lock (Queue)
@@ -84,7 +84,7 @@ namespace NetExtender.NAudio.Types.Playlist
             {
                 if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(value));
+                    throw new ArgumentOutOfRangeException(nameof(value), value, null);
                 }
 
                 lock (Queue)

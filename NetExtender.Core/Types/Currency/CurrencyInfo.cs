@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using NetExtender.Types.Culture;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Region;
 using NetExtender.Utilities.Types;
 
@@ -321,7 +322,7 @@ namespace NetExtender.Types.Currency
                     CurrencyIdentifier.Bov => new CurrencyInfo("", "Bolivian Mvdol", "Bolivian Mvdol", CurrencyIdentifier.Bov),
                     CurrencyIdentifier.Pln => new CurrencyInfo("zł", "Polish Zloty", "Polish Zloty", CurrencyIdentifier.Pln),
                     CurrencyIdentifier.Brl => new CurrencyInfo("R$", "Real", "Brazilian real", CurrencyIdentifier.Brl),
-                    _ => throw new ArgumentOutOfRangeException(nameof(identifier), identifier, null)
+                    _ => throw new EnumUndefinedOrNotSupportedException<CurrencyIdentifier>(identifier, nameof(identifier), null)
                 };
             }
         }

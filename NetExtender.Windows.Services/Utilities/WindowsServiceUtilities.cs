@@ -15,6 +15,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Win32;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.TextWriters;
 using NetExtender.Utilities.Types;
 using NetExtender.Windows.Services.Exceptions;
@@ -27,7 +28,6 @@ using NetExtender.Windows.Services.Types.TextWriters;
 namespace NetExtender.Windows.Services.Utilities
 {
     [SuppressMessage("ReSharper", "ParameterOnlyUsedForPreconditionCheck.Local")]
-    [SuppressMessage("ReSharper", "CognitiveComplexity")]
     public static class WindowsServiceUtilities
     {
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
@@ -170,7 +170,7 @@ namespace NetExtender.Windows.Services.Utilities
 
         private static String? ConvertToDependencyString(this IEnumerable<String?>? dependency)
         {
-            return dependency is not null ? ConvertToServiceControllers(dependency)?.ConvertToDependencyString() : null;
+            return dependency is not null ? ConvertToServiceControllers(dependency).ConvertToDependencyString() : null;
         }
 
         private static String? ConvertToDependencyString(this IEnumerable<ServiceController?>? controllers)
@@ -207,7 +207,7 @@ namespace NetExtender.Windows.Services.Utilities
                 }
             }
 
-            return builder?.Append(Char.MinValue)?.ToString();
+            return builder?.Append(Char.MinValue).ToString();
         }
 
         public static Boolean IsValidServiceName(String name)
@@ -688,7 +688,8 @@ namespace NetExtender.Windows.Services.Utilities
 
             try
             {
-                switch (controller.Status)
+                ServiceControllerStatus status = controller.Status;
+                switch (status)
                 {
                     case ServiceControllerStatus.Stopped:
                         controller.Start(arguments);
@@ -701,7 +702,7 @@ namespace NetExtender.Windows.Services.Utilities
                         controller.WaitForStatus(ServiceControllerStatus.Stopped, timeout);
                         goto case ServiceControllerStatus.Stopped;
                     case ServiceControllerStatus.Running:
-                        break;
+                        return true;
                     case ServiceControllerStatus.ContinuePending:
                         controller.WaitForStatus(ServiceControllerStatus.Running, timeout);
                         goto case ServiceControllerStatus.Running;
@@ -713,7 +714,7 @@ namespace NetExtender.Windows.Services.Utilities
                         controller.WaitForStatus(ServiceControllerStatus.Running, timeout);
                         goto case ServiceControllerStatus.Running;
                     default:
-                        throw new NotSupportedException();
+                        throw new EnumUndefinedOrNotSupportedException<ServiceControllerStatus>(status, nameof(status), null);
                 }
             }
             catch (System.ServiceProcess.TimeoutException)
@@ -739,8 +740,6 @@ namespace NetExtender.Windows.Services.Utilities
 
                 return false;
             }
-
-            return true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1221,7 +1220,8 @@ namespace NetExtender.Windows.Services.Utilities
 
             try
             {
-                switch (controller.Status)
+                ServiceControllerStatus status = controller.Status;
+                switch (status)
                 {
                     case ServiceControllerStatus.Stopped:
                         controller.Start(arguments);
@@ -1234,7 +1234,7 @@ namespace NetExtender.Windows.Services.Utilities
                         await controller.WaitForStatusAsync(ServiceControllerStatus.Stopped, timeout, token).ConfigureAwait(false);
                         goto case ServiceControllerStatus.Stopped;
                     case ServiceControllerStatus.Running:
-                        break;
+                        return true;
                     case ServiceControllerStatus.ContinuePending:
                         await controller.WaitForStatusAsync(ServiceControllerStatus.Running, timeout, token).ConfigureAwait(false);
                         goto case ServiceControllerStatus.Running;
@@ -1246,7 +1246,7 @@ namespace NetExtender.Windows.Services.Utilities
                         await controller.WaitForStatusAsync(ServiceControllerStatus.Running, timeout, token).ConfigureAwait(false);
                         goto case ServiceControllerStatus.Running;
                     default:
-                        throw new NotSupportedException();
+                        throw new EnumUndefinedOrNotSupportedException<ServiceControllerStatus>(status, nameof(status), null);
                 }
             }
             catch (System.ServiceProcess.TimeoutException)
@@ -1272,8 +1272,6 @@ namespace NetExtender.Windows.Services.Utilities
 
                 return false;
             }
-
-            return true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1409,22 +1407,20 @@ namespace NetExtender.Windows.Services.Utilities
 
             try
             {
-                switch (controller.Status)
+                ServiceControllerStatus status = controller.Status;
+                switch (status)
                 {
                     case ServiceControllerStatus.Stopped:
-                        break;
+                        return true;
                     case ServiceControllerStatus.StartPending:
                         controller.WaitForStatus(ServiceControllerStatus.Running, timeout);
                         goto case ServiceControllerStatus.Running;
                     case ServiceControllerStatus.StopPending:
                         controller.WaitForStatus(ServiceControllerStatus.Stopped, timeout);
                         goto case ServiceControllerStatus.Stopped;
+                    case ServiceControllerStatus.Running when !controller.CanStop:
+                        return false;
                     case ServiceControllerStatus.Running:
-                        if (!controller.CanStop)
-                        {
-                            return false;
-                        }
-
                         controller.Stop();
                         controller.WaitForStatus(ServiceControllerStatus.Stopped, timeout);
                         goto case ServiceControllerStatus.Stopped;
@@ -1434,17 +1430,14 @@ namespace NetExtender.Windows.Services.Utilities
                     case ServiceControllerStatus.PausePending:
                         controller.WaitForStatus(ServiceControllerStatus.Paused, timeout);
                         goto case ServiceControllerStatus.Paused;
+                    case ServiceControllerStatus.Paused when !controller.CanStop:
+                        return false;
                     case ServiceControllerStatus.Paused:
-                        if (!controller.CanStop)
-                        {
-                            return false;
-                        }
-
                         controller.Stop();
                         controller.WaitForStatus(ServiceControllerStatus.Stopped, timeout);
                         goto case ServiceControllerStatus.Stopped;
                     default:
-                        throw new NotSupportedException();
+                        throw new EnumUndefinedOrNotSupportedException<ServiceControllerStatus>(status, nameof(status), null);
                 }
             }
             catch (System.ServiceProcess.TimeoutException)
@@ -1470,8 +1463,6 @@ namespace NetExtender.Windows.Services.Utilities
 
                 return false;
             }
-
-            return true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1721,22 +1712,20 @@ namespace NetExtender.Windows.Services.Utilities
 
             try
             {
-                switch (controller.Status)
+                ServiceControllerStatus status = controller.Status;
+                switch (status)
                 {
                     case ServiceControllerStatus.Stopped:
-                        break;
+                        return true;
                     case ServiceControllerStatus.StartPending:
                         await controller.WaitForStatusAsync(ServiceControllerStatus.Running, timeout, token).ConfigureAwait(false);
                         goto case ServiceControllerStatus.Running;
                     case ServiceControllerStatus.StopPending:
                         await controller.WaitForStatusAsync(ServiceControllerStatus.Stopped, timeout, token).ConfigureAwait(false);
                         goto case ServiceControllerStatus.Stopped;
+                    case ServiceControllerStatus.Running when !controller.CanStop:
+                        return false;
                     case ServiceControllerStatus.Running:
-                        if (!controller.CanStop)
-                        {
-                            return false;
-                        }
-
                         controller.Stop();
                         await controller.WaitForStatusAsync(ServiceControllerStatus.Stopped, timeout, token).ConfigureAwait(false);
                         goto case ServiceControllerStatus.Stopped;
@@ -1746,17 +1735,14 @@ namespace NetExtender.Windows.Services.Utilities
                     case ServiceControllerStatus.PausePending:
                         await controller.WaitForStatusAsync(ServiceControllerStatus.Paused, timeout, token).ConfigureAwait(false);
                         goto case ServiceControllerStatus.Paused;
+                    case ServiceControllerStatus.Paused when !controller.CanStop:
+                        return false;
                     case ServiceControllerStatus.Paused:
-                        if (!controller.CanStop)
-                        {
-                            return false;
-                        }
-
                         controller.Stop();
                         await controller.WaitForStatusAsync(ServiceControllerStatus.Stopped, timeout, token).ConfigureAwait(false);
                         goto case ServiceControllerStatus.Stopped;
                     default:
-                        throw new NotSupportedException();
+                        throw new EnumUndefinedOrNotSupportedException<ServiceControllerStatus>(status, nameof(status), null);
                 }
             }
             catch (System.ServiceProcess.TimeoutException)
@@ -1782,8 +1768,6 @@ namespace NetExtender.Windows.Services.Utilities
 
                 return false;
             }
-
-            return true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2034,7 +2018,8 @@ namespace NetExtender.Windows.Services.Utilities
 
             try
             {
-                switch (controller.Status)
+                ServiceControllerStatus status = controller.Status;
+                switch (status)
                 {
                     case ServiceControllerStatus.Stopped:
                         controller.Start(arguments);
@@ -2047,7 +2032,7 @@ namespace NetExtender.Windows.Services.Utilities
                         controller.WaitForStatus(ServiceControllerStatus.Stopped, timeout);
                         goto case ServiceControllerStatus.Stopped;
                     case ServiceControllerStatus.Running:
-                        break;
+                        return true;
                     case ServiceControllerStatus.ContinuePending:
                         controller.WaitForStatus(ServiceControllerStatus.Running, timeout);
                         goto case ServiceControllerStatus.Running;
@@ -2059,7 +2044,7 @@ namespace NetExtender.Windows.Services.Utilities
                         controller.WaitForStatus(ServiceControllerStatus.Running, timeout);
                         goto case ServiceControllerStatus.Running;
                     default:
-                        throw new NotSupportedException();
+                        throw new EnumUndefinedOrNotSupportedException<ServiceControllerStatus>(status, nameof(status), null);
                 }
             }
             catch (System.ServiceProcess.TimeoutException)
@@ -2085,8 +2070,6 @@ namespace NetExtender.Windows.Services.Utilities
 
                 return false;
             }
-
-            return true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2567,7 +2550,8 @@ namespace NetExtender.Windows.Services.Utilities
 
             try
             {
-                switch (controller.Status)
+                ServiceControllerStatus status = controller.Status;
+                switch (status)
                 {
                     case ServiceControllerStatus.Stopped:
                         controller.Start(arguments);
@@ -2580,7 +2564,7 @@ namespace NetExtender.Windows.Services.Utilities
                         await controller.WaitForStatusAsync(ServiceControllerStatus.Stopped, timeout, token).ConfigureAwait(false);
                         goto case ServiceControllerStatus.Stopped;
                     case ServiceControllerStatus.Running:
-                        break;
+                        return true;
                     case ServiceControllerStatus.ContinuePending:
                         await controller.WaitForStatusAsync(ServiceControllerStatus.Running, timeout, token).ConfigureAwait(false);
                         goto case ServiceControllerStatus.Running;
@@ -2592,7 +2576,7 @@ namespace NetExtender.Windows.Services.Utilities
                         await controller.WaitForStatusAsync(ServiceControllerStatus.Running, timeout, token).ConfigureAwait(false);
                         goto case ServiceControllerStatus.Running;
                     default:
-                        throw new NotSupportedException();
+                        throw new EnumUndefinedOrNotSupportedException<ServiceControllerStatus>(status, nameof(status), null);
                 }
             }
             catch (System.ServiceProcess.TimeoutException)
@@ -2618,8 +2602,6 @@ namespace NetExtender.Windows.Services.Utilities
 
                 return false;
             }
-
-            return true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -2755,22 +2737,20 @@ namespace NetExtender.Windows.Services.Utilities
 
             try
             {
-                switch (controller.Status)
+                ServiceControllerStatus status = controller.Status;
+                switch (status)
                 {
                     case ServiceControllerStatus.Stopped:
-                        break;
+                        return true;
                     case ServiceControllerStatus.StartPending:
                         controller.WaitForStatus(ServiceControllerStatus.Running, timeout);
                         goto case ServiceControllerStatus.Running;
                     case ServiceControllerStatus.StopPending:
                         controller.WaitForStatus(ServiceControllerStatus.Stopped, timeout);
                         goto case ServiceControllerStatus.Stopped;
+                    case ServiceControllerStatus.Running when !controller.CanPauseAndContinue:
+                        return false;
                     case ServiceControllerStatus.Running:
-                        if (!controller.CanPauseAndContinue)
-                        {
-                            return false;
-                        }
-
                         controller.Pause();
                         controller.WaitForStatus(ServiceControllerStatus.Paused, timeout);
                         goto case ServiceControllerStatus.Paused;
@@ -2781,9 +2761,9 @@ namespace NetExtender.Windows.Services.Utilities
                         controller.WaitForStatus(ServiceControllerStatus.Paused, timeout);
                         goto case ServiceControllerStatus.Paused;
                     case ServiceControllerStatus.Paused:
-                        break;
+                        return true;
                     default:
-                        throw new NotSupportedException();
+                        throw new EnumUndefinedOrNotSupportedException<ServiceControllerStatus>(status, nameof(status), null);
                 }
             }
             catch (System.ServiceProcess.TimeoutException)
@@ -2809,8 +2789,6 @@ namespace NetExtender.Windows.Services.Utilities
 
                 return false;
             }
-
-            return true;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -3060,22 +3038,20 @@ namespace NetExtender.Windows.Services.Utilities
 
             try
             {
-                switch (controller.Status)
+                ServiceControllerStatus status = controller.Status;
+                switch (status)
                 {
                     case ServiceControllerStatus.Stopped:
-                        break;
+                        return true;
                     case ServiceControllerStatus.StartPending:
                         await controller.WaitForStatusAsync(ServiceControllerStatus.Running, timeout, token).ConfigureAwait(false);
                         goto case ServiceControllerStatus.Running;
                     case ServiceControllerStatus.StopPending:
                         await controller.WaitForStatusAsync(ServiceControllerStatus.Stopped, timeout, token).ConfigureAwait(false);
                         goto case ServiceControllerStatus.Stopped;
+                    case ServiceControllerStatus.Running when !controller.CanPauseAndContinue:
+                        return false;
                     case ServiceControllerStatus.Running:
-                        if (!controller.CanPauseAndContinue)
-                        {
-                            return false;
-                        }
-
                         controller.Pause();
                         await controller.WaitForStatusAsync(ServiceControllerStatus.Paused, timeout, token).ConfigureAwait(false);
                         goto case ServiceControllerStatus.Paused;
@@ -3086,9 +3062,9 @@ namespace NetExtender.Windows.Services.Utilities
                         await controller.WaitForStatusAsync(ServiceControllerStatus.Paused, timeout, token).ConfigureAwait(false);
                         goto case ServiceControllerStatus.Paused;
                     case ServiceControllerStatus.Paused:
-                        break;
+                        return true;
                     default:
-                        throw new NotSupportedException();
+                        throw new EnumUndefinedOrNotSupportedException<ServiceControllerStatus>(status, nameof(status), null);
                 }
             }
             catch (System.ServiceProcess.TimeoutException)
@@ -3114,8 +3090,6 @@ namespace NetExtender.Windows.Services.Utilities
 
                 return false;
             }
-
-            return true;
         }
 
         public static Boolean CheckServiceExist(String name)
@@ -3559,7 +3533,7 @@ namespace NetExtender.Windows.Services.Utilities
                     1 => ServiceErrorControl.Normal,
                     2 => ServiceErrorControl.Severe,
                     3 => ServiceErrorControl.Critical,
-                    _ => !isThrow ? alternate : throw new ArgumentOutOfRangeException(nameof(control))
+                    _ => !isThrow ? alternate : throw new ArgumentOutOfRangeException(nameof(control), control, null)
                 };
             }
             catch (Exception)
@@ -3635,6 +3609,7 @@ namespace NetExtender.Windows.Services.Utilities
                 installer.AutoStart, installer.Dependency, installer.Username, installer.Password, false);
         }
 
+        // ReSharper disable once CognitiveComplexity
         private static Boolean InstallServiceInternal(FileInfo info, String name, String? displayname, String? description, ServiceType type, ServiceStartMode mode, ServiceErrorControl error, Boolean autostart,
             IEnumerable<ServiceController?>? dependency, String? username, String? password, Boolean isThrow)
         {
@@ -4010,6 +3985,7 @@ namespace NetExtender.Windows.Services.Utilities
                 installer.ErrorControl, installer.AutoStart, installer.Dependency, installer.Username, installer.Password, true, false);
         }
 
+        // ReSharper disable once CognitiveComplexity
         private static Boolean ChangeServiceConfigInternal(FileInfo info, String name, String? displayname, String? description, ServiceType type, ServiceStartMode mode,
             ServiceErrorControl error, Boolean autostart, IEnumerable<ServiceController?>? dependency, String? username, String? password, Boolean isInstall, Boolean isThrow)
         {

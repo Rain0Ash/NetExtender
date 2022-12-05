@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Culture;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Utilities.Types
 {
@@ -303,7 +304,7 @@ namespace NetExtender.Utilities.Types
                 CultureType.Current => CultureInfo.CurrentCulture,
                 CultureType.User => CultureInfo.CurrentUICulture,
                 CultureType.System => CultureInfo.InstalledUICulture,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<CultureType>(type, nameof(type), null)
             };
         }
 

@@ -2,11 +2,12 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Numerics;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Numerics;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Utilities.Numerics
 {
@@ -407,7 +408,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (value < 0)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
 
             return Factorial((UInt32)value);
@@ -422,7 +423,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (value < 0)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
 
             return Factorial((UInt32)value);
@@ -437,7 +438,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (value < 0)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
 
             return Factorial((UInt32)value);
@@ -447,12 +448,12 @@ namespace NetExtender.Utilities.Numerics
         {
             if (value < 0)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
 
             if (value > UInt32.MaxValue)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
 
             return Factorial((UInt32)value);
@@ -462,7 +463,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (value > UInt32.MaxValue)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
 
             return Factorial((UInt32)value);
@@ -472,12 +473,12 @@ namespace NetExtender.Utilities.Numerics
         {
             if (value < 0)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
 
             if (value > UInt32.MaxValue)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(value), value, null);
             }
 
             return Factorial((UInt32)value);
@@ -1626,7 +1627,7 @@ namespace NetExtender.Utilities.Numerics
                 MathPositionType.Left => value >= minimum && value < maximum,
                 MathPositionType.Right => value > minimum && value <= maximum,
                 MathPositionType.Both => value >= minimum && value <= maximum,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MathPositionType>(comparison, nameof(comparison), null)
             };
         }
 
@@ -1669,7 +1670,7 @@ namespace NetExtender.Utilities.Numerics
                 MathPositionType.Left => value >= minimum && value < maximum,
                 MathPositionType.Right => value > minimum && value <= maximum,
                 MathPositionType.Both => value >= minimum && value <= maximum,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MathPositionType>(comparison, nameof(comparison), null)
             };
         }
 
@@ -1712,7 +1713,7 @@ namespace NetExtender.Utilities.Numerics
                 MathPositionType.Left => value >= minimum && value < maximum,
                 MathPositionType.Right => value > minimum && value <= maximum,
                 MathPositionType.Both => value >= minimum && value <= maximum,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MathPositionType>(comparison, nameof(comparison), null)
             };
         }
 
@@ -1755,7 +1756,7 @@ namespace NetExtender.Utilities.Numerics
                 MathPositionType.Left => value >= minimum && value < maximum,
                 MathPositionType.Right => value > minimum && value <= maximum,
                 MathPositionType.Both => value >= minimum && value <= maximum,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MathPositionType>(comparison, nameof(comparison), null)
             };
         }
 
@@ -1798,7 +1799,7 @@ namespace NetExtender.Utilities.Numerics
                 MathPositionType.Left => value >= minimum && value < maximum,
                 MathPositionType.Right => value > minimum && value <= maximum,
                 MathPositionType.Both => value >= minimum && value <= maximum,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MathPositionType>(comparison, nameof(comparison), null)
             };
         }
 
@@ -1841,7 +1842,7 @@ namespace NetExtender.Utilities.Numerics
                 MathPositionType.Left => value >= minimum && value < maximum,
                 MathPositionType.Right => value > minimum && value <= maximum,
                 MathPositionType.Both => value >= minimum && value <= maximum,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MathPositionType>(comparison, nameof(comparison), null)
             };
         }
 
@@ -1884,7 +1885,7 @@ namespace NetExtender.Utilities.Numerics
                 MathPositionType.Left => value >= minimum && value < maximum,
                 MathPositionType.Right => value > minimum && value <= maximum,
                 MathPositionType.Both => value >= minimum && value <= maximum,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MathPositionType>(comparison, nameof(comparison), null)
             };
         }
 
@@ -1927,7 +1928,7 @@ namespace NetExtender.Utilities.Numerics
                 MathPositionType.Left => value >= minimum && value < maximum,
                 MathPositionType.Right => value > minimum && value <= maximum,
                 MathPositionType.Both => value >= minimum && value <= maximum,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MathPositionType>(comparison, nameof(comparison), null)
             };
         }
 
@@ -1970,7 +1971,7 @@ namespace NetExtender.Utilities.Numerics
                 MathPositionType.Left => value >= minimum && value < maximum,
                 MathPositionType.Right => value > minimum && value <= maximum,
                 MathPositionType.Both => value >= minimum && value <= maximum,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MathPositionType>(comparison, nameof(comparison), null)
             };
         }
 
@@ -2013,7 +2014,7 @@ namespace NetExtender.Utilities.Numerics
                 MathPositionType.Left => value >= minimum && value < maximum,
                 MathPositionType.Right => value > minimum && value <= maximum,
                 MathPositionType.Both => value >= minimum && value <= maximum,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MathPositionType>(comparison, nameof(comparison), null)
             };
         }
 
@@ -2056,7 +2057,7 @@ namespace NetExtender.Utilities.Numerics
                 MathPositionType.Left => value >= minimum && value < maximum,
                 MathPositionType.Right => value > minimum && value <= maximum,
                 MathPositionType.Both => value >= minimum && value <= maximum,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MathPositionType>(comparison, nameof(comparison), null)
             };
         }
 
@@ -2099,7 +2100,7 @@ namespace NetExtender.Utilities.Numerics
                 MathPositionType.Left => value >= minimum && value < maximum,
                 MathPositionType.Right => value > minimum && value <= maximum,
                 MathPositionType.Both => value >= minimum && value <= maximum,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MathPositionType>(comparison, nameof(comparison), null)
             };
         }
 
@@ -2477,7 +2478,12 @@ namespace NetExtender.Utilities.Numerics
             return multiplier > 0 ? RoundUpToMultiplier(value, (SByte)(-multiplier)) : RoundUpToMultiplier(value, multiplier);
         }
 
-        public static SByte RoundToMultiplier(this SByte value, SByte multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
+        public static SByte RoundToMultiplier(this SByte value, SByte multiplier)
+        {
+            return RoundToMultiplier(value, multiplier, MidpointRounding.ToEven);
+        }
+
+        public static SByte RoundToMultiplier(this SByte value, SByte multiplier, MidpointRounding rounding)
         {
             return rounding switch
             {
@@ -2486,7 +2492,7 @@ namespace NetExtender.Utilities.Numerics
                 MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
                 MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
                 MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MidpointRounding>(rounding, nameof(rounding), null)
             };
         }
 
@@ -2567,7 +2573,12 @@ namespace NetExtender.Utilities.Numerics
             return RoundUpToMultiplier(value, multiplier);
         }
 
-        public static Byte RoundToMultiplier(this Byte value, Byte multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
+        public static Byte RoundToMultiplier(this Byte value, Byte multiplier)
+        {
+            return RoundToMultiplier(value, multiplier, MidpointRounding.ToEven);
+        }
+
+        public static Byte RoundToMultiplier(this Byte value, Byte multiplier, MidpointRounding rounding)
         {
             return rounding switch
             {
@@ -2576,7 +2587,7 @@ namespace NetExtender.Utilities.Numerics
                 MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
                 MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
                 MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MidpointRounding>(rounding, nameof(rounding), null)
             };
         }
 
@@ -2705,7 +2716,12 @@ namespace NetExtender.Utilities.Numerics
             return multiplier > 0 ? RoundUpToMultiplier(value, (Int16)(-multiplier)) : RoundUpToMultiplier(value, multiplier);
         }
 
-        public static Int16 RoundToMultiplier(this Int16 value, Int16 multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
+        public static Int16 RoundToMultiplier(this Int16 value, Int16 multiplier)
+        {
+            return RoundToMultiplier(value, multiplier, MidpointRounding.ToEven);
+        }
+
+        public static Int16 RoundToMultiplier(this Int16 value, Int16 multiplier, MidpointRounding rounding)
         {
             return rounding switch
             {
@@ -2714,7 +2730,7 @@ namespace NetExtender.Utilities.Numerics
                 MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
                 MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
                 MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MidpointRounding>(rounding, nameof(rounding), null)
             };
         }
 
@@ -2795,7 +2811,12 @@ namespace NetExtender.Utilities.Numerics
             return RoundUpToMultiplier(value, multiplier);
         }
 
-        public static UInt16 RoundToMultiplier(this UInt16 value, UInt16 multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
+        public static UInt16 RoundToMultiplier(this UInt16 value, UInt16 multiplier)
+        {
+            return RoundToMultiplier(value, multiplier, MidpointRounding.ToEven);
+        }
+
+        public static UInt16 RoundToMultiplier(this UInt16 value, UInt16 multiplier, MidpointRounding rounding)
         {
             return rounding switch
             {
@@ -2804,7 +2825,7 @@ namespace NetExtender.Utilities.Numerics
                 MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
                 MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
                 MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MidpointRounding>(rounding, nameof(rounding), null)
             };
         }
 
@@ -2933,7 +2954,12 @@ namespace NetExtender.Utilities.Numerics
             return multiplier > 0 ? RoundUpToMultiplier(value, -multiplier) : RoundUpToMultiplier(value, multiplier);
         }
 
-        public static Int32 RoundToMultiplier(this Int32 value, Int32 multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
+        public static Int32 RoundToMultiplier(this Int32 value, Int32 multiplier)
+        {
+            return RoundToMultiplier(value, multiplier, MidpointRounding.ToEven);
+        }
+
+        public static Int32 RoundToMultiplier(this Int32 value, Int32 multiplier, MidpointRounding rounding)
         {
             return rounding switch
             {
@@ -2942,7 +2968,7 @@ namespace NetExtender.Utilities.Numerics
                 MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
                 MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
                 MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MidpointRounding>(rounding, nameof(rounding), null)
             };
         }
 
@@ -3023,7 +3049,12 @@ namespace NetExtender.Utilities.Numerics
             return RoundUpToMultiplier(value, multiplier);
         }
 
-        public static UInt32 RoundToMultiplier(this UInt32 value, UInt32 multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
+        public static UInt32 RoundToMultiplier(this UInt32 value, UInt32 multiplier)
+        {
+            return RoundToMultiplier(value, multiplier, MidpointRounding.ToEven);
+        }
+
+        public static UInt32 RoundToMultiplier(this UInt32 value, UInt32 multiplier, MidpointRounding rounding)
         {
             return rounding switch
             {
@@ -3032,7 +3063,7 @@ namespace NetExtender.Utilities.Numerics
                 MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
                 MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
                 MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MidpointRounding>(rounding, nameof(rounding), null)
             };
         }
 
@@ -3161,7 +3192,12 @@ namespace NetExtender.Utilities.Numerics
             return multiplier > 0 ? RoundUpToMultiplier(value, -multiplier) : RoundUpToMultiplier(value, multiplier);
         }
 
-        public static Int64 RoundToMultiplier(this Int64 value, Int64 multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
+        public static Int64 RoundToMultiplier(this Int64 value, Int64 multiplier)
+        {
+            return RoundToMultiplier(value, multiplier, MidpointRounding.ToEven);
+        }
+
+        public static Int64 RoundToMultiplier(this Int64 value, Int64 multiplier, MidpointRounding rounding)
         {
             return rounding switch
             {
@@ -3170,7 +3206,7 @@ namespace NetExtender.Utilities.Numerics
                 MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
                 MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
                 MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MidpointRounding>(rounding, nameof(rounding), null)
             };
         }
 
@@ -3251,7 +3287,12 @@ namespace NetExtender.Utilities.Numerics
             return RoundUpToMultiplier(value, multiplier);
         }
 
-        public static UInt64 RoundToMultiplier(this UInt64 value, UInt64 multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
+        public static UInt64 RoundToMultiplier(this UInt64 value, UInt64 multiplier)
+        {
+            return RoundToMultiplier(value, multiplier, MidpointRounding.ToEven);
+        }
+
+        public static UInt64 RoundToMultiplier(this UInt64 value, UInt64 multiplier, MidpointRounding rounding)
         {
             return rounding switch
             {
@@ -3260,7 +3301,7 @@ namespace NetExtender.Utilities.Numerics
                 MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
                 MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
                 MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MidpointRounding>(rounding, nameof(rounding), null)
             };
         }
 
@@ -3389,7 +3430,12 @@ namespace NetExtender.Utilities.Numerics
             return multiplier > 0 ? RoundUpToMultiplier(value, -multiplier) : RoundUpToMultiplier(value, multiplier);
         }
 
-        public static Single RoundToMultiplier(this Single value, Single multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
+        public static Single RoundToMultiplier(this Single value, Single multiplier)
+        {
+            return RoundToMultiplier(value, multiplier, MidpointRounding.ToEven);
+        }
+
+        public static Single RoundToMultiplier(this Single value, Single multiplier, MidpointRounding rounding)
         {
             return rounding switch
             {
@@ -3398,7 +3444,7 @@ namespace NetExtender.Utilities.Numerics
                 MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
                 MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
                 MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MidpointRounding>(rounding, nameof(rounding), null)
             };
         }
 
@@ -3527,7 +3573,12 @@ namespace NetExtender.Utilities.Numerics
             return multiplier > 0 ? RoundUpToMultiplier(value, -multiplier) : RoundUpToMultiplier(value, multiplier);
         }
 
-        public static Double RoundToMultiplier(this Double value, Double multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
+        public static Double RoundToMultiplier(this Double value, Double multiplier)
+        {
+            return RoundToMultiplier(value, multiplier, MidpointRounding.ToEven);
+        }
+
+        public static Double RoundToMultiplier(this Double value, Double multiplier, MidpointRounding rounding)
         {
             return rounding switch
             {
@@ -3536,7 +3587,7 @@ namespace NetExtender.Utilities.Numerics
                 MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
                 MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
                 MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MidpointRounding>(rounding, nameof(rounding), null)
             };
         }
 
@@ -3665,7 +3716,12 @@ namespace NetExtender.Utilities.Numerics
             return multiplier > 0 ? RoundUpToMultiplier(value, -multiplier) : RoundUpToMultiplier(value, multiplier);
         }
 
-        public static Decimal RoundToMultiplier(this Decimal value, Decimal multiplier, MidpointRounding rounding = MidpointRounding.ToEven)
+        public static Decimal RoundToMultiplier(this Decimal value, Decimal multiplier)
+        {
+            return RoundToMultiplier(value, multiplier, MidpointRounding.ToEven);
+        }
+
+        public static Decimal RoundToMultiplier(this Decimal value, Decimal multiplier, MidpointRounding rounding)
         {
             return rounding switch
             {
@@ -3674,7 +3730,7 @@ namespace NetExtender.Utilities.Numerics
                 MidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),
                 MidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),
                 MidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<MidpointRounding>(rounding, nameof(rounding), null)
             };
         }
 
@@ -6092,7 +6148,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (!@base.InRange(MinimumBase, MaximumBase))
             {
-                throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
+                throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
             }
 
             if (value == 0)
@@ -6126,7 +6182,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (!@base.InRange(MinimumBase, MaximumBase))
             {
-                throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
+                throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
             }
 
             if (value <= 0)
@@ -6154,7 +6210,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (!@base.InRange(MinimumBase, MaximumBase))
             {
-                throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
+                throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
             }
 
             if (value == 0)
@@ -6188,7 +6244,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (!@base.InRange(MinimumBase, MaximumBase))
             {
-                throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
+                throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
             }
 
             if (value <= 0)
@@ -6216,7 +6272,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (!@base.InRange(MinimumBase, MaximumBase))
             {
-                throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
+                throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
             }
 
             if (value == 0)
@@ -6250,7 +6306,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (!@base.InRange(MinimumBase, MaximumBase))
             {
-                throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
+                throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
             }
 
             if (value <= 0)
@@ -6278,7 +6334,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (!@base.InRange(MinimumBase, MaximumBase))
             {
-                throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
+                throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
             }
 
             if (value == 0)
@@ -6312,7 +6368,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (!@base.InRange(MinimumBase, MaximumBase))
             {
-                throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
+                throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
             }
 
             if (value <= 0)
@@ -6340,7 +6396,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (!@base.InRange(MinimumBase, MaximumBase))
             {
-                throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
+                throw new ArgumentOutOfRangeException(nameof(@base), @base, @"Base out of range");
             }
 
             if (value == 0)

@@ -16,7 +16,6 @@ using NetExtender.Types.Enums;
 using NetExtender.Types.Enums.Attributes;
 using NetExtender.Types.Enums.Interfaces;
 using NetExtender.Types.Exceptions;
-using NetExtender.Types.Exceptions.Enum;
 using NetExtender.Utilities.Numerics;
 
 // ReSharper disable StaticMemberInGenericType
@@ -184,7 +183,7 @@ namespace NetExtender.Utilities.Types
         {
             if (!IsFlags<T>())
             {
-                throw new NotFlagsEnumTypeException();
+                throw new NotFlagsEnumTypeException<T>(null, nameof(T));
             }
 
             UInt64[] values = AsUInt64<T>().ToArray();

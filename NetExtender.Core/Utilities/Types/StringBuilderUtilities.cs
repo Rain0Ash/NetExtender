@@ -213,7 +213,7 @@ namespace NetExtender.Utilities.Types
 
                     if (length > builder.MaxCapacity)
                     {
-                        throw new ArgumentOutOfRangeException(nameof(values));
+                        throw new ArgumentOutOfRangeException(nameof(values), values.Length, null);
                     }
 
                     return values.Aggregate(builder, (sb, str) => sb.Append(str));
@@ -258,7 +258,7 @@ namespace NetExtender.Utilities.Types
 
                     if (length + builder.Length > builder.MaxCapacity)
                     {
-                        throw new ArgumentOutOfRangeException(nameof(values));
+                        throw new ArgumentOutOfRangeException(nameof(values), values.Length, null);
                     }
 
                     StringBuilder preconcat = new StringBuilder(length, length).AddSuffix(values);
@@ -280,7 +280,7 @@ namespace NetExtender.Utilities.Types
 
             if (builder.Length + 2 * value.Length > builder.MaxCapacity)
             {
-                throw new ArgumentOutOfRangeException(nameof(value));
+                throw new ArgumentOutOfRangeException(nameof(value), value.Length, null);
             }
 
             return builder.AddPrefix(value).AddSuffix(value);
@@ -300,7 +300,7 @@ namespace NetExtender.Utilities.Types
 
             if (builder.Length + 2 * value.Length > builder.MaxCapacity)
             {
-                throw new ArgumentOutOfRangeException(nameof(value));
+                throw new ArgumentOutOfRangeException(nameof(value), value.Length, null);
             }
 
             return builder.AddPrefix(value).AddSuffix(value);
@@ -320,7 +320,7 @@ namespace NetExtender.Utilities.Types
 
             if (builder.Length + 2 * values.CharLength() > builder.MaxCapacity)
             {
-                throw new ArgumentOutOfRangeException(nameof(values));
+                throw new ArgumentOutOfRangeException(nameof(values), values.Length, null);
             }
 
             return values.Length switch
@@ -440,7 +440,7 @@ namespace NetExtender.Utilities.Types
 
             if (index < 0 || index >= builder.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             return Char.GetUnicodeCategory(builder[index]);
@@ -478,22 +478,22 @@ namespace NetExtender.Utilities.Types
 
             if (start < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(start));
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
 
             if (length < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(length));
+                throw new ArgumentOutOfRangeException(nameof(length), length, null);
             }
 
             if (start > builder.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(start));
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
 
             if (start + length > builder.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(length));
+                throw new ArgumentOutOfRangeException(nameof(length), length, null);
             }
 
             if (length == 0)
@@ -920,7 +920,7 @@ namespace NetExtender.Utilities.Types
             {
                 if (replace.Length > builder.MaxCapacity)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(builder));
+                    throw new ArgumentOutOfRangeException(nameof(builder), builder.Length, null);
                 }
 
                 return builder.Append(replace);
@@ -937,7 +937,7 @@ namespace NetExtender.Utilities.Types
 
             if (index + replace.Length > builder.MaxCapacity)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (index >= 0)
@@ -990,7 +990,7 @@ namespace NetExtender.Utilities.Types
 
             if (builder.Length * count > builder.MaxCapacity)
             {
-                throw new ArgumentOutOfRangeException(nameof(builder));
+                throw new ArgumentOutOfRangeException(nameof(builder), builder.Length, null);
             }
 
             return builder.Insert(0, builder.ToString(), count);
@@ -1021,7 +1021,7 @@ namespace NetExtender.Utilities.Types
 
             if (index < 0 || index >= builder.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (builder.Length <= 1)
@@ -1042,12 +1042,12 @@ namespace NetExtender.Utilities.Types
 
             if (length < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(length));
+                throw new ArgumentOutOfRangeException(nameof(length), length, null);
             }
 
             if (index < 0 || index + length >= builder.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (length <= 0 || builder.Length <= 1)
@@ -1301,17 +1301,17 @@ namespace NetExtender.Utilities.Types
 
             if (start < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(start));
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
 
             if (count < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count), count, null);
             }
 
             if (start + count > builder.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count), count, null);
             }
 
             for (Int32 i = start; i < start + count; i++)
@@ -1351,7 +1351,7 @@ namespace NetExtender.Utilities.Types
 
             if (start < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(start));
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
 
             if (builder.Length - start < value.Length)
@@ -1372,12 +1372,12 @@ namespace NetExtender.Utilities.Types
 
             if (start < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(start));
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
 
             if (count < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count), start, null);
             }
 
             if (count < value.Length)
@@ -1417,7 +1417,7 @@ namespace NetExtender.Utilities.Types
 
             if (start < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(start));
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
 
             if (builder.Length - start < value.Length)
@@ -1437,12 +1437,12 @@ namespace NetExtender.Utilities.Types
 
             if (start < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(start));
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
 
             if (count < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count), count, null);
             }
 
             if (count < value.Length)
@@ -1482,17 +1482,17 @@ namespace NetExtender.Utilities.Types
 
             if (start < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(start));
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
 
             if (count < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count), count, null);
             }
 
             if (start + count > builder.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count), count, null);
             }
 
             for (Int32 i = builder.Length - count; i >= start; i--)
@@ -1532,7 +1532,7 @@ namespace NetExtender.Utilities.Types
 
             if (start < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(start));
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
 
             if (builder.Length - start < value.Length)
@@ -1553,12 +1553,12 @@ namespace NetExtender.Utilities.Types
 
             if (start < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(start));
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
 
             if (count < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count), count, null);
             }
 
             if (count < value.Length)
@@ -1598,7 +1598,7 @@ namespace NetExtender.Utilities.Types
 
             if (start < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(start));
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
 
             if (builder.Length - start < value.Length)
@@ -1618,12 +1618,12 @@ namespace NetExtender.Utilities.Types
 
             if (start < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(start));
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
 
             if (count < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count), count, null);
             }
 
             if (count < value.Length)
@@ -1658,17 +1658,17 @@ namespace NetExtender.Utilities.Types
 
             if (start < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(start));
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
 
             if (count <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count), count, null);
             }
 
             if (start + count >= builder.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count), count, null);
             }
 
             if (values is null || values.Length <= 0)
@@ -1711,17 +1711,17 @@ namespace NetExtender.Utilities.Types
 
             if (start < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(start));
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
             }
 
             if (count <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count), count, null);
             }
 
             if (start + count >= builder.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count), count, null);
             }
 
             if (values is null || values.Length <= 0)
@@ -1869,7 +1869,7 @@ namespace NetExtender.Utilities.Types
 
             if (result.Length > builder.MaxCapacity)
             {
-                throw new ArgumentOutOfRangeException(nameof(builder));
+                throw new ArgumentOutOfRangeException(nameof(builder), builder.Length, null);
             }
 
             return builder.Clear().Append(result);
@@ -1886,7 +1886,7 @@ namespace NetExtender.Utilities.Types
 
             if (result.Length > builder.MaxCapacity)
             {
-                throw new ArgumentOutOfRangeException(nameof(builder));
+                throw new ArgumentOutOfRangeException(nameof(builder), builder.Length, null);
             }
 
             return builder.Clear().Append(result);
@@ -1903,7 +1903,7 @@ namespace NetExtender.Utilities.Types
 
             if (result.Length > builder.MaxCapacity)
             {
-                throw new ArgumentOutOfRangeException(nameof(builder));
+                throw new ArgumentOutOfRangeException(nameof(builder), builder.Length, null);
             }
 
             return builder.Clear().Append(result);

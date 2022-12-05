@@ -4,6 +4,7 @@
 using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Numerics;
 
 namespace NetExtender.Utilities.Numerics
@@ -1194,7 +1195,7 @@ namespace NetExtender.Utilities.Numerics
                 PointOffset.DownLeft => PointOffset.UpRight,
                 PointOffset.UpRight => PointOffset.DownLeft,
                 PointOffset.DownRight => PointOffset.UpLeft,
-                _ => throw new ArgumentOutOfRangeException(nameof(offset))
+                _ => throw new EnumUndefinedOrNotSupportedException<PointOffset>(offset, nameof(offset), null)
             };
         }
     }

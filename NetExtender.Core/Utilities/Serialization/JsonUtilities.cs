@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using NetExtender.NewtonSoft;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -313,7 +314,7 @@ namespace NetExtender.Utilities.Serialization
                 JsonToken.EndConstructor => false,
                 JsonToken.Date => true,
                 JsonToken.Bytes => true,
-                _ => throw new ArgumentOutOfRangeException(nameof(token), token, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<JsonToken>(token, nameof(token), null)
             };
         }
 

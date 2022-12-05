@@ -30,7 +30,7 @@ namespace NetExtender.Utilities.Types
         {
             if (!interval.InRange(0, Int32.MaxValue, MathPositionType.Right))
             {
-                throw new ArgumentOutOfRangeException(nameof(interval));
+                throw new ArgumentOutOfRangeException(nameof(interval), interval, null);
             }
 
             return interval;

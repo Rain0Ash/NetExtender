@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Text;
 using NetExtender.IO.FileSystem.NTFS.DataStreams;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.IO;
 using NetExtender.Utilities.Types;
 using NetExtender.Utilities.Windows.IO;
@@ -423,7 +424,7 @@ namespace NetExtender.Windows.Utilities.IO
 
                     break;
                 default:
-                    throw new NotSupportedException();
+                    throw new EnumUndefinedOrNotSupportedException<TrustedZoneIdentifier>(identifier, nameof(identifier), null);
             }
 
             if (character < '0' || character > '4')
@@ -440,7 +441,7 @@ namespace NetExtender.Windows.Utilities.IO
                 TrustedZoneIdentifier.Trusted => '2',
                 TrustedZoneIdentifier.Internet => '3',
                 TrustedZoneIdentifier.Restricted => '4',
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<TrustedZoneIdentifier>(identifier, nameof(identifier), null)
             };
 
             stream.WriteLine(builder.ToString(), Encoding.UTF8);

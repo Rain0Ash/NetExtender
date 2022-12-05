@@ -3,18 +3,24 @@
 
 using System;
 using System.Windows.Forms;
+using NetExtender.Types.Exceptions;
 using NetExtender.UserInterface;
 
 namespace NetExtender.Utilities.Types
 {
     public static class DialogResultUtilities
     {
-        public static DialogResult ToDialogResult(Boolean? result)
+        public static DialogResult ToDialogResult(Boolean value)
         {
-            return result switch
+            return value ? DialogResult.Yes : DialogResult.No;
+        }
+        
+        public static DialogResult ToDialogResult(Boolean? value)
+        {
+            return value switch
             {
-                true => DialogResult.OK,
-                false => DialogResult.Cancel,
+                true => DialogResult.Yes,
+                false => DialogResult.No,
                 _ => DialogResult.None
             };
         }
@@ -31,7 +37,9 @@ namespace NetExtender.Utilities.Types
                 DialogResult.Ignore => false,
                 DialogResult.Yes => true,
                 DialogResult.No => false,
-                _ => throw new NotSupportedException()
+                DialogResult.TryAgain => true,
+                DialogResult.Continue => true,
+                _ => throw new EnumUndefinedOrNotSupportedException<DialogResult>(value, nameof(value), null)
             };
         }
 
@@ -47,7 +55,9 @@ namespace NetExtender.Utilities.Types
                 InterfaceDialogResult.Ignore => DialogResult.Ignore,
                 InterfaceDialogResult.Yes => DialogResult.Yes,
                 InterfaceDialogResult.No => DialogResult.No,
-                _ => throw new NotSupportedException()
+                InterfaceDialogResult.TryAgain => DialogResult.TryAgain,
+                InterfaceDialogResult.Continue => DialogResult.Continue,
+                _ => throw new EnumUndefinedOrNotSupportedException<InterfaceDialogResult>(value, nameof(value), null)
             };
         }
 
@@ -63,7 +73,9 @@ namespace NetExtender.Utilities.Types
                 DialogResult.Ignore => InterfaceDialogResult.Ignore,
                 DialogResult.Yes => InterfaceDialogResult.Yes,
                 DialogResult.No => InterfaceDialogResult.No,
-                _ => throw new NotSupportedException()
+                DialogResult.TryAgain => InterfaceDialogResult.TryAgain,
+                DialogResult.Continue => InterfaceDialogResult.Continue,
+                _ => throw new EnumUndefinedOrNotSupportedException<DialogResult>(value, nameof(value), null)
             };
         }
     }

@@ -49,21 +49,19 @@ namespace NetExtender.Utilities.Cryptography
                 {
                     case RSAKeyType.RSA:
                         rsa.ImportRSAPrivateKey(key);
-                        break;
+                        return rsa;
                     case RSAKeyType.Pkcs8:
                         rsa.ImportPkcs8PrivateKey(key);
-                        break;
+                        return rsa;
                     case RSAKeyType.RSAPublic:
                         rsa.ImportRSAPublicKey(key);
-                        break;
+                        return rsa;
                     case RSAKeyType.SubjectPublic:
                         rsa.ImportSubjectPublicKeyInfo(key);
-                        break;
+                        return rsa;
                     default:
-                        throw new NotSupportedException();
+                        throw new EnumUndefinedOrNotSupportedException<RSAKeyType>(type, nameof(type), null);
                 }
-
-                return rsa;
             }
 
             public static String? Encrypt(String? text, ReadOnlySpan<Byte> key, RSAKeyType type = DefaultRSAKeyType, RSAParameters? parameters = null)

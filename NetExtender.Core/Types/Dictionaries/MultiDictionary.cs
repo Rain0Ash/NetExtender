@@ -231,7 +231,7 @@ namespace NetExtender.Types.Dictionaries
 
             if ((UInt32) arrayIndex > (UInt32) array.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(arrayIndex), "Non-negative number required.");
+                throw new ArgumentOutOfRangeException(nameof(arrayIndex), arrayIndex, "Non-negative number required.");
             }
 
             if (array.Length - arrayIndex < Count)

@@ -5,6 +5,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Threading;
 using NetExtender.Utilities.Types;
 using NetExtender.WindowsPresentation.Types.Input;
@@ -103,7 +104,7 @@ namespace NetExtender.Utilities.Windows.IO
                 KeyState.Up => device.IsKeyUp,
                 KeyState.Down => device.IsKeyDown,
                 KeyState.Toggle => device.IsKeyToggled,
-                _ => throw new ArgumentOutOfRangeException(nameof(state), state, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<KeyState>(state, nameof(state), null)
             };
 
             return ThreadUtilities.STA(Keys, handler);

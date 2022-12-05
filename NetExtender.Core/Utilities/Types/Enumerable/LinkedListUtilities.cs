@@ -55,14 +55,14 @@ namespace NetExtender.Utilities.Types
 
             if (index < 0 || index >= collection.Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             LinkedListNode<T>? node = collection.NodeAt(index);
 
             if (node is null)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             return collection.AddBefore(node, item);
@@ -92,14 +92,14 @@ namespace NetExtender.Utilities.Types
 
             if (index < 0 || index >= collection.Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             LinkedListNode<T>? node = collection.NodeAt(index);
 
             if (node is null)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             collection.AddBefore(node, newNode);
@@ -129,14 +129,14 @@ namespace NetExtender.Utilities.Types
 
             if (index < 0 || index >= collection.Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             LinkedListNode<T>? node = collection.NodeAt(index);
 
             if (node is null)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             collection.Remove(node);
@@ -363,12 +363,12 @@ namespace NetExtender.Utilities.Types
 
             if (index1 < 0 || index1 >= collection.Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(index1));
+                throw new ArgumentOutOfRangeException(nameof(index1), index1, null);
             }
 
             if (index2 < 0 || index2 >= collection.Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(index2));
+                throw new ArgumentOutOfRangeException(nameof(index2), index2, null);
             }
 
             if (index1 == index2)
@@ -448,7 +448,7 @@ namespace NetExtender.Utilities.Types
 
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (index >= collection.Count)

@@ -252,7 +252,7 @@ namespace NetExtender.Workstation
         {
             if (milliseconds < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(milliseconds));
+                throw new ArgumentOutOfRangeException(nameof(milliseconds), milliseconds, null);
             }
 
             return LockAsync(TimeSpan.FromMilliseconds(milliseconds), token);

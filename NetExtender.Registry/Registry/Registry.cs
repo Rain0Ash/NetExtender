@@ -9,6 +9,7 @@ using System.Linq;
 using System.Security.AccessControl;
 using Microsoft.Win32;
 using NetExtender.Registry.Interfaces;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Registry;
 using NetExtender.Utilities.Types;
 
@@ -195,7 +196,7 @@ namespace NetExtender.Registry
                     RegistryKeyPermissionCheck.Default => Nested?.IsReadOnly ?? false,
                     RegistryKeyPermissionCheck.ReadSubTree => true,
                     RegistryKeyPermissionCheck.ReadWriteSubTree => false,
-                    _ => throw new NotSupportedException()
+                    _ => throw new EnumUndefinedOrNotSupportedException<RegistryKeyPermissionCheck>(Permission, nameof(Permission), null)
                 };
             }
         }

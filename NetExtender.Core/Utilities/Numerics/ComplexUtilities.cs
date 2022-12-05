@@ -4,6 +4,7 @@
 using System;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Utilities.Numerics
 {
@@ -279,7 +280,7 @@ namespace NetExtender.Utilities.Numerics
                 TrigonometryType.Csch => Csch(value),
                 TrigonometryType.Acsc => Acsc(value),
                 TrigonometryType.Acsch => Acsch(value),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<TrigonometryType>(type, nameof(type), null)
             };
         }
 

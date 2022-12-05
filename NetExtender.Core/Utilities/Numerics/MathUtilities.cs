@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Numerics
@@ -359,7 +360,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (first == Int32.MinValue || second == Int32.MinValue)
             {
-                throw new ArgumentOutOfRangeException(nameof(first), @"Values can't be Int32.MinValue");
+                throw new ArgumentOutOfRangeException(nameof(first), first, @"Values can't be Int32.MinValue");
             }
 
             first = first.Abs();
@@ -412,7 +413,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (first == Int64.MinValue || second == Int64.MinValue)
             {
-                throw new ArgumentOutOfRangeException(nameof(first), @"Values can't be Int64.MinValue");
+                throw new ArgumentOutOfRangeException(nameof(first), first, @"Values can't be Int64.MinValue");
             }
 
             first = first.Abs();
@@ -713,7 +714,7 @@ namespace NetExtender.Utilities.Numerics
                 8 => 16777216,
                 9 => 134217728,
                 10 => 1073741824,
-                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value), value, null) : throw new OverflowException()
             };
         }
 
@@ -733,7 +734,7 @@ namespace NetExtender.Utilities.Numerics
                 8 => 16777216,
                 9 => 134217728,
                 10 => 1073741824,
-                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value), value, null) : throw new OverflowException()
             };
         }
 
@@ -783,7 +784,7 @@ namespace NetExtender.Utilities.Numerics
                 18 => 18014398509481984,
                 19 => 144115188075855872,
                 20 => 1152921504606846976,
-                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value), value, null) : throw new OverflowException()
             };
         }
 
@@ -813,7 +814,7 @@ namespace NetExtender.Utilities.Numerics
                 18 => 18014398509481984,
                 19 => 144115188075855872,
                 20 => 1152921504606846976,
-                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value), value, null) : throw new OverflowException()
             };
         }
 
@@ -873,7 +874,7 @@ namespace NetExtender.Utilities.Numerics
                 18 => 18014398509481984,
                 19 => 144115188075855872,
                 20 => 1152921504606846976,
-                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value), value, null) : throw new OverflowException()
             };
         }
 
@@ -903,7 +904,7 @@ namespace NetExtender.Utilities.Numerics
                 18 => 18014398509481984,
                 19 => 144115188075855872,
                 20 => 1152921504606846976,
-                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value), value, null) : throw new OverflowException()
             };
         }
 
@@ -952,7 +953,7 @@ namespace NetExtender.Utilities.Numerics
                 7 => 10000000,
                 8 => 100000000,
                 9 => 1000000000,
-                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value), value, null) : throw new OverflowException()
             };
         }
 
@@ -971,7 +972,7 @@ namespace NetExtender.Utilities.Numerics
                 7 => 10000000,
                 8 => 100000000,
                 9 => 1000000000,
-                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value), value, null) : throw new OverflowException()
             };
         }
 
@@ -1018,7 +1019,7 @@ namespace NetExtender.Utilities.Numerics
                 16 => 10000000000000000,
                 17 => 100000000000000000,
                 18 => 1000000000000000000,
-                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value), value, null) : throw new OverflowException()
             };
         }
 
@@ -1046,7 +1047,7 @@ namespace NetExtender.Utilities.Numerics
                 16 => 10000000000000000,
                 17 => 100000000000000000,
                 18 => 1000000000000000000,
-                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value), value, null) : throw new OverflowException()
             };
         }
 
@@ -1102,7 +1103,7 @@ namespace NetExtender.Utilities.Numerics
                 16 => 10000000000000000,
                 17 => 100000000000000000,
                 18 => 1000000000000000000,
-                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value), value, null) : throw new OverflowException()
             };
         }
 
@@ -1130,7 +1131,7 @@ namespace NetExtender.Utilities.Numerics
                 16 => 10000000000000000,
                 17 => 100000000000000000,
                 18 => 1000000000000000000,
-                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value), value, null) : throw new OverflowException()
             };
         }
 
@@ -1175,7 +1176,7 @@ namespace NetExtender.Utilities.Numerics
                 5 => 1048576,
                 6 => 16777216,
                 7 => 268435456,
-                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value), value, null) : throw new OverflowException()
             };
         }
 
@@ -1192,7 +1193,7 @@ namespace NetExtender.Utilities.Numerics
                 5 => 1048576,
                 6 => 16777216,
                 7 => 268435456,
-                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value), value, null) : throw new OverflowException()
             };
         }
 
@@ -1234,7 +1235,7 @@ namespace NetExtender.Utilities.Numerics
                 13 => 4503599627370496,
                 14 => 72057594037927936,
                 15 => 1152921504606846976,
-                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value), value, null) : throw new OverflowException()
             };
         }
 
@@ -1259,7 +1260,7 @@ namespace NetExtender.Utilities.Numerics
                 13 => 4503599627370496,
                 14 => 72057594037927936,
                 15 => 1152921504606846976,
-                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value), value, null) : throw new OverflowException()
             };
         }
 
@@ -1309,7 +1310,7 @@ namespace NetExtender.Utilities.Numerics
                 13 => 4503599627370496,
                 14 => 72057594037927936,
                 15 => 1152921504606846976,
-                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value), value, null) : throw new OverflowException()
             };
         }
 
@@ -1334,7 +1335,7 @@ namespace NetExtender.Utilities.Numerics
                 13 => 4503599627370496,
                 14 => 72057594037927936,
                 15 => 1152921504606846976,
-                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value)) : throw new OverflowException()
+                _ => value < 0 ? throw new ArgumentOutOfRangeException(nameof(value), value, null) : throw new OverflowException()
             };
         }
 
@@ -1888,7 +1889,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             return value != 0 && ILog10(value) >= index ? value / Pow10(index) % 10 : 0;
@@ -1904,7 +1905,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (index.Value == 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (value == 0)
@@ -1913,7 +1914,7 @@ namespace NetExtender.Utilities.Numerics
             }
 
             Int32 count = ILog10(value) - index.Value + 1;
-            return count >= 0 ? value / Pow10(count) % 10 : throw new ArgumentOutOfRangeException(nameof(index));
+            return count >= 0 ? value / Pow10(count) % 10 : throw new ArgumentOutOfRangeException(nameof(index), index, null);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -1921,7 +1922,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             return value != 0 && ILog10(value) >= index ? (Int32) (value / Pow10U(index) % 10U) : 0;
@@ -1937,7 +1938,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (index.Value == 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (value == 0)
@@ -1946,7 +1947,7 @@ namespace NetExtender.Utilities.Numerics
             }
 
             Int32 count = ILog10(value) - index.Value + 1;
-            return count >= 0 ? (Int32) (value / Pow10U(count) % 10U) : throw new ArgumentOutOfRangeException(nameof(index));
+            return count >= 0 ? (Int32) (value / Pow10U(count) % 10U) : throw new ArgumentOutOfRangeException(nameof(index), index, null);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -1954,7 +1955,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             return value != 0 && ILog10(value) >= index ? (Int32) (value / Pow10L(index) % 10L) : 0;
@@ -1970,7 +1971,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (index.Value == 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (value == 0)
@@ -1979,7 +1980,7 @@ namespace NetExtender.Utilities.Numerics
             }
 
             Int32 count = ILog10(value) - index.Value + 1;
-            return count >= 0 ? (Int32) (value / Pow10L(count) % 10L) : throw new ArgumentOutOfRangeException(nameof(index));
+            return count >= 0 ? (Int32) (value / Pow10L(count) % 10L) : throw new ArgumentOutOfRangeException(nameof(index), index, null);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -1987,7 +1988,7 @@ namespace NetExtender.Utilities.Numerics
         {
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             return value != 0 && ILog10(value) >= index ? (Int32) (value / Pow10UL(index) % 10UL) : 0;
@@ -2003,7 +2004,7 @@ namespace NetExtender.Utilities.Numerics
 
             if (index.Value == 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (value == 0)
@@ -2012,7 +2013,7 @@ namespace NetExtender.Utilities.Numerics
             }
 
             Int32 count = ILog10(value) - index.Value + 1;
-            return count >= 0 ? (Int32) (value / Pow10UL(count) % 10UL) : throw new ArgumentOutOfRangeException(nameof(index));
+            return count >= 0 ? (Int32) (value / Pow10UL(count) % 10UL) : throw new ArgumentOutOfRangeException(nameof(index), index, null);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
@@ -2020,12 +2021,12 @@ namespace NetExtender.Utilities.Numerics
         {
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (digit < 0 || digit > 9)
             {
-                throw new ArgumentOutOfRangeException(nameof(digit));
+                throw new ArgumentOutOfRangeException(nameof(digit), digit, null);
             }
 
             if (value == 0)
@@ -2053,12 +2054,12 @@ namespace NetExtender.Utilities.Numerics
         {
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (digit < 0 || digit > 9)
             {
-                throw new ArgumentOutOfRangeException(nameof(digit));
+                throw new ArgumentOutOfRangeException(nameof(digit), digit, null);
             }
 
             if (value == 0)
@@ -2086,12 +2087,12 @@ namespace NetExtender.Utilities.Numerics
         {
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (digit < 0 || digit > 9)
             {
-                throw new ArgumentOutOfRangeException(nameof(digit));
+                throw new ArgumentOutOfRangeException(nameof(digit), digit, null);
             }
 
             if (value == 0)
@@ -2119,12 +2120,12 @@ namespace NetExtender.Utilities.Numerics
         {
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (digit < 0 || digit > 9)
             {
-                throw new ArgumentOutOfRangeException(nameof(digit));
+                throw new ArgumentOutOfRangeException(nameof(digit), digit, null);
             }
 
             if (value == 0)
@@ -2152,12 +2153,12 @@ namespace NetExtender.Utilities.Numerics
         {
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (digit < 0 || digit > 9)
             {
-                throw new ArgumentOutOfRangeException(nameof(digit));
+                throw new ArgumentOutOfRangeException(nameof(digit), digit, null);
             }
 
             if (value == 0)
@@ -2185,12 +2186,12 @@ namespace NetExtender.Utilities.Numerics
         {
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (digit < 0 || digit > 9)
             {
-                throw new ArgumentOutOfRangeException(nameof(digit));
+                throw new ArgumentOutOfRangeException(nameof(digit), digit, null);
             }
 
             if (value == 0)
@@ -2218,12 +2219,12 @@ namespace NetExtender.Utilities.Numerics
         {
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (digit < 0 || digit > 9)
             {
-                throw new ArgumentOutOfRangeException(nameof(digit));
+                throw new ArgumentOutOfRangeException(nameof(digit), digit, null);
             }
 
             if (value == 0)
@@ -2251,12 +2252,12 @@ namespace NetExtender.Utilities.Numerics
         {
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (digit < 0 || digit > 9)
             {
-                throw new ArgumentOutOfRangeException(nameof(digit));
+                throw new ArgumentOutOfRangeException(nameof(digit), digit, null);
             }
 
             if (value == 0)
@@ -2776,7 +2777,7 @@ namespace NetExtender.Utilities.Numerics
                 TrigonometryType.Csch => Csch(value),
                 TrigonometryType.Acsc => Acsc(value),
                 TrigonometryType.Acsch => Acsch(value),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<TrigonometryType>(type, nameof(type), null)
             };
         }
 
@@ -2983,7 +2984,7 @@ namespace NetExtender.Utilities.Numerics
                 TrigonometryType.Csch => Csch(value),
                 TrigonometryType.Acsc => Acsc(value),
                 TrigonometryType.Acsch => Acsch(value),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<TrigonometryType>(type, nameof(type), null)
             };
         }
 
@@ -3380,7 +3381,7 @@ namespace NetExtender.Utilities.Numerics
                 TrigonometryType.Csch => Csch(value),
                 TrigonometryType.Acsc => Acsc(value),
                 TrigonometryType.Acsch => Acsch(value),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<TrigonometryType>(type, nameof(type), null)
             };
         }
 
@@ -3982,7 +3983,7 @@ namespace NetExtender.Utilities.Numerics
                 MathPositionType.Left => value >= BigInteger.Zero,
                 MathPositionType.Right => value > BigInteger.Zero,
                 MathPositionType.Both => value >= BigInteger.Zero,
-                _ => throw new NotSupportedException(comparison.ToString())
+                _ => throw new EnumUndefinedOrNotSupportedException<MathPositionType>(comparison, nameof(comparison), null)
             };
         }
 
@@ -4013,7 +4014,7 @@ namespace NetExtender.Utilities.Numerics
                 MathPositionType.Left => value >= minimum && value < maximum,
                 MathPositionType.Right => value > minimum && value <= maximum,
                 MathPositionType.Both => value >= minimum && value <= maximum,
-                _ => throw new NotSupportedException(comparison.ToString())
+                _ => throw new EnumUndefinedOrNotSupportedException<MathPositionType>(comparison, nameof(comparison), null)
             };
         }
 
@@ -4848,7 +4849,7 @@ namespace NetExtender.Utilities.Numerics
             {
                 if (character < ZeroChar || character >= max || @base > 10 && character is > '9' and < 'A')
                 {
-                    throw new ArgumentOutOfRangeException(nameof(value));
+                    throw new ArgumentOutOfRangeException(nameof(value), value, null);
                 }
 
                 Byte number = (Byte) (character >= 'A' ? character - 'A' + 10 : character - ZeroChar);

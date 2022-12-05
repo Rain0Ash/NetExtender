@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
@@ -62,7 +63,7 @@ namespace NetExtender.Utilities.Types
                 TimeType.Minutes => TimeSpan.FromMinutes(count),
                 TimeType.Hours => TimeSpan.FromHours(count),
                 TimeType.Days => TimeSpan.FromDays(count),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<TimeType>(type, nameof(type), null)
             };
         }
 

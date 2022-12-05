@@ -305,7 +305,7 @@ namespace NetExtender.Utilities.Types
 
             if (timeout < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(timeout));
+                throw new ArgumentOutOfRangeException(nameof(timeout), timeout, null);
             }
 
             if (token.IsCancellationRequested)
@@ -395,7 +395,7 @@ namespace NetExtender.Utilities.Types
 
             if (timeout < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(timeout));
+                throw new ArgumentOutOfRangeException(nameof(timeout), timeout, null);
             }
 
             return factory.StartNewDelayed(timeout, token).ContinueWith(action, token, TaskContinuationOptions.OnlyOnRanToCompletion, scheduler);
@@ -450,7 +450,7 @@ namespace NetExtender.Utilities.Types
 
             if (timeout < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(timeout));
+                throw new ArgumentOutOfRangeException(nameof(timeout), timeout, null);
             }
 
             TaskCompletionSource<Object?> result = new TaskCompletionSource<Object?>(state);
@@ -528,7 +528,7 @@ namespace NetExtender.Utilities.Types
 
             if (timeout < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(timeout));
+                throw new ArgumentOutOfRangeException(nameof(timeout), timeout, null);
             }
 
             TaskCompletionSource<Object?> source = new TaskCompletionSource<Object?>();
@@ -582,7 +582,7 @@ namespace NetExtender.Utilities.Types
 
             if (timeout < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(timeout));
+                throw new ArgumentOutOfRangeException(nameof(timeout), timeout, null);
             }
 
             if (function is null)

@@ -90,7 +90,7 @@ namespace NetExtender.Types.Queues
         {
             if (capacity < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(capacity));
+                throw new ArgumentOutOfRangeException(nameof(capacity), capacity, null);
             }
 
             Set.EnsureCapacity(capacity);

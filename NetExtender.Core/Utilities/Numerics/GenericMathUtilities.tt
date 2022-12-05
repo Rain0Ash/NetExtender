@@ -2,6 +2,7 @@
 <#@ output extension=".cs" encoding="utf-8"#>
 <#@ assembly name="System.Core"#>
 <#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
 // This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
@@ -11,6 +12,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Utilities.Numerics
 {
@@ -323,7 +325,7 @@ namespace NetExtender.Utilities.Numerics
         {
             WriteLine("\t\t\tif (value < 0)");
             WriteLine("\t\t\t{");
-            WriteLine("\t\t\t\tthrow new ArgumentOutOfRangeException();");
+            WriteLine("\t\t\t\tthrow new ArgumentOutOfRangeException(nameof(value), value, null);");
             WriteLine("\t\t\t}");
 
             WriteLine(String.Empty);
@@ -333,7 +335,7 @@ namespace NetExtender.Utilities.Numerics
         {
             WriteLine("\t\t\tif (value > UInt32.MaxValue)");
             WriteLine("\t\t\t{");
-            WriteLine("\t\t\t\tthrow new ArgumentOutOfRangeException();");
+            WriteLine("\t\t\t\tthrow new ArgumentOutOfRangeException(nameof(value), value, null);");
             WriteLine("\t\t\t}");
 
             WriteLine(String.Empty);
@@ -613,7 +615,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t\tMathPositionType.Left => value >= minimum && value < maximum,");
         WriteLine("\t\t\t\tMathPositionType.Right => value > minimum && value <= maximum,");
         WriteLine("\t\t\t\tMathPositionType.Both => value >= minimum && value <= maximum,");
-        WriteLine("\t\t\t\t_ => throw new NotSupportedException()");
+        WriteLine("\t\t\t\t_ => throw new EnumUndefinedOrNotSupportedException<MathPositionType>(comparison, nameof(comparison), null)");
         WriteLine("\t\t\t};");
         WriteLine("\t\t}");
     }
@@ -887,8 +889,15 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t}");
 
         WriteLine(String.Empty);
+        
+        WriteLine($"\t\tpublic static {type} {nameof(RoundToMultiplier)}(this {type} value, {type} multiplier)");
+        WriteLine("\t\t{");
+        WriteLine($"\t\t\treturn {nameof(RoundToMultiplier)}(value, multiplier, MidpointRounding.ToEven);");
+        WriteLine("\t\t}");
+        
+        WriteLine(String.Empty);
 
-        WriteLine($"\t\tpublic static {type} {nameof(RoundToMultiplier)}(this {type} value, {type} multiplier, MidpointRounding rounding = MidpointRounding.ToEven)");
+        WriteLine($"\t\tpublic static {type} {nameof(RoundToMultiplier)}(this {type} value, {type} multiplier, MidpointRounding rounding)");
         WriteLine("\t\t{");
         WriteLine("\t\t\treturn rounding switch");
         WriteLine("\t\t\t{");
@@ -897,7 +906,7 @@ namespace NetExtender.Utilities.Numerics
         WriteLine("\t\t\t\tMidpointRounding.AwayFromZero => RoundAwayFromZeroToMultiplier(value, multiplier),");
         WriteLine("\t\t\t\tMidpointRounding.ToPositiveInfinity => RoundUpToMultiplier(value, multiplier),");
         WriteLine("\t\t\t\tMidpointRounding.ToNegativeInfinity => RoundDownToMultiplier(value, multiplier),");
-        WriteLine($"\t\t\t\t_ => throw new {nameof(NotSupportedException)}()");
+        WriteLine("\t\t\t\t_ => throw new EnumUndefinedOrNotSupportedException<MidpointRounding>(rounding, nameof(rounding), null)");
         WriteLine("\t\t\t};");
         WriteLine("\t\t}");
     }
@@ -1378,9 +1387,9 @@ namespace NetExtender.Utilities.Numerics
     {
         WriteLine($"\t\tpublic static {nameof(String)} {nameof(ToBase)}(this {type} value, {nameof(Byte)} @base)");
         WriteLine("\t\t{");
-        WriteLine("\t\t\tif (!@base.InRange(MinBase, MaxBase))");
+        WriteLine("\t\t\tif (!@base.InRange(MinimumBase, MaximumBase))");
         WriteLine("\t\t\t{");
-        WriteLine("\t\t\t\tthrow new ArgumentOutOfRangeException(nameof(@base), @\"Base out of range\");");
+        WriteLine("\t\t\t\tthrow new ArgumentOutOfRangeException(nameof(@base), @base, @\"Base out of range\");");
         WriteLine("\t\t\t}");
 
         WriteLine(String.Empty);
@@ -1438,10 +1447,10 @@ namespace NetExtender.Utilities.Numerics
 
     void ToBase()
     {
-        WriteLine("\t\tprivate const Byte MinBase = 2;");
-        WriteLine("\t\tprivate const Byte MaxBase = 36;");
+        WriteLine("\t\tprivate const Byte MinimumBase = 2;");
+        WriteLine("\t\tprivate const Byte MaximumBase = 36;");
         WriteLine("\t\tprivate const Int32 ZeroChar = '0';");
-        WriteLine("\t\tprivate const Int32 AlphabetStart = '9' - MinBase;");
+        WriteLine("\t\tprivate const Int32 AlphabetStart = '9' - MinimumBase;");
 
         WriteLine(String.Empty);
 

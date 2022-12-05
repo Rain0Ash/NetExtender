@@ -4,6 +4,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 using Md5 = System.Security.Cryptography.MD5;
@@ -118,7 +119,7 @@ namespace NetExtender.Utilities.Cryptography
                 case HashType.SHA512:
                     return Hash.Sha512(value);
                 default:
-                    throw new NotSupportedException();
+                    throw new EnumUndefinedOrNotSupportedException<HashType>(type, nameof(type), null);
             }
         }
 
@@ -271,7 +272,7 @@ namespace NetExtender.Utilities.Cryptography
                 HashType.SHA256 => Hash.Sha256(value, destination, out written),
                 HashType.SHA384 => Hash.Sha384(value, destination, out written),
                 HashType.SHA512 => Hash.Sha512(value, destination, out written),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<HashType>(type, nameof(type), null)
             };
         }
 

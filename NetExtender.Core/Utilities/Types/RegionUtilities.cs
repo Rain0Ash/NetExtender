@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Region;
 
 namespace NetExtender.Utilities.Types
@@ -37,7 +38,7 @@ namespace NetExtender.Utilities.Types
                 SubregionIdentifier.Caribbean => RegionIdentifier.Oceania,
                 SubregionIdentifier.Arctic => RegionIdentifier.Arctic,
                 SubregionIdentifier.Antarctic => RegionIdentifier.Antarctic,
-                _ => throw new ArgumentOutOfRangeException(nameof(identifier), identifier, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<SubregionIdentifier>(identifier, nameof(identifier), null)
             };
         }
     }

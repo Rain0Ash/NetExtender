@@ -15,6 +15,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Immutable.Maps.Interfaces;
 using NetExtender.Types.Maps.Interfaces;
 using NetExtender.Types.Strings;
@@ -1419,12 +1420,12 @@ namespace NetExtender.Utilities.Types
 
             if (min < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(min));
+                throw new ArgumentOutOfRangeException(nameof(min), min, null);
             }
 
             if (max < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(max));
+                throw new ArgumentOutOfRangeException(nameof(max), max, null);
             }
 
             if (value.Length <= 0)
@@ -1901,7 +1902,7 @@ namespace NetExtender.Utilities.Types
                 SplitType.NewLineAndUpperCase => SplitByUpperCase(SplitByNewLine(value, options), options),
                 SplitType.SpaceAndUpperCase => SplitByUpperCase(SplitBySpace(value, options), options),
                 SplitType.All => SplitByUpperCase(SplitByNewLineAndSpace(value, options), options),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<SplitType>(split, nameof(split), null)
             };
         }
 
@@ -1967,7 +1968,7 @@ namespace NetExtender.Utilities.Types
                 JoinType.Default => Join(separator, values),
                 JoinType.NotEmpty => Join(separator, IsNotNullOrEmpty, values),
                 JoinType.NotWhiteSpace => Join(separator, IsNotNullOrWhiteSpace, values),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<JoinType>(type, nameof(type), null)
             };
         }
 
@@ -2536,7 +2537,7 @@ namespace NetExtender.Utilities.Types
 
             if (index < 0 || index >= value.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             return value.Length > 1 ? String.Concat(value.AsSpan(0, index), value.Substring(index).Shuffle()) : value;
@@ -2551,12 +2552,12 @@ namespace NetExtender.Utilities.Types
 
             if (length < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(length));
+                throw new ArgumentOutOfRangeException(nameof(length), length, null);
             }
 
             if (index < 0 || index + length > value.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (length <= 1)
@@ -3271,7 +3272,7 @@ namespace NetExtender.Utilities.Types
                 StringComparison.InvariantCultureIgnoreCase => LevenshteinDistance(first.ToUpperInvariant(), second.ToUpperInvariant()),
                 StringComparison.Ordinal => LevenshteinDistance(first, second),
                 StringComparison.OrdinalIgnoreCase => LevenshteinDistance(first.ToUpperInvariant(), second.ToUpperInvariant()),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<StringComparison>(comparison, nameof(comparison), null)
             };
         }
 
@@ -3348,7 +3349,7 @@ namespace NetExtender.Utilities.Types
                 StringComparison.InvariantCultureIgnoreCase => DamerauLevenshteinDistance(first.ToUpperInvariant(), second.ToUpperInvariant(), values),
                 StringComparison.Ordinal => DamerauLevenshteinDistance(first, second, values),
                 StringComparison.OrdinalIgnoreCase => DamerauLevenshteinDistance(first.ToUpperInvariant(), second.ToUpperInvariant(), values),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<StringComparison>(comparison, nameof(comparison), null)
             };
         }
 
@@ -3417,73 +3418,58 @@ namespace NetExtender.Utilities.Types
 
         public static CultureInfo? ToCultureInfo(this StringComparison comparison)
         {
-            switch (comparison)
+            return comparison switch
             {
-                case StringComparison.CurrentCulture:
-                case StringComparison.CurrentCultureIgnoreCase:
-                    return CultureInfo.CurrentCulture;
-                case StringComparison.InvariantCulture:
-                case StringComparison.InvariantCultureIgnoreCase:
-                    return CultureInfo.InvariantCulture;
-                case StringComparison.Ordinal:
-                case StringComparison.OrdinalIgnoreCase:
-                    return null;
-                default:
-                    throw new NotSupportedException();
-            }
+                StringComparison.CurrentCulture => CultureInfo.CurrentCulture,
+                StringComparison.CurrentCultureIgnoreCase => CultureInfo.CurrentCulture,
+                StringComparison.InvariantCulture => CultureInfo.InvariantCulture,
+                StringComparison.InvariantCultureIgnoreCase => CultureInfo.InvariantCulture,
+                StringComparison.Ordinal => null,
+                StringComparison.OrdinalIgnoreCase => null,
+                _ => throw new EnumUndefinedOrNotSupportedException<StringComparison>(comparison, nameof(comparison), null)
+            };
         }
 
         public static Boolean IsIgnoreCase(this StringComparison comparison)
         {
-            switch (comparison)
+            return comparison switch
             {
-                case StringComparison.CurrentCulture:
-                case StringComparison.InvariantCulture:
-                case StringComparison.Ordinal:
-                    return false;
-                case StringComparison.CurrentCultureIgnoreCase:
-                case StringComparison.InvariantCultureIgnoreCase:
-                case StringComparison.OrdinalIgnoreCase:
-                    return true;
-                default:
-                    throw new NotSupportedException();
-            }
+                StringComparison.CurrentCulture => false,
+                StringComparison.InvariantCulture => false,
+                StringComparison.Ordinal => false,
+                StringComparison.CurrentCultureIgnoreCase => true,
+                StringComparison.InvariantCultureIgnoreCase => true,
+                StringComparison.OrdinalIgnoreCase => true,
+                _ => throw new EnumUndefinedOrNotSupportedException<StringComparison>(comparison, nameof(comparison), null)
+            };
         }
 
         public static StringComparison ToIgnoreCase(this StringComparison comparison)
         {
-            switch (comparison)
+            return comparison switch
             {
-                case StringComparison.CurrentCulture:
-                case StringComparison.CurrentCultureIgnoreCase:
-                    return StringComparison.CurrentCultureIgnoreCase;
-                case StringComparison.InvariantCulture:
-                case StringComparison.InvariantCultureIgnoreCase:
-                    return StringComparison.InvariantCultureIgnoreCase;
-                case StringComparison.Ordinal:
-                case StringComparison.OrdinalIgnoreCase:
-                    return StringComparison.OrdinalIgnoreCase;
-                default:
-                    throw new NotSupportedException();
-            }
+                StringComparison.CurrentCulture => StringComparison.CurrentCultureIgnoreCase,
+                StringComparison.CurrentCultureIgnoreCase => StringComparison.CurrentCultureIgnoreCase,
+                StringComparison.InvariantCulture => StringComparison.InvariantCultureIgnoreCase,
+                StringComparison.InvariantCultureIgnoreCase => StringComparison.InvariantCultureIgnoreCase,
+                StringComparison.Ordinal => StringComparison.OrdinalIgnoreCase,
+                StringComparison.OrdinalIgnoreCase => StringComparison.OrdinalIgnoreCase,
+                _ => throw new EnumUndefinedOrNotSupportedException<StringComparison>(comparison, nameof(comparison), null)
+            };
         }
 
         public static StringComparison ToCaseSensitive(this StringComparison comparison)
         {
-            switch (comparison)
+            return comparison switch
             {
-                case StringComparison.CurrentCulture:
-                case StringComparison.CurrentCultureIgnoreCase:
-                    return StringComparison.CurrentCulture;
-                case StringComparison.InvariantCulture:
-                case StringComparison.InvariantCultureIgnoreCase:
-                    return StringComparison.InvariantCulture;
-                case StringComparison.Ordinal:
-                case StringComparison.OrdinalIgnoreCase:
-                    return StringComparison.Ordinal;
-                default:
-                    throw new NotSupportedException();
-            }
+                StringComparison.CurrentCulture => StringComparison.CurrentCulture,
+                StringComparison.CurrentCultureIgnoreCase => StringComparison.CurrentCulture,
+                StringComparison.InvariantCulture => StringComparison.InvariantCulture,
+                StringComparison.InvariantCultureIgnoreCase => StringComparison.InvariantCulture,
+                StringComparison.Ordinal => StringComparison.Ordinal,
+                StringComparison.OrdinalIgnoreCase => StringComparison.Ordinal,
+                _ => throw new EnumUndefinedOrNotSupportedException<StringComparison>(comparison, nameof(comparison), null)
+            };
         }
 
         private static Regex RightToLeftChecker { get; } = new Regex("[\u04c7-\u0591\u05D0-\u05EA\u05F0-\u05F4\u0600-\u06FF]", RegexOptions.Compiled);
@@ -3553,14 +3539,9 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(value));
             }
 
-            if (position < 0)
+            if (position < 0 || position > value.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(position));
-            }
-
-            if (position > value.Length)
-            {
-                throw new ArgumentOutOfRangeException(nameof(position));
+                throw new ArgumentOutOfRangeException(nameof(position), position, null);
             }
 
             fixed (Char* pinned = value)
@@ -3608,12 +3589,12 @@ namespace NetExtender.Utilities.Types
 
             if (position < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(position));
+                throw new ArgumentOutOfRangeException(nameof(position), position, null);
             }
 
             if (position + span.Length > value.Length)
             {
-                throw new ArgumentOutOfRangeException(span.Length > value.Length ? nameof(span) : nameof(position));
+                throw span.Length > value.Length ? new ArgumentOutOfRangeException(nameof(span), span.Length, null) : new ArgumentOutOfRangeException(nameof(position), position, null);
             }
 
             fixed (Char* pinned = value)

@@ -52,7 +52,7 @@ namespace NetExtender.Cryptography.Random
         {
             if (min >= max)
             {
-                throw new ArgumentOutOfRangeException(nameof(min));
+                throw new ArgumentOutOfRangeException(nameof(min), min, null);
             }
 
             unchecked

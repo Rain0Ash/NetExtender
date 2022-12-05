@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 
@@ -102,7 +103,7 @@ namespace NetExtender.Utilities.Network
                 PortType.System => SystemPortMaximum - SystemPortMinimum + 1,
                 PortType.Register => RegisterPortMaximum - RegisterPortMinimum + 1,
                 PortType.Dynamic => DynamicPortMaximum - DynamicPortMinimum + 1,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<PortType>(type, nameof(type), null)
             };
         }
 
@@ -231,7 +232,7 @@ namespace NetExtender.Utilities.Network
                 PortType.System => RandomUtilities.NextUInt16(SystemPortMinimum, SystemPortMaximum),
                 PortType.Register => RandomUtilities.NextUInt16(RegisterPortMinimum, RegisterPortMaximum),
                 PortType.Dynamic => RandomUtilities.NextUInt16(DynamicPortMinimum, DynamicPortMaximum),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<PortType>(type, nameof(type), null)
             };
         }
 
@@ -280,7 +281,7 @@ namespace NetExtender.Utilities.Network
                 PortType.System => Enumerable.Except(MathUtilities.RangeInclude(SystemPortMinimum, SystemPortMaximum), except),
                 PortType.Register => Enumerable.Except(MathUtilities.RangeInclude(RegisterPortMinimum, RegisterPortMaximum), except),
                 PortType.Dynamic => Enumerable.Except(MathUtilities.RangeInclude(DynamicPortMinimum, DynamicPortMaximum), except),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<PortType>(type, nameof(type), null)
             };
         }
 

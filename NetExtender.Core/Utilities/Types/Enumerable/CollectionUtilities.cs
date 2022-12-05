@@ -67,12 +67,12 @@ namespace NetExtender.Utilities.Types
 
             if (min < 1 || min > collection.Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(min));
+                throw new ArgumentOutOfRangeException(nameof(min), min, null);
             }
 
             if (max < 1 || max < min || max > collection.Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(max));
+                throw new ArgumentOutOfRangeException(nameof(max), max, null);
             }
 
             IEnumerable<IList<T>> combo = new List<List<T>>();
@@ -425,7 +425,7 @@ namespace NetExtender.Utilities.Types
 
             if (index < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(index));
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
 
             if (source is ICollection<T> collection)
@@ -436,7 +436,7 @@ namespace NetExtender.Utilities.Types
 
             if (source is IReadOnlyCollection<T> count && count.Count + index > array.Length)
             {
-                throw new ArgumentOutOfRangeException(nameof(array));
+                throw new ArgumentOutOfRangeException(nameof(array), array.Length, null);
             }
 
             using IEnumerator<T> enumerator = source.GetEnumerator();

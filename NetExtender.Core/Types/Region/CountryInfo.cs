@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Linq;
 using NetExtender.Types.Culture;
 using NetExtender.Types.Currency;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Types.Region
@@ -1997,7 +1998,7 @@ namespace NetExtender.Types.Region
                         Currency = new CountryCurrency(CurrencyIdentifier.Zmw),
                         Calling = new CountryCalling(260)
                     },
-                    _ => throw new ArgumentOutOfRangeException(nameof(identifier), identifier, null)
+                    _ => throw new EnumUndefinedOrNotSupportedException<CountryIdentifier>(identifier, nameof(identifier), null)
                 };
             }
         }

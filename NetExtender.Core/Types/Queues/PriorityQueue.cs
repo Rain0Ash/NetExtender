@@ -38,7 +38,7 @@ namespace NetExtender.Types.Queues
         {
             if (size <= 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(size));
+                throw new ArgumentOutOfRangeException(nameof(size), size, null);
             }
 
             Size = size;
@@ -391,7 +391,7 @@ namespace NetExtender.Types.Queues
 
             if (arrayIndex < 0 || arrayIndex > array.Length || array.Length - arrayIndex < Count)
             {
-                throw new ArgumentOutOfRangeException(nameof(arrayIndex));
+                throw new ArgumentOutOfRangeException(nameof(arrayIndex), arrayIndex, null);
             }
 
             foreach (Queue<T> queue in Queue.Values)

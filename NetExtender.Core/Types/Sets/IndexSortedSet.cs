@@ -251,7 +251,7 @@ namespace NetExtender.Types.Sets
                     Rebuild = false;
                 }
 
-                return Indexer.ValueOf(index, out T? item) ? item : throw new ArgumentOutOfRangeException(nameof(index));
+                return Indexer.ValueOf(index, out T? item) ? item : throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
             set
             {
@@ -263,7 +263,7 @@ namespace NetExtender.Types.Sets
 
                 if (!Indexer.ValueOf(index, out T? item))
                 {
-                    throw new ArgumentOutOfRangeException(nameof(index));
+                    throw new ArgumentOutOfRangeException(nameof(index), index, null);
                 }
 
                 Internal.Remove(item);

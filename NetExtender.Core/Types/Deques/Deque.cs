@@ -79,7 +79,7 @@ namespace NetExtender.Types.Deques
             {
                 if (value < Count)
                 {
-                    throw new ArgumentOutOfRangeException(nameof(value), @"Capacity cannot be set to a value less than Count");
+                    throw new ArgumentOutOfRangeException(nameof(value), value, @"Capacity cannot be set to a value less than Count");
                 }
 
                 if (value == _buffer.Length)
@@ -111,7 +111,7 @@ namespace NetExtender.Types.Deques
         {
             if (capacity < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(capacity), @"Capacity may not be negative.");
+                throw new ArgumentOutOfRangeException(nameof(capacity), capacity, @"Capacity may not be negative.");
             }
 
             _buffer = new T[capacity];
@@ -423,7 +423,7 @@ namespace NetExtender.Types.Deques
         {
             if (index < 0 || index > sourceLength)
             {
-                throw new ArgumentOutOfRangeException(nameof(index), @"Invalid new index " + index + @" for source length " + sourceLength);
+                throw new ArgumentOutOfRangeException(nameof(index), index, @"Invalid new index " + index + @" for source length " + sourceLength);
             }
         }
 
@@ -437,7 +437,7 @@ namespace NetExtender.Types.Deques
         {
             if (index < 0 || index >= sourceLength)
             {
-                throw new ArgumentOutOfRangeException(nameof(index), @"Invalid existing index " + index + @" for source length " + sourceLength);
+                throw new ArgumentOutOfRangeException(nameof(index), index, @"Invalid existing index " + index + @" for source length " + sourceLength);
             }
         }
 
@@ -453,12 +453,12 @@ namespace NetExtender.Types.Deques
         {
             if (offset < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(offset), @"Invalid offset " + offset);
+                throw new ArgumentOutOfRangeException(nameof(offset), offset, @"Invalid offset " + offset);
             }
 
             if (count < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(count), @"Invalid count " + count);
+                throw new ArgumentOutOfRangeException(nameof(count), count, @"Invalid count " + count);
             }
 
             if (sourceLength - offset < count)

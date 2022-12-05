@@ -17,6 +17,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using NetExtender.Initializer.Types.Reflection;
 using NetExtender.Types.Attributes;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Core
@@ -777,7 +778,7 @@ namespace NetExtender.Utilities.Core
                 AssemblyHashAlgorithm.Sha256 => System.Configuration.Assemblies.AssemblyHashAlgorithm.SHA256,
                 AssemblyHashAlgorithm.Sha384 => System.Configuration.Assemblies.AssemblyHashAlgorithm.SHA384,
                 AssemblyHashAlgorithm.Sha512 => System.Configuration.Assemblies.AssemblyHashAlgorithm.SHA512,
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<AssemblyHashAlgorithm>(algorithm, nameof(algorithm), null)
             });
         }
 
@@ -1421,7 +1422,7 @@ namespace NetExtender.Utilities.Core
         {
             if (levels < 0)
             {
-                throw new ArgumentOutOfRangeException(nameof(levels));
+                throw new ArgumentOutOfRangeException(nameof(levels), levels, null);
             }
 
             StackFrame frame = new StackFrame(levels, true);
@@ -2071,7 +2072,7 @@ namespace NetExtender.Utilities.Core
                 MethodVisibilityType.Unavailable => null,
                 MethodVisibilityType.Private => false,
                 MethodVisibilityType.Public => true,
-                _ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+                _ => throw new EnumUndefinedOrNotSupportedException<MethodVisibilityType>(type, nameof(type), null)
             };
         }
 

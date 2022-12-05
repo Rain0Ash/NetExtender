@@ -5,6 +5,7 @@ using System;
 using System.Data.SqlTypes;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Numerics;
 
 namespace NetExtender.Utilities.Types
@@ -125,7 +126,7 @@ namespace NetExtender.Utilities.Types
                 DateTimeKind.Unspecified => value.ToSpecifyKind(kind),
                 DateTimeKind.Utc => value.ToUtcKind(),
                 DateTimeKind.Local => value.ToLocalKind(),
-                _ => throw new NotSupportedException()
+                _ => throw new EnumUndefinedOrNotSupportedException<DateTimeKind>(kind, nameof(kind), null)
             };
         }
 
@@ -221,7 +222,7 @@ namespace NetExtender.Utilities.Types
         {
             if (at < date)
             {
-                throw new ArgumentOutOfRangeException(nameof(at));
+                throw new ArgumentOutOfRangeException(nameof(at), at, null);
             }
 
             return (at - date).Years();

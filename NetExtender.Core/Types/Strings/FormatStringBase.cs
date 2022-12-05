@@ -30,7 +30,7 @@ namespace NetExtender.Types.Strings
 
             if (format.Length != Arguments)
             {
-                throw new ArgumentOutOfRangeException(nameof(format));
+                throw new ArgumentOutOfRangeException(nameof(format), format.Length, null);
             }
 
             return NonFormatToString(provider).Format(provider, format);
