@@ -86,7 +86,7 @@ namespace NetExtender.Types.Combinatoric
         /// </summary>
         /// <param name="values">List of values to select combinations from.</param>
         /// <param name="index">The size of each combination set to return.</param>
-        public Combinations(ICollection<T> values, Int32 index = 1)
+        public Combinations(IEnumerable<T> values, Int32 index = 1)
             : this(values, index, false)
         {
         }
@@ -98,13 +98,12 @@ namespace NetExtender.Types.Combinatoric
         /// <param name="values">List of values to select combinations from.</param>
         /// <param name="index">The size of each combination set to return.</param>
         /// <param name="repetition">The type of Combinations set to generate.</param>
-        public Combinations(ICollection<T> values, Int32 index, Boolean repetition)
+        public Combinations(IEnumerable<T> values, Int32 index, Boolean repetition)
         {
             Repetition = repetition;
             LowerIndex = index;
 
-            Values = new List<T>();
-            Values.AddRange(values);
+            Values = new List<T>(values);
 
             if (!Repetition)
             {
@@ -114,7 +113,7 @@ namespace NetExtender.Types.Combinatoric
 
             List<Boolean> map = new List<Boolean>();
 
-            for (Int32 i = 0; i < values.Count - 1; ++i)
+            for (Int32 i = 0; i < Values.Count - 1; ++i)
             {
                 map.Add(true);
             }

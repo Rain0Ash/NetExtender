@@ -91,7 +91,7 @@ namespace NetExtender.Types.Combinatoric
         /// The repetition type defaults to MetaCollectionType.WithholdRepetitionSets
         /// </summary>
         /// <param name="values">List of values to permute.</param>
-        public Permutations(ICollection<T> values)
+        public Permutations(IEnumerable<T> values)
             : this(values, null)
         {
         }
@@ -103,7 +103,7 @@ namespace NetExtender.Types.Combinatoric
         /// </summary>
         /// <param name="values">List of values to permute.</param>
         /// <param name="repetition">The type of permutation set to calculate.</param>
-        public Permutations(ICollection<T> values, Boolean repetition)
+        public Permutations(IEnumerable<T> values, Boolean repetition)
             : this(values, repetition, null)
         {
         }
@@ -115,7 +115,7 @@ namespace NetExtender.Types.Combinatoric
         /// </summary>
         /// <param name="values">List of values to permute.</param>
         /// <param name="comparer">Comparer used for defining the lexigraphic order.</param>
-        public Permutations(ICollection<T> values, IComparer<T>? comparer)
+        public Permutations(IEnumerable<T> values, IComparer<T>? comparer)
             : this(values, false, comparer)
         {
         }
@@ -128,7 +128,7 @@ namespace NetExtender.Types.Combinatoric
         /// <param name="values">List of values to permute.</param>
         /// <param name="repetition">The type of permutation set to calculate.</param>
         /// <param name="comparer">Comparer used for defining the lexigraphic order.</param>
-        public Permutations(ICollection<T> values, Boolean repetition, IComparer<T>? comparer)
+        public Permutations(IEnumerable<T> values, Boolean repetition, IComparer<T>? comparer)
         {
             if (values is null)
             {
@@ -136,7 +136,7 @@ namespace NetExtender.Types.Combinatoric
             }
 
             Values = new List<T>(values);
-            Orders = new Int32[values.Count];
+            Orders = new Int32[Values.Count];
 
             Repetition = repetition;
 

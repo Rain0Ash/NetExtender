@@ -1,21 +1,22 @@
-﻿// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
+// This is an independent project of an individual developer. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
 using System.Collections.Generic;
+using NetExtender.Types.Combinatoric;
 using NetExtender.Types.Combinatoric.Interfaces;
 using NetExtender.Types.Exceptions;
 
-namespace NetExtender.Types.Combinatoric
+namespace NetExtender.Utilities.Numerics
 {
-    public static class Combinatorics
+    public static class CombinatoricUtilities
     {
-        public static ICombinatoricCollection<T> Create<T>(IList<T> values, CombinatoricsType type)
+        public static ICombinatoricCollection<T> Combinatoric<T>(IEnumerable<T> values, CombinatoricsType type)
         {
-            return Create(values, type, 2);
+            return Combinatoric(values, type, 2);
         }
 
-        public static ICombinatoricCollection<T> Create<T>(IList<T> values, CombinatoricsType type, Int32 take)
+        public static ICombinatoricCollection<T> Combinatoric<T>(IEnumerable<T> values, CombinatoricsType type, Int32 take)
         {
             return type switch
             {
@@ -29,14 +30,14 @@ namespace NetExtender.Types.Combinatoric
             };
         }
 
-        public static ICombinatoricCollection<T> Create<T>(this CombinatoricsType type, IList<T> values)
+        public static ICombinatoricCollection<T> Combinatoric<T>(this CombinatoricsType type, IEnumerable<T> values)
         {
-            return Create(values, type, 2);
+            return Combinatoric(values, type, 2);
         }
 
-        public static ICombinatoricCollection<T> Create<T>(this CombinatoricsType type, IList<T> values, Int32 take)
+        public static ICombinatoricCollection<T> Combinatoric<T>(this CombinatoricsType type, IEnumerable<T> values, Int32 take)
         {
-            return Create(values, type, take);
+            return Combinatoric(values, type, take);
         }
     }
 }
