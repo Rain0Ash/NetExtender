@@ -90,6 +90,11 @@ namespace NetExtender.Types.Anonymous
             Index = null;
         }
 
+        public AnonymousObjectProperty<T> To<T>()
+        {
+            return new AnonymousObjectProperty<T>(this);
+        }
+
         public Object? Get()
         {
             return Value;
@@ -140,6 +145,117 @@ namespace NetExtender.Types.Anonymous
             {
                 return false;
             }
+        }
+    }
+    
+    public readonly ref struct AnonymousObjectProperty<T>
+    {
+        public static implicit operator AnonymousObjectProperty(AnonymousObjectProperty<T> property)
+        {
+            return property.Anonymous;
+        }
+        
+        public static implicit operator Maybe<T?>(AnonymousObjectProperty<T> property)
+        {
+            return property.Maybe;
+        }
+
+        private AnonymousObjectProperty Anonymous { get; }
+
+        public Int32? Index
+        {
+            get
+            {
+                return Anonymous.Index;
+            }
+        }
+
+        public String? Property
+        {
+            get
+            {
+                return Anonymous.Property;
+            }
+        }
+
+        public Type Type
+        {
+            get
+            {
+                return Anonymous.Type;
+            }
+        }
+
+        private T? Value
+        {
+            get
+            {
+                return Anonymous.Get<T>();
+            }
+            set
+            {
+                Anonymous.Set(value);
+            }
+        }
+
+        public Maybe<T?> Maybe
+        {
+            get
+            {
+                try
+                {
+                    return Get();
+                }
+                catch (Exception)
+                {
+                    return default;
+                }
+            }
+        }
+
+        public AnonymousObjectProperty(IAnonymousObject anonymous, Int32 index)
+        {
+            Anonymous = anonymous is not null ? new AnonymousObjectProperty(anonymous, index) : throw new ArgumentNullException(nameof(anonymous));
+        }
+
+        public AnonymousObjectProperty(IAnonymousObject anonymous, String property)
+        {
+            Anonymous = anonymous is not null ? new AnonymousObjectProperty(anonymous, property) : throw new ArgumentNullException(nameof(anonymous));
+        }
+
+        public AnonymousObjectProperty(AnonymousObjectProperty anonymous)
+        {
+            Anonymous = anonymous;
+        }
+        
+        public AnonymousObjectProperty<TConvert> To<TConvert>()
+        {
+            return new AnonymousObjectProperty<TConvert>(Anonymous);
+        }
+
+        public T? Get()
+        {
+            return Value;
+        }
+
+        public TConvert? Get<TConvert>()
+        {
+            return Anonymous.Get<TConvert>();
+        }
+
+        public Boolean Get<TConvert>(out TConvert? result)
+        {
+            return Anonymous.Get(out result);
+        }
+
+        public Boolean Set(T value)
+        {
+            return Anonymous.Set(value);
+        }
+
+        public Boolean Set(Func<T?, T> selector)
+        {
+            return Anonymous.Set(selector);
         }
     }
 }
