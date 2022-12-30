@@ -29,6 +29,7 @@ namespace NetExtender.Types.Trees
         public ImmutableArray<TKey> Sections { get; }
 
         [JsonIgnore]
+        [System.Text.Json.Serialization.JsonIgnore]
         public Int32 Length
         {
             get
@@ -57,6 +58,16 @@ namespace NetExtender.Types.Trees
             Key = key;
             Value = value;
             Sections = sections;
+        }
+
+        public FlattenDictionaryTreeEntry<TKey, TValue> Flatten(String? separator)
+        {
+            if (Value is null)
+            {
+                throw new InvalidOperationException("Entry without value can't be flatten");
+            }
+            
+            return new FlattenDictionaryTreeEntry<TKey, TValue>(Key, Value, separator, Sections);
         }
 
         public void Deconstruct(out TKey key, out ImmutableArray<TKey> sections)

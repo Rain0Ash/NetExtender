@@ -4,11 +4,13 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using NetExtender.Configuration.Common;
+using NetExtender.Initializer.Types.Behavior.Interfaces;
 using NetExtender.Interfaces;
 
 namespace NetExtender.Configuration.Properties.Interfaces
 {
-    public interface IConfigProperty<T> : IConfigPropertyValueInfo<T>, IReadOnlyValidable<T>, IFormattable
+    public interface IConfigProperty<T> : IConfigPropertyValueInfo<T>, IChangeableBehavior<ConfigPropertyOptions>, IReadOnlyValidable<T>, IFormattable
     {
         public new T Value { get; set; }
         public TryConverter<String?, T> Converter { get; }
@@ -27,19 +29,9 @@ namespace NetExtender.Configuration.Properties.Interfaces
         public Boolean KeyExist();
         public Task<Boolean> KeyExistAsync();
         public Task<Boolean> KeyExistAsync(CancellationToken token);
-
-        public Boolean Read();
-        public Task<Boolean> ReadAsync();
-        public Task<Boolean> ReadAsync(CancellationToken token);
-        public Boolean Save();
-        public Task<Boolean> SaveAsync();
-        public Task<Boolean> SaveAsync(CancellationToken token);
-        public Boolean Reset();
-        public Task<Boolean> ResetAsync();
-        public Task<Boolean> ResetAsync(CancellationToken token);
     }
 
-    public interface IConfigProperty : IConfigPropertyValueInfo, IFormattable
+    public interface IConfigProperty : IConfigPropertyValueInfo, IChangeableBehavior<ConfigPropertyOptions>, IFormattable
     {
         public new String? Value { get; set; }
         public String? GetValue();
@@ -54,15 +46,5 @@ namespace NetExtender.Configuration.Properties.Interfaces
         public Boolean KeyExist();
         public Task<Boolean> KeyExistAsync();
         public Task<Boolean> KeyExistAsync(CancellationToken token);
-
-        public Boolean Read();
-        public Task<Boolean> ReadAsync();
-        public Task<Boolean> ReadAsync(CancellationToken token);
-        public Boolean Save();
-        public Task<Boolean> SaveAsync();
-        public Task<Boolean> SaveAsync(CancellationToken token);
-        public Boolean Reset();
-        public Task<Boolean> ResetAsync();
-        public Task<Boolean> ResetAsync(CancellationToken token);
     }
 }

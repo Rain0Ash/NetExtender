@@ -7,18 +7,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Behavior.Transactions.Interfaces;
 using NetExtender.Configuration.Common;
+using NetExtender.Initializer.Types.Behavior.Interfaces;
 
 namespace NetExtender.Configuration.Behavior.Interfaces
 {
-    public interface IConfigBehavior : IEnumerable<ConfigurationValueEntry>, IDisposable, IAsyncDisposable
+    public interface IConfigBehavior : IBehavior<ConfigOptions>, IEnumerable<ConfigurationValueEntry>, IDisposable, IAsyncDisposable
     {
         public event ConfigurationChangedEventHandler Changed;
         public String Path { get; }
-        public ConfigOptions Options { get; }
         public Boolean IsReadOnly { get; }
         public Boolean IsIgnoreEvent { get; }
         public Boolean IsLazyWrite { get; }
-        public Boolean IsThreadSafe { get; }
         public String Joiner { get; }
 
         public Boolean Contains(String? key, IEnumerable<String>? sections);

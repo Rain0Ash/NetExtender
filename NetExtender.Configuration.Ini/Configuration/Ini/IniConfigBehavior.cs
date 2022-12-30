@@ -2,15 +2,14 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using NetExtender.Configuration.Common;
 using NetExtender.Configuration.File;
 using NetExtender.Serialization.Ini;
 using NetExtender.Types.Trees;
-using NetExtender.Types.Trees.Interfaces;
-using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Ini
 {
@@ -52,17 +51,10 @@ namespace NetExtender.Configuration.Ini
         {
             MainSection = section ?? DefaultSection;
         }
-
-        [return: NotNullIfNotNull("sections")]
-        protected override IEnumerable<String>? ToSection(IEnumerable<String>? sections)
+        
+        protected virtual String[]? UnpackSection(String? section)
         {
-            if (sections is null)
-            {
-                return null;
-            }
-
-            String join = Joiner.Join(sections);
-            return !String.IsNullOrEmpty(join) ? new[] { join } : new []{ MainSection };
+            return !String.IsNullOrEmpty(section) && section != MainSection ? section.Split(Joiner) : null;
         }
 
         protected override DictionaryTree<String, String>? DeserializeConfig(String config)
@@ -83,7 +75,7 @@ namespace NetExtender.Configuration.Ini
                             continue;
                         }
 
-                        tree.Add(key, value.Value, section);
+                        tree.Add(key, value.Value, UnpackSection(section));
                     }
                 }
 
@@ -101,19 +93,57 @@ namespace NetExtender.Configuration.Ini
             {
                 IniFile file = new IniFile(StringComparer.Ordinal);
 
-                foreach ((String section, IDictionaryTreeNode<String, String> node) in Config)
+                FlattenDictionaryTreeEntry<String, String>[]? flatten = Config.Flatten(Joiner);
+
+                if (flatten is null)
                 {
-                    IniSection ini = new IniSection();
+                    return null;
+                }
 
-                    foreach ((String key, IDictionaryTreeNode<String, String> value) in node)
+                foreach (IGrouping<String, FlattenDictionaryTreeEntry<String, String>> grouping in flatten.GroupBy(entry => entry.Section ?? MainSection))
+                {
+                    IniSection section = new IniSection();
+                    foreach (FlattenDictionaryTreeEntry<String, String> entry in grouping)
                     {
-                        ini.Add(key, value.Value);
+                        section.Add(entry.Key, entry.Value);
                     }
-
-                    file.Add(section, ini);
+                    
+                    file.Add(grouping.Key, section);
                 }
 
                 return file.Write();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        protected override async Task<String?> SerializeConfigAsync(CancellationToken token)
+        {
+            try
+            {
+                IniFile file = new IniFile(StringComparer.Ordinal);
+
+                FlattenDictionaryTreeEntry<String, String>[]? flatten = Config.Flatten(Joiner);
+
+                if (flatten is null)
+                {
+                    return null;
+                }
+
+                foreach (IGrouping<String, FlattenDictionaryTreeEntry<String, String>> grouping in flatten.GroupBy(entry => entry.Section ?? MainSection))
+                {
+                    IniSection section = new IniSection();
+                    foreach (FlattenDictionaryTreeEntry<String, String> entry in grouping)
+                    {
+                        section.Add(entry.Key, entry.Value);
+                    }
+                    
+                    file.Add(grouping.Key, section);
+                }
+
+                return await file.WriteAsync();
             }
             catch (Exception)
             {

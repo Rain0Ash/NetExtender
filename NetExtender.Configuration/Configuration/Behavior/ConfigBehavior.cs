@@ -4,8 +4,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Behavior.Interfaces;
@@ -77,7 +77,24 @@ namespace NetExtender.Configuration.Behavior
         }
 
         public const String DefaultJoiner = ".";
-        public String Joiner { get; init; } = DefaultJoiner;
+
+        private readonly String _joiner = DefaultJoiner;
+        public String Joiner
+        {
+            get
+            {
+                return _joiner;
+            }
+            init
+            {
+                if (value is null)
+                {
+                    throw new ArgumentNullException(nameof(value));
+                }
+                
+                _joiner = IsJoiner(value) ? value : throw new ArgumentException("This joiner not supported", nameof(value));
+            }
+        }
 
         protected ConfigBehavior(String path, ConfigOptions options)
         {
@@ -85,24 +102,12 @@ namespace NetExtender.Configuration.Behavior
             Options = options;
         }
 
-        [return: NotNullIfNotNull("sections")]
-        protected virtual IEnumerable<String>? ToSection(IEnumerable<String>? sections)
+        protected virtual Boolean IsJoiner(String joiner)
         {
-            return sections;
+            return Regex.IsMatch(joiner, "^[.-_\\w]*$");
         }
-
-        [return: NotNullIfNotNull("key")]
-        protected virtual IEnumerable<String>? ToSection<T>(String? key, IEnumerable<String>? sections)
-        {
-            if (key is null)
-            {
-                return default;
-            }
-
-            return sections is null ? new[] { key } : ToSection(sections.Append(key));
-        }
-
-        protected virtual String? FromSection(ref IEnumerable<String>? sections)
+        
+        protected virtual String? PopKeyFromSection(ref IEnumerable<String>? sections)
         {
             if (sections is null)
             {
@@ -127,8 +132,24 @@ namespace NetExtender.Configuration.Behavior
             return Get(key, sections) is not null;
         }
 
+        public virtual async Task<Boolean> ContainsAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
+        {
+            return await GetAsync(key, sections, token) is not null;
+        }
+
         public abstract String? Get(String? key, IEnumerable<String>? sections);
+
+        public virtual Task<String?> GetAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
+        {
+            return Get(key, sections).ToTask();
+        }
+
         public abstract Boolean Set(String? key, String? value, IEnumerable<String>? sections);
+
+        public virtual Task<Boolean> SetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
+        {
+            return Set(key, value, sections).ToTask();
+        }
 
         public virtual String? GetOrSet(String? key, String? value, IEnumerable<String>? sections)
         {
@@ -144,24 +165,18 @@ namespace NetExtender.Configuration.Behavior
             return value is not null && Set(key, value, sections) ? value : null;
         }
 
-        public virtual Task<Boolean> ContainsAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
+        public virtual async Task<String?> GetOrSetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
         {
-            return Contains(key, sections).ToTask();
-        }
+            sections = sections.Materialize();
 
-        public virtual Task<String?> GetAsync(String? key, IEnumerable<String>? sections, CancellationToken token)
-        {
-            return Get(key, sections).ToTask();
-        }
+            String? result = await GetAsync(key, sections, token);
 
-        public virtual Task<Boolean> SetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
-        {
-            return Set(key, value, sections).ToTask();
-        }
+            if (result is not null)
+            {
+                return result;
+            }
 
-        public virtual Task<String?> GetOrSetAsync(String? key, String? value, IEnumerable<String>? sections, CancellationToken token)
-        {
-            return GetOrSet(key, value, sections).ToTask();
+            return value is not null && await SetAsync(key, value, sections, token) ? value : null;
         }
 
         public abstract ConfigurationEntry[]? GetExists(IEnumerable<String>? sections);

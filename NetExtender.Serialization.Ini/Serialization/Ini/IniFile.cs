@@ -17,7 +17,6 @@ namespace NetExtender.Serialization.Ini
         public static IEqualityComparer<String> DefaultComparer { get; } = StringComparer.OrdinalIgnoreCase;
 
         public IEqualityComparer<String> Comparer { get; }
-
         private IndexDictionary<String, IniSection> Sections { get; }
 
         Boolean ICollection<KeyValuePair<String, IniSection>>.IsReadOnly
@@ -79,48 +78,113 @@ namespace NetExtender.Serialization.Ini
             Sections = new IndexDictionary<String, IniSection>(Comparer);
         }
 
-        public Boolean ContainsKey(String section)
+        public Boolean ContainsKey(String key)
         {
-            if (section is null)
+            if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentNullException(nameof(section));
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
             }
-
-            return Sections.ContainsKey(section);
+            
+            return Sections.ContainsKey(key);
         }
 
         Boolean ICollection<KeyValuePair<String, IniSection>>.Contains(KeyValuePair<String, IniSection> item)
         {
+            if (String.IsNullOrEmpty(item.Key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(item.Key));
+            }
+
             return ((IDictionary<String, IniSection>) Sections).Contains(item);
         }
 
-        public Boolean TryGetValue(String section, [MaybeNullWhen(false)] out IniSection result)
+        public Boolean TryGetValue(String key, [MaybeNullWhen(false)] out IniSection result)
         {
-            if (section is null)
+            if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentNullException(nameof(section));
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
             }
 
-            return Sections.TryGetValue(section, out result);
+            return Sections.TryGetValue(key, out result);
+        }
+        
+        public Int32 IndexOf(String key)
+        {
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+            
+            return Sections.IndexOf(key);
         }
 
-        public IniSection Add(String section)
+        public Int32 IndexOf(String key, Int32 index)
         {
-            if (section is null)
+            if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentNullException(nameof(section));
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+            
+            return Sections.IndexOf(key, index);
+        }
+
+        public Int32 IndexOf(String key, Int32 index, Int32 count)
+        {
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+            
+            return Sections.IndexOf(key, index, count);
+        }
+
+        public Int32 LastIndexOf(String key)
+        {
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+            
+            return Sections.LastIndexOf(key);
+        }
+
+        public Int32 LastIndexOf(String key, Int32 index)
+        {
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+            
+            return Sections.LastIndexOf(key, index);
+        }
+
+        public Int32 LastIndexOf(String key, Int32 index, Int32 count)
+        {
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+            
+            return Sections.LastIndexOf(key, index, count);
+        }
+
+        public IniSection Add(String key)
+        {
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
             }
 
             IniSection value = new IniSection(Comparer);
-            Sections.Add(section, value);
+            Sections.Add(key, value);
             return value;
         }
 
-        public IniSection Add(String section, IniSection value)
+        public IniSection Add(String key, IniSection value)
         {
-            if (section is null)
+            if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentNullException(nameof(section));
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
             }
 
             if (value is null)
@@ -133,7 +197,7 @@ namespace NetExtender.Serialization.Ini
                 value = new IniSection(value, Comparer);
             }
 
-            Sections.Add(section, value);
+            Sections.Add(key, value);
             return value;
         }
 
@@ -142,11 +206,11 @@ namespace NetExtender.Serialization.Ini
             Add(key, value);
         }
 
-        public IniSection Add(String section, IDictionary<String, IniValue> values)
+        public IniSection Add(String key, IDictionary<String, IniValue> values)
         {
-            if (section is null)
+            if (String.IsNullOrEmpty(key))
             {
-                throw new ArgumentNullException(nameof(section));
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
             }
 
             if (values is null)
@@ -154,22 +218,77 @@ namespace NetExtender.Serialization.Ini
                 throw new ArgumentNullException(nameof(values));
             }
 
-            return Add(section, new IniSection(values, Comparer));
+            return Add(key, new IniSection(values, Comparer));
         }
 
         void ICollection<KeyValuePair<String, IniSection>>.Add(KeyValuePair<String, IniSection> item)
         {
+            if (String.IsNullOrEmpty(item.Key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(item.Key));
+            }
+
             ((IDictionary<String, IniSection>) Sections).Add(item);
         }
-
-        public Boolean Remove(String section)
+        
+        public void Insert(Int32 index, String key, IniSection value)
         {
-            return Sections.Remove(section);
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+            
+            Sections.Insert(index, key, value);
+        }
+        
+        public void Sort()
+        {
+            Sections.Sort();
+        }
+
+        public void Sort(Comparison<String> comparison)
+        {
+            Sections.Sort(comparison);
+        }
+
+        public void Sort(IComparer<String>? comparer)
+        {
+            Sections.Sort(comparer);
+        }
+
+        public void Reverse()
+        {
+            Sections.Reverse();
+        }
+
+        public void Reverse(Int32 index, Int32 count)
+        {
+            Sections.Reverse(index, count);
+        }
+
+        public Boolean Remove(String key)
+        {
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+
+            return Sections.Remove(key);
         }
 
         Boolean ICollection<KeyValuePair<String, IniSection>>.Remove(KeyValuePair<String, IniSection> item)
         {
+            if (String.IsNullOrEmpty(item.Key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(item.Key));
+            }
+
             return ((IDictionary<String, IniSection>) Sections).Remove(item);
+        }
+        
+        public Boolean RemoveAt(Int32 index)
+        {
+            return Sections.RemoveAt(index);
         }
 
         public void Clear()
@@ -206,9 +325,8 @@ namespace NetExtender.Serialization.Ini
                 throw new ArgumentNullException(nameof(reader));
             }
 
-            String? line;
             IniSection? section = null;
-            while ((line = reader.ReadLine()) is not null)
+            while (reader.ReadLine() is { } line)
             {
                 ReadLine(line, ref section);
             }
@@ -243,9 +361,8 @@ namespace NetExtender.Serialization.Ini
                 throw new ArgumentNullException(nameof(reader));
             }
 
-            String? line;
             IniSection? section = null;
-            while ((line = await reader.ReadLineAsync()) is not null)
+            while (await reader.ReadLineAsync() is { } line)
             {
                 ReadLine(line, ref section);
             }
@@ -326,22 +443,36 @@ namespace NetExtender.Serialization.Ini
 
         public void Write(Stream stream)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             using StreamWriter writer = new StreamWriter(stream);
             Write(writer);
         }
 
         public virtual void Write(TextWriter writer)
         {
-            foreach ((String ini, IniSection section) in Sections.Where(section =>section.Value.Count > 0))
+            if (writer is null)
             {
+                throw new ArgumentNullException(nameof(writer));
+            }
+
+            Int32 index = 0;
+            foreach ((String ini, IniSection section) in Sections.Where(section => !section.Value.IsEmpty))
+            {
+                if (index++ > 0)
+                {
+                    writer.WriteLine(String.Empty);
+                }
+                
                 writer.WriteLine($"[{ini.Trim()}]");
 
                 foreach ((String key, IniValue value) in section)
                 {
                     writer.WriteLine($"{key}={value}");
                 }
-
-                writer.WriteLine(String.Empty);
             }
         }
 
@@ -354,22 +485,36 @@ namespace NetExtender.Serialization.Ini
 
         public Task WriteAsync(Stream stream)
         {
+            if (stream is null)
+            {
+                throw new ArgumentNullException(nameof(stream));
+            }
+
             using StreamWriter writer = new StreamWriter(stream);
             return WriteAsync(writer);
         }
 
         public virtual async Task WriteAsync(TextWriter writer)
         {
+            if (writer is null)
+            {
+                throw new ArgumentNullException(nameof(writer));
+            }
+
+            Int32 index = 0;
             foreach ((String ini, IniSection section) in Sections.Where(section => !section.Value.IsEmpty))
             {
+                if (index++ > 0)
+                {
+                    await writer.WriteLineAsync(String.Empty);
+                }
+                
                 await writer.WriteLineAsync($"[{ini.Trim()}]");
 
                 foreach ((String key, IniValue value) in section)
                 {
                     await writer.WriteLineAsync($"{key}={value}");
                 }
-
-                await writer.WriteLineAsync(String.Empty);
             }
         }
 
@@ -388,27 +533,49 @@ namespace NetExtender.Serialization.Ini
             return GetEnumerator();
         }
 
-        public IniSection this[String section]
+        public IniSection this[String key]
         {
             get
             {
-                if (Sections.TryGetValue(section, out IniSection? result))
+                if (String.IsNullOrEmpty(key))
+                {
+                    throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                }
+
+                if (Sections.TryGetValue(key, out IniSection? result))
                 {
                     return result;
                 }
 
                 result = new IniSection(Comparer);
-                Sections[section] = result;
+                Sections[key] = result;
                 return result;
             }
             set
             {
+                if (String.IsNullOrEmpty(key))
+                {
+                    throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                }
+
                 if (!Equals(value.Comparer, Comparer))
                 {
                     value = new IniSection(value, Comparer);
                 }
 
-                Sections[section] = value;
+                Sections[key] = value;
+            }
+        }
+        
+        public IniSection this[Int32 index]
+        {
+            get
+            {
+                return Sections.GetValueByIndex(index);
+            }
+            set
+            {
+                Sections.TrySetValueByIndex(index, value);
             }
         }
     }

@@ -16,8 +16,638 @@ namespace NetExtender.Utilities.AspNetCore.Types
     public static class MiddlewareUtilities
     {
         private const DynamicallyAccessedMemberTypes MiddlewareAccessibility = DynamicallyAccessedMemberTypes.PublicConstructors | DynamicallyAccessedMemberTypes.PublicMethods;
+        
+        public static IApplicationBuilder UseMiddlewareIf(this IApplicationBuilder builder, Type middleware, Boolean condition, params Object?[] args)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
 
-        public static Func<HttpContext, Task>? GetMiddlewareInvokeAsync<[DynamicallyAccessedMembers(MiddlewareAccessibility)]TMiddleware>(TMiddleware middleware) where TMiddleware : class
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return condition ? builder.UseMiddleware(middleware, args) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIf(this IApplicationBuilder builder, Type middleware, Func<Boolean> condition, params Object?[] args)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return condition() ? builder.UseMiddleware(middleware, args) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIf(this IApplicationBuilder builder, Type middleware, Func<IApplicationBuilder, Boolean> condition, params Object?[] args)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return condition(builder) ? builder.UseMiddleware(middleware, args) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIfNot(this IApplicationBuilder builder, Type middleware, Boolean condition, params Object?[] args)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return !condition ? builder.UseMiddleware(middleware, args) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIfNot(this IApplicationBuilder builder, Type middleware, Func<Boolean> condition, params Object?[] args)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return !condition() ? builder.UseMiddleware(middleware, args) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIfNot(this IApplicationBuilder builder, Type middleware, Func<IApplicationBuilder, Boolean> condition, params Object?[] args)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return !condition(builder) ? builder.UseMiddleware(middleware, args) : builder;
+        }
+        
+        public static IApplicationBuilder UseMiddlewareIf<[DynamicallyAccessedMembers(MiddlewareAccessibility)] TMiddleware>(this IApplicationBuilder builder, Boolean condition, params Object?[] args) where TMiddleware : class
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return condition ? builder.UseMiddleware<TMiddleware>(args) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIf<[DynamicallyAccessedMembers(MiddlewareAccessibility)] TMiddleware>(this IApplicationBuilder builder, Func<Boolean> condition, params Object?[] args) where TMiddleware : class
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return condition() ? builder.UseMiddleware<TMiddleware>(args) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIf<[DynamicallyAccessedMembers(MiddlewareAccessibility)] TMiddleware>(this IApplicationBuilder builder, Func<IApplicationBuilder, Boolean> condition, params Object?[] args) where TMiddleware : class
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return condition(builder) ? builder.UseMiddleware<TMiddleware>(args) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIfNot<[DynamicallyAccessedMembers(MiddlewareAccessibility)] TMiddleware>(this IApplicationBuilder builder, Boolean condition, params Object?[] args) where TMiddleware : class
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            return !condition ? builder.UseMiddleware<TMiddleware>(args) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIfNot<[DynamicallyAccessedMembers(MiddlewareAccessibility)] TMiddleware>(this IApplicationBuilder builder, Func<Boolean> condition, params Object?[] args) where TMiddleware : class
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return !condition() ? builder.UseMiddleware<TMiddleware>(args) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIfNot<[DynamicallyAccessedMembers(MiddlewareAccessibility)] TMiddleware>(this IApplicationBuilder builder, Func<IApplicationBuilder, Boolean> condition, params Object?[] args) where TMiddleware : class
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            return !condition(builder) ? builder.UseMiddleware<TMiddleware>(args) : builder;
+        }
+        
+        public static IApplicationBuilder UseMiddlewareIf(this IApplicationBuilder builder, Boolean condition, Func<IApplicationBuilder, IApplicationBuilder> middleware)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return condition ? middleware(builder) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIf(this IApplicationBuilder builder, Func<Boolean> condition, Func<IApplicationBuilder, IApplicationBuilder> middleware)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return condition() ? middleware(builder) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIf(this IApplicationBuilder builder, Func<IApplicationBuilder, Boolean> condition, Func<IApplicationBuilder, IApplicationBuilder> middleware)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return condition(builder) ? middleware(builder) : builder;
+        }
+        
+        public static IApplicationBuilder UseMiddlewareIf<T>(this IApplicationBuilder builder, Boolean condition, Func<IApplicationBuilder, T, IApplicationBuilder> middleware, T argument)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return condition ? middleware(builder, argument) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIf<T>(this IApplicationBuilder builder, Func<Boolean> condition, Func<IApplicationBuilder, T, IApplicationBuilder> middleware, T argument)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return condition() ? middleware(builder, argument) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIf<T>(this IApplicationBuilder builder, Func<IApplicationBuilder, Boolean> condition, Func<IApplicationBuilder, T, IApplicationBuilder> middleware, T argument)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return condition(builder) ? middleware(builder, argument) : builder;
+        }
+        
+        public static IApplicationBuilder UseMiddlewareIf<T1, T2>(this IApplicationBuilder builder, Boolean condition, Func<IApplicationBuilder, T1, T2, IApplicationBuilder> middleware, T1 first, T2 second)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return condition ? middleware(builder, first, second) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIf<T1, T2>(this IApplicationBuilder builder, Func<Boolean> condition, Func<IApplicationBuilder, T1, T2, IApplicationBuilder> middleware, T1 first, T2 second)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return condition() ? middleware(builder, first, second) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIf<T1, T2>(this IApplicationBuilder builder, Func<IApplicationBuilder, Boolean> condition, Func<IApplicationBuilder, T1, T2, IApplicationBuilder> middleware, T1 first, T2 second)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return condition(builder) ? middleware(builder, first, second) : builder;
+        }
+        
+        public static IApplicationBuilder UseMiddlewareIf<T1, T2, T3>(this IApplicationBuilder builder, Boolean condition, Func<IApplicationBuilder, T1, T2, T3, IApplicationBuilder> middleware, T1 first, T2 second, T3 third)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return condition ? middleware(builder, first, second, third) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIf<T1, T2, T3>(this IApplicationBuilder builder, Func<Boolean> condition, Func<IApplicationBuilder, T1, T2, T3, IApplicationBuilder> middleware, T1 first, T2 second, T3 third)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return condition() ? middleware(builder, first, second, third) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIf<T1, T2, T3>(this IApplicationBuilder builder, Func<IApplicationBuilder, Boolean> condition, Func<IApplicationBuilder, T1, T2, T3, IApplicationBuilder> middleware, T1 first, T2 second, T3 third)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return condition(builder) ? middleware(builder, first, second, third) : builder;
+        }
+        
+        public static IApplicationBuilder UseMiddlewareIfNot(this IApplicationBuilder builder, Boolean condition, Func<IApplicationBuilder, IApplicationBuilder> middleware)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return !condition ? middleware(builder) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIfNot(this IApplicationBuilder builder, Func<Boolean> condition, Func<IApplicationBuilder, IApplicationBuilder> middleware)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return !condition() ? middleware(builder) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIfNot(this IApplicationBuilder builder, Func<IApplicationBuilder, Boolean> condition, Func<IApplicationBuilder, IApplicationBuilder> middleware)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return !condition(builder) ? middleware(builder) : builder;
+        }
+        
+        public static IApplicationBuilder UseMiddlewareIfNot<T>(this IApplicationBuilder builder, Boolean condition, Func<IApplicationBuilder, T, IApplicationBuilder> middleware, T argument)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return !condition ? middleware(builder, argument) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIfNot<T>(this IApplicationBuilder builder, Func<Boolean> condition, Func<IApplicationBuilder, T, IApplicationBuilder> middleware, T argument)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return !condition() ? middleware(builder, argument) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIfNot<T>(this IApplicationBuilder builder, Func<IApplicationBuilder, Boolean> condition, Func<IApplicationBuilder, T, IApplicationBuilder> middleware, T argument)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return !condition(builder) ? middleware(builder, argument) : builder;
+        }
+        
+        public static IApplicationBuilder UseMiddlewareIfNot<T1, T2>(this IApplicationBuilder builder, Boolean condition, Func<IApplicationBuilder, T1, T2, IApplicationBuilder> middleware, T1 first, T2 second)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return !condition ? middleware(builder, first, second) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIfNot<T1, T2>(this IApplicationBuilder builder, Func<Boolean> condition, Func<IApplicationBuilder, T1, T2, IApplicationBuilder> middleware, T1 first, T2 second)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return !condition() ? middleware(builder, first, second) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIfNot<T1, T2>(this IApplicationBuilder builder, Func<IApplicationBuilder, Boolean> condition, Func<IApplicationBuilder, T1, T2, IApplicationBuilder> middleware, T1 first, T2 second)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return !condition(builder) ? middleware(builder, first, second) : builder;
+        }
+        
+        public static IApplicationBuilder UseMiddlewareIfNot<T1, T2, T3>(this IApplicationBuilder builder, Boolean condition, Func<IApplicationBuilder, T1, T2, T3, IApplicationBuilder> middleware, T1 first, T2 second, T3 third)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return !condition ? middleware(builder, first, second, third) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIfNot<T1, T2, T3>(this IApplicationBuilder builder, Func<Boolean> condition, Func<IApplicationBuilder, T1, T2, T3, IApplicationBuilder> middleware, T1 first, T2 second, T3 third)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return !condition() ? middleware(builder, first, second, third) : builder;
+        }
+
+        public static IApplicationBuilder UseMiddlewareIfNot<T1, T2, T3>(this IApplicationBuilder builder, Func<IApplicationBuilder, Boolean> condition, Func<IApplicationBuilder, T1, T2, T3, IApplicationBuilder> middleware, T1 first, T2 second, T3 third)
+        {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
+            if (condition is null)
+            {
+                throw new ArgumentNullException(nameof(condition));
+            }
+
+            if (middleware is null)
+            {
+                throw new ArgumentNullException(nameof(middleware));
+            }
+
+            return !condition(builder) ? middleware(builder, first, second, third) : builder;
+        }
+
+        public static Func<HttpContext, Task>? GetMiddlewareInvokeAsync<[DynamicallyAccessedMembers(MiddlewareAccessibility)] TMiddleware>(TMiddleware middleware) where TMiddleware : class
         {
             if (middleware is null)
             {
@@ -28,7 +658,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
             return method is not null ? context => (Task) method.Invoke(middleware, new Object[]{ context })! : null;
         }
 
-        public static Func<HttpContext, Task> RequireMiddlewareInvokeAsync<[DynamicallyAccessedMembers(MiddlewareAccessibility)]TMiddleware>(TMiddleware middleware) where TMiddleware : class
+        public static Func<HttpContext, Task> RequireMiddlewareInvokeAsync<[DynamicallyAccessedMembers(MiddlewareAccessibility)] TMiddleware>(TMiddleware middleware) where TMiddleware : class
         {
             if (middleware is null)
             {
@@ -157,7 +787,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.UseMiddleware<UserAgentAccessRestrictionMiddleware>(agent!);
+            return builder.UseMiddleware<UserAgentAccessRestrictionMiddleware>(agent);
         }
 
         public static IApplicationBuilder UseUserAgentAccessRestrictionMiddleware(this IApplicationBuilder builder, String? agent, HttpStatusCode code)
@@ -167,7 +797,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.UseMiddleware<UserAgentAccessRestrictionMiddleware>(agent!, code);
+            return builder.UseMiddleware<UserAgentAccessRestrictionMiddleware>(agent, code);
         }
 
         public static IApplicationBuilder UseUserAgentAccessRestrictionMiddleware(this IApplicationBuilder builder, String? agent, Int32 code)
@@ -177,7 +807,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            return builder.UseMiddleware<UserAgentAccessRestrictionMiddleware>(agent!, code);
+            return builder.UseMiddleware<UserAgentAccessRestrictionMiddleware>(agent, code);
         }
 
         public static IApplicationBuilder UseUserAgentAccessRestrictionMiddleware(this IApplicationBuilder builder, IEnumerable<String?> agents)
@@ -301,7 +931,7 @@ namespace NetExtender.Utilities.AspNetCore.Types
         }
 
         /// <inheritdoc cref="UseMiddlewareExtensions.UseMiddleware{TMiddleware}"/>
-        public static IApplicationBuilder UseMiddlewareWhen<[DynamicallyAccessedMembers(MiddlewareAccessibility)]TMiddleware>(this IApplicationBuilder builder, Func<HttpContext, Boolean> predicate, params Object[]? args) where TMiddleware : class
+        public static IApplicationBuilder UseMiddlewareWhen<[DynamicallyAccessedMembers(MiddlewareAccessibility)] TMiddleware>(this IApplicationBuilder builder, Func<HttpContext, Boolean> predicate, params Object[]? args) where TMiddleware : class
         {
             return UseMiddlewareWhen(builder, predicate, typeof(TMiddleware), args);
         }

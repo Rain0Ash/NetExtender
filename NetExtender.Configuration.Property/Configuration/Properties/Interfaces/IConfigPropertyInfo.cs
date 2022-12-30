@@ -5,15 +5,15 @@ using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using NetExtender.Configuration.Common;
+using NetExtender.Initializer.Types.Behavior.Interfaces;
 
 namespace NetExtender.Configuration.Properties.Interfaces
 {
-    public interface IConfigPropertyInfo : INotifyPropertyChanged, IDisposable
+    public interface IConfigPropertyInfo : IBehavior<ConfigPropertyOptions>, INotifyPropertyChanged, IDisposable
     {
         public String Path { get; }
         public String? Key { get; }
         public ImmutableArray<String> Sections { get; }
-        public ConfigPropertyOptions Options { get; }
         public Boolean HasValue { get; }
         public Boolean IsCaching { get; }
         public Boolean IsThrowWhenValueSetInvalid { get; }

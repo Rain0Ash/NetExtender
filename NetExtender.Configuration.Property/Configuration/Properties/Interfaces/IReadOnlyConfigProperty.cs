@@ -4,11 +4,13 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using NetExtender.Configuration.Common;
+using NetExtender.Initializer.Types.Behavior.Interfaces;
 using NetExtender.Interfaces;
 
 namespace NetExtender.Configuration.Properties.Interfaces
 {
-    public interface IReadOnlyConfigProperty<T> : IConfigPropertyValueInfo<T>, IReadOnlyValidable<T>, IFormattable
+    public interface IReadOnlyConfigProperty<T> : IConfigPropertyValueInfo<T>, IReadableBehavior<ConfigPropertyOptions>, IReadOnlyValidable<T>, IFormattable
     {
         public TryConverter<String?, T> Converter { get; }
         public T GetValue();
@@ -20,13 +22,9 @@ namespace NetExtender.Configuration.Properties.Interfaces
         public Boolean KeyExist();
         public Task<Boolean> KeyExistAsync();
         public Task<Boolean> KeyExistAsync(CancellationToken token);
-
-        public Boolean Read();
-        public Task<Boolean> ReadAsync();
-        public Task<Boolean> ReadAsync(CancellationToken token);
     }
 
-    public interface IReadOnlyConfigProperty : IConfigPropertyValueInfo, IFormattable
+    public interface IReadOnlyConfigProperty : IConfigPropertyValueInfo, IReadableBehavior<ConfigPropertyOptions>, IFormattable
     {
         public String? GetValue();
         public Task<String?> GetValueAsync();
@@ -34,9 +32,5 @@ namespace NetExtender.Configuration.Properties.Interfaces
         public Boolean KeyExist();
         public Task<Boolean> KeyExistAsync();
         public Task<Boolean> KeyExistAsync(CancellationToken token);
-
-        public Boolean Read();
-        public Task<Boolean> ReadAsync();
-        public Task<Boolean> ReadAsync(CancellationToken token);
     }
 }

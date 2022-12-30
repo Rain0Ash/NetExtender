@@ -208,9 +208,9 @@ namespace NetExtender.Types.Trees
             }
         }
 
-        public void Add(TKey key, IEnumerable<TKey>? sections, TValue value)
+        public void Add(TKey key, TValue value, IEnumerable<TKey>? sections)
         {
-            if (!TryAdd(key, sections, value))
+            if (!TryAdd(key, value, sections))
             {
                 throw new ArgumentException($"An item with the same key has already been added. Key: {key}");
             }
@@ -218,7 +218,7 @@ namespace NetExtender.Types.Trees
 
         public void Add(TKey key, TValue value, params TKey[]? sections)
         {
-            Add(key, sections, value);
+            Add(key, value, (IEnumerable<TKey>?) sections);
         }
 
         public Boolean TryAdd(TKey key, TValue value)
@@ -239,27 +239,27 @@ namespace NetExtender.Types.Trees
             return true;
         }
 
-        public Boolean TryAdd(TKey key, IEnumerable<TKey>? sections, TValue value)
+        public Boolean TryAdd(TKey key, TValue value, IEnumerable<TKey>? sections)
         {
             if (key is null)
             {
                 throw new ArgumentNullException(nameof(key));
             }
 
-            IImmutableList<TKey> imsections = sections.AsIImmutableList();
+            sections = sections.AsIImmutableList();
 
-            if (ContainsKey(key, imsections))
+            if (ContainsKey(key, sections))
             {
                 return false;
             }
 
-            this[key, imsections].Value = value;
+            this[key, sections].Value = value;
             return true;
         }
 
         public Boolean TryAdd(TKey key, TValue value, params TKey[]? sections)
         {
-            return TryAdd(key, sections, value);
+            return TryAdd(key, value, (IEnumerable<TKey>?) sections);
         }
 
         public TValue? GetValue(TKey key)
@@ -441,6 +441,36 @@ namespace NetExtender.Types.Trees
                     yield return entry;
                 }
             }
+        }
+
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten()
+        {
+            return Flatten(FlattenDictionaryTreeEntry<TKey, TValue>.DefaultSeparator);
+        }
+
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(String? separator)
+        {
+            return Dump()?.Where(entry => entry.Value is not null).Select(entry => entry.Flatten(separator)).OrderBy(entry => entry.Section).ThenBy(entry => entry.Key).ToArray();
+        }
+        
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(params TKey[]? sections)
+        {
+            return Flatten(FlattenDictionaryTreeEntry<TKey, TValue>.DefaultSeparator, sections);
+        }
+
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(String? separator, params TKey[]? sections)
+        {
+            return Dump(sections)?.Where(entry => entry.Value is not null).Select(entry => entry.Flatten(separator)).OrderBy(entry => entry.Section).ThenBy(entry => entry.Key).ToArray();
+        }
+        
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(IEnumerable<TKey>? sections)
+        {
+            return Flatten(FlattenDictionaryTreeEntry<TKey, TValue>.DefaultSeparator, sections);
+        }
+
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(String? separator, IEnumerable<TKey>? sections)
+        {
+            return Dump(sections)?.Where(entry => entry.Value is not null).Select(entry => entry.Flatten(separator)).OrderBy(entry => entry.Section).ThenBy(entry => entry.Key).ToArray();
         }
 
         public DictionaryTreeEntry<TKey, TValue>[]? Dump()

@@ -110,6 +110,14 @@ namespace NetExtender.Configuration.Properties
                 return Property.IsAlwaysDefault;
             }
         }
+        
+        public Boolean IsThreadSafe
+        {
+            get
+            {
+                return Property.IsThreadSafe;
+            }
+        }
 
         public virtual T Value
         {
@@ -400,7 +408,7 @@ namespace NetExtender.Configuration.Properties
 
         public event ConfigurationChangedEventHandler? Changed;
 
-        public override String Path
+        public sealed override String Path
         {
             get
             {
@@ -420,6 +428,14 @@ namespace NetExtender.Configuration.Properties
                 {
                     throw new InvalidOperationException($"Can't set value '{value}' to {Path}");
                 }
+            }
+        }
+        
+        public sealed override Boolean IsThreadSafe
+        {
+            get
+            {
+                return Config.IsThreadSafe;
             }
         }
 

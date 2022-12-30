@@ -5,7 +5,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using NetExtender.Types.Dictionaries;
 using NetExtender.Utilities.Types;
 
@@ -19,13 +18,13 @@ namespace NetExtender.Serialization.Ini
             return value is not null ? new IniSection(value) : null;
         }
 
-        private IndexDictionary<String, IniValue> Dictionary { get; }
+        private IndexDictionary<String, IniValue> Internal { get; }
 
         public Int32 Count
         {
             get
             {
-                return Dictionary.Count;
+                return Internal.Count;
             }
         }
 
@@ -41,7 +40,7 @@ namespace NetExtender.Serialization.Ini
         {
             get
             {
-                return ((IDictionary<String, IniValue>) Dictionary).IsReadOnly;
+                return ((IDictionary<String, IniValue>) Internal).IsReadOnly;
             }
         }
 
@@ -49,7 +48,7 @@ namespace NetExtender.Serialization.Ini
         {
             get
             {
-                return Dictionary.Keys;
+                return Internal.Keys;
             }
         }
 
@@ -65,7 +64,7 @@ namespace NetExtender.Serialization.Ini
         {
             get
             {
-                return Dictionary.Values;
+                return Internal.Values;
             }
         }
 
@@ -81,7 +80,7 @@ namespace NetExtender.Serialization.Ini
         {
             get
             {
-                return Dictionary.Comparer;
+                return Internal.Comparer;
             }
         }
 
@@ -92,7 +91,7 @@ namespace NetExtender.Serialization.Ini
 
         public IniSection(IEqualityComparer<String>? comparer)
         {
-            Dictionary = new IndexDictionary<String, IniValue>(comparer);
+            Internal = new IndexDictionary<String, IniValue>(comparer);
         }
 
         public IniSection(IDictionary<String, IniValue> values)
@@ -107,7 +106,7 @@ namespace NetExtender.Serialization.Ini
                 throw new ArgumentNullException(nameof(values));
             }
 
-            Dictionary = new IndexDictionary<String, IniValue>(values, comparer);
+            Internal = new IndexDictionary<String, IniValue>(values, comparer);
         }
 
         public IniSection(IniSection values)
@@ -122,127 +121,192 @@ namespace NetExtender.Serialization.Ini
                 throw new ArgumentNullException(nameof(values));
             }
 
-            Dictionary = new IndexDictionary<String, IniValue>(values.Dictionary, comparer);
+            Internal = new IndexDictionary<String, IniValue>(values.Internal, comparer);
         }
 
         Boolean ICollection<KeyValuePair<String, IniValue>>.Contains(KeyValuePair<String, IniValue> item)
         {
-            return ((IDictionary<String, IniValue>) Dictionary).Contains(item);
+            if (String.IsNullOrEmpty(item.Key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(item.Key));
+            }
+            
+            return ((IDictionary<String, IniValue>) Internal).Contains(item);
         }
 
         public Boolean ContainsKey(String key)
         {
-            return Dictionary.ContainsKey(key);
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+
+            return Internal.ContainsKey(key);
         }
 
         public Boolean TryGetValue(String key, out IniValue value)
         {
-            return Dictionary.TryGetValue(key, out value);
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+            
+            return Internal.TryGetValue(key, out value);
         }
 
         public Int32 IndexOf(String key)
         {
-            return Dictionary.IndexOf(key);
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+            
+            return Internal.IndexOf(key);
         }
 
         public Int32 IndexOf(String key, Int32 index)
         {
-            return Dictionary.IndexOf(key, index);
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+            
+            return Internal.IndexOf(key, index);
         }
 
         public Int32 IndexOf(String key, Int32 index, Int32 count)
         {
-            return Dictionary.IndexOf(key, index, count);
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+            
+            return Internal.IndexOf(key, index, count);
         }
 
         public Int32 LastIndexOf(String key)
         {
-            return Dictionary.LastIndexOf(key);
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+            
+            return Internal.LastIndexOf(key);
         }
 
         public Int32 LastIndexOf(String key, Int32 index)
         {
-            return Dictionary.LastIndexOf(key, index);
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+            
+            return Internal.LastIndexOf(key, index);
         }
 
         public Int32 LastIndexOf(String key, Int32 index, Int32 count)
         {
-            return Dictionary.LastIndexOf(key, index, count);
-        }
-
-        public ICollection<IniValue> GetValues()
-        {
-            return Dictionary.GetValueEnumerator().AsEnumerable().ToList();
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+            
+            return Internal.LastIndexOf(key, index, count);
         }
 
         public void Add(String key, IniValue value)
         {
-            Dictionary.Add(key, value);
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+            
+            Internal.Add(key, value);
         }
 
         void ICollection<KeyValuePair<String, IniValue>>.Add(KeyValuePair<String, IniValue> item)
         {
-            Dictionary.Add(item);
+            if (String.IsNullOrEmpty(item.Key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(item.Key));
+            }
+            
+            Internal.Add(item);
         }
 
         public void Insert(Int32 index, String key, IniValue value)
         {
-            Dictionary.Insert(index, key, value);
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+            
+            Internal.Insert(index, key, value);
         }
 
         public void Sort()
         {
-            Dictionary.Sort();
+            Internal.Sort();
         }
 
         public void Sort(Comparison<String> comparison)
         {
-            Dictionary.Sort(comparison);
+            Internal.Sort(comparison);
         }
 
         public void Sort(IComparer<String>? comparer)
         {
-            Dictionary.Sort(comparer);
+            Internal.Sort(comparer);
         }
 
         public void Reverse()
         {
-            Dictionary.Reverse();
+            Internal.Reverse();
         }
 
         public void Reverse(Int32 index, Int32 count)
         {
-            Dictionary.Reverse(index, count);
+            Internal.Reverse(index, count);
         }
 
         public Boolean Remove(String key)
         {
-            return Dictionary.Remove(key);
+            if (String.IsNullOrEmpty(key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+            }
+            
+            return Internal.Remove(key);
         }
 
         Boolean ICollection<KeyValuePair<String, IniValue>>.Remove(KeyValuePair<String, IniValue> item)
         {
-            return Dictionary.Remove(item);
+            if (String.IsNullOrEmpty(item.Key))
+            {
+                throw new ArgumentException("Value cannot be null or empty.", nameof(item.Key));
+            }
+            
+            return Internal.Remove(item);
         }
 
         public Boolean RemoveAt(Int32 index)
         {
-            return Dictionary.RemoveAt(index);
+            return Internal.RemoveAt(index);
         }
 
         public void Clear()
         {
-            Dictionary.Clear();
+            Internal.Clear();
         }
 
         void ICollection<KeyValuePair<String, IniValue>>.CopyTo(KeyValuePair<String, IniValue>[] array, Int32 arrayIndex)
         {
-            Dictionary.CopyTo(array, arrayIndex);
+            Internal.CopyTo(array, arrayIndex);
         }
 
         public IEnumerator<KeyValuePair<String, IniValue>> GetEnumerator()
         {
-            return Dictionary.GetEnumerator();
+            return Internal.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -254,11 +318,21 @@ namespace NetExtender.Serialization.Ini
         {
             get
             {
-                return Dictionary.TryGetValue(key, out IniValue result) ? result : IniValue.Default;
+                if (String.IsNullOrEmpty(key))
+                {
+                    throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                }
+                
+                return Internal.TryGetValue(key, out IniValue result) ? result : IniValue.Default;
             }
             set
             {
-                Dictionary[key] = value;
+                if (String.IsNullOrEmpty(key))
+                {
+                    throw new ArgumentException("Value cannot be null or empty.", nameof(key));
+                }
+                
+                Internal[key] = value;
             }
         }
 
@@ -266,11 +340,11 @@ namespace NetExtender.Serialization.Ini
         {
             get
             {
-                return Dictionary.GetValueByIndex(index);
+                return Internal.GetValueByIndex(index);
             }
             set
             {
-                Dictionary.TrySetValueByIndex(index, value);
+                Internal.TrySetValueByIndex(index, value);
             }
         }
     }

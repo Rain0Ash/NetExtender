@@ -23,12 +23,12 @@ namespace NetExtender.Types.Strings
 
         public override String ToString()
         {
-            return Format() ?? String.Empty;
+            return Format();
         }
 
         public override String ToString(IFormatProvider? provider)
         {
-            return Format(provider) ?? String.Empty;
+            return Format(provider);
         }
     }
 }

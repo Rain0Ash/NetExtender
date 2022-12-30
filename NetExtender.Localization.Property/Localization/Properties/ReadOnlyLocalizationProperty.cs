@@ -42,7 +42,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
             }
         }
 
-        public override String Path
+        public sealed override String Path
         {
             get
             {
@@ -50,7 +50,15 @@ namespace NetExtender.Localization.Property.Localization.Properties
             }
         }
 
-        public override LocalizationIdentifier Identifier
+        public sealed override Boolean IsThreadSafe
+        {
+            get
+            {
+                return Config.IsThreadSafe;
+            }
+        }
+
+        public sealed override LocalizationIdentifier Identifier
         {
             get
             {
@@ -378,15 +386,7 @@ namespace NetExtender.Localization.Property.Localization.Properties
 
         public override event LocalizationValueChangedEventHandler? Changed;
         public override event LocalizationChangedEventHandler? LocalizationChanged;
-
-        public override String Path
-        {
-            get
-            {
-                return Config.Path;
-            }
-        }
-
+        
         private event ConfigurationChangedEventHandler? ConfigurationChanged;
         event ConfigurationChangedEventHandler? IConfigPropertyValueInfo.Changed
         {
@@ -397,6 +397,22 @@ namespace NetExtender.Localization.Property.Localization.Properties
             remove
             {
                 ConfigurationChanged -= value;
+            }
+        }
+
+        public sealed override String Path
+        {
+            get
+            {
+                return Config.Path;
+            }
+        }
+        
+        public sealed override Boolean IsThreadSafe
+        {
+            get
+            {
+                return Config.IsThreadSafe;
             }
         }
 

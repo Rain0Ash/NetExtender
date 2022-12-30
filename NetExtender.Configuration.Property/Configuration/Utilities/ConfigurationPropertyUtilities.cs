@@ -9,6 +9,7 @@ using NetExtender.Configuration.Common;
 using NetExtender.Configuration.Interfaces;
 using NetExtender.Configuration.Properties;
 using NetExtender.Configuration.Properties.Interfaces;
+using NetExtender.Configuration.Synchronizers.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Utilities
@@ -622,6 +623,22 @@ namespace NetExtender.Configuration.Utilities
         public static IReadOnlyConfigProperty<T> GetReadOnlyConfigurationProperty<T>(this IConfig config, String? key, T alternate, Func<T, Boolean>? validate, TryConverter<String?, T>? converter, ConfigPropertyOptions options, IEnumerable<String>? sections)
         {
             return new ReadOnlyConfigPropertyWrapper<T>(config, key, alternate, validate, converter, options, sections);
+        }
+
+        public static TProperty Synchronize<TProperty>(this TProperty property, IConfigPropertySynchronizer synchronizer) where TProperty : IConfigPropertyInfo
+        {
+            if (property is null)
+            {
+                throw new ArgumentNullException(nameof(property));
+            }
+
+            if (synchronizer is null)
+            {
+                throw new ArgumentNullException(nameof(synchronizer));
+            }
+            
+            synchronizer.Add(property);
+            return property;
         }
     }
 }

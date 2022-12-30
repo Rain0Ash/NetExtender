@@ -4836,7 +4836,7 @@ namespace NetExtender.Utilities.Numerics
                 throw new ArgumentNullException(nameof(value));
             }
 
-            if (!@base.InRange(2, 36))
+            if (!@base.InRange(MinimumBase, MaximumBase))
             {
                 throw new ArgumentOutOfRangeException(nameof(@base), @"Base out of range");
             }

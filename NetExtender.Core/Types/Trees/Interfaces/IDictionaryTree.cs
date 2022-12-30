@@ -28,10 +28,10 @@ namespace NetExtender.Types.Trees.Interfaces
         public IDictionaryTreeNode<TKey, TValue>? GetChildSection(IEnumerable<TKey>? sections);
         public IDictionaryTreeNode<TKey, TValue>? GetChildSection(params TKey[]? sections);
         public void Add(TKey key, TValue value);
-        public void Add(TKey key, IEnumerable<TKey>? sections, TValue value);
+        public void Add(TKey key, TValue value, IEnumerable<TKey>? sections);
         public void Add(TKey key, TValue value, params TKey[]? sections);
         public Boolean TryAdd(TKey key, TValue value);
-        public Boolean TryAdd(TKey key, IEnumerable<TKey>? sections, TValue value);
+        public Boolean TryAdd(TKey key, TValue value, IEnumerable<TKey>? sections);
         public Boolean TryAdd(TKey key, TValue value, params TKey[]? sections);
         public new Boolean Remove(TKey key);
         public Boolean Remove(TKey key, out TValue? value);
@@ -44,6 +44,12 @@ namespace NetExtender.Types.Trees.Interfaces
         public Boolean Purge(TKey key);
         public Boolean Purge(TKey key, IEnumerable<TKey> sections);
         public Boolean Purge(TKey key, params TKey[] sections);
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten();
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(String? separator);
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(params TKey[]? sections);
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(String? separator, params TKey[]? sections);
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(IEnumerable<TKey>? sections);
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(String? separator, IEnumerable<TKey>? sections);
         public DictionaryTreeEntry<TKey, TValue>[]? Dump();
         public DictionaryTreeEntry<TKey, TValue>[]? Dump(params TKey[]? sections);
         public DictionaryTreeEntry<TKey, TValue>[]? Dump(IEnumerable<TKey>? sections);

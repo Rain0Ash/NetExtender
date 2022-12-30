@@ -92,7 +92,7 @@ namespace NetExtender.Configuration.Windows.Registry
                 return Registry.SetValue(key, value, sections);
             }
 
-            sections = ToSection(sections).AsIImmutableList();
+            sections = sections.AsIImmutableList();
 
             if (IsLazyWrite && Get(key, sections) == value)
             {

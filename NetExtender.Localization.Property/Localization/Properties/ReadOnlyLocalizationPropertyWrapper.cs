@@ -192,6 +192,14 @@ namespace NetExtender.Localization.Properties
             }
         }
 
+        public Boolean IsThreadSafe
+        {
+            get
+            {
+                return Internal.IsThreadSafe;
+            }
+        }
+
         public LocalizationIdentifier Identifier
         {
             get
@@ -508,6 +516,14 @@ namespace NetExtender.Localization.Properties
             get
             {
                 return Internal.IsAlwaysDefault;
+            }
+        }
+        
+        public Boolean IsThreadSafe
+        {
+            get
+            {
+                return Internal.IsThreadSafe;
             }
         }
 

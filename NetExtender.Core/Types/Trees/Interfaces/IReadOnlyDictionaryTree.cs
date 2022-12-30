@@ -25,6 +25,12 @@ namespace NetExtender.Types.Trees.Interfaces
         public IDictionaryTreeNode<TKey, TValue>? GetChild(TKey key, params TKey[]? sections);
         public IDictionaryTreeNode<TKey, TValue>? GetChildSection(IEnumerable<TKey>? sections);
         public IDictionaryTreeNode<TKey, TValue>? GetChildSection(params TKey[]? sections);
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten();
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(String? separator);
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(params TKey[]? sections);
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(String? separator, params TKey[]? sections);
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(IEnumerable<TKey>? sections);
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(String? separator, IEnumerable<TKey>? sections);
         public DictionaryTreeEntry<TKey, TValue>[]? Dump();
         public DictionaryTreeEntry<TKey, TValue>[]? Dump(params TKey[]? sections);
         public DictionaryTreeEntry<TKey, TValue>[]? Dump(IEnumerable<TKey>? sections);

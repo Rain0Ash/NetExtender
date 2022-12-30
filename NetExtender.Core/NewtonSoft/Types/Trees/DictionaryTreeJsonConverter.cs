@@ -138,7 +138,7 @@ namespace NetExtender.NewtonSoft.Types.Trees
                 }
 
                 TKey key = keys[^1];
-                dictionary.Add(key, keys.SkipLast(1), nodevalue!);
+                dictionary.Add(key, nodevalue!, keys.SkipLast(1));
             }
 
             return dictionary;

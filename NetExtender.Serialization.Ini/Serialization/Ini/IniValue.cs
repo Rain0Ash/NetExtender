@@ -10,6 +10,21 @@ namespace NetExtender.Serialization.Ini
 {
     public readonly struct IniValue : IString
     {
+        public static implicit operator IniValue(Boolean value)
+        {
+            return new IniValue(value);
+        }
+        
+        public static implicit operator IniValue(Char value)
+        {
+            return new IniValue(value);
+        }
+        
+        public static implicit operator IniValue(Char32 value)
+        {
+            return new IniValue(value);
+        }
+
         public static implicit operator IniValue(SByte value)
         {
             return new IniValue(value);
@@ -70,11 +85,6 @@ namespace NetExtender.Serialization.Ini
             return new IniValue(value);
         }
 
-        public static implicit operator IniValue(Boolean value)
-        {
-            return new IniValue(value.ToString());
-        }
-
         public static implicit operator IniValue(String? value)
         {
             return new IniValue(value);
@@ -116,14 +126,79 @@ namespace NetExtender.Serialization.Ini
 
         public String? Value { get; }
 
-        public IniValue(Object? value)
-            : this(value?.ToString())
+        public IniValue(Boolean value)
         {
+            Value = value.ToString();
         }
 
-        public IniValue(IFormattable? value)
+        public IniValue(Char value)
         {
-            Value = value?.ToString(null, CultureInfo.InvariantCulture);
+            Value = value.ToString();
+        }
+
+        public IniValue(Char32 value)
+        {
+            Value = value.ToString();
+        }
+
+        public IniValue(SByte value)
+        {
+            Value = value.ToString(null, CultureInfo.InvariantCulture);
+        }
+
+        public IniValue(Byte value)
+        {
+            Value = value.ToString(null, CultureInfo.InvariantCulture);
+        }
+
+        public IniValue(Int16 value)
+        {
+            Value = value.ToString(null, CultureInfo.InvariantCulture);
+        }
+
+        public IniValue(UInt16 value)
+        {
+            Value = value.ToString(null, CultureInfo.InvariantCulture);
+        }
+
+        public IniValue(Int32 value)
+        {
+            Value = value.ToString(null, CultureInfo.InvariantCulture);
+        }
+
+        public IniValue(UInt32 value)
+        {
+            Value = value.ToString(null, CultureInfo.InvariantCulture);
+        }
+
+        public IniValue(Int64 value)
+        {
+            Value = value.ToString(null, CultureInfo.InvariantCulture);
+        }
+
+        public IniValue(UInt64 value)
+        {
+            Value = value.ToString(null, CultureInfo.InvariantCulture);
+        }
+
+        public IniValue(Single value)
+        {
+            Value = value.ToString(null, CultureInfo.InvariantCulture);
+        }
+
+        public IniValue(Double value)
+        {
+            Value = value.ToString(null, CultureInfo.InvariantCulture);
+        }
+
+        public IniValue(Decimal value)
+        {
+            Value = value.ToString(null, CultureInfo.InvariantCulture);
+        }
+
+        public IniValue(BigInteger value)
+        {
+            Value = value.ToString(null, CultureInfo.InvariantCulture);
         }
 
         public IniValue(String? value)

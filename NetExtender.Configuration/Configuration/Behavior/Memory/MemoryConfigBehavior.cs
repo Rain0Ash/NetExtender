@@ -60,7 +60,7 @@ namespace NetExtender.Configuration.Memory
 
         public override String? Get(String? key, IEnumerable<String>? sections)
         {
-            return key is not null ? Config[key, ToSection(sections)].Value : null;
+            return key is not null ? Config[key, sections].Value : null;
         }
 
         // ReSharper disable once CognitiveComplexity
@@ -93,7 +93,7 @@ namespace NetExtender.Configuration.Memory
                 return true;
             }
 
-            sections = ToSection(sections).AsIImmutableList();
+            sections = sections.AsIImmutableList();
 
             if (IsLazyWrite && Get(key, sections) == value)
             {
@@ -161,7 +161,7 @@ namespace NetExtender.Configuration.Memory
                 return true;
             }
 
-            String? key = FromSection(ref sections);
+            String? key = PopKeyFromSection(ref sections);
             return key is not null && Config.Remove(key, sections);
         }
 

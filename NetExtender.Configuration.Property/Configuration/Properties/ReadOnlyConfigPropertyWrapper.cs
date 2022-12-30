@@ -129,6 +129,14 @@ namespace NetExtender.Configuration.Properties
             }
         }
 
+        public Boolean IsThreadSafe
+        {
+            get
+            {
+                return Internal.IsThreadSafe;
+            }
+        }
+
         public T Value
         {
             get
@@ -384,6 +392,14 @@ namespace NetExtender.Configuration.Properties
             get
             {
                 return Internal.IsAlwaysDefault;
+            }
+        }
+        
+        public Boolean IsThreadSafe
+        {
+            get
+            {
+                return Internal.IsThreadSafe;
             }
         }
 

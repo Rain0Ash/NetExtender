@@ -94,6 +94,23 @@ namespace NetExtender.Initializer
 
         protected virtual void UnhandledException(Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
         {
+            UnhandledException<ExceptionHandler>(sender, exception, ref action);
+        }
+        
+        protected void UnhandledException<T>(Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action) where T : ExceptionHandler, new()
+        {
+            T handler = new T();
+            UnhandledException(handler, sender, exception, ref action);
+        }
+        
+        protected virtual void UnhandledException(ExceptionHandler handler, Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
+        {
+            if (handler is null)
+            {
+                throw new ArgumentNullException(nameof(handler));
+            }
+
+            handler.Handle(sender, exception, ref action);
         }
 
         protected virtual void ShutdownException(Object? sender, ShutdownException exception, ref InitializerUnhandledExceptionState action)
@@ -138,6 +155,13 @@ namespace NetExtender.Initializer
 
         protected internal virtual void InitializeNetExtender(INetExtenderFrameworkInitializer initializer)
         {
+        }
+        
+        protected class ExceptionHandler
+        {
+            public virtual void Handle(Object? sender, Exception? exception, ref InitializerUnhandledExceptionState action)
+            {
+            }
         }
     }
 }

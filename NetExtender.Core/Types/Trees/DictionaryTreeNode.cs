@@ -299,9 +299,9 @@ namespace NetExtender.Types.Trees
             Tree.Add(key, value);
         }
 
-        public void Add(TKey key, IEnumerable<TKey>? sections, TValue value)
+        public void Add(TKey key, TValue value, IEnumerable<TKey>? sections)
         {
-            Tree.Add(key, sections, value);
+            Tree.Add(key, value, sections);
         }
 
         public void Add(TKey key, TValue value, params TKey[]? sections)
@@ -314,9 +314,9 @@ namespace NetExtender.Types.Trees
             return Tree.TryAdd(key, value);
         }
 
-        public Boolean TryAdd(TKey key, IEnumerable<TKey>? sections, TValue value)
+        public Boolean TryAdd(TKey key, TValue value, IEnumerable<TKey>? sections)
         {
-            return Tree.TryAdd(key, sections, value);
+            return Tree.TryAdd(key, value, sections);
         }
 
         public Boolean TryAdd(TKey key, TValue value, params TKey[]? sections)
@@ -515,6 +515,36 @@ namespace NetExtender.Types.Trees
         public Boolean Purge(TKey key, params TKey[] sections)
         {
             return Purge(key, (IEnumerable<TKey>) sections);
+        }
+        
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten()
+        {
+            return HasTree ? Tree.Flatten() : null;
+        }
+
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(String? separator)
+        {
+            return HasTree ? Tree.Flatten(separator) : null;
+        }
+        
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(params TKey[]? sections)
+        {
+            return HasTree ? Tree.Flatten(sections) : null;
+        }
+
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(String? separator, params TKey[]? sections)
+        {
+            return HasTree ? Tree.Flatten(separator, sections) : null;
+        }
+        
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(IEnumerable<TKey>? sections)
+        {
+            return HasTree ? Tree.Flatten(sections) : null;
+        }
+
+        public FlattenDictionaryTreeEntry<TKey, TValue>[]? Flatten(String? separator, IEnumerable<TKey>? sections)
+        {
+            return HasTree ? Tree.Flatten(separator, sections) : null;
         }
 
         public DictionaryTreeEntry<TKey, TValue>[]? Dump()
