@@ -10,7 +10,7 @@
         <Version>0.8.9</Version>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>../SignTool/Private/NetExtender.snk</AssemblyOriginatorKeyFile>
-        <Title>NetExtender.Domain</Title>
+        <Title>NetExtender.Domain.AspNetCore</Title>
         <Description>ASP.NET Core Domain module of NetExtender Framework</Description>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <RepositoryUrl>https://github.com/Rain0Ash/NetExtender</RepositoryUrl>

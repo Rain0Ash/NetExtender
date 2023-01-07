@@ -11,10 +11,8 @@ using NetExtender.Types.Dispatchers.Interfaces;
 
 namespace NetExtender.Domains.AspNetCore.Applications
 {
-    public class AspNetCoreApplication : Application
+    public class AspNetCoreApplication : Application<IHost?>
     {
-        protected IHost? Context { get; set; }
-
         public override IDispatcher? Dispatcher
         {
             get
@@ -34,12 +32,7 @@ namespace NetExtender.Domains.AspNetCore.Applications
             }
         }
 
-        public override Task<IApplication> RunAsync(CancellationToken token)
-        {
-            return RunAsync(null, token);
-        }
-
-        public virtual async Task<IApplication> RunAsync(IHost? host, CancellationToken token)
+        public override async Task<IApplication> RunAsync(IHost? host, CancellationToken token)
         {
             if (host is null)
             {

@@ -10,12 +10,13 @@ using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Domains.Service.Applications;
 using NetExtender.Windows.Services.Types.Installers;
 using NetExtender.Windows.Services.Types.Services;
+using NetExtender.Windows.Services.Types.Services.Interfaces;
 
-namespace NetExtender.Domains.AspNetCore.Windows.Service.Applications
+namespace NetExtender.Domains.AspNetCore.Service.Applications
 {
-    public class AspNetCoreWindowsServiceApplication : WindowsServiceApplication
+    public class AspNetCoreWindowsServiceApplication : WindowsServiceApplication, IApplication<IHost>
     {
-        protected IHost? Context { get; set; }
+        protected IHost? Host { get; set; }
 
         public AspNetCoreWindowsServiceApplication()
         {
@@ -41,6 +42,16 @@ namespace NetExtender.Domains.AspNetCore.Windows.Service.Applications
             return RunAsync(null, token);
         }
 
+        public virtual IApplication Run(IHost? context)
+        {
+            return RunAsync(context).GetAwaiter().GetResult();
+        }
+
+        public Task<IApplication> RunAsync(IHost? context)
+        {
+            return RunAsync(context, CancellationToken.None);
+        }
+
         public virtual async Task<IApplication> RunAsync(IHost? host, CancellationToken token)
         {
             if (host is null)
@@ -48,16 +59,17 @@ namespace NetExtender.Domains.AspNetCore.Windows.Service.Applications
                 return this;
             }
 
-            Context = host;
+            Host = host;
             RegisterShutdownToken(token);
-            return await RunAsync(Context.AsService(), token);
+            IWindowsService service = Host.AsService();
+            return await RunAsync(service, token);
         }
 
         public override void Shutdown(Int32 code)
         {
             try
             {
-                Context?.StopAsync().GetAwaiter().GetResult();
+                Host?.StopAsync().GetAwaiter().GetResult();
             }
             finally
             {

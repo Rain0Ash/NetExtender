@@ -37,4 +37,11 @@ namespace NetExtender.Domains.Applications.Interfaces
         public Task<Boolean> RestartAsync(CancellationToken token);
         public Task<Boolean> RestartAsync(Int32 milli, CancellationToken token);
     }
+
+    public interface IApplication<in T> : IApplication where T : class?
+    {
+        public IApplication Run(T? context);
+        public Task<IApplication> RunAsync(T? context);
+        public Task<IApplication> RunAsync(T? context, CancellationToken token);
+    }
 }

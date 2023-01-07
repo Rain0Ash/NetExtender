@@ -5,34 +5,61 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using NetExtender.Domain.Utilities;
-using NetExtender.Domains.Applications;
+using NetExtender.Domains.Builder.Interfaces;
+using NetExtender.Domains.Utilities;
+using NetExtender.Domains.View;
 using NetExtender.Domains.View.Interfaces;
+using NetExtender.Domains.WinForms.Applications;
+using NetExtender.Domains.WinForms.Builder;
 
-namespace NetExtender.Domains.View
+namespace NetExtender.Domains.WinForms.View
 {
-    public class WinFormsView<T> : WinFormsView where T : Form, new()
+    public class WinFormsView<T> : WinFormsView<T, WinFormsBuilder<T>> where T : Form, new()
     {
         public WinFormsView()
             : base(new T())
         {
         }
 
-        public WinFormsView(T? context)
-            : base(context)
+        public WinFormsView(T? form)
+            : base(form)
         {
         }
     }
-
-    public class WinFormsView : ApplicationView
+    
+    public class WinFormsView<T, TBuilder> : WinFormsView where T : Form where TBuilder : IApplicationBuilder<T>, new()
     {
-        protected Form? Context { get; private set; }
+        protected sealed override Form? Context { get; set; }
+        protected TBuilder? Builder { get; }
 
+        public WinFormsView()
+        {
+            Builder = new TBuilder();
+        }
+
+        public WinFormsView(T? form)
+        {
+            Context = form ?? throw new ArgumentNullException(nameof(form));
+        }
+        
+        public WinFormsView(TBuilder builder)
+        {
+            Builder = builder ?? throw new ArgumentNullException(nameof(builder));
+        }
+
+        protected override Task<IApplicationView> RunAsync(CancellationToken token)
+        {
+            return RunAsync(Context ?? Builder?.Build(Arguments), token);
+        }
+    }
+
+    public abstract class WinFormsView : ContextApplicationView<Form, WinFormsApplication>
+    {
         public virtual Boolean VisualStyle
         {
             get
             {
-                return System.Windows.Forms.Application.UseVisualStyles;
+                return Application.UseVisualStyles;
             }
         }
 
@@ -44,18 +71,9 @@ namespace NetExtender.Domains.View
             }
         }
 
-        public WinFormsView()
-        {
-        }
-
-        public WinFormsView(Form? context)
-        {
-            Context = context;
-        }
-
         protected static void EnableVisualStyles()
         {
-            System.Windows.Forms.Application.EnableVisualStyles();
+            Application.EnableVisualStyles();
         }
 
         protected override Task<IApplicationView> RunAsync(CancellationToken token)
@@ -65,11 +83,11 @@ namespace NetExtender.Domains.View
                 return RunAsync(Context, token);
             }
 
-            System.Windows.Forms.Application.Run();
+            Application.Run();
             return Task.FromResult<IApplicationView>(this);
         }
 
-        protected virtual async Task<IApplicationView> RunAsync(Form? form, CancellationToken token)
+        protected override async Task<IApplicationView> RunAsync(Form? form, CancellationToken token)
         {
             if (form is null)
             {

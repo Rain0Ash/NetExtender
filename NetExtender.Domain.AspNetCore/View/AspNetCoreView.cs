@@ -2,19 +2,19 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using NetExtender.Domain.Utilities;
 using NetExtender.Domains.AspNetCore.Applications;
+using NetExtender.Domains.AspNetCore.Builder;
+using NetExtender.Domains.Builder.Interfaces;
 using NetExtender.Domains.View;
 using NetExtender.Domains.View.Interfaces;
+using NetExtender.Types.Exceptions;
 
 namespace NetExtender.Domains.AspNetCore.View
 {
-    public class AspNetCoreView<T> : AspNetCoreView where T : class, IHost, new()
+    public class AspNetCoreView<T> : AspNetCoreView<T, AspNetCoreBuilder<T>> where T : class, IHost, new()
     {
         public AspNetCoreView()
             : base(new T())
@@ -26,74 +26,54 @@ namespace NetExtender.Domains.AspNetCore.View
         {
         }
     }
-
-    public class AspNetCoreView : ApplicationView
+    
+    public class AspNetCoreView<T, TBuilder> : AspNetCoreView where T : class, IHost where TBuilder : IApplicationBuilder<T>, new()
     {
-        protected IHost? Context { get; private set; }
-        protected Action<IWebHostBuilder>? Builder { get; }
-        protected Boolean UseDefaultHostBuilder { get; }
+        protected T? Internal { get; set; }
 
+        protected sealed override IHost? Context
+        {
+            get
+            {
+                return Internal;
+            }
+            set
+            {
+                Internal = value is not null ? value as T ?? throw new InitializeException($"{nameof(value)} is not {typeof(T).Name}") : null;
+            }
+        }
+
+        protected TBuilder? Builder { get; }
+
+        public AspNetCoreView()
+        {
+            Builder = new TBuilder();
+        }
+
+        public AspNetCoreView(T host)
+        {
+            Context = host ?? throw new ArgumentNullException(nameof(host));
+        }
+        
+        public AspNetCoreView(TBuilder builder)
+        {
+            Builder = builder ?? throw new ArgumentNullException(nameof(builder));
+        }
+
+        protected override Task<IApplicationView> RunAsync(CancellationToken token)
+        {
+            return RunAsync(Context ?? Builder?.Build(Arguments), token);
+        }
+    }
+
+    public abstract class AspNetCoreView : ContextApplicationView<IHost, AspNetCoreApplication>
+    {
         protected override ApplicationShutdownMode? ShutdownMode
         {
             get
             {
                 return ApplicationShutdownMode.OnExplicitShutdown;
             }
-        }
-
-        public AspNetCoreView(IHost host)
-        {
-            Context = host ?? throw new ArgumentNullException(nameof(host));
-        }
-
-        public AspNetCoreView(Action<IWebHostBuilder> builder)
-            : this(builder, false)
-        {
-        }
-
-        public AspNetCoreView(Action<IWebHostBuilder> builder, Boolean initialize)
-        {
-            Builder = builder ?? throw new ArgumentNullException(nameof(builder));
-            UseDefaultHostBuilder = initialize;
-        }
-
-        protected IHostBuilder CreateHostBuilder()
-        {
-            return CreateHostBuilder(Arguments.ToArray());
-        }
-
-        protected virtual IHostBuilder CreateHostBuilder(String[] args)
-        {
-            IHostBuilder builder = UseDefaultHostBuilder ? Host.CreateDefaultBuilder(args) : new HostBuilder();
-            return builder.ConfigureWebHostDefaults(Build);
-        }
-
-        protected virtual void Build(IWebHostBuilder builder)
-        {
-            Builder?.Invoke(builder);
-        }
-
-        protected override Task<IApplicationView> RunAsync(CancellationToken token)
-        {
-            return RunAsync(Context ?? CreateHostBuilder().Build(), token);
-        }
-
-        protected virtual async Task<IApplicationView> RunAsync(IHost? host, CancellationToken token)
-        {
-            if (host is null)
-            {
-                return await RunAsync(token);
-            }
-
-            Context ??= host;
-            if (host != Context)
-            {
-                throw new ArgumentException($"{nameof(host)} not reference equals with {nameof(Context)}");
-            }
-
-            AspNetCoreApplication application = Domain.Current.Application.As<AspNetCoreApplication>();
-            await application.RunAsync(Context, token);
-            return this;
         }
     }
 }

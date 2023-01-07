@@ -4,12 +4,13 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
-using NetExtender.Domains.Applications;
+using NetExtender.Domains.Builder.Interfaces;
 using NetExtender.Domains.Initializer;
-using NetExtender.Domains.View;
+using NetExtender.Domains.WinForms.Applications;
+using NetExtender.Domains.WinForms.View;
 using NetExtender.Initializer;
 
-namespace NetExtender.Domain.WinForms.Initializer
+namespace NetExtender.Domains.WinForms.Initializer
 {
     public abstract class WinFormsApplicationInitializer : ApplicationInitializer
     {
@@ -75,6 +76,10 @@ namespace NetExtender.Domain.WinForms.Initializer
     }
     
     public abstract class WinFormsApplicationInitializer<T> : ApplicationInitializer<WinFormsApplication, WinFormsView<T>> where T : Form, new()
+    {
+    }
+    
+    public abstract class WinFormsApplicationInitializer<T, TBuilder> : ApplicationInitializer<WinFormsApplication, WinFormsView<T, TBuilder>> where T : Form where TBuilder : IApplicationBuilder<T>, new()
     {
     }
 }

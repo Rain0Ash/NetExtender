@@ -5,8 +5,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
-using NetExtender.Types.Memento.Interfaces;
 using NetExtender.Types.Memento.Builder.Interfaces;
+using NetExtender.Types.Memento.Interfaces;
 
 namespace NetExtender.Types.Memento
 {

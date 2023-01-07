@@ -47,6 +47,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.WinForms
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.WindowsPresentation", "NetExtender.Domain.WindowsPresentation\NetExtender.Domain.WindowsPresentation.csproj", "{265EEED3-7DFD-4CEF-9E88-8F3BEC4F0994}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Domain.WindowsPresentation.AspNetCore", "NetExtender.Domain.WindowsPresentation.AspNetCore\NetExtender.Domain.WindowsPresentation.AspNetCore.csproj", "{6DD44487-5020-48DF-8A41-33E0813A65AA}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.Xamarin", "NetExtender.Domain.Xamarin\NetExtender.Domain.Xamarin.csproj", "{B1628C4E-3A11-4A9D-B592-3982E2B0EB7A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.AspNetCore", "NetExtender.Domain.AspNetCore\NetExtender.Domain.AspNetCore.csproj", "{0F17D558-04C4-4238-9135-EA27F581C690}"
@@ -156,6 +158,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Logging", "NetExtender.Logging\NetExtender.Logging.csproj", "{A4D5D2FB-89CF-43CD-8134-75258AC240E7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Memento", "NetExtender.Memento\NetExtender.Memento.csproj", "{2EA1EAFC-84DC-4F99-9609-34A821C35756}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Domain.WinForms.AspNetCore", "NetExtender.Domain.WinForms.AspNetCore\NetExtender.Domain.WinForms.AspNetCore.csproj", "{2105F181-7E83-41D7-9C1B-3C8F662ADE0F}"
 EndProject
 Global
 				GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -415,6 +419,14 @@ Global
 					{486437A8-F8FE-4D33-951E-267B4039EE59}.Debug|Any CPU.Build.0 = Debug|Any CPU
 					{486437A8-F8FE-4D33-951E-267B4039EE59}.Release|Any CPU.ActiveCfg = Release|Any CPU
 					{486437A8-F8FE-4D33-951E-267B4039EE59}.Release|Any CPU.Build.0 = Release|Any CPU
+					{6DD44487-5020-48DF-8A41-33E0813A65AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+					{6DD44487-5020-48DF-8A41-33E0813A65AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+					{6DD44487-5020-48DF-8A41-33E0813A65AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+					{6DD44487-5020-48DF-8A41-33E0813A65AA}.Release|Any CPU.Build.0 = Release|Any CPU
+					{2105F181-7E83-41D7-9C1B-3C8F662ADE0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+					{2105F181-7E83-41D7-9C1B-3C8F662ADE0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+					{2105F181-7E83-41D7-9C1B-3C8F662ADE0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+					{2105F181-7E83-41D7-9C1B-3C8F662ADE0F}.Release|Any CPU.Build.0 = Release|Any CPU
 				EndGlobalSection
 				GlobalSection(SolutionProperties) = preSolution
 								HideSolutionNode = FALSE
@@ -489,5 +501,7 @@ Global
 								{A4D5D2FB-89CF-43CD-8134-75258AC240E7} = {0FA64880-9D69-4D8B-884F-47EF1F94961A}
 								{2EA1EAFC-84DC-4F99-9609-34A821C35756} = {0831D84F-7D4F-4E1A-87BA-8E00A2BFB199}
 					{486437A8-F8FE-4D33-951E-267B4039EE59} = {57669121-7D0F-4429-96C8-563563F6F3D1}
+					{6DD44487-5020-48DF-8A41-33E0813A65AA} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
+					{2105F181-7E83-41D7-9C1B-3C8F662ADE0F} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
 				EndGlobalSection
 EndGlobal

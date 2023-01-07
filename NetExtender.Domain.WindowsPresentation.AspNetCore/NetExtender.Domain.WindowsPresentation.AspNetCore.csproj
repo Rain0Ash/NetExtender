@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <OutputType>Library</OutputType>
+        <UseWpf>true</UseWpf>
+        <LangVersion>10</LangVersion>
+        <Authors>Rain0Ash</Authors>
+        <PackageProjectUrl>https://github.com/Rain0Ash/NetExtender</PackageProjectUrl>
+        <Version>0.8.9</Version>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>../SignTool/Private/NetExtender.snk</AssemblyOriginatorKeyFile>
+        <Title>NetExtender.Domain.WindowsPresentation.AspNetCore</Title>
+        <Description>Windows Presentation Foundation Domain module with ASP.NET Core Domain module of NetExtender Framework</Description>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/Rain0Ash/NetExtender</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>Extension</PackageTags>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <IsPackable>true</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\NetExtender.Domain.AspNetCore\NetExtender.Domain.AspNetCore.csproj" />
+        <ProjectReference Include="..\NetExtender.Domain.WindowsPresentation\NetExtender.Domain.WindowsPresentation.csproj" />
+    </ItemGroup>
+
+</Project>
