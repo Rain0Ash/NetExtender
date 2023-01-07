@@ -22,15 +22,15 @@ namespace NetExtender.Localization.Wrappers
     {
         private ILocalizationConfig Config { get; }
 
-        event ConfigurationChangedEventHandler? IReadOnlyConfig.Changed
+        event ConfigurationChangedEventHandler? IConfigInfo.Changed
         {
             add
             {
-                ((IConfig) Config).Changed += value;
+                ((IConfigInfo) Config).Changed += value;
             }
             remove
             {
-                ((IConfig) Config).Changed -= value;
+                ((IConfigInfo) Config).Changed -= value;
             }
         }
 

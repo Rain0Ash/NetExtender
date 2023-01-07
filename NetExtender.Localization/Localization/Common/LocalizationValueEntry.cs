@@ -9,14 +9,13 @@ using System.Linq;
 using NetExtender.Configuration.Common;
 using NetExtender.Localization.Common.Interfaces;
 using NetExtender.Types.Culture;
-using NetExtender.Utilities.Serialization;
 using NetExtender.Utilities.Types;
 using Newtonsoft.Json;
 
 namespace NetExtender.Localization.Common
 {
     [Serializable]
-    public readonly struct LocalizationValueEntry : IComparable<LocalizationValueEntry>, IEquatable<LocalizationValueEntry>, IEquatable<LocalizationEntry>
+    public readonly struct LocalizationValueEntry : IComparable<LocalizationValueEntry>, IEquatable<LocalizationValueEntry>, IEquatable<LocalizationEntry>, IFormattable
     {
         public static implicit operator ConfigurationEntry(LocalizationValueEntry entry)
         {
@@ -200,12 +199,22 @@ namespace NetExtender.Localization.Common
 
         public override String ToString()
         {
-            return this.JsonSerializeObject();
+            return Value ?? String.Empty;
+        }
+
+        public String ToString(IFormatProvider? provider)
+        {
+            return ToString(null, provider);
+        }
+
+        public String ToString(String? format, IFormatProvider? provider)
+        {
+            return Value?.ToString(provider) ?? String.Empty;
         }
     }
 
     [Serializable]
-    public readonly struct LocalizationMultiValueEntry : IComparable<LocalizationMultiValueEntry>, IEquatable<LocalizationMultiValueEntry>, IEquatable<LocalizationMultiEntry>, IEnumerable<LocalizationValueEntry>
+    public readonly struct LocalizationMultiValueEntry : IComparable<LocalizationMultiValueEntry>, IEquatable<LocalizationMultiValueEntry>, IEquatable<LocalizationMultiEntry>, IEnumerable<LocalizationValueEntry>, IFormattable
     {
         public static implicit operator ConfigurationEntry[](LocalizationMultiValueEntry value)
         {
@@ -365,7 +374,17 @@ namespace NetExtender.Localization.Common
 
         public override String ToString()
         {
-            return this.JsonSerializeObject();
+            return Value.ToString();
+        }
+
+        public String ToString(IFormatProvider? provider)
+        {
+            return Value.ToString(provider);
+        }
+
+        public String ToString(String? format, IFormatProvider? provider)
+        {
+            return Value.ToString(format, provider);
         }
     }
 }

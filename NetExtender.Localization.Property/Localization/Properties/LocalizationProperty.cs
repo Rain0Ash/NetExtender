@@ -470,7 +470,13 @@ namespace NetExtender.Localization.Property.Localization.Properties
             return value is not null ? new LocalizationValueEntry(Key, Identifier, value.Text, Sections).GetString() : null;
         }
 
-        public String ToString(String? format, IFormatProvider? provider)
+        public override String ToString(IFormatProvider? provider)
+        {
+            ILocalizationString? value = Value;
+            return value is not null ? new LocalizationValueEntry(Key, Identifier, value.Text, Sections).GetString(provider) ?? String.Empty : String.Empty;
+        }
+
+        public override String ToString(String? format, IFormatProvider? provider)
         {
             ILocalizationString? value = Value;
             return value is not null ? new LocalizationValueEntry(Key, Identifier, value.Text, Sections).GetString(format, provider) ?? String.Empty : String.Empty;
@@ -851,7 +857,12 @@ namespace NetExtender.Localization.Property.Localization.Properties
             return new LocalizationValueEntry(Key, Identifier, Value, Sections).GetString();
         }
 
-        public String ToString(String? format, IFormatProvider? provider)
+        public override String ToString(IFormatProvider? provider)
+        {
+            return new LocalizationValueEntry(Key, Identifier, Value, Sections).GetString(provider) ?? String.Empty;
+        }
+
+        public override String ToString(String? format, IFormatProvider? provider)
         {
             return new LocalizationValueEntry(Key, Identifier, Value, Sections).GetString(format, provider) ?? String.Empty;
         }

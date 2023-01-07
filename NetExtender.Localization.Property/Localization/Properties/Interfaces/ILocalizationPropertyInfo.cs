@@ -8,7 +8,7 @@ using NetExtender.Types.Culture;
 
 namespace NetExtender.Localization.Properties.Interfaces
 {
-    public interface ILocalizationPropertyInfo : IConfigPropertyInfo
+    public interface ILocalizationPropertyInfo : IConfigPropertyInfo, IFormattable
     {
         public event LocalizationChangedEventHandler LocalizationChanged;
         public LocalizationIdentifier Identifier { get; }

@@ -25,4 +25,8 @@
       <ProjectReference Include="..\NetExtender.Core\NetExtender.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Configuration\Behavior" />
+    </ItemGroup>
+
 </Project>

@@ -3,164 +3,227 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Core", "NetExtender.Core\NetExtender.Core.csproj", "{19E3C7A6-6110-4CA1-9F8E-049BB5191C28}"
+
+
+
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.AspNet", "NetExtender.AspNet", "{CDC97F3D-8B7E-41EF-9C34-BF94FD2B08C2}"
 EndProject
+
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.AspNetCore", "NetExtender.AspNetCore\NetExtender.AspNetCore.csproj", "{9E3F450B-F1ED-4BC7-93C1-251835DCC98E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.EntityFramework.Core", "NetExtender.EntityFramework.Core\NetExtender.EntityFramework.Core.csproj", "{1566851A-7963-45CA-A2B6-6ACEDF041ACA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.AspNetCore.SignalR", "NetExtender.AspNetCore.SignalR\NetExtender.AspNetCore.SignalR.csproj", "{26D2659A-7EDE-4CFE-9CD5-D90E1206037F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.AutoMapper", "NetExtender.AutoMapper\NetExtender.AutoMapper.csproj", "{6F121305-43B4-4F3A-BBC3-7A8C1689D17B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.AspNetCore.SinglePageApplication", "NetExtender.AspNetCore.SinglePageApplication\NetExtender.AspNetCore.SinglePageApplication.csproj", "{9D288315-D1B8-491F-82A3-DB387EDE34D3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Windows", "NetExtender.Windows\NetExtender.Windows.csproj", "{40412617-CA47-4C9D-A9A3-C34365D6895B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.AspNetCore.Windows.Services", "NetExtender.AspNetCore.Windows.Services\NetExtender.AspNetCore.Windows.Services.csproj", "{489FE9F3-4D7F-464D-BD5F-B242CFEC3CC0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Cryptography", "NetExtender.Cryptography\NetExtender.Cryptography.csproj", "{A876A04B-A1C8-45A8-8072-CA7A40A3F6F3}"
+
+
+
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Audio", "NetExtender.Audio", "{F22DBBFE-420B-4A95-BC9E-9E406DE5ACC5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Configuration", "NetExtender.Configuration\NetExtender.Configuration.csproj", "{122AEC2E-FC14-481F-A81B-0305ACE86ECC}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain", "NetExtender.Domain\NetExtender.Domain.csproj", "{565276E6-CCA8-4E40-A700-9DB9861F7AC8}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Configuration.Ini", "NetExtender.Configuration.Ini\NetExtender.Configuration.Ini.csproj", "{7582CB59-4A44-4938-8A6E-00A5B91C91A1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Registry", "NetExtender.Registry\NetExtender.Registry.csproj", "{C78BDA6F-B9C6-4245-9462-9EBD6FE2DC13}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.BouncyCastle", "NetExtender.BouncyCastle\NetExtender.BouncyCastle.csproj", "{ECAF556B-AFC3-4EB4-9A85-5A1C3B9CDDA8}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface", "NetExtender.UserInterface\NetExtender.UserInterface.csproj", "{879289F6-2ED8-48D7-AC55-C0528E036D88}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Configuration.Windows.Registry", "NetExtender.Configuration.Windows.Registry\NetExtender.Configuration.Windows.Registry.csproj", "{CE0CABC3-EC8A-4A18-A4EF-624F6DAF5A6A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WinForms", "NetExtender.UserInterface.WinForms\NetExtender.UserInterface.WinForms.csproj", "{7AF8C949-E014-43DE-A0FE-4D49735536D9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Localization.Flags", "NetExtender.Localization.Flags\NetExtender.Localization.Flags.csproj", "{96A15B1D-FFE0-49D8-A8B9-5386C11FCAF5}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.ImageSharp", "NetExtender.ImageSharp\NetExtender.ImageSharp.csproj", "{8F13ECC7-6A93-4863-A03F-E7DF616DB603}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Drawing.Images", "NetExtender.Drawing.Images\NetExtender.Drawing.Images.csproj", "{3165AF7B-F29C-4FC7-BAF0-13A92CB0ACDB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.ImageSharp.Drawing", "NetExtender.ImageSharp.Drawing\NetExtender.ImageSharp.Drawing.csproj", "{99270A76-B263-403E-AA32-1885325E67AB}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WindowsPresentation", "NetExtender.UserInterface.WindowsPresentation\NetExtender.UserInterface.WindowsPresentation.csproj", "{893248EA-B992-462C-AD27-628EB72EFF59}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.Xamarin", "NetExtender.UserInterface.Xamarin\NetExtender.UserInterface.Xamarin.csproj", "{F1AB5887-46C7-4F74-A0CF-D861A74A7E61}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.WinForms", "NetExtender.Domain.WinForms\NetExtender.Domain.WinForms.csproj", "{7E0E72A6-A871-474B-83E0-377B5276766C}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.WindowsPresentation", "NetExtender.Domain.WindowsPresentation\NetExtender.Domain.WindowsPresentation.csproj", "{265EEED3-7DFD-4CEF-9E88-8F3BEC4F0994}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Domain.WindowsPresentation.AspNetCore", "NetExtender.Domain.WindowsPresentation.AspNetCore\NetExtender.Domain.WindowsPresentation.AspNetCore.csproj", "{6DD44487-5020-48DF-8A41-33E0813A65AA}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.Xamarin", "NetExtender.Domain.Xamarin\NetExtender.Domain.Xamarin.csproj", "{B1628C4E-3A11-4A9D-B592-3982E2B0EB7A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.AspNetCore", "NetExtender.Domain.AspNetCore\NetExtender.Domain.AspNetCore.csproj", "{0F17D558-04C4-4238-9135-EA27F581C690}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.Windows", "NetExtender.UserInterface.Windows\NetExtender.UserInterface.Windows.csproj", "{DD3793F2-6663-4150-8221-4CF7FF6BF120}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.WinForms", "NetExtender.WinForms\NetExtender.WinForms.csproj", "{DAB909F0-FDE0-44FB-B977-0776FF1E01B5}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.WindowsPresentation", "NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj", "{A37F702C-DB88-4391-84B6-7220C0141002}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.WindowsPresentationForms", "NetExtender.WindowsPresentationForms\NetExtender.WindowsPresentationForms.csproj", "{8431E4DB-6D77-4A20-AFE9-655C48CC8181}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WindowsPresentationForms", "NetExtender.UserInterface.WindowsPresentationForms\NetExtender.UserInterface.WindowsPresentationForms.csproj", "{947201F3-F6F9-488F-934B-BA40166C9748}"
-EndProject
+
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.NAudio", "NetExtender.NAudio\NetExtender.NAudio.csproj", "{F0BD0491-EA66-44A1-93CA-7A663568DA10}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.Windows.Service", "NetExtender.Domain.Windows.Service\NetExtender.Domain.Windows.Service.csproj", "{F03DD29F-3866-41B8-A478-7F7C506A2D0F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.NAudio.Windows", "NetExtender.NAudio.Windows\NetExtender.NAudio.Windows.csproj", "{8D3D9988-3DE2-4E48-B9CA-C15FFD95F3B6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.NAudio.Xamarin.Android", "NetExtender.NAudio.Xamarin.Android\NetExtender.NAudio.Xamarin.Android.csproj", "{7E15DFE1-B6DA-4509-9C76-833B2230DF6E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Windows.Services", "NetExtender.Windows.Services\NetExtender.Windows.Services.csproj", "{6DC163F4-82DD-40D7-AEA5-A12F76859CC5}"
+
+
+
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Capability", "NetExtender.Capability", "{0831D84F-7D4F-4E1A-87BA-8E00A2BFB199}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.AspNetCore.Windows.Service", "NetExtender.Domain.AspNetCore.Windows.Service\NetExtender.Domain.AspNetCore.Windows.Service.csproj", "{D6A48FD6-BFEF-4618-BF09-A05C3B86D8E0}"
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Caching", "NetExtender.Caching\NetExtender.Caching.csproj", "{47692AB7-5D73-4577-B4E6-BFE37AA19954}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.AspNetCore.Windows.Services", "NetExtender.AspNetCore.Windows.Services\NetExtender.AspNetCore.Windows.Services.csproj", "{489FE9F3-4D7F-464D-BD5F-B242CFEC3CC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Cryptography", "NetExtender.Cryptography\NetExtender.Cryptography.csproj", "{A876A04B-A1C8-45A8-8072-CA7A40A3F6F3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Property", "NetExtender.Configuration.Property\NetExtender.Configuration.Property.csproj", "{17E27756-46A4-4FB3-AB01-94424343C565}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Cryptography.Certificate", "NetExtender.Cryptography.Certificate\NetExtender.Cryptography.Certificate.csproj", "{03F0B837-5E35-4F53-8A6F-DECB75580DAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Environment", "NetExtender.Configuration.Environment\NetExtender.Configuration.Environment.csproj", "{1C4BC6E0-49FD-4BFC-AA04-0AF7482ED7F9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Memento", "NetExtender.Memento\NetExtender.Memento.csproj", "{2EA1EAFC-84DC-4F99-9609-34A821C35756}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Configuration", "NetExtender.Configuration", "{57669121-7D0F-4429-96C8-563563F6F3D1}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Domain", "NetExtender.Domain", "{57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.AspNet", "NetExtender.AspNet", "{CDC97F3D-8B7E-41EF-9C34-BF94FD2B08C2}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Audio", "NetExtender.Audio", "{F22DBBFE-420B-4A95-BC9E-9E406DE5ACC5}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Image", "NetExtender.Image", "{93B62F24-8CA7-430C-AFA3-87FFBE152731}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.UserInterface", "NetExtender.UserInterface", "{FD7B50FD-1BB3-4D14-B9E6-BF0B09172F97}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.EntityFramework", "NetExtender.EntityFramework", "{0B0D27E3-898C-4D84-AF56-13C54F9F1EC1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Serialization.Ini", "NetExtender.Serialization.Ini\NetExtender.Serialization.Ini.csproj", "{EE07CD85-37EE-4994-966B-DF635B545BE0}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Serialization", "NetExtender.Serialization", "{08A70EBF-E861-4C24-824D-C5D6F4A62343}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Cryptography", "NetExtender.Configuration.Cryptography\NetExtender.Configuration.Cryptography.csproj", "{7075FF8D-F229-41F5-8D29-8CC58930C49D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Json", "NetExtender.Configuration.Json\NetExtender.Configuration.Json.csproj", "{2C9DC104-67CB-48EE-9723-2B8920DA79A0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Xml", "NetExtender.Configuration.Xml\NetExtender.Configuration.Xml.csproj", "{A7137A1F-4DB2-4E3B-BF7A-028927FE5D95}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.File", "NetExtender.Configuration.File\NetExtender.Configuration.File.csproj", "{84D843F2-404B-4BFC-AE26-B4BA2AB9EA7F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Database", "NetExtender.Configuration.Database\NetExtender.Configuration.Database.csproj", "{486437A8-F8FE-4D33-951E-267B4039EE59}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Microsoft", "NetExtender.Configuration.Microsoft\NetExtender.Configuration.Microsoft.csproj", "{E98DAA63-7BFD-4FC2-9650-7440067EB0E6}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Localization", "NetExtender.Localization", "{F7A961F4-F974-4820-8FE6-E608A2FF4B24}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Windows", "NetExtender.Windows", "{A7BE8994-15D1-4F4B-BD86-C308973371B6}"
-EndProject
+
+
+
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Compability", "NetExtender.Compability", "{0D61BFC7-C568-4F5F-983E-ADA30B66AD97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Localization", "NetExtender.Localization\NetExtender.Localization.csproj", "{517CF6A6-39F4-4D76-ADD3-B4954A36B93A}"
+
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.AutoMapper", "NetExtender.AutoMapper\NetExtender.AutoMapper.csproj", "{6F121305-43B4-4F3A-BBC3-7A8C1689D17B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.BouncyCastle", "NetExtender.BouncyCastle\NetExtender.BouncyCastle.csproj", "{ECAF556B-AFC3-4EB4-9A85-5A1C3B9CDDA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.DynamicData", "NetExtender.DynamicData\NetExtender.DynamicData.csproj", "{DD617399-34DC-4DCC-9CC9-73C1E7259171}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.JavaScript", "NetExtender.JavaScript\NetExtender.JavaScript.csproj", "{0EF043EA-7AC4-40A7-8E50-53CA3691C281}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Protobuf", "NetExtender.Protobuf\NetExtender.Protobuf.csproj", "{686AB4C5-5F1F-45BC-9EB5-A0E87291769A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Capability", "NetExtender.Capability", "{0831D84F-7D4F-4E1A-87BA-8E00A2BFB199}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.ReactiveUI", "NetExtender.ReactiveUI\NetExtender.ReactiveUI.csproj", "{C1E6EAFC-EC4F-4952-B23B-B85544770173}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Windows.Interprocess", "NetExtender.Windows.Interprocess\NetExtender.Windows.Interprocess.csproj", "{98B59792-5150-4E8A-936F-66B26FB2C3E6}"
+
+
+
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Configuration", "NetExtender.Configuration", "{57669121-7D0F-4429-96C8-563563F6F3D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Windows.Toast", "NetExtender.Windows.Toast\NetExtender.Windows.Toast.csproj", "{D79137E7-361B-430F-A718-0CB1A3868E24}"
+
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Configuration", "NetExtender.Configuration\NetExtender.Configuration.csproj", "{122AEC2E-FC14-481F-A81B-0305ACE86ECC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.AspNetCore.SinglePageApplication", "NetExtender.AspNetCore.SinglePageApplication\NetExtender.AspNetCore.SinglePageApplication.csproj", "{9D288315-D1B8-491F-82A3-DB387EDE34D3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Cryptography", "NetExtender.Configuration.Cryptography\NetExtender.Configuration.Cryptography.csproj", "{7075FF8D-F229-41F5-8D29-8CC58930C49D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Caching", "NetExtender.Caching\NetExtender.Caching.csproj", "{47692AB7-5D73-4577-B4E6-BFE37AA19954}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Database", "NetExtender.Configuration.Database\NetExtender.Configuration.Database.csproj", "{486437A8-F8FE-4D33-951E-267B4039EE59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.AspNetCore.SignalR", "NetExtender.AspNetCore.SignalR\NetExtender.AspNetCore.SignalR.csproj", "{26D2659A-7EDE-4CFE-9CD5-D90E1206037F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Environment", "NetExtender.Configuration.Environment\NetExtender.Configuration.Environment.csproj", "{1C4BC6E0-49FD-4BFC-AA04-0AF7482ED7F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.File", "NetExtender.Configuration.File\NetExtender.Configuration.File.csproj", "{84D843F2-404B-4BFC-AE26-B4BA2AB9EA7F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Configuration.Ini", "NetExtender.Configuration.Ini\NetExtender.Configuration.Ini.csproj", "{7582CB59-4A44-4938-8A6E-00A5B91C91A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Json", "NetExtender.Configuration.Json\NetExtender.Configuration.Json.csproj", "{2C9DC104-67CB-48EE-9723-2B8920DA79A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Microsoft", "NetExtender.Configuration.Microsoft\NetExtender.Configuration.Microsoft.csproj", "{E98DAA63-7BFD-4FC2-9650-7440067EB0E6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Property", "NetExtender.Configuration.Property\NetExtender.Configuration.Property.csproj", "{17E27756-46A4-4FB3-AB01-94424343C565}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Property.Cryptography", "NetExtender.Configuration.Property.Cryptography\NetExtender.Configuration.Property.Cryptography.csproj", "{C1243F14-F351-4B89-9F50-C38A46BA1E11}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Initializer", "NetExtender.Initializer\NetExtender.Initializer.csproj", "{A21B4E21-0794-4384-9A6B-40823247B32B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Configuration.Windows.Registry", "NetExtender.Configuration.Windows.Registry\NetExtender.Configuration.Windows.Registry.csproj", "{CE0CABC3-EC8A-4A18-A4EF-624F6DAF5A6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.DynamicData", "NetExtender.DynamicData\NetExtender.DynamicData.csproj", "{DD617399-34DC-4DCC-9CC9-73C1E7259171}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Configuration.Xml", "NetExtender.Configuration.Xml\NetExtender.Configuration.Xml.csproj", "{A7137A1F-4DB2-4E3B-BF7A-028927FE5D95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.ReactiveUI", "NetExtender.ReactiveUI\NetExtender.ReactiveUI.csproj", "{C1E6EAFC-EC4F-4952-B23B-B85544770173}"
+
+
+
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Domain", "NetExtender.Domain", "{57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.WindowsPresentation.Drawing", "NetExtender.WindowsPresentation.Drawing\NetExtender.WindowsPresentation.Drawing.csproj", "{F16C5DB5-8479-4D37-880F-BC94DD2614CD}"
+
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain", "NetExtender.Domain\NetExtender.Domain.csproj", "{565276E6-CCA8-4E40-A700-9DB9861F7AC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Localization.Property", "NetExtender.Localization.Property\NetExtender.Localization.Property.csproj", "{CC214BD7-44F8-4CCD-806A-E10BF506DF64}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.AspNetCore", "NetExtender.Domain.AspNetCore\NetExtender.Domain.AspNetCore.csproj", "{0F17D558-04C4-4238-9135-EA27F581C690}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.WindowsPresentation.ActiveBinding", "NetExtender.WindowsPresentation.ActiveBinding\NetExtender.WindowsPresentation.ActiveBinding.csproj", "{EC020E52-AFFE-48F6-A415-64F1E6B75F24}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.AspNetCore.Windows.Service", "NetExtender.Domain.AspNetCore.Windows.Service\NetExtender.Domain.AspNetCore.Windows.Service.csproj", "{D6A48FD6-BFEF-4618-BF09-A05C3B86D8E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.WindowsPresentation.Localization", "NetExtender.WindowsPresentation.Localization\NetExtender.WindowsPresentation.Localization.csproj", "{83447D1F-291A-444A-9496-BE772E412FD6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.Windows.Service", "NetExtender.Domain.Windows.Service\NetExtender.Domain.Windows.Service.csproj", "{F03DD29F-3866-41B8-A478-7F7C506A2D0F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Logging", "NetExtender.Logging", "{0FA64880-9D69-4D8B-884F-47EF1F94961A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.WindowsPresentation", "NetExtender.Domain.WindowsPresentation\NetExtender.Domain.WindowsPresentation.csproj", "{265EEED3-7DFD-4CEF-9E88-8F3BEC4F0994}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Cryptography.Certificate", "NetExtender.Cryptography.Certificate\NetExtender.Cryptography.Certificate.csproj", "{03F0B837-5E35-4F53-8A6F-DECB75580DAD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Domain.WindowsPresentation.AspNetCore", "NetExtender.Domain.WindowsPresentation.AspNetCore\NetExtender.Domain.WindowsPresentation.AspNetCore.csproj", "{6DD44487-5020-48DF-8A41-33E0813A65AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Logging", "NetExtender.Logging\NetExtender.Logging.csproj", "{A4D5D2FB-89CF-43CD-8134-75258AC240E7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Memento", "NetExtender.Memento\NetExtender.Memento.csproj", "{2EA1EAFC-84DC-4F99-9609-34A821C35756}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.WinForms", "NetExtender.Domain.WinForms\NetExtender.Domain.WinForms.csproj", "{7E0E72A6-A871-474B-83E0-377B5276766C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Domain.WinForms.AspNetCore", "NetExtender.Domain.WinForms.AspNetCore\NetExtender.Domain.WinForms.AspNetCore.csproj", "{2105F181-7E83-41D7-9C1B-3C8F662ADE0F}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Domain.Xamarin", "NetExtender.Domain.Xamarin\NetExtender.Domain.Xamarin.csproj", "{B1628C4E-3A11-4A9D-B592-3982E2B0EB7A}"
+EndProject
+
+
+
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.EntityFramework", "NetExtender.EntityFramework", "{0B0D27E3-898C-4D84-AF56-13C54F9F1EC1}"
+EndProject
+
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.EntityFramework.Core", "NetExtender.EntityFramework.Core\NetExtender.EntityFramework.Core.csproj", "{1566851A-7963-45CA-A2B6-6ACEDF041ACA}"
+EndProject
+
+
+
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Image", "NetExtender.Image", "{93B62F24-8CA7-430C-AFA3-87FFBE152731}"
+EndProject
+
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Drawing.Images", "NetExtender.Drawing.Images\NetExtender.Drawing.Images.csproj", "{3165AF7B-F29C-4FC7-BAF0-13A92CB0ACDB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.ImageSharp", "NetExtender.ImageSharp\NetExtender.ImageSharp.csproj", "{8F13ECC7-6A93-4863-A03F-E7DF616DB603}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.ImageSharp.Drawing", "NetExtender.ImageSharp.Drawing\NetExtender.ImageSharp.Drawing.csproj", "{99270A76-B263-403E-AA32-1885325E67AB}"
+EndProject
+
+
+
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Localization", "NetExtender.Localization", "{F7A961F4-F974-4820-8FE6-E608A2FF4B24}"
+EndProject
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Localization", "NetExtender.Localization\NetExtender.Localization.csproj", "{517CF6A6-39F4-4D76-ADD3-B4954A36B93A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Localization.Flags", "NetExtender.Localization.Flags\NetExtender.Localization.Flags.csproj", "{96A15B1D-FFE0-49D8-A8B9-5386C11FCAF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Localization.Property", "NetExtender.Localization.Property\NetExtender.Localization.Property.csproj", "{CC214BD7-44F8-4CCD-806A-E10BF506DF64}"
+EndProject
+
+
+
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Logging", "NetExtender.Logging", "{0FA64880-9D69-4D8B-884F-47EF1F94961A}"
+EndProject
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Logging", "NetExtender.Logging\NetExtender.Logging.csproj", "{A4D5D2FB-89CF-43CD-8134-75258AC240E7}"
+EndProject
+
+
+
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Serialization", "NetExtender.Serialization", "{08A70EBF-E861-4C24-824D-C5D6F4A62343}"
+EndProject
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Serialization.Ini", "NetExtender.Serialization.Ini\NetExtender.Serialization.Ini.csproj", "{EE07CD85-37EE-4994-966B-DF635B545BE0}"
+EndProject
+
+
+
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.UserInterface", "NetExtender.UserInterface", "{FD7B50FD-1BB3-4D14-B9E6-BF0B09172F97}"
+EndProject
+
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface", "NetExtender.UserInterface\NetExtender.UserInterface.csproj", "{879289F6-2ED8-48D7-AC55-C0528E036D88}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.Windows", "NetExtender.UserInterface.Windows\NetExtender.UserInterface.Windows.csproj", "{DD3793F2-6663-4150-8221-4CF7FF6BF120}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WindowsPresentation", "NetExtender.UserInterface.WindowsPresentation\NetExtender.UserInterface.WindowsPresentation.csproj", "{893248EA-B992-462C-AD27-628EB72EFF59}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.UserInterface.WindowsPresentation.Localization", "NetExtender.UserInterface.WindowsPresentation.Localization\NetExtender.UserInterface.WindowsPresentation.Localization.csproj", "{9BAFDC4C-6F4F-421E-BD4A-72B1B778EB7B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WindowsPresentationForms", "NetExtender.UserInterface.WindowsPresentationForms\NetExtender.UserInterface.WindowsPresentationForms.csproj", "{947201F3-F6F9-488F-934B-BA40166C9748}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.WinForms", "NetExtender.UserInterface.WinForms\NetExtender.UserInterface.WinForms.csproj", "{7AF8C949-E014-43DE-A0FE-4D49735536D9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.UserInterface.Xamarin", "NetExtender.UserInterface.Xamarin\NetExtender.UserInterface.Xamarin.csproj", "{F1AB5887-46C7-4F74-A0CF-D861A74A7E61}"
+EndProject
+
+
+
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NetExtender.Windows", "NetExtender.Windows", "{A7BE8994-15D1-4F4B-BD86-C308973371B6}"
+EndProject
+
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Registry", "NetExtender.Registry\NetExtender.Registry.csproj", "{C78BDA6F-B9C6-4245-9462-9EBD6FE2DC13}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Windows", "NetExtender.Windows\NetExtender.Windows.csproj", "{40412617-CA47-4C9D-A9A3-C34365D6895B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Windows.Interprocess", "NetExtender.Windows.Interprocess\NetExtender.Windows.Interprocess.csproj", "{98B59792-5150-4E8A-936F-66B26FB2C3E6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Windows.Services", "NetExtender.Windows.Services\NetExtender.Windows.Services.csproj", "{6DC163F4-82DD-40D7-AEA5-A12F76859CC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Windows.Toast", "NetExtender.Windows.Toast\NetExtender.Windows.Toast.csproj", "{D79137E7-361B-430F-A718-0CB1A3868E24}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.WindowsPresentation", "NetExtender.WindowsPresentation\NetExtender.WindowsPresentation.csproj", "{A37F702C-DB88-4391-84B6-7220C0141002}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.WindowsPresentation.ActiveBinding", "NetExtender.WindowsPresentation.ActiveBinding\NetExtender.WindowsPresentation.ActiveBinding.csproj", "{EC020E52-AFFE-48F6-A415-64F1E6B75F24}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.WindowsPresentation.Drawing", "NetExtender.WindowsPresentation.Drawing\NetExtender.WindowsPresentation.Drawing.csproj", "{F16C5DB5-8479-4D37-880F-BC94DD2614CD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.WindowsPresentation.Localization", "NetExtender.WindowsPresentation.Localization\NetExtender.WindowsPresentation.Localization.csproj", "{83447D1F-291A-444A-9496-BE772E412FD6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.WindowsPresentationForms", "NetExtender.WindowsPresentationForms\NetExtender.WindowsPresentationForms.csproj", "{8431E4DB-6D77-4A20-AFE9-655C48CC8181}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.WinForms", "NetExtender.WinForms\NetExtender.WinForms.csproj", "{DAB909F0-FDE0-44FB-B977-0776FF1E01B5}"
+EndProject
+
+
+
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.Core", "NetExtender.Core\NetExtender.Core.csproj", "{19E3C7A6-6110-4CA1-9F8E-049BB5191C28}"
+EndProject
+
+
+
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.Initializer", "NetExtender.Initializer\NetExtender.Initializer.csproj", "{A21B4E21-0794-4384-9A6B-40823247B32B}"
+EndProject
+
+
+
 Global
 				GlobalSection(SolutionConfigurationPlatforms) = preSolution
 								Debug|Any CPU = Debug|Any CPU
@@ -427,6 +490,10 @@ Global
 					{2105F181-7E83-41D7-9C1B-3C8F662ADE0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 					{2105F181-7E83-41D7-9C1B-3C8F662ADE0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 					{2105F181-7E83-41D7-9C1B-3C8F662ADE0F}.Release|Any CPU.Build.0 = Release|Any CPU
+					{9BAFDC4C-6F4F-421E-BD4A-72B1B778EB7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+					{9BAFDC4C-6F4F-421E-BD4A-72B1B778EB7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+					{9BAFDC4C-6F4F-421E-BD4A-72B1B778EB7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+					{9BAFDC4C-6F4F-421E-BD4A-72B1B778EB7B}.Release|Any CPU.Build.0 = Release|Any CPU
 				EndGlobalSection
 				GlobalSection(SolutionProperties) = preSolution
 								HideSolutionNode = FALSE
@@ -503,5 +570,6 @@ Global
 					{486437A8-F8FE-4D33-951E-267B4039EE59} = {57669121-7D0F-4429-96C8-563563F6F3D1}
 					{6DD44487-5020-48DF-8A41-33E0813A65AA} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
 					{2105F181-7E83-41D7-9C1B-3C8F662ADE0F} = {57E5B92C-BB28-4EA3-B380-1CC3B8B2F71A}
+					{9BAFDC4C-6F4F-421E-BD4A-72B1B778EB7B} = {FD7B50FD-1BB3-4D14-B9E6-BF0B09172F97}
 				EndGlobalSection
 EndGlobal

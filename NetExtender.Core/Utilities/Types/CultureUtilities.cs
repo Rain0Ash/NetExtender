@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using NetExtender.Types.Culture;
 using NetExtender.Types.Exceptions;
@@ -378,6 +380,41 @@ namespace NetExtender.Utilities.Types
         public static CultureInfo GetCultureInfo(String culture, CultureType type)
         {
             return TryGetCultureInfo(culture, out CultureInfo info) ? info : type.GetCultureInfo();
+        }
+
+        private static Dictionary<LocalizationIdentifier, LocalizationIdentifier> IdentifiersNormalization { get; } = new Dictionary<LocalizationIdentifier, LocalizationIdentifier>
+        {
+            [CultureIdentifier.Us] = CultureIdentifier.En
+        };
+
+        public static CultureIdentifier Normalize(this CultureIdentifier value)
+        {
+            return IdentifiersNormalization.TryGetValue(value, out LocalizationIdentifier identifier) ? identifier : value;
+        }
+
+        public static IEnumerable<CultureIdentifier> Normalize(this IEnumerable<CultureIdentifier> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Select(Normalize).Distinct();
+        }
+
+        public static LocalizationIdentifier Normalize(LocalizationIdentifier value)
+        {
+            return IdentifiersNormalization.TryGetValue(value, out LocalizationIdentifier identifier) ? identifier : value;
+        }
+        
+        public static IEnumerable<LocalizationIdentifier> Normalize(this IEnumerable<LocalizationIdentifier> source)
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Select(Normalize).Distinct();
         }
 
         private static class RegionInfoCache

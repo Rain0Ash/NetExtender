@@ -627,6 +627,11 @@ namespace NetExtender.Localization.Properties
             return Internal.ToString();
         }
 
+        public String ToString(IFormatProvider? provider)
+        {
+            return Internal.ToString(null, provider);
+        }
+
         public String ToString(String? format, IFormatProvider? provider)
         {
             return Internal.ToString(format, provider);

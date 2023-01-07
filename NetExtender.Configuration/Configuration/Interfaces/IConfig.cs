@@ -12,8 +12,6 @@ namespace NetExtender.Configuration.Interfaces
 {
     public interface IConfig : IConfigInfo, IEnumerable<ConfigurationEntry>, IDisposable, IAsyncDisposable
     {
-        public event ConfigurationChangedEventHandler Changed;
-
         public String? GetValue(String? key, params String[]? sections);
         public String? GetValue(String? key, IEnumerable<String>? sections);
         public String? GetValue(String? key, String? alternate, params String[]? sections);

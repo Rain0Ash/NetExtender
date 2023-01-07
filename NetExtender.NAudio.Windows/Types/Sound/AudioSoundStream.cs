@@ -86,7 +86,6 @@ namespace NetExtender.NAudio.Types.Sound
 
             Provider = new AudioSoundSampleProvider(this, new WaveToSampleProvider(Stream));
 
-            // ReSharper disable once VirtualMemberCallInConstructor
             TimeSpan total = TotalTime;
 
             if (start > total)

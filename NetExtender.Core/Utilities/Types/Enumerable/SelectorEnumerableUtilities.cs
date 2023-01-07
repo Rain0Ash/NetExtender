@@ -1245,6 +1245,27 @@ namespace NetExtender.Utilities.Types
                 yield return predicate(item) ? item : alternate;
             }
         }
+        
+        public static IEnumerable<T> NotEmptyOrDefault<T>(this IEnumerable<T>? source, T alternate)
+        {
+            if (source is null)
+            {
+                yield return alternate;
+                yield break;
+            }
+
+            Boolean any = false;
+            foreach (T item in source)
+            {
+                any = true;
+                yield return item;
+            }
+
+            if (!any)
+            {
+                yield return alternate;
+            }
+        }
 
         public static IEnumerable<T> NotEmptyOrDefault<T>(this IEnumerable<T>? source, params T[] alternate)
         {

@@ -79,5 +79,8 @@ namespace NetExtender.Localization.Property.Localization.Properties
             ImmutableArray<String> sections = key is not null ? Sections.Add(key) : Sections;
             return String.Join(".", sections.Select(section => section.ToUpperInvariant()));
         }
+
+        public abstract String ToString(IFormatProvider? provider);
+        public abstract String ToString(String? format, IFormatProvider? provider);
     }
 }

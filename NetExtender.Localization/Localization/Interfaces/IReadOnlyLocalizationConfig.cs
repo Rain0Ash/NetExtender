@@ -8,17 +8,12 @@ using System.Threading.Tasks;
 using NetExtender.Configuration.Interfaces;
 using NetExtender.Localization.Common;
 using NetExtender.Localization.Common.Interfaces;
-using NetExtender.Localization.Events;
 using NetExtender.Types.Culture;
 
 namespace NetExtender.Localization.Interfaces
 {
-    public interface IReadOnlyLocalizationConfig : IReadOnlyConfig, ILocalizationInfo
+    public interface IReadOnlyLocalizationConfig : IReadOnlyConfig, ILocalizationConfigInfo
     {
-        public new event LocalizationChangedEventHandler Changed;
-        public event LocalizationValueChangedEventHandler ValueChanged;
-
-        public ILocalizationConverter Converter { get; }
         public new ILocalizationString? GetValue(String? key, params String[]? sections);
         public new ILocalizationString? GetValue(String? key, IEnumerable<String>? sections);
         public ILocalizationString? GetValue(String? key, ILocalizationString? alternate, params String[]? sections);
