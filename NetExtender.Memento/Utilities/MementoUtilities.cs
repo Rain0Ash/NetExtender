@@ -6,8 +6,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using NetExtender.Types.Memento;
-using NetExtender.Types.Memento.Interfaces;
 using NetExtender.Types.Memento.Builder.Interfaces;
+using NetExtender.Types.Memento.Interfaces;
 using NetExtender.Types.Reflection;
 using NetExtender.Utilities.Types;
 

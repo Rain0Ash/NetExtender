@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NetExtender.Localization.Behavior.Interfaces;
 using NetExtender.Types.Culture;
 using NetExtender.Utilities.Types;
@@ -30,8 +31,18 @@ namespace NetExtender.Types.Comparers
         {
         }
 
+        public LocalizationComparer(params LocalizationIdentifiers[]? order)
+            : base(order?.SelectMany(identifier => identifier).Distinct())
+        {
+        }
+
         public LocalizationComparer(IEnumerable<LocalizationIdentifier>? order)
             : base(order)
+        {
+        }
+
+        public LocalizationComparer(IEnumerable<LocalizationIdentifiers>? order)
+            : base(order?.SelectMany(identifier => identifier).Distinct())
         {
         }
 
@@ -42,6 +53,11 @@ namespace NetExtender.Types.Comparers
 
         public LocalizationComparer(IEnumerable<LocalizationIdentifier>? order, IComparer<LocalizationIdentifier>? comparer)
             : base(order, comparer)
+        {
+        }
+
+        public LocalizationComparer(IEnumerable<LocalizationIdentifiers>? order, IComparer<LocalizationIdentifier>? comparer)
+            : base(order?.SelectMany(identifier => identifier).Distinct(), comparer)
         {
         }
 

@@ -156,4 +156,26 @@ namespace NetExtender.Domains.Applications
             return ApplicationUtilities.Restart(milli, Dispatcher, Shutdown, token);
         }
     }
+
+    public abstract class Application<T> : Application, IApplication<T> where T : class?
+    {
+        protected T? Context { get; set; }
+
+        public virtual IApplication Run(T? context)
+        {
+            return RunAsync(context).GetAwaiter().GetResult();
+        }
+
+        public Task<IApplication> RunAsync(T? context)
+        {
+            return RunAsync(context, CancellationToken.None);
+        }
+
+        public override Task<IApplication> RunAsync(CancellationToken token)
+        {
+            return RunAsync(Context, token);
+        }
+
+        public abstract Task<IApplication> RunAsync(T? context, CancellationToken token);
+    }
 }

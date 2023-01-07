@@ -6,11 +6,12 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using NetExtender.Domains.Applications;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Types.Dispatchers;
 using NetExtender.Types.Dispatchers.Interfaces;
 
-namespace NetExtender.Domains.Applications
+namespace NetExtender.Domains.WindowsPresentation.Applications
 {
     public class WindowsPresentationApplication<T> : WindowsPresentationApplication where T : System.Windows.Application, new()
     {
@@ -25,7 +26,7 @@ namespace NetExtender.Domains.Applications
         }
     }
 
-    public class WindowsPresentationApplication : Application
+    public class WindowsPresentationApplication : Application<Window>
     {
         public System.Windows.Application Application { get; }
 
@@ -65,23 +66,17 @@ namespace NetExtender.Domains.Applications
             Application = application ?? throw new ArgumentNullException(nameof(application));
         }
 
-        public override Task<IApplication> RunAsync(CancellationToken token)
+        public override Task<IApplication> RunAsync(Window? window, CancellationToken token)
         {
+            Context = window;
             RegisterShutdownToken(token);
-            InitializeComponent();
-            Application.Dispatcher.Invoke(() => Application.Run());
-            return Task.FromResult<IApplication>(this);
-        }
 
-        public virtual Task<IApplication> RunAsync(Window? window, CancellationToken token)
-        {
             if (window is null)
             {
-                return RunAsync(token);
+                InitializeComponent();
             }
-
-            RegisterShutdownToken(token);
-            Application.Dispatcher.Invoke(() => Application.Run(window));
+            
+            Application.Dispatcher.Invoke(() => Application.Run(Context));
             return Task.FromResult<IApplication>(this);
         }
 

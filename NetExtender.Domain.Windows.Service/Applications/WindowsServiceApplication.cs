@@ -20,7 +20,7 @@ using NetExtender.Workstation;
 
 namespace NetExtender.Domains.Service.Applications
 {
-    public class WindowsServiceApplication : Application, IWindowsService
+    public class WindowsServiceApplication : Application<IWindowsService>, IWindowsService
     {
         public override Boolean? Elevate
         {
@@ -241,12 +241,7 @@ namespace NetExtender.Domains.Service.Applications
             Installer = installer;
         }
 
-        public override Task<IApplication> RunAsync(CancellationToken token)
-        {
-            return RunAsync(null, token);
-        }
-
-        public virtual async Task<IApplication> RunAsync(IWindowsService? service, CancellationToken token)
+        public override async Task<IApplication> RunAsync(IWindowsService? service, CancellationToken token)
         {
             if (service is null)
             {

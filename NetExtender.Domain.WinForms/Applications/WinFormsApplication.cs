@@ -5,12 +5,13 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using NetExtender.Domains.Applications;
 using NetExtender.Domains.Applications.Interfaces;
 using NetExtender.Types.Dispatchers.Interfaces;
 
-namespace NetExtender.Domains.Applications
+namespace NetExtender.Domains.WinForms.Applications
 {
-    public class WinFormsApplication : Application
+    public class WinFormsApplication : Application<Form>
     {
         public override IDispatcher? Dispatcher
         {
@@ -32,21 +33,8 @@ namespace NetExtender.Domains.Applications
         }
 
         [STAThread]
-        public override Task<IApplication> RunAsync(CancellationToken token)
+        public override Task<IApplication> RunAsync(Form? form, CancellationToken token)
         {
-            RegisterShutdownToken(token);
-            System.Windows.Forms.Application.Run();
-            return Task.FromResult<IApplication>(this);
-        }
-
-        [STAThread]
-        public virtual Task<IApplication> RunAsync(Form? form, CancellationToken token)
-        {
-            if (form is null)
-            {
-                return RunAsync(token);
-            }
-
             RegisterShutdownToken(token);
             System.Windows.Forms.Application.Run(form);
             return Task.FromResult<IApplication>(this);

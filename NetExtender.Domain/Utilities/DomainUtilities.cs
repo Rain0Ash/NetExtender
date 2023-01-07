@@ -14,10 +14,20 @@ using NetExtender.Domains.View.Interfaces;
 using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Core;
 
-namespace NetExtender.Domain.Utilities
+namespace NetExtender.Domains.Utilities
 {
     public static class DomainUtilities
     {
+        private static Type? AutoApplication(this Assembly assembly, IDomain source, String @namespace)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            return assembly.GetTypeWithoutNamespace($"{source.ApplicationName}Application") ?? assembly.GetTypeWithoutNamespace($"{@namespace}Application") ?? assembly.GetTypeWithoutNamespace("Application");
+        }
+        
         private static IApplication AutoInitializeInternal(IDomain source)
         {
             if (source is null)
@@ -36,14 +46,14 @@ namespace NetExtender.Domain.Utilities
                 throw new EntryPointNotFoundException($"Entry point type namespace not found at '{assembly.FullName}'.");
             }
 
-            Type? applicationtype = assembly.GetTypeWithoutNamespace($"{source.ApplicationName}Application") ?? assembly.GetTypeWithoutNamespace($"{@namespace}Application");
+            type = assembly.AutoApplication(source, @namespace);
 
-            if (applicationtype is null)
+            if (type is null)
             {
-                throw new InvalidOperationException($"Application type not found at '{assembly.FullName}' with name {source.ApplicationName}Application or {@namespace}Application.");
+                throw new InvalidOperationException($"Application type not found at '{assembly.FullName}'.");
             }
 
-            if (Activator.CreateInstance(applicationtype) is not IApplication application)
+            if (Activator.CreateInstance(type) is not IApplication application)
             {
                 throw new InvalidOperationException("Application instance can't be instantiated.");
             }
@@ -146,6 +156,21 @@ namespace NetExtender.Domain.Utilities
             return domain.Initialize(application);
         }
 
+        private static Type? AutoView(this Assembly assembly, IDomain source, String @namespace)
+        {
+            if (assembly is null)
+            {
+                throw new ArgumentNullException(nameof(assembly));
+            }
+
+            return assembly.GetTypeWithoutNamespace($"{source.ApplicationName}ApplicationView") ??
+                   assembly.GetTypeWithoutNamespace($"{source.ApplicationName}View") ??
+                   assembly.GetTypeWithoutNamespace($"{@namespace}ApplicationView") ??
+                   assembly.GetTypeWithoutNamespace($"{@namespace}View") ??
+                   assembly.GetTypeWithoutNamespace("ApplicationView") ??
+                   assembly.GetTypeWithoutNamespace("View");
+        }
+
         private static IApplicationView AutoViewInternal(IDomain source)
         {
             if (source is null)
@@ -164,14 +189,14 @@ namespace NetExtender.Domain.Utilities
                 throw new EntryPointNotFoundException($"Entry point type namespace not found at '{assembly.FullName}'.");
             }
 
-            Type? viewtype = assembly.GetTypeWithoutNamespace($"{source.ApplicationName}View") ?? assembly.GetTypeWithoutNamespace($"{@namespace}View");
+            type = assembly.AutoView(source, @namespace);
 
-            if (viewtype is null)
+            if (type is null)
             {
-                throw new InvalidOperationException($"View type not found at '{assembly.FullName}' with name {source.ApplicationName}View or {@namespace}View.");
+                throw new InvalidOperationException($"View type not found at '{assembly.FullName}'.");
             }
 
-            if (Activator.CreateInstance(viewtype) is not IApplicationView view)
+            if (Activator.CreateInstance(type) is not IApplicationView view)
             {
                 throw new InvalidOperationException("View instance can't be instantiated.");
             }

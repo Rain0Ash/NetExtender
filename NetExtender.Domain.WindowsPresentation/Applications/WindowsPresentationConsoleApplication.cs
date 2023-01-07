@@ -5,7 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Domains.Applications.Interfaces;
 
-namespace NetExtender.Domains.Applications
+namespace NetExtender.Domains.WindowsPresentation.Applications
 {
     public class WindowsPresentationConsoleApplication<T> : WindowsPresentationConsoleApplication where T : System.Windows.Application, new()
     {

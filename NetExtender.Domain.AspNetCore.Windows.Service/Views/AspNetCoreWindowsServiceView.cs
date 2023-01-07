@@ -4,16 +4,17 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using NetExtender.Domain.Utilities;
-using NetExtender.Domains.AspNetCore.View;
-using NetExtender.Domains.AspNetCore.Windows.Service.Applications;
+using NetExtender.Domains.AspNetCore.Service.Applications;
+using NetExtender.Domains.AspNetCore.Service.Builder;
+using NetExtender.Domains.Builder.Interfaces;
+using NetExtender.Domains.View;
 using NetExtender.Domains.View.Interfaces;
+using NetExtender.Types.Exceptions;
 
-namespace NetExtender.Domains.Windows.Service.AspNetCore.Views
+namespace NetExtender.Domains.AspNetCore.Service.View
 {
-    public class AspNetCoreWindowsServiceView<T> : AspNetCoreWindowsServiceView where T : class, IHost, new()
+    public class AspNetCoreWindowsServiceView<T> : AspNetCoreWindowsServiceView<T, AspNetCoreWindowsServiceBuilder<T>> where T : class, IHost, new()
     {
         public AspNetCoreWindowsServiceView()
             : base(new T())
@@ -25,42 +26,54 @@ namespace NetExtender.Domains.Windows.Service.AspNetCore.Views
         {
         }
     }
-
-    public class AspNetCoreWindowsServiceView : AspNetCoreView
+    
+    public class AspNetCoreWindowsServiceView<T, TBuilder> : AspNetCoreWindowsServiceView where T : class, IHost where TBuilder : IApplicationBuilder<T>, new()
     {
-        protected new IHost? Context { get; set; }
+        protected T? Internal { get; set; }
 
-        public AspNetCoreWindowsServiceView(IHost host)
-            : base(host)
+        protected sealed override IHost? Context
         {
-        }
-
-        public AspNetCoreWindowsServiceView(Action<IWebHostBuilder> builder)
-            : base(builder)
-        {
-        }
-
-        public AspNetCoreWindowsServiceView(Action<IWebHostBuilder> builder, Boolean initialize)
-            : base(builder, initialize)
-        {
-        }
-
-        protected override async Task<IApplicationView> RunAsync(IHost? host, CancellationToken token)
-        {
-            if (host is null)
+            get
             {
-                return await RunAsync(token);
+                return Internal;
             }
-
-            Context ??= host;
-            if (host != Context)
+            set
             {
-                throw new ArgumentException($"{nameof(host)} not reference equals with {nameof(Context)}");
+                Internal = value is not null ? value as T ?? throw new InitializeException($"{nameof(value)} is not {typeof(T).Name}") : null;
             }
+        }
 
-            AspNetCoreWindowsServiceApplication application = Domain.Current.Application.As<AspNetCoreWindowsServiceApplication>();
-            await application.RunAsync(Context, token);
-            return this;
+        protected TBuilder? Builder { get; }
+
+        public AspNetCoreWindowsServiceView()
+        {
+            Builder = new TBuilder();
+        }
+
+        public AspNetCoreWindowsServiceView(T host)
+        {
+            Context = host ?? throw new ArgumentNullException(nameof(host));
+        }
+        
+        public AspNetCoreWindowsServiceView(TBuilder builder)
+        {
+            Builder = builder ?? throw new ArgumentNullException(nameof(builder));
+        }
+
+        protected override Task<IApplicationView> RunAsync(CancellationToken token)
+        {
+            return RunAsync(Context ?? Builder?.Build(Arguments), token);
+        }
+    }
+
+    public abstract class AspNetCoreWindowsServiceView : ContextApplicationView<IHost, AspNetCoreWindowsServiceApplication>
+    {
+        protected override ApplicationShutdownMode? ShutdownMode
+        {
+            get
+            {
+                return ApplicationShutdownMode.OnExplicitShutdown;
+            }
         }
     }
 }
