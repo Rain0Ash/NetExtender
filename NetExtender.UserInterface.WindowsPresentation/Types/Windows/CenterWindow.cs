@@ -39,37 +39,55 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             Loaded += BringToForeground;
         }
 
-        protected virtual void SetSizeTo(Object? sender, RoutedEventArgs args)
+        private void SetSizeTo(Object? sender, EventArgs args)
         {
+            SetSizeTo();
         }
 
-        protected virtual void DuplicateOwnerIcon(Object? sender, RoutedEventArgs args)
+        private void DuplicateOwnerIcon(Object? sender, EventArgs args)
         {
-            Icon ??= Owner?.Icon ?? Application.Current.MainWindow?.Icon;
+            DuplicateOwnerIcon();
         }
 
-        protected virtual void SetTaskbarVisible(Object? sender, RoutedEventArgs args)
+        private void SetTaskbarVisible(Object? sender, EventArgs args)
         {
+            SetTaskbarVisible();
         }
 
-        protected virtual void BringToForeground(Object? sender, RoutedEventArgs args)
+        private void BringToForeground(Object? sender, EventArgs args)
         {
-            if (!BringToFront)
+            if (BringToFront)
             {
-                return;
+                BringToForeground();
             }
-
-            UserInterfaceUtilities.BringToForegroundWindow(Handle);
         }
 
-        protected virtual void CenterTo(Object? sender, RoutedEventArgs args)
+        private void CenterTo(Object? sender, EventArgs args)
         {
             CenterTo();
         }
 
-        protected virtual void ScaleTo(Object? sender, RoutedEventArgs args)
+        private void ScaleTo(Object? sender, EventArgs args)
         {
             ScaleTo();
+        }
+
+        public virtual void SetSizeTo()
+        {
+        }
+
+        public virtual void DuplicateOwnerIcon()
+        {
+            Icon ??= Owner?.Icon ?? Application.Current.MainWindow?.Icon;
+        }
+
+        public virtual void SetTaskbarVisible()
+        {
+        }
+
+        public virtual void BringToForeground()
+        {
+            UserInterfaceUtilities.BringToForegroundWindow(Handle);
         }
 
         public Boolean CenterTo()
@@ -96,9 +114,9 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 
         public virtual Boolean CenterToParent()
         {
-            Window? parent = Owner ?? Application.Current.MainWindow;
+            Window? parent = Owner;
 
-            if (parent is null || parent == this || parent.WindowState == WindowState.Maximized)
+            if (parent is null || parent == this || parent.WindowState != WindowState.Normal)
             {
                 return CenterToScreen();
             }

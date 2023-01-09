@@ -5,27 +5,8 @@ using System;
 using System.Globalization;
 using NetExtender.Types.Culture;
 
-namespace NetExtender.Utilities.Types
+namespace NetExtender.Localization.Utilities
 {
-    public record LocalizationFlagEntry<T> where T : class
-    {
-        public String Name { get; }
-        public LocalizationIdentifier Identifier { get; }
-        public T? Image { get; }
-
-        public LocalizationFlagEntry(LocalizationIdentifier identifier)
-        {
-            Identifier = identifier;
-            Name = identifier.ToString();
-            Image = identifier.GetFlagImage<T>();
-        }
-
-        public override String ToString()
-        {
-            return Name;
-        }
-    }
-
     public static partial class LocalizationFlagsUtilities
     {
         public static Boolean Initialize<T>(Func<LocalizationIdentifier, T?>? converter) where T : class

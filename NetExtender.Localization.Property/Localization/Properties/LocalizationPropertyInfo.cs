@@ -12,7 +12,7 @@ using NetExtender.Localization.Events;
 using NetExtender.Localization.Properties.Interfaces;
 using NetExtender.Types.Culture;
 
-namespace NetExtender.Localization.Property.Localization.Properties
+namespace NetExtender.Localization.Properties
 {
     public abstract class LocalizationPropertyInfo : LocalizationPropertyInfoAbstraction<ILocalizationString?>
     {

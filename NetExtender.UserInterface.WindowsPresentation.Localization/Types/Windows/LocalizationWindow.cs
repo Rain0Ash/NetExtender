@@ -16,10 +16,10 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         public abstract WindowLocalizationAbstraction Localization { get; }
     }
 
-    public abstract class WindowLocalizationAutoInitializer : WindowLocalizationAbstraction, INotifyPropertyChanged
+    public abstract class WindowLocalizationAutoInitializer : WindowLocalizationAbstraction
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected IndexDictionary<ILocalizationPropertyInfo, PropertyInfo> Internal { get; } = new IndexDictionary<ILocalizationPropertyInfo, PropertyInfo>();
+        public sealed override event PropertyChangedEventHandler? PropertyChanged;
+        protected IndexDictionary<ILocalizationPropertyInfo, PropertyInfo> Store { get; } = new IndexDictionary<ILocalizationPropertyInfo, PropertyInfo>();
         
         protected WindowLocalizationAutoInitializer()
         {
@@ -45,7 +45,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                     continue;
                 }
 
-                Internal.Add(info, property);
+                Store.Add(info, property);
                 info.PropertyChanged += OnPropertyChanged;
             }
         }
@@ -57,7 +57,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                 return;
             }
 
-            if (sender is not ILocalizationPropertyInfo info || !Internal.TryGetValue(info, out PropertyInfo? property))
+            if (sender is not ILocalizationPropertyInfo info || !Store.TryGetValue(info, out PropertyInfo? property))
             {
                 return;
             }
@@ -66,10 +66,10 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         }
     }
 
-    public abstract class WindowLocalizationInitializer : WindowLocalizationAbstraction, INotifyPropertyChanged
+    public abstract class WindowLocalizationInitializer : WindowLocalizationAbstraction
     {
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected IndexDictionary<ILocalizationPropertyInfo, String> Internal { get; } = new IndexDictionary<ILocalizationPropertyInfo, String>();
+        public sealed override event PropertyChangedEventHandler? PropertyChanged;
+        protected IndexDictionary<ILocalizationPropertyInfo, String> Store { get; } = new IndexDictionary<ILocalizationPropertyInfo, String>();
 
         protected internal void Subscribe(ILocalizationPropertyInfo value)
         {
@@ -93,7 +93,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                 throw new ArgumentNullException(nameof(name));
             }
 
-            Internal.Add(value, name);
+            Store.Add(value, name);
             value.PropertyChanged += OnPropertyChanged;
         }
         
@@ -104,7 +104,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                 return;
             }
 
-            if (sender is not ILocalizationPropertyInfo info || !Internal.TryGetValue(info, out String? name))
+            if (sender is not ILocalizationPropertyInfo info || !Store.TryGetValue(info, out String? name))
             {
                 return;
             }
@@ -113,22 +113,47 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         }
     }
 
-    public abstract class WindowLocalizationAbstraction
+    public abstract class WindowLocalizationAbstraction : INotifyPropertyChanged
     {
+        public abstract event PropertyChangedEventHandler? PropertyChanged;
     }
 
-    public abstract class WindowLocalizationSingleton<TWindowLocalization> : WindowLocalizationAbstraction where TWindowLocalization : WindowLocalizationAbstraction, new()
+    public abstract class WindowLocalizationSingleton<T> : WindowLocalizationAbstraction where T : WindowLocalizationAbstraction, new()
     {
-        public static TWindowLocalization Instance { get; } = new TWindowLocalization();
+        private static Lazy<T> Internal { get; } = new Lazy<T>(() => new T(), true);
+
+        public static T Instance
+        {
+            get
+            {
+                return Internal.Value;
+            }
+        }
     }
 
-    public abstract class WindowLocalizationInitializerSingleton<TWindowLocalization> : WindowLocalizationInitializer where TWindowLocalization : WindowLocalizationInitializer, new()
+    public abstract class WindowLocalizationInitializerSingleton<T> : WindowLocalizationInitializer where T : WindowLocalizationInitializer, new()
     {
-        public static TWindowLocalization Instance { get; } = new TWindowLocalization();
+        private static Lazy<T> Internal { get; } = new Lazy<T>(() => new T(), true);
+
+        public static T Instance
+        {
+            get
+            {
+                return Internal.Value;
+            }
+        }
     }
 
-    public abstract class WindowLocalizationAutoInitializerSingleton<TWindowLocalization> : WindowLocalizationAutoInitializer where TWindowLocalization : WindowLocalizationAutoInitializer, new()
+    public abstract class WindowLocalizationAutoInitializerSingleton<T> : WindowLocalizationAutoInitializer where T : WindowLocalizationAutoInitializer, new()
     {
-        public static TWindowLocalization Instance { get; } = new TWindowLocalization();
+        private static Lazy<T> Internal { get; } = new Lazy<T>(() => new T(), true);
+
+        public static T Instance
+        {
+            get
+            {
+                return Internal.Value;
+            }
+        }
     }
 }

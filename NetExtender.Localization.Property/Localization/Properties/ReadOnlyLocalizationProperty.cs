@@ -19,7 +19,7 @@ using NetExtender.Localization.Properties.Interfaces;
 using NetExtender.Types.Culture;
 using NetExtender.Utilities.Types;
 
-namespace NetExtender.Localization.Property.Localization.Properties
+namespace NetExtender.Localization.Properties
 {
     public class ReadOnlyLocalizationProperty : LocalizationPropertyInfo, IReadOnlyLocalizationProperty
     {

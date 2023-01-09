@@ -4,8 +4,9 @@
 using System;
 using System.Collections.Generic;
 using NetExtender.Types.Culture;
+using NetExtender.Utilities.Types;
 
-namespace NetExtender.Utilities.Types
+namespace NetExtender.Localization.Utilities
 {
     public static partial class LocalizationFlagsUtilities
     {

@@ -11,7 +11,7 @@ using NetExtender.Localization.Interfaces;
 using NetExtender.Types.Comparers;
 using NetExtender.Types.Culture;
 
-namespace NetExtender.Localization.Property.Localization.Behavior
+namespace NetExtender.Localization.Behavior.Settings
 {
     public abstract class SettingsLocalizationSynchronizedBehavior<T> : SettingsLocalizationSynchronizedBehavior where T : SettingsLocalizationSynchronizedBehavior, new()
     {

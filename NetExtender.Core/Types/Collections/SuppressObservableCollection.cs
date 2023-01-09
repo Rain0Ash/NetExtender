@@ -88,7 +88,7 @@ namespace NetExtender.Types.Collections
             return true;
         }
 
-        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs args)
         {
             if (IsSuppressed)
             {
@@ -96,17 +96,17 @@ namespace NetExtender.Types.Collections
                 return;
             }
 
-            base.OnCollectionChanged(e);
+            base.OnCollectionChanged(args);
         }
 
-        protected override void OnPropertyChanged(PropertyChangedEventArgs e)
+        protected override void OnPropertyChanged(PropertyChangedEventArgs args)
         {
             if (IsSuppressed)
             {
                 return;
             }
 
-            base.OnPropertyChanged(e);
+            base.OnPropertyChanged(args);
         }
     }
 

@@ -6,24 +6,11 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using System.Windows.Media.Imaging;
+using NetExtender.Localization.Utilities;
 using NetExtender.Types.Culture;
-using NetExtender.Utilities.Types;
 
 namespace NetExtender.WindowsPresentation.Localization.Utilities
 {
-    public record LocalizationFlagBitmapSourceEntry : LocalizationFlagEntry<BitmapSource>
-    {
-        static LocalizationFlagBitmapSourceEntry()
-        {
-            WindowsPresentationLocalizationFlagsUtilities.Initialize();
-        }
-
-        public LocalizationFlagBitmapSourceEntry(LocalizationIdentifier identifier)
-            : base(identifier)
-        {
-        }
-    }
-
     public static class WindowsPresentationLocalizationFlagsUtilities
     {
         private static Assembly Assembly { get; }
@@ -38,11 +25,11 @@ namespace NetExtender.WindowsPresentation.Localization.Utilities
         {
         }
 
-        private static BitmapSource? Convert(LocalizationIdentifier info)
+        private static BitmapSource? Convert(LocalizationIdentifier identifier)
         {
             try
             {
-                String? region = info.TwoLetterISORegionName?.ToLower() ?? info.TwoLetterISOLanguageName?.ToLower();
+                String? region = identifier.TwoLetterISORegionName?.ToLower() ?? identifier.TwoLetterISOLanguageName?.ToLower();
 
                 if (region is null)
                 {

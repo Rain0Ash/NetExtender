@@ -5,7 +5,7 @@ using System;
 
 namespace NetExtender.Initializer.Types.Behavior.Interfaces
 {
-    public interface IChangeableBehavior<out TOptions> : IReadableBehavior<TOptions>, ISaveableBehavior<TOptions>, IResetableBehavior<TOptions> where TOptions : unmanaged, Enum
+    public interface IChangeableBehavior<out TOptions> : IChangeableBehavior, IReadableBehavior<TOptions>, ISaveableBehavior<TOptions>, IResetableBehavior<TOptions> where TOptions : unmanaged, Enum
     {
     }
     

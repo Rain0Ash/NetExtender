@@ -15,7 +15,7 @@ using NetExtender.Localization.Common.Interfaces;
 using NetExtender.Localization.Events;
 using NetExtender.Localization.Interfaces;
 using NetExtender.Localization.Properties.Interfaces;
-using NetExtender.Localization.Property.Localization.Properties;
+using NetExtender.Localization.Properties;
 using NetExtender.Types.Culture;
 
 namespace NetExtender.Localization.Properties

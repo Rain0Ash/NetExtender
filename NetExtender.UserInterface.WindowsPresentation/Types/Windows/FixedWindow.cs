@@ -16,6 +16,23 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
 {
     public abstract class FixedWindow : WndProcWindow, IWindow
     {
+        public new Window? Owner
+        {
+            get
+            {
+                return base.Owner ?? Application.Current.MainWindow;
+            }
+        }
+        
+        public Boolean IsOwner
+        {
+            get
+            {
+                Window? parent = Owner;
+                return parent is null || parent == this;
+            }
+        }
+        
         public Boolean TopMost
         {
             get
@@ -29,7 +46,6 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         }
 
         private InterfaceCloseReason _reason;
-
         public InterfaceCloseReason CloseReason
         {
             get
@@ -65,9 +81,9 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             WindowClosing += DisableIconClickExit;
         }
 
-        protected override Boolean WndProc(ref WinMessage m)
+        protected override Boolean WndProc(ref WinMessage message)
         {
-            switch (m.Message)
+            switch (message.Message)
             {
                 case WM.QUERYENDSESSION:
                 case WM.ENDSESSION:
@@ -75,7 +91,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                     break;
 
                 case WM.SYSCOMMAND:
-                    if (((UInt16) m.WParam & 0xFFF0) == 0xF060)
+                    if (((UInt16) message.WParam & 0xFFF0) == 0xF060)
                     {
                         CloseReason = InterfaceCloseReason.UserClosing;
                     }
@@ -84,7 +100,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                 case WM.ENTERSIZEMOVE:
                 case WM.EXITSIZEMOVE:
                 {
-                    SizeChangeToggleEventArgs args = new SizeChangeToggleEventArgs { End = m.Message == WM.EXITSIZEMOVE };
+                    SizeChangeToggleEventArgs args = new SizeChangeToggleEventArgs { End = message.Message == WM.EXITSIZEMOVE };
                     OnSizeChangeToggle(args);
 
                     if (args.Handled)
@@ -98,7 +114,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                     break;
             }
 
-            return base.WndProc(ref m);
+            return base.WndProc(ref message);
         }
 
         protected virtual void OnSizeChangeToggle(SizeChangeToggleEventArgs args)
@@ -106,7 +122,7 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
             SizeChangeToggle?.Invoke(this, args);
         }
 
-        private void OnDeactivated(Object? sender, EventArgs e)
+        private void OnDeactivated(Object? sender, EventArgs args)
         {
             if (!IsExitOnFocusLost)
             {

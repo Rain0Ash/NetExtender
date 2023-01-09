@@ -26,16 +26,16 @@ namespace NetExtender.Types.Collections
         {
         }
 
-        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs args)
         {
-            Unsubscribe(e.OldItems);
-            Subscribe(e.NewItems);
-            base.OnCollectionChanged(e);
+            Unsubscribe(args.OldItems);
+            Subscribe(args.NewItems);
+            base.OnCollectionChanged(args);
         }
 
-        private void ItemPropertyChanged(Object? sender, PropertyChangedEventArgs e)
+        private void ItemPropertyChanged(Object? sender, PropertyChangedEventArgs args)
         {
-            OnPropertyChanged(e);
+            OnPropertyChanged(args);
         }
 
         private void Subscribe(IList? items)
