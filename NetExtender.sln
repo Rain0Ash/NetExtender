@@ -207,6 +207,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.WindowsPresenta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.WindowsPresentation.Localization", "NetExtender.WindowsPresentation.Localization\NetExtender.WindowsPresentation.Localization.csproj", "{83447D1F-291A-444A-9496-BE772E412FD6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.WindowsPresentation.Localization.ReactiveUI", "NetExtender.WindowsPresentation.Localization.ReactiveUI\NetExtender.WindowsPresentation.Localization.ReactiveUI.csproj", "{58742BCD-7A82-498A-8E20-3B55F39DF2C3}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NetExtender.WindowsPresentation.ReactiveUI", "NetExtender.WindowsPresentation.ReactiveUI\NetExtender.WindowsPresentation.ReactiveUI.csproj", "{77FDEB46-F528-4401-8D3E-9BFCDAD9EEE9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NetExtender.WindowsPresentationForms", "NetExtender.WindowsPresentationForms\NetExtender.WindowsPresentationForms.csproj", "{8431E4DB-6D77-4A20-AFE9-655C48CC8181}"
@@ -572,6 +574,11 @@ Global
                 {83447D1F-291A-444A-9496-BE772E412FD6}.Release|Any CPU.ActiveCfg = Release|Any CPU
                 {83447D1F-291A-444A-9496-BE772E412FD6}.Release|Any CPU.Build.0 = Release|Any CPU
 
+                {58742BCD-7A82-498A-8E20-3B55F39DF2C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+                {58742BCD-7A82-498A-8E20-3B55F39DF2C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+                {58742BCD-7A82-498A-8E20-3B55F39DF2C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+                {58742BCD-7A82-498A-8E20-3B55F39DF2C3}.Release|Any CPU.Build.0 = Release|Any CPU
+
                 {77FDEB46-F528-4401-8D3E-9BFCDAD9EEE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
                 {77FDEB46-F528-4401-8D3E-9BFCDAD9EEE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
                 {77FDEB46-F528-4401-8D3E-9BFCDAD9EEE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -693,6 +700,7 @@ Global
                 {EC020E52-AFFE-48F6-A415-64F1E6B75F24} = {A7BE8994-15D1-4F4B-BD86-C308973371B6}
                 {F16C5DB5-8479-4D37-880F-BC94DD2614CD} = {A7BE8994-15D1-4F4B-BD86-C308973371B6}
                 {83447D1F-291A-444A-9496-BE772E412FD6} = {A7BE8994-15D1-4F4B-BD86-C308973371B6}
+                {58742BCD-7A82-498A-8E20-3B55F39DF2C3} = {A7BE8994-15D1-4F4B-BD86-C308973371B6}
                 {77FDEB46-F528-4401-8D3E-9BFCDAD9EEE9} = {A7BE8994-15D1-4F4B-BD86-C308973371B6}
                 {8431E4DB-6D77-4A20-AFE9-655C48CC8181} = {A7BE8994-15D1-4F4B-BD86-C308973371B6}
                 {DAB909F0-FDE0-44FB-B977-0776FF1E01B5} = {A7BE8994-15D1-4F4B-BD86-C308973371B6}
