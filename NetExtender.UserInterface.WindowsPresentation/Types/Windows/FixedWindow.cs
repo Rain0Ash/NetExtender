@@ -14,7 +14,7 @@ using NetExtender.Windows;
 
 namespace NetExtender.UserInterface.WindowsPresentation.Windows
 {
-    public abstract class FixedWindow : WndProcWindow, IWindow
+    public abstract class FixedWindow : HotKeyWindow, IWindow
     {
         public new Window? Owner
         {

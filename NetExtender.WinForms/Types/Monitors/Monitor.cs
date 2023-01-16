@@ -3,9 +3,11 @@
 
 using System;
 using System.Drawing;
+using System.Windows.Forms;
+using NetExtender.Utilities.Windows;
 using NetExtender.Workstation.Interfaces;
 
-namespace NetExtender.Utilities.Windows
+namespace NetExtender.Types.Monitors
 {
     public readonly struct Monitor : IScreen
     {
@@ -33,8 +35,6 @@ namespace NetExtender.Utilities.Windows
             }
         }
 
-        internal MonitorUtilities.Devmode Devmode { get; }
-
         public String DeviceName
         {
             get
@@ -51,10 +51,28 @@ namespace NetExtender.Utilities.Windows
             }
         }
 
+        public ScreenOrientation Orientation
+        {
+            get
+            {
+                return Devmode.dmDisplayOrientation;
+            }
+        }
+
+        public Boolean IsEmpty
+        {
+            get
+            {
+                return Name is null;
+            }
+        }
+
+        private MonitorUtilities.Devmode Devmode { get; }
+
         internal Monitor(Int32 id, String name, Rectangle resolution, Rectangle workingArea, Rectangle bounds, MonitorUtilities.Devmode devmode)
         {
             Id = id;
-            Name = name;
+            Name = name ?? throw new ArgumentNullException(nameof(name));
             Resolution = resolution;
             WorkingArea = workingArea;
             Bounds = bounds;

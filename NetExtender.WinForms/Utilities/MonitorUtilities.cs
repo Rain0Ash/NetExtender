@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using NetExtender.Types.Monitors;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Utilities.Windows
@@ -70,7 +71,7 @@ namespace NetExtender.Utilities.Windows
 
         public static Monitor GetMonitor(Screen screen, Int32 customID)
         {
-            Devmode devmode = new Devmode {dmSize = (Int16) Marshal.SizeOf(typeof(Devmode))};
+            Devmode devmode = new Devmode { dmSize = (Int16) Marshal.SizeOf(typeof(Devmode)) };
             EnumDisplaySettings(screen.DeviceName, -1, ref devmode);
 
             return new Monitor(customID, screen.DeviceName, screen.Bounds, screen.WorkingArea, screen.Bounds, devmode);

@@ -99,6 +99,171 @@ namespace NetExtender.Utilities.Types
         {
             return CacheValuesWithoutDefault<T>.Values.Count;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Minimum<T>() where T : unmanaged, Enum
+        {
+            return CacheValues<T>.Minimum ?? throw new InvalidOperationException($"{nameof(Enum)} {typeof(T)} is empty.");
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Minimum<T>(Boolean without) where T : unmanaged, Enum
+        {
+            return without ? MinimumWithoutDefault<T>() : Minimum<T>();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MinimumWithoutDefault<T>() where T : unmanaged, Enum
+        {
+            return CacheValuesWithoutDefault<T>.Minimum ?? throw new InvalidOperationException($"{nameof(Enum)} {typeof(T)} is empty.");
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? TryGetMinimum<T>() where T : unmanaged, Enum
+        {
+            return CacheValues<T>.Minimum;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? TryGetMinimum<T>(Boolean without) where T : unmanaged, Enum
+        {
+            return without ? TryGetMinimumWithoutDefault<T>() : TryGetMinimum<T>();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? TryGetMinimumWithoutDefault<T>() where T : unmanaged, Enum
+        {
+            return CacheValuesWithoutDefault<T>.Minimum;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetMinimum<T>(out T result) where T : unmanaged, Enum
+        {
+            if (CacheValues<T>.Minimum is T maximum)
+            {
+                result = maximum;
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetMinimum<T>(Boolean without, out T result) where T : unmanaged, Enum
+        {
+            return without ? TryGetMinimumWithoutDefault(out result) : TryGetMinimum(out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetMinimumWithoutDefault<T>(out T result) where T : unmanaged, Enum
+        {
+            if (CacheValuesWithoutDefault<T>.Minimum is T maximum)
+            {
+                result = maximum;
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Maximum<T>() where T : unmanaged, Enum
+        {
+            return CacheValues<T>.Maximum ?? throw new InvalidOperationException($"{nameof(Enum)} {typeof(T)} is empty.");
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Maximum<T>(Boolean without) where T : unmanaged, Enum
+        {
+            return without ? MaximumWithoutDefault<T>() : Maximum<T>();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T MaximumWithoutDefault<T>() where T : unmanaged, Enum
+        {
+            return CacheValuesWithoutDefault<T>.Maximum ?? throw new InvalidOperationException($"{nameof(Enum)} {typeof(T)} is empty.");
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? TryGetMaximum<T>() where T : unmanaged, Enum
+        {
+            return CacheValues<T>.Maximum;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? TryGetMaximum<T>(Boolean without) where T : unmanaged, Enum
+        {
+            return without ? TryGetMaximumWithoutDefault<T>() : TryGetMaximum<T>();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T? TryGetMaximumWithoutDefault<T>() where T : unmanaged, Enum
+        {
+            return CacheValuesWithoutDefault<T>.Maximum;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetMaximum<T>(out T result) where T : unmanaged, Enum
+        {
+            if (CacheValues<T>.Maximum is T maximum)
+            {
+                result = maximum;
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetMaximum<T>(Boolean without, out T result) where T : unmanaged, Enum
+        {
+            return without ? TryGetMaximumWithoutDefault(out result) : TryGetMaximum(out result);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryGetMaximumWithoutDefault<T>(out T result) where T : unmanaged, Enum
+        {
+            if (CacheValuesWithoutDefault<T>.Maximum is T maximum)
+            {
+                result = maximum;
+                return true;
+            }
+
+            result = default;
+            return false;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Random<T>() where T : unmanaged, Enum
+        {
+            return CacheValues<T>.Values.GetRandom();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Random<T>(Boolean without) where T : unmanaged, Enum
+        {
+            return without ? RandomWithoutDefault<T>() : Random<T>();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T RandomWithoutDefault<T>() where T : unmanaged, Enum
+        {
+            return CacheValuesWithoutDefault<T>.Values.GetRandom();
+        }
+
+        public static T GetRandomEnumValue<T>(this IEnumerable<T> source) where T : unmanaged, Enum
+        {
+            if (source is null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            T[] values = source.ToArray();
+            return values.Length > 0 ? values.GetRandom() : Random<T>();
+        }
 
         public static Boolean NameConvert<T, TResult>(this T value, out TResult result) where T : unmanaged, Enum where TResult : unmanaged, Enum
         {
@@ -115,23 +280,6 @@ namespace NetExtender.Utilities.Types
 
             result = default;
             return false;
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T Random<T>() where T : unmanaged, Enum
-        {
-            return CacheValues<T>.Values.GetRandom();
-        }
-
-        public static T GetRandomEnumValue<T>(this IEnumerable<T> source) where T : unmanaged, Enum
-        {
-            if (source is null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
-
-            T[] values = source.ToArray();
-            return values.Length > 0 ? values.GetRandom() : Random<T>();
         }
 
         public static IEnumerable<Decimal> AsDecimal<T>() where T : unmanaged, Enum
@@ -460,28 +608,6 @@ namespace NetExtender.Utilities.Types
         public static EnumMember<T> GetMember<T>(T value) where T : unmanaged, Enum
         {
             return CacheUnderlyingOperation<T>.UnderlyingOperation.GetMember(ref value);
-        }
-
-        /// <summary>
-        ///     Returns the minimum value.
-        /// </summary>
-        /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T? GetMinValue<T>() where T : unmanaged, Enum
-        {
-            return CacheValues<T>.IsEmpty ? null : CacheMinMaxValues<T>.MinValue;
-        }
-
-        /// <summary>
-        ///     Returns the maximum value.
-        /// </summary>
-        /// <typeparam name="T">Enum type</typeparam>
-        /// <returns></returns>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static T? GetMaxValue<T>() where T : unmanaged, Enum
-        {
-            return CacheValues<T>.IsEmpty ? null : CacheMinMaxValues<T>.MaxValue;
         }
 
         /// <summary>
@@ -974,7 +1100,9 @@ namespace NetExtender.Utilities.Types
         {
             public static ReadOnlyCollection<T> Values { get; }
             public static ImmutableHashSet<T> Set { get; }
-
+            public static T? Minimum { get; }
+            public static T? Maximum { get; }
+            
             public static Boolean IsEmpty
             {
                 get
@@ -989,6 +1117,7 @@ namespace NetExtender.Utilities.Types
                 T[] values = Enum.GetValues(type) as T[] ?? throw new ArgumentException(nameof(T));
                 Values = values.ToReadOnlyArray();
                 Set = Values.ToImmutableHashSet();
+                (Minimum, Maximum) = Values.Count > 0 ? Values.MinMax() : (default(T?), default(T?));
             }
 
             public static Boolean Contains(T value)
@@ -1001,7 +1130,9 @@ namespace NetExtender.Utilities.Types
         {
             public static ReadOnlyCollection<T> Values { get; }
             public static ImmutableHashSet<T> Set { get; }
-
+            public static T? Minimum { get; }
+            public static T? Maximum { get; }
+            
             public static Boolean IsEmpty
             {
                 get
@@ -1014,6 +1145,7 @@ namespace NetExtender.Utilities.Types
             {
                 Values = CacheValues<T>.Values.Where(GenericUtilities.IsNotDefault).ToReadOnlyArray();
                 Set = Values.ToImmutableHashSet();
+                (Minimum, Maximum) = Values.Count > 0 ? Values.MinMax() : (default(T?), default(T?));
             }
 
             public static Boolean Contains(T value)
@@ -1115,19 +1247,6 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        private static class CacheMinMaxValues<T> where T : unmanaged, Enum
-        {
-            public static T MinValue { get; }
-            public static T MaxValue { get; }
-
-            static CacheMinMaxValues()
-            {
-                ReadOnlyCollection<T> values = CacheValues<T>.Values;
-                MinValue = values.DefaultIfEmpty().Min();
-                MaxValue = values.DefaultIfEmpty().Max();
-            }
-        }
-
         private static class CacheIsFlags<T> where T : unmanaged, Enum
         {
             public static Boolean IsFlags { get; }
@@ -1164,22 +1283,22 @@ namespace NetExtender.Utilities.Types
             static CacheUnderlyingOperation()
             {
                 Type type = CacheType<T>.Type;
-                T min = CacheMinMaxValues<T>.MinValue;
-                T max = CacheMinMaxValues<T>.MaxValue;
+                T minimum = Minimum<T>();
+                T maximum = Maximum<T>();
                 EnumMember<T>[] distincted = CacheMembers<T>.Members.OrderBy(member => member.Value).Distinct(new EnumMember<T>.ValueComparer()).ToArray();
                 UnderlyingType = CacheType<T>.UnderlyingType;
 
                 // ReSharper disable once SwitchExpressionHandlesSomeKnownEnumValuesWithExceptionInDefault
                 UnderlyingOperation = Type.GetTypeCode(type) switch
                 {
-                    TypeCode.SByte => SByteOperation<T>.Create(min, max, distincted),
-                    TypeCode.Byte => ByteOperation<T>.Create(min, max, distincted),
-                    TypeCode.Int16 => Int16Operation<T>.Create(min, max, distincted),
-                    TypeCode.UInt16 => UInt16Operation<T>.Create(min, max, distincted),
-                    TypeCode.Int32 => Int32Operation<T>.Create(min, max, distincted),
-                    TypeCode.UInt32 => UInt32Operation<T>.Create(min, max, distincted),
-                    TypeCode.Int64 => Int64Operation<T>.Create(min, max, distincted),
-                    TypeCode.UInt64 => UInt64Operation<T>.Create(min, max, distincted),
+                    TypeCode.SByte => SByteOperation<T>.Create(minimum, maximum, distincted),
+                    TypeCode.Byte => ByteOperation<T>.Create(minimum, maximum, distincted),
+                    TypeCode.Int16 => Int16Operation<T>.Create(minimum, maximum, distincted),
+                    TypeCode.UInt16 => UInt16Operation<T>.Create(minimum, maximum, distincted),
+                    TypeCode.Int32 => Int32Operation<T>.Create(minimum, maximum, distincted),
+                    TypeCode.UInt32 => UInt32Operation<T>.Create(minimum, maximum, distincted),
+                    TypeCode.Int64 => Int64Operation<T>.Create(minimum, maximum, distincted),
+                    TypeCode.UInt64 => UInt64Operation<T>.Create(minimum, maximum, distincted),
                     _ => throw new InvalidOperationException()
                 };
             }

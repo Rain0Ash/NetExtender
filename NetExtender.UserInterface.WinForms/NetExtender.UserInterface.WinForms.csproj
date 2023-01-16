@@ -27,8 +27,4 @@
       <ProjectReference Include="..\NetExtender.WinForms\NetExtender.WinForms.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Types" />
-    </ItemGroup>
-
 </Project>
