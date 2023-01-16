@@ -5,10 +5,10 @@ using System;
 using System.Collections.Concurrent;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using NetExtender.Interfaces.Common;
 using NetExtender.Types.HotKeys;
+using NetExtender.UserInterface.Interfaces;
 
-namespace NetExtender.Windows.Utilities
+namespace NetExtender.Utilities.UserInterface
 {
     [Flags]
     public enum HotKeyModifierKeys
@@ -29,7 +29,7 @@ namespace NetExtender.Windows.Utilities
         Windows = 8,
     }
 
-    public static class WindowsHotKeyUtilities
+    public static class HotKeyUtilities
     {
         [DllImport("user32.dll")]
         private static extern Boolean RegisterHotKey(IntPtr handle, Int32 id, Int32 modifiers, Int32 key);
@@ -53,7 +53,7 @@ namespace NetExtender.Windows.Utilities
             return RegisterHotKey(handle, new WindowsHotKeyAction<Int32>(id, hotkey));
         }
 
-        public static Boolean RegisterHotKey(IHandle handle, WindowsHotKeyAction hotkey, out Int32 id)
+        public static Boolean RegisterHotKey(this IUserInterfaceHandle handle, WindowsHotKeyAction hotkey, out Int32 id)
         {
             if (handle is null)
             {
@@ -68,7 +68,7 @@ namespace NetExtender.Windows.Utilities
             return handle != IntPtr.Zero && RegisterHotKey(handle, hotkey.Id.ToInt32(CultureInfo.InvariantCulture), hotkey.Key, hotkey.Modifier);
         }
         
-        public static Boolean RegisterHotKey<T>(IHandle handle, WindowsHotKeyAction<T> hotkey) where T : unmanaged, IConvertible
+        public static Boolean RegisterHotKey<T>(this IUserInterfaceHandle handle, WindowsHotKeyAction<T> hotkey) where T : unmanaged, IConvertible
         {
             if (handle is null)
             {
@@ -100,7 +100,7 @@ namespace NetExtender.Windows.Utilities
             return array;
         }
 
-        public static Int32?[] RegisterHotKey(IHandle handle, params WindowsHotKeyAction[] hotkeys)
+        public static Int32?[] RegisterHotKey(this IUserInterfaceHandle handle, params WindowsHotKeyAction[] hotkeys)
         {
             if (handle is null)
             {
@@ -137,7 +137,7 @@ namespace NetExtender.Windows.Utilities
             return array;
         }
         
-        public static Int32?[] RegisterHotKey<T>(IHandle handle, params WindowsHotKeyAction<T>[] hotkeys) where T : unmanaged, IConvertible
+        public static Int32?[] RegisterHotKey<T>(this IUserInterfaceHandle handle, params WindowsHotKeyAction<T>[] hotkeys) where T : unmanaged, IConvertible
         {
             if (handle is null)
             {

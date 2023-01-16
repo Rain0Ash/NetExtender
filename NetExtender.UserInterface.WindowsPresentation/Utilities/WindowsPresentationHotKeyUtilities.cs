@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows;
 using NetExtender.Types.HotKeys;
 using NetExtender.UserInterface.Interfaces;
-using NetExtender.Windows.Utilities;
 
 namespace NetExtender.Utilities.UserInterface
 {
@@ -22,8 +21,8 @@ namespace NetExtender.Utilities.UserInterface
             return window switch
             {
                 null => throw new ArgumentNullException(nameof(window)),
-                IUserInterfaceHandle handle => WindowsHotKeyUtilities.RegisterHotKey(handle.Handle, hotkey, out id),
-                _ => WindowsHotKeyUtilities.RegisterHotKey(window.GetHandle(), hotkey, out id)
+                IUserInterfaceHandle handle => HotKeyUtilities.RegisterHotKey(handle.Handle, hotkey, out id),
+                _ => HotKeyUtilities.RegisterHotKey(window.GetHandle(), hotkey, out id)
             };
         }
         
@@ -37,8 +36,8 @@ namespace NetExtender.Utilities.UserInterface
             return window switch
             {
                 null => throw new ArgumentNullException(nameof(window)),
-                IUserInterfaceHandle handle => WindowsHotKeyUtilities.RegisterHotKey(handle.Handle, hotkey),
-                _ => WindowsHotKeyUtilities.RegisterHotKey(window.GetHandle(), hotkey)
+                IUserInterfaceHandle handle => HotKeyUtilities.RegisterHotKey(handle.Handle, hotkey),
+                _ => HotKeyUtilities.RegisterHotKey(window.GetHandle(), hotkey)
             };
         }
 
@@ -67,8 +66,8 @@ namespace NetExtender.Utilities.UserInterface
             return window switch
             {
                 null => throw new ArgumentNullException(nameof(window)),
-                IUserInterfaceHandle handle => WindowsHotKeyUtilities.RegisterHotKey(handle.Handle, hotkeys),
-                _ => WindowsHotKeyUtilities.RegisterHotKey(window.GetHandle(), hotkeys)
+                IUserInterfaceHandle handle => HotKeyUtilities.RegisterHotKey(handle.Handle, hotkeys),
+                _ => HotKeyUtilities.RegisterHotKey(window.GetHandle(), hotkeys)
             };
         }
         
@@ -97,8 +96,8 @@ namespace NetExtender.Utilities.UserInterface
             return window switch
             {
                 null => throw new ArgumentNullException(nameof(window)),
-                IUserInterfaceHandle handle => WindowsHotKeyUtilities.RegisterHotKey(handle.Handle, hotkeys),
-                _ => WindowsHotKeyUtilities.RegisterHotKey(window.GetHandle(), hotkeys)
+                IUserInterfaceHandle handle => HotKeyUtilities.RegisterHotKey(handle.Handle, hotkeys),
+                _ => HotKeyUtilities.RegisterHotKey(window.GetHandle(), hotkeys)
             };
         }
     }

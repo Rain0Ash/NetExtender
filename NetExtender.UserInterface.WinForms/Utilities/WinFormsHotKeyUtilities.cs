@@ -5,7 +5,6 @@ using System;
 using System.Linq;
 using System.Windows.Forms;
 using NetExtender.Types.HotKeys;
-using NetExtender.Windows.Utilities;
 
 namespace NetExtender.Utilities.UserInterface
 {
@@ -23,7 +22,7 @@ namespace NetExtender.Utilities.UserInterface
                 throw new ArgumentNullException(nameof(form));
             }
 
-            return WindowsHotKeyUtilities.RegisterHotKey(form.Handle, hotkey, out id);
+            return HotKeyUtilities.RegisterHotKey(form.Handle, hotkey, out id);
         }
         
         public static Boolean RegisterHotKey<T>(this Form form, HotKeyAction<T> hotkey) where T : unmanaged, IConvertible
@@ -38,7 +37,7 @@ namespace NetExtender.Utilities.UserInterface
                 throw new ArgumentNullException(nameof(form));
             }
 
-            return WindowsHotKeyUtilities.RegisterHotKey(form.Handle, hotkey);
+            return HotKeyUtilities.RegisterHotKey(form.Handle, hotkey);
         }
         
         public static Int32?[] RegisterHotKey(this Form form, params HotKeyAction[] hotkeys)
@@ -68,7 +67,7 @@ namespace NetExtender.Utilities.UserInterface
                 throw new ArgumentNullException(nameof(hotkeys));
             }
 
-            return WindowsHotKeyUtilities.RegisterHotKey(form.Handle, hotkeys);
+            return HotKeyUtilities.RegisterHotKey(form.Handle, hotkeys);
         }
         
         public static Int32?[] RegisterHotKey<T>(this Form form, params HotKeyAction<T>[] hotkeys) where T : unmanaged, IConvertible
@@ -98,7 +97,7 @@ namespace NetExtender.Utilities.UserInterface
                 throw new ArgumentNullException(nameof(hotkeys));
             }
 
-            return WindowsHotKeyUtilities.RegisterHotKey(form.Handle, hotkeys);
+            return HotKeyUtilities.RegisterHotKey(form.Handle, hotkeys);
         }
     }
 }

@@ -2,8 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Windows.Input;
-using NetExtender.Windows.Utilities;
+using System.Windows.Forms;
+using NetExtender.Utilities.UserInterface;
 
 namespace NetExtender.Types.HotKeys
 {
@@ -11,21 +11,21 @@ namespace NetExtender.Types.HotKeys
     {
         public static implicit operator WindowsHotKeyAction(HotKeyAction value)
         {
-            return new WindowsHotKeyAction((Char) value.Key, (HotKeyModifierKeys) value.Modifier);
+            return new WindowsHotKeyAction((Char) value.Key, value.Modifier);
         }
         
-        public static implicit operator Key(HotKeyAction value)
+        public static implicit operator Keys(HotKeyAction value)
         {
             return value.Key;
         }
         
-        public static implicit operator ModifierKeys(HotKeyAction value)
+        public static implicit operator HotKeyModifierKeys(HotKeyAction value)
         {
             return value.Modifier;
         }
         
-        public Key Key { get; }
-        public ModifierKeys Modifier { get; }
+        public Keys Key { get; }
+        public HotKeyModifierKeys Modifier { get; }
 
         public Boolean IsEmpty
         {
@@ -35,7 +35,7 @@ namespace NetExtender.Types.HotKeys
             }
         }
         
-        public HotKeyAction(Key key, ModifierKeys modifier)
+        public HotKeyAction(Keys key, HotKeyModifierKeys modifier)
         {
             Key = key;
             Modifier = modifier;
@@ -51,12 +51,12 @@ namespace NetExtender.Types.HotKeys
         
         public static implicit operator WindowsHotKeyAction(HotKeyAction<T> value)
         {
-            return new WindowsHotKeyAction((Char) value.Key, (HotKeyModifierKeys) value.Modifier);
+            return new WindowsHotKeyAction((Char) value.Key, value.Modifier);
         }
         
         public static implicit operator WindowsHotKeyAction<T>(HotKeyAction<T> value)
         {
-            return new WindowsHotKeyAction<T>(value.Id, (Char) value.Key, (HotKeyModifierKeys) value.Modifier);
+            return new WindowsHotKeyAction<T>(value.Id, (Char) value.Key, value.Modifier);
         }
         
         public static implicit operator T(HotKeyAction<T> value)
@@ -64,19 +64,19 @@ namespace NetExtender.Types.HotKeys
             return value.Id;
         }
         
-        public static implicit operator Key(HotKeyAction<T> value)
+        public static implicit operator Keys(HotKeyAction<T> value)
         {
             return value.Key;
         }
         
-        public static implicit operator ModifierKeys(HotKeyAction<T> value)
+        public static implicit operator HotKeyModifierKeys(HotKeyAction<T> value)
         {
             return value.Modifier;
         }
         
         public T Id { get; }
-        public Key Key { get; }
-        public ModifierKeys Modifier { get; }
+        public Keys Key { get; }
+        public HotKeyModifierKeys Modifier { get; }
 
         public Boolean IsEmpty
         {
@@ -86,7 +86,7 @@ namespace NetExtender.Types.HotKeys
             }
         }
         
-        public HotKeyAction(T id, Key key, ModifierKeys modifier)
+        public HotKeyAction(T id, Keys key, HotKeyModifierKeys modifier)
         {
             Id = id;
             Key = key;
