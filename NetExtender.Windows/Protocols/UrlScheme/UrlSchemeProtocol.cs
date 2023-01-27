@@ -152,7 +152,6 @@ namespace NetExtender.Windows.Protocols
             {
                 using RegistryKey? registry = Microsoft.Win32.Registry.ClassesRoot.CreateSubKey(Name);
 
-                //TODO: CS8598
                 if (registry is null)
                 {
                     return false;
@@ -164,7 +163,6 @@ namespace NetExtender.Windows.Protocols
 
                 using RegistryKey? icon = registry.CreateSubKey(DefaultIcon);
 
-                //TODO: CS8598
                 if (icon is null)
                 {
                     return false;
@@ -174,7 +172,6 @@ namespace NetExtender.Windows.Protocols
 
                 using RegistryKey? shell = registry.CreateSubKey(ShellSubKey);
 
-                //TODO: CS8598
                 if (shell is null)
                 {
                     return false;

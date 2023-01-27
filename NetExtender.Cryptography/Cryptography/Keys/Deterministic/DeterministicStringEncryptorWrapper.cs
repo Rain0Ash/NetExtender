@@ -101,28 +101,34 @@ namespace NetExtender.Cryptography.Keys.Deterministic
             return result;
         }
 
-        public String? Encrypt(String value)
+        public String? Encrypt(String? value)
         {
+            if (value is null)
+            {
+                return EncryptNullInternal();
+            }
+            
             if (Dictionary is null || Encryptor.IsDeterministic)
             {
                 return Encryptor.Encrypt(value);
             }
 
-            //TODO: CS8598
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            return value is not null ? Dictionary.GetOrAdd(value, Encryptor.Encrypt) : EncryptNullInternal();
+            return Dictionary.GetOrAdd(value, Encryptor.Encrypt);
         }
 
-        public String? EncryptString(String value)
+        public String? EncryptString(String? value)
         {
+            if (value is null)
+            {
+                return EncryptNullStringInternal();
+            }
+            
             if (Dictionary is null || Encryptor.IsDeterministic)
             {
                 return Encryptor.Encrypt(value);
             }
 
-            //TODO: CS8598
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            return value is not null ? Dictionary.GetOrAdd(value, Encryptor.EncryptString) : EncryptNullStringInternal();
+            return Dictionary.GetOrAdd(value, Encryptor.EncryptString);
         }
 
         public IEnumerable<String?> Encrypt(IEnumerable<String> source)

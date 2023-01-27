@@ -100,5 +100,25 @@ namespace NetExtender.Utilities.UserInterface
                 _ => HotKeyUtilities.RegisterHotKey(window.GetHandle(), hotkeys)
             };
         }
+        
+        public static Boolean UnregisterHotKey(this Window window, Int32 id)
+        {
+            return window switch
+            {
+                null => throw new ArgumentNullException(nameof(window)),
+                IUserInterfaceHandle handle => HotKeyUtilities.UnregisterHotKey(handle.Handle, id),
+                _ => HotKeyUtilities.UnregisterHotKey(window.GetHandle(), id)
+            };
+        }
+        
+        public static Boolean UnregisterHotKey<T>(this Window window, T id) where T : unmanaged, IConvertible
+        {
+            return window switch
+            {
+                null => throw new ArgumentNullException(nameof(window)),
+                IUserInterfaceHandle handle => HotKeyUtilities.UnregisterHotKey(handle.Handle, id),
+                _ => HotKeyUtilities.UnregisterHotKey(window.GetHandle(), id)
+            };
+        }
     }
 }

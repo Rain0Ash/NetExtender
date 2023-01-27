@@ -128,12 +128,12 @@ namespace NetExtender.Types.Sets
             return Indexer.IndexOf(item);
         }
 
-        T? IReadOnlyMapIndexer<T>.ValueOf(Int32 index)
+        public T? ValueOf(Int32 index)
         {
             return ((IReadOnlyMapIndexer<T>) this).ValueOf(index, out T? result) ? result : default;
         }
 
-        Boolean IReadOnlyMapIndexer<T>.ValueOf(Int32 index, [MaybeNullWhen(false)] out T value)
+        public Boolean ValueOf(Int32 index, [MaybeNullWhen(false)] out T value)
         {
             if (Rebuild)
             {
@@ -144,33 +144,63 @@ namespace NetExtender.Types.Sets
             return Indexer.ValueOf(index, out value);
         }
 
-        public Boolean IsProperSubsetOf(IEnumerable<T> other)
-        {
-            return Internal.IsProperSubsetOf(other);
-        }
-
-        public Boolean IsProperSupersetOf(IEnumerable<T> other)
-        {
-            return Internal.IsProperSupersetOf(other);
-        }
-
         public Boolean IsSubsetOf(IEnumerable<T> other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             return Internal.IsSubsetOf(other);
+        }
+
+        public Boolean IsProperSubsetOf(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return Internal.IsProperSubsetOf(other);
         }
 
         public Boolean IsSupersetOf(IEnumerable<T> other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             return Internal.IsSupersetOf(other);
+        }
+
+        public Boolean IsProperSupersetOf(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return Internal.IsProperSupersetOf(other);
         }
 
         public Boolean Overlaps(IEnumerable<T> other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             return Internal.Overlaps(other);
         }
 
         public Boolean SetEquals(IEnumerable<T> other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             return Internal.SetEquals(other);
         }
 
@@ -188,6 +218,11 @@ namespace NetExtender.Types.Sets
 
         public void UnionWith(IEnumerable<T> other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             Int32 count = Internal.Count;
             Internal.UnionWith(other);
             Rebuild = Internal.Count > count;
@@ -195,6 +230,11 @@ namespace NetExtender.Types.Sets
 
         public void IntersectWith(IEnumerable<T> other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             Int32 count = Internal.Count;
             Internal.IntersectWith(other);
             Rebuild = Internal.Count < count;
@@ -202,6 +242,11 @@ namespace NetExtender.Types.Sets
 
         public void ExceptWith(IEnumerable<T> other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             Int32 count = Internal.Count;
             Internal.ExceptWith(other);
             Rebuild = Internal.Count < count;
@@ -209,6 +254,11 @@ namespace NetExtender.Types.Sets
 
         public void SymmetricExceptWith(IEnumerable<T> other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             Internal.SymmetricExceptWith(other);
             Rebuild = true;
         }
@@ -233,12 +283,32 @@ namespace NetExtender.Types.Sets
 
         public void CopyTo(T[] array)
         {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
             Internal.CopyTo(array);
         }
 
         public void CopyTo(T[] array, Int32 index)
         {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
             Internal.CopyTo(array, index);
+        }
+
+        public IEnumerator<T> GetEnumerator()
+        {
+            return Internal.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         public T this[Int32 index]
@@ -278,16 +348,6 @@ namespace NetExtender.Types.Sets
             {
                 return IndexOf(item);
             }
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            return Internal.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
         }
     }
 }

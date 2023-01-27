@@ -14,7 +14,7 @@ namespace NetExtender.Types.Numerics
     {
         public static implicit operator (T Min, T Max)(Range<T> value)
         {
-            return (value.Min, value.Max);
+            return (value.Minimum, value.Maximum);
         }
 
         [SuppressMessage("ReSharper", "UseDeconstructionOnParameter")]
@@ -53,48 +53,48 @@ namespace NetExtender.Types.Numerics
             return first.CompareTo(second) >= 0;
         }
 
-        public T Min { get; }
-        public T Max { get; }
+        public T Minimum { get; }
+        public T Maximum { get; }
 
-        public Range(T min, T max)
+        public Range(T minimum, T maximum)
         {
-            (Min, Max) = ComparerUtilities.Sort(min, max);
+            (Minimum, Maximum) = ComparerUtilities.Sort(minimum, maximum);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Range<T> Expand(Range<T> other)
         {
-            return new Range<T>(Min.Min(other.Min), Max.Max(other.Max));
+            return new Range<T>(Minimum.Min(other.Minimum), Maximum.Max(other.Maximum));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Range<T> Truncate(Range<T> other)
         {
-            return new Range<T>(Min.Max(other.Min), Max.Min(other.Max));
+            return new Range<T>(Minimum.Max(other.Minimum), Maximum.Min(other.Maximum));
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean IsSubRange(Range<T> other)
         {
-            return Min.MoreEquals(other.Min) && Max.LessEquals(other.Max);
+            return Minimum.MoreEquals(other.Minimum) && Maximum.LessEquals(other.Maximum);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean IsSuperRange(Range<T> other)
         {
-            return Min.LessEquals(other.Min) && Max.MoreEquals(other.Max);
+            return Minimum.LessEquals(other.Minimum) && Maximum.MoreEquals(other.Maximum);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean Intersect(Range<T> other)
         {
-            return Min.LessEquals(other.Max) && other.Min.LessEquals(Max);
+            return Minimum.LessEquals(other.Maximum) && other.Minimum.LessEquals(Maximum);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean Contains(T value)
         {
-            return Min.LessEquals(value) && Max.MoreEquals(value);
+            return Minimum.LessEquals(value) && Maximum.MoreEquals(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -110,22 +110,22 @@ namespace NetExtender.Types.Numerics
                 return 0;
             }
 
-            if (Min.More(other.Max))
+            if (Minimum.More(other.Maximum))
             {
                 return Int32.MaxValue;
             }
 
-            if (Max.Less(other.Min))
+            if (Maximum.Less(other.Minimum))
             {
                 return Int32.MinValue;
             }
 
-            return Min.CompareTo(other.Min) + Max.CompareTo(other.Max);
+            return Minimum.CompareTo(other.Minimum) + Maximum.CompareTo(other.Maximum);
         }
 
         public Boolean Equals(Range<T> other)
         {
-            return EqualityComparer<T>.Default.Equals(Min, other.Min) && EqualityComparer<T>.Default.Equals(Max, other.Max);
+            return EqualityComparer<T>.Default.Equals(Minimum, other.Minimum) && EqualityComparer<T>.Default.Equals(Maximum, other.Maximum);
         }
 
         public override Boolean Equals(Object? obj)
@@ -135,7 +135,7 @@ namespace NetExtender.Types.Numerics
 
         public override Int32 GetHashCode()
         {
-            return HashCode.Combine(Min, Max);
+            return HashCode.Combine(Minimum, Maximum);
         }
     }
 }

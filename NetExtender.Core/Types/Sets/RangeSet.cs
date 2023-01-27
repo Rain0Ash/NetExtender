@@ -48,12 +48,12 @@ namespace NetExtender.Types.Sets
 
         public Range<T> Minimum()
         {
-            return this.MinBy(range => range.Min);
+            return this.MinBy(range => range.Minimum);
         }
 
         public Range<T> Maximum()
         {
-            return this.MaxBy(range => range.Max);
+            return this.MaxBy(range => range.Maximum);
         }
     }
 }

@@ -96,7 +96,7 @@ namespace NetExtender.Types.Sets
             Set = new SortedSetCollection<T>(source, Inner);
         }
 
-        public OrderedSortedSet(IEnumerable<T> source, IEnumerable<T> order)
+        public OrderedSortedSet(IEnumerable<T> source, IEnumerable<T>? order)
         {
             if (source is null)
             {
@@ -154,28 +154,22 @@ namespace NetExtender.Types.Sets
             return true;
         }
 
-        /// <inheritdoc cref="SortedSet{T}.ExceptWith"/>
-        public void ExceptWith(IEnumerable<T> other)
+        /// <inheritdoc cref="SortedSet{T}.UnionWith"/>
+        public void UnionWith(IEnumerable<T> other)
         {
             if (other is null)
             {
                 throw new ArgumentNullException(nameof(other));
             }
 
-            if (Count <= 0)
-            {
-                return;
-            }
-
             if (ReferenceEquals(this, other))
             {
-                Clear();
                 return;
             }
 
             foreach (T item in other)
             {
-                Remove(item);
+                Add(item);
             }
         }
 
@@ -199,6 +193,31 @@ namespace NetExtender.Types.Sets
                     continue;
                 }
 
+                Remove(item);
+            }
+        }
+
+        /// <inheritdoc cref="SortedSet{T}.ExceptWith"/>
+        public void ExceptWith(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            if (Count <= 0)
+            {
+                return;
+            }
+
+            if (ReferenceEquals(this, other))
+            {
+                Clear();
+                return;
+            }
+
+            foreach (T item in other)
+            {
                 Remove(item);
             }
         }
@@ -235,23 +254,15 @@ namespace NetExtender.Types.Sets
             }
         }
 
-        /// <inheritdoc cref="SortedSet{T}.UnionWith"/>
-        public void UnionWith(IEnumerable<T> other)
+        /// <inheritdoc cref="SortedSet{T}.IsSubsetOf"/>
+        public Boolean IsSubsetOf(IEnumerable<T> other)
         {
             if (other is null)
             {
                 throw new ArgumentNullException(nameof(other));
             }
 
-            if (ReferenceEquals(this, other))
-            {
-                return;
-            }
-
-            foreach (T item in other)
-            {
-                Add(item);
-            }
+            return Set.IsSubsetOf(other);
         }
 
         /// <inheritdoc cref="SortedSet{T}.IsProperSubsetOf"/>
@@ -265,28 +276,6 @@ namespace NetExtender.Types.Sets
             return Set.IsProperSubsetOf(other);
         }
 
-        /// <inheritdoc cref="SortedSet{T}.IsProperSupersetOf"/>
-        public Boolean IsProperSupersetOf(IEnumerable<T> other)
-        {
-            if (other is null)
-            {
-                throw new ArgumentNullException(nameof(other));
-            }
-
-            return Set.IsProperSupersetOf(other);
-        }
-
-        /// <inheritdoc cref="SortedSet{T}.IsSubsetOf"/>
-        public Boolean IsSubsetOf(IEnumerable<T> other)
-        {
-            if (other is null)
-            {
-                throw new ArgumentNullException(nameof(other));
-            }
-
-            return Set.IsSubsetOf(other);
-        }
-
         /// <inheritdoc cref="SortedSet{T}.IsSupersetOf"/>
         public Boolean IsSupersetOf(IEnumerable<T> other)
         {
@@ -296,6 +285,17 @@ namespace NetExtender.Types.Sets
             }
 
             return Set.IsSupersetOf(other);
+        }
+
+        /// <inheritdoc cref="SortedSet{T}.IsProperSupersetOf"/>
+        public Boolean IsProperSupersetOf(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return Set.IsProperSupersetOf(other);
         }
 
         /// <inheritdoc cref="SortedSet{T}.Overlaps"/>
@@ -352,15 +352,25 @@ namespace NetExtender.Types.Sets
         }
 
         /// <inheritdoc cref="SortedSet{T}.CopyTo(T[],Int32)"/>
-        public void CopyTo(T[] array, Int32 arrayIndex)
+        void ICollection.CopyTo(Array array, Int32 index)
         {
-            Set.CopyTo(array, arrayIndex);
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            ((ICollection) Set).CopyTo(array, index);
         }
 
         /// <inheritdoc cref="SortedSet{T}.CopyTo(T[],Int32)"/>
-        void ICollection.CopyTo(Array array, Int32 index)
+        public void CopyTo(T[] array, Int32 arrayIndex)
         {
-            ((ICollection) Set).CopyTo(array, index);
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            Set.CopyTo(array, arrayIndex);
         }
 
         public T this[Int32 index]

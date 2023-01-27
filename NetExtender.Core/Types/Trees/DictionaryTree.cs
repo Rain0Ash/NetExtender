@@ -344,13 +344,7 @@ namespace NetExtender.Types.Trees
 
         public Boolean Purge()
         {
-            Boolean successful = false;
-            foreach (TKey key in Keys)
-            {
-                successful |= Purge(key);
-            }
-
-            return successful;
+            return Keys.Aggregate(false, (current, key) => current | Purge(key));
         }
 
         // ReSharper disable once CognitiveComplexity
@@ -382,12 +376,13 @@ namespace NetExtender.Types.Trees
             Boolean successful = false;
             foreach ((TKey dictionarykey, IDictionaryTreeNode<TKey, TValue> dictionary) in node)
             {
-                //TODO: CS8598
-                if (/*dictionary is null! || */dictionary.Count <= 0 && dictionary.Value.IsDefault())
+                if (dictionary.Count <= 0 && dictionary.Value.IsDefault())
                 {
                     successful |= node.Tree.Remove(dictionarykey);
+                    continue;
                 }
-                else if (dictionary.Count > 0)
+
+                if (dictionary.Count > 0)
                 {
                     successful |= dictionary.Purge();
                 }

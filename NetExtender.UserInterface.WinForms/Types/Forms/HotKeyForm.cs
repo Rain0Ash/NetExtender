@@ -40,5 +40,16 @@ namespace NetExtender.UserInterface.WinForms.Forms
         {
             return WinFormsHotKeyUtilities.RegisterHotKey(this, hotkey);
         }
+        
+        public Boolean UnregisterHotKey(Int32 id)
+        {
+            return WinFormsHotKeyUtilities.UnregisterHotKey(this, id);
+        }
+
+        public Boolean RegisterHotKey<T>(T id) where T : unmanaged, IConvertible
+        {
+            // ReSharper disable once InvokeAsExtensionMethod
+            return WinFormsHotKeyUtilities.UnregisterHotKey(this, id);
+        }
     }
 }

@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using System.Windows.Forms;
 using NetExtender.Types.HotKeys;
+using NetExtender.UserInterface.Interfaces;
 
 namespace NetExtender.Utilities.UserInterface
 {
@@ -98,6 +99,26 @@ namespace NetExtender.Utilities.UserInterface
             }
 
             return HotKeyUtilities.RegisterHotKey(form.Handle, hotkeys);
+        }
+        
+        public static Boolean UnregisterHotKey(this Form form, Int32 id)
+        {
+            return form switch
+            {
+                null => throw new ArgumentNullException(nameof(form)),
+                IUserInterfaceHandle handle => HotKeyUtilities.UnregisterHotKey(handle.Handle, id),
+                _ => HotKeyUtilities.UnregisterHotKey(form.Handle, id)
+            };
+        }
+        
+        public static Boolean UnregisterHotKey<T>(this Form form, T id) where T : unmanaged, IConvertible
+        {
+            return form switch
+            {
+                null => throw new ArgumentNullException(nameof(form)),
+                IUserInterfaceHandle handle => HotKeyUtilities.UnregisterHotKey(handle.Handle, id),
+                _ => HotKeyUtilities.UnregisterHotKey(form.Handle, id)
+            };
         }
     }
 }

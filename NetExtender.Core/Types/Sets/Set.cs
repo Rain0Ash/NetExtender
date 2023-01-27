@@ -20,13 +20,13 @@ namespace NetExtender.Types.Sets
             return new Set(set);
         }
 
-        private readonly ISet _set;
+        private ISet Internal { get; }
 
         public Int32 Count
         {
             get
             {
-                return _set.Count;
+                return Internal.Count;
             }
         }
 
@@ -53,22 +53,27 @@ namespace NetExtender.Types.Sets
 
         public Set(ISet set)
         {
-            _set = set;
+            Internal = set;
         }
 
         public void Clear()
         {
-            _set.Clear();
+            Internal.Clear();
         }
 
         void ICollection.CopyTo(Array array, Int32 index)
         {
-            _set.CopyTo(array, index);
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            Internal.CopyTo(array, index);
         }
 
         public IEnumerator GetEnumerator()
         {
-            return _set.GetEnumerator();
+            return Internal.GetEnumerator();
         }
     }
 }

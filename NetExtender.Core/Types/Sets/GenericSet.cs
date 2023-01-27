@@ -67,69 +67,119 @@ namespace NetExtender.Types.Sets
             Internal = set ?? throw new ArgumentNullException(nameof(set));
         }
 
-        void ICollection<T>.Add(T item)
+        public Boolean Contains(T item)
         {
-            Internal.Add(item ?? throw new ArgumentNullException(nameof(item)));
-        }
-
-        public void ExceptWith(IEnumerable<T> other)
-        {
-            Internal.ExceptWith(other);
-        }
-
-        public void IntersectWith(IEnumerable<T> other)
-        {
-            Internal.IntersectWith(other);
-        }
-
-        public Boolean IsProperSubsetOf(IEnumerable<T> other)
-        {
-            return Internal.IsProperSubsetOf(other);
-        }
-
-        public Boolean IsProperSupersetOf(IEnumerable<T> other)
-        {
-            return Internal.IsProperSupersetOf(other);
+            return Internal.Contains(item);
         }
 
         public Boolean IsSubsetOf(IEnumerable<T> other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             return Internal.IsSubsetOf(other);
+        }
+
+        public Boolean IsProperSubsetOf(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return Internal.IsProperSubsetOf(other);
         }
 
         public Boolean IsSupersetOf(IEnumerable<T> other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             return Internal.IsSupersetOf(other);
+        }
+
+        public Boolean IsProperSupersetOf(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return Internal.IsProperSupersetOf(other);
         }
 
         public Boolean Overlaps(IEnumerable<T> other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             return Internal.Overlaps(other);
         }
 
         public Boolean SetEquals(IEnumerable<T> other)
         {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
             return Internal.SetEquals(other);
         }
 
-        public void SymmetricExceptWith(IEnumerable<T> other)
-        {
-            Internal.SymmetricExceptWith(other);
-        }
-
-        public void UnionWith(IEnumerable<T> other)
-        {
-            Internal.UnionWith(other);
-        }
-
-        Boolean ISet<T>.Add(T item)
+        public Boolean Add(T item)
         {
             return Internal.Add(item);
         }
 
-        public Boolean Contains(T item)
+        void ICollection<T>.Add(T item)
         {
-            return Internal.Contains(item);
+            Internal.Add(item);
+        }
+
+        public void UnionWith(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            Internal.UnionWith(other);
+        }
+
+        public void IntersectWith(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            Internal.IntersectWith(other);
+        }
+
+        public void ExceptWith(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            Internal.ExceptWith(other);
+        }
+
+        public void SymmetricExceptWith(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            Internal.SymmetricExceptWith(other);
         }
 
         public Boolean Remove(T item)
@@ -144,11 +194,21 @@ namespace NetExtender.Types.Sets
 
         void ICollection.CopyTo(Array array, Int32 index)
         {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
             Internal.CopyTo((T[]) array, index);
         }
 
         public void CopyTo(T[] array, Int32 arrayIndex)
         {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
             Internal.CopyTo(array, arrayIndex);
         }
 

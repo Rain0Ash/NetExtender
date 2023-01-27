@@ -305,7 +305,6 @@ namespace NetExtender.Utilities.Windows.IO
 
                 using Process? process = Process.Start("notepad.exe", info.FullName);
 
-                //TODO: CS8598
                 // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
                 if (process is null)
                 {
@@ -313,9 +312,7 @@ namespace NetExtender.Utilities.Windows.IO
                 }
 
                 await process.WaitForExitAsync(token);
-
                 await using FileStream stream = info.OpenRead();
-
                 return await stream.ReadAsStringAsync();
             }
             catch (Exception)

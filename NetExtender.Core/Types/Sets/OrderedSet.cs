@@ -85,6 +85,96 @@ namespace NetExtender.Types.Sets
         {
             return Node.ContainsKey(item);
         }
+        
+        /// <inheritdoc cref="SortedSet{T}.IsSubsetOf"/>
+        public Boolean IsSubsetOf(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return other switch
+            {
+                ISet<T> set => set.IsSupersetOf(this),
+                IImmutableSet<T> set => set.IsSupersetOf(this),
+                IReadOnlySet<T> set => set.IsSupersetOf(this),
+                _ => other.ToHashSet().IsSupersetOf(this)
+            };
+        }
+
+        /// <inheritdoc cref="SortedSet{T}.IsProperSubsetOf"/>
+        public Boolean IsProperSubsetOf(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return other switch
+            {
+                ISet<T> set => set.IsProperSupersetOf(this),
+                IImmutableSet<T> set => set.IsProperSupersetOf(this),
+                IReadOnlySet<T> set => set.IsProperSupersetOf(this),
+                _ => other.ToHashSet().IsProperSupersetOf(this)
+            };
+        }
+
+        /// <inheritdoc cref="SortedSet{T}.IsSupersetOf"/>
+        public Boolean IsSupersetOf(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return other switch
+            {
+                ISet<T> set => set.IsSubsetOf(this),
+                IImmutableSet<T> set => set.IsSubsetOf(this),
+                IReadOnlySet<T> set => set.IsSubsetOf(this),
+                _ => other.ToHashSet().IsSubsetOf(this)
+            };
+        }
+
+        /// <inheritdoc cref="SortedSet{T}.IsProperSupersetOf"/>
+        public Boolean IsProperSupersetOf(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return other switch
+            {
+                ISet<T> set => set.IsProperSubsetOf(this),
+                IImmutableSet<T> set => set.IsProperSubsetOf(this),
+                IReadOnlySet<T> set => set.IsProperSubsetOf(this),
+                _ => other.ToHashSet().IsProperSubsetOf(this)
+            };
+        }
+
+        /// <inheritdoc cref="SortedSet{T}.Overlaps"/>
+        public Boolean Overlaps(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return other.Any(Contains);
+        }
+
+        /// <inheritdoc cref="SortedSet{T}.SetEquals"/>
+        public Boolean SetEquals(IEnumerable<T> other)
+        {
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            return ReferenceEquals(this, other) || other.All(Contains);
+        }
 
         public Boolean Add(T item)
         {
@@ -226,96 +316,6 @@ namespace NetExtender.Types.Sets
             }
         }
 
-        /// <inheritdoc cref="SortedSet{T}.IsProperSubsetOf"/>
-        public Boolean IsProperSubsetOf(IEnumerable<T> other)
-        {
-            if (other is null)
-            {
-                throw new ArgumentNullException(nameof(other));
-            }
-
-            return other switch
-            {
-                ISet<T> set => set.IsProperSupersetOf(this),
-                IImmutableSet<T> set => set.IsProperSupersetOf(this),
-                IReadOnlySet<T> set => set.IsProperSupersetOf(this),
-                _ => other.ToHashSet().IsProperSupersetOf(this)
-            };
-        }
-
-        /// <inheritdoc cref="SortedSet{T}.IsProperSupersetOf"/>
-        public Boolean IsProperSupersetOf(IEnumerable<T> other)
-        {
-            if (other is null)
-            {
-                throw new ArgumentNullException(nameof(other));
-            }
-
-            return other switch
-            {
-                ISet<T> set => set.IsProperSubsetOf(this),
-                IImmutableSet<T> set => set.IsProperSubsetOf(this),
-                IReadOnlySet<T> set => set.IsProperSubsetOf(this),
-                _ => other.ToHashSet().IsProperSubsetOf(this)
-            };
-        }
-
-        /// <inheritdoc cref="SortedSet{T}.IsSubsetOf"/>
-        public Boolean IsSubsetOf(IEnumerable<T> other)
-        {
-            if (other is null)
-            {
-                throw new ArgumentNullException(nameof(other));
-            }
-
-            return other switch
-            {
-                ISet<T> set => set.IsSupersetOf(this),
-                IImmutableSet<T> set => set.IsSupersetOf(this),
-                IReadOnlySet<T> set => set.IsSupersetOf(this),
-                _ => other.ToHashSet().IsSupersetOf(this)
-            };
-        }
-
-        /// <inheritdoc cref="SortedSet{T}.IsSupersetOf"/>
-        public Boolean IsSupersetOf(IEnumerable<T> other)
-        {
-            if (other is null)
-            {
-                throw new ArgumentNullException(nameof(other));
-            }
-
-            return other switch
-            {
-                ISet<T> set => set.IsSubsetOf(this),
-                IImmutableSet<T> set => set.IsSubsetOf(this),
-                IReadOnlySet<T> set => set.IsSubsetOf(this),
-                _ => other.ToHashSet().IsSubsetOf(this)
-            };
-        }
-
-        /// <inheritdoc cref="SortedSet{T}.Overlaps"/>
-        public Boolean Overlaps(IEnumerable<T> other)
-        {
-            if (other is null)
-            {
-                throw new ArgumentNullException(nameof(other));
-            }
-
-            return other.Any(Contains);
-        }
-
-        /// <inheritdoc cref="SortedSet{T}.SetEquals"/>
-        public Boolean SetEquals(IEnumerable<T> other)
-        {
-            if (other is null)
-            {
-                throw new ArgumentNullException(nameof(other));
-            }
-
-            return ReferenceEquals(this, other) || other.All(Contains);
-        }
-
         public Boolean Remove(T item)
         {
             if (!Node.TryGetValue(item, out LinkedListNode<T>? node))
@@ -335,19 +335,29 @@ namespace NetExtender.Types.Sets
             Node.Clear();
         }
 
-        public void CopyTo(T[] array, Int32 arrayIndex)
-        {
-            Linked.CopyTo(array, arrayIndex);
-        }
-
         void ICollection.CopyTo(Array array, Int32 index)
         {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
             if (array is not T[] generic)
             {
                 throw new ArgumentException(@"Invalid type", nameof(array));
             }
 
             CopyTo(generic, index);
+        }
+
+        public void CopyTo(T[] array, Int32 arrayIndex)
+        {
+            if (array is null)
+            {
+                throw new ArgumentNullException(nameof(array));
+            }
+
+            Linked.CopyTo(array, arrayIndex);
         }
 
         public IEnumerator<T> GetEnumerator()

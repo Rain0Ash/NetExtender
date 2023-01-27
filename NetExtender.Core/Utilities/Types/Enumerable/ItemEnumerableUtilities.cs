@@ -3846,7 +3846,6 @@ namespace NetExtender.Utilities.Types
             Int32 counter = 0;
 
             //TODO: check algorithm
-
             do
             {
                 T item = enumerator.Current;

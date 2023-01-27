@@ -39,5 +39,15 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
         {
             return WindowsPresentationHotKeyUtilities.RegisterHotKey(this, hotkey);
         }
+
+        public Boolean UnregisterHotKey(Int32 id)
+        {
+            return WindowsPresentationHotKeyUtilities.UnregisterHotKey(this, id);
+        }
+
+        public Boolean RegisterHotKey<T>(T id) where T : unmanaged, IConvertible
+        {
+            return WindowsPresentationHotKeyUtilities.UnregisterHotKey(this, id);
+        }
     }
 }

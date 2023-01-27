@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using NetExtender.Types.HotKeys;
@@ -31,12 +32,19 @@ namespace NetExtender.Utilities.UserInterface
 
     public static class HotKeyUtilities
     {
-        [DllImport("user32.dll")]
-        private static extern Boolean RegisterHotKey(IntPtr handle, Int32 id, Int32 modifiers, Int32 key);
+        [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
+        private static class Internal
+        {
+            [DllImport("user32.dll")]
+            public static extern Boolean RegisterHotKey(IntPtr handle, Int32 id, Int32 modifiers, Int32 key);
+        
+            [DllImport("user32.dll")]
+            public static extern Boolean UnregisterHotKey(IntPtr handle, Int32 id);
+        }
 
         private static Boolean RegisterHotKey(IntPtr handle, Int32 id, Char key, HotKeyModifierKeys modifiers)
         {
-            return handle != IntPtr.Zero && RegisterHotKey(handle, id, (Int32) modifiers, key);
+            return handle != IntPtr.Zero && Internal.RegisterHotKey(handle, id, (Int32) modifiers, key);
         }
 
         private static ConcurrentDictionary<IntPtr, Int32> Counter { get; } = new ConcurrentDictionary<IntPtr, Int32>();
@@ -150,6 +158,36 @@ namespace NetExtender.Utilities.UserInterface
             }
 
             return RegisterHotKey(handle.Handle, hotkeys);
+        }
+
+        public static Boolean UnregisterHotKey(IntPtr handle, Int32 id)
+        {
+            return handle != IntPtr.Zero && Internal.UnregisterHotKey(handle, id);
+        }
+
+        public static Boolean UnregisterHotKey(this IUserInterfaceHandle handle, Int32 id)
+        {
+            if (handle is null)
+            {
+                throw new ArgumentNullException(nameof(handle));
+            }
+
+            return UnregisterHotKey(handle.Handle, id);
+        }
+
+        public static Boolean UnregisterHotKey<T>(IntPtr handle, T id) where T : unmanaged, IConvertible
+        {
+            return handle != IntPtr.Zero && UnregisterHotKey(handle, id.ToInt32(CultureInfo.InvariantCulture));
+        }
+        
+        public static Boolean UnregisterHotKey<T>(this IUserInterfaceHandle handle, T id) where T : unmanaged, IConvertible
+        {
+            if (handle is null)
+            {
+                throw new ArgumentNullException(nameof(handle));
+            }
+
+            return UnregisterHotKey(handle.Handle, id);
         }
     }
 }
