@@ -2,17 +2,18 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using NetExtender.Types.Events;
 
-namespace NetExtender.Types.Events
+namespace NetExtender.Types.HotKeys.Events
 {
-    public class HotKeyEventArgs : HandledEventArgs<Int32>
+    public class HotKeyEventArgs : HandledEventArgs<HotKeyAction<Int32>>
     {
-        public HotKeyEventArgs(Int32 value)
+        public HotKeyEventArgs(HotKeyAction<Int32> value)
             : base(value)
         {
         }
 
-        public HotKeyEventArgs(Int32 value, Boolean handled)
+        public HotKeyEventArgs(HotKeyAction<Int32> value, Boolean handled)
             : base(value, handled)
         {
         }

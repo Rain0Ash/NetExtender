@@ -2,8 +2,8 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using NetExtender.Types.Events;
 using NetExtender.Types.HotKeys;
+using NetExtender.Types.HotKeys.Events;
 using NetExtender.UserInterface.Windows.Types;
 using NetExtender.Utilities.UserInterface;
 using NetExtender.Windows;
@@ -21,8 +21,16 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
                 return base.WndProc(ref message);
             }
 
-            OnHotKey(new HotKeyEventArgs(message.WParam.ToInt32()));
+            OnHotKey(message.WParam.ToInt32());
             return base.WndProc(ref message);
+        }
+        
+        private void OnHotKey(Int32 id)
+        {
+            if (HotKeyUtilities.TryGetHotKey(Handle, id, out WindowsHotKeyAction<Int32> action))
+            {
+                OnHotKey(new HotKeyEventArgs(action));
+            }
         }
 
         protected virtual void OnHotKey(HotKeyEventArgs args)

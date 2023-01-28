@@ -3,8 +3,8 @@
 
 using System;
 using System.Windows.Forms;
-using NetExtender.Types.Events;
 using NetExtender.Types.HotKeys;
+using NetExtender.Types.HotKeys.Events;
 using NetExtender.Utilities.UserInterface;
 using NetExtender.Windows;
 
@@ -22,8 +22,16 @@ namespace NetExtender.UserInterface.WinForms.Forms
                 return;
             }
 
-            OnHotKey(new HotKeyEventArgs(message.WParam.ToInt32()));
+            OnHotKey(message.WParam.ToInt32());
             base.WndProc(ref message);
+        }
+
+        private void OnHotKey(Int32 id)
+        {
+            if (HotKeyUtilities.TryGetHotKey(Handle, id, out WindowsHotKeyAction<Int32> action))
+            {
+                OnHotKey(new HotKeyEventArgs(action));
+            }
         }
 
         protected virtual void OnHotKey(HotKeyEventArgs args)

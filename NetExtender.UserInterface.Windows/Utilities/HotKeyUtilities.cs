@@ -41,14 +41,50 @@ namespace NetExtender.Utilities.UserInterface
             [DllImport("user32.dll")]
             public static extern Boolean UnregisterHotKey(IntPtr handle, Int32 id);
         }
+        
+        private static ConcurrentDictionary<IntPtr, Int32> Counter { get; }
+        private static ConcurrentDictionary<IntPtr, ConcurrentDictionary<Int32, WindowsHotKeyAction<Int32>>> HotKeys { get; }
+
+        static HotKeyUtilities()
+        {
+            Counter = new ConcurrentDictionary<IntPtr, Int32>();
+            HotKeys = new ConcurrentDictionary<IntPtr, ConcurrentDictionary<Int32, WindowsHotKeyAction<Int32>>>();
+        }
+
+        public static Boolean TryGetHotKey(IntPtr handle, Int32 id, out WindowsHotKeyAction<Int32> result)
+        {
+            if (HotKeys.TryGetValue(handle, out ConcurrentDictionary<Int32, WindowsHotKeyAction<Int32>>? hotkeys))
+            {
+                return hotkeys.TryGetValue(id, out result);
+            }
+
+            result = default;
+            return false;
+        }
 
         private static Boolean RegisterHotKey(IntPtr handle, Int32 id, Char key, HotKeyModifierKeys modifiers)
         {
-            return handle != IntPtr.Zero && Internal.RegisterHotKey(handle, id, (Int32) modifiers, key);
+            if (handle == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            if (!Internal.RegisterHotKey(handle, id, (Int32) modifiers, key))
+            {
+                return false;
+            }
+
+            ConcurrentDictionary<Int32, WindowsHotKeyAction<Int32>> hotkeys = HotKeys.GetOrAdd(handle, _ => new ConcurrentDictionary<Int32, WindowsHotKeyAction<Int32>>());
+
+            if (hotkeys.TryAdd(id, new WindowsHotKeyAction<Int32>(id, key, modifiers)))
+            {
+                return true;
+            }
+
+            Internal.UnregisterHotKey(handle, id);
+            return false;
         }
-
-        private static ConcurrentDictionary<IntPtr, Int32> Counter { get; } = new ConcurrentDictionary<IntPtr, Int32>();
-
+        
         public static Boolean RegisterHotKey(IntPtr handle, WindowsHotKeyAction hotkey, out Int32 id)
         {
             if (handle == IntPtr.Zero)
@@ -162,7 +198,22 @@ namespace NetExtender.Utilities.UserInterface
 
         public static Boolean UnregisterHotKey(IntPtr handle, Int32 id)
         {
-            return handle != IntPtr.Zero && Internal.UnregisterHotKey(handle, id);
+            if (handle == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            if (!HotKeys.TryGetValue(handle, out ConcurrentDictionary<Int32, WindowsHotKeyAction<Int32>>? hotkeys))
+            {
+                return Internal.UnregisterHotKey(handle, id);
+            }
+
+            if (hotkeys.TryRemove(id, out _) && hotkeys.IsEmpty)
+            {
+                HotKeys.TryRemove(handle, out _);
+            }
+            
+            return Internal.UnregisterHotKey(handle, id);
         }
 
         public static Boolean UnregisterHotKey(this IUserInterfaceHandle handle, Int32 id)
