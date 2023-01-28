@@ -22,7 +22,7 @@ namespace NetExtender.Types.HotKeys
         
         public static implicit operator WindowsHotKeyAction(HotKeyAction value)
         {
-            return new WindowsHotKeyAction((Char) value.Key, (HotKeyModifierKeys) value.Modifier);
+            return new WindowsHotKeyAction(value.VirtualKey, (HotKeyModifierKeys) value.Modifier);
         }
         
         public static implicit operator HotKeyAction(WindowsHotKeyAction value)
@@ -48,6 +48,14 @@ namespace NetExtender.Types.HotKeys
         public String? Title { get; }
         public Key Key { get; }
         public ModifierKeys Modifier { get; }
+        
+        public Char VirtualKey
+        {
+            get
+            {
+                return (Char) KeyInterop.VirtualKeyFromKey(Key);
+            }
+        }
 
         public Boolean IsEmpty
         {
@@ -72,7 +80,7 @@ namespace NetExtender.Types.HotKeys
         public HotKeyAction(WindowsHotKeyAction value)
         {
             Title = value.Title;
-            Key = (Key) value.Key;
+            Key = KeyInterop.KeyFromVirtualKey(value.Key);
             Modifier = (ModifierKeys) value.Modifier;
         }
         
@@ -122,12 +130,12 @@ namespace NetExtender.Types.HotKeys
         
         public static implicit operator WindowsHotKeyAction(HotKeyAction<T> value)
         {
-            return new WindowsHotKeyAction((Char) value.Key, (HotKeyModifierKeys) value.Modifier);
+            return new WindowsHotKeyAction(value.VirtualKey, (HotKeyModifierKeys) value.Modifier);
         }
         
         public static implicit operator WindowsHotKeyAction<T>(HotKeyAction<T> value)
         {
-            return new WindowsHotKeyAction<T>(value.Id, (Char) value.Key, (HotKeyModifierKeys) value.Modifier);
+            return new WindowsHotKeyAction<T>(value.Id, value.VirtualKey, (HotKeyModifierKeys) value.Modifier);
         }
         
         public static implicit operator HotKeyAction<T>(WindowsHotKeyAction<T> value)
@@ -159,6 +167,14 @@ namespace NetExtender.Types.HotKeys
         public String? Title { get; }
         public Key Key { get; }
         public ModifierKeys Modifier { get; }
+        
+        public Char VirtualKey
+        {
+            get
+            {
+                return (Char) KeyInterop.VirtualKeyFromKey(Key);
+            }
+        }
 
         public Boolean IsEmpty
         {
@@ -190,7 +206,7 @@ namespace NetExtender.Types.HotKeys
         {
             Id = value.Id;
             Title = value.Title;
-            Key = (Key) value.Key;
+            Key = KeyInterop.KeyFromVirtualKey(value.Key);
             Modifier = (ModifierKeys) value.Modifier;
         }
         

@@ -38,6 +38,14 @@ namespace NetExtender.Types.HotKeys
         public Char Key { get; }
         public HotKeyModifierKeys Modifier { get; }
 
+        public Char VirtualKey
+        {
+            get
+            {
+                return Key;
+            }
+        }
+
         public Boolean IsEmpty
         {
             get
@@ -99,7 +107,7 @@ namespace NetExtender.Types.HotKeys
         
         public static implicit operator WindowsHotKeyAction(WindowsHotKeyAction<T> value)
         {
-            return new WindowsHotKeyAction(value.Key, value.Modifier);
+            return new WindowsHotKeyAction(value.VirtualKey, value.Modifier);
         }
         
         public static implicit operator T(WindowsHotKeyAction<T> value)
@@ -126,6 +134,14 @@ namespace NetExtender.Types.HotKeys
         public String? Title { get; }
         public Char Key { get; }
         public HotKeyModifierKeys Modifier { get; }
+
+        public Char VirtualKey
+        {
+            get
+            {
+                return Key;
+            }
+        }
 
         public Boolean IsEmpty
         {

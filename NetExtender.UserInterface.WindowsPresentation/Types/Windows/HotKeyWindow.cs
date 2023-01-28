@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Windows;
 using NetExtender.Types.HotKeys;
 using NetExtender.Types.HotKeys.Events;
 using NetExtender.UserInterface.Windows.Types;
@@ -13,6 +14,15 @@ namespace NetExtender.UserInterface.WindowsPresentation.Windows
     public abstract class HotKeyWindow : WndProcWindow
     {
         public event EventHandler<HotKeyEventArgs>? HotKey;
+
+        protected HotKeyWindow()
+        {
+            Started += RegisterHotKeys;
+        }
+
+        protected virtual void RegisterHotKeys(Object sender, RoutedEventArgs args)
+        {
+        }
 
         protected override Boolean WndProc(ref WinMessage message)
         {

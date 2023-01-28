@@ -13,6 +13,15 @@ namespace NetExtender.UserInterface.WinForms.Forms
     public abstract class HotKeyForm : Form
     {
         public event EventHandler<HotKeyEventArgs>? HotKey;
+        
+        protected HotKeyForm()
+        {
+            Load += RegisterHotKeys;
+        }
+
+        protected virtual void RegisterHotKeys(Object? sender, EventArgs args)
+        {
+        }
 
         protected override void WndProc(ref Message message)
         {
