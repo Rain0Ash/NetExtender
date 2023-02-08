@@ -74,12 +74,12 @@ namespace NetExtender.Types.SpanCollections
 
         public readonly Int32 IndexOf(T item)
         {
-            return IndexOf(item, 0, Count);
+            return Count > 0 ? IndexOf(item, 0, Count) : -1;
         }
 
         public readonly Int32 IndexOf(T item, Int32 index)
         {
-            if (index < 0 || index > Count)
+            if (index < 0 || index >= Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
@@ -89,7 +89,7 @@ namespace NetExtender.Types.SpanCollections
 
         public readonly Int32 IndexOf(T item, Int32 index, Int32 count)
         {
-            if (index < 0 || index > Count)
+            if (index < 0 || index >= Count)
             {
                 throw new ArgumentOutOfRangeException(nameof(index), index, null);
             }
@@ -100,6 +100,44 @@ namespace NetExtender.Types.SpanCollections
             }
 
             for (Int32 i = index; i < count; i++)
+            {
+                if (EqualityComparer<T>.Default.Equals(Internal[i], item))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+        
+        public Int32 LastIndexOf(T item)
+        {
+            return Count > 0 ? LastIndexOf(item, Count - 1, Count) : -1;
+        }
+
+        public Int32 LastIndexOf(T item, Int32 index)
+        {
+            if (index < 0 || index >= Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
+            }
+            
+            return LastIndexOf(item, index, index + 1);
+        }
+        
+        public Int32 LastIndexOf(T item, Int32 index, Int32 count)
+        {
+            if (index < 0 || index >= Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), index, null);
+            }
+
+            if (count < 0 || index > Count - count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count), count, null);
+            }
+            
+            for (Int32 i = index + count - 1; i >= index; i--)
             {
                 if (EqualityComparer<T>.Default.Equals(Internal[i], item))
                 {
@@ -363,6 +401,37 @@ namespace NetExtender.Types.SpanCollections
             Internal.Clear();
             Count = 0;
             Version++;
+        }
+
+        public readonly Span<TOutput> ConvertAll<TOutput>(Converter<T, TOutput> converter)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            TOutput[] array = new TOutput[Count];
+            return ConvertAll(array, converter);
+        }
+
+        public readonly Span<TOutput> ConvertAll<TOutput>(Span<TOutput> span, Converter<T, TOutput> converter)
+        {
+            if (converter is null)
+            {
+                throw new ArgumentNullException(nameof(converter));
+            }
+
+            if (span.Length != Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(span.Length), span.Length, null);
+            }
+
+            for (Int32 i = 0; i < Count; i++)
+            {
+                span[i] = converter(this[i]);
+            }
+
+            return span;
         }
 
         public readonly void CopyTo(Span<T> destination)

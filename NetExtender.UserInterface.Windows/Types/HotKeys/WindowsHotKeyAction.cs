@@ -3,11 +3,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
+using NetExtender.Types.HotKeys.Interfaces;
 using NetExtender.Utilities.UserInterface;
 
 namespace NetExtender.Types.HotKeys
 {
-    public readonly struct WindowsHotKeyAction : IEquatable<WindowsHotKeyAction>, IComparable<WindowsHotKeyAction>
+    public readonly struct WindowsHotKeyAction : IWindowsHotKeyAction<WindowsHotKeyAction>
     {
         public static Boolean operator ==(WindowsHotKeyAction first, WindowsHotKeyAction second)
         {
@@ -53,12 +56,22 @@ namespace NetExtender.Types.HotKeys
                 return Key <= 0;
             }
         }
-        
+
+        public WindowsHotKeyAction(Char key)
+            : this(key, HotKeyModifierKeys.None)
+        {
+        }
+
         public WindowsHotKeyAction(Char key, HotKeyModifierKeys modifier)
             : this(null, key, modifier)
         {
         }
-        
+
+        public WindowsHotKeyAction(String? title, Char key)
+            : this(title, key, HotKeyModifierKeys.None)
+        {
+        }
+
         public WindowsHotKeyAction(String? title, Char key, HotKeyModifierKeys modifier)
         {
             Title = title;
@@ -81,19 +94,45 @@ namespace NetExtender.Types.HotKeys
             return Title == other.Title && Key == other.Key && Modifier == other.Modifier;
         }
 
+        public Boolean Equals(Char key, HotKeyModifierKeys modifier)
+        {
+            return Key == key && Modifier == modifier;
+        }
+
+        public Boolean Equals((Char Key, HotKeyModifierKeys Modifier) other)
+        {
+            return Equals(other.Key, other.Modifier);
+        }
+
         public Int32 CompareTo(WindowsHotKeyAction other)
         {
             Int32 comparison = Key.CompareTo(other.Key);
             return comparison != 0 ? comparison : Modifier.CompareTo(other.Modifier);
         }
 
-        public override String? ToString()
+        public override String ToString()
         {
-            return Title;
+            return Title ?? String.Empty;
+        }
+
+        public String ToString(String? format, IFormatProvider? provider)
+        {
+            if (String.IsNullOrEmpty(format))
+            {
+                return ToString();
+            }
+
+            return new StringBuilder(format)
+                .Replace("{TITLE}", Title?.ToString(provider))
+                .Replace("{KEY}", Key.ToString(provider))
+                .Replace("{MODIFIER}", Modifier.ToString())
+                .Replace("{VKEY}", VirtualKey.ToString(provider))
+                .Replace("{VIRTUALKEY}", VirtualKey.ToString(provider))
+                .ToString();
         }
     }
     
-    public readonly struct WindowsHotKeyAction<T> : IEquatable<WindowsHotKeyAction<T>>, IComparable<WindowsHotKeyAction<T>> where T : unmanaged, IConvertible
+    public readonly struct WindowsHotKeyAction<T> : IWindowsHotKeyAction<WindowsHotKeyAction<T>, T> where T : unmanaged, IComparable<T>, IConvertible
     {
         public static Boolean operator ==(WindowsHotKeyAction<T> first, WindowsHotKeyAction<T> second)
         {
@@ -151,8 +190,18 @@ namespace NetExtender.Types.HotKeys
             }
         }
 
+        public WindowsHotKeyAction(T id, Char key)
+            : this(id, key, HotKeyModifierKeys.None)
+        {
+        }
+
         public WindowsHotKeyAction(T id, Char key, HotKeyModifierKeys modifier)
             : this(id, null, key, modifier)
+        {
+        }
+
+        public WindowsHotKeyAction(T id, String? title, Char key)
+            : this(id, title, key, HotKeyModifierKeys.None)
         {
         }
 
@@ -169,12 +218,12 @@ namespace NetExtender.Types.HotKeys
         {
         }
 
-        public WindowsHotKeyAction<TId> As<TId>() where TId : unmanaged, IConvertible
+        public WindowsHotKeyAction<TId> As<TId>() where TId : unmanaged, IComparable<TId>, IConvertible
         {
             return As(static id => (TId) Convert.ChangeType(id, typeof(TId)));
         }
 
-        public WindowsHotKeyAction<TId> As<TId>(Func<T, TId> selector) where TId : unmanaged, IConvertible
+        public WindowsHotKeyAction<TId> As<TId>(Func<T, TId> selector) where TId : unmanaged, IComparable<TId>, IConvertible
         {
             if (selector is null)
             {
@@ -200,15 +249,43 @@ namespace NetExtender.Types.HotKeys
             return EqualityComparer<T>.Default.Equals(Id, other.Id) && Title == other.Title && Key == other.Key && Modifier == other.Modifier;
         }
         
+        public Boolean Equals(Char key, HotKeyModifierKeys modifier)
+        {
+            return Key == key && Modifier == modifier;
+        }
+
+        public Boolean Equals((Char Key, HotKeyModifierKeys Modifier) other)
+        {
+            return Equals(other.Key, other.Modifier);
+        }
+        
         public Int32 CompareTo(WindowsHotKeyAction<T> other)
         {
-            Int32 comparison = Key.CompareTo(other.Key);
+            Int32 comparison = Id.CompareTo(other.Id);
+            if (comparison != 0)
+            {
+                return comparison;
+            }
+
+            comparison = Key.CompareTo(other.Key);
             return comparison != 0 ? comparison : Modifier.CompareTo(other.Modifier);
         }
 
-        public override String? ToString()
+        public override String ToString()
         {
-            return Title;
+            return Title ?? Id.ToString(CultureInfo.InvariantCulture);
+        }
+
+        public String ToString(String? format, IFormatProvider? provider)
+        {
+            return new StringBuilder(format)
+                .Replace("{ID}", Id.ToString(provider))
+                .Replace("{TITLE}", Title?.ToString(provider))
+                .Replace("{KEY}", Key.ToString(provider))
+                .Replace("{MODIFIER}", Modifier.ToString())
+                .Replace("{VKEY}", VirtualKey.ToString(provider))
+                .Replace("{VIRTUALKEY}", VirtualKey.ToString(provider))
+                .ToString();
         }
     }
 }

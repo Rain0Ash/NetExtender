@@ -3,7 +3,7 @@
 
 using System;
 
-namespace NetExtender.Initializer.Types.Behavior.Interfaces
+namespace NetExtender.Types.Behavior.Interfaces
 {
     public interface IBehavior<out TOptions> : IBehavior where TOptions : unmanaged, Enum
     {

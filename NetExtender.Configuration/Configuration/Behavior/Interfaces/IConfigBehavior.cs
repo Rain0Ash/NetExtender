@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Behavior.Transactions.Interfaces;
 using NetExtender.Configuration.Common;
-using NetExtender.Initializer.Types.Behavior.Interfaces;
+using NetExtender.Types.Behavior.Interfaces;
 
 namespace NetExtender.Configuration.Behavior.Interfaces
 {

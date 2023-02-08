@@ -10,7 +10,7 @@ namespace NetExtender.Initializer
 {
     public abstract class Initializer
     {
-        public static Task Stop
+        protected static Task Stop
         {
             get
             {
@@ -18,11 +18,19 @@ namespace NetExtender.Initializer
             }
         }
 
-        public static Task<Int32> Zero
+        protected static Task<Int32> Zero
         {
             get
             {
                 return Stop.ContinueWith(_ => 0);
+            }
+        }
+
+        protected static Task<Int32> One
+        {
+            get
+            {
+                return Stop.ContinueWith(_ => 1);
             }
         }
 
@@ -151,6 +159,31 @@ namespace NetExtender.Initializer
         protected virtual void Terminate(Object? sender, Exception? exception)
         {
             Environment.Exit(exception?.HResult ?? 1);
+        }
+
+        protected static Task<Int32> Exit()
+        {
+            return Zero;
+        }
+
+        protected static Task<Int32> Exit(Int32 code)
+        {
+            return code switch
+            {
+                0 => Zero,
+                1 => One,
+                _ => Task.Delay(TimeSpan.FromMilliseconds(100)).ContinueWith(_ => code)
+            };
+        }
+
+        protected static Task<Int32> Exit(TimeSpan delay)
+        {
+            return Exit(delay, 0);
+        }
+
+        protected static Task<Int32> Exit(TimeSpan delay, Int32 code)
+        {
+            return Task.Delay(delay).ContinueWith(_ => code);
         }
 
         protected internal virtual void InitializeNetExtender(INetExtenderFrameworkInitializer initializer)

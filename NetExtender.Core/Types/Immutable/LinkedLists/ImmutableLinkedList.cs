@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using NetExtender.Types.Comparers;
 
 namespace NetExtender.Types.Immutable.LinkedLists
 {
@@ -36,15 +37,8 @@ namespace NetExtender.Types.Immutable.LinkedLists
         }
     }
 
-    /// <summary>
-    /// An immutable linked list data structure
-    /// </summary>
-    //TODO: refactoring
-    public readonly struct ImmutableLinkedList<T> : IReadOnlyCollection<T>, IEquatable<ImmutableLinkedList<T>>, ICollection<T>
+    public readonly struct ImmutableLinkedList<T> : ICollection<T>, IReadOnlyCollection<T>, IEquatable<ImmutableLinkedList<T>>
     {
-        /// <summary>
-        /// The empty list
-        /// </summary>
         public static ImmutableLinkedList<T> Empty
         {
             get
@@ -52,7 +46,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
                 return default;
             }
         }
-        
+
         internal static ImmutableLinkedList<T> Create(T value)
         {
             return new ImmutableLinkedList<T>(new Node(value), 1);
@@ -60,15 +54,14 @@ namespace NetExtender.Types.Immutable.LinkedLists
 
         internal static ImmutableLinkedList<T> CreateRange(IEnumerable<T> values)
         {
-            // ReSharper disable once ConvertIfStatementToSwitchStatement
             if (values is null)
             {
                 throw new ArgumentNullException(nameof(values));
             }
 
-            if (values is ImmutableLinkedList<T> list)
+            if (values is ImmutableLinkedList<T> source)
             {
-                return list;
+                return source;
             }
 
             using IEnumerator<T> enumerator = values.GetEnumerator();
@@ -89,26 +82,25 @@ namespace NetExtender.Types.Immutable.LinkedLists
             return new ImmutableLinkedList<T>(head, count);
         }
 
-        private readonly Node? _head;
-
-        /// <summary>
-        /// The length of the list
-        /// </summary>
-        public Int32 Count { get; }
+        private Node? Head { get; init; }
 
         /// <summary>
         /// The first element in the list. Throws <see cref="InvalidOperationException"/> if the list is empty.
         /// </summary>
-        public T Head
+        public T First
         {
             get
             {
-                if (Count <= 0)
+                if (Head is null || Count <= 0)
                 {
                     throw new InvalidOperationException();
                 }
 
-                return _head!.Value;
+                return Head.Value;
+            }
+            private init
+            {
+                Head = new Node(value);
             }
         }
 
@@ -120,18 +112,31 @@ namespace NetExtender.Types.Immutable.LinkedLists
         {
             get
             {
-                if (Count <= 0)
+                if (Head is null || Count <= 0)
                 {
                     throw new InvalidOperationException();
                 }
 
-                return new ImmutableLinkedList<T>(_head!.Next, Count - 1);
+                return new ImmutableLinkedList<T>(Head.Next, Count - 1);
+            }
+        }
+
+        /// <summary>
+        /// The length of the list
+        /// </summary>
+        public Int32 Count { get; }
+
+        Boolean ICollection<T>.IsReadOnly
+        {
+            get
+            {
+                return true;
             }
         }
 
         private ImmutableLinkedList(Node? head, Int32 count)
         {
-            _head = head;
+            Head = head;
             Count = count;
         }
 
@@ -142,13 +147,13 @@ namespace NetExtender.Types.Immutable.LinkedLists
         /// </summary>
         public void Deconstruct(out T head, out ImmutableLinkedList<T> tail)
         {
-            if (Count <= 0)
+            if (Head is null || Count <= 0)
             {
                 throw new InvalidOperationException();
             }
 
-            head = _head!.Value;
-            tail = new ImmutableLinkedList<T>(_head.Next, Count - 1);
+            head = Head.Value;
+            tail = new ImmutableLinkedList<T>(Head.Next, Count - 1);
         }
 
         /// <summary>
@@ -157,65 +162,648 @@ namespace NetExtender.Types.Immutable.LinkedLists
         /// </summary>
         public Boolean TryDeconstruct([MaybeNullWhen(false)] out T head, out ImmutableLinkedList<T> tail)
         {
-            if (Count <= 0)
+            if (Head is null || Count <= 0)
             {
                 head = default;
                 tail = default;
                 return false;
             }
 
-            head = _head!.Value;
-            tail = new ImmutableLinkedList<T>(_head.Next, Count - 1);
+            head = Head.Value;
+            tail = new ImmutableLinkedList<T>(Head.Next, Count - 1);
             return true;
+        }
+
+        /// <summary>
+        /// Returns true if <paramref name="value"/> is an element of the list.
+        /// This method is O(N)
+        /// </summary>
+        public Boolean Contains(T value)
+        {
+            for (Node? current = Head; current is not null; current = current.Next)
+            {
+                if (EqualityComparer<T>.Default.Equals(current.Value, value))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        void ICollection<T>.Add(T item)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// Returns a new list with <paramref name="value"/> appended.
+        /// This method is O(n) and requires copying the entire list.
+        /// </summary>
+        public ImmutableLinkedList<T> Append(T value)
+        {
+            if (Head is null || Count <= 0)
+            {
+                return Create(value);
+            }
+
+            if (!CopyRange(Head, null, out Node? first, out Node? last))
+            {
+                return this;
+            }
+            
+            last.Next = new Node(value);
+            return new ImmutableLinkedList<T>(first, Count + 1);
+        }
+
+        /// <summary>
+        /// Returns a new list with <paramref name="values"/> appended.
+        /// This method is O(n + k) where k is the number of elements in <paramref name="values"/> and requires copying the entire list.
+        /// </summary>
+        public ImmutableLinkedList<T> AppendRange(IEnumerable<T> values)
+        {
+            return AppendRange(CreateRange(values));
+        }
+
+        /// <summary>
+        /// Same as <see cref="AppendRange(ImmutableLinkedList{T})"/>, but optimized for appending 
+        /// another instance of <see cref="ImmutableLinkedList{T}"/>
+        /// </summary>
+        public ImmutableLinkedList<T> AppendRange(ImmutableLinkedList<T> source)
+        {
+            return source.PrependRange(this);
+        }
+
+        /// <summary>
+        /// Returns a new list with <paramref name="value"/> prepended.
+        /// This method is O(1) and requires no copying.
+        /// </summary>
+        public ImmutableLinkedList<T> Prepend(T value)
+        {
+            return new ImmutableLinkedList<T>(new Node(value) { Next = Head }, Count + 1);
+        }
+
+        /// <summary>
+        /// Returns a new list with <paramref name="values"/> prepended such that the first element of <paramref name="values"/> values
+        /// becomes the first element of the returned list.
+        /// This method is O(k) where k is the number of elements in <paramref name="values"/> and requires no copying.
+        /// </summary>
+        public ImmutableLinkedList<T> PrependRange(IEnumerable<T> values)
+        {
+            if (values is null)
+            {
+                throw new ArgumentNullException(nameof(values));
+            }
+
+            if (Count <= 0)
+            {
+                return CreateRange(values);
+            }
+
+            if (values is ImmutableLinkedList<T> source)
+            {
+                return PrependRange(source);
+            }
+
+            using IEnumerator<T> enumerator = values.GetEnumerator();
+            if (!enumerator.MoveNext())
+            {
+                return this;
+            }
+
+            Node first = new Node(enumerator.Current);
+            Node last = first;
+
+            Int32 count = 1;
+            while (enumerator.MoveNext())
+            {
+                last = last.Next = new Node(enumerator.Current);
+                ++count;
+            }
+
+            last.Next = Head;
+            return new ImmutableLinkedList<T>(first, count + Count);
+        }
+
+        /// <summary>
+        /// Same as <see cref="PrependRange(IEnumerable{T})"/>, but optimized for prepending another
+        /// instance of <see cref="ImmutableLinkedList{T}"/>
+        /// </summary>
+        public ImmutableLinkedList<T> PrependRange(ImmutableLinkedList<T> source)
+        {
+            if (source.Head is null || source.Count <= 0)
+            {
+                return this;
+            }
+
+            if (Count <= 0)
+            {
+                return source;
+            }
+
+            if (!CopyRange(source.Head, null, out Node? first, out Node? last))
+            {
+                return this;
+            }
+            
+            last.Next = Head;
+            return new ImmutableLinkedList<T>(first, Count + source.Count);
+        }
+
+        /// <summary>
+        /// Same as <see cref="Enumerable.Skip{TSource}(IEnumerable{TSource}, int)"/>, except the
+        /// return type is <see cref="ImmutableLinkedList{T}"/> and allocations are avoided.
+        /// This method is O(<paramref name="count"/>) and does not result in any copying.
+        /// </summary>
+        public ImmutableLinkedList<T> Skip(Int32 count)
+        {
+            if (count >= Count)
+            {
+                return Empty;
+            }
+
+            Int32 skip = 0;
+            Node? current = Head;
+            while (current is not null && skip < count)
+            {
+                current = current.Next;
+                ++skip;
+            }
+
+            return new ImmutableLinkedList<T>(current, Count - skip);
+        }
+
+        /// <summary>
+        /// Same as <see cref="Enumerable.SkipWhile{TSource}(IEnumerable{TSource}, Func{TSource, bool})"/>, except
+        /// the return type is <see cref="ImmutableLinkedList{T}"/> and allocations are avoided.
+        /// This method is O(skipped) and does not result in any copying.
+        /// </summary>
+        public ImmutableLinkedList<T> SkipWhile(Func<T, Boolean> predicate)
+        {
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            Int32 count = 0;
+            Node? head = Head;
+            while (head is not null && predicate(head.Value))
+            {
+                head = head.Next;
+                ++count;
+            }
+
+            return new ImmutableLinkedList<T>(head, Count - count);
+        }
+
+        /// <summary>
+        /// Same as <see cref="Enumerable.SkipWhile{TSource}(IEnumerable{TSource}, Func{TSource, int, bool})"/>, except
+        /// the return type is <see cref="ImmutableLinkedList{T}"/> and allocations are avoided.
+        /// This method is O(skipped) and does not result in any copying.
+        /// </summary>
+        public ImmutableLinkedList<T> SkipWhile(Func<T, Int32, Boolean> predicate)
+        {
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            Int32 count = 0;
+            Int32 index = 0;
+            Node? head = Head;
+            while (head is not null && predicate(head.Value, index))
+            {
+                head = head.Next;
+                ++index;
+                ++count;
+            }
+
+            return new ImmutableLinkedList<T>(head, Count - count);
+        }
+
+        Boolean ICollection<T>.Remove(T item)
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// Returns a new list with the first instance of <paramref name="value"/> removed (if present).
+        /// This method is O(n). If <paramref name="value"/> exists in the list and is removed, all elements 
+        /// prior to <paramref name="value"/> must be copied.
+        /// </summary>
+        public ImmutableLinkedList<T> Remove(T value)
+        {
+            for (Node? current = Head; current is not null; current = current.Next)
+            {
+                if (!EqualityComparer<T>.Default.Equals(current.Value, value))
+                {
+                    continue;
+                }
+
+                if (current == Head)
+                {
+                    return new ImmutableLinkedList<T>(Head.Next, Count - 1);
+                }
+
+                if (!CopyRange(Head, current, out Node? first, out Node? last))
+                {
+                    return this;
+                }
+                
+                last.Next = current.Next;
+                return new ImmutableLinkedList<T>(first, Count - 1);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// Returns a new list with the <paramref name="index"/>th element removed. Throws <see cref="ArgumentOutOfRangeException"/>
+        /// if <paramref name="index"/> is not a valid list index.
+        /// This method is O(<paramref name="index"/>) and will result in the copying of the first <paramref name="index"/> - 1 elements.
+        /// </summary>
+        public ImmutableLinkedList<T> RemoveAt(Int32 index)
+        {
+            return RemoveAt(index, out _);
+        }
+
+        /// <summary>
+        /// Same as <see cref="RemoveAt(int)"/>, but also returns the <paramref name="removed"/> value
+        /// </summary>
+        public ImmutableLinkedList<T> RemoveAt(Int32 index, out T? removed)
+        {
+            if (Head is null || index < 0 || index >= Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index), index, @"must be non-negative and less than the length of the list");
+            }
+
+            if (index <= 0)
+            {
+                removed = Head.Value;
+                return new ImmutableLinkedList<T>(Head.Next, Count - 1);
+            }
+
+            Node? current = Head.Next;
+            for (Int32 i = 1; current is not null && i < index; ++i)
+            {
+                current = current.Next;
+            }
+
+            if (!CopyRange(Head, current, out Node? first, out Node? last))
+            {
+                removed = default;
+                return this;
+            }
+            
+            last.Next = current?.Next;
+            removed = current is not null ? current.Value : default;
+            return new ImmutableLinkedList<T>(first, Count - 1);
+        }
+
+        /// <summary>
+        /// Returns a new list with all elements matching <paramref name="predicate"/> removed.
+        /// This method is O(n). All retained elements prior to the last removed element are copied.
+        /// </summary>
+        public ImmutableLinkedList<T> RemoveAll(Func<T, Boolean> predicate)
+        {
+            if (predicate is null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            ImmutableLinkedList<T> without = SkipWhile(predicate);
+            if (without.Count <= 0 || without.Head is not { } first)
+            {
+                return Empty;
+            }
+
+            Node? last = first;
+            Node? current = first.Next;
+            Int32 count = 0;
+            while (current is not null)
+            {
+                if (predicate(current.Value))
+                {
+                    if (count <= 0)
+                    {
+                        CopyRange(first, current, out first, out last);
+                    }
+
+                    ++count;
+                    continue;
+                }
+
+                if (count > 0 && last is not null)
+                {
+                    last = last.Next = new Node(current.Value);
+                    continue;
+                }
+
+                last = current;
+                current = current.Next;
+            }
+
+            return new ImmutableLinkedList<T>(first, without.Count - count);
+        }
+
+        void ICollection<T>.Clear()
+        {
+            throw new NotSupportedException();
+        }
+
+        /// <summary>
+        /// Same as <see cref="Enumerable.SequenceEqual{TSource}(IEnumerable{TSource}, IEnumerable{TSource}, IEqualityComparer{TSource})"/>,
+        /// but optimized for comparing two instances of <see cref="ImmutableLinkedList{T}"/>.
+        /// This method is O(n).
+        /// </summary>
+        public Boolean SequenceEqual(ImmutableLinkedList<T> source)
+        {
+            return SequenceEqual(source, null);
+        }
+
+        /// <summary>
+        /// Same as <see cref="Enumerable.SequenceEqual{TSource}(IEnumerable{TSource}, IEnumerable{TSource}, IEqualityComparer{TSource})"/>,
+        /// but optimized for comparing two instances of <see cref="ImmutableLinkedList{T}"/>.
+        /// This method is O(n).
+        /// </summary>
+        public Boolean SequenceEqual(ImmutableLinkedList<T> source, IEqualityComparer<T>? comparer)
+        {
+            if (Count != source.Count)
+            {
+                return false;
+            }
+
+            comparer ??= EqualityComparer<T>.Default;
+
+            Node? current = Head;
+            Node? other = source.Head;
+            while (true)
+            {
+                if (current == other)
+                {
+                    return true;
+                }
+
+                if (current is null || !comparer.Equals(current.Value, other!.Value))
+                {
+                    return false;
+                }
+
+                current = current.Next;
+                other = other.Next;
+            }
+        }
+
+        /// <summary>
+        /// Same as <see cref="Enumerable.Reverse{TSource}(IEnumerable{TSource})"/>, but the return type is <see cref="ImmutableLinkedList{T}"/>.
+        /// This method is O(n) and involves copying the entire list for lists of length two or greater.
+        /// </summary>
+        public ImmutableLinkedList<T> Reverse()
+        {
+            if (Head is null || Count <= 1)
+            {
+                return this;
+            }
+
+            Node current = new Node(Head.Value);
+            for (Node? next = Head.Next; next is not null; next = next.Next)
+            {
+                current = new Node(next.Value) { Next = current };
+            }
+
+            return new ImmutableLinkedList<T>(current, Count);
+        }
+
+        public ImmutableLinkedList<T> Sort()
+        {
+            return Sort(null);
+        }
+
+        public ImmutableLinkedList<T> Sort(IComparer<T>? comparer)
+        {
+            if (Head is null || Count <= 1)
+            {
+                return this;
+            }
+
+            SortInternal(Head, Count, comparer, out Segment sorted, out Node? _);
+            return new ImmutableLinkedList<T>(sorted.First, Count);
+        }
+
+        private static void SortInternal(Node head, Int32 count, IComparer<T>? comparer, out Segment sorted, out Node? next)
+        {
+            comparer ??= ComparisonComparer<T>.Default;
+            
+            if (count == 1)
+            {
+                sorted = new Segment { First = head, Copied = null, Last = head };
+                next = head.Next;
+                return;
+            }
+
+            Int32 half = count >> 1;
+            SortInternal(head, half, comparer, out Segment segment1, out Node? half2);
+
+            if (half2 is null)
+            {
+                sorted = segment1;
+                next = head.Next;
+                return;
+            }
+            
+            SortInternal(half2, count - half, comparer, out Segment segment2, out next);
+
+            if (!TryShortCircuitMerge(ref segment1, ref segment2, count, comparer, out sorted))
+            {
+                Merge(ref segment1, ref segment2, comparer, out sorted);
+            }
+        }
+
+        private static Boolean TryShortCircuitMerge(ref Segment first, ref Segment second, Int32 count, IComparer<T>? comparer, out Segment result)
+        {
+            comparer ??= Comparer<T>.Default;
+
+            if (comparer.Compare(first.Last.Value, second.First.Value) <= 0)
+            {
+                if (first.Last.Next != second.First)
+                {
+                    EnsureFullCopy(ref first);
+                    first.Last.Next = second.First;
+                }
+
+                result = new Segment { First = first.First, Copied = second.Copied, Last = second.Last };
+                return true;
+            }
+
+            if (count != 2 && comparer.Compare(second.Last.Value, first.First.Value) > 0)
+            {
+                result = default;
+                return false;
+            }
+
+            EnsureFullCopy(ref first);
+            EnsureFullCopy(ref second);
+            second.Last.Next = first.First;
+            result = new Segment { First = second.First, Last = first.Last, Copied = first.Last };
+            return true;
+        }
+
+        private static void Merge(ref Segment segment1, ref Segment segment2, IComparer<T> comparer, out Segment result)
+        {
+            EnsureFullCopy(ref segment1);
+            Node? next1 = segment1.First;
+            Node? next2 = segment2.First;
+            Boolean iscopied = segment2.Copied is not null;
+            Node? first = null;
+            Node? last = null;
+            
+            do
+            {
+                if (comparer.Compare(next1.Value, next2.Value) <= 0)
+                {
+                    last = first is null || last is null ? first = next1 : last.Next = next1;
+                    next1 = next1 == segment1.Last ? null : next1.Next;
+                    continue;
+                }
+
+                Node copy;
+                if (iscopied)
+                {
+                    copy = next2;
+                    if (next2 == segment2.Copied)
+                    {
+                        iscopied = false;
+                    }
+                }
+                else
+                {
+                    copy = new Node(next2.Value);
+                }
+
+                last = first is null || last is null ? first = copy : last.Next = copy;
+                next2 = next2 == segment2.Last ? null : next2.Next;
+            } while (next1 is not null && next2 is not null);
+
+            Node? copied;
+            if (next1 is null)
+            {
+                copied = iscopied ? segment2.Copied : last;
+                last.Next = next2;
+                last = segment2.Last;
+            }
+            else
+            {
+                last.Next = next1;
+                copied = last = segment1.Last;
+            }
+
+            result = new Segment { First = first, Copied = copied, Last = last };
+        }
+
+        /// <summary>
+        /// Returns an <see cref="ImmutableLinkedList{T}"/> for the index range described
+        /// by <paramref name="start"/> and <paramref name="count"/> (similar to
+        /// <see cref="String.Substring(int, int)"/>).
+        /// This method is O(<paramref name="start"/> + <paramref name="count"/>) and
+        /// copies all elements in the returned sublist unless the sublist extends to the
+        /// end of the current list.
+        /// </summary>
+        public ImmutableLinkedList<T> SubList(Int32 start, Int32 count)
+        {
+            if (start < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(start), start, null);
+            }
+
+            if (count < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count), count, null);
+            }
+
+            if (start + count > Count)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count), count, null);
+            }
+
+            if (count <= 0)
+            {
+                return Empty;
+            }
+
+            ImmutableLinkedList<T> skip = Skip(start);
+            if (count == skip.Count)
+            {
+                return skip;
+            }
+
+            Node? current = skip.Head?.Next;
+            for (Int32 i = 1; i < count; ++i)
+            {
+                current = current?.Next;
+            }
+
+            return CopyRange(skip.Head, current, out Node? head, out _) ? new ImmutableLinkedList<T>(head, count) : this;
+        }
+
+        private static Boolean CopyRange(Node? first, Node? last, [MaybeNullWhen(false)] out Node newhead, [MaybeNullWhen(false)] out Node newlast)
+        {
+            if (first is null)
+            {
+                newhead = default;
+                newlast = default;
+                return false;
+            }
+            
+            Node current = newhead = new Node(first.Value);
+            for (Node? next = first.Next; next is not null && next != last; next = next.Next)
+            {
+                current = current.Next = new Node(next.Value);
+            }
+
+            newlast = current;
+            return true;
+        }
+
+        private static void FullCopy(ref Segment segment)
+        {
+            if (segment.Copied is null)
+            {
+                if (!CopyRange(segment.First, segment.Last.Next, out Node? first, out Node? last))
+                {
+                    return;
+                }
+
+                segment.First = first;
+                segment.Last = last;
+                segment.Copied = segment.Last;
+            }
+            else
+            {
+                if (!CopyRange(segment.Copied.Next, segment.Last.Next, out Node? copy, out Node? last))
+                {
+                    return;
+                }
+
+                segment.Last = last;
+                segment.Copied.Next = copy;
+                segment.Copied = segment.Last;
+            }
+        }
+
+        private static void EnsureFullCopy(ref Segment segment)
+        {
+            if (segment.Copied != segment.Last)
+            {
+                FullCopy(ref segment);
+            }
         }
 
         /// <summary>
         /// Prevents boxing when using lists with <see cref="EqualityComparer{T}.Default"/>
         /// </summary>
-        Boolean IEquatable<ImmutableLinkedList<T>>.Equals(ImmutableLinkedList<T> other)
+        public Boolean Equals(ImmutableLinkedList<T> other)
         {
-            return _head == other._head;
-        }
-
-        /// <summary>
-        /// This method returns a value type enumerator (similar to <see cref="List{T}.Enumerator"/>).
-        /// This improves the efficiency of foreach loops but means that the <see cref="Enumerator"/> has value type semantics with
-        /// respect to copying. For example, copying an <see cref="Enumerator"/> value to another value captures a
-        /// "snapshot" of the enumerator state; the original variable can continue to be enumerated over while the
-        /// snapshot remains at the original state (and can be advanced from there)
-        /// </summary>
-        public Enumerator GetEnumerator()
-        {
-            return new Enumerator(_head);
-        }
-
-        IEnumerator<T> IEnumerable<T>.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-
-
-        Boolean ICollection<T>.IsReadOnly
-        {
-            get
-            {
-                return true;
-            }
-        }
-
-        void ICollection<T>.Add(T item)
-        {
-            throw ReadOnly();
-        }
-
-        void ICollection<T>.Clear()
-        {
-            throw ReadOnly();
+            return Head == other.Head;
         }
 
         /// <summary>
@@ -238,21 +826,25 @@ namespace NetExtender.Types.Immutable.LinkedLists
                 throw new ArgumentException(@"destination array was not long enough", nameof(array));
             }
 
-            Int32 currentIndex = arrayIndex;
-            for (Node? current = _head; current is not null; current = current.Next)
+            for (Node? current = Head; current is not null; current = current.Next)
             {
-                array[currentIndex++] = current.Value;
+                array[arrayIndex++] = current.Value;
             }
         }
 
-        Boolean ICollection<T>.Remove(T item)
+        public Enumerator GetEnumerator()
         {
-            throw ReadOnly();
+            return new Enumerator(Head);
         }
 
-        private static NotSupportedException ReadOnly()
+        IEnumerator<T> IEnumerable<T>.GetEnumerator()
         {
-            return new NotSupportedException("the collection is read-only");
+            return GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
 
         internal sealed class Node
@@ -267,599 +859,19 @@ namespace NetExtender.Types.Immutable.LinkedLists
         }
 
         /// <summary>
-        /// Returns true if <paramref name="value"/> is an element of the list.
-        /// This method is O(N)
-        /// </summary>
-        public Boolean Contains(T value)
-        {
-            EqualityComparer<T> comparer = EqualityComparer<T>.Default;
-            for (Node? current = _head; current is not null; current = current.Next)
-            {
-                if (comparer.Equals(current.Value, value))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Same as <see cref="Enumerable.SequenceEqual{TSource}(IEnumerable{TSource}, IEnumerable{TSource}, IEqualityComparer{TSource})"/>,
-        /// but optimized for comparing two instances of <see cref="ImmutableLinkedList{T}"/>.
-        /// This method is O(n).
-        /// </summary>
-        public Boolean SequenceEqual(ImmutableLinkedList<T> that, IEqualityComparer<T>? comparer = null)
-        {
-            if (Count != that.Count)
-            {
-                return false;
-            }
-
-            IEqualityComparer<T> comparerToUse = comparer ?? EqualityComparer<T>.Default;
-
-            Node? thisCurrent = _head;
-            Node? thatCurrent = that._head;
-            while (true)
-            {
-                if (thisCurrent == thatCurrent)
-                {
-                    return true;
-                }
-
-                if (thisCurrent is null || !comparerToUse.Equals(thisCurrent.Value, thatCurrent!.Value))
-                {
-                    return false;
-                }
-
-                thisCurrent = thisCurrent.Next;
-                thatCurrent = thatCurrent.Next;
-            }
-        }
-        
-        /// <summary>
-        /// Returns a new list with <paramref name="value"/> appended.
-        /// This method is O(n) and requires copying the entire list.
-        /// </summary>
-        public ImmutableLinkedList<T> Append(T value)
-        {
-            if (Count == 0)
-            {
-                return Create(value);
-            }
-
-            CopyNonEmptyRange(_head!, null, out Node newHead, out Node newLast);
-            newLast.Next = new Node(value);
-            return new ImmutableLinkedList<T>(newHead, Count + 1);
-        }
-
-        /// <summary>
-        /// Returns a new list with <paramref name="values"/> appended.
-        /// This method is O(n + k) where k is the number of elements in <paramref name="values"/> and requires copying the entire list.
-        /// </summary>
-        public ImmutableLinkedList<T> AppendRange(IEnumerable<T> values)
-        {
-            return AppendRange(CreateRange(values));
-        }
-
-        /// <summary>
-        /// Same as <see cref="AppendRange(ImmutableLinkedList{T})"/>, but optimized for appending 
-        /// another instance of <see cref="ImmutableLinkedList{T}"/>
-        /// </summary>
-        public ImmutableLinkedList<T> AppendRange(ImmutableLinkedList<T> list)
-        {
-            return list.PrependRange(this);
-        }
-
-        /// <summary>
-        /// Returns a new list with <paramref name="value"/> prepended.
-        /// This method is O(1) and requires no copying.
-        /// </summary>
-        public ImmutableLinkedList<T> Prepend(T value)
-        {
-            return new ImmutableLinkedList<T>(new Node(value) {Next = _head}, Count + 1);
-        }
-
-        /// <summary>
-        /// Returns a new list with <paramref name="values"/> prepended such that the first element of <paramref name="values"/> values
-        /// becomes the first element of the returned list.
-        /// This method is O(k) where k is the number of elements in <paramref name="values"/> and requires no copying.
-        /// </summary>
-        public ImmutableLinkedList<T> PrependRange(IEnumerable<T> values)
-        {
-            if (Count == 0)
-            {
-                return CreateRange(values);
-            }
-
-            // ReSharper disable once ConvertIfStatementToSwitchStatement
-            if (values is null)
-            {
-                throw new ArgumentNullException(nameof(values));
-            }
-
-            if (values is ImmutableLinkedList<T> list)
-            {
-                return PrependRange(list);
-            }
-
-            using IEnumerator<T> enumerator = values.GetEnumerator();
-            if (!enumerator.MoveNext())
-            {
-                return this;
-            }
-
-            Node head = new Node(enumerator.Current);
-            Node last = head;
-            Int32 count = 1;
-            while (enumerator.MoveNext())
-            {
-                last = last.Next = new Node(enumerator.Current);
-                ++count;
-            }
-
-            last.Next = _head;
-            return new ImmutableLinkedList<T>(head, count + Count);
-        }
-
-        /// <summary>
-        /// Same as <see cref="PrependRange(IEnumerable{T})"/>, but optimized for prepending another
-        /// instance of <see cref="ImmutableLinkedList{T}"/>
-        /// </summary>
-        public ImmutableLinkedList<T> PrependRange(ImmutableLinkedList<T> list)
-        {
-            if (list.Count == 0)
-            {
-                return this;
-            }
-
-            if (Count == 0)
-            {
-                return list;
-            }
-
-            CopyNonEmptyRange(list._head!, null, out Node newHead, out Node newLast);
-            newLast.Next = _head;
-            return new ImmutableLinkedList<T>(newHead, Count + list.Count);
-        }
-
-        /// <summary>
-        /// Returns a new list with the first instance of <paramref name="value"/> removed (if present).
-        /// This method is O(n). If <paramref name="value"/> exists in the list and is removed, all elements 
-        /// prior to <paramref name="value"/> must be copied.
-        /// </summary>
-        public ImmutableLinkedList<T> Remove(T value)
-        {
-            EqualityComparer<T> comparer = EqualityComparer<T>.Default;
-            for (Node? current = _head; current is not null; current = current.Next)
-            {
-                if (!comparer.Equals(current.Value, value))
-                {
-                    continue;
-                }
-
-                if (current == _head)
-                {
-                    return new ImmutableLinkedList<T>(_head.Next, Count - 1);
-                }
-
-                CopyNonEmptyRange(_head!, current, out Node newHead, out Node newLast);
-                newLast.Next = current.Next;
-                return new ImmutableLinkedList<T>(newHead, Count - 1);
-            }
-
-            return this;
-        }
-
-        /// <summary>
-        /// Returns a new list with the <paramref name="index"/>th element removed. Throws <see cref="ArgumentOutOfRangeException"/>
-        /// if <paramref name="index"/> is not a valid list index.
-        /// This method is O(<paramref name="index"/>) and will result in the copying of the first <paramref name="index"/> - 1 elements.
-        /// </summary>
-        public ImmutableLinkedList<T> RemoveAt(Int32 index)
-        {
-            return RemoveAt(index, out _);
-        }
-
-        /// <summary>
-        /// Same as <see cref="RemoveAt(int)"/>, but also returns the <paramref name="removed"/> value
-        /// </summary>
-        public ImmutableLinkedList<T> RemoveAt(Int32 index, out T removed)
-        {
-            if (index < 0 || index >= Count)
-            {
-                throw new ArgumentOutOfRangeException(nameof(index), index, @"must be non-negative and less than the length of the list");
-            }
-
-            // remove at 0 requires no copying
-            if (index == 0)
-            {
-                removed = _head!.Value;
-                return new ImmutableLinkedList<T>(_head.Next, Count - 1);
-            }
-
-            Node? current = _head!.Next;
-            for (Int32 i = 1; i < index; ++i)
-            {
-                current = current!.Next;
-            }
-
-            CopyNonEmptyRange(_head, current, out Node newHead, out Node newLast);
-            newLast.Next = current!.Next;
-            removed = current.Value;
-            return new ImmutableLinkedList<T>(newHead, Count - 1);
-        }
-
-        /// <summary>
-        /// Returns a new list with all elements matching <paramref name="predicate"/> removed.
-        /// This method is O(n). All retained elements prior to the last removed element are copied.
-        /// </summary>
-        public ImmutableLinkedList<T> RemoveAll(Func<T, Boolean> predicate)
-        {
-            // first, remove prefix since we can do this without any copying
-            ImmutableLinkedList<T> withoutPrefix = SkipWhile(predicate);
-            if (withoutPrefix.Count == 0)
-            {
-                return Empty;
-            }
-
-            // now, remove any elements from the middle/end, copying only if necessary
-            Node newHead = withoutPrefix._head!;
-            Node lastNonRemoved = newHead;
-            Int32 countRemoved = 0;
-            Node? current = newHead.Next;
-            while (current is not null)
-            {
-                if (predicate(current.Value))
-                {
-                    if (countRemoved == 0)
-                    {
-                        // force a copy
-                        CopyNonEmptyRange(newHead, current, out Node copiedNewHead, out Node copiedLastNonRemoved);
-                        newHead = copiedNewHead;
-                        lastNonRemoved = copiedLastNonRemoved;
-                    }
-
-                    ++countRemoved;
-                }
-                else if (countRemoved != 0)
-                {
-                    // if we copied, copy the current node
-                    lastNonRemoved = lastNonRemoved.Next = new Node(current.Value);
-                }
-                else
-                {
-                    // if we didn't copy, we can just advance our last pointer
-                    lastNonRemoved = current;
-                }
-
-                current = current.Next;
-            }
-
-            return new ImmutableLinkedList<T>(newHead, withoutPrefix.Count - countRemoved);
-        }
-
-        /// <summary>
-        /// Same as <see cref="Enumerable.Skip{TSource}(IEnumerable{TSource}, int)"/>, except the
-        /// return type is <see cref="ImmutableLinkedList{T}"/> and allocations are avoided.
-        /// This method is O(<paramref name="count"/>) and does not result in any copying.
-        /// </summary>
-        public ImmutableLinkedList<T> Skip(Int32 count)
-        {
-            if (count >= Count)
-            {
-                return Empty;
-            }
-
-            Int32 skipped = 0;
-            Node? current = _head;
-            while (current is not null && skipped < count)
-            {
-                current = current.Next;
-                ++skipped;
-            }
-
-            return new ImmutableLinkedList<T>(current, Count - skipped);
-        }
-
-        /// <summary>
-        /// Same as <see cref="Enumerable.SkipWhile{TSource}(IEnumerable{TSource}, Func{TSource, bool})"/>, except
-        /// the return type is <see cref="ImmutableLinkedList{T}"/> and allocations are avoided.
-        /// This method is O(skipped) and does not result in any copying.
-        /// </summary>
-        public ImmutableLinkedList<T> SkipWhile(Func<T, Boolean> predicate)
-        {
-            if (predicate is null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
-
-            Node? newHead = _head;
-            Int32 countRemoved = 0;
-            while (newHead is not null && predicate(newHead.Value))
-            {
-                newHead = newHead.Next;
-                ++countRemoved;
-            }
-
-            return new ImmutableLinkedList<T>(newHead, Count - countRemoved);
-        }
-
-        /// <summary>
-        /// Same as <see cref="Enumerable.SkipWhile{TSource}(IEnumerable{TSource}, Func{TSource, int, bool})"/>, except
-        /// the return type is <see cref="ImmutableLinkedList{T}"/> and allocations are avoided.
-        /// This method is O(skipped) and does not result in any copying.
-        /// </summary>
-        public ImmutableLinkedList<T> SkipWhile(Func<T, Int32, Boolean> predicate)
-        {
-            if (predicate is null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
-
-            Node? newHead = _head;
-            Int32 index = 0;
-            Int32 countRemoved = 0;
-            while (newHead is not null && predicate(newHead.Value, index))
-            {
-                newHead = newHead.Next;
-                ++index;
-                ++countRemoved;
-            }
-
-            return new ImmutableLinkedList<T>(newHead, Count - countRemoved);
-        }
-
-        /// <summary>
-        /// Returns an <see cref="ImmutableLinkedList{T}"/> for the index range described
-        /// by <paramref name="startIndex"/> and <paramref name="count"/> (similar to
-        /// <see cref="String.Substring(int, int)"/>).
-        /// This method is O(<paramref name="startIndex"/> + <paramref name="count"/>) and
-        /// copies all elements in the returned sublist unless the sublist extends to the
-        /// end of the current list.
-        /// </summary>
-        public ImmutableLinkedList<T> SubList(Int32 startIndex, Int32 count)
-        {
-            if (startIndex < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(startIndex), startIndex, @"must be non-negative");
-            }
-
-            if (count < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(count), count, @"must be non-negative");
-            }
-
-            if (startIndex + count > Count)
-            {
-                throw new ArgumentOutOfRangeException($"({nameof(startIndex)}, {nameof(count)})", $"({startIndex}, {count})", @"must represent a range of indices within the list");
-            }
-
-            if (count == 0)
-            {
-                return Empty;
-            }
-
-            ImmutableLinkedList<T> skipped = Skip(startIndex);
-            if (count == skipped.Count)
-            {
-                return skipped;
-            }
-
-            Node? current = skipped._head!.Next;
-            for (Int32 i = 1; i < count; ++i)
-            {
-                current = current!.Next;
-            }
-
-            CopyNonEmptyRange(skipped._head, current, out Node subListHead, out _);
-            return new ImmutableLinkedList<T>(subListHead, count);
-        }
-
-        /// <summary>
-        /// Same as <see cref="Enumerable.Reverse{TSource}(IEnumerable{TSource})"/>, but the return type is <see cref="ImmutableLinkedList{T}"/>.
-        /// This method is O(n) and involves copying the entire list for lists of length two or greater.
-        /// </summary>
-        public ImmutableLinkedList<T> Reverse()
-        {
-            if (Count < 2)
-            {
-                return this;
-            }
-
-            Node current = new Node(_head!.Value);
-            for (Node? next = _head.Next; next is not null; next = next.Next)
-            {
-                current = new Node(next.Value) {Next = current};
-            }
-
-            return new ImmutableLinkedList<T>(current, Count);
-        }
-
-        /// <summary>
-        /// Returns a new list with the elements sorted. The sort is stable.
-        /// This method uses the merge sort algorithm and is O(nlg(n)). However, it 
-        /// can take advantage of existing sorted structure in the input to run as quickly
-        /// as O(n) in some cases (e. g. already-sorted input).
-        /// Elements are only copied as needed. For example, if a trailing portion of the 
-        /// original list remains unchanged in the sorted output, those elements will not 
-        /// be copied. As an extension of this, calling this method on an already-sorted list 
-        /// results in no copying (the original list is returned).
-        /// </summary>
-        public ImmutableLinkedList<T> Sort(IComparer<T>? comparer = null)
-        {
-            if (Count < 2)
-            {
-                return this;
-            }
-
-            SortHelper(_head!, Count, comparer ?? Comparer<T>.Default, out SortedSegment sorted, out Node? _);
-
-            return new ImmutableLinkedList<T>(sorted.First, Count);
-        }
-
-        private static void SortHelper(Node head, Int32 count, IComparer<T> comparer, out SortedSegment sorted, out Node? next)
-        {
-            if (count == 1)
-            {
-                sorted = new SortedSegment {First = head, Copied = null, Last = head};
-                next = head.Next;
-                return;
-            }
-
-            Int32 firstHalfCount = count >> 1;
-            SortHelper(head, firstHalfCount, comparer, out SortedSegment sortedFirstHalf, out Node? secondHalfHead);
-            SortHelper(secondHalfHead!, count - firstHalfCount, comparer, out SortedSegment sortedSecondHalf, out next);
-
-            if (!TryShortCircuitMerge(ref sortedFirstHalf, ref sortedSecondHalf, count, comparer, out sorted))
-            {
-                Merge(ref sortedFirstHalf, ref sortedSecondHalf, comparer, out sorted);
-            }
-        }
-
-        /// <summary>
-        /// An optimistic version of <see cref="Merge(ref SortedSegment, ref SortedSegment, IComparer{T}, out SortedSegment)"/> which
-        /// can skip most of the work in the case where one segment goes entirely before the other. This allows us to achieve O(n)
-        /// performance for mostly-sorted or mostly-reverse sorted input and generally take advantage of existing sorted subsequences
-        /// in the data.
-        /// </summary>
-        private static Boolean TryShortCircuitMerge(ref SortedSegment first, ref SortedSegment second, Int32 count, IComparer<T> comparer, out SortedSegment result)
-        {
-            if (comparer.Compare(first.Last.Value, second.First.Value) <= 0)
-            {
-                if (first.Last.Next != second.First)
-                {
-                    EnsureFullyCopied(ref first);
-                    first.Last.Next = second.First;
-                }
-
-                result = new SortedSegment { First = first.First, Copied = second.Copied, Last = second.Last };
-                return true;
-            }
-
-            if (count != 2 && comparer.Compare(second.Last.Value, first.First.Value) > 0)
-            {
-                result = default;
-                return false;
-            }
-
-            EnsureFullyCopied(ref first);
-            EnsureFullyCopied(ref second);
-            second.Last.Next = first.First;
-            result = new SortedSegment { First = second.First, Last = first.Last, Copied = first.Last };
-            return true;
-        }
-
-        /// <summary>
-        /// The standard merge algorithm, adjusted to manage proper copying. Assumes that
-        /// <see cref="TryShortCircuitMerge(ref SortedSegment, ref SortedSegment, int, IComparer{T}, out SortedSegment)"/>
-        /// has already been called and returned false.
-        /// </summary>
-        private static void Merge(ref SortedSegment segment1, ref SortedSegment segment2, IComparer<T> comparer, out SortedSegment merged)
-        {
-            EnsureFullyCopied(ref segment1);
-            Node? next1 = segment1.First;
-            Node? next2 = segment2.First;
-            Boolean isNext2Copied = segment2.Copied is not null;
-            Node? mergedFirst = null;
-            Node? mergedLast = null;
-            do
-            {
-                if (comparer.Compare(next1.Value, next2.Value) <= 0)
-                {
-                    mergedLast = mergedFirst is null ? mergedFirst = next1 : mergedLast!.Next = next1;
-                    next1 = next1 == segment1.Last ? null : next1.Next;
-                }
-                else
-                {
-                    Node copiedNext2;
-                    if (isNext2Copied)
-                    {
-                        copiedNext2 = next2;
-                        if (next2 == segment2.Copied)
-                        {
-                            isNext2Copied = false;
-                        }
-                    }
-                    else
-                    {
-                        copiedNext2 = new Node(next2.Value);
-                    }
-
-                    mergedLast = mergedFirst is null
-                        ? mergedFirst = copiedNext2
-                        : mergedLast!.Next = copiedNext2;
-                    next2 = next2 == segment2.Last ? null : next2.Next;
-                }
-            } while (next1 is not null && next2 is not null);
-
-            Node? mergedLastCopied;
-            if (next1 is null)
-            {
-                mergedLastCopied = isNext2Copied ? segment2.Copied : mergedLast;
-                mergedLast.Next = next2;
-                mergedLast = segment2.Last;
-            }
-            else
-            {
-                mergedLast.Next = next1;
-                mergedLastCopied = mergedLast = segment1.Last;
-            }
-
-            merged = new SortedSegment {First = mergedFirst, Copied = mergedLastCopied, Last = mergedLast};
-        }
-
-        private static void FullyCopy(ref SortedSegment segment)
-        {
-            if (segment.Copied is null)
-            {
-                CopyNonEmptyRange(segment.First, segment.Last.Next, out Node first, out Node last);
-                segment.First = first;
-                segment.Last = last;
-                segment.Copied = segment.Last;
-            }
-            else
-            {
-                CopyNonEmptyRange(segment.Copied.Next!, segment.Last.Next, out Node copied, out Node last);
-                segment.Last = last;
-                segment.Copied.Next = copied;
-                segment.Copied = segment.Last;
-            }
-        }
-
-        private static void EnsureFullyCopied(ref SortedSegment segment)
-        {
-            if (segment.Copied != segment.Last)
-            {
-                FullyCopy(ref segment);
-            }
-        }
-        
-        private static void CopyNonEmptyRange(Node head, Node? last, out Node newHead, out Node newLast)
-        {
-            Node newCurrent = newHead = new Node(head.Value);
-            for (Node? current = head.Next; current != last; current = current.Next)
-            {
-                newCurrent = newCurrent.Next = new Node(current!.Value);
-            }
-
-            newLast = newCurrent;
-        }
-
-        /// <summary>
         /// An enumerator over <see cref="ImmutableLinkedList{T}"/>. See <see cref="ImmutableLinkedList{T}.GetEnumerator"/>
         /// for more details
         /// </summary>
         public struct Enumerator : IEnumerator<T>
         {
             private Node? Next { get; set; }
-            
+
             /// <summary>
             /// The current value. Behavior is undefined before enumeration begins
             /// and after it ends
             /// </summary>
             public T Current { get; private set; }
-            
+
             readonly Object? IEnumerator.Current
             {
                 get
@@ -894,7 +906,7 @@ namespace NetExtender.Types.Immutable.LinkedLists
             {
                 throw new NotSupportedException();
             }
-            
+
             /// <summary>
             /// Cleans up any resources held by the enumerator (currently none)
             /// </summary>
@@ -902,8 +914,8 @@ namespace NetExtender.Types.Immutable.LinkedLists
             {
             }
         }
-        
-        private struct SortedSegment
+
+        private struct Segment
         {
             public Node First { get; set; }
             public Node Last { get; set; }

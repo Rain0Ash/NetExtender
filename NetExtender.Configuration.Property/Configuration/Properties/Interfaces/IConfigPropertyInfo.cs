@@ -5,7 +5,7 @@ using System;
 using System.Collections.Immutable;
 using System.ComponentModel;
 using NetExtender.Configuration.Common;
-using NetExtender.Initializer.Types.Behavior.Interfaces;
+using NetExtender.Types.Behavior.Interfaces;
 
 namespace NetExtender.Configuration.Properties.Interfaces
 {

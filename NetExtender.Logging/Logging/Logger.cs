@@ -10,9 +10,9 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Logging
 {
-    public class Logger : ILogger
+    public class Logger<TLevel> : ILogger<TLevel> where TLevel : unmanaged, Enum
     {
-        protected ILoggerBehavior Behavior { get; }
+        protected ILoggerBehavior<TLevel> Behavior { get; }
         public LoggingMessageOptions Options { get; }
         public EscapeType Escape { get; }
         public TimeSpan Offset { get; }
@@ -98,7 +98,7 @@ namespace NetExtender.Logging
             }
         }
 
-        protected internal Logger(ILoggerBehavior behavior, LoggingMessageOptions options, EscapeType escape, TimeSpan offset, IFormatProvider? provider)
+        protected internal Logger(ILoggerBehavior<TLevel> behavior, LoggingMessageOptions options, EscapeType escape, TimeSpan offset, IFormatProvider? provider)
         {
             Behavior = behavior ?? throw new ArgumentNullException(nameof(behavior));
             Options = options;
@@ -112,86 +112,101 @@ namespace NetExtender.Logging
             return Offset != default ? DateTimeOffset.UtcNow.ToOffset(Offset) : options.HasFlag(LoggingMessageOptions.Utc) ? DateTimeOffset.UtcNow : DateTimeOffset.Now;
         }
 
-        public void Log<T>(T value, LoggingMessageType type)
+        public void Log<T>(T value, TLevel level)
         {
-            Log(value, type, Options);
+            Log(value, level, Options);
         }
 
-        public void Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options)
+        public void Log<T>(T value, TLevel level, LoggingMessageOptions options)
         {
-            Log(value, type, options, Escape);
+            Log(value, level, options, Escape);
         }
 
-        public void Log<T>(T value, LoggingMessageType type, EscapeType escape)
+        public void Log<T>(T value, TLevel level, EscapeType escape)
         {
-            Log(value, type, Options, escape);
+            Log(value, level, Options, escape);
         }
 
-        public void Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape)
+        public void Log<T>(T value, TLevel level, LoggingMessageOptions options, EscapeType escape)
         {
-            Log(value, type, options, escape, Provider);
+            Log(value, level, options, escape, Provider);
         }
 
-        public void Log<T>(T value, LoggingMessageType type, IFormatProvider? provider)
+        public void Log<T>(T value, TLevel level, IFormatProvider? provider)
         {
-            Log(value, type, Options, provider);
+            Log(value, level, Options, provider);
         }
 
-        public void Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, IFormatProvider? provider)
+        public void Log<T>(T value, TLevel level, LoggingMessageOptions options, IFormatProvider? provider)
         {
-            Log(value, type, options, Escape, provider);
+            Log(value, level, options, Escape, provider);
         }
 
-        public void Log<T>(T value, LoggingMessageType type, EscapeType escape, IFormatProvider? provider)
+        public void Log<T>(T value, TLevel level, EscapeType escape, IFormatProvider? provider)
         {
-            Log(value, type, Options, escape, provider);
+            Log(value, level, Options, escape, provider);
         }
 
-        public void Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, IFormatProvider? provider)
+        public void Log<T>(T value, TLevel level, LoggingMessageOptions options, EscapeType escape, IFormatProvider? provider)
         {
             DateTimeOffset now = Now(options);
-            Behavior.Log(value, type, options, escape, now, provider);
+            Behavior.Log(value, level, options, escape, now, provider);
         }
 
-        public void Log<T>(T value, LoggingMessageType type, String? format)
+        public void Log<T>(T value, TLevel level, String? format)
         {
-            Log(value, type, Options, format);
+            Log(value, level, Options, format);
         }
 
-        public void Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, String? format)
+        public void Log<T>(T value, TLevel level, LoggingMessageOptions options, String? format)
         {
-            Log(value, type, options, Escape, format);
+            Log(value, level, options, Escape, format);
         }
 
-        public void Log<T>(T value, LoggingMessageType type, EscapeType escape, String? format)
+        public void Log<T>(T value, TLevel level, EscapeType escape, String? format)
         {
-            Log(value, type, Options, escape, format);
+            Log(value, level, Options, escape, format);
         }
 
-        public void Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, String? format)
+        public void Log<T>(T value, TLevel level, LoggingMessageOptions options, EscapeType escape, String? format)
         {
-            Log(value, type, options, escape, format, Provider);
+            Log(value, level, options, escape, format, Provider);
         }
 
-        public void Log<T>(T value, LoggingMessageType type, String? format, IFormatProvider? provider)
+        public void Log<T>(T value, TLevel level, String? format, IFormatProvider? provider)
         {
-            Log(value, type, Options, format, provider);
+            Log(value, level, Options, format, provider);
         }
 
-        public void Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, String? format, IFormatProvider? provider)
+        public void Log<T>(T value, TLevel level, LoggingMessageOptions options, String? format, IFormatProvider? provider)
         {
-            Log(value, type, options, Escape, format, provider);
+            Log(value, level, options, Escape, format, provider);
         }
 
-        public void Log<T>(T value, LoggingMessageType type, EscapeType escape, String? format, IFormatProvider? provider)
+        public void Log<T>(T value, TLevel level, EscapeType escape, String? format, IFormatProvider? provider)
         {
-            Log(value, type, Options, escape, format, provider);
+            Log(value, level, Options, escape, format, provider);
         }
 
-        public void Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, String? format, IFormatProvider? provider)
+        public void Log<T>(T value, TLevel level, LoggingMessageOptions options, EscapeType escape, String? format, IFormatProvider? provider)
         {
             DateTimeOffset now = Now(options);
-            Behavior.Log(value, type, options, escape, now, format, provider);
+            Behavior.Log(value, level, options, escape, now, format, provider);
+        }
+
+        public Boolean IsEnabled(TLevel level)
+        {
+            return Behavior.IsEnabled(level);
+        }
+
+        public Boolean Enable(TLevel level)
+        {
+            return Behavior.Enable(level);
+        }
+
+        public Boolean Disable(TLevel level)
+        {
+            return Behavior.Disable(level);
         }
 
         public void Dispose()

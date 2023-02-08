@@ -2,6 +2,7 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 using NetExtender.Logging.Behavior.Interfaces;
@@ -12,9 +13,10 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Logging.Behavior
 {
-    public abstract class LoggerBehavior : ILoggerBehavior
+    public abstract class LoggerBehavior<TLevel> : ILoggerBehavior<TLevel> where TLevel : unmanaged, Enum
     {
-        protected ILoggerFormatProvider Formatter { get; }
+        protected ILoggerFormatProvider<TLevel> Formatter { get; }
+        protected HashSet<TLevel> Levels { get; }
 
         public virtual Boolean IsThreadSafe
         {
@@ -25,27 +27,53 @@ namespace NetExtender.Logging.Behavior
         }
 
         protected LoggerBehavior()
-            : this(LoggerFormatProvider.Default)
+            : this(LoggerFormatProvider<TLevel>.Default)
         {
         }
 
-        protected LoggerBehavior(ILoggerFormatProvider formatter)
+        protected LoggerBehavior(ILoggerFormatProvider<TLevel> formatter)
         {
             Formatter = formatter ?? throw new ArgumentNullException(nameof(formatter));
+            Levels = new HashSet<TLevel>(EnumUtilities.GetValues<TLevel>());
         }
 
-        protected abstract Boolean Log(String? message, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, IFormatProvider? provider);
+        protected abstract Boolean Log(String? message, TLevel level, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, IFormatProvider? provider);
 
-        public virtual Boolean Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, IFormatProvider? provider)
+        public virtual Boolean Log<T>(T value, TLevel level, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, IFormatProvider? provider)
         {
+            if (!Levels.Contains(level))
+            {
+                return false;
+            }
+            
             String message = value.GetString(escape, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
-            return Log(message, type, options, escape, offset, provider);
+            return Log(message, level, options, escape, offset, provider);
         }
 
-        public virtual Boolean Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, String? format, IFormatProvider? provider)
+        public virtual Boolean Log<T>(T value, TLevel level, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, String? format, IFormatProvider? provider)
         {
+            if (!Levels.Contains(level))
+            {
+                return false;
+            }
+            
             String message = value.GetString(escape, format, provider ?? CultureInfo.InvariantCulture) ?? StringUtilities.NullString;
-            return Log(message, type, options, escape, offset, provider);
+            return Log(message, level, options, escape, offset, provider);
+        }
+
+        public virtual Boolean IsEnabled(TLevel level)
+        {
+            return Levels.Contains(level);
+        }
+
+        public virtual Boolean Enable(TLevel level)
+        {
+            return Levels.Add(level);
+        }
+
+        public virtual Boolean Disable(TLevel level)
+        {
+            return Levels.Remove(level);
         }
 
         public void Dispose()
@@ -67,6 +95,11 @@ namespace NetExtender.Logging.Behavior
         protected virtual ValueTask DisposeAsync(Boolean disposing)
         {
             return ValueTask.CompletedTask;
+        }
+
+        ~LoggerBehavior()
+        {
+            Dispose(false);
         }
     }
 }

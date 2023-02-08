@@ -35,6 +35,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
 
         private delegate void PropertyChangedSemiCallback(DependencyObject sender);
 
+        [SuppressMessage("ReSharper", "RedundantTypeArgumentsOfMethod")]
         private static PropertyChangedCallback? CreateCallback(MethodInfo? method)
         {
             if (method is null)
@@ -242,7 +243,7 @@ namespace NetExtender.WindowsPresentation.Utilities.Types
 
             value ??= ReflectionUtilities.Default(information.Property.PropertyType);
 
-            if (value is not null && !value.GetType().IsSameAsOrSubclassOf(information.Property.PropertyType))
+            if (value is not null && !value.GetType().IsAssignableTo(information.Property.PropertyType))
             {
                 throw new InvalidOperationException($"Default value type '{value.GetType()}' does not match property type '{information.Property.PropertyType}'.");
             }

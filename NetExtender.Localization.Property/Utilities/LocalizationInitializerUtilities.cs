@@ -3,29 +3,29 @@
 
 using System;
 using NetExtender.Localization.Properties.Interfaces;
-using NetExtender.UserInterface.WindowsPresentation.Windows;
+using NetExtender.Localization.Property.Localization.Initializers;
 
-namespace NetExtender.UserInterface.WindowsPresentation.Localization.Utilities
+namespace NetExtender.Localization.Utilities
 {
-    public static class WindowLocalizationUtilities
+    public static class LocalizationInitializerUtilities
     {
-        public static T Subscribe<T>(this T value, WindowLocalizationInitializer window) where T : ILocalizationPropertyInfo
+        public static T Subscribe<T>(this T value, LocalizationInitializer initializer) where T : ILocalizationPropertyInfo
         {
             if (value is null)
             {
                 throw new ArgumentNullException(nameof(value));
             }
 
-            if (window is null)
+            if (initializer is null)
             {
-                throw new ArgumentNullException(nameof(window));
+                throw new ArgumentNullException(nameof(initializer));
             }
             
-            window.Subscribe(value);
+            initializer.Subscribe(value);
             return value;
         }
         
-        public static T Subscribe<T>(this T value, String name, WindowLocalizationInitializer window) where T : ILocalizationPropertyInfo
+        public static T Subscribe<T>(this T value, String name, LocalizationInitializer initializer) where T : ILocalizationPropertyInfo
         {
             if (value is null)
             {
@@ -37,12 +37,12 @@ namespace NetExtender.UserInterface.WindowsPresentation.Localization.Utilities
                 throw new ArgumentNullException(nameof(name));
             }
 
-            if (window is null)
+            if (initializer is null)
             {
-                throw new ArgumentNullException(nameof(window));
+                throw new ArgumentNullException(nameof(initializer));
             }
             
-            window.Subscribe(value, name);
+            initializer.Subscribe(value, name);
             return value;
         }
     }

@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Utilities.Cryptography;
+using NetExtender.Windows.Types;
 
 namespace NetExtender.Utilities.Types
 {
@@ -154,7 +155,7 @@ namespace NetExtender.Utilities.Types
                 throw new ArgumentNullException(nameof(image));
             }
 
-            Size size = new Size(image.Width, image.Height).AspectRatioBoundsSize(bounds);
+            Size size = new Size(image.Width, image.Height).AspectRatioBounds(bounds);
 
             Bitmap thumbnail = new Bitmap(size.Width, size.Height, image.PixelFormat);
             using Graphics gfx = Graphics.FromImage(thumbnail);
@@ -682,7 +683,7 @@ namespace NetExtender.Utilities.Types
                 return image.ToBytes().Hashing(destination, type, out written);
             }
 
-            BitmapData data = bitmap.LockBits(new Rectangle(new Point(0, 0), bitmap.Size), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            BitmapData data = bitmap.LockBits(new Rectangle(Point.Empty, bitmap.Size), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
             try
             {
@@ -698,37 +699,161 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        [DllImport("msvcrt.dll")]
-        private static extern Int32 memcmp(IntPtr first, IntPtr second, Int64 count);
-
-        public static Boolean CompareBitmap(Bitmap? first, Bitmap? second)
+        public static unsafe Boolean Copy(this Bitmap bitmap, Bitmap other)
         {
-            if (first is null || second is null)
+            if (bitmap is null)
             {
-                return first == second;
+                throw new ArgumentNullException(nameof(bitmap));
             }
 
-            if (first.Size != second.Size)
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            if (bitmap == other)
             {
                 return false;
             }
 
-            BitmapData firstdata = first.LockBits(new Rectangle(new Point(0, 0), first.Size), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-            BitmapData seconddata = second.LockBits(new Rectangle(new Point(0, 0), second.Size), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            if (bitmap.Width != other.Width || bitmap.Height != other.Height || bitmap.PixelFormat != other.PixelFormat)
+            {
+                return false;
+            }
+
+            using DirectBitmap source = bitmap.Direct();
+            using DirectBitmap target = other.Direct();
+            
+            UInt64 count = (UInt64) (source.Height * source.Stride * (Int64) DirectBitmap.BytesPerPixel);
+            Buffer.MemoryCopy(source.Scan0.ToPointer(), target.Scan0.ToPointer(), count, count);
+            return true;
+        }
+        
+        public static Boolean Copy(this Bitmap bitmap, Bitmap other, Rectangle source, Rectangle target)
+        {
+            if (bitmap is null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            if (other is null)
+            {
+                throw new ArgumentNullException(nameof(other));
+            }
+
+            Rectangle r1 = new Rectangle(Point.Empty, bitmap.Size);
+            Rectangle r2 = new Rectangle(Point.Empty, other.Size);
+
+            if (r1 == r2 && r1 == source && r2 == target)
+            {
+                return Copy(bitmap, other);
+            }
+
+            using DirectBitmap direct = other.Direct();
+            direct.Copy(bitmap, source, target);
+            return true;
+        }
+
+        public static Bitmap? Slice(this Bitmap bitmap, Rectangle region)
+        {
+            if (bitmap is null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            if (region.Width <= 0 || region.Height <= 0)
+            {
+                return null;
+            }
+
+            Rectangle intersect = Rectangle.Intersect(new Rectangle(Point.Empty, bitmap.Size), region);
+
+            if (intersect.IsEmpty)
+            {
+                return null;
+            }
+
+            Bitmap slice = new Bitmap(intersect.Width, intersect.Height);
+            Copy(bitmap, slice, intersect, new Rectangle(Point.Empty, intersect.Size));
+            return slice;
+        }
+        
+        public static void ClearBitmap(this Bitmap bitmap, Color color)
+        {
+            ClearBitmap(bitmap, color.ToArgb());
+        }
+
+        public static void ClearBitmap(this Bitmap bitmap, Int32 color)
+        {
+            using DirectBitmap direct = bitmap.Direct();
+            direct.Clear(color);
+        }
+        
+        public static DirectBitmap Direct(this Bitmap bitmap)
+        {
+            if (bitmap is null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            DirectBitmap direct = new DirectBitmap(bitmap);
+            direct.Lock();
+            return direct;
+        }
+	
+        public static DirectBitmap Direct(this Bitmap bitmap, DirectBitmapLockFormat format)
+        {
+            if (bitmap is null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            DirectBitmap direct = new DirectBitmap(bitmap);
+            direct.Lock(format);
+            return direct;
+        }
+
+        public static Bitmap DeepClone(this Bitmap bitmap)
+        {
+            if (bitmap is null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            return bitmap.Clone(new Rectangle(default, bitmap.Size), bitmap.PixelFormat);
+        }
+
+        [DllImport("msvcrt.dll")]
+        private static extern Int32 memcmp(IntPtr first, IntPtr second, Int64 count);
+
+        public static Boolean Equals(this Bitmap? bitmap, Bitmap? other)
+        {
+            if (bitmap == other)
+            {
+                return true;
+            }
+            
+            if (bitmap is null || other is null)
+            {
+                return false;
+            }
+
+            if (bitmap.Size != other.Size)
+            {
+                return false;
+            }
+
+            BitmapData first = bitmap.LockBits(new Rectangle(Point.Empty, bitmap.Size), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            BitmapData second = other.LockBits(new Rectangle(Point.Empty, other.Size), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
             try
             {
-                IntPtr firstscan = firstdata.Scan0;
-                IntPtr secondscan = seconddata.Scan0;
-
-                Int32 stride = firstdata.Stride;
-
-                return memcmp(firstscan, secondscan, stride * first.Height) == 0;
+                return memcmp(first.Scan0, second.Scan0, first.Stride * bitmap.Height) == 0;
             }
             finally
             {
-                first.UnlockBits(firstdata);
-                second.UnlockBits(seconddata);
+                bitmap.UnlockBits(first);
+                other.UnlockBits(second);
             }
         }
     }

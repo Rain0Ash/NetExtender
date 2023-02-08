@@ -8,7 +8,7 @@ using System.Linq;
 using System.Reflection;
 using NetExtender.Utilities.Core;
 
-namespace NetExtender.Initializer.Types.Reflection
+namespace NetExtender.Types.Reflection
 {
     public readonly struct ReflectionDifference : IReadOnlyCollection<MemberInfo>
     {

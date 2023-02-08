@@ -4,6 +4,7 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Text;
 using NetExtender.Types.Drawing.Colors.Interfaces;
 using NetExtender.Utilities.Types;
 
@@ -105,10 +106,12 @@ namespace NetExtender.Types.Drawing.Colors
             String a = A.ToString(provider);
             String b = B.ToString(provider);
 
-            return format.Replace("{COLOR}", $"L:{l} A:{a} B:{b}")
+            return new StringBuilder(format)
+                .Replace("{COLOR}", $"L:{l} A:{a} B:{b}")
                 .Replace("{L}", l)
                 .Replace("{A}", a)
-                .Replace("{B}", b);
+                .Replace("{B}", b)
+                .ToString();
         }
     }
 }

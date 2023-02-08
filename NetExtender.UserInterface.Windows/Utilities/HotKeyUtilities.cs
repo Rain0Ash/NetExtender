@@ -107,12 +107,12 @@ namespace NetExtender.Utilities.UserInterface
             return RegisterHotKey(handle.Handle, hotkey, out id);
         }
 
-        public static Boolean RegisterHotKey<T>(IntPtr handle, WindowsHotKeyAction<T> hotkey) where T : unmanaged, IConvertible
+        public static Boolean RegisterHotKey<T>(IntPtr handle, WindowsHotKeyAction<T> hotkey) where T : unmanaged, IComparable<T>, IConvertible
         {
             return handle != IntPtr.Zero && RegisterHotKey(handle, hotkey.Id.ToInt32(CultureInfo.InvariantCulture), hotkey.Key, hotkey.Modifier);
         }
         
-        public static Boolean RegisterHotKey<T>(this IUserInterfaceHandle handle, WindowsHotKeyAction<T> hotkey) where T : unmanaged, IConvertible
+        public static Boolean RegisterHotKey<T>(this IUserInterfaceHandle handle, WindowsHotKeyAction<T> hotkey) where T : unmanaged, IComparable<T>, IConvertible
         {
             if (handle is null)
             {
@@ -159,7 +159,7 @@ namespace NetExtender.Utilities.UserInterface
             return RegisterHotKey(handle.Handle, hotkeys);
         }
 
-        public static Int32?[] RegisterHotKey<T>(IntPtr handle, params WindowsHotKeyAction<T>[] hotkeys) where T : unmanaged, IConvertible
+        public static Int32?[] RegisterHotKey<T>(IntPtr handle, params WindowsHotKeyAction<T>[] hotkeys) where T : unmanaged, IComparable<T>, IConvertible
         {
             if (hotkeys is null)
             {
@@ -181,7 +181,7 @@ namespace NetExtender.Utilities.UserInterface
             return array;
         }
         
-        public static Int32?[] RegisterHotKey<T>(this IUserInterfaceHandle handle, params WindowsHotKeyAction<T>[] hotkeys) where T : unmanaged, IConvertible
+        public static Int32?[] RegisterHotKey<T>(this IUserInterfaceHandle handle, params WindowsHotKeyAction<T>[] hotkeys) where T : unmanaged, IComparable<T>, IConvertible
         {
             if (handle is null)
             {

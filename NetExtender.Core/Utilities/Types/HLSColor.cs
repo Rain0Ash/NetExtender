@@ -108,6 +108,7 @@ namespace NetExtender.Utilities.Types
                     Int32 Gdelta = ((max - g) * (HLSMax / 6) + difference / 2) / difference;
                     Int32 Bdelta = ((max - b) * (HLSMax / 6) + difference / 2) / difference;
 
+                    //TODO: переписать
                     if (r == max)
                     {
                         Hue = Bdelta - Gdelta;

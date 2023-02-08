@@ -353,5 +353,10 @@ namespace NetExtender.Configuration.Behavior
         {
             return ValueTask.CompletedTask;
         }
+
+        ~ConfigBehavior()
+        {
+            Dispose(false);
+        }
     }
 }

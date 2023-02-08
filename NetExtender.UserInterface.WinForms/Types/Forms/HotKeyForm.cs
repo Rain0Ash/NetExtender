@@ -53,7 +53,7 @@ namespace NetExtender.UserInterface.WinForms.Forms
             return WinFormsHotKeyUtilities.RegisterHotKey(this, hotkey, out id);
         }
 
-        public Boolean RegisterHotKey<T>(HotKeyAction<T> hotkey) where T : unmanaged, IConvertible
+        public Boolean RegisterHotKey<T>(HotKeyAction<T> hotkey) where T : unmanaged, IComparable<T>, IConvertible
         {
             return WinFormsHotKeyUtilities.RegisterHotKey(this, hotkey);
         }

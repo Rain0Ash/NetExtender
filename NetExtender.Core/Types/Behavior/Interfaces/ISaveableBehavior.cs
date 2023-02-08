@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace NetExtender.Initializer.Types.Behavior.Interfaces
+namespace NetExtender.Types.Behavior.Interfaces
 {
     public interface ISaveableBehavior<out TOptions> : ISaveableBehavior, IBehavior<TOptions> where TOptions : unmanaged, Enum
     {

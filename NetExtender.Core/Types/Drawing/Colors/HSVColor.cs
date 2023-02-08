@@ -4,6 +4,7 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Text;
 using NetExtender.Types.Drawing.Colors.Interfaces;
 using NetExtender.Utilities.Types;
 
@@ -105,10 +106,12 @@ namespace NetExtender.Types.Drawing.Colors
             String s = S.ToString(provider);
             String v = V.ToString(provider);
 
-            return format.Replace("{COLOR}", $"H:{h}° S:{s} V:{v}")
+            return new StringBuilder(format)
+                .Replace("{COLOR}", $"H:{h}° S:{s} V:{v}")
                 .Replace("{H}", h)
                 .Replace("{S}", s)
-                .Replace("{V}", v);
+                .Replace("{V}", v)
+                .ToString();
         }
     }
 }

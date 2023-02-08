@@ -4,6 +4,7 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Text;
 using NetExtender.Types.Drawing.Colors.Interfaces;
 using NetExtender.Utilities.Types;
 
@@ -105,10 +106,12 @@ namespace NetExtender.Types.Drawing.Colors
             String y = Y.ToString(provider);
             String z = Z.ToString(provider);
 
-            return format.Replace("{COLOR}", $"X:{x} Y:{y} Z:{z}")
+            return new StringBuilder(format)
+                .Replace("{COLOR}", $"X:{x} Y:{y} Z:{z}")
                 .Replace("{X}", x)
                 .Replace("{Y}", y)
-                .Replace("{Z}", z);
+                .Replace("{Z}", z)
+                .ToString();
         }
     }
 }

@@ -7,6 +7,13 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Logging.Interfaces
 {
+    public interface ILoggerInfo<in TLevel> : ILoggerInfo where TLevel : unmanaged, Enum
+    {
+        public Boolean IsEnabled(TLevel level);
+        public Boolean Enable(TLevel level);
+        public Boolean Disable(TLevel level);
+    }
+    
     public interface ILoggerInfo
     {
         public LoggingMessageOptions Options { get; }

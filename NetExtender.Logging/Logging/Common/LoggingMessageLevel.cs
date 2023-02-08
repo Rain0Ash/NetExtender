@@ -3,7 +3,7 @@
 
 namespace NetExtender.Logging.Common
 {
-    public enum LoggingMessageType
+    public enum LoggingMessageLevel
     {
         Log,
         Debug,

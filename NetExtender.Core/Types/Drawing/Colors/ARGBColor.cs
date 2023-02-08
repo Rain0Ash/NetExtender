@@ -4,6 +4,7 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Text;
 using NetExtender.Types.Drawing.Colors.Interfaces;
 using NetExtender.Utilities.Types;
 
@@ -112,11 +113,18 @@ namespace NetExtender.Types.Drawing.Colors
             String g = G.ToString(provider);
             String b = B.ToString(provider);
 
-            return format.Replace("{COLOR}", $"A:{a} R:{r} G:{g} B:{b}")
-                .Replace("{A}", $"{a}")
-                .Replace("{R}", $"{r}")
-                .Replace("{G}", $"{g}")
-                .Replace("{B}", $"{b}");
+            return new StringBuilder(format)
+                .Replace("{COLOR}", $"A:{a} R:{r} G:{g} B:{b}")
+                .Replace("{HEX}", ColorUtilities.RGBToHEX(A, R, G, B))
+                .Replace("{ALPHA}", a)
+                .Replace("{A}", a)
+                .Replace("{RED}", r)
+                .Replace("{R}", r)
+                .Replace("{GREEN}", g)
+                .Replace("{G}", g)
+                .Replace("{BLUE}", b)
+                .Replace("{B}", b)
+                .ToString();
         }
     }
 }

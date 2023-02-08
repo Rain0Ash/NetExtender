@@ -13,32 +13,42 @@ namespace NetExtender.Types.Numerics
         /// <summary>
         /// Represents the zero <see cref="AngleRevolution"/> value (0 degrees).
         /// </summary>
-        public static readonly AngleRevolution Zero = new AngleRevolution(0);
+        public static AngleRevolution Zero { get; } = new AngleRevolution(AngleUtilities.DoubleRevolution.Zero);
+        
+        /// <summary>
+        /// Represents the golden <see cref="AngleRevolution"/> value (~137.508 degrees).
+        /// </summary>
+        public static AngleRevolution Golden { get; } = AngleRadian.Golden.ToAngleRevolution();
 
         /// <summary>
-        /// Represents the smallest possible value of a <see cref="AngleRevolution"/>.
+        /// Represents the quarter <see cref="AngleRevolution"/> value (90 degrees).
         /// </summary>
-        public static readonly AngleRevolution MinValue = new AngleRevolution(Double.MinValue);
-
-        /// <summary>
-        /// Represents the largest possible value of a <see cref="AngleRevolution"/>.
-        /// </summary>
-        public static readonly AngleRevolution MaxValue = new AngleRevolution(Double.MaxValue);
-
-        /// <summary>
-        /// Represents the right <see cref="AngleRevolution"/> value (90 degrees).
-        /// </summary>
-        public static readonly AngleRevolution Right = new AngleRevolution(AngleUtilities.Revolution.Right);
+        public static AngleRevolution Quarter { get; } = new AngleRevolution(AngleUtilities.DoubleRevolution.Quarter);
 
         /// <summary>
         /// Represents the straight <see cref="AngleRevolution"/> value (180 degrees).
         /// </summary>
-        public static readonly AngleRevolution Straight = new AngleRevolution(AngleUtilities.Revolution.Straight);
+        public static AngleRevolution Straight { get; } = new AngleRevolution(AngleUtilities.DoubleRevolution.Straight);
+        
+        /// <summary>
+        /// Represents the three quarter <see cref="AngleRevolution"/> value (270 degrees).
+        /// </summary>
+        public static AngleRevolution ThreeQuarter { get; } = new AngleRevolution(AngleUtilities.DoubleRevolution.ThreeQuarter);
 
         /// <summary>
         /// Represents the full <see cref="AngleRevolution"/> value (360 degrees).
         /// </summary>
-        public static readonly AngleRevolution Full = new AngleRevolution(AngleUtilities.Revolution.Full);
+        public static AngleRevolution Full { get; } = new AngleRevolution(AngleUtilities.DoubleRevolution.Full);
+
+        /// <summary>
+        /// Represents the smallest possible value of a <see cref="AngleRevolution"/>.
+        /// </summary>
+        public static AngleRevolution MinValue { get; } = new AngleRevolution(Double.MinValue);
+
+        /// <summary>
+        /// Represents the largest possible value of a <see cref="AngleRevolution"/>.
+        /// </summary>
+        public static AngleRevolution MaxValue { get; } = new AngleRevolution(Double.MaxValue);
 
         public static explicit operator Double(AngleRevolution angle)
         {
