@@ -35,30 +35,9 @@ namespace NetExtender.Domains.Utilities
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (!ReflectionUtilities.TryGetEntryPointType(out Type? type))
-            {
-                throw new EntryPointNotFoundException("Entry point type not found.");
-            }
-
-            Assembly assembly = type.Assembly;
-            if (!assembly.TryGetEntryTypeNamespace(out String? @namespace))
-            {
-                throw new EntryPointNotFoundException($"Entry point type namespace not found at '{assembly.FullName}'.");
-            }
-
-            type = assembly.AutoApplication(source, @namespace);
-
-            if (type is null)
-            {
-                throw new InvalidOperationException($"Application type not found at '{assembly.FullName}'.");
-            }
-
-            if (Activator.CreateInstance(type) is not IApplication application)
-            {
-                throw new InvalidOperationException("Application instance can't be instantiated.");
-            }
-
-            return application;
+            String @namespace = ReflectionUtilities.GetEntryAssemblyNamespace(out Assembly assembly);
+            Type type = assembly.AutoApplication(source, @namespace) ?? throw new InvalidOperationException($"Application type not found at '{assembly.FullName}'.");
+            return Activator.CreateInstance(type) as IApplication ?? throw new InvalidOperationException("Application instance can't be instantiated.");
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -178,30 +157,9 @@ namespace NetExtender.Domains.Utilities
                 throw new ArgumentNullException(nameof(source));
             }
 
-            if (!ReflectionUtilities.TryGetEntryPointType(out Type? type))
-            {
-                throw new EntryPointNotFoundException("Entry point type not found.");
-            }
-
-            Assembly assembly = type.Assembly;
-            if (!assembly.TryGetEntryTypeNamespace(out String? @namespace))
-            {
-                throw new EntryPointNotFoundException($"Entry point type namespace not found at '{assembly.FullName}'.");
-            }
-
-            type = assembly.AutoView(source, @namespace);
-
-            if (type is null)
-            {
-                throw new InvalidOperationException($"View type not found at '{assembly.FullName}'.");
-            }
-
-            if (Activator.CreateInstance(type) is not IApplicationView view)
-            {
-                throw new InvalidOperationException("View instance can't be instantiated.");
-            }
-
-            return view;
+            String @namespace = ReflectionUtilities.GetEntryAssemblyNamespace(out Assembly assembly);
+            Type type = assembly.AutoView(source, @namespace) ?? throw new InvalidOperationException($"View type not found at '{assembly.FullName}'.");
+            return Activator.CreateInstance(type) as IApplicationView ?? throw new InvalidOperationException("View instance can't be instantiated.");
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

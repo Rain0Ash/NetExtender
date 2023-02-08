@@ -34,6 +34,11 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         public static Task<Int32> Zero { get; } = Task.FromResult(0);
 
+        /// <summary>
+        /// Cached one task
+        /// </summary>
+        public static Task<Int32> One { get; } = Task.FromResult(1);
+
         private static class TaskCache<T>
         {
             public static Task<T?> Default { get; }

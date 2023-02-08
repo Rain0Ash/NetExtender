@@ -9,7 +9,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Logging.Behavior
 {
-    public class LoggerWriterBehavior : LoggerBehavior
+    public class LoggerWriterBehavior<TLevel> : LoggerBehavior<TLevel> where TLevel : unmanaged, Enum
     {
         protected TextWriter? Writer { get; private set; }
 
@@ -18,14 +18,14 @@ namespace NetExtender.Logging.Behavior
             Writer = writer ?? throw new ArgumentNullException(nameof(writer));
         }
 
-        protected override Boolean Log(String? message, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, IFormatProvider? provider)
+        protected override Boolean Log(String? message, TLevel level, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, IFormatProvider? provider)
         {
             if (Writer is null)
             {
                 throw new ObjectDisposedException(nameof(TextWriter));
             }
 
-            message = Formatter.Format(message, type, options, offset, provider);
+            message = Formatter.Format(message, level, options, offset, provider);
 
             if (message is null)
             {

@@ -49,7 +49,7 @@ namespace NetExtender.Types.Notify
             return Store.TryGetValue(when, out LinkedList<String>? collection) && collection.Contains(property);
         }
 
-        public Boolean Contains<TProperty>(Expression<Func<T, TProperty>> when, Expression<Func<T, TProperty>> property)
+        public Boolean Contains<TProperty>(Expression<Func<T, TProperty>> when, Expression<Func<T, Object?>> property)
         {
             if (when is null)
             {
@@ -114,7 +114,7 @@ namespace NetExtender.Types.Notify
             return this;
         }
 
-        public PropertySubnotifier<T> Register<TProperty>(Expression<Func<T, TProperty>> when, params Expression<Func<T, TProperty>>?[]? properties)
+        public PropertySubnotifier<T> Register<TProperty>(Expression<Func<T, TProperty>> when, params Expression<Func<T, Object?>>?[]? properties)
         {
             if (when is null)
             {
@@ -166,7 +166,7 @@ namespace NetExtender.Types.Notify
             return this;
         }
 
-        public PropertySubnotifier<T> Unregister<TProperty>(Expression<Func<T, TProperty>> when, params Expression<Func<T, TProperty>>?[]? properties)
+        public PropertySubnotifier<T> Unregister<TProperty>(Expression<Func<T, TProperty>> when, params Expression<Func<T, Object?>>?[]? properties)
         {
             if (when is null)
             {

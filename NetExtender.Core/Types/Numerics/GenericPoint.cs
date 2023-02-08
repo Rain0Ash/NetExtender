@@ -17,10 +17,10 @@ namespace NetExtender.Types.Numerics
         Left = 4,
         Right = 12,
 
-        UpLeft = 5,
-        DownLeft = 7,
-        UpRight = 13,
-        DownRight = 15
+        UpLeft = Up | Left,
+        DownLeft = Down | Left,
+        UpRight = Up | Right,
+        DownRight = Down | Right
     }
 
     public readonly struct Point2<T> : IEquatable<Point2<T>> where T : unmanaged, IEquatable<T>, IComparable<T>, IConvertible

@@ -6,9 +6,9 @@ using NetExtender.Logging.Common;
 
 namespace NetExtender.Logging.Format.Interfaces
 {
-    public interface ILoggerFormatProvider
+    public interface ILoggerFormatProvider<in TLevel> where TLevel : unmanaged, Enum
     {
-        public String? Format(String? message, LoggingMessageType type, LoggingMessageOptions options, DateTimeOffset offset);
-        public String? Format(String? message, LoggingMessageType type, LoggingMessageOptions options, DateTimeOffset offset, IFormatProvider? provider);
+        public String? Format(String? message, TLevel level, LoggingMessageOptions options, DateTimeOffset offset);
+        public String? Format(String? message, TLevel level, LoggingMessageOptions options, DateTimeOffset offset, IFormatProvider? provider);
     }
 }

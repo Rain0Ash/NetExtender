@@ -7,12 +7,21 @@ using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using NetExtender.Types.Exceptions;
 using NetExtender.Types.Native.Windows;
 
 namespace NetExtender.Utilities.Windows
 {
+    public enum ScreenshotType
+    {
+        Full,
+        Title,
+        Content
+    }
+    
     public static class ScreenshotUtilities
     {
         /// <summary>
@@ -94,30 +103,185 @@ namespace NetExtender.Utilities.Windows
 
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern Boolean GetWindowRect(IntPtr hWnd, out WinRectangle lpRect);
+        private static extern Boolean GetWindowRect(IntPtr handle, out WinRectangle rectangle);
 
-        public static Boolean TakeScreenshot(IntPtr handle, [MaybeNullWhen(false)] out Bitmap screenshot)
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern Boolean GetClientRect(IntPtr handle, out WinRectangle rectangle);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern Boolean ClientToScreen(IntPtr handle, out Point point);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Boolean ClientInScreen(IntPtr handle, out Point point)
+        {
+            if (handle != IntPtr.Zero && ClientToScreen(handle, out point) && point.X >= 0 && point.Y >= 0)
+            {
+                return true;
+            }
+
+            point = default;
+            return false;
+        }
+
+        [return: MarshalAs(UnmanagedType.Bool)]
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern Boolean GetWindowInfo(IntPtr handle, ref WinWindowInfo info);
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static Boolean GetWindowInformation(IntPtr handle, out WinWindowInfo info)
+        {
+            info = new WinWindowInfo { Size = (UInt32) Marshal.SizeOf(typeof(WinWindowInfo)) };
+            return GetWindowInfo(handle, ref info);
+        }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern Int32 GetSystemMetrics(Int32 index);
+
+        [DllImport("User32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern Boolean PrintWindow(IntPtr handle, IntPtr hdc, UInt32 flags);
+
+        private static Boolean PrintWindow(IntPtr handle, Bitmap bitmap)
+        {
+            if (bitmap is null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            if (handle == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            using Graphics graphics = Graphics.FromImage(bitmap);
+            IntPtr hdc = graphics.GetHdc();
+
+            try
+            {
+                return PrintWindow(handle, hdc, 0);
+            }
+            finally
+            {
+                graphics.ReleaseHdc(hdc);
+            }
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private readonly struct WinWindowInfo
+        {
+            public UInt32 Size { get; init; }
+            public WinRectangle Window { get; init; }
+            public WinRectangle Client { get; init; }
+            public UInt32 Style { get; init; }
+            public UInt32 ExStyle { get; init; }
+            public UInt32 WindowStatus { get; init; }
+            public Int32 WindowBorderX { get; init; }
+            public Int32 WindowBorderY { get; init; }
+            public UInt16 AtomWindowType { get; init; }
+            public UInt16 CreatorVersion { get; init; }
+
+            public Size BorderSize
+            {
+                get
+                {
+                    return new Size(WindowBorderX, WindowBorderY);
+                }
+            }
+        }
+
+        //TODO:
+        private static Boolean GetContentSize(IntPtr handle, ScreenshotType type, out Rectangle bounds, out Rectangle content)
         {
             if (handle == IntPtr.Zero)
             {
-                screenshot = default;
+                bounds = default;
+                content = default;
                 return false;
             }
-
-            if (!GetWindowRect(handle, out WinRectangle rect))
+            
+            switch (type)
             {
-                screenshot = default;
+                case ScreenshotType.Full:
+                {
+                    bounds = default;
+                    content = default;
+                    return false;
+                }
+                case ScreenshotType.Title:
+                {
+                    if (!GetWindowRect(handle, out WinRectangle rect) || !GetWindowInformation(handle, out WinWindowInfo info))
+                    {
+                        bounds = default;
+                        content = default;
+                        return false;
+                    }
+
+                    Size border = info.BorderSize;
+                    bounds = rect;
+                    content = new Rectangle(border.Width, 0, bounds.Width - border.Width * 2, bounds.Height - border.Width);
+                    return true;
+                }
+                case ScreenshotType.Content:
+                {
+                    if (!GetClientRect(handle, out WinRectangle rect) || !ClientInScreen(handle, out Point point) || !GetWindowInformation(handle, out WinWindowInfo info))
+                    {
+                        bounds = default;
+                        content = default;
+                        return false;
+                    }
+
+                    Rectangle rectangle = rect;
+                    Size border = info.BorderSize;
+                    Int32 title = GetSystemMetrics(0x21) + GetSystemMetrics(0x4) + GetSystemMetrics(0x5C);
+                    bounds = new Rectangle(point.X, point.Y, rectangle.Right, rectangle.Bottom);
+                    content = new Rectangle(border.Width, title, bounds.Width - border.Width, bounds.Height - title);
+                    return true;
+                }
+                default:
+                    throw new EnumUndefinedOrNotSupportedException<ScreenshotType>(type, nameof(type), null);
+            }
+        }
+
+        public static Boolean TakeScreenshot(IntPtr handle, [MaybeNullWhen(false)] out Bitmap screenshot)
+        {
+            return TakeScreenshot(handle, ScreenshotType.Content, out screenshot);
+        }
+
+        public static Boolean TakeScreenshot(IntPtr handle, ScreenshotType type, [MaybeNullWhen(false)] out Bitmap screenshot)
+        {
+            if (handle == IntPtr.Zero)
+            {
+                screenshot = null;
                 return false;
             }
 
-            Rectangle rectangle = rect;
+            if (!GetContentSize(handle, type, out Rectangle rectangle, out Rectangle content))
+            {
+                screenshot = null;
+                return false;
+            }
 
-            screenshot = new Bitmap(rectangle.Width, rectangle.Height, PixelFormat.Format32bppArgb);
+            try
+            {
+                using Bitmap raw = new Bitmap(rectangle.Width, rectangle.Height);
 
-            using Graphics graphics = Graphics.FromImage(screenshot);
-            graphics.CopyFromScreen(rectangle.Left, rectangle.Top, 0, 0, new Size(rectangle.Width, rectangle.Height), CopyPixelOperation.SourceCopy);
+                if (!PrintWindow(handle, raw))
+                {
+                    raw.Dispose();
+                    screenshot = null;
+                    return false;
+                }
 
-            return true;
+                screenshot = raw.Clone(content, raw.PixelFormat);
+                return true;
+            }
+            catch (Exception)
+            {
+                screenshot = null;
+                return false;
+            }
         }
     }
 }

@@ -8,25 +8,25 @@ using NetExtender.Logging.Format.Interfaces;
 
 namespace NetExtender.Logging.Format
 {
-    public class LoggerFormatProvider : ILoggerFormatProvider
+    public class LoggerFormatProvider<TLevel> : ILoggerFormatProvider<TLevel> where TLevel : unmanaged, Enum
     {
-        public static ILoggerFormatProvider Default { get; } = new LoggerFormatProvider();
+        public static ILoggerFormatProvider<TLevel> Default { get; } = new LoggerFormatProvider<TLevel>();
 
-        public String? Format(String? message, LoggingMessageType type, LoggingMessageOptions options, DateTimeOffset offset)
+        public String? Format(String? message, TLevel level, LoggingMessageOptions options, DateTimeOffset offset)
         {
-            return Format(message, type, options, offset, null);
+            return Format(message, level, options, offset, null);
         }
 
-        public virtual String? Format(String? message, LoggingMessageType type, LoggingMessageOptions options, DateTimeOffset offset, IFormatProvider? provider)
+        public virtual String? Format(String? message, TLevel level, LoggingMessageOptions options, DateTimeOffset offset, IFormatProvider? provider)
         {
             if (message is null)
             {
                 return null;
             }
 
-            String? prefix = Prefix(type, options, offset, provider);
-            String? time = Time(type, options, offset, provider);
-            String? thread = Thread(type, options, offset, provider);
+            String? prefix = Prefix(level, options, offset, provider);
+            String? time = Time(level, options, offset, provider);
+            String? thread = Thread(level, options, offset, provider);
 
             Int32 capacity = time?.Length ?? 0 + prefix?.Length ?? 0 + thread?.Length ?? 0 + message.Length;
 
@@ -42,12 +42,12 @@ namespace NetExtender.Logging.Format
             return result.Length > 0 ? result.Append(": ").Append(message).ToString() : null;
         }
 
-        protected virtual String? Prefix(LoggingMessageType type, LoggingMessageOptions options, DateTimeOffset offset, IFormatProvider? provider)
+        protected virtual String? Prefix(TLevel level, LoggingMessageOptions options, DateTimeOffset offset, IFormatProvider? provider)
         {
-            return options.HasFlag(LoggingMessageOptions.Prefix) ? $"[{type}]" : null;
+            return options.HasFlag(LoggingMessageOptions.Prefix) ? $"[{level}]" : null;
         }
 
-        protected virtual String? Time(LoggingMessageType type, LoggingMessageOptions options, DateTimeOffset offset, IFormatProvider? provider)
+        protected virtual String? Time(TLevel level, LoggingMessageOptions options, DateTimeOffset offset, IFormatProvider? provider)
         {
             return (options & LoggingMessageOptions.DateTime) switch
             {
@@ -58,7 +58,7 @@ namespace NetExtender.Logging.Format
             };
         }
 
-        protected virtual String? Thread(LoggingMessageType type, LoggingMessageOptions options, DateTimeOffset offset, IFormatProvider? provider)
+        protected virtual String? Thread(TLevel level, LoggingMessageOptions options, DateTimeOffset offset, IFormatProvider? provider)
         {
             return options.HasFlag(LoggingMessageOptions.Thread) ? $"|{Environment.CurrentManagedThreadId.ToString(provider)}|" : null;
         }

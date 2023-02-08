@@ -13,12 +13,32 @@ namespace NetExtender.Types.Numerics
         /// <summary>
         /// Represents the zero <see cref="AngleRadian"/> value (0 degrees).
         /// </summary>
-        public static AngleRadian Zero { get; } = new AngleRadian(0);
+        public static AngleRadian Zero { get; } = new AngleRadian(AngleUtilities.DoubleRadian.Zero);
 
         /// <summary>
         /// Represents the golden <see cref="AngleRadian"/> value (~137.508 degrees).
         /// </summary>
         public static AngleRadian Golden { get; } = new AngleRadian(Math.PI * (3 - MathUtilities.DoubleConstants.Sqrt5));
+
+        /// <summary>
+        /// Represents the quarter <see cref="AngleRadian"/> value (90 degrees).
+        /// </summary>
+        public static AngleRadian Quarter { get; } = new AngleRadian(AngleUtilities.DoubleRadian.Quarter);
+
+        /// <summary>
+        /// Represents the straight <see cref="AngleRadian"/> value (180 degrees).
+        /// </summary>
+        public static AngleRadian Straight { get; } = new AngleRadian(AngleUtilities.DoubleRadian.Straight);
+        
+        /// <summary>
+        /// Represents the three quarter <see cref="AngleRadian"/> value (270 degrees).
+        /// </summary>
+        public static AngleRadian ThreeQuarter { get; } = new AngleRadian(AngleUtilities.DoubleRadian.ThreeQuarter);
+
+        /// <summary>
+        /// Represents the full <see cref="AngleRadian"/> value (360 degrees).
+        /// </summary>
+        public static AngleRadian Full { get; } = new AngleRadian(AngleUtilities.DoubleRadian.Full);
 
         /// <summary>
         /// Represents the smallest possible value of a <see cref="AngleRadian"/>.
@@ -29,21 +49,6 @@ namespace NetExtender.Types.Numerics
         /// Represents the largest possible value of a <see cref="AngleRadian"/>.
         /// </summary>
         public static AngleRadian MaxValue { get; } = new AngleRadian(Double.MaxValue);
-
-        /// <summary>
-        /// Represents the right <see cref="AngleRadian"/> value (90 degrees).
-        /// </summary>
-        public static AngleRadian Right { get; } = new AngleRadian(AngleUtilities.Radian.Right);
-
-        /// <summary>
-        /// Represents the straight <see cref="AngleRadian"/> value (180 degrees).
-        /// </summary>
-        public static AngleRadian Straight { get; } = new AngleRadian(AngleUtilities.Radian.Straight);
-
-        /// <summary>
-        /// Represents the full <see cref="AngleRadian"/> value (360 degrees).
-        /// </summary>
-        public static AngleRadian Full { get; } = new AngleRadian(AngleUtilities.Radian.Full);
 
         public static explicit operator Double(AngleRadian angle)
         {

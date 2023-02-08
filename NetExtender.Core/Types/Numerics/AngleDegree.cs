@@ -13,8 +13,33 @@ namespace NetExtender.Types.Numerics
         /// <summary>
         /// Represents the zero <see cref="AngleDegree"/> value (0 degrees).
         /// </summary>
-        public static AngleDegree Zero { get; } = new AngleDegree(0);
+        public static AngleDegree Zero { get; } = new AngleDegree(AngleUtilities.DoubleDegree.Zero);
+        
+        /// <summary>
+        /// Represents the golden <see cref="AngleDegree"/> value (~137.508 degrees).
+        /// </summary>
+        public static AngleDegree Golden { get; } = AngleRadian.Golden.ToAngleDegree();
 
+        /// <summary>
+        /// Represents the quarter <see cref="AngleDegree"/> value (90 degrees).
+        /// </summary>
+        public static AngleDegree Right { get; } = new AngleDegree(AngleUtilities.DoubleDegree.Quarter);
+
+        /// <summary>
+        /// Represents the straight <see cref="AngleDegree"/> value (180 degrees).
+        /// </summary>
+        public static AngleDegree Straight { get; } = new AngleDegree(AngleUtilities.DoubleDegree.Straight);
+
+        /// <summary>
+        /// Represents the three quarter <see cref="AngleDegree"/> value (270 degrees).
+        /// </summary>
+        public static AngleDegree ThreeQuarter { get; } = new AngleDegree(AngleUtilities.DoubleDegree.ThreeQuarter);
+
+        /// <summary>
+        /// Represents the full <see cref="AngleDegree"/> value (360 degrees).
+        /// </summary>
+        public static AngleDegree Full { get; } = new AngleDegree(AngleUtilities.DoubleDegree.Full);
+        
         /// <summary>
         /// Represents the smallest possible value of a <see cref="AngleDegree"/>.
         /// </summary>
@@ -24,21 +49,6 @@ namespace NetExtender.Types.Numerics
         /// Represents the largest possible value of a <see cref="AngleDegree"/>.
         /// </summary>
         public static AngleDegree MaxValue { get; } = new AngleDegree(Double.MaxValue);
-
-        /// <summary>
-        /// Represents the right <see cref="AngleDegree"/> value (90 degrees).
-        /// </summary>
-        public static AngleDegree Right { get; } = new AngleDegree(AngleUtilities.Degree.Right);
-
-        /// <summary>
-        /// Represents the straight <see cref="AngleDegree"/> value (180 degrees).
-        /// </summary>
-        public static AngleDegree Straight { get; } = new AngleDegree(AngleUtilities.Degree.Straight);
-
-        /// <summary>
-        /// Represents the full <see cref="AngleDegree"/> value (360 degrees).
-        /// </summary>
-        public static AngleDegree Full { get; } = new AngleDegree(AngleUtilities.Degree.Full);
 
         public static explicit operator Double(AngleDegree angle)
         {

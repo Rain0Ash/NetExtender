@@ -442,7 +442,6 @@ namespace NetExtender.Utilities.Types
 
             if (Math.Abs(rgbDelta) < Double.Epsilon)
             {
-                // this is a gray, no chroma ...
                 h = 0;
                 s = 0;
                 return;
@@ -1073,6 +1072,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [SuppressMessage("ReSharper", "RedundantTypeArgumentsOfMethod")]
         public static TColor ToColor<TColor>(this Color color) where TColor : IColor
         {
             return ToColor<TColor>(color, out TColor? result) ? result : throw new InvalidCastException();
@@ -1317,6 +1317,92 @@ namespace NetExtender.Utilities.Types
         public static TColor? SuperDark<TColor>(this TColor? color) where TColor : IColor
         {
             return color is not null ? color.ToColor().SuperDark().ToColor<TColor>() : default;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double DifferenceCie1976(this Color first, Color second)
+        {
+            return DifferenceCie1976(first.ToColor<CIELABColor>(), second.ToColor<CIELABColor>());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double DifferenceCie1976<TColor1, TColor2>(this TColor1 first, TColor2 second) where TColor1 : IColor where TColor2 : IColor
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+
+            return DifferenceCie1976(first.ToColor<TColor1, CIELABColor>(), second.ToColor<TColor2, CIELABColor>());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        private static Double DifferenceCie1976(CIELABColor first, CIELABColor second)
+        {
+            Double difference = Math.Pow(first.L - second.L, 2) + Math.Pow(first.A - second.A, 2) + Math.Pow(first.B - second.B, 2);
+            return Math.Sqrt(difference);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double DifferenceCmc(this Color first, Color second)
+        {
+            return DifferenceCmc(first, second, 1.0, 2.0);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double DifferenceCmc(this Color first, Color second, Double chroma, Double lightness)
+        {
+            return DifferenceCmc(first.ToColor<CIELABColor>(), second.ToColor<CIELABColor>(), chroma, lightness);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double DifferenceCmc<TColor1, TColor2>(this TColor1 first, TColor2 second) where TColor1 : IColor where TColor2 : IColor
+        {
+            return DifferenceCmc(first, second, 1.0, 2.0);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Double DifferenceCmc<TColor1, TColor2>(this TColor1 first, TColor2 second, Double chroma, Double lightness) where TColor1 : IColor where TColor2 : IColor
+        {
+            if (first is null)
+            {
+                throw new ArgumentNullException(nameof(first));
+            }
+
+            if (second is null)
+            {
+                throw new ArgumentNullException(nameof(second));
+            }
+
+            return DifferenceCmc(first.ToColor<TColor1, CIELABColor>(), second.ToColor<TColor2, CIELABColor>(), chroma, lightness);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        private static Double DifferenceCmc(CIELABColor first, CIELABColor second, Double chroma, Double lightness)
+        {
+            Double dl = first.L - second.L;
+            Double h = Math.Atan2(first.B, first.A);
+
+            Double c1 = Math.Sqrt(Math.Pow(first.A, 2) + Math.Pow(first.B, 2));
+            Double c2 = Math.Sqrt(Math.Pow(second.A, 2) + Math.Pow(second.B, 2));
+            Double dc = c1 - c2;
+
+            Double dh = Math.Sqrt(Math.Pow(first.A - second.A, 2) + Math.Pow(first.B - second.B, 2) - Math.Pow(dc, 2));
+
+            Double t = 164 <= h || h >= 345 ? 0.56 + Math.Abs(.2 * Math.Cos(h + 168.0)) : 0.36 + Math.Abs(0.4 * Math.Cos(h + 35.0));
+            Double f = Math.Sqrt(Math.Pow(c1, 4) / (Math.Pow(c1, 4) + 1900.0));
+
+            Double sl = first.L < 16 ? 0.511 : 0.040975 * first.L / (1.0 + 0.01765 * first.L);
+            Double sc = 0.0638 * c1 / (1 + 0.0131 * c1) + 0.638;
+            Double sh = sc * (f * t + 1 - f);
+
+            Double difference = Math.Pow(dl / (lightness * sl), 2) + Math.Pow(dc / (chroma * sc), 2) + Math.Pow(dh / sh, 2);
+            return Math.Sqrt(difference);
         }
 
         public static Boolean WaveLengthToRGB(Double wavelength, out Byte r, out Byte g, out Byte b)

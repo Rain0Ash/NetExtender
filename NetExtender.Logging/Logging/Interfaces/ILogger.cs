@@ -7,23 +7,27 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Logging.Interfaces
 {
-    public interface ILogger : ILoggerInfo, IDisposable, IAsyncDisposable
+    public interface ILogger : ILogger<LoggingMessageLevel>
     {
-        public void Log<T>(T value, LoggingMessageType type);
-        public void Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options);
-        public void Log<T>(T value, LoggingMessageType type, EscapeType escape);
-        public void Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape);
-        public void Log<T>(T value, LoggingMessageType type, IFormatProvider? provider);
-        public void Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, IFormatProvider? provider);
-        public void Log<T>(T value, LoggingMessageType type, EscapeType escape, IFormatProvider? provider);
-        public void Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, IFormatProvider? provider);
-        public void Log<T>(T value, LoggingMessageType type, String? format);
-        public void Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, String? format);
-        public void Log<T>(T value, LoggingMessageType type, EscapeType escape, String? format);
-        public void Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, String? format);
-        public void Log<T>(T value, LoggingMessageType type, String? format, IFormatProvider? provider);
-        public void Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, String? format, IFormatProvider? provider);
-        public void Log<T>(T value, LoggingMessageType type, EscapeType escape, String? format, IFormatProvider? provider);
-        public void Log<T>(T value, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, String? format, IFormatProvider? provider);
+    }
+
+    public interface ILogger<in TLevel> : ILoggerInfo<TLevel>, IDisposable, IAsyncDisposable where TLevel : unmanaged, Enum
+    {
+        public void Log<T>(T value, TLevel level);
+        public void Log<T>(T value, TLevel level, LoggingMessageOptions options);
+        public void Log<T>(T value, TLevel level, EscapeType escape);
+        public void Log<T>(T value, TLevel level, LoggingMessageOptions options, EscapeType escape);
+        public void Log<T>(T value, TLevel level, IFormatProvider? provider);
+        public void Log<T>(T value, TLevel level, LoggingMessageOptions options, IFormatProvider? provider);
+        public void Log<T>(T value, TLevel level, EscapeType escape, IFormatProvider? provider);
+        public void Log<T>(T value, TLevel level, LoggingMessageOptions options, EscapeType escape, IFormatProvider? provider);
+        public void Log<T>(T value, TLevel level, String? format);
+        public void Log<T>(T value, TLevel level, LoggingMessageOptions options, String? format);
+        public void Log<T>(T value, TLevel level, EscapeType escape, String? format);
+        public void Log<T>(T value, TLevel level, LoggingMessageOptions options, EscapeType escape, String? format);
+        public void Log<T>(T value, TLevel level, String? format, IFormatProvider? provider);
+        public void Log<T>(T value, TLevel level, LoggingMessageOptions options, String? format, IFormatProvider? provider);
+        public void Log<T>(T value, TLevel level, EscapeType escape, String? format, IFormatProvider? provider);
+        public void Log<T>(T value, TLevel level, LoggingMessageOptions options, EscapeType escape, String? format, IFormatProvider? provider);
     }
 }

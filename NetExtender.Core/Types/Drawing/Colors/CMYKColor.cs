@@ -4,6 +4,7 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Text;
 using NetExtender.Types.Drawing.Colors.Interfaces;
 using NetExtender.Utilities.Types;
 
@@ -108,11 +109,13 @@ namespace NetExtender.Types.Drawing.Colors
             String y = Y.ToString(provider);
             String k = K.ToString(provider);
 
-            return format.Replace("{COLOR}", $"C:{c} M:{m} Y:{y} K:{k}")
+            return new StringBuilder(format)
+                .Replace("{COLOR}", $"C:{c} M:{m} Y:{y} K:{k}")
                 .Replace("{C}", $"{c}")
                 .Replace("{M}", $"{m}")
                 .Replace("{Y}", $"{y}")
-                .Replace("{K}", $"{k}");
+                .Replace("{K}", $"{k}")
+                .ToString();
         }
     }
 }

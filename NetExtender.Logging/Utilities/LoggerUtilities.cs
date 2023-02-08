@@ -11,89 +11,89 @@ namespace NetExtender.Logging.Utilities
 {
     public static class LoggerUtilities
     {
-        public static ILogger Create(this ILoggerBehavior behavior)
+        public static ILogger<TLevel> Create<TLevel>(this ILoggerBehavior<TLevel> behavior) where TLevel : unmanaged, Enum
         {
             return Create(behavior, null);
         }
 
-        public static ILogger Create(this ILoggerBehavior behavior, IFormatProvider? provider)
+        public static ILogger<TLevel> Create<TLevel>(this ILoggerBehavior<TLevel> behavior, IFormatProvider? provider) where TLevel : unmanaged, Enum
         {
             return Create(behavior, default(TimeSpan), provider);
         }
 
-        public static ILogger Create(this ILoggerBehavior behavior, TimeSpan offset)
+        public static ILogger<TLevel> Create<TLevel>(this ILoggerBehavior<TLevel> behavior, TimeSpan offset) where TLevel : unmanaged, Enum
         {
             return Create(behavior, offset, null);
         }
 
-        public static ILogger Create(this ILoggerBehavior behavior, TimeSpan offset, IFormatProvider? provider)
+        public static ILogger<TLevel> Create<TLevel>(this ILoggerBehavior<TLevel> behavior, TimeSpan offset, IFormatProvider? provider) where TLevel : unmanaged, Enum
         {
             return Create(behavior, LoggingMessageOptions.All, offset, provider);
         }
 
-        public static ILogger Create(this ILoggerBehavior behavior, LoggingMessageOptions options)
+        public static ILogger<TLevel> Create<TLevel>(this ILoggerBehavior<TLevel> behavior, LoggingMessageOptions options) where TLevel : unmanaged, Enum
         {
             return Create(behavior, options, null);
         }
 
-        public static ILogger Create(this ILoggerBehavior behavior, LoggingMessageOptions options, IFormatProvider? provider)
+        public static ILogger<TLevel> Create<TLevel>(this ILoggerBehavior<TLevel> behavior, LoggingMessageOptions options, IFormatProvider? provider) where TLevel : unmanaged, Enum
         {
             return Create(behavior, options, ConvertUtilities.DefaultEscapeType, default, provider);
         }
 
-        public static ILogger Create(this ILoggerBehavior behavior, LoggingMessageOptions options, TimeSpan offset)
+        public static ILogger<TLevel> Create<TLevel>(this ILoggerBehavior<TLevel> behavior, LoggingMessageOptions options, TimeSpan offset) where TLevel : unmanaged, Enum
         {
             return Create(behavior, options, offset, null);
         }
 
-        public static ILogger Create(this ILoggerBehavior behavior, LoggingMessageOptions options, TimeSpan offset, IFormatProvider? provider)
+        public static ILogger<TLevel> Create<TLevel>(this ILoggerBehavior<TLevel> behavior, LoggingMessageOptions options, TimeSpan offset, IFormatProvider? provider) where TLevel : unmanaged, Enum
         {
             return Create(behavior, options, ConvertUtilities.DefaultEscapeType, offset, provider);
         }
 
-        public static ILogger Create(this ILoggerBehavior behavior, EscapeType escape)
+        public static ILogger<TLevel> Create<TLevel>(this ILoggerBehavior<TLevel> behavior, EscapeType escape) where TLevel : unmanaged, Enum
         {
             return Create(behavior, escape, null);
         }
 
-        public static ILogger Create(this ILoggerBehavior behavior, EscapeType escape, IFormatProvider? provider)
+        public static ILogger<TLevel> Create<TLevel>(this ILoggerBehavior<TLevel> behavior, EscapeType escape, IFormatProvider? provider) where TLevel : unmanaged, Enum
         {
             return Create(behavior, escape, default, provider);
         }
 
-        public static ILogger Create(this ILoggerBehavior behavior, EscapeType escape, TimeSpan offset)
+        public static ILogger<TLevel> Create<TLevel>(this ILoggerBehavior<TLevel> behavior, EscapeType escape, TimeSpan offset) where TLevel : unmanaged, Enum
         {
             return Create(behavior, escape, offset, null);
         }
 
-        public static ILogger Create(this ILoggerBehavior behavior, EscapeType escape, TimeSpan offset, IFormatProvider? provider)
+        public static ILogger<TLevel> Create<TLevel>(this ILoggerBehavior<TLevel> behavior, EscapeType escape, TimeSpan offset, IFormatProvider? provider) where TLevel : unmanaged, Enum
         {
             return Create(behavior, LoggingMessageOptions.All, escape, offset, provider);
         }
 
-        public static ILogger Create(this ILoggerBehavior behavior, LoggingMessageOptions options, EscapeType escape)
+        public static ILogger<TLevel> Create<TLevel>(this ILoggerBehavior<TLevel> behavior, LoggingMessageOptions options, EscapeType escape) where TLevel : unmanaged, Enum
         {
             return Create(behavior, options, escape, null);
         }
 
-        public static ILogger Create(this ILoggerBehavior behavior, LoggingMessageOptions options, EscapeType escape, IFormatProvider? provider)
+        public static ILogger<TLevel> Create<TLevel>(this ILoggerBehavior<TLevel> behavior, LoggingMessageOptions options, EscapeType escape, IFormatProvider? provider) where TLevel : unmanaged, Enum
         {
             return Create(behavior, options, escape, default, provider);
         }
 
-        public static ILogger Create(this ILoggerBehavior behavior, LoggingMessageOptions options, EscapeType escape, TimeSpan offset)
+        public static ILogger<TLevel> Create<TLevel>(this ILoggerBehavior<TLevel> behavior, LoggingMessageOptions options, EscapeType escape, TimeSpan offset) where TLevel : unmanaged, Enum
         {
             return Create(behavior, options, escape, offset, null);
         }
 
-        public static ILogger Create(this ILoggerBehavior behavior, LoggingMessageOptions options, EscapeType escape, TimeSpan offset, IFormatProvider? provider)
+        public static ILogger<TLevel> Create<TLevel>(this ILoggerBehavior<TLevel> behavior, LoggingMessageOptions options, EscapeType escape, TimeSpan offset, IFormatProvider? provider) where TLevel : unmanaged, Enum
         {
             if (behavior is null)
             {
                 throw new ArgumentNullException(nameof(behavior));
             }
 
-            return new Logger(behavior, options, escape, offset, provider);
+            return new Logger<TLevel>(behavior, options, escape, offset, provider);
         }
     }
 }

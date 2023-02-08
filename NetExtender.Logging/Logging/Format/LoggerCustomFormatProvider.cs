@@ -20,11 +20,11 @@ namespace NetExtender.Logging.Format
         Thread
     }
 
-    public delegate String? LoggerFormatResolver(LoggingMessageType type, LoggingMessageOptions options, DateTimeOffset offset, IFormatProvider? provider);
+    public delegate String? LoggerFormatResolver<in TLevel>(TLevel level, LoggingMessageOptions options, DateTimeOffset offset, IFormatProvider? provider) where TLevel : unmanaged, Enum;
 
-    public class LoggerCustomFormatProvider : LoggerFormatProvider, IReadOnlyList<LoggerFormatResolver>
+    public class LoggerCustomFormatProvider<TLevel> : LoggerFormatProvider<TLevel>, IReadOnlyList<LoggerFormatResolver<TLevel>> where TLevel : unmanaged, Enum
     {
-        protected List<LoggerFormatResolver> Resolvers { get; }
+        protected List<LoggerFormatResolver<TLevel>> Resolvers { get; }
 
         public Int32 Count
         {
@@ -36,10 +36,10 @@ namespace NetExtender.Logging.Format
 
         public LoggerCustomFormatProvider()
         {
-            Resolvers = new List<LoggerFormatResolver>(6) { Prefix, Time, Thread };
+            Resolvers = new List<LoggerFormatResolver<TLevel>>(6) { Prefix, Time, Thread };
         }
 
-        public override String? Format(String? message, LoggingMessageType type, LoggingMessageOptions options, DateTimeOffset offset, IFormatProvider? provider)
+        public override String? Format(String? message, TLevel level, LoggingMessageOptions options, DateTimeOffset offset, IFormatProvider? provider)
         {
             if (message is null)
             {
@@ -52,7 +52,7 @@ namespace NetExtender.Logging.Format
             {
                 Int32 i = 0;
                 Int32 capacity = 0;
-                foreach (String? item in Resolvers.Select(resolver => resolver(type, options, offset, provider)).WhereNotNull())
+                foreach (String? item in Resolvers.Select(resolver => resolver(level, options, offset, provider)).WhereNotNull())
                 {
                     buffer[i++] = item;
                     capacity += item.Length;
@@ -74,7 +74,7 @@ namespace NetExtender.Logging.Format
             }
         }
 
-        protected virtual LoggerFormatResolver Resolve(LoggerFormatProviderEvaluatorType type)
+        protected virtual LoggerFormatResolver<TLevel> Resolve(LoggerFormatProviderEvaluatorType type)
         {
             return type switch
             {
@@ -90,7 +90,7 @@ namespace NetExtender.Logging.Format
             return Contains(Resolve(type));
         }
 
-        public Boolean Contains(LoggerFormatResolver resolver)
+        public Boolean Contains(LoggerFormatResolver<TLevel> resolver)
         {
             if (resolver is null)
             {
@@ -105,7 +105,7 @@ namespace NetExtender.Logging.Format
             return IndexOf(Resolve(type));
         }
 
-        public Int32 IndexOf(LoggerFormatResolver resolver)
+        public Int32 IndexOf(LoggerFormatResolver<TLevel> resolver)
         {
             if (resolver is null)
             {
@@ -120,7 +120,7 @@ namespace NetExtender.Logging.Format
             return Add(Resolve(type));
         }
 
-        public Boolean Add(LoggerFormatResolver resolver)
+        public Boolean Add(LoggerFormatResolver<TLevel> resolver)
         {
             if (resolver is null)
             {
@@ -144,7 +144,7 @@ namespace NetExtender.Logging.Format
             return Insert(index, Resolve(type));
         }
 
-        public Boolean Insert(Int32 index, LoggerFormatResolver resolver)
+        public Boolean Insert(Int32 index, LoggerFormatResolver<TLevel> resolver)
         {
             if (resolver is null)
             {
@@ -182,7 +182,7 @@ namespace NetExtender.Logging.Format
             return Remove(Resolve(type));
         }
 
-        public Boolean Remove(LoggerFormatResolver resolver)
+        public Boolean Remove(LoggerFormatResolver<TLevel> resolver)
         {
             if (resolver is null)
             {
@@ -197,7 +197,7 @@ namespace NetExtender.Logging.Format
             Resolvers.Clear();
         }
 
-        public IEnumerator<LoggerFormatResolver> GetEnumerator()
+        public IEnumerator<LoggerFormatResolver<TLevel>> GetEnumerator()
         {
             return Resolvers.GetEnumerator();
         }
@@ -207,7 +207,7 @@ namespace NetExtender.Logging.Format
             return GetEnumerator();
         }
 
-        public LoggerFormatResolver this[Int32 index]
+        public LoggerFormatResolver<TLevel> this[Int32 index]
         {
             get
             {

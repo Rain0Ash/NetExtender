@@ -15,7 +15,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
-using NetExtender.Initializer.Types.Reflection;
+using NetExtender.Types.Reflection;
 using NetExtender.Types.Attributes;
 using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
@@ -591,7 +591,7 @@ namespace NetExtender.Utilities.Core
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Type GetEntryPointType()
         {
-            return TryGetEntryPointType(out Type? type) ? type : throw new InvalidOperationException();
+            return TryGetEntryPointType(out Type? type) ? type : throw new EntryPointNotFoundException("Entry point type not found.");
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -602,7 +602,7 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(assembly));
             }
 
-            return TryGetEntryPointType(assembly, out Type? type) ? type : throw new InvalidOperationException();
+            return TryGetEntryPointType(assembly, out Type? type) ? type : throw new EntryPointNotFoundException("Entry point type not found.");
         }
 
         public static Boolean TryGetEntryPointType([MaybeNullWhen(false)] out Type result)
@@ -1149,6 +1149,41 @@ namespace NetExtender.Utilities.Core
             }
 
             return root ? @namespace.Split('.')[0] : @namespace;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetEntryAssemblyNamespace()
+        {
+            return GetEntryAssemblyNamespace(out _, out _);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetEntryAssemblyNamespace(out Type type)
+        {
+            return GetEntryAssemblyNamespace(out _, out type);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static String GetEntryAssemblyNamespace(out Assembly assembly)
+        {
+            return GetEntryAssemblyNamespace(out assembly, out _);
+        }
+
+        public static String GetEntryAssemblyNamespace(out Assembly assembly, out Type type)
+        {
+            if (!TryGetEntryPointType(out Type? entry))
+            {
+                throw new EntryPointNotFoundException("Entry point type not found.");
+            }
+
+            type = entry;
+            assembly = type.Assembly;
+            if (!assembly.TryGetEntryTypeNamespace(out String? @namespace))
+            {
+                throw new EntryPointNotFoundException($"Entry point type namespace not found at '{assembly.FullName}'.");
+            }
+
+            return @namespace;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

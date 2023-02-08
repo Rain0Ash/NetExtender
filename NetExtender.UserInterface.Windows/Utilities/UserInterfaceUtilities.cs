@@ -48,7 +48,31 @@ namespace NetExtender.Utilities.UserInterface
 
         [DllImport("user32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern Boolean GetWindowRect(IntPtr hwnd, out WinRectangle lpRect);
+        private static extern Boolean GetClientRect(IntPtr hwnd, out WinRectangle rectangle);
+        
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern Boolean GetWindowRect(IntPtr hwnd, out WinRectangle rectangle);
+
+        public static Rectangle GetClientRectangle(IntPtr handle)
+        {
+            if (!GetClientRect(handle, out WinRectangle rectangle))
+            {
+                WindowsInteropUtilities.ThrowLastWin32Exception();
+            }
+
+            return rectangle;
+        }
+
+        public static Rectangle GetClientRectangle<T>(this T window) where T : IWindow
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            return GetClientRectangle(window.Handle);
+        }
 
         public static Rectangle GetWindowRectangle(IntPtr handle)
         {

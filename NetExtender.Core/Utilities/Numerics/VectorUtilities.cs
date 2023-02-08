@@ -1181,22 +1181,5 @@ namespace NetExtender.Utilities.Numerics
         {
             return Quaternion.CreateFromRotationMatrix(value);
         }
-
-        public static PointOffset Invert(this PointOffset offset)
-        {
-            return offset switch
-            {
-                PointOffset.None => PointOffset.None,
-                PointOffset.Up => PointOffset.Down,
-                PointOffset.Down => PointOffset.Up,
-                PointOffset.Left => PointOffset.Right,
-                PointOffset.Right => PointOffset.Left,
-                PointOffset.UpLeft => PointOffset.DownRight,
-                PointOffset.DownLeft => PointOffset.UpRight,
-                PointOffset.UpRight => PointOffset.DownLeft,
-                PointOffset.DownRight => PointOffset.UpLeft,
-                _ => throw new EnumUndefinedOrNotSupportedException<PointOffset>(offset, nameof(offset), null)
-            };
-        }
     }
 }

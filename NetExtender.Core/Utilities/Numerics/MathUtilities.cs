@@ -61,7 +61,7 @@ namespace NetExtender.Utilities.Numerics
 
             public const Single PI = MathF.PI;
             public const Single E = MathF.E;
-            public const Single Radian = PI / 180F;
+            public const Single Radian = PI / AngleUtilities.SingleDegree.Straight;
 
             public const Single Sqrt2 = (Single) DecimalConstants.Sqrt2;
             public const Single InvertedSqrt2 = (Single) DecimalConstants.InvertedSqrt2;
@@ -85,7 +85,7 @@ namespace NetExtender.Utilities.Numerics
 
             public const Double PI = Math.PI;
             public const Double E = Math.E;
-            public const Double Radian = PI / 180D;
+            public const Double Radian = PI / AngleUtilities.DoubleDegree.Straight;
 
             public const Double Sqrt2 = (Double) DecimalConstants.Sqrt2;
             public const Double InvertedSqrt2 = (Double) DecimalConstants.InvertedSqrt3;
@@ -156,7 +156,7 @@ namespace NetExtender.Utilities.Numerics
             /// <summary>
             /// Represents PI / 180
             /// </summary>
-            public const Decimal Radian = PI / 180M;
+            public const Decimal Radian = PI / AngleUtilities.DecimalDegree.Straight;
 
             /// <summary>
             /// Represents log(2,E) factor
@@ -2559,25 +2559,138 @@ namespace NetExtender.Utilities.Numerics
             return Math.CopySign(value, sign);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single ToDegrees(this Single radians)
         {
-            return 180 / SingleConstants.PI * radians;
+            return AngleUtilities.SingleDegree.Straight / SingleConstants.PI * radians;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double ToDegrees(this Double radians)
         {
-            return 180 / DoubleConstants.PI * radians;
+            return AngleUtilities.DoubleDegree.Straight / DoubleConstants.PI * radians;
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Decimal ToDegrees(this Decimal radians)
         {
-            return 180 / DecimalConstants.PI * radians;
+            return AngleUtilities.DecimalDegree.Straight / DecimalConstants.PI * radians;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Single ToRadians(this Single value)
         {
             return value * SingleConstants.Radian;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 ToQuarterDegree(this SByte value, out Quarter quarter)
+        {
+            return ToQuarterDegree((Int32) value, out quarter);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 ToQuarterDegree(this Byte value, out Quarter quarter)
+        {
+            return ToQuarterDegree((Int32) value, out quarter);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 ToQuarterDegree(this Int16 value, out Quarter quarter)
+        {
+            return ToQuarterDegree((Int32) value, out quarter);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 ToQuarterDegree(this UInt16 value, out Quarter quarter)
+        {
+            return ToQuarterDegree((Int32) value, out quarter);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Int32 ToQuarterDegree(this Int32 value, out Quarter quarter)
+        {
+            value %= AngleUtilities.Int32Degree.Full;
+            Int32 angle = value < AngleUtilities.Int32Degree.Zero ? AngleUtilities.Int32Degree.Full + value % AngleUtilities.Int32Degree.Full : value % AngleUtilities.Int32Degree.Full;
+
+            Int32 degree = angle switch
+            {
+                <= AngleUtilities.Int32Degree.Quarter => angle,
+                <= AngleUtilities.Int32Degree.ThreeQuarter => AngleUtilities.Int32Degree.Straight - angle,
+                _ => angle - AngleUtilities.Int32Degree.Full
+            };
+            
+            quarter = (Quarter) (angle / AngleUtilities.Int32Degree.Quarter + 1);
+            return degree;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 ToQuarterDegree(this UInt32 value, out Quarter quarter)
+        {
+            return ToQuarterDegree((Int32) (value % AngleUtilities.Int32Degree.Full), out quarter);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 ToQuarterDegree(this Int64 value, out Quarter quarter)
+        {
+            return ToQuarterDegree((Int32) (value % AngleUtilities.Int32Degree.Full), out quarter);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int32 ToQuarterDegree(this UInt64 value, out Quarter quarter)
+        {
+            return ToQuarterDegree((Int32) (value % AngleUtilities.Int32Degree.Full), out quarter);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Single ToQuarterDegree(this Single value, out Quarter quarter)
+        {
+            value %= AngleUtilities.SingleDegree.Full;
+            Single angle = value < AngleUtilities.SingleDegree.Zero ? AngleUtilities.SingleDegree.Full + value % AngleUtilities.SingleDegree.Full : value % AngleUtilities.SingleDegree.Full;
+            
+            Single degree = angle switch
+            {
+                <= AngleUtilities.SingleDegree.Quarter => angle,
+                <= AngleUtilities.SingleDegree.ThreeQuarter => AngleUtilities.SingleDegree.Straight - angle,
+                _ => angle - AngleUtilities.SingleDegree.Full
+            };
+            
+            quarter = (Quarter) (Int32) (angle / AngleUtilities.SingleDegree.Quarter + 1);
+            return degree;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Double ToQuarterDegree(this Double value, out Quarter quarter)
+        {
+            value %= AngleUtilities.DoubleDegree.Full;
+            Double angle = value < AngleUtilities.DoubleDegree.Zero ? AngleUtilities.DoubleDegree.Full + value % AngleUtilities.DoubleDegree.Full : value % AngleUtilities.DoubleDegree.Full;
+            
+            Double degree = angle switch
+            {
+                <= AngleUtilities.DoubleDegree.Quarter => angle,
+                <= AngleUtilities.DoubleDegree.ThreeQuarter => AngleUtilities.DoubleDegree.Straight - angle,
+                _ => angle - AngleUtilities.DoubleDegree.Full
+            };
+            
+            quarter = (Quarter) (Int32) (angle / AngleUtilities.DoubleDegree.Quarter + 1);
+            return degree;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Decimal ToQuarterDegree(this Decimal value, out Quarter quarter)
+        {
+            value %= AngleUtilities.DecimalDegree.Full;
+            Decimal angle = value < AngleUtilities.DecimalDegree.Zero ? AngleUtilities.DecimalDegree.Full + value % AngleUtilities.DecimalDegree.Full : value % AngleUtilities.DecimalDegree.Full;
+            
+            Decimal degree = angle switch
+            {
+                <= AngleUtilities.DecimalDegree.Quarter => angle,
+                <= AngleUtilities.DecimalDegree.ThreeQuarter => AngleUtilities.DecimalDegree.Straight - angle,
+                _ => angle - AngleUtilities.DecimalDegree.Full
+            };
+            
+            quarter = (Quarter) (Int32) (angle / AngleUtilities.DecimalDegree.Quarter + 1);
+            return degree;
         }
 
         /// <inheritdoc cref="Math.Sin"/>
@@ -3458,31 +3571,71 @@ namespace NetExtender.Utilities.Numerics
         /// <para>If one value is zero, 1.0 is returned.</para>
         /// <para>Both values must either be positive or negative.</para>
         /// </summary>
-        /// <param name="d1">The first decimal.</param>
-        /// <param name="d2">The second decimal.</param>
-        public static Decimal DifferencePercentage(Decimal d1, Decimal d2)
+        /// <param name="first">The first decimal.</param>
+        /// <param name="second">The second decimal.</param>
+        public static Decimal DifferencePercentage(Decimal first, Decimal second)
         {
-            if (d1 == d2)
+            if (first == second)
             {
                 return 0;
             }
 
-            if (d1 == 0 || d2 == 0)
+            if (first == 0 || second == 0)
             {
                 return 1;
             }
 
-            switch (d1)
+            switch (first)
             {
-                case < 0 when d2 > 0:
-                case > 0 when d2 < 0:
-                    throw new ArgumentException($"Both values must either be positive or negative. Given values were '{d1}' and '{d2}'.");
-                case > 0 when d1 < d2:
-                case < 0 when d1 > d2:
-                    return 1 - d1 / d2;
+                case < 0 when second > 0:
+                case > 0 when second < 0:
+                    throw new ArgumentException($"Both values must either be positive or negative. Given values were '{first}' and '{second}'.");
+                case > 0 when first < second:
+                case < 0 when first > second:
+                    return 1 - first / second;
                 default:
-                    return 1 - d2 / d1;
+                    return 1 - second / first;
             }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Double Distance(Int32 x1, Int32 y1, Int32 x2, Int32 y2)
+        {
+            Double dx = x1 - x2;
+            Double dy = y1 - y2;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Double Distance(Int64 x1, Int64 y1, Int64 x2, Int64 y2)
+        {
+            Double dx = x1 - x2;
+            Double dy = y1 - y2;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Single Distance(Single x1, Single y1, Single x2, Single y2)
+        {
+            Single dx = x1 - x2;
+            Single dy = y1 - y2;
+            return MathF.Sqrt(dx * dx + dy * dy);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Double Distance(Double x1, Double y1, Double x2, Double y2)
+        {
+            Double dx = x1 - x2;
+            Double dy = y1 - y2;
+            return Math.Sqrt(dx * dx + dy * dy);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Decimal Distance(Decimal x1, Decimal y1, Decimal x2, Decimal y2)
+        {
+            Decimal dx = x1 - x2;
+            Decimal dy = y1 - y2;
+            return Sqrt(dx * dx + dy * dy);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

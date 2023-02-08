@@ -10,7 +10,7 @@ using NetExtender.Utilities.Types;
 
 namespace NetExtender.Logging.Behavior
 {
-    public class LoggerStreamBehavior : LoggerBehavior
+    public class LoggerStreamBehavior<TLevel> : LoggerBehavior<TLevel> where TLevel : unmanaged, Enum
     {
         protected Stream Stream { get; }
         protected StreamWriter? Writer { get; private set; }
@@ -21,21 +21,21 @@ namespace NetExtender.Logging.Behavior
             Writer = new StreamWriter(Stream);
         }
 
-        public LoggerStreamBehavior(Stream stream, ILoggerFormatProvider formatter)
+        public LoggerStreamBehavior(Stream stream, ILoggerFormatProvider<TLevel> formatter)
             : base(formatter)
         {
             Stream = stream ?? throw new ArgumentNullException(nameof(stream));
             Writer = new StreamWriter(Stream);
         }
 
-        protected override Boolean Log(String? message, LoggingMessageType type, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, IFormatProvider? provider)
+        protected override Boolean Log(String? message, TLevel level, LoggingMessageOptions options, EscapeType escape, DateTimeOffset offset, IFormatProvider? provider)
         {
             if (Writer is null)
             {
                 throw new ObjectDisposedException(nameof(StreamWriter));
             }
 
-            message = Formatter.Format(message, type, options, offset, provider);
+            message = Formatter.Format(message, level, options, offset, provider);
 
             if (message is null)
             {

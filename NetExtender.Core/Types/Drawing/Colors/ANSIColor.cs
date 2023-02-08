@@ -4,6 +4,7 @@
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
+using System.Text;
 using NetExtender.Types.Drawing.Colors.Interfaces;
 using NetExtender.Types.Exceptions;
 using NetExtender.Utilities.Types;
@@ -126,10 +127,12 @@ namespace NetExtender.Types.Drawing.Colors
             String g = G.ToString(provider);
             String b = B.ToString(provider);
 
-            String result = format.Replace("{FILL}", $"\x1b[38;2;{r};{g};{b};48;2;{r};{g};{b}m")
+            String result = new StringBuilder(format)
+                .Replace("{FILL}", $"\x1b[38;2;{r};{g};{b};48;2;{r};{g};{b}m")
                 .Replace("{FOREGROUND}", $"\x1b[38;2;{r};{g};{b}m")
                 .Replace("{BACKGROUND}", $"\x1b[48;2;{r};{g};{b}m")
-                .Replace("{END}", "\x1b[0m");
+                .Replace("{END}", "\x1b[0m")
+                .ToString();
 
             return format != result ? format : Mode switch
             {

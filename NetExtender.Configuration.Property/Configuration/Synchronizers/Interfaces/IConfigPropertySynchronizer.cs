@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 using NetExtender.Configuration.Properties.Interfaces;
-using NetExtender.Initializer.Types.Behavior.Interfaces;
+using NetExtender.Types.Behavior.Interfaces;
 
 namespace NetExtender.Configuration.Synchronizers.Interfaces
 {

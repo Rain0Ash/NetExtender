@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NetExtender.Configuration.Properties.Interfaces;
 using NetExtender.Configuration.Synchronizers.Interfaces;
-using NetExtender.Initializer.Types.Behavior.Interfaces;
+using NetExtender.Types.Behavior.Interfaces;
 using NetExtender.Utilities.Types;
 
 namespace NetExtender.Configuration.Synchronizers

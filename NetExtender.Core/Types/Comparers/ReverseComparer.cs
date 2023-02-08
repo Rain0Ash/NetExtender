@@ -9,7 +9,14 @@ namespace NetExtender.Types.Comparers
 {
     public class ReverseComparer<T> : IReverseComparer<T>
     {
+        public static ReverseComparer<T> Default { get; } = new ReverseComparer<T>();
+
         public IComparer<T> Original { get; }
+
+        public ReverseComparer()
+            : this(Comparer<T>.Default)
+        {
+        }
 
         public ReverseComparer(IComparer<T> comparer)
         {
