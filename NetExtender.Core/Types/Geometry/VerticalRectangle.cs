@@ -403,14 +403,14 @@ namespace NetExtender.Types.Geometry
             [MethodImpl(MethodImplOptions.AggressiveOptimization)]
             public Boolean MoveNext()
             {
-                Int32 y = _rectangle.Top + _current.Y + Step.Height;
+                Int32 y = _current.Y + Step.Height;
                 if (y <= Rectangle.Bottom)
                 {
                     _current.Y = y;
                     return true;
                 }
                 
-                Int32 x = _rectangle.Left + _current.X + Step.Width;
+                Int32 x = _current.X + Step.Width;
                 if (x <= Rectangle.Right)
                 {
                     _current.Y = _rectangle.Top;
