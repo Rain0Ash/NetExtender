@@ -146,10 +146,11 @@ namespace NetExtender.Utilities.Core
 
     public static class ReflectionUtilities
     {
+        public static Type NullableAttribute { get; }
+        public static Type NullableContextAttribute { get; }
+        
         private static HashSet<Type> VarArgTypes { get; }
-
         private static Predicate<Type> IsByRefLikePredicate { get; }
-
         public static Boolean AssemblyLoadCallStaticContructor { get; set; }
 
         static ReflectionUtilities()
@@ -157,6 +158,8 @@ namespace NetExtender.Utilities.Core
             AppDomain.CurrentDomain.AssemblyLoad += OnAssemblyLoad;
             VarArgTypes = new[] { Type.GetType("System.ArgIterator"), Type.GetType("System.RuntimeArgumentHandle"), Type.GetType("System.TypedReference") }.OfType<Type>().ToHashSet();
             IsByRefLikePredicate = typeof(Type).GetProperty("IsByRefLike")?.GetMethod?.CreateDelegate(typeof(Predicate<Type>)) as Predicate<Type> ?? (_ => false);
+            NullableAttribute = Type.GetType("System.Runtime.CompilerServices.NullableAttribute") ?? throw new InvalidInitializationException();
+            NullableContextAttribute = Type.GetType("System.Runtime.CompilerServices.NullableContextAttribute") ?? throw new InvalidInitializationException();
         }
 
         private static void OnAssemblyLoad(Object? sender, AssemblyLoadEventArgs args)
@@ -1342,11 +1345,30 @@ namespace NetExtender.Utilities.Core
             result = null;
             return false;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Type> GetTypes(this AppDomain domain)
+        {
+            if (domain is null)
+            {
+                throw new ArgumentNullException(nameof(domain));
+            }
 
-        /// <summary>
-        /// Gets all the namespaces in this assembly.
-        /// </summary>
-        /// <param name="assembly">The assembly.</param>
+            return domain.GetAssemblies().GetTypes();
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static IEnumerable<Type> GetTypes(this IEnumerable<Assembly> assemblies)
+        {
+            if (assemblies is null)
+            {
+                throw new ArgumentNullException(nameof(assemblies));
+            }
+
+            return assemblies.SelectMany(assembly => assembly.GetTypes());
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static IEnumerable<String?> GetNamespaces(this Assembly assembly)
         {
             if (assembly is null)

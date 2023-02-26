@@ -5,31 +5,50 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Windows.Forms;
-using NetExtender.UserInterface.Interfaces;
 using NetExtender.Utilities.Windows;
 
 namespace NetExtender.Utilities.UserInterface
 {
     public static class WinFormsScreenshotUtilities
     {
-        public static Boolean TakeScreenshot(this Form form, [MaybeNullWhen(false)] out Bitmap screenshot)
+        public static Bitmap? MakeScreenshot(this Form form)
         {
             if (form is null)
             {
                 throw new ArgumentNullException(nameof(form));
             }
 
-            return ScreenshotUtilities.TakeScreenshot(form.Handle, out screenshot);
+            return ScreenshotUtilities.MakeScreenshot(form.Handle);
         }
-
-        public static Boolean TakeScreenshot<T>(this T window, [MaybeNullWhen(false)] out Bitmap screenshot) where T : IUserInterfaceHandle
+        
+        public static Bitmap? MakeScreenshot(this Form form, ScreenshotType type)
         {
-            if (window is null)
+            if (form is null)
             {
-                throw new ArgumentNullException(nameof(window));
+                throw new ArgumentNullException(nameof(form));
             }
 
-            return ScreenshotUtilities.TakeScreenshot(window.Handle, out screenshot);
+            return ScreenshotUtilities.MakeScreenshot(form.Handle, type);
+        }
+        
+        public static Boolean TryMakeScreenshot(this Form form, [MaybeNullWhen(false)] out Bitmap screenshot)
+        {
+            if (form is null)
+            {
+                throw new ArgumentNullException(nameof(form));
+            }
+
+            return ScreenshotUtilities.TryMakeScreenshot(form.Handle, out screenshot);
+        }
+        
+        public static Boolean TryMakeScreenshot(this Form form, ScreenshotType type, [MaybeNullWhen(false)] out Bitmap screenshot)
+        {
+            if (form is null)
+            {
+                throw new ArgumentNullException(nameof(form));
+            }
+
+            return ScreenshotUtilities.TryMakeScreenshot(form.Handle, type, out screenshot);
         }
     }
 }

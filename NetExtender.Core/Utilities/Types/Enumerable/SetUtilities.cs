@@ -287,12 +287,12 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static (T?, T?) Nearest<T>(this SortedSet<T> set, T value)
+        public static (T? Lower, T? Higher) Nearest<T>(this SortedSet<T> set, T value)
         {
             return Nearest(set, value, out _);
         }
 
-        public static (T?, T?) Nearest<T>(this SortedSet<T> set, T value, out MathPositionType result)
+        public static (T? Lower, T? Higher) Nearest<T>(this SortedSet<T> set, T value, out MathPositionType result)
         {
             if (set is null)
             {
@@ -302,12 +302,12 @@ namespace NetExtender.Utilities.Types
             return Nearest(set, value, set.Comparer, out result);
         }
 
-        public static (T?, T?) Nearest<T>(this SortedSet<T> set, T value, IComparer<T>? comparer)
+        public static (T? Lower, T? Higher) Nearest<T>(this SortedSet<T> set, T value, IComparer<T>? comparer)
         {
             return Nearest(set, value, comparer, out _);
         }
 
-        public static (T?, T?) Nearest<T>(this SortedSet<T> set, T value, IComparer<T>? comparer, out MathPositionType result)
+        public static (T? Lower, T? Higher) Nearest<T>(this SortedSet<T> set, T value, IComparer<T>? comparer, out MathPositionType result)
         {
             if (set is null)
             {
@@ -413,12 +413,12 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static (T?, T?) Nearest<T>(this ImmutableSortedSet<T> set, T value)
+        public static (T? Lower, T? Higher) Nearest<T>(this ImmutableSortedSet<T> set, T value)
         {
             return Nearest(set, value, out _);
         }
 
-        public static (T?, T?) Nearest<T>(this ImmutableSortedSet<T> set, T value, out MathPositionType result)
+        public static (T? Lower, T? Higher) Nearest<T>(this ImmutableSortedSet<T> set, T value, out MathPositionType result)
         {
             if (set is null)
             {
@@ -428,12 +428,12 @@ namespace NetExtender.Utilities.Types
             return Nearest(set, value, set.KeyComparer, out result);
         }
 
-        public static (T?, T?) Nearest<T>(this ImmutableSortedSet<T> set, T value, IComparer<T>? comparer)
+        public static (T? Lower, T? Higher) Nearest<T>(this ImmutableSortedSet<T> set, T value, IComparer<T>? comparer)
         {
             return Nearest(set, value, comparer, out _);
         }
 
-        public static (T?, T?) Nearest<T>(this ImmutableSortedSet<T> set, T value, IComparer<T>? comparer, out MathPositionType result)
+        public static (T? Lower, T? Higher) Nearest<T>(this ImmutableSortedSet<T> set, T value, IComparer<T>? comparer, out MathPositionType result)
         {
             if (set is null)
             {

@@ -2,16 +2,22 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
+using NetExtender.Types.Drawing.Colors;
+using NetExtender.Types.Geometry;
 using NetExtender.Utilities.Cryptography;
+using NetExtender.Utilities.IO;
 using NetExtender.Windows.Types;
 
 namespace NetExtender.Utilities.Types
@@ -34,6 +40,30 @@ namespace NetExtender.Utilities.Types
 
     public static class ImageUtilities
     {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DirectBitmap.Enumerator GetEnumerator(this DirectBitmap bitmap)
+        {
+            return GetEnumerator(bitmap, GeometryRotationType.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DirectBitmap.Enumerator GetEnumerator(this DirectBitmap bitmap, GeometryRotationType rotation)
+        {
+            return new DirectBitmap.Enumerator(bitmap, rotation);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DirectBitmap.Enumerator GetEnumerator(this DirectBitmap bitmap, Rectangle rectangle)
+        {
+            return GetEnumerator(bitmap, rectangle, GeometryRotationType.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static DirectBitmap.Enumerator GetEnumerator(this DirectBitmap bitmap, Rectangle rectangle, GeometryRotationType rotation)
+        {
+            return new DirectBitmap.Enumerator(bitmap, rectangle, rotation);
+        }
+
         public static ImageType GetImageFormatType(String path)
         {
             if (path is null)
@@ -666,6 +696,312 @@ namespace NetExtender.Utilities.Types
             return Hashing(image, destination, CryptographyUtilities.DefaultHashType, out written);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean MakeContrast(this Bitmap bitmap, Double contrast)
+        {
+            return MakeContrast(bitmap, contrast, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean MakeContrast(this Bitmap bitmap, Double contrast, Boolean transparency)
+        {
+            if (bitmap is null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            using DirectBitmap direct = bitmap.Direct();
+            return MakeContrast(direct, contrast, transparency);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean MakeContrast(this DirectBitmap bitmap, Double contrast)
+        {
+            return MakeContrast(bitmap, contrast, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean MakeContrast(this DirectBitmap bitmap, Double contrast, Boolean transparency)
+        {
+            if (bitmap is null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            unchecked
+            {
+                Span<Byte> lookup = stackalloc Byte[Byte.MaxValue + 1];
+
+                const Double percent = 100;
+                Double c = (percent + contrast) * (1 / percent);
+                c *= c;
+
+                for (Int32 i = 0; i < Byte.MaxValue + 1; i++)
+                {
+                    Double value = i;
+                    value *= 1.0 / Byte.MaxValue;
+                    value -= 0.5;
+                    value *= c;
+                    value += 0.5;
+                    value *= Byte.MaxValue;
+
+                    value = value switch
+                    {
+                        < Byte.MinValue => Byte.MinValue,
+                        > Byte.MaxValue => Byte.MaxValue,
+                        _ => value
+                    };
+
+                    lookup[i] = (Byte) value;
+                }
+
+                Span<Byte> integer = stackalloc Byte[4];
+
+                if (transparency)
+                {
+                    foreach (DirectPoint point in bitmap)
+                    {
+                        Int32 color = point.Color.ToArgb();
+                        MemoryMarshal.Write(integer, ref color);
+
+                        integer[0] = lookup[integer[0]]; // B
+                        integer[1] = lookup[integer[1]]; // G
+                        integer[2] = lookup[integer[2]]; // R
+                        integer[3] = integer[3]; // A
+
+                        point.Color = Color.FromArgb(MemoryMarshal.Read<Int32>(integer));
+                    }
+                }
+                else
+                {
+                    foreach (DirectPoint point in bitmap)
+                    {
+                        Int32 color = point.Color.ToArgb();
+                        MemoryMarshal.Write(integer, ref color);
+
+                        integer[0] = lookup[integer[0]]; // B
+                        integer[1] = lookup[integer[1]]; // G
+                        integer[2] = lookup[integer[2]]; // R
+                        integer[3] = Byte.MaxValue; // A
+
+                        point.Color = Color.FromArgb(MemoryMarshal.Read<Int32>(integer));
+                    }
+                }
+
+                return true;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean MakeBlackWhite(this Bitmap bitmap)
+        {
+            return MakeBlackWhite(bitmap, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean MakeBlackWhite(this Bitmap bitmap, Boolean transparency)
+        {
+            if (bitmap is null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            using DirectBitmap direct = bitmap.Direct();
+            return MakeBlackWhite(direct, transparency);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean MakeBlackWhite(this DirectBitmap bitmap)
+        {
+            return MakeBlackWhite(bitmap, false);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean MakeBlackWhite(this DirectBitmap bitmap, Boolean transparency)
+        {
+            if (bitmap is null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            Span<Double> lookup = stackalloc Double[Byte.MaxValue + 1];
+
+            for (Int32 i = 0; i < lookup.Length; i++)
+            {
+                lookup[i] = ColorUtilities.RGBToSrgbItur(i);
+            }
+
+            Span<Byte> integer = stackalloc Byte[4];
+
+            if (transparency)
+            {
+                foreach (DirectPoint point in bitmap)
+                {
+                    Int32 color = point.Color.ToArgb();
+                    MemoryMarshal.Write(integer, ref color);
+
+                    Double b = lookup[integer[0]]; // B
+                    Double g = lookup[integer[1]]; // G
+                    Double r = lookup[integer[2]]; // R
+                    Byte a = integer[3]; // A
+                    Double l = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+
+                    point.Color = l > 0.179 ? Color.FromArgb(a, Color.Black) : Color.FromArgb(a, Color.White);
+                }
+            }
+            else
+            {
+                foreach (DirectPoint point in bitmap)
+                {
+                    Int32 color = point.Color.ToArgb();
+                    MemoryMarshal.Write(integer, ref color);
+
+                    Double b = lookup[integer[0]]; // B
+                    Double g = lookup[integer[1]]; // G
+                    Double r = lookup[integer[2]]; // R
+                    Double l = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+
+                    point.Color = l > 0.179 ? Color.Black : Color.White;
+                }
+            }
+
+            return true;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean MakeTransparent(this Bitmap bitmap)
+        {
+            if (bitmap is null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            using DirectBitmap direct = bitmap.Direct();
+            return MakeTransparent(direct);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean MakeTransparent(this Bitmap bitmap, params Color[]? transparent)
+        {
+            return MakeTransparent(bitmap, (IEnumerable<Color>?) transparent);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean MakeTransparent(this Bitmap bitmap, IEnumerable<Color>? transparent)
+        {
+            if (bitmap is null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            using DirectBitmap direct = bitmap.Direct();
+            return MakeTransparent(direct, transparent);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean MakeTransparent(this Bitmap bitmap, IEnumerable<Int32>? transparent)
+        {
+            if (bitmap is null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            using DirectBitmap direct = bitmap.Direct();
+            return MakeTransparent(direct, transparent);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean MakeTransparent(this Bitmap bitmap, IEnumerable<UInt32>? transparent)
+        {
+            if (bitmap is null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            using DirectBitmap direct = bitmap.Direct();
+            return MakeTransparent(direct, transparent);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean MakeTransparent(this DirectBitmap bitmap)
+        {
+            if (bitmap is null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            const UInt32 alpha = Byte.MaxValue;
+            
+            foreach (DirectPoint point in bitmap)
+            {
+                UInt32 color = unchecked((UInt32) point.Color.ToArgb()) | alpha;
+
+                if (color == (UInt32.MinValue | alpha) || color == UInt32.MaxValue)
+                {
+                    point.Color = Color.Transparent;
+                }
+            }
+
+            return true;
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean MakeTransparent(this DirectBitmap bitmap, params Color[]? transparent)
+        {
+            return MakeTransparent(bitmap, (IEnumerable<Color>?) transparent);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean MakeTransparent(this DirectBitmap bitmap, IEnumerable<Color>? transparent)
+        {
+            if (bitmap is null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            return MakeTransparent(bitmap, transparent?.Select(item => unchecked((UInt32) item.ToArgb())));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean MakeTransparent(this DirectBitmap bitmap, IEnumerable<Int32>? transparent)
+        {
+            if (bitmap is null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            return MakeTransparent(bitmap, transparent?.Select(item => unchecked((UInt32) item)));
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static Boolean MakeTransparent(this DirectBitmap bitmap, IEnumerable<UInt32>? transparent)
+        {
+            if (bitmap is null)
+            {
+                throw new ArgumentNullException(nameof(bitmap));
+            }
+
+            const UInt32 alpha = Byte.MaxValue;
+            ImmutableHashSet<UInt32> set = transparent?.Select(value => value | alpha).ToImmutableHashSet() ?? ImmutableHashSet<UInt32>.Empty;
+
+            if (set.Count <= 0)
+            {
+                set = set.Add(UInt32.MinValue | alpha).Add(UInt32.MaxValue);
+            }
+
+            foreach (DirectPoint point in bitmap)
+            {
+                UInt32 color = unchecked((UInt32) point.Color.ToArgb()) | alpha;
+
+                if (set.Contains(color))
+                {
+                    point.Color = Color.Transparent;
+                }
+            }
+
+            return true;
+        }
+
         public static unsafe Boolean Hashing(this Image image, Span<Byte> destination, HashType type, out Int32 written)
         {
             if (image is null)
@@ -777,18 +1113,18 @@ namespace NetExtender.Utilities.Types
             Copy(bitmap, slice, intersect, new Rectangle(Point.Empty, intersect.Size));
             return slice;
         }
-        
-        public static void ClearBitmap(this Bitmap bitmap, Color color)
+
+        public static Boolean Clear(this Bitmap bitmap, Color color)
         {
-            ClearBitmap(bitmap, color.ToArgb());
+            return Clear(bitmap, color.ToArgb());
         }
 
-        public static void ClearBitmap(this Bitmap bitmap, Int32 color)
+        public static Boolean Clear(this Bitmap bitmap, Int32 color)
         {
             using DirectBitmap direct = bitmap.Direct();
-            direct.Clear(color);
+            return direct.Clear(color);
         }
-        
+
         public static DirectBitmap Direct(this Bitmap bitmap)
         {
             if (bitmap is null)

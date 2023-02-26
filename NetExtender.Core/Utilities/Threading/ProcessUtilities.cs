@@ -40,6 +40,42 @@ namespace NetExtender.Utilities.Threading
 
     public static class ProcessUtilities
     {
+        public static Boolean? IsHasExited(this Process process)
+        {
+            if (process is null)
+            {
+                throw new ArgumentNullException(nameof(process));
+            }
+
+            try
+            {
+                process.Refresh();
+                return process.HasExited;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        
+        public static Boolean IsAlive(this Process process)
+        {
+            if (process is null)
+            {
+                throw new ArgumentNullException(nameof(process));
+            }
+
+            try
+            {
+                process.Refresh();
+                return !IsHasExited(process) ?? Process.GetProcessById(process.Id, process.MachineName).Handle == process.Handle;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+        
         public static void OpenBrowser(String url)
         {
             if (String.IsNullOrEmpty(url))
@@ -78,14 +114,14 @@ namespace NetExtender.Utilities.Threading
             OpenBrowser(uri.ToString());
         }
 
-        public static void Kill(this Process process, Boolean entireProcessTree, Boolean dispose)
+        public static void Kill(this Process process, Boolean tree, Boolean dispose)
         {
             if (process is null)
             {
                 throw new ArgumentNullException(nameof(process));
             }
 
-            process.Kill(entireProcessTree);
+            process.Kill(tree);
 
             if (dispose)
             {
@@ -104,14 +140,14 @@ namespace NetExtender.Utilities.Threading
             process.Dispose();
         }
 
-        public static void DisposeKill(this Process process, Boolean entireProcessTree)
+        public static void DisposeKill(this Process process, Boolean tree)
         {
             if (process is null)
             {
                 throw new ArgumentNullException(nameof(process));
             }
 
-            process.Kill(entireProcessTree);
+            process.Kill(tree);
             process.Dispose();
         }
 
@@ -133,7 +169,7 @@ namespace NetExtender.Utilities.Threading
             }
         }
 
-        public static Boolean TryKill(this Process process, Boolean entireProcessTree)
+        public static Boolean TryKill(this Process process, Boolean tree)
         {
             if (process is null)
             {
@@ -142,7 +178,7 @@ namespace NetExtender.Utilities.Threading
 
             try
             {
-                process.Kill(entireProcessTree);
+                process.Kill(tree);
                 return true;
             }
             catch (Exception)
@@ -151,14 +187,14 @@ namespace NetExtender.Utilities.Threading
             }
         }
 
-        public static Boolean TryKill(this Process process, Boolean entireProcessTree, Boolean dispose)
+        public static Boolean TryKill(this Process process, Boolean tree, Boolean dispose)
         {
             if (process is null)
             {
                 throw new ArgumentNullException(nameof(process));
             }
 
-            return dispose ? TryKill(process, entireProcessTree) : TryDisposeKill(process, entireProcessTree);
+            return dispose ? TryKill(process, tree) : TryDisposeKill(process, tree);
         }
 
         public static Boolean TryDisposeKill(this Process process)
@@ -180,7 +216,7 @@ namespace NetExtender.Utilities.Threading
             }
         }
 
-        public static Boolean TryDisposeKill(this Process process, Boolean entireProcessTree)
+        public static Boolean TryDisposeKill(this Process process, Boolean tree)
         {
             if (process is null)
             {
@@ -189,7 +225,7 @@ namespace NetExtender.Utilities.Threading
 
             try
             {
-                process.Kill(entireProcessTree);
+                process.Kill(tree);
                 process.Dispose();
                 return true;
             }
@@ -411,7 +447,7 @@ namespace NetExtender.Utilities.Threading
 
             try
             {
-                return await GetProcessOutputAsync(process);
+                return await GetProcessOutputAsync(process).ConfigureAwait(false);
             }
             catch (Exception)
             {
@@ -465,7 +501,7 @@ namespace NetExtender.Utilities.Threading
 
             try
             {
-                return await GetProcessErrorAsync(process);
+                return await GetProcessErrorAsync(process).ConfigureAwait(false);
             }
             catch (Exception)
             {
@@ -738,7 +774,7 @@ namespace NetExtender.Utilities.Threading
 
             try
             {
-                await Task.Delay(wait, token);
+                await Task.Delay(wait, token).ConfigureAwait(false);
                 process = Process.Start(info);
             }
             catch (Exception)

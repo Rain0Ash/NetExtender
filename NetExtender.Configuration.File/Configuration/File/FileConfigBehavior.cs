@@ -28,7 +28,7 @@ namespace NetExtender.Configuration.File
         {
             try
             {
-                return System.IO.File.ReadAllText(Path, Encoding ?? Encoding.UTF8);
+                return System.IO.File.Exists(Path) ? System.IO.File.ReadAllText(Path, Encoding ?? Encoding.UTF8) : null;
             }
             catch (Exception)
             {

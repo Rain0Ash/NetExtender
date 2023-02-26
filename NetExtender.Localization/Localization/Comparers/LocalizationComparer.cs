@@ -12,7 +12,7 @@ namespace NetExtender.Types.Comparers
 {
     public class LocalizationComparer : OrderedComparer<LocalizationIdentifier>, IComparer<CultureIdentifier>
     {
-        public static LocalizationComparer Default { get; } = new LocalizationComparer(CultureIdentifier.Us, CultureIdentifier.En,
+        public static LocalizationComparer Default { get; } = new LocalizationComparer(CultureIdentifier.Invariant, CultureIdentifier.Us, CultureIdentifier.En,
             CultureIdentifier.Ru, CultureIdentifier.Uk, CultureIdentifier.Be, CultureIdentifier.Kk, CultureIdentifier.Pl,
             CultureIdentifier.De, CultureIdentifier.Fr, CultureIdentifier.It, CultureIdentifier.Es, CultureIdentifier.Tr,
             CultureIdentifier.Lt, CultureIdentifier.Lv, CultureIdentifier.Et, CultureIdentifier.Zh);

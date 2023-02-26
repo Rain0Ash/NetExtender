@@ -9,6 +9,11 @@ namespace NetExtender.Types.Monads
     [Serializable]
     public readonly struct Maybe<T> : IEquatable<T>, IEquatable<Maybe<T>>, IEquatable<NullMaybe<T>>
     {
+        public static implicit operator Boolean(Maybe<T> value)
+        {
+            return value.HasValue;
+        }
+        
         public static implicit operator Maybe<T>(T value)
         {
             return new Maybe<T>(value);

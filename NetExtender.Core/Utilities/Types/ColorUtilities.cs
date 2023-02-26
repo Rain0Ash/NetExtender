@@ -32,6 +32,9 @@ namespace NetExtender.Utilities.Types
     public static partial class ColorUtilities
     {
         public const ColorType DefaultColorType = ColorType.RGB;
+        
+        private const Double Minimum = Byte.MinValue;
+        private const Double Maximum = Byte.MaxValue;
 
         private static readonly IImmutableMap<Color, ConsoleColor> ColorMap = new Dictionary<Color, ConsoleColor>(16)
         {
@@ -276,7 +279,7 @@ namespace NetExtender.Utilities.Types
             {
                 static Double Gets(Int32 cv)
                 {
-                    Double d = cv / 255.0;
+                    Double d = cv / Maximum;
                     d = d <= 0.03928 ? d / 12.92 : Math.Pow((d + 0.055) / 1.055, 2.4);
                     return d;
                 }
@@ -293,19 +296,40 @@ namespace NetExtender.Utilities.Types
             return (Math.Max(l1, l2) + 0.05) / (Math.Min(l1, l2) + 0.05) / 21;
         }
 
+        public static Color ToContrast(this Color color, Double value)
+        {
+            const Double contrast = 0.5;
+            
+            Int32 red = (Int32) Math.Clamp(((color.R / Maximum - contrast) * value + contrast) * Maximum, Minimum, Maximum);
+            Int32 green = (Int32) Math.Clamp(((color.G / Maximum - contrast) * value + contrast) * Maximum, Minimum, Maximum);
+            Int32 blue = (Int32) Math.Clamp(((color.B / Maximum - contrast) * value + contrast) * Maximum, Minimum, Maximum);
+
+            return Color.FromArgb(color.A, red, green, blue);
+        }
+
+        public static TColor ToContrast<TColor>(this TColor color, Double value) where TColor : IColor
+        {
+            if (color is null)
+            {
+                throw new ArgumentNullException(nameof(color));
+            }
+
+            return ToContrast(color.ToColor(), value).ToColor<TColor>();
+        }
+
         /// <summary>
         /// Returns either black or white, depending on the luminosity of the specified background color.
         /// </summary>
-        /// <param name="background">The color of the background.</param>
-        public static Color ToBlackWhite(this Color background)
+        /// <param name="color">The color of the background.</param>
+        public static Color ToBlackWhite(this Color color)
         {
             // The formula given for contrast in the W3C Recommendations is (L1 + 0.05) / (L2 + 0.05), where L1 is the luminance of the lightest color and L2 is the luminance of the darkest on a scale of 0.0-1.0.
             // The luminance of black is 0.0 and white is 1.0, so substituting those values lets you determine the one with the highest contrast.
             // If the contrast for black is greater than the contrast for white, use black, otherwise use white.
 
-            Double r = background.R;
-            Double g = background.G;
-            Double b = background.B;
+            Double r = color.R;
+            Double g = color.G;
+            Double b = color.B;
 
             // compute L (the luminance of the background color)
             r = RGBToSrgbItur(r);
@@ -318,18 +342,28 @@ namespace NetExtender.Utilities.Types
             // This simplifies down algebraically to:
             // if L > sqrt(1.05 * 0.05) - 0.05
             // Or approximately:
-            return l > 0.179 ? Color.Black : Color.White;
+            return l > 0.179 ? Color.FromArgb(color.A, Color.Black) : Color.FromArgb(color.A, Color.White);
         }
 
-        public static Double RGBToSrgbItur(Double c)
+        public static TColor ToBlackWhite<TColor>(this TColor color) where TColor : IColor
         {
-            c /= 255.0;
-            if (c <= 0.03928)
+            if (color is null)
             {
-                return c / 12.92;
+                throw new ArgumentNullException(nameof(color));
             }
 
-            return Math.Pow((c + 0.055) / 1.055, 2.4);
+            return ToBlackWhite(color.ToColor()).ToColor<TColor>();
+        }
+
+        public static Double RGBToSrgbItur(Double color)
+        {
+            color /= Maximum;
+            if (color <= 0.03928)
+            {
+                return color / 12.92;
+            }
+
+            return Math.Pow((color + 0.055) / 1.055, 2.4);
         }
 
         public static void ToCMYK(this Color color, out Byte c, out Byte m, out Byte y, out Byte k)
@@ -339,13 +373,13 @@ namespace NetExtender.Utilities.Types
 
         public static void RGBToCMYK(Byte r, Byte g, Byte b, out Byte c, out Byte m, out Byte y, out Byte k)
         {
-            Double kd = 1 - Math.Max(r, Math.Max(g, b)) / 255.0;
+            Double kd = 1 - Math.Max(r, Math.Max(g, b)) / Maximum;
             Double div = (1 - kd) * 100;
 
             k = (Byte) Math.Round(kd * 100);
-            c = (Byte) Math.Round((1 - r / 255.0 - kd) / div);
-            m = (Byte) Math.Round((1 - g / 255.0 - kd) / div);
-            y = (Byte) Math.Round((1 - b / 255.0 - kd) / div);
+            c = (Byte) Math.Round((1 - r / Maximum - kd) / div);
+            m = (Byte) Math.Round((1 - g / Maximum - kd) / div);
+            y = (Byte) Math.Round((1 - b / Maximum - kd) / div);
         }
 
         public static Color CMYKToRGB(Byte c, Byte m, Byte y, Byte k)
@@ -358,9 +392,9 @@ namespace NetExtender.Utilities.Types
         {
             Double kd = 1 - k * 0.01;
 
-            r = (Byte) Math.Round(255 * (1 - c * 0.01) * kd);
-            g = (Byte) Math.Round(255 * (1 - m * 0.01) * kd);
-            b = (Byte) Math.Round(255 * (1 - y * 0.01) * kd);
+            r = (Byte) Math.Round(Maximum * (1 - c * 0.01) * kd);
+            g = (Byte) Math.Round(Maximum * (1 - m * 0.01) * kd);
+            b = (Byte) Math.Round(Maximum * (1 - y * 0.01) * kd);
         }
 
         /// <summary>
@@ -398,9 +432,9 @@ namespace NetExtender.Utilities.Types
         /// <param name="v">Value (from 0 to 1).</param>
         public static void RGBToHSV(Byte r, Byte g, Byte b, out Double h, out Double s, out Double v)
         {
-            Double rd = r / 255D;
-            Double gd = g / 255D;
-            Double bd = b / 255D;
+            Double rd = r / Maximum;
+            Double gd = g / Maximum;
+            Double bd = b / Maximum;
 
             RGBToHSV(rd, gd, bd, out h, out s, out v);
         }
@@ -418,9 +452,9 @@ namespace NetExtender.Utilities.Types
         {
             HSVToRGB(h, s, v, out Double rd, out Double gd, out Double bd);
 
-            r = (Byte) (rd * 255);
-            g = (Byte) (gd * 255);
-            b = (Byte) (bd * 255);
+            r = (Byte) (rd * Maximum);
+            g = (Byte) (gd * Maximum);
+            b = (Byte) (bd * Maximum);
         }
 
         /// <summary>
@@ -551,9 +585,9 @@ namespace NetExtender.Utilities.Types
 
         public static void RGBToHSL(Byte r, Byte g, Byte b, out Int32 h, out Byte s, out Byte l)
         {
-            Double red = r / 255.0;
-            Double green = g / 255.0;
-            Double blue = b / 255.0;
+            Double red = r / Maximum;
+            Double green = g / Maximum;
+            Double blue = b / Maximum;
 
             Double min = Math.Min(red, Math.Min(green, blue));
             Double max = Math.Max(red, Math.Max(green, blue));
@@ -609,9 +643,9 @@ namespace NetExtender.Utilities.Types
                 bd = GetHue(p, q, hd - 1.0 / 3);
             }
 
-            r = (Byte) Math.Round(rd * 255);
-            g = (Byte) Math.Round(gd * 255);
-            b = (Byte) Math.Round(bd * 255);
+            r = (Byte) Math.Round(rd * Maximum);
+            g = (Byte) Math.Round(gd * Maximum);
+            b = (Byte) Math.Round(bd * Maximum);
         }
 
         public static Double GetHue(Double p, Double q, Double t)
@@ -676,9 +710,9 @@ namespace NetExtender.Utilities.Types
         /// <param name="b">Blue-yellow color component.</param>
         public static void RGBToCIELAB(Byte r, Byte g, Byte cb, out Double l, out Double a, out Double b)
         {
-            Double red = r / 255D;
-            Double green = g / 255D;
-            Double blue = cb / 255D;
+            Double red = r / Maximum;
+            Double green = g / Maximum;
+            Double blue = cb / Maximum;
             RGBToCIELAB(red, green, blue, out l, out a, out b);
         }
 
@@ -696,9 +730,9 @@ namespace NetExtender.Utilities.Types
         {
             CIELABToRGB(l, a, cb, out Double red, out Double green, out Double blue);
 
-            r = (Byte) (red * 255);
-            g = (Byte) (green * 255);
-            b = (Byte) (blue * 255);
+            r = (Byte) (red * Maximum);
+            g = (Byte) (green * Maximum);
+            b = (Byte) (blue * Maximum);
         }
 
         /// <summary>
@@ -769,9 +803,9 @@ namespace NetExtender.Utilities.Types
         /// <param name="z">Z.</param>
         public static void RGBToXYZ(Byte r, Byte g, Byte b, out Double x, out Double y, out Double z)
         {
-            Double red = r / 255D;
-            Double green = g / 255D;
-            Double blue = b / 255D;
+            Double red = r / Maximum;
+            Double green = g / Maximum;
+            Double blue = b / Maximum;
             RGBToXYZ(red, green, blue, out x, out y, out z);
         }
 
@@ -789,9 +823,9 @@ namespace NetExtender.Utilities.Types
         {
             RGBToXYZ(x, y, z, out Double rd, out Double gd, out Double bd);
 
-            r = (Byte) (rd * 255);
-            g = (Byte) (gd * 255);
-            b = (Byte) (bd * 255);
+            r = (Byte) (rd * Maximum);
+            g = (Byte) (gd * Maximum);
+            b = (Byte) (bd * Maximum);
         }
 
         private const Double D65X = 95.047;
@@ -1433,7 +1467,7 @@ namespace NetExtender.Utilities.Types
             };
 
             const Double Gamma = 0.80;
-            const Double IntensityMax = 255;
+            const Double IntensityMax = Maximum;
 
             r = red < Double.Epsilon ? (Byte) 0 : (Byte) Math.Round(IntensityMax * Math.Pow(red * factor, Gamma));
             g = green < Double.Epsilon ? (Byte) 0 : (Byte) Math.Round(IntensityMax * Math.Pow(green * factor, Gamma));
@@ -1469,7 +1503,7 @@ namespace NetExtender.Utilities.Types
             };
 
             const Decimal Gamma = 0.80M;
-            const Decimal IntensityMax = 255;
+            const Decimal IntensityMax = Byte.MaxValue;
 
             r = red <= 0 ? (Byte) 0 : (Byte) Math.Round(IntensityMax * (red * factor).Pow(Gamma));
             g = green <= 0 ? (Byte) 0 : (Byte) Math.Round(IntensityMax * (green * factor).Pow(Gamma));

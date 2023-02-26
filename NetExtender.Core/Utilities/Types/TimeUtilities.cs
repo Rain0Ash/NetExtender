@@ -26,6 +26,14 @@ namespace NetExtender.Utilities.Types
         {
             return (Int64) (DateTime.Now - UnixDate).TotalSeconds;
         }
+        
+        /// <summary>
+        /// Return unix time in seconds
+        /// </summary>
+        public static Int64 UnixUtcTime()
+        {
+            return (Int64) (DateTime.UtcNow - UnixDate).TotalSeconds;
+        }
 
         /// <summary>
         /// Return unix time in seconds
@@ -39,6 +47,21 @@ namespace NetExtender.Utilities.Types
         public static Double GetTime(TimeType type)
         {
             TimeSpan time = DateTime.Now - UnixDate;
+
+            return type switch
+            {
+                TimeType.Milliseconds => time.TotalMilliseconds,
+                TimeType.Seconds => time.TotalSeconds,
+                TimeType.Minutes => time.TotalMinutes,
+                TimeType.Hours => time.TotalHours,
+                TimeType.Days => time.TotalDays,
+                _ => throw new EnumUndefinedOrNotSupportedException<TimeType>(type, nameof(type), null)
+            };
+        }
+
+        public static Double GetUtcTime(TimeType type)
+        {
+            TimeSpan time = DateTime.UtcNow - UnixDate;
 
             return type switch
             {

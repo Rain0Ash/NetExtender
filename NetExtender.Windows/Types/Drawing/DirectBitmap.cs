@@ -2,12 +2,16 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using NetExtender.Types.Drawing.Colors;
 using NetExtender.Types.Drawing.Colors.Interfaces;
+using NetExtender.Types.Geometry;
 using NetExtender.Utilities.Numerics;
 using NetExtender.Utilities.Types;
 
@@ -48,6 +52,14 @@ namespace NetExtender.Windows.Types
         }
 
         public Size Size { get; }
+
+        public PixelFormat PixelFormat
+        {
+            get
+            {
+                return Bitmap.PixelFormat;
+            }
+        }
 
         public Int32 Stride
         {
@@ -249,6 +261,30 @@ namespace NetExtender.Windows.Types
             pixel = *((UInt32*) LockScan0 + x + y * Stride);
             return true;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public Boolean TryGetPixel(Point point, out Color color)
+        {
+            return TryGetPixel(point.X, point.Y, out color);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public Boolean TryGetPixel<TColor>(Point point, [MaybeNullWhen(false)] out TColor color) where TColor : IColor
+        {
+            return TryGetPixel(point.X, point.Y, out color);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public Boolean TryGetPixel(Point point, out Int32 pixel)
+        {
+            return TryGetPixel(point.X, point.Y, out pixel);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public Boolean TryGetPixel(Point point, out UInt32 pixel)
+        {
+            return TryGetPixel(point.X, point.Y, out pixel);
+        }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean TrySetPixel(Int32 index, Color color)
@@ -339,6 +375,30 @@ namespace NetExtender.Windows.Types
             *(UInt32*) (LockScan0 + x + y * Stride) = color;
             return true;
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Boolean TrySetPixel(Point point, Color color)
+        {
+            return TrySetPixel(point.X, point.Y, color);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Boolean TrySetPixel<TColor>(Point point, TColor color) where TColor : IColor
+        {
+            return TrySetPixel(point.X, point.Y, color);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Boolean TrySetPixel(Point point, Int32 color)
+        {
+            return TrySetPixel(point.X, point.Y, color);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Boolean TrySetPixel(Point point, UInt32 color)
+        {
+            return TrySetPixel(point.X, point.Y, color);
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public Boolean Clear(Color color)
@@ -406,6 +466,7 @@ namespace NetExtender.Windows.Types
             return Clear(region, color.ToArgb());
         }
 
+        // ReSharper disable once CognitiveComplexity
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public Boolean Clear(Rectangle region, Int32 pixel)
         {
@@ -623,6 +684,46 @@ namespace NetExtender.Windows.Types
             return color;
         }
 
+        public Bitmap Clone()
+        {
+            lock (Bitmap)
+            {
+                return (Bitmap) Bitmap.Clone();
+            }
+        }
+
+        public Bitmap Clone(Rectangle rectangle)
+        {
+            lock (Bitmap)
+            {
+                return Bitmap.Clone(rectangle, Bitmap.PixelFormat);
+            }
+        }
+
+        public Bitmap Clone(Rectangle rectangle, PixelFormat format)
+        {
+            lock (Bitmap)
+            {
+                return Bitmap.Clone(rectangle, format);
+            }
+        }
+
+        public Bitmap Clone(RectangleF rectangle)
+        {
+            lock (Bitmap)
+            {
+                return Bitmap.Clone(rectangle, Bitmap.PixelFormat);
+            }
+        }
+        
+        public Bitmap Clone(RectangleF rectangle, PixelFormat format)
+        {
+            lock (Bitmap)
+            {
+                return Bitmap.Clone(rectangle, format);
+            }
+        }
+
         public Locker Lock()
         {
             return Lock((DirectBitmapLockFormat) Bitmap.PixelFormat);
@@ -657,8 +758,15 @@ namespace NetExtender.Windows.Types
                 return false;
             }
 
-            Bitmap.UnlockBits(Data);
-            return true;
+            try
+            {
+                Bitmap.UnlockBits(Data);
+                return true;
+            }
+            catch (Exception)
+            {
+                return true;
+            }
         }
 
         public void Dispose()
@@ -716,6 +824,31 @@ namespace NetExtender.Windows.Types
             }
         }
 
+        public Color this[Point point]
+        {
+            get
+            {
+                if (Data is null)
+                {
+                    throw new InvalidOperationException("Must be locked before any pixel operations.");
+                }
+
+                return TryGetPixel(point, out Color color) ? color : throw new InvalidOperationException($"Invalid pixel at '{point.X},{point.Y}'");
+            }
+            set
+            {
+                if (Data is null)
+                {
+                    throw new InvalidOperationException("Must be locked before any pixel operations.");
+                }
+
+                if (!TrySetPixel(point, value))
+                {
+                    throw new InvalidOperationException($"Invalid pixel at '{point.X},{point.Y}'");
+                }
+            }
+        }
+
         public readonly struct Locker : IDisposable
         {
             public DirectBitmap Bitmap { get; }
@@ -729,6 +862,142 @@ namespace NetExtender.Windows.Types
             {
                 Bitmap.Unlock();
             }
+        }
+
+        public struct Enumerator : IEnumerable<ColorPoint>
+        {
+            private DirectBitmap Bitmap { get; }
+            private RectangleEnumerator _enumerator;
+
+            public readonly DirectPoint Current
+            {
+                get
+                {
+                    return new DirectPoint(Bitmap, Position);
+                }
+            }
+
+            public readonly Point Position
+            {
+                get
+                {
+                    return _enumerator.Current;
+                }
+            }
+
+            public readonly Rectangle Rectangle
+            {
+                get
+                {
+                    return _enumerator.Rectangle;
+                }
+            }
+            
+            public readonly GeometryBoundsType Bounds
+            {
+                get
+                {
+                    return _enumerator.Bounds;
+                }
+            }
+            
+            public readonly GeometryRotationType Rotation
+            {
+                get
+                {
+                    return _enumerator.Rotation;
+                }
+            }
+            
+            public Enumerator(DirectBitmap bitmap, GeometryRotationType rotation)
+            {
+                Bitmap = bitmap ?? throw new ArgumentNullException(nameof(bitmap));
+                Rectangle rectangle = new Rectangle(Point.Empty, Bitmap.Size);
+                _enumerator = new RectangleEnumerator(rectangle, GeometryBoundsType.Point, rotation);
+            }
+
+            public Enumerator(DirectBitmap bitmap, Rectangle rectangle, GeometryRotationType rotation)
+            {
+                Bitmap = bitmap ?? throw new ArgumentNullException(nameof(bitmap));
+
+                Rectangle image = new Rectangle(Point.Empty, Bitmap.Size);
+                if (!image.Contains(rectangle))
+                {
+                    throw new ArgumentOutOfRangeException(nameof(rectangle), rectangle, $"Bitmap rectangle '{image}' must contains rectangle '{rectangle}'");
+                }
+
+                _enumerator = new RectangleEnumerator(rectangle, GeometryBoundsType.Point, rotation);
+            }
+
+            public Boolean MoveNext()
+            {
+                return _enumerator.MoveNext();
+            }
+
+            public void Reset()
+            {
+                _enumerator.Reset();
+            }
+
+            public readonly Enumerator GetEnumerator()
+            {
+                Enumerator enumerator = this;
+                enumerator.Reset();
+                return enumerator;
+            }
+            
+            readonly IEnumerator<ColorPoint> IEnumerable<ColorPoint>.GetEnumerator()
+            {
+                // ReSharper disable once ForeachCanBeConvertedToQueryUsingAnotherGetEnumerator
+                foreach (ColorPoint point in this)
+                {
+                    yield return point;
+                }
+            }
+
+            readonly IEnumerator IEnumerable.GetEnumerator()
+            {
+                return ((IEnumerable<ColorPoint>) this).GetEnumerator();
+            }
+        }
+    }
+    
+    public readonly ref struct DirectPoint
+    {
+        public static implicit operator Point(DirectPoint value)
+        {
+            return value.Point;
+        }
+            
+        public static implicit operator Color(DirectPoint value)
+        {
+            return value.Color;
+        }
+            
+        public static implicit operator ColorPoint(DirectPoint value)
+        {
+            return new ColorPoint(value, value);
+        }
+
+        private DirectBitmap Bitmap { get; }
+        public Point Point { get; }
+
+        public Color Color
+        {
+            get
+            {
+                return Bitmap[Point];
+            }
+            set
+            {
+                Bitmap[Point] = value;
+            }
+        }
+            
+        public DirectPoint(DirectBitmap bitmap, Point point)
+        {
+            Bitmap = bitmap ?? throw new ArgumentNullException(nameof(bitmap));
+            Point = point;
         }
     }
 }

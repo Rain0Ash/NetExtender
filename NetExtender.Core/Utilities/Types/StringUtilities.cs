@@ -48,6 +48,17 @@ namespace NetExtender.Utilities.Types
         /// Cached null string task
         /// </summary>
         public static Task<String?> Null { get; } = Task.FromResult<String?>(null);
+        
+        /// <summary>
+        /// Cached null string task
+        /// </summary>
+        public static ValueTask<String?> ValueNull
+        {
+            get
+            {
+                return ValueTask.FromResult<String?>(null);
+            }
+        }
 
         /// <summary>
         /// Cached empty string task
@@ -986,7 +997,6 @@ namespace NetExtender.Utilities.Types
             }
 
             Int32 expected = CountExpectedFormatArguments(source);
-
             return expected > 0 ? String.Format(provider, source, FormatSafeGetArguments(args, expected)) : source;
         }
 

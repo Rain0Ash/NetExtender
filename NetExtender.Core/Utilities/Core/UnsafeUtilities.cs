@@ -20,7 +20,7 @@ namespace NetExtender.Utilities.Core
                 throw new ArgumentNullException(nameof(instance));
             }
 
-            return ref **(IntPtr**)Unsafe.AsPointer(ref instance);
+            return ref **(IntPtr**) Unsafe.AsPointer(ref instance);
         }
 
         public static T UncheckedCast<T>(this Object instance)

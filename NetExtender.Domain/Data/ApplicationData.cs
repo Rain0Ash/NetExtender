@@ -193,7 +193,7 @@ namespace NetExtender.Domains
             Guid = Guid.NewGuid();
             ApplicationName = name;
             ApplicationIdentifier = identifier;
-            StartedAt = DateTime.Now;
+            StartedAt = DateTime.UtcNow;
             Version = version;
             Information = information;
             Status = status;

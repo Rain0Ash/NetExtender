@@ -58,16 +58,68 @@ namespace NetExtender.Utilities.Types
             return CacheDescription<T>.TryGetValue(value, out result);
         }
 
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static T Next<T>(this T value) where T : unmanaged, Enum
         {
-            Int32 index = CacheValues<T>.Values.IndexOf(value);
+            Int32 index = CacheValues<T>.IndexOf(value);
 
-            if (index == -1)
+            if (index < 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(value), value, "The value is not defined in the enum.");
             }
 
             return CacheValues<T>.Values[(index + 1) % CacheValues<T>.Values.Count];
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Next<T>(this T value, Boolean without) where T : unmanaged, Enum
+        {
+            return without ? NextWithoutDefault(value) : Next(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static T NextWithoutDefault<T>(this T value) where T : unmanaged, Enum
+        {
+            Int32 index = CacheValuesWithoutDefault<T>.IndexOf(value);
+
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, "The value is not defined in the enum without default.");
+            }
+
+            return CacheValuesWithoutDefault<T>.Values[(index + 1) % CacheValuesWithoutDefault<T>.Values.Count];
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static T Previous<T>(this T value) where T : unmanaged, Enum
+        {
+            Int32 index = CacheValues<T>.IndexOf(value);
+
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, "The value is not defined in the enum.");
+            }
+            
+            return CacheValues<T>.Values[index > 0 ? index - 1 : CacheValues<T>.Values.Count - 1];
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static T Previous<T>(this T value, Boolean without) where T : unmanaged, Enum
+        {
+            return without ? PreviousWithoutDefault(value) : Previous(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveOptimization)]
+        public static T PreviousWithoutDefault<T>(this T value) where T : unmanaged, Enum
+        {
+            Int32 index = CacheValuesWithoutDefault<T>.IndexOf(value);
+
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(value), value, "The value is not defined in the enum without default.");
+            }
+
+            return CacheValuesWithoutDefault<T>.Values[index > 0 ? index - 1 : CacheValuesWithoutDefault<T>.Values.Count - 1];
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -77,9 +129,33 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean In<T>(this T value, Boolean without) where T : unmanaged, Enum
+        {
+            return without ? InWithoutDefault(value) : In(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean InWithoutDefault<T>(this T value) where T : unmanaged, Enum
+        {
+            return CacheValuesWithoutDefault<T>.Contains(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Boolean NotIn<T>(this T value) where T : unmanaged, Enum
         {
             return !In(value);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean NotIn<T>(this T value, Boolean without) where T : unmanaged, Enum
+        {
+            return without ? NotInWithoutDefault(value) : NotIn(value);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean NotInWithoutDefault<T>(this T value) where T : unmanaged, Enum
+        {
+            return !InWithoutDefault(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -1099,7 +1175,7 @@ namespace NetExtender.Utilities.Types
         private static class CacheValues<T> where T : unmanaged, Enum
         {
             public static ReadOnlyCollection<T> Values { get; }
-            public static ImmutableHashSet<T> Set { get; }
+            public static ImmutableDictionary<T, Int32> Set { get; }
             public static T? Minimum { get; }
             public static T? Maximum { get; }
             
@@ -1116,20 +1192,31 @@ namespace NetExtender.Utilities.Types
                 Type type = CacheType<T>.Type;
                 T[] values = Enum.GetValues(type) as T[] ?? throw new ArgumentException(nameof(T));
                 Values = values.ToReadOnlyArray();
-                Set = Values.ToImmutableHashSet();
+                Int32 i = 0;
+                Set = Values.ToImmutableDictionary(value => value, _ => i++);
                 (Minimum, Maximum) = Values.Count > 0 ? Values.MinMax() : (default(T?), default(T?));
             }
 
             public static Boolean Contains(T value)
             {
-                return Set.Contains(value);
+                return Set.ContainsKey(value);
+            }
+
+            public static Boolean TryGetValue(T value, out Int32 result)
+            {
+                return Set.TryGetValue(value, out result);
+            }
+            
+            public static Int32 IndexOf(T value)
+            {
+                return TryGetValue(value, out Int32 result) ? result : -1;
             }
         }
 
         private static class CacheValuesWithoutDefault<T> where T : unmanaged, Enum
         {
             public static ReadOnlyCollection<T> Values { get; }
-            public static ImmutableHashSet<T> Set { get; }
+            public static ImmutableDictionary<T, Int32> Set { get; }
             public static T? Minimum { get; }
             public static T? Maximum { get; }
             
@@ -1144,13 +1231,24 @@ namespace NetExtender.Utilities.Types
             static CacheValuesWithoutDefault()
             {
                 Values = CacheValues<T>.Values.Where(GenericUtilities.IsNotDefault).ToReadOnlyArray();
-                Set = Values.ToImmutableHashSet();
+                Int32 i = 0;
+                Set = Values.ToImmutableDictionary(value => value, _ => i++);
                 (Minimum, Maximum) = Values.Count > 0 ? Values.MinMax() : (default(T?), default(T?));
             }
 
             public static Boolean Contains(T value)
             {
-                return Set.Contains(value);
+                return Set.ContainsKey(value);
+            }
+
+            public static Boolean TryGetValue(T value, out Int32 result)
+            {
+                return Set.TryGetValue(value, out result);
+            }
+
+            public static Int32 IndexOf(T value)
+            {
+                return TryGetValue(value, out Int32 result) ? result : -1;
             }
         }
 

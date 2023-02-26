@@ -11,63 +11,279 @@ namespace NetExtender.Utilities.Types
     public static class SizeUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static HorizontalSize.Enumerator GetEnumerator(this Size size)
+        public static Int32 Count(this Size size)
         {
-            return new HorizontalSize.Enumerator(size);
+            return checked(size.Width * size.Height);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static HorizontalSizeF.Enumerator GetEnumerator(this SizeF size)
+        public static Boolean TryCount(this Size size, out Int32 result)
         {
-            return new HorizontalSizeF.Enumerator(size);
+            try
+            {
+                result = checked(size.Width * size.Height);
+                return true;
+            }
+            catch (OverflowException)
+            {
+                result = default;
+                return false;
+            }
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static HorizontalSize Horizontal(this Size size)
+        public static Int32 Count(this SizeF size)
         {
-            return size;
+            return checked((Int32) size.Width * (Int32) size.Height);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static HorizontalSizeF Horizontal(this SizeF size)
+        public static Boolean TryCount(this SizeF size, out Int32 result)
         {
-            return size;
+            try
+            {
+                result = checked((Int32) size.Width * (Int32) size.Height);
+                return true;
+            }
+            catch (OverflowException)
+            {
+                result = default;
+                return false;
+            }
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static HorizontalSize Horizontal(this VerticalSize size)
+        public static Int64 LongCount(this Size size)
         {
-            return size.Size;
+            return checked((Int64) size.Width * size.Height);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static HorizontalSizeF Horizontal(this VerticalSizeF size)
+        public static Boolean TryLongCount(this Size size, out Int64 result)
         {
-            return size.Size;
+            try
+            {
+                result = checked((Int64) size.Width * size.Height);
+                return true;
+            }
+            catch (OverflowException)
+            {
+                result = default;
+                return false;
+            }
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VerticalSize Vertical(this Size size)
+        public static Int64 LongCount(this SizeF size)
         {
-            return size;
+            return checked((Int64) size.Width * (Int64) size.Height);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VerticalSizeF Vertical(this SizeF size)
+        public static Boolean TryLongCount(this SizeF size, out Int64 result)
         {
-            return size;
+            try
+            {
+                result = checked((Int64) size.Width * (Int64) size.Height);
+                return true;
+            }
+            catch (OverflowException)
+            {
+                result = default;
+                return false;
+            }
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VerticalSize Vertical(this HorizontalSize size)
+        public static SizeEnumerator GetEnumerator(this Size size)
         {
-            return size.Size;
+            return GetEnumerator(size, GeometryRotationType.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeEnumerator GetEnumerator(this Size size, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(size, bounds, GeometryRotationType.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeEnumerator GetEnumerator(this Size size, GeometryRotationType rotation)
+        {
+            return GetEnumerator(size, GeometryBoundsType.Bound, rotation);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeEnumerator GetEnumerator(this Size size, GeometryBoundsType bounds, GeometryRotationType rotation)
+        {
+            return new SizeEnumerator(size, bounds, rotation);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VerticalSizeF Vertical(this HorizontalSizeF size)
+        public static SizeEnumerator GetEnumerator(this Size size, Size step)
         {
-            return size.Size;
+            return GetEnumerator(size, step, GeometryRotationType.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeEnumerator GetEnumerator(this Size size, Size step, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(size, step, bounds, GeometryRotationType.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeEnumerator GetEnumerator(this Size size, Size step, GeometryRotationType rotation)
+        {
+            return GetEnumerator(size, step, GeometryBoundsType.Bound, rotation);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeEnumerator GetEnumerator(this Size size, Size step, GeometryBoundsType bounds, GeometryRotationType rotation)
+        {
+            return new SizeEnumerator(size, step, bounds, rotation);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeFEnumerator GetEnumerator(this SizeF size)
+        {
+            return GetEnumerator(size, GeometryRotationType.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeFEnumerator GetEnumerator(this SizeF size, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(size, bounds, GeometryRotationType.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeFEnumerator GetEnumerator(this SizeF size, GeometryRotationType rotation)
+        {
+            return GetEnumerator(size, GeometryBoundsType.Bound, rotation);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeFEnumerator GetEnumerator(this SizeF size, GeometryBoundsType bounds, GeometryRotationType rotation)
+        {
+            return new SizeFEnumerator(size, bounds, rotation);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeFEnumerator GetEnumerator(this SizeF size, SizeF step)
+        {
+            return GetEnumerator(size, step, GeometryRotationType.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeFEnumerator GetEnumerator(this SizeF size, SizeF step, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(size, step, bounds, GeometryRotationType.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeFEnumerator GetEnumerator(this SizeF size, SizeF step, GeometryRotationType rotation)
+        {
+            return GetEnumerator(size, step, GeometryBoundsType.Bound, rotation);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeFEnumerator GetEnumerator(this SizeF size, SizeF step, GeometryBoundsType bounds, GeometryRotationType rotation)
+        {
+            return new SizeFEnumerator(size, step, bounds, rotation);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeEnumerator Horizontal(this Size size)
+        {
+            return Horizontal(size, GeometryBoundsType.Bound);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeEnumerator Horizontal(this Size size, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(size, bounds, GeometryRotationType.Horizontal);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeEnumerator Horizontal(this Size size, Size step)
+        {
+            return Horizontal(size, step, GeometryBoundsType.Bound);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeEnumerator Horizontal(this Size size, Size step, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(size, step, bounds, GeometryRotationType.Horizontal);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeFEnumerator Horizontal(this SizeF size)
+        {
+            return Horizontal(size, GeometryBoundsType.Bound);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeFEnumerator Horizontal(this SizeF size, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(size, bounds, GeometryRotationType.Horizontal);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeFEnumerator Horizontal(this SizeF size, SizeF step)
+        {
+            return Horizontal(size, step, GeometryBoundsType.Bound);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeFEnumerator Horizontal(this SizeF size, SizeF step, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(size, step, bounds, GeometryRotationType.Horizontal);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeEnumerator Vertical(this Size size)
+        {
+            return Vertical(size, GeometryBoundsType.Bound);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeEnumerator Vertical(this Size size, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(size, bounds, GeometryRotationType.Vertical);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeEnumerator Vertical(this Size size, Size step)
+        {
+            return Vertical(size, step, GeometryBoundsType.Bound);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeEnumerator Vertical(this Size size, Size step, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(size, step, bounds, GeometryRotationType.Vertical);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeFEnumerator Vertical(this SizeF size)
+        {
+            return Vertical(size, GeometryBoundsType.Bound);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeFEnumerator Vertical(this SizeF size, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(size, bounds, GeometryRotationType.Vertical);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeFEnumerator Vertical(this SizeF size, SizeF step)
+        {
+            return Vertical(size, step, GeometryBoundsType.Bound);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static SizeFEnumerator Vertical(this SizeF size, SizeF step, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(size, step, bounds, GeometryRotationType.Vertical);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -100,18 +316,6 @@ namespace NetExtender.Utilities.Types
             return new Size(width, bounds.Height);
         }
 
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static HorizontalSize AspectRatioBounds(this HorizontalSize size, Size bounds)
-        {
-            return AspectRatioBounds(size.Size, bounds);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VerticalSize AspectRatioBounds(this VerticalSize size, Size bounds)
-        {
-            return AspectRatioBounds(size.Size, bounds);
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveOptimization)]
         public static SizeF AspectRatioBounds(this SizeF size, SizeF bounds)
         {
@@ -128,18 +332,6 @@ namespace NetExtender.Utilities.Types
             
             Single width = (Single) DrawingUtilities.GetAspectRatio(bounds.Width, difference);
             return new SizeF(width, bounds.Height);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static HorizontalSizeF AspectRatioBounds(this HorizontalSizeF size, SizeF bounds)
-        {
-            return AspectRatioBounds(size.Size, bounds);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VerticalSizeF AspectRatioBounds(this VerticalSizeF size, SizeF bounds)
-        {
-            return AspectRatioBounds(size.Size, bounds);
         }
     }
 }

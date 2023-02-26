@@ -144,6 +144,21 @@
           <DesignTime>True</DesignTime>
           <DependentUpon>GenericBusinessStatusException.tt</DependentUpon>
         </Compile>
+        <Compile Update="Utilities\Types\RectangleEnumerator.cs">
+          <DependentUpon>RectangleUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\RangeEnumerator.cs">
+          <DependentUpon>RangeUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\RectangleFEnumerator.cs">
+          <DependentUpon>RectangleUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\SizeEnumerator.cs">
+          <DependentUpon>SizeUtilities.cs</DependentUpon>
+        </Compile>
+        <Compile Update="Utilities\Types\SizeFEnumerator.cs">
+          <DependentUpon>SizeUtilities.cs</DependentUpon>
+        </Compile>
     </ItemGroup>
 
     <ItemGroup>

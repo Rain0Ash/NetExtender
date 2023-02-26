@@ -11,65 +11,309 @@ namespace NetExtender.Utilities.Types
     public static class RectangleUtilities
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static HorizontalRectangle.Enumerator GetEnumerator(this Rectangle rectangle)
+        public static Int32 Count(this Rectangle rectangle)
         {
-            return new HorizontalRectangle.Enumerator(rectangle);
+            return checked(rectangle.Width * rectangle.Height);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static HorizontalRectangleF.Enumerator GetEnumerator(this RectangleF rectangle)
+        public static Boolean TryCount(this Rectangle rectangle, out Int32 result)
         {
-            return new HorizontalRectangleF.Enumerator(rectangle);
+            try
+            {
+                result = checked(rectangle.Width * rectangle.Height);
+                return true;
+            }
+            catch (OverflowException)
+            {
+                result = default;
+                return false;
+            }
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static HorizontalRectangle Horizontal(this Rectangle rectangle)
+        public static Int32 Count(this RectangleF rectangle)
         {
+            return checked((Int32) rectangle.Width * (Int32) rectangle.Height);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryCount(this RectangleF rectangle, out Int32 result)
+        {
+            try
+            {
+                result = checked((Int32) rectangle.Width * (Int32) rectangle.Height);
+                return true;
+            }
+            catch (OverflowException)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int64 LongCount(this Rectangle rectangle)
+        {
+            return checked((Int64) rectangle.Width * rectangle.Height);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryLongCount(this Rectangle rectangle, out Int64 result)
+        {
+            try
+            {
+                result = checked((Int64) rectangle.Width * rectangle.Height);
+                return true;
+            }
+            catch (OverflowException)
+            {
+                result = default;
+                return false;
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Int64 LongCount(this RectangleF rectangle)
+        {
+            return checked((Int64) rectangle.Width * (Int64) rectangle.Height);
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryLongCount(this RectangleF rectangle, out Int64 result)
+        {
+            try
+            {
+                result = checked((Int64) rectangle.Width * (Int64) rectangle.Height);
+                return true;
+            }
+            catch (OverflowException)
+            {
+                result = default;
+                return false;
+            }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Rectangle OffsetWith(this Rectangle rectangle, Int32 x, Int32 y)
+        {
+            rectangle.Offset(x, y);
+            return rectangle;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Rectangle OffsetWith(this Rectangle rectangle, Point point)
+        {
+            rectangle.Offset(point);
+            return rectangle;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleF OffsetWith(this RectangleF rectangle, Single x, Single y)
+        {
+            rectangle.Offset(x, y);
+            return rectangle;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleF OffsetWith(this RectangleF rectangle, PointF point)
+        {
+            rectangle.Offset(point);
             return rectangle;
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static HorizontalRectangleF Horizontal(this RectangleF rectangle)
+        public static RectangleEnumerator GetEnumerator(this Rectangle rectangle)
         {
-            return rectangle;
+            return GetEnumerator(rectangle, GeometryRotationType.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleEnumerator GetEnumerator(this Rectangle rectangle, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(rectangle, bounds, GeometryRotationType.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleEnumerator GetEnumerator(this Rectangle rectangle, GeometryRotationType rotation)
+        {
+            return GetEnumerator(rectangle, GeometryBoundsType.Bound, rotation);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleEnumerator GetEnumerator(this Rectangle rectangle, GeometryBoundsType bounds, GeometryRotationType rotation)
+        {
+            return new RectangleEnumerator(rectangle, bounds, rotation);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static HorizontalRectangle Horizontal(this VerticalRectangle rectangle)
+        public static RectangleEnumerator GetEnumerator(this Rectangle rectangle, Size step)
         {
-            return rectangle.Rectangle;
+            return GetEnumerator(rectangle, step, GeometryRotationType.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleEnumerator GetEnumerator(this Rectangle rectangle, Size step, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(rectangle, step, bounds, GeometryRotationType.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleEnumerator GetEnumerator(this Rectangle rectangle, Size step, GeometryRotationType rotation)
+        {
+            return GetEnumerator(rectangle, step, GeometryBoundsType.Bound, rotation);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleEnumerator GetEnumerator(this Rectangle rectangle, Size step, GeometryBoundsType bounds, GeometryRotationType rotation)
+        {
+            return new RectangleEnumerator(rectangle, step, bounds, rotation);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static HorizontalRectangleF Horizontal(this VerticalRectangleF rectangle)
+        public static RectangleFEnumerator GetEnumerator(this RectangleF rectangle)
         {
-            return rectangle.Rectangle;
+            return GetEnumerator(rectangle, GeometryRotationType.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleFEnumerator GetEnumerator(this RectangleF rectangle, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(rectangle, bounds, GeometryRotationType.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleFEnumerator GetEnumerator(this RectangleF rectangle, GeometryRotationType rotation)
+        {
+            return GetEnumerator(rectangle, GeometryBoundsType.Bound, rotation);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VerticalRectangle Vertical(this Rectangle rectangle)
+        public static RectangleFEnumerator GetEnumerator(this RectangleF rectangle, GeometryBoundsType bounds, GeometryRotationType rotation)
         {
-            return rectangle;
+            return new RectangleFEnumerator(rectangle, bounds, rotation);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VerticalRectangleF Vertical(this RectangleF rectangle)
+        public static RectangleFEnumerator GetEnumerator(this RectangleF rectangle, SizeF step)
         {
-            return rectangle;
+            return GetEnumerator(rectangle, step, GeometryRotationType.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleFEnumerator GetEnumerator(this RectangleF rectangle, SizeF step, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(rectangle, step, bounds, GeometryRotationType.Default);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleFEnumerator GetEnumerator(this RectangleF rectangle, SizeF step, GeometryRotationType rotation)
+        {
+            return GetEnumerator(rectangle, step, GeometryBoundsType.Bound, rotation);
         }
         
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VerticalRectangle Vertical(this HorizontalRectangle rectangle)
+        public static RectangleFEnumerator GetEnumerator(this RectangleF rectangle, SizeF step, GeometryBoundsType bounds, GeometryRotationType rotation)
         {
-            return rectangle.Rectangle;
+            return new RectangleFEnumerator(rectangle, step, bounds, rotation);
         }
-        
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VerticalRectangleF Vertical(this HorizontalRectangleF rectangle)
+        public static RectangleEnumerator Horizontal(this Rectangle rectangle)
         {
-            return rectangle.Rectangle;
+            return Horizontal(rectangle, GeometryBoundsType.Bound);
         }
-        
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleEnumerator Horizontal(this Rectangle rectangle, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(rectangle, bounds, GeometryRotationType.Horizontal);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleEnumerator Horizontal(this Rectangle rectangle, Size step)
+        {
+            return Horizontal(rectangle, step, GeometryBoundsType.Bound);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleEnumerator Horizontal(this Rectangle rectangle, Size step, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(rectangle, step, bounds, GeometryRotationType.Horizontal);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleFEnumerator Horizontal(this RectangleF rectangle)
+        {
+            return Horizontal(rectangle, GeometryBoundsType.Bound);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleFEnumerator Horizontal(this RectangleF rectangle, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(rectangle, bounds, GeometryRotationType.Horizontal);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleFEnumerator Horizontal(this RectangleF rectangle, SizeF step)
+        {
+            return Horizontal(rectangle, step, GeometryBoundsType.Bound);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleFEnumerator Horizontal(this RectangleF rectangle, SizeF step, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(rectangle, step, bounds, GeometryRotationType.Horizontal);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleEnumerator Vertical(this Rectangle rectangle)
+        {
+            return Vertical(rectangle, GeometryBoundsType.Bound);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleEnumerator Vertical(this Rectangle rectangle, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(rectangle, bounds, GeometryRotationType.Vertical);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleEnumerator Vertical(this Rectangle rectangle, Size step)
+        {
+            return Vertical(rectangle, step, GeometryBoundsType.Bound);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleEnumerator Vertical(this Rectangle rectangle, Size step, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(rectangle, step, bounds, GeometryRotationType.Vertical);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleFEnumerator Vertical(this RectangleF rectangle)
+        {
+            return Vertical(rectangle, GeometryBoundsType.Bound);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleFEnumerator Vertical(this RectangleF rectangle, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(rectangle, bounds, GeometryRotationType.Vertical);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleFEnumerator Vertical(this RectangleF rectangle, SizeF step)
+        {
+            return Vertical(rectangle, step, GeometryBoundsType.Bound);
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static RectangleFEnumerator Vertical(this RectangleF rectangle, SizeF step, GeometryBoundsType bounds)
+        {
+            return GetEnumerator(rectangle, step, bounds, GeometryRotationType.Vertical);
+        }
+
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Double GetAspectRatio(this Rectangle rectangle)
         {
@@ -89,31 +333,7 @@ namespace NetExtender.Utilities.Types
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static HorizontalSize AspectRatioBounds(this HorizontalRectangle rectangle, Size bounds)
-        {
-            return rectangle.Size.AspectRatioBounds(bounds);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VerticalSize AspectRatioBounds(this VerticalRectangle rectangle, Size bounds)
-        {
-            return rectangle.Size.AspectRatioBounds(bounds);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static SizeF AspectRatioBounds(this RectangleF rectangle, SizeF bounds)
-        {
-            return rectangle.Size.AspectRatioBounds(bounds);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static HorizontalSizeF AspectRatioBounds(this HorizontalRectangleF rectangle, SizeF bounds)
-        {
-            return rectangle.Size.AspectRatioBounds(bounds);
-        }
-
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static VerticalSizeF AspectRatioBounds(this VerticalRectangleF rectangle, SizeF bounds)
         {
             return rectangle.Size.AspectRatioBounds(bounds);
         }

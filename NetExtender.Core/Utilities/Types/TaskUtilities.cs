@@ -39,20 +39,10 @@ namespace NetExtender.Utilities.Types
         /// </summary>
         public static Task<Int32> One { get; } = Task.FromResult(1);
 
-        private static class TaskCache<T>
-        {
-            public static Task<T?> Default { get; }
-
-            static TaskCache()
-            {
-                Default = Task.FromResult(default(T));
-            }
-        }
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<T?> Default<T>()
         {
-            return TaskCache<T>.Default;
+            return TaskUtilities<T>.Default;
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -64,7 +54,7 @@ namespace NetExtender.Utilities.Types
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Task<T> ToTask<T>(this T value)
         {
-            return value is null ? TaskCache<T>.Default! : Task.FromResult(value);
+            return value is null ? TaskUtilities<T>.Default! : Task.FromResult(value);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

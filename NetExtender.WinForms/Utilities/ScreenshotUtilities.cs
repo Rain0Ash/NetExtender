@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using NetExtender.Types.Exceptions;
 using NetExtender.Types.Native.Windows;
+using NetExtender.Utilities.IO;
 
 namespace NetExtender.Utilities.Windows
 {
@@ -29,7 +30,7 @@ namespace NetExtender.Utilities.Windows
         /// </summary>
         /// <param name="screen">Screen to get the screenshot from</param>
         /// <returns>Returns a Bitmap containing the screen shot</returns>
-        public static Bitmap TakeScreenshot(this Screen screen)
+        public static Bitmap MakeScreenshot(this Screen screen)
         {
             if (screen is null)
             {
@@ -59,7 +60,7 @@ namespace NetExtender.Utilities.Windows
         /// </summary>
         /// <param name="screens">Screens to get the screenshot from</param>
         /// <returns>Returns a Bitmap containing the screen shot</returns>
-        public static Bitmap TakeScreenshot(this IEnumerable<Screen> screens)
+        public static Bitmap MakeScreenshot(this IEnumerable<Screen> screens)
         {
             if (screens is null)
             {
@@ -91,14 +92,14 @@ namespace NetExtender.Utilities.Windows
         /// </summary>
         /// <param name="screens">Screens to get the screenshot from</param>
         /// <returns>Returns a Bitmap containing the screen shot</returns>
-        public static IEnumerable<Bitmap> TakeScreenshots(this IEnumerable<Screen> screens)
+        public static IEnumerable<Bitmap> MakeScreenshots(this IEnumerable<Screen> screens)
         {
             if (screens is null)
             {
                 throw new ArgumentNullException(nameof(screens));
             }
 
-            return screens.Select(TakeScreenshot);
+            return screens.Select(MakeScreenshot);
         }
 
         [DllImport("user32.dll", SetLastError = true)]
@@ -192,10 +193,11 @@ namespace NetExtender.Utilities.Windows
         }
 
         //TODO:
-        private static Boolean GetContentSize(IntPtr handle, ScreenshotType type, out Rectangle bounds, out Rectangle content)
+        private static Boolean GetContentSize(IntPtr handle, ScreenshotType type, out Boolean client, out Rectangle bounds, out Rectangle content)
         {
             if (handle == IntPtr.Zero)
             {
+                client = false;
                 bounds = default;
                 content = default;
                 return false;
@@ -205,12 +207,15 @@ namespace NetExtender.Utilities.Windows
             {
                 case ScreenshotType.Full:
                 {
+                    client = false;
                     bounds = default;
                     content = default;
                     return false;
                 }
                 case ScreenshotType.Title:
                 {
+                    client = false;
+                    
                     if (!GetWindowRect(handle, out WinRectangle rect) || !GetWindowInformation(handle, out WinWindowInfo info))
                     {
                         bounds = default;
@@ -225,18 +230,19 @@ namespace NetExtender.Utilities.Windows
                 }
                 case ScreenshotType.Content:
                 {
-                    if (!GetClientRect(handle, out WinRectangle rect) || !ClientInScreen(handle, out Point point) || !GetWindowInformation(handle, out WinWindowInfo info))
+                    client = true;
+                    
+                    if (!GetWindowRect(handle, out WinRectangle rect) || !GetWindowInformation(handle, out WinWindowInfo info))
                     {
                         bounds = default;
                         content = default;
                         return false;
                     }
 
-                    Rectangle rectangle = rect;
                     Size border = info.BorderSize;
+                    bounds = rect;
                     Int32 title = GetSystemMetrics(0x21) + GetSystemMetrics(0x4) + GetSystemMetrics(0x5C);
-                    bounds = new Rectangle(point.X, point.Y, rectangle.Right, rectangle.Bottom);
-                    content = new Rectangle(border.Width, title, bounds.Width - border.Width, bounds.Height - title);
+                    content = new Rectangle(border.Width, title, bounds.Width - border.Width * 2, bounds.Height - border.Width - title);
                     return true;
                 }
                 default:
@@ -244,42 +250,63 @@ namespace NetExtender.Utilities.Windows
             }
         }
 
-        public static Boolean TakeScreenshot(IntPtr handle, [MaybeNullWhen(false)] out Bitmap screenshot)
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Bitmap? MakeScreenshot(IntPtr handle)
         {
-            return TakeScreenshot(handle, ScreenshotType.Content, out screenshot);
+            return MakeScreenshot(handle, ScreenshotType.Content);
         }
 
-        public static Boolean TakeScreenshot(IntPtr handle, ScreenshotType type, [MaybeNullWhen(false)] out Bitmap screenshot)
+        public static Bitmap? MakeScreenshot(IntPtr handle, ScreenshotType type)
         {
             if (handle == IntPtr.Zero)
             {
-                screenshot = null;
-                return false;
+                return null;
             }
 
-            if (!GetContentSize(handle, type, out Rectangle rectangle, out Rectangle content))
+            if (!GetContentSize(handle, type, out Boolean client, out Rectangle rectangle, out Rectangle content))
             {
-                screenshot = null;
-                return false;
+                return null;
             }
 
-            try
+            using Bitmap raw = new Bitmap(rectangle.Width, rectangle.Height);
+            
+            switch (client)
             {
-                using Bitmap raw = new Bitmap(rectangle.Width, rectangle.Height);
-
-                if (!PrintWindow(handle, raw))
+                case true when PrintWindow(handle, raw):
+                {
+                    Bitmap result = raw.Clone(content, raw.PixelFormat);
+                    return result;
+                }
+                case true:
                 {
                     raw.Dispose();
-                    screenshot = null;
-                    return false;
+                    return null;
                 }
+                case false:
+                {
+                    using Graphics graphics = Graphics.FromImage(raw);
+                    graphics.CopyFromScreen(rectangle.Left, rectangle.Top, 0, 0, new Size(rectangle.Width, rectangle.Height), CopyPixelOperation.SourceCopy);
+                    return raw.Clone(content, raw.PixelFormat);
+                }
+            }
+        }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static Boolean TryMakeScreenshot(IntPtr handle, [MaybeNullWhen(false)] out Bitmap screenshot)
+        {
+            return TryMakeScreenshot(handle, ScreenshotType.Content, out screenshot);
+        }
 
-                screenshot = raw.Clone(content, raw.PixelFormat);
-                return true;
+        public static Boolean TryMakeScreenshot(IntPtr handle, ScreenshotType type, [MaybeNullWhen(false)] out Bitmap screenshot)
+        {
+            try
+            {
+                screenshot = MakeScreenshot(handle, type);
+                return screenshot is not null;
             }
             catch (Exception)
             {
-                screenshot = null;
+                screenshot = default;
                 return false;
             }
         }

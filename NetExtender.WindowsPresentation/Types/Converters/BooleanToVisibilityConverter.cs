@@ -7,7 +7,7 @@ namespace NetExtender.WindowsPresentation.Types.Converters
 {
     public sealed class BooleanToVisibilityConverter : IValueConverter
     {
-        public static BooleanToVisibilityConverter Create(Boolean collapsed)
+        public static implicit operator BooleanToVisibilityConverter(Boolean collapsed)
         {
             return collapsed ? Collapsed : Hidden;
         }

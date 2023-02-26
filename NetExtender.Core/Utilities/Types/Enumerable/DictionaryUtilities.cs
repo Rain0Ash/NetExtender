@@ -613,12 +613,12 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static (KeyValuePair<TKey, TValue>?, KeyValuePair<TKey, TValue>?) Nearest<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value) where TKey : notnull
+        public static (KeyValuePair<TKey, TValue>? Lower, KeyValuePair<TKey, TValue>? Higher) Nearest<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value) where TKey : notnull
         {
             return Nearest(source, value, out _);
         }
 
-        public static (KeyValuePair<TKey, TValue>?, KeyValuePair<TKey, TValue>?) Nearest<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, out MathPositionType result) where TKey : notnull
+        public static (KeyValuePair<TKey, TValue>? Lower, KeyValuePair<TKey, TValue>? Higher) Nearest<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, out MathPositionType result) where TKey : notnull
         {
             if (source is null)
             {
@@ -628,12 +628,12 @@ namespace NetExtender.Utilities.Types
             return Nearest(source, value, source.Comparer, out result);
         }
 
-        public static (KeyValuePair<TKey, TValue>?, KeyValuePair<TKey, TValue>?) Nearest<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer) where TKey : notnull
+        public static (KeyValuePair<TKey, TValue>? Lower, KeyValuePair<TKey, TValue>? Higher) Nearest<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer) where TKey : notnull
         {
             return Nearest(source, value, comparer, out _);
         }
 
-        public static (KeyValuePair<TKey, TValue>?, KeyValuePair<TKey, TValue>?) Nearest<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer, out MathPositionType result) where TKey : notnull
+        public static (KeyValuePair<TKey, TValue>? Lower, KeyValuePair<TKey, TValue>? Higher) Nearest<TKey, TValue>(this SortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer, out MathPositionType result) where TKey : notnull
         {
             if (source is null)
             {
@@ -743,12 +743,12 @@ namespace NetExtender.Utilities.Types
             }
         }
 
-        public static (KeyValuePair<TKey, TValue>?, KeyValuePair<TKey, TValue>?) Nearest<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value) where TKey : notnull
+        public static (KeyValuePair<TKey, TValue>? Lower, KeyValuePair<TKey, TValue>? Higher) Nearest<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value) where TKey : notnull
         {
             return Nearest(source, value, out _);
         }
 
-        public static (KeyValuePair<TKey, TValue>?, KeyValuePair<TKey, TValue>?) Nearest<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, out MathPositionType result) where TKey : notnull
+        public static (KeyValuePair<TKey, TValue>? Lower, KeyValuePair<TKey, TValue>? Higher) Nearest<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, out MathPositionType result) where TKey : notnull
         {
             if (source is null)
             {
@@ -758,12 +758,12 @@ namespace NetExtender.Utilities.Types
             return Nearest(source, value, source.KeyComparer, out result);
         }
 
-        public static (KeyValuePair<TKey, TValue>?, KeyValuePair<TKey, TValue>?) Nearest<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer) where TKey : notnull
+        public static (KeyValuePair<TKey, TValue>? Lower, KeyValuePair<TKey, TValue>? Higher) Nearest<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer) where TKey : notnull
         {
             return Nearest(source, value, comparer, out _);
         }
 
-        public static (KeyValuePair<TKey, TValue>?, KeyValuePair<TKey, TValue>?) Nearest<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer, out MathPositionType result) where TKey : notnull
+        public static (KeyValuePair<TKey, TValue>? Lower, KeyValuePair<TKey, TValue>? Higher) Nearest<TKey, TValue>(this ImmutableSortedDictionary<TKey, TValue> source, TKey value, IComparer<TKey>? comparer, out MathPositionType result) where TKey : notnull
         {
             if (source is null)
             {

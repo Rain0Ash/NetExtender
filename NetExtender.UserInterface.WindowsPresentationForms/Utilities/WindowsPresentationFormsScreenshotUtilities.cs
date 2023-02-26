@@ -13,31 +13,92 @@ namespace NetExtender.Utilities.UserInterface
 {
     public static class WindowsPresentationFormsScreenshotUtilities
     {
-        public static Boolean TakeScreenshot(this Window window, [MaybeNullWhen(false)] out Bitmap screenshot)
+        public static Bitmap? MakeScreenshot(this Window window)
         {
             if (window is null)
             {
                 throw new ArgumentNullException(nameof(window));
             }
 
-            return ScreenshotUtilities.TakeScreenshot(window.GetHandle(), out screenshot);
+            return ScreenshotUtilities.MakeScreenshot(window.GetHandle());
         }
         
-        public static Boolean TakeScreenshot(this Window window, [MaybeNullWhen(false)] out BitmapSource screenshot)
+        public static Bitmap? MakeScreenshot(this Window window, ScreenshotType type)
         {
             if (window is null)
             {
                 throw new ArgumentNullException(nameof(window));
             }
 
-            if (!TakeScreenshot(window, out Bitmap? bitmap))
+            return ScreenshotUtilities.MakeScreenshot(window.GetHandle(), type);
+        }
+        
+        public static Boolean TryMakeScreenshot(this Window window, [MaybeNullWhen(false)] out Bitmap screenshot)
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            return ScreenshotUtilities.TryMakeScreenshot(window.GetHandle(), out screenshot);
+        }
+        
+        public static Boolean TryMakeScreenshot(this Window window, ScreenshotType type, [MaybeNullWhen(false)] out Bitmap screenshot)
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            return ScreenshotUtilities.TryMakeScreenshot(window.GetHandle(), type, out screenshot);
+        }
+
+        public static Boolean TryMakeScreenshot(this Window window, [MaybeNullWhen(false)] out BitmapSource screenshot)
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            if (!TryMakeScreenshot(window, out Bitmap? bitmap))
             {
                 screenshot = default;
                 return false;
             }
 
-            screenshot = bitmap.ToBitmapSource();
-            return true;
+            try
+            {
+                screenshot = bitmap.ToBitmapSource();
+                return true;
+            }
+            finally
+            {
+                bitmap.Dispose();
+            }
+        }
+
+        public static Boolean TryMakeScreenshot(this Window window, ScreenshotType type, [MaybeNullWhen(false)] out BitmapSource screenshot)
+        {
+            if (window is null)
+            {
+                throw new ArgumentNullException(nameof(window));
+            }
+
+            if (!TryMakeScreenshot(window, type, out Bitmap? bitmap))
+            {
+                screenshot = default;
+                return false;
+            }
+
+            try
+            {
+                screenshot = bitmap.ToBitmapSource();
+                return true;
+            }
+            finally
+            {
+                bitmap.Dispose();
+            }
         }
     }
 }

@@ -20,6 +20,5 @@ namespace NetExtender.Types.Comparers.Interfaces
         public Boolean Equals(T1 x, T2 y);
 
         public Int32 GetHashCode(T1 obj);
-        public Int32 GetHashCode(T2 obj);
     }
 }
